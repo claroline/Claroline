@@ -31,8 +31,8 @@ const ResourceComment = {
 const ResourceNode = {
   propTypes: {
     id: T.string.isRequired,
-    autoId: T.number.isRequired, // for retro-compatibility with old api, will be removed in future.
     name: T.string.isRequired,
+    autoId: T.number,
     slug: T.string,
     thumbnail: T.string,
     poster: T.string,

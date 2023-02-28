@@ -28,17 +28,15 @@ class EventUser extends AbstractUserRegistration
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Event")
      * @ORM\JoinColumn(name="event_id", nullable=false, onDelete="CASCADE")
-     *
-     * @var Event
      */
-    private $event;
+    private ?Event $event = null;
 
     public function getEvent(): Event
     {
         return $this->event;
     }
 
-    public function setEvent(Event $event)
+    public function setEvent(Event $event): void
     {
         $this->event = $event;
     }

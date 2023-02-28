@@ -11,9 +11,11 @@
 
 namespace Claroline\CursusBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CommunityBundle\Model\HasOrganizations;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -25,85 +27,69 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  */
 class Course extends AbstractTraining
 {
+    use HasOrganizations;
+
     /**
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(length=128, unique=true)
-     *
-     * @var string
      */
-    private $slug;
+    private string $slug;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Course", inversedBy="children")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
-     *
-     * @var Course
      */
-    private $parent;
+    private ?Course $parent;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Course", mappedBy="parent")
      * @ORM\OrderBy({"order" = "ASC"})
      *
-     * @var Course[]|ArrayCollection
+     * @var Collection|Course[]
      */
-    private $children;
+    private Collection $children;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
      * @ORM\JoinColumn(name="workspace_model_id", nullable=true, onDelete="SET NULL")
      */
-    private $workspaceModel;
+    private ?Workspace $workspaceModel;
 
     /**
      * @ORM\Column(name="tutor_role_name", nullable=true)
      */
-    private $tutorRoleName;
+    private ?string $tutorRoleName = null;
 
     /**
      * @ORM\Column(name="learner_role_name", nullable=true)
      */
-    private $learnerRoleName;
+    private ?string $learnerRoleName = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Session", mappedBy="course")
      *
-     * @var Session[]
+     * @var Collection|Session[]
      */
-    private $sessions;
+    private Collection $sessions;
 
     /**
      * Hides sessions to users.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    private $hideSessions = false;
-
-    /**
-     * If true, automatically register users to the default session of the training children
-     * when registering to a session of this training.
-     *
-     * @ORM\Column(type="boolean", options={"default" = 0})
-     *
-     * @var bool
-     */
-    private $propagateRegistration = false;
+    private bool $hideSessions = false;
 
     /**
      * Configure which session to open when opening the course.
      *
      * @ORM\Column(nullable=true)
-     *
-     * @var string
      */
-    private $sessionOpening = 'first_available';
+    private ?string $sessionOpening = 'first_available';
 
     /**
      * @ORM\Column(name="session_duration", nullable=false, type="float", options={"default" = 1})
      */
-    private $defaultSessionDuration = 1;
+    private float $defaultSessionDuration = 1;
 
     /**
      * @ORM\ManyToMany(
@@ -111,11 +97,21 @@ class Course extends AbstractTraining
      * )
      * @ORM\JoinTable(name="claro_cursusbundle_course_organizations")
      */
-    private $organizations;
+    private Collection $organizations;
 
     /**
-     * Course constructor.
+     * A list of custom panels and fields for the user registration form.
+     *
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacet", cascade={"persist"})
+     * @ORM\JoinTable(name="claro_cursusbundle_course_panel_facet",
+     *     joinColumns={@ORM\JoinColumn(name="course_id", referencedColumnName="id", onDelete="CASCADE")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="panel_facet_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
+     * )
+     *
+     * @var Collection|PanelFacet[]
      */
+    private Collection $panelFacets;
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -123,14 +119,20 @@ class Course extends AbstractTraining
         $this->sessions = new ArrayCollection();
         $this->organizations = new ArrayCollection();
         $this->children = new ArrayCollection();
+        $this->panelFacets = new ArrayCollection();
     }
 
-    public function getSlug()
+    public function __toString(): string
+    {
+        return $this->getName().' ['.$this->getCode().']';
+    }
+
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    public function setSlug($slug = null)
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
@@ -140,47 +142,37 @@ class Course extends AbstractTraining
         return $this->workspaceModel;
     }
 
-    public function setWorkspaceModel(?Workspace $workspace = null)
+    public function setWorkspaceModel(?Workspace $workspace = null): void
     {
         $this->workspaceModel = $workspace;
     }
 
-    public function getTutorRoleName()
+    public function getTutorRoleName(): ?string
     {
         return $this->tutorRoleName;
     }
 
-    public function setTutorRoleName($tutorRoleName)
+    public function setTutorRoleName(?string $tutorRoleName = null): void
     {
         $this->tutorRoleName = $tutorRoleName;
     }
 
-    public function getLearnerRoleName()
+    public function getLearnerRoleName(): ?string
     {
         return $this->learnerRoleName;
     }
 
-    public function setLearnerRoleName($learnerRoleName)
+    public function setLearnerRoleName(?string $learnerRoleName = null): void
     {
         $this->learnerRoleName = $learnerRoleName;
     }
 
-    public function getPropagateRegistration(): bool
-    {
-        return $this->propagateRegistration;
-    }
-
-    public function setPropagateRegistration(bool $propagate)
-    {
-        $this->propagateRegistration = $propagate;
-    }
-
-    public function getSessions()
+    public function getSessions(): Collection
     {
         return $this->sessions;
     }
 
-    public function getDefaultSession()
+    public function getDefaultSession(): ?Session
     {
         $defaultSession = null;
 
@@ -194,7 +186,7 @@ class Course extends AbstractTraining
         return $defaultSession;
     }
 
-    public function hasAvailableSession()
+    public function hasAvailableSession(): bool
     {
         $now = new \DateTime();
         foreach ($this->sessions as $session) {
@@ -211,7 +203,7 @@ class Course extends AbstractTraining
         return $this->hideSessions;
     }
 
-    public function setHideSessions(bool $hideSessions)
+    public function setHideSessions(bool $hideSessions): void
     {
         $this->hideSessions = $hideSessions;
     }
@@ -221,80 +213,66 @@ class Course extends AbstractTraining
         return $this->sessionOpening;
     }
 
-    public function setSessionOpening(string $sessionOpening)
+    public function setSessionOpening(string $sessionOpening): void
     {
         $this->sessionOpening = $sessionOpening;
     }
 
-    public function getDefaultSessionDuration()
+    public function getDefaultSessionDuration(): float
     {
         return $this->defaultSessionDuration;
     }
 
-    public function setDefaultSessionDuration($defaultSessionDuration)
+    public function setDefaultSessionDuration($defaultSessionDuration): void
     {
         $this->defaultSessionDuration = $defaultSessionDuration;
     }
 
-    public function getOrganizations()
-    {
-        return $this->organizations;
-    }
-
-    public function addOrganization(Organization $organization)
-    {
-        if (!$this->organizations->contains($organization)) {
-            $this->organizations->add($organization);
-        }
-
-        return $this;
-    }
-
-    public function removeOrganization(Organization $organization)
-    {
-        if ($this->organizations->contains($organization)) {
-            $this->organizations->removeElement($organization);
-        }
-
-        return $this;
-    }
-
-    public function emptyOrganizations()
-    {
-        $this->organizations->clear();
-    }
-
-    public function getParent()
+    public function getParent(): ?Course
     {
         return $this->parent;
     }
 
-    public function setParent(Course $parent = null)
+    public function setParent(?Course $parent = null): void
     {
         $this->parent = $parent;
     }
 
-    public function getChildren()
+    public function getChildren(): Collection
     {
         return $this->children;
     }
 
-    public function addChild(Course $course)
+    public function addChild(Course $course): void
     {
         if (!$this->children->contains($course)) {
             $this->children->add($course);
         }
     }
 
-    public function removeChild(Course $course)
+    public function removeChild(Course $course): void
     {
         if ($this->children->contains($course)) {
             $this->children->removeElement($course);
         }
     }
 
-    public function __toString()
+    public function getPanelFacets(): Collection
     {
-        return $this->getName().' ['.$this->getCode().']';
+        return $this->panelFacets;
+    }
+
+    public function addPanelFacet(PanelFacet $panelFacet): void
+    {
+        if (!$this->panelFacets->contains($panelFacet)) {
+            $this->panelFacets->add($panelFacet);
+        }
+    }
+
+    public function removePanelFacet(PanelFacet $panelFacet): void
+    {
+        if ($this->panelFacets->contains($panelFacet)) {
+            $this->panelFacets->removeElement($panelFacet);
+        }
     }
 }

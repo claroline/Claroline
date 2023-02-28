@@ -13,24 +13,25 @@ namespace Claroline\CoreBundle\Entity\Facet;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Meta\Icon;
+use Claroline\AppBundle\Entity\Meta\Name;
+use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Facet\PanelFacetRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="claro_panel_facet")
  */
 class PanelFacet
 {
     use Id;
     use Uuid;
-
-    /**
-     * @ORM\Column
-     *
-     * @var string
-     */
-    protected $name;
+    use Name;
+    use Description;
+    use Icon;
+    use Order;
 
     /**
      * @ORM\ManyToOne(
@@ -40,8 +41,10 @@ class PanelFacet
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      *
      * @var Facet
+     *
+     * @todo : to remove. Only used in profile
      */
-    protected $facet;
+    private $facet;
 
     /**
      * @ORM\OneToMany(
@@ -49,84 +52,31 @@ class PanelFacet
      *     mappedBy="panelFacet",
      *     cascade={"all"}
      * )
-     * @ORM\OrderBy({"position" = "ASC"})
+     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var ArrayCollection
      */
-    protected $fieldsFacet;
+    private $fieldsFacet;
 
-    /**
-     * @ORM\Column(type="integer", name="position")
-     *
-     * @var int
-     */
-    protected $position;
-
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $isDefaultCollapsed = false;
-
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $isEditable = false;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacetRole",
-     *     mappedBy="panelFacet"
-     * )
-     *
-     * @var ArrayCollection
-     */
-    protected $panelFacetsRole;
-
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
-        $this->fieldsFacet = new ArrayCollection();
-        $this->panelFacetsRole = new ArrayCollection();
         $this->refreshUuid();
+
+        $this->fieldsFacet = new ArrayCollection();
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getFacet(): ?Facet
     {
-        return $this->name;
+        return $this->facet;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function setFacet(Facet $facet = null)
+    public function setFacet(?Facet $facet = null): void
     {
         $this->facet = $facet;
 
         if ($facet) {
             $facet->addPanelFacet($this);
         }
-    }
-
-    /**
-     * @return Facet|null
-     */
-    public function getFacet()
-    {
-        return $this->facet;
     }
 
     /**
@@ -137,101 +87,29 @@ class PanelFacet
         return $this->fieldsFacet;
     }
 
-    public function addFieldFacet(FieldFacet $fieldFacet)
+    public function addFieldFacet(FieldFacet $fieldFacet): void
     {
-        $this->fieldsFacet->add($fieldFacet);
+        if (!$this->fieldsFacet->contains($fieldFacet)) {
+            $this->fieldsFacet->add($fieldFacet);
+        }
     }
 
-    public function addPanelFacetRole(PanelFacetRole $pfr)
+    public function removeFieldFacet(FieldFacet $fieldFacet): void
     {
-        $this->panelFacetsRole->add($pfr);
+        if ($this->fieldsFacet->contains($fieldFacet)) {
+            $this->fieldsFacet->removeElement($fieldFacet);
+        }
     }
 
     /**
      * Remove all field facets.
      */
-    public function resetFieldFacets()
+    public function resetFieldFacets(): void
     {
         foreach ($this->fieldsFacet as $field) {
             $field->setPanelFacet(null);
         }
 
         $this->fieldsFacet = new ArrayCollection();
-    }
-
-    /**
-     * @param int $position
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    /**
-     * @param bool $boolean
-     */
-    public function setIsDefaultCollapsed($boolean)
-    {
-        $this->isDefaultCollapsed = $boolean;
-    }
-
-    /**
-     * @return bool
-     *
-     * @deprecated
-     */
-    public function getIsDefaultCollapsed()
-    {
-        return $this->isDefaultCollapsed;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDefaultCollapsed()
-    {
-        return $this->isDefaultCollapsed;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isEditable()
-    {
-        return $this->isEditable;
-    }
-
-    /**
-     * @param bool $isEditable
-     */
-    public function setIsEditable($isEditable)
-    {
-        $this->isEditable = $isEditable;
-    }
-
-    /**
-     * @return string
-     *
-     * @deprecated
-     */
-    public function isCollapsed()
-    {
-        return $this->isDefaultCollapsed ? 'true' : 'false';
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getPanelFacetsRole()
-    {
-        return $this->panelFacetsRole;
     }
 }

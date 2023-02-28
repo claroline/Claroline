@@ -1,7 +1,7 @@
 import get from 'lodash/get'
 
 /**
- * Checks if the user a the specified role.
+ * Checks if the user has the specified role.
  *
  * @param {string} roleName
  * @param {object} user

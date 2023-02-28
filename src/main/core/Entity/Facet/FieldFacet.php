@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Entity\Facet;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Restriction\Hidden;
+use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,8 +25,7 @@ class FieldFacet
 {
     use Id;
     use Uuid;
-    // Restrictions
-    use Hidden;
+    use Order;
 
     /** @var string */
     const NUMBER_TYPE = 'number';
@@ -69,17 +68,8 @@ class FieldFacet
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      *
      * @var PanelFacet
-     *
-     * @todo should not be declared here (not used in ClacoForm)
      */
     private $panelFacet;
-
-    /**
-     * @ORM\Column(type="integer", name="position", nullable=true)
-     *
-     * @var int
-     */
-    private $position = 0;
 
     /**
      * @ORM\OneToMany(
@@ -153,7 +143,7 @@ class FieldFacet
         $this->fieldFacetChoices = new ArrayCollection();
     }
 
-    public function setPanelFacet(?PanelFacet $panelFacet = null)
+    public function setPanelFacet(?PanelFacet $panelFacet = null): void
     {
         $this->panelFacet = $panelFacet;
 
@@ -176,7 +166,7 @@ class FieldFacet
         return $this->id.'-'.strtolower($string);
     }
 
-    public function setLabel(string $label)
+    public function setLabel(string $label): void
     {
         $this->label = $label;
     }
@@ -186,7 +176,7 @@ class FieldFacet
         return $this->label;
     }
 
-    public function setType(string $type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -196,28 +186,18 @@ class FieldFacet
         return $this->type;
     }
 
-    public function addFieldChoice(FieldFacetChoice $choice)
+    public function addFieldChoice(FieldFacetChoice $choice): void
     {
         if (!$this->fieldFacetChoices->contains($choice)) {
             $this->fieldFacetChoices->add($choice);
         }
     }
 
-    public function removeFieldChoice(FieldFacetChoice $choice)
+    public function removeFieldChoice(FieldFacetChoice $choice): void
     {
         if ($this->fieldFacetChoices->contains($choice)) {
             $this->fieldFacetChoices->removeElement($choice);
         }
-    }
-
-    public function setPosition(?int $position = null)
-    {
-        $this->position = $position;
-    }
-
-    public function getPosition(): ?int
-    {
-        return $this->position;
     }
 
     /**
@@ -258,7 +238,7 @@ class FieldFacet
         return $this->required;
     }
 
-    public function setRequired(bool $required)
+    public function setRequired(bool $required): void
     {
         $this->required = $required;
     }
@@ -268,7 +248,7 @@ class FieldFacet
         return $this->options;
     }
 
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->options = $options;
     }
@@ -278,7 +258,7 @@ class FieldFacet
         return $this->metadata;
     }
 
-    public function setMetadata(bool $isMetadata)
+    public function setMetadata(bool $isMetadata): void
     {
         $this->metadata = $isMetadata;
     }
@@ -288,7 +268,7 @@ class FieldFacet
         return $this->locked;
     }
 
-    public function setLocked(bool $locked)
+    public function setLocked(bool $locked): void
     {
         $this->locked = $locked;
     }
@@ -298,7 +278,7 @@ class FieldFacet
         return $this->lockedEditionOnly;
     }
 
-    public function setLockedEditionOnly(bool $lockedEditionOnly)
+    public function setLockedEditionOnly(bool $lockedEditionOnly): void
     {
         $this->lockedEditionOnly = $lockedEditionOnly;
     }
@@ -308,7 +288,7 @@ class FieldFacet
         return $this->help;
     }
 
-    public function setHelp(?string $help)
+    public function setHelp(?string $help): void
     {
         $this->help = $help;
     }
@@ -318,7 +298,7 @@ class FieldFacet
         return $this->conditionField;
     }
 
-    public function setConditionField(?string $conditionField)
+    public function setConditionField(?string $conditionField): void
     {
         $this->conditionField = $conditionField;
     }
@@ -328,7 +308,7 @@ class FieldFacet
         return $this->conditionComparator;
     }
 
-    public function setConditionComparator(?string $conditionComparator)
+    public function setConditionComparator(?string $conditionComparator): void
     {
         $this->conditionComparator = $conditionComparator;
     }
@@ -338,7 +318,7 @@ class FieldFacet
         return $this->conditionValue;
     }
 
-    public function setConditionValue($conditionValue)
+    public function setConditionValue($conditionValue): void
     {
         $this->conditionValue = $conditionValue;
     }

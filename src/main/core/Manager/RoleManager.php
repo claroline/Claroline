@@ -171,17 +171,9 @@ class RoleManager
         return $this->roleRepo->findWorkspaceRolesForUser($user, $workspace);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Role
-     */
-    public function getRoleByName($name)
+    public function getRoleByName(string $name): ?Role
     {
-        /** @var Role $role */
-        $role = $this->roleRepo->findOneBy(['name' => $name]);
-
-        return $role;
+        return $this->roleRepo->findOneBy(['name' => $name]);
     }
 
     /**
@@ -192,25 +184,12 @@ class RoleManager
         return $this->roleRepo->findAllPlatformRoles();
     }
 
-    /**
-     * @param string $key - The translation key
-     *
-     * @return Role
-     */
-    public function getRoleByTranslationKeyAndWorkspace($key, Workspace $workspace)
+    public function getRoleByTranslationKeyAndWorkspace(string $key, Workspace $workspace): ?Role
     {
-        /** @var Role $role */
-        $role = $this->roleRepo->findOneBy(['translationKey' => $key, 'workspace' => $workspace]);
-
-        return $role;
-    }
-
-    /**
-     * @return Role[]
-     */
-    public function getRolesByWorkspaceCodeAndTranslationKey(string $workspaceCode, string $translationKey)
-    {
-        return $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey($workspaceCode, $translationKey);
+        return $this->roleRepo->findOneBy([
+            'translationKey' => $key,
+            'workspace' => $workspace,
+        ]);
     }
 
     public function getUserRole($username): ?Role

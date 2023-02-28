@@ -1,8 +1,5 @@
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
         tags: ['claroline.serializer']
 
     # Trainings
@@ -14,6 +11,7 @@ services:
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CommunityBundle\Serializer\OrganizationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer'
 
     Claroline\CursusBundle\Serializer\SessionSerializer:
         arguments:
@@ -51,6 +49,7 @@ services:
         arguments:
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CursusBundle\Serializer\SessionSerializer'
+            - '@Claroline\CoreBundle\Manager\FacetManager'
 
     Claroline\CursusBundle\Serializer\Registration\SessionGroupSerializer:
         arguments:

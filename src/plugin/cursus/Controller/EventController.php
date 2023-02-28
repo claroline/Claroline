@@ -106,16 +106,16 @@ class EventController extends AbstractCrudController
      */
     public function listAction(Request $request, $class = Event::class, Workspace $workspace = null): JsonResponse
     {
-        $query = $request->query->all();
-        $options = $this->options['list'];
+        $options = static::getOptions();
 
+        $query = $request->query->all();
         $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
         if ($workspace) {
             $query['hiddenFilters']['workspace'] = $workspace->getUuid();
         }
 
         return new JsonResponse(
-            $this->finder->search($class, $query, $options ?? [])
+            $this->finder->search($class, $query, $options['list'] ?? [])
         );
     }
 
@@ -125,9 +125,9 @@ class EventController extends AbstractCrudController
      */
     public function listPublicAction(Request $request, Workspace $workspace = null): JsonResponse
     {
-        $query = $request->query->all();
-        $options = $this->options['list'];
+        $options = static::getOptions();
 
+        $query = $request->query->all();
         $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
         $query['hiddenFilters']['registrationType'] = Session::REGISTRATION_PUBLIC;
         $query['hiddenFilters']['terminated'] = false;
@@ -136,7 +136,7 @@ class EventController extends AbstractCrudController
         }
 
         return new JsonResponse(
-            $this->finder->search(Event::class, $query, $options ?? [])
+            $this->finder->search(Event::class, $query, $options['list'] ?? [])
         );
     }
 

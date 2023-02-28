@@ -3,7 +3,6 @@
 namespace Claroline\ForumBundle\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -105,10 +104,11 @@ class ForumController extends AbstractCrudController
         $subject = new Subject();
         $subject->setForum($forum);
 
-        $this->crud->create($subject, $this->decodeRequest($request), array_merge($this->options['create'], [Crud::THROW_EXCEPTION]));
+        $options = static::getOptions();
+        $this->crud->create($subject, $this->decodeRequest($request), $options['create'] ?? []);
 
         return new JsonResponse(
-            $this->serializer->serialize($subject, $this->options['get']),
+            $this->serializer->serialize($subject, $options['get'] ?? []),
             201
         );
     }

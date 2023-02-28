@@ -20,7 +20,6 @@ const CatalogMain = (props) =>
         )
       }, {
         path: '/new',
-        exact: true,
         onEnter: () => props.openForm(null, CourseTypes.defaultProps),
         disabled: !props.canEdit,
         render: () => (

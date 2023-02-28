@@ -259,7 +259,7 @@ class CompetencyController extends AbstractCrudController
         return new JsonResponse();
     }
 
-    public function getOptions(): array
+    public static function getOptions(): array
     {
         return array_merge(parent::getOptions(), [
             'get' => [Options::IS_RECURSIVE],

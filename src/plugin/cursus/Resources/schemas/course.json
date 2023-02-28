@@ -41,14 +41,6 @@
             }
           }
         },
-        "tutorRoleName": {
-          "type": ["string", "null"],
-          "description": "The course role for tutor"
-        },
-        "learnerRoleName": {
-          "type": ["string", "null"],
-          "description": "The course role for learner"
-        },
         "duration": {
           "type": "number",
           "description": "The default duration in days of session"
@@ -94,6 +86,14 @@
         },
         "mail": {
           "type": "boolean"
+        },
+        "tutorRoleName": {
+          "type": ["string", "null"],
+          "description": "The course role for tutor"
+        },
+        "learnerRoleName": {
+          "type": ["string", "null"],
+          "description": "The course role for learner"
         }
       }
     }

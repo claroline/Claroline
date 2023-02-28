@@ -10,7 +10,7 @@ function getActions(courses, context, courseRefresher, path, currentUser) {
     delete: identity
   }, courseRefresher)
 
-  // get all actions declared for workspace
+  // get all actions declared for course
   const actions = getApps('actions.course')
 
   return Promise.all(

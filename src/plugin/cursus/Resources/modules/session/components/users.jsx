@@ -1,66 +1,35 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {Button} from '#/main/app/action/components/button'
-import {ListData} from '#/main/app/content/list/containers/data'
-import {constants as listConst} from '#/main/app/content/list/constants'
-import {UserCard} from '#/main/community/user/components/card'
 
-import {Session as SessionTypes} from '#/plugin/cursus/prop-types'
+import {RegistrationUsers} from '#/plugin/cursus/registration/components/users'
+import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
+import {formatField} from '#/main/app/content/form/parameters/utils'
 
-const SessionUsers = (props) =>
-  <Fragment>
-    <ListData
-      name={props.name}
-      fetch={{
-        url: props.url,
-        autoload: true
-      }}
-      delete={{
-        url: props.unregisterUrl,
-        label: trans('unregister', {}, 'actions'),
-        displayed: () => hasPermission('register', props.session)
-      }}
-      definition={[
-        {
-          name: 'user',
-          type: 'user',
-          label: trans('user'),
-          displayed: true
-        }, {
-          name: 'date',
-          type: 'date',
-          label: trans('registration_date', {}, 'cursus'),
-          options: {time: true},
-          displayed: true
-        }, {
-          name: 'userDisabled',
-          label: trans('user_disabled', {}, 'community'),
-          type: 'boolean',
-          displayable: false,
-          sortable: false,
-          filterable: true
-        }
-      ]}
-      actions={props.actions}
-      card={(cardProps) => <UserCard {...cardProps} data={cardProps.data.user} />}
-      display={{
-        current: listConst.DISPLAY_TILES_SM
-      }}
+const SessionUsers = (props) => {
+  let customDefinition = []
+  if (get(props.course, 'registration.form')) {
+    get(props.course, 'registration.form').map(formSection => {
+      customDefinition = customDefinition.concat(formSection.fields)
+    })
+  }
+
+  return (
+    <RegistrationUsers
+      {...props}
+      customDefinition={customDefinition
+        .map(field => formatField(field, customDefinition, 'data', hasPermission('register', props.session)))
+      }
     />
-
-    {props.add && hasPermission('register', props.session) &&
-      <Button
-        className="btn btn-block btn-emphasis component-container"
-        primary={true}
-        {...props.add}
-      />
-    }
-  </Fragment>
+  )
+}
 
 SessionUsers.propTypes = {
+  course: T.shape(
+    CourseTypes.propTypes
+  ).isRequired,
   session: T.shape(
     SessionTypes.propTypes
   ).isRequired,

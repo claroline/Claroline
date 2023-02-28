@@ -26,7 +26,7 @@ trait CreatedAt
     /**
      * Sets the entity's creation date.
      */
-    public function setCreatedAt(\DateTimeInterface $createdAt = null)
+    public function setCreatedAt(?\DateTimeInterface $createdAt = null): void
     {
         $this->createdAt = $createdAt;
     }

@@ -25,13 +25,6 @@ class Scorm extends AbstractResource
     const SCORM_2004 = 'scorm_2004';
 
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
      * @ORM\Column()
      */
     protected $version;
@@ -56,22 +49,6 @@ class Scorm extends AbstractResource
         parent::__construct();
 
         $this->scos = new ArrayCollection();
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     /**

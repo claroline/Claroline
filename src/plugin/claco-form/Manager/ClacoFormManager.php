@@ -679,7 +679,7 @@ class ClacoFormManager implements LoggerAwareInterface
         $newField->setClacoForm($newClacoForm);
         $newField->setLabel($field->getLabel());
         $newField->setType($field->getType());
-        $newField->setPosition($field->getPosition());
+        $newField->setOrder($field->getOrder());
         $newField->setRequired($field->isRequired());
         $newField->setMetadata($field->isMetadata());
         $newField->setLocked($field->isLocked());

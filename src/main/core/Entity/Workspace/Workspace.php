@@ -29,9 +29,11 @@ use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\AppBundle\Entity\Restriction\AllowedIps;
 use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CommunityBundle\Model\HasOrganizations;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -213,9 +215,9 @@ class Workspace implements IdentifiableInterface
      *     inversedBy="workspaces"
      * )
      *
-     * @var ArrayCollection
+     * @var Collection|Organization[]
      */
-    private $organizations;
+    private Collection $organizations;
 
     //not mapped. Used for creation
     private $workspaceModel;

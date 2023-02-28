@@ -296,7 +296,7 @@ class MessageController extends AbstractCrudController
         return new JsonResponse("No object found for id {$id} of class {$class}", 404);
     }
 
-    public function getOptions(): array
+    public static function getOptions(): array
     {
         return array_merge(parent::getOptions(), [
             'get' => [Options::IS_RECURSIVE],

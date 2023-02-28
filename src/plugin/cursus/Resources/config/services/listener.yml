@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
-
     # Tools
     Claroline\CursusBundle\Listener\Tool\TrainingEventsListener:
         arguments:

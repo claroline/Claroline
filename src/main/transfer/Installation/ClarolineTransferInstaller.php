@@ -11,12 +11,12 @@
 
 namespace Claroline\TransferBundle\Installation;
 
-use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
+use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 use Claroline\TransferBundle\Installation\Updater\Updater130300;
 use Claroline\TransferBundle\Installation\Updater\Updater130500;
 use Claroline\TransferBundle\Installation\Updater\Updater130601;
 
-class ClarolineTransferInstaller extends BaseInstaller
+class ClarolineTransferInstaller extends AdditionalInstaller
 {
     public static function getUpdaters(): array
     {

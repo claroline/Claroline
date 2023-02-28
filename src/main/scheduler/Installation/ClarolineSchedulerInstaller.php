@@ -11,8 +11,8 @@
 
 namespace Claroline\SchedulerBundle\Installation;
 
-use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
+use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
-class ClarolineSchedulerInstaller extends BaseInstaller
+class ClarolineSchedulerInstaller extends AdditionalInstaller
 {
 }

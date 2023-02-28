@@ -19,11 +19,11 @@ const SessionCard = props =>
     })}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon="fa fa-calendar-week"
-    title={trans('date_range', {
+    title={props.data.name}
+    subtitle={trans('date_range', {
       start: displayDate(props.data.restrictions.dates[0]),
       end: displayDate(props.data.restrictions.dates[1])
     })}
-    subtitle={props.data.name}
     contentText={props.data.plainDescription || props.data.description}
     toolbar="self-register | more"
     footer={

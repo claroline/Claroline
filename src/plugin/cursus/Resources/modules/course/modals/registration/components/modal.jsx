@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
+import {hasPermission} from '#/main/app/security'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
@@ -13,10 +14,12 @@ import {DetailsData} from '#/main/app/content/details/components/data'
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 import {route} from '#/plugin/cursus/routing'
 import {getInfo, isFull} from '#/plugin/cursus/utils'
+import {RegistrationForm} from '#/plugin/cursus/course/modals/registration/components/form'
+import {selectors} from '#/plugin/cursus/course/modals/registration/store/selectors'
 
 const RegistrationModal = props =>
   <Modal
-    {...omit(props, 'course')}
+    {...omit(props, 'path', 'course', 'session', 'register')}
     icon="fa fa-fw fa-user-plus"
     title={trans('registration')}
     subtitle={getInfo(props.course, props.session, 'name')}
@@ -42,7 +45,7 @@ const RegistrationModal = props =>
 
         <DetailsData
           data={props.session}
-          sections={[
+          definition={[
             {
               title: trans('general'),
               primary: true,
@@ -53,13 +56,14 @@ const RegistrationModal = props =>
                   label: trans('date')
                 }, {
                   name: 'description',
-                  label: trans('description'),
-                  type: 'html'
+                  type: 'html',
+                  label: trans('description')
                 }, {
                   name: 'location',
                   type: 'location',
                   label: trans('location'),
-                  placeholder: trans('online_session', {}, 'cursus')
+                  placeholder: trans('online_session', {}, 'cursus'),
+                  displayed: (session) => !!get(session, 'location')
                 }, {
                   name: 'available',
                   type: 'string',
@@ -71,7 +75,15 @@ const RegistrationModal = props =>
             }
           ]}
         />
+      </Fragment>
+    }
 
+    <RegistrationForm
+      name={selectors.STORE_NAME}
+      sections={get(props.course, 'registration.form', [])}
+      isManager={hasPermission('edit', props.course)}
+    >
+      {props.session &&
         <Button
           className="btn modal-btn"
           type={LINK_BUTTON}
@@ -79,19 +91,22 @@ const RegistrationModal = props =>
           target={route(props.path, props.course, props.session)+'/sessions'}
           onClick={() => props.fadeModal()}
         />
-      </Fragment>
-    }
+      }
 
-    <Button
-      className="btn modal-btn"
-      type={CALLBACK_BUTTON}
-      primary={true}
-      label={trans(!props.session || isFull(props.session) ? 'register_waiting_list' : 'self_register', {}, 'actions')}
-      callback={() => {
-        props.register(props.course, props.session ? props.session.id : null)
-        props.fadeModal()
-      }}
-    />
+      <Button
+        className="btn modal-btn"
+        type={CALLBACK_BUTTON}
+        primary={true}
+        htmlType="submit"
+        label={trans(!props.session || isFull(props.session) ? 'register_waiting_list' : 'self_register', {}, 'actions')}
+        callback={() => {
+          console.log(props.formData)
+
+          props.register(props.course, props.session ? props.session.id : null, props.formData)
+          props.fadeModal()
+        }}
+      />
+    </RegistrationForm>
   </Modal>
 
 RegistrationModal.propTypes = {
@@ -102,6 +117,7 @@ RegistrationModal.propTypes = {
   session: T.shape(
     SessionTypes.propTypes
   ),
+  formData: T.object,
   register: T.func.isRequired,
 
   // from modal

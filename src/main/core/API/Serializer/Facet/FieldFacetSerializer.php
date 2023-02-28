@@ -7,17 +7,15 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
+use Doctrine\Persistence\ObjectRepository;
 
 class FieldFacetSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var FieldFacetChoiceSerializer */
-    private $ffcSerializer;
-
-    private $fieldFacetChoiceRepo;
+    private ObjectManager $om;
+    private FieldFacetChoiceSerializer $ffcSerializer;
+    private ObjectRepository $fieldFacetChoiceRepo;
 
     public function __construct(
         ObjectManager $om,
@@ -28,7 +26,12 @@ class FieldFacetSerializer
         $this->fieldFacetChoiceRepo = $om->getRepository(FieldFacetChoice::class);
     }
 
-    public function getName()
+    public function getClass(): string
+    {
+        return FieldFacet::class;
+    }
+
+    public function getName(): string
     {
         return 'field_facet';
     }
@@ -41,7 +44,7 @@ class FieldFacetSerializer
      *
      * @return array - the serialized representation of the field facet
      */
-    public function serialize(FieldFacet $fieldFacet, array $options = []): array
+    public function serialize(FieldFacet $fieldFacet, ?array $options = []): array
     {
         $serialized = [
             'id' => $fieldFacet->getUuid(),
@@ -51,7 +54,7 @@ class FieldFacetSerializer
             'required' => $fieldFacet->isRequired(),
             'help' => $fieldFacet->getHelp(),
             'display' => [
-                'order' => $fieldFacet->getPosition(),
+                'order' => $fieldFacet->getOrder(),
                 'condition' => [
                     'field' => $fieldFacet->getConditionField(),
                     'comparator' => $fieldFacet->getConditionComparator(),
@@ -59,7 +62,6 @@ class FieldFacetSerializer
                 ],
             ],
             'restrictions' => [
-                'hidden' => $fieldFacet->isHidden(),
                 'metadata' => $fieldFacet->isMetadata(),
                 'locked' => $fieldFacet->isLocked(),
                 'lockedEditionOnly' => $fieldFacet->getLockedEditionOnly(),
@@ -79,7 +81,7 @@ class FieldFacetSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, FieldFacet $field, array $options = []): FieldFacet
+    public function deserialize(array $data, FieldFacet $field, ?array $options = []): FieldFacet
     {
         if (!in_array(Options::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $field);
@@ -90,12 +92,11 @@ class FieldFacetSerializer
         $this->sipe('required', 'setRequired', $data, $field);
         $this->sipe('help', 'setHelp', $data, $field);
 
-        $this->sipe('display.order', 'setPosition', $data, $field);
+        $this->sipe('display.order', 'setOrder', $data, $field);
         $this->sipe('display.condition.field', 'setConditionField', $data, $field);
         $this->sipe('display.condition.comparator', 'setConditionComparator', $data, $field);
         $this->sipe('display.condition.value', 'setConditionValue', $data, $field);
 
-        $this->sipe('restrictions.hidden', 'setHidden', $data, $field);
         $this->sipe('restrictions.metadata', 'setMetadata', $data, $field);
         $this->sipe('restrictions.locked', 'setLocked', $data, $field);
         $this->sipe('restrictions.lockedEditionOnly', 'setLockedEditionOnly', $data, $field);
@@ -111,7 +112,7 @@ class FieldFacetSerializer
         return $field;
     }
 
-    private function deserializeChoices(array $choicesData, FieldFacet $field)
+    private function deserializeChoices(array $choicesData, FieldFacet $field): void
     {
         $oldChoices = $field->getRootFieldFacetChoices();
         $newChoicesUuids = [];
@@ -153,7 +154,7 @@ class FieldFacetSerializer
         }
     }
 
-    private function deserializeChildrenChoices(array $choicesData, FieldFacetChoice $parent, FieldFacet $field)
+    private function deserializeChildrenChoices(array $choicesData, FieldFacetChoice $parent, FieldFacet $field): void
     {
         $oldChoices = $parent->getChildren();
         $newChoicesUuids = [];

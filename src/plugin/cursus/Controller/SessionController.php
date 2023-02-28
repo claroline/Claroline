@@ -46,18 +46,12 @@ class SessionController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var RoutingHelper */
-    private $routingHelper;
-    /** @var ToolManager */
-    private $toolManager;
-    /** @var SessionManager */
-    private $manager;
-    /** @var PdfManager */
-    private $pdfManager;
+    private TokenStorageInterface $tokenStorage;
+    private TranslatorInterface $translator;
+    private RoutingHelper $routingHelper;
+    private ToolManager $toolManager;
+    private SessionManager $manager;
+    private PdfManager $pdfManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -87,11 +81,6 @@ class SessionController extends AbstractCrudController
         return Session::class;
     }
 
-    public function getIgnore(): array
-    {
-        return ['schema'];
-    }
-
     protected function getDefaultHiddenFilters(): array
     {
         $filters = [];
@@ -100,10 +89,9 @@ class SessionController extends AbstractCrudController
             $user = $this->tokenStorage->getToken()->getUser();
 
             // filter by organization
+            $organizations = [];
             if ($user instanceof User) {
                 $organizations = $user->getOrganizations();
-            } else {
-                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
             }
 
             $filters['organizations'] = array_map(function (Organization $organization) {
@@ -124,7 +112,7 @@ class SessionController extends AbstractCrudController
      */
     public function listPublicAction(Request $request): JsonResponse
     {
-        $options = $this->options['list'];
+        $options = static::getOptions();
         $params = $request->query->all();
 
         $params['hiddenFilters'] = $this->getDefaultHiddenFilters();
@@ -137,7 +125,7 @@ class SessionController extends AbstractCrudController
         }
 
         return new JsonResponse(
-            $this->finder->search(Session::class, $params, $options ?? [])
+            $this->finder->search(Session::class, $params, $options['list'] ?? [])
         );
     }
 
@@ -198,10 +186,9 @@ class SessionController extends AbstractCrudController
             $user = $this->tokenStorage->getToken()->getUser();
 
             // filter by organizations
+            $organizations = [];
             if ($user instanceof User) {
                 $organizations = $user->getOrganizations();
-            } else {
-                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
             }
 
             $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
@@ -266,6 +253,22 @@ class SessionController extends AbstractCrudController
         }
         $params['hiddenFilters']['session'] = $session->getUuid();
         $params['hiddenFilters']['type'] = $type;
+
+        // only list participants of the same organization
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
+            /** @var User $user */
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            // filter by organizations
+            $organizations = [];
+            if ($user instanceof User) {
+                $organizations = $user->getOrganizations();
+            }
+
+            $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $organizations);
+        }
 
         return new JsonResponse(
             $this->finder->search(SessionGroup::class, $params)
@@ -335,10 +338,9 @@ class SessionController extends AbstractCrudController
             $user = $this->tokenStorage->getToken()->getUser();
 
             // filter by organizations
+            $organizations = [];
             if ($user instanceof User) {
                 $organizations = $user->getOrganizations();
-            } else {
-                $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
             }
 
             $params['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
@@ -404,7 +406,7 @@ class SessionController extends AbstractCrudController
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
-    public function selfRegisterAction(Session $session, User $user): JsonResponse
+    public function selfRegisterAction(Session $session, User $user, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $session, [], true);
 
@@ -412,7 +414,11 @@ class SessionController extends AbstractCrudController
             throw new AccessDeniedException();
         }
 
-        $sessionUsers = $this->manager->addUsers($session, [$user], AbstractRegistration::LEARNER);
+        $registrationData = $this->decodeRequest($request);
+
+        $sessionUsers = $this->manager->addUsers($session, [$user], AbstractRegistration::LEARNER, false, [
+            $user->getUuid() => $registrationData,
+        ]);
 
         return new JsonResponse($this->serializer->serialize($sessionUsers[0]));
     }
@@ -556,7 +562,7 @@ class SessionController extends AbstractCrudController
         return new JsonResponse();
     }
 
-    private function checkToolAccess(string $rights = 'OPEN'): bool
+    private function checkToolAccess(?string $rights = 'OPEN'): bool
     {
         $trainingsTool = $this->toolManager->getOrderedTool('trainings', Tool::DESKTOP);
 

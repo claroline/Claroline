@@ -13,12 +13,10 @@ trait Order
      * Order of the element.
      *
      * @ORM\Column(name="entity_order", type="integer")
-     *
-     * @var int
      */
-    protected $order = 0;
+    protected int $order = 0;
 
-    public function setOrder(int $order)
+    public function setOrder(int $order): void
     {
         $this->order = $order;
     }

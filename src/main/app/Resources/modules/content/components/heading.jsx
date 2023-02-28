@@ -5,6 +5,9 @@ import classes from 'classnames'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {ContentTabs} from '#/main/app/content/components/tabs'
 
+/**
+ * @deprecated
+ */
 const ContentHeading = props =>
   <header className={classes('content-heading', props.className)}>
     {props.image &&

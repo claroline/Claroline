@@ -40,8 +40,7 @@ const LayoutMain = props =>
           routes={[
             {
               path: '/desktop/workspaces/open/:slug',
-              component: WorkspaceMenu,
-              disabled: props.unavailable
+              component: WorkspaceMenu
             }, {
               path: '/desktop',
               component: DesktopMenu,

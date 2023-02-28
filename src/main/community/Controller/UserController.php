@@ -275,7 +275,7 @@ class UserController extends AbstractCrudController
         }, $processed));
     }
 
-    public function getOptions(): array
+    public static function getOptions(): array
     {
         return array_merge(parent::getOptions(), [
             'deleteBulk' => [Options::SOFT_DELETE],

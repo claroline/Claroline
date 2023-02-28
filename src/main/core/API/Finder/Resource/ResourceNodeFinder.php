@@ -25,8 +25,6 @@ class ResourceNodeFinder extends AbstractFinder
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    private $usedJoin = [];
-
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
         TokenStorageInterface $tokenStorage
@@ -44,6 +42,8 @@ class ResourceNodeFinder extends AbstractFinder
     {
         $qb->join('obj.resourceType', 'ort');
         $qb->join('obj.workspace', 'ow');
+
+        $parentJoin = false;
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
@@ -99,7 +99,7 @@ class ResourceNodeFinder extends AbstractFinder
                         $qb->join('obj.parent', 'op');
                         $qb->andWhere('op.uuid = :parent');
                         $qb->setParameter('parent', $filterValue);
-                        $this->usedJoin['parent'] = true;
+                        $parentJoin = true;
                     }
                     break;
 
@@ -144,9 +144,10 @@ class ResourceNodeFinder extends AbstractFinder
                     $qb->orderBy('ow.name', $sortByDirection);
                     break;
                 case 'parent':
-                    if (!$this->usedJoin['parent']) {
+                    if (!$parentJoin) {
                         $qb->join('obj.parent', 'op');
                     }
+
                     $qb->orderBy('op.name', $sortByDirection);
                     break;
             }

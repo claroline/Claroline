@@ -31,7 +31,6 @@ class Version20210920074139 extends AbstractMigration
                 ff.is_metadata = f.is_metadata,
                 ff.locked = f.locked,
                 ff.locked_edition = f.locked_edition,
-                ff.hidden = f.hidden,
                 ff.options = f.details,
                 ff.help = f.help
         ');

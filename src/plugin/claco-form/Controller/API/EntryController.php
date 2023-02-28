@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -55,19 +54,6 @@ class EntryController extends AbstractCrudController
     public function getName(): string
     {
         return 'clacoformentry';
-    }
-
-    public function getAction(string $field, $id, $class): JsonResponse
-    {
-        /** @var Entry $entry */
-        $entry = $this->crud->get($class, $id, $field);
-        if (!$entry) {
-            throw new NotFoundHttpException('Entry cannot be found');
-        }
-
-        $this->checkPermission('OPEN', $entry, [], true);
-
-        return new JsonResponse($this->serializer->serialize($entry));
     }
 
     /**

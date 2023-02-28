@@ -13,13 +13,15 @@ namespace Claroline\CoreBundle\Entity\Facet;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\CoreBundle\Entity\Role;
+use Claroline\AppBundle\Entity\Meta\Icon;
+use Claroline\AppBundle\Entity\Meta\Name;
+use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Facet\FacetRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="claro_facet")
  * @DoctrineAssert\UniqueEntity("name")
  */
@@ -27,20 +29,23 @@ class Facet
 {
     use Id;
     use Uuid;
+    use Name;
+    use Order;
+    use Icon;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column(name="isMain", type="boolean")
      *
-     * @var string
+     * @var bool
      */
-    protected $name;
+    private $main = false;
 
     /**
-     * @ORM\Column(type="integer", name="position")
+     * @ORM\Column(type="boolean")
      *
-     * @var int
+     * @var bool
      */
-    protected $position;
+    private $forceCreationForm = false;
 
     /**
      * @ORM\OneToMany(
@@ -48,68 +53,51 @@ class Facet
      *     mappedBy="facet",
      *     cascade={"all"}
      * )
-     * @ORM\OrderBy({"position" = "ASC"})
+     * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var ArrayCollection|PanelFacet[]
      */
-    protected $panelFacets;
+    private $panelFacets;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
-     * @ORM\JoinTable(name="claro_facet_role")
-     *
-     * @var ArrayCollection|Role[]
-     */
-    protected $roles;
-
-    /**
-     * @ORM\Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $forceCreationForm = false;
-
-    /**
-     * @ORM\Column(name="isMain", type="boolean")
-     *
-     * @var bool
-     */
-    protected $main = false;
-
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
-        $this->panelFacets = new ArrayCollection();
         $this->refreshUuid();
+
+        $this->panelFacets = new ArrayCollection();
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function isMain(): bool
     {
-        $this->name = $name;
+        return $this->main;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function setMain(bool $main): void
     {
-        return $this->name;
+        $this->main = $main;
     }
 
-    public function addPanelFacet(PanelFacet $panelFacet)
+    public function getForceCreationForm(): bool
     {
-        $this->panelFacets->add($panelFacet);
+        return $this->forceCreationForm;
     }
 
-    public function removePanelFacet(PanelFacet $panelFacet)
+    public function setForceCreationForm(bool $forceCreationForm): void
     {
-        $this->panelFacets->removeElement($panelFacet);
+        $this->forceCreationForm = $forceCreationForm;
+    }
+
+    public function addPanelFacet(PanelFacet $panelFacet): void
+    {
+        if (!$this->panelFacets->contains($panelFacet)) {
+            $this->panelFacets->add($panelFacet);
+        }
+    }
+
+    public function removePanelFacet(PanelFacet $panelFacet): void
+    {
+        if ($this->panelFacets->contains($panelFacet)) {
+            $this->panelFacets->removeElement($panelFacet);
+        }
     }
 
     /**
@@ -123,83 +111,12 @@ class Facet
     /**
      * Removes all PanelFacet.
      */
-    public function resetPanelFacets()
+    public function resetPanelFacets(): void
     {
         foreach ($this->panelFacets as $panelFacet) {
             $panelFacet->setFacet(null);
         }
 
         $this->panelFacets = new ArrayCollection();
-    }
-
-    /**
-     * @param int $position
-     */
-    public function setPosition($position)
-    {
-        $this->position = $position;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPosition()
-    {
-        return $this->position;
-    }
-
-    public function addRole(Role $role)
-    {
-        $this->roles->add($role);
-    }
-
-    public function removeRole(Role $role)
-    {
-        $this->roles->removeElement($role);
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getRoles()
-    {
-        return $this->roles;
-    }
-
-    public function setRoles(array $roles)
-    {
-        $this->roles = $roles;
-    }
-
-    /**
-     * @param bool $forceCreationForm
-     */
-    public function setForceCreationForm($forceCreationForm)
-    {
-        $this->forceCreationForm = $forceCreationForm;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getForceCreationForm()
-    {
-        return $this->forceCreationForm;
-    }
-
-    /**
-     * @param bool $main
-     */
-    public function setMain($main)
-    {
-        $this->main = $main;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isMain()
-    {
-        return $this->main;
     }
 }

@@ -2,78 +2,68 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Facet;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CommunityBundle\Serializer\RoleSerializer;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
-use Claroline\CoreBundle\Entity\Role;
 
 class FacetSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var RoleSerializer */
-    private $roleSerializer;
-    /** @var PanelFacetSerializer */
-    private $pfSerializer;
+    private ObjectManager $om;
+    private PanelFacetSerializer $pfSerializer;
 
-    public function __construct(ObjectManager $om, RoleSerializer $roleSerializer, PanelFacetSerializer $pfSerializer)
+    public function __construct(ObjectManager $om, PanelFacetSerializer $pfSerializer)
     {
         $this->om = $om;
-        $this->roleSerializer = $roleSerializer;
         $this->pfSerializer = $pfSerializer;
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getClass(): string
+    {
+        return Facet::class;
+    }
+
+    public function getSchema(): string
     {
         return '#/main/core/facet.json';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'facet';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Facet $facet, array $options = [])
+    public function serialize(Facet $facet, ?array $options = []): array
     {
         return [
-          'id' => $facet->getUuid(),
-          'title' => $facet->getName(),
-          'position' => $facet->getPosition(),
-          'display' => [
-            'creation' => $facet->getForceCreationForm(),
-          ],
-          'roles' => array_map(function (Role $role) {
-              return $this->roleSerializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
-          }, $facet->getRoles()->toArray()),
-          'meta' => [
-              'main' => $facet->isMain(),
-          ],
-          'sections' => array_map(function ($panel) use ($options) { // todo check user rights
-              return $this->pfSerializer->serialize($panel, $options);
-          }, $facet->getPanelFacets()->toArray()),
+            'id' => $facet->getUuid(),
+            'title' => $facet->getName(),
+            'display' => [
+                'order' => $facet->getOrder(),
+                'icon' => $facet->getIcon(),
+                'creation' => $facet->getForceCreationForm(),
+            ],
+            'meta' => [
+                'main' => $facet->isMain(),
+            ],
+            'sections' => array_map(function ($panel) use ($options) {
+                return $this->pfSerializer->serialize($panel, $options);
+            }, $facet->getPanelFacets()->toArray()),
         ];
     }
 
-    public function deserialize(array $data, Facet $facet, array $options = [])
+    public function deserialize(array $data, Facet $facet, array $options = []): Facet
     {
         $this->sipe('id', 'setUuid', $data, $facet);
         $this->sipe('title', 'setName', $data, $facet);
-        $this->sipe('position', 'setPosition', $data, $facet);
         $this->sipe('meta.main', 'setMain', $data, $facet);
+        $this->sipe('display.order', 'setOrder', $data, $facet);
+        $this->sipe('display.icon', 'setIcon', $data, $facet);
         $this->sipe('display.creation', 'setForceCreationForm', $data, $facet);
 
-        if (isset($data['sections']) && in_array(Options::IS_RECURSIVE, $options)) {
+        if (array_key_exists('sections', $data)) {
             $facet->resetPanelFacets();
 
             foreach ($data['sections'] as $section) {
@@ -83,5 +73,7 @@ class FacetSerializer
                 $panelFacet->setFacet($facet);
             }
         }
+
+        return $facet;
     }
 }

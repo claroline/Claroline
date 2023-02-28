@@ -14,12 +14,15 @@ namespace Claroline\CursusBundle\Manager;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
+use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -38,28 +41,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SessionManager
 {
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var ObjectManager */
-    private $om;
-    /** @var UrlGeneratorInterface */
-    private $router;
-    /** @var Crud */
-    private $crud;
-    /** @var PlatformManager */
-    private $platformManager;
-    /** @var RoleManager */
-    private $roleManager;
-    /** @var RoutingHelper */
-    private $routingHelper;
-    /** @var TemplateManager */
-    private $templateManager;
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-    /** @var EventManager */
-    private $sessionEventManager;
+    private EventDispatcherInterface $eventDispatcher;
+    private TranslatorInterface $translator;
+    private ObjectManager $om;
+    private UrlGeneratorInterface $router;
+    private Crud $crud;
+    private PlatformManager $platformManager;
+    private RoleManager $roleManager;
+    private RoutingHelper $routingHelper;
+    private TemplateManager $templateManager;
+    private FacetManager $facetManager;
+    private WorkspaceManager $workspaceManager;
+    private EventManager $sessionEventManager;
 
     private $sessionRepo;
     private $sessionUserRepo;
@@ -76,6 +69,7 @@ class SessionManager
         RoutingHelper $routingHelper,
         TemplateManager $templateManager,
         WorkspaceManager $workspaceManager,
+        FacetManager $facetManager,
         EventManager $sessionEventManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
@@ -88,6 +82,7 @@ class SessionManager
         $this->routingHelper = $routingHelper;
         $this->templateManager = $templateManager;
         $this->workspaceManager = $workspaceManager;
+        $this->facetManager = $facetManager;
         $this->sessionEventManager = $sessionEventManager;
 
         $this->sessionRepo = $om->getRepository(Session::class);
@@ -161,11 +156,10 @@ class SessionManager
     /**
      * Adds users to a session.
      */
-    public function addUsers(Session $session, array $users, string $type = AbstractRegistration::LEARNER, bool $validated = false): array
+    public function addUsers(Session $session, array $users, string $type = AbstractRegistration::LEARNER, bool $validated = false, array $registrationData = []): array
     {
         $results = [];
 
-        $course = $session->getCourse();
         $registrationDate = new \DateTime();
 
         $this->om->startFlushSuite();
@@ -190,11 +184,29 @@ class SessionManager
                     $sessionUser->setConfirmed(!$session->getUserValidation());
                 }
 
-                // grant workspace role if registration is fully validated
-                $role = AbstractRegistration::TUTOR === $type ? $session->getTutorRole() : $session->getLearnerRole();
-                if ($role && $sessionUser->isValidated() && $sessionUser->isConfirmed() && !$user->hasRole($role->getName())) {
-                    $this->crud->patch($user, 'role', Crud::COLLECTION_ADD, [$role], [Crud::NO_PERMISSIONS]);
+                // store data for custom registration form if any
+                if (isset($registrationData[$user->getUuid()])) {
+                    foreach ($registrationData[$user->getUuid()] as $fieldId => $fieldValue) {
+                        $fieldFacetValue = $sessionUser->getFacetValue($fieldId) ?? new FieldFacetValue();
+                        $fieldFacet = $this->om->getRepository(FieldFacet::class)->findOneBy(['uuid' => $fieldId]);
+                        if (empty($fieldFacet)) {
+                            $this->om->remove($fieldFacetValue);
+                        } else {
+                            $fieldFacetValue->setFieldFacet($fieldFacet);
+                            $fieldFacetValue->setValue(
+                                $this->facetManager->deserializeFieldValue(
+                                    $user,
+                                    $fieldFacet->getType(),
+                                    $fieldValue
+                                )
+                            );
+
+                            $sessionUser->addFacetValue($fieldFacetValue);
+                            $this->om->persist($fieldFacetValue);
+                        }
+                    }
                 }
+
                 $this->om->persist($sessionUser);
 
                 $this->eventDispatcher->dispatch(new LogSessionUserRegistrationEvent($sessionUser), 'log');
@@ -205,22 +217,10 @@ class SessionManager
 
         $this->checkUsersRegistration($session, $results);
 
-        // TODO : what to do with this if he goes in pending state ?
-
         if ($session->getRegistrationMail()) {
             $this->sendSessionInvitation($session, array_map(function (SessionUser $sessionUser) {
                 return $sessionUser->getUser();
             }, $results), AbstractRegistration::LEARNER === $type);
-        }
-
-        // registers users to linked trainings
-        if ($course->getPropagateRegistration() && !empty($course->getChildren())) {
-            foreach ($course->getChildren() as $childCourse) {
-                $childSession = $childCourse->getDefaultSession();
-                if ($childSession && !$childSession->isTerminated()) {
-                    $this->addUsers($childSession, $users, $type);
-                }
-            }
         }
 
         $this->om->endFlushSuite();
@@ -356,17 +356,6 @@ class SessionManager
             }
         }
 
-        // registers groups to linked trainings
-        $course = $session->getCourse();
-        if ($course->getPropagateRegistration() && !empty($course->getChildren())) {
-            foreach ($course->getChildren() as $childCourse) {
-                $childSession = $childCourse->getDefaultSession();
-                if ($childSession && !$childSession->isTerminated()) {
-                    $this->addGroups($childSession, $groups);
-                }
-            }
-        }
-
         // registers groups to linked events
         $events = $session->getEvents();
         foreach ($events as $event) {
@@ -430,7 +419,7 @@ class SessionManager
     /**
      * Gets/generates workspace role for session depending on given role name and type.
      */
-    public function generateRoleForSession(Workspace $workspace, string $roleName = null, string $type = 'learner'): Role
+    public function generateRoleForSession(Workspace $workspace, ?string $roleName = null, ?string $type = 'learner'): Role
     {
         if (empty($roleName)) {
             if ('manager' === $type) {
@@ -439,19 +428,11 @@ class SessionManager
                 $role = $this->roleManager->getCollaboratorRole($workspace);
             }
         } else {
-            $roles = $this->roleManager->getRolesByWorkspaceCodeAndTranslationKey(
-                $workspace->getCode(),
-                $roleName
-            );
-
-            if (count($roles) > 0) {
-                $role = $roles[0];
-            } else {
-                $uuid = $workspace->getUuid();
-                $wsRoleName = 'ROLE_WS_'.strtoupper($roleName).'_'.$uuid;
+            $role = $this->roleManager->getRoleByTranslationKeyAndWorkspace($roleName, $workspace);
+            if (empty($role)) {
+                $wsRoleName = 'ROLE_WS_'.strtoupper($roleName).'_'.$workspace->getUuid();
 
                 $role = $this->roleManager->getRoleByName($wsRoleName);
-
                 if (is_null($role)) {
                     $role = $this->roleManager->createWorkspaceRole(
                         $wsRoleName,

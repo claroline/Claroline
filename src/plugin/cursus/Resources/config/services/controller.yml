@@ -9,7 +9,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-            - '@twig'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CursusBundle\Manager\CourseManager'

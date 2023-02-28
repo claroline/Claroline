@@ -50,7 +50,7 @@ class FieldFacetValue extends AbstractFacetValue
         return $this->fieldFacet->getType();
     }
 
-    public function setFieldFacet(FieldFacet $fieldFacet)
+    public function setFieldFacet(FieldFacet $fieldFacet): void
     {
         $this->fieldFacet = $fieldFacet;
     }
@@ -60,7 +60,7 @@ class FieldFacetValue extends AbstractFacetValue
         return $this->fieldFacet;
     }
 
-    public function setUser(?User $user = null)
+    public function setUser(?User $user = null): void
     {
         $this->user = $user;
     }

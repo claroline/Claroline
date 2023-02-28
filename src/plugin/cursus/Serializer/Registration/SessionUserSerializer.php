@@ -1,19 +1,11 @@
 <?php
 
-/*
- * This file is part of the Claroline Connect package.
- *
- * (c) Claroline Consortium <consortium@claroline.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Claroline\CursusBundle\Serializer\Registration;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
+use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CursusBundle\Entity\Registration\AbstractUserRegistration;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Serializer\SessionSerializer;
@@ -22,14 +14,18 @@ class SessionUserSerializer extends AbstractUserSerializer
 {
     use SerializerTrait;
 
-    /** @var SessionSerializer */
-    private $sessionSerializer;
+    private SessionSerializer $sessionSerializer;
+    private FacetManager $facetManager;
 
-    public function __construct(UserSerializer $userSerializer, SessionSerializer $sessionSerializer)
-    {
+    public function __construct(
+        UserSerializer $userSerializer,
+        SessionSerializer $sessionSerializer,
+        FacetManager $facetManager
+    ) {
         parent::__construct($userSerializer);
 
         $this->sessionSerializer = $sessionSerializer;
+        $this->facetManager = $facetManager;
     }
 
     public function getClass()
@@ -42,8 +38,20 @@ class SessionUserSerializer extends AbstractUserSerializer
      */
     public function serialize(AbstractUserRegistration $sessionUser, array $options = []): array
     {
-        return array_merge(parent::serialize($sessionUser, $options), [
+        $serialized = array_merge(parent::serialize($sessionUser, $options), [
             'session' => $this->sessionSerializer->serialize($sessionUser->getSession(), [Options::SERIALIZE_MINIMAL]),
         ]);
+
+        $serialized['data'] = [];
+        foreach ($sessionUser->getFacetValues() as $field) {
+            // we just flatten field facets in the base user structure
+            $serialized['data'][$field->getFieldFacet()->getUuid()] = $this->facetManager->serializeFieldValue(
+                $sessionUser,
+                $field->getType(),
+                $field->getValue()
+            );
+        }
+
+        return $serialized;
     }
 }

@@ -22,8 +22,7 @@ class CourseUserSerializer extends AbstractUserSerializer
 {
     use SerializerTrait;
 
-    /** @var CourseSerializer */
-    private $courseSerializer;
+    private CourseSerializer $courseSerializer;
 
     public function __construct(UserSerializer $userSerializer, CourseSerializer $courseSerializer)
     {
@@ -32,7 +31,7 @@ class CourseUserSerializer extends AbstractUserSerializer
         $this->courseSerializer = $courseSerializer;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return CourseUser::class;
     }
