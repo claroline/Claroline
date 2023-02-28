@@ -11,6 +11,7 @@ import {Moderation} from '#/plugin/forum/resources/forum/moderation/components/m
 import {Editor} from '#/plugin/forum/resources/forum/editor/components/editor'
 import {Player} from '#/plugin/forum/resources/forum/player/components/player'
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
+import {constants} from '#/plugin/forum/resources/forum/constants'
 
 const ForumResource = props =>
   <ResourcePage
@@ -46,17 +47,15 @@ const ForumResource = props =>
         icon: 'fa fa-fw fa-gavel',
         label: trans('blocked_messages_subjects', {}, 'forum'),
         group: trans('moderation', {}, 'forum'),
-        displayed: !!get(props.forum, 'restrictions.moderator'),
-        target: `${props.path}/moderation/blocked/subjects`,
-        exact: true
+        displayed: constants.VALIDATE_NONE !== get(props.forum, 'moderation') && !!get(props.forum, 'restrictions.moderator'),
+        target: `${props.path}/moderation/blocked/subjects`
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-flag',
         label: trans('flagged_messages_subjects', {}, 'forum'),
         group: trans('moderation', {}, 'forum'),
         displayed: !!get(props.forum, 'restrictions.moderator'),
-        target: `${props.path}/moderation/flagged/subjects`,
-        exact: true
+        target: `${props.path}/moderation/flagged/subjects`
       }
     ]}
     routes={[
