@@ -41,11 +41,11 @@ actions.open = (id, contextData = null, reload = false) => (dispatch) => {
       success: (response) => {
         dispatch(formActions.resetForm(selectors.FORM_NAME, response, false))
 
-        if (constants.ROLE_PLATFORM === response.type) {
+        if (!isEmpty(contextData) || constants.ROLE_WORKSPACE === response.type) {
+          dispatch(actions.fetchWorkspaceRights(id, !isEmpty(contextData) ? contextData.id : get(response, 'workspace.id')))
+        } else if (constants.ROLE_PLATFORM === response.type) {
           dispatch(actions.fetchDesktopRights(id))
           dispatch(actions.fetchAdministrationRights(id))
-        } else if (constants.ROLE_WORKSPACE === response.type || !isEmpty(contextData)) {
-          dispatch(actions.fetchWorkspaceRights(id, !isEmpty(contextData) ? contextData.id : get(response, 'workspace.id')))
         }
       }
     }
