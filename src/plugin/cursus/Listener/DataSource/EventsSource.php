@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Claroline Connect package.
- *
- * (c) Claroline Consortium <consortium@claroline.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Claroline\CursusBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
@@ -59,20 +50,8 @@ class EventsSource
             $options['hiddenFilters']['session'] = array_map(function (Session $session) {
                 return $session->getUuid();
             }, $this->sessionRepo->findByWorkspace($event->getWorkspace()));
-        } else {
-            // filter by organization for desktop
-            if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-                $user = $this->tokenStorage->getToken()->getUser();
-                if ($user instanceof User) {
-                    $organizations = $user->getOrganizations();
-                } else {
-                    $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
-                }
-
-                $options['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $organizations);
-            }
+        } elseif (!$this->authorization->isGranted('ROLE_ADMIN') && (empty($options['filters']) || empty($options['filters']['organizations']))) {
+            $options['hiddenFilters']['organizations'] = $this->getOrganizations();
         }
 
         $event->setData(
@@ -80,5 +59,17 @@ class EventsSource
         );
 
         $event->stopPropagation();
+    }
+
+    private function getOrganizations(): array
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User) {
+            return array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getOrganizations());
+        }
+
+        return [];
     }
 }
