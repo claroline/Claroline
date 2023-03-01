@@ -37,16 +37,8 @@ class BadgesSource
 
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
             $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
-        } elseif (!$this->authorization->isGranted('ROLE_ADMIN')) {
-            // only display badges for the current user organization
-            $options['hiddenFilters']['organizations'] = [];
-
-            $user = $this->tokenStorage->getToken()->getUser();
-            if ($user instanceof User) {
-                $options['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $user->getOrganizations());
-            }
+        } elseif (!$this->authorization->isGranted('ROLE_ADMIN') && (empty($options['filters']) || empty($options['filters']['organizations']))) {
+            $options['hiddenFilters']['organizations'] = $this->getOrganizations();
         }
 
         $event->setData(
@@ -54,5 +46,17 @@ class BadgesSource
         );
 
         $event->stopPropagation();
+    }
+
+    private function getOrganizations(): array
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User) {
+            return array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getOrganizations());
+        }
+
+        return [];
     }
 }
