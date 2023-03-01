@@ -67,6 +67,14 @@ export default {
         label: trans('order'),
         displayable: false,
         filterable: false
+      }, {
+        name: 'organizations',
+        type: 'organizations',
+        label: trans('organizations'),
+        displayable: false,
+        displayed: false,
+        sortable: false,
+        filterable: true
       }
     ],
     card: CourseCard
