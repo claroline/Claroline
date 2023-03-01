@@ -87,6 +87,14 @@ export default {
         options: {
           objectClass: 'Claroline\\CursusBundle\\Entity\\Course'
         }
+      }, {
+        name: 'organizations',
+        type: 'organizations',
+        label: trans('organizations'),
+        displayable: false,
+        displayed: false,
+        sortable: false,
+        filterable: true
       }
     ],
     card: SessionCard

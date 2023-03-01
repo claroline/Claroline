@@ -54,26 +54,8 @@ class SessionSource
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext() && (empty($options['filters'] || empty($options['filters']['workspace'])))) {
             // we allow users to display sessions from another workspace (this is a little weird)
             $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
-        } elseif (DataSource::CONTEXT_HOME === $event->getContext()) {
-            // only display sessions of the default organization on home
-            $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
-            $options['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $organizations);
-        } else {
-            // filter by organization for desktop
-            if (!$this->authorization->isGranted('ROLE_ADMIN')) {
-                $user = $this->tokenStorage->getToken()->getUser();
-                if ($user instanceof User) {
-                    $organizations = $user->getOrganizations();
-                } else {
-                    $organizations = $this->om->getRepository(Organization::class)->findBy(['default' => true]);
-                }
-
-                $options['hiddenFilters']['organizations'] = array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $organizations);
-            }
+        } elseif (!$this->authorization->isGranted('ROLE_ADMIN') && (empty($options['filters']) || empty($options['filters']['organizations']))) {
+            $options['hiddenFilters']['organizations'] = $this->getOrganizations();
         }
 
         $event->setData(
@@ -81,5 +63,17 @@ class SessionSource
         );
 
         $event->stopPropagation();
+    }
+
+    private function getOrganizations(): array
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User) {
+            return array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getOrganizations());
+        }
+
+        return [];
     }
 }
