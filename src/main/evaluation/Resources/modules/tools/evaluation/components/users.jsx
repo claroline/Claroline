@@ -149,16 +149,10 @@ const EvaluationUsers = (props) =>
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-file-pdf',
           label: trans('download_success_certificate', {}, 'actions'),
-          displayed: -1 !== rows.findIndex((row) => [
-            constants.EVALUATION_STATUS_PASSED,
-            constants.EVALUATION_STATUS_FAILED
-          ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))),
+          displayed: -1 !== rows.findIndex((row) => constants.EVALUATION_STATUS_PASSED === get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN)),
           callback: () => {
             rows.map(row => {
-              if ([
-                constants.EVALUATION_STATUS_PASSED,
-                constants.EVALUATION_STATUS_FAILED
-              ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))) {
+              if (constants.EVALUATION_STATUS_PASSED === get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN)) {
                 props.downloadSuccessCertificate(row)
               }
             })
