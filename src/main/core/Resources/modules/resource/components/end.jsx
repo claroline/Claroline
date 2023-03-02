@@ -55,10 +55,7 @@ const WorkspaceCertificatesToolbar = (props) => {
             workspace: get(wsEval, 'workspace.id'),
             user: get(wsEval, 'user.id')
           }],
-          displayed: [
-            evalConstants.EVALUATION_STATUS_PASSED,
-            evalConstants.EVALUATION_STATUS_FAILED
-          ].includes(get(wsEval, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))
+          displayed: evalConstants.EVALUATION_STATUS_PASSED === get(wsEval, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN)
         }
       ]}
     />
