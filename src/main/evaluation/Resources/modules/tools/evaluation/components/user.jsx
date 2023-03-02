@@ -138,10 +138,7 @@ class EvaluationUser extends Component {
                       workspace: get(this.props.workspaceEvaluation, 'workspace.id'),
                       user: get(this.props.workspaceEvaluation, 'user.id')
                     }],
-                    displayed: [
-                      baseConstants.EVALUATION_STATUS_PASSED,
-                      baseConstants.EVALUATION_STATUS_FAILED
-                    ].includes(get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN))
+                    displayed: baseConstants.EVALUATION_STATUS_PASSED === get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)
                   }
                 ]}
               />
