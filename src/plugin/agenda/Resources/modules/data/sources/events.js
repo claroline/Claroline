@@ -26,17 +26,17 @@ export default {
         label: trans('description'),
         displayed: true
       }, {
-        name: 'startDate',
-        alias: 'start',
+        name: 'start',
         type: 'date',
         label: trans('start_date'),
-        displayed: true
+        displayed: true,
+        options: {time: true}
       }, {
-        name: 'endDate',
-        alias: 'end',
+        name: 'end',
         type: 'date',
         label: trans('end_date'),
-        displayed: true
+        displayed: true,
+        options: {time: true}
       }, {
         name: 'afterToday',
         type: 'boolean',
