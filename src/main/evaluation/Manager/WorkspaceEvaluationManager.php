@@ -226,7 +226,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
                 if (array_key_exists('maxFailed', $successCondition) && is_numeric($successCondition['maxFailed'])) {
                     // the condition has been set for the workspace, we need to check it
                     $maxFailed = $successCondition['maxFailed'] > $progressionMax ? $progressionMax : $successCondition['maxFailed'];
-                    if ($maxFailed <= $statusCount[AbstractEvaluation::STATUS_FAILED]) {
+                    if ($maxFailed < $statusCount[AbstractEvaluation::STATUS_FAILED]) {
                         // condition is not met
                         $status = AbstractEvaluation::STATUS_FAILED;
                     }
