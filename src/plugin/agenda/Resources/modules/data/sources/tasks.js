@@ -29,7 +29,8 @@ export default {
         name: 'start',
         type: 'date',
         label: trans('start_date'),
-        displayed: true
+        displayed: true,
+        options: {time: true}
       }, {
         name: 'afterToday',
         type: 'boolean',
