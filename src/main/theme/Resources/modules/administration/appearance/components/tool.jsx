@@ -1,5 +1,6 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {Toolbar} from '#/main/app/action'
@@ -182,21 +183,31 @@ class AppearanceTool extends Component {
             title: trans('footer', {}, 'appearance'),
             fields: [
               {
-                name: 'footer.show_terms_of_service',
-                type: 'boolean',
-                label: trans('footer_show_terms_of_service', {}, 'appearance')
-              }, {
-                name: 'footer.show_help',
-                type: 'boolean',
-                label: trans('footer_show_help', {}, 'appearance')
-              }, {
-                name: 'footer.show_locale',
-                type: 'boolean',
-                label: trans('footer_show_locale', {}, 'appearance')
-              }, {
                 name: 'footer.content',
                 type: 'html',
                 label: trans('footer', {}, 'appearance')
+              }, {
+                name: 'footer.show',
+                type: 'boolean',
+                label: trans('footer_show', {}, 'appearance'),
+                linked: [
+                  {
+                    name: 'footer.show_terms_of_service',
+                    type: 'boolean',
+                    label: trans('footer_show_terms_of_service', {}, 'appearance'),
+                    displayed: (params) => get(params, 'footer.show', false)
+                  }, {
+                    name: 'footer.show_help',
+                    type: 'boolean',
+                    label: trans('footer_show_help', {}, 'appearance'),
+                    displayed: (params) => get(params, 'footer.show', false)
+                  }, {
+                    name: 'footer.show_locale',
+                    type: 'boolean',
+                    label: trans('footer_show_locale', {}, 'appearance'),
+                    displayed: (params) => get(params, 'footer.show', false)
+                  }
+                ]
               }
             ]
           }

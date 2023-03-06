@@ -136,7 +136,7 @@ class ClientSerializer
         return array_merge_recursive($data, $event->getResponse() ?? []);
     }
 
-    private function serializeLocale()
+    private function serializeLocale(): array
     {
         // TODO : there is a method in LocaleManager to do that. Reuse it
         $request = $this->requestStack->getCurrentRequest();
