@@ -100,6 +100,7 @@ class ClientController
                 'footer' => [
                     'content' => $this->configHandler->getParameter('footer.content'),
                     'display' => [
+                        'show' => $this->configHandler->getParameter('footer.show'),
                         'locale' => $this->configHandler->getParameter('footer.show_locale'),
                         'help' => $this->configHandler->getParameter('footer.show_help'),
                         'termsOfService' => $this->configHandler->getParameter('footer.show_terms_of_service'),
