@@ -20,3 +20,8 @@ services:
             - '@Claroline\CoreBundle\Manager\CurlManager'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\BigBlueButtonBundle\Manager\ServerManager'
+
+    Claroline\BigBlueButtonBundle\Manager\EvaluationManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
