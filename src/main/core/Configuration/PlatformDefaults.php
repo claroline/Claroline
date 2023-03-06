@@ -95,6 +95,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 'breadcrumb' => true,
             ],
             'footer' => [
+                'show' => true,
                 'content' => null,
                 'show_locale' => false,
                 'show_help' => false,
