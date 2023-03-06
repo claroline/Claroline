@@ -116,7 +116,7 @@ class UpdateRichTextCommand extends Command
             'Claroline\CursusBundle\Entity\Session' => ['description'],
             'HeVinci\UrlBundle\Entity\Url' => ['url'],
             'HeVinci\UrlBundle\Entity\Home\UrlTab' => ['url'],
-            'Icap\LessonBundle\Entity\Chapter' => ['description', 'internalNote'],
+            'Icap\LessonBundle\Entity\Chapter' => ['text', 'internalNote'],
         ], function (string $className) {
             return class_exists($className);
         }, ARRAY_FILTER_USE_KEY);
