@@ -1,14 +1,11 @@
 services:
-    _defaults:
-        autowire: false #change to true
-        autoconfigure: false
-        public: true
-
     Claroline\BigBlueButtonBundle\Listener\Resource\BBBListener:
         arguments:
+            - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
+            - '@Claroline\BigBlueButtonBundle\Manager\EvaluationManager'
         tags:
             - { name: kernel.event_listener, event: resource.claroline_big_blue_button.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.claroline_big_blue_button.delete, method: onDelete }
