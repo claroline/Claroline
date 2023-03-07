@@ -58,14 +58,15 @@ class NotifyUsersOnMessageCreatedHandler implements MessageHandlerInterface
 
         $placeholders = [
             'forum' => $forum->getName(),
-            'forum_url' => $this->routing->resourcePath($forum->getResourceNode()),
             'subject' => $subject->getTitle(),
-            'subject_url' => $this->routing->resourcePath($forum->getResourceNode()).'/subjects/show/'.$subject->getUuid(),
             'message' => $message->getContent(),
             'date' => $message->getCreationDate() ? $message->getCreationDate()->format('d/m/Y H:m:s') : null,
             'author' => $message->getCreator() ? $message->getCreator()->getFullName() : null,
             'workspace' => $forum->getResourceNode()->getWorkspace()->getName(),
-            'workspace_url' => $this->routing->workspacePath($forum->getResourceNode()->getWorkspace()),
+
+            'workspace_url' => $this->routing->workspaceUrl($forum->getResourceNode()->getWorkspace()),
+            'forum_url' => $this->routing->resourceUrl($forum->getResourceNode()),
+            'subject_url' => $this->routing->resourceUrl($forum->getResourceNode()).'/subjects/show/'.$subject->getUuid(),
         ];
 
         $subject = $this->templateManager->getTemplate('forum_new_message', $placeholders, null, 'title');
