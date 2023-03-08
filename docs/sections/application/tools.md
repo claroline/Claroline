@@ -5,8 +5,11 @@ title: Tools
 
 # Tools
 
-Each workspace and desktop is composed of tools. A plugin can define new tools.
-Each time the CoreBundle is opening a tool, it'll fire the event `open_tool_workspace|desktop_*claroline_mytool*`.
+Desktop, Administration and Workspaces are composed of multiple tools.
+A plugin can define new tools.
+
+Each time the CoreBundle is opening a tool, 
+it'll fire the event `open_tool_workspace|desktop_*claroline_my_tool*`.
 
 ## Tools implementation
 
@@ -18,29 +21,32 @@ Your plugin must define its properties, and the list of its tools in the *Resour
 plugin:
     # Tools declared by your plugin.
     tools:
-    - name: claroline_mytool
-        **Currently using classes (prototype). Implementation of css classes not done yet**
-        #class: res_text.png
-        is_displayable_in_workspace: true
-        is_displayable_in_desktop: true
-        tool_rights: (optional)
-            - name: action_name
-              granted_icon_class: fa fa-something
-              denied_icon_class: fa fa-something_2
+        - name: claroline_my_tool
+          class: icon # a FontAwesome icon name to display in menus (MUST NOT contain the fa- prefix)
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: true
+          tool_rights: # (optional)
+              - name: action_name
+
+    # Admin tools declared by your plugins
+    admin_tools:
+        - name: claroline_my_admin_tool
+          class: icon # a FontAwesome icon name to display in menus (MUST NOT contain the fa- prefix)
 ```
 
-In order to catch the event, your plugin must define a listener in your config.
+> When adding a new tool in the `config.yml` of a plugin, you'll need to run a claroline:update
+> to see it appear in the application
 
-This example will show you the main files of a basic HTML5 video player.
+### Tool subscriber definition
 
-### Tool listener definition
+In order to catch the event, your plugin must define a subscriber in your config.
 
 **The listener config file**
 
-*Claroline\VideoPlayer\Resources\config\services\listener.yml*
+*MY_PLUGIN\Resources\config\services\subscriber.yml*
 
 ```yml
-Claroline\ExampleBundle\Listener\ToolListener:
+Claroline\ExampleBundle\Subscriber\MyToolSubscriber:
     tags:
         - { name: kernel.event_listener, event: open_tool_workspace_claroline_my_tool, method: onWorkspaceOpen }
         - { name: kernel.event_listener, event: open_tool_desktop_claroline_my_tool, method: onDesktopOpen }
@@ -48,22 +54,35 @@ Claroline\ExampleBundle\Listener\ToolListener:
         - { name: kernel.event_listener, event: configure_desktop_tool_claroline_my_tool, method: onDesktopConfigure }
 ```
 
-### Listener implementation
+### Subscriber implementation
 
 ```php
+namespace Claroline\ExampleBundle\Subscriber;
 
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 
-class MyToolListener
+class MyToolSubscriber implements EventSubscriberInterface
 {
-    public function onWorkspaceOpen(OpenToolEvent $event)
+    const NAME = 'claroline_my_tool';
+    
+    public static function getSubscribedEvents(): array
     {
-        $event->setData([]);
+        return [
+            // For desktop tools
+            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::DESKTOP, static::NAME) => 'onOpen',
+            // For workspace tools
+            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::WORKSPACE, static::NAME) => 'onOpen',
+            // For admin tools
+            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::ADMINISTRATION, static::NAME) => 'onOpen',
+        ];
     }
     
-    public function onDesktopOpen(OpenToolEvent $event)
+    public function onOpen(OpenToolEvent $event): void
     {
-        $event->setData([]);
+        $event->setData([
+            // You can put here the serialized data which need be loaded when the tool is opened 
+        ]);
     }
 }
 ```
@@ -77,8 +96,8 @@ using `$event->getWorkspace();`.
 
 We use lower case for every translation keys.
 
-Create the *tools* file in your Resources/translations folder.
-You can translate your widget names here.
+Create the *tools* file in your MY_PLUGIN/Resources/translations folder.
+You can translate your tool names here.
 
 ```json
 {
@@ -87,20 +106,3 @@ You can translate your widget names here.
 ```
 
 Where `claroline_my_tool` is the name you defined in your config file.
-
-Right management
-----------------
-
-Both workspace and desktop are an aggregation of tools.
-
-There is a Voter which will determine which user can access which tool in a workspace.
-(Currently a user can access every tool in its desktop)
-When you must know if a user has access to a tool, you can use
-
-```php
-if (!$this->get('security.authorization_checker')->isGranted($toolName, $workspace)) {
-    throw new AccessDeniedException();
-}
-```
-
-*Where $toolName is your tool name and $workspace is the current workspace.*
