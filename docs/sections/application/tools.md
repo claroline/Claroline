@@ -46,12 +46,9 @@ In order to catch the event, your plugin must define a subscriber in your config
 *MY_PLUGIN\Resources\config\services\subscriber.yml*
 
 ```yml
-Claroline\ExampleBundle\Subscriber\MyToolSubscriber:
-    tags:
-        - { name: kernel.event_listener, event: open_tool_workspace_claroline_my_tool, method: onWorkspaceOpen }
-        - { name: kernel.event_listener, event: open_tool_desktop_claroline_my_tool, method: onDesktopOpen }
-        - { name: kernel.event_listener, event: configure_workspace_tool_claroline_my_tool, method: onWorkspaceConfigure }
-        - { name: kernel.event_listener, event: configure_desktop_tool_claroline_my_tool, method: onDesktopConfigure }
+services:
+    Claroline\ExampleBundle\Subscriber\MyToolSubscriber:
+        tags: [ kernel.event_subscriber ]
 ```
 
 ### Subscriber implementation
