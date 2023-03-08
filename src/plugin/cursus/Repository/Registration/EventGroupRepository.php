@@ -19,7 +19,7 @@ class EventGroupRepository extends EntityRepository
 {
     public function findBySessionAndUser(Session $session, Group $group)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT eg 
                 FROM Claroline\CursusBundle\Entity\Registration\EventGroup AS eg

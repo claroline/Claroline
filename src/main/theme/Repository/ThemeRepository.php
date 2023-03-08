@@ -33,7 +33,7 @@ class ThemeRepository extends ServiceEntityRepository
             ';
         }
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
 
         if ($onlyEnabled) {
             $query->setParameter('bundles', $this->bundles);

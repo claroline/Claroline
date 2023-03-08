@@ -42,7 +42,7 @@ class ToolRightsRepository extends EntityRepository
             $dql .= ' AND ot.workspace IS NULL';
         }
 
-        $query = $this->_em
+        $query = $this->getEntityManager()
             ->createQuery($dql)
             ->setParameter('toolId', $tool->getId())
             ->setParameter('roles', $roles);

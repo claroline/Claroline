@@ -20,7 +20,7 @@ class TeamRepository extends EntityRepository
 {
     public function countUsers(Team $team)
     {
-        return (int) $this->_em
+        return (int) $this->getEntityManager()
             ->createQuery('
                 SELECT COUNT(u) 
                 FROM Claroline\CommunityBundle\Entity\Team AS t
@@ -44,7 +44,7 @@ class TeamRepository extends EntityRepository
             WHERE r.name = :role 
                OR mr.name = :role
         ";
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('role', $roleName);
 
         return $query->getResult();
@@ -60,7 +60,7 @@ class TeamRepository extends EntityRepository
             WHERE t.workspace = :workspace
             AND u = :user
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('workspace', $workspace);
         $query->setParameter('user', $user);
 
@@ -142,7 +142,7 @@ class TeamRepository extends EntityRepository
                 AND u6.isEnabled = true
             )
         ";
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('workspace', $workspace);
         $query->setParameter('workspaceManagerName', 'ROLE_WS_MANAGER_'.$workspace->getUuid());
         $query->setParameter('teams', $teams);

@@ -38,7 +38,7 @@ class TaggedObjectRepository extends EntityRepository
             AND to.objectId = :objectId
             AND to.objectClass = :objectClass
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('tag', $tag);
         $query->setParameter('objectId', $objectId);
         $query->setParameter('objectClass', $objectClass);
@@ -55,7 +55,7 @@ class TaggedObjectRepository extends EntityRepository
             AND to.objectId IN (:ids)
             ORDER BY to.{$orderedBy} {$order}
         ";
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('class', $class);
         $query->setParameter('ids', $ids);
 
@@ -92,7 +92,7 @@ class TaggedObjectRepository extends EntityRepository
         // trigger the undefined variable rule (https://github.com/phpmd/phpmd/issues/714)
         $defaultDecoders = ToolMaskDecoder::$defaultValues;
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('roles', $roles);
         $query->setParameter('workspaceClass', 'Claroline\CoreBundle\Entity\Workspace\Workspace');
         $query->setParameter('tag', $tag);

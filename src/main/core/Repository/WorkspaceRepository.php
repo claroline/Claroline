@@ -64,7 +64,7 @@ class WorkspaceRepository extends EntityRepository
      */
     public function findByRoles(array $roleNames)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT DISTINCT w 
                 FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace w
@@ -107,7 +107,7 @@ class WorkspaceRepository extends EntityRepository
             $dql .= ' AND t.name = :toolName';
         }
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
         $query->setParameter('roleNames', $roleNames);
         $query->setParameter('action', $action);
@@ -146,7 +146,7 @@ class WorkspaceRepository extends EntityRepository
             WHERE w.code IN (:codes)
             ';
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('codes', $codes);
 
         return $query->getResult();
@@ -162,7 +162,7 @@ class WorkspaceRepository extends EntityRepository
             function (array $ws) {
                 return $ws['code'];
             },
-            $this->_em->createQuery('
+            $this->getEntityManager()->createQuery('
                 SELECT UPPER(w.code) AS code
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
                 WHERE UPPER(w.code) LIKE :search

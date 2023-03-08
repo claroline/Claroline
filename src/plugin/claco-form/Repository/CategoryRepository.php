@@ -31,7 +31,7 @@ class CategoryRepository extends EntityRepository
             WHERE cf = :clacoForm
             AND m = :manager
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('clacoForm', $clacoForm);
         $query->setParameter('manager', $manager);
 
@@ -49,7 +49,7 @@ class CategoryRepository extends EntityRepository
             JOIN c.managers m
             WHERE m = :manager
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('manager', $manager);
 
         return $query->getResult();
@@ -62,7 +62,7 @@ class CategoryRepository extends EntityRepository
             FROM Claroline\ClacoFormBundle\Entity\Category c
             WHERE c.id IN (:ids)
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('ids', $ids);
 
         return $query->getResult();
@@ -70,7 +70,7 @@ class CategoryRepository extends EntityRepository
 
     public function findAutoCategories(ClacoForm $clacoForm)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT c
                 FROM Claroline\ClacoFormBundle\Entity\Category c

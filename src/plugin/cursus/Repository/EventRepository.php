@@ -35,7 +35,7 @@ class EventRepository extends EntityRepository
         $count = $this->countUsers($event, AbstractRegistration::LEARNER);
 
         // add groups count
-        $eventGroups = $this->_em
+        $eventGroups = $this->getEntityManager()
             ->createQuery('
                 SELECT sg FROM Claroline\CursusBundle\Entity\Registration\EventGroup AS sg
                 WHERE sg.type = :registrationType
@@ -56,7 +56,7 @@ class EventRepository extends EntityRepository
 
     private function countUsers(Event $event, string $type)
     {
-        return (int) $this->_em
+        return (int) $this->getEntityManager()
             ->createQuery('
                 SELECT COUNT(su) FROM Claroline\CursusBundle\Entity\Registration\EventUser AS su
                 WHERE su.type = :registrationType

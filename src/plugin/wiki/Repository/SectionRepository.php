@@ -87,7 +87,7 @@ class SectionRepository extends NestedTreeRepository
     public function deleteFromTree(Section $section)
     {
         //Update values for all descendants
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->update('Icap\WikiBundle\Entity\Section', 'section')
             ->set('section.left', 'section.left-1')
             ->set('section.right', 'section.right-1')
@@ -99,7 +99,7 @@ class SectionRepository extends NestedTreeRepository
         $queryBuilder->getQuery()->getSingleScalarResult();
 
         //Update parentId of immediate descendants
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->update('Icap\WikiBundle\Entity\Section', 'section')
             ->set('section.parent', '?1')
             ->andWhere($queryBuilder->expr()->eq('section.parent', '?2'))
@@ -108,7 +108,7 @@ class SectionRepository extends NestedTreeRepository
         $queryBuilder->getQuery()->getSingleScalarResult();
 
         //Update boundaries (left and right) for all nodes after deleted node
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->update('Icap\WikiBundle\Entity\Section', 'section')
             ->set('section.right', 'section.right-2')
             ->andWhere('section.root = :root')
@@ -116,7 +116,7 @@ class SectionRepository extends NestedTreeRepository
             ->setParameter('root', $section->getRoot());
         $queryBuilder->getQuery()->getSingleScalarResult();
 
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->update('Icap\WikiBundle\Entity\Section', 'section')
             ->set('section.left', 'section.left-2')
             ->andWhere('section.root = :root')
@@ -125,7 +125,7 @@ class SectionRepository extends NestedTreeRepository
         $queryBuilder->getQuery()->getSingleScalarResult();
 
         //Update deleted section
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->update('Icap\WikiBundle\Entity\Section', 'section')
             ->set('section.left', 0)
             ->set('section.right', 0)
@@ -144,7 +144,7 @@ class SectionRepository extends NestedTreeRepository
     public function deleteSubtree(Section $section)
     {
         //Update deleted subtree
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->update('Icap\WikiBundle\Entity\Section', 'section')
             ->set('section.left', 0)
             ->set('section.right', 0)
@@ -163,7 +163,7 @@ class SectionRepository extends NestedTreeRepository
 
         $boundaryWidth = $section->getRight() - $section->getLeft() + 1;
         //Update boundaries (left and right) for all nodes after deleted node
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->update('Icap\WikiBundle\Entity\Section', 'section')
             ->set('section.right', 'section.right-?1')
             ->andWhere('section.root = :root')
@@ -172,7 +172,7 @@ class SectionRepository extends NestedTreeRepository
             ->setParameter('root', $section->getRoot());
         $queryBuilder->getQuery()->getSingleScalarResult();
 
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->update('Icap\WikiBundle\Entity\Section', 'section')
             ->set('section.left', 'section.left-?1')
             ->andWhere('section.root = :root')
@@ -188,7 +188,7 @@ class SectionRepository extends NestedTreeRepository
         if (null === $parent) {
             $parent = $section->getWiki()->getRoot();
         }
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->update('Icap\WikiBundle\Entity\Section', 'section')
             ->set('section.left', $parent->getRight())
             ->set('section.right', $parent->getRight() + 1)
@@ -202,7 +202,7 @@ class SectionRepository extends NestedTreeRepository
         $queryBuilder->getQuery()->getSingleScalarResult();
 
         //Update parent (root) data
-        $queryBuilder = $this->_em->createQueryBuilder();
+        $queryBuilder = $this->getEntityManager()->createQueryBuilder();
         $queryBuilder->update('Icap\WikiBundle\Entity\Section', 'section')
             ->set('section.right', $parent->getRight() + 2)
             ->andWhere('section.id = :sectionId')

@@ -31,7 +31,7 @@ class OrderedToolRepository extends ServiceEntityRepository
 
     public function findByName($name)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT ot
                 FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
@@ -45,7 +45,7 @@ class OrderedToolRepository extends ServiceEntityRepository
 
     public function findOneByNameAndWorkspace(string $name, ?Workspace $workspace = null): ?OrderedTool
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT ot
                 FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
@@ -66,7 +66,7 @@ class OrderedToolRepository extends ServiceEntityRepository
      */
     public function findByWorkspace(Workspace $workspace)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT ot
                 FROM Claroline\CoreBundle\Entity\Tool\OrderedTool AS ot
@@ -95,7 +95,7 @@ class OrderedToolRepository extends ServiceEntityRepository
             return [];
         }
 
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT ot
                 FROM Claroline\CoreBundle\Entity\Tool\OrderedTool AS ot
@@ -120,7 +120,7 @@ class OrderedToolRepository extends ServiceEntityRepository
 
     public function findOneByNameAndDesktop(string $name): ?OrderedTool
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT ot
                 FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
@@ -136,7 +136,7 @@ class OrderedToolRepository extends ServiceEntityRepository
 
     public function findByDesktop()
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT ot
                 FROM Claroline\CoreBundle\Entity\Tool\OrderedTool AS ot
@@ -160,7 +160,7 @@ class OrderedToolRepository extends ServiceEntityRepository
             return [];
         }
 
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT ot
                 FROM Claroline\CoreBundle\Entity\Tool\OrderedTool AS ot

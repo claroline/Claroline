@@ -46,7 +46,7 @@ class ResourceRightsRepository extends EntityRepository
             ++$index;
         }
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
 
         foreach ($roles as $key => $role) {
             $query->setParameter("role{$key}", $role);
@@ -90,7 +90,7 @@ class ResourceRightsRepository extends EntityRepository
             ++$index;
         }
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('nodeId', $node->getId());
 
         foreach ($roles as $key => $role) {

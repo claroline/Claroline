@@ -27,7 +27,7 @@ class PluginRepository extends EntityRepository
     {
         $split = explode('\\', $fqcn);
 
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT p FROM Claroline\CoreBundle\Entity\Plugin p
                 WHERE p.vendorName = :vendor
@@ -47,7 +47,7 @@ class PluginRepository extends EntityRepository
      */
     public function findPluginByShortName($name)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT p FROM Claroline\CoreBundle\Entity\Plugin p
                 WHERE CONCAT(p.vendorName, p.bundleName) LIKE :name

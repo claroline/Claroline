@@ -25,7 +25,7 @@ class GroupRepository extends EntityRepository
      */
     public function findByWorkspace(Workspace $workspace)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT g, wr
                 FROM Claroline\CoreBundle\Entity\Group g
@@ -46,7 +46,7 @@ class GroupRepository extends EntityRepository
     public function findByOrganizations(array $organizations = [])
     {
         if (!empty($organizations)) {
-            return $this->_em
+            return $this->getEntityManager()
                 ->createQuery('
                     SELECT g
                     FROM Claroline\CoreBundle\Entity\Group g
@@ -72,7 +72,7 @@ class GroupRepository extends EntityRepository
             WHERE g.name IN (:names)
         ';
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('names', $names);
 
         return $query->getResult();

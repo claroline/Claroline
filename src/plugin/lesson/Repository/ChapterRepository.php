@@ -89,9 +89,9 @@ class ChapterRepository extends NestedTreeRepository
     public function getNextChapter(Chapter $chapter)
     {
         try {
-            $qb = $this->_em->createQueryBuilder();
+            $qb = $this->getEntityManager()->createQueryBuilder();
 
-            return $this->_em->createQueryBuilder()->add('select', 'c')
+            return $this->getEntityManager()->createQueryBuilder()->add('select', 'c')
                 ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
                 ->innerJoin('c.lesson', ' l')
                 ->where($qb->expr()->andx(
@@ -113,9 +113,9 @@ class ChapterRepository extends NestedTreeRepository
     public function getPreviousChapter($chapter)
     {
         try {
-            $qb = $this->_em->createQueryBuilder();
+            $qb = $this->getEntityManager()->createQueryBuilder();
 
-            return $this->_em->createQueryBuilder()->add('select', 'c')
+            return $this->getEntityManager()->createQueryBuilder()->add('select', 'c')
                 ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
                 ->innerJoin('c.lesson', ' l')
                 ->where($qb->expr()->andx(
@@ -139,9 +139,9 @@ class ChapterRepository extends NestedTreeRepository
     public function getChapterBySLug($chapterSlug, $lessonId)
     {
         try {
-            $qb = $this->_em->createQueryBuilder();
+            $qb = $this->getEntityManager()->createQueryBuilder();
 
-            return $this->_em->createQueryBuilder()->add('select', 'c')
+            return $this->getEntityManager()->createQueryBuilder()->add('select', 'c')
                 ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
                 ->innerJoin('c.lesson', ' l')
                 ->where($qb->expr()->andx(

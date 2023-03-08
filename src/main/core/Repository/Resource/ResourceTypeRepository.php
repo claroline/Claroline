@@ -41,7 +41,7 @@ class ResourceTypeRepository extends ServiceEntityRepository
             JOIN rt.plugin p
             WHERE CONCAT(p.vendorName, p.bundleName) IN (:bundles)
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('bundles', $this->bundles);
 
         return $query->getResult();
@@ -103,7 +103,7 @@ class ResourceTypeRepository extends ServiceEntityRepository
           OR rt.plugin is NULL)
           AND rt.isEnabled = true';
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('bundles', $this->bundles);
 
         return $query->getResult();
@@ -118,7 +118,7 @@ class ResourceTypeRepository extends ServiceEntityRepository
             SELECT t.name FROM Claroline\CoreBundle\Entity\Resource\ResourceType t
             WHERE t.name NOT IN (:types)
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('types', $excludedTypeNames);
 
         return $query->getResult();
@@ -128,7 +128,7 @@ class ResourceTypeRepository extends ServiceEntityRepository
     {
         $dql = '
             SELECT t.name AS name FROM Claroline\CoreBundle\Entity\Resource\ResourceType t';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
 
         return $query->getResult();
     }
@@ -151,7 +151,7 @@ class ResourceTypeRepository extends ServiceEntityRepository
                 $dql .= ' AND r.isEnabled = true';
             }
 
-            $query = $this->_em->createQuery($dql);
+            $query = $this->getEntityManager()->createQuery($dql);
             $query->setParameter('names', $names);
             $result = $query->getResult();
         } else {

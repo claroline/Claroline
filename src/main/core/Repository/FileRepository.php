@@ -25,7 +25,7 @@ class FileRepository extends EntityRepository
             WHERE parent.id = {$parent->getId()}
         ";
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
 
         return $query->getResult();
     }

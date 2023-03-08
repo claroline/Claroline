@@ -46,7 +46,7 @@ class FieldFacetRepository extends EntityRepository
             WHERE ff.panelFacet IS NOT NULL
         ';
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
 
         return $query->getResult();
     }

@@ -42,7 +42,7 @@ class EntryRepository extends EntityRepository
                 AND e.publicationDate <= :endDate
             ';
         }
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('clacoForm', $clacoForm);
         $query->setParameter('status', Entry::PUBLISHED);
 
@@ -84,7 +84,7 @@ class EntryRepository extends EntityRepository
                 AND e.publicationDate <= :endDate
             ';
         }
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('clacoForm', $clacoForm);
         $query->setParameter('status', Entry::PUBLISHED);
         $query->setParameter('categoriesIds', $categoriesIds);

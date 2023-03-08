@@ -18,7 +18,7 @@ class PlanningRepository extends EntityRepository
 {
     public function areDatesAvailable(string $objectId, \DateTimeInterface $start, \DateTimeInterface $end): bool
     {
-        $count = (int) $this->_em
+        $count = (int) $this->getEntityManager()
             ->createQuery('
                 SELECT COUNT(p)
                 FROM Claroline\CoreBundle\Entity\Planning\Planning AS pl 

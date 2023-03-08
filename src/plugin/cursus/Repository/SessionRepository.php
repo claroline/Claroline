@@ -20,7 +20,7 @@ class SessionRepository extends EntityRepository
 {
     public function findByWorkspace(Workspace $workspace)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT s FROM Claroline\CursusBundle\Entity\Session AS s
                 WHERE s.workspace = :workspace
@@ -50,7 +50,7 @@ class SessionRepository extends EntityRepository
         $count = $this->countUsers($session, AbstractRegistration::LEARNER);
 
         // add groups count
-        $sessionGroups = $this->_em
+        $sessionGroups = $this->getEntityManager()
             ->createQuery('
                 SELECT sg FROM Claroline\CursusBundle\Entity\Registration\SessionGroup AS sg
                 WHERE sg.type = :registrationType
@@ -71,7 +71,7 @@ class SessionRepository extends EntityRepository
 
     public function countPending(Session $session)
     {
-        return (int) $this->_em
+        return (int) $this->getEntityManager()
             ->createQuery('
                 SELECT COUNT(su) FROM Claroline\CursusBundle\Entity\Registration\SessionUser AS su
                 WHERE su.type = :registrationType
@@ -87,7 +87,7 @@ class SessionRepository extends EntityRepository
 
     private function countUsers(Session $session, string $type)
     {
-        return (int) $this->_em
+        return (int) $this->getEntityManager()
             ->createQuery('
                 SELECT COUNT(su) FROM Claroline\CursusBundle\Entity\Registration\SessionUser AS su
                 WHERE su.type = :registrationType

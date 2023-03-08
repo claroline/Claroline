@@ -30,7 +30,7 @@ class CommentRepository extends EntityRepository
                 OR u = :user
             )
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('entry', $entry);
         $query->setParameter('status', Comment::VALIDATED);
         $query->setParameter('user', $user);

@@ -18,7 +18,7 @@ class FieldRepository extends EntityRepository
 {
     public function findByFieldFacetUuid(string $fieldFacetId): ?Field
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT f
                 FROM Claroline\ClacoFormBundle\Entity\Field f

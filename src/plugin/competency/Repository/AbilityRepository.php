@@ -103,7 +103,7 @@ class AbilityRepository extends EntityRepository
      */
     public function deleteOrphans()
     {
-        $linkedAbilityIds = $this->_em->createQueryBuilder()
+        $linkedAbilityIds = $this->getEntityManager()->createQueryBuilder()
             ->select('a.id')
             ->distinct()
             ->from('HeVinci\CompetencyBundle\Entity\CompetencyAbility', 'ca')
@@ -134,7 +134,7 @@ class AbilityRepository extends EntityRepository
     public function findFirstByName($name, Competency $excludedParent)
     {
         $qb = $this->createQueryBuilder('a');
-        $qb2 = $this->_em->createQueryBuilder();
+        $qb2 = $this->getEntityManager()->createQueryBuilder();
         $qb2->select('a2')
             ->from('HeVinci\CompetencyBundle\Entity\CompetencyAbility', 'ca')
             ->join('ca.ability', 'a2')
@@ -192,7 +192,7 @@ class AbilityRepository extends EntityRepository
             ->join('a1.competencyAbilities', 'ca')
             ->where('ca.competency = :competency');
 
-        return $this->_em->createQueryBuilder()
+        return $this->getEntityManager()->createQueryBuilder()
             ->select(
                 'e.id AS evaluationId',
                 'e.status',

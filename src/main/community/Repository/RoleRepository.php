@@ -45,7 +45,7 @@ class RoleRepository extends EntityRepository
      */
     public function findPlatformRoles(User $user)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT r 
                 FROM Claroline\CoreBundle\Entity\Role r
@@ -85,7 +85,7 @@ class RoleRepository extends EntityRepository
      */
     public function findWorkspaceRolesForUser(User $user, Workspace $workspace)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT r 
                 FROM Claroline\CoreBundle\Entity\Role r
@@ -120,7 +120,7 @@ class RoleRepository extends EntityRepository
      */
     public function findUserRoleByUsername(string $username): ?Role
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT r
                 FROM Claroline\CoreBundle\Entity\Role r
@@ -136,7 +136,7 @@ class RoleRepository extends EntityRepository
 
     private function findBaseWorkspaceRole(string $roleType, Workspace $workspace)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT r FROM Claroline\CoreBundle\Entity\Role r
                 WHERE r.name LIKE :role_pattern'

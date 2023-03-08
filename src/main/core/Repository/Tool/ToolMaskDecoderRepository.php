@@ -27,7 +27,7 @@ class ToolMaskDecoderRepository extends EntityRepository
             WHERE tmd.tool = :tool
             ORDER BY tmd.value ASC
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('tool', $tool);
 
         return $query->getResult();
@@ -47,7 +47,7 @@ class ToolMaskDecoderRepository extends EntityRepository
             AND tmd.name = :name
             ORDER BY tmd.value ASC
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('tool', $tool);
         $query->setParameter('name', $name);
 
@@ -63,7 +63,7 @@ class ToolMaskDecoderRepository extends EntityRepository
             AND tmd.name NOT IN (:defaultActions)
             ORDER BY tmd.value ASC
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('tool', $tool);
         $query->setParameter('defaultActions', ToolMaskDecoder::$defaultActions);
 

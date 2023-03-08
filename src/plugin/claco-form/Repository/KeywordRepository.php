@@ -25,7 +25,7 @@ class KeywordRepository extends EntityRepository
             WHERE c = :clacoForm
             AND UPPER(k.name) = :name
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('clacoForm', $clacoForm);
         $upperName = strtoupper($name);
         $query->setParameter('name', $upperName);
@@ -47,7 +47,7 @@ class KeywordRepository extends EntityRepository
             $dql .= ' AND k.uuid != :uuid';
         }
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('clacoForm', $clacoForm);
         $query->setParameter('name', strtoupper($name));
         if (!empty($uuid)) {
