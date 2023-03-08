@@ -25,7 +25,7 @@ class CorrectionRepository extends EntityRepository
             JOIN drop.dropzone d
             WHERE d = :dropzone
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);
 
         return $query->getResult();

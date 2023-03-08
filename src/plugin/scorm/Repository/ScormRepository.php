@@ -27,7 +27,7 @@ class ScormRepository extends EntityRepository
             AND w = :workspace
         ';
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('hashName', $hashName);
         $query->setParameter('workspace', $workspace);
 

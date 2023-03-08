@@ -22,7 +22,7 @@ class FieldFacetValueRepository extends EntityRepository
      */
     public function findPlatformValuesByUser(User $user)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT fv
                 FROM Claroline\CoreBundle\Entity\Facet\FieldFacetValue fv

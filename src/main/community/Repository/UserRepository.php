@@ -67,7 +67,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             $dql .= ' OR u.administrativeCode LIKE :username';
         }
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('username', $username);
 
         try {
@@ -106,7 +106,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             LEFT JOIN g.roles gr
             WHERE u.id = :id
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('id', $user->getId());
         $user = $query->getSingleResult();
 
@@ -128,7 +128,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
      */
     public function findByGroup(Group $group)
     {
-        $query = $this->_em->createQuery('
+        $query = $this->getEntityManager()->createQuery('
             SELECT DISTINCT u 
             FROM Claroline\\CoreBundle\\Entity\\User u
             JOIN u.groups g
@@ -163,7 +163,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
               AND u.isEnabled = true
               AND u.technical = false
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
 
         return $query->getResult();
@@ -183,7 +183,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
                 AND u.username IN (:usernames)
             ';
 
-            $query = $this->_em->createQuery($dql);
+            $query = $this->getEntityManager()->createQuery($dql);
             $query->setParameter('usernames', $usernames);
             $result = $query->getResult();
         } else {
@@ -249,10 +249,12 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
      */
     public function findByRoles(array $roles)
     {
-        $rsm = new ResultSetMappingBuilder($this->_em);
+        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
         $rsm->addRootEntityFromClassMetadata(User::class, 'u');
 
-        return $this->_em
+        // TODO : rewrite without union
+
+        return $this->getEntityManager()
             ->createNativeQuery('
                 (
                     SELECT u.* 

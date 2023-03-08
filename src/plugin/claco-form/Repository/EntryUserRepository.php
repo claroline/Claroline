@@ -32,7 +32,7 @@ class EntryUserRepository extends EntityRepository
             AND eu.user = :user
             AND eu.shared = true
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('clacoForm', $clacoForm);
         $query->setParameter('user', $user);
 
@@ -52,7 +52,7 @@ class EntryUserRepository extends EntityRepository
             WHERE c = :clacoForm
             AND eu.shared = true
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('clacoForm', $clacoForm);
 
         return $query->getResult();

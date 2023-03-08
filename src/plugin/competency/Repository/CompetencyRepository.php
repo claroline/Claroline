@@ -50,7 +50,7 @@ class CompetencyRepository extends NestedTreeRepository
      */
     public function findFirstUsersByName($search)
     {
-        return $this->_em->createQueryBuilder()
+        return $this->getEntityManager()->createQueryBuilder()
             ->select(
                 'u.id',
                 "CONCAT(u.firstName, ' ', u.lastName, ' (', u.username, ')') AS name"
@@ -76,7 +76,7 @@ class CompetencyRepository extends NestedTreeRepository
      */
     public function findFirstGroupsByName($search)
     {
-        return $this->_em->createQueryBuilder()
+        return $this->getEntityManager()->createQueryBuilder()
             ->select('g.id, g.name')
             ->from(Group::class, 'g')
             ->where('g.name LIKE :search')

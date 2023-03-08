@@ -27,7 +27,7 @@ class ResourceMaskDecoderRepository extends EntityRepository
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('id', 'id', 'integer');
 
-        $query = $this->_em->createNativeQuery($sql, $rsm);
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
 
         return array_column($query->getArrayResult(), 'id');
     }

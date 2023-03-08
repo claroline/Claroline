@@ -39,7 +39,7 @@ class ToolRepository extends ServiceEntityRepository
      */
     public function findUndisplayedToolsByWorkspace(Workspace $workspace)
     {
-        $query = $this->_em->createQuery('
+        $query = $this->getEntityManager()->createQuery('
             SELECT tool
             FROM Claroline\CoreBundle\Entity\Tool\Tool tool
             LEFT JOIN tool.plugin p
@@ -71,7 +71,7 @@ class ToolRepository extends ServiceEntityRepository
      */
     public function countDisplayedToolsByWorkspace(Workspace $workspace)
     {
-        $query = $this->_em->createQuery('
+        $query = $this->getEntityManager()->createQuery('
             SELECT count(tool)
             FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
             JOIN ot.tool tool

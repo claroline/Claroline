@@ -37,7 +37,7 @@ class ConnectionMessageRepository extends EntityRepository
                 AND cmu = :user
             ))
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('type', ConnectionMessage::TYPE_ALWAYS);
         $query->setParameter('now', new \DateTime());
         $query->setParameter('user', $user);

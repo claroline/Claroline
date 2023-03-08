@@ -27,7 +27,7 @@ class DropRepository extends EntityRepository
             WHERE d = :dropzone
             AND uu = :user
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);
         $query->setParameter('user', $user);
 
@@ -50,7 +50,7 @@ class DropRepository extends EntityRepository
             AND u != :user
             AND cu = :user
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);
         $query->setParameter('user', $user);
 
@@ -71,7 +71,7 @@ class DropRepository extends EntityRepository
             AND c.finished = true
             AND c.teamUuid = :teamId
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);
         $query->setParameter('teamId', $teamId);
 
@@ -94,7 +94,7 @@ class DropRepository extends EntityRepository
             AND u != :user
             AND cu = :user
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);
         $query->setParameter('user', $user);
 
@@ -115,7 +115,7 @@ class DropRepository extends EntityRepository
             AND c.finished = false
             AND c.teamUuid = :teamId
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);
         $query->setParameter('teamId', $teamId);
 
@@ -143,7 +143,7 @@ class DropRepository extends EntityRepository
               AND cor.teamUuid IS NULL
             )
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);
         $query->setParameter('user', $user);
 
@@ -168,7 +168,7 @@ class DropRepository extends EntityRepository
               AND cor.teamUuid = :teamId
             )
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);
         $query->setParameter('teamId', $teamId);
 
@@ -185,7 +185,7 @@ class DropRepository extends EntityRepository
             AND drop.finished = false
             AND drop.teamUuid IN (:teamsIds)
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('dropzone', $dropzone);
         $query->setParameter('teamsIds', $teamsIds);
 

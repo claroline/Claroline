@@ -35,7 +35,7 @@ class AdministrationToolRepository extends ServiceEntityRepository
             WHERE CONCAT(p.vendorName, p.bundleName) IN (:bundles)
             OR tool.plugin is NULL';
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('bundles', $this->bundles);
 
         return $query->getResult();
@@ -62,7 +62,7 @@ class AdministrationToolRepository extends ServiceEntityRepository
             $dql .= ' AND role.name IN (:roleNames)';
         }
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('bundles', $this->bundles);
 
         if (!$isAdmin) {

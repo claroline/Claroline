@@ -18,7 +18,7 @@ class ScheduledTaskRepository extends EntityRepository
 {
     public function findTasksToExecute()
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT t
                 FROM Claroline\SchedulerBundle\Entity\ScheduledTask t

@@ -41,7 +41,7 @@ class ResourceActionRepository extends ServiceEntityRepository
             return parent::findAll();
         }
 
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT m FROM Claroline\CoreBundle\Entity\Resource\MenuAction m
                 LEFT JOIN m.plugin p

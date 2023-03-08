@@ -33,7 +33,7 @@ class FieldValueRepository extends EntityRepository
             WHERE c = :clacoForm
             AND ff.type = :type
         ';
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('clacoForm', $clacoForm);
         $query->setParameter('type', $type);
 

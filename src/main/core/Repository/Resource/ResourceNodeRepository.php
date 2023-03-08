@@ -159,7 +159,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
             FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node
             WHERE node.parent = :node';
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('node', $node->getId());
 
         return $query->getSingleScalarResult();
@@ -198,7 +198,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
             function (array $ws) {
                 return $ws['code'];
             },
-            $this->_em->createQuery('
+            $this->getEntityManager()->createQuery('
                 SELECT UPPER(n.code) AS code
                 FROM Claroline\CoreBundle\Entity\Resource\ResourceNode n
                 WHERE UPPER(n.code) LIKE :search

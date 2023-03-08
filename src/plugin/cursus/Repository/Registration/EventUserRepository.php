@@ -19,7 +19,7 @@ class EventUserRepository extends EntityRepository
 {
     public function findBySessionAndUser(Session $session, User $user)
     {
-        return $this->_em
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT eu 
                 FROM Claroline\CursusBundle\Entity\Registration\EventUser AS eu
