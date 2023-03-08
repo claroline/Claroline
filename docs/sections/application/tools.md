@@ -41,7 +41,7 @@ plugin:
 
 In order to catch the event, your plugin must define a subscriber in your config.
 
-**The listener config file**
+**The subscriber config file**
 
 *MY_PLUGIN\Resources\config\services\subscriber.yml*
 
@@ -58,6 +58,7 @@ namespace Claroline\ExampleBundle\Subscriber;
 
 use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class MyToolSubscriber implements EventSubscriberInterface
 {
@@ -89,7 +90,7 @@ using `$event->getWorkspace();`.
 
 ## Translations
 
-* tools.xx.yml
+* tools.xx.json
 
 We use lower case for every translation keys.
 
@@ -103,3 +104,7 @@ You can translate your tool names here.
 ```
 
 Where `claroline_my_tool` is the name you defined in your config file.
+
+> You'll need to rebuild the js translation in order to see the changes in your application.
+> 
+> $ rm -rf var/cache/* && php bin/console bazinga:js-translation:dump public/js && rm -rf var/cache/*
