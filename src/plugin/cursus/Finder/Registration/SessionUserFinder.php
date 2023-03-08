@@ -75,9 +75,17 @@ class SessionUserFinder extends AbstractFinder
                         $userJoin = true;
                     }
 
-                    $qb->join('u.organizations', 'o');
-                    $qb->andWhere("o.uuid IN (:{$filterName})");
-                    $qb->setParameter($filterName, $filterValue);
+                    // get user organizations
+                    $qb->leftJoin('u.userOrganizationReferences', 'ref');
+                    $qb->leftJoin('ref.organization', 'o');
+
+                    // get organizations from user groups
+                    $qb->leftJoin('u.groups', 'g');
+                    $qb->leftJoin('g.organizations', 'go');
+
+                    $qb->andWhere('(o.uuid IN (:organizations) OR go.uuid IN (:organizations))');
+                    $qb->setParameter('organizations', is_array($filterValue) ? $filterValue : [$filterValue]);
+
                     break;
 
                 case 'pending':
