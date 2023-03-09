@@ -25,17 +25,7 @@ title: Introduction
 >
 > will help to understand the current document.
 
-
-## Directory structure
-
-
-## Import
-
-
-## Export
-
-
-### Webpack
+## Webpack
 
 All the JavaScript needed by the application is compiled and distributed by webpack.
 To ease the development process, we use the `webpack-dev-server` in order to serve the files.
@@ -43,21 +33,48 @@ This requires to run the dev server in command line :
 
     npm run webpack:dev
 
+## Directory structure
 
-## React integration
+JavaScript applications for plugins are stored in `MY_PLUGIN/Resources/modules`.
 
-### mount()
+## Import
 
-### PropTypes
+Webpack defines some aliases for imports in order to simplify the path to the JS source files
 
+### Alias for the Claroline Connect distribution plugins
 
-## Redux integration
+*Plugins declared by Claroline Connect in the `src` directory.*
 
-### Reducer
+#### Original path
+```
+/src/main/app/Resources/modules/page/components/full.jsx
+```
 
-### Selectors
+#### Alias
+```
+#/main/app/page/components/full
+```
 
-### Middleware
+#### Usage
+```js
+import {PageFull} from '#/main/app/page/components/full'
+```
 
+### Alias for external plugins
 
-## Immutability
+*Plugins declared by distribution packages located in the `vendor` directory.*
+
+#### Original path
+```
+/vendor/vendor-name/package-name/plugin/MY_PLUGIN/Resources/modules/tools/my-tool/index.js
+```
+
+#### Alias
+```
+~/vendor-name/package-name/MY_PLUGIN/tools/my-tool
+```
+
+#### Usage
+```js
+import {PageFull} from '#/main/app/page/components/full'
+```
