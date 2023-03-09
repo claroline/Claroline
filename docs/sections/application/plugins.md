@@ -25,7 +25,9 @@ Plugins can inject :
 
 # Declaring a new plugin
 
-## The bundle class **[required]**
+## API
+
+### The bundle class **[required]**
 
 Plugins are standard [symfony bundles](https://symfony.com/doc/current/bundles.html) (aka class extending `Symfony\Component\HttpKernel\Bundle\Bundle`)
 and follow the same naming standards.
@@ -43,7 +45,7 @@ The abstract class to implement depends on the way the plugin is provided to Cla
 It's only used to declare the plugin to the base system, and all the required implementations are provided by
 the plugin abstract classes.
 
-## The plugin config file **[required]**
+### The plugin config file **[required]**
 
 Plugins also require a config file (written in yaml) in order to inject new features (like resources and tools) into the Claroline Connect application.
 This file is located in `your_plugin/Resources/config/config.yml`.
@@ -52,7 +54,7 @@ This file is located in `your_plugin/Resources/config/config.yml`.
 plugin: ~
 ```
 
-## The composer autoloading
+### The composer autoloading **[required]**
 
 Claroline Connect uses a custom directory structure which don't fully follow the PSR-4 rules 
 (there are additional directories before the PSR-4 can be applied).
@@ -86,3 +88,24 @@ When creating a new plugin, you'll need to manually declare it to the composer a
 ```bash
 $ composer dump-autoload
 ``` 
+
+## UI
+
+### The plugin config file **[required]**
+
+Plugins require a config file (written in js) in order to inject new elements (like resources and tools) into the Claroline Connect user interface.
+This file is located in `MY_PLUGIN/Resources/modules/plugin.js`.
+
+```js
+import {registry} from '#/main/app/plugins/registry'
+
+registry.add('VendorPluginNameBundle', {
+  tools: {
+    // ...
+  },
+  resources: {
+    // ...
+  }
+  // ... Other elements to inject into the UI
+})
+```
