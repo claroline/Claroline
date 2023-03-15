@@ -10,32 +10,39 @@ title: Serializer
 
 **Class :** `Claroline\AppBundle\API\SerializerProvider`
 
-**Dependency Injection ID :** `claroline.api.serializer`
-
-The `SerializerProvider` is responsible of the serialization/deserialization process of the 
- application Entities.
+The `SerializerProvider` is in charge of the serialization/deserialization process of the application Entities.
 
 ### Usages
 
 The provider is a standard service registered in the Symfony [ServiceContainer](https://symfony.com/doc/current/service_container.html).
- It can be retrieved from the `container` or directly injected inside another service.
+It can be retrieved from the `container` or directly injected inside another service.
+
+```yaml
+services:
+    MyCustomService:
+        - '@Claroline\AppBundle\API\SerializerProvider'
+```
+
+You can now use it in your own service :
 
 ```php
-use Claroline\AppBundle\API\SerializerProvider;
-use JMS\DiExtraBundle\Annotation as DI;
+// ...
 
-/**
- * Injects SerializerProvider service.
- *
- * @DI\InjectParams({
- *     "serializerProvider" = @DI\Inject("claroline.api.serializer")
- * })
- *
- * @param SerializerProvider $serializerProvider
- */
-public function injector(SerializerProvider $serializerProvider)
+use Claroline\AppBundle\API\SerializerProvider;
+
+class MyCustomService
 {
-    // ...
+    private SerializerProvider $serializer;
+    
+    public function __construct(SerializerProvider $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+    
+    public function myCustomMethod()
+    {
+        $serialized = $this->serializer->serialize($myCustomObject);
+    }
 }
 ```
 
@@ -78,9 +85,6 @@ $serializedUser = $this->serializerProvider->serialize($user, [Options::SERIALIZ
 
 Converts a serializable structure into the Entity `$class`.
 
-If `$data` contains an `id`, the provider will try to fetch it from the DB (you can avoid this behavior with
-the option `Options::NO_FETCH`) otherwise it will initialize a new object.
-
 ##### Arguments
 
 - `$class`   _(string)_ : the full class name (including namespace) of the target entity.
@@ -105,7 +109,7 @@ $serializedUser = [
 ];
 
 // get a User entity from the serialized data
-$user = $this->serializerProvider->deserialize('Claroline\CoreBundle\Entity\User', $serializedUser); 
+$user = $this->serializerProvider->deserialize(User::class, $serializedUser); 
 
 echo $user instanceof User; // true
 echo $user->getFirstName(); // John
@@ -116,17 +120,17 @@ echo $user->getFirstName(); // John
 
 **Namespace :** `MyVendor\MyBundle\Serializer\MySerializer`
 
-**Dependency Injection Tag :** `claroline.api.serializer`
+**Dependency Injection Tag :** `claroline.serializer`
 
-The `Serializer` is a service responsible of the serialization/deserialization of an Entity (and it's associations). 
+The `Serializer` is a service in charge of the serialization/deserialization of an Entity (and it's associations). 
 
 > **Note**
 > 
 > All entities in the application don't require their own serializer. In most cases, there is only one `Serializer`
-> for each objects exposed in the [JSON API](sections/json/index.md) (which includes a main Entity and it's associations).
+> for each object exposed in the [JSON API](sections/json/index.md) (which includes a main Entity and it's associations).
 >
 > Some complex cases (like quiz resource) use multiple serializers for development purposes.
-> In this cases, the additional serializers SHOULD NOT be registered in the `SerializerProvider`.
+> In these cases, the additional serializers SHOULD NOT be registered in the `SerializerProvider`.
 
 
 ### Register into the `SerializerProvider`
@@ -134,16 +138,13 @@ The `Serializer` is a service responsible of the serialization/deserialization o
 In order to be able to access a `Serializer` from the [`SerializerProvider`](#serializerprovider), you need to register it.
 For this, we use the symfony [Tagged Services](https://symfony.com/doc/current/service_container/tags.html).
 
-```php
-use JMS\DiExtraBundle\Annotation as DI;
+```yaml
+# MY_PLUGIN/Resources/config/services/serializer.yml
 
-/**
- * @DI\Tag("claroline.api.serializer")
- */
-class MySerializer
-{
-    // ...
-}
+services:
+    MySerializer:
+        tags: [claroline.serializer]
+
 ```
 
 ### Methods
@@ -175,7 +176,7 @@ class MySerializer
 {
     public function getClass()
     {
-        return 'MyVendor\MyBundle\Entity\MyObject';
+        return MyObject::class;
     }
 }
 ```
