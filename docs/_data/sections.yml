@@ -85,6 +85,8 @@
       - title: API
         doc: user-interface/api
 
+      - title: Tools
+        doc: user-interface/tools
 
 - title: Themes
   doc: themes
