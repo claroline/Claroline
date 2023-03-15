@@ -179,7 +179,7 @@ import {makeInstanceAction} from '#/main/app/store/actions'
 
 import {selectors} from '#/plugin/my-plugin/tools/my-tool/store/selectors'
 
-const reducer = makeReducer(initialeState = null, handlers = {
+const reducer = makeReducer(null, {
   [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.data_key,
 })
 ```
@@ -214,7 +214,7 @@ const MyToolTool = connect(
   (dispatch) => ({
     // inject Redux actions inside your component
   })
-)
+)(MyToolToolComponent)
 
 export {
   MyToolTool
