@@ -61,7 +61,7 @@
     "uuid": "^9.0.0",
     "video.js": "7.7.4",
     "wavesurfer.js": "2.2.1",
-    "webpack": "^5.75.0",
+    "webpack": "^5.76.0",
     "webpack-cli": "^5.0.1",
     "whatwg-fetch": "^2.0.1"
   },
