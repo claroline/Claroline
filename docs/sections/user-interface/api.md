@@ -5,9 +5,13 @@ title: API
 
 # API
 
-The API module is responsible of the UI calls to the underlying data api.
+The API module is in charge of the UI calls to the underlying data api.
 
-> To learn more about creating an API for your user interface, please check [API documentation](/sections/api/index).
+> To learn more about creating an API for your user interface, please check [API documentation](Claroline/sections/api/index).
+
+In order to call our API we will need two things : 
+- Have access to the API routes 
+- Be able to trigger AJAX requests
 
 ## Router
 
@@ -31,18 +35,15 @@ const userGetUrl = url(['apiv2_user_get', {id: '123'}])
 console.log(userGetUrl) // print : /apiv2/user/123
 ```
 
-## Middleware
+> Lots of components which need API URLs (like DataForm or DataList) will accept the route definition `['apiv2_user_list']` or the final URL string.
 
-The api middleware is highly inspired by:
-[Redux real world example](https://github.com/reactjs/redux/blob/master/examples/real-world/src/middleware/api.js).
+## Redux
 
-It permits to declare new actions that will be caught and transformed in API request.
+AJAX calls are performed through our Redux integration.
+You can declare new actions that will be caught and transformed in API request.
 
-### Requirements
-
-- Requires to be registered in the app store.
-- Requires `redux-thunk` to dispatch the correct sets of actions on AJAX events.
-- As it needs `redux-thunk`, the api middleware must to be registered **before** it.
+> Under the hood, we use a custom [middleware](https://redux.js.org/understanding/history-and-design/middleware)
+> based on the `redux-thunk` middleware which will eventually call the standard [fetch](https://developer.mozilla.org/fr/docs/Web/API/Fetch_API/Using_Fetch) function.
 
 ### Usage
 
