@@ -175,6 +175,8 @@ class MyToolSubscriber implements EventSubscriberInterface
 ```js
 // MY_PLUGIN/Resources/modules/tools/my-tool/store/reducer.js
 
+import {makeInstanceAction} from '#/main/app/store/actions'
+
 import {selectors} from '#/plugin/my-plugin/tools/my-tool/store/selectors'
 
 const reducer = makeReducer(initialeState = null, handlers = {
@@ -201,7 +203,7 @@ This is done through `containers`.
 import {connect} from 'react-redux'
 
 import {MyToolTool as MyToolToolComponent} from '#/plugin/MY_PLUGIN/tools/my-tool/components/tool'
-import {selectors} from '#/plugin/my-plugin/tools/my-tool/store'
+import {selectors} from '#/plugin/MY_PLUGIN/tools/my-tool/store'
 
 const MyToolTool = connect(
   (state) => ({
