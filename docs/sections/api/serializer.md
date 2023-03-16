@@ -20,7 +20,8 @@ It can be retrieved from the `container` or directly injected inside another ser
 ```yaml
 services:
     MyCustomService:
-        - '@Claroline\AppBundle\API\SerializerProvider'
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
 ```
 
 You can now use it in your own service :
