@@ -5,7 +5,7 @@ title: Tools
 
 # Tools
 
-> Before declaring an UI for your tool, 
+> Before declaring a user interface for your tool, 
 > you'll first need to [register it](Claroline/sections/application/tools) in the Claroline Connect application.
 
 ## Registering a tool into Claroline Connect
@@ -67,9 +67,24 @@ import {MyToolMenu} from '#/plugin/my-plugin/tools/my-tool/components/menu'
 import {reducer} from '#/plugin/my-plugin/tools/my-tool/store'
 
 export default {
+  /**
+   * [Required] The root component of the tool.
+   */
   component: MyToolTool,
+  
+  /**
+   * [Optional] A menu component to display in the Claroline sidebar.
+   */
   menu: MyToolMenu,
+  
+  /**
+   * [Optional] A reducer to mount in the Claroline store to manage the custom tool data.
+   */
   store: reducer,
+  
+  /**
+   * [Optional] Additional styles to append to the page when opening the tool.
+   */
   styles: ['claroline-distribution-plugin-my-plugin-my-tool']
 }
 ```
@@ -166,7 +181,7 @@ class MyToolSubscriber implements EventSubscriberInterface
     {
         $event->setData([
             // You can put here the serialized data which need be loaded when the tool is opened
-            'data_key' => [/*serializable structure*/], 
+            'my_data_key' => [/* serializable structure */], 
         ]);
     }
 }
@@ -180,16 +195,27 @@ import {makeInstanceAction} from '#/main/app/store/actions'
 import {selectors} from '#/plugin/my-plugin/tools/my-tool/store/selectors'
 
 const reducer = makeReducer(null, {
-  [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.data_key,
+  [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.my_data_key,
 })
 ```
 
-We can now access our API data with our selectors : 
+You can now access your API data with your selectors : 
 
 ```js
 import {selectors} from '#/plugin/my-plugin/tools/my-tool/store/selectors'
 
-const data = selectors.store(state)
+// From a Container
+const MyContainer = connect(
+  (state) => ({
+    myData: selectors.store(state)
+  })
+)(MyComponent)
+
+// From another selector
+const data = createSelector(
+  [selectors.store],
+  (myData) => console.log(myData)
+)
 ```
 
 ### Connecting the tool to the store
@@ -260,11 +286,13 @@ All this information are accessible through some selectors :
 ```js
 import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 
+// ...
+
 // retrieves the base path of the tool
-const myToolPath = toolSelectors.path(state)
+toolSelectors.path(state)
 
 // retrieves information (permissions, name, poster, ...) about the tool
-const myToolData = toolSelectors.toolData(state)
+toolSelectors.toolData(state)
 ```
 
 
