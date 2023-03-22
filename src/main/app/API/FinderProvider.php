@@ -16,12 +16,9 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 
 class FinderProvider
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var iterable */
-    private $finders;
+    private ObjectManager $om;
+    private SerializerProvider $serializer;
+    private iterable $finders;
 
     public function __construct(
         ObjectManager $om,
@@ -84,7 +81,7 @@ class FinderProvider
         $data = $this->fetch($class, $allFilters, $sortBy, $page, $limit);
 
         if (0 < $count && empty($data)) {
-            // search should have returned results, but we have requested a non existent page => get the last page
+            // search should have returned results, but we have requested a non-existent page => get the last page
             $page = 0 !== $limit ? ceil($count / $limit) - 1 : 1;
             // load last page data
             $data = $this->fetch($class, $allFilters, $sortBy, $page, $limit);
@@ -109,7 +106,7 @@ class FinderProvider
      *
      * @return mixed
      */
-    public function fetch(string $class, array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false)
+    public function fetch(string $class, ?array $filters = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false)
     {
         try {
             return $this->get($class)->find($filters, $sortBy, $page, $limit, $count);
