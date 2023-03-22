@@ -24,7 +24,17 @@ class ListUsersExporter extends AbstractListExporter
             return [];
         }
 
-        return parent::execute($batchNumber, $options, $extra);
+        $data = [];
+
+        $users = parent::execute($batchNumber, $options, $extra);
+        foreach ($users as $user) {
+            $data[] = [
+                'user' => $user,
+                'group' => $extra['group'],
+            ];
+        }
+
+        return $data;
     }
 
     public function getExtraDefinition(?array $options = [], ?array $extra = []): array
@@ -43,46 +53,57 @@ class ListUsersExporter extends AbstractListExporter
     {
         return [
             'properties' => [
+                // User info
                 [
-                    'name' => 'id',
+                    'name' => 'user.id',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user id', [], 'schema'),
                 ], [
-                    'name' => 'email',
+                    'name' => 'user.email',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user email address', [], 'schema'),
                 ], [
-                    'name' => 'username',
+                    'name' => 'user.username',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user username', [], 'schema'),
                 ], [
-                    'name' => 'firstName',
+                    'name' => 'user.firstName',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user first name', [], 'schema'),
                 ], [
-                    'name' => 'lastName',
+                    'name' => 'user.lastName',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user last name', [], 'schema'),
                 ], [
-                    'name' => 'administrativeCode',
+                    'name' => 'user.administrativeCode',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user administrativeCode', [], 'schema'),
                 ], [
-                    'name' => 'meta.description',
+                    'name' => 'user.meta.description',
                     'type' => 'string',
                     'description' => $this->translator->trans('The user description', [], 'schema'),
                 ], [
-                    'name' => 'meta.created',
+                    'name' => 'user.meta.created',
                     'type' => 'date',
                     'description' => $this->translator->trans('The user creation date', [], 'schema'),
                 ], [
-                    'name' => 'meta.lastActivity',
+                    'name' => 'user.meta.lastActivity',
                     'type' => 'date',
                     'description' => $this->translator->trans('The user last activity date', [], 'schema'),
                 ], [
-                    'name' => 'restrictions.disabled',
+                    'name' => 'user.restrictions.disabled',
                     'type' => 'boolean',
                     'description' => $this->translator->trans('Is the user disabled ?', [], 'schema'),
+                ],
+                // Group info
+                [
+                    'name' => 'group.id',
+                    'type' => 'string',
+                    'description' => $this->translator->trans('The group id', [], 'schema'),
+                ], [
+                    'name' => 'group.name',
+                    'type' => 'string',
+                    'description' => $this->translator->trans('The group name', [], 'schema'),
                 ],
             ],
         ];
