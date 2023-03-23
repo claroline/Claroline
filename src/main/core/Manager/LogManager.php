@@ -16,7 +16,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -25,53 +25,24 @@ class LogManager
 {
     const CSV_LOG_BATCH = 1000;
 
-    /** @var ObjectManager */
-    private $om;
+    private ObjectManager $om;
+    private LogRepository $logRepository;
+    private FinderProvider $finder;
+    private TranslatorInterface $translator;
+    private EventDispatcherInterface $dispatcher;
 
-    /** @var LogRepository */
-    private $logRepository;
-
-    /** @var FinderProvider */
-    private $finder;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var ClaroUtilities */
-    private $ut;
-
-    /** @var EventDispatcherInterface */
-    private $dispatcher;
-
-    /**
-     * LogManager constructor.
-     */
     public function __construct(
         ObjectManager $objectManager,
         FinderProvider $finder,
         TranslatorInterface $translator,
-        ClaroUtilities $ut,
         EventDispatcherInterface $dispatcher
     ) {
         $this->translator = $translator;
         $this->om = $objectManager;
         $this->finder = $finder;
-        $this->ut = $ut;
         $this->dispatcher = $dispatcher;
 
         $this->logRepository = $objectManager->getRepository(Log::class);
-    }
-
-    /**
-     * Get log by id.
-     *
-     * @param $id
-     *
-     * @return object|null
-     */
-    public function getLog($id)
-    {
-        return $this->logRepository->findOneBy(['id' => $id]);
     }
 
     public function getData(array $finderParams = [])
@@ -114,6 +85,8 @@ class LogManager
      * @param $query
      *
      * @return bool|resource
+     *
+     * @deprecated
      */
     public function exportLogsToCsv($query, $fileName = null)
     {
@@ -156,7 +129,7 @@ class LogManager
                     DateNormalizer::normalize($log->getDateLog()),
                     $this->translator->trans('log_'.$log->getAction().'_shortname', [], 'log'),
                     $log->getDoer() ? $log->getDoer()->getUsername() : '',
-                    $this->ut->html2Csv($description, true),
+                    TextNormalizer::stripHtml($description, true),
                 ], ';', '"');
             }
 
@@ -172,6 +145,8 @@ class LogManager
      * Exports users' actions for a given query.
      *
      * @return bool|resource
+     *
+     * @deprecated
      */
     public function exportUserActionToCsv(array $finderParams = [])
     {
@@ -241,6 +216,9 @@ class LogManager
         return $chartData;
     }
 
+    /**
+     * @deprecated
+     */
     public function getDetails(Log $log)
     {
         $details = $log->getDetails();

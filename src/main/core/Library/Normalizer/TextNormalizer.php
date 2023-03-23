@@ -4,15 +4,8 @@ namespace Claroline\CoreBundle\Library\Normalizer;
 
 class TextNormalizer
 {
-    /**
-     * @param $string
-     *
-     * @return string
-     */
-    public static function stripDiacritics($string)
+    public static function stripDiacritics(string $string): string
     {
-        $string = (string) $string;
-
         if (!preg_match('/[\x80-\xff]/', $string)) {
             return $string;
         }
@@ -82,9 +75,8 @@ class TextNormalizer
             // grave accent
             'Ǜ' => 'U', 'ǜ' => 'u',
         ];
-        $string = str_replace(array_keys($transliteration), array_values($transliteration), $string);
 
-        return $string;
+        return str_replace(array_keys($transliteration), array_values($transliteration), $string);
     }
 
     public static function toKey($string, int $length = null)
@@ -118,6 +110,9 @@ class TextNormalizer
         return $string;
     }
 
+    /**
+     * Converts a string into UTF-8 and replaces EOL by PHP ones.
+     */
     public static function sanitize(string $string): string
     {
         // If encoding not UTF-8 then convert it to UTF-8
@@ -126,6 +121,7 @@ class TextNormalizer
         // normalize end of lines
         $string = str_replace("\r\n", PHP_EOL, $string);
         $string = str_replace("\r", PHP_EOL, $string);
+        $string = str_replace("\n", PHP_EOL, $string);
 
         return $string;
     }
@@ -135,87 +131,127 @@ class TextNormalizer
      */
     public static function resumeHtml(string $text, int $nbCharacter, ?string $readMoreText = ''): string
     {
-        if (is_numeric($nbCharacter)) {
-            $lengthBeforeWithoutHtml = strlen(trim(strip_tags($text)));
-            $htmlSplitMask = '#</?([a-zA-Z1-6]+)(?: +[a-zA-Z]+="[^"]*")*( ?/)?>#';
-            $htmlMatchMask = '#<(?:/([a-zA-Z1-6]+)|([a-zA-Z1-6]+)(?: +[a-zA-Z]+="[^"]*")*( ?/)?)>#';
+        $lengthBeforeWithoutHtml = strlen(trim(strip_tags($text)));
+        $htmlSplitMask = '#</?([a-zA-Z1-6]+)(?: +[a-zA-Z]+="[^"]*")*( ?/)?>#';
+        $htmlMatchMask = '#<(?:/([a-zA-Z1-6]+)|([a-zA-Z1-6]+)(?: +[a-zA-Z]+="[^"]*")*( ?/)?)>#';
+        $text .= ' ';
+        $textPieces = preg_split($htmlSplitMask, $text, -1, PREG_SPLIT_OFFSET_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $pieceNumber = count($textPieces);
+
+        if (1 === $pieceNumber) {
             $text .= ' ';
-            $textPieces = preg_split($htmlSplitMask, $text, -1, PREG_SPLIT_OFFSET_CAPTURE | PREG_SPLIT_NO_EMPTY);
-            $pieceNumber = count($textPieces);
+            $lengthBefore = strlen($text);
+            $text = substr($text, 0, strpos($text, ' ', $lengthBefore > $nbCharacter ? $nbCharacter : $lengthBefore));
 
-            if (1 === $pieceNumber) {
-                $text .= ' ';
-                $lengthBefore = strlen($text);
-                $text = substr($text, 0, strpos($text, ' ', $lengthBefore > $nbCharacter ? $nbCharacter : $lengthBefore));
+            if ('' != $readMoreText && $lengthBefore > $nbCharacter) {
+                $text .= $readMoreText;
+            }
+        } else {
+            $length = 0;
+            $indexLastPiece = $pieceNumber - 1;
+            $position = $textPieces[$indexLastPiece][1] + strlen($textPieces[$indexLastPiece][0]) - 1;
+            $indexPiece = $indexLastPiece;
+            $searchSpace = true;
 
-                if ('' != $readMoreText && $lengthBefore > $nbCharacter) {
-                    $text .= $readMoreText;
+            foreach ($textPieces as $index => $bout) {
+                $length += strlen($bout[0]);
+                if ($length >= $nbCharacter) {
+                    $positionEndPiece = $bout[1] + strlen($bout[0]) - 1;
+                    $position = $positionEndPiece - ($length - $nbCharacter);
+
+                    $positionSpace = strpos($bout[0], ' ', $position - $bout[1]);
+                    if (false !== $positionSpace) {
+                        $position = $bout[1] + $positionSpace;
+                        $searchSpace = false;
+                    }
+                    if ($index != $indexLastPiece) {
+                        $indexPiece = $index + 1;
+                    }
+                    break;
                 }
-            } else {
-                $length = 0;
-                $indexLastPiece = $pieceNumber - 1;
-                $position = $textPieces[$indexLastPiece][1] + strlen($textPieces[$indexLastPiece][0]) - 1;
-                $indexPiece = $indexLastPiece;
-                $searchSpace = true;
+            }
 
-                foreach ($textPieces as $index => $bout) {
-                    $length += strlen($bout[0]);
-                    if ($length >= $nbCharacter) {
-                        $positionEndPiece = $bout[1] + strlen($bout[0]) - 1;
-                        $position = $positionEndPiece - ($length - $nbCharacter);
-
-                        $positionSpace = strpos($bout[0], ' ', $position - $bout[1]);
-                        if (false !== $positionSpace) {
-                            $position = $bout[1] + $positionSpace;
-                            $searchSpace = false;
-                        }
-                        if ($index != $indexLastPiece) {
-                            $indexPiece = $index + 1;
-                        }
+            if (true === $searchSpace) {
+                for ($i = $indexPiece; $i <= $indexLastPiece; ++$i) {
+                    $position = $textPieces[$i][1];
+                    $positionSpace = strpos($textPieces[$i][0], ' ');
+                    if (false !== $positionSpace) {
+                        $position += $positionSpace;
                         break;
                     }
                 }
+            }
 
-                if (true === $searchSpace) {
-                    for ($i = $indexPiece; $i <= $indexLastPiece; ++$i) {
-                        $position = $textPieces[$i][1];
-                        $positionSpace = strpos($textPieces[$i][0], ' ');
-                        if (false !== $positionSpace) {
-                            $position += $positionSpace;
-                            break;
-                        }
-                    }
+            $text = substr($text, 0, $position);
+            preg_match_all($htmlMatchMask, $text, $return, PREG_OFFSET_CAPTURE);
+            $tagPieces = [];
+
+            foreach ($return[0] as $index => $tag) {
+                if (isset($return[3][$index][0])) {
+                    continue;
                 }
-
-                $text = substr($text, 0, $position);
-                preg_match_all($htmlMatchMask, $text, $return, PREG_OFFSET_CAPTURE);
-                $tagPieces = [];
-
-                foreach ($return[0] as $index => $tag) {
-                    if (isset($return[3][$index][0])) {
-                        continue;
-                    }
-                    if ('/' != $return[0][$index][0][1]) {
-                        array_unshift($tagPieces, $return[2][$index][0]);
-                    } else {
-                        array_shift($tagPieces);
-                    }
+                if ('/' != $return[0][$index][0][1]) {
+                    array_unshift($tagPieces, $return[2][$index][0]);
+                } else {
+                    array_shift($tagPieces);
                 }
+            }
 
-                if (!empty($tagPieces)) {
-                    foreach ($tagPieces as $tag) {
-                        $text .= '</'.$tag.'>';
-                    }
+            if (!empty($tagPieces)) {
+                foreach ($tagPieces as $tag) {
+                    $text .= '</'.$tag.'>';
                 }
+            }
 
-                if ('' != $readMoreText && $lengthBeforeWithoutHtml > $nbCharacter) {
-                    $text .= 'SuspensionPoint';
-                    $pattern = '#((</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>)[\n\t\r ]*SuspensionPoint)#i';
-                    $text = preg_replace($pattern, $readMoreText.'${2}${3}${4}${5}${6}', $text);
-                }
+            if ('' != $readMoreText && $lengthBeforeWithoutHtml > $nbCharacter) {
+                $text .= 'SuspensionPoint';
+                $pattern = '#((</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>[\n\t\r ]*)?(</[^>]*>)[\n\t\r ]*SuspensionPoint)#i';
+                $text = preg_replace($pattern, $readMoreText.'${2}${3}${4}${5}${6}', $text);
             }
         }
 
         return $text;
+    }
+
+    public static function stripHtml(string $htmlStr, ?bool $preserveMedia = false): string
+    {
+        $csvStr = self::sanitize($htmlStr);
+        if ($preserveMedia) {
+            $csvStr = strip_tags($csvStr, '<img><embed><video><audio><source>');
+            // On Image and Embed objects, keep src
+            $csvStr = preg_replace(
+                '/<(img|embed)([^>]+src=[\'"]([^\'"]+)[\'"])*[^\/>]*\/?>/i',
+                '[$1 src="$3"]',
+                $csvStr
+            );
+            // On Video and Audio keep sources
+            $csvStr = preg_replace_callback(
+                '/<(video|audio)([^>]+src=[\'"]([^\'"]+)[\'"])*[^\/>]*\/?>([\s\S]*)<\/\1>/i',
+                function ($matches) {
+                    return self::mediaSrcExtractor($matches);
+                },
+                $csvStr
+            );
+        }
+        // Strip any remaining tags
+        $csvStr = strip_tags($csvStr);
+
+        // Trim spaces
+        return trim(preg_replace('/\s+/', ' ', $csvStr));
+    }
+
+    private static function mediaSrcExtractor(array $matches): string
+    {
+        $ret = '['.$matches[1].(empty($matches[3]) ? '' : ' src="'.$matches[3].'"');
+        if (!empty($matches[4])) {
+            $srcs = [];
+            preg_match_all('/src=[\'"]([^\'"]+)[\'"]/', $matches[4], $srcs);
+            foreach ($srcs[1] as $src) {
+                $ret .= ' src="'.$src.'"';
+            }
+        }
+        $ret .= ']';
+
+        return $ret;
     }
 }

@@ -68,7 +68,6 @@ services:
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@security.helper'
@@ -100,7 +99,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@translator'
-            - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
             - '@event_dispatcher'
 
     Claroline\CoreBundle\Manager\LogConnectManager:
