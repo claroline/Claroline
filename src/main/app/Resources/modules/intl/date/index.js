@@ -186,10 +186,6 @@ function getTimeDiff(startDate, endDate) {
   return moment.duration(diff).asSeconds()
 }
 
-function nowAdd(addition, local = true) {
-  return local ? moment().utc().local().add(addition).format(getApiFormat()) : moment().utc().add(addition).format(getApiFormat())
-}
-
 export {
   getApiFormat,
   getDisplayFormat,
@@ -201,7 +197,6 @@ export {
   dateToDisplayFormat,
   computeElapsedTime,
   getTimeDiff,
-  nowAdd,
   displayDuration,
   displayTime,
   displayDateRange
