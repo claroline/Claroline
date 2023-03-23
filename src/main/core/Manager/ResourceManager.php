@@ -28,7 +28,7 @@ use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Exception\ResourceNotFoundException;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
@@ -41,36 +41,23 @@ class ResourceManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var ObjectManager */
-    private $om;
-    /** @var ClaroUtilities */
-    private $ut;
-    /** @var Crud */
-    private $crud;
-    /** @var RightsManager */
-    private $rightsManager;
-    /** @var TempFileManager */
-    private $tempManager;
-    /** @var Security */
-    private $security;
+    private AuthorizationCheckerInterface $authorization;
+    private StrictDispatcher $dispatcher;
+    private ObjectManager $om;
+    private Crud $crud;
+    private RightsManager $rightsManager;
+    private TempFileManager $tempManager;
+    private Security $security;
 
-    /** @var ResourceTypeRepository */
-    private $resourceTypeRepo;
-    /** @var ResourceNodeRepository */
-    private $resourceNodeRepo;
-    /** @var RoleRepository */
-    private $roleRepo;
+    private ResourceTypeRepository $resourceTypeRepo;
+    private ResourceNodeRepository $resourceNodeRepo;
+    private RoleRepository $roleRepo;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         RightsManager $rightsManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
-        ClaroUtilities $ut,
         Crud $crud,
         TempFileManager $tempManager,
         Security $security
@@ -79,7 +66,6 @@ class ResourceManager implements LoggerAwareInterface
         $this->om = $om;
         $this->rightsManager = $rightsManager;
         $this->dispatcher = $dispatcher;
-        $this->ut = $ut;
         $this->crud = $crud;
         $this->tempManager = $tempManager;
         $this->security = $security;
@@ -298,12 +284,12 @@ class ResourceManager implements LoggerAwareInterface
                         $obj = $event->getItem();
 
                         if (null !== $obj) {
-                            $archive->addFile($obj, iconv($this->ut->detectEncoding($filename), 'UTF-8//TRANSLIT', $filename));
+                            $archive->addFile($obj, TextNormalizer::toUtf8($filename));
                         } else {
-                            $archive->addFromString(iconv($this->ut->detectEncoding($filename), 'UTF-8//TRANSLIT', $filename), '');
+                            $archive->addFromString(TextNormalizer::toUtf8($filename), '');
                         }
                     } else {
-                        $archive->addEmptyDir(iconv($this->ut->detectEncoding($filename), 'UTF-8//TRANSLIT', $filename));
+                        $archive->addEmptyDir(TextNormalizer::toUtf8($filename));
                     }
 
                     $this->dispatcher->dispatch('log', 'Log\LogResourceExport', [$node]);

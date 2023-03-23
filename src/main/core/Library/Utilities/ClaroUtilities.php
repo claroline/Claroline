@@ -1,60 +1,14 @@
 <?php
 
-/*
- * This file is part of the Claroline Connect package.
- *
- * (c) Claroline Consortium <consortium@claroline.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Claroline\CoreBundle\Library\Utilities;
+
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 
 class ClaroUtilities
 {
-    private $hasIntl;
-
-    public function __construct()
+    public function html2Csv(string $htmlStr, ?bool $preserveMedia = false): string
     {
-        $this->hasIntl = extension_loaded('intl');
-    }
-
-    /**
-     * Detect if encoding is UTF-8, ASCII, ISO-8859-1 or Windows-1252.
-     *
-     * @param $string
-     *
-     * @return bool|string
-     */
-    public function detectEncoding($string)
-    {
-        static $enclist = ['UTF-8', 'ASCII', 'ISO-8859-1', 'Windows-1252'];
-
-        if (function_exists('mb_detect_encoding')) {
-            return mb_detect_encoding($string, $enclist, true);
-        }
-
-        $result = false;
-
-        foreach ($enclist as $item) {
-            try {
-                $sample = iconv($item, $item, $string);
-                if (md5($sample) === md5($string)) {
-                    $result = $item;
-                    break;
-                }
-            } catch (\Exception $e) {
-                unset($e);
-            }
-        }
-
-        return $result;
-    }
-
-    public function html2Csv($htmlStr, $preserveMedia = false)
-    {
-        $csvStr = $this->formatCsvOutput($htmlStr);
+        $csvStr = TextNormalizer::sanitize($htmlStr);
         if ($preserveMedia) {
             $csvStr = strip_tags($csvStr, '<img><embed><video><audio><source>');
             // On Image and Embed objects, keep src
@@ -74,13 +28,12 @@ class ClaroUtilities
         }
         // Strip any remaining tags
         $csvStr = strip_tags($csvStr);
-        // Trim spaces
-        $csvStr = trim(preg_replace('/\s+/', ' ', $csvStr));
 
-        return $csvStr;
+        // Trim spaces
+        return trim(preg_replace('/\s+/', ' ', $csvStr));
     }
 
-    private function mediaSrcExtractor($matches)
+    private function mediaSrcExtractor(array $matches): string
     {
         $ret = '['.$matches[1].(empty($matches[3]) ? '' : ' src="'.$matches[3].'"');
         if (!empty($matches[4])) {
@@ -93,27 +46,5 @@ class ClaroUtilities
         $ret .= ']';
 
         return $ret;
-    }
-
-    private function formatCsvOutput($data)
-    {
-        // If encoding not UTF-8 then convert it to UTF-8
-        $data = $this->stringToUtf8($data);
-        $data = str_replace("\r\n", PHP_EOL, $data);
-        $data = str_replace("\r", PHP_EOL, $data);
-        $data = str_replace("\n", PHP_EOL, $data);
-
-        return $data;
-    }
-
-    private function stringToUtf8($string)
-    {
-        // If encoding not UTF-8 then convert it to UTF-8
-        $encoding = $this->detectEncoding($string);
-        if ($encoding && 'UTF-8' !== $encoding) {
-            $string = iconv($encoding, 'UTF-8', $string);
-        }
-
-        return $string;
     }
 }
