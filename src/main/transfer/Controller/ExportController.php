@@ -32,12 +32,8 @@ class ExportController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TransferManager */
-    private $transferManager;
-    /** @var string */
-    private $filesDir;
+    private TransferManager $transferManager;
+    private string $filesDir;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -103,6 +99,7 @@ class ExportController extends AbstractCrudController
         ).'.'.$exportFile->getFormat();
 
         return new BinaryFileResponse($this->filesDir.DIRECTORY_SEPARATOR.'transfer'.DIRECTORY_SEPARATOR.$exportFile->getUuid(), 200, [
+            'Content-Type' => 'text/csv; charset=utf-8',
             'Content-Disposition' => "attachment; filename={$filename}",
         ]);
     }
