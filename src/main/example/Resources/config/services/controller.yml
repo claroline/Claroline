@@ -1,0 +1,4 @@
+services:
+  Claroline\ExampleBundle\Controller\ExampleController:
+    parent: Claroline\AppBundle\Controller\AbstractCrudController
+    public: true
