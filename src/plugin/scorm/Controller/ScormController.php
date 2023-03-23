@@ -202,7 +202,7 @@ class ScormController
 
             return $handle;
         }, 200, [
-            'Content-Type' => 'application/force-download',
+            'Content-Type' => 'text/csv; charset=utf-8',
             'Content-Disposition' => 'attachment; filename="'.$fileName.'.csv"',
         ]);
     }
