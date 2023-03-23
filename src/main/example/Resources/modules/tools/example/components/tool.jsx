@@ -6,9 +6,22 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {MODAL_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_EXAMPLE_ABOUT} from '#/main/example/tools/example/modals/about'
+import {MODAL_EXAMPLE_PARAMETERS} from '#/main/example/tools/example/modals/parameters'
 
 const ExampleTool = () =>
-  <ToolPage>
+  <ToolPage
+    primaryAction="add"
+    actions={[
+      {
+        name: 'add',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-plus',
+        label: trans('create', {}, 'actions'),
+        modal: [MODAL_EXAMPLE_PARAMETERS],
+        primary: true
+      }
+    ]}
+  >
     <Toolbar
       buttonName="btn btn-block"
       actions={[

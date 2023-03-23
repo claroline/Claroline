@@ -1,0 +1,6 @@
+claro_example:
+    resource: "@ClarolineExampleBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true
