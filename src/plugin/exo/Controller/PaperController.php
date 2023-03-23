@@ -187,7 +187,7 @@ class PaperController
         return new StreamedResponse(function () use ($exercise) {
             $this->exerciseManager->exportResultsToCsv($exercise);
         }, 200, [
-            'Content-Type' => 'application/force-download',
+            'Content-Type' => 'text/csv; charset=utf-8',
             'Content-Disposition' => 'attachment; filename="'.preg_replace('/[^A-Za-z0-9_\-]/', '_', $exercise->getResourceNode()->getName()).'.csv"',
         ]);
     }

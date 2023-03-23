@@ -76,8 +76,6 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
-    Claroline\CoreBundle\Library\Utilities\ClaroUtilities: ~
-
     Claroline\CoreBundle\Library\RoutingHelper:
         arguments:
             - '@router'
