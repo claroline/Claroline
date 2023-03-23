@@ -3,8 +3,7 @@
 namespace UJM\ExoBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Attempt\Paper;
@@ -24,47 +23,21 @@ use UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator;
 
 class ExerciseManager
 {
-    /** @var ObjectManager */
-    private $om;
+    private ObjectManager $om;
+    private ExerciseRepository $repository;
+    private ExerciseValidator $validator;
+    private ExerciseSerializer $serializer;
+    private ItemManager $itemManager;
+    private PaperManager $paperManager;
+    private ItemDefinitionsCollection $definitions;
+    private EventDispatcherInterface $eventDispatcher;
 
-    /** @var ExerciseRepository */
-    private $repository;
-
-    /** @var ExerciseValidator */
-    private $validator;
-
-    /** @var ExerciseSerializer */
-    private $serializer;
-
-    /** @var ResourceManager */
-    private $resourceManager;
-
-    /** @var ItemManager */
-    private $itemManager;
-
-    /** @var PaperManager */
-    private $paperManager;
-
-    /** @var ClaroUtilities */
-    private $utils;
-
-    /** @var ItemDefinitionsCollection */
-    private $definitions;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
-    /**
-     * ExerciseManager constructor.
-     */
     public function __construct(
         ObjectManager $om,
         ExerciseValidator $validator,
         ExerciseSerializer $serializer,
-        ResourceManager $resourceManager,
         ItemManager $itemManager,
         PaperManager $paperManager,
-        ClaroUtilities $utils,
         ItemDefinitionsCollection $definitions,
         EventDispatcherInterface $eventDispatcher
     ) {
@@ -72,22 +45,16 @@ class ExerciseManager
         $this->repository = $this->om->getRepository(Exercise::class);
         $this->validator = $validator;
         $this->serializer = $serializer;
-        $this->resourceManager = $resourceManager;
         $this->itemManager = $itemManager;
         $this->paperManager = $paperManager;
         $this->definitions = $definitions;
-        $this->utils = $utils;
         $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      * Validates and updates an Exercise entity with raw data.
-     *
-     * @return Exercise
-     *
-     * @throws InvalidDataException
      */
-    public function update(Exercise $exercise, array $data)
+    public function update(Exercise $exercise, array $data): Exercise
     {
         // Validate received data
         $validationOptions = [];
@@ -114,7 +81,7 @@ class ExerciseManager
         $this->repository->invalidatePapers($exercise);
 
         // Log exercise update
-        $event = new LogExerciseUpdateEvent($exercise, (array) $this->serializer->serialize($exercise));
+        $event = new LogExerciseUpdateEvent($exercise, $this->serializer->serialize($exercise));
         $this->eventDispatcher->dispatch($event, 'log');
 
         return $exercise;
@@ -122,10 +89,8 @@ class ExerciseManager
 
     /**
      * Serializes an Exercise.
-     *
-     * @return array
      */
-    public function serialize(Exercise $exercise, array $options = [])
+    public function serialize(Exercise $exercise, array $options = []): array
     {
         return $this->serializer->serialize($exercise, $options);
     }
@@ -133,10 +98,8 @@ class ExerciseManager
     /**
      * Checks if an Exercise can be deleted.
      * The exercise needs to be unpublished or have no paper to be safely removed.
-     *
-     * @return bool
      */
-    public function isDeletable(Exercise $exercise)
+    public function isDeletable(Exercise $exercise): bool
     {
         return ExerciseType::CERTIFICATION !== $exercise->getType()
             || !$exercise->getResourceNode()->isPublished()
@@ -161,7 +124,7 @@ class ExerciseManager
             foreach ($papers as $paper) {
                 $user = $paper->getUser();
                 // maybe use stored score to speed up things
-                // problem is we don't have it for non finished papers
+                // problem is we don't have it for non-finished papers
                 $score = $this->paperManager->calculateScore($paper);
 
                 fputcsv($handle, [
@@ -176,7 +139,7 @@ class ExerciseManager
                 ], ';');
             }
 
-            $this->om->clear(Paper::class);
+            $this->om->clear();
         }
 
         fclose($handle);
@@ -216,7 +179,7 @@ class ExerciseManager
 
         foreach ($titles as $title) {
             foreach ($title as $subTitle) {
-                $flattenedTitles[] = $this->utils->html2Csv($subTitle);
+                $flattenedTitles[] = TextNormalizer::stripHtml($subTitle);
             }
         }
 
@@ -282,7 +245,7 @@ class ExerciseManager
                         }
                     }
 
-                    // question has no answer, we need to add place holders
+                    // question has no answer, we need to add placeholders
                     if (!$found) {
                         $countBlank = count($itemDefinition->getCsvTitles($item->getInteraction()));
                         $csv[$item->getUuid()] = array_pad([], $countBlank, '');
@@ -300,14 +263,14 @@ class ExerciseManager
                 foreach ($paper as $paperItem) {
                     if (is_array($paperItem)) {
                         foreach ($paperItem as $paperEl) {
-                            $flattenedAnswers[] = $this->utils->html2Csv($paperEl, true);
+                            $flattenedAnswers[] = TextNormalizer::stripHtml($paperEl, true);
                         }
                     }
                 }
                 $flattenedData[] = $flattenedAnswers;
             }
 
-            $this->om->clear(Paper::class);
+            $this->om->clear();
 
             foreach ($flattenedData as $item) {
                 fputcsv($fp, $item, ';');

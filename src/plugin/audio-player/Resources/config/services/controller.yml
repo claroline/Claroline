@@ -1,13 +1,10 @@
 services:
     _defaults:
-        public: true #because controller
+        public: true # because controller
 
     Claroline\AudioPlayerBundle\Controller\API\SectionCommentController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        arguments:
-            - '@Claroline\CoreBundle\Library\Utilities\ClaroUtilities'
-            - '@translator'
 
     Claroline\AudioPlayerBundle\Controller\API\SectionController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

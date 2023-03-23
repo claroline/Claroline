@@ -151,7 +151,7 @@ class ExportManager
                 $field = $fieldValue->getField();
                 $fieldFacetValue = $fieldValue->getFieldFacetValue();
 
-                $data[$field->getId()] = $this->formatFieldValue($entry, $field, $fieldFacetValue->getValue());
+                $data[$field->getId()] = $this->formatFieldValue($entry, $field, $fieldFacetValue->getValue(), true);
             }
 
             $entriesData[] = $data;
@@ -171,7 +171,7 @@ class ExportManager
         $archive = new \ZipArchive();
         $pathArch = $this->tempManager->generate();
         $archive->open($pathArch, \ZipArchive::CREATE);
-        $archive->addFromString($clacoForm->getResourceNode()->getName().'.xls', $content);
+        $archive->addFromString(TextNormalizer::toKey($clacoForm->getResourceNode()->getName()).'.xls', $content);
 
         $entries = $this->clacoFormManager->getAllEntries($clacoForm);
 
@@ -191,7 +191,7 @@ class ExportManager
                         $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$fileUrl;
 
                         $ext = pathinfo($filePath, PATHINFO_EXTENSION);
-                        $fileName = TextNormalizer::toKey($entry->getTitle()).'-'.TextNormalizer::toKey($field->getLabel()).'.'.$ext;
+                        $fileName = TextNormalizer::toKey($entry->getTitle().'-'.$field->getLabel()).'.'.$ext;
 
                         $archive->addFile(
                             $filePath,
@@ -206,7 +206,7 @@ class ExportManager
         return $pathArch;
     }
 
-    private function formatFieldValue(Entry $entry, Field $field, $value)
+    private function formatFieldValue(Entry $entry, Field $field, $value, ?bool $stripHtml = false)
     {
         if (is_null($value)) {
             return '';
@@ -232,16 +232,19 @@ class ExportManager
                 break;
 
             case FieldFacet::HTML_TYPE:
-                // when present, those tags completely broke the pdf generation
-                $illegalTags = [
-                    '<o:p>',
-                    '</o:p>',
-                ];
+                if ($stripHtml) {
+                    $value = TextNormalizer::stripHtml($value, true);
+                } else {
+                    // when present, those tags completely broke the pdf generation
+                    $illegalTags = [
+                        '<o:p>',
+                        '</o:p>',
+                    ];
 
-                foreach ($illegalTags as $illegalTag) {
-                    $value = str_replace($illegalTag, '', $value);
+                    foreach ($illegalTags as $illegalTag) {
+                        $value = str_replace($illegalTag, '', $value);
+                    }
                 }
-
                 break;
 
             case FieldFacet::CASCADE_TYPE:

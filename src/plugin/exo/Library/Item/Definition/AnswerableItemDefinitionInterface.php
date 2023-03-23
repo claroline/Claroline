@@ -40,7 +40,7 @@ interface AnswerableItemDefinitionInterface
     public function expectAnswer(AbstractItem $question);
 
     /**
-     * Returns all the defined answers of a the question.
+     * Returns all the defined answers of the question.
      *
      * @return AnswerPartInterface[]
      */
