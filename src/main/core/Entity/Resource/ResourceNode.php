@@ -194,19 +194,6 @@ class ResourceNode
     private $pathForCreationLog = '';
 
     /**
-     * @var ArrayCollection|\Claroline\CoreBundle\Entity\Log\Log[]
-     *
-     * @ORM\OneToMany(
-     *  targetEntity="Claroline\CoreBundle\Entity\Log\Log",
-     *  fetch="EXTRA_LAZY",
-     *  mappedBy="resourceNode"
-     * )
-     *
-     * @todo : remove me. this relation should not be bi-directional
-     */
-    protected $logs;
-
-    /**
      * @var string
      *
      * @ORM\Column(nullable=true)
@@ -238,13 +225,6 @@ class ResourceNode
      * @ORM\Column(nullable=false, type="integer", name="views_count", options={"default": 0})
      */
     protected $viewsCount = 0;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(type="boolean", options={"default": 1})
-     */
-    protected $deletable = true;
 
     /**
      * @var bool
@@ -289,7 +269,6 @@ class ResourceNode
 
         $this->rights = new ArrayCollection();
         $this->children = new ArrayCollection();
-        $this->logs = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
 
@@ -719,11 +698,6 @@ class ResourceNode
         $this->accesses = $accesses;
     }
 
-    public function getLogs()
-    {
-        return $this->logs;
-    }
-
     /**
      * Gets how many times a resource has been viewed.
      *
@@ -747,31 +721,11 @@ class ResourceNode
     }
 
     /**
-     * Checks if the resource node can be deleted.
-     *
-     * @return bool
-     */
-    public function isDeletable()
-    {
-        return $this->deletable;
-    }
-
-    /**
-     * Sets the deletable option.
-     *
-     * @param bool $deletable
-     */
-    public function setDeletable($deletable)
-    {
-        $this->deletable = $deletable;
-    }
-
-    /**
      * Returns the ancestors of a resource.
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function getAncestors()
+    public function getAncestors(): array
     {
         // No need to access DB to get ancestors as they are given by the materialized path.
         //I use \/ instead of PATH_SEPARATOR for escape purpose
@@ -807,7 +761,7 @@ class ResourceNode
             return;
         }
 
-        $entityManager = $args->getEntityManager();
+        $entityManager = $args->getObjectManager();
 
         $this->materializedPath = $this->makePath($this);
         $entityManager->persist($this);
@@ -829,7 +783,7 @@ class ResourceNode
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function getOldAncestors()
+    private function getOldAncestors(): array
     {
         // No need to access DB to get ancestors as they are given by the materialized path.
         $parts = preg_split('/-(\d+)'.ResourceNode::PATH_OLDSEPARATOR.'/', $this->path, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);

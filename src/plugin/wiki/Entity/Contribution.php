@@ -4,7 +4,7 @@ namespace Icap\WikiBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Icap\NotificationBundle\Entity\UserPickerContent;
@@ -216,7 +216,7 @@ class Contribution
     /**
      * @ORM\PrePersist
      */
-    public function createUserPicker(LifecycleEventArgs $event)
+    public function createUserPicker(PrePersistEventArgs $event)
     {
         if (null !== $this->getText()) {
             $userPicker = new UserPickerContent($this->getText());

@@ -3,7 +3,7 @@
 namespace Icap\WikiBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -159,9 +159,9 @@ class Wiki extends AbstractResource
     /**
      * @ORM\PostPersist
      */
-    public function createRoot(LifecycleEventArgs $event)
+    public function createRoot(PostPersistEventArgs $event)
     {
-        $em = $event->getEntityManager();
+        $em = $event->getObjectManager();
         $rootSection = $this->buildRoot();
         $em->getRepository(Section::class)->persistAsFirstChild($rootSection);
         $em->flush();

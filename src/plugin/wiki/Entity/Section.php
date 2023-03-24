@@ -4,7 +4,7 @@ namespace Icap\WikiBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -426,10 +426,10 @@ class Section
     /**
      * @ORM\PostPersist
      */
-    public function createActiveContribution(LifecycleEventArgs $event)
+    public function createActiveContribution(PostPersistEventArgs $event)
     {
         if (null === $this->getActiveContribution()) {
-            $em = $event->getEntityManager();
+            $em = $event->getObjectManager();
             $activeContribution = new Contribution();
             $activeContribution->setSection($this);
             $activeContribution->setContributor($this->getAuthor());

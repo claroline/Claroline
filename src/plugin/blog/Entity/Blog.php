@@ -4,7 +4,7 @@ namespace Icap\BlogBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -64,22 +64,6 @@ class Blog extends AbstractResource
         $this->posts = $posts;
 
         return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCountPublishedPosts()
-    {
-        $countPublishedPosts = 0;
-
-        foreach ($this->getPosts() as $post) {
-            if (Statusable::STATUS_PUBLISHED === $post->getStatus()) {
-                ++$countPublishedPosts;
-            }
-        }
-
-        return $countPublishedPosts;
     }
 
     /**
@@ -173,10 +157,10 @@ class Blog extends AbstractResource
     /**
      * @ORM\PostPersist
      */
-    public function postPersist(LifecycleEventArgs $args)
+    public function postPersist(PostPersistEventArgs $args)
     {
         if (null === $this->getOptions()) {
-            $entityManager = $args->getEntityManager();
+            $entityManager = $args->getObjectManager();
 
             $blogOptions = new BlogOptions();
             $blogOptions->setBlog($this);

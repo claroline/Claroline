@@ -23,7 +23,7 @@ trait Template
         return $this->template;
     }
 
-    public function setTemplate(?TemplateEntity $template = null)
+    public function setTemplate(?TemplateEntity $template = null): void
     {
         $this->template = $template;
     }
