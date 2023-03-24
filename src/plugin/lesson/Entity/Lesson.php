@@ -3,7 +3,7 @@
 namespace Icap\LessonBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -87,9 +87,9 @@ class Lesson extends AbstractResource
     /**
      * @ORM\PostPersist
      */
-    public function createRoot(LifecycleEventArgs $event)
+    public function createRoot(PostPersistEventArgs $event)
     {
-        $em = $event->getEntityManager();
+        $em = $event->getObjectManager();
         $rootLesson = $this->buildRoot();
 
         $em->getRepository(Chapter::class)->persistAsFirstChild($rootLesson);

@@ -2,7 +2,9 @@
 
 namespace UJM\ExoBundle\Listener\Entity;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostLoadEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
@@ -25,12 +27,12 @@ class ItemListener
     /**
      * Loads the entity that holds the item type data when an Item is loaded.
      */
-    public function postLoad(Item $item, LifecycleEventArgs $event)
+    public function postLoad(Item $item, PostLoadEventArgs $event)
     {
         $type = $this->itemDefinitions->getConvertedType($item->getMimeType());
         $definition = $this->itemDefinitions->get($type);
         $repository = $event
-            ->getEntityManager()
+            ->getObjectManager()
             ->getRepository($definition->getEntityClass());
 
         /** @var AbstractItem $typeEntity */
@@ -46,22 +48,22 @@ class ItemListener
     /**
      * Persists the entity that holds the item type data when an Item is persisted.
      */
-    public function prePersist(Item $item, LifecycleEventArgs $event)
+    public function prePersist(Item $item, PrePersistEventArgs $event)
     {
         $interaction = $item->getInteraction();
         if (null !== $interaction) {
-            $event->getEntityManager()->persist($interaction);
+            $event->getObjectManager()->persist($interaction);
         }
     }
 
     /**
      * Deletes the entity that holds the item type data when an Item is deleted.
      */
-    public function preRemove(Item $item, LifecycleEventArgs $event)
+    public function preRemove(Item $item, PreRemoveEventArgs $event)
     {
         $interaction = $item->getInteraction();
         if (null !== $interaction) {
-            $event->getEntityManager()->remove($interaction);
+            $event->getObjectManager()->remove($interaction);
         }
     }
 }
