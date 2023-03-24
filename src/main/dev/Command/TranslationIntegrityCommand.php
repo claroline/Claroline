@@ -21,8 +21,8 @@ class TranslationIntegrityCommand extends Command
 {
     const BASE_LANG = 'fr';
 
-    private $kernel;
-    private $pluginManager;
+    private KernelInterface $kernel;
+    private PluginManager $pluginManager;
 
     public function __construct(KernelInterface $kernel, PluginManager $pluginManager)
     {
@@ -32,9 +32,9 @@ class TranslationIntegrityCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
-        $this->setDescription('Show translations integrity information. This command ignore arrays');
+        $this->setDescription('Show duplicates in translations (NB. this command ignore arrays).');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -48,11 +48,11 @@ class TranslationIntegrityCommand extends Command
         return 0;
     }
 
-    private function getTranslationFiles()
+    private function getTranslationFiles(): array
     {
         $bundles = $this->pluginManager->getInstalledBundles();
-        $translationFiles = [];
 
+        $translationFiles = [];
         foreach ($bundles as $bundle) {
             $parts = explode('\\', get_class($bundle));
             $shortName = end($parts);
@@ -62,13 +62,10 @@ class TranslationIntegrityCommand extends Command
             }
         }
 
-        //then we need to add the corebundle
-        $translationFiles = array_unique(array_merge($this->parseDirectoryTranslationFiles('ClarolineCoreBundle'), $translationFiles));
-
         return $translationFiles;
     }
 
-    private function getDuplicates($translationFiles)
+    private function getDuplicates($translationFiles): array
     {
         $duplicates = [];
 
@@ -111,7 +108,7 @@ class TranslationIntegrityCommand extends Command
         return $duplicates;
     }
 
-    private function getLangFiles($translationFiles, $lang)
+    private function getLangFiles(array $translationFiles, string $lang): array
     {
         $langFiles = [];
 
@@ -126,7 +123,7 @@ class TranslationIntegrityCommand extends Command
         return $langFiles;
     }
 
-    private function getDomainFromFileName($file)
+    private function getDomainFromFileName(string $file): string
     {
         $parts = explode('/', $file);
         $end = end($parts);
@@ -134,7 +131,7 @@ class TranslationIntegrityCommand extends Command
         return explode('.', $end)[0];
     }
 
-    private function getBundleFromFileName($file)
+    private function getBundleFromFileName(string $file): string
     {
         $startsAt = strpos($file, '/plugin/') + strlen('/plugin/');
         $endsAt = strpos($file, '/Resources', $startsAt);
@@ -147,22 +144,26 @@ class TranslationIntegrityCommand extends Command
         return $result;
     }
 
-    private function parseDirectoryTranslationFiles($shortName)
+    private function parseDirectoryTranslationFiles(string $shortName): array
     {
         $translationFiles = [];
-        $translationDir = $this->kernel->locateResource('@'.$shortName.'/Resources/translations');
-        $iterator = new \DirectoryIterator($translationDir);
 
-        foreach ($iterator as $fileInfo) {
-            if ($fileInfo->isFile()) {
-                $translationFiles[] = realpath($fileInfo->getPathname());
+        try {
+            $translationDir = $this->kernel->locateResource('@'.$shortName.'/Resources/translations');
+            $iterator = new \DirectoryIterator($translationDir);
+
+            foreach ($iterator as $fileInfo) {
+                if ($fileInfo->isFile()) {
+                    $translationFiles[] = realpath($fileInfo->getPathname());
+                }
             }
-        }
+        } catch (\Exception $e) {
+        } // kernel will throw an exception if no translations is defined
 
         return $translationFiles;
     }
 
-    private function displayDuplicateErrors($duplicates, OutputInterface $output)
+    private function displayDuplicateErrors(array $duplicates, OutputInterface $output): void
     {
         $output->writeln('<comment> Displaying duplicate keys result: </comment>');
         $totalDuplicates = 0;
@@ -174,7 +175,7 @@ class TranslationIntegrityCommand extends Command
                 ++$totalDuplicates;
                 foreach ($values as $value) {
                     ++$totalLines;
-                    $output->writeln("  <comment>{$value[2]}/translations/{$value[1]}.fr.yml line {$value[0]}</comment>");
+                    $output->writeln("  <comment>{$value[2]}/translations/{$value[1]}.fr.json line {$value[0]}</comment>");
                 }
             }
         }
@@ -187,7 +188,7 @@ class TranslationIntegrityCommand extends Command
                 ++$totalDuplicates;
                 foreach ($values as $value) {
                     ++$totalLines;
-                    $output->writeln("  <comment>{$value[2]}:{$value[1]}.fr.yml line {$value[0]}</comment>");
+                    $output->writeln("  <comment>{$value[2]}:{$value[1]}.fr.json line {$value[0]}</comment>");
                 }
             }
         }
@@ -195,7 +196,7 @@ class TranslationIntegrityCommand extends Command
         $output->writeln('<comment> Displaying array translations result: </comment>');
 
         foreach ($duplicates['array'] as $key => $value) {
-            $output->writeln("  <error>Array found at {$value[2]}:{$value[1]}.fr.yml line {$value[0]}</error>");
+            $output->writeln("  <error>Array found at {$value[2]}:{$value[1]}.fr.json line {$value[0]}</error>");
         }
 
         $output->writeln(' ');

@@ -1,13 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
-
-    Claroline\DevBundle\Manager\TranslationManager:
-        calls:
-            - setLogger: [ '@logger' ]
-
     Claroline\DevBundle\Listener\DebugToolbarListener:
         arguments:
             - '%kernel.debug%'
@@ -15,29 +6,9 @@ services:
             - { name: kernel.event_listener, event: kernel.response, method: onResponse }
 
     # Console Commands
-
-    Claroline\DevBundle\Command\TranslationDebugCommand:
-        arguments:
-            - '@Claroline\DevBundle\Manager\TranslationManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:translations:fixup' }
-
     Claroline\DevBundle\Command\TranslationIntegrityCommand:
         arguments:
             - '@kernel'
             - '@Claroline\CoreBundle\Manager\PluginManager'
         tags:
             - { name: 'console.command', command: 'claroline:translations:debug' }
-
-    Claroline\DevBundle\Command\RouterDebugCommand:
-        arguments:
-            - '@Claroline\AppBundle\Routing\Finder'
-        tags:
-            - { name: 'console.command', command: 'claroline:router:debug' }
-
-    Claroline\DevBundle\Command\ApiDumpCommand:
-        arguments:
-            - '@Claroline\AppBundle\Routing\Finder'
-            - '@Claroline\AppBundle\Routing\Documentator'
-        tags:
-            - { name: 'console.command', command: 'claroline:api:dump' }
