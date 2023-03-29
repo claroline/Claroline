@@ -213,7 +213,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function downloadParticipationCertificateAction(Workspace $workspace, User $user, Request $request): StreamedResponse
+    public function downloadParticipationCertificateAction(Workspace $workspace, User $user): StreamedResponse
     {
         $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
             'workspace' => $workspace,
@@ -226,7 +226,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
         $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
 
-        $certificate = $this->pdfManager->getWorkspaceParticipationCertificate($workspaceEvaluation, $request->getLocale());
+        $certificate = $this->pdfManager->getWorkspaceParticipationCertificate($workspaceEvaluation);
         if (empty($certificate)) {
             throw new NotFoundHttpException('No participation certificate is available yet.');
         }

@@ -32,7 +32,7 @@ class PdfManager
         $this->templateManager = $templateManager;
     }
 
-    public function getWorkspaceParticipationCertificate(Evaluation $evaluation, string $locale): ?string
+    public function getWorkspaceParticipationCertificate(Evaluation $evaluation): ?string
     {
         // only generate certificate if the evaluation is finished
         if (!$evaluation->isTerminated()) {
@@ -42,11 +42,11 @@ class PdfManager
         $placeholders = $this->getCommonPlaceholders($evaluation);
 
         return $this->pdfManager->fromHtml(
-            $this->templateManager->getTemplate('workspace_participation_certificate', $placeholders, $locale)
+            $this->templateManager->getTemplate('workspace_participation_certificate', $placeholders, $evaluation->getUser()->getLocale())
         );
     }
 
-    public function getWorkspaceSuccessCertificate(Evaluation $evaluation, string $locale): ?string
+    public function getWorkspaceSuccessCertificate(Evaluation $evaluation): ?string
     {
         // only generate certificate if the evaluation is finished and has success/failure status
         if (!$evaluation->isTerminated() || !in_array($evaluation->getStatus(), [AbstractEvaluation::STATUS_PASSED, AbstractEvaluation::STATUS_FAILED])) {
@@ -63,7 +63,7 @@ class PdfManager
         ]);
 
         return $this->pdfManager->fromHtml(
-            $this->templateManager->getTemplate('workspace_success_certificate', $placeholders, $locale)
+            $this->templateManager->getTemplate('workspace_success_certificate', $placeholders, $evaluation->getUser()->getLocale())
         );
     }
 
