@@ -14,7 +14,7 @@ const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
     }),
     (dispatch) => ({
       save(formData, onSave) {
-        dispatch(formActions.saveForm(selectors.STORE_NAME, formData.id ? ['apiv2_example,update', {id: formData.id}] : ['apiv2_example_create'])).then((response) => {
+        dispatch(formActions.saveForm(selectors.STORE_NAME, formData.id ? ['apiv2_example_update', {id: formData.id}] : ['apiv2_example_create'])).then((response) => {
           onSave(response)
         })
       },
