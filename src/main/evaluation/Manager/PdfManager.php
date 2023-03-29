@@ -53,12 +53,12 @@ class PdfManager
             return null;
         }
 
-        $score = $evaluation->getScore() || 0;
-        $scoreMax = $evaluation->getScoreMax() || 1;
-        $finalScore = ($score / $scoreMax) * 100;
+        $score = $evaluation->getScore() ?: 0;
+        $scoreMax = $evaluation->getScoreMax() ?: 1;
+        $finalScore = round(($score / $scoreMax) * 100, 2);
 
         $placeholders = array_merge($this->getCommonPlaceholders($evaluation), [
-            'evaluation_score' => $finalScore ? $finalScore : '0',
+            'evaluation_score' => $finalScore ?: '0',
             'evaluation_score_max' => 100,
         ]);
 
