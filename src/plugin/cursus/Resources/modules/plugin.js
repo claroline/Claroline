@@ -2,13 +2,6 @@ import {registry} from '#/main/app/plugins/registry'
 
 registry.add('ClarolineCursusBundle', {
   /**
-   * Provides tab types for Home tools.
-   */
-  home: {
-    'training_catalog': () => { return import(/* webpackChunkName: "cursus-home-catalog" */ '#/plugin/cursus/home/catalog') }
-  },
-
-  /**
    * Provides searchable items for the global search.
    */
   search: {

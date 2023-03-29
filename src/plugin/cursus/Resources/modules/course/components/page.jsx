@@ -46,6 +46,7 @@ const CoursePage = (props) => {
 
   return (
     <ToolPage
+      className="training-page"
       path={props.path}
       title={props.course.name}
       subtitle={get(props.activeSession, 'name')}
