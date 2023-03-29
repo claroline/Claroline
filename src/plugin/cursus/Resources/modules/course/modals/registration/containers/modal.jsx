@@ -10,11 +10,6 @@ const RegistrationModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME))
-    }),
-    (dispatch) => ({
-      save() {
-
-      }
     })
   )(RegistrationModalComponent)
 )

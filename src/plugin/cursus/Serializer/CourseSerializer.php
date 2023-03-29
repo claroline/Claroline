@@ -248,7 +248,7 @@ class CourseSerializer
             $course->setParent($parent);
         }
 
-        if (isset($data['workspace'])) {
+        if (array_key_exists('workspace', $data)) {
             $workspace = null;
             if (isset($data['workspace']['id'])) {
                 /** @var Workspace $workspace */
@@ -257,7 +257,7 @@ class CourseSerializer
             $course->setWorkspace($workspace);
         }
 
-        if (isset($data['workspaceModel'])) {
+        if (array_key_exists('workspaceModel', $data)) {
             $workspace = null;
             if (isset($data['workspaceModel']['id'])) {
                 /** @var Workspace $workspace */
