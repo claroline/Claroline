@@ -70,7 +70,7 @@ class WebResourceListener
         $hash = $resource->getHashName();
         $workspace = $resource->getResourceNode()->getWorkspace();
         $unzippedPath = $this->uploadDir.$ds.'webresource'.$ds.$workspace->getUuid();
-        $srcPath = 'uploads'.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$hash;
+        $srcPath = 'data/uploads'.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$hash;
 
         if (!is_dir($srcPath)) {
             $this->webResourceManager->unzip($hash, $workspace);
