@@ -14,8 +14,8 @@ namespace Claroline\CursusBundle\Entity;
 use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,49 +31,23 @@ class Session extends AbstractTraining implements IdentifiableInterface
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Course", inversedBy="sessions")
      * @ORM\JoinColumn(name="course_id", nullable=false, onDelete="CASCADE")
-     *
-     * @var Course
      */
-    protected $course;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role"
-     * )
-     * @ORM\JoinColumn(name="learner_role_id", nullable=true, onDelete="SET NULL")
-     *
-     * @var Role
-     */
-    protected $learnerRole;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role"
-     * )
-     * @ORM\JoinColumn(name="tutor_role_id", nullable=true, onDelete="SET NULL")
-     *
-     * @var Role
-     */
-    protected $tutorRole;
+    private ?Course $course = null;
 
     /**
      * @ORM\Column(name="default_session", type="boolean")
      */
-    protected $defaultSession = false;
+    private bool $defaultSession = false;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
-     *
-     * @var \DateTime
      */
-    protected $startDate;
+    private ?\DateTimeInterface $startDate = null;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     *
-     * @var \DateTime
      */
-    protected $endDate;
+    private ?\DateTimeInterface $endDate = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode", orphanRemoval=true)
@@ -82,27 +56,27 @@ class Session extends AbstractTraining implements IdentifiableInterface
      *      inverseJoinColumns={@ORM\JoinColumn(name="session_id", referencedColumnName="id", unique=true)}
      * )
      *
-     * @var ArrayCollection|ResourceNode[]
+     * @var Collection|ResourceNode[]
      */
-    protected $resources;
+    private Collection $resources;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location\Location")
      * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
-     *
-     * @var Location
      */
-    protected $location;
+    private ?Location $location = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Event", mappedBy="session")
+     *
+     * @var Collection|Event[]
      */
-    protected $events;
+    private Collection $events;
 
     /**
      * @ORM\Column(name="event_registration_type", type="integer", nullable=false, options={"default" = 0})
      */
-    protected $eventRegistrationType = self::REGISTRATION_AUTO;
+    private int $eventRegistrationType = self::REGISTRATION_AUTO;
 
     public function __construct()
     {
@@ -112,115 +86,88 @@ class Session extends AbstractTraining implements IdentifiableInterface
         $this->events = new ArrayCollection();
     }
 
-    /**
-     * @return Course
-     */
-    public function getCourse()
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
+    public function getCourse(): ?Course
     {
         return $this->course;
     }
 
-    public function setCourse(Course $course)
+    public function setCourse(Course $course): void
     {
         $this->course = $course;
     }
 
-    public function getLearnerRole()
-    {
-        return $this->learnerRole;
-    }
-
-    public function setLearnerRole(Role $learnerRole = null)
-    {
-        $this->learnerRole = $learnerRole;
-    }
-
-    public function getTutorRole()
-    {
-        return $this->tutorRole;
-    }
-
-    public function setTutorRole(Role $tutorRole = null)
-    {
-        $this->tutorRole = $tutorRole;
-    }
-
-    public function isDefaultSession()
+    public function isDefaultSession(): bool
     {
         return $this->defaultSession;
     }
 
-    public function setDefaultSession($defaultSession)
+    public function setDefaultSession(bool $defaultSession): void
     {
         $this->defaultSession = $defaultSession;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getStartDate()
+    public function getStartDate(): ?\DateTimeInterface
     {
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTime $startDate = null)
+    public function setStartDate(?\DateTimeInterface $startDate = null): void
     {
         $this->startDate = $startDate;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getEndDate()
+    public function getEndDate(): ?\DateTimeInterface
     {
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTime $endDate = null)
+    public function setEndDate(?\DateTimeInterface $endDate = null): void
     {
         $this->endDate = $endDate;
     }
 
-    public function isTerminated()
+    public function isTerminated(): bool
     {
         $now = new \DateTime();
 
         return $this->endDate && $now > $this->endDate;
     }
 
-    public function getResources()
+    public function getResources(): Collection
     {
         return $this->resources;
     }
 
-    public function setResources(array $resources)
+    public function setResources(array $resources): void
     {
         $this->resources = new ArrayCollection($resources);
     }
 
-    public function addResource(ResourceNode $resource)
+    public function addResource(ResourceNode $resource): void
     {
         if (!$this->resources->contains($resource)) {
             $this->resources->add($resource);
         }
     }
 
-    public function removeResource(ResourceNode $resource)
+    public function removeResource(ResourceNode $resource): void
     {
         if ($this->resources->contains($resource)) {
             $this->resources->removeElement($resource);
         }
     }
 
-    /**
-     * @return Location
-     */
-    public function getLocation()
+    public function getLocation(): ?Location
     {
         return $this->location;
     }
 
-    public function setLocation(Location $location = null)
+    public function setLocation(?Location $location = null): void
     {
         $this->location = $location;
     }
@@ -228,23 +175,18 @@ class Session extends AbstractTraining implements IdentifiableInterface
     /**
      * @return Event[]|ArrayCollection
      */
-    public function getEvents()
+    public function getEvents(): Collection
     {
         return $this->events;
     }
 
-    public function getEventRegistrationType()
+    public function getEventRegistrationType(): int
     {
         return $this->eventRegistrationType;
     }
 
-    public function setEventRegistrationType($eventRegistrationType)
+    public function setEventRegistrationType(int $eventRegistrationType): void
     {
         $this->eventRegistrationType = $eventRegistrationType;
-    }
-
-    public function __toString()
-    {
-        return $this->name;
     }
 }

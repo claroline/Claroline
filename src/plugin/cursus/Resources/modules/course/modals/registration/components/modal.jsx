@@ -1,21 +1,20 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {hasPermission} from '#/main/app/security'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {DetailsData} from '#/main/app/content/details/components/data'
 
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 import {route} from '#/plugin/cursus/routing'
 import {getInfo, isFull} from '#/plugin/cursus/utils'
-import {RegistrationForm} from '#/plugin/cursus/course/modals/registration/components/form'
-import {selectors} from '#/plugin/cursus/course/modals/registration/store/selectors'
+import {MODAL_REGISTRATION_PARAMETERS} from '#/plugin/cursus/registration/modals/parameters'
 
 const RegistrationModal = props =>
   <Modal
@@ -37,7 +36,7 @@ const RegistrationModal = props =>
       <Fragment>
         {isFull(props.session) &&
           <div className="modal-body">
-            <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
+            <AlertBlock type="warning" title={trans('session_full', {}, 'cursus')}>
               {trans('Vous pouvez vous inscrire en liste d\'attente ou parcourir les autres sessions.', {}, 'cursus')}
             </AlertBlock>
           </div>
@@ -78,46 +77,51 @@ const RegistrationModal = props =>
       </Fragment>
     }
 
-    <RegistrationForm
-      name={selectors.STORE_NAME}
-      sections={get(props.course, 'registration.form', [])}
-      isManager={hasPermission('edit', props.course)}
-    >
-      {props.session &&
-        <Button
-          className="btn modal-btn"
-          type={LINK_BUTTON}
-          label={trans('show_other_sessions', {}, 'actions')}
-          target={route(props.path, props.course, props.session)+'/sessions'}
-          onClick={() => props.fadeModal()}
-        />
-      }
+    {props.session &&
+      <Button
+        className="btn modal-btn"
+        type={LINK_BUTTON}
+        label={trans('show_other_sessions', {}, 'actions')}
+        target={route(props.course, props.session)+'/sessions'}
+        onClick={() => props.fadeModal()}
+      />
+    }
 
+    {isEmpty(get(props.course, 'registration.form', [])) ?
       <Button
         className="btn modal-btn"
         type={CALLBACK_BUTTON}
         primary={true}
-        htmlType="submit"
         label={trans(!props.session || isFull(props.session) ? 'register_waiting_list' : 'self_register', {}, 'actions')}
         callback={() => {
-          console.log(props.formData)
-
-          props.register(props.course, props.session ? props.session.id : null, props.formData)
+          props.register(props.course, props.session ? props.session.id : null)
           props.fadeModal()
         }}
+      /> :
+      <Button
+        className="btn modal-btn"
+        type={MODAL_BUTTON}
+        primary={true}
+        label={trans(!props.session || isFull(props.session) ? 'register_waiting_list' : 'self_register', {}, 'actions')}
+        onClick={props.fadeModal}
+        modal={[MODAL_REGISTRATION_PARAMETERS, {
+          course: props.course,
+          session: props.session,
+          onSave: (registrationData) => {
+            props.register(props.course, props.session ? props.session.id : null, registrationData.data)
+          }
+        }]}
       />
-    </RegistrationForm>
+    }
   </Modal>
 
 RegistrationModal.propTypes = {
-  path: T.string.isRequired,
   course: T.shape(
     CourseTypes.propTypes
   ).isRequired,
   session: T.shape(
     SessionTypes.propTypes
   ),
-  formData: T.object,
   register: T.func.isRequired,
 
   // from modal

@@ -12,7 +12,7 @@ import {CourseRegistration} from '#/plugin/cursus/course/components/registration
 import {route} from '#/plugin/cursus/routing'
 
 const CourseForm = (props) => {
-  const basePath = props.isNew ? props.path + '/new' : route(props.path, props.course)+'/edit'
+  const basePath = props.isNew ? props.path + '/new' : route(props.course)+'/edit'
 
   return (
     <Fragment>

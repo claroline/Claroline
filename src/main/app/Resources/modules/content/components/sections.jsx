@@ -46,10 +46,12 @@ const Section = props =>
 
         {typeof props.icon !== 'string' && props.icon}
 
-        {props.title}
-        {props.subtitle &&
-          <small>{props.subtitle}</small>
-        }
+        <span role="presentation">
+          {props.title}
+          {props.subtitle &&
+            <small>{props.subtitle}</small>
+          }
+        </span>
 
         {(props.status || 0 !== props.actions.length) &&
           <div className="panel-actions">

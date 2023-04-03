@@ -3,6 +3,8 @@ services:
         arguments:
             - '@translator'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@Claroline\CursusBundle\Manager\SessionManager'
@@ -14,12 +16,12 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@router'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-            - '@Claroline\CoreBundle\Manager\FacetManager'
             - '@Claroline\CursusBundle\Manager\EventManager'
 
     Claroline\CursusBundle\Manager\EventManager:

@@ -10,3 +10,13 @@ services:
 
     Claroline\CursusBundle\Security\Voter\EventVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+
+    # Registrations
+    Claroline\CursusBundle\Security\Voter\Registration\CourseUserVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+
+    Claroline\CursusBundle\Security\Voter\Registration\SessionUserVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
+
+    Claroline\CursusBundle\Security\Voter\Registration\SessionGroupVoter:
+        parent: Claroline\AppBundle\Security\Voter\AbstractVoter

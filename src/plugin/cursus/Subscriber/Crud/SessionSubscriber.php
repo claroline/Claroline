@@ -100,26 +100,32 @@ class SessionSubscriber implements EventSubscriberInterface
         $course = $session->getCourse();
         $workspace = $session->getWorkspace();
         if (empty($workspace) && !empty($course)) {
+            // link the session to the configured workspace on the parent training
             $workspace = $course->getWorkspace();
+            if (!empty($workspace)) {
+                // The parent training as a workspace linked to it
+                if ($workspace->isModel()) {
+                    // The linked workspace is a model, we need to generate a new workspace from it for the new session
+                    $workspace = $this->sessionManager->generateWorkspace($session);
+                }
 
-            if (empty($workspace)) {
-                $workspace = $this->sessionManager->generateWorkspace($session);
+                // Link the session the workspace
+                $session->setWorkspace($workspace);
+
+                $learnerRole = $this->sessionManager->generateRoleForSession(
+                    $workspace,
+                    $course->getLearnerRole(),
+                    'learner'
+                );
+                $session->setLearnerRole($learnerRole);
+
+                $tutorRole = $this->sessionManager->generateRoleForSession(
+                    $workspace,
+                    $course->getTutorRole(),
+                    'manager'
+                );
+                $session->setTutorRole($tutorRole);
             }
-            $session->setWorkspace($workspace);
-
-            $learnerRole = $this->sessionManager->generateRoleForSession(
-                $workspace,
-                $course->getLearnerRoleName(),
-                'learner'
-            );
-            $session->setLearnerRole($learnerRole);
-
-            $tutorRole = $this->sessionManager->generateRoleForSession(
-                $workspace,
-                $course->getTutorRoleName(),
-                'manager'
-            );
-            $session->setTutorRole($tutorRole);
         }
 
         $this->eventDispatcher->dispatch(new LogSessionCreateEvent($session), 'log');

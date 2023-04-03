@@ -7,6 +7,7 @@ import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {CatalogList} from '#/plugin/cursus/tools/trainings/catalog/components/list'
 import {CatalogDetails} from '#/plugin/cursus/tools/trainings/catalog/containers/details'
 import {CatalogCreation} from '#/plugin/cursus/tools/trainings/catalog/components/creation'
+import {CatalogEdit} from '#/plugin/cursus/tools/trainings/catalog/containers/edit'
 
 const CatalogMain = (props) =>
   <Routes
@@ -16,7 +17,7 @@ const CatalogMain = (props) =>
         path: '/',
         exact: true,
         render: () => (
-          <CatalogList path={`${props.path}/catalog`} canEdit={props.canEdit} />
+          <CatalogList path={props.path} canEdit={props.canEdit} />
         )
       }, {
         path: '/new',
@@ -26,11 +27,13 @@ const CatalogMain = (props) =>
           <CatalogCreation path={`${props.path}/catalog`} />
         )
       }, {
+        path: '/:slug/edit',
+        onEnter: (params = {}) => props.openForm(params.slug),
+        component: CatalogEdit
+      }, {
         path: '/:slug',
         onEnter: (params = {}) => props.open(params.slug),
-        render: () => (
-          <CatalogDetails path={`${props.path}/catalog`} />
-        )
+        component: CatalogDetails
       }
     ]}
   />

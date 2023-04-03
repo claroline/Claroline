@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Finder\Registration;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CommunityBundle\Finder\Filter\UserFilter;
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CursusBundle\Entity\Registration\CourseUser;
 use Doctrine\ORM\QueryBuilder;
 
@@ -74,10 +75,52 @@ class CourseUserFinder extends AbstractFinder
                     break;
 
                 default:
-                    $this->setDefaults($qb, $filterName, $filterValue);
+                    if (false !== strpos($filterName, 'data.')) {
+                        $filterName = str_replace('data.', '', $filterName);
+                        $field = $this->om->getRepository(FieldFacet::class)->findOneBy(['uuid' => $filterName]);
+                        if ($field) {
+                            $this->filterField($qb, $filterName, $filterValue, $field);
+                        }
+                    } else {
+                        $this->setDefaults($qb, $filterName, $filterValue);
+                    }
             }
         }
 
         return $qb;
+    }
+
+    private function filterField(QueryBuilder $qb, $filterName, $filterValue, FieldFacet $field)
+    {
+        $parsedFilterName = str_replace('-', '', $filterName);
+
+        $qb->leftJoin('obj.facetValues', "fv{$parsedFilterName}");
+        $qb->leftJoin("fv{$parsedFilterName}.fieldFacet", "ff{$parsedFilterName}");
+        $qb->andWhere("ff{$parsedFilterName}.uuid = :field{$parsedFilterName}");
+        $qb->setParameter("field{$parsedFilterName}", $field->getUuid());
+
+        switch ($field->getType()) {
+            case FieldFacet::DATE_TYPE:
+            case FieldFacet::BOOLEAN_TYPE:
+            case FieldFacet::NUMBER_TYPE:
+                $qb->andWhere("fv{$parsedFilterName}.value = :value{$parsedFilterName}");
+                $qb->setParameter("value{$parsedFilterName}", $filterValue);
+                break;
+
+            case FieldFacet::FILE_TYPE:
+                break;
+
+            case FieldFacet::CHOICE_TYPE:
+            case FieldFacet::CASCADE_TYPE:
+            default:
+                $qb->andWhere("UPPER(fv{$parsedFilterName}.value) LIKE :value{$parsedFilterName}");
+
+                // a little of black magic because Doctrine Json type stores unicode seq for special chars
+                $value = json_encode($filterValue);
+                $value = trim($value, '"'); // removes string delimiters added by json encode
+
+                $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
+                break;
+        }
     }
 }

@@ -16,11 +16,13 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\OrganizationSerializer;
+use Claroline\CommunityBundle\Serializer\RoleSerializer;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Facet\PanelFacetSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
@@ -38,8 +40,8 @@ class CourseSerializer
     private AuthorizationCheckerInterface $authorization;
     private EventDispatcherInterface $eventDispatcher;
     private ObjectManager $om;
-
     private UserSerializer $userSerializer;
+    private RoleSerializer $roleSerializer;
     private OrganizationSerializer $orgaSerializer;
     private WorkspaceSerializer $workspaceSerializer;
     private PanelFacetSerializer $panelFacetSerializer;
@@ -52,6 +54,7 @@ class CourseSerializer
         EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
         UserSerializer $userSerializer,
+        RoleSerializer $roleSerializer,
         OrganizationSerializer $orgaSerializer,
         WorkspaceSerializer $workspaceSerializer,
         PanelFacetSerializer $panelFacetSerializer
@@ -60,6 +63,7 @@ class CourseSerializer
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->userSerializer = $userSerializer;
+        $this->roleSerializer = $roleSerializer;
         $this->orgaSerializer = $orgaSerializer;
         $this->workspaceSerializer = $workspaceSerializer;
         $this->panelFacetSerializer = $panelFacetSerializer;
@@ -138,6 +142,7 @@ class CourseSerializer
                     'order' => $course->getOrder(),
                     'hideSessions' => $course->getHideSessions(),
                 ],
+                'participants' => $this->courseRepo->countParticipants($course),
                 'registration' => [
                     'selfRegistration' => $course->getPublicRegistration(),
                     'autoRegistration' => $course->getAutoRegistration(),
@@ -146,17 +151,18 @@ class CourseSerializer
                     'userValidation' => $course->getUserValidation(),
                     'mail' => $course->getRegistrationMail(),
                     'pendingRegistrations' => $course->getPendingRegistrations(),
-                    'tutorRoleName' => $course->getTutorRoleName(),
-                    'learnerRoleName' => $course->getLearnerRoleName(),
+                    'learnerRole' => $course->getLearnerRole() ?
+                        $this->roleSerializer->serialize($course->getLearnerRole(), [SerializerInterface::SERIALIZE_MINIMAL]) :
+                        null,
+                    'tutorRole' => $course->getTutorRole() ?
+                        $this->roleSerializer->serialize($course->getTutorRole(), [SerializerInterface::SERIALIZE_MINIMAL]) :
+                        null,
                     'form' => array_map(function (PanelFacet $panelFacet) {
                         return $this->panelFacetSerializer->serialize($panelFacet);
                     }, $course->getPanelFacets()->toArray()),
                 ],
                 'workspace' => $course->getWorkspace() ?
                     $this->workspaceSerializer->serialize($course->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]) :
-                    null,
-                'workspaceModel' => $course->getWorkspaceModel() ?
-                    $this->workspaceSerializer->serialize($course->getWorkspaceModel(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
                 'organizations' => array_map(function (Organization $organization) {
                     return $this->orgaSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
@@ -217,8 +223,24 @@ class CourseSerializer
             $this->sipe('registration.userValidation', 'setUserValidation', $data, $course);
             $this->sipe('registration.mail', 'setRegistrationMail', $data, $course);
             $this->sipe('registration.pendingRegistrations', 'setPendingRegistrations', $data, $course);
-            $this->sipe('registration.tutorRoleName', 'setTutorRoleName', $data, $course);
-            $this->sipe('registration.learnerRoleName', 'setLearnerRoleName', $data, $course);
+
+            if (array_key_exists('learnerRole', $data['registration'])) {
+                $learnerRole = null;
+                if (!empty($data['registration']['learnerRole'])) {
+                    $learnerRole = $this->om->getRepository(Role::class)->findOneBy(['uuid' => $data['registration']['learnerRole']['id']]);
+                }
+
+                $course->setLearnerRole($learnerRole);
+            }
+
+            if (array_key_exists('tutorRole', $data['registration'])) {
+                $tutorRole = null;
+                if (!empty($data['registration']['tutorRole'])) {
+                    $tutorRole = $this->om->getRepository(Role::class)->findOneBy(['uuid' => $data['registration']['tutorRole']['id']]);
+                }
+
+                $course->setTutorRole($tutorRole);
+            }
 
             if (array_key_exists('form', $data['registration'])) {
                 $sectionIds = [];
@@ -255,15 +277,6 @@ class CourseSerializer
                 $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspace']['id']]);
             }
             $course->setWorkspace($workspace);
-        }
-
-        if (array_key_exists('workspaceModel', $data)) {
-            $workspace = null;
-            if (isset($data['workspaceModel']['id'])) {
-                /** @var Workspace $workspace */
-                $workspace = $this->workspaceRepo->findOneBy(['uuid' => $data['workspaceModel']['id']]);
-            }
-            $course->setWorkspaceModel($workspace);
         }
 
         if (array_key_exists('organizations', $data)) {

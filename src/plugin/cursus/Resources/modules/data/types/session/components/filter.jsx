@@ -21,6 +21,7 @@ const SessionFilter = (props) =>
       label={props.placeholder || trans('select', {}, 'actions')}
       size="sm"
       modal={[MODAL_SESSIONS, {
+        ...props.picker,
         selectAction: (selected) => ({
           type: CALLBACK_BUTTON,
           label: trans('select', {}, 'actions'),
@@ -36,7 +37,12 @@ implementPropTypes(SessionFilter, DataSearchTypes, {
    id: T.string.isRequired,
    name: T.string.isRequired
    }),*/
-  search: T.string
+  search: T.string,
+  picker: T.shape({
+    url: T.oneOfType([T.string, T.array]),
+    title: T.string,
+    filters: T.arrayOf(T.object)
+  })
 })
 
 export {

@@ -11,6 +11,7 @@ import {constants} from '#/main/app/content/search/constants'
 const Search = props => {
   // exclude disabled data types from the search
   const values = []
+
   const filters = props.available.filter(filter => {
     if (isTypeEnabled(filter.type)) {
       // grab filter value
@@ -25,6 +26,15 @@ const Search = props => {
     return false
   })
 
+  // we keep filter values without column definition in order to keep the "hidden" filters work
+  const otherFilters = props.current.filter(value => {
+    const filterDef = props.available.find(filter => value.property === filter.name || value.property === filter.alias)
+    if (!filterDef) {
+
+      return true
+    }
+  })
+
   switch (props.mode) {
     case constants.SEARCH_FULL:
       return (
@@ -32,6 +42,7 @@ const Search = props => {
           {...props}
           available={filters}
           current={values}
+          resetFilters={(userFilters) => props.resetFilters([].concat(userFilters, otherFilters))}
         />
       )
 
@@ -41,6 +52,7 @@ const Search = props => {
           {...props}
           available={filters}
           current={values}
+          resetFilters={(userFilters) => props.resetFilters([].concat(userFilters, otherFilters))}
         />
       )
   }

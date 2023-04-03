@@ -3,26 +3,31 @@
     .box-shadow(@panel-box-shadow); // just override bootstrap to use a var.
 
     .panel-heading {
-        position: relative; // used to create an absolute button bar in the right corner
+        //position: relative; // used to create an absolute button bar in the right corner
 
         small {
-            margin-left: 5px;
+            display: block; // should be done in all titles
+            margin-top: 5px;
         }
     }
 
     .panel-title {
+        display: flex;
+        align-items: center;
         .icon-with-text-right {
             margin-right: @panel-heading-padding-h;
         }
     }
 
     .panel-actions { // deprecated
-        position: absolute; // TODO : use flex design instead
-        right: 0;
-        top: 0;
-        height: 100%;
+        //position: absolute; // TODO : use flex design instead
+        //right: 0;
+        //top: 0;
+        //height: 100%;
         display: flex;
         align-items: center;
+        // move actions to the right corner and absorb panel-heading padding
+        margin: -@panel-heading-padding-v -@panel-heading-padding-h -@panel-heading-padding-v auto;
     }
 
     .panel-body img {
@@ -71,7 +76,9 @@
 
 .panel-group {
     .panel-title > a {
-        display: block; // make the click zone fill the parent block
+        flex: 1; // make the click zone fill the parent block
+        display: flex;
+        align-items: center;
         cursor: pointer; // the <a> tag to toggle the panel has no href, so the cursor do not change properly
     }
 

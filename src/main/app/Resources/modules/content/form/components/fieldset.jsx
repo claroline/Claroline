@@ -9,6 +9,7 @@ import {Alert} from '#/main/app/alert/components/alert'
 import {DataInput} from '#/main/app/data/components/input'
 import {DataDisplay} from '#/main/app/data/components/display'
 import {toKey} from '#/main/core/scaffolding/text'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 /**
  * ATTENTION : as it's only be used in the FormData component, the `fields` are not defaulted by the component.
@@ -127,7 +128,9 @@ class FormFieldset extends Component {
       const helps = Array.isArray(this.props.help) ? this.props.help : [this.props.help]
 
       return helps.map(help =>
-        <Alert key={toKey(help)} type="info">{help}</Alert>
+        <Alert key={toKey(help)} type="info">
+          <ContentHtml>{help}</ContentHtml>
+        </Alert>
       )
     }
 

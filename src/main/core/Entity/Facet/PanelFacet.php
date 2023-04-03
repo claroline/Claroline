@@ -34,6 +34,11 @@ class PanelFacet
     use Order;
 
     /**
+     * @ORM\Column(name="help", nullable=true)
+     */
+    private $help;
+
+    /**
      * @ORM\ManyToOne(
      *      targetEntity="Claroline\CoreBundle\Entity\Facet\Facet",
      *      inversedBy="panelFacets"
@@ -63,6 +68,16 @@ class PanelFacet
         $this->refreshUuid();
 
         $this->fieldsFacet = new ArrayCollection();
+    }
+
+    public function getHelp(): ?string
+    {
+        return $this->help;
+    }
+
+    public function setHelp(?string $help): void
+    {
+        $this->help = $help;
     }
 
     public function getFacet(): ?Facet

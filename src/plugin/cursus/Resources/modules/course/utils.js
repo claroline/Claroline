@@ -1,27 +1,14 @@
-import identity from 'lodash/identity'
+import {getActions as getPluginsActions, getDefaultAction as getPluginsDefaultAction} from '#/main/app/plugins'
 
-import {getApps} from '#/main/app/plugins'
+function getActions(courses, coursesRefresher, path, currentUser, withDefault = false) {
+  return getPluginsActions('course', courses, coursesRefresher, path, currentUser, withDefault)
+}
 
-function getActions(courses, context, courseRefresher, path, currentUser) {
-  // adds default refresher actions
-  const refresher = Object.assign({
-    add: identity,
-    update: identity,
-    delete: identity
-  }, courseRefresher)
-
-  // get all actions declared for course
-  const actions = getApps('actions.course')
-
-  return Promise.all(
-    // boot actions applications
-    Object.keys(actions).map(action => actions[action]())
-  ).then((loadedActions) => loadedActions
-    // generate action
-    .map(actionModule => actionModule.default(courses, context, refresher, path, currentUser))
-  )
+function getDefaultAction(courses, coursesRefresher, path, currentUser = null) {
+  return getPluginsDefaultAction('course', courses, coursesRefresher, path, currentUser)
 }
 
 export {
-  getActions
+  getActions,
+  getDefaultAction
 }

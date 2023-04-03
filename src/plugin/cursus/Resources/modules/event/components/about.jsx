@@ -132,22 +132,23 @@ const EventAbout = (props) =>
         />
       }
 
-      <section className="overview-user-actions">
-        {constants.REGISTRATION_MANUAL === get(props.event, 'registration.registrationType') &&
+      <section>
+        {constants.REGISTRATION_MANUAL === get(props.event, 'registration.registrationType') && !isFullyRegistered(props.registration) &&
           <Alert type="warning">{trans('registration_requires_manager', {}, 'cursus')}</Alert>
         }
 
-        {constants.REGISTRATION_AUTO === get(props.event, 'registration.registrationType') &&
+        {constants.REGISTRATION_AUTO === get(props.event, 'registration.registrationType') && !isFullyRegistered(props.registration) &&
           <Alert type="warning">{trans('registration_auto', {}, 'cursus')}</Alert>
         }
 
-        {!isFull(props.event) && isEmpty(props.registration) && constants.REGISTRATION_PUBLIC === get(props.event, 'registration.registrationType') &&
+        {!isFull(props.event) && !isFullyRegistered(props.registration) && constants.REGISTRATION_PUBLIC === get(props.event, 'registration.registrationType') &&
           <Button
             className="btn btn-block btn-emphasis"
             type={MODAL_BUTTON}
             label={trans('self_register', {}, 'actions')}
             modal={[MODAL_COURSE_REGISTRATION, {
-              event: props.event,
+              path: props.path,
+              session: props.event,
               register: props.register
             }]}
             primary={true}
@@ -204,14 +205,14 @@ const EventAbout = (props) =>
         </div>
       </div>
 
-      {props.registration && (!isEmpty(props.registration.users) || !isEmpty(props.registration.groups)) &&
+      {!isEmpty(props.registration) &&
         <CurrentRegistration
           eventFull={isFull(props.event)}
-          registration={!isEmpty(props.registration.users) ? props.registration.users[0] : props.registration.groups[0]}
+          registration={props.registration}
         />
       }
 
-      {!props.registration && isFull(props.event) &&
+      {isEmpty(props.registration) && isFull(props.event) &&
         <AlertBlock type="warning" title={trans('event_full', {}, 'cursus')}>
           {trans('event_full_help', {}, 'cursus')}
         </AlertBlock>
@@ -267,10 +268,7 @@ EventAbout.propTypes = {
   event: T.shape(
     EventTypes.propTypes
   ).isRequired,
-  registration: T.shape({
-    users: T.array,
-    groups: T.array
-  }),
+  registration: T.object,
   register: T.func.isRequired
 }
 

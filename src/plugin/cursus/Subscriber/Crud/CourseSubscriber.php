@@ -29,14 +29,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class CourseSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var ObjectManager */
-    private $om;
-    /** @var FileManager */
-    private $fileManager;
+    private TokenStorageInterface $tokenStorage;
+    private EventDispatcherInterface $eventDispatcher;
+    private ObjectManager $om;
+    private FileManager $fileManager;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,

@@ -10,8 +10,8 @@ const dataType = {
   meta: {
     creatable: true,
     icon: 'fa fa-fw fa fa-building',
-    label: trans('organization'),
-    description: trans('organization_desc')
+    label: trans('organization', {}, 'data'),
+    description: trans('organization_desc', {}, 'data')
   },
   /**
    * The list of configuration fields.

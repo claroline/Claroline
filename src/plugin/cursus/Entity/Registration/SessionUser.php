@@ -35,7 +35,7 @@ class SessionUser extends AbstractUserRegistration
     private ?Session $session = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue")
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue", cascade={"persist"}, orphanRemoval=true)
      * @ORM\JoinTable(name="claro_cursusbundle_session_user_values",
      *      joinColumns={@ORM\JoinColumn(name="registration_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="value_id", referencedColumnName="id", unique=true, onDelete="CASCADE")}

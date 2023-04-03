@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -20,7 +21,7 @@ const CourseRegistration = (props) =>
     }
     cancel={{
       type: LINK_BUTTON,
-      target: props.isNew ? props.path : route(props.path, props.course),
+      target: props.isNew ? props.path : route(props.course),
       exact: true
     }}
     definition={[
@@ -82,6 +83,8 @@ const CourseRegistration = (props) =>
                       props.update(props.name, 'registration.userValidation', false)
                       props.update(props.name, 'registration.selfUnregistration', false)
                       props.update(props.name, 'registration.pendingRegistrations', false)
+                      props.update(props.name, 'registration._enableCustomForm', false)
+                      props.update(props.name, 'registration.form', [])
                       break
 
                     case 'validation':
@@ -124,16 +127,33 @@ const CourseRegistration = (props) =>
             label: trans('activate_self_unregistration'),
             help: trans('self_unregistration_training_help', {}, 'cursus'),
             displayed: (course) => !get(course, 'registration.autoRegistration')
+          }, {
+            name: 'registration._enableCustomForm',
+            type: 'boolean',
+            label: trans('enable_custom_registration_form', {}, 'cursus'),
+            displayed: (data) => !get(data, 'registration.autoRegistration', false),
+            calculated: (data) => get(data, 'registration._enableCustomForm') || !isEmpty(get(data, 'registration.form')),
+            onChange: (enabled) => {
+              if (!enabled) {
+                props.update(props.name, 'registration.form', [])
+              }
+            },
+            help: [
+              trans('custom_registration_form_help', {}, 'cursus'),
+              trans('custom_registration_form_group_help', {}, 'cursus')
+            ]
           }
         ]
       }
     ]}
   >
-    <FormParameters
-      name={props.name}
-      dataPart="registration.form"
-      sections={get(props.course, 'registration.form', [])}
-    />
+    {(get(props.course, 'registration._enableCustomForm') || !isEmpty(get(props.course, 'registration.form'))) &&
+      <FormParameters
+        name={props.name}
+        dataPart="registration.form"
+        sections={get(props.course, 'registration.form', [])}
+      />
+    }
   </FormData>
 
 CourseRegistration.propTypes = {

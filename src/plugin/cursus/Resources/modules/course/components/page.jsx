@@ -1,11 +1,11 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {hasPermission} from '#/main/app/security'
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
@@ -14,7 +14,9 @@ import {getInfo} from '#/plugin/cursus/utils'
 import {getActions} from '#/plugin/cursus/course/utils'
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 
-const CoursePage = (props) => {
+import {selectors as securitySelectors} from '#/main/app/security/store'
+
+const Course = (props) => {
   if (isEmpty(props.course)) {
     return (
       <ContentLoader
@@ -24,30 +26,9 @@ const CoursePage = (props) => {
     )
   }
 
-  const baseActions = [
-    {
-      name: 'edit',
-      type: LINK_BUTTON,
-      icon: 'fa fa-fw fa-pencil',
-      label: trans('edit', {}, 'actions'),
-      target: route(props.basePath, props.course) + '/edit',
-      displayed: hasPermission('edit', props.course),
-      primary: true
-    }, {
-      name: 'export-pdf',
-      type: URL_BUTTON,
-      icon: 'fa fa-fw fa-file-pdf',
-      label: trans('export-pdf', {}, 'actions'),
-      displayed: hasPermission('open', props.course),
-      group: trans('transfer'),
-      target: ['apiv2_cursus_course_download_pdf', {id: props.course.id}]
-    }
-  ]
-
   return (
     <ToolPage
       className="training-page"
-      path={props.path}
       title={props.course.name}
       subtitle={get(props.activeSession, 'name')}
       poster={getInfo(props.course, props.activeSession, 'poster')}
@@ -55,42 +36,47 @@ const CoursePage = (props) => {
         title: `${trans('trainings', {}, 'tools')} - ${props.course.name}`,
         description: props.course.description
       }}
-
-      primaryAction="edit"
-      actions={getActions([props.course], props.currentContext, {}, props.basePath).then(pluginActions => {
-        if (props.actions instanceof Promise) {
-          return props.actions.then(promisedActions => promisedActions.concat(pluginActions, baseActions))
+      path={[
+        {
+          type: LINK_BUTTON,
+          label: trans('catalog', {}, 'cursus'),
+          target: props.path + '/catalog'
+        }, {
+          type: LINK_BUTTON,
+          label: get(props.course, 'name', trans('loading')),
+          target: !isEmpty(props.course) ? route(props.course, null, props.path) : ''
         }
-
-        return (props.actions || []).concat(pluginActions, baseActions)
-      })}
+      ].concat(props.course ? props.breadcrumb : [])}
+      primaryAction="edit"
+      actions={getActions([props.course], {}, props.path, props.currentUser)}
     >
       {props.children}
     </ToolPage>
   )
 }
 
-CoursePage.propTypes = {
-  path: T.array,
-  basePath: T.string.isRequired,
-  currentContext: T.shape({
-    type: T.oneOf(['administration', 'desktop', 'workspace']),
-    data: T.object
-  }).isRequired,
-  primaryAction: T.string,
-  actions: T.array,
+Course.propTypes = {
+  path: T.string,
+  breadcrumb: T.array,
   course: T.shape(
     CourseTypes.propTypes
   ),
   activeSession: T.shape(
     SessionTypes.propTypes
   ),
+  currentUser: T.object,
   children: T.any
 }
 
-CoursePage.defaultProps = {
-  path: []
+Course.defaultProps = {
+  breadcrumb: []
 }
+
+const CoursePage = connect(
+  (state) => ({
+    currentUser: securitySelectors.currentUser(state)
+  })
+)(Course)
 
 export {
   CoursePage

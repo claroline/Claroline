@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
@@ -15,7 +16,9 @@ import {FormData} from '#/main/app/content/form/containers/data'
 const SectionParameters = props =>
   <FormSection
     {...omit(props, ['name', 'dataPart', 'index', 'fields', 'remove'])}
-    title={props.title || trans('profile_facet_section')}
+    icon={props.icon ? `fa fa-fw fa-${props.icon}` : undefined}
+    title={props.title || trans('facet_section')}
+    subtitle={props.description}
     className="embedded-form-section"
     actions={[
       {
@@ -26,8 +29,8 @@ const SectionParameters = props =>
         callback: props.remove,
         dangerous: true,
         confirm: {
-          title: trans('profile_remove_section'),
-          message: trans('profile_remove_section_question')
+          title: trans('facet_remove_section'),
+          message: trans('facet_remove_section_question')
         }
       }
     ]}
@@ -39,25 +42,54 @@ const SectionParameters = props =>
       dataPart={`${props.dataPart}[${props.index}]`}
       definition={[
         {
-          icon: 'fa fa-fw fa-cog',
+          id: 'general',
           title: trans('general'),
           primary: true,
           fields: [
             {
               name: 'title',
               type: 'string',
-              label: trans('title'),
-              required: true
+              label: trans('title')
+            }, {
+              name: 'meta.description',
+              type: 'string',
+              label: trans('description')
             }, {
               name: 'fields',
               type: 'fields',
               label: trans('fields_list'),
               required: true,
               options: {
-                placeholder: trans('profile_section_no_field'),
+                placeholder: trans('facet_section_no_field'),
                 fields: props.fields,
                 min: 1
               }
+            }
+          ]
+        }, {
+          id: 'help',
+          icon: 'fa fa-fw fa-circle-question',
+          title: trans('help'),
+          fields: [
+            {
+              name: 'help',
+              type: 'html',
+              label: trans('message')
+            }
+          ]
+        }, {
+          id: 'display',
+          icon: 'fa fa-fw fa-desktop',
+          title: trans('display_parameters'),
+          fields: [
+            {
+              name: 'display.icon',
+              type: 'icon',
+              label: trans('icon')
+            }, {
+              name: 'display.order',
+              type: 'number',
+              label: trans('order')
             }
           ]
         }
@@ -71,6 +103,7 @@ SectionParameters.propTypes = {
   dataPart: T.string.isRequired,
   icon: T.string,
   title: T.string,
+  description: T.string,
   fields: T.array,
   remove: T.func.isRequired
 }
@@ -85,7 +118,9 @@ const FormParameters = (props) =>
             index={sectionIndex}
             name={props.name}
             dataPart={props.dataPart}
+            icon={get(section, 'display.icon')}
             title={section.title}
+            description={get(section, 'meta.description')}
             fields={props.fields}
             remove={() => {
               const updatedSections = merge([], props.sections)
@@ -112,15 +147,15 @@ const FormParameters = (props) =>
     {0 === props.sections.length &&
       <ContentPlaceholder
         size="lg"
-        icon="fa fa-face-frown"
-        title={trans('profile_facet_no_section')}
+        title={trans('facet_no_section')}
+        help={trans('facet_no_section_help')}
       />
     }
 
     <Button
       type={CALLBACK_BUTTON}
       className="btn btn-block btn-emphasis component-container"
-      label={trans('profile_facet_section_add')}
+      label={trans('facet_section_add')}
       callback={() => props.update(props.name, props.dataPart, [].concat(props.sections, [{
         id: makeId(),
         title: '',

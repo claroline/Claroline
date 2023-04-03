@@ -61,6 +61,16 @@ const courseRegistration = createSelector(
   }
 )
 
+const courseStats = createSelector(
+  [catalog],
+  (catalog) => catalog.courseStats
+)
+
+const participantsView = createSelector(
+  [catalog],
+  (catalog) => catalog.participantsView
+)
+
 export const selectors = {
   STORE_NAME,
   LIST_NAME,
@@ -72,5 +82,7 @@ export const selectors = {
   availableSessions,
   sessionRegistrations,
   activeSessionRegistration,
-  courseRegistration
+  courseRegistration,
+  courseStats,
+  participantsView
 }

@@ -9,12 +9,11 @@ import {currency} from '#/main/app/intl/currency'
 import {hasPermission} from '#/main/app/security'
 import {Alert} from '#/main/app/alert/components/alert'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
-import {Button} from '#/main/app/action/components/button'
+import {Button, Toolbar} from '#/main/app/action'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, POPOVER_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
-import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {LocationCard} from '#/main/core/data/types/location/components/card'
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
@@ -81,56 +80,6 @@ const CourseAbout = (props) => {
   return (
     <div className="row">
       <div className="col-md-3">
-        {!isEmpty(props.activeSession) &&
-          <div className="panel panel-default">
-            <ul className="list-group list-group-values">
-              <li className="list-group-item">
-                {trans('status')}
-
-                {get(props.activeSession, 'restrictions.dates[0]') > now() &&
-                  <span className="value text-muted">
-                    {trans('session_not_started', {}, 'cursus')}
-                  </span>
-                }
-
-                {(get(props.activeSession, 'restrictions.dates[0]') <= now() && get(props.activeSession, 'restrictions.dates[1]') >= now()) &&
-                  <span className="value text-success">
-                    {trans('session_in_progress', {}, 'cursus')}
-                  </span>
-                }
-
-                {get(props.activeSession, 'restrictions.dates[1]') < now() &&
-                  <span className="value text-danger">
-                    {trans('session_ended', {}, 'cursus')}
-                  </span>
-                }
-              </li>
-
-              <li className="list-group-item">
-                {trans('start_date')}
-
-                <span className="value">
-                  {get(props.activeSession, 'restrictions.dates[0]') ?
-                    displayDate(get(props.activeSession, 'restrictions.dates[0]')) :
-                    trans('empty_value')
-                  }
-                </span>
-              </li>
-
-              <li className="list-group-item">
-                {trans('end_date')}
-
-                <span className="value">
-                  {get(props.activeSession, 'restrictions.dates[1]') ?
-                    displayDate(get(props.activeSession, 'restrictions.dates[1]')) :
-                    trans('empty_value')
-                  }
-                </span>
-              </li>
-            </ul>
-          </div>
-        }
-
         <div className="panel panel-default">
           <ul className="list-group list-group-values">
             <li className="list-group-item">
@@ -227,67 +176,119 @@ const CourseAbout = (props) => {
           </Fragment>
         }
 
-        <section className="overview-user-actions">
-          {!getInfo(props.course, props.activeSession, 'registration.selfRegistration') &&
-            <Alert type="warning">{trans('registration_requires_manager', {}, 'cursus')}</Alert>
+        <section>
+          {!isFullyRegistered(props.activeSessionRegistration) && !getInfo(props.course, props.activeSession, 'registration.selfRegistration') &&
+            <Alert type="warning" >{trans('registration_requires_manager', {}, 'cursus')}</Alert>
           }
 
-          {selfRegistration &&
-            <Button
-              className="btn btn-block btn-emphasis"
-              type={MODAL_BUTTON}
-              label={trans(isEmpty(props.activeSession) || isFull(props.activeSession) ? 'register_waiting_list' : 'self_register', {}, 'actions')}
-              modal={[MODAL_COURSE_REGISTRATION, {
-                path: props.path,
-                course: props.course,
-                session: props.activeSession,
-                register: props.register
-              }]}
-              primary={true}
-            />
-          }
-
-          {isEmpty(props.activeSession) && !get(props.course, 'display.hideSessions') &&
-            <Button
-              className="btn btn-block btn-emphasis"
-              type={LINK_BUTTON}
-              label={trans('show_sessions', {}, 'actions')}
-              target={route(props.path, props.course)+'/sessions'}
-              primary={!selfRegistration}
-            />
-          }
-
-          {!isEmpty(props.activeSession) &&
-            <Button
-              className="btn btn-block"
-              type={LINK_BUTTON}
-              label={trans('show_training_events', {}, 'actions')}
-              target={route(props.path, props.course, props.activeSession)+'/events'}
-            />
-          }
-
-          {(isFullyRegistered(props.activeSessionRegistration)
-            || get(props.activeSession, 'registration.autoRegistration')
-            || hasPermission('edit', props.course)
-          ) && !isEmpty(getInfo(props.course, props.activeSession, 'workspace')) &&
-            <Button
-              className="btn btn-block"
-              type={CALLBACK_BUTTON}
-              label={trans('open-training', {}, 'actions')}
-              callback={() => {
-                const workspaceUrl = workspaceRoute(getInfo(props.course, props.activeSession, 'workspace'))
-                if (get(props.activeSession, 'registration.autoRegistration') && !isFullyRegistered(props.activeSessionRegistration)) {
-                  props.register(props.course, props.activeSession.id).then(() => props.history.push(workspaceUrl))
-                } else {
-                  props.history.push(workspaceUrl)
-                }
-              }}
-            />
-          }
+          <Toolbar
+            className="component-container"
+            buttonName="btn btn-block"
+            actions={[
+              {
+                name: 'self-register',
+                className: 'btn-emphasis',
+                type: MODAL_BUTTON,
+                label: trans(isEmpty(props.activeSession) || isFull(props.activeSession) ? 'register_waiting_list' : 'self_register', {}, 'actions'),
+                modal: [MODAL_COURSE_REGISTRATION, {
+                  course: props.course,
+                  session: props.activeSession,
+                  register: props.register
+                }],
+                primary: true,
+                displayed: selfRegistration
+              }, {
+                name: 'open',
+                className: 'btn-emphasis',
+                type: CALLBACK_BUTTON,
+                label: trans('open-training', {}, 'actions'),
+                callback: () => {
+                  const workspaceUrl = workspaceRoute(getInfo(props.course, props.activeSession, 'workspace'))
+                  if (get(props.activeSession, 'registration.autoRegistration') && !isFullyRegistered(props.activeSessionRegistration)) {
+                    props.register(props.course, props.activeSession.id).then(() => props.history.push(workspaceUrl))
+                  } else {
+                    props.history.push(workspaceUrl)
+                  }
+                },
+                displayed: (isFullyRegistered(props.activeSessionRegistration)
+                  || get(props.activeSession, 'registration.autoRegistration')
+                  || hasPermission('edit', props.course)
+                ) && !isEmpty(getInfo(props.course, props.activeSession, 'workspace')),
+                primary: isFullyRegistered(props.activeSessionRegistration)
+              }, {
+                name: 'show-sessions',
+                type: LINK_BUTTON,
+                label: trans('show_sessions', {}, 'actions'),
+                target: props.path+'/sessions',
+                primary: !selfRegistration && !isFullyRegistered(props.activeSessionRegistration),
+                displayed: isEmpty(props.activeSession) && !get(props.course, 'display.hideSessions')
+              }, {
+                name: 'show-events',
+                type: LINK_BUTTON,
+                label: trans('show_training_events', {}, 'actions'),
+                target: props.path+'/events',
+                displayed: !isEmpty(props.activeSession)
+              }
+            ]}
+          />
         </section>
       </div>
 
       <div className="col-md-9">
+        {!isEmpty(props.activeSession) &&
+          <div className="content-resume">
+            <div className="content-resume-info content-resume-primary">
+              <span className="text-muted">
+                {trans('status')}
+              </span>
+
+              {get(props.activeSession, 'restrictions.dates[0]') > now() &&
+                <h1 className="content-resume-title h2 text-muted">
+                  {trans('session_not_started', {}, 'cursus')}
+                </h1>
+              }
+
+              {(get(props.activeSession, 'restrictions.dates[0]') <= now() && get(props.activeSession, 'restrictions.dates[1]') >= now()) &&
+                <h1 className="content-resume-title h2 text-success">
+                  {trans('session_in_progress', {}, 'cursus')}
+                </h1>
+              }
+
+              {get(props.activeSession, 'restrictions.dates[1]') < now() &&
+                <h1 className="content-resume-title h2 text-danger">
+                  {trans('session_ended', {}, 'cursus')}
+                </h1>
+              }
+            </div>
+
+            <div className="content-resume-info">
+              <span className="text-muted">
+                {trans('start_date')}
+              </span>
+
+              <h1 className="content-resume-title h2">
+                {get(props.activeSession, 'restrictions.dates[0]') ?
+                  displayDate(get(props.activeSession, 'restrictions.dates[0]')) :
+                  trans('empty_value')
+                }
+              </h1>
+            </div>
+
+            <div className="content-resume-info">
+              <span className="text-muted">
+                {trans('end_date')}
+              </span>
+
+              <h1 className="content-resume-title h2">
+                {get(props.activeSession, 'restrictions.dates[1]') ?
+                  displayDate(get(props.activeSession, 'restrictions.dates[1]')) :
+                  trans('empty_value')
+                }
+              </h1>
+            </div>
+          </div>
+        }
+
         {props.courseRegistration &&
           <AlertBlock
             type="warning"
@@ -367,18 +368,11 @@ const CourseAbout = (props) => {
         )}
 
         {(props.course.parent || !isEmpty(props.course.children)) &&
-          <hr/>
-        }
-
-        {(props.course.parent || !isEmpty(props.course.children)) &&
           <ContentTitle
             level={3}
             displayLevel={2}
             title={trans('linked_trainings', {}, 'cursus')}
-            subtitle={props.course.parent ?
-              'Cette formation fait partie de la formation' :
-              'Cette formation contient les formations suivantes'
-            }
+            subtitle={trans(props.course.parent ? 'linked_trainings_parent' : 'linked_trainings_children', {}, 'cursus')}
           />
         }
 
@@ -390,7 +384,7 @@ const CourseAbout = (props) => {
             data={props.course.parent}
             primaryAction={{
               type: LINK_BUTTON,
-              target: route(props.path, props.course.parent)
+              target: route(props.course.parent)
             }}
           />
         }
@@ -399,7 +393,7 @@ const CourseAbout = (props) => {
           <ContentTitle
             level={3}
             displayLevel={2}
-            subtitle="Cette formation contient les formations suivantes"
+            subtitle={trans('linked_trainings_children', {}, 'cursus')}
           />
         }
 
@@ -412,12 +406,12 @@ const CourseAbout = (props) => {
             data={child}
             primaryAction={{
               type: LINK_BUTTON,
-              target: route(props.path, child)
+              target: route(child)
             }}
           />
         )}
 
-        {!get(props.course, 'display.hideSessions') &&
+        {!get(props.course, 'display.hideSessions') && !isEmpty(availableSessions) &&
           <Fragment>
             <ContentTitle
               level={3}
@@ -434,18 +428,10 @@ const CourseAbout = (props) => {
                 data={session}
                 primaryAction={{
                   type: LINK_BUTTON,
-                  target: route(props.path, props.course, session)
+                  target: route(props.course, session)
                 }}
               />
             )}
-
-            {isEmpty(availableSessions) &&
-              <ContentPlaceholder
-                icon="fa fa-fw fa-calendar-week"
-                title={trans('no_available_session', {}, 'cursus')}
-                help={trans('no_available_session_help', {}, 'cursus')}
-              />
-            }
           </Fragment>
         }
       </div>

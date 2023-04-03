@@ -20,7 +20,7 @@ const CourseParameters = (props) =>
     }
     cancel={{
       type: LINK_BUTTON,
-      target: props.isNew ? props.path : route(props.path, props.course),
+      target: props.isNew ? props.path : route(props.course),
       exact: true
     }}
     definition={[
@@ -125,101 +125,81 @@ const CourseParameters = (props) =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-calendar-week',
-        title: trans('training_sessions', {}, 'cursus'),
+        icon: 'fa fa-fw fa-book',
+        title: trans('workspace'),
         fields: [
           {
-            name: 'workspace',
-            type: 'workspace',
-            label: trans('workspace'),
-            displayed: (course) => course.workspace || !course.workspaceModel
-          }, {
-            name: 'workspaceModel',
-            type: 'workspace',
-            label: trans('workspace_model'),
+            name: '_workspaceType',
+            type: 'choice',
+            label: trans('type'),
+            hideLabel: true,
             options: {
-              picker: {
-                model: true,
-                title: trans('workspace_model')
+              condensed: false,
+              choices: {
+                none: trans('none'),
+                workspace: trans('Utiliser le même espace d\'activités pour toutes les sessions de la formation', {}, 'cursus'),
+                model: trans('Utiliser un modèle d\'espace d\'activités pour générer un nouvel espace pour chaque session de la formation', {}, 'cursus')
               }
             },
-            displayed: (course) => course.workspaceModel || !course.workspace
+            calculated: (course) => {
+              if (get(course, '_workspaceType')) {
+                return get(course, '_workspaceType')
+              }
+
+              if (get(course, 'workspace', null)) {
+                if (get(props.course, 'workspace.meta.model', false)) {
+                  return 'model'
+                }
+
+                return 'workspace'
+              }
+
+              return 'none'
+            },
+            onChange: () => {
+              props.update(props.name, 'workspace', null)
+              props.update(props.name, 'registration.tutorRole', null)
+              props.update(props.name, 'registration.learnerRole', null)
+            },
+            linked: [
+              {
+                name: 'workspace',
+                type: 'workspace',
+                label: get(props.course, 'workspace.meta.model', false) || 'model' === get(props.course, '_workspaceType') ? trans('workspace_model') : trans('workspace'),
+                required: true,
+                options: {
+                  picker: {
+                    model: get(props.course, 'workspace.meta.model', false) || 'model' === get(props.course, '_workspaceType'),
+                    title: get(props.course, 'workspace.meta.model', false) || 'model' === get(props.course, '_workspaceType') ? trans('workspace_models', {}, 'workspace') : trans('workspaces')
+                  }
+                },
+                displayed: (course) => get(course, 'workspace', null) || ['workspace', 'model'].includes(get(course, '_workspaceType'))
+              }
+            ]
           }, {
-            name: 'registration.tutorRoleName',
-            type: 'choice',
+            name: 'registration.tutorRole',
+            type: 'role',
             label: trans('tutor_role', {}, 'cursus'),
-            displayed: (course) => course.workspace && course.workspace.roles,
-            required: true,
+            displayed: (course) => get(course, 'workspace', null),
             options: {
-              condensed: true,
-              multiple: false,
-              choices: props.course && props.course.workspace && props.course.workspace.roles ?
-                props.course.workspace.roles.reduce((acc, role) => {
-                  if (2 === role.type) {
-                    acc[role.translationKey] = trans(role.translationKey)
-                  }
-
-                  return acc
-                }, {}) :
-                {}
-            }
+              picker: {
+                url: ['apiv2_workspace_list_roles', {id: get(props.course, 'workspace.id', null)}],
+                filters: []
+              }
+            },
+            help: trans('tutor_role_help', {}, 'cursus')
           }, {
-            name: 'registration.learnerRoleName',
-            type: 'choice',
+            name: 'registration.learnerRole',
+            type: 'role',
             label: trans('learner_role', {}, 'cursus'),
-            displayed: (course) => course.workspace && course.workspace.roles,
-            required: true,
+            displayed: (course) => get(course, 'workspace', null),
             options: {
-              condensed: true,
-              multiple: false,
-              choices: props.course && props.course.workspace && props.course.workspace.roles ?
-                props.course.workspace.roles.reduce((acc, role) => {
-                  if (2 === role.type) {
-                    acc[role.translationKey] = trans(role.translationKey)
-                  }
-
-                  return acc
-                }, {}) :
-                {}
-            }
-          }, {
-            name: 'registration.tutorRoleName',
-            type: 'choice',
-            label: trans('tutor_role', {}, 'cursus'),
-            displayed: (course) => !course.workspace && course.workspaceModel && course.workspaceModel.roles,
-            required: true,
-            options: {
-              condensed: true,
-              multiple: false,
-              choices: props.course && props.course.workspaceModel && props.course.workspaceModel.roles ?
-                props.course.workspaceModel.roles.reduce((acc, role) => {
-                  if (2 === role.type) {
-                    acc[role.translationKey] = trans(role.translationKey)
-                  }
-
-                  return acc
-                }, {}) :
-                {}
-            }
-          }, {
-            name: 'registration.learnerRoleName',
-            type: 'choice',
-            label: trans('learner_role', {}, 'cursus'),
-            displayed: (course) => !course.workspace && course.workspaceModel && course.workspaceModel.roles,
-            required: true,
-            options: {
-              condensed: true,
-              multiple: false,
-              choices: props.course && props.course.workspaceModel && props.course.workspaceModel.roles ?
-                props.course.workspaceModel.roles.reduce((acc, role) => {
-                  if (2 === role.type) {
-                    acc[role.translationKey] = trans(role.translationKey)
-                  }
-
-                  return acc
-                }, {}) :
-                {}
-            }
+              picker: {
+                url: ['apiv2_workspace_list_roles', {id: get(props.course, 'workspace.id', null)}],
+                filters: []
+              }
+            },
+            help: trans('learner_role_help', {}, 'cursus')
           }
         ]
       }, {

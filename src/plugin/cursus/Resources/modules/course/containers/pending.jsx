@@ -6,11 +6,11 @@ import {CoursePending as CoursePendingComponent} from '#/plugin/cursus/course/co
 const CoursePending = connect(
   null,
   (dispatch) => ({
+    updateUser(courseUser) {
+      dispatch(actions.updateCourseUser(courseUser))
+    },
     addUsers(courseId, users) {
       dispatch(actions.addCourseUsers(courseId, users))
-    },
-    inviteUsers(courseId, users) {
-      dispatch(actions.inviteUsers(courseId, users))
     },
     moveUsers(courseId, targetId, courseUsers) {
       dispatch(actions.moveCourseUsers(courseId, targetId, courseUsers))

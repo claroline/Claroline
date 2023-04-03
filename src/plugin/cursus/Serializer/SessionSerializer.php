@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Claroline Connect package.
- *
- * (c) Claroline Consortium <consortium@claroline.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Claroline\CursusBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
@@ -16,12 +7,12 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\RoleSerializer;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
-use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\Location\LocationSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
@@ -29,6 +20,7 @@ use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
+use Claroline\CursusBundle\Repository\CourseRepository;
 use Claroline\CursusBundle\Repository\SessionRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -36,33 +28,21 @@ class SessionSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var RoleSerializer */
-    private $roleSerializer;
-    /** @var LocationSerializer */
-    private $locationSerializer;
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
-    /** @var ResourceNodeSerializer */
-    private $resourceSerializer;
-    /** @var CourseSerializer */
-    private $courseSerializer;
+    private AuthorizationCheckerInterface $authorization;
+    private ObjectManager $om;
+    private UserSerializer $userSerializer;
+    private RoleSerializer $roleSerializer;
+    private LocationSerializer $locationSerializer;
+    private WorkspaceSerializer $workspaceSerializer;
+    private ResourceNodeSerializer $resourceSerializer;
+    private CourseSerializer $courseSerializer;
 
-    private $courseRepo;
-    /** @var SessionRepository */
-    private $sessionRepo;
+    private CourseRepository $courseRepo;
+    private SessionRepository $sessionRepo;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
-        PublicFileSerializer $fileSerializer,
         UserSerializer $userSerializer,
         RoleSerializer $roleSerializer,
         LocationSerializer $locationSerializer,
@@ -72,7 +52,6 @@ class SessionSerializer
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
-        $this->fileSerializer = $fileSerializer;
         $this->userSerializer = $userSerializer;
         $this->roleSerializer = $roleSerializer;
         $this->locationSerializer = $locationSerializer;
@@ -84,7 +63,12 @@ class SessionSerializer
         $this->sessionRepo = $om->getRepository(Session::class);
     }
 
-    public function getSchema()
+    public function getClass(): string
+    {
+        return Session::class;
+    }
+
+    public function getSchema(): string
     {
         return '#/plugin/cursus/session.json';
     }
@@ -145,12 +129,6 @@ class SessionSerializer
                 'updated' => DateNormalizer::normalize($session->getUpdatedAt()),
                 'duration' => $session->getCourse() ? $session->getCourse()->getDefaultSessionDuration() : null,
                 'default' => $session->isDefaultSession(),
-                'learnerRole' => $session->getLearnerRole() ?
-                    $this->roleSerializer->serialize($session->getLearnerRole(), [SerializerInterface::SERIALIZE_MINIMAL]) :
-                    null,
-                'tutorRole' => $session->getTutorRole() ?
-                    $this->roleSerializer->serialize($session->getTutorRole(), [SerializerInterface::SERIALIZE_MINIMAL]) :
-                    null,
             ],
             'display' => [
                 'order' => $session->getOrder(),
@@ -164,6 +142,12 @@ class SessionSerializer
                 'mail' => $session->getRegistrationMail(),
                 'pendingRegistrations' => $session->getPendingRegistrations(),
                 'eventRegistrationType' => $session->getEventRegistrationType(),
+                'learnerRole' => $session->getLearnerRole() ?
+                    $this->roleSerializer->serialize($session->getLearnerRole(), [SerializerInterface::SERIALIZE_MINIMAL]) :
+                    null,
+                'tutorRole' => $session->getTutorRole() ?
+                    $this->roleSerializer->serialize($session->getTutorRole(), [SerializerInterface::SERIALIZE_MINIMAL]) :
+                    null,
             ],
             'pricing' => [
                 'price' => $session->getPrice(),
@@ -191,14 +175,34 @@ class SessionSerializer
 
         $this->sipe('display.order', 'setOrder', $data, $session);
 
-        $this->sipe('registration.selfRegistration', 'setPublicRegistration', $data, $session);
-        $this->sipe('registration.autoRegistration', 'setAutoRegistration', $data, $session);
-        $this->sipe('registration.selfUnregistration', 'setPublicUnregistration', $data, $session);
-        $this->sipe('registration.validation', 'setRegistrationValidation', $data, $session);
-        $this->sipe('registration.userValidation', 'setUserValidation', $data, $session);
-        $this->sipe('registration.mail', 'setRegistrationMail', $data, $session);
-        $this->sipe('registration.pendingRegistrations', 'setPendingRegistrations', $data, $session);
-        $this->sipe('registration.eventRegistrationType', 'setEventRegistrationType', $data, $session);
+        if (isset($data['registration'])) {
+            $this->sipe('registration.selfRegistration', 'setPublicRegistration', $data, $session);
+            $this->sipe('registration.autoRegistration', 'setAutoRegistration', $data, $session);
+            $this->sipe('registration.selfUnregistration', 'setPublicUnregistration', $data, $session);
+            $this->sipe('registration.validation', 'setRegistrationValidation', $data, $session);
+            $this->sipe('registration.userValidation', 'setUserValidation', $data, $session);
+            $this->sipe('registration.mail', 'setRegistrationMail', $data, $session);
+            $this->sipe('registration.pendingRegistrations', 'setPendingRegistrations', $data, $session);
+            $this->sipe('registration.eventRegistrationType', 'setEventRegistrationType', $data, $session);
+
+            if (array_key_exists('learnerRole', $data['registration'])) {
+                $learnerRole = null;
+                if (!empty($data['registration']['learnerRole'])) {
+                    $learnerRole = $this->om->getRepository(Role::class)->findOneBy(['uuid' => $data['registration']['learnerRole']['id']]);
+                }
+
+                $session->setLearnerRole($learnerRole);
+            }
+
+            if (array_key_exists('tutorRole', $data['registration'])) {
+                $tutorRole = null;
+                if (!empty($data['registration']['tutorRole'])) {
+                    $tutorRole = $this->om->getRepository(Role::class)->findOneBy(['uuid' => $data['registration']['tutorRole']['id']]);
+                }
+
+                $session->setTutorRole($tutorRole);
+            }
+        }
 
         $this->sipe('pricing.price', 'setPrice', $data, $session);
         $this->sipe('pricing.description', 'setPriceDescription', $data, $session);

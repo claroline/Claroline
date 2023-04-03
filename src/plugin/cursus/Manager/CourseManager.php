@@ -11,6 +11,8 @@
 
 namespace Claroline\CursusBundle\Manager;
 
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
@@ -25,6 +27,8 @@ class CourseManager
 {
     private TranslatorInterface $translator;
     private ObjectManager $om;
+    private Crud $crud;
+    private SerializerProvider $serializer;
     private PlatformManager $platformManager;
     private TemplateManager $templateManager;
     private SessionManager $sessionManager;
@@ -34,12 +38,16 @@ class CourseManager
     public function __construct(
         TranslatorInterface $translator,
         ObjectManager $om,
+        Crud $crud,
+        SerializerProvider $serializer,
         PlatformManager $platformManager,
         TemplateManager $templateManager,
         SessionManager $sessionManager
     ) {
         $this->om = $om;
         $this->translator = $translator;
+        $this->crud = $crud;
+        $this->serializer = $serializer;
         $this->platformManager = $platformManager;
         $this->templateManager = $templateManager;
         $this->sessionManager = $sessionManager;
@@ -62,11 +70,9 @@ class CourseManager
         return $this->templateManager->getTemplate('training_course', $placeholders, $locale);
     }
 
-    public function addUsers(Course $course, array $users): array
+    public function addUsers(Course $course, array $users, array $registrationData = []): array
     {
         $results = [];
-
-        $registrationDate = new \DateTime();
 
         $this->om->startFlushSuite();
 
@@ -77,13 +83,14 @@ class CourseManager
                 $courseUser = new CourseUser();
                 $courseUser->setCourse($course);
                 $courseUser->setUser($user);
-                $courseUser->setType(AbstractRegistration::LEARNER);
-                $courseUser->setDate($registrationDate);
 
-                $this->om->persist($courseUser);
-
-                $results[] = $courseUser;
+                $this->crud->create($courseUser, [
+                    'type' => AbstractRegistration::LEARNER,
+                    'data' => !empty($registrationData[$user->getUuid()]) ? $registrationData[$user->getUuid()] : [],
+                ]);
             }
+
+            $results[] = $courseUser;
         }
 
         $this->om->endFlushSuite();
@@ -94,29 +101,25 @@ class CourseManager
     /**
      * @param CourseUser[] $courseUsers
      */
-    public function removeUsers(array $courseUsers): void
-    {
-        foreach ($courseUsers as $courseUser) {
-            $this->om->remove($courseUser);
-        }
-
-        $this->om->flush();
-    }
-
-    /**
-     * @param CourseUser[] $courseUsers
-     */
     public function moveUsers(Session $targetSession, array $courseUsers): void
     {
         $this->om->startFlushSuite();
 
         // unregister users from course pending list
-        $this->removeUsers($courseUsers);
+        $this->crud->deleteBulk($courseUsers);
 
         // register to the new session
-        $this->sessionManager->addUsers($targetSession, array_map(function (CourseUser $courseUser) {
+        $registrationData = [];
+        $users = array_map(function (CourseUser $courseUser) use (&$registrationData) {
+            $serialized = $this->serializer->serialize($courseUser);
+            if ($serialized['data']) {
+                $registrationData[$courseUser->getUser()->getUuid()] = $serialized['data'];
+            }
+
             return $courseUser->getUser();
-        }, $courseUsers), AbstractRegistration::LEARNER, true);
+        }, $courseUsers);
+
+        $this->sessionManager->addUsers($targetSession, $users, AbstractRegistration::LEARNER, true, $registrationData);
 
         $this->om->endFlushSuite();
     }
@@ -133,12 +136,20 @@ class CourseManager
                 $this->om->startFlushSuite();
 
                 // remove users from session
-                $this->sessionManager->removeUsers($session, $sessionUsers);
+                $this->crud->deleteBulk($sessionUsers);
 
                 // add users to the pending list of the course
-                $this->addUsers($course, array_map(function (SessionUser $sessionUser) {
+                $registrationData = [];
+                $users = array_map(function (SessionUser $sessionUser) use (&$registrationData) {
+                    $serialized = $this->serializer->serialize($sessionUser);
+                    if ($serialized['data']) {
+                        $registrationData[$sessionUser->getUser()->getUuid()] = $serialized['data'];
+                    }
+
                     return $sessionUser->getUser();
-                }, $sessionUsers));
+                }, $sessionUsers);
+
+                $this->addUsers($course, $users, $registrationData);
 
                 $this->om->endFlushSuite();
             }

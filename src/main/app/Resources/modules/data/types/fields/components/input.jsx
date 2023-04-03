@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
+import get from 'lodash/get'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
@@ -15,6 +16,7 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {getCreatableTypes} from '#/main/app/data/types'
 import {DataInput} from '#/main/app/data/components/input'
+import isNumber from 'lodash/isNumber'
 
 // todo try to avoid connexion to the store
 // todo create working preview
@@ -122,42 +124,57 @@ class FieldList extends Component {
 
         {0 < this.props.value.length &&
           <ul>
-            {this.props.value.map((field, fieldIndex) =>
-              <li key={fieldIndex} className="field-item">
-                <FieldPreview {...this.formatField(field)} />
+            {this.props.value
+              .sort((a, b) => {
+                if (isNumber(get(a, 'display.order')) && !isNumber(get(b, 'display.order'))) {
+                  return -1
+                } else if (!isNumber(get(a, 'display.order')) && isNumber(get(b, 'display.order'))) {
+                  return 1
+                } else if (isNumber(get(a, 'display.order')) && isNumber(get(b, 'display.order'))) {
+                  return get(a, 'display.order') - get(b, 'display.order')
+                } else if (a.label > b.label) {
+                  return 1
+                }
 
-                <div className="field-item-actions">
-                  <Button
-                    id={`${this.props.id}-${fieldIndex}-edit`}
-                    type={MODAL_BUTTON}
-                    className="btn-link"
-                    icon="fa fa-fw fa-pencil"
-                    label={trans('edit', {}, 'actions')}
-                    tooltip="top"
-                    modal={[MODAL_FIELD_PARAMETERS, {
-                      data: field,
-                      fields: allFields.filter(otherField => otherField.id !== field.id),
-                      save: (data) => this.update(fieldIndex, data)
-                    }]}
-                  />
+                return 0
+              })
+              .map((field, fieldIndex) =>
+                <li key={fieldIndex} className="field-item">
+                  <FieldPreview {...this.formatField(field)} />
 
-                  <Button
-                    id={`${this.props.id}-${fieldIndex}-delete`}
-                    type={CALLBACK_BUTTON}
-                    className="btn-link"
-                    icon="fa fa-fw fa-trash"
-                    label={trans('delete', {}, 'actions')}
-                    tooltip="top"
-                    confirm={{
-                      title: trans('delete_field'),
-                      message: trans('delete_field_confirm')
-                    }}
-                    callback={() => this.remove(fieldIndex)}
-                    dangerous={true}
-                  />
-                </div>
-              </li>
-            )}
+                  <div className="field-item-actions">
+                    <Button
+                      id={`${this.props.id}-${fieldIndex}-edit`}
+                      type={MODAL_BUTTON}
+                      className="btn-link"
+                      icon="fa fa-fw fa-pencil"
+                      label={trans('edit', {}, 'actions')}
+                      tooltip="top"
+                      modal={[MODAL_FIELD_PARAMETERS, {
+                        data: field,
+                        fields: allFields.filter(otherField => otherField.id !== field.id),
+                        save: (data) => this.update(fieldIndex, data)
+                      }]}
+                    />
+
+                    <Button
+                      id={`${this.props.id}-${fieldIndex}-delete`}
+                      type={CALLBACK_BUTTON}
+                      className="btn-link"
+                      icon="fa fa-fw fa-trash"
+                      label={trans('delete', {}, 'actions')}
+                      tooltip="top"
+                      confirm={{
+                        title: trans('delete_field'),
+                        message: trans('delete_field_confirm')
+                      }}
+                      callback={() => this.remove(fieldIndex)}
+                      dangerous={true}
+                    />
+                  </div>
+                </li>
+              )
+            }
           </ul>
         }
 

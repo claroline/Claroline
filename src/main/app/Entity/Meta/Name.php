@@ -8,10 +8,8 @@ trait Name
 {
     /**
      * @ORM\Column(name="entity_name")
-     *
-     * @var string
      */
-    protected $name;
+    protected ?string $name = null;
 
     public function getName(): ?string
     {

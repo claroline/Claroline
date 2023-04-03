@@ -43,6 +43,7 @@ class PanelFacetSerializer
         return [
             'id' => $panel->getUuid(),
             'title' => $panel->getName(),
+            'help' => $panel->getHelp(),
             'meta' => [
                 'description' => $panel->getDescription(),
             ],
@@ -63,6 +64,7 @@ class PanelFacetSerializer
         $this->sipe('meta.description', 'setDescription', $data, $panel);
         $this->sipe('display.order', 'setOrder', $data, $panel);
         $this->sipe('display.icon', 'setIcon', $data, $panel);
+        $this->sipe('help', 'setHelp', $data, $panel);
 
         if (array_key_exists('fields', $data)) {
             $panel->resetFieldFacets();
