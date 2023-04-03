@@ -13,7 +13,6 @@ namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CommunityBundle\Model\HasOrganizations;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -48,22 +47,6 @@ class Course extends AbstractTraining
      * @var Collection|Course[]
      */
     private Collection $children;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     * @ORM\JoinColumn(name="workspace_model_id", nullable=true, onDelete="SET NULL")
-     */
-    private ?Workspace $workspaceModel;
-
-    /**
-     * @ORM\Column(name="tutor_role_name", nullable=true)
-     */
-    private ?string $tutorRoleName = null;
-
-    /**
-     * @ORM\Column(name="learner_role_name", nullable=true)
-     */
-    private ?string $learnerRoleName = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Session", mappedBy="course")
@@ -135,36 +118,6 @@ class Course extends AbstractTraining
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
-    }
-
-    public function getWorkspaceModel(): ?Workspace
-    {
-        return $this->workspaceModel;
-    }
-
-    public function setWorkspaceModel(?Workspace $workspace = null): void
-    {
-        $this->workspaceModel = $workspace;
-    }
-
-    public function getTutorRoleName(): ?string
-    {
-        return $this->tutorRoleName;
-    }
-
-    public function setTutorRoleName(?string $tutorRoleName = null): void
-    {
-        $this->tutorRoleName = $tutorRoleName;
-    }
-
-    public function getLearnerRoleName(): ?string
-    {
-        return $this->learnerRoleName;
-    }
-
-    public function setLearnerRoleName(?string $learnerRoleName = null): void
-    {
-        $this->learnerRoleName = $learnerRoleName;
     }
 
     public function getSessions(): Collection

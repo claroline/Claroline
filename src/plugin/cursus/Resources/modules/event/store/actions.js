@@ -50,10 +50,7 @@ actions.addUsers = (eventId, users, type) => ({
     request: {
       method: 'PATCH'
     },
-    success: (data, dispatch) => {
-      // TODO : do something better (I need it to recompute event available space)
-      dispatch(actions.open(eventId, true))
-    }
+    success: (data, dispatch) => dispatch(actions.open(eventId, true))
   }
 })
 
@@ -73,10 +70,7 @@ actions.addGroups = (eventId, groups, type) => ({
     request: {
       method: 'PATCH'
     },
-    success: (data, dispatch) => {
-      // TODO : do something better (I need it to recompute event available space)
-      dispatch(actions.open(eventId, true))
-    }
+    success: (data, dispatch) => dispatch(actions.open(eventId, true))
   }
 })
 

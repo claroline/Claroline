@@ -26,16 +26,11 @@ class ResourceNodeSerializer
 
     const NO_PARENT = 'no_parent';
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var RightsManager */
-    private $rightsManager;
-    /** @var SerializerProvider */
-    private $serializer;
+    private ObjectManager $om;
+    private EventDispatcherInterface $eventDispatcher;
+    private UserSerializer $userSerializer;
+    private RightsManager $rightsManager;
+    private SerializerProvider $serializer;
 
     public function __construct(
         ObjectManager $om,
@@ -71,6 +66,11 @@ class ResourceNodeSerializer
      */
     public function serialize(ResourceNode $resourceNode, array $options = []): array
     {
+        $serializedWorkspace = null;
+        if ($resourceNode->getWorkspace()) {
+            $serializedWorkspace = $this->serializer->serialize($resourceNode->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
+        }
+
         if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             return [
                 'id' => $resourceNode->getUuid(),
@@ -84,6 +84,8 @@ class ResourceNodeSerializer
                     'type' => $resourceNode->getType(), // try to remove. use mimeType instead
                     'mimeType' => $resourceNode->getMimeType(),
                 ],
+                // for now this is required in the minimal representation to generate the correct resource path
+                'workspace' => $serializedWorkspace,
             ];
         }
 
@@ -113,6 +115,7 @@ class ResourceNodeSerializer
             ],
             'thumbnail' => $resourceNode->getThumbnail(),
             'poster' => $resourceNode->getPoster(),
+            'workspace' => $serializedWorkspace,
             'evaluation' => [
                 'evaluated' => $resourceNode->isEvaluated(),
                 'required' => $resourceNode->isRequired(),
@@ -129,17 +132,6 @@ class ResourceNodeSerializer
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
             $serializedNode['permissions'] = $this->rightsManager->getCurrentPermissionArray($resourceNode);
-        }
-
-        if ($resourceNode->getWorkspace()) {
-            $serializedNode['workspace'] = [ // TODO : use workspace serializer with minimal option
-                'id' => $resourceNode->getWorkspace()->getUuid(),
-                'autoId' => $resourceNode->getWorkspace()->getId(),
-                'slug' => $resourceNode->getWorkspace()->getSlug(),
-                'name' => $resourceNode->getWorkspace()->getName(),
-                'code' => $resourceNode->getWorkspace()->getCode(),
-                'thumbnail' => $resourceNode->getWorkspace()->getThumbnail(),
-            ];
         }
 
         if (!empty($resourceNode->getParent())) {

@@ -15,9 +15,11 @@ const CatalogCreation = (props) =>
       {
         type: LINK_BUTTON,
         label: trans('catalog', {}, 'cursus'),
-        target: props.path
+        target: props.path + '/catalog'
       }, {
-        label: trans('new_course', {}, 'cursus')
+        type: LINK_BUTTON,
+        label: trans('new_course', {}, 'cursus'),
+        target: '' // current page, no need to add a link
       }
     ]}
     title={trans('trainings', {}, 'tools')}
@@ -36,7 +38,7 @@ const CatalogCreation = (props) =>
     ]}
   >
     <CourseForm
-      path={props.path}
+      path={props.path+'/catalog'}
       name={selectors.FORM_NAME}
     />
   </ToolPage>

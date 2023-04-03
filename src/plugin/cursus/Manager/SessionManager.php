@@ -12,17 +12,15 @@
 namespace Claroline\CursusBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
-use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
-use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -31,10 +29,6 @@ use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
-use Claroline\CursusBundle\Event\Log\LogSessionGroupRegistrationEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionGroupUnregistrationEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionUserRegistrationEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionUserUnregistrationEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -50,7 +44,6 @@ class SessionManager
     private RoleManager $roleManager;
     private RoutingHelper $routingHelper;
     private TemplateManager $templateManager;
-    private FacetManager $facetManager;
     private WorkspaceManager $workspaceManager;
     private EventManager $sessionEventManager;
 
@@ -64,12 +57,12 @@ class SessionManager
         ObjectManager $om,
         UrlGeneratorInterface $router,
         Crud $crud,
+        SerializerProvider $serializer,
         PlatformManager $platformManager,
         RoleManager $roleManager,
         RoutingHelper $routingHelper,
         TemplateManager $templateManager,
         WorkspaceManager $workspaceManager,
-        FacetManager $facetManager,
         EventManager $sessionEventManager
     ) {
         $this->eventDispatcher = $eventDispatcher;
@@ -77,12 +70,12 @@ class SessionManager
         $this->om = $om;
         $this->router = $router;
         $this->crud = $crud;
+        $this->serializer = $serializer;
         $this->platformManager = $platformManager;
         $this->roleManager = $roleManager;
         $this->routingHelper = $routingHelper;
         $this->templateManager = $templateManager;
         $this->workspaceManager = $workspaceManager;
-        $this->facetManager = $facetManager;
         $this->sessionEventManager = $sessionEventManager;
 
         $this->sessionRepo = $om->getRepository(Session::class);
@@ -90,7 +83,7 @@ class SessionManager
         $this->sessionGroupRepo = $om->getRepository(SessionGroup::class);
     }
 
-    public function setDefaultSession(Course $course, Session $session = null)
+    public function setDefaultSession(Course $course, ?Session $session = null): void
     {
         /** @var Session[] $defaultSessions */
         $defaultSessions = $this->sessionRepo->findBy(['course' => $course, 'defaultSession' => true]);
@@ -105,7 +98,7 @@ class SessionManager
         $this->om->flush();
     }
 
-    public function generateFromTemplate(Session $session, string $locale)
+    public function generateFromTemplate(Session $session, string $locale): string
     {
         $placeholders = [
             'session_url' => $this->routingHelper->desktopUrl('trainings').'/catalog/'.$session->getCourse()->getSlug().'/'.$session->getUuid(),
@@ -130,8 +123,8 @@ class SessionManager
         $course = $session->getCourse();
 
         $model = null;
-        if (!empty($course->getWorkspaceModel())) {
-            $model = ['id' => $course->getWorkspaceModel()->getUuid()];
+        if (!empty($course->getWorkspace())) {
+            $model = ['id' => $course->getWorkspace()->getUuid()];
         }
 
         /** @var Workspace $workspace */
@@ -158,69 +151,29 @@ class SessionManager
      */
     public function addUsers(Session $session, array $users, string $type = AbstractRegistration::LEARNER, bool $validated = false, array $registrationData = []): array
     {
-        $results = [];
-
-        $registrationDate = new \DateTime();
-
         $this->om->startFlushSuite();
 
+        $results = [];
         foreach ($users as $user) {
-            $sessionUser = $this->sessionUserRepo->findOneBy(['session' => $session, 'user' => $user, 'type' => $type]);
+            $sessionUser = $this->sessionUserRepo->findOneBy([
+                'session' => $session,
+                'user' => $user,
+                'type' => $type,
+            ]);
 
             if (empty($sessionUser)) {
                 $sessionUser = new SessionUser();
                 $sessionUser->setSession($session);
                 $sessionUser->setUser($user);
-                $sessionUser->setType($type);
-                $sessionUser->setDate($registrationDate);
 
-                if (AbstractRegistration::TUTOR === $type) {
-                    // no validation on tutors
-                    $sessionUser->setValidated(true);
-                    $sessionUser->setConfirmed(true);
-                } else {
-                    // set validations for users based on session config
-                    $sessionUser->setValidated(!$session->getRegistrationValidation() || $validated);
-                    $sessionUser->setConfirmed(!$session->getUserValidation());
-                }
-
-                // store data for custom registration form if any
-                if (isset($registrationData[$user->getUuid()])) {
-                    foreach ($registrationData[$user->getUuid()] as $fieldId => $fieldValue) {
-                        $fieldFacetValue = $sessionUser->getFacetValue($fieldId) ?? new FieldFacetValue();
-                        $fieldFacet = $this->om->getRepository(FieldFacet::class)->findOneBy(['uuid' => $fieldId]);
-                        if (empty($fieldFacet)) {
-                            $this->om->remove($fieldFacetValue);
-                        } else {
-                            $fieldFacetValue->setFieldFacet($fieldFacet);
-                            $fieldFacetValue->setValue(
-                                $this->facetManager->deserializeFieldValue(
-                                    $user,
-                                    $fieldFacet->getType(),
-                                    $fieldValue
-                                )
-                            );
-
-                            $sessionUser->addFacetValue($fieldFacetValue);
-                            $this->om->persist($fieldFacetValue);
-                        }
-                    }
-                }
-
-                $this->om->persist($sessionUser);
-
-                $this->eventDispatcher->dispatch(new LogSessionUserRegistrationEvent($sessionUser), 'log');
-
-                $results[] = $sessionUser;
+                $this->crud->create($sessionUser, [
+                    'type' => $type,
+                    'validated' => $validated,
+                    'data' => !empty($registrationData[$user->getUuid()]) ? $registrationData[$user->getUuid()] : [],
+                ]);
             }
-        }
 
-        $this->checkUsersRegistration($session, $results);
-
-        if ($session->getRegistrationMail()) {
-            $this->sendSessionInvitation($session, array_map(function (SessionUser $sessionUser) {
-                return $sessionUser->getUser();
-            }, $results), AbstractRegistration::LEARNER === $type);
+            $results[] = $sessionUser;
         }
 
         $this->om->endFlushSuite();
@@ -231,42 +184,25 @@ class SessionManager
     /**
      * @param SessionUser[] $sessionUsers
      */
-    public function removeUsers(Session $session, array $sessionUsers)
-    {
-        foreach ($sessionUsers as $sessionUser) {
-            $this->om->remove($sessionUser);
-
-            // unregister user from the linked workspace
-            if ($session->getWorkspace()) {
-                $this->workspaceManager->unregister($sessionUser->getUser(), $session->getWorkspace(), [Crud::NO_PERMISSIONS]);
-            }
-
-            // unregister user from linked events
-            $eventRegistrations = $this->sessionEventManager->getBySessionAndUser($session, $sessionUser->getUser());
-            foreach ($eventRegistrations as $eventRegistration) {
-                $this->sessionEventManager->removeUsers($eventRegistration->getEvent(), [$eventRegistration]);
-            }
-
-            $this->eventDispatcher->dispatch(new LogSessionUserUnregistrationEvent($sessionUser), 'log');
-        }
-
-        $this->om->flush();
-    }
-
-    /**
-     * @param SessionUser[] $sessionUsers
-     */
-    public function moveUsers(Session $originalSession, Session $targetSession, array $sessionUsers, string $type = AbstractRegistration::LEARNER)
+    public function moveUsers(Session $targetSession, array $sessionUsers, string $type = AbstractRegistration::LEARNER): void
     {
         $this->om->startFlushSuite();
 
         // unregister users from current session
-        $this->removeUsers($originalSession, $sessionUsers);
+        $this->crud->deleteBulk($sessionUsers);
 
         // register to the new session
-        $this->addUsers($targetSession, array_map(function (SessionUser $sessionUser) {
+        $registrationData = [];
+        $users = array_map(function (SessionUser $sessionUser) use (&$registrationData) {
+            $serialized = $this->serializer->serialize($sessionUser);
+            if ($serialized['data']) {
+                $registrationData[$sessionUser->getUser()->getUuid()] = $serialized['data'];
+            }
+
             return $sessionUser->getUser();
-        }, $sessionUsers), $type, true);
+        }, $sessionUsers);
+
+        $this->addUsers($targetSession, $users, $type, true, $registrationData);
 
         $this->om->endFlushSuite();
     }
@@ -274,7 +210,7 @@ class SessionManager
     /**
      * @param SessionUser[] $sessionUsers
      */
-    public function confirmUsers(Session $session, array $sessionUsers = []): array
+    public function confirmUsers(array $sessionUsers = []): array
     {
         // TODO : check capacity
 
@@ -283,9 +219,9 @@ class SessionManager
         foreach ($sessionUsers as $sessionUser) {
             $sessionUser->setConfirmed(true);
             $this->om->persist($sessionUser);
-        }
 
-        $this->checkUsersRegistration($session, $sessionUsers);
+            $this->registerUser($sessionUser);
+        }
 
         $this->om->endFlushSuite();
 
@@ -295,7 +231,7 @@ class SessionManager
     /**
      * @param SessionUser[] $sessionUsers
      */
-    public function validateUsers(Session $session, array $sessionUsers = []): array
+    public function validateUsers(array $sessionUsers = []): array
     {
         // TODO : check capacity
 
@@ -304,9 +240,9 @@ class SessionManager
         foreach ($sessionUsers as $sessionUser) {
             $sessionUser->setValidated(true);
             $this->om->persist($sessionUser);
-        }
 
-        $this->checkUsersRegistration($session, $sessionUsers);
+            $this->registerUser($sessionUser);
+        }
 
         $this->om->endFlushSuite();
 
@@ -319,11 +255,9 @@ class SessionManager
     public function addGroups(Session $session, array $groups, string $type = AbstractRegistration::LEARNER): array
     {
         $results = [];
-        $registrationDate = new \DateTime();
 
         $this->om->startFlushSuite();
 
-        $users = [];
         foreach ($groups as $group) {
             $sessionGroup = $this->sessionGroupRepo->findOneBy([
                 'session' => $session,
@@ -335,37 +269,13 @@ class SessionManager
                 $sessionGroup = new SessionGroup();
                 $sessionGroup->setSession($session);
                 $sessionGroup->setGroup($group);
-                $sessionGroup->setType($type);
-                $sessionGroup->setDate($registrationDate);
 
-                // Registers group to session workspace
-                $role = AbstractRegistration::TUTOR === $type ? $session->getTutorRole() : $session->getLearnerRole();
-                if ($role && !$group->hasRole($role->getName())) {
-                    $this->crud->patch($group, 'role', Crud::COLLECTION_ADD, [$role], [Crud::NO_PERMISSIONS]);
-                }
-
-                $this->om->persist($sessionGroup);
-
-                $this->eventDispatcher->dispatch(new LogSessionGroupRegistrationEvent($sessionGroup), 'log');
-
-                $results[] = $sessionGroup;
-
-                foreach ($group->getUsers() as $user) {
-                    $users[$user->getUuid()] = $user;
-                }
+                $this->crud->create($sessionGroup, [
+                    'type' => $type,
+                ]);
             }
-        }
 
-        // registers groups to linked events
-        $events = $session->getEvents();
-        foreach ($events as $event) {
-            if (Session::REGISTRATION_AUTO === $event->getRegistrationType() && !$event->isTerminated()) {
-                $this->sessionEventManager->addGroups($event, $groups);
-            }
-        }
-
-        if ($session->getRegistrationMail()) {
-            $this->sendSessionInvitation($session, $users, false);
+            $results[] = $sessionGroup;
         }
 
         $this->om->endFlushSuite();
@@ -376,37 +286,12 @@ class SessionManager
     /**
      * @param SessionGroup[] $sessionGroups
      */
-    public function removeGroups(Session $session, array $sessionGroups)
-    {
-        foreach ($sessionGroups as $sessionGroup) {
-            $this->om->remove($sessionGroup);
-
-            // unregister group from the linked workspace
-            if ($session->getWorkspace()) {
-                $this->workspaceManager->unregister($sessionGroup->getGroup(), $session->getWorkspace());
-            }
-
-            // unregister group from linked events
-            $eventRegistrations = $this->sessionEventManager->getBySessionAndGroup($session, $sessionGroup->getGroup());
-            foreach ($eventRegistrations as $eventRegistration) {
-                $this->sessionEventManager->removeGroups($eventRegistration->getEvent(), [$eventRegistration]);
-            }
-
-            $this->eventDispatcher->dispatch(new LogSessionGroupUnregistrationEvent($sessionGroup), 'log');
-        }
-
-        $this->om->flush();
-    }
-
-    /**
-     * @param SessionGroup[] $sessionGroups
-     */
-    public function moveGroups(Session $originalSession, Session $targetSession, array $sessionGroups, string $type = AbstractRegistration::LEARNER)
+    public function moveGroups(Session $targetSession, array $sessionGroups, string $type = AbstractRegistration::LEARNER): void
     {
         $this->om->startFlushSuite();
 
-        // unregister users from current session
-        $this->removeGroups($originalSession, $sessionGroups);
+        // unregister groups from current session
+        $this->crud->deleteBulk($sessionGroups);
 
         // register to the new session
         $this->addGroups($targetSession, array_map(function (SessionGroup $sessionGroup) {
@@ -419,24 +304,24 @@ class SessionManager
     /**
      * Gets/generates workspace role for session depending on given role name and type.
      */
-    public function generateRoleForSession(Workspace $workspace, ?string $roleName = null, ?string $type = 'learner'): Role
+    public function generateRoleForSession(Workspace $workspace, ?Role $courseRole = null, ?string $type = 'learner'): Role
     {
-        if (empty($roleName)) {
+        if (empty($courseRole)) {
             if ('manager' === $type) {
                 $role = $this->roleManager->getManagerRole($workspace);
             } else {
                 $role = $this->roleManager->getCollaboratorRole($workspace);
             }
         } else {
-            $role = $this->roleManager->getRoleByTranslationKeyAndWorkspace($roleName, $workspace);
+            $role = $this->roleManager->getRoleByTranslationKeyAndWorkspace($courseRole->getTranslationKey(), $workspace);
             if (empty($role)) {
-                $wsRoleName = 'ROLE_WS_'.strtoupper($roleName).'_'.$workspace->getUuid();
+                $wsRoleName = 'ROLE_WS_'.strtoupper($courseRole->getTranslationKey()).'_'.$workspace->getUuid();
 
                 $role = $this->roleManager->getRoleByName($wsRoleName);
                 if (is_null($role)) {
                     $role = $this->roleManager->createWorkspaceRole(
                         $wsRoleName,
-                        $roleName,
+                        $courseRole->getTranslationKey(),
                         $workspace
                     );
                 }
@@ -464,7 +349,7 @@ class SessionManager
     /**
      * Sends invitation to all session learners.
      */
-    public function inviteAllSessionLearners(Session $session)
+    public function inviteAllSessionLearners(Session $session): void
     {
         /** @var SessionUser[] $sessionLearners */
         $sessionLearners = $this->sessionUserRepo->findBy([
@@ -499,7 +384,7 @@ class SessionManager
     /**
      * Sends invitation to session to given users.
      */
-    public function sendSessionInvitation(Session $session, array $users, bool $confirm = true)
+    public function sendSessionInvitation(Session $session, array $users, bool $confirm = true): void
     {
         $templateName = 'training_session_invitation';
         if ($confirm && $session->getUserValidation()) {
@@ -559,42 +444,81 @@ class SessionManager
     }
 
     /**
-     * @param SessionUser[] $sessionUsers
+     * Register the user to the linked workspace and events if the registration is fully validated (confirmed and validated).
      */
-    private function checkUsersRegistration(Session $session, array $sessionUsers)
+    public function registerUser(SessionUser $sessionUser): void
     {
-        $fullyRegistered = [
-            AbstractRegistration::TUTOR => [],
-            AbstractRegistration::LEARNER => [],
-        ];
+        $session = $sessionUser->getSession();
 
-        foreach ($sessionUsers as $sessionUser) {
-            if ($sessionUser->isValidated() && $sessionUser->isConfirmed()) {
-                // registration is fully validated
-                $fullyRegistered[$sessionUser->getType()][] = $sessionUser->getUser();
-
-                // grant workspace role if registration is fully validated
+        if ($sessionUser->isValidated() && $sessionUser->isConfirmed()) {
+            // register to linked workspace
+            if ($session->getWorkspace()) {
                 $role = AbstractRegistration::TUTOR === $sessionUser->getType() ? $session->getTutorRole() : $session->getLearnerRole();
                 if ($role && !$sessionUser->getUser()->hasRole($role->getName())) {
                     $this->crud->patch($sessionUser->getUser(), 'role', Crud::COLLECTION_ADD, [$role], [Crud::NO_PERMISSIONS]);
                 }
             }
-        }
 
-        if (!empty($fullyRegistered[AbstractRegistration::TUTOR]) || !empty($fullyRegistered[AbstractRegistration::LEARNER])) {
-            // registers users to linked events
+            // register to linked events
             $events = $session->getEvents();
             foreach ($events as $event) {
                 if (Session::REGISTRATION_AUTO === $event->getRegistrationType() && !$event->isTerminated()) {
-                    if (!empty($fullyRegistered[AbstractRegistration::TUTOR])) {
-                        $this->sessionEventManager->addUsers($event, $fullyRegistered[AbstractRegistration::TUTOR], AbstractRegistration::TUTOR);
-                    }
-
-                    if (!empty($fullyRegistered[AbstractRegistration::LEARNER])) {
-                        $this->sessionEventManager->addUsers($event, $fullyRegistered[AbstractRegistration::LEARNER], AbstractRegistration::LEARNER);
-                    }
+                    $this->sessionEventManager->addUsers($event, [$sessionUser->getUser()], $sessionUser->getType());
                 }
             }
+        }
+    }
+
+    public function unregisterUser(SessionUser $sessionUser): void
+    {
+        $session = $sessionUser->getSession();
+
+        // unregister user from the linked workspace
+        if ($session->getWorkspace()) {
+            $this->workspaceManager->unregister($sessionUser->getUser(), $session->getWorkspace(), [Crud::NO_PERMISSIONS]);
+        }
+
+        // unregister user from linked events
+        $eventRegistrations = $this->sessionEventManager->getBySessionAndUser($session, $sessionUser->getUser());
+        foreach ($eventRegistrations as $eventRegistration) {
+            $this->sessionEventManager->removeUsers($eventRegistration->getEvent(), [$eventRegistration]);
+        }
+    }
+
+    public function registerGroup(SessionGroup $sessionGroup): void
+    {
+        $session = $sessionGroup->getSession();
+
+        // register to linked workspace
+        if ($session->getWorkspace()) {
+            $role = AbstractRegistration::TUTOR === $sessionGroup->getType() ? $session->getTutorRole() : $session->getLearnerRole();
+            if ($role && !$sessionGroup->getGroup()->hasRole($role->getName())) {
+                $this->crud->patch($sessionGroup->getGroup(), 'role', Crud::COLLECTION_ADD, [$role], [Crud::NO_PERMISSIONS]);
+            }
+        }
+
+        // registers groups to linked events
+        $events = $session->getEvents();
+        foreach ($events as $event) {
+            if (Session::REGISTRATION_AUTO === $event->getRegistrationType() && !$event->isTerminated()) {
+                $this->sessionEventManager->addGroups($event, [$sessionGroup->getGroup()], $sessionGroup->getType());
+            }
+        }
+    }
+
+    public function unregisterGroup(SessionGroup $sessionGroup): void
+    {
+        $session = $sessionGroup->getSession();
+
+        // unregister group from the linked workspace
+        if ($session->getWorkspace()) {
+            $this->workspaceManager->unregister($sessionGroup->getGroup(), $session->getWorkspace());
+        }
+
+        // unregister group from linked events
+        $eventRegistrations = $this->sessionEventManager->getBySessionAndGroup($session, $sessionGroup->getGroup());
+        foreach ($eventRegistrations as $eventRegistration) {
+            $this->sessionEventManager->removeGroups($eventRegistration->getEvent(), [$eventRegistration]);
         }
     }
 }

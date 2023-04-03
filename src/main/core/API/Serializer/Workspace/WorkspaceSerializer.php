@@ -25,28 +25,15 @@ class WorkspaceSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
+    private AuthorizationCheckerInterface $authorization;
+    private TokenStorageInterface $tokenStorage;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    private $eventDispatcher;
-
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-
-    /** @var OrganizationSerializer */
-    private $organizationSerializer;
-
-    /** @var UserSerializer */
-    private $userSerializer;
-
-    /** @var ResourceNodeSerializer */
-    private $resNodeSerializer;
+    private EventDispatcherInterface $eventDispatcher;
+    private ObjectManager $om;
+    private WorkspaceManager $workspaceManager;
+    private OrganizationSerializer $organizationSerializer;
+    private UserSerializer $userSerializer;
+    private ResourceNodeSerializer $resNodeSerializer;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -100,6 +87,10 @@ class WorkspaceSerializer
                 'code' => $workspace->getCode(),
                 'slug' => $workspace->getSlug(),
                 'thumbnail' => $workspace->getThumbnail(),
+                'meta' => [
+                    // move outside meta
+                    'model' => $workspace->isModel(),
+                ],
             ];
         }
 
@@ -165,7 +156,7 @@ class WorkspaceSerializer
         return $serialized;
     }
 
-    private function isRegistered(Workspace $workspace)
+    private function isRegistered(Workspace $workspace): bool
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
@@ -176,7 +167,7 @@ class WorkspaceSerializer
         return false;
     }
 
-    private function getOpening(Workspace $workspace)
+    private function getOpening(Workspace $workspace): array
     {
         $details = $this->workspaceManager->getWorkspaceOptions($workspace)->getDetails();
         $openingData = [
@@ -222,7 +213,7 @@ class WorkspaceSerializer
         ];
     }
 
-    private function getBreadcrumb(Workspace $workspace)
+    private function getBreadcrumb(Workspace $workspace): array
     {
         $options = $workspace->getOptions();
 
@@ -236,7 +227,7 @@ class WorkspaceSerializer
     {
         $defaultRole = null;
         if ($workspace->getDefaultRole()) {
-            // this should use RoleSerializer but we will get a circular reference if we do it
+            // this should use RoleSerializer, but we will get a circular reference if we do it
             $defaultRole = [
                 'id' => $workspace->getDefaultRole()->getUuid(),
                 'name' => $workspace->getDefaultRole()->getName(),
@@ -415,7 +406,7 @@ class WorkspaceSerializer
         return $workspace;
     }
 
-    private function waitingForRegistration(Workspace $workspace)
+    private function waitingForRegistration(Workspace $workspace): bool
     {
         $user = $this->tokenStorage->getToken()->getUser();
         if (!$user instanceof User) {

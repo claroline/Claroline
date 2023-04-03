@@ -31,3 +31,22 @@ services:
             - '@Claroline\CursusBundle\Manager\SessionManager'
         tags:
             - { name: kernel.event_subscriber }
+
+    # Registrations
+    Claroline\CursusBundle\Subscriber\Crud\Registration\CourseUserSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\CursusBundle\Subscriber\Crud\Registration\SessionUserSubscriber:
+        arguments:
+            - '@event_dispatcher'
+            - '@Claroline\CursusBundle\Manager\SessionManager'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    Claroline\CursusBundle\Subscriber\Crud\Registration\SessionGroupSubscriber:
+        arguments:
+            - '@event_dispatcher'
+            - '@Claroline\CursusBundle\Manager\SessionManager'
+        tags:
+            - { name: kernel.event_subscriber }

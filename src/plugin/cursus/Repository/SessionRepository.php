@@ -31,7 +31,7 @@ class SessionRepository extends EntityRepository
             ->getResult();
     }
 
-    public function countParticipants(Session $session)
+    public function countParticipants(Session $session): array
     {
         return [
             'tutors' => $this->countTutors($session),
@@ -40,19 +40,20 @@ class SessionRepository extends EntityRepository
         ];
     }
 
-    public function countTutors(Session $session)
+    public function countTutors(Session $session): int
     {
         return $this->countUsers($session, AbstractRegistration::TUTOR);
     }
 
-    public function countLearners(Session $session)
+    public function countLearners(Session $session): int
     {
         $count = $this->countUsers($session, AbstractRegistration::LEARNER);
 
         // add groups count
         $sessionGroups = $this->getEntityManager()
             ->createQuery('
-                SELECT sg FROM Claroline\CursusBundle\Entity\Registration\SessionGroup AS sg
+                SELECT sg 
+                FROM Claroline\CursusBundle\Entity\Registration\SessionGroup AS sg
                 WHERE sg.type = :registrationType
                   AND sg.session = :session
             ')
@@ -69,14 +70,17 @@ class SessionRepository extends EntityRepository
         return $count;
     }
 
-    public function countPending(Session $session)
+    public function countPending(Session $session): int
     {
         return (int) $this->getEntityManager()
             ->createQuery('
-                SELECT COUNT(su) FROM Claroline\CursusBundle\Entity\Registration\SessionUser AS su
+                SELECT COUNT(DISTINCT su) 
+                FROM Claroline\CursusBundle\Entity\Registration\SessionUser AS su
+                LEFT JOIN su.user AS u
                 WHERE su.type = :registrationType
                   AND su.session = :session
                   AND (su.confirmed = 0 OR su.validated = 0)
+                  AND u.isEnabled = true AND u.isRemoved = false AND u.technical = false
             ')
             ->setParameters([
                 'registrationType' => AbstractRegistration::LEARNER,
@@ -85,14 +89,17 @@ class SessionRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    private function countUsers(Session $session, string $type)
+    private function countUsers(Session $session, string $type): int
     {
         return (int) $this->getEntityManager()
             ->createQuery('
-                SELECT COUNT(su) FROM Claroline\CursusBundle\Entity\Registration\SessionUser AS su
+                SELECT COUNT(DISTINCT su) 
+                FROM Claroline\CursusBundle\Entity\Registration\SessionUser AS su
+                LEFT JOIN su.user AS u
                 WHERE su.type = :registrationType
                   AND su.session = :session
                   AND (su.confirmed = 1 AND su.validated = 1)
+                  AND u.isEnabled = true AND u.isRemoved = false
             ')
             ->setParameters([
                 'registrationType' => $type,

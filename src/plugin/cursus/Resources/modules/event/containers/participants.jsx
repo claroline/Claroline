@@ -7,17 +7,17 @@ import {EventParticipants as EventParticipantsComponent} from '#/plugin/cursus/e
 const EventParticipants = connect(
   null,
   (dispatch) => ({
-    addUsers(sessionId, users, type = constants.LEARNER_TYPE) {
-      dispatch(actions.addUsers(sessionId, users, type))
+    addUsers(eventId, users, type = constants.LEARNER_TYPE) {
+      dispatch(actions.addUsers(eventId, users, type))
     },
-    inviteUsers(sessionId, users) {
-      dispatch(actions.inviteUsers(sessionId, users))
+    inviteUsers(eventId, users) {
+      dispatch(actions.inviteUsers(eventId, users))
     },
-    inviteGroups(sessionId, groups) {
-      dispatch(actions.inviteGroups(sessionId, groups))
+    inviteGroups(eventId, groups) {
+      dispatch(actions.inviteGroups(eventId, groups))
     },
-    addGroups(sessionId, groups, type = constants.LEARNER_TYPE) {
-      dispatch(actions.addGroups(sessionId, groups, type))
+    addGroups(eventId, groups, type = constants.LEARNER_TYPE) {
+      dispatch(actions.addGroups(eventId, groups, type))
     },
     setPresenceStatus(eventId, presences, status) {
       dispatch(actions.setPresenceStatus(eventId, presences, status))

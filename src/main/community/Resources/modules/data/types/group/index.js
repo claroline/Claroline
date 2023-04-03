@@ -1,5 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 
+import {GroupCell} from '#/main/community/data/types/group/components/cell'
 import {GroupDisplay} from '#/main/community/data/types/group/components/display'
 import {GroupInput} from '#/main/community/data/types/group/components/input'
 
@@ -13,7 +14,8 @@ const dataType = {
   },
   components: {
     details: GroupDisplay,
-    input: GroupInput
+    input: GroupInput,
+    table: GroupCell
   }
 }
 

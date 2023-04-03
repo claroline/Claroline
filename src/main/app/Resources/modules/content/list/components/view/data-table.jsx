@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
@@ -39,7 +39,7 @@ const DataCellContent = props => {
     cellRendering = props.column.placeholder
   } else if (get(props.definition, 'components.table', null)) {
     // use custom component defined in the type definition
-    cellRendering = React.createElement(props.definition.components.table, merge({}, props.column.options || {}, {
+    cellRendering = createElement(props.definition.components.table, merge({}, props.column.options || {}, {
       id: toKey(props.column.name + '-' + props.rowData.id),
       label: props.column.label,
       data: cellData

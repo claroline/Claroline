@@ -17,14 +17,15 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\AppBundle\Entity\Meta\Order;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
 use Claroline\AppBundle\Entity\Restriction\Hidden;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\MappedSuperclass
@@ -34,6 +35,7 @@ class AbstractTraining
     use Id;
     use Uuid;
     use Code;
+    use Name;
     use Description;
     use Hidden;
     use Order;
@@ -44,91 +46,79 @@ class AbstractTraining
     use Thumbnail;
 
     /**
-     * @ORM\Column(name="course_name")
-     * @Assert\NotBlank()
-     *
-     * @var string
-     */
-    protected $name;
-
-    /**
      * @ORM\Column(nullable=true)
-     *
-     * @var string
      */
-    protected $plainDescription;
+    protected ?string $plainDescription = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
      * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="SET NULL")
      */
-    protected $workspace;
+    protected ?Workspace $workspace = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
+     * @ORM\JoinColumn(name="learner_role_id", nullable=true, onDelete="SET NULL")
+     */
+    protected ?Role $learnerRole = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
+     * @ORM\JoinColumn(name="tutor_role_id", nullable=true, onDelete="SET NULL")
+     */
+    protected ?Role $tutorRole = null;
 
     /**
      * @ORM\Column(name="public_registration", type="boolean")
      */
-    protected $publicRegistration = false;
+    protected bool $publicRegistration = false;
 
     /**
      * @ORM\Column(name="auto_registration", type="boolean")
      */
-    protected $autoRegistration = false;
+    protected bool $autoRegistration = false;
 
     /**
      * @ORM\Column(name="public_unregistration", type="boolean")
      */
-    protected $publicUnregistration = false;
+    protected bool $publicUnregistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
      */
-    protected $registrationValidation = false;
+    protected bool $registrationValidation = false;
 
     /**
      * @ORM\Column(name="registration_mail", type="boolean")
      */
-    protected $registrationMail = false;
+    protected bool $registrationMail = false;
 
     /**
      * @ORM\Column(name="user_validation", type="boolean")
      */
-    protected $userValidation = false;
+    protected bool $userValidation = false;
 
     /**
      * Enables the waiting list for the training.
      *
      * @ORM\Column(name="pending_registrations", type="boolean")
      */
-    protected $pendingRegistrations = false;
+    protected bool $pendingRegistrations = false;
 
     /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
      */
-    protected $maxUsers;
+    protected ?int $maxUsers = null;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     *
-     * @var float
      */
-    protected $price = null;
+    protected ?float $price = null;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $priceDescription = null;
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
+    protected ?string $priceDescription = null;
 
     public function getPlainDescription(): ?string
     {
@@ -140,22 +130,42 @@ class AbstractTraining
         $this->plainDescription = $description;
     }
 
-    public function getWorkspace()
+    public function getWorkspace(): ?Workspace
     {
         return $this->workspace;
     }
 
-    public function setWorkspace(Workspace $workspace = null)
+    public function setWorkspace(?Workspace $workspace = null)
     {
         $this->workspace = $workspace;
     }
 
-    public function getPublicRegistration()
+    public function getLearnerRole(): ?Role
+    {
+        return $this->learnerRole;
+    }
+
+    public function setLearnerRole(?Role $learnerRole = null): void
+    {
+        $this->learnerRole = $learnerRole;
+    }
+
+    public function getTutorRole(): ?Role
+    {
+        return $this->tutorRole;
+    }
+
+    public function setTutorRole(?Role $tutorRole = null): void
+    {
+        $this->tutorRole = $tutorRole;
+    }
+
+    public function getPublicRegistration(): bool
     {
         return $this->publicRegistration;
     }
 
-    public function setPublicRegistration($publicRegistration)
+    public function setPublicRegistration(bool $publicRegistration): void
     {
         $this->publicRegistration = $publicRegistration;
     }
@@ -165,27 +175,27 @@ class AbstractTraining
         return $this->autoRegistration;
     }
 
-    public function setAutoRegistration(bool $autoRegistration)
+    public function setAutoRegistration(bool $autoRegistration): void
     {
         $this->autoRegistration = $autoRegistration;
     }
 
-    public function getPublicUnregistration()
+    public function getPublicUnregistration(): bool
     {
         return $this->publicUnregistration;
     }
 
-    public function setPublicUnregistration($publicUnregistration)
+    public function setPublicUnregistration(bool $publicUnregistration): void
     {
         $this->publicUnregistration = $publicUnregistration;
     }
 
-    public function getRegistrationValidation()
+    public function getRegistrationValidation(): bool
     {
         return $this->registrationValidation;
     }
 
-    public function setRegistrationValidation($registrationValidation)
+    public function setRegistrationValidation(bool $registrationValidation): void
     {
         $this->registrationValidation = $registrationValidation;
     }
@@ -195,22 +205,22 @@ class AbstractTraining
         return $this->registrationMail;
     }
 
-    public function setRegistrationMail(bool $mail)
+    public function setRegistrationMail(bool $mail): void
     {
         $this->registrationMail = $mail;
     }
 
-    public function getUserValidation()
+    public function getUserValidation(): bool
     {
         return $this->userValidation;
     }
 
-    public function setUserValidation($userValidation)
+    public function setUserValidation(bool $userValidation): void
     {
         $this->userValidation = $userValidation;
     }
 
-    public function hasValidation()
+    public function hasValidation(): bool
     {
         return $this->registrationValidation || $this->userValidation;
     }
@@ -220,17 +230,17 @@ class AbstractTraining
         return $this->pendingRegistrations;
     }
 
-    public function setPendingRegistrations(bool $pendingRegistrations)
+    public function setPendingRegistrations(bool $pendingRegistrations): void
     {
         $this->pendingRegistrations = $pendingRegistrations;
     }
 
-    public function getMaxUsers()
+    public function getMaxUsers(): ?int
     {
         return $this->maxUsers;
     }
 
-    public function setMaxUsers($maxUsers)
+    public function setMaxUsers(?int $maxUsers): void
     {
         $this->maxUsers = $maxUsers;
     }
@@ -240,7 +250,7 @@ class AbstractTraining
         return $this->price;
     }
 
-    public function setPrice(float $price = null)
+    public function setPrice(?float $price = null): void
     {
         $this->price = $price;
     }
@@ -250,7 +260,7 @@ class AbstractTraining
         return $this->priceDescription;
     }
 
-    public function setPriceDescription(string $description = null)
+    public function setPriceDescription(?string $description = null): void
     {
         $this->priceDescription = $description;
     }

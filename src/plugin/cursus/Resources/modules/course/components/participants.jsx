@@ -4,10 +4,7 @@ import get from 'lodash/get'
 import {schemeCategory20c} from 'd3-scale'
 
 import {trans} from '#/main/app/intl/translation'
-import {hasPermission} from '#/main/app/security'
-import {LinkButton} from '#/main/app/buttons/link'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Routes} from '#/main/app/router/components/routes'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 import {ContentCounter} from '#/main/app/content/components/counter'
@@ -17,138 +14,12 @@ import {MODAL_GROUPS} from '#/main/community/modals/groups'
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 import {constants} from '#/plugin/cursus/constants'
-import {isFull} from '#/plugin/cursus/utils'
+
+import {CourseStats} from '#/plugin/cursus/course/components/stats'
+import {SessionGroups} from '#/plugin/cursus/session/containers/groups'
+import {SessionUsers} from '#/plugin/cursus/session/containers/users'
+import {Button} from '#/main/app/action'
 import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
-
-import {SessionGroups} from '#/plugin/cursus/session/components/groups'
-import {SessionUsers} from '#/plugin/cursus/session/components/users'
-
-const CourseUsers = (props) =>
-  <SessionUsers
-    course={props.course}
-    session={props.activeSession}
-    name={props.name}
-    url={['apiv2_cursus_session_list_users', {type: props.type, id: props.activeSession.id}]}
-    unregisterUrl={['apiv2_cursus_session_remove_users', {type: props.type, id: props.activeSession.id}]}
-    actions={(rows) => [
-      {
-        name: 'invite',
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-envelope',
-        label: trans('send_invitation', {}, 'actions'),
-        callback: () => props.inviteUsers(props.activeSession.id, rows),
-        displayed: hasPermission('register', props.activeSession)
-      }, {
-        name: 'move',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-arrows',
-        label: trans('move', {}, 'actions'),
-        displayed: hasPermission('register', props.activeSession),
-        group: trans('management'),
-        modal: [MODAL_SESSIONS, {
-          url: ['apiv2_cursus_course_list_sessions', {id: get(props.activeSession, 'course.id')}],
-          filters: [{property: 'status', value: 'not_ended'}],
-          selectAction: (selected) => ({
-            type: CALLBACK_BUTTON,
-            callback: () => props.moveUsers(props.activeSession.id, selected[0].id, rows, props.type)
-          })
-        }]
-      }, {
-        name: 'move-pending',
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-hourglass-half',
-        label: trans('move-pending', {}, 'actions'),
-        displayed: props.hasPendingRegistrations && hasPermission('register', props.activeSession),
-        group: trans('management'),
-        callback: () => props.movePending(rows)
-      }
-    ]}
-    add={{
-      name: 'add_users',
-      type: MODAL_BUTTON,
-      label: constants.TEACHER_TYPE === props.type ? trans('add_tutors', {}, 'cursus') : trans('add_users'),
-      modal: [MODAL_USERS, {
-        selectAction: (selected) => ({
-          type: CALLBACK_BUTTON,
-          label: trans('register', {}, 'actions'),
-          callback: () => props.addUsers(props.activeSession.id, selected, props.type)
-        })
-      }]
-    }}
-  />
-
-CourseUsers.propTypes = {
-  name: T.string.isRequired,
-  type: T.string.isRequired,
-  course: T.shape(
-    CourseTypes.propTypes
-  ).isRequired,
-  activeSession: T.shape(
-    SessionTypes.propTypes
-  ),
-  hasPendingRegistrations: T.bool,
-  addUsers: T.func.isRequired,
-  moveUsers: T.func.isRequired,
-  inviteUsers: T.func.isRequired,
-  movePending: T.func.isRequired
-}
-
-const CourseGroups = (props) =>
-  <SessionGroups
-    session={props.activeSession}
-    name={props.name}
-    url={['apiv2_cursus_session_list_groups', {type: props.type, id: props.activeSession.id}]}
-    unregisterUrl={['apiv2_cursus_session_remove_groups', {type: props.type, id: props.activeSession.id}]}
-    actions={(rows) => [
-      {
-        name: 'invite',
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-envelope',
-        label: trans('send_invitation', {}, 'actions'),
-        callback: () => props.inviteGroups(props.activeSession.id, rows),
-        displayed: hasPermission('register', props.activeSession)
-      }, {
-        name: 'move',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-arrows',
-        label: trans('move', {}, 'actions'),
-        displayed: hasPermission('register', props.activeSession),
-        group: trans('management'),
-        modal: [MODAL_SESSIONS, {
-          url: ['apiv2_cursus_course_list_sessions', {id: get(props.activeSession, 'course.id')}],
-          filters: [{property: 'status', value: 'not_ended'}],
-          selectAction: (selected) => ({
-            type: CALLBACK_BUTTON,
-            callback: () => props.moveGroups(props.activeSession.id, selected[0].id, rows, props.type)
-          })
-        }]
-      }
-    ]}
-    add={{
-      name: 'add_groups',
-      type: MODAL_BUTTON,
-      label: trans('add_groups'),
-      disabled: isFull(props.activeSession),
-      modal: [MODAL_GROUPS, {
-        selectAction: (selected) => ({
-          type: CALLBACK_BUTTON,
-          label: trans('register', {}, 'actions'),
-          callback: () => props.addGroups(props.activeSession.id, selected, props.type)
-        })
-      }]
-    }}
-  />
-
-CourseGroups.propTypes = {
-  name: T.string.isRequired,
-  type: T.string.isRequired,
-  activeSession: T.shape(
-    SessionTypes.propTypes
-  ),
-  addGroups: T.func.isRequired,
-  inviteGroups: T.func.isRequired,
-  moveGroups: T.func.isRequired
-}
 
 const CourseParticipants = (props) =>
   <Fragment>
@@ -157,31 +28,29 @@ const CourseParticipants = (props) =>
         icon="fa fa-chalkboard-teacher"
         label={trans('tutors', {}, 'cursus')}
         color={schemeCategory20c[1]}
-        value={get(props.activeSession, 'participants.tutors', 0)}
+        value={get(props.course, 'participants.tutors', 0)}
       />
 
       <ContentCounter
         icon="fa fa-user"
         label={trans('users')}
         color={schemeCategory20c[5]}
-        value={get(props.activeSession, 'participants.learners', 0)}
+        value={get(props.course, 'participants.learners', 0)}
       />
 
-      {hasPermission('register', props.activeSession) &&
-        <ContentCounter
-          icon="fa fa-hourglass-half"
-          label={trans('En attente')}
-          color={schemeCategory20c[9]}
-          value={get(props.activeSession, 'participants.pending', 0)}
-        />
-      }
+      <ContentCounter
+        icon="fa fa-hourglass-half"
+        label={trans('En attente')}
+        color={schemeCategory20c[9]}
+        value={get(props.course, 'participants.pending', 0)}
+      />
 
       <ContentCounter
         icon="fa fa-user-plus"
-        label={trans('available_seats', {}, 'cursus')}
+        label={trans('available_seats_per_session', {}, 'cursus')}
         color={schemeCategory20c[13]}
-        value={get(props.activeSession, 'restrictions.users') ?
-          (get(props.activeSession, 'restrictions.users') - get(props.activeSession, 'participants.learners', 0)) + ' / ' + get(props.activeSession, 'restrictions.users')
+        value={get(props.course, 'restrictions.users') ?
+          get(props.course, 'restrictions.users')
           : <span className="fa fa-fw fa-infinity" />
         }
       />
@@ -190,7 +59,7 @@ const CourseParticipants = (props) =>
     <div className="row">
       <div className="col-md-3">
         <Vertical
-          basePath={props.path+'/'+props.course.slug+(props.activeSession ? '/'+props.activeSession.id : '')+'/participants'}
+          basePath={props.path}
           tabs={[
             {
               icon: 'fa fa-fw fa-chalkboard-teacher',
@@ -208,169 +77,239 @@ const CourseParticipants = (props) =>
             }, {
               icon: 'fa fa-fw fa-hourglass-half',
               title: trans('En attente'),
-              path: '/pending',
-              displayed: hasPermission('register', props.activeSession)
+              path: '/pending'
+            }, {
+              icon: 'fa fa-fw fa-pie-chart',
+              title: trans('statistics'),
+              path: '/stats',
+              displayed: !!get(props.course, 'registration.form')
             }
           ]}
         />
+
+        {props.activeSession &&
+          <Button
+            className="btn btn-link btn-block"
+            type={CALLBACK_BUTTON}
+            label="Voir pour la session ouverte"
+            callback={props.toggleVisibility}
+            primary={true}
+          />
+        }
       </div>
 
       <div className="col-md-9">
         <Routes
-          path={props.path+'/'+props.course.slug+(props.activeSession ? '/'+props.activeSession.id : '')+'/participants'}
+          path={props.path}
           routes={[
             {
               path: '/',
               exact: true,
-              render() {
-                const Tutors = (
-                  <CourseUsers
-                    type={constants.TEACHER_TYPE}
-                    course={props.course}
-                    activeSession={props.activeSession}
-                    name={selectors.STORE_NAME+'.sessionTutors'}
-                    addUsers={props.addUsers}
-                    inviteUsers={props.inviteUsers}
-                    moveUsers={props.moveUsers}
-                    movePending={(sessionUsers) => props.movePending(props.course.id, sessionUsers)}
-                    hasPendingRegistrations={false}
-                  />
-                )
-
-                return Tutors
-              }
-            }, {
-              path: '/users',
-              render() {
-                const Users = (
-                  <Fragment>
-                    {isFull(props.activeSession) &&
-                      <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
-                        {trans('Toutes les nouvelles inscriptions seront automatiquement ajoutées en liste d\'attente.', {}, 'cursus')}
-                      </AlertBlock>
-                    }
-
-                    {get(props.activeSession, 'registration.userValidation') &&
-                      <AlertBlock title={trans('registration_user_confirmation_title', {}, 'cursus')}>
-                        {trans('registration_user_confirmation_pending_help', {}, 'cursus')}
-                        <br/>
-                        {trans('registration_user_confirmation_manager_help', {}, 'cursus')}
-                        (<LinkButton target={props.path+'/'+props.course.slug+(props.activeSession ? '/'+props.activeSession.id : '')+'/participants/pending'}>{trans('show_pending_list', {}, 'cursus')}</LinkButton>)
-                      </AlertBlock>
-                    }
-
-                    <CourseUsers
-                      type={constants.LEARNER_TYPE}
-                      course={props.course}
-                      activeSession={props.activeSession}
-                      name={selectors.STORE_NAME+'.sessionUsers'}
-                      addUsers={props.addUsers}
-                      inviteUsers={props.inviteUsers}
-                      moveUsers={props.moveUsers}
-                      hasPendingRegistrations={get(props.course, 'registration.pendingRegistrations', false)}
-                      movePending={(sessionUsers) => props.movePending(props.course.id, sessionUsers)}
-                    />
-                  </Fragment>
-                )
-
-                return Users
-              }
-            }, {
-              path: '/groups',
-              render() {
-                const Groups = (
-                  <CourseGroups
-                    type={constants.LEARNER_TYPE}
-                    activeSession={props.activeSession}
-                    name={selectors.STORE_NAME+'.sessionGroups'}
-                    addGroups={props.addGroups}
-                    inviteGroups={props.inviteGroups}
-                    moveGroups={props.moveGroups}
-                  />
-                )
-
-                return Groups
-              }
-            }, {
-              path: '/pending',
-              disabled: !hasPermission('register', props.activeSession),
-              render() {
-                const Pending = (
-                  <Fragment>
-                    {isFull(props.activeSession) && hasPermission('register', props.activeSession) &&
-                      <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
-                        {trans('Il n\'est plus possible de valider les inscriptions en attente.', {}, 'cursus')}
-                      </AlertBlock>
-                    }
-
-                    <SessionUsers
-                      course={props.course}
-                      session={props.activeSession}
-                      name={selectors.STORE_NAME+'.sessionPending'}
-                      url={['apiv2_cursus_session_list_pending', {id: props.activeSession.id}]}
-                      unregisterUrl={['apiv2_cursus_session_remove_users', {type: constants.LEARNER_TYPE, id: props.activeSession.id}]}
-                      actions={(rows) => [
-                        {
-                          name: 'confirm',
-                          type: CALLBACK_BUTTON,
-                          icon: 'fa fa-fw fa-user-check',
-                          label: trans('confirm_registration', {}, 'actions'),
-                          callback: () => props.confirmPending(props.activeSession.id, rows),
-                          disabled: isFull(props.activeSession),
-                          displayed: hasPermission('register', props.activeSession) && get (props.activeSession, 'registration.userValidation') && -1 !== rows.findIndex(row => !row.confirmed),
-                          group: trans('management')
-                        }, {
-                          name: 'validate',
-                          type: CALLBACK_BUTTON,
-                          icon: 'fa fa-fw fa-check',
-                          label: trans('validate_registration', {}, 'actions'),
-                          callback: () => props.validatePending(props.activeSession.id, rows),
-                          disabled: isFull(props.activeSession),
-                          displayed: hasPermission('register', props.activeSession) && -1 !== rows.findIndex(row => !row.validated),
-                          group: trans('management')
-                        }, {
-                          name: 'move',
-                          type: MODAL_BUTTON,
-                          icon: 'fa fa-fw fa-arrows',
-                          label: trans('move', {}, 'actions'),
-                          displayed: hasPermission('register', props.activeSession),
-                          group: trans('management'),
-                          modal: [MODAL_SESSIONS, {
-                            url: ['apiv2_cursus_course_list_sessions', {id: get(props.activeSession, 'course.id')}],
-                            filters: [{property: 'status', value: 'not_ended'}],
-                            selectAction: (selected) => ({
-                              type: CALLBACK_BUTTON,
-                              callback: () => props.moveUsers(props.activeSession.id, selected[0].id, rows, constants.LEARNER_TYPE)
-                            })
-                          }]
-                        }, {
-                          name: 'move-pending',
-                          type: CALLBACK_BUTTON,
-                          icon: 'fa fa-fw fa-hourglass-half',
-                          label: trans('move-pending', {}, 'actions'),
-                          displayed: get(props.course, 'registration.pendingRegistrations') && hasPermission('register', props.activeSession),
-                          group: trans('management'),
-                          callback: () => props.movePending(props.course.id, rows)
+              render: () => (
+                <SessionUsers
+                  type={constants.TEACHER_TYPE}
+                  course={props.course}
+                  name={selectors.STORE_NAME+'.sessionTutors'}
+                  customDefinition={[
+                    {
+                      name: 'session',
+                      label: trans('session', {}, 'cursus'),
+                      type: 'training_session',
+                      displayed: true,
+                      displayable: true,
+                      filterable: true,
+                      options: {
+                        course: props.course,
+                        picker: {
+                          url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
+                          filters: [{property: 'status', value: 'not_ended'}]
                         }
-                      ]}
-                      add={{
-                        name: 'add_users',
+                      }
+                    }
+                  ]}
+                  add={{
+                    name: 'add_tutors',
+                    type: MODAL_BUTTON,
+                    label: trans('add_tutors', {}, 'cursus'),
+                    modal: [MODAL_USERS, {
+                      selectAction: (selected) => ({
                         type: MODAL_BUTTON,
-                        label: trans('add_pending', {}, 'cursus'),
-                        modal: [MODAL_USERS, {
-                          selectAction: (selected) => ({
+                        label: trans('register', {}, 'actions'),
+                        modal: [MODAL_SESSIONS, {
+                          url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
+                          filters: [{property: 'status', value: 'not_ended'}],
+                          selectAction: (selectedSessions) => ({
                             type: CALLBACK_BUTTON,
                             label: trans('register', {}, 'actions'),
-                            callback: () => props.addPending(props.activeSession.id, selected)
+                            callback: () => selectedSessions.map(selectedSession => props.addUsers(selectedSession.id, selected, constants.TEACHER_TYPE))
                           })
                         }]
-                      }}
-                    />
-                  </Fragment>
-                )
-
-                return Pending
-              }
+                      })
+                    }]
+                  }}
+                />
+              )
+            }, {
+              path: '/users',
+              render: () => (
+                <SessionUsers
+                  type={constants.LEARNER_TYPE}
+                  course={props.course}
+                  name={selectors.STORE_NAME+'.sessionUsers'}
+                  customDefinition={[
+                    {
+                      name: 'session',
+                      label: trans('session', {}, 'cursus'),
+                      type: 'training_session',
+                      displayed: true,
+                      displayable: true,
+                      filterable: true,
+                      options: {
+                        course: props.course,
+                        picker: {
+                          url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
+                          filters: [{property: 'status', value: 'not_ended'}]
+                        }
+                      }
+                    }
+                  ]}
+                  add={{
+                    name: 'add_users',
+                    type: MODAL_BUTTON,
+                    label: trans('add_users'),
+                    modal: [MODAL_USERS, {
+                      selectAction: (selected) => ({
+                        type: MODAL_BUTTON,
+                        label: trans('register', {}, 'actions'),
+                        modal: [MODAL_SESSIONS, {
+                          url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
+                          filters: [{property: 'status', value: 'not_ended'}],
+                          selectAction: (selectedSessions) => ({
+                            type: CALLBACK_BUTTON,
+                            label: trans('register', {}, 'actions'),
+                            callback: () => selectedSessions.map(selectedSession => props.addUsers(selectedSession.id, selected, constants.LEARNER_TYPE))
+                          })
+                        }]
+                      })
+                    }]
+                  }}
+                />
+              )
+            }, {
+              path: '/groups',
+              render: () => (
+                <SessionGroups
+                  type={constants.LEARNER_TYPE}
+                  course={props.course}
+                  name={selectors.STORE_NAME+'.sessionGroups'}
+                  customDefinition={[
+                    {
+                      name: 'session',
+                      label: trans('session', {}, 'cursus'),
+                      type: 'training_session',
+                      displayed: true,
+                      displayable: true,
+                      filterable: true,
+                      options: {
+                        course: props.course,
+                        picker: {
+                          url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
+                          filters: [{property: 'status', value: 'not_ended'}]
+                        }
+                      }
+                    }
+                  ]}
+                  add={{
+                    name: 'add_groups',
+                    type: MODAL_BUTTON,
+                    label: trans('add_groups'),
+                    modal: [MODAL_GROUPS, {
+                      selectAction: (selected) => ({
+                        type: MODAL_BUTTON,
+                        label: trans('register', {}, 'actions'),
+                        modal: [MODAL_SESSIONS, {
+                          url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
+                          filters: [{property: 'status', value: 'not_ended'}],
+                          selectAction: (selectedSessions) => ({
+                            type: CALLBACK_BUTTON,
+                            label: trans('register', {}, 'actions'),
+                            callback: () => selectedSessions.map(selectedSession => props.addGroups(selectedSession.id, selected, constants.LEARNER_TYPE))
+                          })
+                        }]
+                      })
+                    }]
+                  }}
+                />
+              )
+            }, {
+              path: '/pending',
+              render: () => (
+                <SessionUsers
+                  type={constants.LEARNER_TYPE}
+                  course={props.course}
+                  session={props.activeSession}
+                  name={selectors.STORE_NAME+'.sessionPending'}
+                  customDefinition={[
+                    {
+                      name: 'session',
+                      label: trans('session', {}, 'cursus'),
+                      type: 'training_session',
+                      displayed: true,
+                      displayable: true,
+                      filterable: true,
+                      options: {
+                        course: props.course,
+                        picker: {
+                          url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
+                          filters: [{property: 'status', value: 'not_ended'}]
+                        }
+                      }
+                    }, {
+                      name: 'confirmed',
+                      type: 'boolean',
+                      label: trans('confirmed'),
+                      displayable: true,
+                      displayed: false
+                    }, {
+                      name: 'validated',
+                      type: 'boolean',
+                      label: trans('validated'),
+                      displayable: true,
+                      displayed: false
+                    }
+                  ]}
+                  add={{
+                    name: 'add_pending',
+                    type: MODAL_BUTTON,
+                    label: trans('add_pending', {}, 'cursus'),
+                    modal: [MODAL_USERS, {
+                      selectAction: (selected) => ({
+                        type: MODAL_BUTTON,
+                        label: trans('register', {}, 'actions'),
+                        modal: [MODAL_SESSIONS, {
+                          url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
+                          filters: [{property: 'status', value: 'not_ended'}],
+                          selectAction: (selectedSessions) => ({
+                            type: CALLBACK_BUTTON,
+                            label: trans('register', {}, 'actions'),
+                            callback: () => selectedSessions.map(selectedSession => props.addPending(selectedSession.id, selected))
+                          })
+                        }]
+                      })
+                    }]
+                  }}
+                />
+              )
+            }, {
+              path: '/stats',
+              onEnter: () => props.loadStats(props.course.id),
+              disabled: !get(props.course, 'registration.form'),
+              render: () => (
+                <CourseStats
+                  course={props.course}
+                  stats={props.stats}
+                />
+              )
             }
           ]}
         />
@@ -386,16 +325,12 @@ CourseParticipants.propTypes = {
   activeSession: T.shape(
     SessionTypes.propTypes
   ),
+  stats: T.object,
   addUsers: T.func.isRequired,
-  inviteUsers: T.func.isRequired,
-  moveUsers: T.func.isRequired,
-  addGroups: T.func.isRequired,
-  inviteGroups: T.func.isRequired,
-  moveGroups: T.func.isRequired,
   addPending: T.func.isRequired,
-  confirmPending: T.func.isRequired,
-  validatePending: T.func.isRequired,
-  movePending: T.func.isRequired
+  addGroups: T.func.isRequired,
+  loadStats: T.func.isRequired,
+  toggleVisibility: T.func.isRequired
 }
 
 export {

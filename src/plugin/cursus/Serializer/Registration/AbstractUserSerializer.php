@@ -39,4 +39,21 @@ abstract class AbstractUserSerializer
             'user' => $this->userSerializer->serialize($userRegistration->getUser(), [Options::SERIALIZE_MINIMAL]),
         ];
     }
+
+    public function deserialize(array $data, AbstractUserRegistration $userRegistration, ?array $options = []): AbstractUserRegistration
+    {
+        if (!in_array(Options::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $userRegistration);
+        }
+
+        $this->sipe('id', 'setUuid', $data, $userRegistration);
+        $this->sipe('validated', 'setValidated', $data, $userRegistration);
+        $this->sipe('confirmed', 'setConfirmed', $data, $userRegistration);
+
+        if (isset($data['date'])) {
+            $userRegistration->setDate(DateNormalizer::denormalize($data['date']));
+        }
+
+        return $userRegistration;
+    }
 }

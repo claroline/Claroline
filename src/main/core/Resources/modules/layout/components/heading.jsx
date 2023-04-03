@@ -3,6 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
+/**
+ *
+ * @deprecated
+ */
 const Heading = props =>
   React.createElement(`h${props.level}`, Object.assign({},
     omit(props, 'level', 'displayLevel', 'first', 'displayed', 'align'),

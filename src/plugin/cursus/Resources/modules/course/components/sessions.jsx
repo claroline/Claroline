@@ -117,7 +117,7 @@ const CourseSessions = (props) =>
           course: props.course,
           onSave: (newSession) => {
             // open created session, but let user on sessions list to allow multiples creations
-            props.history.push(route(props.path, props.course, newSession)+'/sessions')
+            props.history.push(route(props.course, newSession)+'/sessions')
             props.reload(props.course.slug)
           }
         }]}

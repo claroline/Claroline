@@ -1,11 +1,13 @@
 {
   "boolean": "Booléen",
+  "boolean_desc": "Permet d'activer ou non une case à cocher représentant une valeur booléenne (oui/non, activé/désactivé, etc.).",
   "choice": "Choix",
   "choice_desc": "Permet de sélectionner une ou plusieurs valeurs dans une liste de choix prédéfinie.",
   "collection": "Collection",
   "country": "Pays",
   "country_desc": "Permet de sélectionner un pays.",
   "currency": "Monnaie",
+  "currency_desc": "Permet de saisir une valeur monétaire en utilisant la monnaie définie pour la plateforme.",
   "date": "Date",
   "date_desc": "Permet de saisir ou de sélectionner une date dans un calendrier.",
   "date-range": "Période",
@@ -17,7 +19,7 @@
   "html": "Texte riche",
   "html_desc": "Permet de saisir un texte avec des contenus riches (images, liens, styles personnalisés).",
   "image": "Image",
-  "image_desc": "\"Permet de télécharger un fichier d'image sur la plateforme.",
+  "image_desc": "Permet de télécharger un fichier d'image sur la plateforme.",
   "ip": "Adresse IP",
   "ip_desc": "Permet de saisir une adresse IP.",
   "number": "Nombre",
@@ -28,5 +30,7 @@
   "url_desc": "Permet de saisir une URL.",
   "array_of": "Une liste de '%type%'",
   "integer": "Nombre entier",
-  "object": "Objet"
+  "object": "Objet",
+  "cascade": "Choix à plusieurs niveaux",
+  "cascade_desc": "Permet de sélectionner une valeur parmis les groupes de choix prédéfinis."
 }

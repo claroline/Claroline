@@ -133,7 +133,7 @@ const ItemEditor = props => {
           ]
         }, {
           id: 'help',
-          icon: 'fa fa-fw fa-circle-info',
+          icon: 'fa fa-fw fa-circle-question',
           title: trans('help'),
           displayed: props.definition.answerable,
           fields: [

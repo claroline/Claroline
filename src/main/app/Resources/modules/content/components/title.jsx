@@ -57,7 +57,7 @@ const ContentTitle = props =>
 
     {props.children}
 
-    <span className={classes(
+    <span role="presentation" className={classes(
       props.align && `text-${props.align}`
     )}>
       {props.title}

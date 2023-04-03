@@ -5,13 +5,13 @@ registry.add('ClarolineCursusBundle', {
    * Provides searchable items for the global search.
    */
   search: {
-    'training' : () => { return import(/* webpackChunkName: "cursus-search-training" */ '#/plugin/cursus/search/training')}
+    'training' : () => { return import(/* webpackChunkName: "training-search-training" */ '#/plugin/cursus/search/training')}
   },
 
   data: {
     types: {
-      'course'          : () => { return import(/* webpackChunkName: "cursus-data-course" */  '#/plugin/cursus/data/types/course') },
-      'training_session': () => { return import(/* webpackChunkName: "cursus-data-session" */ '#/plugin/cursus/data/types/session') }
+      'course'          : () => { return import(/* webpackChunkName: "training-data-course" */  '#/plugin/cursus/data/types/course') },
+      'training_session': () => { return import(/* webpackChunkName: "training-data-session" */ '#/plugin/cursus/data/types/session') }
     },
     sources: {
       'all_courses'           : () => { return import(/* webpackChunkName: "cursus-data-all-courses" */     '#/plugin/cursus/data/sources/courses') },
@@ -24,11 +24,20 @@ registry.add('ClarolineCursusBundle', {
   },
 
   tools: {
-    'trainings'      : () => { return import(/* webpackChunkName: "cursus-tools-trainings" */       '#/plugin/cursus/tools/trainings') },
-    'training_events': () => { return import(/* webpackChunkName: "cursus-tools-training-events" */ '#/plugin/cursus/tools/events') }
+    'trainings'      : () => { return import(/* webpackChunkName: "training-tools-trainings" */       '#/plugin/cursus/tools/trainings') },
+    'training_events': () => { return import(/* webpackChunkName: "training-tools-training-events" */ '#/plugin/cursus/tools/events') }
   },
 
   events: {
-    'training_event': () => { return import(/* webpackChunkName: "cursus-events-event" */ '#/plugin/cursus/events/event') }
+    'training_event': () => { return import(/* webpackChunkName: "training-events-event" */ '#/plugin/cursus/events/event') }
+  },
+
+  actions: {
+    course: {
+      'open'      : () => { return import(/* webpackChunkName: "training-action-course-open" */       '#/plugin/cursus/actions/course/open') },
+      'edit'      : () => { return import(/* webpackChunkName: "training-action-course-edit" */       '#/plugin/cursus/actions/course/edit') },
+      'export-pdf': () => { return import(/* webpackChunkName: "training-action-course-export-pdf" */ '#/plugin/cursus/actions/course/export-pdf') },
+      'delete'    : () => { return import(/* webpackChunkName: "training-action-course-delete" */     '#/plugin/cursus/actions/course/delete') }
+    }
   }
 })

@@ -37,8 +37,12 @@ const Course = {
       validation: T.bool,
       mail: T.bool,
       userValidation: T.bool,
-      tutorRoleName: T.string,
-      learnerRoleName: T.string,
+      tutorRole: T.shape(
+        RoleTypes.propTypes
+      ),
+      learnerRole: T.shape(
+        RoleTypes.propTypes
+      ),
       // custom registration form using FieldFacets
       form: T.array
     })
@@ -75,17 +79,11 @@ const Session = {
     course: T.shape(
       Course.propTypes
     ),
+    workspace: T.shape(
+      WorkspaceTypes.propTypes
+    ),
     meta: T.shape({
-      default: T.bool,
-      workspace: T.shape(
-        WorkspaceTypes.propTypes
-      ),
-      tutorRole: T.shape(
-        RoleTypes.propTypes
-      ),
-      learnerRole: T.shape(
-        RoleTypes.propTypes
-      )
+      default: T.bool
     }),
     display: T.shape({
       order: T.number
@@ -106,7 +104,13 @@ const Session = {
       validation: T.bool,
       mail: T.bool,
       userValidation: T.bool,
-      eventRegistrationType: T.number
+      eventRegistrationType: T.number,
+      tutorRole: T.shape(
+        RoleTypes.propTypes
+      ),
+      learnerRole: T.shape(
+        RoleTypes.propTypes
+      )
     })
   },
   defaultProps: {

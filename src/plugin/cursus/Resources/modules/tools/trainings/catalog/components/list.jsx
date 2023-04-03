@@ -13,7 +13,7 @@ const CatalogList = (props) =>
     path={[{
       type: LINK_BUTTON,
       label: trans('catalog', {}, 'cursus'),
-      target: props.path
+      target: props.path + '/catalog'
     }]}
     subtitle={trans('catalog', {}, 'cursus')}
     primaryAction="add"

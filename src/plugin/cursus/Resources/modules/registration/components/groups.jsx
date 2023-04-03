@@ -5,9 +5,11 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Button} from '#/main/app/action/components/button'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {constants as listConst} from '#/main/app/content/list/constants'
+
 import {GroupCard} from '#/main/community/group/components/card'
+import {route} from '#/main/community/group/routing'
 
 import {isFull} from '#/plugin/cursus/utils'
 import {Session as SessionTypes} from '#/plugin/cursus/prop-types'
@@ -15,8 +17,8 @@ import {Session as SessionTypes} from '#/plugin/cursus/prop-types'
 const RegistrationGroups = (props) =>
   <Fragment>
     {isFull(props.session) && hasPermission('register', props.session) &&
-      <AlertBlock type="warning" title={trans('La session est complète.', {}, 'cursus')}>
-        {trans('Il n\'est plus possible d\'inscrire de nouveaux groupes.', {}, 'cursus')}
+      <AlertBlock type="warning" title={trans('session_full', {}, 'cursus')}>
+        {trans('session_full_group_help', {}, 'cursus')}
       </AlertBlock>
     }
 
@@ -32,6 +34,11 @@ const RegistrationGroups = (props) =>
         label: trans('unregister', {}, 'actions'),
         displayed: () => hasPermission('register', props.session)
       }}
+      primaryAction={(row) => ({
+        type: LINK_BUTTON,
+        label: trans('show_profile', {}, 'actions'),
+        target: route(row.group)
+      })}
       definition={[
         {
           name: 'group',
@@ -45,19 +52,17 @@ const RegistrationGroups = (props) =>
           options: {time: true},
           displayed: true
         }
-      ]}
+      ].concat(props.customDefinition || [])}
       actions={props.actions}
       card={(cardProps) => <GroupCard {...cardProps} data={cardProps.data.group} />}
-      display={{
-        current: listConst.DISPLAY_TILES_SM
-      }}
     />
 
-    {props.add && hasPermission('register', props.session) &&
+    {props.add &&
       <Button
+        {...props.add}
         className="btn btn-block btn-emphasis component-container"
         primary={true}
-        {...props.add}
+        disabled={isFull(props.session)}
       />
     }
   </Fragment>
@@ -69,6 +74,9 @@ RegistrationGroups.propTypes = {
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,
   unregisterUrl: T.oneOfType([T.string, T.array]).isRequired,
+  customDefinition: T.arrayOf(T.shape({
+    // data list prop types
+  })),
   actions: T.func,
   add: T.shape({
     // action types

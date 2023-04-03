@@ -42,14 +42,10 @@ class EventController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var EventManager */
-    private $manager;
-    /** @var PdfManager */
-    private $pdfManager;
+    private TokenStorageInterface $tokenStorage;
+    private TranslatorInterface $translator;
+    private EventManager $manager;
+    private PdfManager $pdfManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,

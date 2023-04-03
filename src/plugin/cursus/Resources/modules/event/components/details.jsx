@@ -73,9 +73,7 @@ EventDetails.propTypes = {
   event: T.shape(
     EventTypes.propTypes
   ).isRequired,
-  registration: T.shape({
-
-  }),
+  registration: T.object,
   register: T.func.isRequired
 }
 

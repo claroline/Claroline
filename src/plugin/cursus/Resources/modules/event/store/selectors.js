@@ -1,4 +1,5 @@
 import {createSelector} from 'reselect'
+import isEmpty from 'lodash/isEmpty'
 
 const STORE_NAME = 'trainingEventCurrent'
 
@@ -16,7 +17,13 @@ const loaded = createSelector(
 
 const registration = createSelector(
   [store],
-  (store) => store.registration
+  (store) => {
+    if (!isEmpty(store.registration.users)) {
+      return store.registration.users[0]
+    }
+
+    return store.registration.groups[0]
+  }
 )
 
 export const selectors = {

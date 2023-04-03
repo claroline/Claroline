@@ -6,7 +6,10 @@ import {DataProperty} from '#/main/app/data/types/prop-types'
 const DataDetailsProperty = {
   propTypes: merge({}, DataProperty.propTypes, {
     hideLabel: T.bool,
-    displayed: T.bool
+    displayed: T.oneOfType([
+      T.bool,
+      T.func // a function that receives the whole details data and returns a bool
+    ])
   }),
   defaultProps: merge({}, DataProperty.defaultProps, {
     hideLabel: false,
@@ -21,7 +24,10 @@ const DataDetailsSection = {
     title: T.string.isRequired,
     className: T.string,
     primary: T.bool,
-    displayed: T.bool,
+    displayed: T.oneOfType([
+      T.bool,
+      T.func // a function that receives the whole details data and returns a bool
+    ]),
     defaultOpened: T.bool,
     fields: T.arrayOf(T.shape(
       DataDetailsProperty.propTypes

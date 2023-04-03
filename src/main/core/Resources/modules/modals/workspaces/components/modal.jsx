@@ -20,7 +20,7 @@ const WorkspacesModal = props => {
       icon="fa fa-fw fa-book"
       className="data-picker-modal"
       bsSize="lg"
-      onExiting={props.reset}
+      onExited={props.reset}
     >
       <WorkspaceList
         name={selectors.STORE_NAME}

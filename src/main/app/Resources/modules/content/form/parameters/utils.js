@@ -9,6 +9,8 @@ function formatSections(sections, allFields, dataPath = null, hasConfidentialRig
 function formatSection(section, allFields, dataPath = null, hasConfidentialRights = false, hasLockedRights = false) {
   const sectionDefinition = cloneDeep(section)
 
+  sectionDefinition.icon = get(section, 'display.icon') ? `fa fa-fw fa-${get(section, 'display.icon')}` : undefined
+  sectionDefinition.subtitle = get(section, 'meta.description')
   sectionDefinition.fields = sectionDefinition.fields
     .filter(field => !get(field, 'restrictions.metadata') || hasConfidentialRights)
     .map(f => formatField(f, allFields, dataPath, hasLockedRights))
@@ -34,6 +36,25 @@ function formatField(fieldDef, allFields, dataPath = null, hasLockedRights = fal
 
       return false
     }
+  }
+
+  if (fieldDef.type === 'choice') {
+    field.options.choices = fieldDef.options.choices ?
+      fieldDef.options.choices.reduce((acc, choice) => Object.assign(acc, {
+        [choice.value]: choice.value
+      }), {}) : {}
+  }
+
+  return field
+}
+
+function formatListField(fieldDef, allFields, dataPath = null) {
+  const field = {
+    name: dataPath ? `${dataPath}.${fieldDef.id}` : fieldDef.id,
+    type: fieldDef.type,
+    label: fieldDef.label,
+    help: fieldDef.help,
+    options: fieldDef.options ? cloneDeep(fieldDef.options) : {}
   }
 
   if (fieldDef.type === 'choice') {
@@ -78,5 +99,6 @@ function isFieldDisplayed(fieldDef, allFields, data) {
 export {
   formatSections,
   formatField,
+  formatListField,
   isFieldDisplayed
 }

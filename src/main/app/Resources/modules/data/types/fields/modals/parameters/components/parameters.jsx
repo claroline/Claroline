@@ -142,7 +142,7 @@ class ParametersModal extends Component {
             fields: this.generateParametersForm(this.state.typeDef.configure(this.state.options))
           }, {
             id: 'help',
-            icon: 'fa fa-fw fa-circle-info',
+            icon: 'fa fa-fw fa-circle-question',
             title: trans('help'),
             fields: [
               {
