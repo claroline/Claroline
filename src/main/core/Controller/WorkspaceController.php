@@ -173,11 +173,7 @@ class WorkspaceController
      * Opens a tool.
      *
      * @Route("/{id}/tool/{toolName}", name="claro_workspace_open_tool")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *      options={"mapping": {"id": "uuid"}}
-     * )
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"id": "uuid"}})
      */
     public function openToolAction(Workspace $workspace, string $toolName): JsonResponse
     {
@@ -220,11 +216,7 @@ class WorkspaceController
      * Submit access code.
      *
      * @Route("/unlock/{id}", name="claro_workspace_unlock", methods={"POST"})
-     * @EXT\ParamConverter(
-     *     "workspace",
-     *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"id": "uuid"}})
      */
     public function unlockAction(Workspace $workspace, Request $request): JsonResponse
     {

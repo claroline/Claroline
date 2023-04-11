@@ -13,16 +13,16 @@ use Symfony\Component\Routing\RouteCollection;
 
 class ApiLoader extends Loader
 {
+    // Route format : [path, method, defaults]
     const DEFAULT_MAP = [
-      'create' => ['', 'POST'],
-      'deleteBulk' => ['', 'DELETE'],
-      'list' => ['', 'GET'],
-      'csv' => ['/csv', 'GET'],
-      'find' => ['/find', 'GET'],
-      'copyBulk' => ['/copy', 'GET'],
-      'update' => ['/{id}', 'PUT'],
-      'get' => ['/{id}', 'GET'],
-      'exist' => ['/exist/{field}/{value}', 'GET'],
+        'create' => ['', 'POST'],
+        'deleteBulk' => ['', 'DELETE'],
+        'list' => ['', 'GET'],
+        'find' => ['/find', 'GET'],
+        'copyBulk' => ['/copy', 'GET'],
+        'update' => ['/{id}', 'PUT'],
+        'get' => ['/{field}/{id}', 'GET', ['field' => 'id']],
+        'exist' => ['/exist/{field}/{value}', 'GET'],
     ];
 
     /** @var bool */
@@ -151,6 +151,9 @@ class ApiLoader extends Loader
                             $route = new ApiRoute($pattern, $routeDefaults, []);
                             $route->setAction($name);
                             $route->setMethods([$options[1]]);
+                            if (isset($options[2])) {
+                                $route->addDefaults($options[2]);
+                            }
                             $requirements = $refClass->newInstanceWithoutConstructor()->getRequirements();
 
                             if (isset($requirements[$name])) {
