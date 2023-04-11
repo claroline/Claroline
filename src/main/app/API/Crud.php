@@ -72,13 +72,22 @@ class Crud
      *
      * @return object|null
      */
-    public function get(string $class, $id)
+    public function get(string $class, $id, string $idProp = 'id')
     {
-        if (!is_numeric($id) && property_exists($class, 'uuid')) {
-            return $this->om->getRepository($class)->findOneBy(['uuid' => $id]);
+        if ('id' === $idProp) {
+            if (!is_numeric($id) && property_exists($class, 'uuid')) {
+                return $this->om->getRepository($class)->findOneBy(['uuid' => $id]);
+            }
+
+            return $this->om->getRepository($class)->findOneBy(['id' => $id]);
         }
 
-        return $this->om->getRepository($class)->findOneBy(['id' => $id]);
+        $identifiers = $this->schema->getIdentifiers($class);
+        if (!in_array($idProp, $identifiers)) {
+            throw new \LogicException(sprintf('You can only get entities with an identifier property (identifiers: %s).', implode(', ', $identifiers)));
+        }
+
+        return $this->om->getRepository($class)->findOneBy([$idProp => $id]);
     }
 
     public function find(string $class, $data)
