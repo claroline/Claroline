@@ -35,16 +35,6 @@
       doc: application/widgets
 
 
-- title: JSON API
-  home: json/index
-  docs:
-    - title: Schemas
-      doc: json/schemas
-
-    - title: Endpoints
-      doc: json/endpoints
-
-
 - title: API
   home: api/index
   docs:
