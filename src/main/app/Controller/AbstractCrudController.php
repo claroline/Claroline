@@ -99,7 +99,8 @@ abstract class AbstractCrudController
      * @ApiDoc(
      *     description="Finds an object class $class.",
      *     parameters={
-     *          {"name": "id", "type": {"string", "integer"}, "description": "The object id or uuid"}
+     *          {"name": "field", "type": "string", "description": "The name of the identifier we want to use (eg. id, slug)"},
+     *          {"name": "id", "type": {"string", "integer"}, "description": "The object identifier value"}
      *     },
      *     response={"$object"}
      * )
@@ -107,22 +108,18 @@ abstract class AbstractCrudController
      * @param string|int $id
      * @param string     $class
      */
-    public function getAction(Request $request, $id, $class): JsonResponse
+    public function getAction(string $field, $id, $class): JsonResponse
     {
-        $query = $request->query->all();
-        $object = $this->crud->get($class, $id);
+        $options = static::getOptions();
 
-        $options = $this->options['get'];
-        if (isset($query['options'])) {
-            $options = $query['options'];
-        }
+        $object = $this->crud->get($class, $id, $field);
 
         if (!$object) {
             throw new NotFoundHttpException(sprintf('No object found for id %s of class %s', $id.'', $class));
         }
 
         return new JsonResponse(
-            $this->serializer->serialize($object, $options ?? [])
+            $this->serializer->serialize($object, $options['get'] ?? [])
         );
     }
 
