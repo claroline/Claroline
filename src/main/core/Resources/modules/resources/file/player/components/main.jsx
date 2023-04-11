@@ -16,8 +16,7 @@ import {ContentComments} from '#/main/app/content/components/comments'
 import {PlayerOverview} from '#/main/core/resources/file/player/components/overview'
 
 const PlayerMain = (props) => {
-  // FIXME : ugly
-  if (constants.OPENING_DOWNLOAD === props.file.opening) {
+  if (!props.embedded && constants.OPENING_DOWNLOAD === props.file.opening) {
     props.download(props.resourceNode)
   } else if (constants.OPENING_BROWSER === props.file.opening) {
     window.location.replace(url(['claro_resource_file_raw', {file: props.file.id}]))
@@ -59,9 +58,9 @@ const PlayerMain = (props) => {
           )
         }
 
-        props.download(props.resourceNode)
-
-        console.log(props.mimeType)
+        if (!props.embedded) {
+          props.download(props.resourceNode)
+        }
 
         return (
           <PlayerOverview
@@ -82,6 +81,7 @@ PlayerMain.propTypes = {
   mimeType: T.string.isRequired,
   download: T.func.isRequired,
   resourceNode: T.shape(ResourceNodeType.propTypes).isRequired,
+  embedded: T.bool.isRequired,
   canEdit: T.bool.isRequired,
   file: T.shape(
     FileTypes.propTypes
