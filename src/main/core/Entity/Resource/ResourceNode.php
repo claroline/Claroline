@@ -22,7 +22,7 @@ use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\AppBundle\Entity\Restriction\Hidden;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Model\HasWorkspace;
 use Claroline\EvaluationBundle\Entity\Evaluated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PreFlushEventArgs;
@@ -49,6 +49,7 @@ class ResourceNode
     use Description;
     use Creator;
     use Published;
+    use HasWorkspace;
     // restrictions
     use Hidden;
     use AccessibleFrom;
@@ -143,16 +144,6 @@ class ResourceNode
      * @ORM\OrderBy({"index" = "ASC"})
      */
     protected $children;
-
-    /**
-     * The parent workspace of the resource.
-     *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
-     *
-     * @var Workspace
-     */
-    protected $workspace;
 
     /**
      * @var string
@@ -412,24 +403,6 @@ class ResourceNode
     public function getChildren()
     {
         return $this->children;
-    }
-
-    /**
-     * Sets the workspace containing the resource instance.
-     */
-    public function setWorkspace(Workspace $workspace)
-    {
-        $this->workspace = $workspace;
-    }
-
-    /**
-     * Returns the workspace containing the resource instance.
-     *
-     * @return Workspace
-     */
-    public function getWorkspace()
-    {
-        return $this->workspace;
     }
 
     public function getShowIcon()
