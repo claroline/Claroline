@@ -14,6 +14,7 @@ namespace Claroline\HomeBundle\Subscriber\Tool;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
@@ -32,14 +33,10 @@ class HomeSubscriber implements EventSubscriberInterface
 {
     const NAME = 'home';
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var HomeManager */
-    private $manager;
+    private TokenStorageInterface $tokenStorage;
+    private ObjectManager $om;
+    private Crud $crud;
+    private HomeManager $manager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -125,6 +122,17 @@ class HomeSubscriber implements EventSubscriberInterface
         foreach ($data['tabs'] as $tab) {
             if (isset($tab['workspace'])) {
                 unset($tab['workspace']);
+            }
+
+            if (!empty($tab['restrictions']) && !empty($tab['restrictions']['roles'])) {
+                // replace roles ids
+                foreach ($tab['restrictions']['roles'] as $i => $roleData) {
+                    /** @var Role $role */
+                    $role = $event->getCreatedEntity($roleData['id']);
+                    if ($role) {
+                        $tab['restrictions']['roles'][$i]['id'] = $role->getUuid();
+                    }
+                }
             }
 
             $new = new HomeTab();
