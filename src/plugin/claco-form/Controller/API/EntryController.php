@@ -57,10 +57,10 @@ class EntryController extends AbstractCrudController
         return 'clacoformentry';
     }
 
-    public function getAction(Request $request, $id, $class): JsonResponse
+    public function getAction(string $field, $id, $class): JsonResponse
     {
         /** @var Entry $entry */
-        $entry = $this->crud->get($class, $id);
+        $entry = $this->crud->get($class, $id, $field);
         if (!$entry) {
             throw new NotFoundHttpException('Entry cannot be found');
         }

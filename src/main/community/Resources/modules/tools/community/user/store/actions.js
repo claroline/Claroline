@@ -38,7 +38,7 @@ actions.open = (username, reload = false) => (dispatch, getState) => {
 
   return dispatch({
     [API_REQUEST]: {
-      url: url(['apiv2_user_find'], {filters: {username: username}}),
+      url: ['apiv2_user_get', {field: 'username', id: username}],
       silent: true,
       success: (response, dispatch) => dispatch(formActions.resetForm(selectors.FORM_NAME, response, false))
     }
