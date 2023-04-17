@@ -47,6 +47,7 @@ abstract class AbstractUserSerializer
         }
 
         $this->sipe('id', 'setUuid', $data, $userRegistration);
+        $this->sipe('type', 'setType', $data, $userRegistration);
         $this->sipe('validated', 'setValidated', $data, $userRegistration);
         $this->sipe('confirmed', 'setConfirmed', $data, $userRegistration);
 
