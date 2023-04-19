@@ -4,6 +4,7 @@ namespace Claroline\CommunityBundle\Transfer\Importer\User;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\TransferBundle\Transfer\Importer\AbstractUpdateImporter;
@@ -55,6 +56,21 @@ class Update extends AbstractUpdateImporter
             unset($data['roles']);
         }
 
+        $organizations = [];
+        if (isset($data['organizations'])) {
+            foreach ($data['organizations'] as $organization) {
+                $object = $this->om->getObject($organization, Organization::class, array_keys($organization));
+                if (!$object) {
+                    throw new \Exception('Organization '.implode(',', $organization).' does not exists');
+                }
+
+                $organizations[] = $object;
+            }
+
+            // remove organizations from input data to avoid the user serializer to process it
+            unset($data['organizations']);
+        }
+
         $user = $this->crud->update(static::getClass(), $data);
         if ($user) {
             if (!empty($groups)) {
@@ -63,6 +79,10 @@ class Update extends AbstractUpdateImporter
 
             if (!empty($roles)) {
                 $this->crud->patch($user, 'role', 'add', $roles);
+            }
+
+            if (!empty($organizations)) {
+                $this->crud->patch($user, 'organization', 'add', $organizations);
             }
         }
 
