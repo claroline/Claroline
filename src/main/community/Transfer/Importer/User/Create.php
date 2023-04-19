@@ -88,10 +88,10 @@ class Create extends AbstractImporter
                     throw new \Exception('Organization '.implode(',', $organization).' does not exists');
                 }
 
-                $organizations[] = $organization;
+                $organizations[] = $object;
             }
 
-            // remove roles from input data to avoid the user serializer to process it
+            // remove organizations from input data to avoid the user serializer to process it
             unset($data['organizations']);
         }
 
