@@ -24,7 +24,7 @@ const CatalogMain = (props) =>
         onEnter: () => props.openForm(null, CourseTypes.defaultProps),
         disabled: !props.canEdit,
         render: () => (
-          <CatalogCreation path={`${props.path}/catalog`} />
+          <CatalogCreation path={props.path} />
         )
       }, {
         path: '/:slug/edit',

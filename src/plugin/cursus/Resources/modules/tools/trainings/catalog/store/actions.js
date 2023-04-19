@@ -45,6 +45,7 @@ actions.openForm = (courseSlug = null, defaultProps = {}) => (dispatch) => {
     [API_REQUEST]: {
       url: ['apiv2_cursus_course_get', {field: 'slug', id: courseSlug}],
       silent: true,
+      before: () => dispatch(formActions.resetForm(selectors.FORM_NAME, null, false)),
       success: (data) => dispatch(formActions.resetForm(selectors.FORM_NAME, data))
     }
   })

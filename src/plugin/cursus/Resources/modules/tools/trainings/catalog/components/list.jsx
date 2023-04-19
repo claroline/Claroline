@@ -23,7 +23,7 @@ const CatalogList = (props) =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
         label: trans('add_course', {}, 'cursus'),
-        target: `${props.path}/new`,
+        target: `${props.path}/catalog/new`,
         group: trans('management'),
         displayed: props.canEdit,
         primary: true
