@@ -23,11 +23,4 @@ class FileLogger extends Logger
 
         return $fileLogger;
     }
-
-    //make the interface happy altough we don't use it -,-.
-    //that way we can use the same parmaeter order than the sf2 one
-    public function log($level, $log, array $context = [])
-    {
-        parent::log($level, $log, $context);
-    }
 }
