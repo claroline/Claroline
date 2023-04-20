@@ -4,7 +4,6 @@ namespace Claroline\DevBundle;
 
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Symfony\Bundle\DebugBundle\DebugBundle;
-use Symfony\Bundle\MakerBundle\MakerBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,7 +22,6 @@ class ClarolineDevBundle extends Bundle implements AutoConfigurableInterface
         return [
             new WebProfilerBundle(),
             new DebugBundle(),
-            new MakerBundle(),
         ];
     }
 

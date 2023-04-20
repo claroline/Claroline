@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 
 <!-- see https://phpmd.org/rules/index.html -->
-<!-- see http://phpmd.org/documentation/creating-a-ruleset.html -->
-<!-- see https://github.com/phpmd/phpmd -->
 
 <ruleset
     name="Claroline distribution PHPMD rule set"
@@ -13,32 +11,77 @@
 >
     <description>Code checks</description>
 
-    <rule ref="rulesets/cleancode.xml/IfStatementAssignment" />
-    <rule ref="rulesets/cleancode.xml/DuplicatedArrayKey" />
-    <rule ref="rulesets/cleancode.xml/ErrorControlOperator" />
-    <rule ref="rulesets/cleancode.xml/UndefinedVariable" />
+    <rule ref="rulesets/cleancode.xml/IfStatementAssignment">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/cleancode.xml/DuplicatedArrayKey">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/cleancode.xml/ErrorControlOperator">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/cleancode.xml/UndefinedVariable">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/unusedcode.xml/UnusedPrivateField">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/design.xml/ExitExpression">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/design.xml/EvalExpression">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/design.xml/GotoStatement">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/design.xml/DevelopmentCodeFragment">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/naming.xml/ConstantNamingConventions">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/controversial.xml/Superglobals">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/controversial.xml/CamelCaseClassName">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/controversial.xml/CamelCasePropertyName">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/controversial.xml/CamelCaseMethodName">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/controversial.xml/CamelCaseParameterName">
+        <priority>1</priority>
+    </rule>
+    <rule ref="rulesets/controversial.xml/CamelCaseVariableName">
+        <priority>1</priority>
+    </rule>
 
-    <rule ref="rulesets/unusedcode.xml/UnusedPrivateField" />
-    <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod" />
-    <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable" />
-    <rule ref="rulesets/unusedcode.xml/UnusedFormalParameter" />
+    <!-- These rules are not checked in the CI because it will need too many work to have them all -->
+    <rule ref="rulesets/unusedcode.xml/UnusedFormalParameter">
+        <!-- It also throws an error when params are declared to follow the parent method's prototype -->
+        <priority>2</priority>
+    </rule>
+    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
+        <priority>2</priority>
+    </rule>
+    <rule ref="rulesets/codesize.xml/ExcessiveParameterList">
+        <priority>2</priority>
+    </rule>
+    <rule ref="rulesets/codesize.xml/ExcessivePublicCount">
+        <priority>2</priority>
+    </rule>
 
-    <rule ref="rulesets/design.xml/ExitExpression" />
-    <rule ref="rulesets/design.xml/EvalExpression" />
-    <rule ref="rulesets/design.xml/GotoStatement" />
-    <rule ref="rulesets/design.xml/DevelopmentCodeFragment" />
-
-    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength" />
-    <rule ref="rulesets/codesize.xml/ExcessiveParameterList" />
-    <rule ref="rulesets/codesize.xml/ExcessivePublicCount" />
-
-    <rule ref="rulesets/naming.xml/BooleanGetMethodName" />
-    <rule ref="rulesets/naming.xml/ConstantNamingConventions" />
-
-    <rule ref="rulesets/controversial.xml/Superglobals" />
-    <rule ref="rulesets/controversial.xml/CamelCaseClassName" />
-    <rule ref="rulesets/controversial.xml/CamelCasePropertyName" />
-    <rule ref="rulesets/controversial.xml/CamelCaseMethodName" />
-    <rule ref="rulesets/controversial.xml/CamelCaseParameterName" />
-    <rule ref="rulesets/controversial.xml/CamelCaseVariableName" />
+    <rule ref="rulesets/naming.xml/BooleanGetMethodName">
+        <priority>2</priority>
+    </rule>
 </ruleset>
