@@ -14,10 +14,10 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: "Install PHP 7.4"
+      - name: "Install PHP 8.2"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: "7.4"
+          php-version: "8.2"
 
       - name: "List modified files"
         id: diff
@@ -64,8 +64,8 @@ jobs:
         env:
           DIFF: ${{ steps.diff.outputs.diff_js }}
 
-  php-74:
-    name: "PHPUnit (PHP 7.4)"
+  php-82:
+    name: "PHPUnit (PHP 8.2)"
     needs: cs
     runs-on: ubuntu-latest
 
@@ -85,75 +85,10 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: "Install PHP 7.4"
+      - name: "Install PHP 8.2"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: "7.4"
-          extensions: pdo_mysql
-
-      - name: "Cache composer dependencies"
-        uses: actions/cache@v1
-        with:
-          path: "~/.composer/cache"
-          key: composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: composer-
-
-      - name: "Set project parameters"
-        run: php bin/configure --default
-
-      - name: "Install PHP dependencies with Composer"
-        run: composer update --no-interaction
-
-      - name: "Cache node modules"
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('**/package.json') }}
-          restore-keys: |
-            npm-
-
-      - name: "Install JS dependencies with NPM"
-        run: npm install --legacy-peer-deps
-
-      - name: "Build JS files with Webpack"
-        run: npm run webpack
-
-      - name: "Setup Claroline platform"
-        run: php bin/console claroline:install --env=test -vvv
-
-      - name: "Run PHPUnit Tests"
-        run: SYMFONY_DEPRECATIONS_HELPER=weak vendor/bin/simple-phpunit --dont-report-useless-tests
-
-      # Created user is not used in the job. This is just a dumb way to test the user creation process.
-      # We do it after tests because we don't want tests on user parts to be affected by this.
-      - name: "Create a Claroline user"
-        run: php bin/console claroline:user:create --env=test -vvv -a John Doe john.doe john.doe john.doe@test.com
-
-  php-80:
-    name: "PHPUnit (PHP 8.0)"
-    needs: cs
-    runs-on: ubuntu-latest
-
-    services:
-      mysql:
-        image: mysql:8.0
-        options: >-
-          --health-cmd "mysqladmin ping --silent"
-          -e MYSQL_ALLOW_EMPTY_PASSWORD=yes
-          -e MYSQL_DATABASE=claroline_test
-        ports:
-          - "3306:3306"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v2"
-        with:
-          fetch-depth: 2
-
-      - name: "Install PHP 8.0"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          php-version: "8.0"
+          php-version: "8.2"
           extensions: pdo_mysql
 
       - name: "Cache composer dependencies"
