@@ -23,7 +23,7 @@ The ruleset used in the project is defined in *phpmd.xml*.
 Usage example :
 
 ```sh
-$ phpmd src/plugin/FooVendor/BarBundle text app/dev/config/phpmd.xml
+$ vendor/bin/phpmd src/plugin/FooVendor/BarBundle text phpmd.xml
 ```
 
 

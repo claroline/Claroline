@@ -35,7 +35,7 @@ jobs:
 
       - name: "Run PHPMD checks"
         if: ${{ env.DIFF != '' }}
-        run: php phpmd `echo "$DIFF" | tr ' ' ','` text phpmd.xml
+        run: php phpmd `echo "$DIFF" | tr ' ' ','` github phpmd.xml
         env:
           DIFF: ${{ steps.diff.outputs.diff_php }}
 
