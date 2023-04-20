@@ -29,11 +29,24 @@ You can create an empty database using:
 $ php bin/console doctrine:database:create
 ```
 
-### Generating migrations
+### Database migrations
 
-A properly installed platform will include the MigrationBundle.
-It includes several usefull commands.
-Please read the MigrationBundle readme for me informations
+> **ATTENTION: ** You MUST NOT use the doctrine default `doctrine:schema:update --force` to apply 
+> schema modifications to your DB.
+
+Generate migrations for entity modifications :
+
+```sh
+$ php bin/console claroline:migration:generate FooBarBundle
+```
+
+Apply migrations to the database :
+
+```sh
+$ php bin/console claroline:migration:upgrade FooBarBundle
+```
+
+> **NB: ** Pending migrations are automatically run by the `claroline:update` command.
 
 
 ### Plugins management
@@ -41,13 +54,13 @@ Please read the MigrationBundle readme for me informations
 Plugins are registered with the command:
 
 ```sh
-$ php bin/console claroline:plugin:install
+$ php bin/console claroline:plugin:install FooBarBundle
 ```
 
 You can remove plugins with:
 
 ```sh
-$ php bin/console claroline:plugin:uninstall
+$ php bin/console claroline:plugin:uninstall FooBarBundle
 ```
 
 **Tips:** The list of registered bundle is saved in the file
@@ -84,6 +97,14 @@ $ php bin/console cache:clear
 
 
 ## Code quality
+
+See [Code analysis](Claroline/sections/dev/code-analysis) for more information.
+
+### PHP Mess Detector
+
+```sh
+$ vendor/bin/phpmd src/plugin/FooVendor/BarBundle text phpmd.xml
+```
 
 ## Tests
 

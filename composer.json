@@ -93,7 +93,8 @@
         "symfony/web-profiler-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
         "twig/twig": "^2.14",
-        "willdurand/js-translation-bundle": "^4.0"
+        "willdurand/js-translation-bundle": "^4.0",
+        "http-interop/http-factory-guzzle": "^1.2"
     },
     "require-dev": {
         "symfony/dom-crawler": "4.4.*",
@@ -101,7 +102,7 @@
         "friendsofphp/php-cs-fixer": "^2.15",
         "mockery/mockery": "^1.2",
         "mikey179/vfsstream": "1.6.8",
-        "phpmd/phpmd": "^2.9.1",
+        "phpmd/phpmd": "^2.13",
         "symfony/phpunit-bridge": "^4.4"
     },
     "autoload": {

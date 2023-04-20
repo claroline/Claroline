@@ -15,23 +15,30 @@
 
     <rule ref="rulesets/cleancode.xml/IfStatementAssignment" />
     <rule ref="rulesets/cleancode.xml/DuplicatedArrayKey" />
-    <!--<rule ref="rulesets/cleancode.xml/MissingImport" />-->
+    <rule ref="rulesets/cleancode.xml/ErrorControlOperator" />
     <rule ref="rulesets/cleancode.xml/UndefinedVariable" />
 
     <rule ref="rulesets/unusedcode.xml/UnusedPrivateField" />
     <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod" />
     <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable" />
+    <rule ref="rulesets/unusedcode.xml/UnusedFormalParameter" />
 
     <rule ref="rulesets/design.xml/ExitExpression" />
     <rule ref="rulesets/design.xml/EvalExpression" />
     <rule ref="rulesets/design.xml/GotoStatement" />
     <rule ref="rulesets/design.xml/DevelopmentCodeFragment" />
 
-    <!-- NICE TO HAVE -->
+    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength" />
+    <rule ref="rulesets/codesize.xml/ExcessiveParameterList" />
+    <rule ref="rulesets/codesize.xml/ExcessivePublicCount" />
 
-    <!-- <rule ref="rulesets/codesize.xml/ExcessiveMethodLength" /> -->
-    <!-- <rule ref="rulesets/codesize.xml/ExcessiveParameterList" /> -->
-    <!-- <rule ref="rulesets/naming.xml/BooleanGetMethodName" /> -->
-    <!-- <rule ref="rulesets/controversial.xml" /> -->
+    <rule ref="rulesets/naming.xml/BooleanGetMethodName" />
+    <rule ref="rulesets/naming.xml/ConstantNamingConventions" />
 
+    <rule ref="rulesets/controversial.xml/Superglobals" />
+    <rule ref="rulesets/controversial.xml/CamelCaseClassName" />
+    <rule ref="rulesets/controversial.xml/CamelCasePropertyName" />
+    <rule ref="rulesets/controversial.xml/CamelCaseMethodName" />
+    <rule ref="rulesets/controversial.xml/CamelCaseParameterName" />
+    <rule ref="rulesets/controversial.xml/CamelCaseVariableName" />
 </ruleset>
