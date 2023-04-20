@@ -81,7 +81,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/{role}", name="apiv2_team_list_users", methods={"GET"})
+     * @Route("/{id}/users/{role}", name="apiv2_team_list_users", methods={"GET"})
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
@@ -108,7 +108,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/{role}/register", name="apiv2_team_register", methods={"PATCH"})
+     * @Route("/{id}/users/{role}", name="apiv2_team_register", methods={"PATCH"})
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      */
     public function registerAction(Team $team, string $role, Request $request): JsonResponse
@@ -145,7 +145,7 @@ class TeamController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/{role}/unregister", name="apiv2_team_unregister", methods={"DELETE"})
+     * @Route("/{id}/users/{role}", name="apiv2_team_unregister", methods={"DELETE"})
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      */
     public function unregisterAction(Team $team, string $role, Request $request): JsonResponse
