@@ -138,9 +138,7 @@ class TeamSubscriber implements EventSubscriberInterface
                 $defaultResource = isset($data['defaultResource']['id']) ?
                     $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $data['defaultResource']['id']]) :
                     null;
-                $creatableResources = isset($data['creatableResources']) ?
-                    $data['creatableResources'] :
-                    [];
+                $creatableResources = isset($data['creatableResources']) ? $data['creatableResources'] : [];
                 $directory = $this->manager->createTeamDirectory(
                     $team,
                     $this->tokenStorage->getToken()->getUser(),
