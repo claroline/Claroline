@@ -153,7 +153,11 @@ class ResourceManager implements LoggerAwareInterface
     public function createRights(ResourceNode $node, array $rights = [], bool $withDefault = true, bool $log = true)
     {
         foreach ($rights as $data) {
-            $resourceTypes = $this->checkResourceTypes($data['create']);
+            $resourceTypes = [];
+            if (isset($data['create'])) {
+                $resourceTypes = $this->checkResourceTypes($data['create']);
+            }
+
             $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes, $log);
         }
 

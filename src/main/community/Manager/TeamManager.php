@@ -112,46 +112,68 @@ class TeamManager
     public function createTeamDirectory(Team $team, User $user, ?ResourceNode $resource = null, ?array $creatableResources = []): Directory
     {
         $workspace = $team->getWorkspace();
+
         $teamRole = $team->getRole();
         $teamManagerRole = $team->getManagerRole();
-        $rootDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
-        $directoryType = $this->resourceManager->getResourceTypeByName('directory');
-        $resourceTypes = $this->resourceManager->getAllResourceTypes();
-
-        $directory = new Directory();
-        $directory->setName($team->getName());
+        $wsManagerRole = $workspace->getManagerRole();
 
         $teamRoleName = $teamRole->getName();
         $teamManagerRoleName = $teamManagerRole->getName();
+
         $rights = [];
         $rights[$teamRoleName] = [];
         $rights[$teamRoleName]['role'] = $teamRole;
         $rights[$teamRoleName]['create'] = [];
+
         $rights[$teamManagerRoleName] = [];
         $rights[$teamManagerRoleName]['role'] = $teamManagerRole;
         $rights[$teamManagerRoleName]['create'] = [];
 
+        if ($wsManagerRole) {
+            $rights[$wsManagerRole->getName()] = [];
+            $rights[$wsManagerRole->getName()]['role'] = $wsManagerRole;
+            $rights[$wsManagerRole->getName()]['create'] = [];
+        }
+
+        $resourceTypes = $this->resourceManager->getAllResourceTypes();
         foreach ($resourceTypes as $resourceType) {
             $rights[$teamManagerRoleName]['create'][] = ['name' => $resourceType->getName()];
+
+            // because we don't copy the root rights, we need to correctly initialize the workspace manager rights
+            if ($wsManagerRole) {
+                $rights[$wsManagerRole->getName()]['create'][] = ['name' => $resourceType->getName()];
+            }
         }
 
         foreach ($creatableResources as $creatableResource) {
             $rights[$teamRoleName]['create'][] = ['name' => $creatableResource];
         }
-        $decoders = $directoryType->getMaskDecoders();
 
+        $directoryType = $this->resourceManager->getResourceTypeByName('directory');
+        $decoders = $directoryType->getMaskDecoders();
         foreach ($decoders as $decoder) {
             $decoderName = $decoder->getName();
 
             if ('create' !== $decoderName) {
                 $rights[$teamManagerRoleName][$decoderName] = true;
-            }
-            if ('administrate' !== $decoderName && 'delete' !== $decoderName && 'create' !== $decoderName) {
-                $rights[$teamRoleName][$decoderName] = true;
+
+                if ('administrate' !== $decoderName && 'delete' !== $decoderName) {
+                    $rights[$teamRoleName][$decoderName] = true;
+                }
+
+                // because we don't copy the root rights, we need to correctly initialize the workspace manager rights
+                if ($wsManagerRole) {
+                    $rights[$wsManagerRole->getName()][$decoderName] = true;
+                }
             }
         }
 
         // TODO : use crud
+        $rootDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
+
+        $directory = new Directory();
+        $directory->setName($team->getName());
+
         $this->resourceManager->create(
             $directory,
             $directoryType,
@@ -161,8 +183,10 @@ class TeamManager
             $rights
         );
 
+        // ATTENTION : because rights are pushed into DB in plain SQL we need to reload the entity to get the correct data
+        $this->om->refresh($directory->getResourceNode());
+
         if (!is_null($resource)) {
-            // TODO : manage rights
             $this->crud->copy($resource, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $directory->getResourceNode()]);
         }
 
@@ -195,7 +219,7 @@ class TeamManager
         $teamRole = $team->getRole();
         $teamManagerRole = $team->getManagerRole();
 
-        if (!empty($team->getDirectory())) {
+        if (!empty($team->getDirectory()) && $team->isPublic()) {
             $workspaceRoles = $this->roleManager->getWorkspaceRoles($workspace);
             $rights = [];
 
@@ -203,17 +227,17 @@ class TeamManager
                 if (!in_array($role->getUuid(), [$teamRole->getUuid(), $teamManagerRole->getUuid()])) {
                     $rights[$role->getName()] = [
                         'role' => $role,
-                        'create' => [],
                         'open' => $team->isPublic(),
                     ];
                 }
             }
+
             $this->applyRightsToResourceNode($team->getDirectory(), $rights);
         }
     }
 
     /**
-     * Updates permissions of team directory..
+     * Updates permissions of team directory.
      */
     public function updateTeamDirectoryPerms(Team $team): void
     {
