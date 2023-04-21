@@ -47,7 +47,7 @@ class DataSource
     /**
      * The context of the source (workspace, desktop).
      *
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @var array
      */
@@ -61,7 +61,7 @@ class DataSource
     /**
      * A list of tags to group similar sources.
      *
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @var array
      */
