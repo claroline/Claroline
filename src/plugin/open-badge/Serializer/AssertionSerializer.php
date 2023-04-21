@@ -20,27 +20,23 @@ class AssertionSerializer
     private $badgeSerializer;
     /** @var RouterInterface */
     private $router;
-    /** @var VerificationObjectSerializer */
-    private $verificationObjectSerializer;
 
     public function __construct(
         UserSerializer $userSerializer,
         BadgeClassSerializer $badgeSerializer,
-        RouterInterface $router,
-        VerificationObjectSerializer $verificationObjectSerializer
+        RouterInterface $router
     ) {
         $this->userSerializer = $userSerializer;
         $this->badgeSerializer = $badgeSerializer;
         $this->router = $router;
-        $this->verificationObjectSerializer = $verificationObjectSerializer;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'open_badge_assertion';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Assertion::class;
     }
@@ -52,11 +48,15 @@ class AssertionSerializer
                 'uid' => $assertion->getUuid(),
                 'id' => $this->router->generate('apiv2_open_badge__assertion', ['assertion' => $assertion->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL),
                 'type' => 'Assertion',
-                'verify' => $this->verificationObjectSerializer->serialize($assertion),
-                //doc is uncomplete ? verify works but not verification. For mozilla backpack.
+                'verify' => [
+                    'type' => 'SignedBadge',
+                    //is a link to a cryptographic key
+                    'creator' => null,
+                ],
+                //doc is uncompleted ? verify works but not verification. For mozilla backpack.
                 //'verification' => $this->verificationObjectSerializer->serialize($assertion),
                 //'recipient' => $this->identityObjectSerializer->serialize($assertion->getRecipient(), [Options::ENFORCE_OPEN_BADGE_JSON]),
-                //they don't follow their owndock ? it's for mozilla backpack
+                //they don't follow their own dock ? it's for mozilla backpack
                 'recipient' => $assertion->getRecipient()->getEmail(),
                 'badge' => $this->badgeSerializer->serialize($assertion->getBadge(), [Options::ENFORCE_OPEN_BADGE_JSON]),
                 'issuedOn' => $assertion->getIssuedOn()->format('Y-m-d'),
@@ -74,7 +74,7 @@ class AssertionSerializer
         ];
     }
 
-    public function getExpireDate(Assertion $assertion)
+    public function getExpireDate(Assertion $assertion): string
     {
         $badge = $assertion->getBadge();
         $date = $assertion->getIssuedOn();
