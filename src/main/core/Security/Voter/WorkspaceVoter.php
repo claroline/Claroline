@@ -18,14 +18,13 @@ use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class WorkspaceVoter extends AbstractVoter
+class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
 {
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-    /** @var WorkspaceRestrictionsManager */
-    private $restrictionsManager;
+    private WorkspaceManager $workspaceManager;
+    private WorkspaceRestrictionsManager $restrictionsManager;
 
     public function __construct(
         WorkspaceManager $workspaceManager,
@@ -38,6 +37,28 @@ class WorkspaceVoter extends AbstractVoter
     public function getClass(): string
     {
         return Workspace::class;
+    }
+
+    public function vote(TokenInterface $token, $subject, array $attributes): int
+    {
+
+    }
+
+    /**
+     * Return false if your voter doesn't support the given attribute. Symfony will cache
+     * that decision and won't call your voter again for that attribute.
+     */
+    public function supportsAttribute(string $attribute): bool
+    {
+        return true;
+    }
+
+    public function supportsType(string $subjectType): bool
+    {
+        // you can't use a simple User::class === $subjectType comparison
+        // here because the given subject type could be the proxy class used
+        // by Doctrine when creating the entity object
+        return is_a($subjectType, Workspace::class, true);
     }
 
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
@@ -143,7 +164,7 @@ class WorkspaceVoter extends AbstractVoter
         return in_array(PlatformRoles::WS_CREATOR, $token->getRoleNames());
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): ?array
     {
         //atm, null means "everything is supported... implement this later"
         return null;

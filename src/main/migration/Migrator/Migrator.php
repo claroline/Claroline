@@ -137,11 +137,9 @@ class Migrator
             return $this->cacheConfigs[$bundle->getName()];
         }
 
-        $driverName = $this->connection->getDriver()->getName();
-
-        $migrationsDir = implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', $driverName]);
+        $migrationsDir = implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', 'pdo_mysql']);
         $migrationsName = "{$bundle->getName()} migration";
-        $migrationsNamespace = "{$bundle->getNamespace()}\\Installation\\Migrations\\{$driverName}";
+        $migrationsNamespace = "{$bundle->getNamespace()}\\Installation\\Migrations\\pdo_mysql";
         $migrationsTableName = 'doctrine_'.strtolower($bundle->getName()).'_versions';
 
         $config = new Configuration($this->connection);

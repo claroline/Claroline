@@ -43,7 +43,6 @@ Claroline\LinkBundle\ClarolineLinkBundle = true
 Claroline\SlideshowBundle\ClarolineSlideshowBundle = true
 Claroline\OpenBadgeBundle\ClarolineOpenBadgeBundle = true
 Claroline\AudioPlayerBundle\ClarolineAudioPlayerBundle = true
-Claroline\SamlBundle\ClarolineSamlBundle = false
 Claroline\CursusBundle\ClarolineCursusBundle = true
 Claroline\BigBlueButtonBundle\ClarolineBigBlueButtonBundle = false
 Claroline\PeerTubeBundle\ClarolinePeerTubeBundle = false

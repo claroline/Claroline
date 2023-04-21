@@ -44,7 +44,7 @@ class LocationVoter extends AbstractVoter
         return Location::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::OPEN, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }

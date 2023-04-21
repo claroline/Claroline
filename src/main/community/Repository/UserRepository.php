@@ -21,7 +21,8 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -50,6 +51,11 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
             ->getResult();
     }
 
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        return $this->loadUserByUsername($identifier);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -73,16 +79,16 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         try {
             $user = $query->getSingleResult();
         } catch (NoResultException $e) {
-            throw new UsernameNotFoundException(sprintf('Unable to find an active user identified by "%s".', $username));
+            throw new UserNotFoundException(sprintf('Unable to find an active user identified by "%s".', $username));
         }
 
         return $user;
     }
 
-    public function upgradePassword(UserInterface $user, string $newEncodedPassword): void
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         $em = $this->getEntityManager();
-        $user->setPassword($newEncodedPassword);
+        $user->setPassword($newHashedPassword);
 
         $em->persist($user);
         $em->flush();

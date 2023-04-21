@@ -3,13 +3,25 @@
 namespace Claroline\AppBundle\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface as BaseVoterInterface;
 
-/**
- * Claroline VoterInterface. This is used by the AbstractVoter and contains several utilities
- * methods to handle collections.
- */
-interface VoterInterface
+interface VoterInterface extends BaseVoterInterface
 {
+    /** @var string */
+    const CREATE = 'CREATE';
+    /** @var string */
+    const EDIT = 'EDIT';
+    /** @var string */
+    const ADMINISTRATE = 'ADMINISTRATE';
+    /** @var string */
+    const DELETE = 'DELETE';
+    /** @var string */
+    const VIEW = 'VIEW';
+    /** @var string */
+    const OPEN = 'OPEN';
+    /** @var string */
+    const PATCH = 'PATCH';
+
     /**
      * @param mixed $object
      */
@@ -23,5 +35,5 @@ interface VoterInterface
     /**
      * @return array|null
      */
-    public function getSupportedActions();
+    public function getSupportedActions(): ?array;
 }

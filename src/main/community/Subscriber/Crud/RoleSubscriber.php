@@ -13,15 +13,13 @@ use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RoleSubscriber implements EventSubscriberInterface
 {
-    /** @var Connection */
-    private $conn;
-    /** @var StrictDispatcher */
-    private $dispatcher;
+    private Connection $conn;
+    private StrictDispatcher $dispatcher;
 
     public function __construct(
         Connection $conn,

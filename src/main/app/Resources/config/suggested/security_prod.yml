@@ -1,4 +1,6 @@
 security:
+    enable_authenticator_manager: false
+
     providers:
         user_db:
             entity: { class: Claroline\CoreBundle\Entity\User }

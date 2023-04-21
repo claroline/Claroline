@@ -19,27 +19,18 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Twig\Environment;
 
 /**
- * ClientController.
- * It's responsible of the rendering of the Claroline web UI.
+ * ClientController is in charge of the rendering of the Claroline web UI.
  */
 class ClientController
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var Environment */
-    private $templating;
-    /** @var EventDispatcherInterface */
-    private $dispatcher;
-    /** @var PlatformConfigurationHandler */
-    private $configHandler;
-    /** @var SecurityManager */
-    private $securityManager;
-    /** @var ToolManager */
-    private $toolManager;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ClientSerializer */
-    private $clientSerializer;
+    private TokenStorageInterface $tokenStorage;
+    private Environment $templating;
+    private EventDispatcherInterface $dispatcher;
+    private PlatformConfigurationHandler $configHandler;
+    private SecurityManager $securityManager;
+    private ToolManager $toolManager;
+    private SerializerProvider $serializer;
+    private ClientSerializer $clientSerializer;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,

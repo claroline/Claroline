@@ -64,7 +64,7 @@ class LogListener
     ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
-        $this->request = $requestStack->getMasterRequest();
+        $this->request = $requestStack->getMainRequest();
         $this->container = $container;
         $this->roleManager = $roleManager;
         $this->ch = $ch;

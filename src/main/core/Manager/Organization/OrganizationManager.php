@@ -14,18 +14,50 @@ namespace Claroline\CoreBundle\Manager\Organization;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\User;
 use Psr\Log\LoggerAwareInterface;
 
-class OrganizationManager implements LoggerAwareInterface
+class OrganizationManager
 {
-    use LoggableTrait;
-
-    /** @var ObjectManager */
-    private $om;
+    private ObjectManager $om;
 
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+    }
+
+    /**
+     * Check if the user is manager of at least one of the organizations.
+     */
+    public function isManager(User $user, iterable $organizations): bool
+    {
+        $adminOrganizations = $user->getAdministratedOrganizations();
+        foreach ($adminOrganizations as $adminOrganization) {
+            foreach ($organizations as $organization) {
+                if ($organization === $adminOrganization) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the user is member of at least one of the organizations.
+     */
+    public function isMember(User $user, iterable $organizations): bool
+    {
+        $userOrganizations = $user->getOrganizations();
+        foreach ($userOrganizations as $userOrganization) {
+            foreach ($organizations as $organization) {
+                if ($organization === $userOrganization) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function getDefault($createIfEmpty = false)

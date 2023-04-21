@@ -90,7 +90,7 @@ class HomeTabVoter extends AbstractVoter
         $granted = false;
         switch ($object->getContext()) {
             case HomeTab::TYPE_HOME:
-                $granted = $this->isAdmin($token) || $this->isGranted('ROLE_HOME_MANAGER');
+                $granted = $this->isGranted('ROLE_HOME_MANAGER');
                 break;
 
             case HomeTab::TYPE_ADMIN:

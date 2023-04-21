@@ -25,6 +25,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\LegacyPasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -38,7 +40,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         @ORM\Index(name="is_removed", columns={"is_removed"})
  * })
  */
-class User extends AbstractRoleSubject implements \Serializable, UserInterface, EquatableInterface, IdentifiableInterface
+class User extends AbstractRoleSubject implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface, IdentifiableInterface
 {
     use Id;
     use Uuid;
@@ -113,7 +115,7 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
      *
      * @ORM\Column(unique=true, name="mail")
      * @Assert\NotBlank()
-     * @Assert\Email(strict = true)
+     * @Assert\Email(mode="strict")
      */
     private $email;
 
@@ -311,26 +313,30 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
     /**
      * Required to store user in session.
      */
-    public function serialize(): string
+    public function __serialize(): array
     {
-        return serialize([
+        return [
             'id' => $this->id,
             'username' => $this->username,
             'roles' => $this->getRoles(),
-        ]);
+        ];
     }
 
     /**
      * Required to store user in session.
      */
-    public function unserialize($serialized)
+    public function __unserialize(array $data)
     {
-        $user = unserialize($serialized);
+        $this->id = $data['id'];
+        $this->username = $data['username'];
 
-        $this->id = $user['id'];
-        $this->username = $user['username'];
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->username;
     }
 
     public function getFirstName(): ?string

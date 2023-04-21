@@ -63,6 +63,8 @@ class ExportController extends AbstractCrudController
     {
         $this->checkPermission(['transfer', 'open'], $workspace, [], true);
 
+        $this->checkPermission('TOOL/transfer');
+
         return new JsonResponse(
             $this->finder->search(self::getClass(), array_merge($request->query->all(), ['hiddenFilters' => [
                 'workspace' => $workspace->getUuid(),
