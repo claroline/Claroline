@@ -1,18 +1,10 @@
 services:
-    _defaults:
-        autowire: false #change to true
-        autoconfigure: false
-        public: true #because lazy
-
-    Claroline\OpenBadgeBundle\Serializer\AlignementObjectSerializer:
-
     Claroline\OpenBadgeBundle\Serializer\AssertionSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\BadgeClassSerializer'
             - '@router'
-            - '@Claroline\OpenBadgeBundle\Serializer\VerificationObjectSerializer'
 
     Claroline\OpenBadgeBundle\Serializer\BadgeClassSerializer:
         tags: [claroline.serializer]
@@ -37,21 +29,12 @@ services:
         arguments:
             - '@router'
 
-    Claroline\OpenBadgeBundle\Serializer\EndorsementSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@router'
-
     Claroline\OpenBadgeBundle\Serializer\EvidenceSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@router'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
-
-    Claroline\OpenBadgeBundle\Serializer\HostedBadgeSerializer: ~
-
-    Claroline\OpenBadgeBundle\Serializer\IdentityObjectSerializer: ~
 
     Claroline\OpenBadgeBundle\Serializer\ImageSerializer:
         arguments:
@@ -62,13 +45,7 @@ services:
             - '@router'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    Claroline\OpenBadgeBundle\Serializer\RevocationListSerializer: ~
-
     Claroline\OpenBadgeBundle\Serializer\RuleSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\OpenBadgeBundle\Serializer\VerificationObjectSerializer:
-        arguments:
-            - '@router'

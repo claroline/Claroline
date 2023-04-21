@@ -46,13 +46,6 @@ class Assertion
     private $badge;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\VerificationObject")
-     *
-     * @var VerificationObject
-     */
-    private $verification;
-
-    /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
      *
@@ -146,30 +139,6 @@ class Assertion
     public function setBadge($badge)
     {
         $this->badge = $badge;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of Verification.
-     *
-     * @return VerificationObject
-     */
-    public function getVerification()
-    {
-        return $this->verification;
-    }
-
-    /**
-     * Set the value of Verification.
-     *
-     * @param VerificationObject $verification
-     *
-     * @return self
-     */
-    public function setVerification($verification)
-    {
-        $this->verification = $verification;
 
         return $this;
     }
