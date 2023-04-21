@@ -53,7 +53,7 @@ class Rule
     private $badge;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @var array
      */

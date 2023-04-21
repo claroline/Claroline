@@ -41,7 +41,7 @@ class ResourceEvaluation extends AbstractEvaluation
     private $comment;
 
     /**
-     * @ORM\Column(name="more_data", type="json_array", nullable=true)
+     * @ORM\Column(name="more_data", type="json", nullable=true)
      *
      * @var array
      */

@@ -63,7 +63,7 @@ class ClacoForm extends AbstractResource
     protected $keywords;
 
     /**
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      *
      * @var array
      */

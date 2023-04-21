@@ -59,7 +59,7 @@ class ResourceType
     /**
      * A list of tags to group similar types.
      *
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @var array
      */
