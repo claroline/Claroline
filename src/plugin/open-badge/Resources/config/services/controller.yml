@@ -27,10 +27,6 @@ services:
             - '@Claroline\OpenBadgeBundle\Manager\BadgeManager'
             - '@Claroline\OpenBadgeBundle\Manager\AssertionManager'
 
-    Claroline\OpenBadgeBundle\Controller\API\EndorsementController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-
     Claroline\OpenBadgeBundle\Controller\API\EvidenceController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
