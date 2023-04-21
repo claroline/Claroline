@@ -161,7 +161,7 @@ class ScoTracking
     protected $isLocked;
 
     /**
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     protected $details;
 

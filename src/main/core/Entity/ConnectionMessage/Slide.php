@@ -52,7 +52,7 @@ class Slide
     private $message;
 
     /**
-     * @ORM\Column(name="shortcuts", type="json_array", nullable=true)
+     * @ORM\Column(name="shortcuts", type="json", nullable=true)
      *
      * @var array
      */

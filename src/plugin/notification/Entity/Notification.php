@@ -41,7 +41,7 @@ class Notification
     private $actionKey;
 
     /**
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     private $details;
 

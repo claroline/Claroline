@@ -33,7 +33,7 @@ class WorkspaceOptions
     /**
      * The options of the workspace.
      *
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      *
      * @var array
      *
@@ -44,7 +44,7 @@ class WorkspaceOptions
     /**
      * The list of items to display in the Workspace when shown.
      *
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      *
      * @var array
      */

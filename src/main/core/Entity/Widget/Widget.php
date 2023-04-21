@@ -58,7 +58,7 @@ class Widget
     /**
      * The list of DataSources accepted by the widget.
      *
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @var array
      */
@@ -67,7 +67,7 @@ class Widget
     /**
      * The rendering context of the widget (workspace, desktop).
      *
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @var array
      */
@@ -88,7 +88,7 @@ class Widget
     /**
      * A list of tags to group similar widgets.
      *
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @var array
      */
