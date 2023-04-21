@@ -70,7 +70,20 @@ public function onBagdeCreateValidationLink(BadgeCreateValidationLinkEvent $even
 
 All this method need to return is some html content to represent the link to the associated resource, or any object you want.
 
-If no listener is defined a default link will be generate with the resource node identifier of the log. If this one doesn't exist either no link will be generate.
+If no listener is defined a default link will be generated with the resource node identifier of the log. If this one doesn't exist either no link will be generate.
+
+How to validate Badges
+======================
+
+https://openbadges.org/developers/#verification
+
+https://github.com/IMSGlobal/openbadges-validator-core
+sudo apt-get install python-pip
+
+https://docs.python-guide.org/dev/virtualenvs/#lower-level-virtualenv
+
+then run the cli tool
+
 
 [2]: http://openbadges.org/
 [3]: http://www.mozilla.org/
