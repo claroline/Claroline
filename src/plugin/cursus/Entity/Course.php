@@ -38,7 +38,7 @@ class Course extends AbstractTraining
      * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Course", inversedBy="children")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
-    private ?Course $parent;
+    private ?Course $parent = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Course", mappedBy="parent")
