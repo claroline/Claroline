@@ -33,7 +33,7 @@ class VerificationObject
     private $startWith;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      */
     private $allowedOrigins;
 }

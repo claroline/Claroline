@@ -40,7 +40,7 @@ class AnnouncementSend
     private $announcement;
 
     /**
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      */
     private $data;
 

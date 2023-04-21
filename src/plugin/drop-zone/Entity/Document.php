@@ -57,7 +57,7 @@ class Document
     protected $type;
 
     /**
-     * @ORM\Column(name="file_array", type="json_array", nullable=true)
+     * @ORM\Column(name="file_array", type="json", nullable=true)
      *
      * @var array
      */

@@ -213,7 +213,7 @@ class ResourceNode
     protected $fullscreen = false;
 
     /**
-     * @ORM\Column(type="json_array", nullable=true)
+     * @ORM\Column(type="json", nullable=true)
      *
      * @todo split IPS & access code into 2 props.
      */

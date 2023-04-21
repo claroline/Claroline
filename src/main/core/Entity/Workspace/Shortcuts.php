@@ -44,7 +44,7 @@ class Shortcuts
     private $role;
 
     /**
-     * @ORM\Column(name="shortcuts_data", type="json_array", nullable=true)
+     * @ORM\Column(name="shortcuts_data", type="json", nullable=true)
      *
      * @var array
      */

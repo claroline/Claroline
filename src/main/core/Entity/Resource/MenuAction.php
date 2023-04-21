@@ -45,14 +45,14 @@ class MenuAction
     private $group;
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @var array
      */
     private $scope = [];
 
     /**
-     * @ORM\Column(type="json_array")
+     * @ORM\Column(type="json")
      *
      * @var array
      */
