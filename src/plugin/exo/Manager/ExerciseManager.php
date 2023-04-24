@@ -116,6 +116,17 @@ class ExerciseManager
         $iteration = 0;
         $papers = [];
 
+        fputcsv($handle, [
+            'last_name',
+            'fisrt_name',
+            'number',
+            'start_date',
+            'end_date',
+            'status',
+            'score',
+            'total',
+        ], ';');
+
         while (0 === $iteration || count($papers) >= $limit) {
             $papers = $repo->findBy(['exercise' => $exercise], [], $limit, $iteration * $limit);
             ++$iteration;
@@ -263,7 +274,7 @@ class ExerciseManager
                 foreach ($paper as $paperItem) {
                     if (is_array($paperItem)) {
                         foreach ($paperItem as $paperEl) {
-                            $flattenedAnswers[] = TextNormalizer::stripHtml($paperEl, true);
+                            $flattenedAnswers[] = $paperEl ? TextNormalizer::stripHtml($paperEl, true) : null;
                         }
                     }
                 }
