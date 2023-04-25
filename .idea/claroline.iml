@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/integration/big-blue-button" isTestSource="false" packagePrefix="Claroline\BigBlueButtonBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/integration/peertube" isTestSource="false" packagePrefix="Claroline\PeerTubeBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/app" isTestSource="false" packagePrefix="Claroline\AppBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/authentication" isTestSource="false" packagePrefix="Claroline\AuthenticationBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/community" isTestSource="false" packagePrefix="Claroline\CommunityBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/core" isTestSource="false" packagePrefix="Claroline\CoreBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/dev" isTestSource="false" packagePrefix="Claroline\DevBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/evaluation" isTestSource="false" packagePrefix="Claroline\EvaluationBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/installation" isTestSource="false" packagePrefix="Claroline\InstallationBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/kernel" isTestSource="false" packagePrefix="Claroline\KernelBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/log" isTestSource="false" packagePrefix="Claroline\LogBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/migration" isTestSource="false" packagePrefix="Claroline\MigrationBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/scheduler" isTestSource="false" packagePrefix="Claroline\SchedulerBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/theme" isTestSource="false" packagePrefix="Claroline\ThemeBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/transfer" isTestSource="false" packagePrefix="Claroline\TransferBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/agenda" isTestSource="false" packagePrefix="Claroline\AgendaBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/analytics" isTestSource="false" packagePrefix="Claroline\AnalyticsBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/announcement" isTestSource="false" packagePrefix="Claroline\AnnouncementBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/audio-player" isTestSource="false" packagePrefix="Claroline\AudioPlayerBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/bibliography" isTestSource="false" packagePrefix="Icap\BibliographyBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/blog" isTestSource="false" packagePrefix="Icap\BlogBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/claco-form" isTestSource="false" packagePrefix="Claroline\ClacoFormBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/competency" isTestSource="false" packagePrefix="HeVinci\CompetencyBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/cursus" isTestSource="false" packagePrefix="Claroline\CursusBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/documentation" isTestSource="false" packagePrefix="Claroline\DocumentationBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/drop-zone" isTestSource="false" packagePrefix="Claroline\DropZoneBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/exo" isTestSource="false" packagePrefix="UJM\ExoBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/favourite" isTestSource="false" packagePrefix="HeVinci\FavouriteBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/formula" isTestSource="false" packagePrefix="Icap\FormulaPluginBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/forum" isTestSource="false" packagePrefix="Claroline\ForumBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/history" isTestSource="false" packagePrefix="Claroline\HistoryBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/home" isTestSource="false" packagePrefix="Claroline\HomeBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/image-player" isTestSource="false" packagePrefix="Claroline\ImagePlayerBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/lesson" isTestSource="false" packagePrefix="Icap\LessonBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/link" isTestSource="false" packagePrefix="Claroline\LinkBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/message" isTestSource="false" packagePrefix="Claroline\MessageBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/notification" isTestSource="false" packagePrefix="Icap\NotificationBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/open-badge" isTestSource="false" packagePrefix="Claroline\OpenBadgeBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/path" isTestSource="false" packagePrefix="Innova\PathBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/pdf-player" isTestSource="false" packagePrefix="Claroline\PdfPlayerBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/rss" isTestSource="false" packagePrefix="Claroline\RssBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/saml" isTestSource="false" packagePrefix="Claroline\SamlBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/scorm" isTestSource="false" packagePrefix="Claroline\ScormBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/slideshow" isTestSource="false" packagePrefix="Claroline\SlideshowBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/tag" isTestSource="false" packagePrefix="Claroline\TagBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/text-player" isTestSource="false" packagePrefix="Claroline\TextPlayerBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/url" isTestSource="false" packagePrefix="HeVinci\UrlBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/video-player" isTestSource="false" packagePrefix="Claroline\VideoPlayerBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/web-resource" isTestSource="false" packagePrefix="Claroline\WebResourceBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugin/wiki" isTestSource="false" packagePrefix="Icap\WikiBundle\" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/example" isTestSource="false" packagePrefix="Claroline\ExampleBundle\" />
+      <excludeFolder url="file://$MODULE_DIR$/public/bundles" />
+      <excludeFolder url="file://$MODULE_DIR$/public/data" />
+      <excludeFolder url="file://$MODULE_DIR$/public/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/public/js" />
+      <excludeFolder url="file://$MODULE_DIR$/public/packages" />
+      <excludeFolder url="file://$MODULE_DIR$/public/themes" />
+      <excludeFolder url="file://$MODULE_DIR$/var/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/var/sessions" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/behat/transliterator" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/bin/.phpunit" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/claroline/json-quiz" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/clue/stream-filter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/annotations" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/collections" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/common" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/data-fixtures" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/dbal" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/deprecations" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/doctrine-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/event-manager" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/inflector" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/lexer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/migrations" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/orm" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/persistence" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/sql-formatter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dompdf/dompdf" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/egulias/email-validator" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofphp/proxy-manager-lts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofsymfony/jsrouting-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/gedmo/doctrine-extensions" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/geoip2/geoip2" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/hwi/oauth-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/icap/html-diff" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/invoiceninja/sdk-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jdorn/sql-formatter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/jean85/pretty-package-versions" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/justinrainbow/json-schema" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/laminas/laminas-code" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/lightsaml/lightsaml" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/lightsaml/lightsaml-logout" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/lightsaml/sp-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/lightsaml/symfony-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/masterminds/html5" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/maxmind-db/reader" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/maxmind/web-service-common" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/monolog/monolog" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nikic/php-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ovh/ovh" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phenx/php-font-lib" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phenx/php-svg-lib" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/client-common" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/discovery" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/guzzle6-adapter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/httplug" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/httplug-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/logger-plugin" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/message" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/message-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/promise" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/stopwatch-plugin" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/postal/postal" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ramsey/uuid" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/rmccue/requests" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/robrichards/xmlseclibs" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sabberworm/php-css-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/seld/jsonlint" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/seld/phar-utils" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sensio/framework-extra-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sentry/sentry" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/sentry/sentry-symfony" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/stefk/jval" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/stof/doctrine-extensions-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/amqp-messenger" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/asset" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/browser-kit" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/cache-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/config" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/console" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/debug" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/debug-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/dependency-injection" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/deprecation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/doctrine-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/doctrine-messenger" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/dom-crawler" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/dotenv" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/error-handler" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/event-dispatcher" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/event-dispatcher-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/filesystem" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/finder" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/form" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/framework-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/google-mailer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-client-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-foundation" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/http-kernel" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/intl" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/mailer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/maker-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/messenger" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/mime" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/monolog-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/monolog-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/options-resolver" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-ctype" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-grapheme" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-icu" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-idn" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-mbstring" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php72" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php73" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php81" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/process" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/property-access" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/property-info" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/psr-http-message-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/redis-messenger" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/routing" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/security-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/security-core" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/security-csrf" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/security-guard" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/security-http" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/serializer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/service-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/stopwatch" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/string" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/templating" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/translation" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/translation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/twig-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/twig-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/validator" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/var-dumper" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/var-exporter" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/web-profiler-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/yaml" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/twig/twig" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/willdurand/js-translation-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/willdurand/jsonp-callback-validator" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/http-interop/http-factory-guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pdepend/pdepend" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-cs-fixer/diff" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/formalibre/alterlms" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/css-selector" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/phpunit-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/hamcrest/hamcrest-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpmd/phpmd" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofphp/php-cs-fixer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mikey179/vfsstream" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mockery/mockery" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="PHP Runtime" type="php">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="PHARS">
+        <CLASSES>
+          <root url="phar://$MODULE_DIR$/vendor/twig/twig/test/Twig/Tests/Loader/Fixtures/phar/phar-sample.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/phpunit/phpunit/tests/_files/phpunit-example-extension/tools/phpunit.d/phpunit-example-extension-3.0.3.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/symfony/symfony/src/Symfony/Component/DependencyInjection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/pdepend/pdepend/src/site/rst/static_reflection/releases/staticReflection-0.1.1.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/phar-io/manifest/tests/_fixture/test.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/friendsofphp/php-cs-fixer/tests/Fixtures/empty.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/symfony/phpunit-bridge/Tests/DeprecationErrorHandler/deprecation.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/symfony/symfony/src/Symfony/Bridge/PhpUnit/Tests/DeprecationErrorHandler/deprecation.phar/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="phar://$MODULE_DIR$/vendor/twig/twig/test/Twig/Tests/Loader/Fixtures/phar/phar-sample.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/phpunit/phpunit/tests/_files/phpunit-example-extension/tools/phpunit.d/phpunit-example-extension-3.0.3.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/symfony/symfony/src/Symfony/Component/DependencyInjection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/pdepend/pdepend/src/site/rst/static_reflection/releases/staticReflection-0.1.1.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/phar-io/manifest/tests/_fixture/test.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/friendsofphp/php-cs-fixer/tests/Fixtures/empty.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/symfony/phpunit-bridge/Tests/DeprecationErrorHandler/deprecation.phar/" />
+          <root url="phar://$MODULE_DIR$/vendor/symfony/symfony/src/Symfony/Bridge/PhpUnit/Tests/DeprecationErrorHandler/deprecation.phar/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>

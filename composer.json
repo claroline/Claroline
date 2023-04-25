@@ -93,7 +93,9 @@
         "symfony/web-profiler-bundle": "4.4.*",
         "symfony/yaml": "4.4.*",
         "twig/twig": "^2.14",
-        "willdurand/js-translation-bundle": "^4.0"
+        "willdurand/js-translation-bundle": "^4.0",
+        "http-interop/http-factory-guzzle": "^1.2",
+        "formalibre/alterlms": "dev-main"
     },
     "require-dev": {
         "symfony/dom-crawler": "4.4.*",
@@ -198,5 +200,11 @@
             "composer disable-maintenance",
             "composer delete-cache"
         ]
-    }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:FormaLibre/AlterLMS.git"
+        }
+    ]
 }
