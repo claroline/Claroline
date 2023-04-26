@@ -14,7 +14,6 @@ use Doctrine\Migrations\AbstractMigration;
 class Version20230426080000 extends AbstractMigration
 {
     use ConditionalMigrationTrait;
-    use ConditionalMigrationTrait;
 
     public function up(Schema $schema): void
     {
