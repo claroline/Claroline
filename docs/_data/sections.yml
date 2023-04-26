@@ -41,6 +41,9 @@
       - title: Authentication
         doc: api/authentication/index
 
+      - title: Model
+        doc: api/model
+
       - title: Serializer
         doc: api/serializer
 
@@ -115,6 +118,9 @@
       - title: Commands
         doc: dev/commands
 
+      - title: Database migrations
+        doc: dev/migrations
+
       - title: Testing
         doc: dev/testing
 
@@ -132,6 +138,3 @@
 
       - title: Release process
         doc: dev/release
-
-#- title: Cookbook
-#  doc: cookbook

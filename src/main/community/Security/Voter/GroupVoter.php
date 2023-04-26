@@ -94,9 +94,6 @@ class GroupVoter extends AbstractRoleSubjectVoter
         return $this->checkEdit($token, $group);
     }
 
-    /**
-     * @return array
-     */
     public function getSupportedActions(): array
     {
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH];

@@ -29,6 +29,7 @@ class OrganizationManagerVoter implements VoterInterface, CacheableVoterInterfac
     {
         $this->organizationManager = $organizationManager;
     }
+
     /**
      * The OrganizationManagerVoter applies to any attributes.
      */
@@ -48,7 +49,7 @@ class OrganizationManagerVoter implements VoterInterface, CacheableVoterInterfac
 
     public function vote(TokenInterface $token, $subject, array $attributes): int
     {
-        if (!$token->getUser() instanceof User || !$this->organizationManager->isManager($token->getUser(), $subject->getOrganizations())) {
+        if ($token->getUser() instanceof User && $this->organizationManager->isManager($token->getUser(), $subject->getOrganizations())) {
             // user is a manager of the subject, grant him all accesses
             return self::ACCESS_GRANTED;
         }

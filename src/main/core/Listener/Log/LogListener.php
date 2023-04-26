@@ -156,7 +156,6 @@ class LogListener
             $log->setResourceType($event->getResource()->getResourceType());
         }
 
-        //Json_array properties
         $details = $event->getDetails();
 
         if (null === $details) {

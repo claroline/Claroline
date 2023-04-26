@@ -16,9 +16,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DiscardCommand extends AbstractCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
+
         $this
             ->setDescription('Deletes migration classes which are above the current version of the bundle.')
             ->setHelp(<<<EOT

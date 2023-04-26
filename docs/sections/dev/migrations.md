@@ -1,14 +1,20 @@
-README
-======
+---
+layout: default
+title: Database migrations
+---
 
-Doctrine Migrations integration bundle providing :
+# Database migrations
 
-- Generation of migration classes on a per bundle basis
+We use [Doctrine Migrations](https://github.com/doctrine/migrations) to generate migrations for the database.
+
+Doctrine Migrations integration bundle provides :
+
+- Generation of migration classes on a per-bundle basis
 - Generation for multiple target platforms
-- API allowing to execute migrations programmaticaly
+- API allowing to execute migrations programmatically
 
-Commands
---------
+
+## Commands
 
 You can generate migrations for a specific bundle using:
 
@@ -64,8 +70,8 @@ php bin/console claroline:migration:discard AcmeFooBundle
 php bin/console claroline:migration:generate AcmeFooBundle
 ```
 
-API
----
+
+## API
 
 The whole API is accessible through the migration [manager class][manager_path]:
 

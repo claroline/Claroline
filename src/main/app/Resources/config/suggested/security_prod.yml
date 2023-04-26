@@ -31,6 +31,9 @@ security:
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: _switch }
             user_checker: Claroline\CoreBundle\Security\UserChecker
 
+            #login_throttling:
+            #    max_attempts: 5 # per minute
+
             guard:
                 authenticators:
                     - 'Claroline\AuthenticationBundle\Security\Authentication\Guard\IpAuthenticator'

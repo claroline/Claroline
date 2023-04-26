@@ -34,7 +34,9 @@ class AdministratorVoter implements VoterInterface, CacheableVoterInterface
 
     public function supportsAttribute(string $attribute): bool
     {
-        return true;
+        // PlatformRoles::ADMIN check is here to avoid an infinite loop (@see vote())
+        // ROLE_USURPATE_WORKSPACE_ROLE check is here to avoid applying the admin bypass when browsing a workspace in impersonation mode
+        return PlatformRoles::ADMIN !== $attribute && 'ROLE_USURPATE_WORKSPACE_ROLE' !== $attribute;
     }
 
     public function supportsType(string $subjectType): bool
@@ -44,7 +46,7 @@ class AdministratorVoter implements VoterInterface, CacheableVoterInterface
 
     public function vote(TokenInterface $token, $subject, array $attributes): int
     {
-        if ($this->security->isGranted(PlatformRoles::ADMIN) && !$this->security->isGranted('ROLE_USURPATE_WORKSPACE_ROLE')) {
+        if ($this->security->isGranted(PlatformRoles::ADMIN)) {
             return VoterInterface::ACCESS_GRANTED;
         }
 

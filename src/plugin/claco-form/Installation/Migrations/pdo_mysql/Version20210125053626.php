@@ -28,13 +28,13 @@ class Version20210125053626 extends AbstractMigration
     public function down(Schema $schema): void
     {
         $this->addSql('
-            ALTER TABLE claro_clacoformbundle_claco_form CHANGE availableSort availableSort LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)", 
-            CHANGE availablePageSizes availablePageSizes LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)", 
-            CHANGE availableDisplays availableDisplays LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)", 
-            CHANGE filters filters LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)", 
-            CHANGE availableFilters availableFilters LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)", 
-            CHANGE availableColumns availableColumns LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)", 
-            CHANGE displayedColumns displayedColumns LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)"
+            ALTER TABLE claro_clacoformbundle_claco_form CHANGE availableSort availableSort LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)", 
+            CHANGE availablePageSizes availablePageSizes LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)", 
+            CHANGE availableDisplays availableDisplays LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)", 
+            CHANGE filters filters LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)", 
+            CHANGE availableFilters availableFilters LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)", 
+            CHANGE availableColumns availableColumns LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)", 
+            CHANGE displayedColumns displayedColumns LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)"
         ');
     }
 }

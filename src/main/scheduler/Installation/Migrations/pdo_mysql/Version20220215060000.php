@@ -39,7 +39,7 @@ class Version20220215060000 extends AbstractMigration
                 scheduled_date DATETIME NOT NULL, 
                 execution_date DATETIME DEFAULT NULL, 
                 execution_status VARCHAR(255) DEFAULT NULL, 
-                task_data LONGTEXT DEFAULT NULL COMMENT "(DC2Type:json_array)", 
+                task_data LONGTEXT DEFAULT NULL COMMENT "(DC2Type:json)", 
                 INDEX IDX_9D92A4DDFE54D947 (group_id), 
                 INDEX IDX_9D92A4DD82D40A1F (workspace_id), 
                 PRIMARY KEY(id)

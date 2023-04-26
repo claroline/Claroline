@@ -194,9 +194,6 @@ class UserVoter extends AbstractRoleSubjectVoter
         return User::class;
     }
 
-    /**
-     * @return array
-     */
     public function getSupportedActions(): array
     {
         return [self::OPEN, self::CREATE, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH, self::VIEW];

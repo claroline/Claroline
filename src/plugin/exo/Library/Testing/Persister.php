@@ -163,7 +163,6 @@ class Persister
     public function matchQuestion($title, $labels = [], $proposals = [])
     {
         $question = new Item();
-        $question->setUuid(uniqid('', true));
         $question->setExpectedAnswers(true);
         $question->setMimeType(ItemType::MATCH);
         $question->setScoreRule('{"type": "sum"}');
@@ -200,7 +199,6 @@ class Persister
     public function exercise($title, array $questionData = [], User $user = null)
     {
         $exercise = new Exercise();
-        $exercise->setUuid(uniqid('', true));
         $exercise->setExpectedAnswers(true);
         $exercise->setScoreRule(json_encode(['type' => 'sum']));
 

@@ -7,7 +7,11 @@ doctrine:
         user:           "%database_user%"
         password:       "%database_password%"
         port:           "%database_port%"
-        charset:        UTF8
+        charset:        utf8mb4
+        default_table_options:
+            charset: utf8mb4
+            collation: utf8mb4_unicode_ci
+            engine: InnoDB
         options:
             1002: 'SET sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY", ""))'
 

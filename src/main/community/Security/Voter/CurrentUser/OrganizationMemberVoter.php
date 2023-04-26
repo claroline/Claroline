@@ -29,6 +29,7 @@ class OrganizationMemberVoter implements VoterInterface, CacheableVoterInterface
     {
         $this->organizationManager = $organizationManager;
     }
+
     /**
      * The OrganizationMemberVoter applies to any attributes.
      */

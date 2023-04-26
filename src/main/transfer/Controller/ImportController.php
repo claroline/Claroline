@@ -14,6 +14,7 @@ namespace Claroline\TransferBundle\Controller;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Security\ToolPermissions;
 use Claroline\TransferBundle\Entity\ImportFile;
 use Claroline\TransferBundle\Manager\TransferManager;
 use Claroline\TransferBundle\Transfer\ImportProvider;
@@ -66,7 +67,7 @@ class ImportController extends AbstractCrudController
      */
     public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
     {
-        $this->checkPermission(['transfer', 'open'], $workspace, [], true);
+        $this->checkPermission(ToolPermissions::getPermission('transfer', 'OPEN'), $workspace, [], true);
 
         return new JsonResponse(
             $this->finder->search(self::getClass(), array_merge($request->query->all(), ['hiddenFilters' => [

@@ -81,7 +81,7 @@ class Version20220215071904 extends AbstractMigration
             ALTER TABLE claro_scheduled_task 
             CHANGE entity_name task_name VARCHAR(255) CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci`, 
             DROP uuid, 
-            CHANGE task_data task_data LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)"
+            CHANGE task_data task_data LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)"
         ');
 
         $this->addSql('

@@ -12,9 +12,7 @@
 namespace Claroline\CursusBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\CursusBundle\Entity\Course;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

@@ -11,11 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager\Organization;
 
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Psr\Log\LoggerAwareInterface;
 
 class OrganizationManager
 {
@@ -79,8 +77,6 @@ class OrganizationManager
         if (!$force && $default) {
             return $default;
         }
-
-        $this->log('Adding default organization...');
 
         $organization = new Organization();
         $organization->setName('default');

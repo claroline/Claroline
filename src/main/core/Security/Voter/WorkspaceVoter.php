@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
+use Claroline\CoreBundle\Security\ToolPermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -39,26 +40,13 @@ class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
         return Workspace::class;
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes): int
-    {
-
-    }
-
     /**
      * Return false if your voter doesn't support the given attribute. Symfony will cache
      * that decision and won't call your voter again for that attribute.
      */
     public function supportsAttribute(string $attribute): bool
     {
-        return true;
-    }
-
-    public function supportsType(string $subjectType): bool
-    {
-        // you can't use a simple User::class === $subjectType comparison
-        // here because the given subject type could be the proxy class used
-        // by Doctrine when creating the entity object
-        return is_a($subjectType, Workspace::class, true);
+        return parent::supportsAttribute($attribute) || ToolPermissions::isPermission($attribute);
     }
 
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
@@ -84,14 +72,11 @@ class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
             return VoterInterface::ACCESS_DENIED;
         }
 
-        $toolName = isset($attributes[0]) && 'OPEN' !== $attributes[0] ?
-            $attributes[0] :
-            null;
-
-        $action = isset($attributes[1]) ? strtolower($attributes[1]) : 'open';
-
-        if ($this->workspaceManager->hasAccess($object, $token, $toolName, $action)) {
-            return VoterInterface::ACCESS_GRANTED;
+        if (ToolPermissions::isPermission($attributes[0])) {
+            $toolPerm = ToolPermissions::parsePermission($attributes[0]);
+            if ($this->workspaceManager->hasAccess($object, $token, $toolPerm[0], $toolPerm[1])) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
         }
 
         return VoterInterface::ACCESS_DENIED;

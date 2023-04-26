@@ -19,8 +19,6 @@ public/themes/*
 .env
 docker-compose.override.yml
 installed
-composer.lock
-symfony.lock
 .php_cs.cache
 .phpunit.result.cache
 ###> symfony/framework-bundle ###

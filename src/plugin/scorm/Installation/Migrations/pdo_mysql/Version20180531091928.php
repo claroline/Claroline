@@ -153,7 +153,7 @@ class Version20180531091928 extends AbstractMigration
                 completion_status VARCHAR(255) DEFAULT NULL, 
                 success_status VARCHAR(255) DEFAULT NULL, 
                 total_time VARCHAR(255) DEFAULT NULL, 
-                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json)', 
                 INDEX IDX_3A61CA76ED395 (user_id), 
                 INDEX IDX_3A61C18A32826 (sco_id), 
                 PRIMARY KEY(id)
@@ -180,7 +180,7 @@ class Version20180531091928 extends AbstractMigration
                 lesson_location VARCHAR(255) DEFAULT NULL, 
                 lesson_mode VARCHAR(255) DEFAULT NULL, 
                 is_locked TINYINT(1) DEFAULT NULL, 
-                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json)', 
                 latest_date DATETIME DEFAULT NULL, 
                 uuid VARCHAR(36) NOT NULL, 
                 UNIQUE INDEX UNIQ_2627E972D17F50A6 (uuid), 

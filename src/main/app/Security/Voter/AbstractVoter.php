@@ -91,7 +91,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, CacheableVoterI
      */
     private function supports($object): bool
     {
-        return $this->supportsType(get_class($object))
+        return is_a($object, $this->getClass(), true)
             || ($object instanceof ObjectCollection && $object->isInstanceOf($this->getClass()));
     }
 
@@ -137,7 +137,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, CacheableVoterI
     }
 
     /**
-     * @deprecated use OrganizationManager::isMember()
+     * @deprecated use OrganizationManager::isManager()
      */
     protected function isOrganizationManager(TokenInterface $token, $object): bool
     {

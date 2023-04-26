@@ -97,8 +97,8 @@ class GeneratorTest extends MockeryTestCase
         $this->em->shouldReceive('getMetadataFactory')->once()->andReturn($metadataFactory);
         $metadataFactory->shouldReceive('getAllMetadata')->once()->andReturn($this->metadata);
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
-        $connection->shouldReceive('getSchemaManager')->once()->andReturn($schemaManager);
-        $schemaManager->shouldReceive('createSchema')->once()->andReturn($this->fromSchema);
+        $connection->shouldReceive('createSchemaManager')->once()->andReturn($schemaManager);
+        $schemaManager->shouldReceive('introspectSchema')->once()->andReturn($this->fromSchema);
         $this->schemaTool->shouldReceive('getSchemaFromMetadata')
             ->once()
             ->with($this->metadata)

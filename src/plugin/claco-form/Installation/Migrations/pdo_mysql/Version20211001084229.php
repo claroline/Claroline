@@ -29,7 +29,7 @@ class Version20211001084229 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_clacoformbundle_field_choice_category 
             CHANGE stringValue field_value VARCHAR(255) CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci`, 
-            CHANGE arrayValue array_value LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT '(DC2Type:json_array)', 
+            CHANGE arrayValue array_value LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT '(DC2Type:json)', 
             CHANGE floatvalue float_value DOUBLE PRECISION DEFAULT NULL, 
             CHANGE datevalue date_value DATETIME DEFAULT NULL, 
             CHANGE boolvalue bool_value TINYINT(1) DEFAULT NULL

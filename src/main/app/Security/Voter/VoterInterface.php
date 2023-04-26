@@ -32,8 +32,5 @@ interface VoterInterface extends BaseVoterInterface
      */
     public function getClass();
 
-    /**
-     * @return array|null
-     */
     public function getSupportedActions(): ?array;
 }

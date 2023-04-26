@@ -43,6 +43,16 @@ class ManagerTest extends MockeryTestCase
         );
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $platform = m::mock('Doctrine\DBAL\Platforms\AbstractPlatform');
+        $bundleConfig = m::mock('Claroline\MigrationBundle\Migrator\BundleMigration');
+
+        $this->migrator->shouldReceive('getConfiguration')
+            ->once()
+            ->with($bundle)
+            ->andReturn($bundleConfig);
+
+        $bundleConfig->shouldReceive('generateClassName')
+            ->once()
+            ->andReturn('VersionTest');
 
         $manager->shouldReceive('getAvailablePlatforms')
             ->once()
@@ -59,6 +69,10 @@ class ManagerTest extends MockeryTestCase
         }
 
         $manager->generateBundleMigration($bundle);
+
+        // to remove the "risky" warning
+        // if the method call fails, the assertion will not be checked and the test will fail
+        $this->assertTrue(true);
     }
 
     public function testGetAvailablePlatforms()
@@ -75,8 +89,18 @@ class ManagerTest extends MockeryTestCase
         $this->migrator->shouldReceive('getMigrationStatus')
             ->once()
             ->with($bundle)
-            ->andReturn('status');
-        $this->assertEquals('status', $this->manager->getBundleStatus($bundle));
+            ->andReturn([
+                'current' => null,
+                'latest' => null,
+                'available' => [],
+            ]);
+
+        $bundleStatus = $this->manager->getBundleStatus($bundle);
+
+        $this->assertIsArray($bundleStatus);
+        $this->assertArrayHasKey('current', $bundleStatus);
+        $this->assertArrayHasKey('latest', $bundleStatus);
+        $this->assertArrayHasKey('available', $bundleStatus);
     }
 
     /**
@@ -91,7 +115,12 @@ class ManagerTest extends MockeryTestCase
         $this->migrator->shouldReceive('getCurrentVersion')
             ->once()
             ->with($bundle);
+
         $this->manager->{$method}($bundle, '123');
+
+        // to remove the "risky" warning
+        // if the method call fails, the assertion will not be checked and the test will fail
+        $this->assertTrue(true);
     }
 
     public function testDiscardUpperMigrations()
@@ -114,7 +143,12 @@ class ManagerTest extends MockeryTestCase
         $this->writer->shouldReceive('deleteUpperMigrationClasses')
             ->once()
             ->with($bundle, 'driver2', '1');
+
         $manager->discardUpperMigrations($bundle);
+
+        // to remove the "risky" warning
+        // if the method call fails, the assertion will not be checked and the test will fail
+        $this->assertTrue(true);
     }
 
     public function queriesProvider()
