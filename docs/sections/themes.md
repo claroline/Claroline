@@ -89,7 +89,7 @@ You **SHOULD NOT** declare custom rules.
 Custom rules can be broken when we change the structure of the DOM and are hard to maintain.
 
 ## Commands
-#### Build themes which are installed in the platform
+**Build themes which are installed in the platform**
 
 ### Usage:
 
