@@ -4,7 +4,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {LINK_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON, ASYNC_BUTTON} from '#/main/app/buttons'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {DetailsData} from '#/main/app/content/details/components/data'
@@ -97,15 +97,18 @@ const PrivacyMain = (props) =>
       callback={props.exportAccount}
     />
 
-    {false &&
-      <Button
-        className="btn btn-block component-container"
-        type={CALLBACK_BUTTON}
-        label={trans('Demander la suppression de mon compte')}
-        callback={() => true}
-        dangerous={true}
-      />
-    }
+    <Button
+      className="btn btn-block component-container"
+      type={ASYNC_BUTTON}
+      label={trans('Demander la suppression de mon compte')}
+      request={{
+        method: 'SEND_MAIL',
+        url: route('dataUser.delete')
+      }}
+      dangerous={true}
+      alert={trans('Un email va être envoyé au DPO pour la supression de vos données personnelles. Etes-vous sûr de vouloir valider cette action ?')}
+    />
+
   </AccountPage>
 
 PrivacyMain.propTypes = {
