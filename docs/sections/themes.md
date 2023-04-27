@@ -91,7 +91,7 @@ Custom rules can be broken when we change the structure of the DOM and are hard 
 ## Commands
 #### Build themes which are installed in the platform
 
-## Usage:
+### Usage:
 
 ``php bin/console claroline:theme:build [options]``
 
