@@ -68,6 +68,18 @@ $ php bin/console claroline:user:create -a
 
 Removing the -a option will create a regular user.
 
+## Theme
+### Declare the theme to the Claroline Application
+You can create your theme using the command:
+```sh
+$ php bin/console claroline:theme:create MY_THEME_NAME
+```
+
+### Rebuild to update your theme
+After all modifications, you can rebuild the theme using:
+````sh
+$ php bin/console claroline:theme:build
+````
 
 ## Refresh
 
