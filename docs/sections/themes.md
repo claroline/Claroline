@@ -89,3 +89,32 @@ You **SHOULD NOT** declare custom rules.
 Custom rules can be broken when we change the structure of the DOM and are hard to maintain.
 
 ## Commands
+#### Build themes which are installed in the platform
+
+## Usage:
+
+``php bin/console claroline:theme:build [options]``
+
+#### Rebuild only the theme currently used by the platform :
+
+``php bin/console claroline:theme:build --current`` 
+
+or 
+
+``php bin/console claroline:theme:build -c``
+
+#### Rebuild only this theme :
+
+``php bin/console claroline:theme:build --theme[=THEME]`` 
+
+or 
+
+``php bin/console claroline:theme:build -t[=THEME]``
+
+#### Rebuild themes without using cache :
+
+``php bin/console claroline:theme:build --no-cache`` 
+
+or 
+
+``php bin/console claroline:theme:build -nc``
