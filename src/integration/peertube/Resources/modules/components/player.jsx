@@ -19,6 +19,10 @@ const PeerTubePlayer = (props) => {
 
         let currentInfo
         let updater = (playbackInfo) => {
+          if ('playing' === playbackInfo.playbackState) {
+            props.onTimeUpdate(playbackInfo.position, playbackInfo.duration)
+          }
+
           if (isEmpty(currentInfo) || currentInfo.playbackState !== playbackInfo.playbackState) {
             currentInfo = playbackInfo
 
@@ -52,7 +56,8 @@ const PeerTubePlayer = (props) => {
 PeerTubePlayer.propTypes = {
   url: T.string.isRequired,
   onPlay: T.func, // get the currentTime and totalDuration as parameters
-  onPause: T.func // get the currentTime and totalDuration as parameters
+  onPause: T.func, // get the currentTime and totalDuration as parameters
+  onTimeUpdate: T.func // get the currentTime and totalDuration as parameters
 }
 
 export {
