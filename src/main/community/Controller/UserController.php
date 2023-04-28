@@ -15,6 +15,7 @@ use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
@@ -29,6 +30,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -57,13 +59,18 @@ class UserController extends AbstractCrudController
     /** @var WorkspaceManager */
     private $workspaceManager;
 
+    private $dpoEmail;
+    private $userRepository;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         UserManager $manager,
         MailManager $mailManager,
         ToolManager $toolManager,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        UserRepository $userRepository,
+        string $platformOptionsPath
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -71,6 +78,9 @@ class UserController extends AbstractCrudController
         $this->mailManager = $mailManager;
         $this->toolManager = $toolManager;
         $this->workspaceManager = $workspaceManager;
+        $this->userRepository = $userRepository;
+        $platformOptions = json_decode(file_get_contents($platformOptionsPath), true);
+        $this->dpoEmail = $platformOptions['privacy']['dpo']['email'];
     }
 
     public function getName(): string
@@ -316,4 +326,25 @@ class UserController extends AbstractCrudController
 
         return [];
     }
+
+    /**
+     * @route("/privacy", name="apiv2_privacy_datas_delete", methods={"POST","GET"})
+     */
+    public function sendEmail()
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $dpoEmail = $this->dpoEmail;
+        $dpoUser = $this->userRepository->findOneBy(['email' => $dpoEmail]);
+        var_dump($dpoEmail); die();
+        $subject = "Demande supression infos personnelles";
+        $body = $user->getFirstName()." ".$user->getLastName()."Uuid : ".$user->getUuid()." \n souhaite supprimer ses informations personnelles.";
+        $from = $user;
+        $extra = [];
+        $replyToMail = $user->getEmail();
+
+        // Passe le DPO en tant qu'utilisateur dans la méthode send
+        $this->mailManager->send($subject, $body, [$dpoUser], $from, $extra, false, $replyToMail);
+        return new Response(null, Response::HTTP_NO_CONTENT);
+    }
+
 }

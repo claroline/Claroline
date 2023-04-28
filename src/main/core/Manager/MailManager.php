@@ -191,7 +191,7 @@ class MailManager
             $to = [];
 
             $fromEmail = $this->config->getParameter('mailer.from');
-            $locale = 1 === count($users) ? $users[0]->getLocale() : $this->localeManager->getDefault();
+            $locale = 1 === count($users) && $users[0] !== null ? $users[0]->getLocale() : $this->localeManager->getDefault();
 
             if (!$locale) {
                 $locale = $this->localeManager->getDefault();

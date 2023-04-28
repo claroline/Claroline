@@ -12,6 +12,7 @@ import {MODAL_TERMS_OF_SERVICE} from '#/main/app/modals/terms-of-service'
 import {AccountPage} from '#/main/app/account/containers/page'
 import {route} from '#/main/app/account/routing'
 import {User as UserTypes} from '#/main/community/prop-types'
+import {url} from '#/main/app/api'
 
 const PrivacyMain = (props) =>
   <AccountPage
@@ -102,13 +103,12 @@ const PrivacyMain = (props) =>
       type={ASYNC_BUTTON}
       label={trans('Demander la suppression de mon compte')}
       request={{
-        method: 'SEND_MAIL',
-        url: route('dataUser.delete')
+        url: url(['apiv2_privacy_datas_delete']),
+        method: 'POST'
       }}
       dangerous={true}
-      alert={trans('Un email va être envoyé au DPO pour la supression de vos données personnelles. Etes-vous sûr de vouloir valider cette action ?')}
+      confirm={trans('Supprimer mon compte')}
     />
-
   </AccountPage>
 
 PrivacyMain.propTypes = {

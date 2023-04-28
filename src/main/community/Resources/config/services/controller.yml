@@ -73,3 +73,5 @@ services:
             - '@Claroline\CoreBundle\Manager\MailManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CommunityBundle\Repository\UserRepository'
+            - '%kernel.project_dir%/files/config/platform_options.json'
