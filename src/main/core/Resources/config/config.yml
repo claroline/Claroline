@@ -141,6 +141,9 @@ plugin:
         - name: plugins
           class: puzzle-piece
 
+        - name: connection_messages
+          class: comment-dots
+
     widgets:
         - name: simple
           class: Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget

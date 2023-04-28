@@ -116,7 +116,8 @@ registry.add('ClarolineCoreBundle', {
     'main_settings' : () => { return import(/* webpackChunkName: "core-admin-parameters" */  '#/main/core/administration/parameters') },
     'templates'     : () => { return import(/* webpackChunkName: "core-admin-template" */    '#/main/core/administration/template') },
     'integration'   : () => { return import(/* webpackChunkName: "core-admin-integration" */ '#/main/core/administration/integration') },
-    'plugins'       : () => { return import(/* webpackChunkName: "core-admin-plugins" */     '#/main/core/administration/plugins') }
+    'plugins'       : () => { return import(/* webpackChunkName: "core-admin-plugins" */     '#/main/core/administration/plugins') },
+    'connection_messages': () => { return import(/* webpackChunkName: "core-admin-connection-messages" */ '#/main/core/administration/connection-messages') },
   },
 
   /**
