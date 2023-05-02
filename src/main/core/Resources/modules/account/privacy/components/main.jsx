@@ -152,12 +152,10 @@ PrivacyMain.propTypes = {
   acceptTerms: T.func.isRequired,
   messages: T.shape({
     pending: T.object,
-    success: T.object
+    success: T.object,
+    error: T.object
   })
-
-
 }
-
 
 export {
   PrivacyMain

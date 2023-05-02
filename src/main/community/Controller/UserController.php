@@ -306,7 +306,7 @@ class UserController extends AbstractCrudController
         $body = "L'utilisateur ". $name . " <br/> ID : ". $idUser ." <br/> souhaite supprimer son compte. Veuillez prendre les mesures appropriées.<br/><hr/>";
 
         $this->mailManager->sendAEmailDpo($subject, $body, [$user->getEmail()], $dpoEmail, true);
-                                        //$subject, $body, array $to, $from = null, $replyToMail = null
+
         return new JsonResponse([
             'status' => 'success',
             'message' => 'E-mail de suppression de compte envoyé avec succès',
