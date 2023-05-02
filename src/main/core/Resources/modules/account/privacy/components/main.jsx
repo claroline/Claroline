@@ -104,10 +104,27 @@ const PrivacyMain = (props) =>
       label={trans('Demander la suppression de mon compte')}
       request={{
         url: url(['apiv2_privacy_datas_delete']),
-        method: 'POST'
+        method: 'POST',
+        messages: {
+          pending: {
+            title: 'Envoi de votre demande',
+            message: 'Veuillez patienter pendant l\'envoi de votre demande'
+          },
+          success: {
+            title: 'E-mail envoyé !',
+            message: 'Votre demande a bien été prise en compte'
+          },
+          error: {
+            title: 'Erreur !',
+            message: 'Une erreur est survenue lors de l\'envoi de votre demande, contactez un administrateur'
+          }
+        }
       }}
       dangerous={true}
-      confirm={trans('Supprimer mon compte')}
+      confirm={{
+        title: trans('Demande de suppression de mon compte'),
+        message: trans('Êtes-vous sûr de vouloir demander la suppression de votre compte ? Cette action est irréversible.')
+      }}
     />
   </AccountPage>
 
@@ -132,8 +149,15 @@ PrivacyMain.propTypes = {
     })
   }).isRequired,
   exportAccount: T.func.isRequired,
-  acceptTerms: T.func.isRequired
+  acceptTerms: T.func.isRequired,
+  messages: T.shape({
+    pending: T.object,
+    success: T.object
+  })
+
+
 }
+
 
 export {
   PrivacyMain
