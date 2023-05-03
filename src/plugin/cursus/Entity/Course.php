@@ -72,7 +72,7 @@ class Course extends AbstractTraining
     /**
      * @ORM\Column(name="session_duration", nullable=false, type="float", options={"default" = 1})
      */
-    private float $defaultSessionDuration = 1;
+    private float $defaultSessionDuration = 1; // in hours
 
     /**
      * @ORM\ManyToMany(

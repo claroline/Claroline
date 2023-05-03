@@ -5,6 +5,7 @@ namespace Claroline\CursusBundle\Installation;
 use Claroline\CursusBundle\Installation\Updater\Updater130001;
 use Claroline\CursusBundle\Installation\Updater\Updater130013;
 use Claroline\CursusBundle\Installation\Updater\Updater130100;
+use Claroline\CursusBundle\Installation\Updater\Updater130800;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
 class ClarolineCursusInstaller extends AdditionalInstaller
@@ -15,6 +16,7 @@ class ClarolineCursusInstaller extends AdditionalInstaller
             '13.0.1' => Updater130001::class,
             '13.0.13' => Updater130013::class,
             '13.1.0' => Updater130100::class,
+            '13.8.0' => Updater130800::class,
         ];
     }
 
