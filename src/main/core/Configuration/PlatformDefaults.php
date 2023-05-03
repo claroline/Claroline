@@ -136,6 +136,11 @@ class PlatformDefaults implements ParameterProviderInterface
                 'default' => 'fr',
                 'available' => ['fr', 'en'],
             ],
+            'intl' => [
+                'timezone' => null, // default to UTC
+                'dateFormat' => 'd/m/Y',
+                'timeFormat' => 'H:i',
+            ],
             'maintenance' => [
                 'enable' => false,
                 'message' => null,
@@ -207,7 +212,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'changelogMessage' => [
                 // display a connection message when a new minor version is installed
                 'enabled' => true,
-                // how many time the changelog is displayed
+                // how many times the changelog is displayed
                 'duration' => 'P7D',
                 // which roles see the changelog message
                 'roles' => ['ROLE_ADMIN'],

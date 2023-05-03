@@ -15,7 +15,6 @@
     "create": "Create",
     "create_new_section": "Create new section",
     "create_section": "Create section",
-    "date_format": "m/d/Y 'at' H:i",
     "delete": "Delete",
     "delete_confirmation": "Do you really want to delete \"%sectionTitle%\" section?",
     "delete_section": "Delete section",

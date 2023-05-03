@@ -57,6 +57,10 @@ const Meta = (props) =>
             options: {
               available: props.availableLocales
             }
+          }, {
+            name: 'intl.timezone',
+            type: 'timezone',
+            label: trans('timezone')
           }
         ]
       }, {

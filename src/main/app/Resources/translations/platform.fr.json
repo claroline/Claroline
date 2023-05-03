@@ -23,5 +23,8 @@
   "empty": "est vide",
   "not_empty": "est non vide",
   "image_not_found": "Nous sommes désolés, nous n'avons pas pu trouver votre image. Il est possible qu'elle n'existe pas (ou plus).",
-  "image_error": "Nous somme désolés, une erreur s'est produite lors du chargement de votre image. Veuillez contacter un administrateur."
+  "image_error": "Nous somme désolés, une erreur s'est produite lors du chargement de votre image. Veuillez contacter un administrateur.",
+  "timezone": "Fuseau horaire",
+  "date_format": "d/m/Y",
+  "time_format": "H:i"
 }
