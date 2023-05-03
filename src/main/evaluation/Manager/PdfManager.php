@@ -84,7 +84,7 @@ class PdfManager
 
             'evaluation_duration' => round($evaluation->getDuration() / 60, 2), // in minutes
             'evaluation_status' => $this->translator->trans('evaluation_'.$evaluation->getStatus().'_status', [], 'workspace'),
-            'evaluation_date' => $evaluation->getDate()->format('d/m/Y H:i'),
+            ...$this->templateManager->formatDatePlaceholder('evaluation', $evaluation->getDate()),
         ];
     }
 }
