@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 class MailManager
 {
     /** @var Mailer */
@@ -52,10 +53,12 @@ class MailManager
         $this->userManager = $userManager;
         $this->dispatcher = $dispatcher;
     }
+    
     public function isMailerAvailable(): bool
     {
         return $this->config->getParameter('mailer.enabled');
     }
+    
     public function sendForgotPassword(User $user): bool
     {
         $this->dispatcher->dispatch(SecurityEvents::FORGOT_PASSWORD, ForgotPasswordEvent::class, [$user]);
@@ -80,6 +83,7 @@ class MailManager
         $body = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale);
         return $this->send($subject, $body, [$user], null, [], true);
     }
+    
     public function sendInitPassword(User $user)
     {
         $this->userManager->initializePassword($user);
@@ -100,6 +104,7 @@ class MailManager
         $body = $this->templateManager->getTemplate('password_initialization', $placeholders, $locale);
         return $this->send($subject, $body, [$user], null, [], true);
     }
+    
     public function sendEnableAccountMessage(User $user)
     {
         $hash = $user->getResetPasswordHash();
@@ -119,6 +124,7 @@ class MailManager
         $body = $this->templateManager->getTemplate('user_activation', $placeholders, $locale);
         return $this->send($subject, $body, [$user], null, [], true);
     }
+    
     public function sendValidateEmail(User $user)
     {
         $url = $this->router->generate(
@@ -137,6 +143,7 @@ class MailManager
         $body = $this->templateManager->getTemplate('user_email_validation', $placeholders, $locale);
         $this->send($subject, $body, [$user], null, [], true);
     }
+    
     /**
      * @return bool
      */
@@ -159,6 +166,7 @@ class MailManager
         $body = $this->templateManager->getTemplate('user_registration', $placeholders, $locale);
         return $this->send($subject, $body, [$user], null, [], true);
     }
+    
     public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false, $replyToMail = null)
     {
         if (0 === count($users) && (!isset($extra['to']) || 0 === count($extra['to']))) {
@@ -218,6 +226,7 @@ class MailManager
         }
         return false;
     }
+    
     public function getMailerFrom()
     {
         $from = $this->config->getParameter('mailer.from');
@@ -231,6 +240,7 @@ class MailManager
         }
         return $this->config->getParameter('help.support_email');
     }
+    
     public function sendSimpleMailOneToOne($subject, $body, $to, $from = null, $replyToMail = null)
     {
         if ($this->isMailerAvailable()) {
