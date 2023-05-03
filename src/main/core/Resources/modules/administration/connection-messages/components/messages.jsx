@@ -1,14 +1,14 @@
-import React from 'react';
-import { trans } from '#/main/app/intl/translation';
-import { ToolPage } from '#/main/core/tool/containers/page';
-import { LINK_BUTTON, MODAL_BUTTON } from '#/main/app/buttons';
-import { MODAL_CONNECTION } from '#/main/app/modals/connection';
-import { ListData } from '#/main/app/content/list/containers/data';
-import { constants } from '#/main/core/data/types/connection-message/constants';
-import { selectors } from '#/main/core/administration/connection-messages/store/selectors';
-import { ConnectionMessageCard } from '#/main/core/data/types/connection-message/components/card';
+import React from 'react'
 
-const MessagesList = (props) => {
+import { trans } from '#/main/app/intl/translation'
+import { LINK_BUTTON, MODAL_BUTTON } from '#/main/app/buttons'
+import { ListData } from '#/main/app/content/list/containers/data'
+import { MODAL_CONNECTION } from '#/main/app/modals/connection'
+import { constants } from '#/main/core/data/types/connection-message/constants'
+import { selectors } from '#/main/core/administration/connection-messages/store/selectors'
+import { ConnectionMessageCard } from '#/main/core/data/types/connection-message/components/card'
+
+const Messages = (props) => {
     return (
         <ListData
             name={selectors.STORE_NAME + '.messages.list'}
@@ -84,5 +84,5 @@ const MessagesList = (props) => {
     );
 };
 
-export { MessagesList };
+export { Messages };
 
