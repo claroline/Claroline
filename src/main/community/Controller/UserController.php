@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -7,7 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Claroline\CommunityBundle\Controller;
+
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
@@ -32,6 +35,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
 /**
  * @Route("/user")
  */
@@ -41,6 +45,7 @@ class UserController extends AbstractCrudController
     use HasRolesTrait;
     use HasOrganizationsTrait;
     use HasGroupsTrait;
+
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
@@ -55,7 +60,9 @@ class UserController extends AbstractCrudController
     private $workspaceManager;
     /** @var PlatformConfigurationHandler */
     private $config;
+    /** @var TranslatorInterface */
     private $translator;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
@@ -64,7 +71,7 @@ class UserController extends AbstractCrudController
         ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
         PlatformConfigurationHandler $config,
-        TranslatorInterface $translator,
+        TranslatorInterface $translator
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -75,20 +82,24 @@ class UserController extends AbstractCrudController
         $this->config = $config;
         $this->translator = $translator;
     }
+
     public function getName(): string
     {
         return 'user';
     }
+
     public function getClass(): string
     {
         return User::class;
     }
+
     public function updateAction($id, Request $request, $class): JsonResponse
     {
         $data = $this->decodeRequest($request);
         if (!isset($data['id'])) {
             $data['id'] = $id;
         }
+
         $object = $this->crud->get(User::class, $id);
         if (!$this->checkPermission('ADMINISTRATE', $object)) {
             // removes main organization from the serialized structure because it will cause access issues.
@@ -97,11 +108,14 @@ class UserController extends AbstractCrudController
             // those roles should not be here anyway.
             unset($data['roles']);
         }
+
         $object = $this->crud->update($class, $data, [Options::SERIALIZE_FACET, Crud::THROW_EXCEPTION]);
+
         return new JsonResponse(
             $this->serializer->serialize($object, [Options::SERIALIZE_FACET])
         );
     }
+
     /**
      * @ApiDoc(
      *     description="Create the personal workspaces of an array of users.",
@@ -115,7 +129,9 @@ class UserController extends AbstractCrudController
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
+
         $this->om->startFlushSuite();
+
         $processed = [];
         foreach ($users as $user) {
             if (!$user->getPersonalWorkspace() && $this->checkPermission('ADMINISTRATE', $user)) {
@@ -124,10 +140,12 @@ class UserController extends AbstractCrudController
             }
         }
         $this->om->endFlushSuite();
+
         return new JsonResponse(array_map(function (User $user) {
             return $this->serializer->serialize($user);
         }, $processed));
     }
+
     /**
      * @ApiDoc(
      *     description="Remove the personal workspaces of an array of users.",
@@ -141,7 +159,9 @@ class UserController extends AbstractCrudController
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
+
         $this->om->startFlushSuite();
+
         $processed = [];
         foreach ($users as $user) {
             $personalWorkspace = $user->getPersonalWorkspace();
@@ -151,10 +171,12 @@ class UserController extends AbstractCrudController
             }
         }
         $this->om->endFlushSuite();
+
         return new JsonResponse(array_map(function (User $user) {
             return $this->serializer->serialize($user);
         }, $processed));
     }
+
     /**
      * @ApiDoc(
      *     description="Enable a list of users.",
@@ -168,7 +190,9 @@ class UserController extends AbstractCrudController
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
+
         $this->om->startFlushSuite();
+
         $processed = [];
         foreach ($users as $user) {
             if (!$user->isEnabled() && $this->checkPermission('ADMINISTRATE', $user)) {
@@ -177,10 +201,12 @@ class UserController extends AbstractCrudController
             }
         }
         $this->om->endFlushSuite();
+
         return new JsonResponse(array_map(function (User $user) {
             return $this->serializer->serialize($user);
         }, $processed));
     }
+
     /**
      * @ApiDoc(
      *     description="Disable a list of users.",
@@ -194,7 +220,9 @@ class UserController extends AbstractCrudController
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
+
         $this->om->startFlushSuite();
+
         $processed = [];
         foreach ($users as $user) {
             if ($user->isEnabled() && $this->checkPermission('ADMINISTRATE', $user)) {
@@ -203,10 +231,12 @@ class UserController extends AbstractCrudController
             }
         }
         $this->om->endFlushSuite();
+
         return new JsonResponse(array_map(function (User $user) {
             return $this->serializer->serialize($user);
         }, $processed));
     }
+
     /**
      * @Route("/disable_inactive", name="apiv2_user_disable_inactive", methods={"PUT"})
      */
@@ -214,13 +244,17 @@ class UserController extends AbstractCrudController
     {
         $tool = $this->toolManager->getToolByName('community');
         $this->checkPermission('ADMINISTRATE', $tool, [], true);
+
         $data = $this->decodeRequest($request);
         if (empty($data['lastActivity'])) {
             throw new InvalidDataException('Last login date is required');
         }
+
         $this->manager->disableInactive(DateNormalizer::denormalize($data['lastActivity']));
+
         return new JsonResponse();
     }
+
     /**
      * @ApiDoc(
      *     description="Reset a list of user password.",
@@ -234,7 +268,9 @@ class UserController extends AbstractCrudController
     {
         /** @var User[] $users */
         $users = $this->decodeIdsString($request, User::class);
+
         $this->om->startFlushSuite();
+
         $processed = [];
         foreach ($users as $user) {
             if ($this->checkPermission('ADMINISTRATE', $user)) {
@@ -243,10 +279,12 @@ class UserController extends AbstractCrudController
             }
         }
         $this->om->endFlushSuite();
+
         return new JsonResponse(array_map(function (User $user) {
             return $this->serializer->serialize($user);
         }, $processed));
     }
+
     public static function getOptions(): array
     {
         return array_merge(parent::getOptions(), [
@@ -262,13 +300,16 @@ class UserController extends AbstractCrudController
             'update' => [Options::SERIALIZE_FACET],
         ]);
     }
+
     protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
         }
+
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();
+
             if ($user instanceof User) {
                 // only shows users of the same organizations
                 return [
@@ -277,12 +318,15 @@ class UserController extends AbstractCrudController
                     }, $user->getOrganizations()),
                 ];
             }
+
             return [
                 'organizations' => [],
             ];
         }
+
         return [];
     }
+
     /**
      * @route("/privacy", name="apiv2_privacy_datas_delete", methods={"GET"})
      */
@@ -293,9 +337,12 @@ class UserController extends AbstractCrudController
         $idUser = $user->getId();
         $dpoEmail = $this->config->getParameter('privacy.dpo.email');
         $locale = $user->getLocale();
+
         $subject = $this->translator->trans('account_deletion.subject', [], 'messages', $locale);
         $body = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'messages', $locale);
+
         $this->mailManager->sendSimpleMailOneToOne($subject, $body, $user->getEmail(), $dpoEmail, true);
+
         return new JsonResponse([
             'status' => 'success',
             'message' => 'E-mail de suppression de compte envoyé avec succès',

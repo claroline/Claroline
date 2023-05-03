@@ -9,6 +9,7 @@
  */
 
 namespace Claroline\CoreBundle\Manager;
+
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
@@ -272,19 +273,24 @@ class MailManager
         if ($this->isMailerAvailable()) {
             $fromEmail = $this->config->getParameter('mailer.from');
             $locale = $this->localeManager->getDefault();
+
             $body = $this->templateManager->getTemplate('email_layout', ['content' => $body], $locale);
+
             $message = new Message();
             $message->subject($subject);
             $message->from($fromEmail);
             $message->body($body);
             $message->to($to);
+
             if ($from instanceof UserInterface && filter_var($from->getEmail(), FILTER_VALIDATE_EMAIL)) {
                 $message->replyTo($from->getEmail());
             } elseif (filter_var($replyToMail, FILTER_VALIDATE_EMAIL)) {
                 $message->replyTo($replyToMail);
             }
+
             return $this->mailer->send($message);
         }
+
         return false;
     }
 }
