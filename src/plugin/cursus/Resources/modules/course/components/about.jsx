@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans, displayDuration, displayDate, now} from '#/main/app/intl'
+import {trans, displayDate, now} from '#/main/app/intl'
 import {param} from '#/main/app/config'
 import {currency} from '#/main/app/intl/currency'
 import {hasPermission} from '#/main/app/security'
@@ -113,7 +113,7 @@ const CourseAbout = (props) => {
               {trans('duration')}
               <span className="value">
                 {getInfo(props.course, props.activeSession, 'meta.duration') ?
-                  displayDuration(getInfo(props.course, props.activeSession, 'meta.duration') * 3600 * 24, true) :
+                  getInfo(props.course, props.activeSession, 'meta.duration') + ' ' + trans('hours') :
                   trans('empty_value')
                 }
               </span>

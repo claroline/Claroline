@@ -65,7 +65,7 @@ const CourseParameters = (props) =>
             required: true,
             options: {
               min: 0,
-              unit: trans('days')
+              unit: trans('hours')
             }
           }, {
             name: 'tags',
