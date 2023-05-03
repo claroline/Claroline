@@ -2,5 +2,11 @@
   "workspace_participation_certificate": "Certificate of participation in a workspace",
   "workspace_participation_certificate_desc": "Template used to generate certificates of participation for users",
   "workspace_success_certificate": "Certificate of achievement in a workspace",
-  "workspace_success_certificate_desc": "Template used to generate certificates of achievement for users."
+  "workspace_success_certificate_desc": "Template used to generate certificates of achievement for users.",
+
+  "evaluation_duration": "Duration of the evaluation",
+  "evaluation_status": "Status of the evaluation (Not attempted, In progress, Success, etc.)",
+  "evaluation_datetime": "Last activity date of the evaluation (Date + Time)",
+  "evaluation_date": "Last activity date of the evaluation (Date only)",
+  "evaluation_time": "Last activity date of the evaluation (Time only)"
 }

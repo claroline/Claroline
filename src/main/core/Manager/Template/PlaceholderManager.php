@@ -9,12 +9,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class PlaceholderManager
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var PlatformManager */
-    private $platformManager;
+    private TokenStorageInterface $tokenStorage;
+    private PlatformConfigurationHandler $config;
+    private PlatformManager $platformManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -26,7 +23,7 @@ class PlaceholderManager
         $this->platformManager = $platformManager;
     }
 
-    public function getAvailablePlaceholders()
+    public function getAvailablePlaceholders(): array
     {
         return [
             'platform_name',
@@ -76,5 +73,40 @@ class PlaceholderManager
         }
 
         return str_replace(array_keys($placeholders), array_values($placeholders), $text);
+    }
+
+    public function formatDatePlaceholder(string $placeholderPrefix, ?\DateTime $date): array
+    {
+        if (empty($date)) {
+            return [
+                "{$placeholderPrefix}_datetime_utc" => '',
+                "{$placeholderPrefix}_date_utc" => '',
+                "{$placeholderPrefix}_time_utc" => '',
+                "{$placeholderPrefix}_datetime" => '',
+                "{$placeholderPrefix}_date" => '',
+                "{$placeholderPrefix}_time" => '',
+            ];
+        }
+
+        $timezone = $this->config->getParameter('intl.timezone');
+        $dateFormat = $this->config->getParameter('intl.dateFormat') ?: 'Y-m-d';
+        $timeFormat = $this->config->getParameter('intl.timeFormat') ?: 'H:i';
+
+        $dateTimezone = new \DateTimeZone($timezone ?: 'UTC');
+
+        // create a copy of the date object to avoid modifying the original data
+        $localeDate = clone $date;
+        $localeDate->setTimezone($dateTimezone);
+
+        return [
+            // UTC date parts
+            "{$placeholderPrefix}_datetime_utc" => $date->format($dateFormat.' '.$timeFormat),
+            "{$placeholderPrefix}_date_utc" => $date->format($dateFormat),
+            "{$placeholderPrefix}_time_utc" => $date->format($timeFormat),
+            // Localized date parts
+            "{$placeholderPrefix}_datetime" => $localeDate->format($dateFormat.' '.$timeFormat),
+            "{$placeholderPrefix}_date" => $localeDate->format($dateFormat),
+            "{$placeholderPrefix}_time" => $localeDate->format($timeFormat),
+        ];
     }
 }

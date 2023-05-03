@@ -42,7 +42,6 @@ const reducer = combineReducers({
   stepsProgression: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, 'innova_path')]: (state, action) => !isEmpty(action.resourceData.stepsProgression) ? action.resourceData.stepsProgression : state,
     [STEP_UPDATE_PROGRESSION]: (state, action) => {
-      console.log(action)
       const newState = cloneDeep(state)
 
       newState[action.stepId] = action.status

@@ -15,18 +15,16 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Doctrine\Persistence\ObjectRepository;
 
 class TemplateManager
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var PlaceholderManager */
-    private $placeholderManager;
+    private ObjectManager $om;
+    private PlatformConfigurationHandler $config;
+    private PlaceholderManager $placeholderManager;
 
-    private $templateTypeRepo;
-    private $templateRepo;
+    private ObjectRepository $templateTypeRepo;
+    private ObjectRepository $templateRepo;
 
     public function __construct(
         ObjectManager $om,
@@ -41,7 +39,7 @@ class TemplateManager
         $this->templateRepo = $om->getRepository(Template::class);
     }
 
-    public function defineTemplateAsDefault(Template $template)
+    public function defineTemplateAsDefault(Template $template): void
     {
         $templateType = $template->getType();
         $templateType->setDefaultTemplate($template->getName());
@@ -98,5 +96,10 @@ class TemplateManager
         }
 
         return '';
+    }
+
+    public function formatDatePlaceholder(string $placeholderPrefix, ?\DateTime $date): array
+    {
+        return $this->placeholderManager->formatDatePlaceholder($placeholderPrefix, $date);
     }
 }
