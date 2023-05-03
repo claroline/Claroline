@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -33,6 +34,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/user")
@@ -56,6 +58,10 @@ class UserController extends AbstractCrudController
     private $toolManager;
     /** @var WorkspaceManager */
     private $workspaceManager;
+    /** @var PlatformConfigurationHandler */
+    private $config;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -63,7 +69,9 @@ class UserController extends AbstractCrudController
         UserManager $manager,
         MailManager $mailManager,
         ToolManager $toolManager,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        PlatformConfigurationHandler $config,
+        TranslatorInterface $translator
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -71,6 +79,8 @@ class UserController extends AbstractCrudController
         $this->mailManager = $mailManager;
         $this->toolManager = $toolManager;
         $this->workspaceManager = $workspaceManager;
+        $this->config = $config;
+        $this->translator = $translator;
     }
 
     public function getName(): string
@@ -315,5 +325,27 @@ class UserController extends AbstractCrudController
         }
 
         return [];
+    }
+
+    /**
+     * @route("/privacy", name="apiv2_privacy_datas_delete", methods={"GET"})
+     */
+    public function requestAccountDeletion(): JsonResponse
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $name = $user->getFullName();
+        $idUser = $user->getId();
+        $dpoEmail = $this->config->getParameter('privacy.dpo.email');
+        $locale = $user->getLocale();
+
+        $subject = $this->translator->trans('account_deletion.subject', [], 'messages', $locale);
+        $body = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'messages', $locale);
+
+        $this->mailManager->sendSimpleMailOneToOne($subject, $body, $user->getEmail(), $dpoEmail, true);
+
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => 'E-mail de suppression de compte envoyé avec succès'
+        ]);
     }
 }
