@@ -32,7 +32,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
-
 /**
  * @Route("/user")
  */
@@ -42,30 +41,21 @@ class UserController extends AbstractCrudController
     use HasRolesTrait;
     use HasOrganizationsTrait;
     use HasGroupsTrait;
-
     /** @var TokenStorageInterface */
     private $tokenStorage;
-
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-
     /** @var UserManager */
     private $manager;
-
     /** @var MailManager */
     private $mailManager;
-
     /** @var ToolManager */
     private $toolManager;
-
     /** @var WorkspaceManager */
     private $workspaceManager;
-
     /** @var PlatformConfigurationHandler */
     private $config;
-
     private $translator;
-
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
@@ -85,7 +75,6 @@ class UserController extends AbstractCrudController
         $this->config = $config;
         $this->translator = $translator;
     }
-
     public function getName(): string
     {
         return 'user';
@@ -292,10 +281,8 @@ class UserController extends AbstractCrudController
                 'organizations' => [],
             ];
         }
-
         return [];
     }
-
     /**
      * @route("/privacy", name="apiv2_privacy_datas_delete", methods={"GET"})
      */
@@ -306,12 +293,9 @@ class UserController extends AbstractCrudController
         $idUser = $user->getId();
         $dpoEmail = $this->config->getParameter('privacy.dpo.email');
         $locale = $user->getLocale();
-
         $subject = $this->translator->trans('account_deletion.subject', [], 'messages', $locale);
         $body = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'messages', $locale);
-
         $this->mailManager->sendSimpleMailOneToOne($subject, $body, $user->getEmail(), $dpoEmail, true);
-
         return new JsonResponse([
             'status' => 'success',
             'message' => 'E-mail de suppression de compte envoyé avec succès',

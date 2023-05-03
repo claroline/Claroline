@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-
 class MailManager
 {
     /** @var Mailer */
@@ -231,30 +230,24 @@ class MailManager
         }
         return $this->config->getParameter('help.support_email');
     }
-
     public function sendSimpleMailOneToOne($subject, $body, $to, $from = null, $replyToMail = null)
     {
         if ($this->isMailerAvailable()) {
             $fromEmail = $this->config->getParameter('mailer.from');
             $locale = $this->localeManager->getDefault();
-
             $body = $this->templateManager->getTemplate('email_layout', ['content' => $body], $locale);
-
             $message = new Message();
             $message->subject($subject);
             $message->from($fromEmail);
             $message->body($body);
             $message->to($to);
-
             if ($from instanceof UserInterface && filter_var($from->getEmail(), FILTER_VALIDATE_EMAIL)) {
                 $message->replyTo($from->getEmail());
             } elseif (filter_var($replyToMail, FILTER_VALIDATE_EMAIL)) {
                 $message->replyTo($replyToMail);
             }
-
             return $this->mailer->send($message);
         }
-
         return false;
     }
 }
