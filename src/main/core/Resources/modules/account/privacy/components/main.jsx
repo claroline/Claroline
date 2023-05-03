@@ -33,8 +33,8 @@ const PrivacyMain = (props) =>
     <AlertBlock
       type={get(props.currentUser, 'meta.acceptedTerms') ? 'info' : 'warning'}
       title={get(props.currentUser, 'meta.acceptedTerms') ?
-        'Vous avez accepté les conditions d\'utilisation de la plateforme.' :
-        'Vous n\'avez pas encore accepté les conditions d\'utilisation de la plateforme.'
+        trans('accept_terms', {}, 'privacy') :
+        trans('no_accept_terms', {}, 'privacy')
       }
     >
       {!get(props.currentUser, 'meta.acceptedTerms') &&
@@ -88,42 +88,42 @@ const PrivacyMain = (props) =>
     />
 
     <ContentTitle
-      title="Mes données"
+      title={trans('title_my_datas', {}, 'privacy')}
     />
 
     <Button
       className="btn btn-block component-container"
       type={CALLBACK_BUTTON}
-      label={trans('Exporter mes données')}
+      label={trans('export_datas', {}, 'privacy')}
       callback={props.exportAccount}
     />
 
     <Button
       className="btn btn-block component-container"
       type={ASYNC_BUTTON}
-      label={trans('Demander la suppression de mon compte')}
+      label={trans('request_deletion', {}, 'privacy')}
       request={{
         url: url(['apiv2_privacy_datas_delete']),
         method: 'POST',
         messages: {
           pending: {
-            title: 'Envoi de votre demande',
-            message: 'Veuillez patienter pendant l\'envoi de votre demande'
+            title: trans('send.pending.title', {}, 'alerts'),
+            message: trans('send.pending.message', {}, 'alerts')
           },
           success: {
-            title: 'E-mail envoyé !',
-            message: 'Envoi de votre demande réussi !'
+            title: trans('send.success.title', {}, 'alerts'),
+            message: trans('send.success.message', {}, 'alerts')
           },
           error: {
-            title: 'Erreur !',
-            message: 'Une erreur est survenue lors de l\'envoi de votre demande, contactez un administrateur'
+            title: trans('generic.error.title', {}, 'alerts'),
+            message: trans('generic.error.message', {}, 'alerts')
           }
         }
       }}
       dangerous={true}
       confirm={{
-        title: trans('Demande de suppression de mon compte'),
-        message: trans('Êtes-vous sûr de vouloir demander la suppression de votre compte ? Cette action est irréversible.')
+        title: trans('title_dialog_delete_account', {}, 'privacy'),
+        message: trans('message_dialog_delete_account', {}, 'privacy')
       }}
     />
   </AccountPage>
