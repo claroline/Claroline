@@ -294,7 +294,7 @@ class UserController extends AbstractCrudController
     /**
      * @route("/privacy", name="apiv2_privacy_datas_delete", methods={"GET"})
      */
-    public function requestAccountDeletion(Request $request): JsonResponse
+    public function requestAccountDeletion(): JsonResponse
     {
         $user = $this->tokenStorage->getToken()->getUser();
         $name = $user->getFullName();
