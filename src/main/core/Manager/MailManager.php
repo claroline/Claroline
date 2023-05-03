@@ -9,7 +9,6 @@
  */
 
 namespace Claroline\CoreBundle\Manager;
-
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
