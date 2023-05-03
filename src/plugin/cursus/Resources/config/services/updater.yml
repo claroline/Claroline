@@ -1,17 +1,21 @@
 services:
+    _defaults:
+        tags: [ 'claroline.platform.updater' ]
+
     Claroline\CursusBundle\Installation\Updater\Updater130001:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@logger'
-        tags: ['claroline.platform.updater']
 
     Claroline\CursusBundle\Installation\Updater\Updater130013:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\PlanningManager'
-        tags: [ 'claroline.platform.updater' ]
 
     Claroline\CursusBundle\Installation\Updater\Updater130100:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-        tags: [ 'claroline.platform.updater' ]
+
+    Claroline\CursusBundle\Installation\Updater\Updater130800:
+        arguments:
+            - '@doctrine.dbal.default_connection'
