@@ -1,0 +1,6 @@
+{
+  "account_deletion": {
+    "subject": "Account deletion request",
+    "body": "User %name% <br/> ID: %id% <br/> wishes to delete their account. Please take the appropriate measures.<br/><hr/>"
+  }
+}

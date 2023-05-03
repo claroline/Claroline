@@ -31,6 +31,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 /**
  * @Route("/user")
  */
@@ -62,6 +64,7 @@ class UserController extends AbstractCrudController
     /** @var PlatformConfigurationHandler */
     private $config;
 
+    private $translator;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -71,6 +74,7 @@ class UserController extends AbstractCrudController
         ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
         PlatformConfigurationHandler $config,
+        TranslatorInterface $translator,
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -79,6 +83,7 @@ class UserController extends AbstractCrudController
         $this->toolManager = $toolManager;
         $this->workspaceManager = $workspaceManager;
         $this->config = $config;
+        $this->translator = $translator;
     }
 
     public function getName(): string
@@ -300,10 +305,10 @@ class UserController extends AbstractCrudController
         $name = $user->getFullName();
         $idUser = $user->getId();
         $dpoEmail = $this->config->getParameter('privacy.dpo.email');
+        $locale = $user->getLocale();
 
-
-        $subject = "Demande de suppression de compte";
-        $body = "L'utilisateur ". $name . " <br/> ID : ". $idUser ." <br/> souhaite supprimer son compte. Veuillez prendre les mesures appropriées.<br/><hr/>";
+        $subject = $this->translator->trans('account_deletion.subject', [], 'messages', $locale);
+        $body = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'messages', $locale);
 
         $this->mailManager->sendSimpleMailOneToOne($subject, $body, $user->getEmail(), $dpoEmail, true);
 
