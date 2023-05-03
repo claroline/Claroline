@@ -23,6 +23,14 @@ class Version20230426080000 extends AbstractMigration
 
         if ($this->checkTableExists('claro_activity', $this->connection)) {
             $this->addSql('ALTER TABLE claro_activity DROP FOREIGN KEY FK_E4A67CAC88BD9C1F');
+
+            if ($this->checkForeignKeyExists('FK_E4A67CAC52410EEC', $this->connection)) {
+                $this->addSql('ALTER TABLE claro_activity DROP FOREIGN KEY FK_E4A67CAC52410EEC');
+            }
+
+            if ($this->checkForeignKeyExists('FK_E4A67CACB87FAB32', $this->connection)) {
+                $this->addSql('ALTER TABLE claro_activity DROP FOREIGN KEY FK_E4A67CACB87FAB32');
+            }
         }
 
         if ($this->checkTableExists('claro_activity_evaluation', $this->connection)) {
@@ -31,13 +39,36 @@ class Version20230426080000 extends AbstractMigration
 
         if ($this->checkTableExists('claro_activity_past_evaluation', $this->connection)) {
             $this->addSql('ALTER TABLE claro_activity_past_evaluation DROP FOREIGN KEY FK_F1A76182896F55DB');
+
+            if ($this->checkForeignKeyExists('FK_F1A76182A76ED395', $this->connection)) {
+                $this->addSql('ALTER TABLE claro_activity_past_evaluation DROP FOREIGN KEY FK_F1A76182A76ED395');
+            }
+
+            if ($this->checkForeignKeyExists('FK_F1A76182EA675D86', $this->connection)) {
+                $this->addSql('ALTER TABLE claro_activity_past_evaluation DROP FOREIGN KEY FK_F1A76182EA675D86');
+            }
         }
 
         if ($this->checkTableExists('claro_activity_secondary_resources', $this->connection)) {
             $this->addSql('ALTER TABLE claro_activity_secondary_resources DROP FOREIGN KEY FK_713242A7DB5E3CF7');
+
+            if ($this->checkForeignKeyExists('FK_713242A777C292AE', $this->connection)) {
+                $this->addSql('ALTER TABLE claro_activity_secondary_resources DROP FOREIGN KEY FK_713242A777C292AE');
+            }
+        }
+
+        if ($this->checkTableExists('claro_activity_rule', $this->connection)) {
+            $this->addSql('ALTER TABLE claro_activity_rule DROP FOREIGN KEY FK_6824A65E89329D25');
+            $this->addSql('ALTER TABLE claro_activity_rule DROP FOREIGN KEY FK_6824A65E896F55DB');
+        }
+
+        if ($this->checkTableExists('claro_activity_rule_action', $this->connection)) {
+            $this->addSql('ALTER TABLE claro_activity_rule_action DROP FOREIGN KEY FK_C8835D2098EC6B7B');
         }
 
         $this->addSql('DROP TABLE IF EXISTS claro_activity');
+        $this->addSql('DROP TABLE IF EXISTS claro_activity_rule');
+        $this->addSql('DROP TABLE IF EXISTS claro_activity_rule_action');
         $this->addSql('DROP TABLE IF EXISTS claro_activity_evaluation');
         $this->addSql('DROP TABLE IF EXISTS claro_activity_parameters');
         $this->addSql('DROP TABLE IF EXISTS claro_activity_past_evaluation');
