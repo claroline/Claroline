@@ -59,6 +59,7 @@ class UserController extends AbstractCrudController
     private $workspaceManager;
     /** @var PlatformConfigurationHandler */
     private $config;
+    /** @var TranslatorInterface */
     private $translator;
 
     public function __construct(
@@ -294,7 +295,7 @@ class UserController extends AbstractCrudController
             ],
             'get' => [Options::SERIALIZE_FACET],
             'find' => [Options::SERIALIZE_FACET],
-            'update' => [Options::SERIALIZE_FACET],
+            'update' => [Options::SERIALIZE_FACET]
         ]);
     }
 
