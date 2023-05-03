@@ -342,7 +342,7 @@ class UserController extends AbstractCrudController
 
         return new JsonResponse([
             'status' => 'success',
-            'message' => 'E-mail de suppression de compte envoyé avec succès',
+            'message' => 'E-mail de suppression de compte envoyé avec succès'
         ]);
     }
 }
