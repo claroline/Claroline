@@ -112,7 +112,7 @@ const PrivacyMain = (props) =>
           },
           success: {
             title: 'E-mail envoyé !',
-            message: 'Votre demande a bien été prise en compte'
+            message: 'Envoi de votre demande réussi !'
           },
           error: {
             title: 'Erreur !',

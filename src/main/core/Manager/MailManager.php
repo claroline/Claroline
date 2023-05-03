@@ -232,17 +232,8 @@ class MailManager
         return $this->config->getParameter('help.support_email');
     }
 
-    public function sendAEmailDpo($subject, $body, array $to, $from = null, $replyToMail = null)
+    public function sendSimpleMailOneToOne($subject, $body, $to, $from = null, $replyToMail = null)
     {
-        $toEmails = [];
-        foreach ($to as $recipient) {
-            $email = is_string($recipient) ? $recipient : $recipient->getEmail();
-            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $toEmails[] = $email;
-            }
-        }
-        $to = $toEmails;
-
         if ($this->isMailerAvailable()) {
             $fromEmail = $this->config->getParameter('mailer.from');
             $locale = $this->localeManager->getDefault();

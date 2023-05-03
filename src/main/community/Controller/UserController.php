@@ -299,13 +299,13 @@ class UserController extends AbstractCrudController
         $user = $this->tokenStorage->getToken()->getUser();
         $name = $user->getFullName();
         $idUser = $user->getId();
-        $dpoEmail = [$this->config->getParameter('privacy.dpo.email')];
+        $dpoEmail = $this->config->getParameter('privacy.dpo.email');
 
 
         $subject = "Demande de suppression de compte";
         $body = "L'utilisateur ". $name . " <br/> ID : ". $idUser ." <br/> souhaite supprimer son compte. Veuillez prendre les mesures appropriées.<br/><hr/>";
 
-        $this->mailManager->sendAEmailDpo($subject, $body, [$user->getEmail()], $dpoEmail, true);
+        $this->mailManager->sendSimpleMailOneToOne($subject, $body, $user->getEmail(), $dpoEmail, true);
 
         return new JsonResponse([
             'status' => 'success',
