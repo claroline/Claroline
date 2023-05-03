@@ -36,7 +36,9 @@ plugin:
               - user_username
               - evaluation_duration
               - evaluation_status
+              - evaluation_datetime
               - evaluation_date
+              - evaluation_time
 
         - name: workspace_success_certificate
           type: pdf
@@ -50,6 +52,8 @@ plugin:
               - user_username
               - evaluation_duration
               - evaluation_status
+              - evaluation_datetime
               - evaluation_date
+              - evaluation_time
               - evaluation_score
               - evaluation_score_max

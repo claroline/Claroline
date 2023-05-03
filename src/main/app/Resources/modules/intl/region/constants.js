@@ -1,7 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
 
-// TODO : break me
-
 const LANGS = {
   'ab': {
     'name': 'Abkhaz',
