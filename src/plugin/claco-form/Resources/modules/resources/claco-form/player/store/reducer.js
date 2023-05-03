@@ -1,8 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep'
+import get from 'lodash/get'
 
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
+import {constants as paginationConst} from '#/main/app/content/pagination/constants'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
@@ -34,7 +36,17 @@ const reducer = combineReducers({
       [ENTRIES_UPDATE]: () => true
     }),
     filters: makeReducer([], {
-      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.clacoForm.list.filters || []
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => get(action.resourceData, 'clacoForm.list.filters', [])
+    }),
+    pagination: makeReducer({page: 0, pageSize: paginationConst.DEFAULT_PAGE_SIZE}, {
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => ({
+        page: state.page,
+        pageSize: get(action.resourceData, 'clacoForm.list.pageSize') || state.pageSize
+      }),
+      [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.clacoFormForm']: (state, action) => ({
+        page: state.page,
+        pageSize: get(action.updatedData, 'list.pageSize') || state.pageSize
+      })
     })
   }),
   current: makeFormReducer(selectors.STORE_NAME+'.entries.current', {}, {
