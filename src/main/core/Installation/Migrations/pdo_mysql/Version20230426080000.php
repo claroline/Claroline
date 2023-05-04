@@ -83,11 +83,7 @@ class Version20230426080000 extends AbstractMigration
             $this->addSql('ALTER TABLE hevinci_competency_activity DROP FOREIGN KEY FK_82CDDCBFFB9F58C');
         }
 
-        if ($this->checkTableExists('hevinci_objective_competency', $this->connection)) {
-            $this->addSql('ALTER TABLE hevinci_objective_competency DROP FOREIGN KEY FK_EDBF854473484933');
-        }
-
-        if ($this->checkTableExists('hevinci_objective_competency', $this->connection)) {
+        if ($this->checkForeignKeyExists('FK_EDBF854473484933', $this->connection)) {
             $this->addSql('ALTER TABLE hevinci_objective_competency DROP FOREIGN KEY FK_EDBF854473484933');
         }
 
