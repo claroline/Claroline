@@ -88,6 +88,10 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\ThemeBundle\Manager\IconSetManager'
+
+    Claroline\CoreBundle\Subscriber\Administration\ConnectionMessagesSubscriber:
+       tags: [ kernel.event_subscriber ]
+
     # Tools
     Claroline\CoreBundle\Subscriber\Tool\LocationsSubscriber:
         tags: [kernel.event_subscriber]
@@ -108,6 +112,5 @@ services:
         arguments:
             - '@security.authorization_checker'
 
-    Claroline\CoreBundle\Subscriber\Tool\ConnectionMessagesSubscriber:
-      tags: [ kernel.event_subscriber ]
+
 

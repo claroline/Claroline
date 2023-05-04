@@ -5,7 +5,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {SlideFormModal} from '#/main/core/administration/parameters/modals/slide/components/modal'
+import {SlideFormModal} from '#/main/core/administration/connection-messages/modals/slide/components/modal'
 
 const MODAL_SLIDE_FORM = 'MODAL_SLIDE_FORM'
 

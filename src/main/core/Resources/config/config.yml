@@ -141,7 +141,7 @@ plugin:
         - name: plugins
           class: puzzle-piece
 
-        - name: connection_message
+        - name: connection_messages
           class: comment-dots
 
     widgets:

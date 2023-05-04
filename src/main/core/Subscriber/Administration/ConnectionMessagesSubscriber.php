@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Subscriber\Tool;
+namespace Claroline\CoreBundle\Subscriber\Administration;
 
 use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;

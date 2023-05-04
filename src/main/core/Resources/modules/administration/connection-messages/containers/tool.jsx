@@ -1,26 +1,24 @@
 import {connect} from 'react-redux'
-
-import {withRouter} from '#/main/app/router'
-
-import {makeId} from '#/main/core/scaffolding/id'
-import {ConnectionMessage as ConnectionMessageTypes} from '#/main/core/data/types/connection-message/prop-types'
+import {actions, selectors} from '#/main/core/administration/connection-messages/store'
 import {ConnectionMessagesTool as ConnectionMessagesToolComponent} from '#/main/core/administration/connection-messages/components/tool'
+import {ConnectionMessage as ConnectionMessageTypes} from "#/main/core/data/types/connection-message/prop-types";
+import {makeId} from "#/main/core/scaffolding/id";
 
-const ConnectionMessagesTool = withRouter(connect(
-    null,
-    (dispatch) => ({
-        openConnectionMessageForm(id = null) {
-            const defaultProps = Object.assign({}, ConnectionMessageTypes.defaultProps, {
-                id: makeId()
-            })
-            dispatch(actions.openConnectionMessageForm(selectors.STORE_NAME+'.messages.current', defaultProps, id))
-        },
-        resetConnectionMessageFrom() {
-            dispatch(actions.resetForm(selectors.STORE_NAME+'.messages.current'))
-        }
-    })
-)(ConnectionMessagesToolComponent))
+const ConnectionMessagesTool = connect(
+  null,
+  (dispatch) => ({
+    openConnectionMessageForm(id) {
+      const defaultProps = Object.assign({}, ConnectionMessageTypes.defaultProps, {
+        id: makeId()
+      })
+      dispatch(actions.openConnectionMessageForm(selectors.STORE_NAME+'.current', defaultProps, id))
+    },
+    resetConnectionMessageForm() {
+      dispatch(actions.resetConnectionMessageForm())
+    }
+  })
+)(ConnectionMessagesToolComponent)
 
 export {
-    ConnectionMessagesTool
+  ConnectionMessagesTool
 }
