@@ -35,6 +35,14 @@ class Version20230426080000 extends AbstractMigration
 
         if ($this->checkTableExists('claro_activity_evaluation', $this->connection)) {
             $this->addSql('ALTER TABLE claro_activity_evaluation DROP FOREIGN KEY FK_F75EC869896F55DB');
+
+            if ($this->checkForeignKeyExists('FK_F75EC869A76ED395', $this->connection)) {
+                $this->addSql('ALTER TABLE claro_activity_evaluation DROP FOREIGN KEY FK_F75EC869A76ED395');
+            }
+
+            if ($this->checkForeignKeyExists('FK_F75EC869EA675D86', $this->connection)) {
+                $this->addSql('ALTER TABLE claro_activity_evaluation DROP FOREIGN KEY FK_F75EC869EA675D86');
+            }
         }
 
         if ($this->checkTableExists('claro_activity_past_evaluation', $this->connection)) {
