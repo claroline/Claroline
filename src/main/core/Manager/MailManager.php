@@ -299,5 +299,4 @@ class MailManager
 
         return false;
     }
-
 }
