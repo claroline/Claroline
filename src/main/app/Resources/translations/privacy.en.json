@@ -1,9 +1,13 @@
 {
   "accept_terms": "You have accepted the terms of use of the platform.",
   "no_accept_terms": "You have not yet accepted the terms of use of the platform.",
-  "title_my_datas": "My personnals datas",
-  "export_datas": "Export datas",
+  "title_my_data": "My personnals data",
+  "export_data": "Export data",
   "request_deletion" : "Request deletion of my account",
   "title_dialog_delete_account" : "Request to delete my account",
-  "message_dialog_delete_account" : "Are you sure you want to request the deletion of your account?"
+  "message_dialog_delete_account" : "Are you sure you want to request the deletion of your account?",
+  "account_deletion": {
+    "subject": "Account deletion request",
+    "body": "User %name% <br/> ID: %id% <br/> wishes to delete their account. Please take the appropriate measures.<br/><hr/>"
+  }
 }

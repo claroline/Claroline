@@ -1,6 +1,0 @@
-{
-  "account_deletion": {
-    "subject": "Demande de suppression de compte",
-    "body": "L'utilisateur %name% <br/> ID : %id% <br/> souhaite supprimer son compte. Veuillez prendre les mesures appropriées.<br/><hr/>"
-  }
-}

@@ -13,6 +13,7 @@ import {AccountPage} from '#/main/app/account/containers/page'
 import {route} from '#/main/app/account/routing'
 import {User as UserTypes} from '#/main/community/prop-types'
 import {url} from '#/main/app/api'
+import {constants as actionConstants} from '#/main/app/action/constants'
 
 const PrivacyMain = (props) =>
   <AccountPage
@@ -88,13 +89,13 @@ const PrivacyMain = (props) =>
     />
 
     <ContentTitle
-      title={trans('title_my_datas', {}, 'privacy')}
+      title={trans('title_my_data', {}, 'privacy')}
     />
 
     <Button
       className="btn btn-block component-container"
       type={CALLBACK_BUTTON}
-      label={trans('export_datas', {}, 'privacy')}
+      label={trans('export_data', {}, 'privacy')}
       callback={props.exportAccount}
     />
 
@@ -103,8 +104,8 @@ const PrivacyMain = (props) =>
       type={ASYNC_BUTTON}
       label={trans('request_deletion', {}, 'privacy')}
       request={{
-        url: url(['apiv2_privacy_datas_delete']),
-        method: 'POST',
+        url: url(['request-deletion']),
+        request:{method: 'POST', type: actionConstants.ACTION_SEND},
         messages: {
           pending: {
             title: trans('send.pending.title', {}, 'alerts'),
@@ -113,13 +114,9 @@ const PrivacyMain = (props) =>
           success: {
             title: trans('send.success.title', {}, 'alerts'),
             message: trans('send.success.message', {}, 'alerts')
-          },
-          error: {
-            title: trans('generic.error.title', {}, 'alerts'),
-            message: trans('generic.error.message', {}, 'alerts')
           }
-        }
-      }}
+        }}
+      }
       dangerous={true}
       confirm={{
         title: trans('title_dialog_delete_account', {}, 'privacy'),

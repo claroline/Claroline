@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MailManager
 {
@@ -37,6 +38,8 @@ class MailManager
     private $userManager;
     /** @var StrictDispatcher */
     private $dispatcher;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         Mailer $mailer,
@@ -45,7 +48,8 @@ class MailManager
         TemplateManager $templateManager,
         LocaleManager $localeManager,
         UserManager $userManager,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        TranslatorInterface $translator
     ) {
         $this->mailer = $mailer;
         $this->router = $router;
@@ -54,6 +58,7 @@ class MailManager
         $this->localeManager = $localeManager;
         $this->userManager = $userManager;
         $this->dispatcher = $dispatcher;
+        $this->translator = $translator;
     }
 
     public function isMailerAvailable(): bool
@@ -268,11 +273,17 @@ class MailManager
         return $this->config->getParameter('help.support_email');
     }
 
-    public function sendSimpleMailOneToOne($subject, $body, $to, $from = null, $replyToMail = null)
+    public function sendRequestToDPO(UserInterface $user)
     {
         if ($this->isMailerAvailable()) {
+            $name = $user->getFullName();
+            $idUser = $user->getId();
+            $dpoEmail = $this->config->getParameter('privacy.dpo.email');
+            $locale = $user->getLocale();
+
+            $subject = $this->translator->trans('account_deletion.subject', [], 'privacy', $locale);
+            $body = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'privacy', $locale);
             $fromEmail = $this->config->getParameter('mailer.from');
-            $locale = $this->localeManager->getDefault();
 
             $body = $this->templateManager->getTemplate('email_layout', ['content' => $body], $locale);
 
@@ -280,17 +291,13 @@ class MailManager
             $message->subject($subject);
             $message->from($fromEmail);
             $message->body($body);
-            $message->to($to);
-
-            if ($from instanceof UserInterface && filter_var($from->getEmail(), FILTER_VALIDATE_EMAIL)) {
-                $message->replyTo($from->getEmail());
-            } elseif (filter_var($replyToMail, FILTER_VALIDATE_EMAIL)) {
-                $message->replyTo($replyToMail);
-            }
+            $message->to($user->getEmail());
+            $message->replyTo($dpoEmail);
 
             return $this->mailer->send($message);
         }
 
         return false;
     }
+
 }
