@@ -73,7 +73,17 @@ class Version20230426080000 extends AbstractMigration
             $this->addSql('ALTER TABLE claro_workspace_required_resources DROP FOREIGN KEY FK_85A0B2D9296B0ED5');
         }
 
-        if ($this->checkTableExists('hevinci_objective_competency', $this->connection)) {
+        if ($this->checkTableExists('hevinci_ability_activity', $this->connection)) {
+            $this->addSql('ALTER TABLE hevinci_ability_activity DROP FOREIGN KEY FK_46D92D328016D8B2');
+            $this->addSql('ALTER TABLE hevinci_ability_activity DROP FOREIGN KEY FK_46D92D3281C06096');
+        }
+
+        if ($this->checkTableExists('hevinci_competency_activity', $this->connection)) {
+            $this->addSql('ALTER TABLE hevinci_competency_activity DROP FOREIGN KEY FK_82CDDCBF81C06096');
+            $this->addSql('ALTER TABLE hevinci_competency_activity DROP FOREIGN KEY FK_82CDDCBFFB9F58C');
+        }
+
+        if ($this->checkForeignKeyExists('FK_EDBF854473484933', $this->connection)) {
             $this->addSql('ALTER TABLE hevinci_objective_competency DROP FOREIGN KEY FK_EDBF854473484933');
         }
 
@@ -145,6 +155,8 @@ class Version20230426080000 extends AbstractMigration
         $this->addSql('DROP TABLE IF EXISTS hevinci_objective_user');
         $this->addSql('DROP TABLE IF EXISTS hevinci_user_progress');
         $this->addSql('DROP TABLE IF EXISTS hevinci_user_progress_log');
+        $this->addSql('DROP TABLE IF EXISTS hevinci_ability_activity');
+        $this->addSql('DROP TABLE IF EXISTS hevinci_competency_activity');
         $this->addSql('DROP TABLE IF EXISTS icap__blog_post_tag');
         $this->addSql('DROP TABLE IF EXISTS icap__blog_tag');
 

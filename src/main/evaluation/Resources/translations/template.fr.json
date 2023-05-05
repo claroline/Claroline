@@ -2,5 +2,11 @@
   "workspace_participation_certificate": "Certificat de participation à un espace d'activités",
   "workspace_participation_certificate_desc": "Template utilisé pour générer les certificats de participation des utilisateurs.",
   "workspace_success_certificate": "Certificat de réussite à un espace d'activités",
-  "workspace_success_certificate_desc": "Template utilisé pour générer les certificats de réussite des utilisateurs."
+  "workspace_success_certificate_desc": "Template utilisé pour générer les certificats de réussite des utilisateurs.",
+
+  "evaluation_duration_desc": "Durée de l'évaluation",
+  "evaluation_status_desc": "Statut de l'évaluation (Non commencé, En cours, Réussi, etc.)",
+  "evaluation_datetime_desc": "La date de dernière activité sur l'évaluation (Date + Heure)",
+  "evaluation_date_desc": "La date de dernière activité sur l'évaluation (Date seule)",
+  "evaluation_time_desc": "La date de dernière activité sur l'évaluation (Heure seule)"
 }
