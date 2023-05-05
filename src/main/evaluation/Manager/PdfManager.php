@@ -72,7 +72,7 @@ class PdfManager
         $workspace = $evaluation->getWorkspace();
         $user = $evaluation->getUser();
 
-        return [
+        return array_merge([
             'workspace_name' => $workspace->getName(),
             'workspace_code' => $workspace->getCode(),
             'workspace_description' => $workspace->getDescription(),
@@ -84,7 +84,6 @@ class PdfManager
 
             'evaluation_duration' => round($evaluation->getDuration() / 60, 2), // in minutes
             'evaluation_status' => $this->translator->trans('evaluation_'.$evaluation->getStatus().'_status', [], 'workspace'),
-            ...$this->templateManager->formatDatePlaceholder('evaluation', $evaluation->getDate()),
-        ];
+        ], $this->templateManager->formatDatePlaceholder('evaluation', $evaluation->getDate()));
     }
 }
