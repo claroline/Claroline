@@ -141,30 +141,36 @@ class PlatformListener
     /**
      * Display new version changelogs to administrators.
      */
-    public function displayVersionChangeLogs(GenericDataEvent $event)
+    public function displayVersionChangeLogs(GenericDataEvent $event): void
+    {
+        $event->setResponse(array_merge(
+            $this->getChangelogs(),
+            $this->getDPOMessages(),
+            $this->getSupportMessages()
+        ));
+    }
+
+    private function getChangelogs(): array
     {
         if (!$this->config->getParameter('changelogMessage.enabled')) {
-            // connection message is disabled, nothing to do
-            return;
+            return [];
         }
 
         $roles = $this->config->getParameter('changelogMessage.roles');
         if (empty(array_intersect($this->tokenStorage->getToken()->getRoleNames(), $roles))) {
-            // current user cannot see the changelog with its current roles
-            return;
+            return [];
         }
 
-        // check if we still are in the display period
         $installationDate = $this->versionManager->getInstallationDate($this->versionManager->getCurrentMinor());
         if (empty($installationDate)) {
-            return;
+            return [];
         }
 
         $period = new \DateInterval($this->config->getParameter('changelogMessage.duration'));
         $endDate = $installationDate->add($period);
         $now = new \DateTime();
         if ($now > $endDate) {
-            return;
+            return [];
         }
 
         $user = $this->tokenStorage->getToken()->getUser();
@@ -172,11 +178,11 @@ class PlatformListener
         $locale = $this->localeManager->getLocale($user);
         $content = $this->versionManager->getChangelogs($locale).'<br/>'.'<br/>';
         $content .= '<em>'.$this->translator->trans('platform_changelog_display', [
-            '%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles')),
-            '%end_date%' => $endDate->format('d/m/Y'),
-        ], 'platform').'</em>';
+                '%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles')),
+                '%end_date%' => $endDate->format('d/m/Y'),
+            ], 'platform').'</em>';
 
-        $event->setResponse([
+        return [
             [
                 'id' => 'new-version',
                 'title' => $this->translator->trans('platform_new_available_version', [], 'platform'),
@@ -188,10 +194,52 @@ class PlatformListener
                     'order' => 0,
                 ]],
             ],
-        ]);
+        ];
     }
 
-    private function isAdmin()
+    private function getDPOMessages(): array
+    {
+        if (!$this->isAdmin() || $this->config->getParameter('privacy.dpo.email')) {
+            return [];
+        } else {
+            return [
+                [
+                    'id' => 'dpo-email-missing',
+                    'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
+                    'type' => ConnectionMessage::TYPE_ALWAYS,
+                    'slides' => [[
+                        'id' => 'dpo-email-missing-message',
+                        'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
+                        'content' => $this->translator->trans('dpo_email_missing_content', [], 'platform'),
+                        'order' => 1,
+                    ]],
+                ],
+            ];
+        }
+    }
+
+    private function getSupportMessages(): array
+    {
+        if (!$this->isAdmin() || $this->config->getParameter('help.support_email')) {
+            return [];
+        } else {
+            return [
+                [
+                    'id' => 'support-email-missing',
+                    'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
+                    'type' => ConnectionMessage::TYPE_ALWAYS,
+                    'slides' => [[
+                        'id' => 'support-email-missing-message',
+                        'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
+                        'content' => $this->translator->trans('support_email_missing_content', [], 'platform'),
+                        'order' => 2,
+                    ]],
+                ],
+            ];
+        }
+    }
+
+    private function isAdmin(): bool
     {
         $token = $this->tokenStorage->getToken();
         if ($token) {
@@ -200,4 +248,5 @@ class PlatformListener
 
         return false;
     }
+
 }
