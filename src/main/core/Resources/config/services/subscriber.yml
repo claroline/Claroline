@@ -90,7 +90,7 @@ services:
             - '@Claroline\ThemeBundle\Manager\IconSetManager'
 
     Claroline\CoreBundle\Subscriber\Administration\ConnectionMessagesSubscriber:
-       tags: [ kernel.event_subscriber ]
+        tags: [ kernel.event_subscriber ]
 
     # Tools
     Claroline\CoreBundle\Subscriber\Tool\LocationsSubscriber:

@@ -15,10 +15,7 @@ import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContentHtml} from '#/main/app/content/components/html'
 
 import {selectors} from '#/main/core/administration/connection-messages/store/selectors'
-import {
-  ConnectionMessage as ConnectionMessageTypes,
-  Slide as SlideTypes
-} from '#/main/core/data/types/connection-message/prop-types'
+import {ConnectionMessage as ConnectionMessageTypes, Slide as SlideTypes} from '#/main/core/data/types/connection-message/prop-types'
 
 import {constants} from '#/main/core/data/types/connection-message/constants'
 import {MODAL_SLIDE_FORM} from '#/main/core/administration/connection-messages/modals/slide'
@@ -112,9 +109,9 @@ SlidesForm.propTypes = {
   slides: T.arrayOf(T.shape(
     SlideTypes.propTypes
   )).isRequired,
-  disabled: T.bool,
-  createSlide: T.func,
-  updateProp: T.func
+  disabled: T.bool.isRequired,
+  createSlide: T.func.isRequired,
+  updateProp: T.func.isRequired
 }
 
 SlidesForm.defaultProps = {
@@ -135,7 +132,7 @@ const Message = (props) =>
       target: props.path,
       exact: true
     }}
-    sections={[{
+    definition={[{
       title: trans('general'),
       primary: true,
       fields: [{
@@ -215,8 +212,8 @@ Message.propTypes = {
   message: T.shape(
     ConnectionMessageTypes.propTypes
   ),
-  createSlide: T.func,
-  updateProp: T.func
+  createSlide: T.func.isRequired,
+  updateProp: T.func.isRequired
 }
 
 export {

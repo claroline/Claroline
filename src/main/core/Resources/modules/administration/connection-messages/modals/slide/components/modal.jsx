@@ -11,7 +11,6 @@ import {Select} from '#/main/app/input/components/select'
 
 import {getActions} from '#/main/core/desktop'
 import {getTools} from '#/main/core/tools'
-
 const ShortcutRow = (props) => {
   let shortcutChoices = {}
   if ('action' === props.value.type) {

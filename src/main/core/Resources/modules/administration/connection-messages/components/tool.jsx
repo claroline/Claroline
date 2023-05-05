@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
@@ -26,7 +26,7 @@ const ConnectionMessagesTool = (props) => {
     <ToolPage
       primaryAction="add"
       actions={addActions}
-      subtitle={trans('connection_messages')}
+      subtitle={trans('connection_messages', {}, 'tools')}
     >
       <Routes
         path={props.path}
@@ -36,7 +36,6 @@ const ConnectionMessagesTool = (props) => {
             component: Message,
             onEnter: (params) => props.openConnectionMessageForm(params.id),
             onLeave: () => props.resetConnectionMessageForm(),
-            // render: (props) => <Message {...props} />
           },
           {
             path: '/',
@@ -50,9 +49,9 @@ const ConnectionMessagesTool = (props) => {
 }
 
 ConnectionMessagesTool.propTypes = {
-  path: PropTypes.string,
-  openConnectionMessageForm: PropTypes.func,
-  resetConnectionMessageForm: PropTypes.func
+  path: T.string,
+  openConnectionMessageForm: T.func,
+  resetConnectionMessageForm: T.func
 }
 
 export {

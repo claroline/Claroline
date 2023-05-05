@@ -8,8 +8,7 @@ const ConnectionMessagesMenu = (props) =>
   <MenuSection
     {...omit(props, 'path')}
     title={trans('connection_messages', {}, 'tools')}
-  >
-  </MenuSection>
+  />
 
 ConnectionMessagesMenu.propTypes = {
   path: T.string
