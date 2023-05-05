@@ -63,7 +63,7 @@ class UserController extends AbstractCrudController
         UserManager $manager,
         MailManager $mailManager,
         ToolManager $toolManager,
-        WorkspaceManager $workspaceManager,
+        WorkspaceManager $workspaceManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -327,5 +327,4 @@ class UserController extends AbstractCrudController
 
         return new JsonResponse(null, 204);
     }
-
 }
