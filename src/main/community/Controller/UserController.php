@@ -316,4 +316,15 @@ class UserController extends AbstractCrudController
 
         return [];
     }
+
+    /**
+     * @Route("/request-deletion", name="apiv2_user_request_account_deletion", methods={"POST"})
+     */
+    public function requestAccountDeletionAction(): JsonResponse
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $this->mailManager->sendRequestToDPO($user);
+
+        return new JsonResponse(null, 204);
+    }
 }

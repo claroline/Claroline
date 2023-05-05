@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -20,6 +19,8 @@ use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MailManager
 {
@@ -37,6 +38,8 @@ class MailManager
     private $userManager;
     /** @var StrictDispatcher */
     private $dispatcher;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         Mailer $mailer,
@@ -45,7 +48,8 @@ class MailManager
         TemplateManager $templateManager,
         LocaleManager $localeManager,
         UserManager $userManager,
-        StrictDispatcher $dispatcher
+        StrictDispatcher $dispatcher,
+        TranslatorInterface $translator
     ) {
         $this->mailer = $mailer;
         $this->router = $router;
@@ -54,6 +58,7 @@ class MailManager
         $this->localeManager = $localeManager;
         $this->userManager = $userManager;
         $this->dispatcher = $dispatcher;
+        $this->translator = $translator;
     }
 
     public function isMailerAvailable(): bool
@@ -82,10 +87,10 @@ class MailManager
         $this->userManager->initializePassword($user);
 
         $placeholders['password_reset_link'] = $this->router->generate(
-            'claro_index',
-            [],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        )."#/newpassword/{$user->getResetPasswordHash()}";
+                'claro_index',
+                [],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            )."#/newpassword/{$user->getResetPasswordHash()}";
 
         $subject = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale);
@@ -98,10 +103,10 @@ class MailManager
         $this->userManager->initializePassword($user);
         $hash = $user->getResetPasswordHash();
         $link = $this->router->generate(
-            'claro_index',
-            [],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        )."#/newpassword/{$hash}";
+                'claro_index',
+                [],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            )."#/newpassword/{$hash}";
         $locale = $this->localeManager->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
@@ -266,5 +271,23 @@ class MailManager
         }
 
         return $this->config->getParameter('help.support_email');
+    }
+
+    public function sendRequestToDPO(UserInterface $user)
+    {
+        if ($this->isMailerAvailable()) {
+            $name = $user->getFullName();
+            $idUser = $user->getId();
+            $dpoEmail = $this->config->getParameter('privacy.dpo.email');
+            $locale = $user->getLocale();
+
+            $subject = $this->translator->trans('account_deletion.subject', [], 'privacy', $locale);
+            $content = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'privacy', $locale);
+            $body = $this->templateManager->getTemplate('email_layout', ['content' => $content], $locale);
+
+            return $this->send($subject, $body, [], null, ['to' => [$dpoEmail]], false, $user->getEmail());
+        }
+
+        return false;
     }
 }
