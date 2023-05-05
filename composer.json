@@ -78,8 +78,15 @@
         "symfony/yaml": "4.4.*",
         "twig/twig": "^2.14",
         "willdurand/js-translation-bundle": "^4.0",
-        "http-interop/http-factory-guzzle": "^1.2"
+        "http-interop/http-factory-guzzle": "^1.2",
+        "formalibre/alterlms": "dev-main"
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:FormaLibre/AlterLMS.git"
+        }
+    ],
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "friendsofphp/php-cs-fixer": "^2.15",
@@ -101,6 +108,7 @@
             "Claroline\\BigBlueButtonBundle\\": "src/integration/big-blue-button",
             "Claroline\\ClacoFormBundle\\": "src/plugin/claco-form",
             "Claroline\\CommunityBundle\\": "src/main/community",
+            "Claroline\\PrivacyBundle\\": "src/main/privacy",
             "Claroline\\CoreBundle\\": "src/main/core",
             "Claroline\\CursusBundle\\": "src/plugin/cursus",
             "Claroline\\DevBundle\\": "src/main/dev",
