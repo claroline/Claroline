@@ -104,7 +104,7 @@ const PrivacyMain = (props) =>
       type={ASYNC_BUTTON}
       label={trans('request_deletion', {}, 'privacy')}
       request={{
-        url: url(['request-deletion']),
+        url: url(['apiv2_user_request_account_deletion']),
         request:{method: 'POST', type: actionConstants.ACTION_SEND},
         messages: {
           pending: {

@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -57,8 +56,6 @@ class UserController extends AbstractCrudController
     private $toolManager;
     /** @var WorkspaceManager */
     private $workspaceManager;
-    /** @var PlatformConfigurationHandler */
-    private $config;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -67,7 +64,6 @@ class UserController extends AbstractCrudController
         MailManager $mailManager,
         ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
-        PlatformConfigurationHandler $config
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -75,7 +71,6 @@ class UserController extends AbstractCrudController
         $this->mailManager = $mailManager;
         $this->toolManager = $toolManager;
         $this->workspaceManager = $workspaceManager;
-        $this->config = $config;
     }
 
     public function getName(): string
@@ -323,7 +318,7 @@ class UserController extends AbstractCrudController
     }
 
     /**
-     * @Route("/privacy", name="request-deletion", methods={"POST"})
+     * @Route("/privacy", name="apiv2_user_request_account_deletion", methods={"POST"})
      */
     public function requestAccountDeletionAction(): JsonResponse
     {

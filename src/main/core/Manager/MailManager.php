@@ -282,19 +282,10 @@ class MailManager
             $locale = $user->getLocale();
 
             $subject = $this->translator->trans('account_deletion.subject', [], 'privacy', $locale);
-            $body = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'privacy', $locale);
-            $fromEmail = $this->config->getParameter('mailer.from');
+            $content = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'privacy', $locale);
+            $body = $this->templateManager->getTemplate('email_layout', ['content' => $content], $locale);
 
-            $body = $this->templateManager->getTemplate('email_layout', ['content' => $body], $locale);
-
-            $message = new Message();
-            $message->subject($subject);
-            $message->from($fromEmail);
-            $message->body($body);
-            $message->to($user->getEmail());
-            $message->replyTo($dpoEmail);
-
-            return $this->mailer->send($message);
+            return $this->send($subject, $body, [$user], null, [], false, $dpoEmail);
         }
 
         return false;
