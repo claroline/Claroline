@@ -14,14 +14,11 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContentHtml} from '#/main/app/content/components/html'
 
-import {selectors} from '#/main/core/administration/parameters/store/selectors'
-import {
-  ConnectionMessage as ConnectionMessageTypes,
-  Slide as SlideTypes
-} from '#/main/core/data/types/connection-message/prop-types'
+import {selectors} from '#/main/core/administration/connection-messages/store/selectors'
+import {ConnectionMessage as ConnectionMessageTypes, Slide as SlideTypes} from '#/main/core/data/types/connection-message/prop-types'
 
 import {constants} from '#/main/core/data/types/connection-message/constants'
-import {MODAL_SLIDE_FORM} from '#/main/core/administration/parameters/modals/slide'
+import {MODAL_SLIDE_FORM} from '#/main/core/administration/connection-messages/modals/slide'
 
 const restrictedByDates = (message) => get(message, 'restrictions.enableDates') || (!isEmpty(get(message, 'restrictions.dates')) && (!isEmpty(get(message, 'restrictions.dates.0')) || !isEmpty(get(message, 'restrictions.dates.1'))))
 const restrictedByRoles = (message) => get(message, 'restrictions.enableRoles') || !isEmpty(get(message, 'restrictions.roles'))
@@ -66,7 +63,7 @@ const SlidesForm = (props) =>
                     icon: 'fa fa-fw fa-pencil',
                     label: trans('edit', {}, 'actions'),
                     modal: [MODAL_SLIDE_FORM, {
-                      formName: selectors.STORE_NAME+'.messages.current',
+                      formName: selectors.STORE_NAME+'.current',
                       dataPart: `slides.${slideIndex}`,
                       title: trans('content_edition')
                     }]
@@ -89,7 +86,6 @@ const SlidesForm = (props) =>
         )}
       </ul>
     }
-
     <CallbackButton
       className="btn btn-block btn-emphasis component-container"
       primary={true}
@@ -127,93 +123,80 @@ const Message = (props) =>
   <FormData
     level={2}
     title={props.new ? trans('connection_message_creation') : trans('connection_message_edition')}
-    name={selectors.STORE_NAME+'.messages.current'}
-    target={(message, isNew) => isNew ?
-      ['apiv2_connectionmessage_create'] :
-      ['apiv2_connectionmessage_update', {id: message.id}]
-    }
+    name={selectors.STORE_NAME + '.current'}
+    target={(message, isNew) => isNew ? ['apiv2_connectionmessage_create'] : ['apiv2_connectionmessage_update', {id: message.id}]}
     buttons={true}
     disabled={props.message.locked}
     cancel={{
       type: LINK_BUTTON,
-      target: props.path+'/messages',
+      target: props.path,
       exact: true
     }}
-    sections={[
-      {
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            name: 'title',
-            type: 'string',
-            label: trans('title'),
-            required: true
-          }, {
-            name: 'type',
-            type: 'choice',
-            label: trans('type'),
-            required: true,
-            options: {
-              condensed: true,
-              noEmpty: true,
-              choices: constants.MESSAGE_TYPES
-            }
-          }
-        ]
+    definition={[{
+      title: trans('general'),
+      primary: true,
+      fields: [{
+        name: 'title',
+        type: 'string',
+        label: trans('title'),
+        required: true
       }, {
-        icon: 'fa fa-fw fa-key',
-        title: trans('access_restrictions'),
-        fields: [
-          {
-            name: 'restrictions.hidden',
-            type: 'boolean',
-            label: trans('restrict_hidden')
-          }, {
-            name: 'restrictions.enableDates',
-            label: trans('restrict_by_dates'),
-            type: 'boolean',
-            calculated: restrictedByDates,
-            onChange: activated => {
-              if (!activated) {
-                props.updateProp('restrictions.dates', [])
-              }
-            },
-            linked: [
-              {
-                name: 'restrictions.dates',
-                type: 'date-range',
-                label: trans('access_dates'),
-                displayed: restrictedByDates,
-                required: true,
-                options: {
-                  time: true
-                }
-              }
-            ]
-          }, {
-            name: 'restrictions.enableRoles',
-            label: trans('restrict_by_roles'),
-            type: 'boolean',
-            calculated: restrictedByRoles,
-            onChange: activated => {
-              if (!activated) {
-                props.updateProp('restrictions.roles', [])
-              }
-            },
-            linked: [
-              {
-                name: 'restrictions.roles',
-                label: trans('roles'),
-                type: 'roles',
-                displayed: restrictedByRoles,
-                required: true
-              }
-            ]
+        name: 'type',
+        type: 'choice',
+        label: trans('type'),
+        required: true,
+        options: {
+          condensed: true,
+          noEmpty: true,
+          choices: constants.MESSAGE_TYPES
+        }
+      }]
+    }, {
+      icon: 'fa fa-fw fa-key',
+      title: trans('access_restrictions'),
+      fields: [{
+        name: 'restrictions.hidden',
+        type: 'boolean',
+        label: trans('restrict_hidden')
+      }, {
+        name: 'restrictions.enableDates',
+        label: trans('restrict_by_dates'),
+        type: 'boolean',
+        calculated: restrictedByDates,
+        onChange: activated => {
+          if (!activated) {
+            props.updateProp('restrictions.dates', [])
           }
-        ]
-      }
-    ]}
+        },
+        linked: [{
+          name: 'restrictions.dates',
+          type: 'date-range',
+          label: trans('access_dates'),
+          displayed: restrictedByDates,
+          required: true,
+          options: {
+            time: true
+          }
+        }]
+      }, {
+        name: 'restrictions.enableRoles',
+        label: trans('restrict_by_roles'),
+        type: 'boolean',
+        calculated: restrictedByRoles,
+        onChange: activated => {
+          if (!activated) {
+            props.updateProp('restrictions.roles', [])
+          }
+        },
+        linked: [{
+          name: 'restrictions.roles',
+          label: trans('roles'),
+          type: 'roles',
+          displayed: restrictedByRoles,
+          required: true
+        }]
+      }]
+    }]}
   >
     <SlidesForm
       slides={props.message.slides || []}

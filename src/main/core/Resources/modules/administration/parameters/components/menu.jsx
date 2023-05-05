@@ -42,12 +42,6 @@ const ParametersMenu = (props) =>
           icon: 'fa fa-fw fa-wrench',
           label: trans('technical'),
           target: props.path+'/technical'
-        }, {
-          name: 'messages',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-comment-dots',
-          label: trans('connection_messages'),
-          target: props.path+'/messages'
         }
       ]}
       onClick={props.autoClose}
