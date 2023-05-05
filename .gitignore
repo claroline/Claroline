@@ -32,5 +32,4 @@ symfony.lock
 /var/*
 !/var/geoip/.gitkeep
 /vendor/
-.idea/*
 ###< symfony/framework-bundle ###
