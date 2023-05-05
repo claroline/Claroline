@@ -318,7 +318,7 @@ class UserController extends AbstractCrudController
     }
 
     /**
-     * @Route("/privacy", name="apiv2_user_request_account_deletion", methods={"POST"})
+     * @Route("/request-deletion", name="apiv2_user_request_account_deletion", methods={"POST"})
      */
     public function requestAccountDeletionAction(): JsonResponse
     {
