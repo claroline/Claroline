@@ -93,6 +93,7 @@ services:
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@translator'
 
     Claroline\CoreBundle\Manager\LogManager:
         arguments:
