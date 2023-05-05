@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\AppBundle\Manager\File\TempFileManager;
@@ -176,8 +177,10 @@ class PlatformListener
 
         $locale = $this->localeManager->getLocale($user);
         $content = $this->versionManager->getChangelogs($locale).'<br/>'.'<br/>';
-        $content .= '<em>'.$this->translator->trans('platform_changelog_display', ['%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles')), '%end_date%' => $endDate->format('d/m/Y'),], 'platform').'</em>';
-
+        $content .= '<em>'.$this->translator->trans('platform_changelog_display', [
+                '%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles')),
+                '%end_date%' => $endDate->format('d/m/Y'),
+            ], 'platform').'</em>';
         return [
             [
                 'id' => 'new-version',
@@ -187,12 +190,11 @@ class PlatformListener
                     'id' => 'new-version-changelog',
                     'title' => $this->translator->trans('platform_version', ['%version%' => $this->versionManager->getCurrentMinor()], 'platform'),
                     'content' => $content,
-                    'order' => 0,
-                ]],
-            ],
+                    'order' => 0
+                ]]
+            ]
         ];
     }
-
     private function getDPOMessages(): array
     {
         if (!$this->isAdmin() || $this->config->getParameter('privacy.dpo.email')) {
@@ -207,9 +209,9 @@ class PlatformListener
                         'id' => 'dpo-email-missing-message',
                         'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
                         'content' => $this->translator->trans('dpo_email_missing_content', [], 'platform'),
-                        'order' => 1,
-                    ]],
-                ],
+                        'order' => 1
+                    ]]
+                ]
             ];
         }
     }
@@ -227,13 +229,13 @@ class PlatformListener
                         'id' => 'support-email-missing-message',
                         'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
                         'content' => $this->translator->trans('support_email_missing_content', [], 'platform'),
-                        'order' => 2,
-                    ]],
-                ],
+                        'order' => 2
+                    ]]
+                ]
             ];
         }
     }
-    private function isAdmin(): bool
+    private function isAdmin()
     {
         $token = $this->tokenStorage->getToken();
         if ($token) {
