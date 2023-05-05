@@ -1,0 +1,13 @@
+{
+  "accept_terms": "Vous avez accepté les conditions d'utilisation de la plateforme.",
+  "no_accept_terms": "Vous n'avez pas encore accepté les conditions d'utilisation de la plateforme.",
+  "title_my_datas": "Mes données personnelles",
+  "export_datas": "Exporter mes données",
+  "request_deletion" : "Demander la suppression de mon compte",
+  "title_dialog_delete_account" : "Demande de suppression de mon compte",
+  "message_dialog_delete_account" : "Êtes-vous sûr de vouloir demander la suppression de votre compte ?",
+  "account_deletion": {
+    "subject": "Demande de suppression de compte",
+    "body": "L'utilisateur %name% <br/> ID : %id% <br/> souhaite supprimer son compte. Veuillez prendre les mesures appropriées.<br/><hr/>"
+  }
+}
