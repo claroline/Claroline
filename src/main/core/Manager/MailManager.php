@@ -285,9 +285,10 @@ class MailManager
             $content = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'privacy', $locale);
             $body = $this->templateManager->getTemplate('email_layout', ['content' => $content], $locale);
 
-            return $this->send($subject, $body, [$user], null, [], false, $dpoEmail);
+            return $this->send($subject, $body, [], null, ['to' => [$dpoEmail]], false, $user->getEmail());
         }
 
         return false;
     }
+
 }
