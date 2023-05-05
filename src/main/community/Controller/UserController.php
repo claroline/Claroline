@@ -327,4 +327,5 @@ class UserController extends AbstractCrudController
 
         return new JsonResponse(null, 204);
     }
+
 }
