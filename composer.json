@@ -1,0 +1,188 @@
+{
+    "name": "claroline/claroline",
+    "description": "Claroline Learning Management System",
+    "keywords": [
+        "Claroline",
+        "LMS"
+    ],
+    "homepage": "https://www.claroline.com",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "https://github.com/claroline"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.2",
+        "ext-curl": "*",
+        "ext-dom": "*",
+        "ext-fileinfo": "*",
+        "ext-gd": "*",
+        "ext-iconv": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-openssl": "*",
+        "ext-simplexml": "*",
+        "ext-zip": "*",
+        "claroline/json-quiz": "^1.0",
+        "composer/composer": "^1.6|^2.5",
+        "doctrine/data-fixtures": "^1.3",
+        "doctrine/dbal": "^2.7",
+        "doctrine/doctrine-bundle": "^2.4",
+        "doctrine/migrations": "^2.3",
+        "doctrine/orm": "^2.8",
+        "dompdf/dompdf": "*",
+        "friendsofsymfony/jsrouting-bundle": "^2.2",
+        "gedmo/doctrine-extensions": "^3.2",
+        "geoip2/geoip2": "^2.11",
+        "hwi/oauth-bundle": "^1.1",
+        "icap/html-diff": "1.1.0",
+        "jdorn/sql-formatter": "1.2.17",
+        "lightsaml/sp-bundle": "1.2.1",
+        "lightsaml/lightsaml-logout": "1.0.0",
+        "php-http/httplug-bundle": "*",
+        "php-http/guzzle6-adapter": "*",
+        "postal/postal": "^1.0",
+        "psr/log": "1.0.2",
+        "ramsey/uuid": "^3.7",
+        "sensio/framework-extra-bundle": "^5.6",
+        "stefk/jval": "dev-master",
+        "stof/doctrine-extensions-bundle": "1.6.0",
+        "symfony/monolog-bundle": "^3.5",
+        "symfony/asset": "4.4.*",
+        "symfony/browser-kit": "4.4.*",
+        "symfony/console": "4.4.*",
+        "symfony/doctrine-messenger": "^5.2",
+        "symfony/dotenv": "4.4.*",
+        "symfony/event-dispatcher": "4.4.*",
+        "symfony/framework-bundle": "4.4.*",
+        "symfony/google-mailer": "4.4.*",
+        "symfony/http-client": "4.4.*",
+        "symfony/intl": "4.4.*",
+        "symfony/mailer": "4.4.*",
+        "symfony/messenger": "^5.2",
+        "symfony/redis-messenger": "^5.2",
+        "symfony/routing": "4.4.*",
+        "symfony/security-bundle": "4.4.*",
+        "symfony/translation": "4.4.*",
+        "symfony/twig-bridge": "4.4.*",
+        "symfony/twig-bundle": "4.4.*",
+        "symfony/validator": "4.4.*",
+        "symfony/yaml": "4.4.*",
+        "twig/twig": "^2.14",
+        "willdurand/js-translation-bundle": "^4.0",
+        "http-interop/http-factory-guzzle": "^1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "mikey179/vfsstream": "1.6.8",
+        "mockery/mockery": "^1.2",
+        "phpmd/phpmd": "^2.13",
+        "symfony/phpunit-bridge": "^4.4",
+        "symfony/web-profiler-bundle": "4.4.*",
+        "symfony/debug-bundle": "^4.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Claroline\\AgendaBundle\\": "src/plugin/agenda",
+            "Claroline\\AnalyticsBundle\\": "src/plugin/analytics",
+            "Claroline\\AnnouncementBundle\\": "src/plugin/announcement",
+            "Claroline\\AppBundle\\": "src/main/app",
+            "Claroline\\AudioPlayerBundle\\": "src/plugin/audio-player",
+            "Claroline\\AuthenticationBundle\\": "src/main/authentication",
+            "Claroline\\BigBlueButtonBundle\\": "src/integration/big-blue-button",
+            "Claroline\\ClacoFormBundle\\": "src/plugin/claco-form",
+            "Claroline\\CommunityBundle\\": "src/main/community",
+            "Claroline\\CoreBundle\\": "src/main/core",
+            "Claroline\\CursusBundle\\": "src/plugin/cursus",
+            "Claroline\\DevBundle\\": "src/main/dev",
+            "Claroline\\DocumentationBundle\\": "src/plugin/documentation",
+            "Claroline\\DropZoneBundle\\": "src/plugin/drop-zone",
+            "Claroline\\EvaluationBundle\\": "src/main/evaluation",
+            "Claroline\\ExampleBundle\\": "src/main/example",
+            "Claroline\\ForumBundle\\": "src/plugin/forum",
+            "Claroline\\HistoryBundle\\": "src/plugin/history",
+            "Claroline\\HomeBundle\\": "src/plugin/home",
+            "Claroline\\ImagePlayerBundle\\": "src/plugin/image-player",
+            "Claroline\\InstallationBundle\\": "src/main/installation",
+            "Claroline\\KernelBundle\\": "src/main/kernel",
+            "Claroline\\LinkBundle\\": "src/plugin/link",
+            "Claroline\\LogBundle\\": "src/main/log",
+            "Claroline\\MessageBundle\\": "src/plugin/message",
+            "Claroline\\MigrationBundle\\": "src/main/migration",
+            "Claroline\\OpenBadgeBundle\\": "src/plugin/open-badge",
+            "Claroline\\PdfPlayerBundle\\": "src/plugin/pdf-player",
+            "Claroline\\PeerTubeBundle\\": "src/integration/peertube",
+            "Claroline\\RssBundle\\": "src/plugin/rss",
+            "Claroline\\SamlBundle\\": "src/plugin/saml",
+            "Claroline\\SchedulerBundle\\": "src/main/scheduler",
+            "Claroline\\ScormBundle\\": "src/plugin/scorm",
+            "Claroline\\SlideshowBundle\\": "src/plugin/slideshow",
+            "Claroline\\TagBundle\\": "src/plugin/tag",
+            "Claroline\\TextPlayerBundle\\": "src/plugin/text-player",
+            "Claroline\\ThemeBundle\\": "src/main/theme",
+            "Claroline\\TransferBundle\\": "src/main/transfer",
+            "Claroline\\VideoPlayerBundle\\": "src/plugin/video-player",
+            "Claroline\\WebResourceBundle\\": "src/plugin/web-resource",
+            "HeVinci\\CompetencyBundle\\": "src/plugin/competency",
+            "HeVinci\\FavouriteBundle\\": "src/plugin/favourite",
+            "HeVinci\\UrlBundle\\": "src/plugin/url",
+            "Icap\\BibliographyBundle\\": "src/plugin/bibliography",
+            "Icap\\BlogBundle\\": "src/plugin/blog",
+            "Icap\\LessonBundle\\": "src/plugin/lesson",
+            "Icap\\FormulaPluginBundle\\": "src/plugin/formula",
+            "Icap\\NotificationBundle\\": "src/plugin/notification",
+            "Icap\\WikiBundle\\": "src/plugin/wiki",
+            "Innova\\PathBundle\\": "src/plugin/path",
+            "UJM\\ExoBundle\\": "src/plugin/exo"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
+    "scripts": {
+        "enable-maintenance": [
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
+        ],
+        "disable-maintenance": [
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::disableMaintenance"
+        ],
+        "delete-cache": [
+            "rm -rf ./var/cache/*"
+        ],
+        "bundles": [
+            "Claroline\\KernelBundle\\ScriptHandler::buildBundleFile"
+        ],
+        "setup-geoip": [
+            "php bin/console claroline:geoip:download"
+        ],
+        "pre-install-cmd": [
+            "php bin/configure"
+        ],
+        "post-install-cmd": [
+            "composer bundles",
+            "composer setup-geoip"
+        ],
+        "pre-update-cmd": [
+            "php bin/configure",
+            "composer enable-maintenance",
+            "composer delete-cache"
+        ],
+        "post-update-cmd": [
+            "composer bundles",
+            "composer setup-geoip",
+            "composer disable-maintenance",
+            "composer delete-cache"
+        ]
+    }
+}
