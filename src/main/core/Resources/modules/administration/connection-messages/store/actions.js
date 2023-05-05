@@ -8,8 +8,8 @@ export const openConnectionMessageForm = (formName, defaultProps, id = null) => 
         url: ['apiv2_connectionmessage_get', { id }],
         success: (response, dispatch) => {
           dispatch(formActions.resetForm(formName, response, false))
-        },
-      },
+        }
+      }
     })
   }
 
@@ -20,5 +20,5 @@ export const resetConnectionMessageForm = (formName) => (dispatch) => dispatch(f
 
 export const actions = {
   openConnectionMessageForm,
-  resetConnectionMessageForm,
+  resetConnectionMessageForm
 }

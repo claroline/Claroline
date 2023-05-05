@@ -35,7 +35,7 @@ const ConnectionMessagesTool = (props) => {
             path: '/form/:id?',
             component: Message,
             onEnter: (params) => props.openConnectionMessageForm(params.id),
-            onLeave: () => props.resetConnectionMessageForm(),
+            onLeave: () => props.resetConnectionMessageForm()
           },
           {
             path: '/',
