@@ -1,1 +1,4 @@
-plugin: ~
+plugin:
+  admin_tools:
+    - name: privacy
+      class: key # a FontAwesome icon name to display in menus (MUST NOT contain the fa- prefix)

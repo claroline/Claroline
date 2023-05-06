@@ -11,8 +11,8 @@
 
 namespace Claroline\PrivacyBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 
-class ClarolinePrivacyBundle extends Bundle
+class ClarolinePrivacyBundle extends DistributionPluginBundle
 {
 }

@@ -1,0 +1,4 @@
+services:
+  Claroline\PrivacyBundle\Subscriber\Administration\PrivacySubscriber:
+    tags:
+      - { name: kernel.event_subscriber }
