@@ -1,0 +1,67 @@
+/*
+ * Application mixins
+ */
+
+// gets bootstrap mixins
+@import "bootstrap/mixins";
+
+@import "mixins/alerts";
+@import "mixins/buttons";
+@import "mixins/calendars";
+@import "mixins/gauges";
+@import "mixins/pagination";
+@import "mixins/placeholders";
+@import "mixins/summaries";
+
+// -
+// Modifiers
+// ---
+
+@mixin box-shadow($shadow...) {
+    @if $enable-box-shadow {
+        -webkit-box-shadow: $shadow;
+        -moz-box-shadow: $shadow;
+        box-shadow: $shadow;
+    } @else {
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
+}
+
+@mixin border-radius($border-radius) {
+    @if $enable-border-radius {
+        -webkit-border-radius: $border-radius;
+        -moz-border-radius: $border-radius;
+        border-radius: $border-radius;
+    } @else {
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+    }
+}
+
+@mixin border($border) {
+    @if $enable-border {
+        border: $border;
+    } @else {
+        border: none;
+    }
+}
+
+// -
+// Typography
+// ---
+
+// makes text readable on all bg types/colors
+// uses same styles than movie subtitles : white text with black border
+@mixin text-movie-subtitles() {
+    color: white;
+
+    // simulates borders
+    text-shadow:
+         0.05em  0      1px rgba(0, 0, 0, 0.75),
+         0       0.05em 1px rgba(0, 0, 0, 0.75),
+        -0.05em  0      1px rgba(0, 0, 0, 0.75),
+         0      -0.05em 1px rgba(0, 0, 0, 0.75);
+}

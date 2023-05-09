@@ -1,0 +1,26 @@
+// TODO : clean me
+
+.component-container {
+    margin-bottom: $component-margin-bottom !important;
+}
+
+.user-select-disabled {
+    .user-select('none');
+}
+
+// Cursors
+.move, .move a {
+    cursor: move !important;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.drag-handle {
+    cursor: move;
+}
+
+.cursor-help {
+    cursor: help;
+}

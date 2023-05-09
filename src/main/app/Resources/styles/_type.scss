@@ -1,0 +1,111 @@
+@use "sass:math";
+
+// in bootstrap this doesn't use the mixin
+.text-muted {
+    @include text-emphasis-variant('.text-secondary', $text-muted);
+}
+
+.text-secondary {
+    @include text-emphasis-variant('.text-secondary', $brand-secondary);
+}
+
+// a color to use on background which is considered 'dark' by tinycolor2
+// $see https://www.npmjs.com/package/tinycolor2#isdark
+.text-light {
+    @include text-emphasis-variant('.text-light', $text-light-color);
+}
+
+// a color to use on background which is considered 'light' by tinycolor2
+// $see https://www.npmjs.com/package/tinycolor2#islight
+.text-dark {
+    @include text-emphasis-variant('.text-dark', $text-dark-color);
+}
+
+.text-subtitles {
+    @include text-movie-subtitles();
+}
+
+.h-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+
+    small {
+        display: block;
+        margin-top: 5px;
+    }
+
+    // because of the flex layout the alignment helpers does not work
+    &.text-left {
+        justify-content: left;
+    }
+    &.text-center {
+        justify-content: center;
+    }
+    &.text-right {
+        justify-content: right;
+    }
+}
+
+.h-numbering {
+    display: inline-flex;
+    align-items: center;
+    align-self: stretch;
+    font-size: $heading-numbering-font;
+    font-weight: $heading-numbering-weight;
+    padding: $heading-numbering-padding;
+    margin-right: 10px;
+    background: $heading-numbering-bg;
+    color: $heading-numbering-color;
+
+    @include box-shadow($heading-numbering-box-shadow);
+    @include border-radius($heading-numbering-border-radius);
+
+    &:after {
+        content: $heading-numbering-separator;
+    }
+}
+
+.h-gauge {
+    margin-right: floor(math.div($grid-gutter-width, 2));
+}
+
+.btn.h-back {
+    margin-right: floor(math.div($grid-gutter-width, 2));
+    padding: $padding-base-horizontal;
+    border-radius: 50%;
+}
+
+.h-toolbar {
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+// AVOID USING IT
+// Find a better way to handle it
+.h-first {
+    // otherwise there is too many space when used just after a .page-header
+    // there may be a better way to handle it.
+    margin-top: 0;
+}
+
+.content-html {
+    img {
+        max-width: 100%; // avoids user images to overflow their container
+    }
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    small,
+    .small {
+        font-weight: 300;
+    }
+}
+
+::-moz-selection, /* Code for Firefox */
+::selection {
+    color: $text-selection-color;
+    background: $text-selection-bg;
+}

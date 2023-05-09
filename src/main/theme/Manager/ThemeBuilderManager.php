@@ -92,7 +92,7 @@ class ThemeBuilderManager
         if (!empty($themeSrc)) {
             $themeSrc .= DIRECTORY_SEPARATOR.$theme->getNormalizedName();
             // check expected source files exist
-            if (!file_exists($themeSrc) && !file_exists($themeSrc.'.less')) {
+            if (!file_exists($themeSrc) && !file_exists($themeSrc.'.scss')) {
                 return null;
             }
         }

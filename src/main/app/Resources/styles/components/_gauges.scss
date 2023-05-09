@@ -1,0 +1,93 @@
+
+.gauge {
+    .gauge-text {
+        fill: $text-color;
+    }
+
+    .gauge-liquid {
+        fill-opacity: .3;
+    }
+
+    // generates variants
+    &.gauge-default {
+        @include gauge-variant($gray);
+    }
+    &.gauge-primary {
+        @include gauge-variant($brand-primary);
+    }
+    &.gauge-success {
+        @include gauge-variant($brand-success);
+    }
+    &.gauge-warning {
+        @include gauge-variant($brand-warning);
+    }
+    &.gauge-danger {
+        @include gauge-variant($brand-danger);
+    }
+    &.gauge-info {
+        @include gauge-variant($brand-info);
+    }
+    &.gauge-user {
+        @include gauge-variant($brand-secondary);
+    }
+}
+
+.count-gauge {
+    .gauge-text {
+        font-weight: 900;
+    }
+}
+
+.liquid-gauge {
+    .gauge-text {
+        font-weight: 900;
+    }
+
+    // generates variants
+    &.gauge-default {
+        @include liquid-gauge-variant($gray);
+    }
+    &.gauge-primary {
+        @include liquid-gauge-variant($brand-primary);
+    }
+    &.gauge-success {
+        @include liquid-gauge-variant($brand-success);
+    }
+    &.gauge-warning {
+        @include liquid-gauge-variant($brand-warning);
+    }
+    &.gauge-danger {
+        @include liquid-gauge-variant($brand-danger);
+    }
+    &.gauge-info {
+        @include liquid-gauge-variant($brand-info);
+    }
+    &.gauge-user {
+        @include liquid-gauge-variant($brand-secondary);
+    }
+}
+
+.score-gauge {
+    // generates variants
+    &.gauge-default {
+        @include score-gauge-variant($gray);
+    }
+    &.gauge-primary {
+        @include score-gauge-variant($brand-primary);
+    }
+    &.gauge-success {
+        @include score-gauge-variant($brand-success);
+    }
+    &.gauge-warning {
+        @include score-gauge-variant($brand-warning);
+    }
+    &.gauge-danger {
+        @include score-gauge-variant($brand-danger);
+    }
+    &.gauge-info {
+        @include score-gauge-variant($brand-info);
+    }
+    &.gauge-user {
+        @include score-gauge-variant($brand-secondary);
+    }
+}

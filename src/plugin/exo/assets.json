@@ -1,7 +1,7 @@
 {
   "styles": {
     "entry": {
-      "quiz-resource": "main.less"
+      "quiz-resource": "main.scss"
     }
   }
 }

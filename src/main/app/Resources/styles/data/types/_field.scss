@@ -1,0 +1,55 @@
+/**
+ * Styles for `field` data type.
+ */
+
+@use "sass:math";
+
+.field-list-control {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .field-item {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        background: $gray-lighter;
+        padding: 10px;
+        margin-bottom: $component-margin-bottom-small;
+
+        @include border-radius($border-radius-base);
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .help-block {
+            margin-bottom: 0; // todo ugly. will break when there is error message
+        }
+
+        .field-item-actions {
+            margin-left: floor(math.div($grid-gutter-width, 2));
+
+            .btn {
+                padding: 4px;
+            }
+        }
+    }
+}
+
+.form-group {
+    .field-list-control {
+        position: relative; // constrains remove all btn
+
+        // moves remove all btn on the same line than the label
+        // code is not really aesthetic
+        .btn-delete-all {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+        }
+    }
+}

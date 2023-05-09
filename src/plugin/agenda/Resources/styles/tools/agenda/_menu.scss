@@ -1,0 +1,40 @@
+
+@use "sass:math";
+
+.agenda-menu {
+    text-align: center;
+
+    .calendar-container {
+        margin-top: $component-margin-bottom;
+        margin-bottom: 10px; // $component-margin-bottom - h5 margin
+    }
+
+    .calendar {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .list-group-item {
+        display: flex;
+        align-items: center;
+        font-weight: normal;
+
+        input[type=checkbox] {
+            margin-top: 0;
+            margin-right: $icon-text-spacer;
+        }
+    }
+
+    .agenda-menu-title {
+        margin-left: floor(math.div($grid-gutter-width, 2));
+        font-size: 16px;
+    }
+
+    .planning-loader {
+        margin-left: auto;
+    }
+
+    .colors-container {
+        height: auto;
+    }
+}

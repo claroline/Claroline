@@ -57,6 +57,9 @@ ContentTabs.propTypes = {
   sections: T.arrayOf(T.shape({
     // TODO : action types
   })),
+  /**
+   * @deprecated
+   */
   backAction: T.shape({
     // TODO : action types
   }),

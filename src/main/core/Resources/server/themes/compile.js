@@ -1,5 +1,6 @@
 const fs = require('fs')
-const less = require('less')
+
+const sass = require('sass')
 const path = require('path')
 const postcss = require('postcss')
 const autoprefixer = require('autoprefixer')
@@ -7,11 +8,19 @@ const cssnano = require('cssnano')
 
 const paths = require('../paths')
 
-function compile(srcFile, outputFile, additionalVarsFiles) {
+function compile(srcFile, outputFile, additionalVarsFiles = []) {
   const baseName = path.basename(outputFile, '.css')
 
   const compileOptions = {
-    filename: srcFile,
+    style: 'compressed',
+    loadPaths: [
+      paths.root(),
+      // this is required because `compileString` does not resolve paths like `compile`
+      paths.dirname(srcFile),
+      ...additionalVarsFiles.map(varsFile => paths.relative(paths.root(), paths.dirname(varsFile)))
+    ]
+    //style: outputFile
+    /*filename: srcFile,
     paths: [
       paths.root()
     ],
@@ -22,16 +31,22 @@ function compile(srcFile, outputFile, additionalVarsFiles) {
       outputSourceFiles: true,
       sourceMapBasepath: paths.root(),
       sourceMapFilename:'./'+baseName+'.css.map'
-    }
+    }*/
   }
 
-  var src = fs.readFileSync(srcFile, 'utf8')
+  let src = fs.readFileSync(srcFile, 'utf8')
+
   if (additionalVarsFiles) {
     // Add vars from all additional vars file
-    src = src.concat(...additionalVarsFiles.map(varsFile => `@import "${varsFile}";\n`))
+    src = src.concat(...additionalVarsFiles.map(varsFile => {
+      let filePath = paths.relative(paths.root(), varsFile)
+      filePath = filePath.replaceAll('\\', '/')
+
+      return `@import "${filePath}";\n`
+    }))
   }
 
-  return less.render(src, compileOptions)
+  return sass.compileString(src, compileOptions)
 }
 
 function optimize(input) {

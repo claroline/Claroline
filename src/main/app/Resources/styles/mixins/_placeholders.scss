@@ -1,0 +1,31 @@
+@use "sass:math";
+
+@mixin placeholder-variant($font-size, $padding, $border-radius, $border) {
+  //font-size: $font-size;
+  padding: $padding;
+  border-width: $border;
+
+  @include border-radius($border-radius);
+
+  .placeholder-icon {
+    font-size: $font-size*2;
+    height: $font-size*4;
+    width: $font-size*4;
+
+    margin-right: floor(math.div($grid-gutter-width, 2));
+  }
+
+  .placeholder-body {
+    border-left-width: $border;
+
+    .placeholder-title {
+      display: block;
+      font-size: $font-size;
+      font-weight: bold;
+    }
+
+    .placeholder-help {
+      font-size: $font-size-base; // todo this will be ugly on sm placeholder
+    }
+  }
+}

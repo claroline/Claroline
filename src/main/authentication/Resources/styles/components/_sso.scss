@@ -1,0 +1,85 @@
+/**
+ * SSO login buttons
+ */
+
+@use "sass:math";
+
+.btn-third-party-login {
+  text-align: left;
+  border-radius: $sso-btn-border-radius;
+  color: $sso-btn-color !important;
+  font-size: $sso-btn-font-size;
+
+  &:hover,
+  &:focus {
+    color: $sso-btn-color !important;
+  }
+
+  @include sso-connect-btn($sso-default-primary, $sso-default-secondary);
+
+  &.dropbox      { @include sso-connect-btn($sso-dropbox-primary,    $sso-dropbox-primary); }
+  &.facebook     { @include sso-connect-btn($sso-facebook-primary,   $sso-facebook-secondary); }
+  &.github       { @include sso-connect-btn($sso-github-primary,     $sso-github-primary); }
+  &.google       { @include sso-connect-btn($sso-google-primary,     $sso-google-secondary); }
+  &.linkedin     { @include sso-connect-btn($sso-linkedin-primary,   $sso-linkedin-secondary); }
+  &.office_365   { @include sso-connect-btn($sso-office_365-primary, $sso-office_365-secondary); }
+  &.twitter      { @include sso-connect-btn($sso-twitter-primary,    $sso-twitter-secondary); }
+  &.windows_live { @include sso-connect-btn($sso-office_365-primary, $sso-office_365-secondary); }
+}
+
+/**
+ * Link external app page
+ */
+
+.external-link-container {
+  text-align: center;
+  max-width: floor(math.div($login-max-width, 2));
+  width: 100%;
+  margin: 0 auto $component-margin-bottom;
+
+  .img-thumbnail {
+    border-radius: 50%;
+  }
+
+  .external-app-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 72px;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+  }
+
+  .external-link-title {
+    margin-top: 0;
+    font-weight: 900;
+
+    > small {
+      display: block;
+      font-weight: normal;
+      margin-bottom: 5px;
+    }
+  }
+
+  .external-link-panel {
+    margin-top: -55px;
+    border: 1px solid $panel-default-border;
+    border-radius: $panel-border-radius;
+    background: $panel-bg;
+    padding: 30px 45px;
+    padding-top: 55px + 15px; // half-size of the app icon (4px comes from img-thumbnail) + standard padding
+
+    @include box-shadow($panel-box-shadow);
+  }
+
+  &.dropbox      { @include external-app-variant($sso-dropbox-primary,    $sso-dropbox-primary); }
+  &.facebook     { @include external-app-variant($sso-facebook-primary,   $sso-facebook-secondary); }
+  &.github       { @include external-app-variant($sso-github-primary,     $sso-github-primary); }
+  &.google       { @include external-app-variant($sso-google-primary,     $sso-google-secondary); }
+  &.linkedin     { @include external-app-variant($sso-linkedin-primary,   $sso-linkedin-secondary); }
+  &.office_365   { @include external-app-variant($sso-office_365-primary, $sso-office_365-secondary); }
+  &.twitter      { @include external-app-variant($sso-twitter-primary,    $sso-twitter-secondary); }
+  &.windows_live { @include external-app-variant($sso-office_365-primary, $sso-office_365-secondary); }
+}

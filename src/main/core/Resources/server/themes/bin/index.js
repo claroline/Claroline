@@ -68,11 +68,11 @@ if (getFlag(commandArgs, 'version', 'v')) {
  * @return {Theme}
  */
 function getThemeFromPath(themePath) {
-  if (!shell.test('-e', themePath) && !shell.test('-e', themePath+'.less')) {
+  if (!shell.test('-e', themePath) && !shell.test('-e', themePath+'.scss')) {
     throw new Error(`Theme '${themePath}' not found.`)
   }
 
-  return new themeConf.Theme(path.basename(themePath, '.less'), path.dirname(themePath))
+  return new themeConf.Theme(path.basename(themePath, '.scss'), path.dirname(themePath))
 }
 
 function getFlag(args, longName, shortName) {

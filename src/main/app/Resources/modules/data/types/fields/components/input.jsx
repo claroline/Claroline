@@ -179,7 +179,7 @@ class FieldList extends Component {
         }
 
         {0 === this.props.value.length &&
-          <div className="no-field-info">{this.props.placeholder}</div>
+          <div className="no-item-info">{this.props.placeholder}</div>
         }
 
         <Button

@@ -82,7 +82,7 @@ const CriteriaInput = props =>
     }
 
     {0 === props.value.length &&
-      <div className="no-criterion-info">{props.placeholder}</div>
+      <div className="no-item-info">{props.placeholder}</div>
     }
 
     <Button

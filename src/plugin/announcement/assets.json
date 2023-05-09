@@ -1,7 +1,7 @@
 {
   "styles": {
     "entry": {
-      "announcement-resource": "resources/announcement.less"
+      "announcement-resource": "resources/announcement.scss"
     }
   }
 }

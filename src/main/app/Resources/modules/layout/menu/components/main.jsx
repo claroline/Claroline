@@ -14,7 +14,6 @@ import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/ma
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {MenuSection} from '#/main/app/layout/menu/components/section'
-import {HeaderBrand} from '#/main/app/layout/header/components/brand'
 
 class MenuMain extends Component {
   constructor(props) {
@@ -64,15 +63,6 @@ class MenuMain extends Component {
       >
         <Fragment>
           <aside className="app-menu">
-            {false && ((this.props.display.name && this.props.title) || this.props.logo) &&
-              <HeaderBrand
-                logo={this.props.logo}
-                title={this.props.title}
-                subtitle={this.props.subtitle}
-                showTitle={this.props.display.name}
-              />
-            }
-
             <header className="app-menu-header">
               {this.props.backAction &&
                 <Button

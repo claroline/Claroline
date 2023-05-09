@@ -1,7 +1,7 @@
 {
   "styles": {
     "entry": {
-      "resource": "audio/resource.less"
+      "resource": "resources/audio.scss"
     }
   }
 }

@@ -27,13 +27,12 @@ function build(theme, noCache) {
     previousBuild[theme.name] = {}
   }
 
-  buildTheme(theme, previousBuild[theme.name]).then(() => {
-    shell.echo('Theme state: ')
-    shell.echo(previousBuild[theme.name])
+  buildTheme(theme, previousBuild[theme.name]).then((results) => {
+    previousBuild[theme.name] = results.reduce((acc, result) => Object.assign(acc, result), {})
 
     dumpBuildState(previousBuild)
 
-    shell.echo('Rebuild theme finished.')
+    console.log(`[SUCCESS] Rebuild theme "${theme.name}" finished.`)
   })
 }
 
@@ -46,7 +45,7 @@ function build(theme, noCache) {
 function buildTheme(theme, themeState) {
   const errors = theme.validate()
   if (0 !== errors.length) {
-    errors.forEach(error => shell.echo(error))
+    errors.forEach(error => console.error(error))
   }
 
   if (theme.canCompile()) {
@@ -58,6 +57,8 @@ function buildTheme(theme, themeState) {
 
     // Copy static assets
     if (theme.hasStaticAssets()) {
+      console.log(`Copy static files :`)
+
       theme.getStaticAssets().map(assetDir =>
         copyStatic(
           // src
@@ -65,9 +66,12 @@ function buildTheme(theme, themeState) {
           // destination
           path.resolve(themeDir),
           // asset dir
-          assetDir)
+          assetDir
+        )
       )
     }
+
+    console.log(`Compile styles :`)
 
     return Promise.all([
       // 1. Build theme root file
@@ -76,7 +80,7 @@ function buildTheme(theme, themeState) {
         path.resolve(themeDir, 'bootstrap.css'),
         themeState['bootstrap.css']
       ).then(
-        newVersion => themeState['bootstrap.css'] = newVersion
+        newVersion => ({'bootstrap.css' : newVersion})
       ),
 
       // 2. Build plugins styles using theme vars
@@ -86,57 +90,42 @@ function buildTheme(theme, themeState) {
         themeState[packageAssets+'.css'],
         theme.getVars() // global vars
       ).then(
-        newVersion => themeState[packageAssets+'.css'] = newVersion)
-      )
-    ]).then(
-      result => onThemeSuccess(theme, result),
-      reject => onThemeError(theme, reject)
-    )
+        //newVersion => themeState[packageAssets+'.css'] = newVersion
+        newVersion => ({[`${packageAssets}.css`] : newVersion})
+      ))
+    ])
   } else {
     return Promise.reject('Theme is not valid. Compilation aborted.')
   }
 }
 
-function onThemeSuccess(theme, result) {
-  shell.echo(`[SUCCESS] Theme '${theme.name}' has been successfully updated.`)
-
-  return result
-}
-
-function onThemeError(theme, reject) {
-  shell.echo(`[ERROR] Theme '${theme.name}' has not been updated.`)
-  shell.echo(reject)
-
-  return reject
-}
-
 function createAsset(asset, outputFile, currentVersion, globalVars) {
-  return compile.compile(asset, outputFile, globalVars).then(output => {
-    // Check if the result has change since last compilation
-    const newVersion = crypto.createHash('md5').update(output.css).digest('hex')
+  const output = compile.compile(asset, outputFile, globalVars)
 
-    if (currentVersion !== newVersion || !fs.existsSync(outputFile)) {
-      // Content has changed => update the build
-      shell.echo(`+++ ${outputFile}.`)
+  // Check if the result has changed since last compilation
+  const newVersion = crypto.createHash('md5').update(output.css).digest('hex')
 
-      // Post process
-      return compile.optimize(output.css).then(optimized => {
-        // Write new css file
-        fs.writeFileSync(outputFile, optimized)
+  if (currentVersion !== newVersion || !fs.existsSync(outputFile)) {
+    // Content has changed => update the build
+    console.info(`+++ ${outputFile}.`)
 
-        // Write new map file
-        if (output.map) {
-          fs.writeFileSync(outputFile + '.map', output.map)
-        }
+    // Post process
+    return compile.optimize(output.css).then(optimized => {
+      // Write new css file
+      fs.writeFileSync(outputFile, optimized)
 
-        return Promise.resolve(newVersion)
-      })
-    } else {
-      shell.echo(`    ${outputFile}.`)
+      // Write new map file
+      if (output.map) {
+        fs.writeFileSync(outputFile + '.map', output.map)
+      }
 
       return Promise.resolve(newVersion)
-    }
-  })
+    })
+  } else {
+    shell.echo(`    ${outputFile}.`)
+
+    return Promise.resolve(newVersion)
+  }
 }
 
 /**
@@ -147,9 +136,7 @@ function createAsset(asset, outputFile, currentVersion, globalVars) {
  */
 function copyStatic(src, destination, assetDir) {
   const pathToRemove = path.join(destination, assetDir)
-  console.log('Removing path: ', pathToRemove)
-  console.log('copy src: ', src)
-  console.log('copy destination: ', destination)
+  console.log(`    ${src} => ${pathToRemove}`)
   shell.rm('-rf', pathToRemove)
   shell.cp('-R', src, destination)
 }
@@ -170,17 +157,12 @@ function dumpBuildState(state) {
  * @returns {object}
  */
 function getBuildState() {
-  shell.echo('Retrieving previous build state...')
   if (shell.test('-e', BUILD_FILE)) {
     // Themes have already been built once
-    shell.echo('Build state FOUND.')
-
     return JSON.parse(shell.cat(BUILD_FILE)) || {}
-  } else {
-    shell.echo('Build state NOT FOUND.')
-
-    return {}
   }
+
+  return {}
 }
 
 module.exports = {
