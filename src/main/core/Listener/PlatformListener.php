@@ -209,7 +209,7 @@ class PlatformListener
             return [];
         }
 
-        $editUrl = $this->routingHelper->indexPath() . '#/admin/main_settings/privacy';
+        $editUrl = $this->routingHelper->indexPath().'#/admin/main_settings/privacy';
 
         return [
             [
@@ -232,7 +232,7 @@ class PlatformListener
             return [];
         }
 
-        $editUrl = $this->routingHelper->indexPath() . '#/admin/main_settings';
+        $editUrl = $this->routingHelper->indexPath().'#/admin/main_settings';
 
         return [
             [
