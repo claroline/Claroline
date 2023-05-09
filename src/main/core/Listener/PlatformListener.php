@@ -210,7 +210,6 @@ class PlatformListener
         }
 
         $editUrl = $this->routingHelper->indexPath() . '#/admin/main_settings/privacy';
-
         return [
             [
                 'id' => 'dpo-email-missing',
@@ -239,7 +238,6 @@ class PlatformListener
         }
 
         $editUrl = $this->routingHelper->indexPath() . '#/admin/main_settings';
-
         return [
             [
                 'id' => 'support-email-missing',
