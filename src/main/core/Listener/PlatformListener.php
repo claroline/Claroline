@@ -209,19 +209,25 @@ class PlatformListener
             return [];
         }
 
-        $editUrl = $this->routingHelper->indexPath().'#/admin/main_settings/privacy';
+        $editUrl = $this->routingHelper->indexPath() . '#/admin/main_settings/privacy';
 
         return [
             [
                 'id' => 'dpo-email-missing',
                 'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
                 'type' => ConnectionMessage::TYPE_ALWAYS,
-                'slides' => [[
-                    'id' => 'dpo-email-missing-message',
-                    'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
-                    'content' => $this->translator->trans('dpo_email_missing_content', ['%link%' => "<a href=\"$editUrl\" target=\"_blank\"><strong>".$this->translator->trans('here', [], 'platform')."</strong></a>"], 'platform'),
-                    'order' => 1,
-                ]],
+                'slides' => [
+                    [
+                        'id' => 'dpo-email-missing-message',
+                        'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
+                        'content' => $this->translator->trans(
+                            'dpo_email_missing_content',
+                            ['%link%' => '<a href="' . $editUrl . '" target="_blank"><strong>' . $this->translator->trans('here', [], 'platform') . '</strong></a>'],
+                            'platform'
+                        ),
+                        'order' => 1,
+                    ],
+                ],
             ],
         ];
     }
@@ -232,19 +238,25 @@ class PlatformListener
             return [];
         }
 
-        $editUrl = $this->routingHelper->indexPath().'#/admin/main_settings';
+        $editUrl = $this->routingHelper->indexPath() . '#/admin/main_settings';
 
         return [
             [
                 'id' => 'support-email-missing',
                 'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
                 'type' => ConnectionMessage::TYPE_ALWAYS,
-                'slides' => [[
-                    'id' => 'support-email-missing-message',
-                    'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
-                    'content' => $this->translator->trans('support_email_missing_content', ['%link%' => "<a href=\"$editUrl\" target=\"_blank\"><strong>".$this->translator->trans('here', [], 'platform')."</strong></a>"], 'platform'),
-                    'order' => 2,
-                ]],
+                'slides' => [
+                    [
+                        'id' => 'support-email-missing-message',
+                        'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
+                        'content' => $this->translator->trans(
+                            'support_email_missing_content',
+                            ['%link%' => '<a href="' . $editUrl . '" target="_blank"><strong>' . $this->translator->trans('here', [], 'platform') . '</strong></a>'],
+                            'platform'
+                        ),
+                        'order' => 2,
+                    ],
+                ],
             ],
         ];
     }
