@@ -1,8 +1,8 @@
 import {connect} from 'react-redux'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {selectors} from '#/main/core/administration/parameters/store/selectors'
-import {PrivacyMain as PrivacyMainComponent} from '#/main/core/administration/parameters/privacy/components/main'
+import {selectors} from '#/main/core/administration/parameters/store'
+import {PrivacyMain as PrivacyMainComponent} from '../components/main.jsx'
 
 const PrivacyMain = connect(
   (state) => ({

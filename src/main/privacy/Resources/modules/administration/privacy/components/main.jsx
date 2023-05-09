@@ -8,7 +8,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/main/core/administration/parameters/store'
 
-const PrivacyMain = (props) =>
+const PrivacyMain = (props) => 
   <FormData
     level={2}
     name={selectors.FORM_NAME}
