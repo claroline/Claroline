@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
@@ -43,6 +44,9 @@ class PlatformListener
 
     /** @var LocaleManager */
     private $localeManager;
+
+    /** @var RoutingHelper */
+    private $routingHelper;
 
     /**
      * The list of public routes of the application.
@@ -71,7 +75,8 @@ class PlatformListener
         PlatformConfigurationHandler $config,
         VersionManager $versionManager,
         TempFileManager $tempManager,
-        LocaleManager $localeManager
+        LocaleManager $localeManager,
+        RoutingHelper $routingHelper
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
@@ -79,6 +84,7 @@ class PlatformListener
         $this->versionManager = $versionManager;
         $this->tempManager = $tempManager;
         $this->localeManager = $localeManager;
+        $this->routingHelper = $routingHelper;
     }
 
     /**
@@ -201,42 +207,45 @@ class PlatformListener
     {
         if (!$this->isAdmin() || $this->config->getParameter('privacy.dpo.email')) {
             return [];
-        } else {
-            return [
-                [
-                    'id' => 'dpo-email-missing',
-                    'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
-                    'type' => ConnectionMessage::TYPE_ALWAYS,
-                    'slides' => [[
-                        'id' => 'dpo-email-missing-message',
-                        'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
-                        'content' => $this->translator->trans('dpo_email_missing_content', [], 'platform'),
-                        'order' => 1,
-                    ]],
-                ],
-            ];
         }
+
+        $editUrl = $this->routingHelper->indexPath() . '#/admin/main_settings/privacy';
+
+        return [
+            [
+                'id' => 'dpo-email-missing',
+                'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
+                'type' => ConnectionMessage::TYPE_ALWAYS,
+                'slides' => [[
+                    'id' => 'dpo-email-missing-message',
+                    'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
+                    'content' => $this->translator->trans('dpo_email_missing_content', ['%link%' => "<a href=\"$editUrl\" target=\"_blank\"><strong>".$this->translator->trans('here', [], 'platform')."</strong></a>"], 'platform'),
+                    'order' => 1,
+                ]],
+            ],
+        ];
     }
 
     private function getSupportMessages(): array
     {
         if (!$this->isAdmin() || $this->config->getParameter('help.support_email')) {
             return [];
-        } else {
-            return [
-                [
-                    'id' => 'support-email-missing',
-                    'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
-                    'type' => ConnectionMessage::TYPE_ALWAYS,
-                    'slides' => [[
-                        'id' => 'support-email-missing-message',
-                        'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
-                        'content' => $this->translator->trans('support_email_missing_content', [], 'platform'),
-                        'order' => 2,
-                    ]],
-                ],
-            ];
         }
+
+        $editUrl = $this->routingHelper->indexPath() . '#/admin/main_settings';
+
+        return [
+            [
+                'id' => 'support-email-missing',
+                'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
+                'type' => ConnectionMessage::TYPE_ALWAYS,
+                'slides' => [[
+                    'id' => 'support-email-missing-message',
+                    'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
+                    'content' => $this->translator->trans('support_email_missing_content', ['%link%' => "<a href=\"$editUrl\" target=\"_blank\"><strong>".$this->translator->trans('here', [], 'platform')."</strong></a>"], 'platform'),
+                ]],
+            ],
+        ];
     }
 
     private function isAdmin(): bool
