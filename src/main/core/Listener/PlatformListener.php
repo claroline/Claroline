@@ -243,6 +243,7 @@ class PlatformListener
                     'id' => 'support-email-missing-message',
                     'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
                     'content' => $this->translator->trans('support_email_missing_content', ['%link%' => "<a href=\"$editUrl\" target=\"_blank\"><strong>".$this->translator->trans('here', [], 'platform')."</strong></a>"], 'platform'),
+                    'order' => 2,
                 ]],
             ],
         ];
