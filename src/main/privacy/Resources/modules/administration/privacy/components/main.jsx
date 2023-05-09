@@ -5,8 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-
-import {selectors} from '#/main/core/administration/parameters/store'
+import {selectors} from '#/main/privacy/administration/privacy/store'
 
 const PrivacyMain = (props) => 
   <FormData
