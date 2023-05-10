@@ -208,7 +208,9 @@ class PlatformListener
         if (!$this->isAdmin() || $this->config->getParameter('privacy.dpo.email')) {
             return [];
         }
+
         $editUrl = $this->routingHelper->adminPath('main_settings/privacy');
+
         return [
             [
                 'id' => 'dpo-email-missing',
@@ -217,7 +219,7 @@ class PlatformListener
                 'slides' => [[
                     'id' => 'dpo-email-missing-message',
                     'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
-                    'content' => $this->translator->trans('dpo_email_missing_content', ['%link%' => "<a href=\"$editUrl\" target=\"_blank\"><strong>".$this->translator->trans('here', [], 'platform')."</strong></a>"], 'platform'),
+                    'content' => $this->translator->trans('dpo_email_missing_content', ['%link%' => '<a href="' . $editUrl . '" target="_blank"><strong>' . $this->translator->trans('here', [], 'platform') . '</strong></a>'], 'platform'),
                     'order' => 1,
                 ]],
             ],
@@ -229,7 +231,9 @@ class PlatformListener
         if (!$this->isAdmin() || $this->config->getParameter('help.support_email')) {
             return [];
         }
+
         $editUrl = $this->routingHelper->adminPath('main_settings');
+
         return [
             [
                 'id' => 'support-email-missing',
@@ -238,7 +242,7 @@ class PlatformListener
                 'slides' => [[
                     'id' => 'support-email-missing-message',
                     'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
-                    'content' => $this->translator->trans('support_email_missing_content', ['%link%' => "<a href=\"$editUrl\" target=\"_blank\"><strong>".$this->translator->trans('here', [], 'platform')."</strong></a>"], 'platform'),
+                    'content' => $this->translator->trans('support_email_missing_content', ['%link%' => '<a href="' . $editUrl . '" target="_blank"><strong>' . $this->translator->trans('here', [], 'platform') . '</strong></a>'], 'platform'),
                     'order' => 2,
                 ]],
             ],
