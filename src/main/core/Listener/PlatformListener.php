@@ -219,7 +219,7 @@ class PlatformListener
                 'slides' => [[
                     'id' => 'dpo-email-missing-message',
                     'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
-                    'content' => $this->translator->trans('dpo_email_missing_content', ['%link%' => '<a href="' . $editUrl . '" target="_blank"><strong>' . $this->translator->trans('here', [], 'platform') . '</strong></a>'], 'platform'),
+                    'content' => $this->translator->trans('dpo_email_missing_content', ['%link%' => '<a href="'.$editUrl.'" target="_blank"><strong>'.$this->translator->trans('here', [], 'platform').'</strong></a>'], 'platform'),
                     'order' => 1,
                 ]],
             ],
@@ -242,7 +242,7 @@ class PlatformListener
                 'slides' => [[
                     'id' => 'support-email-missing-message',
                     'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
-                    'content' => $this->translator->trans('support_email_missing_content', ['%link%' => '<a href="' . $editUrl . '" target="_blank"><strong>' . $this->translator->trans('here', [], 'platform') . '</strong></a>'], 'platform'),
+                    'content' => $this->translator->trans('support_email_missing_content', ['%link%' => '<a href="'.$editUrl.'" target="_blank"><strong>'.$this->translator->trans('here', [], 'platform').'</strong></a>'], 'platform'),
                     'order' => 2,
                 ]],
             ],
