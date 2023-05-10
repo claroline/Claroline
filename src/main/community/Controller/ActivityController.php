@@ -109,9 +109,10 @@ class ActivityController
             ]);
         }
 
-        $user = $this->tokenStorage->getToken()->getUser();
         $organizations = [];
-        if (!$user->hasRole(PlatformRoles::ADMIN)) {
+        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
+            $user = $this->tokenStorage->getToken()->getUser();
+
             $organizations = $user->getOrganizations()->toArray();
         }
 
@@ -185,8 +186,9 @@ class ActivityController
             $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $contextId]);
             $query['hiddenFilters'] = ['workspace' => $workspace];
         } else {
-            $user = $this->tokenStorage->getToken()->getUser();
-            if (!$user->hasRole(PlatformRoles::ADMIN)) {
+            if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
+                $user = $this->tokenStorage->getToken()->getUser();
+
                 $organizations = array_map(function (Organization $organization) {
                     return $organization->getUuid();
                 }, $user->geOrganizations()->toArray());

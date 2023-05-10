@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class Kernel extends BaseKernel
 {
@@ -40,7 +40,7 @@ class Kernel extends BaseKernel
     public function registerBundles(): iterable
     {
         // MaintenanceHandler::isMaintenanceEnabled() is a hacky way to know we are in update/install
-        // command and we need to enable all plugins in order to update them
+        // command, and we need to enable all plugins in order to update them
         // We also need all plugins in tests environment to be able to run their tests suite
         $fetchAll = MaintenanceHandler::isMaintenanceEnabled() || 'test' === $this->environment;
 
@@ -58,7 +58,7 @@ class Kernel extends BaseKernel
         }
     }
 
-    protected function configureRoutes(RouteCollectionBuilder $routes): void
+    protected function configureRoutes(RoutingConfigurator $routes): void
     {
         foreach ($this->bundles as $bundle) {
             if ($bundle instanceof AutoConfigurableInterface) {

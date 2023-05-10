@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event;
+namespace Claroline\CoreBundle\Tests\Unit\Event;
 
 use Claroline\AppBundle\Event\MandatoryEventException;
 use Claroline\AppBundle\Event\MissingEventClassException;

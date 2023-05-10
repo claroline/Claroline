@@ -5,31 +5,33 @@ services:
                 - [setManager, ['@claroline.migration.manager']]
 
     claroline.migration.manager:
-        class: '%claroline.migration_manager.class%'
+        class: Claroline\MigrationBundle\Manager\Manager
         arguments:
             - '@claroline.migration.generator'
             - '@claroline.migration.writer'
             - '@claroline.migration.migrator'
+        calls:
+            - [ setLogger, [ '@logger' ] ]
 
     claroline.migration.generator:
-        class: '%claroline.migration_generator.class%'
+        class: Claroline\MigrationBundle\Generator\Generator
         arguments:
             - '@doctrine.orm.entity_manager'
             - '@claroline.migration.doctrine_schema_tool'
 
     claroline.migration.writer:
-        class: '%claroline.migration_writer.class%'
+        class: Claroline\MigrationBundle\Generator\Writer
         arguments:
             - '@filesystem'
             - '@twig'
 
     claroline.migration.migrator:
-        class: '%claroline.migration_migrator.class%'
+        class: Claroline\MigrationBundle\Migrator\Migrator
         arguments:
             - '@doctrine.dbal.default_connection'
 
     claroline.migration.doctrine_schema_tool:
-        class: '%claroline.migration_schema_tool.class%'
+        class: Doctrine\ORM\Tools\SchemaTool
         arguments:
             - '@doctrine.orm.entity_manager'
 
@@ -38,7 +40,7 @@ services:
 
     Claroline\MigrationBundle\Command\DiscardCommand:
         tags:
-            - { name: 'console.command', command: 'claroline:teams:check' }
+            - { name: 'console.command', command: 'claroline:migration:discard' }
 
     Claroline\MigrationBundle\Command\DowngradeCommand:
         tags:

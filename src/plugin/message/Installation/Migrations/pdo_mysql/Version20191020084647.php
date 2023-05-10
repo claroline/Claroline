@@ -18,7 +18,7 @@ class Version20191020084647 extends AbstractMigration
             CREATE TABLE claro_contact_options (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT DEFAULT NULL, 
-                options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json)', 
                 UNIQUE INDEX UNIQ_BBCE147CA76ED395 (user_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB

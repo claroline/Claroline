@@ -22,7 +22,7 @@ class InvalidVersionException extends \Exception
             'Invalid target version "%s": version must be either "%s", "%s" or an explicit version number',
             $version,
             Migrator::VERSION_NEAREST,
-            Migrator::VERSION_FARTHEST
+            Migrator::VERSION_LATEST
         );
         parent::__construct($message);
     }

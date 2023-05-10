@@ -97,7 +97,7 @@ class TranslatableSerializer
 
         $this->sipe('type', 'setType', $data, $content);
         $content->setTranslatableLocale(
-            $this->localeManager->getUserLocale($this->requestStack->getMasterRequest())
+            $this->localeManager->getUserLocale($this->requestStack->getMainRequest())
         );
     }
 }

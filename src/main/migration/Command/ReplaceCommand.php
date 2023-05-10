@@ -13,22 +13,15 @@ namespace Claroline\MigrationBundle\Command;
 
 use Claroline\MigrationBundle\Migrator\InvalidVersionException;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ReplaceCommand extends AbstractMigrateCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
         $this->setDescription('Replace the last migration of a bundle (this is equivalent to downgrade => discard => generate => upgrade)');
-        $this->addOption(
-            'output',
-            null,
-            InputOption::VALUE_REQUIRED,
-            'The bundle output if you want migrations to be generated somewhere else'
-        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -37,7 +30,7 @@ class ReplaceCommand extends AbstractMigrateCommand
         try {
             $manager->downgradeBundle($this->getTargetBundle($input), $input->getOption('target'));
             $manager->discardUpperMigrations($this->getTargetBundle($input));
-            $manager->generateBundleMigration($this->getTargetBundle($input), $this->getOutputBundle($input));
+            $manager->generateBundleMigration($this->getTargetBundle($input));
             $manager->upgradeBundle($this->getTargetBundle($input), $input->getOption('target'));
         } catch (InvalidVersionException $ex) {
             throw new \Exception($ex->getUsageMessage());
@@ -46,7 +39,7 @@ class ReplaceCommand extends AbstractMigrateCommand
         return 0;
     }
 
-    protected function getAction()
+    protected function getAction(): string
     {
         return 'replace';
     }

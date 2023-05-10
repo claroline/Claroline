@@ -20,8 +20,6 @@ services:
     Claroline\CoreBundle\Security\Voter\Tool\AdministrationToolVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 
-    Claroline\CoreBundle\Security\Voter\AdministratorVoter: ~
-
     Claroline\CoreBundle\Security\Voter\PublicFileVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 
@@ -52,8 +50,6 @@ services:
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager'
-
-    Claroline\CoreBundle\Security\Voter\UserSwitchVoter: ~
 
     Claroline\CoreBundle\Security\Voter\WorkspaceVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter

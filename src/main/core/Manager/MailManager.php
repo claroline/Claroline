@@ -24,22 +24,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MailManager
 {
-    /** @var Mailer */
-    private $mailer;
-    /** @var UrlGeneratorInterface */
-    private $router;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var TemplateManager */
-    private $templateManager;
-    /** @var LocaleManager */
-    private $localeManager;
-    /** @var UserManager */
-    private $userManager;
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var TranslatorInterface */
-    private $translator;
+    private Mailer $mailer;
+    private UrlGeneratorInterface $router;
+    private PlatformConfigurationHandler $config;
+    private TemplateManager $templateManager;
+    private LocaleManager $localeManager;
+    private UserManager $userManager;
+    private StrictDispatcher $dispatcher;
+    private TranslatorInterface $translator;
 
     public function __construct(
         Mailer $mailer,
@@ -195,7 +187,7 @@ class MailManager
         if ($this->isMailerAvailable()) {
             $to = [];
 
-            $fromEmail = $this->config->getParameter('mailer.from');
+            $fromEmail = $this->getMailerFrom();
             $locale = 1 === count($users) ? $users[0]->getLocale() : $this->localeManager->getDefault();
 
             if (!$locale) {
@@ -257,7 +249,7 @@ class MailManager
         return false;
     }
 
-    public function getMailerFrom()
+    public function getMailerFrom(): ?string
     {
         $from = $this->config->getParameter('mailer.from');
         if ($from) {

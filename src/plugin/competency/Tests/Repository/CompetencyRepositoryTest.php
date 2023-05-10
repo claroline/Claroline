@@ -1,6 +1,6 @@
 <?php
 
-namespace HeVinci\CompetencyBundle\Repository;
+namespace HeVinci\CompetencyBundle\Tests\Repository;
 
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;

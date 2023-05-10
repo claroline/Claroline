@@ -1,8 +1,10 @@
 <?php
 
-namespace HeVinci\CompetencyBundle\Entity;
+namespace HeVinci\CompetencyBundle\Tests\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use HeVinci\CompetencyBundle\Entity\Level;
+use HeVinci\CompetencyBundle\Entity\Scale;
 use PHPUnit\Framework\TestCase;
 
 class ScaleTest extends TestCase

@@ -8,7 +8,7 @@ use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class ClarolineDevBundle extends Bundle implements AutoConfigurableInterface
 {
@@ -30,11 +30,8 @@ class ClarolineDevBundle extends Bundle implements AutoConfigurableInterface
         $loader->load($this->getPath().'/Resources/config/suggested/web_profiler.yml');
     }
 
-    public function configureRoutes(RouteCollectionBuilder $routes): void
+    public function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routingFile = $this->getPath().'/Resources/config/routing.yml';
-        if (file_exists($routingFile)) {
-            $routes->import($routingFile);
-        }
+        $routes->import($this->getPath().'/Resources/config/routing.yml');
     }
 }

@@ -149,6 +149,7 @@ services:
 
     Claroline\CoreBundle\Listener\PlatformListener:
         arguments:
+            - '@security.authorization_checker'
             - '@security.token_storage'
             - '@translator'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

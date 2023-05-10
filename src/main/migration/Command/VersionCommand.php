@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class VersionCommand extends AbstractCommand
 {
-    private $migrator;
+    private Migrator $migrator;
 
     public function __construct(Migrator $migrator)
     {
@@ -27,7 +27,7 @@ class VersionCommand extends AbstractCommand
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -77,15 +77,18 @@ EOT
         $status = $this->getManager($output)->getBundleStatus($this->getTargetBundle($input));
         $latest = $input->getOption('latest');
 
-        if ($version = $input->getOption('remove')) {
+        $version = $input->getOption('remove');
+        if ($version) {
             $this->migrator->markNotMigrated($this->getTargetBundle($input), $version);
         }
 
-        if ($version = $input->getOption('add')) {
+        $version = $input->getOption('add');
+        if ($version) {
             $this->migrator->markMigrated($this->getTargetBundle($input), $version);
         }
 
-        if ($version = $input->getOption('all')) {
+        $version = $input->getOption('all');
+        if ($version) {
             $this->migrator->markAllMigrated($this->getTargetBundle($input));
         }
 
@@ -99,7 +102,7 @@ EOT
         if (count($status[Migrator::STATUS_AVAILABLE]) > 0) {
             foreach ($status[Migrator::STATUS_AVAILABLE] as $version) {
                 $output->writeln(
-                    $version === $status[Migrator::STATUS_CURRENT] ?
+                    (string) $version === (string) $status[Migrator::STATUS_CURRENT] ?
                         "  * {$version} (current)" :
                         "    {$version}"
                 );

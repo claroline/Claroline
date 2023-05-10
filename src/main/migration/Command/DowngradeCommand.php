@@ -13,14 +13,14 @@ namespace Claroline\MigrationBundle\Command;
 
 class DowngradeCommand extends AbstractMigrateCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this
             ->setDescription('Downgrades a bundle to a specified version.');
     }
 
-    protected function getAction()
+    protected function getAction(): string
     {
         return 'downgrade';
     }

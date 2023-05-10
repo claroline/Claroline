@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Security\ToolPermissions;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -246,9 +247,9 @@ class TeamController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    private function checkToolAccess(Workspace $workspace, $rights): void
+    private function checkToolAccess(Workspace $workspace, string $permission): void
     {
-        if (!$this->authorization->isGranted(['community', $rights], $workspace)) {
+        if (!$this->authorization->isGranted(ToolPermissions::getPermission('community', $permission), $workspace)) {
             throw new AccessDeniedException();
         }
     }

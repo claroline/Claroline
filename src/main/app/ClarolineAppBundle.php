@@ -26,7 +26,7 @@ use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
 {
@@ -86,7 +86,7 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
         }
     }
 
-    public function configureRoutes(RouteCollectionBuilder $routes): void
+    public function configureRoutes(RoutingConfigurator $routes): void
     {
         $routes->import($this->getPath().'/Resources/config/routing.yml');
     }

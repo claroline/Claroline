@@ -16,6 +16,7 @@ use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
+use Claroline\CoreBundle\Security\ToolPermissions;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -74,7 +75,7 @@ class HomeTabVoter extends AbstractVoter
                 break;
 
             case HomeTab::TYPE_WORKSPACE:
-                $granted = $object->getWorkspace() && $this->isGranted(['home', self::OPEN], $object->getWorkspace());
+                $granted = $object->getWorkspace() && $this->isGranted(ToolPermissions::getPermission('home', self::OPEN), $object->getWorkspace());
                 break;
         }
 
@@ -90,7 +91,7 @@ class HomeTabVoter extends AbstractVoter
         $granted = false;
         switch ($object->getContext()) {
             case HomeTab::TYPE_HOME:
-                $granted = $this->isAdmin($token) || $this->isGranted('ROLE_HOME_MANAGER');
+                $granted = $this->isGranted('ROLE_HOME_MANAGER');
                 break;
 
             case HomeTab::TYPE_ADMIN:
@@ -111,7 +112,7 @@ class HomeTabVoter extends AbstractVoter
                 break;
 
             case HomeTab::TYPE_WORKSPACE:
-                $granted = $object->getWorkspace() && $this->isGranted(['home', self::EDIT], $object->getWorkspace());
+                $granted = $object->getWorkspace() && $this->isGranted(ToolPermissions::getPermission('home', self::EDIT), $object->getWorkspace());
                 break;
         }
 

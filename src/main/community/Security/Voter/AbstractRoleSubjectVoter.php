@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Claroline\CoreBundle\Security\ToolPermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -41,7 +42,7 @@ class AbstractRoleSubjectVoter extends AbstractVoter
         $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token, $object, $action) {
             $workspace = $role->getWorkspace();
             if ($workspace) {
-                if ($this->isGranted(['community', 'create_user'], $workspace)) {
+                if ($this->isGranted(ToolPermissions::getPermission('community', 'CREATE_USER'), $workspace)) {
                     // If user is workspace manager then grant access
                     if ($this->workspaceManager->isManager($workspace, $token)) {
                         return false;

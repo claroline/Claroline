@@ -133,7 +133,7 @@ class RoleVoter extends AbstractVoter
         return $this->check($token, $object);
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::CREATE, self::OPEN, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH];
     }

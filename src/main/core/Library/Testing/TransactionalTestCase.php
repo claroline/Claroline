@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Library\Testing;
 
 use Claroline\CoreBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -61,7 +61,7 @@ abstract class TransactionalTestCase extends WebTestCase
         $this->logClient($user, $this->client, $firewall);
     }
 
-    private function logClient(User $user, Client $client, $firewall = 'main')
+    private function logClient(User $user, KernelBrowser $client, $firewall = 'main')
     {
         $tokenStorage = $client->getContainer()->get('security.token_storage');
         $token = new UsernamePasswordToken($user, $user->getPlainPassword(), $firewall, $user->getRoles());

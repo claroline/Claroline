@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Security\ToolPermissions;
 use Claroline\TransferBundle\Entity\ExportFile;
 use Claroline\TransferBundle\Manager\TransferManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -61,7 +62,7 @@ class ExportController extends AbstractCrudController
      */
     public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
     {
-        $this->checkPermission(['transfer', 'open'], $workspace, [], true);
+        $this->checkPermission(ToolPermissions::getPermission('transfer', 'OPEN'), $workspace, [], true);
 
         return new JsonResponse(
             $this->finder->search(self::getClass(), array_merge($request->query->all(), ['hiddenFilters' => [

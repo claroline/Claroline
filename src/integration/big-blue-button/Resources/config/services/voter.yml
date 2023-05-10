@@ -2,8 +2,5 @@ services:
     _defaults:
         tags: [ security.voter ]
 
-    Claroline\BigBlueButtonBundle\Security\Voter\BBBVoter:
-        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
-
     Claroline\BigBlueButtonBundle\Security\Voter\RecordingVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter

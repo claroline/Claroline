@@ -14,7 +14,7 @@ namespace Claroline\KernelBundle\Bundle;
 use Claroline\InstallationBundle\Bundle\InstallableBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Routing\RouteCollectionBuilder;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 /**
  * Base class of all the plugin bundles on the claroline platform.
@@ -30,7 +30,7 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     {
     }
 
-    public function configureRoutes(RouteCollectionBuilder $routes): void
+    public function configureRoutes(RoutingConfigurator $routes): void
     {
         $routingFile = $this->getPath().'/Resources/config/routing.yml';
         if (file_exists($routingFile)) {
