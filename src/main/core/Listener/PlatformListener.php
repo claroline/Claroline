@@ -208,7 +208,7 @@ class PlatformListener
         if (!$this->isAdmin() || $this->config->getParameter('privacy.dpo.email')) {
             return [];
         }
-        $editUrl = $this->routingHelper->indexPath().'#/admin/main_settings/privacy';
+        $editUrl = $this->routingHelper->adminPath('main_settings/privacy');
         return [
             [
                 'id' => 'dpo-email-missing',
@@ -229,7 +229,7 @@ class PlatformListener
         if (!$this->isAdmin() || $this->config->getParameter('help.support_email')) {
             return [];
         }
-        $editUrl = $this->routingHelper->indexPath() . '#/admin/main_settings';
+        $editUrl = $this->routingHelper->adminPath('main_settings');
         return [
             [
                 'id' => 'support-email-missing',
