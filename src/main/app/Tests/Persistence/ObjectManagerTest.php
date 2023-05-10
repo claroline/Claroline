@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Persistence;
+namespace Claroline\AppBundle\Tests\Persistence;
 
 use Claroline\AppBundle\Persistence\NoFlushSuiteStartedException;
 use Claroline\AppBundle\Persistence\ObjectManager;

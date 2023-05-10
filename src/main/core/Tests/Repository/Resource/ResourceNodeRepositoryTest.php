@@ -9,10 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Repository\Resource;
+namespace Claroline\CoreBundle\Tests\Repository\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Testing\RepositoryTestCase;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 
 class ResourceNodeRepositoryTest extends RepositoryTestCase
 {

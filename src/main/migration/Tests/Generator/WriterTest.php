@@ -9,9 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\MigrationBundle\Generator;
+namespace Claroline\MigrationBundle\Tests\Generator;
 
-use Claroline\MigrationBundle\Tests\MockeryTestCase;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\MigrationBundle\Generator\Generator;
+use Claroline\MigrationBundle\Generator\Writer;
 use Claroline\MigrationBundle\Twig\SqlFormatterExtension;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;

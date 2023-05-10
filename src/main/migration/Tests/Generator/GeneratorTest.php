@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\MigrationBundle\Generator;
+namespace Claroline\MigrationBundle\Tests\Generator;
 
-use Claroline\MigrationBundle\Tests\MockeryTestCase;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\MigrationBundle\Generator\Generator;
 use Mockery as m;
 
 class GeneratorTest extends MockeryTestCase

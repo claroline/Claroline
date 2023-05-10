@@ -9,11 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\MigrationBundle\Manager;
+namespace Claroline\MigrationBundle\Tests\Manager;
 
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\MigrationBundle\Generator\Generator;
+use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
-use Claroline\MigrationBundle\Tests\MockeryTestCase;
 use Mockery as m;
 
 class ManagerTest extends MockeryTestCase

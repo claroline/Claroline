@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Tests\NewAPI;
+namespace Claroline\AppBundle\Tests\API;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
