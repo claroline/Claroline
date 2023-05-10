@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
+use Claroline\CoreBundle\Security\ToolPermissions;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -282,12 +283,9 @@ class LogConnectController
         }
     }
 
-    /**
-     * @param string $rights
-     */
-    private function checkWorkspaceToolAccess(Workspace $workspace, $rights = 'OPEN')
+    private function checkWorkspaceToolAccess(Workspace $workspace, ?string $permission = 'OPEN'): void
     {
-        if (!$this->authorization->isGranted(['dashboard', $rights], $workspace)) {
+        if (!$this->authorization->isGranted(ToolPermissions::getPermission('dashboard', $permission), $workspace)) {
             throw new AccessDeniedException();
         }
     }

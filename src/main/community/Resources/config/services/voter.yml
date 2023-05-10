@@ -7,6 +7,35 @@ services:
               arguments:
                   - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
+    Claroline\CommunityBundle\Security\Voter\CurrentUser\AdministratorVoter:
+        tags:
+            # The AdministratorVoter checks if the current user as the ROLE_ADMIN to grant all rights
+            # We want it to be executed at first for performances reasons
+            - { name: security.voter , priority: 255 }
+        arguments:
+            - '@security.helper'
+
+    Claroline\CommunityBundle\Security\Voter\CurrentUser\CreatorVoter:
+        tags:
+            - { name: security.voter , priority: 250 }
+
+    Claroline\CommunityBundle\Security\Voter\CurrentUser\OrganizationMemberVoter:
+        tags:
+            - { name: security.voter , priority: 245 }
+        arguments:
+            - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
+
+    Claroline\CommunityBundle\Security\Voter\CurrentUser\OrganizationManagerVoter:
+        tags:
+            - { name: security.voter , priority: 240 }
+        arguments:
+            - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
+
+    Claroline\CommunityBundle\Security\Voter\CurrentUser\UserSwitchVoter:
+        tags: [ security.voter ]
+        arguments:
+            - '@security.helper'
+
     Claroline\CommunityBundle\Security\Voter\GroupVoter:
         parent: Claroline\CommunityBundle\Security\Voter\AbstractRoleSubjectVoter
         tags: [ security.voter ]

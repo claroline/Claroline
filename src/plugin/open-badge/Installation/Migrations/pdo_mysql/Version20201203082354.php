@@ -25,7 +25,7 @@ class Version20201203082354 extends AbstractMigration
     {
         $this->addSql('
             ALTER TABLE claro__open_badge_badge_class 
-            ADD issuingMode LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)", 
+            ADD issuingMode LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)", 
             DROP issuingPeer
         ');
     }

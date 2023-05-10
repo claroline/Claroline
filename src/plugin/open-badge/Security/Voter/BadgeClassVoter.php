@@ -41,11 +41,6 @@ class BadgeClassVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
-        // give all rights if organization manager
-        if (!empty($object->getOrganizations()) && $this->isOrganizationManager($token, $object)) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
         switch ($attributes[0]) {
             case self::OPEN:
                 // has open rights on the tool
@@ -81,7 +76,7 @@ class BadgeClassVoter extends AbstractVoter
                 }
 
                 // the badge is configured to allow users which own the badge to grant it
-                // and current user own the badge TODO
+                // and current user own the badge
                 if ($token->getUser() instanceof User && $object->hasIssuingPeer()) {
                     $assertion = $this->om->getRepository(Assertion::class)->findOneBy(['badge' => $object, 'recipient' => $token->getUser()]);
                     if ($assertion) {

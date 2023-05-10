@@ -9,8 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Converter;
+namespace Claroline\CoreBundle\Tests\Unit\Converter;
 
+use Claroline\CoreBundle\Converter\CurrentUserConverter;
+use Claroline\CoreBundle\Converter\InvalidConfigurationException;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Symfony\Component\HttpFoundation\ParameterBag;

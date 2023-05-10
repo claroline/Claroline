@@ -1,4 +1,6 @@
 security:
+    enable_authenticator_manager: false
+
     providers:
         user_db:
             entity: { class: Claroline\CoreBundle\Entity\User }
@@ -28,6 +30,9 @@ security:
                     - Claroline\AuthenticationBundle\Security\Logout\LogoutHandler
             switch_user: { role: ROLE_ALLOWED_TO_SWITCH, parameter: _switch }
             user_checker: Claroline\CoreBundle\Security\UserChecker
+
+            #login_throttling:
+            #    max_attempts: 5 # per minute
 
             guard:
                 authenticators:

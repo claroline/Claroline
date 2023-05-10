@@ -14,6 +14,7 @@ namespace Claroline\CommunityBundle\Security\Voter;
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CommunityBundle\Entity\Team;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Security\ToolPermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -24,14 +25,14 @@ class TeamVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
-        if ($this->isGranted(['community', 'edit'], $object->getWorkspace())) {
+        if ($this->isGranted(ToolPermissions::getPermission('community', 'EDIT'), $object->getWorkspace())) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
         switch ($attributes[0]) {
             case self::OPEN:
             case self::VIEW:
-                if ($this->isGranted(['community', 'open'], $object->getWorkspace())) {
+                if ($this->isGranted(ToolPermissions::getPermission('community', 'OPEN'), $object->getWorkspace())) {
                     if ($object->isSelfRegistration() || ($token->getUser() instanceof User && $object->hasUser($token->getUser()))) {
                         return VoterInterface::ACCESS_GRANTED;
                     }

@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Security\Voter\Tool;
 
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Security\ToolPermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -29,7 +30,7 @@ class OrderedToolVoter extends AbstractVoter
     {
         if (!empty($object->getWorkspace())) {
             // let the workspace voter decide
-            $isGranted = $this->isGranted([$object->getTool()->getName(), $attributes[0]], $object->getWorkspace());
+            $isGranted = $this->isGranted(ToolPermissions::getPermission($object->getTool()->getName(), $attributes[0]), $object->getWorkspace());
         } else {
             // let the base tool voter decide
             $isGranted = $this->isGranted($attributes[0], $object->getTool());

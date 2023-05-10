@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit
-    backupGlobals               = "false"
-    backupStaticAttributes      = "false"
-    colors                      = "true"
-    convertErrorsToExceptions   = "true"
-    convertNoticesToExceptions  = "false"
-    convertWarningsToExceptions = "true"
-    processIsolation            = "false"
-    stopOnFailure               = "false"
-    bootstrap                   = "./vendor/autoload.php" >
-
+<!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         backupGlobals="false"
+         colors="true"
+         bootstrap="vendor/autoload.php"
+         convertErrorsToExceptions="true"
+>
     <php>
-        <server name="KERNEL_CLASS" value="Claroline\KernelBundle\Kernel" />
+      <server name="KERNEL_CLASS" value="Claroline\KernelBundle\Kernel"/>
+
+      <server name="APP_ENV" value="test" force="true" />
+      <server name="SHELL_VERBOSITY" value="-1" />
+      <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
+      <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+      <server name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
     </php>
 
     <testsuites>
-        <testsuite name="Claroline test suite">
-            <directory suffix=".php">./src/*/*/Tests</directory>
-        </testsuite>
+      <testsuite name="Claroline test suite">
+        <directory suffix=".php">./src/*/*/Tests</directory>
+      </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
+    <coverage>
+        <include>
             <directory suffix=".php">./src</directory>
-            <exclude>
-                <directory>./src/*/*/Migrations</directory>
-                <directory>./src/*/*/Resources</directory>
-                <directory>./src/*/*/Tests</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+        </include>
+        <exclude>
+            <directory>./src/*/*/Migrations</directory>
+            <directory>./src/*/*/Resources</directory>
+            <directory>./src/*/*/Tests</directory>
+        </exclude>
+    </coverage>
 </phpunit>

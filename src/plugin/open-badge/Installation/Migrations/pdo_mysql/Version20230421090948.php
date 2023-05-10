@@ -28,13 +28,13 @@ class Version20230421090948 extends AbstractMigration
     public function down(Schema $schema): void
     {
         $this->addSql('
-            ALTER TABLE claro__open_badge_endorsement CHANGE claim claim LONGTEXT CHARACTER SET utf8mb3 NOT NULL COLLATE `utf8mb3_unicode_ci` COMMENT "(DC2Type:json_array)"
+            ALTER TABLE claro__open_badge_endorsement CHANGE claim claim LONGTEXT CHARACTER SET utf8mb3 NOT NULL COLLATE `utf8mb3_unicode_ci` COMMENT "(DC2Type:json)"
         ');
         $this->addSql('
-            ALTER TABLE claro__open_badge_rule CHANGE data data LONGTEXT CHARACTER SET utf8mb3 NOT NULL COLLATE `utf8mb3_unicode_ci` COMMENT "(DC2Type:json_array)"
+            ALTER TABLE claro__open_badge_rule CHANGE data data LONGTEXT CHARACTER SET utf8mb3 NOT NULL COLLATE `utf8mb3_unicode_ci` COMMENT "(DC2Type:json)"
         ');
         $this->addSql('
-            ALTER TABLE claro__open_badge_verification_object CHANGE allowedOrigins allowedOrigins LONGTEXT CHARACTER SET utf8mb3 NOT NULL COLLATE `utf8mb3_unicode_ci` COMMENT "(DC2Type:json_array)"
+            ALTER TABLE claro__open_badge_verification_object CHANGE allowedOrigins allowedOrigins LONGTEXT CHARACTER SET utf8mb3 NOT NULL COLLATE `utf8mb3_unicode_ci` COMMENT "(DC2Type:json)"
         ');
     }
 }

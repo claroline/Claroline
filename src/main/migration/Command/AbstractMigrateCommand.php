@@ -19,11 +19,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractMigrateCommand extends AbstractCommand
 {
-    abstract protected function getAction();
+    abstract protected function getAction(): string;
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
+
         $this->setDescription(ucfirst($this->getAction()).'s a specified bundle')
             ->addOption(
                 'target',
@@ -40,16 +41,16 @@ By default, the {$this->getAction()} target is the nearest available version,
 but you can specify a target using the <info>--target</info> option:
 
     <info>%command.name% AcmeFooBundle --target=YYYYMMDDHHMMSS</info>
-    <info>%command.name% AcmeFooBundle --target=farthest</info>
+    <info>%command.name% AcmeFooBundle --target=latest</info>
     <info>%command.name% AcmeFooBundle --target=nearest</info>
 
-where <info>farthest</info> means a full {$this->getAction()}.
+where <info>latest</info> means a full {$this->getAction()}.
 
 EOT
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $method = "{$this->getAction()}Bundle";
@@ -60,5 +61,7 @@ EOT
         } catch (InvalidVersionException $ex) {
             throw new \Exception($ex->getUsageMessage());
         }
+
+        return 0;
     }
 }

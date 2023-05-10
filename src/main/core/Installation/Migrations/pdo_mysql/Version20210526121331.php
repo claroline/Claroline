@@ -22,7 +22,7 @@ class Version20210526121331 extends AbstractMigration
     public function down(Schema $schema): void
     {
         $this->addSql('
-            ALTER TABLE claro_field_facet_value CHANGE arrayValue arrayValue LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)"
+            ALTER TABLE claro_field_facet_value CHANGE arrayValue arrayValue LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)"
         ');
     }
 }

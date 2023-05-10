@@ -250,8 +250,6 @@ services:
     Claroline\CoreBundle\Manager\Organization\OrganizationManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-        calls:
-            - setLogger: [ '@logger' ]
 
     claroline.manager.organization_manager:
         alias: Claroline\CoreBundle\Manager\Organization\OrganizationManager

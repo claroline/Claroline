@@ -54,11 +54,11 @@ class ViewAsListener
         $request = $event->getRequest();
         $attributes = $request->query->all();
 
-        if ($event->isMasterRequest() && array_key_exists('view_as', $attributes)) {
+        if ($event->isMainRequest() && array_key_exists('view_as', $attributes)) {
             // first, if we're already usurping a user role with the sf2 function, we cancel this.
-            // ROLE_PREVIOUS_ADMIN means we're an administrator usurping a user account.
+            // IS_IMPERSONATOR means we're an administrator usurping a user account.
 
-            if ($this->authorization->isGranted('ROLE_PREVIOUS_ADMIN')) {
+            if ($this->authorization->isGranted('IS_IMPERSONATOR')) {
                 $this->authenticator->cancelUserUsurpation($this->tokenStorage->getToken());
             }
 
@@ -74,7 +74,7 @@ class ViewAsListener
                     throw new \Exception("The role {$viewAs} does not exists");
                 }
 
-                if (!in_array('ROLE_USURPATE_WORKSPACE_ROLE', $this->tokenStorage->getToken()->getRoleNames())) {
+                if (!$this->authorization->isGranted('ROLE_USURPATE_WORKSPACE_ROLE')) {
                     // we are not already usurping a workspace role
                     if (in_array($viewAs, [PlatformRoles::USER, PlatformRoles::ANONYMOUS]) || $this->authorization->isGranted('ADMINISTRATE', $role->getWorkspace())) {
                         // we have the right to usurp one the workspace role

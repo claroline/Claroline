@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
+use Claroline\CoreBundle\Security\ToolPermissions;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -192,7 +193,7 @@ class UserValidator implements ValidatorInterface
 
                 $workspace = $role->getWorkspace();
                 if ($workspace) {
-                    if ($this->authorization->isGranted(['community', 'create_user'], $workspace)) {
+                    if ($this->authorization->isGranted(ToolPermissions::getPermission('community', 'CREATE_USER'), $workspace)) {
                         // If user is workspace manager then grant access
                         if ($this->workspaceManager->isManager($workspace, $this->tokenStorage->getToken())) {
                             return false;

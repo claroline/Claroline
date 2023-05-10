@@ -9,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\MigrationBundle\Generator;
+namespace Claroline\MigrationBundle\Tests\Generator;
 
-use Claroline\MigrationBundle\Tests\MockeryTestCase;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\MigrationBundle\Generator\Generator;
 use Mockery as m;
 
 class GeneratorTest extends MockeryTestCase
@@ -97,8 +98,8 @@ class GeneratorTest extends MockeryTestCase
         $this->em->shouldReceive('getMetadataFactory')->once()->andReturn($metadataFactory);
         $metadataFactory->shouldReceive('getAllMetadata')->once()->andReturn($this->metadata);
         $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
-        $connection->shouldReceive('getSchemaManager')->once()->andReturn($schemaManager);
-        $schemaManager->shouldReceive('createSchema')->once()->andReturn($this->fromSchema);
+        $connection->shouldReceive('createSchemaManager')->once()->andReturn($schemaManager);
+        $schemaManager->shouldReceive('introspectSchema')->once()->andReturn($this->fromSchema);
         $this->schemaTool->shouldReceive('getSchemaFromMetadata')
             ->once()
             ->with($this->metadata)

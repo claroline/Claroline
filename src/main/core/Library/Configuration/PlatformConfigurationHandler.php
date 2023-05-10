@@ -53,11 +53,11 @@ class PlatformConfigurationHandler
     public function getParameter(string $parameter, bool $fromDomain = true)
     {
         if ($fromDomain) {
-            $request = $this->requestStack->getMasterRequest();
+            $request = $this->requestStack->getMainRequest();
 
             // check if there is a custom configuration for the current request ip
             $ip = $request ? $request->getClientIp() : null;
-            $forwarded = $request ? $request->headers->get('X-Forwarded-For') : ''; // I can only get trusted proxies if I use symfony getClientIps()
+            $forwarded = $request && $request->headers->get('X-Forwarded-For') ? $request->headers->get('X-Forwarded-For') : ''; // I can only get trusted proxies if I use symfony getClientIps()
             $domains = ArrayUtils::get($this->parameters, 'domains');
             if (!empty($domains) && $ip) {
                 $forwardedList = explode(', ', $forwarded);

@@ -110,7 +110,7 @@ class WorkspaceRepository extends EntityRepository
         $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
         $query->setParameter('roleNames', $roleNames);
-        $query->setParameter('action', $action);
+        $query->setParameter('action', strtoupper($action));
 
         if ($toolName) {
             $query->setParameter('toolName', $toolName);

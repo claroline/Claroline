@@ -43,7 +43,7 @@ class ConnectionMessageVoter extends AbstractVoter
         return ConnectionMessage::class;
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): array
     {
         return [self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }

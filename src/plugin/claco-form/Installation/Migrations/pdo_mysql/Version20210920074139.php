@@ -68,7 +68,7 @@ class Version20210920074139 extends AbstractMigration
             ADD locked TINYINT(1) DEFAULT "0" NOT NULL, 
             ADD locked_edition TINYINT(1) DEFAULT "0" NOT NULL, 
             ADD hidden TINYINT(1) DEFAULT "0" NOT NULL, 
-            ADD details LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)", 
+            ADD details LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)", 
             ADD field_order INT DEFAULT 1000 NOT NULL, 
             ADD help VARCHAR(255) CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci`,
             ADD uuid VARCHAR(36) CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci`

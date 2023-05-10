@@ -23,26 +23,24 @@ use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PlatformListener
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
+    private AuthorizationCheckerInterface $authorization;
 
-    private $translator;
+    private TokenStorageInterface $tokenStorage;
 
-    /** @var PlatformConfigurationHandler */
-    private $config;
+    private TranslatorInterface $translator;
 
-    /** @var VersionManager */
-    private $versionManager;
+    private PlatformConfigurationHandler $config;
 
-    /** @var TempFileManager */
-    private $tempManager;
+    private VersionManager $versionManager;
 
-    /** @var LocaleManager */
-    private $localeManager;
+    private TempFileManager $tempManager;
+
+    private LocaleManager $localeManager;
 
     /**
      * The list of public routes of the application.
@@ -66,6 +64,7 @@ class PlatformListener
     ];
 
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         PlatformConfigurationHandler $config,
@@ -73,6 +72,7 @@ class PlatformListener
         TempFileManager $tempManager,
         LocaleManager $localeManager
     ) {
+        $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->config = $config;
@@ -86,7 +86,7 @@ class PlatformListener
      */
     public function setLocale(RequestEvent $event)
     {
-        if ($event->isMasterRequest()) {
+        if ($event->isMainRequest()) {
             $request = $event->getRequest();
 
             $locale = $this->localeManager->getUserLocale($request);
@@ -99,7 +99,7 @@ class PlatformListener
      */
     public function checkAvailability(RequestEvent $event)
     {
-        if (!$event->isMasterRequest() || in_array($event->getRequest()->get('_route'), static::PUBLIC_ROUTES)) {
+        if (!$event->isMainRequest() || in_array($event->getRequest()->get('_route'), static::PUBLIC_ROUTES)) {
             return;
         }
 
@@ -124,7 +124,7 @@ class PlatformListener
         if (MaintenanceHandler::isMaintenanceEnabled() || $this->config->getParameter('maintenance.enable')) {
             // only disable for non admin
             // TODO : it may break the impersonation mode
-            if (!$this->isAdmin()) {
+            if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
                 throw new HttpException(503, 'Platform is not available (Platform is under maintenance).');
             }
         }
@@ -189,15 +189,5 @@ class PlatformListener
                 ]],
             ],
         ]);
-    }
-
-    private function isAdmin()
-    {
-        $token = $this->tokenStorage->getToken();
-        if ($token) {
-            return in_array(PlatformRoles::ADMIN, $token->getRoleNames());
-        }
-
-        return false;
     }
 }

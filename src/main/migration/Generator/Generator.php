@@ -24,9 +24,9 @@ class Generator
     const QUERIES_UP = 'up';
     const QUERIES_DOWN = 'down';
 
-    private $em;
-    private $schemaTool;
-    private $schemas = [];
+    private EntityManager $em;
+    private SchemaTool $schemaTool;
+    private array $schemas = [];
 
     /**
      * Constructor.
@@ -39,10 +39,8 @@ class Generator
 
     /**
      * Generates bundle migration queries (up and down) for a given SQL platform.
-     *
-     * @return array
      */
-    public function generateMigrationQueries(BundleInterface $bundle, AbstractPlatform $platform)
+    public function generateMigrationQueries(BundleInterface $bundle, AbstractPlatform $platform): array
     {
         $schemas = $this->getSchemas();
         $fromSchema = $schemas['fromSchema'];
@@ -61,21 +59,19 @@ class Generator
     }
 
     /**
-     * Returns the "from" an "to" schemas and the metadata used to generate them.
+     * Returns the "from" and "to" schemas and the metadata used to generate them.
      *
      * Note: this method is public for testing purposes only
-     *
-     * @return array
      */
-    public function getSchemas()
+    public function getSchemas(): array
     {
         if (0 === count($this->schemas)) {
             $this->schemas['metadata'] = $this->em->getMetadataFactory()->getAllMetadata();
-            $this->schemas['fromSchema'] = $this->em->getConnection()->getSchemaManager()->createSchema();
+            $this->schemas['fromSchema'] = $this->em->getConnection()->createSchemaManager()->introspectSchema();
             $this->schemas['toSchema'] = $this->schemaTool->getSchemaFromMetadata($this->schemas['metadata']);
         }
 
-        // cloning schemas is much more ligther than re-generating them for each platform
+        // cloning schemas is lighter than re-generating them for each platform
         return [
             'fromSchema' => clone $this->schemas['fromSchema'],
             'toSchema' => clone $this->schemas['toSchema'],
@@ -83,12 +79,12 @@ class Generator
         ];
     }
 
-    private function getBundleTables(BundleInterface $bundle, array $metadata)
+    private function getBundleTables(BundleInterface $bundle, array $metadata): array
     {
         $bundleTables = ['tables' => [], 'joinTables' => []];
 
         foreach ($metadata as $entityMetadata) {
-            if (0 === strpos($entityMetadata->name, $bundle->getNamespace())) {
+            if (str_starts_with($entityMetadata->name, $bundle->getNamespace())) {
                 $bundleTables[] = $entityMetadata->getTableName();
 
                 foreach ($entityMetadata->associationMappings as $association) {
@@ -102,7 +98,7 @@ class Generator
         return $bundleTables;
     }
 
-    private function filterSchemas(array $schemas, array $bundleTables)
+    private function filterSchemas(array $schemas, array $bundleTables): void
     {
         foreach ($schemas as $schema) {
             foreach ($schema->getTables() as $table) {

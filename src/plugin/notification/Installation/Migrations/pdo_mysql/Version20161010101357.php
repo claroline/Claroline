@@ -32,7 +32,7 @@ class Version20161010101357 extends AbstractMigration
                 resource_id INT DEFAULT NULL, 
                 icon_key VARCHAR(255) DEFAULT NULL, 
                 action_key VARCHAR(255) NOT NULL, 
-                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json)', 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
         ");
