@@ -1,5 +1,9 @@
-import {PrivacyMain} from './components/main.jsx'
+import {PrivacyTool} from './components/tool'
+import {reducer} from './store/reducer'
+
+
 
 export default {
-  component: PrivacyMain
+  component: PrivacyTool,
+  store: reducer
 }
