@@ -1,8 +1,7 @@
-const STORE_NAME = 'privacy'
+import {reducer as privacyReducer} from './reducers.js'
+import {selectors} from './selectors.js'
 
-const privacy = (state) => state[STORE_NAME]
-
-export const index = {
-  STORE_NAME,
-  privacy
+export {
+  privacyReducer,
+  selectors
 }

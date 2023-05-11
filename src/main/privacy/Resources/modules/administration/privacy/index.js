@@ -1,4 +1,4 @@
-import {PrivacyMain} from '#/main/privacy/administration/privacy/components/main'
+import {PrivacyMain} from './components/main.jsx'
 
 export default {
   component: PrivacyMain

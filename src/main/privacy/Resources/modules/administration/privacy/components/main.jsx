@@ -5,13 +5,14 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors} from '#/main/privacy/administration/privacy/store'
 
-const PrivacyMain = (props) => 
+import {selectors} from '../store'
+
+const PrivacyMain = (props) =>
   <FormData
     level={2}
     name={selectors.FORM_NAME}
-    target={['apiv2_parameters_update']}
+    target={['apiv2_privacy_update']}
     buttons={true}
     cancel={{
       type: LINK_BUTTON,
