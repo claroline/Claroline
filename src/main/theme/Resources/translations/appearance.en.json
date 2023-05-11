@@ -3,7 +3,7 @@
   "theme": "Theme",
   "icons": "Icons",
   "colors": "Colors",
-
+  "color_charts": "Color charts",
   "footer": "Footer",
   "footer_show": "Show Claroline Connnect footer",
   "footer_show_locale": "Show language",

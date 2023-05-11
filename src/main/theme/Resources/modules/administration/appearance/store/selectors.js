@@ -29,11 +29,27 @@ const currentIconSet = createSelector(
   }
 )
 
+const availableColorsCharts = createSelector(
+  [store],
+  (store) => store.availableColorsCharts
+)
+
+const currentColorsChart = createSelector(
+  [paramSelectors.parameters, availableColorsCharts],
+  (parameters, availableColorsCharts) => {
+    const currentColorsChartName = get(parameters, 'display.resource_colors_chart')
+
+    return availableColorsCharts.find(colorsChart => colorsChart.name === currentColorsChartName)
+  }
+)
+
 export const selectors = {
   STORE_NAME,
 
   store,
   availableThemes,
   availableIconSets,
-  currentIconSet
+  currentIconSet,
+  availableColorsCharts,
+  currentColorsChart
 }

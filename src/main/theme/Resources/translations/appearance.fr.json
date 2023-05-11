@@ -3,7 +3,7 @@
   "theme": "Thème",
   "icons": "Icones",
   "colors": "Couleurs",
-
+  "color_charts": "Palettes de couleurs",
   "footer": "Pied de page",
   "footer_show": "Afficher le pied de page Claroline Connect",
   "footer_show_locale": "Afficher la langue",

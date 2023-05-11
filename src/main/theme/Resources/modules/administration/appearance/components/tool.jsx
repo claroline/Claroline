@@ -7,10 +7,10 @@ import {Toolbar} from '#/main/app/action'
 import {ASYNC_BUTTON, DOWNLOAD_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {getMenus} from '#/main/app/layout/header/utils'
-import {selectors} from '#/main/core/administration/parameters/store/selectors'
-import {AppearanceIcons} from '#/main/theme/administration/appearance/containers/icons'
-
+import {getMenus}                from '#/main/app/layout/header/utils'
+import {selectors}               from '#/main/core/administration/parameters/store/selectors'
+import {AppearanceIcons}         from '#/main/theme/administration/appearance/containers/icons'
+import {AppearanceColorsCharts}  from '#/main/theme/administration/appearance/containers/colorsCharts'
 import {MODAL_ICON_SET_CREATION} from '#/main/theme/administration/appearance/modals/icon-set-creation'
 
 class AppearanceTool extends Component {
@@ -178,6 +178,27 @@ class AppearanceTool extends Component {
               }
             ],
             component: AppearanceIcons
+          }, {
+            icon: 'fa fa-fw fa-palette',
+            title: trans('color_charts', {}, 'appearance'),
+            actions: [
+              {
+                name: 'add',
+                type: MODAL_BUTTON,
+                icon: 'fa fa-fw fa-plus',
+                label: trans('add_color_chart', {}, 'actions'),
+                // modal: [MODAL_COLOR_COLLECTION_CREATION, {
+                //   onSave: this.props.addColorCollection
+                // }]
+              }
+            ],
+            fields: [{
+              name: 'display.color_charts',
+              type: 'choice',
+              label: trans('colors', {}, 'appearance'),
+              required: true,
+            }],
+            component: AppearanceColorsCharts
           }, {
             icon: 'fa fa-fw fa-copyright',
             title: trans('footer', {}, 'appearance'),
