@@ -10,8 +10,11 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {getMenus}                from '#/main/app/layout/header/utils'
 import {selectors}               from '#/main/core/administration/parameters/store/selectors'
 import {AppearanceIcons}         from '#/main/theme/administration/appearance/containers/icons'
-import {AppearanceColorsCharts}  from '#/main/theme/administration/appearance/containers/colorsCharts'
-import {MODAL_ICON_SET_CREATION} from '#/main/theme/administration/appearance/modals/icon-set-creation'
+import {AppearanceColorCharts}  from '#/main/theme/administration/appearance/containers/colorCharts'
+import {MODAL_ICON_SET_CREATION}                           from '#/main/theme/administration/appearance/modals/icon-set-creation'
+import {MODAL_NEW_COLOR_CHART} from '#/main/theme/administration/appearance/modals/color-chart-creation'
+
+import {ColorChart} from '#/main/theme/administration/appearance/components/colorCharts';
 
 class AppearanceTool extends Component {
   constructor(props) {
@@ -187,18 +190,39 @@ class AppearanceTool extends Component {
                 type: MODAL_BUTTON,
                 icon: 'fa fa-fw fa-plus',
                 label: trans('add_color_chart', {}, 'actions'),
-                // modal: [MODAL_COLOR_COLLECTION_CREATION, {
-                //   onSave: this.props.addColorCollection
-                // }]
+                modal: [MODAL_NEW_COLOR_CHART, {
+                   onSave: this.props.addColorChart
+                }]
               }
             ],
             fields: [{
-              name: 'display.color_charts',
+              name: 'display.color_chart',
               type: 'choice',
-              label: trans('colors', {}, 'appearance'),
-              required: true,
+              label: trans('color_charts', {}, 'appearance'),
+              required: false,
+              hideLabel: true,
+              options: {
+                multiple: false,
+                condensed: false,
+                noEmpty: true,
+                choices: []
+                  .concat(this.props.availableColorCharts)
+                  .sort((a, b) => {
+                    if (a.default || a.name < b.name) {
+                      return 1
+                    }
+                    return -1
+                  })
+                  .reduce((acc, current) => Object.assign({
+                    [current.name]: (
+                      <Fragment key={current.name}>
+                        <ColorChart {...current} />
+                      </Fragment>
+                    )
+                  }, acc), {})
+              }
             }],
-            component: AppearanceColorsCharts
+            component: AppearanceColorCharts
           }, {
             icon: 'fa fa-fw fa-copyright',
             title: trans('footer', {}, 'appearance'),
@@ -245,7 +269,10 @@ AppearanceTool.propTypes = {
   availableIconSets: T.array.isRequired,
 
   addIconSet: T.func.isRequired,
-  removeIconSet: T.func.isRequired
+  removeIconSet: T.func.isRequired,
+
+  addColorChart: T.func,
+  removeColorChart: T.func,
 }
 
 export {

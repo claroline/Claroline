@@ -12,3 +12,4 @@ services:
         arguments:
             - '@Claroline\ThemeBundle\Manager\ThemeManager'
             - '@Claroline\ThemeBundle\Manager\IconSetManager'
+            - '@Claroline\ThemeBundle\Manager\ColorCollectionManager'

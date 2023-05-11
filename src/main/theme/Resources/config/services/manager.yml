@@ -23,3 +23,9 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\ThemeBundle\Manager\IconSetBuilderManager'
+
+    Claroline\ThemeBundle\Manager\ColorCollectionManager:
+      arguments:
+        - '@Claroline\AppBundle\Persistence\ObjectManager'
+        - '@Doctrine\ORM\EntityManagerInterface'
+        - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

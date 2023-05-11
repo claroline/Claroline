@@ -11,7 +11,8 @@ const AppearanceTool = connect(
     path: toolSelectors.path(state),
     lockedParameters: paramSelectors.lockedParameters(state),
     availableThemes: selectors.availableThemes(state),
-    availableIconSets: selectors.availableIconSets(state)
+    availableIconSets: selectors.availableIconSets(state),
+    availableColorCharts: selectors.availableColorCharts(state),
   }),
   (dispatch) => ({
     addIconSet(iconSet) {
@@ -19,6 +20,12 @@ const AppearanceTool = connect(
     },
     removeIconSet(iconSet) {
       dispatch(actions.removeIconSet(iconSet))
+    },
+    addColorChart(colorChart) {
+      dispatch(actions.addColorChart(colorChart))
+    },
+    removeColorChart(colorChart) {
+      dispatch(actions.removeColorChart(colorChart))
     }
   })
 )(AppearanceToolComponent)

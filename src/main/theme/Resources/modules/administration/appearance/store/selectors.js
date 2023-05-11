@@ -20,6 +20,11 @@ const availableIconSets = createSelector(
   (store) => store.availableIconSets
 )
 
+const availableColorCharts = createSelector(
+  [store],
+  (store) => store.availableColorCharts
+)
+
 const currentIconSet = createSelector(
   [paramSelectors.parameters, availableIconSets],
   (parameters, availableIconSets) => {
@@ -29,19 +34,14 @@ const currentIconSet = createSelector(
   }
 )
 
-const availableColorsCharts = createSelector(
-  [store],
-  (store) => store.availableColorsCharts
-)
-
-const currentColorsChart = createSelector(
-  [paramSelectors.parameters, availableColorsCharts],
-  (parameters, availableColorsCharts) => {
-    const currentColorsChartName = get(parameters, 'display.resource_colors_chart')
-
-    return availableColorsCharts.find(colorsChart => colorsChart.name === currentColorsChartName)
+const currentColorChart = createSelector(
+  [paramSelectors.parameters, availableColorCharts],
+  (parameters, availableColorCharts) => {
+    const currentColorChartName = get(parameters, 'display.color_chart')
+    return availableColorCharts.find(colorChart => colorChart.name === currentColorChartName)
   }
 )
+
 
 export const selectors = {
   STORE_NAME,
@@ -50,6 +50,6 @@ export const selectors = {
   availableThemes,
   availableIconSets,
   currentIconSet,
-  availableColorsCharts,
-  currentColorsChart
+  availableColorCharts,
+  currentColorChart
 }

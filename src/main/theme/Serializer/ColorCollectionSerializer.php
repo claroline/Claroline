@@ -3,7 +3,6 @@
 namespace Claroline\ThemeBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ThemeBundle\Entity\ColorCollection;
 
 class ColorCollectionSerializer

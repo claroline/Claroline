@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\ThemeBundle\Manager\IconSetManager;
 use Claroline\ThemeBundle\Manager\ThemeManager;
+use Claroline\ThemeBundle\Manager\ColorCollectionManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ParametersSubscriber implements EventSubscriberInterface
@@ -23,16 +24,20 @@ class ParametersSubscriber implements EventSubscriberInterface
     const NAME = 'main_settings';
 
     /** @var ThemeManager */
-    private $themeManager;
+    private ThemeManager $themeManager;
     /** @var IconSetManager */
-    private $iconSetManager;
+    private IconSetManager $iconSetManager;
+    private ColorCollectionManager $colorCollectionManager;
+
 
     public function __construct(
         ThemeManager $themeManager,
-        IconSetManager $iconSetManager
+        IconSetManager $iconSetManager,
+        ColorCollectionManager $colorCollectionManager,
     ) {
         $this->themeManager = $themeManager;
         $this->iconSetManager = $iconSetManager;
+        $this->colorCollectionManager = $colorCollectionManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -50,6 +55,7 @@ class ParametersSubscriber implements EventSubscriberInterface
         $event->setData([
             'availableThemes' => $this->themeManager->getAvailableThemes(),
             'availableIconSets' => $this->iconSetManager->getAvailableSets(),
+            'availableColorCharts' => $this->colorCollectionManager->getAvailableColorCharts()
         ]);
     }
 }
