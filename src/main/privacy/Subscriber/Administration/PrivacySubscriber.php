@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Subscriber\Administration;
+namespace Claroline\PrivacyBundle\Subscriber\Administration;
 
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Tool\Tool;
