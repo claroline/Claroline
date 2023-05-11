@@ -261,6 +261,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         $this->request('DELETE', "/apiv2/exercises/{$this->exercise->getUuid()}/papers?ids[]={$paper->getUuid()}", $this->john);
+
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
 
         // Checks the papers have really been deleted

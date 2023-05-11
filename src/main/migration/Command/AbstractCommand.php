@@ -15,49 +15,35 @@ use Claroline\MigrationBundle\Manager\Manager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 abstract class AbstractCommand extends Command
 {
-    private $manager;
+    private Manager $manager;
 
     public function setManager(Manager $manager)
     {
         $this->manager = $manager;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->addArgument('bundle', InputArgument::REQUIRED, 'The bundle name');
     }
 
-    protected function getManager(OutputInterface $output)
+    protected function getManager(OutputInterface $output): Manager
     {
+        $this->manager->setLogger(new ConsoleLogger($output));
+
         return $this->manager;
     }
 
-    protected function getTargetBundle(InputInterface $input)
+    protected function getTargetBundle(InputInterface $input): BundleInterface
     {
         return $this->getApplication()->getKernel()->getBundle(
             $input->getArgument('bundle')
         );
-    }
-
-    protected function getOutputBundle(InputInterface $input)
-    {
-        $bundleName = $input->getOption('output');
-
-        if ($bundleName) {
-            $bundles = $this->getApplication()->getKernel()->getBundle(
-                $bundleName,
-                false
-            );
-
-            foreach ($bundles as $bundle) {
-                if ($bundle->getName() == $bundleName) {
-                    return $bundle;
-                }
-            }
-        }
     }
 }

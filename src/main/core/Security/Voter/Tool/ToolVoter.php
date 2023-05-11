@@ -41,10 +41,6 @@ class ToolVoter extends AbstractVoter
 
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
-        if ($this->isAdmin($token)) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
         $decoder = $this->maskManager->getMaskDecoderByToolAndName($object, $attributes[0]);
         if ($decoder) {
             $mask = $this->rightsRepository->findMaximumRights($token->getRoleNames(), $object);

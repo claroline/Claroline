@@ -17,15 +17,15 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
+use Claroline\CoreBundle\Security\ToolPermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class WorkspaceVoter extends AbstractVoter
+class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
 {
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-    /** @var WorkspaceRestrictionsManager */
-    private $restrictionsManager;
+    private WorkspaceManager $workspaceManager;
+    private WorkspaceRestrictionsManager $restrictionsManager;
 
     public function __construct(
         WorkspaceManager $workspaceManager,
@@ -38,6 +38,15 @@ class WorkspaceVoter extends AbstractVoter
     public function getClass(): string
     {
         return Workspace::class;
+    }
+
+    /**
+     * Return false if your voter doesn't support the given attribute. Symfony will cache
+     * that decision and won't call your voter again for that attribute.
+     */
+    public function supportsAttribute(string $attribute): bool
+    {
+        return parent::supportsAttribute($attribute) || ToolPermissions::isPermission($attribute);
     }
 
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
@@ -63,14 +72,11 @@ class WorkspaceVoter extends AbstractVoter
             return VoterInterface::ACCESS_DENIED;
         }
 
-        $toolName = isset($attributes[0]) && 'OPEN' !== $attributes[0] ?
-            $attributes[0] :
-            null;
-
-        $action = isset($attributes[1]) ? strtolower($attributes[1]) : 'open';
-
-        if ($this->workspaceManager->hasAccess($object, $token, $toolName, $action)) {
-            return VoterInterface::ACCESS_GRANTED;
+        if (ToolPermissions::isPermission($attributes[0])) {
+            $toolPerm = ToolPermissions::parsePermission($attributes[0]);
+            if ($this->workspaceManager->hasAccess($object, $token, $toolPerm[0], $toolPerm[1])) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
         }
 
         return VoterInterface::ACCESS_DENIED;
@@ -143,7 +149,7 @@ class WorkspaceVoter extends AbstractVoter
         return in_array(PlatformRoles::WS_CREATOR, $token->getRoleNames());
     }
 
-    public function getSupportedActions()
+    public function getSupportedActions(): ?array
     {
         //atm, null means "everything is supported... implement this later"
         return null;

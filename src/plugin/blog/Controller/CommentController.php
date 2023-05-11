@@ -2,7 +2,6 @@
 
 namespace Icap\BlogBundle\Controller;
 
-use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
@@ -63,8 +62,8 @@ class CommentController
 
         $userId = null !== $user ? $user->getId() : null;
         //if no edit rights, list only published comments and current user ones
-        $canEdit = $this->authorization->isGranted('EDIT', new ObjectCollection([$blog]))
-            || $this->authorization->isGranted('MODERATE', new ObjectCollection([$blog]));
+        $canEdit = $this->authorization->isGranted('EDIT', $blog)
+            || $this->authorization->isGranted('MODERATE', $blog);
 
         $parameters = $request->query->all();
         $comments = $this->commentManager->getComments(
@@ -159,8 +158,8 @@ class CommentController
         if ($blog->isCommentsAuthorized() && ($blog->isAuthorizeAnonymousComment() || null !== $user)) {
             $data = [];
             $data['message'] = $this->decodeRequest($request)['comment'];
-            $forcePublication = $this->authorization->isGranted('EDIT', new ObjectCollection([$blog]))
-                || $this->authorization->isGranted('MODERATE', new ObjectCollection([$blog]));
+            $forcePublication = $this->authorization->isGranted('EDIT', $blog)
+                || $this->authorization->isGranted('MODERATE', $blog);
             $comment = $this->commentManager->createComment($blog, $post, $this->commentSerializer->deserialize($data, null, $user), $forcePublication);
 
             return new JsonResponse($this->commentSerializer->serialize($comment));

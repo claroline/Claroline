@@ -47,7 +47,7 @@ class Version20200214094333 extends AbstractMigration
                 hideRecipients TINYINT(1) NOT NULL, 
                 created DATETIME NOT NULL, 
                 updated DATETIME NOT NULL, 
-                issuingMode LONGTEXT NOT NULL COMMENT '(DC2Type:json_array)', 
+                issuingMode LONGTEXT NOT NULL COMMENT '(DC2Type:json)', 
                 uuid VARCHAR(36) NOT NULL, 
                 color VARCHAR(255) DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_7A1CAEBED17F50A6 (uuid), 
@@ -79,7 +79,7 @@ class Version20200214094333 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 issuer_id INT DEFAULT NULL, 
                 verification_id INT DEFAULT NULL, 
-                claim LONGTEXT NOT NULL COMMENT '(DC2Type:json_array)', 
+                claim LONGTEXT NOT NULL COMMENT '(DC2Type:json)', 
                 issuedOn DATETIME NOT NULL, 
                 comment LONGTEXT NOT NULL, 
                 uuid VARCHAR(36) NOT NULL, 
@@ -147,7 +147,7 @@ class Version20200214094333 extends AbstractMigration
                 role_id INT DEFAULT NULL, 
                 group_id INT DEFAULT NULL, 
                 action VARCHAR(255) NOT NULL, 
-                data LONGTEXT NOT NULL COMMENT '(DC2Type:json_array)', 
+                data LONGTEXT NOT NULL COMMENT '(DC2Type:json)', 
                 uuid VARCHAR(36) NOT NULL, 
                 UNIQUE INDEX UNIQ_DE554AC7D17F50A6 (uuid), 
                 INDEX IDX_DE554AC7F7A2C2FC (badge_id), 
@@ -171,7 +171,7 @@ class Version20200214094333 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 verificationProperty VARCHAR(255) NOT NULL, 
                 startWith VARCHAR(255) NOT NULL, 
-                allowedOrigins LONGTEXT NOT NULL COMMENT '(DC2Type:json_array)', 
+                allowedOrigins LONGTEXT NOT NULL COMMENT '(DC2Type:json)', 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
         ");

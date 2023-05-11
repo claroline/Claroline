@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Installation\Plugin;
+namespace Claroline\CoreBundle\Tests\Unit\Library\Installation\Plugin;
 
+use Claroline\CoreBundle\Library\Installation\Plugin\Recorder;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class RecorderTest extends MockeryTestCase

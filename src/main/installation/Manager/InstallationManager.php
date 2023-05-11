@@ -82,7 +82,7 @@ class InstallationManager implements LoggerAwareInterface
 
         if ($additionalInstaller->hasMigrations()) {
             $this->log('Executing migrations...');
-            $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
+            $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_LATEST);
         }
 
         if ($additionalInstaller->hasFixtures()) {
@@ -127,7 +127,7 @@ class InstallationManager implements LoggerAwareInterface
 
         if ($additionalInstaller->hasMigrations()) {
             $this->log('Executing migrations...');
-            $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_FARTHEST);
+            $this->migrationManager->upgradeBundle($bundle, Migrator::VERSION_LATEST);
         }
 
         if ($additionalInstaller->hasFixtures()) {
@@ -177,7 +177,7 @@ class InstallationManager implements LoggerAwareInterface
 
         if ($additionalInstaller->hasMigrations()) {
             $this->log('Executing migrations...');
-            $this->migrationManager->downgradeBundle($bundle, Migrator::VERSION_FARTHEST);
+            $this->migrationManager->downgradeBundle($bundle, Migrator::VERSION_LATEST);
         }
 
         $this->log('Launching post-uninstallation actions...');

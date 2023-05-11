@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateCommand extends AbstractCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this->addOption(
@@ -43,7 +43,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->getManager($output)->generateBundleMigration($this->getTargetBundle($input), $this->getOutputBundle($input));
+        $this->getManager($output)->generateBundleMigration($this->getTargetBundle($input));
 
         return 0;
     }

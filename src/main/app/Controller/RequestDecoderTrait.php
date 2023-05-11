@@ -26,7 +26,7 @@ trait RequestDecoderTrait
 
     protected function decodeIdsString(Request $request, string $class, string $property = 'ids')
     {
-        $ids = $request->query->get($property) ?? [];
+        $ids = $request->query->all($property) ?? [];
         if (empty($ids)) {
             return [];
         }

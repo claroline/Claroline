@@ -60,7 +60,7 @@ class Version20181001101504 extends AbstractMigration
             CREATE TABLE claro_announcements_send (
                 id INT AUTO_INCREMENT NOT NULL, 
                 announcement_id INT DEFAULT NULL, 
-                data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                data LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json)', 
                 uuid VARCHAR(36) NOT NULL, 
                 UNIQUE INDEX UNIQ_7C739377D17F50A6 (uuid), 
                 INDEX IDX_7C739377913AEA17 (announcement_id), 

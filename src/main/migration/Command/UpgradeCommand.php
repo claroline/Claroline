@@ -13,14 +13,14 @@ namespace Claroline\MigrationBundle\Command;
 
 class UpgradeCommand extends AbstractMigrateCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
         $this->setDescription('Upgrades a bundle to a specified version.');
     }
 
-    protected function getAction()
+    protected function getAction(): string
     {
         return 'upgrade';
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace HeVinci\CompetencyBundle\Transfer;
+namespace HeVinci\CompetencyBundle\Tests\Transfer;
 
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 

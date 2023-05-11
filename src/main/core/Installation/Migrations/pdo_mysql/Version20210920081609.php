@@ -46,7 +46,7 @@ class Version20210920081609 extends AbstractMigration
             CREATE INDEX IDX_F6C21DB28A5F48FF ON claro_field_facet (resource_node)
         ');
         $this->addSql('
-            ALTER TABLE claro_field_facet CHANGE options options LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)"
+            ALTER TABLE claro_field_facet CHANGE options options LONGTEXT CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)"
         ');
     }
 }

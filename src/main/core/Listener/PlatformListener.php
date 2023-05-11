@@ -17,32 +17,34 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PlatformListener
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
+    private AuthorizationCheckerInterface $authorization;
 
-    private $translator;
+    private TokenStorageInterface $tokenStorage;
 
-    /** @var PlatformConfigurationHandler */
-    private $config;
+    private TranslatorInterface $translator;
 
-    /** @var VersionManager */
-    private $versionManager;
+    private PlatformConfigurationHandler $config;
 
-    /** @var TempFileManager */
-    private $tempManager;
+    private VersionManager $versionManager;
 
-    /** @var LocaleManager */
-    private $localeManager;
+    private TempFileManager $tempManager;
+
+    private LocaleManager $localeManager;
+
+    /** @var RoutingHelper */
+    private $routingHelper;
 
     /**
      * The list of public routes of the application.
@@ -66,19 +68,23 @@ class PlatformListener
     ];
 
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         PlatformConfigurationHandler $config,
         VersionManager $versionManager,
         TempFileManager $tempManager,
-        LocaleManager $localeManager
+        LocaleManager $localeManager,
+        RoutingHelper $routingHelper,
     ) {
+        $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->config = $config;
         $this->versionManager = $versionManager;
         $this->tempManager = $tempManager;
         $this->localeManager = $localeManager;
+        $this->routingHelper = $routingHelper;
     }
 
     /**
@@ -86,7 +92,7 @@ class PlatformListener
      */
     public function setLocale(RequestEvent $event)
     {
-        if ($event->isMasterRequest()) {
+        if ($event->isMainRequest()) {
             $request = $event->getRequest();
 
             $locale = $this->localeManager->getUserLocale($request);
@@ -99,7 +105,7 @@ class PlatformListener
      */
     public function checkAvailability(RequestEvent $event)
     {
-        if (!$event->isMasterRequest() || in_array($event->getRequest()->get('_route'), static::PUBLIC_ROUTES)) {
+        if (!$event->isMainRequest() || in_array($event->getRequest()->get('_route'), static::PUBLIC_ROUTES)) {
             return;
         }
 
@@ -124,7 +130,7 @@ class PlatformListener
         if (MaintenanceHandler::isMaintenanceEnabled() || $this->config->getParameter('maintenance.enable')) {
             // only disable for non admin
             // TODO : it may break the impersonation mode
-            if (!$this->isAdmin()) {
+            if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
                 throw new HttpException(503, 'Platform is not available (Platform is under maintenance).');
             }
         }
@@ -141,30 +147,36 @@ class PlatformListener
     /**
      * Display new version changelogs to administrators.
      */
-    public function displayVersionChangeLogs(GenericDataEvent $event)
+    public function displayVersionChangeLogs(GenericDataEvent $event): void
+    {
+        $event->setResponse(array_merge(
+            $this->getChangelogs(),
+            $this->getDPOMessages(),
+            $this->getSupportMessages(),
+        ));
+    }
+
+    private function getChangelogs(): array
     {
         if (!$this->config->getParameter('changelogMessage.enabled')) {
-            // connection message is disabled, nothing to do
-            return;
+            return [];
         }
 
         $roles = $this->config->getParameter('changelogMessage.roles');
         if (empty(array_intersect($this->tokenStorage->getToken()->getRoleNames(), $roles))) {
-            // current user cannot see the changelog with its current roles
-            return;
+            return [];
         }
 
-        // check if we still are in the display period
         $installationDate = $this->versionManager->getInstallationDate($this->versionManager->getCurrentMinor());
         if (empty($installationDate)) {
-            return;
+            return [];
         }
 
         $period = new \DateInterval($this->config->getParameter('changelogMessage.duration'));
         $endDate = $installationDate->add($period);
         $now = new \DateTime();
         if ($now > $endDate) {
-            return;
+            return [];
         }
 
         $user = $this->tokenStorage->getToken()->getUser();
@@ -172,11 +184,11 @@ class PlatformListener
         $locale = $this->localeManager->getLocale($user);
         $content = $this->versionManager->getChangelogs($locale).'<br/>'.'<br/>';
         $content .= '<em>'.$this->translator->trans('platform_changelog_display', [
-            '%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles')),
-            '%end_date%' => $endDate->format('d/m/Y'),
-        ], 'platform').'</em>';
+                '%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles')),
+                '%end_date%' => $endDate->format('d/m/Y'),
+            ], 'platform').'</em>';
 
-        $event->setResponse([
+        return [
             [
                 'id' => 'new-version',
                 'title' => $this->translator->trans('platform_new_available_version', [], 'platform'),
@@ -188,10 +200,56 @@ class PlatformListener
                     'order' => 0,
                 ]],
             ],
-        ]);
+        ];
     }
 
-    private function isAdmin()
+    private function getDPOMessages(): array
+    {
+        if (!$this->isAdmin() || $this->config->getParameter('privacy.dpo.email')) {
+            return [];
+        }
+
+        $editUrl = $this->routingHelper->adminPath('main_settings/privacy');
+
+        return [
+            [
+                'id' => 'dpo-email-missing',
+                'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
+                'type' => ConnectionMessage::TYPE_ALWAYS,
+                'slides' => [[
+                    'id' => 'dpo-email-missing-message',
+                    'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
+                    'content' => $this->translator->trans('dpo_email_missing_content', ['%link%' => '<a href="'.$editUrl.'" target="_blank"><strong>'.$this->translator->trans('here', [], 'platform').'</strong></a>'], 'platform'),
+                    'order' => 1,
+                ]],
+            ],
+        ];
+    }
+
+    private function getSupportMessages(): array
+    {
+        if (!$this->isAdmin() || $this->config->getParameter('help.support_email')) {
+            return [];
+        }
+
+        $editUrl = $this->routingHelper->adminPath('main_settings');
+
+        return [
+            [
+                'id' => 'support-email-missing',
+                'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
+                'type' => ConnectionMessage::TYPE_ALWAYS,
+                'slides' => [[
+                    'id' => 'support-email-missing-message',
+                    'title' => $this->translator->trans('support_email_missing_title', [], 'platform'),
+                    'content' => $this->translator->trans('support_email_missing_content', ['%link%' => '<a href="'.$editUrl.'" target="_blank"><strong>'.$this->translator->trans('here', [], 'platform').'</strong></a>'], 'platform'),
+                    'order' => 2,
+                ]],
+            ],
+        ];
+    }
+
+    private function isAdmin(): bool
     {
         $token = $this->tokenStorage->getToken();
         if ($token) {

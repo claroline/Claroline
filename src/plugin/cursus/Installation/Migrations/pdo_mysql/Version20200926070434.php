@@ -81,7 +81,7 @@ class Version20200926070434 extends AbstractMigration
             DROP creator_id, 
             DROP updatedAt, 
             ADD createdAt creation_date DATETIME NOT NULL,
-            CHANGE details details LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)", 
+            CHANGE details details LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)", 
             CHANGE display_order display_order INT DEFAULT 500 NOT NULL
         ');
     }

@@ -63,7 +63,7 @@ class Version20211026053317 extends AbstractMigration
             ALTER TABLE claro_template_type 
             CHANGE entity_name type_name VARCHAR(255) CHARACTER SET utf8 NOT NULL COLLATE `utf8_unicode_ci`, 
             DROP entity_type, 
-            CHANGE placeholders placeholders LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json_array)"
+            CHANGE placeholders placeholders LONGTEXT CHARACTER SET utf8 DEFAULT NULL COLLATE `utf8_unicode_ci` COMMENT "(DC2Type:json)"
         ');
         $this->addSql('
             CREATE UNIQUE INDEX template_unique_type ON claro_template_type (type_name)

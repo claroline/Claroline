@@ -9,18 +9,20 @@ use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 
 class ObjectLockSerializer
 {
+    private UserSerializer $userSerializer;
+
     public function __construct(
         UserSerializer $userSerializer
     ) {
         $this->userSerializer = $userSerializer;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ObjectLock::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'object_lock';
     }

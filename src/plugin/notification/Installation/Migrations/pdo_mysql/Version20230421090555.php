@@ -22,7 +22,7 @@ class Version20230421090555 extends AbstractMigration
     public function down(Schema $schema): void
     {
         $this->addSql('
-            ALTER TABLE icap__notification CHANGE details details LONGTEXT CHARACTER SET utf8mb3 DEFAULT NULL COLLATE `utf8mb3_unicode_ci` COMMENT "(DC2Type:json_array)"
+            ALTER TABLE icap__notification CHANGE details details LONGTEXT CHARACTER SET utf8mb3 DEFAULT NULL COLLATE `utf8mb3_unicode_ci` COMMENT "(DC2Type:json)"
         ');
     }
 }

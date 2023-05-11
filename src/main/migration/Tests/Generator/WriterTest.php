@@ -9,9 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\MigrationBundle\Generator;
+namespace Claroline\MigrationBundle\Tests\Generator;
 
-use Claroline\MigrationBundle\Tests\MockeryTestCase;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\MigrationBundle\Generator\Generator;
+use Claroline\MigrationBundle\Generator\Writer;
 use Claroline\MigrationBundle\Twig\SqlFormatterExtension;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;
@@ -54,16 +56,18 @@ class WriterTest extends MockeryTestCase
                 }
             )
         );
+
+        $bundlePath = vfsStream::url('root').'/bundle/path';
+
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
-        $bundle->shouldReceive('getPath')->once()->andReturn(vfsStream::url('root').'/bundle/path');
-        $bundle->shouldReceive('getNamespace')->once()->andReturn('Bundle\Namespace');
+        $bundle->shouldReceive('getPath')->once()->andReturn($bundlePath);
         $this->fileSystem->shouldReceive('exists')
             ->once()
-            ->with(vfsStream::url('root').'/bundle/path/Installation/Migrations/some_driver')
+            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver']))
             ->andReturn(false);
         $this->fileSystem->shouldReceive('mkdir')
             ->once()
-            ->with(vfsStream::url('root').'/bundle/path/Installation/Migrations/some_driver');
+            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver']));
         $this->twigEnvironment->shouldReceive('render')
             ->once()
             ->with(
@@ -78,13 +82,13 @@ class WriterTest extends MockeryTestCase
             ->andReturn('migration class content');
         $this->fileSystem->shouldReceive('touch')
             ->once()
-            ->with(vfsStream::url('root').'/bundle/path/Installation/Migrations/some_driver/Versionsome_version.php');
+            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver', 'Versionsome_version.php']));
 
         $writer = new Writer($this->fileSystem, $this->twigEnvironment);
         $writer->writeMigrationClass(
             $bundle,
             'some_driver',
-            'some_version',
+            'Bundle\Namespace\Installation\Migrations\some_driver\Versionsome_version',
             [Generator::QUERIES_UP => 'queries up', Generator::QUERIES_DOWN => 'queries down']
         );
         $this->assertEquals(
@@ -116,7 +120,7 @@ class WriterTest extends MockeryTestCase
         );
         $this->twigEnvironment->shouldReceive('addExtension');
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
-        $bundlePath = implode(DIRECTORY_SEPARATOR, [vfsStream::url('root'), 'bundle', 'path']);
+        $bundlePath = vfsStream::url('root').'/bundle/path';
 
         $bundle->shouldReceive('getPath')->once()->andReturn($bundlePath);
 
@@ -129,7 +133,7 @@ class WriterTest extends MockeryTestCase
             ->with([implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver', 'Version3.php'])]);
 
         $writer = new Writer($this->fileSystem, $this->twigEnvironment);
-        $deletedVersions = $writer->deleteUpperMigrationClasses($bundle, 'some_driver', '1');
+        $deletedVersions = $writer->deleteUpperMigrationClasses($bundle, 'some_driver', 'Version1');
         $this->assertEquals(2, count($deletedVersions));
     }
 }

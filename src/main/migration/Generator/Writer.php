@@ -21,16 +21,12 @@ use Twig\Environment;
  */
 class Writer
 {
-    /** @var Filesystem */
-    private $fileSystem;
-    /** @var Environment */
-    private $twigEnvironment;
-    /** @var bool */
-    private $hasSqlExtension = false;
+    private Filesystem $fileSystem;
 
-    /**
-     * Writer constructor.
-     */
+    private Environment $twigEnvironment;
+
+    private bool $hasSqlExtension = false;
+
     public function __construct(
         Filesystem $fileSystem,
         Environment $environment
@@ -41,21 +37,21 @@ class Writer
 
     /**
      * Writes a bundle migration class for a given driver.
-     *
-     * @param string $driverName
-     * @param string $version
      */
-    public function writeMigrationClass(BundleInterface $bundle, $driverName, $version, array $queries)
+    public function writeMigrationClass(BundleInterface $bundle, string $driverName, string $className, array $queries): void
     {
         if (!$this->hasSqlExtension) {
             $this->twigEnvironment->addExtension(new SqlFormatterExtension());
             $this->hasSqlExtension = true;
         }
 
+        $versionParts = explode('\\', $className);
+
+        $class = array_pop($versionParts);
+        $namespace = implode('\\', $versionParts);
         $targetDir = implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', $driverName]);
-        $class = "Version{$version}";
-        $namespace = "{$bundle->getNamespace()}\\Installation\\Migrations\\{$driverName}";
-        $classFile = "{$targetDir}/{$class}.php";
+
+        $classFile = implode(DIRECTORY_SEPARATOR, [$targetDir, $class.'.php']);
 
         if (!$this->fileSystem->exists($targetDir)) {
             $this->fileSystem->mkdir($targetDir);
@@ -78,21 +74,19 @@ class Writer
     /**
      * Deletes bundle migration classes for a given driver which are above a
      * reference version.
-     *
-     * @param string $driverName
-     * @param string $referenceVersion
-     *
-     * @return array The migration files that were deleted
      */
-    public function deleteUpperMigrationClasses(BundleInterface $bundle, $driverName, $referenceVersion)
+    public function deleteUpperMigrationClasses(BundleInterface $bundle, string $driverName, string $referenceVersion): array
     {
-        $migrations = new \DirectoryIterator(implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', $driverName]));
-        $deletedVersions = [];
+        $versionParts = explode('\\', $referenceVersion);
+        $currentVersion = array_pop($versionParts);
 
+        $migrations = new \DirectoryIterator(implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', $driverName]));
+
+        $deletedVersions = [];
         foreach ($migrations as $migration) {
             $matches = [];
-            if (preg_match('#Version(\d+)\.php#', $migration->getFilename(), $matches)) {
-                if ($matches[1] > $referenceVersion) {
+            if (preg_match('#(.+)\.php#', $migration->getFilename(), $matches)) {
+                if ($matches[1] > $currentVersion) {
                     $this->fileSystem->remove([$migration->getPathname()]);
                     $deletedVersions[] = $migration->getFilename();
                 }
