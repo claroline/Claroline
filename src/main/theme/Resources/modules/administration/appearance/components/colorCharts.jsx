@@ -9,19 +9,20 @@ import {MODAL_EDIT_COLOR_CHART} from '#/main/theme/administration/appearance/mod
 const AppearanceColorCharts = (props) => {
   return (
     <div>
-      {props.availableColorCharts.map((color) =>
-        <div className="color-chart">
+      {props.availableColorCharts.map((color, index) => (
+        <div className="color-chart" key={index}>
           <h3 className="h4 color-chart-title">
             <div className="color-chart-name">
               {trans(color.name)}
             </div>
 
             <div className="color-colors-list">
-              {color.colors.map((color) =>
+              {color.colors.map((color, index) => (
                 <div className="color-pastille"
-                  style={{
-                    backgroundColor: color
-                  }}></div>)}
+                     style={{
+                       backgroundColor: color
+                     }} key={index}></div>
+              ))}
             </div>
 
             <Toolbar
@@ -36,7 +37,7 @@ const AppearanceColorCharts = (props) => {
                   label: trans('edit', {}, 'actions'),
                   modal: [MODAL_EDIT_COLOR_CHART, {
                     colorChart: color,
-                    onSave: (data) => props.updateColorChart(data),
+                    onSave: (data) => props.updateColorChart(data)
                   }],
                   displayed: true,
                   group: trans('color_chart', {}, 'appearance')
@@ -64,7 +65,7 @@ const AppearanceColorCharts = (props) => {
             />
           </h3>
         </div>
-      )}
+      ))}
     </div>
   )
 }

@@ -20,7 +20,7 @@ const ColorChartEditModal = withReducer(selectors.STORE_NAME, reducer)(
       },
       reset(colorChart) {
 
-        const colorChartCopy = Object.assign({}, colorChart);
+        const colorChartCopy = Object.assign({}, colorChart)
         colorChartCopy.colors = {
           color1: colorChart.colors[0],
           color2: colorChart.colors[1],

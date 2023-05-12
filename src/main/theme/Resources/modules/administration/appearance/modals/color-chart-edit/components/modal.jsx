@@ -25,7 +25,7 @@ const ColorChartEditModal = props => {
           name: 'name',
           label: trans('name'),
           type: 'string',
-          required: true,
+          required: true
         }, {
           name: 'colors.color1',
           label: trans('color 1'),
