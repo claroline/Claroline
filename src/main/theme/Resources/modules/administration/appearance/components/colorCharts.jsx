@@ -18,10 +18,7 @@ const AppearanceColorCharts = (props) => {
 
             <div className="color-colors-list">
               {color.colors.map((color, index) => (
-                <div className="color-pastille"
-                     style={{
-                       backgroundColor: color
-                     }} key={index}></div>
+                <div className="color-pastille" style={{backgroundColor: color}} key={index}></div>
               ))}
             </div>
 
