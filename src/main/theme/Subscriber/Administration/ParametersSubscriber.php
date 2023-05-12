@@ -57,6 +57,7 @@ class ParametersSubscriber implements EventSubscriberInterface
     {
         $colorCharts = $this->objectManager->getRepository('Claroline\ThemeBundle\Entity\ColorCollection')->findAll();
         $chartsData = [];
+
         foreach($colorCharts as $chart)
         {
             $chartsData[] = $this->serializer->serialize($chart);
