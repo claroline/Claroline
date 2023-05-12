@@ -1,5 +1,5 @@
-import React, {Fragment} from 'react'
-import {trans}           from "#/main/app/intl";
+import React from 'react'
+import {trans} from '#/main/app/intl'
 
 const ColorChart = (props) =>
   <div
@@ -27,9 +27,7 @@ const ColorChart = (props) =>
     </div>
   </div>
 
-
 const AppearanceColorCharts = (props) => {
-  console.log(props);
   return (
     <div></div>);
 };

@@ -42,7 +42,6 @@ const currentColorChart = createSelector(
   }
 )
 
-
 export const selectors = {
   STORE_NAME,
 
