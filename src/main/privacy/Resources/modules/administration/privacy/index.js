@@ -1,5 +1,5 @@
 import {PrivacyTool} from './components/tool'
-import {reducer} from './store/reducer'
+import {reducer} from './store'
 
 export default {
   component: PrivacyTool,

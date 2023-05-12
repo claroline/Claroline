@@ -71,7 +71,7 @@ const PrivacyTool = (props) => {
                     name: 'tos.text',
                     type: 'translated',
                     label: trans('terms_of_service'),
-                    required: true,
+                    required: false,
                     displayed: get(props.parameters, 'tos.enabled')
                   }
                 ]
@@ -84,6 +84,17 @@ const PrivacyTool = (props) => {
     </>
   )
 }
+
+PrivacyTool.propTypes = {
+  path: T.string,
+  lockedParameters: T.arrayOf(T.string),
+  parameters: T.shape({
+    tos: T.shape({
+      enabled: T.bool
+    })
+  })
+}
+
 
 export {
   PrivacyTool
