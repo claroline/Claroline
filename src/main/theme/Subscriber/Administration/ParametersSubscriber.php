@@ -11,12 +11,13 @@
 
 namespace Claroline\ThemeBundle\Subscriber\Administration;
 
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\ThemeBundle\Manager\IconSetManager;
 use Claroline\ThemeBundle\Manager\ThemeManager;
-use Claroline\ThemeBundle\Manager\ColorCollectionManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ParametersSubscriber implements EventSubscriberInterface
@@ -27,17 +28,19 @@ class ParametersSubscriber implements EventSubscriberInterface
     private ThemeManager $themeManager;
     /** @var IconSetManager */
     private IconSetManager $iconSetManager;
-    private ColorCollectionManager $colorCollectionManager;
-
+    private SerializerProvider $serializer;
+    private ObjectManager $objectManager;
 
     public function __construct(
         ThemeManager $themeManager,
         IconSetManager $iconSetManager,
-        ColorCollectionManager $colorCollectionManager,
+        SerializerProvider $serializer,
+        ObjectManager $objectManager,
     ) {
         $this->themeManager = $themeManager;
         $this->iconSetManager = $iconSetManager;
-        $this->colorCollectionManager = $colorCollectionManager;
+        $this->serializer = $serializer;
+        $this->objectManager = $objectManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -52,10 +55,17 @@ class ParametersSubscriber implements EventSubscriberInterface
      */
     public function onOpen(OpenToolEvent $event): void
     {
+        $colorCharts = $this->objectManager->getRepository('Claroline\ThemeBundle\Entity\ColorCollection')->findAll();
+        $chartsData = [];
+        foreach ($colorCharts as $chart)
+        {
+            $chartsData[] = $this->serializer->serialize($chart);
+        }
+
         $event->setData([
             'availableThemes' => $this->themeManager->getAvailableThemes(),
             'availableIconSets' => $this->iconSetManager->getAvailableSets(),
-            'availableColorCharts' => $this->colorCollectionManager->getAvailableColorCharts()
+            'availableColorCharts' => $chartsData,
         ]);
     }
 }

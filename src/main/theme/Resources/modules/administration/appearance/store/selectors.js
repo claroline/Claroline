@@ -34,14 +34,6 @@ const currentIconSet = createSelector(
   }
 )
 
-const currentColorChart = createSelector(
-  [paramSelectors.parameters, availableColorCharts],
-  (parameters, availableColorCharts) => {
-    const currentColorChartName = get(parameters, 'display.color_chart')
-    return availableColorCharts.find(colorChart => colorChart.name === currentColorChartName)
-  }
-)
-
 export const selectors = {
   STORE_NAME,
 
@@ -49,6 +41,5 @@ export const selectors = {
   availableThemes,
   availableIconSets,
   currentIconSet,
-  availableColorCharts,
-  currentColorChart
+  availableColorCharts
 }

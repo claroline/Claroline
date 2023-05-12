@@ -5,16 +5,16 @@ import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {selectors} from '#/main/theme/administration/appearance/modals/color-chart-creation/store/selectors'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
 
-const ColorChartCreationModal = props => {
+import {selectors} from '#/main/theme/administration/appearance/modals/color-chart-edit/store/selectors'
+const ColorChartEditModal = props => {
   return <Modal
     {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'updateProp', 'onSave')}
-    icon="fa fa-fw fa-plus"
-    title={trans('new_color_chart', {}, 'appearance')}
-    onExiting={() => props.reset()}
+    icon="fa fa-fw fa-pencil"
+    title={trans('edit_color_chart', {}, 'appearance')}
+    onEntering={() => props.reset(props.colorChart)}
   >
     <FormData
       name={selectors.STORE_NAME}
@@ -25,7 +25,7 @@ const ColorChartCreationModal = props => {
           name: 'name',
           label: trans('name'),
           type: 'string',
-          required: true
+          required: true,
         }, {
           name: 'colors.color1',
           label: trans('color 1'),
@@ -64,7 +64,6 @@ const ColorChartCreationModal = props => {
   </Modal>
 }
 
-
 export {
-  ColorChartCreationModal
+  ColorChartEditModal
 }

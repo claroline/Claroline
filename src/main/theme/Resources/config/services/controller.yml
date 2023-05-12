@@ -13,5 +13,5 @@ services:
             - '@Claroline\ThemeBundle\Manager\IconSetManager'
 
     Claroline\ThemeBundle\Controller\ColorCollectionController:
-      arguments:
-        - '@Claroline\ThemeBundle\Manager\ColorCollectionManager'
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true

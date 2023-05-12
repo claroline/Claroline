@@ -7,7 +7,7 @@ import {TOOL_LOAD} from '#/main/core/tool/store'
 
 import {
   APPEARANCE_ADD_ICON_SET, APPEARANCE_REMOVE_ICON_SET,
-  APPEARANCE_ADD_COLOR_CHART, APPEARANCE_REMOVE_COLOR_CHART
+  APPEARANCE_ADD_COLOR_CHART, APPEARANCE_UPDATE_COLOR_CHART, APPEARANCE_REMOVE_COLOR_CHART
 } from '#/main/theme/administration/appearance/store/actions'
 
 export const reducer = combineReducers({
@@ -39,14 +39,26 @@ export const reducer = combineReducers({
     [APPEARANCE_ADD_COLOR_CHART]: (state, action) => {
       const newState = cloneDeep(state)
 
-      newState.push(action.addColorChart)
+      newState.push(action.colorChart)
+
+      return newState
+    },
+    [APPEARANCE_UPDATE_COLOR_CHART]: (state, action) => {
+      const newState = cloneDeep(state)
+
+      console.log(action.colorChart)
+
+      const pos = newState.findIndex(colorChart => colorChart.id === action.colorChart.id)
+      if (-1 !== pos) {
+        newState[pos] = action.colorChart
+      }
 
       return newState
     },
     [APPEARANCE_REMOVE_COLOR_CHART]: (state, action) => {
       const newState = cloneDeep(state)
 
-      const pos = newState.findIndex(colorChart => colorChart.name === action.removeColorChart.name)
+      const pos = newState.findIndex(colorChart => colorChart.id === action.colorChart.id)
       if (-1 !== pos) {
         newState.splice(pos, 1)
       }
@@ -55,5 +67,3 @@ export const reducer = combineReducers({
     }
   })
 })
-
-

@@ -31,14 +31,13 @@ class ColorCollection
 
     public function getColors(): array
     {
-        return $this->colors;
+        return array_values( $this->colors );
     }
 
     public function setColors(array $colors): self
     {
-        $this->colors = $colors;
+        $this->colors = array_values( $colors );
 
         return $this;
     }
-
 }

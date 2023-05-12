@@ -2,9 +2,9 @@ import {connect} from 'react-redux'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors as paramSelectors} from '#/main/core/administration/parameters/store'
+import {actions, selectors} from '#/main/theme/administration/appearance/store'
 
 import {AppearanceTool as AppearanceToolComponent} from '#/main/theme/administration/appearance/components/tool'
-import {actions, selectors} from '#/main/theme/administration/appearance/store'
 
 const AppearanceTool = connect(
   (state) => ({
@@ -12,7 +12,7 @@ const AppearanceTool = connect(
     lockedParameters: paramSelectors.lockedParameters(state),
     availableThemes: selectors.availableThemes(state),
     availableIconSets: selectors.availableIconSets(state),
-    availableColorCharts: selectors.availableColorCharts(state),
+    availableColorCharts: selectors.availableColorCharts(state)
   }),
   (dispatch) => ({
     addIconSet(iconSet) {
@@ -23,9 +23,6 @@ const AppearanceTool = connect(
     },
     addColorChart(colorChart) {
       dispatch(actions.addColorChart(colorChart))
-    },
-    removeColorChart(colorChart) {
-      dispatch(actions.removeColorChart(colorChart))
     }
   })
 )(AppearanceToolComponent)

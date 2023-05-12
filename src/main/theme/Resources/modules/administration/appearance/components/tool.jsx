@@ -7,14 +7,12 @@ import {Toolbar} from '#/main/app/action'
 import {ASYNC_BUTTON, DOWNLOAD_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {getMenus}                from '#/main/app/layout/header/utils'
-import {selectors}               from '#/main/core/administration/parameters/store/selectors'
-import {AppearanceIcons}         from '#/main/theme/administration/appearance/containers/icons'
-import {AppearanceColorCharts}  from '#/main/theme/administration/appearance/containers/colorCharts'
-import {MODAL_ICON_SET_CREATION}                           from '#/main/theme/administration/appearance/modals/icon-set-creation'
+import {getMenus} from '#/main/app/layout/header/utils'
+import {selectors} from '#/main/core/administration/parameters/store/selectors'
+import {AppearanceIcons} from '#/main/theme/administration/appearance/containers/icons'
+import {AppearanceColorCharts} from '#/main/theme/administration/appearance/containers/colorCharts'
+import {MODAL_ICON_SET_CREATION} from '#/main/theme/administration/appearance/modals/icon-set-creation'
 import {MODAL_NEW_COLOR_CHART} from '#/main/theme/administration/appearance/modals/color-chart-creation'
-
-import {ColorChart} from '#/main/theme/administration/appearance/components/colorCharts';
 
 class AppearanceTool extends Component {
   constructor(props) {
@@ -191,37 +189,10 @@ class AppearanceTool extends Component {
                 icon: 'fa fa-fw fa-plus',
                 label: trans('add_color_chart', {}, 'actions'),
                 modal: [MODAL_NEW_COLOR_CHART, {
-                   onSave: this.props.addColorChart
+                  onSave: this.props.addColorChart
                 }]
               }
             ],
-            fields: [{
-              name: 'display.color_chart',
-              type: 'choice',
-              label: trans('color_charts', {}, 'appearance'),
-              required: false,
-              hideLabel: true,
-              options: {
-                multiple: false,
-                condensed: false,
-                noEmpty: true,
-                choices: []
-                  .concat(this.props.availableColorCharts)
-                  .sort((a, b) => {
-                    if (a.default || a.name < b.name) {
-                      return 1
-                    }
-                    return -1
-                  })
-                  .reduce((acc, current) => Object.assign({
-                    [current.name]: (
-                      <Fragment key={current.name}>
-                        <ColorChart {...current} />
-                      </Fragment>
-                    )
-                  }, acc), {})
-              }
-            }],
             component: AppearanceColorCharts
           }, {
             icon: 'fa fa-fw fa-copyright',
@@ -267,6 +238,7 @@ AppearanceTool.propTypes = {
   lockedParameters: T.arrayOf(T.string).isRequired,
   availableThemes: T.object,
   availableIconSets: T.array.isRequired,
+  availableColorCharts: T.array.isRequired,
 
   addIconSet: T.func.isRequired,
   removeIconSet: T.func.isRequired,

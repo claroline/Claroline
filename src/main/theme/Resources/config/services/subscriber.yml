@@ -12,4 +12,5 @@ services:
         arguments:
             - '@Claroline\ThemeBundle\Manager\ThemeManager'
             - '@Claroline\ThemeBundle\Manager\IconSetManager'
-            - '@Claroline\ThemeBundle\Manager\ColorCollectionManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

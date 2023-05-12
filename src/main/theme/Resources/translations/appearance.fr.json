@@ -4,6 +4,7 @@
   "icons": "Icones",
   "colors": "Couleurs",
   "color_charts": "Palettes de couleurs",
+  "edit_color_chart": "Modifier la palette de couleurs",
   "footer": "Pied de page",
   "footer_show": "Afficher le pied de page Claroline Connect",
   "footer_show_locale": "Afficher la langue",
@@ -11,6 +12,8 @@
   "footer_show_terms_of_service": "Afficher les conditions d'utilisation",
   "new_icon_set": "Nouveau jeu d'icones",
   "new_color_chart": "Nouvelle palette de couleurs",
+  "color_chart_delete_confirm_title": "Suppression de la palette de couleurs",
+  "color_chart_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer cette palette de couleurs ?",
   "icon_set_delete_confirm_title": "{1} Suppression d'un jeu d'icones | [2,Inf[ Suppression de plusieurs jeux d'icones",
   "icon_set_delete_confirm_message": "{1} Êtes-vous sûr de vouloir supprimer ce jeu d'icones ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% jeux d'icones ?"
 }

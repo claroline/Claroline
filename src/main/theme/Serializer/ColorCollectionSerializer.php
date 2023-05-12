@@ -35,5 +35,4 @@ class ColorCollectionSerializer
 
         return $colorCollection;
     }
-
 }
