@@ -25,10 +25,9 @@ class ParametersSubscriber implements EventSubscriberInterface
     const NAME = 'main_settings';
 
     /** @var ThemeManager */
-    private ThemeManager $themeManager;
-
+    private $themeManager;
     /** @var IconSetManager */
-    private IconSetManager $iconSetManager;
+    private $iconSetManager;
     private SerializerProvider $serializer;
     private ObjectManager $objectManager;
 
@@ -36,7 +35,7 @@ class ParametersSubscriber implements EventSubscriberInterface
         ThemeManager $themeManager,
         IconSetManager $iconSetManager,
         SerializerProvider $serializer,
-        ObjectManager $objectManager,
+        ObjectManager $objectManager
     ) {
         $this->themeManager = $themeManager;
         $this->iconSetManager = $iconSetManager;
@@ -58,6 +57,7 @@ class ParametersSubscriber implements EventSubscriberInterface
     {
         $colorCharts = $this->objectManager->getRepository('Claroline\ThemeBundle\Entity\ColorCollection')->findAll();
         $chartsData = [];
+
         foreach ($colorCharts as $chart)
         {
             $chartsData[] = $this->serializer->serialize($chart);
