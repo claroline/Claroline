@@ -8,7 +8,7 @@ const PrivacyTool = connect(
   (state) => ({
     path: toolSelectors.path(state),
     lockedParameters: selectors.lockedParameters(state),
-    parameters: selectors.parameters(state)
+    parameters: selectors.form(state)
   })
 )(PrivacyToolComponent)
 
