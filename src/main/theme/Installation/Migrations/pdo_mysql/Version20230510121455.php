@@ -28,8 +28,8 @@ final class Version20230510121455 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             DROP TABLE claro_color_collection
-        ");
+        ');
     }
 }

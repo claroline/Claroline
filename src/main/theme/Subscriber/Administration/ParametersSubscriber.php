@@ -26,6 +26,7 @@ class ParametersSubscriber implements EventSubscriberInterface
 
     /** @var ThemeManager */
     private ThemeManager $themeManager;
+
     /** @var IconSetManager */
     private IconSetManager $iconSetManager;
     private SerializerProvider $serializer;
