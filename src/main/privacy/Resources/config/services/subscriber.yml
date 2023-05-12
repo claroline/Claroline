@@ -1,4 +1,7 @@
 services:
   Claroline\PrivacyBundle\Subscriber\Administration\PrivacySubscriber:
-    tags:
-      - { name: kernel.event_subscriber }
+      tags: [ kernel.event_subscriber ]
+      arguments:
+        - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+        - '@Claroline\CoreBundle\Manager\LocaleManager'
+        - '@Claroline\ThemeBundle\Manager\IconSetManager'
