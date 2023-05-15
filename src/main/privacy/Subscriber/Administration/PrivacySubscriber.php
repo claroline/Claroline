@@ -37,5 +37,4 @@ class PrivacySubscriber implements EventSubscriberInterface
             'parameters' => $parameters,
         ]);
     }
-
 }
