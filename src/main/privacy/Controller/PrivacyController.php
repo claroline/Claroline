@@ -18,13 +18,10 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  {
      use RequestDecoderTrait;
 
-     /** @var AuthorizationCheckerInterface */
      private AuthorizationCheckerInterface $authorization;
 
-     /** @var PlatformConfigurationHandler */
      private PlatformConfigurationHandler $config;
 
-     /** @var ParametersSerializer */
      private ParametersSerializer $serializer;
 
      public function __construct(

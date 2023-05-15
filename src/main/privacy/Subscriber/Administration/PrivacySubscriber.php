@@ -12,7 +12,6 @@ class PrivacySubscriber implements EventSubscriberInterface
 {
     const NAME = 'privacy';
 
-    /** @var ParametersSerializer */
     private ParametersSerializer $serializer;
 
     public function __construct(
