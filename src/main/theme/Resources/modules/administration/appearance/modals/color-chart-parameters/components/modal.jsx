@@ -11,8 +11,8 @@ import {Button} from '#/main/app/action'
 import {selectors} from '#/main/theme/administration/appearance/modals/color-chart-parameters/store/selectors'
 
 const ColorChartParametersModal = props => {
-  const icon  = typeof props.colorChart !== 'undefined' ? 'fa fa-fw fa-pencil' : 'fa fa-fw fa-plus';
-  const label = typeof props.colorChart !== 'undefined'? trans('edit_color_chart', {}, 'appearance') : trans('new_color_chart', {}, 'appearance');
+  const icon  = typeof props.colorChart !== 'undefined' ? 'fa fa-fw fa-pencil' : 'fa fa-fw fa-plus'
+  const label = typeof props.colorChart !== 'undefined'? trans('edit_color_chart', {}, 'appearance') : trans('new_color_chart', {}, 'appearance')
 
   return <Modal
     {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'updateProp', 'onSave')}
