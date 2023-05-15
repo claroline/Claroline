@@ -11,8 +11,7 @@ const AppearanceTool = connect(
     path: toolSelectors.path(state),
     lockedParameters: paramSelectors.lockedParameters(state),
     availableThemes: selectors.availableThemes(state),
-    availableIconSets: selectors.availableIconSets(state),
-    availableColorCharts: selectors.availableColorCharts(state)
+    availableIconSets: selectors.availableIconSets(state)
   }),
   (dispatch) => ({
     addIconSet(iconSet) {

@@ -242,8 +242,7 @@ AppearanceTool.propTypes = {
   addIconSet: T.func.isRequired,
   removeIconSet: T.func.isRequired,
 
-  addColorChart: T.func,
-  removeColorChart: T.func
+  addColorChart: T.func
 }
 
 export {

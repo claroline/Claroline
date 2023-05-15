@@ -5,17 +5,20 @@ import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {selectors} from '#/main/theme/administration/appearance/modals/color-chart-parameters/store/selectors'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
 
+import {selectors} from '#/main/theme/administration/appearance/modals/color-chart-parameters/store/selectors'
+
 const ColorChartParametersModal = props => {
+  const icon  = typeof props.colorChart !== "undefined" ? 'fa fa-fw fa-pencil' : 'fa fa-fw fa-plus';
+  const label = typeof props.colorChart !== "undefined" ? trans('edit_color_chart', {}, 'appearance') : trans('new_color_chart', {}, 'appearance');
 
   return <Modal
     {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'updateProp', 'onSave')}
-    icon="fa fa-fw fa-plus"
-    title={trans('new_color_chart', {}, 'appearance')}
-    onExiting={() => props.reset()}
+    icon={icon}
+    title={label}
+    onEntering={() => props.reset(props.colorChart)}
   >
     <FormData
       name={selectors.STORE_NAME}

@@ -7,39 +7,16 @@ import {selectors} from '#/main/theme/administration/appearance/modals/color-cha
 export const actions = {}
 
 actions.save = (data) => (dispatch) => {
-
-  dispatch(formActions.submit(selectors.STORE_NAME))
+  const isNew = typeof data.id === "undefined";
 
   return dispatch({
     [API_REQUEST]: {
-      url: ['apiv2_color_collection_create'],
+      url: isNew ? ['apiv2_color_collection_create'] : ['apiv2_color_collection_update', {id: data.id}],
       request: {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        })
+        method: isNew ? "POST" : "PUT",
+        body: JSON.stringify(data)
       },
       error: (errors) => dispatch(formActions.errors(selectors.STORE_NAME, errors))
     }
   })
 }
-
-// actions.update = (data) => (dispatch) => {
-//   return dispatch({
-//     [API_REQUEST]: {
-//       url: [`apiv2_color_collection_update/${data.id}`],
-//       request: {
-//         method: 'PUT',
-//         body: JSON.stringify(data),
-//         headers: new Headers({
-//           'Content-Type': 'application/json',
-//           'Accept': 'application/json'
-//         })
-//       },
-//       success: (response) => dispatch(formActions.save(selectors.STORE_NAME, response)),
-//       error: (errors) => dispatch(formActions.errors(selectors.STORE_NAME, errors))
-//     }
-//   })
-// }
