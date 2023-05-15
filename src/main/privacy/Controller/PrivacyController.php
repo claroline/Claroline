@@ -14,47 +14,47 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
- class PrivacyController extends AbstractSecurityController
- {
-   use RequestDecoderTrait;
+class PrivacyController extends AbstractSecurityController
+{
+    use RequestDecoderTrait;
 
-   private AuthorizationCheckerInterface $authorization;
+    private AuthorizationCheckerInterface $authorization;
 
-   private PlatformConfigurationHandler $config;
+    private PlatformConfigurationHandler $config;
 
-   private ParametersSerializer $serializer;
+    private ParametersSerializer $serializer;
 
-   public function __construct(
-     AuthorizationCheckerInterface $authorization,
-     PlatformConfigurationHandler $ch,
-     ParametersSerializer $serializer
-   ) {
-     $this->authorization = $authorization;
-     $this->config = $ch;
-     $this->serializer = $serializer;
-   }
+    public function __construct(
+         AuthorizationCheckerInterface $authorization,
+         PlatformConfigurationHandler $ch,
+         ParametersSerializer $serializer
+    ) {
+         $this->authorization = $authorization;
+         $this->config = $ch;
+         $this->serializer = $serializer;
+    }
 
-   /**
+    /**
     * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
     *
     * @throws InvalidDataException
     * @throws Exception
     */
-   public function updateAction(Request $request): JsonResponse
-   {
-     $this->canOpenAdminTool('privacy');
+    public function updateAction(Request $request): JsonResponse
+    {
+         $this->canOpenAdminTool('privacy');
 
-     $parametersData = $this->decodeRequest($request);
+         $parametersData = $this->decodeRequest($request);
 
-     ArrayUtils::remove($parametersData, 'lockedParameters');
+         ArrayUtils::remove($parametersData, 'lockedParameters');
 
-     $locked = $this->config->getParameter('lockedParameters') ?? [];
-     foreach ($locked as $lockedParam) {
-       ArrayUtils::remove($parametersData, $lockedParam);
-     }
+         $locked = $this->config->getParameter('lockedParameters') ?? [];
+         foreach ($locked as $lockedParam) {
+             ArrayUtils::remove($parametersData, $lockedParam);
+         }
 
-     $parameters = $this->serializer->deserialize($parametersData);
+        $parameters = $this->serializer->deserialize($parametersData);
 
-     return new JsonResponse($parameters);
-   }
- }
+        return new JsonResponse($parameters);
+    }
+}

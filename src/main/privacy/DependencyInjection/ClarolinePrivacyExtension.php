@@ -19,15 +19,15 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class ClarolinePrivacyExtension extends Extension
 {
-  /**
-   * {@inheritdoc}
-   *
-   * @throws Exception
-   */
-  public function load(array $configs, ContainerBuilder $container)
-  {
-    $locator = new FileLocator(__DIR__.'/../Resources/config');
-    $loader = new YamlFileLoader($container, $locator);
-    $loader->load('services.yml');
-  }
+    /**
+    * {@inheritdoc}
+    *
+    * @throws Exception
+    */
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $locator = new FileLocator(__DIR__.'/../Resources/config');
+        $loader = new YamlFileLoader($container, $locator);
+        $loader->load('services.yml');
+    }
 }
