@@ -22,7 +22,7 @@ const ColorChartParametersModal = props => {
 
   const colorFields = Array.from({ length: colorCount }, (_, i) => ({
     name: `colors.color${i + 1}`,
-    label: trans(`color`) + ` ${i + 1}`,
+    label: trans('color') + ` ${i + 1}`,
     type: 'color'
   }))
 
