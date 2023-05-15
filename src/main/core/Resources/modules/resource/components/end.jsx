@@ -92,10 +92,12 @@ const ResourceEnd = (props) =>
       <div className="col-md-8">
         {((!isEmpty(props.attempt) && get(props, 'display.feedback', false) || !isEmpty(props.feedbacks.closed))) &&
           <section className="resource-feedbacks">
-            <EvaluationFeedback
-              status={props.attempt.status}
-              {...props.feedbacks}
-            />
+            {!isEmpty(props.attempt) &&
+              <EvaluationFeedback
+                status={props.attempt.status}
+                {...props.feedbacks}
+              />
+            }
 
             {!isEmpty(props.feedbacks.closed) && props.feedbacks.closed.map(closedMessage =>
               <AlertBlock key={toKey(closedMessage[0])} type="warning" title={closedMessage[0]}>
