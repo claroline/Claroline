@@ -1,4 +1,4 @@
-const STORE_NAME = 'colorChartEdit'
+const STORE_NAME = 'colorChartParameters'
 
 export const selectors = {
   STORE_NAME

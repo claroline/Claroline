@@ -12,7 +12,7 @@ import {selectors} from '#/main/core/administration/parameters/store/selectors'
 import {AppearanceIcons} from '#/main/theme/administration/appearance/containers/icons'
 import {AppearanceColorCharts} from '#/main/theme/administration/appearance/containers/colorCharts'
 import {MODAL_ICON_SET_CREATION} from '#/main/theme/administration/appearance/modals/icon-set-creation'
-import {MODAL_NEW_COLOR_CHART} from '#/main/theme/administration/appearance/modals/color-chart-creation'
+import {MODAL_PARAMETERS_COLOR_CHART} from '#/main/theme/administration/appearance/modals/color-chart-parameters'
 
 class AppearanceTool extends Component {
   constructor(props) {
@@ -188,7 +188,7 @@ class AppearanceTool extends Component {
                 type: MODAL_BUTTON,
                 icon: 'fa fa-fw fa-plus',
                 label: trans('add_color_chart', {}, 'actions'),
-                modal: [MODAL_NEW_COLOR_CHART, {
+                modal: [MODAL_PARAMETERS_COLOR_CHART, {
                   onSave: this.props.addColorChart
                 }]
               }
@@ -238,7 +238,6 @@ AppearanceTool.propTypes = {
   lockedParameters: T.arrayOf(T.string).isRequired,
   availableThemes: T.object,
   availableIconSets: T.array.isRequired,
-  availableColorCharts: T.array.isRequired,
 
   addIconSet: T.func.isRequired,
   removeIconSet: T.func.isRequired,

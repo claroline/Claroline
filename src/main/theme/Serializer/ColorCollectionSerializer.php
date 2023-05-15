@@ -28,10 +28,7 @@ class ColorCollectionSerializer
     {
         $this->sipe('id', 'setUuid', $data, $colorCollection);
         $this->sipe('name', 'setName', $data, $colorCollection);
-
-        if (isset($data['colors']) && is_array($data['colors'])) {
-            $this->sipe('colors', 'setColors', $data, $colorCollection);
-        }
+        $this->sipe('colors', 'setColors', $data, $colorCollection);
 
         return $colorCollection;
     }

@@ -1,14 +1,14 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 
 import {trans, transChoice} from '#/main/app/intl'
 import {Toolbar} from '#/main/app/action'
 import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
-import {MODAL_EDIT_COLOR_CHART} from '#/main/theme/administration/appearance/modals/color-chart-edit'
+import {MODAL_PARAMETERS_COLOR_CHART} from '#/main/theme/administration/appearance/modals/color-chart-parameters'
 
 const AppearanceColorCharts = (props) => {
   return (
-    <div>
+    <Fragment>
       {props.availableColorCharts.map((color, index) => (
         <div className="color-chart" key={index}>
           <h3 className="h4 color-chart-title">
@@ -16,14 +16,14 @@ const AppearanceColorCharts = (props) => {
               {trans(color.name)}
             </div>
 
-            <div className="color-colors-list">
+            <div className="color-chart-colors-list">
               {color.colors.map((color, index) => (
-                <div className="color-pastille" style={{backgroundColor: color}} key={index}></div>
+                <div className="color-chart-dot" style={{backgroundColor: color}} key={index}></div>
               ))}
             </div>
 
             <Toolbar
-              style={{marginLeft: 'auto'}}
+              className="color-chart-actions"
               buttonName="btn btn-link btn-sm"
               tooltip="bottom"
               actions={[
@@ -32,7 +32,7 @@ const AppearanceColorCharts = (props) => {
                   type: MODAL_BUTTON,
                   icon: 'fa fa-fw fa-pencil',
                   label: trans('edit', {}, 'actions'),
-                  modal: [MODAL_EDIT_COLOR_CHART, {
+                  modal: [MODAL_PARAMETERS_COLOR_CHART, {
                     colorChart: color,
                     onSave: (data) => props.updateColorChart(data)
                   }],
@@ -63,7 +63,7 @@ const AppearanceColorCharts = (props) => {
           </h3>
         </div>
       ))}
-    </div>
+    </Fragment>
   )
 }
 

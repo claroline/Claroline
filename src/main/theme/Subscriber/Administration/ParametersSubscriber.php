@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\ThemeBundle\Manager\IconSetManager;
 use Claroline\ThemeBundle\Manager\ThemeManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Claroline\ThemeBundle\Entity\ColorCollection;
 
 class ParametersSubscriber implements EventSubscriberInterface
 {
@@ -55,7 +56,7 @@ class ParametersSubscriber implements EventSubscriberInterface
      */
     public function onOpen(OpenToolEvent $event): void
     {
-        $colorCharts = $this->objectManager->getRepository('Claroline\ThemeBundle\Entity\ColorCollection')->findAll();
+        $colorCharts = $this->objectManager->getRepository(ColorCollection::class)->findAll();
         $chartsData = [];
 
         foreach ($colorCharts as $chart) {
