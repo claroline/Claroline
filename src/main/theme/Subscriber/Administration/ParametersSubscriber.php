@@ -16,10 +16,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
+use Claroline\ThemeBundle\Entity\ColorCollection;
 use Claroline\ThemeBundle\Manager\IconSetManager;
 use Claroline\ThemeBundle\Manager\ThemeManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Claroline\ThemeBundle\Entity\ColorCollection;
 
 class ParametersSubscriber implements EventSubscriberInterface
 {
