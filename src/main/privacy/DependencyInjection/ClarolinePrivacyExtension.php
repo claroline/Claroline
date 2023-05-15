@@ -20,10 +20,10 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 class ClarolinePrivacyExtension extends Extension
 {
     /**
-    * {@inheritdoc}
-    *
-    * @throws Exception
-    */
+     * {@inheritdoc}
+     *
+     * @throws Exception
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $locator = new FileLocator(__DIR__.'/../Resources/config');

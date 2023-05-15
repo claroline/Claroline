@@ -25,33 +25,33 @@ class PrivacyController extends AbstractSecurityController
     private ParametersSerializer $serializer;
 
     public function __construct(
-         AuthorizationCheckerInterface $authorization,
-         PlatformConfigurationHandler $ch,
-         ParametersSerializer $serializer
+        AuthorizationCheckerInterface $authorization,
+        PlatformConfigurationHandler $ch,
+        ParametersSerializer $serializer
     ) {
-         $this->authorization = $authorization;
-         $this->config = $ch;
-         $this->serializer = $serializer;
+        $this->authorization = $authorization;
+        $this->config = $ch;
+        $this->serializer = $serializer;
     }
 
     /**
-    * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
-    *
-    * @throws InvalidDataException
-    * @throws Exception
-    */
+     * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
+     *
+     * @throws InvalidDataException
+     * @throws Exception
+     */
     public function updateAction(Request $request): JsonResponse
     {
-         $this->canOpenAdminTool('privacy');
+        $this->canOpenAdminTool('privacy');
 
-         $parametersData = $this->decodeRequest($request);
+        $parametersData = $this->decodeRequest($request);
 
-         ArrayUtils::remove($parametersData, 'lockedParameters');
+        ArrayUtils::remove($parametersData, 'lockedParameters');
 
-         $locked = $this->config->getParameter('lockedParameters') ?? [];
-         foreach ($locked as $lockedParam) {
-             ArrayUtils::remove($parametersData, $lockedParam);
-         }
+        $locked = $this->config->getParameter('lockedParameters') ?? [];
+        foreach ($locked as $lockedParam) {
+            ArrayUtils::remove($parametersData, $lockedParam);
+        }
 
         $parameters = $this->serializer->deserialize($parametersData);
 
