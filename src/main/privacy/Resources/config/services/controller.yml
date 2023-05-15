@@ -1,0 +1,4 @@
+services:
+    Claroline\PrivacyBundle\Controller\PrivacyController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
