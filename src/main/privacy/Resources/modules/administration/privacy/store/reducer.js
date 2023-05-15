@@ -5,20 +5,20 @@ import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
 const reducer = combineReducers({
-    lockedParameters: makeReducer([], {
-        [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.lockedParameters
+  lockedParameters: makeReducer([], {
+    [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.lockedParameters
+  }),
+  parameters: makeFormReducer(selectors.STORE_NAME, {}, {
+    originalData: makeReducer({}, {
+      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
     }),
-    parameters: makeFormReducer(selectors.STORE_NAME, {}, {
-        originalData: makeReducer({}, {
-            [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
-        }),
-        data: makeReducer({}, {
-            [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
-        })
+    data: makeReducer({}, {
+      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
     })
+  })
 })
 
 export {
-    reducer
+  reducer
 }
 

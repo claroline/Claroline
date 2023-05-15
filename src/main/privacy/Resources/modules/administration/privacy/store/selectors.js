@@ -14,9 +14,9 @@ const parameters = (state) => formSelectors.data(formSelectors.form(state, FORM_
 
 
 export const selectors = {
-    STORE_NAME,
-    store,
-    lockedParameters,
-    parameters,
-    FORM_NAME
+  STORE_NAME,
+  store,
+  lockedParameters,
+  parameters,
+  FORM_NAME
 }

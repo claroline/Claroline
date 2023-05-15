@@ -10,30 +10,30 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PrivacySubscriber implements EventSubscriberInterface
 {
-    const NAME = 'privacy';
+  const NAME = 'privacy';
 
-    private ParametersSerializer $serializer;
+  private ParametersSerializer $serializer;
 
-    public function __construct(
-        ParametersSerializer $serializer,
-    ) {
-        $this->serializer = $serializer;
-    }
+  public function __construct(
+    ParametersSerializer $serializer,
+  ) {
+    $this->serializer = $serializer;
+  }
 
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            ToolEvents::getEventName(ToolEvents::OPEN, Tool::ADMINISTRATION, static::NAME) => 'onOpen',
-        ];
-    }
+  public static function getSubscribedEvents(): array
+  {
+    return [
+      ToolEvents::getEventName(ToolEvents::OPEN, Tool::ADMINISTRATION, static::NAME) => 'onOpen',
+    ];
+  }
 
-    public function onOpen(OpenToolEvent $event): void
-    {
-        $parameters = $this->serializer->serialize();
+  public function onOpen(OpenToolEvent $event): void
+  {
+    $parameters = $this->serializer->serialize();
 
-        $event->setData([
-            'lockedParameters' => $parameters['lockedParameters'] ?? [],
-            'parameters' => $parameters,
-        ]);
-    }
+    $event->setData([
+      'lockedParameters' => $parameters['lockedParameters'] ?? [],
+      'parameters' => $parameters,
+    ]);
+  }
 }
