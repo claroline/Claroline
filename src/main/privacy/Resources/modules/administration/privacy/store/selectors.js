@@ -3,17 +3,7 @@ import {selectors as formSelectors} from '#/main/app/content/form/store/selector
 
 const STORE_NAME = 'privacy'
 //const FORM_NAME = STORE_NAME+'.parameters'
-
-const privacyForm = createSelector(
-  formSelectors.form,
-  form => form[STORE_NAME]
-)
-
 const store = (state) => state[STORE_NAME]
-
-/*
-const parameters = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
-*/
 
 const availableLocales = createSelector(
   [store],
@@ -25,11 +15,7 @@ const lockedParameters = createSelector(
   (store) => store.lockedParameters
 )
 
-const parameters = createSelector(
-  [store],
-  (store) => store.parameters
-)
-
+const parameters = (state) => formSelectors.data(formSelectors.form(state, STORE_NAME))
 
 const locales = createSelector(
   [parameters],
@@ -38,7 +24,6 @@ const locales = createSelector(
 
 export const selectors = {
   STORE_NAME,
-  privacyForm,
   store,
   availableLocales,
   lockedParameters,

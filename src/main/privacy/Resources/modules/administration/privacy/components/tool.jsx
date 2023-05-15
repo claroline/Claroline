@@ -1,7 +1,7 @@
 import React from 'react'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors} from '../store'
+import {selectors} from '#/main/privacy/administration/privacy/store/selectors'
 
 import {trans} from '#/main/app/intl'
 import {PropTypes as T} from 'prop-types'
@@ -10,7 +10,6 @@ import get from 'lodash/get'
 const PrivacyTool = (props) => {
   return(
     <>
-
       <h1>HELLO !</h1>
       <FormData
         level={2}
@@ -80,7 +79,6 @@ const PrivacyTool = (props) => {
           }
         ]}
       />
-
     </>
   )
 }
@@ -94,7 +92,6 @@ PrivacyTool.propTypes = {
     })
   })
 }
-
 
 export {
   PrivacyTool
