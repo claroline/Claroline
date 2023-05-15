@@ -11,7 +11,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class PrivacySubscriber implements EventSubscriberInterface
 {
     const NAME = 'privacy';
-
     /** @var ParametersSerializer */
     private ParametersSerializer $serializer;
 

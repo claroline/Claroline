@@ -17,13 +17,10 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  class PrivacyController extends AbstractSecurityController
  {
      use RequestDecoderTrait;
-
      /** @var AuthorizationCheckerInterface */
      private AuthorizationCheckerInterface $authorization;
-
      /** @var PlatformConfigurationHandler */
      private PlatformConfigurationHandler $config;
-
      /** @var ParametersSerializer */
      private ParametersSerializer $serializer;
 
@@ -39,6 +36,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
      /**
       * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
+      *
       * @throws InvalidDataException
       * @throws Exception
       */
