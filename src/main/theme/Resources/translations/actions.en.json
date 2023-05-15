@@ -2,5 +2,6 @@
   "show-colors": "Show color chart",
   "show-icons": "Show icon chart",
   "add_icon_set": "Add an icons set",
-  "add_color_chart": "Add a color chart"
+  "add_color_chart": "Add a color chart",
+  "add_color" : "Add a color"
 }

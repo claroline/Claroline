@@ -39,18 +39,23 @@ export const reducer = combineReducers({
     [APPEARANCE_ADD_COLOR_CHART]: (state, action) => {
       const newState = cloneDeep(state)
 
-      newState.push(action.colorChart)
+      const newColorChart = {
+        ...action.colorChart,
+        colors: Object.keys(action.colorChart.colors).map(key => action.colorChart.colors[key])
+      }
+      newState.push(newColorChart)
 
       return newState
     },
     [APPEARANCE_UPDATE_COLOR_CHART]: (state, action) => {
       const newState = cloneDeep(state)
 
-      console.log(action.colorChart)
-
       const pos = newState.findIndex(colorChart => colorChart.id === action.colorChart.id)
       if (-1 !== pos) {
-        newState[pos] = action.colorChart
+        newState[pos] = {
+          ...action.colorChart,
+          colors: Object.keys(action.colorChart.colors).map(key => action.colorChart.colors[key])
+        }
       }
 
       return newState
