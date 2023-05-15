@@ -36,7 +36,7 @@ const ColorChartParametersModal = props => {
         if (props.colorChart) {
           setColorCount(props.colorChart.colors.length)
         } else {
-          setColorCount(1);
+          setColorCount(1)
         }
       }}
       onExited={props.reset}
@@ -52,7 +52,7 @@ const ColorChartParametersModal = props => {
             type: 'string',
             required: true
           },
-            ...colorFields
+          ...colorFields
           ]
         }]}
       >
