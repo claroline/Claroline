@@ -2,14 +2,13 @@
 
 namespace Claroline\PrivacyBundle\Controller;
 
-     use Claroline\AnalyticsBundle\Manager\AnalyticsManager;
      use Claroline\AppBundle\API\Utils\ArrayUtils;
      use Claroline\AppBundle\Controller\AbstractSecurityController;
      use Claroline\AppBundle\Controller\RequestDecoderTrait;
-     use Claroline\AppBundle\Event\StrictDispatcher;
      use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
      use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-     use Claroline\CoreBundle\Manager\VersionManager;
+     use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+     use Exception;
      use Symfony\Component\HttpFoundation\JsonResponse;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\Routing\Annotation\Route;
@@ -20,36 +19,26 @@ namespace Claroline\PrivacyBundle\Controller;
          use RequestDecoderTrait;
 
          /** @var AuthorizationCheckerInterface */
-         private $authorization;
-         /** @var StrictDispatcher */
-         private $dispatcher;
+         private AuthorizationCheckerInterface $authorization;
          /** @var PlatformConfigurationHandler */
-         private $config;
-         /** @var AnalyticsManager */
-         private $analyticsManager;
-         /** @var VersionManager */
-         private $versionManager;
+         private PlatformConfigurationHandler $config;
          /** @var ParametersSerializer */
-         private $serializer;
+         private ParametersSerializer $serializer;
 
          public function __construct(
              AuthorizationCheckerInterface $authorization,
-             StrictDispatcher $dispatcher,
              PlatformConfigurationHandler $ch,
-             AnalyticsManager $analyticsManager,
-             VersionManager $versionManager,
              ParametersSerializer $serializer
          ) {
              $this->authorization = $authorization;
-             $this->dispatcher = $dispatcher;
              $this->config = $ch;
              $this->serializer = $serializer;
-             $this->versionManager = $versionManager;
-             $this->analyticsManager = $analyticsManager;
          }
 
          /**
           * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
+          * @throws InvalidDataException
+          * @throws Exception
           */
          public function updateAction(Request $request): JsonResponse
          {
@@ -58,13 +47,12 @@ namespace Claroline\PrivacyBundle\Controller;
              $parametersData = $this->decodeRequest($request);
 
              ArrayUtils::remove($parametersData, 'lockedParameters');
-             // removes locked parameters values if any
+
              $locked = $this->config->getParameter('lockedParameters') ?? [];
              foreach ($locked as $lockedParam) {
                  ArrayUtils::remove($parametersData, $lockedParam);
              }
 
-             // save updated parameters
              $parameters = $this->serializer->deserialize($parametersData);
 
              return new JsonResponse($parameters);

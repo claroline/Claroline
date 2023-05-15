@@ -4,29 +4,21 @@ import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
-/*
-const reducer = makeFormReducer(selectors.STORE_NAME, {
-  new: true
-})
-*/
 const reducer = combineReducers({
-  lockedParameters: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.lockedParameters
-  }),
-  parameters: makeFormReducer(selectors.STORE_NAME, {}, {
-    originalData: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
+    lockedParameters: makeReducer([], {
+        [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.lockedParameters
     }),
-    data: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
+    parameters: makeFormReducer(selectors.STORE_NAME, {}, {
+        originalData: makeReducer({}, {
+            [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
+        }),
+        data: makeReducer({}, {
+            [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
+        })
     })
-  }),
-  availableLocales: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.availableLocales
-  })
 })
 
 export {
-  reducer
+    reducer
 }
 
