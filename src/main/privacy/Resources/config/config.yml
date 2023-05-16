@@ -1,4 +1,4 @@
 plugin:
     admin_tools:
         - name: privacy
-          class: lock
+          class: shield-halved
