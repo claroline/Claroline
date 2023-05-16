@@ -73,14 +73,7 @@
         "twig/twig": "^3.5",
         "willdurand/js-translation-bundle": "^4.0",
         "http-interop/http-factory-guzzle": "^1.2",
-        "formalibre/alterlms": "dev-main"
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "git@github.com:FormaLibre/AlterLMS.git"
-        }
-    ],
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "friendsofphp/php-cs-fixer": "^2.15",
