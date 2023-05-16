@@ -2,3 +2,11 @@ services:
     Claroline\PrivacyBundle\Controller\PrivacyController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
+
+    Claroline\CoreBundle\Controller\APINew\Platform\ParametersController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'

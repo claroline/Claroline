@@ -7,8 +7,6 @@ use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,10 +33,7 @@ class PrivacyController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/admin/privacy/update", name="apiv2_privacy_update", methods={"PUT"})
-     *
-     * @throws InvalidDataException
-     * @throws Exception
+     * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
      */
     public function updateAction(Request $request): JsonResponse
     {
@@ -54,7 +49,8 @@ class PrivacyController extends AbstractSecurityController
         }
 
         $parameters = $this->serializer->deserialize($parametersData);
-
+        $this->config->setParameters($parameters);
         return new JsonResponse($parameters);
     }
+
 }
