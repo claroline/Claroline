@@ -50,7 +50,7 @@ class PrivacyController extends AbstractSecurityController
 
         $parameters = $this->serializer->deserialize($parametersData);
         $this->config->setParameters($parameters);
+
         return new JsonResponse($parameters);
     }
-
 }
