@@ -35,7 +35,7 @@ class PrivacyController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
+     * @Route("/admin/privacy/update", name="apiv2_privacy_update", methods={"PUT"})
      *
      * @throws InvalidDataException
      * @throws Exception

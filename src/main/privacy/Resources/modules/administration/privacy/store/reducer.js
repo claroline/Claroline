@@ -8,7 +8,7 @@ const reducer = combineReducers({
   lockedParameters: makeReducer([], {
     [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.lockedParameters
   }),
-  parameters: makeFormReducer(selectors.STORE_NAME, {}, {
+  parameters: makeFormReducer(selectors.FORM_NAME, {}, {
     originalData: makeReducer({}, {
       [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
     }),
