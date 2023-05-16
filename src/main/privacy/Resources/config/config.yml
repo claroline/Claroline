@@ -1,0 +1,4 @@
+plugin:
+    admin_tools:
+        - name: privacy
+          class: shield-halved
