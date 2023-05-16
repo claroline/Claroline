@@ -1,13 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
-
 import {selectors} from '#/main/privacy/administration/privacy/store'
+import get from 'lodash/get'
+
+import {trans} from '#/main/app/intl/translation'
 
 const PrivacyTool = (props) =>
   <ToolPage
