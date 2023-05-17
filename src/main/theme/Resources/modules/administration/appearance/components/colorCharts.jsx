@@ -3,7 +3,6 @@ import React, {Fragment} from 'react'
 import {trans, transChoice} from '#/main/app/intl'
 import {Toolbar} from '#/main/app/action'
 import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-
 import {MODAL_PARAMETERS_COLOR_CHART} from '#/main/theme/administration/appearance/modals/color-chart-parameters'
 
 const AppearanceColorCharts = (props) => {

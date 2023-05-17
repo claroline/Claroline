@@ -9,17 +9,12 @@ export const actions = {}
 actions.save = (data) => (dispatch) => {
   const isNew = typeof data.id === 'undefined'
 
-  const colorChartCopy = {
-    ...data,
-    colors: Object.values(data.colors)
-  }
-
   return dispatch({
     [API_REQUEST]: {
       url: isNew ? ['apiv2_color_collection_create'] : ['apiv2_color_collection_update', { id: data.id }],
       request: {
         method: isNew ? 'POST' : 'PUT',
-        body: JSON.stringify(colorChartCopy)
+        body: JSON.stringify(data)
       },
       error: (errors) => dispatch(formActions.errors(selectors.STORE_NAME, errors))
     }
