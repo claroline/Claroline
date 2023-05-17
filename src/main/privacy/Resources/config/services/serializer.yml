@@ -3,9 +3,3 @@ services:
         autowire: false
         autoconfigure: false
         public: true
-
-    Claroline\CoreBundle\API\Serializer\ParametersSerializer:
-        arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

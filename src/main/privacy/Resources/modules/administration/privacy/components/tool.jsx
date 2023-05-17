@@ -10,9 +10,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 
 const PrivacyTool = (props) =>
-  <ToolPage
-    title={trans('privacy')}>
-
+  <ToolPage>
     <FormData
       level={2}
       name={selectors.FORM_NAME}
