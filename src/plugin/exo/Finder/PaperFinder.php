@@ -35,7 +35,7 @@ class PaperFinder extends AbstractFinder
             $userJoin = true;
 
             $this->addFilter(UserFilter::class, $qb, 'u', [
-                'disabled' => in_array('isDisabled', array_keys($searches)) && $searches['isDisabled'],
+                'disabled' => in_array('userDisabled', array_keys($searches)) && $searches['userDisabled'],
             ]);
         }
 

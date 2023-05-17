@@ -20,17 +20,16 @@ class UserFilter implements FinderFilterInterface
     public function addFilter(QueryBuilder $qb, string $alias, ?array $searches = []): QueryBuilder
     {
         // if we don't explicitly request for it, we will not return disabled or removed users
-        if (!in_array('disabled', array_keys($searches))) {
+        if (!in_array('disabled', array_keys($searches)) || !$searches['disabled']) {
             $qb->andWhere("({$alias}.id IS NULL OR ({$alias}.isEnabled = TRUE AND {$alias}.isRemoved = FALSE))");
         } else {
-            $qb->andWhere("{$alias}.isEnabled = :disabled");
+            $qb->andWhere("{$alias}.isEnabled = FALSE");
             $qb->andWhere("{$alias}.isRemoved = FALSE");
-            $qb->setParameter('disabled', !$searches['disabled']);
         }
 
         $currentUser = $this->tokenStorage->getToken()->getUser();
         if (!$currentUser instanceof User || !$currentUser->isTechnical()) {
-            $qb->andWhere("{$alias}.technical = false");
+            $qb->andWhere("({$alias}.id IS NULL OR {$alias}.technical = false)");
         }
 
         return $qb;
