@@ -13,7 +13,7 @@ const TinymceEditor = (props) =>
     id={props.id}
     disabled={props.disabled}
     value={props.value}
-    //initialValue={props.value}
+    initialValue={props.initialValue}
     inline={false}
     init={merge({}, config, {
       selector: props.id,
@@ -42,9 +42,9 @@ const TinymceEditor = (props) =>
       workspace: props.workspace
     })}
     onEditorChange={(v) => {
-      console.log(v)
-      //console.log(v)
+      console.log('coucou')
       if (v !== props.value) {
+        console.log(v)
         props.onChange(v)
       }
     }}

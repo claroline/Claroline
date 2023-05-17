@@ -13,6 +13,7 @@ const TinymceEditor = (props) =>
     id={props.id}
     disabled={props.disabled}
     value={props.value}
+    initialValue={props.initialValue}
     init={merge({}, config, {
       selector: props.id,
       placeholder: props.placeholder,
@@ -48,6 +49,7 @@ TinymceEditor.propTypes = {
   id: T.string.isRequired,
   disabled: T.bool,
   value: T.string,
+  initialValue: T.string,
   placeholder: T.string,
   config: T.object,
   onChange: T.func,

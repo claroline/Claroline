@@ -410,5 +410,5 @@ window.tinymce.addI18n('fr',{
   'File...': 'File...',
   'Upload file': 'Uploader un fichier',
   'Dynamic value...': 'Valeur dynamique...',
-  'Insert dynamic value': 'Insérer une valeur dynamique',
+  'Insert dynamic value': 'Insérer une valeur dynamique'
 })

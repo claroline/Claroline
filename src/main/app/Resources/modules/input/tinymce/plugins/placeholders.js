@@ -33,10 +33,7 @@ const dialogConfig = (editor, placeholders = []) => ({
     }
   ],
   onSubmit: (api) => {
-    const data = api.getData();
-    const pet = data.isdog ? 'dog' : 'cat';
-
-    editor.execCommand('mceInsertContent', false, `<p>My ${pet}'s name is: <strong>${data.catdata}</strong></p>`)
+    editor.execCommand('mceInsertContent', false, `%${placeholder}%`)
 
     api.close()
   }
@@ -71,7 +68,7 @@ window.tinymce.PluginManager.add(pluginName, (editor) => {
     trigger: '%',
     columns: 1,
     highlightOn: ['placeholder_name'],
-    fetch: (pattern, maxResults, fetchOptions) => Promise.resolve(placeholders
+    fetch: (pattern) => Promise.resolve(placeholders
       .filter(placeholder => -1 !== placeholder.indexOf(pattern))
       .map(placeholder => ({
         type: 'cardmenuitem',

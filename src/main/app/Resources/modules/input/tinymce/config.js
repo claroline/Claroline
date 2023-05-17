@@ -18,10 +18,19 @@ const config = {
   relative_urls: false,
 
   setup: (editor) => {
-    //console.log('setup tinymce')
-    //console.log(editor)
-    //editor.save()
-    //editor.on('change', () => editor.save())
+    editor.on('change', () =>  {
+      console.log('change')
+      editor.save()
+    })
+
+    //console.log(editor.isDirty())
+    /*console.log('setup')
+    editor.save()
+    editor.on('change', () => editor.save())*/
+
+    editor.on('init', function () {
+      editor.save()
+    })
   },
 
   // styles
@@ -79,7 +88,7 @@ const config = {
   quickbars_insert_toolbar: false,
   //quickbars_insert_toolbar: 'link resource-picker file-upload | insertfile image media table'
 
-  table_toolbar: 'tableprops tabledelete | tablerowprops tableinsertrowbefore tableinsertrowafter tabledeleterow | tablecellprops tableinsertcolbefore tableinsertcolafter tabledeletecol',
+  table_toolbar: 'tableprops tabledelete | tablerowprops tableinsertrowbefore tableinsertrowafter tabledeleterow | tablecellprops tableinsertcolbefore tableinsertcolafter tabledeletecol'
 }
 
 export {

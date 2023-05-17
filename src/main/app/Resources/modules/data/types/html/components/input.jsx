@@ -26,7 +26,7 @@ class HtmlInput extends Component {
   toggleEditor(minimal, fullscreen) {
     this.setState({
       minimal: minimal,
-      fullscreen: fullscreen,
+      fullscreen: fullscreen
     }, () => {
       this.props.onChangeMode({
         minimal: minimal,
@@ -61,7 +61,7 @@ class HtmlInput extends Component {
                   'fa-minus': !this.state.minimal
                 }),
                 label: trans(this.state.minimal ? 'show_editor_toolbar' : 'hide_editor_toolbar'),
-                callback: () => this.toggleEditor(!this.state.minimal, this.state.fullscreen),
+                callback: () => this.toggleEditor(!this.state.minimal, this.state.fullscreen)
               }
             ]}
           />

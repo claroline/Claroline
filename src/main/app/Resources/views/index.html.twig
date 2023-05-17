@@ -41,6 +41,17 @@
         {% for file in stylesheets %}
             <link rel="stylesheet" type="text/css" href="{{ asset(file) }}" />
         {% endfor %}
+
+        {# Adds javascripts #}
+        <script src="{{ hotAsset('runtime') }}"></script>
+        {# Base libraries #}
+        <script src="{{ hotAsset('vendor') }}"></script>
+        {# TinyMCE #}
+        <script src="{{ asset('packages/tinymce/tinymce.min.js') }}"></script>
+        {# Frequently used Claroline JS #}
+        <script src="{{ hotAsset('app') }}"></script>
+        {# Claroline Plugins configuration #}
+        <script src="{{ hotAsset('plugins') }}"></script>
     </head>
 
     <body>
@@ -63,16 +74,6 @@
         {# Anchor for UI portals (eg. modals) #}
         <div class="app-modal-container"></div>
 
-        {# Adds javascripts #}
-        <script src="{{ hotAsset('runtime') }}"></script>
-        {# Base libraries #}
-        <script src="{{ hotAsset('vendor') }}"></script>
-        {# TinyMCE #}
-        <script src="{{ asset('packages/tinymce/tinymce.min.js') }}"></script>
-        {# Frequently used Claroline JS #}
-        <script src="{{ hotAsset('app') }}"></script>
-        {# Claroline Plugins configuration #}
-        <script src="{{ hotAsset('plugins') }}"></script>
         {# Router #}
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
