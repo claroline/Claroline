@@ -47,3 +47,4 @@ Claroline\CursusBundle\ClarolineCursusBundle = true
 Claroline\BigBlueButtonBundle\ClarolineBigBlueButtonBundle = false
 Claroline\PeerTubeBundle\ClarolinePeerTubeBundle = false
 Claroline\LogBundle\ClarolineLogBundle=true
+Claroline\PrivacyBundle\ClarolinePrivacyBundle=true
