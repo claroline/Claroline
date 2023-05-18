@@ -3,6 +3,7 @@
   "no_accept_terms": "You have not yet accepted the terms of use of the platform.",
   "title_my_data": "My personal data",
   "export_data": "Export data",
+  "country_storage": "data storage country",
   "request_deletion" : "Request deletion of my account",
   "title_dialog_delete_account" : "Request to delete my account",
   "message_dialog_delete_account" : "Are you sure you want to request the deletion of your account?",
