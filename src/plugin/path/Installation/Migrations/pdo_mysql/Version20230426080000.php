@@ -74,6 +74,10 @@ class Version20230426080000 extends AbstractMigration
             $this->addSql('ALTER TABLE claro_activity_rule_action DROP FOREIGN KEY FK_C8835D2098EC6B7B');
         }
 
+        if ($this->checkTableExists('claro_resource_activity', $this->connection)) {
+            $this->addSql('ALTER TABLE claro_resource_activity DROP FOREIGN KEY FK_DCF37C7E81C06096');
+        }
+
         $this->addSql('DROP TABLE IF EXISTS claro_activity');
         $this->addSql('DROP TABLE IF EXISTS claro_activity_rule');
         $this->addSql('DROP TABLE IF EXISTS claro_activity_rule_action');
@@ -81,6 +85,7 @@ class Version20230426080000 extends AbstractMigration
         $this->addSql('DROP TABLE IF EXISTS claro_activity_parameters');
         $this->addSql('DROP TABLE IF EXISTS claro_activity_past_evaluation');
         $this->addSql('DROP TABLE IF EXISTS claro_activity_secondary_resources');
+        $this->addSql('DROP TABLE IF EXISTS claro_resource_activity');
     }
 
     public function down(Schema $schema): void
