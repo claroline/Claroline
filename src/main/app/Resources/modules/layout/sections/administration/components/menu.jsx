@@ -107,9 +107,9 @@ class PlatformStatus extends Component {
             }
           </h3>
 
-          {this.props.disabled && 'La plateforme est désactivée et n\'est plus accessible.'}
-          {!this.props.disabled && !this.props.maintenance && 'La plateforme est ouverte aux utilisateurs.'}
-          {!this.props.disabled && this.props.maintenance && 'La plateforme est fermée et uniquement accessible aux administrateurs.'}
+          {this.props.disabled && trans('platform_opened', {}, 'desktop')}
+          {!this.props.disabled && !this.props.maintenance && trans('platform_desactive', {}, 'desktop')}
+          {!this.props.disabled && this.props.maintenance && trans('platform_active_admin', {}, 'desktop')}
         </div>
       </section>
     )
