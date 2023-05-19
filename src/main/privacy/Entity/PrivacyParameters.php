@@ -2,9 +2,10 @@
 
 namespace Claroline\PrivacyBundle\Entity;
 
+use Claroline\AppBundle\Entity\Address;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Address;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
