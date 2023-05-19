@@ -24,14 +24,14 @@ const ColorPalette = props => {
         position: 'relative'
       }}>
 
-        {id === "new-color" && (
+        {id === 'new-color' && (
           <i
             className="fa fa-fw fa-plus"
             style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)"
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)'
             }}
           />
         )}
@@ -40,8 +40,8 @@ const ColorPalette = props => {
           type="color"
           value={value}
           style={{
-            width: "100%",
-            height: "100%",
+            width: '100%',
+            height: '100%',
             opacity: 0
           }}
           onChange={(event) => onChange(event.target.value)}
@@ -58,7 +58,7 @@ const ColorPalette = props => {
             id={`color-${index}`}
             className="color"
             onChange={(color) =>
-              props.updateProp("colors[" + index + "]", color)
+              props.updateProp('colors[' + index + ']', color)
             }
             value={color}
           />
@@ -74,17 +74,17 @@ const ColorPalette = props => {
   }
 
   return (
-    <div className="list-group" style={{
-      display: "flex",
-      flexWrap: "wrap",
-      padding: "0 15px 15px",
-      position: "relative",
-      top: "-15px"
+    <div className='list-group' style={{
+      display: 'flex',
+      flexWrap: 'wrap',
+      padding: '0 15px 15px',
+      position: 'relative',
+      top: '-15px'
     }}>
       {current}
       <ColourPicker
-        id={`new-color`}
-        onChange={(color) => props.updateProp("colors[" + colors.length + "]", color)}
+        id={'new-color'}
+        onChange={(color) => props.updateProp('colors[' + colors.length + ']', color)}
       />
     </div>
   )
