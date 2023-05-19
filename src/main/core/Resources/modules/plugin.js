@@ -125,7 +125,6 @@ registry.add('ClarolineCoreBundle', {
    */
   account: {
     'parameters': () => { return import(/* webpackChunkName: "core-account-parameters" */ '#/main/core/account/parameters') },
-    'privacy'   : () => { return import(/* webpackChunkName: "core-account-privacy" */ '#/main/core/account/privacy') }
   },
 
   /**
