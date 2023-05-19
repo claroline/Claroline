@@ -10,5 +10,11 @@
   "account_deletion": {
     "subject": "Account deletion request",
     "body": "User %name% <br/> ID: %id% <br/> wishes to delete their account. Please take the appropriate measures.<br/><hr/>"
-  }
+  },
+
+  "terms_of_service": "Terms of service",
+  "terms_of_service_activation_message": "Activate the terms of service",
+  "terms_of_service_activation_help": "New users will need to accept the terms to be able to use the platform.",
+  "terms_enabled_but_empty": "Terms of service can only be enabled if a text is provided in at least one language.",
+  "terms_of_service_acceptance": "I accept the terms of service"
 }

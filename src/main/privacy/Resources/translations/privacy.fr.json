@@ -10,5 +10,11 @@
   "account_deletion": {
     "subject": "Demande de suppression de compte",
     "body": "L'utilisateur %name% <br/> ID : %id% <br/> souhaite supprimer son compte. Veuillez prendre les mesures appropriées.<br/><hr/>"
-  }
+  },
+  
+  "terms_of_service": "Conditions d'utilisation",
+  "terms_of_service_activation_message": "Activer les conditions d'utilisation",
+  "terms_of_service_activation_help": "Les nouveaux utilisateurs devront accepter les conditions avant de pouvoir utiliser la plateforme.",
+  "terms_enabled_but_empty": "Les conditions d'utilisation ne peuvent être activées que si le texte est fourni dans au moins une langue.",
+  "terms_of_service_acceptance": "J'accepte les conditions d'utilisation"
 }
