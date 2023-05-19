@@ -18,11 +18,11 @@ const ColorPalette = props => {
   if( props.formData.colors && props.formData.colors.length > 0 ) {
     current = props.formData.colors.map((color, index) => {
       return (
-        <div>
+        <div key={index}>
           <ColorInput
             id={`color-${index}`}
             className="color"
-            colorIcon="fa fa-fw"
+            colorIcon='fa fa-fw'
             hideInput={props.hideInput}
             onChange={color => props.updateProp('colors[' + index + ']', color)}
             value={color}
@@ -43,7 +43,7 @@ const ColorPalette = props => {
     <div className="list-group color-chart-colors-list-group">
       {current}
       <ColorInput
-        id={`new-color`}
+        id={'new-color'}
         colorIcon="fa fa-fw fa-plus"
         onChange={color => props.updateProp('colors['+(colors.length)+']', color)}
         hideInput={true}
