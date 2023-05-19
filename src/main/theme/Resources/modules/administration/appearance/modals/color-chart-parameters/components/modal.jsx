@@ -9,27 +9,61 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {selectors} from '#/main/theme/administration/appearance/modals/color-chart-parameters/store/selectors'
-import {ColorInput} from '#/main/theme/data/types/color/components/input'
 
 const ColorPalette = props => {
   let current = null
   let colors = props.formData.colors || []
 
-  if( props.formData.colors && props.formData.colors.length > 0 ) {
+  const ColourPicker = ({ value, onChange, id }) => {
+    return (
+      <div style={{
+        width: '40px',
+        height: '40px',
+        borderRadius: '50%',
+        backgroundColor: value,
+        position: 'relative'
+      }}>
+
+        {id === "new-color" && (
+          <i
+            className="fa fa-fw fa-plus"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)"
+            }}
+          />
+        )}
+        <input
+          id={id}
+          type="color"
+          value={value}
+          style={{
+            width: "100%",
+            height: "100%",
+            opacity: 0
+          }}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      </div>
+    )
+  }
+
+  if (props.formData.colors && props.formData.colors.length > 0) {
     current = props.formData.colors.map((color, index) => {
       return (
         <div key={index}>
-          <ColorInput
+          <ColourPicker
             id={`color-${index}`}
             className="color"
-            colorIcon='fa fa-fw'
-            hideInput={props.hideInput}
-            onChange={color => props.updateProp('colors[' + index + ']', color)}
+            onChange={(color) =>
+              props.updateProp("colors[" + index + "]", color)
+            }
             value={color}
-            size="md"
           />
           <Button
-            className="btn btn-link btn-md danger color-chart-button"
+            className="btn btn-link btn-md danger"
             type={CALLBACK_BUTTON}
             onClick={() => props.updateProp('colors', props.formData.colors.filter((c, i) => i !== index))}
             icon="fa fa-fw fa-trash"
@@ -40,14 +74,17 @@ const ColorPalette = props => {
   }
 
   return (
-    <div className="list-group color-chart-colors-list-group">
+    <div className="list-group" style={{
+      display: "flex",
+      flexWrap: "wrap",
+      padding: "0 15px 15px",
+      position: "relative",
+      top: "-15px"
+    }}>
       {current}
-      <ColorInput
-        id={'new-color'}
-        colorIcon="fa fa-fw fa-plus"
-        onChange={color => props.updateProp('colors['+(colors.length)+']', color)}
-        hideInput={true}
-        size="md"
+      <ColourPicker
+        id={`new-color`}
+        onChange={(color) => props.updateProp("colors[" + colors.length + "]", color)}
       />
     </div>
   )
