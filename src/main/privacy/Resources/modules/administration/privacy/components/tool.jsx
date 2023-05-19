@@ -57,18 +57,18 @@ const PrivacyTool = (props) =>
           ]
         }, {
           icon: 'fa fa-fw fa-copyright',
-          title: trans('terms_of_service', {}, 'terms_of_service'),
+          title: trans('terms_of_service', {}, 'privacy'),
           fields: [
             {
               name: 'tos.enabled',
               type: 'boolean',
-              label: trans('terms_of_service_activation_message', {}, 'terms_of_service'),
-              help: trans('terms_of_service_activation_help', {}, 'terms_of_service'),
+              label: trans('terms_of_service_activation_message', {}, 'privacy'),
+              help: trans('terms_of_service_activation_help', {}, 'privacy'),
               linked: [
                 {
                   name: 'tos.text',
                   type: 'translated',
-                  label: trans('terms_of_service', {}, 'terms_of_service'),
+                  label: trans('terms_of_service', {}, 'privacy'),
                   required: true,
                   displayed: get(props.parameters, 'tos.enabled')
                 }

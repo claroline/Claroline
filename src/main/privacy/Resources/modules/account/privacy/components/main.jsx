@@ -27,7 +27,7 @@ const PrivacyMain = (props) =>
     title={trans('privacy')}
   >
     <ContentTitle
-      title={trans('terms_of_service',{}, 'terms_of_service')}
+      title={trans('terms_of_service',{}, 'privacy')}
       style={{marginTop: 60}}
     />
 
