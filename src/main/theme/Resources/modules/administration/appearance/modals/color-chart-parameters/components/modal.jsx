@@ -1,35 +1,59 @@
-import React, {useState} from 'react'
+import React from 'react'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
+import {Button} from '#/main/app/action'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Button} from '#/main/app/action'
 
 import {selectors} from '#/main/theme/administration/appearance/modals/color-chart-parameters/store/selectors'
+import {ColorInput} from '#/main/theme/data/types/color/components/input'
+
+const ColorPalette = props => {
+  let current = null
+  let colors = props.formData.colors || []
+
+  if( props.formData.colors && props.formData.colors.length > 0 ) {
+    current = props.formData.colors.map((color, index) => {
+      return (
+        <div>
+          <ColorInput
+            id={`color-${index}`}
+            className="color"
+            colorIcon="fa fa-fw"
+            hideInput={props.hideInput}
+            onChange={color => props.updateProp('colors[' + index + ']', color)}
+            value={color}
+            size="md"
+          />
+          <Button
+            className="btn btn-link btn-md danger color-chart-button"
+            type={CALLBACK_BUTTON}
+            onClick={() => props.updateProp('colors', props.formData.colors.filter((c, i) => i !== index))}
+            icon="fa fa-fw fa-trash"
+          />
+        </div>
+      )
+    })
+  }
+
+  return (
+    <div className="list-group color-chart-colors-list-group">
+      {current}
+      <ColorInput
+        id={`new-color`}
+        colorIcon="fa fa-fw fa-plus"
+        onChange={color => props.updateProp('colors['+(colors.length)+']', color)}
+        hideInput={true}
+        size="md"
+      />
+    </div>
+  )
+}
 
 const ColorChartParametersModal = props => {
-  const { colorChart } = props
-  const [colorCount, setColorCount] =  useState(props.colorChart ? props.colorChart.colors.length : 1)
-
-  const addColor = () => {
-    setColorCount(colorCount + 1)
-  }
-
-  const removeColor = () => {
-    setColorCount(colorCount - 1)
-  }
-
-  const colorFields = Array.from({ length: colorCount }, (_, i) => ({
-    key: `color${i + 1}`,
-    name: `colors.color${i + 1}`,
-    type: 'customColor'
-  }))
-
-
-
   return (
     <Modal
       {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'updateProp', 'onSave')}
@@ -37,11 +61,6 @@ const ColorChartParametersModal = props => {
       title={props.colorChart ? trans('edit_color_chart', {}, 'appearance') : trans('new_color_chart', {}, 'appearance')}
       onEntering={() => {
         props.reset(props.colorChart)
-        if (props.colorChart) {
-          setColorCount(props.colorChart.colors.length)
-        } else {
-          setColorCount(1)
-        }
       }}
       onExited={props.reset}
     >
@@ -55,29 +74,14 @@ const ColorChartParametersModal = props => {
             label: trans('name'),
             type: 'string',
             required: true
-          },
-            ...colorFields
-          ]
+          }]
         }]}
       >
-        <Button
-          className="btn btn-link btn-sm"
-          icon="fa fa-fw fa-plus"
-          type={CALLBACK_BUTTON}
-          primary={true}
-          htmlType="button"
-          label={trans('add_color', {}, 'actions')}
-          callback={addColor}
+        <ColorPalette
+          hideInput={true}
+          {...props}
         />
-        <Button
-          className="btn btn-link btn-sm"
-          icon="fa fa-fw fa-minus"
-          type={CALLBACK_BUTTON}
-          primary={true}
-          htmlType="button"
-          label={trans('remove_color', {}, 'actions')}
-          callback={removeColor}
-        />
+
         <Button
           className="modal-btn btn btn-primary"
           type={CALLBACK_BUTTON}
@@ -85,17 +89,13 @@ const ColorChartParametersModal = props => {
           htmlType="submit"
           label={trans('save', {}, 'actions')}
           disabled={!props.saveEnabled}
-          callback={() => {
-            const formData = {...props.formData}
-            formData.colors = Object.values(formData.colors)
-            props.save(formData).then((response) => {
-              props.fadeModal()
+          callback={() => props.save(props.formData).then((response) => {
+            props.fadeModal()
 
-              if (props.onSave) {
-                props.onSave(response)
-              }
-            })
-          }}
+            if (props.onSave) {
+              props.onSave(response)
+            }
+          })}
         />
       </FormData>
     </Modal>

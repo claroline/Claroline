@@ -10,7 +10,6 @@ registry.add('ClarolineThemeBundle', {
     types: {
       'color': () => { return import(/* webpackChunkName: "theme-data-type-color" */ '#/main/theme/data/types/color') },
       'icon' : () => { return import(/* webpackChunkName: "theme-data-type-icon" */  '#/main/theme/data/types/icon') },
-      'customColor': () => { return import(/* webpackChunkName: "theme-data-type-customColor" */  '#/main/theme/data/types/customColor') }
     }
   }
 })

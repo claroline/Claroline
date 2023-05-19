@@ -22,6 +22,12 @@ const AppearanceTool = connect(
     },
     addColorChart(colorChart) {
       dispatch(actions.addColorChart(colorChart))
+    },
+    updateColorChart(colorChart) {
+      dispatch(actions.updateColorChart(colorChart))
+    },
+    removeColorChart(colorChart) {
+      dispatch(actions.removeColorChart(colorChart))
     }
   })
 )(AppearanceToolComponent)
