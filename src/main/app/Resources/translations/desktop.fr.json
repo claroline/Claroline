@@ -1,8 +1,5 @@
 {
   "loading": "Nous chargeons votre bureau...",
   "access_forbidden": "Accès au Bureau impossible",
-  "access_forbidden_help": "Vous n'avez accès à aucun outil du Bureau. Veuillez contacter un administrateur afin qu'il vous donne les droits nécessaires.",
-  "platform_opened": "La plateforme est ouverte aux utilisateurs.",
-  "platform_desactive": "La plateforme est désactivée et n'est plus accessible.",
-  "platform_active_admin": "La plateforme est fermée et uniquement accessible aux administrateurs."
+  "access_forbidden_help": "Vous n'avez accès à aucun outil du Bureau. Veuillez contacter un administrateur afin qu'il vous donne les droits nécessaires."
 }

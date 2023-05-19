@@ -21,5 +21,9 @@
   "platform_not_started_alert": "La plateforme n'est pas encore accessible.",
   "platform_not_started_desc": "La plateforme sera ouverte à partir du %date%.",
   "platform_ended_alert": "La plateforme n'est plus accessible.",
-  "platform_ended_desc": "La plateforme est fermée depuis le %date%."
+  "platform_ended_desc": "La plateforme est fermée depuis le %date%.",
+
+  "platform_opened": "La plateforme est ouverte aux utilisateurs.",
+  "platform_desactive": "La plateforme est désactivée et n'est plus accessible.",
+  "platform_active_admin": "La plateforme est fermée et uniquement accessible aux administrateurs."
 }

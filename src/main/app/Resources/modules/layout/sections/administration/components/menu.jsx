@@ -107,9 +107,9 @@ class PlatformStatus extends Component {
             }
           </h3>
 
-          {this.props.disabled && trans('platform_opened', {}, 'desktop')}
-          {!this.props.disabled && !this.props.maintenance && trans('platform_desactive', {}, 'desktop')}
-          {!this.props.disabled && this.props.maintenance && trans('platform_active_admin', {}, 'desktop')}
+          {this.props.disabled && trans('platform_opened', {}, 'administration')}
+          {!this.props.disabled && !this.props.maintenance && trans('platform_desactive', {}, 'administration')}
+          {!this.props.disabled && this.props.maintenance && trans('platform_active_admin', {}, 'administration')}
         </div>
       </section>
     )
