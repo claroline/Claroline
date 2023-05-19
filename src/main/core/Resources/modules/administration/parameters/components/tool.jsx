@@ -7,7 +7,6 @@ import {Routes} from '#/main/app/router'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {Meta} from '#/main/core/administration/parameters/main/containers/meta'
 import {Technical} from '#/main/core/administration/parameters/technical/containers/technical'
-import {PrivacyMain} from '#/main/core/administration/parameters/privacy/containers/main'
 
 import {AppearanceTool} from '#/main/theme/administration/appearance/containers/tool'
 
@@ -22,7 +21,6 @@ const ParametersTool = (props) => {
           path={props.path}
           routes={[
             {path: '/', exact: true, render: () => trans('general')},
-            {path: '/privacy',       render: () => trans('privacy')},
             {path: '/technical',     render: () => trans('technical')},
             {path: '/appearance',    render: () => trans('appearance')}
           ]}
@@ -36,9 +34,6 @@ const ParametersTool = (props) => {
             path: '/',
             exact: true,
             component: Meta
-          }, {
-            path: '/privacy',
-            component: PrivacyMain
           },
           {
             path: '/technical',
