@@ -85,36 +85,12 @@
         }
     }
 }
+
 // Color Chart css
-
-.color-chart {
-    width: 100%;
-    padding: 1px 0 1px 15px;
-    background: #e9e9e9;
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
-
-.color-chart-actions {
-    margin-left: auto;
-}
-
-.color-chart-title {
-    font-size: 14px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-}
-
-.color-chart-name {
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
 .color-chart-colors-list {
     display: flex;
     flex: 1 1 auto;
-    justify-content: left;
+    justify-content: flex-start;
 }
 
 .color-chart-dot {
@@ -122,4 +98,44 @@
     width: 25px;
     height: 25px;
     margin: 0 5px;
+}
+
+.color-chart-button {
+    text-align: center;
+
+    span {
+        margin: 0;
+    }
+}
+
+.color-palette-dot-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 5px;
+}
+
+.color-palette-dot-button {
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: auto;
+    border-radius: 50%;
+    position: relative;
+    border: 1px solid #ccc;
+
+    i {
+        position: relative;
+        top: 2px;
+    }
+}
+
+.color-palette-list-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0 15px 15px;
+    position: relative;
+    top: -15px;
 }

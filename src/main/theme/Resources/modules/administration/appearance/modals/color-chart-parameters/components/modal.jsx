@@ -6,66 +6,52 @@ import {Button} from '#/main/app/action'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 
 import {selectors} from '#/main/theme/administration/appearance/modals/color-chart-parameters/store/selectors'
+import {ColorChart} from '#/main/theme/color/components/color-chart'
+
+const ColorDot = ( props ) => {
+  return (
+    <Button
+      type={MENU_BUTTON}
+      icon="fa fa-fw"
+      className="color-palette-dot-button"
+      style={{ backgroundColor: props.value }}
+      menu={
+        <div className="dropdown-menu">
+          <ColorChart
+            selected={props.value}
+            onChange={props.onChange}
+          />
+        </div>
+      }
+    >
+      {props.children}
+    </Button>
+  )
+}
 
 const ColorPalette = props => {
   let current = null
   let colors = props.formData.colors || []
 
-  const ColourPicker = ({ value, onChange, id }) => {
-    return (
-      <div style={{
-        width: '40px',
-        height: '40px',
-        borderRadius: '50%',
-        backgroundColor: value,
-        position: 'relative'
-      }}>
-
-        {id === 'new-color' && (
-          <i
-            className="fa fa-fw fa-plus"
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)'
-            }}
-          />
-        )}
-        <input
-          id={id}
-          type="color"
-          value={value}
-          style={{
-            width: '100%',
-            height: '100%',
-            opacity: 0
-          }}
-          onChange={(event) => onChange(event.target.value)}
-        />
-      </div>
-    )
-  }
-
-  if (props.formData.colors && props.formData.colors.length > 0) {
+  if( props.formData.colors && props.formData.colors.length > 0 ) {
     current = props.formData.colors.map((color, index) => {
       return (
-        <div key={index}>
-          <ColourPicker
+        <div className="color-palette-dot-container">
+          <ColorDot
             id={`color-${index}`}
-            className="color"
-            onChange={(color) =>
-              props.updateProp('colors[' + index + ']', color)
-            }
+            colorIcon="fa fa-fw"
+            hideInput={props.hideInput}
+            onChange={(color) => props.updateProp('colors[' + index + ']', color)}
             value={color}
           />
           <Button
-            className="btn btn-link btn-md danger"
+            className="btn btn-link btn-sm danger color-chart-button"
             type={CALLBACK_BUTTON}
-            onClick={() => props.updateProp('colors', props.formData.colors.filter((c, i) => i !== index))}
+            label={''}
+            callback={() => props.updateProp('colors', props.formData.colors.filter((c, i) => i !== index))}
             icon="fa fa-fw fa-trash"
           />
         </div>
@@ -74,18 +60,20 @@ const ColorPalette = props => {
   }
 
   return (
-    <div className='list-group' style={{
-      display: 'flex',
-      flexWrap: 'wrap',
-      padding: '0 15px 15px',
-      position: 'relative',
-      top: '-15px'
-    }}>
+    <div className="list-group color-palette-list-group">
       {current}
-      <ColourPicker
-        id={'new-color'}
-        onChange={(color) => props.updateProp('colors[' + colors.length + ']', color)}
-      />
+
+      <div className="color-palette-dot-container">
+        <Button
+          type={CALLBACK_BUTTON}
+          id={`new-color`}
+          value={'#ffffff'}
+          callback={async () => props.updateProp('colors[' + colors.length + ']', '#ffffff')}
+          className="color-palette-dot-button"
+        >
+          <i className="fa fa-fw fa-plus"></i>
+        </Button>
+      </div>
     </div>
   )
 }
