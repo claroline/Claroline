@@ -1,27 +1,23 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {Button} from '#/main/app/action/components/button'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {selectors} from '#/main/privacy/administration/privacy/store'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import {MODAL_COUNTRY_STORAGE} from '#/main/privacy/administration/privacy/modals/country'
+import {MODAL_INFOS_DPO} from '#/main/privacy/administration/privacy/modals/dpo'
+import {MODAL_THERM_OF_SERVICE} from '#/main/privacy/administration/privacy/modals/therms'
 
 const PrivacyTool = (props) =>
   <ToolPage>
     <DetailsData
-      level={2}
       name={selectors.FORM_NAME}
-      target={['apiv2_privacy_update']}
-      buttons={true}
-      cancel={{
-        type: LINK_BUTTON,
-        target: props.path,
-        exact: true
-      }}
+      data={props.parameters}
       sections={[
         {
           title: trans('general'),
@@ -78,11 +74,38 @@ const PrivacyTool = (props) =>
         }
       ]}
     />
+    <hr/>
+    <Button
+      className="btn btn-primary"
+      type={MODAL_BUTTON}
+      label={trans('Modifier le pays de stockage', {}, 'privacy')}
+      modal={[MODAL_COUNTRY_STORAGE, {
+        parameters: props.parameters
+      }]}
+      primary={true}
+    />
+    <Button
+      className="btn btn-primary"
+      type={MODAL_BUTTON}
+      label={trans('Modifier le DPO', {}, 'privacy')}
+      modal={[MODAL_INFOS_DPO, {
+        parameters: props.parameters
+      }]}
+      primary={true}
+    />
+    <Button
+      className="btn btn-primary"
+      type={MODAL_BUTTON}
+      label={trans('Modifier les conditions générales', {}, 'privacy')}
+      modal={[MODAL_THERM_OF_SERVICE, {
+        parameters: props.parameters
+      }]}
+      primary={true}
+    />
   </ToolPage>
 
 PrivacyTool.propTypes = {
   path: T.string.isRequired,
-  lockedParameters: T.arrayOf(T.string),
   parameters: T.shape({
     tos: T.shape({
       enabled: T.bool
