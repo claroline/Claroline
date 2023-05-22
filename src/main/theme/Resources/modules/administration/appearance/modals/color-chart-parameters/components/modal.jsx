@@ -39,7 +39,7 @@ const ColorPalette = props => {
   if( props.formData.colors && props.formData.colors.length > 0 ) {
     current = props.formData.colors.map((color, index) => {
       return (
-        <div className="color-palette-dot-container">
+        <div key={index} className="color-palette-dot-container">
           <ColorDot
             id={`color-${index}`}
             colorIcon="fa fa-fw"
@@ -66,7 +66,7 @@ const ColorPalette = props => {
       <div className="color-palette-dot-container">
         <Button
           type={CALLBACK_BUTTON}
-          id={`new-color`}
+          id={'new-color'}
           value={'#ffffff'}
           callback={async () => props.updateProp('colors[' + colors.length + ']', '#ffffff')}
           className="color-palette-dot-button"
