@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 
 import {trans, transChoice} from '#/main/app/intl'
 import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -12,7 +12,7 @@ const AppearanceColorCharts = (props) => {
       {props.availableColorCharts.map((color, index) => (
         <li className="list-group-item" key={index}>
           <h3 className="h-first h4 color-chart-title">
-              {color.name}
+            {color.name}
             <Toolbar
               buttonName='btn btn-link'
               tooltip='bottom'
@@ -24,9 +24,9 @@ const AppearanceColorCharts = (props) => {
                   label: trans('edit', {}, 'actions'),
                   modal: [MODAL_PARAMETERS_COLOR_CHART, {
                     colorChart: color,
-                    onSave: (data) => props.updateColorChart(data),
+                    onSave: (data) => props.updateColorChart(data)
                   }],
-                  displayed: true,
+                  displayed: true
                 },
                 {
                   name: 'delete',
