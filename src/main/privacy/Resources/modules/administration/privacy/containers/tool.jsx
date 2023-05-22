@@ -8,7 +8,6 @@ import {PrivacyTool as PrivacyToolComponent} from '#/main/privacy/administration
 const PrivacyTool = connect(
   (state) => ({
     path: toolSelectors.path(state),
-    lockedParameters: selectors.lockedParameters(state),
     parameters: selectors.parameters(state)
   })
 )(PrivacyToolComponent)

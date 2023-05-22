@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {DetailsData} from '#/main/app/content/details/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {selectors} from '#/main/privacy/administration/privacy/store'
 import get from 'lodash/get'
@@ -11,7 +12,7 @@ import {trans} from '#/main/app/intl/translation'
 
 const PrivacyTool = (props) =>
   <ToolPage>
-    <FormData
+    <DetailsData
       level={2}
       name={selectors.FORM_NAME}
       target={['apiv2_privacy_update']}
@@ -21,7 +22,6 @@ const PrivacyTool = (props) =>
         target: props.path,
         exact: true
       }}
-      locked={props.lockedParameters}
       sections={[
         {
           title: trans('general'),

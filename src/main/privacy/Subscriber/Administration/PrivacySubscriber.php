@@ -32,7 +32,6 @@ class PrivacySubscriber implements EventSubscriberInterface
         $parameters = $this->serializer->serialize();
 
         $event->setData([
-            'lockedParameters' => $parameters['lockedParameters'] ?? [],
             'parameters' => $parameters,
         ]);
     }

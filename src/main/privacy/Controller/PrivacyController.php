@@ -17,9 +17,7 @@ class PrivacyController extends AbstractSecurityController
     use RequestDecoderTrait;
 
     private AuthorizationCheckerInterface $authorization;
-
     private PlatformConfigurationHandler $config;
-
     private ParametersSerializer $serializer;
 
     public function __construct(
@@ -40,13 +38,6 @@ class PrivacyController extends AbstractSecurityController
         $this->canOpenAdminTool('privacy');
 
         $parametersData = $this->decodeRequest($request);
-
-        ArrayUtils::remove($parametersData, 'lockedParameters');
-
-        $locked = $this->config->getParameter('lockedParameters') ?? [];
-        foreach ($locked as $lockedParam) {
-            ArrayUtils::remove($parametersData, $lockedParam);
-        }
 
         $parameters = $this->serializer->deserialize($parametersData);
         $this->config->setParameters($parameters);
