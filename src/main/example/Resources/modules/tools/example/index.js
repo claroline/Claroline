@@ -1,6 +1,10 @@
 
-import {ExampleTool} from '#/main/example/tools/example/components/tool'
+import {ExampleTool} from '#/main/example/tools/example/containers/tool'
+import {ExampleMenu} from '#/main/example/tools/example/components/menu'
+import {reducer} from '#/main/example/tools/example/store'
 
 export default {
-  component: ExampleTool
+  component: ExampleTool,
+  menu: ExampleMenu,
+  store: reducer
 }

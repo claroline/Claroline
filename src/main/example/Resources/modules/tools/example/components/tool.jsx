@@ -1,47 +1,30 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
-import {Toolbar} from '#/main/app/action/components/toolbar'
-import {MODAL_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
+import {Routes} from '#/main/app/router'
+import {ExampleComponents} from '#/main/example/tools/example/components/components'
+import {CrudMain} from '#/main/example/tools/example/crud/containers/main'
 
-import {MODAL_EXAMPLE_ABOUT} from '#/main/example/tools/example/modals/about'
-import {MODAL_EXAMPLE_PARAMETERS} from '#/main/example/tools/example/modals/parameters'
-
-const ExampleTool = () =>
-  <ToolPage
-    primaryAction="add"
-    actions={[
+const ExampleTool = (props) =>
+  <Routes
+    path={props.path}
+    redirect={[
+      {from: '/', to: '/components', exact: true}
+    ]}
+    routes={[
       {
-        name: 'add',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-plus',
-        label: trans('create', {}, 'actions'),
-        modal: [MODAL_EXAMPLE_PARAMETERS],
-        primary: true
+        path: '/crud',
+        component: CrudMain
+      }, {
+        path: '/components',
+        render: () => <ExampleComponents path={props.path} />
       }
     ]}
-  >
-    <Toolbar
-      buttonName="btn btn-block"
-      actions={[
-        {
-          className: 'btn-emphasis',
-          type: MODAL_BUTTON,
-          label: trans('show-info', {}, 'actions'),
-          modal: [MODAL_EXAMPLE_ABOUT, {
-            name: 'Lorem ipsum dolor sit amet',
-            content: 'Lorem ipsum dolor sit amet'
-          }],
-          primary: true
-        }, {
-          type: CALLBACK_BUTTON,
-          label: trans('select', {}, 'actions'),
-          callback: () => alert('coucou')
-        }
-      ]}
-    />
-  </ToolPage>
+  />
+
+ExampleTool.propTypes = {
+  path: T.string.isRequired
+}
 
 export {
   ExampleTool
