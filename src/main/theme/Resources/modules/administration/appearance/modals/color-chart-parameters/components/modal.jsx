@@ -16,8 +16,10 @@ const ColorDot = ( props ) => {
     <Button
       type={MENU_BUTTON}
       icon="fa fa-fw"
-      className="color-palette-dot-button"
+      className="color-dot"
       style={{ backgroundColor: props.value }}
+      opened={props.opened}
+      onClick={props.onClick}
       menu={
         <div className="dropdown-menu">
           <ColorChart
@@ -39,41 +41,44 @@ const ColorPalette = props => {
   if( props.formData.colors && props.formData.colors.length > 0 ) {
     current = props.formData.colors.map((color, index) => {
       return (
-        <div key={index} className="color-palette-dot-container">
+        <div className="color-dot-config" key={index}>
           <ColorDot
             id={`color-${index}`}
             colorIcon="fa fa-fw"
             hideInput={props.hideInput}
             onChange={(color) => props.updateProp('colors[' + index + ']', color)}
+            onClick={() => props.updateProp('openedIndex', props.formData.openedIndex === index ? -1 : index ) }
+            opened={props.formData.openedIndex === index}
             value={color}
           />
-          <Button
-            className="btn btn-link btn-sm danger color-chart-button"
-            type={CALLBACK_BUTTON}
-            label={''}
-            callback={() => props.updateProp('colors', props.formData.colors.filter((c, i) => i !== index))}
-            icon="fa fa-fw fa-trash"
-          />
+          <div className="delete">
+            <Button
+              className="btn btn-link btn-xs"
+              dangerous={true}
+              type={CALLBACK_BUTTON}
+              callback={() => props.updateProp('colors', props.formData.colors.filter((c, i) => i !== index))}
+              icon="fa fa-fw fa-trash"
+            />
+          </div>
         </div>
       )
     })
   }
 
   return (
-    <div className="list-group color-palette-list-group">
+    <div className="color-dot-list">
       {current}
-
-      <div className="color-palette-dot-container">
-        <Button
-          type={CALLBACK_BUTTON}
-          id={'new-color'}
-          value={'#ffffff'}
-          callback={async () => props.updateProp('colors[' + colors.length + ']', '#ffffff')}
-          className="color-palette-dot-button"
-        >
-          <i className="fa fa-fw fa-plus"></i>
-        </Button>
-      </div>
+      <Button
+        type={CALLBACK_BUTTON}
+        id={'new-color'}
+        className="color-dot"
+        callback={() => {
+          props.updateProp('colors[' + colors.length + ']', '#ffffff')
+          props.updateProp('openedIndex', colors.length)
+        }}
+      >
+        <span className="fa fa-fw fa-plus"></span>
+      </Button>
     </div>
   )
 }

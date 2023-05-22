@@ -87,55 +87,42 @@
 }
 
 // Color Chart css
-.color-chart-colors-list {
+
+.color-chart-title {
     display: flex;
-    flex: 1 1 auto;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.color-chart-colors-list {
     justify-content: flex-start;
 }
 
-.color-chart-dot {
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    margin: 0 5px;
-}
-
-.color-chart-button {
-    text-align: center;
-
-    span {
-        margin: 0;
-    }
-}
-
-.color-palette-dot-container {
+.color-dot {
+    width: 60px;
+    height: 60px;
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    margin: 0 5px;
-}
-
-.color-palette-dot-button {
-    display: block;
-    width: 40px;
-    height: 40px;
-    margin: auto;
+    align-items: center;
+    margin-bottom: 5px;
+    border: 1px solid rgba(0, 0, 0, .15);
     border-radius: 50%;
-    position: relative;
-    border: 1px solid #ccc;
-
-    i {
-        position: relative;
-        top: 2px;
-    }
 }
 
-.color-palette-list-group {
+.color-dot-list {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
     justify-content: flex-start;
-    padding: 0 15px 15px;
-    position: relative;
-    top: -15px;
+    padding: 0 15px 10px;
+
+    .color-dot-config {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+
+        .delete {
+            padding: 0 0 0 5px;
+        }
+    }
 }
