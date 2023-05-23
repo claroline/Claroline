@@ -2,24 +2,25 @@
 
 // in bootstrap this doesn't use the mixin
 .text-muted {
-    @include text-emphasis-variant('.text-secondary', $text-muted);
+    //@include text-emphasis-variant('.text-muted', $text-muted);
+    color: $text-muted !important;
 }
 
-.text-secondary {
+/*.text-secondary {
     @include text-emphasis-variant('.text-secondary', $brand-secondary);
-}
+}*/
 
 // a color to use on background which is considered 'dark' by tinycolor2
 // $see https://www.npmjs.com/package/tinycolor2#isdark
-.text-light {
+/*.text-light {
     @include text-emphasis-variant('.text-light', $text-light-color);
-}
+}*/
 
 // a color to use on background which is considered 'light' by tinycolor2
 // $see https://www.npmjs.com/package/tinycolor2#islight
-.text-dark {
+/*.text-dark {
     @include text-emphasis-variant('.text-dark', $text-dark-color);
-}
+}*/
 
 .text-subtitles {
     @include text-movie-subtitles();

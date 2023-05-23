@@ -13,7 +13,7 @@ const ProgressBar = props =>
   >
     <div
       className={classes('progress-bar',
-        props.type && `progress-bar-${props.type}`
+        props.type && `progress-bar-${'user' === props.type ? 'secondary' : props.type}`
       )}
       role="progressbar"
       aria-valuenow={props.value}
@@ -31,7 +31,7 @@ ProgressBar.propTypes = {
   className: T.string,
   value: T.number,
   size: T.oneOf(['xs', 'sm']),
-  type: T.oneOf(['success', 'info', 'warning', 'danger', 'user'])
+  type: T.oneOf(['success', 'info', 'warning', 'danger', 'primary', 'secondary'])
 }
 
 ProgressBar.defaultProps = {

@@ -142,17 +142,17 @@
 }
 
 .dropdown-menu > li > .primary {
-    color: $brand-primary;
+    color: $primary;
 
     &:hover,
     &:focus {
         color: white;
-        background: $brand-primary;
+        background: $primary;
     }
 
     &.disabled {
         opacity: .65; // same than standard button
-        color: $brand-primary;
+        color: $primary;
         background: transparent;
     }
 }
@@ -188,7 +188,7 @@
         text-decoration: none;
         background-color: transparent;
         background-image: none; // Remove CSS gradient
-        @include reset-filter();
+        //@include reset-filter();
         cursor: $cursor-disabled;
     }
 }

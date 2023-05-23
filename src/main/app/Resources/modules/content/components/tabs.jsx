@@ -60,12 +60,11 @@ ContentTabs.propTypes = {
   /**
    * @deprecated
    */
-  backAction: T.shape({
-    // TODO : action types
-  }),
-  actions: T.arrayOf(T.shape({
-    // TODO : action types
-  }))
+  backAction: T.object,
+  /**
+   * @deprecated
+   */
+  actions: T.arrayOf(T.object)
 }
 
 export {

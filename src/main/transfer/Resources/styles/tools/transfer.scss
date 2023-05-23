@@ -32,7 +32,7 @@
 
     &.selected,
     &.required {
-        border: 1px solid $brand-primary;
+        border: 1px solid $primary;
     }
 
     .schema-field-meta {
@@ -54,7 +54,7 @@
     padding: 10px;
 
     &.required {
-        border: 1px solid $brand-primary;
+        border: 1px solid $primary;
     }
 
     .transfer-schema-fields {

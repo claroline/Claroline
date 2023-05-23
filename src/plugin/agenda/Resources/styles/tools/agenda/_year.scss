@@ -4,7 +4,7 @@
     .month-name {
         display: inline-block;
         margin-top: $component-margin-bottom;
-        color: $brand-primary;
+        color: $primary;
     }
 
     .day-name {
@@ -26,15 +26,15 @@
         border: 1px solid transparent;
 
         &.now {
-            color: $brand-primary;
+            color: $primary;
             background: transparent;
-            border-color: $brand-primary;
+            border-color: $primary;
         }
 
         &.selected {
             color: white;
-            background: $brand-primary;
-            border-color: $brand-primary;
+            background: $primary;
+            border-color: $primary;
         }
 
         &.fill {
@@ -80,14 +80,14 @@
     }
 
     &.now .day-number {
-        color: $brand-primary;
+        color: $primary;
         background: transparent;
-        border-color: $brand-primary;
+        border-color: $primary;
     }
 
     &.selected .day-number {
         color: white;
-        background: $brand-primary;
-        border-color: $brand-primary;
+        background: $primary;
+        border-color: $primary;
     }
 }

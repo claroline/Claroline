@@ -12,6 +12,7 @@
         justify-content: center;
     }
 
+    @include input-size('.search-control', $input-height-large, 0, $padding-large-horizontal, $font-size-large, $line-height-large, 0);
     .search-control {
         flex: 1;
         border: none;
@@ -19,7 +20,7 @@
         background: transparent;
         text-overflow: ellipsis;
 
-        @include input-size('.search-control', $input-height-large, 0, $padding-large-horizontal, $font-size-large, $line-height-large, 0);
+
 
         padding-left: 0; // ugly
     }

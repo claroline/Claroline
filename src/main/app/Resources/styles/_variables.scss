@@ -26,20 +26,18 @@ $gray-light:             lighten($gray-base, 46.7%); // #777
 $gray-lighter:           #ebebeb; // #eee
 $gray-lightest:          #F9F9F9;
 
-$brand-primary:         #046d8a /*#148AC7*/; // bootstrap original : #337ab7
+$primary:         #148AC7 /*#046d8a*/; // bootstrap original : #337ab7
 $brand-success:         #4f7302;
 $brand-info:            #335768;
 $brand-warning:         #ED9E2F; // todo adapt to new $state-warning-text color
 $brand-danger:          #bf0404;
 $brand-secondary:       #C51162;
 
-$enable-box-shadow:       true;
-$enable-border-radius:    true;
 $enable-border:           true;
 
 $font-size-modifier:      1;
 
-$box-shadow-base:               0 0 6px rgba(0, 0, 0, 0.25);
+//$box-shadow-base:               0 0 6px rgba(0, 0, 0, 0.25);
 
 //== Scaffolding
 //
@@ -51,7 +49,7 @@ $body-bg:               $gray-lightest;
 $text-color:            $gray-dark;
 
 //** Global textual link color.
-$link-color:            $brand-primary;
+$link-color:            $primary;
 //** Link hover color set via `darken()` function.
 $link-hover-color:      darken($link-color, 15%);
 //** Link hover decoration.
@@ -136,7 +134,7 @@ $border-radius-small:       2px;
 //** Global color for active items (e.g., navs or dropdowns).
 $component-active-color:    #fff;
 //** Global background color for active items (e.g., navs or dropdowns).
-$component-active-bg:       $brand-primary;
+$component-active-bg:       $primary;
 
 //** Width of the `border` for generating carets that indicator dropdowns.
 $caret-width-base:          4px;
@@ -178,7 +176,7 @@ $btn-default-bg:                 #fff;
 $btn-default-border:             #ccc;
 
 $btn-primary-color:              #fff;
-$btn-primary-bg:                 $brand-primary;
+$btn-primary-bg:                 $primary;
 $btn-primary-border:             darken($btn-primary-bg, 5%);
 
 $btn-success-color:              #fff;
@@ -229,7 +227,7 @@ $input-border-radius-large:      $border-radius-large;
 $input-border-radius-small:      $border-radius-small;
 
 //** Border color for inputs on focus
-$input-border-focus:             $brand-primary;
+$input-border-focus:             $primary;
 
 //** Placeholder text color
 $input-color-placeholder:        $gray-light;
@@ -574,7 +572,7 @@ $popover-arrow-outer-fallback-color:  darken($popover-fallback-border-color, 20%
 //** Default label background color
 $label-default-bg:            $gray-light;
 //** Primary label background color
-$label-primary-bg:            $brand-primary;
+$label-primary-bg:            $primary;
 //** Success label background color
 $label-success-bg:            $brand-success;
 //** Info label background color
@@ -660,7 +658,7 @@ $progress-bar-color:          #fff;
 $progress-border-radius:      $border-radius-base;
 
 //** Default progress bar color
-$progress-bar-bg:             $brand-primary;
+$progress-bar-bg:             $primary;
 //** Success progress bar color
 $progress-bar-success-bg:     $brand-success;
 //** Warning progress bar color
@@ -724,8 +722,8 @@ $panel-default-border:        #ddd;
 $panel-default-heading-bg:    $panel-footer-bg;
 
 $panel-primary-text:          #fff;
-$panel-primary-border:        $brand-primary;
-$panel-primary-heading-bg:    $brand-primary;
+$panel-primary-border:        $primary;
+$panel-primary-heading-bg:    $primary;
 
 $panel-success-text:          $state-success-text;
 $panel-success-border:        $state-success-border;
@@ -886,7 +884,7 @@ $hr-border:                   $gray-lighter;
 $icon-text-spacer:     15px;
 
 // colors for SVG theme icons
-$icon-primary-color: $brand-primary;
+$icon-primary-color: $primary;
 $icon-secondary-color: $navbar-inverse-bg;
 
 $icon-fixed-width: 1.25em; // same value as fa-fw (there is no var for it in font awesome)
@@ -944,7 +942,7 @@ $top-bar-max-width:           100%; // max width for the top bar content (do not
 $top-bar-height:              60px + $top-bar-border-bottom-size;
 $top-bar-font-size:           $font-size-base;
 $top-bar-color:               lighten($top-bar-bg, 35%);
-$top-bar-border-bottom-color: $brand-primary;
+$top-bar-border-bottom-color: $primary;
 $top-bar-border-bottom:       $top-bar-border-bottom-size solid $top-bar-border-bottom-color;
 $top-bar-box-shadow:          0 0 5px 1px rgba(0, 0, 0, 0.5);
 
@@ -965,7 +963,7 @@ $top-bar-link-disabled-bg:    transparent;
 // Loader (aka hourglass)
 // ---
 
-$loader-primary:   $brand-primary;
+$loader-primary:   $primary;
 $loader-secondary: $brand-secondary;
 $loader-color:     $gray-light;
 $loader-bg:        $gray-lightest; // same as body bg
@@ -998,7 +996,7 @@ $toolbar-size:           360px;
 $toolbar-font-size:      22px; // size for icons
 $toolbar-bg:             $top-bar-bg;
 $toolbar-color:          white;
-$toolbar-active-color:   $brand-primary;
+$toolbar-active-color:   $primary;
 
 // links
 $toolbar-link-color:          $top-bar-link-color;
@@ -1050,13 +1048,13 @@ $flying-alert-bg:             white;
 $flying-alert-width:          420px;
 $flying-alert-padding:        10px;
 $flying-alert-border-radius:  0;
-$flying-alert-box-shadow:     $box-shadow-base/*0 0 3px rgba(0,0,0,.5)*/;
+$flying-alert-box-shadow:     $box-shadow/*0 0 3px rgba(0,0,0,.5)*/;
 $flying-alert-margin-bottom:  10px;
 $flying-alert-icon-size:      32px;
 
 // variants
 $flying-alert-primary-color:  white;
-$flying-alert-primary-bg:     $brand-primary;
+$flying-alert-primary-bg:     $primary;
 $flying-alert-primary-border: $flying-alert-primary-bg;
 
 $flying-alert-success-color:  white;
@@ -1122,7 +1120,7 @@ $footer-bg:                 #F3F3F3;
 $footer-color:              $gray-light;
 $footer-border-color:       transparent;
 $footer-inner-border-color: #E0E0E0;
-$footer-box-shadow:         $box-shadow-base;
+$footer-box-shadow:         $box-shadow;
 
 // Links
 $footer-link-color:        $gray;
@@ -1200,7 +1198,7 @@ $heading-numbering-separator:     "."; // separator between numbering levels
 // Panels
 // ---
 
-$panel-box-shadow:         $box-shadow-base;
+$panel-box-shadow:         $box-shadow;
 $panel-margin-bottom:      $component-margin-bottom;
 
 // Groups
@@ -1225,7 +1223,7 @@ $nav-spacing:            5px; // margin between 2 tabs
 $nav-tabs-link-color:    $gray;
 $nav-tabs-border-radius: $border-radius-base $border-radius-base 0 0;
 
-$nav-pills-link-color:   $brand-primary;
+$nav-pills-link-color:   $primary;
 $nav-pills-link-bg:      transparent;
 
 
@@ -1294,7 +1292,7 @@ $tooltip-box-shadow:    none;
 
 $placeholder-bg:                 #F0F0F0;
 $placeholder-color:              $text-muted;
-$placeholder-hover-color:        $brand-primary;
+$placeholder-hover-color:        $primary;
 $placeholder-border-color:       #ccc;
 $placeholder-hover-border-color: $placeholder-hover-color;
 
@@ -1357,7 +1355,7 @@ $data-card-color:             $text-color;
 $data-card-color-muted:       $text-muted;
 $data-card-bg:                $panel-bg;
 $data-card-border-radius:     6px/*$panel-border-radius*/;
-$data-card-box-shadow:        $box-shadow-base;
+$data-card-box-shadow:        $box-shadow;
 $data-card-header-bg:         linear-gradient(135deg,
                                 $toolbar-bg 0%,
                                 $toolbar-bg 35%,
@@ -1381,8 +1379,8 @@ $data-card-title-lg-font:     18px;
 // states
 $data-card-active-color:        $text-color;
 $data-card-active-bg:           $table-bg-hover;
-$data-card-active-box-shadow:   0 0 10px 2px rgba($brand-primary, -0.25);
-$data-card-active-header-bg:    $brand-primary;
+$data-card-active-box-shadow:   0 0 10px 2px rgba($primary, 0.25);
+$data-card-active-header-bg:    $primary;
 $data-card-active-border:       $data-card-border;
 $data-card-active-inner-border: $data-card-inner-border;
 

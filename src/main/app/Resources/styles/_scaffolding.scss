@@ -54,14 +54,14 @@ body {
     width: 100%;
     z-index: $zindex-modal + 1;
     height: 5px;
-    background: rgba($brand-primary, 0.7);
+    background: rgba($primary, 0.7); // create gutter
 
     &:before {
         content: " ";
         position: absolute;
         left: 0;
         top: 0;
-        background: $brand-primary;
+        background: $primary;
         width: 50%;
         height: 3px;
         animation: app-loader-move 1.5s ease-out 1s infinite running;

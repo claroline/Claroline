@@ -13,7 +13,7 @@
         @include gauge-variant($gray);
     }
     &.gauge-primary {
-        @include gauge-variant($brand-primary);
+        @include gauge-variant($primary);
     }
     &.gauge-success {
         @include gauge-variant($brand-success);
@@ -48,7 +48,7 @@
         @include liquid-gauge-variant($gray);
     }
     &.gauge-primary {
-        @include liquid-gauge-variant($brand-primary);
+        @include liquid-gauge-variant($primary);
     }
     &.gauge-success {
         @include liquid-gauge-variant($brand-success);
@@ -73,7 +73,7 @@
         @include score-gauge-variant($gray);
     }
     &.gauge-primary {
-        @include score-gauge-variant($brand-primary);
+        @include score-gauge-variant($primary);
     }
     &.gauge-success {
         @include score-gauge-variant($brand-success);

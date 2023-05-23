@@ -5,12 +5,13 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {route as resourceRoute} from '#/main/core/resource/routing'
 
+import {MODAL_FAVOURITES} from '#/plugin/favourite/modals/favourites'
 import {constants} from '#/plugin/favourite/header/favourites/constants'
 
 const FavouritesDropdown = props =>
@@ -133,31 +134,12 @@ class FavouritesMenu extends Component {
     return (
       <Button
         id="app-favourites"
-        type={MENU_BUTTON}
+        type={MODAL_BUTTON}
         className="app-header-btn app-header-item"
-        icon={!this.props.loaded && this.state.opened ?
-          'fa fa-fw fa-spinner fa-spin' :
-          'fa fa-fw fa-star'
-        }
+        icon="fa fa-fw fa-star"
         label={trans('favourites', {}, 'favourite')}
         tooltip="bottom"
-        opened={this.props.loaded && this.state.opened}
-        onToggle={(opened) => {
-          if (opened) {
-            this.props.getFavourites()
-          }
-
-          this.setOpened(opened)
-        }}
-        menu={
-          <FavouritesDropdown
-            section={this.state.section}
-            results={!isEmpty(this.props.results) ? this.props.results[this.state.section] : []}
-            changeSection={this.changeSection}
-            deleteFavourite={this.props.deleteFavourite}
-            closeMenu={() => this.setOpened(false)}
-          />
-        }
+        modal={[MODAL_FAVOURITES]}
       />
     )
   }

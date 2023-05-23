@@ -157,14 +157,14 @@
 
 .user-message-highlight {
     .user-message {
-        border-color: $brand-primary;
+        border-color: $primary;
         &:before {
-            border-color: transparent $brand-primary transparent transparent;
+            border-color: transparent $primary transparent transparent;
         }
     }
 
     .user-message-meta {
-        border-bottom-color: $brand-primary;
+        border-bottom-color: $primary;
     }
 }
 

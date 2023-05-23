@@ -1,6 +1,7 @@
 
 .connection-message-modal {
     .modal-content {
+        > .img-fluid,
         > .img-responsive {
             min-width: 100%;
         }

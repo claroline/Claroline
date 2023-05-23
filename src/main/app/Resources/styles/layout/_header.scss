@@ -80,7 +80,7 @@
 
     // declare colors var to make it usable inside the SVG
     --logo-default: $top-bar-brand-color;
-    --logo-primary: $brand-primary;
+    --logo-primary: $primary;
 
     + .app-header-title {
         margin-left: floor(math.div($grid-gutter-width, 2));
@@ -101,7 +101,7 @@
         font-size: 70%;
         font-weight: normal;
         font-style: italic;
-        color: $brand-primary;
+        color: $primary;
     }
 }
 
@@ -329,7 +329,7 @@
     }
 
     .result-header {
-        color: $brand-primary;
+        color: $primary;
         font-weight: bold;
         padding: 10px;
         margin: 0;

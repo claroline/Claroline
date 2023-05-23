@@ -74,15 +74,14 @@
     &:hover {
       color: $home-tab-hover-color;
       background: $home-tab-hover-bg;
-      @include box-shadow($box-shadow-base);
     }
 
     &.active {
-      border-color: $brand-primary; // can be overridden by tab config
-      background: $brand-primary; // can be overridden by tab config
+      border-color: $primary; // can be overridden by tab config
+      background: $primary; // can be overridden by tab config
 
       @include text-movie-subtitles();
-      @include box-shadow(0 0 3px rgba(0, 0, 0, 0.5));
+      @include box-shadow($box-shadow);
     }
   }
 
@@ -113,7 +112,7 @@
       &:hover {
         color: $home-tab-hover-color;
         background: $home-tab-hover-bg;
-        @include box-shadow($box-shadow-base);
+        @include box-shadow($box-shadow);
       }
     }
   }

@@ -18,7 +18,7 @@
 
     .day-names {
         font-family: $headings-font-family;
-        color: $brand-primary;
+        color: $primary;
         font-size: $font-size-small;
     }
 
@@ -65,15 +65,15 @@
         }
 
         &.now .day-number {
-            color: $brand-primary;
+            color: $primary;
             background: transparent;
-            border-color: $brand-primary;
+            border-color: $primary;
         }
 
         &.selected .day-number {
             color: white;
-            background: $brand-primary;
-            border-color: $brand-primary;
+            background: $primary;
+            border-color: $primary;
         }
 
         &.fill {

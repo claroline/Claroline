@@ -7,6 +7,10 @@ import {NavLink} from '#/main/app/router'
 import {toKey} from '#/main/core/scaffolding/text'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 
+/**
+ *
+ * @deprecated use ContentNav instead
+ */
 const Vertical = (props) =>
   <nav
     {...omit(props, 'tabs', 'basePath')}

@@ -104,7 +104,7 @@ mark,
   color: $text-muted;
 }
 
-@include text-emphasis-variant('.text-primary', $brand-primary);
+@include text-emphasis-variant('.text-primary', $primary);
 
 @include text-emphasis-variant('.text-success', $state-success-text);
 
@@ -122,7 +122,7 @@ mark,
   // automatically.
   color: #fff;
 }
-@include bg-variant('.bg-primary', $brand-primary);
+@include bg-variant('.bg-primary', $primary);
 
 @include bg-variant('.bg-success', $state-success-bg);
 

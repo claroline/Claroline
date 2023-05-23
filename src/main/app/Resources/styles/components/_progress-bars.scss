@@ -11,9 +11,9 @@
 }
 
 // creates a user progression variant
-.progress-bar-user {
+/*.progress-bar-user {
     @include progress-bar-variant($brand-secondary);
-}
+}*/
 
 .progress-sm {
     height: 8px; // todo : use a var

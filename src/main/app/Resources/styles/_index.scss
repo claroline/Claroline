@@ -5,11 +5,16 @@
  * for the user interface.
  */
 
+@import "node_modules/bootstrap/scss/functions";
+//@import "variables.bootstrap";
 @import "variables";
 @import "mixins";
 
-// Import Bootstrap
-@import "bootstrap/bootstrap";
+// Import Bootstrap (v5, partial)
+@import "base";
+
+// Import Bootstrap (v3, to remove)
+//@import "bootstrap/bootstrap";
 
 // Import FontAwesome
 @import "node_modules/@fortawesome/fontawesome-free/scss/fontawesome";

@@ -48,14 +48,14 @@
     }
 
     .now .day-number {
-        color: $brand-primary;
+        color: $primary;
         background: transparent;
-        border-color: $brand-primary;
+        border-color: $primary;
     }
 
     .selected .day-number {
         color: white;
-        background: $brand-primary;
-        border-color: $brand-primary;
+        background: $primary;
+        border-color: $primary;
     }
 }

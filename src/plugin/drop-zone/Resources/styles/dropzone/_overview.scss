@@ -97,11 +97,11 @@
 
         &:before,
         &:after {
-            background: $brand-primary;
+            background: $primary;
         }
 
         .evaluation-status-heading {
-            background: $brand-primary;
+            background: $primary;
             color: white;
             border-color: $btn-primary-border;
         }

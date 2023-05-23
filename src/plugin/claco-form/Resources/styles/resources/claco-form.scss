@@ -53,12 +53,12 @@
 
         &:hover,
         &:focus {
-            border-color: $brand-primary;
+            border-color: $primary;
 
         @include box-shadow($dropdown-menu-box-shadow);
 
             .action-icon {
-                background: $brand-primary;
+                background: $primary;
                 color: rgba(255, 255, 255, 0.75);
                 border-color: $btn-primary-border;
             }

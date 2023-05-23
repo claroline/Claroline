@@ -3,8 +3,10 @@
  */
 
 // gets bootstrap mixins
-@import "bootstrap/mixins";
+//@import "bootstrap/mixins";
+@import "node_modules/bootstrap/scss/mixins";
 
+@import "mixins/legacy";
 @import "mixins/alerts";
 @import "mixins/buttons";
 @import "mixins/calendars";
@@ -16,30 +18,6 @@
 // -
 // Modifiers
 // ---
-
-@mixin box-shadow($shadow...) {
-    @if $enable-box-shadow {
-        -webkit-box-shadow: $shadow;
-        -moz-box-shadow: $shadow;
-        box-shadow: $shadow;
-    } @else {
-        -webkit-box-shadow: none;
-        -moz-box-shadow: none;
-        box-shadow: none;
-    }
-}
-
-@mixin border-radius($border-radius) {
-    @if $enable-border-radius {
-        -webkit-border-radius: $border-radius;
-        -moz-border-radius: $border-radius;
-        border-radius: $border-radius;
-    } @else {
-        -webkit-border-radius: 0;
-        -moz-border-radius: 0;
-        border-radius: 0;
-    }
-}
 
 @mixin border($border) {
     @if $enable-border {

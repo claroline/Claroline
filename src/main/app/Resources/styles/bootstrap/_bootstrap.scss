@@ -9,23 +9,23 @@
 //@import "mixins";
 
 // Reset and dependencies
-@import "normalize";
-@import "print";
+//@import "normalize";
+//@import "print";
 //@import "bootstrap/glyphicons";
 
 // Core CSS
-@import "scaffolding";
-@import "type";
+//@import "scaffolding";
+//@import "type";
 @import "code";
 @import "grid";
 @import "tables";
 @import "forms";
-@import "buttons";
+//@import "buttons";
 
 // Components
 @import "component-animations";
 @import "dropdowns";
-@import "button-groups";
+//@import "button-groups";
 @import "input-groups";
 @import "navs";
 //@import "navbar";

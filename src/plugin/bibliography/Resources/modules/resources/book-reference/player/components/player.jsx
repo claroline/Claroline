@@ -15,7 +15,7 @@ const PlayerComponent = props =>
     {props.bookReference.cover &&
       <Col md={3}>
         <img
-          className={'img-responsive'}
+          className="img-fluid"
           src={props.bookReference.cover}
           alt={trans('cover', {}, 'icap_bibliography')}
           title={trans('cover', {}, 'icap_bibliography')}

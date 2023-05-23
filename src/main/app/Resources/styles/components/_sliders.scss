@@ -20,9 +20,9 @@
     height: 20px;
     border-radius: 50%;
     background: white;
-    border: 1px solid $brand-primary;
+    border: 1px solid $primary;
 
-    @include box-shadow($box-shadow-base);
+    @include box-shadow($box-shadow);
     @include transition(left .6s ease);
 }
 

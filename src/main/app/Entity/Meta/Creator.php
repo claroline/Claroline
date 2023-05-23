@@ -12,10 +12,8 @@ trait Creator
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(onDelete="SET NULL")
-     *
-     * @var User
      */
-    protected $creator;
+    protected ?User $creator;
 
     /**
      * Returns the entity creator.

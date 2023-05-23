@@ -25,7 +25,7 @@
     }
 
     > tbody {
-        //@include box-shadow($box-shadow-base);
+        //@include box-shadow($box-shadow);
 
         th:first-child,
         td:first-child {

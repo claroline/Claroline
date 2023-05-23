@@ -9,13 +9,13 @@
     .checkbox-inline {
         margin: 0;
 
+        // simulate a .form-control
+        @include input-size('label', $input-height-base, $padding-base-vertical, $padding-base-horizontal, $font-size-base, $line-height-base, $input-border-radius);
         label {
-            // simulate a .form-control
-            @include input-size('label', $input-height-base, $padding-base-vertical, $padding-base-horizontal, $font-size-base, $line-height-base, $input-border-radius);
-
             width: 100%;
             border: 1px solid transparent;
             background: $gray-lighter;
+
             @include transition("border-color ease-in-out .15s, background ease-in-out .15s");
         }
 
@@ -64,9 +64,7 @@
         .radio-inline,
         .checkbox,
         .checkbox-inline {
-            label {
-                @include input-size('label', $input-height-small, $padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $input-border-radius-small);
-            }
+            @include input-size('label', $input-height-small, $padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $input-border-radius-small);
         }
     }
 
@@ -75,9 +73,7 @@
         .radio-inline,
         .checkbox,
         .checkbox-inline {
-            label {
-                @include input-size('label', $input-height-large, $padding-large-vertical, $padding-large-horizontal, $font-size-large, $line-height-large, $input-border-radius-large);
-            }
+            @include input-size('label', $input-height-large, $padding-large-vertical, $padding-large-horizontal, $font-size-large, $line-height-large, $input-border-radius-large);
         }
     }
 }

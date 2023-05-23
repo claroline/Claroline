@@ -68,12 +68,12 @@
 .input-group-btn:first-child > .btn-group > .color-picker > .btn,
 .input-group-btn:last-child > .color-picker:not(:last-child) > .btn,
 .input-group-btn:last-child > .btn-group:not(:last-child) > .color-picker > .btn {
-  @include border-right-radius(0);
+  @include border-end-radius(0);
 }
 
 .input-group-btn:last-child > .color-picker > .btn,
 .input-group-btn:last-child > .btn-group > .color-picker > .btn,
 .input-group-btn:first-child > .color-picker:not(:first-child) > .btn,
 .input-group-btn:first-child > .btn-group:not(:first-child) > .color-picker > .btn {
-  @include border-left-radius(0);
+  @include border-start-radius(0);
 }

@@ -1,7 +1,5 @@
 .list-group {
     margin-bottom: $list-group-margin-bottom;
-
-    @include list-group-item-variant('selected', $state-info-bg, $state-info-text);
 }
 
 .list-group-striped {

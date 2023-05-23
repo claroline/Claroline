@@ -55,8 +55,8 @@
   &.active {
     margin: 0;
     background: white;
-    border-color: $brand-primary;
-    box-shadow: $box-shadow-base;
+    border-color: $primary;
+    @include box-shadow($box-shadow);
 
     .locale-icon {
       opacity: 1;
