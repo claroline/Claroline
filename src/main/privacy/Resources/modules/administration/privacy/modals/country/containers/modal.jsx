@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {CountryModal as CountryModalComponent} from '#/main/privacy/administration/privacy/modals/country/components/modal'
-import {selectors, reducer} from '#/main/privacy/administration/privacy/store'
+import {selectors, reducer} from '#/main/privacy/administration/privacy/modals/country/store'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
 const CountryModal = withReducer(selectors.FORM_NAME, reducer)(

@@ -1,7 +1,7 @@
 import { registry } from '#/main/app/modals/registry'
 
 // gets the modal component
-import { ThermsModal } from '#/main/privacy/administration/privacy/modals/therms/components/modal'
+import { ThermsModal } from '#/main/privacy/administration/privacy/modals/terms/containers/modal'
 
 const MODAL_THERM_OF_SERVICE = 'MODAL_THERM_OF_SERVICE'
 

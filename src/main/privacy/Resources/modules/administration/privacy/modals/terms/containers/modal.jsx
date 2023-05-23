@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 import {withReducer} from '#/main/app/store/components/withReducer'
-import {ThermsModal as ThermsModalComponent} from '#/main/privacy/administration/privacy/modals/therms/components/modal'
-import {selectors, reducer} from '#/main/privacy/administration/privacy/store'
+import {ThermsModal as ThermsModalComponent} from '#/main/privacy/administration/privacy/modals/terms/components/modal'
+import {selectors, reducer} from '#/main/privacy/administration/privacy/modals/terms/store'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
 const ThermsModal = withReducer(selectors.FORM_NAME, reducer)(
