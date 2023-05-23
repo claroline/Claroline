@@ -154,10 +154,10 @@ class EvaluationManager
                 $aggregator->addEvaluation(new GenericEvaluation($stepDone ? 100 : 0));
 
                 // store the step status in the path attempt
-                if ($stepDone && !in_array($step->getUuid(), $evaluationData['done'])) {
+                if ($stepDone && (empty($evaluationData['done']) || !in_array($step->getUuid(), $evaluationData['done']))) {
                     // mark the step as done if it has the correct status
                     $evaluationData['done'][] = $step->getUuid();
-                } elseif (!$stepDone && in_array($step->getUuid(), $evaluationData['done'])) {
+                } elseif (!$stepDone && !empty($evaluationData['done']) && in_array($step->getUuid(), $evaluationData['done'])) {
                     // mark the step as not done
                     array_splice($evaluationData['done'], array_search($step->getUuid(), $evaluationData['done']), 1);
                 }
