@@ -31,9 +31,39 @@ class PrivacyController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
+     * @Route("/privacy", name="apiv2_privacy_country_storage_update", methods={"PUT"})
      */
-    public function updateAction(Request $request): JsonResponse
+    public function updateCountryStorage(Request $request): JsonResponse
+    {
+        $this->canOpenAdminTool('privacy');
+
+        $parametersData = $this->decodeRequest($request);
+
+        $parameters = $this->serializer->deserialize($parametersData);
+        $this->config->setParameters($parameters);
+
+        return new JsonResponse($parameters);
+    }
+
+    /**
+     * @Route("/privacy", name="apiv2_privacy_dpo_update", methods={"PUT"})
+     */
+    public function updateInfosDpo(Request $request): JsonResponse
+    {
+        $this->canOpenAdminTool('privacy');
+
+        $parametersData = $this->decodeRequest($request);
+
+        $parameters = $this->serializer->deserialize($parametersData);
+        $this->config->setParameters($parameters);
+
+        return new JsonResponse($parameters);
+    }
+
+    /**
+     * @Route("/privacy", name="apiv2_privacy_therms_update", methods={"PUT"})
+     */
+    public function updateThermsOfService(Request $request): JsonResponse
     {
         $this->canOpenAdminTool('privacy');
 

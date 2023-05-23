@@ -6,7 +6,6 @@ import {Button} from '#/main/app/action/components/button'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {selectors} from '#/main/privacy/administration/privacy/store'
-import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_COUNTRY_STORAGE} from '#/main/privacy/administration/privacy/modals/country'
@@ -30,12 +29,13 @@ const PrivacyTool = (props) =>
             }
           ]
         }, {
-          icon: 'fa fa-fw fa-user-shield',
           title: trans('dpo'),
+          primary: true,
           fields: [
             {
+              icon: 'fa fa-fw fa-user-shield',
               name: 'privacy.dpo.name',
-              label: trans('name'),
+              label: trans('dpo'),
               type: 'string'
             }, {
               name: 'privacy.dpo.email',
@@ -56,19 +56,8 @@ const PrivacyTool = (props) =>
           title: trans('terms_of_service', {}, 'privacy'),
           fields: [
             {
-              name: 'tos.enabled',
-              type: 'boolean',
-              label: trans('terms_of_service_activation_message', {}, 'privacy'),
-              help: trans('terms_of_service_activation_help', {}, 'privacy'),
-              linked: [
-                {
-                  name: 'tos.text',
-                  type: 'translated',
-                  label: trans('terms_of_service', {}, 'privacy'),
-                  required: true,
-                  displayed: get(props.parameters, 'tos.enabled')
-                }
-              ]
+              name: 'tos.text',
+              type: 'translated'
             }
           ]
         }
@@ -105,12 +94,7 @@ const PrivacyTool = (props) =>
   </ToolPage>
 
 PrivacyTool.propTypes = {
-  path: T.string.isRequired,
-  parameters: T.shape({
-    tos: T.shape({
-      enabled: T.bool
-    })
-  })
+  path: T.string.isRequired
 }
 
 export {

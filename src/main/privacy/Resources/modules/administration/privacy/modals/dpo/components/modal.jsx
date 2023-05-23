@@ -9,7 +9,6 @@ import {selectors} from '#/main/privacy/administration/privacy/store/selectors'
 
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
-import get from 'lodash/get'
 
 const DpoModal = (props) =>
   <Modal
@@ -48,6 +47,17 @@ const DpoModal = (props) =>
         }
       ]}
     >
+      <Button
+        className="modal-btn btn"
+        type={CALLBACK_BUTTON}
+        primary={true}
+        label={trans('save', {}, 'actions')}
+        htmlType="submit"
+        disabled={!props.saveEnabled}
+        callback={() => {
+          props.save(props.formData, props.fadeModal)
+        }}
+      />
     </FormData>
   </Modal>
 

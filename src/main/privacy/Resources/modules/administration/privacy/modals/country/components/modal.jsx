@@ -32,6 +32,17 @@ const CountryModal = (props) =>
         }
       ]}
     >
+      <Button
+        className="modal-btn btn"
+        type={CALLBACK_BUTTON}
+        primary={true}
+        label={trans('save', {}, 'actions')}
+        htmlType="submit"
+        disabled={!props.saveEnabled}
+        callback={() => {
+          props.save(props.formData, props.fadeModal)
+        }}
+      />
     </FormData>
   </Modal>
 

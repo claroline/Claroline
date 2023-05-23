@@ -8,7 +8,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors} from '#/main/privacy/administration/privacy/store/selectors'
 
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
 
 const ThermsModal = (props) =>
@@ -43,7 +43,17 @@ const ThermsModal = (props) =>
         }
       ]}
     >
-
+      <Button
+        className="modal-btn btn"
+        type={CALLBACK_BUTTON}
+        primary={true}
+        label={trans('save', {}, 'actions')}
+        htmlType="submit"
+        disabled={!props.saveEnabled}
+        callback={() => {
+          props.save(props.formData, props.fadeModal)
+        }}
+      />
     </FormData>
   </Modal>
 
