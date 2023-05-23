@@ -10,45 +10,32 @@ import {selectors} from '#/main/privacy/administration/privacy/store/selectors'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
 
-const DpoModal = (props) =>
+const CountryModal = (props) =>
   <Modal
     {...omit(props, 'formData', 'saveEnabled', 'save')}
-    icon="fa fa-fw fa-solid fa-pen-to-square"
-    title={trans('add_country', {}, 'actions')}
+    icon="fa fa-fw fa-solid fa-globe"
+    title={trans('Pays de stockage', {}, 'actions')}
   >
     <FormData
-      name={selectors.STORE_NAME}
+      name={`${selectors.FORM_NAME}`}
       definition={[
         {
           title: trans('general'),
           primary: true,
           fields: [
             {
-              name: 'privacy.dpo.name',
-              label: trans('name'),
-              type: 'string'
-            }, {
-              name: 'privacy.dpo.email',
-              label: trans('email'),
-              type: 'email'
-            }, {
-              name: 'privacy.dpo.phone',
-              label: trans('phone'),
-              type: 'string'
-            }, {
-              name: 'privacy.dpo.address',
-              label: trans('address'),
-              type: 'address'
+              name: 'privacy.countryStorage',
+              label: trans('country_storage', {}, 'privacy'),
+              type: 'country'
             }
           ]
         }
       ]}
     >
-
     </FormData>
   </Modal>
 
-DpoModal.propTypes = {
+CountryModal.propTypes = {
   formData: T.object,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
@@ -56,5 +43,5 @@ DpoModal.propTypes = {
 }
 
 export {
-  DpoModal
+  CountryModal
 }
