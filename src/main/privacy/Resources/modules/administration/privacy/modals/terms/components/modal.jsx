@@ -6,16 +6,16 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors} from '#/main/privacy/administration/privacy/store/selectors'
+import {selectors} from '#/main/privacy/administration/privacy/modals/terms/store/selectors'
 
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
 
-const ThermsModal = (props) =>
+const TermsModal = (props) =>
   <Modal
     {...omit(props, 'formData', 'saveEnabled', 'save')}
     icon="fa fa-fw fa-solid fa-pen-to-square"
-    title={trans('Conditions d\'utilisation', {}, 'actions')}
+    title={trans('terms_of_service', {}, 'privacy')}
   >
     <FormData
       name={selectors.FORM_NAME}
@@ -57,7 +57,7 @@ const ThermsModal = (props) =>
     </FormData>
   </Modal>
 
-ThermsModal.propTypes = {
+TermsModal.propTypes = {
   formData: T.object,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
@@ -70,5 +70,5 @@ ThermsModal.propTypes = {
 }
 
 export {
-  ThermsModal
+  TermsModal
 }
