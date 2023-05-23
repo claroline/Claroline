@@ -6,7 +6,6 @@ const store = (state) => state[STORE_NAME]
 
 const parameters = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
 
-
 export const selectors = {
   STORE_NAME,
   store,

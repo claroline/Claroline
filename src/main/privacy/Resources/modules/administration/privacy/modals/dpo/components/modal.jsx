@@ -73,9 +73,6 @@ DpoModal.propTypes = {
         email: T.string,
         phone: T.string
       })
-    }),
-    tos: T.shape({
-      enabled: T.bool
     })
   })
 }

@@ -14,10 +14,12 @@ const ThermsModal = withReducer(selectors.FORM_NAME, reducer)(
     (dispatch) => ({
       save(formData, onSave) {
         dispatch(formActions.saveForm(selectors.FORM_NAME,
-          ['apiv2_privacy_therms_update', {id: formData.id}].then((response) => {
+          ['apiv2_privacy_therms_update', {id: formData.id}]))
+          .then((response) => {
             onSave(response)}
-          )))
+          )
       }
+
     })
   )(ThermsModalComponent)
 )
