@@ -1,4 +1,4 @@
-import BaseOverlay from 'react-overlays/lib/Overlay'
+import BaseOverlay from 'react-bootstrap/Overlay'
 
 const Overlay = BaseOverlay
 

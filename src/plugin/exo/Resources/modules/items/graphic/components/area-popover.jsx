@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import Popover from 'react-bootstrap/lib/Popover'
+import Popover from 'react-bootstrap/Popover'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormGroup} from '#/main/app/content/form/components/group'

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {forwardRef} from 'react'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
@@ -12,11 +12,8 @@ import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
  * Renders a component that will navigate user to an url (internal or external) on click.
  *
  * IMPORTANT : if you need to navigate inside the current app, use `LinkButton` instead.
- *
- * @param props
- * @constructor
  */
-const UrlButton = props => {
+const UrlButton = forwardRef((props, ref) => {
   let target = props.target
   if (Array.isArray(target)) {
     target = url(target)
@@ -28,6 +25,7 @@ const UrlButton = props => {
       role="link"
       tabIndex={props.tabIndex}
       href={!props.disabled ? target : ''}
+      ref={ref}
       disabled={props.disabled}
       className={classes(props.className, {
         disabled: props.disabled,
@@ -41,7 +39,7 @@ const UrlButton = props => {
       {props.children}
     </a>
   )
-}
+})
 
 implementPropTypes(UrlButton, ButtonTypes, {
   target: T.oneOfType([

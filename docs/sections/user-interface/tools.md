@@ -315,7 +315,7 @@ Tools styles are stored in `MY_PLUGIN/Resources/styles`.
 // MY_PLUGIN/Resources/styles/my-tool.less
 
 // Claroline & bootstrap variables
-@import "/src/main/app/Resources/styles/variables";
+@import "src/main/app/Resources/styles/variables";
 
 // Your custom styles are defined here
 

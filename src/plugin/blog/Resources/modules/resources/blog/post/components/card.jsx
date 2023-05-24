@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 // TODO : remove me
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 
 import {asset} from '#/main/app/config'
 import {withRouter} from '#/main/app/router'

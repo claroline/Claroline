@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {Provider} from 'react-redux'
 import { useStore } from 'react-redux'
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
 import {Router} from '#/main/app/router'
 

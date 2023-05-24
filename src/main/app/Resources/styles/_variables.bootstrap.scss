@@ -1398,10 +1398,10 @@ $tooltip-font-size:                 $font-size-sm !default;
 $tooltip-max-width:                 200px !default;
 $tooltip-color:                     var(--#{$prefix}body-bg) !default;
 $tooltip-bg:                        var(--#{$prefix}emphasis-color) !default;
-$tooltip-border-radius:             var(--#{$prefix}border-radius) !default;
+$tooltip-border-radius:             var(--#{$prefix}border-radius-sm) !default;
 $tooltip-opacity:                   .9 !default;
-$tooltip-padding-y:                 $spacer * .25 !default;
-$tooltip-padding-x:                 $spacer * .5 !default;
+$tooltip-padding-y:                 map-get($spacers, 2) !default;
+$tooltip-padding-x:                 map-get($spacers, 3) !default;
 $tooltip-margin:                    null !default; // TODO: remove this in v6
 
 $tooltip-arrow-width:               .8rem !default;
@@ -1627,15 +1627,15 @@ $figure-caption-color:              var(--#{$prefix}secondary-color) !default;
 // Breadcrumbs
 
 // scss-docs-start breadcrumb-variables
-$breadcrumb-font-size:              null !default;
-$breadcrumb-padding-y:              0 !default;
-$breadcrumb-padding-x:              0 !default;
+$breadcrumb-font-size:              $small-font-size !default;
+$breadcrumb-padding-y:              map-get($spacers, 2) !default;
+$breadcrumb-padding-x:              $spacer !default;
 $breadcrumb-item-padding-x:         .5rem !default;
-$breadcrumb-margin-bottom:          1rem !default;
+$breadcrumb-margin-bottom:          0 !default;
 $breadcrumb-bg:                     null !default;
 $breadcrumb-divider-color:          var(--#{$prefix}secondary-color) !default;
 $breadcrumb-active-color:           var(--#{$prefix}secondary-color) !default;
-$breadcrumb-divider:                quote("/") !default;
+$breadcrumb-divider:                quote(">") !default;
 $breadcrumb-divider-flipped:        $breadcrumb-divider !default;
 $breadcrumb-border-radius:          null !default;
 // scss-docs-end breadcrumb-variables

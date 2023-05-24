@@ -4,8 +4,8 @@ import classes from 'classnames'
 import omit from 'lodash/omit'
 
 // TODO : remove us
-import Panel      from 'react-bootstrap/lib/Panel'
-import PanelGroup from 'react-bootstrap/lib/PanelGroup'
+//import Panel      from 'react-bootstrap/Panel'
+//import PanelGroup from 'react-bootstrap/PanelGroup'
 
 import {toKey} from '#/main/core/scaffolding/text'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 import isNumber from 'lodash/isNumber'
 
-import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
+//import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
 
 import {getWindowSize} from '#/main/app/dom/size/utils'
 import {constants} from '#/main/app/dom/size/constants'
@@ -56,11 +56,11 @@ class MenuMain extends Component {
   }
 
   render() {
+    /*<RootCloseWrapper
+      disabled={constants.SIZE_SM !== this.state.computedSize && constants.SIZE_XS !== this.state.computedSize}
+      onRootClose={() => this.props.close()}
+    >*/
     return (
-      <RootCloseWrapper
-        disabled={constants.SIZE_SM !== this.state.computedSize && constants.SIZE_XS !== this.state.computedSize}
-        onRootClose={() => this.props.close()}
-      >
         <Fragment>
           <aside className="app-menu">
             <header className="app-menu-header">
@@ -145,7 +145,6 @@ class MenuMain extends Component {
             <div className="app-menu-backdrop" />
           }
         </Fragment>
-      </RootCloseWrapper>
     )
   }
 }

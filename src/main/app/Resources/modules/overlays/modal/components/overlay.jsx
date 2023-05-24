@@ -1,6 +1,6 @@
 import React, {Component, createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {Portal} from 'react-overlays'
+//import {Portal} from 'react-overlays'
 
 import {Modal as ModalTypes} from '#/main/app/overlays/modal/prop-types'
 
@@ -12,25 +12,24 @@ import {registry} from '#/main/app/modals/registry'
  */
 class ModalOverlay extends Component {
   render() {
+    // <Portal container={() => document.querySelector('.app-modal-container')}>
     return (
-      <Portal container={() => document.querySelector('.app-modal-container')}>
-        <div className="app-modal" ref={(el) => this.container = el}>
-          {this.props.modals.map((modal, index) => createElement(
-            // grab the correct modal component from registry
-            registry.get(modal.type),
+      <div className="app-modal" ref={(el) => this.container = el}>
+        {this.props.modals.map((modal, index) => createElement(
+          // grab the correct modal component from registry
+          registry.get(modal.type),
 
-            // constructs modal props
-            Object.assign({
-              key: modal.id,
-              show: !modal.fading,
-              disabled: 0 !== index && !modal.fading,
-              container: this.container,
-              fadeModal: () => this.props.fadeModal(modal.id),
-              hideModal: () => this.props.hideModal(modal.id)
-            }, modal.props || {})
-          ))}
-        </div>
-      </Portal>
+          // constructs modal props
+          Object.assign({
+            key: modal.id,
+            show: !modal.fading,
+            disabled: 0 !== index && !modal.fading,
+            container: this.container,
+            fadeModal: () => this.props.fadeModal(modal.id),
+            hideModal: () => this.props.hideModal(modal.id)
+          }, modal.props || {})
+        ))}
+      </div>
     )
   }
 }

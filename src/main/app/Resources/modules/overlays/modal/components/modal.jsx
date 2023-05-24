@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
-import BaseModal from 'react-bootstrap/lib/Modal'
+import BaseModal from 'react-bootstrap/Modal'
 
 import {asset} from '#/main/app/config/asset'
 

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
-import Popover from 'react-bootstrap/lib/Popover'
+import Popover from 'react-bootstrap/Popover'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'

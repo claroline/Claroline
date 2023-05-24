@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import classes from 'classnames'
-import Popover from 'react-bootstrap/lib/Popover'
+import Popover from 'react-bootstrap/Popover'
 
 import {trans} from '#/main/app/intl/translation'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'

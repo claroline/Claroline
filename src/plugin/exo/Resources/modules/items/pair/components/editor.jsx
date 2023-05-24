@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
-import Tooltip from 'react-bootstrap/lib/Tooltip'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
 

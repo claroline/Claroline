@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-import Panel from 'react-bootstrap/lib/Panel'
 
 import {trans} from '#/main/app/intl/translation'
 import {withRouter} from '#/main/app/router'
@@ -51,43 +50,45 @@ const CurrentStep = props => {
       }
 
       {props.items.map((item, index) => (
-        <Panel key={item.id}>
-          {!isQuestionType(item.type) ?
-            <ContentItemPlayer
-              showTitle={props.showQuestionTitles}
-              item={item}
-            >
-              {React.createElement(getContentDefinition(item.type).player, {item: item})}
-            </ContentItemPlayer>
-            : (!props.feedbackEnabled ?
-              <ItemPlayer
-                item={item}
-                showHint={props.showHint}
-                usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+        <div className="panel panel-default" key={item.id}>
+          <div className="panel-body">
+            {!isQuestionType(item.type) ?
+              <ContentItemPlayer
                 showTitle={props.showQuestionTitles}
-                numbering={getNumbering(props.questionNumbering, props.number - 1, index)}
-              >
-                {React.createElement(getDefinition(item.type).player, {
-                  item: item,
-                  answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined,
-                  disabled: !props.answersEditable && props.answers[item.id] && 0 < props.answers[item.id].tries,
-                  onChange: (answerData) => props.updateAnswer(item.id, answerData)
-                })}
-              </ItemPlayer>
-              :
-              <ItemFeedback
                 item={item}
-                usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
-                showTitle={props.showQuestionTitles}
-                numbering={props.questionNumbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.questionNumbering, index): null}
               >
-                {React.createElement(getDefinition(item.type).feedback, {
-                  item: item,
-                  answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined
-                })}
-              </ItemFeedback>
-            )}
-        </Panel>
+                {React.createElement(getContentDefinition(item.type).player, {item: item})}
+              </ContentItemPlayer>
+              : (!props.feedbackEnabled ?
+                <ItemPlayer
+                  item={item}
+                  showHint={props.showHint}
+                  usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+                  showTitle={props.showQuestionTitles}
+                  numbering={getNumbering(props.questionNumbering, props.number - 1, index)}
+                >
+                  {React.createElement(getDefinition(item.type).player, {
+                    item: item,
+                    answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined,
+                    disabled: !props.answersEditable && props.answers[item.id] && 0 < props.answers[item.id].tries,
+                    onChange: (answerData) => props.updateAnswer(item.id, answerData)
+                  })}
+                </ItemPlayer>
+                :
+                <ItemFeedback
+                  item={item}
+                  usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+                  showTitle={props.showQuestionTitles}
+                  numbering={props.questionNumbering !== constants.NUMBERING_NONE ? props.number + '.' + getNumbering(props.questionNumbering, index): null}
+                >
+                  {React.createElement(getDefinition(item.type).feedback, {
+                    item: item,
+                    answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined
+                  })}
+                </ItemFeedback>
+              )}
+          </div>
+        </div>
       ))}
     </section>
   )

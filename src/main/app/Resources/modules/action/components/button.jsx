@@ -1,6 +1,7 @@
-import React, {Component, cloneElement} from 'react'
+import React, {Component, cloneElement, createElement, forwardRef} from 'react'
 import classes from 'classnames'
 import invariant from 'invariant'
+import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -10,12 +11,12 @@ import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {createActionDefinition} from '#/main/app/action/utils'
 
-const ButtonComponent = props => {
+const ButtonComponent = forwardRef((props, ref) => {
   const button = buttonRegistry.get(props.type)
 
   invariant(undefined !== button, `You have requested a non existent button "${props.type}".`)
 
-  return React.createElement(button, omit(props, 'type', 'icon', 'label', 'hideLabel', 'subscript'), [
+  return createElement(button, merge(omit(props, 'type', 'icon', 'label', 'hideLabel', 'subscript'), {ref: ref}), [
     (props.icon && typeof props.icon === 'string') &&
       <span key="button-icon" className={classes('action-icon', props.icon, !props.hideLabel && 'icon-with-text-right')} aria-hidden={true} />,
     (props.icon && typeof props.icon !== 'string') && cloneElement(props.icon, {key: 'button-icon'}),
@@ -24,7 +25,7 @@ const ButtonComponent = props => {
     props.subscript &&
       <span key="button-subscript" className={classes('action-subscript', `${props.subscript.type} ${props.subscript.type}-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
   ])
-}
+})
 
 implementPropTypes(ButtonComponent, ActionTypes, {
   hideLabel: T.bool

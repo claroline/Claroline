@@ -1,6 +1,6 @@
-import BaseMenuItem from 'react-bootstrap/lib/MenuItem'
+import Dropdown from 'react-bootstrap/Dropdown'
 
-const MenuItem = BaseMenuItem
+const MenuItem = Dropdown.Item
 
 export {
   MenuItem

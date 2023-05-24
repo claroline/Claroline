@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import Tab from 'react-bootstrap/lib/Tab'
-import Nav from 'react-bootstrap/lib/Nav'
-import NavItem from 'react-bootstrap/lib/NavItem'
+import Tab from 'react-bootstrap/Tab'
+import Nav from 'react-bootstrap/Nav'
+import NavItem from 'react-bootstrap/NavItem'
 
 import {trans} from '#/main/app/intl/translation'
 

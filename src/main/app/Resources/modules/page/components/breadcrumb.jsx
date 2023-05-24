@@ -13,21 +13,23 @@ const PageBreadcrumb = props => {
 
   if (0 !== items.length) {
     return (
-      <ul className={classes('breadcrumb', props.className)}>
-        {items
-          .filter(item => undefined === item.displayed || item.displayed)
-          .map((item, index) => index !== items.length - 1 ?
-            <li key={item.id || toKey(item.label)} role="presentation">
-              <Button
-                type={item.type || URL_BUTTON}
-                {...omit(item, 'displayed')}
-              />
-            </li>
-            :
-            <li key={item.id || toKey(item.label)} className="active" role="presentation">{item.label}</li>
-          )
-        }
-      </ul>
+      <nav aria-label="breadcrumb" className={props.className}>
+        <ol className="breadcrumb">
+          {items
+            .filter(item => undefined === item.displayed || item.displayed)
+            .map((item, index) => index !== items.length - 1 ?
+              <li key={item.id || toKey(item.label)} className="breadcrumb-item">
+                <Button
+                  type={item.type || URL_BUTTON}
+                  {...omit(item, 'displayed')}
+                />
+              </li>
+              :
+              <li key={item.id || toKey(item.label)} className="breadcrumb-item active"  aria-current="page">{item.label}</li>
+            )
+          }
+        </ol>
+      </nav>
     )
   }
 
@@ -36,6 +38,7 @@ const PageBreadcrumb = props => {
 
 PageBreadcrumb.propTypes = {
   className: T.string,
+  // TODO : should only accept label + target (not a full action)
   path: T.arrayOf(T.shape({
     id: T.string,
     type: T.string,

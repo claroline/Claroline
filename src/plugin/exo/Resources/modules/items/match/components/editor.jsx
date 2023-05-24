@@ -3,7 +3,7 @@ import classes from 'classnames'
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 
-import Popover from 'react-bootstrap/lib/Popover'
+import Popover from 'react-bootstrap/Popover'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'

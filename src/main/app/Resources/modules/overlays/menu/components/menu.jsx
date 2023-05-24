@@ -1,7 +1,5 @@
-import DropdownMenu from 'react-bootstrap/lib/DropdownMenu'
-
-const Menu = DropdownMenu
+import DropdownMenu from 'react-bootstrap/DropdownMenu'
 
 export {
-  Menu
+  DropdownMenu as Menu
 }

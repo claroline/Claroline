@@ -1,9 +1,10 @@
-import React, {Component} from 'react'
+import React, {Component, forwardRef} from 'react'
 import classes from 'classnames'
 import identity from 'lodash/identity'
 import omit from 'lodash/omit'
 
-import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
+import Dropdown from 'react-bootstrap/Dropdown'
+//import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {toKey} from '#/main/core/scaffolding/text'
@@ -27,7 +28,7 @@ class StandardMenu extends Component {
 
   // for custom menus
   handleRootClose(event) {
-    this.props.onClose(event, { source: 'rootClose' })
+    //this.props.onClose(event, { source: 'rootClose' })
   }
 
   render() {
@@ -110,7 +111,9 @@ class StandardMenu extends Component {
       )
     }
 
-    return (
+    return props.menu
+
+    /*return (
       <RootCloseWrapper
         disabled={!props.open}
         onRootClose={this.handleRootClose}
@@ -118,7 +121,7 @@ class StandardMenu extends Component {
       >
         {props.menu}
       </RootCloseWrapper>
-    )
+    )*/
   }
 }
 
@@ -148,11 +151,8 @@ StandardMenu.propTypes = {
 /**
  * Menu button.
  * Renders a component that will open a menu with additional actions.
- *
- * @param props
- * @constructor
  */
-const MenuButton = props => {
+const MenuButton = forwardRef((props, ref) => {
   const isStandard = typeof props.menu === 'object' && props.menu.items
   let hasActions = false
   if (isStandard) {
@@ -162,34 +162,44 @@ const MenuButton = props => {
     )
   }
 
-  // only display button if there are actions
-  return (
-    <MenuOverlay
-      id={props.id}
-      open={props.opened}
-      position={props.menu.position}
-      align={props.menu.align}
-      className={props.containerClassName}
-      disabled={(isStandard && !hasActions) || props.disabled}
-      onToggle={props.onToggle}
-    >
-      <CallbackButton
-        {...omit(props, 'menu', 'containerClassName', 'onToggle', 'opened')}
-        className={classes('dropdown-toggle', props.className)}
-        bsRole="toggle"
-        callback={identity}
-      >
-        {props.children}
-      </CallbackButton>
+  /*<CallbackButton
+    {...omit(props, 'menu', 'containerClassName', 'onToggle', 'opened')}
 
-      <StandardMenu
-        bsRole="menu"
+    className={classes('dropdown-toggle', props.className)}
+    callback={identity}
+  >
+    {props.children}
+  </CallbackButton>
+  <StandardMenu
         id={props.id}
         menu={props.menu}
       />
-    </MenuOverlay>
+  */
+
+  // only display button if there are actions
+  return (
+    <Dropdown
+      id={props.id}
+      //open={props.opened}
+      //drop={'right' === props.align}
+      autoClose={true}
+      className={props.className}
+      disabled={props.disabled}
+      onToggle={props.onToggle}
+      ref={ref}
+    >
+      <Dropdown.Toggle id="dropdown-autoclose-true">
+        Default Dropdown
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        <Dropdown.Item href="#">Menu Item</Dropdown.Item>
+        <Dropdown.Item href="#">Menu Item</Dropdown.Item>
+        <Dropdown.Item href="#">Menu Item</Dropdown.Item>
+      </Dropdown.Menu>
+
+    </Dropdown>
   )
-}
+})
 
 implementPropTypes(MenuButton, ButtonTypes, {
   id: T.string.isRequired,

@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import BaseModal from 'react-bootstrap/lib/Modal'
+import BaseModal from 'react-bootstrap/Modal'
 
 import {LoginMain} from '#/main/app/security/login/containers/main'
 
