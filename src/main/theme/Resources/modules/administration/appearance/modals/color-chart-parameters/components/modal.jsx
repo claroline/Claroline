@@ -51,15 +51,16 @@ const ColorPalette = props => {
             opened={props.formData.openedIndex === index}
             value={color}
           />
-          <div className="delete">
-            <Button
-              className="btn btn-link btn-xs"
-              dangerous={true}
-              type={CALLBACK_BUTTON}
-              callback={() => props.updateProp('colors', props.formData.colors.filter((c, i) => i !== index))}
-              icon="fa fa-fw fa-trash"
-            />
-          </div>
+          <Button
+            className="btn"
+            size="xs"
+            tooltip="bottom"
+            label={trans('delete', {}, 'actions')}
+            dangerous={true}
+            type={CALLBACK_BUTTON}
+            callback={() => props.updateProp('colors', props.formData.colors.filter((c, i) => i !== index))}
+            icon="fa fa-fw fa-trash"
+          />
         </div>
       )
     })
@@ -73,7 +74,7 @@ const ColorPalette = props => {
         id={'new-color'}
         className="color-dot"
         callback={() => {
-          props.updateProp('colors[' + colors.length + ']', '#ffffff')
+          props.updateProp('colors[' + colors.length + ']', '#FFFFFF')
           props.updateProp('openedIndex', colors.length)
         }}
       >
