@@ -22,6 +22,11 @@ const ExampleMenu = (props) =>
           label: 'Simple CRUD',
           target: props.path+'/crud'
         }, {
+          name: 'forms',
+          type: LINK_BUTTON,
+          label: 'Forms',
+          target: props.path+'/forms'
+        }, {
           name: 'components',
           type: LINK_BUTTON,
           label: 'Components',
