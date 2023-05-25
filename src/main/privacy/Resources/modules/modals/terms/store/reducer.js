@@ -4,10 +4,10 @@ import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 
-import {selectors} from '#/main/privacy/modals/terms-of-service/store/selectors'
+import {selectors} from '#/main/privacy/modals/terms/store/selectors'
 
 const reducer = combineReducers({
-  parameters: makeFormReducer(selectors.FORM_NAME, {}, {
+  parameters: makeFormReducer(selectors.STORE_NAME, {}, {
     originalData: makeReducer({}, {
       [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
     }),
