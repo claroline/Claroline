@@ -6,11 +6,11 @@ import {Button} from '#/main/app/action/components/button'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {selectors} from '#/main/privacy/administration/privacy/store'
-
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_COUNTRY_STORAGE} from '#/main/privacy/administration/privacy/modals/country'
 import {MODAL_INFOS_DPO} from '#/main/privacy/administration/privacy/modals/dpo'
-import {MODAL_THERM_OF_SERVICE} from '#/main/privacy/administration/privacy/modals/terms'
+import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/administration/privacy/modals/terms'
+import {MODAL_TERMS_OF_SERVICE_CONSUME} from '#/main/privacy/account/privacy/modals/terms'
 
 const PrivacyTool = (props) =>
   <ToolPage>
@@ -32,7 +32,6 @@ const PrivacyTool = (props) =>
           primary: true,
           fields: [
             {
-              icon: 'fa fa-fw fa-user-shield',
               name: 'privacy.dpo.name',
               label: trans('dpo'),
               type: 'string'
@@ -63,6 +62,15 @@ const PrivacyTool = (props) =>
       ]}
     />
     <hr/>
+    <Button
+      className="btn"
+      type={MODAL_BUTTON}
+      label={trans('show-terms-of-service', {}, 'privacy')}
+      modal={[MODAL_TERMS_OF_SERVICE_CONSUME, {
+        parameters: props.parameters
+      }]}
+    />
+    <hr/>
     <div className="row">
       <div className="col-md-4">
         <Button
@@ -89,7 +97,7 @@ const PrivacyTool = (props) =>
           className="btn btn-default btn-block"
           type={MODAL_BUTTON}
           label={trans('Modifier les conditions générales', {}, 'privacy')}
-          modal={[MODAL_THERM_OF_SERVICE, {
+          modal={[MODAL_TERMS_OF_SERVICE, {
             parameters: props.parameters
           }]}
         />
