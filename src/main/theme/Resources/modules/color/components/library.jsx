@@ -47,7 +47,7 @@ class ColorChartLibrary extends Component {
           })}
         />
 
-        {this.state.colorCharts.map(colorChart => {
+        {this.state.colorCharts.map((colorChart, index) => {
           const colorChartDots = colorChart.colors.map(color => {
             if (colorChart.name === this.state.selectedColorChart || this.state.selectedColorChart === 'all') {
               const colorObject = tinycolor(color)
@@ -67,11 +67,13 @@ class ColorChartLibrary extends Component {
                         'text-dark': colorObject.isLight()
                       })}/>}
                   <span className="sr-only">{color}</span>
-                </CallbackButton>)
+                </CallbackButton>
+              )
             }
+            return null
           })
           return (
-            <span className="color-chart-library">
+            <span key={index} className="color-chart-library">
               {colorChartDots}
             </span>
           )
@@ -84,7 +86,7 @@ class ColorChartLibrary extends Component {
 ColorChartLibrary.propTypes = {
   selected: T.string,
   onChange: T.func.isRequired,
-  colorCharts: T.array.isRequired,
+  colorCharts: T.array.isRequired
 }
 
 export {
