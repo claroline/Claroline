@@ -37,7 +37,6 @@ class LogFieldCreateEvent extends LogGenericEvent
         $details['isMetadata'] = $field->isMetadata();
         $details['locked'] = $field->isLocked();
         $details['lockedEditionOnly'] = $field->getLockedEditionOnly();
-        $details['hidden'] = $field->isHidden();
 
         if (count($choices) > 0) {
             $details['choices'] = $choices;

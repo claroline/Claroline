@@ -684,7 +684,6 @@ class ClacoFormManager implements LoggerAwareInterface
         $newField->setMetadata($field->isMetadata());
         $newField->setLocked($field->isLocked());
         $newField->setLockedEditionOnly($field->getLockedEditionOnly());
-        $newField->setHidden($field->isHidden());
         $newField->setOptions($field->getOptions());
         $newField->setHelp($field->getHelp());
 

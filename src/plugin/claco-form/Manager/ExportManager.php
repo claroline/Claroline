@@ -80,7 +80,7 @@ class ExportManager
         }
 
         foreach ($fields as $field) {
-            if (!$field->isHidden() && ($withMeta || !$field->isMetadata()) && isset($fieldValues[$field->getId()])) {
+            if (($withMeta || !$field->isMetadata()) && isset($fieldValues[$field->getId()])) {
                 $fieldValues[$field->getId()] = $this->formatFieldValue($entry, $field, $fieldValues[$field->getId()]);
             } else {
                 $fieldValues[$field->getId()] = '';
