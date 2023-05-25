@@ -8,7 +8,7 @@ import {actions, reducer, selectors} from '#/main/theme/color/store'
 const ColorChart = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      colorChart: selectors.colorChart(state),
+      colorChart: selectors.colorChart(state)
     }),
     (dispatch) => ({
       async load() {

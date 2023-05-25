@@ -105,10 +105,10 @@ implementPropTypes(ColorInput, DataInputTypes, {
 
   // custom options
   hideInput: T.bool,
-  colorIcon: T.string,
+  colorIcon: T.string
 }, {
   hideInput: false,
-  colorIcon: 'fa fa-fw fa-palette',
+  colorIcon: 'fa fa-fw fa-palette'
 })
 
 export {

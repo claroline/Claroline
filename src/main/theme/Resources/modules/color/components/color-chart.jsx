@@ -112,7 +112,7 @@ class ColorChart extends Component {
             />
             { !this.state.viewLocked &&
               <CallbackButton
-                  className={classes('btn-link btn-view btn-block', {
+                className={classes('btn-link btn-view btn-block', {
                   'text-light': color && color.isDark(),
                   'text-dark': color && color.isLight()
                 })}

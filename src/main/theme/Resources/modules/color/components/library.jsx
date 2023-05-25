@@ -83,7 +83,8 @@ class ColorChartLibrary extends Component {
 
 ColorChartLibrary.propTypes = {
   selected: T.string,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  colorCharts: T.array.isRequired,
 }
 
 export {
