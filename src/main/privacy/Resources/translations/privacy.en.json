@@ -3,7 +3,7 @@
   "no_accept_terms": "You have not yet accepted the terms of use of the platform.",
   "title_my_data": "My personal data",
   "export_data": "Export data",
-  "country_storage": "data storage country",
+  "country_storage": "Country of storage of your data",
   "request_deletion" : "Request deletion of my account",
   "title_dialog_delete_account" : "Request to delete my account",
   "message_dialog_delete_account" : "Are you sure you want to request the deletion of your account?",
@@ -11,11 +11,16 @@
     "subject": "Account deletion request",
     "body": "User %name% <br/> ID: %id% <br/> wishes to delete their account. Please take the appropriate measures.<br/><hr/>"
   },
+  "dpo_info": "Data Protection Officer",
 
   "terms_of_service": "Terms of service",
   "terms_of_service_activation_message": "Activate the terms of service",
   "terms_of_service_activation_help": "New users will need to accept the terms to be able to use the platform.",
   "terms_enabled_but_empty": "Terms of service can only be enabled if a text is provided in at least one language.",
   "terms_of_service_acceptance": "I accept the terms of service",
-  "show-terms-of-service": "Show terms of service"
+  "show-terms-of-service": "Show terms of service",
+
+  "change_storage_country": "Change storage country",
+  "change_dpo": "Change DPO",
+  "change_terms": "Change terms of service"
 }

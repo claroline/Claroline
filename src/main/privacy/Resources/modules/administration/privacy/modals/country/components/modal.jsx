@@ -14,7 +14,7 @@ const CountryModal = (props) =>
   <Modal
     {...omit(props, 'formData', 'saveEnabled', 'save')}
     icon="fa fa-fw fa-solid fa-globe"
-    title={trans('Pays de stockage', {}, 'actions')}
+    title={trans('country_storage', {}, 'privacy')}
   >
     <FormData
       name={selectors.FORM_NAME}

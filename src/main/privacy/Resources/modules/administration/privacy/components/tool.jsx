@@ -52,7 +52,7 @@ const PrivacyTool = (props) =>
         }
       ]}
     />
-    <hr/>
+
     <Button
       className="btn"
       type={MODAL_BUTTON}
@@ -67,7 +67,7 @@ const PrivacyTool = (props) =>
         <Button
           className="btn btn-default btn-block"
           type={MODAL_BUTTON}
-          label={trans('Modifier le pays de stockage', {}, 'privacy')}
+          label={trans('change_storage_country', {}, 'privacy')}
           modal={[MODAL_COUNTRY_STORAGE, {
             parameters: props.parameters
           }]}
@@ -77,7 +77,7 @@ const PrivacyTool = (props) =>
         <Button
           className="btn btn-default btn-block"
           type={MODAL_BUTTON}
-          label={trans('Modifier le DPO', {}, 'privacy')}
+          label={trans('change_dpo', {}, 'privacy')}
           modal={[MODAL_INFOS_DPO, {
             parameters: props.parameters
           }]}
@@ -87,7 +87,7 @@ const PrivacyTool = (props) =>
         <Button
           className="btn btn-default btn-block"
           type={MODAL_BUTTON}
-          label={trans('Modifier les conditions générales', {}, 'privacy')}
+          label={trans('change_terms', {}, 'privacy')}
           modal={[MODAL_TERMS_OF_SERVICE, {
             parameters: props.parameters
           }]}

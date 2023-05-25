@@ -14,7 +14,7 @@ const DpoModal = (props) =>
   <Modal
     {...omit(props, 'formData', 'saveEnabled', 'save')}
     icon="fa fa-fw fa-solid fa-pen-to-square"
-    title={trans('Infos DPO', {}, 'actions')}
+    title={trans('dpo_info', {}, 'privacy')}
   >
     <FormData
       name={selectors.FORM_NAME}

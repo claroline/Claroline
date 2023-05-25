@@ -14,7 +14,6 @@ import {route} from '#/main/app/account/routing'
 import {User as UserTypes} from '#/main/community/prop-types'
 import {url} from '#/main/app/api'
 import {constants as actionConstants} from '#/main/app/action/constants'
-import {MODAL_COUNTRY_STORAGE} from '#/main/privacy/administration/privacy/modals/country'
 
 const PrivacyMain = (props) =>
   <AccountPage
