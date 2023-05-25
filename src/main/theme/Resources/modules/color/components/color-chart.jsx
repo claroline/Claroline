@@ -6,8 +6,8 @@ import {implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
-import {ColorChartLibrary} from '#/main/theme/color/components/view/library'
-import {ColorChartSelector} from '#/main/theme/color/components/view/selector'
+import {ColorChartLibrary} from '#/main/theme/color/components/library'
+import {ColorChartSelector} from '#/main/theme/color/components/selector'
 import {ColorChart as ColorChartTypes} from '#/main/theme/color/prop-types'
 
 class ColorChart extends Component {
@@ -15,12 +15,23 @@ class ColorChart extends Component {
     super(props)
 
     this.state = {
-      view: 'library'
+      view: 'library',
+      viewLocked: false,
+      colorCharts: undefined
     }
 
     this.onInputChange = this.onInputChange.bind(this)
     this.onInputBlur = this.onInputBlur.bind(this)
     this.toggleView = this.toggleView.bind(this)
+  }
+
+  async componentDidMount() {
+    await this.props.load()
+    this.setState({
+      view: this.props.view ? this.props.view : this.props.colorChart.data.length > 0 ? 'library' : 'selector',
+      viewLocked: this.props.viewLocked || this.props.colorChart.data.length === 0,
+      colorCharts: this.props.colorChart.data
+    })
   }
 
   onInputChange(e) {
@@ -54,6 +65,7 @@ class ColorChart extends Component {
       case 'library':
         return (
           <ColorChartLibrary
+            colorCharts={this.state.colorCharts}
             selected={this.props.selected}
             onChange={this.props.onChange}
           />
@@ -98,17 +110,18 @@ class ColorChart extends Component {
               onChange={this.onInputChange}
               onBlur={this.onInputBlur}
             />
-
-            <CallbackButton
-              className={classes('btn-link btn-view btn-block', {
-                'text-light': color && color.isDark(),
-                'text-dark': color && color.isLight()
-              })}
-              callback={this.toggleView}
-              size="sm"
-            >
-              {trans('library' === this.state.view ? 'colors-selector':'colors-library')}
-            </CallbackButton>
+            { !this.state.viewLocked &&
+              <CallbackButton
+                  className={classes('btn-link btn-view btn-block', {
+                  'text-light': color && color.isDark(),
+                  'text-dark': color && color.isLight()
+                })}
+                callback={this.toggleView}
+                size="sm"
+              >
+                {trans('library' === this.state.view ? 'colors-selector':'colors-library')}
+              </CallbackButton>
+            }
           </div>
         }
 
@@ -119,7 +132,6 @@ class ColorChart extends Component {
     )
   }
 }
-
 
 implementPropTypes(ColorChart, ColorChartTypes)
 

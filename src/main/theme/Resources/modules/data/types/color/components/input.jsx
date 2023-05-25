@@ -8,7 +8,7 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
-import {ColorChart} from '#/main/theme/color/components/color-chart'
+import {ColorChart} from '#/main/theme/color/containers/color-chart'
 
 class ColorInput extends Component {
   constructor(props) {
@@ -106,22 +106,9 @@ implementPropTypes(ColorInput, DataInputTypes, {
   // custom options
   hideInput: T.bool,
   colorIcon: T.string,
-  colors: T.arrayOf(T.string)
 }, {
   hideInput: false,
   colorIcon: 'fa fa-fw fa-palette',
-  colors: [
-    '#FF6900',
-    '#FCB900',
-    '#7BDCB5',
-    '#00D084',
-    '#8ED1FC',
-    '#0693E3',
-    '#ABB8C3',
-    '#EB144C',
-    '#FFFFFF',
-    '#000000'
-  ]
 })
 
 export {

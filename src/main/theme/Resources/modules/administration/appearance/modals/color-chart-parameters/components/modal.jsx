@@ -9,13 +9,12 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {CALLBACK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 
 import {selectors} from '#/main/theme/administration/appearance/modals/color-chart-parameters/store/selectors'
-import {ColorChart} from '#/main/theme/color/components/color-chart'
+import {ColorChart} from '#/main/theme/color/containers/color-chart'
 
 const ColorDot = ( props ) => {
   return (
     <Button
       type={MENU_BUTTON}
-      icon="fa fa-fw"
       className="color-dot"
       style={{ backgroundColor: props.value }}
       opened={props.opened}
@@ -23,6 +22,8 @@ const ColorDot = ( props ) => {
       menu={
         <div className="dropdown-menu">
           <ColorChart
+            view={'selector'}
+            viewLocked={true}
             selected={props.value}
             onChange={props.onChange}
           />
@@ -44,7 +45,6 @@ const ColorPalette = props => {
         <div className="color-dot-config" key={index}>
           <ColorDot
             id={`color-${index}`}
-            colorIcon="fa fa-fw"
             hideInput={props.hideInput}
             onChange={(color) => props.updateProp('colors[' + index + ']', color)}
             onClick={() => props.updateProp('openedIndex', props.formData.openedIndex === index ? -1 : index ) }

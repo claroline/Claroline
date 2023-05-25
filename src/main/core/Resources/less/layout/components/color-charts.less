@@ -78,8 +78,23 @@
         // temp to have approx same sizing than calendar
         width: (420px / 3) * 2;
         height: 260px;
+
+        .select-color-chart {
+            display: flex;
+            flex-direction: column;
+
+            .color-chart-library {
+                padding-top: 5px;
+
+                .color {
+                    width: 42px;
+                    height: 42px;
+                }
+            }
+        }
     }
 }
+
 
 .color-chart-library {
     margin: -2px;
@@ -94,8 +109,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 34px;
-        height: 34px;
+        width: 50px;
+        height: 50px;
         margin: 4px;
         border: 1px solid rgba(0, 0, 0, .15);
         border-radius: 50%;
