@@ -49,15 +49,6 @@ const PrivacyTool = (props) =>
               type: 'address'
             }
           ]
-        }, {
-          icon: 'fa fa-fw fa-copyright',
-          title: trans('terms_of_service', {}, 'privacy'),
-          fields: [
-            {
-              name: 'tos.text',
-              type: 'translated'
-            }
-          ]
         }
       ]}
     />
