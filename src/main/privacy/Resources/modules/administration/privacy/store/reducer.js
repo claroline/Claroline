@@ -11,8 +11,8 @@ const reducer = combineReducers({
     originalData: makeReducer({}, {
       [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
     }),
-    data: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
+    data: makeReducer(null, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters
     })
   })
 })
