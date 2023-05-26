@@ -15,9 +15,8 @@ class ColorChart extends Component {
     super(props)
 
     this.state = {
-      view: 'library',
-      viewLocked: false,
-      colorCharts: undefined
+      view: 'selector',
+      noLibrary: true
     }
 
     this.onInputChange = this.onInputChange.bind(this)
@@ -26,12 +25,13 @@ class ColorChart extends Component {
   }
 
   async componentDidMount() {
-    await this.props.load()
-    this.setState({
-      view: this.props.view ? this.props.view : this.props.colorChart.data.length > 0 ? 'library' : 'selector',
-      viewLocked: this.props.viewLocked || this.props.colorChart.data.length === 0,
-      colorCharts: this.props.colorChart.data
-    })
+    if( !this.props.noLibrary ) {
+      await this.props.load()
+      this.setState({
+        view: this.props.view ? this.props.view : this.props.colorChart.data.length > 0 ? 'library' : 'selector',
+        noLibrary: this.props.noLibrary || (this.props.colorChart.data && this.props.colorChart.data.length === 0)
+      })
+    }
   }
 
   onInputChange(e) {
@@ -65,7 +65,7 @@ class ColorChart extends Component {
       case 'library':
         return (
           <ColorChartLibrary
-            colorCharts={this.state.colorCharts}
+            colorCharts={this.props.colorChart.data}
             selected={this.props.selected}
             onChange={this.props.onChange}
           />
@@ -85,6 +85,8 @@ class ColorChart extends Component {
     if (this.props.selected) {
       color = tinycolor(this.props.selected)
     }
+
+    const noLibrary = this.props.noLibrary || (this.props.colorChart.data && this.props.colorChart.data.length === 0)
 
     return (
       <div className="color-chart-container">
@@ -110,7 +112,7 @@ class ColorChart extends Component {
               onChange={this.onInputChange}
               onBlur={this.onInputBlur}
             />
-            { !this.state.viewLocked &&
+            {!noLibrary &&
               <CallbackButton
                 className={classes('btn-link btn-view btn-block', {
                   'text-light': color && color.isDark(),

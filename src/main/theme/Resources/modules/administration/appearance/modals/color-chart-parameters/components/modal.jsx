@@ -23,7 +23,7 @@ const ColorDot = ( props ) => {
         <div className="dropdown-menu">
           <ColorChart
             view={'selector'}
-            viewLocked={true}
+            noLibrary={true}
             selected={props.value}
             onChange={props.onChange}
           />
