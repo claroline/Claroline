@@ -61,19 +61,13 @@ class EntryFormComponent extends Component {
 
     const hasLockedRights = this.props.isManager
 
-    return formatSections([
+    // generate form based on claco-form defined fields
+    const formSections = formatSections([
       {
         id: 'general',
         title: trans('general'),
         primary: true,
-        fields: [
-          {
-            name: 'title',
-            type: 'string',
-            label: this.props.titleLabel ? this.props.titleLabel : trans('title'),
-            required: true
-          }
-        ].concat(this.props.fields.map(field => {
+        fields: this.props.fields.map(field => {
           const fieldDef = cloneDeep(field)
 
           if ('file' === fieldDef.type) {
@@ -83,9 +77,21 @@ class EntryFormComponent extends Component {
           }
 
           return fieldDef
-        }))
+        })
       }
     ], this.props.fields, 'values', hasConfidentialRights, hasLockedRights)
+
+    // add entry title to the generated form
+    formSections[0].fields = [
+      {
+        name: 'title',
+        type: 'string',
+        label: this.props.titleLabel ? this.props.titleLabel : trans('title'),
+        required: true
+      }
+    ].concat(formSections[0].fields)
+
+    return formSections
   }
 
   generateTemplate() {
