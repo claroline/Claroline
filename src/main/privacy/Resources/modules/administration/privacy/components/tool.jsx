@@ -4,23 +4,16 @@ import {PropTypes as T} from 'prop-types'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {DetailsData} from '#/main/app/content/details/containers/data'
-import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {ToolPage} from '#/main/core/tool/containers/page'
-import {selectors} from '#/main/privacy/administration/privacy/store'
+import {selectors} from '#/main/privacy/administration/privacy/store/selectors'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_COUNTRY_STORAGE} from '#/main/privacy/administration/privacy/modals/country'
 import {MODAL_INFOS_DPO} from '#/main/privacy/administration/privacy/modals/dpo'
 import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/administration/privacy/modals/terms'
-
-import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
+import {AlertBlock} from '#/main/app/alert/components/alert-block'
 
 const PrivacyTool = (props) => {
-
-  let countryStorage = get(props.privacy, 'countryStorage')
-  let tosText = get(props.tos, 'text')
-  let dpo = get(props.privacy, 'dpo.name')
-  console.log('PrivacyTool', props)
+  console.log(props.parameters.dpo)
   return(
     <ToolPage>
       <DetailsData
@@ -64,7 +57,7 @@ const PrivacyTool = (props) => {
 
       <div className="row">
         <div className="col-md-4">
-          {!isEmpty({countryStorage}) || {countryStorage} !== '' ?
+          {props.parameters.countryStorage !== null ?
             <AlertBlock type="success" title={trans('countryStorage_ok', {}, 'privacy')}>
               <Button
                 className="btn btn-default btn-block"
@@ -85,7 +78,7 @@ const PrivacyTool = (props) => {
           }
         </div>
         <div className="col-md-4">
-          {!isEmpty({dpo}) || {dpo} !== '' ?
+          {props.parameters.dpo.email !== '' ?
             <AlertBlock type="success" title={trans('dpo_ok', {}, 'privacy')}>
               <Button
                 className="btn btn-default btn-block"
@@ -106,7 +99,7 @@ const PrivacyTool = (props) => {
           }
         </div>
         <div className="col-md-4">
-          {!isEmpty({tosText}) || {tosText} !== '' ?
+          {props.parameters.tos.text.fr !== '' ?
             <AlertBlock type="success" title={trans('terms_ok', {}, 'privacy')}>
               <Button
                 className="btn btn-default btn-block"
@@ -128,12 +121,26 @@ const PrivacyTool = (props) => {
         </div>
       </div>
     </ToolPage>
-  )
-}
-
+  )}
 PrivacyTool.propTypes = {
   path: T.string.isRequired,
-  parameters: T.object
+  parameters: T.object.isRequired,
+  privacy: T.shape({
+    countryStorage: T.string,
+    dpo: T.shape({
+      name: T.string,
+      email: T.string,
+      address: T.shape({
+        street1: T.string,
+        street2: T.string,
+        postalCode: T.string,
+        city: T.string,
+        state: T.string,
+        country: T.string
+      }),
+      phone: T.string
+    })
+  })
 }
 
 export {

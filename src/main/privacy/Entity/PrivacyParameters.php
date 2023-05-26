@@ -2,9 +2,10 @@
 
 namespace Claroline\PrivacyBundle\Entity;
 
+use Claroline\AppBundle\Entity\Address;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Address;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +42,16 @@ class Privacy
      * @ORM\Column(type="text")
      */
     private ?string $termsOfService;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private ?bool $isTermsOfServiceEnabled;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     public function getDpoName(): ?string
     {
@@ -92,8 +103,13 @@ class Privacy
         $this->termsOfService = $termsOfService;
     }
 
-    public function __construct()
+    public function getIsTermsOfServiceEnabled(): ?bool
     {
-        $this->refreshUuid();
+        return $this->isTermsOfServiceEnabled;
+    }
+
+    public function setIsTermsOfServiceEnabled(?bool $isTermsOfServiceEnabled = null): void
+    {
+        $this->isTermsOfServiceEnabled = $isTermsOfServiceEnabled;
     }
 }
