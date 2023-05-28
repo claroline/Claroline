@@ -16,7 +16,7 @@ class PrivacySerializer
 
     public function serialize(Privacy $privacy, array $options = []): array
     {
-        return [
+       $serializerPrivacy = [
             'id' => $privacy->getUuid(),
             'autoId' => $privacy->getId(),
             'dpo' =>[
@@ -36,11 +36,12 @@ class PrivacySerializer
             'termsOfService' => $privacy->getTermsOfService(),
             'isTermsOfServiceEnabled' => $privacy->getIsTermsOfServiceEnabled(),
         ];
+       return $serializerPrivacy;
     }
 
     public function deserialize(array $data, Privacy $privacy, array $options = []): Privacy
     {
-        $privacy = new Privacy();
+        $privacy = $privacy ?: new Privacy();
         $this->sipe('id', 'setUuid', $data, $privacy);
         $this->sipe('autoId', 'setId', $data, $privacy);
         $this->sipe('dpo.name', 'setDpoName', $data, $privacy);
