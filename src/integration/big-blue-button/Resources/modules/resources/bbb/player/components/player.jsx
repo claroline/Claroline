@@ -53,8 +53,8 @@ class Player extends Component {
     return (
       <Fragment>
         {this.props.bbb.newTab && this.props.bbb.welcomeMessage &&
-          <div className="panel panel-default" style={{marginTop: 20}}>
-            <ContentHtml className="panel-body">
+          <div className="card mb-3" style={{marginTop: 20}}>
+            <ContentHtml className="card-body">
               {this.props.bbb.welcomeMessage}
             </ContentHtml>
           </div>
@@ -99,7 +99,9 @@ class Player extends Component {
 
             <Button
               type={CALLBACK_BUTTON}
-              className="btn btn-block btn-emphasis component-container"
+              className="w-100 mb-3"
+              variant="btn"
+              size="lg"
               label={trans('join', {}, 'bbb')}
               callback={() => this.openTab()}
               disabled={!this.state.ready}
@@ -112,10 +114,12 @@ class Player extends Component {
         {(this.isClosed() || !isEmpty(this.props.joinStatus)) && this.props.allowRecords && this.props.bbb.record && get(this.props.lastRecording, 'media.presentation') && this.props.bbb.newTab &&
           <Button
             type={URL_BUTTON}
-            className="btn btn-block btn-emphasis"
+            className="w-100"
+            variant="btn"
             label={trans('show-last-record', {}, 'actions')}
             target={this.props.lastRecording.media.presentation}
             primary={true}
+            size="lg"
             open="_blank"
           />
         }
@@ -123,7 +127,8 @@ class Player extends Component {
         {this.props.bbb.newTab && this.props.allowRecords && this.props.bbb.record && !isEmpty(this.props.lastRecording) &&
           <Button
             type={LINK_BUTTON}
-            className="btn btn-block"
+            className="w-100"
+            variant="btn"
             label={trans('show-records', {}, 'actions')}
             target={`${this.props.path}/records`}
           />

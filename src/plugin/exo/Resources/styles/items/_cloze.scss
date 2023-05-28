@@ -11,12 +11,11 @@
     padding: 0; // We need to adjust how answers are rendered
 
     .answer-warning-span {
-      margin-right: floor(math.div($grid-gutter-width, 2));
+      margin-right: ($grid-gutter-width * .5);
     }
 
     // restyle input
     .form-control {
-      //margin-right: floor($grid-gutter-width / 2);
       border: none;
       border-radius: 0;
     }
@@ -44,19 +43,19 @@
 
     .form-control + .btn-feedback,
     .form-control + .solution-score {
-      margin-left: floor(math.div($grid-gutter-width, 2));
+      margin-left: ($grid-gutter-width * .5);
     }
   }
 }
 
 .cloze-text {
   .text-editor {
-    line-height: $input-height-small + 2px; // same as hole for better centering (2px for the hole borders)
+    line-height: $input-height-sm; // same as hole for better centering
   }
 }
 
 .cloze-hole {
-  line-height: $input-height-small;
+  line-height: $input-height-sm;
   display: inline-flex;
   align-items: center;
   margin: 2px 0; // to prevent the holes from touching
@@ -81,7 +80,7 @@
     padding: 4px;
   }
 
-  .user-select(none);
+  user-select: none;
 }
 
 .cloze-stats {

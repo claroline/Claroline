@@ -86,13 +86,14 @@ const AssertionDetailsComponent = (props) =>
 
               {get(props.assertion.badge, 'permissions.grant') &&
                 <Button
-                  className="btn btn-block btn-emphasis component-container"
+                  className="btn btn-primary w-100 mb-3"
                   type={MODAL_BUTTON}
                   label={trans('add_evidence', {}, 'badge')}
                   modal={[MODAL_BADGE_EVIDENCE, {
                     assertion: props.assertion
                   }]}
                   primary={true}
+                  size="lg"
                 />
               }
             </Fragment>

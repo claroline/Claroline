@@ -1,6 +1,6 @@
 body {
-    background: transparent; // removes bootstrap default for TinyMCE rendering
-    font-weight: 300;
+    //background: transparent; // removes bootstrap default for TinyMCE rendering
+    //font-weight: 300;
 }
 
 // We use classes for `html` and `body` tags
@@ -13,9 +13,6 @@ body {
     > body {
         height: 100%;
         overflow-y: hidden;
-
-        // only put body bg for claroline apps (avoids modifying TinyMCE content bg)
-        background: $body-bg;
     }
 }
 
@@ -44,33 +41,6 @@ body {
     flex: 1;
     height: 100%;
     overflow-y: auto;
-}
-
-.app-loader {
-    position: absolute;
-    overflow: hidden;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: $zindex-modal + 1;
-    height: 5px;
-    background: rgba($primary, 0.7); // create gutter
-
-    &:before {
-        content: " ";
-        position: absolute;
-        left: 0;
-        top: 0;
-        background: $primary;
-        width: 50%;
-        height: 3px;
-        animation: app-loader-move 1.5s ease-out 1s infinite running;
-    }
-}
-
-@keyframes app-loader-move {
-    from {left: -50%;}
-    to   {left: 100%;}
 }
 
 // TODO : merge with other security pages styles

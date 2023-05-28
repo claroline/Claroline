@@ -47,11 +47,12 @@ const SubjectFormWrapper = (props) =>
       </div>
 
       <Button
-        className="btn btn-block btn-save btn-emphasis"
+        className="btn btn-primary w-100 btn-save"
         label={props.editingSubject ? trans('save') : trans('post_the_subject', {}, 'forum')}
         type={CALLBACK_BUTTON}
         callback={props.callback}
         primary={true}
+        size="lg"
       />
     </div>
   </div>

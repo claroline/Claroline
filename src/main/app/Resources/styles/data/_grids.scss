@@ -35,15 +35,15 @@
     flex-direction: row;
     margin-left: auto;
 
-    .btn-link {
+    .btn {
         padding: 0 $data-grid-gutter;
-        border: none;
-        font-weight: bold;
+        //border: none;
+        //font-weight: bold;
     }
 
-    > .btn-link { // really ugly
+    /*> .btn-link { // really ugly
         border-left: 1px solid #ccc;
-    }
+    }*/
 }
 
 // customizes bulk actions
@@ -137,7 +137,7 @@
     // XS screens :
     //   - small tiles : 2
     //   - large tiles : 1
-    @media (max-width: $screen-xs-max) {
+    @media (max-width: map-get($grid-breakpoints, 'sm')) {
         &.data-grid-sm .data-grid-item-container {
             flex: 0 0 math.div(100%, 2);
             max-width: math.div(100%, 2);
@@ -152,7 +152,7 @@
     // SM screens :
     //   - small tiles : 3
     //   - large tiles : 2
-    @media (min-width: $screen-sm-min) and (max-width: $screen-sm-max) {
+    @media (max-width: map-get($grid-breakpoints, 'md')) {
         &.data-grid-sm .data-grid-item-container {
             flex: 0 0 math.div(100%, 3);
             max-width: math.div(100%, 3);
@@ -167,7 +167,7 @@
     // MD & LG screens :
     //   - small tiles : 5
     //   - large tiles : 3
-    @media (min-width: $screen-sm-max) {
+    @media (min-width: map-get($grid-breakpoints, 'md')) {
         &.data-grid-sm .data-grid-item-container {
             flex: 0 0 math.div(100%, 5);
             max-width: math.div(100%, 5);

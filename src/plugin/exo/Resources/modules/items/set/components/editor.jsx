@@ -256,6 +256,7 @@ class Association extends Component {
             <input
               title={trans('score', {}, 'quiz')}
               type="checkbox"
+              className="form-check-input"
               checked={0 < this.props.association.score}
               onChange={(e) => this.props.onUpdate('score', e.target.checked ? 1 : 0, this.props.association.setId, this.props.association.itemId)}
             />
@@ -380,7 +381,7 @@ const SetList = (props) =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-block"
+      className="btn btn-outline-primary w-100"
       icon="fa fa-fw fa-plus"
       label={trans('set_add_set', {}, 'quiz')}
       callback={() => addSet(props.sets, props.onChange)}
@@ -476,7 +477,7 @@ const ItemList = (props) =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-block"
+      className="btn btn-outline-primary w-100"
       icon="fa fa-fw fa-plus"
       label={trans('set_add_item', {}, 'quiz')}
       callback={props.add}
@@ -580,7 +581,7 @@ const OddList = (props) =>
     optional={true}
   >
     {0 === props.items.filter(item => utils.isOdd(item.id, props.solutions)).length &&
-      <div className="no-item-info">{trans('no_odd_info', {}, 'quiz')}</div>
+      <div className="empty-placeholder empty-placeholder-md">{trans('no_odd_info', {}, 'quiz')}</div>
     }
 
     {0 < props.items.filter(item => utils.isOdd(item.id, props.solutions)).length &&
@@ -603,7 +604,7 @@ const OddList = (props) =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-block"
+      className="btn btn-outline-primary w-100"
       icon="fa fa-fw fa-plus"
       label={trans('set_add_odd', {}, 'quiz')}
       callback={props.add}

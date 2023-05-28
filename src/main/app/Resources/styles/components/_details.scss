@@ -1,18 +1,29 @@
+/*
+ * Details.
+ */
 
-// FIXME: this is ugly to do it like it
-// if there are additional containers, I'm fucked and it may be required by some other components too
-.page-content > .data-details {
-    &:first-child {
-        margin-top: $component-margin-bottom;
+.data-details {
+    flex: 1 0 auto; // to fill page if needed
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}
+
+.data-details-flush {
+    > .details-primary-section {
+        padding: $accordion-body-padding-y $accordion-body-padding-x;
+
+        + .details-primary-section  {
+            border-top: 1px solid $accordion-border-width solid $accordion-border-color;;
+        }
+
+        + .sections {
+            border-top: 1px solid $accordion-border-width solid $accordion-border-color;;
+        }
     }
 }
 
-.data-details-empty {
-    color: $input-color-placeholder;
-    font-style: italic;
-}
-
-.embedded-details-section {
+/*.embedded-details-section {
     .primary-section {
         // removes panel styles
         box-shadow: none;
@@ -36,4 +47,4 @@
             }
         }
     }
-}
+}*/

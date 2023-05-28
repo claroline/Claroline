@@ -20,7 +20,7 @@
     border-radius: 4px;
     margin-top: $component-margin-bottom;
 
-    @media (max-width: $screen-sm-max) {
+    @media (max-width: map-get($grid-breakpoints, 'sm')) {
         width: 100%;
     }
 }
@@ -31,7 +31,7 @@
     align-items: center;
 
     margin: 0;
-    padding: 10px $panel-body-padding;
+    padding: 10px $card-spacer-x;
 
     + .wiki-contents-items {
         border-top: 1px solid #ddd;
@@ -52,7 +52,7 @@
     .btn-link {
         display: block;
         text-align: left;
-        padding: 4px $panel-body-padding;
+        padding: 4px $card-spacer-x;
         white-space: normal;
     }
 
@@ -144,8 +144,8 @@
         content: '\00a0'
     }
     .diff-html-legend {
-        background-color: $well-bg;
-        border: 1px solid $gray-lighter;;
+        background-color: var(--#{$prefix}tertiary-bg);
+        border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
         margin-top: 15px;
         padding: 10px;
     }

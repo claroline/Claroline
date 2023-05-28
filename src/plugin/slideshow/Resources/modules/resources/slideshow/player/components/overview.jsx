@@ -25,8 +25,8 @@ const OverviewComponent = props =>
       <section className="resource-info">
         <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
 
-        <div className="panel panel-default">
-          <ContentHtml className="panel-body">{props.overviewMessage}</ContentHtml>
+        <div className="card mb-3">
+          <ContentHtml className="card-body">{props.overviewMessage}</ContentHtml>
         </div>
       </section>
     }
@@ -57,11 +57,12 @@ const OverviewComponent = props =>
 
     <Button
       type={LINK_BUTTON}
-      className="btn btn-block btn-emphasis"
+      className="btn btn-primary w-100"
       icon="fa fa-fw fa-play"
       label={trans('start_slideshow', {}, 'slideshow')}
       target={`${props.path}/play`}
       primary={true}
+      size="lg"
       disabled={0 === props.slides.length}
     />
   </section>

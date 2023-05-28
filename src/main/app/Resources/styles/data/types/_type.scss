@@ -49,24 +49,24 @@
         color: $gray-light;
     }
 
-    @include type-control-sizing(40px, $font-size-base, $font-size-small);
+    @include type-control-sizing(40px, $font-size-base, $font-size-sm);
 
     &.lg {
-        @include type-control-sizing(64px, $font-size-large, $font-size-base);
+        @include type-control-sizing(64px, $font-size-lg, $font-size-base);
     }
 }
 
 .type-control.list-group-item {
     .type-icon {
-        margin-right: $list-group-item-padding-h;
+        margin-right: $list-group-item-padding-x;
     }
 }
 
 .type-control:not(.list-group-item) {
-    border-radius: $border-radius-base;
-    background: $gray-lightest;
+    border-radius: $border-radius;
+    background: var(--#{$prefix}tertiary-bg);
     border: 1px solid transparent;
-    padding: $input-padding;
+    padding: $input-padding-y $input-btn-padding-x;
 
     .type-icon {
         margin-right: $icon-text-spacer;

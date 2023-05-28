@@ -2,19 +2,6 @@
  * Progress bars styles.
  */
 
-.progress {
-    @include box-shadow($progress-box-shadow);
-}
-
-.progress-bar {
-    @include box-shadow($progress-bar-box-shadow);
-}
-
-// creates a user progression variant
-/*.progress-bar-user {
-    @include progress-bar-variant($brand-secondary);
-}*/
-
 .progress-sm {
     height: 8px; // todo : use a var
 }

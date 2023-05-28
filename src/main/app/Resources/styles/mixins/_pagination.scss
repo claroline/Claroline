@@ -1,8 +1,8 @@
-@mixin pagination-btn-variant() {
+/*@mixin pagination-btn-variant() {
     background: $pagination-bg;
     color: $pagination-color;
     border-color: $pagination-border;
-    @include border-radius($border-radius-base);
+    @include border-radius($border-radius);
 
     &.hover, &:hover,
     &.focus, &:focus,
@@ -18,4 +18,4 @@
         color: $pagination-disabled-color;
         border-color: $pagination-disabled-border;
     }
-}
+}*/

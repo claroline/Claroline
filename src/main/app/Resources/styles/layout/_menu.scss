@@ -32,14 +32,14 @@
         justify-content: center;
         text-align: center;
         line-height: 1;
-        padding: 10px floor(math.div($grid-gutter-width, 2));
+        padding: 10px ($grid-gutter-width * .5);
         margin: 0;
         font-family: $font-family-base;
     }
 
     .app-menu-status {
         background-color: $toolbar-link-hover-bg;
-        padding: floor(math.div($grid-gutter-width, 2));
+        padding: ($grid-gutter-width * .5);
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -57,15 +57,12 @@
 
         .app-menu-status-info {
             flex: 1 0;
-            margin-left: floor(math.div($grid-gutter-width, 2));
-            font-style: italic;
-            font-size: $font-size-small;
+            margin-left: ($grid-gutter-width * .5);
+            font-size: $font-size-sm;
             color: $toolbar-link-color;
 
             h3 {
-                margin-top: 0;
-                margin-bottom: 5px;
-                font-style: normal;
+                margin-bottom: map-get($spacers, 1);
                 color: $toolbar-color;
                 display: flex;
                 justify-content: space-between;
@@ -118,6 +115,8 @@
             padding-right: 10px;
             color: $toolbar-link-color;
             background: $toolbar-link-hover-bg;
+            border-color: transparent;
+            box-shadow: none;
 
             + .app-menu-shortcuts-btn {
                 margin-left: 2px;
@@ -144,10 +143,11 @@
 
         .app-menu-section-toggle {
             text-align: left;
-            padding: floor(math.div($grid-gutter-width, 2));
+            padding: ($grid-gutter-width * .5);
             display: flex;
             align-items: center;
             width: 100%;
+            color: $toolbar-color;
 
             margin-bottom: 2px;
             background: $toolbar-link-hover-bg;
@@ -193,7 +193,7 @@
     .app-menu-back {
         display: block;
         width: 100%;
-        padding: floor(math.div($grid-gutter-width, 2));
+        padding: ($grid-gutter-width * .5);
         line-height: 1;
         color: $toolbar-link-color;
         background: $toolbar-link-bg;
@@ -250,7 +250,7 @@
 }
 
 .app-menu-search {
-    margin: floor(math.div($grid-gutter-width, 2));
+    margin: ($grid-gutter-width * .5);
 
     .form-control {
         color: $toolbar-link-hover-color;
@@ -258,7 +258,10 @@
         border-color: transparent;
         box-shadow: none;
 
-        @include placeholder($toolbar-link-color);
+        //@include placeholder($toolbar-link-color);
+        &::placeholder {
+            color: $toolbar-link-color;
+        }
     }
 
     .input-group-btn > .btn { // specific selector required to override default styles
@@ -281,7 +284,7 @@
 }
 
 // XS/SM screens :
-@media (max-width: $screen-md-max) {
+@media (max-width: map-get($grid-breakpoints, 'md')) {
     .app-menu {
         position: absolute;
         z-index: 4;

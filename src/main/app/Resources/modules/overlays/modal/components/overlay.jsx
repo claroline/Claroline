@@ -1,6 +1,5 @@
 import React, {Component, createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
-//import {Portal} from 'react-overlays'
 
 import {Modal as ModalTypes} from '#/main/app/overlays/modal/prop-types'
 
@@ -12,7 +11,6 @@ import {registry} from '#/main/app/modals/registry'
  */
 class ModalOverlay extends Component {
   render() {
-    // <Portal container={() => document.querySelector('.app-modal-container')}>
     return (
       <div className="app-modal" ref={(el) => this.container = el}>
         {this.props.modals.map((modal, index) => createElement(
@@ -35,7 +33,6 @@ class ModalOverlay extends Component {
 }
 
 ModalOverlay.propTypes = {
-  container: T.oneOfType([T.node, T.element]),
   show: T.bool.isRequired,
   modals: T.arrayOf(T.shape(
     ModalTypes.propTypes

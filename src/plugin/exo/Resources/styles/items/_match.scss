@@ -54,11 +54,11 @@
     }
 
     .left-controls {
-      margin-right: floor(math.div($grid-gutter-width, 2));
+      margin-right: ($grid-gutter-width * .5);
     }
 
     .right-controls {
-      margin-left: floor(math.div($grid-gutter-width, 2));
+      margin-left: ($grid-gutter-width * .5);
     }
 
     .popover {
@@ -90,7 +90,7 @@
 
         .association-score {
           width: 60px;
-          margin-right: floor(math.div($grid-gutter-width, 2));
+          margin-right: ($grid-gutter-width * .5);
         }
       }
     }

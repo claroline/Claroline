@@ -6,6 +6,10 @@ import omit from 'lodash/omit'
 const ProgressBar = props =>
   <div
     {...omit(props, 'value', 'size', 'type')}
+    role="progressbar"
+    aria-valuenow={props.value}
+    aria-valuemin={0}
+    aria-valuemax={100}
     className={classes('progress',
       props.className,
       props.size && `progress-${props.size}`
@@ -13,12 +17,8 @@ const ProgressBar = props =>
   >
     <div
       className={classes('progress-bar',
-        props.type && `progress-bar-${'user' === props.type ? 'secondary' : props.type}`
+        props.type && `bg-${'user' === props.type ? 'secondary' : props.type}`
       )}
-      role="progressbar"
-      aria-valuenow={props.value}
-      aria-valuemin={0}
-      aria-valuemax={100}
       style={{
         width: props.value+'%'
       }}
@@ -30,8 +30,8 @@ const ProgressBar = props =>
 ProgressBar.propTypes = {
   className: T.string,
   value: T.number,
-  size: T.oneOf(['xs', 'sm']),
-  type: T.oneOf(['success', 'info', 'warning', 'danger', 'primary', 'secondary'])
+  size: T.oneOf(['xs']),
+  type: T.oneOf(['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'learning'])
 }
 
 ProgressBar.defaultProps = {

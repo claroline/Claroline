@@ -18,20 +18,27 @@ const ParametersModal = props =>
     title={trans('parameters')}
     subtitle={props.resourceNode.name}
     onEntering={() => props.loadNode(props.resourceNode)}
+    size="lg"
   >
-    <ResourceForm name={selectors.STORE_NAME} />
-
-    <Button
-      className="btn modal-btn"
-      type={CALLBACK_BUTTON}
-      primary={true}
-      label={trans('save', {}, 'actions')}
-      disabled={!props.saveEnabled}
-      callback={() => {
-        props.save(props.resourceNode, props.updateNode)
-        props.fadeModal()
-      }}
-    />
+    <ResourceForm
+      name={selectors.STORE_NAME}
+      flush={true}
+    >
+      <Button
+        className="modal-btn"
+        variant="btn"
+        size="lg"
+        htmlType="submit"
+        type={CALLBACK_BUTTON}
+        primary={true}
+        label={trans('save', {}, 'actions')}
+        disabled={!props.saveEnabled}
+        callback={() => {
+          props.save(props.resourceNode, props.updateNode)
+          props.fadeModal()
+        }}
+      />
+    </ResourceForm>
   </Modal>
 
 ParametersModal.propTypes = {

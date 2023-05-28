@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -37,7 +37,7 @@ class ActivityMain extends Component {
         }]}
         subtitle={trans('activity')}
       >
-        <div className="row">
+        <div className="d-flex flex-direction-row">
           <ContentCounter
             icon="fa fa-user"
             label={trans('users')}

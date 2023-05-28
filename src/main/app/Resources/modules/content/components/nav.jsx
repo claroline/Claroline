@@ -2,60 +2,62 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import omit from 'lodash/omit'
-import merge from 'lodash/merge'
 
-import {Routes} from '#/main/app/router/components/routes'
-import {Route as RouteTypes, Redirect as RedirectTypes} from '#/main/app/router/prop-types'
-
-import {Button} from '#/main/app/action'
+import {Button, Toolbar} from '#/main/app/action'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {toKey} from '#/main/core/scaffolding/text'
 
 const ContentNav = (props) =>
-  <div className="row" role="presentation">
-    <div className="col-md-3" role="presentation">
-      <nav
-        {...omit(props, 'path', 'redirect', 'sections')}
-        className={classes('lateral-nav', props.className)}
-      >
-        {props.sections
-          .filter(tab => undefined === tab.displayed || tab.displayed)
-          .map((tab) =>
+  <nav role="navigation" className={props.className}>
+    <ul
+      {...omit(props, 'className', 'type', 'sections', 'path')}
+      className={classes('nav nav-pills', {
+        'flex-column': 'vertical' === props.type,
+        'nav-justified': 'vertical' !== props.type
+      })}
+    >
+      {props.sections
+        .filter(section => undefined === section.displayed || section.displayed)
+        .map((section) =>
+          <li className="nav-item" key={section.id || toKey(section.title)}>
             <Button
-              {...omit(tab, 'title', 'render', 'component')}
+              {...omit(section, 'title', 'displayed', 'path', 'actions')}
+              className="nav-link"
               type={LINK_BUTTON}
-              label={tab.title}
-              target={props.path+tab.path}
-              className="lateral-link"
-            />
-          )
-        }
-      </nav>
-    </div>
-
-    <div className="col-md-9" role="presentation">
-      <Routes
-        path={props.path}
-        redirect={props.redirect}
-        routes={props.sections}
-      />
-    </div>
-  </div>
+              label={section.title}
+              target={props.path+section.path}
+            >
+              {section.actions && 0 !== section.actions.length &&
+                <Toolbar
+                  className="ms-auto"
+                  buttonName="btn btn-link p-0"
+                  tooltip="right"
+                  actions={section.actions}
+                />
+              }
+            </Button>
+          </li>
+        )
+      }
+    </ul>
+  </nav>
 
 ContentNav.propTypes= {
   className: T.string,
-  type: T.oneOf(['vertical', 'horizontal']),
+  type: T.oneOf(['vertical', 'horizontal']).isRequired,
   path: T.string,
-  redirect: T.arrayOf(T.shape(
-    RedirectTypes.propTypes
-  )),
-  sections: T.arrayOf(T.shape(merge({}, RouteTypes.propTypes, {
+  sections: T.arrayOf(T.shape({
     id: T.string,
+    path: T.string.isRequired,
+    exact: T.bool,
     icon: T.string,
     title: T.node.isRequired,
-    displayed: T.bool
-  }))).isRequired
+    displayed: T.bool,
+    actions: T.arrayOf(T.shape({
+      // TODO : action types
+    }))
+  })).isRequired
 }
-
 
 export {
   ContentNav

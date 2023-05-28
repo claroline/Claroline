@@ -7,8 +7,8 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
 const PluginMeta = props =>
-  <div className="panel panel-default">
-    <ul className="list-group list-group-values">
+  <div className="card mb-3">
+    <ul className="list-group list-group-flush list-group-values">
       <li className="list-group-item">
         {trans('version')}
         <span className="value">
@@ -91,8 +91,8 @@ const Plugin = (props) => {
         </div>
 
         <div className="col-md-9">
-          <div className="panel panel-default">
-            <div className="panel-body">{trans(props.plugin.name+'_desc', {}, 'plugin')}</div>
+          <div className="card mb-3">
+            <div className="card-body">{trans(props.plugin.name+'_desc', {}, 'plugin')}</div>
           </div>
         </div>
       </div>

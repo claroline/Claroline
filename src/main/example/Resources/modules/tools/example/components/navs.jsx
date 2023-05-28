@@ -8,24 +8,21 @@ const SampleData = [
   {
     id: 'section-1',
     title: 'Section 1',
-    path: '/section1',
-    render: () => <div>Section 1 content</div>
+    path: '/',
+    exact: true
   }, {
     id: 'section-2',
     title: 'Section 2',
-    path: '/section2',
-    render: () => <div>Section 2 content</div>
+    path: '/section2'
   }, {
     id: 'section-3',
     title: 'Section 3 (Disabled)',
     path: '/section3',
-    disabled: true,
-    render: () => <div>Section 3 content</div>
+    disabled: true
   }, {
     id: 'section-4',
     title: 'Section 4',
-    path: '/section4',
-    render: () => <div>Section 4 content</div>
+    path: '/section4'
   }
 ]
 
@@ -33,15 +30,25 @@ const ExampleNavs = (props) =>
   <Fragment>
     <ContentTitle title="Vertical nav" />
 
-    <ContentNav
-      path={props.path+'/vertical'}
-      redirect={[
-        {from: '/', exact: true, to: '/section1'}
-      ]}
-      sections={SampleData}
-    />
+    <div className="row">
+      <div className="col-md-3">
+        <ContentNav
+          className="mb-3"
+          type="vertical"
+          path={props.path}
+          sections={SampleData}
+        />
+      </div>
+    </div>
 
     <ContentTitle title="Horizontal nav" />
+
+    <ContentNav
+      className="mb-3"
+      type="horizontal"
+      path={props.path}
+      sections={SampleData}
+    />
   </Fragment>
 
 ExampleNavs.propTypes = {

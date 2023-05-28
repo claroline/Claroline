@@ -9,23 +9,21 @@
 
   .placeholder-icon {
     font-size: $font-size*2;
-    height: $font-size*4;
-    width: $font-size*4;
-
-    margin-right: floor(math.div($grid-gutter-width, 2));
+    /*height: $font-size*4;
+    width: $font-size*4;*/
   }
 
   .placeholder-body {
-    border-left-width: $border;
+    //border-left-width: $border;
+  }
 
-    .placeholder-title {
-      display: block;
-      font-size: $font-size;
-      font-weight: bold;
-    }
+  .placeholder-title {
+    //display: block;
+    font-size: $font-size;
+    //font-weight: bold;
+  }
 
-    .placeholder-help {
-      font-size: $font-size-base; // todo this will be ugly on sm placeholder
-    }
+  .placeholder-help {
+    font-size: $font-size-base; // todo this will be ugly on sm placeholder
   }
 }

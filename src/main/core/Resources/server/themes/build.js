@@ -1,7 +1,6 @@
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
-const shell = require('shelljs')
 
 const paths = require('../paths')
 const entries = require('./entries')
@@ -90,7 +89,6 @@ function buildTheme(theme, themeState) {
         themeState[packageAssets+'.css'],
         theme.getVars() // global vars
       ).then(
-        //newVersion => themeState[packageAssets+'.css'] = newVersion
         newVersion => ({[`${packageAssets}.css`] : newVersion})
       ))
     ])
@@ -110,19 +108,21 @@ function createAsset(asset, outputFile, currentVersion, globalVars) {
     console.info(`+++ ${outputFile}.`)
 
     // Post process
-    return compile.optimize(output.css).then(optimized => {
+    return compile.optimize(output.css, outputFile).then(optimized => {
+      const baseName = path.basename(outputFile, '.css')
+
       // Write new css file
-      fs.writeFileSync(outputFile, optimized)
+      fs.writeFileSync(outputFile, '/*# sourceMappingURL=./'+baseName+'.css.map */\n' +optimized)
 
       // Write new map file
-      if (output.map) {
-        fs.writeFileSync(outputFile + '.map', output.map)
+      if (output.sourceMap) {
+        fs.writeFileSync(outputFile+'.map', JSON.stringify(output.sourceMap))
       }
 
       return Promise.resolve(newVersion)
     })
   } else {
-    shell.echo(`    ${outputFile}.`)
+    console.info(`    ${outputFile}.`)
 
     return Promise.resolve(newVersion)
   }
@@ -131,14 +131,15 @@ function createAsset(asset, outputFile, currentVersion, globalVars) {
 /**
  * Recursively copies static files directories (eg. images, fonts)
  * @param {string} src
- * @param {string} destination
+ * @param {string} themeDir
  * @param {string} assetDir
  */
-function copyStatic(src, destination, assetDir) {
-  const pathToRemove = path.join(destination, assetDir)
-  console.log(`    ${src} => ${pathToRemove}`)
-  shell.rm('-rf', pathToRemove)
-  shell.cp('-R', src, destination)
+function copyStatic(src, themeDir, assetDir) {
+  const destination = path.join(themeDir, assetDir)
+  console.log(`    ${src} => ${destination}`)
+
+  fs.rmSync(destination, { recursive: true, force: true })
+  fs.cpSync(src, destination, { recursive: true })
 }
 
 /**
@@ -147,7 +148,7 @@ function copyStatic(src, destination, assetDir) {
  * @param {object} state
  */
 function dumpBuildState(state) {
-  shell.echo('Dump theme build state.')
+  console.info('Dump theme build state.')
   fs.writeFileSync(BUILD_FILE, JSON.stringify(state, null, 2))
 }
 
@@ -157,12 +158,11 @@ function dumpBuildState(state) {
  * @returns {object}
  */
 function getBuildState() {
-  if (shell.test('-e', BUILD_FILE)) {
-    // Themes have already been built once
-    return JSON.parse(shell.cat(BUILD_FILE)) || {}
+  try {
+    return JSON.parse(fs.readFileSync(BUILD_FILE))
+  } catch (err) {
+    return {}
   }
-
-  return {}
 }
 
 module.exports = {

@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
@@ -42,7 +42,7 @@ Success.propTypes = {
 
 const LogsComponent = props =>
   <Fragment>
-    <div className="row">
+    <div className="d-flex flex-direction-row">
       <ContentCounter
         icon="fa fa-list"
         label={trans('total')}

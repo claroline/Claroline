@@ -199,7 +199,7 @@ const removeAllCoordinates = (items, saveCallback) => {
 }
 
 let DropBox = props => props.connectDropTarget(
-  <div className={classes('pair-item-placeholder drop-placeholder placeholder-md placeholder-hover', {
+  <div className={classes('pair-item-placeholder drop-placeholder drop-placeholder-md placeholder-hover', {
     hover: props.isOver
   })}
   >
@@ -308,10 +308,11 @@ class Pair extends Component {
             />
           }
 
-          <div className="checkbox">
+          <div className="form-check">
             <label>
               <input
                 type="checkbox"
+                className="form-check-input"
                 disabled={this.props.showPins || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) || utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
                 checked={this.props.pair.ordered || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) || utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
                 onChange={(e) => this.props.onUpdate('ordered', e.target.checked, this.props.index)}
@@ -336,6 +337,7 @@ class Pair extends Component {
             <input
               title={trans('score', {}, 'quiz')}
               type="checkbox"
+              className="form-check-input"
               checked={0 < this.props.pair.score}
               onChange={(e) => this.props.onUpdate('score', e.target.checked ? 1 : 0, this.props.index)}
             />
@@ -430,7 +432,7 @@ class PairList extends Component {
 
         <Button
           type={CALLBACK_BUTTON}
-          className="btn btn-block"
+          className="btn btn-outline-primary w-100"
           icon="fa fa-fw fa-plus"
           label={trans('pair_add_pair', {}, 'quiz')}
           callback={() => addPair(this.props.solutions, this.props.onChange)}
@@ -538,7 +540,7 @@ const OddList= props => {
       optional={true}
     >
       {0 === odd.length &&
-        <div className="no-item-info">{trans('no_odd_info', {}, 'quiz')}</div>
+        <div className="empty-placeholder empty-placeholder-md">{trans('no_odd_info', {}, 'quiz')}</div>
       }
 
       {0 < odd.length &&
@@ -561,7 +563,7 @@ const OddList= props => {
 
       <Button
         type={CALLBACK_BUTTON}
-        className="btn btn-block"
+        className="btn btn-outline-primary w-100"
         icon="fa fa-fw fa-plus"
         label={trans('set_add_odd', {}, 'quiz')}
         callback={() => addItem(props.items, props.solutions, true, props.onChange)}
@@ -655,7 +657,7 @@ const ItemList = props =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-block"
+      className="btn btn-outline-primary w-100"
       icon="fa fa-fw fa-plus"
       label={trans('set_add_item', {}, 'quiz')}
       callback={() => addItem(props.items, props.solutions, false, props.onChange)}

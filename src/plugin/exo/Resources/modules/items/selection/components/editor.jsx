@@ -260,6 +260,7 @@ class ChoiceItem extends Component {
             <span>
               <input
                 type="checkbox"
+                className="form-check-input"
                 id={'selection-chk-' + this.getSelectionId()}
                 checked={this.props.score > 0}
                 onChange={(e) => updateAnswer('score', e.target.checked ? 1 : 0, this.getSelectionId(), this.props.item, this.props.update)}

@@ -1,31 +1,35 @@
-import React from 'react'
+import React, {forwardRef} from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
+import {toKey} from '#/main/core/scaffolding/text'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
-import {MenuItem} from '#/main/app/overlays/menu'
+import {Menu, MenuHeader} from '#/main/app/overlays/menu'
+import {Checkbox} from '#/main/app/input/components/checkbox'
 
 import {DataListProperty} from '#/main/app/content/list/prop-types'
 
-const ColumnsMenu = props =>
-  <ul className="dropdown-menu dropdown-menu-right">
-    <MenuItem header={true}>{trans('list_columns')}</MenuItem>
+const ColumnsMenu = forwardRef((props, ref) =>
+  <ul {...omit(props, 'available', 'current', 'toggle', 'show', 'close')} ref={ref}>
+    <MenuHeader>{trans('list_columns')}</MenuHeader>
 
     {props.available.map(availableColumn =>
-      <li key={availableColumn.name} className="dropdown-checkbox checkbox" role="presentation">
-        <label>
-          <input
-            type="checkbox"
-            checked={-1 !== props.current.indexOf(availableColumn.name)}
-            disabled={1 === props.current.length && -1 !== props.current.indexOf(availableColumn.name)}
-            onChange={() => props.toggle(availableColumn.name)}
-          />
-          {availableColumn.label}
-        </label>
+      <li key={availableColumn.name} className="dropdown-item" role="presentation">
+        <Checkbox
+          id={toKey(availableColumn.name)}
+          className="mb-0"
+          switch={true}
+          label={availableColumn.label}
+          checked={-1 !== props.current.indexOf(availableColumn.name)}
+          disabled={1 === props.current.length && -1 !== props.current.indexOf(availableColumn.name)}
+          onChange={() => props.toggle(availableColumn.name)}
+        />
       </li>
     )}
   </ul>
+)
 
 ColumnsMenu.propTypes = {
   available: T.arrayOf(
@@ -39,14 +43,15 @@ ColumnsMenu.propTypes = {
 const ListColumns = props =>
   <Button
     id="list-columns"
-    className="list-header-btn btn btn-link"
+    className="list-header-btn btn btn-text-secondary"
     type={MENU_BUTTON}
     icon="fa fa-fw fa-columns"
     label={trans('list_columns_title')}
     tooltip="bottom"
     disabled={props.disabled}
     menu={
-      <ColumnsMenu
+      <Menu
+        as={ColumnsMenu}
         current={props.current}
         available={props.available}
         toggle={(column) => {

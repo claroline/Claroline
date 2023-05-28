@@ -45,7 +45,7 @@ function getSectionErrors(sectionFields = [], errors = {}) {
 
 const FormModes = props =>
   <div className="form-mode">
-    <span className="hidden-xs">{trans('form_mode')}</span>
+    <span className="d-none d-sm-block">{trans('form_mode')}</span>
 
     <Button
       id="data-form-mode-menu"
@@ -91,6 +91,7 @@ const FormData = (props) => {
       id={props.id}
       className={props.className}
       embedded={props.embedded}
+      flush={props.flush}
       disabled={disabled}
       level={props.level}
       displayLevel={props.displayLevel}
@@ -121,10 +122,10 @@ const FormData = (props) => {
       }
 
       {primarySections.map(primarySection =>
-        <div
+        <section
           id={`${getSectionId(primarySection, props.id)}-section`}
           key={primarySection.id || toKey(primarySection.title)}
-          className={classes('form-primary-section panel panel-default', primarySection.className)}
+          className={classes('form-primary-section', primarySection.className, !props.flush && 'mb-3')}
         >
           <ContentTitle
             level={hLevel}
@@ -133,34 +134,32 @@ const FormData = (props) => {
             subtitle={primarySection.subtitle}
           />
 
-          <div className="panel-body">
-            {!isEmpty(primarySection.actions) &&
-              <Toolbar
-                id={`${getSectionId(primarySection, props.id)}-actions`}
-                buttonName="btn"
-                className="text-right form-group"
-                size="sm"
-                actions={primarySection.actions}
-              />
-            }
+          {!isEmpty(primarySection.actions) &&
+            <Toolbar
+              id={`${getSectionId(primarySection, props.id)}-actions`}
+              buttonName="btn"
+              className="text-right form-group"
+              size="sm"
+              actions={primarySection.actions}
+            />
+          }
 
-            <FormFieldset
-              id={getSectionId(primarySection, props.id)}
-              mode={props.mode}
-              disabled={props.disabled || primarySection.disabled}
-              fields={primarySection.fields}
-              data={props.data}
-              errors={props.errors}
-              help={primarySection.help}
-              validating={props.validating}
-              updateProp={props.updateProp}
-              setErrors={props.setErrors}
-            >
-              {primarySection.component && createElement(primarySection.component)}
-              {!primarySection.component && primarySection.render && primarySection.render(props.data, props.errors)}
-            </FormFieldset>
-          </div>
-        </div>
+          <FormFieldset
+            id={getSectionId(primarySection, props.id)}
+            mode={props.mode}
+            disabled={props.disabled || primarySection.disabled}
+            fields={primarySection.fields}
+            data={props.data}
+            errors={props.errors}
+            help={primarySection.help}
+            validating={props.validating}
+            updateProp={props.updateProp}
+            setErrors={props.setErrors}
+          >
+            {primarySection.component && createElement(primarySection.component)}
+            {!primarySection.component && primarySection.render && primarySection.render(props.data, props.errors)}
+          </FormFieldset>
+        </section>
       )}
 
       {0 !== otherSections.length &&
@@ -168,6 +167,8 @@ const FormData = (props) => {
           level={hLevel}
           displayLevel={hDisplay}
           defaultOpened={openedSection ? getSectionId(openedSection, props.id) : undefined}
+          flush={props.flush}
+          className={classes(!props.flush && 'mb-3')}
         >
           {otherSections.map(section => (
             <FormSection
@@ -180,11 +181,10 @@ const FormData = (props) => {
               errors={getSectionErrors(section.fields, props.errors)}
               validating={props.validating}
               actions={section.actions}
+              fill={section.fill}
             >
               <FormFieldset
                 id={`${getSectionId(section, props.id)}-fieldset`}
-                fill={true}
-                className="panel-body"
                 mode={props.mode}
                 disabled={props.disabled || (typeof section.disabled === 'function' ? section.disabled(props.data) : section.disabled)}
                 fields={section.fields}
@@ -218,6 +218,7 @@ FormData.propTypes = {
   embedded: T.bool,
   level: T.number,
   displayLevel: T.number,
+  flush: T.bool,
   title: T.string,
   className: T.string,
   mode: T.string.isRequired,
@@ -277,6 +278,7 @@ FormData.propTypes = {
 FormData.defaultProps = {
   level: 2,
   disabled: false,
+  flush: false,
   mode: constants.FORM_MODE_DEFAULT,
   data: {}
 }

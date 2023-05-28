@@ -2,7 +2,7 @@
  * Styles for `choice` data type.
  */
 
-.choice-control {
+/*.choice-control {
     .radio,
     .radio-inline,
     .checkbox,
@@ -64,7 +64,7 @@
         .radio-inline,
         .checkbox,
         .checkbox-inline {
-            @include input-size('label', $input-height-small, $padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $input-border-radius-small);
+            @include input-size('label', $input-height-small, $padding-small-vertical, $padding-small-horizontal, $font-size-sm, $line-height-small, $input-border-radius-sm);
         }
     }
 
@@ -73,10 +73,10 @@
         .radio-inline,
         .checkbox,
         .checkbox-inline {
-            @include input-size('label', $input-height-large, $padding-large-vertical, $padding-large-horizontal, $font-size-large, $line-height-large, $input-border-radius-large);
+            @include input-size('label', $input-height-large, $padding-large-vertical, $padding-large-horizontal, $font-size-lg, $line-height-large, $input-border-radius-lg);
         }
     }
-}
+}*/
 
 .choice-cell {
     .label {

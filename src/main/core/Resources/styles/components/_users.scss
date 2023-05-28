@@ -14,11 +14,21 @@
     justify-content: center;
     color: $toolbar-bg;
 
+
     // make avatar always look as a square
     &:after {
         content: "";
         display: block;
         padding-bottom: 100%;
+    }
+
+    &.user-avatar-sm {
+        // for picture
+        max-width: 50px;
+        max-height: 50px;
+
+        // for .fa when no picture
+        font-size: 50px;
     }
 
     &.user-avatar-md {
@@ -45,7 +55,7 @@
     flex-direction: row;
     align-items: center;
     vertical-align: middle;
-    font-size: $font-size-small;
+    font-size: $font-size-sm;
     font-weight: 400;
     white-space: nowrap;
 
@@ -68,7 +78,7 @@
     .dropdown-menu {
         .user-micro {
             display: flex !important;
-            padding: $dropdown-link-padding-v $dropdown-link-padding-h;
+            padding: $dropdown-item-padding-y $dropdown-item-padding-x;
         }
     }
 }
@@ -88,7 +98,7 @@
 
 .user-profile-aside {
     // because of the profile picture
-    margin-top: floor(($font-size-h2 * $headings-line-height) + math.div($line-height-computed, 2)) + $component-margin-bottom;
+    margin-top: floor(($h2-font-size * $headings-line-height) + math.div($line-height-computed, 2)) + $component-margin-bottom;
 }
 
 .user-profile {

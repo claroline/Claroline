@@ -3,7 +3,7 @@ import React from 'react'
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {ModalButton} from '#/main/app/buttons/modal/containers/button'
+import {ModalButton} from '#/main/app/buttons/modal'
 
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'

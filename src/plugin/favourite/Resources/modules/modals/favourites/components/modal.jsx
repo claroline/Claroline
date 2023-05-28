@@ -15,17 +15,17 @@ import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {route as resourceRoute} from '#/main/core/resource/routing'
 
-import {constants} from '#/plugin/favourite/header/favourites/constants'
+import {constants} from '#/plugin/favourite/constants'
 
-const FavouritesModal = props => {
+const FavouritesModal = (props) => {
   const [section, changeSection] = useState('workspaces')
 
   return (
     <Modal
-      {...omit(props, 'loaded', 'results', 'geFavourites', 'deleteFavourite')}
+      {...omit(props, 'loaded', 'results', 'getFavourites', 'deleteFavourite')}
       icon="fa fa-fw fa-star"
       title={trans('favourites', {}, 'favourite')}
-      onEntering={() => props.getFavourites()}
+      onEntering={props.getFavourites}
     >
       <ContentTabs
         sections={[
@@ -33,7 +33,6 @@ const FavouritesModal = props => {
             name: 'workspaces',
             type: CALLBACK_BUTTON,
             label: trans('workspaces'),
-            target: `${props.path}/statistics/answers`,
             active: 'workspaces' === section,
             callback: () => changeSection('workspaces')
           }, {
@@ -55,15 +54,17 @@ const FavouritesModal = props => {
 
 
       {props.loaded && (isEmpty(props.results) || isEmpty(props.results[section])) &&
-        <ContentPlaceholder
-          icon={'workspaces' === section ? 'fa fa-fw fa-book' : 'fa fa-fw fa-folder'}
-          title={trans('workspaces' === section ? 'empty_workspaces':'empty_resources', {}, 'favourite')}
-          help={trans('workspaces' === section ? 'empty_workspaces_help':'empty_resources_help', {}, 'favourite')}
-        />
+        <div className="modal-body">
+          <ContentPlaceholder
+            size="lg"
+            title={trans('workspaces' === section ? 'empty_workspaces':'empty_resources', {}, 'favourite')}
+            help={trans('workspaces' === section ? 'empty_workspaces_help':'empty_resources_help', {}, 'favourite')}
+          />
+        </div>
       }
 
       {props.loaded && !isEmpty(props.results) && !isEmpty(props.results[section]) &&
-        <div className="modal-body">
+        <div className="data-cards-stacked data-cards-stacked-flush">
           {props.results[section].map(result =>
             createElement(constants.RESULTS_CARD[section], {
               key: result.id,
@@ -78,6 +79,7 @@ const FavouritesModal = props => {
               },
               actions: [
                 {
+                  name: 'delete',
                   type: CALLBACK_BUTTON,
                   icon: 'fa fa-fw fa-trash',
                   label: trans('delete', {}, 'actions'),
@@ -96,26 +98,26 @@ const FavouritesModal = props => {
       }
 
       <Button
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         type={LINK_BUTTON}
         label={trans('workspaces' === section ? 'all_workspaces' : 'all_resources', {}, 'history')}
         target={toolRoute('workspaces' === section ? 'workspaces' : 'resources')}
         onClick={props.fadeModal}
+        exact={true}
+        primary={true}
       />
     </Modal>
   )
 }
 
 FavouritesModal.propTypes = {
-  results: T.array,
+  results: T.object,
   loaded: T.bool.isRequired,
-  geFavourites: T.func.isRequired,
+  getFavourites: T.func.isRequired,
   deleteFavourite: T.func.isRequired,
   fadeModal: T.func.isRequired
-}
-
-FavouritesModal.defaultProps = {
-
 }
 
 export {

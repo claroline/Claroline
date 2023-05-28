@@ -14,19 +14,20 @@
 
     &.active-post {
         .announce-title {
-            border-left-color: $brand-secondary;
+            border-left-color: $learning;
         }
     }
 }
 
+// TODO : merge with content meta
 .announce-meta {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    color: $gray-light;
-    background: $panel-default-heading-bg;
+    color: var(--#{$prefix}tertiary-color);
+    background: var(--#{$prefix}tertiary-bg);
     padding: 5px 10px;
     margin-bottom: $component-margin-bottom;
 
@@ -39,7 +40,7 @@
 
         .date {
             padding: 0 10px;
-            font-size: $font-size-small;
+            font-size: $font-size-sm;
             font-style: italic;
         }
     }

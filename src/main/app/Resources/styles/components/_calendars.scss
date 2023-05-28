@@ -2,21 +2,21 @@
  * Calendars styles
  */
 
-$datepicker-color:         $text-color;
+$datepicker-color:         $body-color;
 
 $datepicker-alt-color:     #fff;
 $datepicker-alt-bg:        $primary;
 
-$datepicker-padding:       15px;
+$datepicker-padding:       map-get($spacers, 3);
 $datepicker-grid-border:   $dropdown-divider-bg; // #eee
 
 // text height + padding height + border height
-$day-names-row-computed-height: $line-height-small*10px + 2px + 1px; // 18
-$day-btn-computed-height: ($line-height-small*$font-size-small) + 2*(1px+3px); // 26
+$day-names-row-computed-height: calc($line-height-sm*$font-size-sm + 2px + 1px); // 18
+$day-btn-computed-height: calc(($line-height-sm*$font-size-sm) + 2 * (1px + 3px)); // 26
 // btn height + padding height + border height
-$week-row-computed-height: $day-btn-computed-height + 2px + 1px; // 29
+$week-row-computed-height: calc($day-btn-computed-height + 2px + 1px); // 29
 // table head height + nbRows * row height + padding top
-$days-grid-computed-height: $day-names-row-computed-height + 6*$week-row-computed-height + 10px; // 203
+$days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-computed-height + 10px); // 203
 
 .calendar-container {
     position: relative;
@@ -40,7 +40,7 @@ $days-grid-computed-height: $day-names-row-computed-height + 6*$week-row-compute
         .current-date {
             margin-top: 0;
             padding: 0;
-            font-size: $font-size-h3;
+            font-size: $h3-font-size;
             font-weight: 900;
 
             small {
@@ -56,7 +56,7 @@ $days-grid-computed-height: $day-names-row-computed-height + 6*$week-row-compute
             flex-direction: row;
             justify-content: space-around;
             align-items: center;
-            font-size: $font-size-large;
+            font-size: $font-size-lg;
             font-weight: bold;
             margin-top: auto;
         }
@@ -100,7 +100,7 @@ $days-grid-computed-height: $day-names-row-computed-height + 6*$week-row-compute
     .calendar-current {
         color: $datepicker-color;
         font-family: $headings-font-family;
-        font-size: $font-size-large;
+        font-size: $font-size-lg;
     }
 
     .calendar-previous,
@@ -163,9 +163,10 @@ $days-grid-computed-height: $day-names-row-computed-height + 6*$week-row-compute
 
     .btn {
         padding: 3px 7px;
-        font-size: $font-size-small;
-        line-height: $line-height-small;
-        border-radius: $border-radius-small;
+        font-size: $font-size-sm;
+        line-height: $line-height-sm;
+
+        @include border-radius($border-radius-sm);
 
         &.now {
             color: $datepicker-alt-bg !important;
@@ -205,7 +206,7 @@ $days-grid-computed-height: $day-names-row-computed-height + 6*$week-row-compute
 
     .day-name,
     .week-num {
-        font-size: 10px;
+        font-size: $font-size-sm;
         font-weight: normal;
     }
 
@@ -215,7 +216,7 @@ $days-grid-computed-height: $day-names-row-computed-height + 6*$week-row-compute
     }
 
     .week-num {
-        color: $text-muted;
+        color: var(--#{$prefix}secondary-color);
         min-width: 15px;
     }
 
@@ -231,7 +232,7 @@ $days-grid-computed-height: $day-names-row-computed-height + 6*$week-row-compute
 
         th {
             border: 1px solid transparent;
-            line-height: $line-height-small;
+            line-height: $line-height-sm;
         }
 
         td {
@@ -364,12 +365,12 @@ $days-grid-computed-height: $day-names-row-computed-height + 6*$week-row-compute
 
 .dropdown-menu {
     .calendar-container {
-        margin: (-$dropdown-menu-padding-v) (-$dropdown-menu-padding-h);
+        margin: (-$dropdown-padding-y) (-$dropdown-padding-x);
     }
 }
 
 // vertical layout for XS screens
-@media (max-width: $screen-xs-max) {
+@media (max-width: map-get($grid-breakpoints, 'sm')) {
     .calendar-container {
         @include calendar-vertical-variant();
     }

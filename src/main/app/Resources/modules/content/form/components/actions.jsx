@@ -12,12 +12,13 @@ import {Button} from '#/main/app/action/components/button'
  * @constructor
  */
 const FormActions = props =>
-  <div className={classes('form-toolbar', props.className)}>
+  <div className={classes('sticky-bottom mt-auto mb-3 btn-toolbar form-toolbar gap-1', props.className)}>
     <Button
       icon="fa fa-fw fa-save"
       label={trans('save', {}, 'actions')}
       {...props.save}
-      className="btn btn-save"
+      variant="btn"
+      className="rounded-pill"
       tooltip="top"
       primary={true}
       htmlType="submit"
@@ -26,10 +27,11 @@ const FormActions = props =>
     {props.cancel &&
       <Button
         {...props.cancel}
-        className="btn btn-exit"
+        className="rounded-pill"
         tooltip="top"
-        icon="fa fa-fw fa-sign-out-alt"
+        icon="fa fa-fw fa-times"
         label={trans('exit', {}, 'actions')}
+        variant="btn"
       />
     }
   </div>

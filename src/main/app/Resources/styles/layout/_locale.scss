@@ -1,6 +1,6 @@
 
 @mixin locale-icon-small() {
-  width: 24px;
+  width: $icon-fixed-width;
   height: 16px;
 }
 
@@ -10,7 +10,7 @@
 }
 
 .locale-icon {
-  margin: 4px 0;
+  //margin: 4px 0;
 
   @include locale-icon-small();
 }

@@ -9,7 +9,6 @@ import merge from 'lodash/merge'
 import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
 import {now} from '#/main/app/intl/date'
-import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentTitle} from '#/main/app/content/components/title'
@@ -21,6 +20,7 @@ import {UserMessageForm} from '#/main/core/user/message/components/user-message-
 
 import {Message as MessageTypes} from '#/plugin/message/prop-types'
 import {actions, selectors} from '#/plugin/message/tools/messaging/store'
+import {Toolbar} from '#/main/app/action'
 
 function flattenMessages(root) {
   let messages = [root]
@@ -140,21 +140,25 @@ class MessageComponent extends Component {
         }
 
         {(!this.state.reply && !get(this.props.message, 'meta.sent') && !get(this.props.message, 'meta.removed')) &&
-          <Button
-            className="btn btn-block btn-emphasis"
-            type={CALLBACK_BUTTON}
-            label={trans('reply', {}, 'actions')}
-            callback={() => this.setState({reply: true, all: false})}
-            primary={true}
-          />
-        }
-
-        {(!this.state.reply && !get(this.props.message, 'meta.sent') && !get(this.props.message, 'meta.removed')) &&
-          <Button
-            className="btn btn-block"
-            type={CALLBACK_BUTTON}
-            label={trans('reply-all', {}, 'actions')}
-            callback={() => this.setState({reply: true, all: true})}
+          <Toolbar
+            className="d-grid gap-1"
+            variant="btn"
+            buttonName="w-100"
+            actions={[
+              {
+                name: 'reply',
+                type: CALLBACK_BUTTON,
+                label: trans('reply', {}, 'actions'),
+                callback: () => this.setState({reply: true, all: false}),
+                primary: true,
+                size: 'lg'
+              }, {
+                name: 'reply-all',
+                type: CALLBACK_BUTTON,
+                label: trans('reply-all', {}, 'actions'),
+                callback: () => this.setState({reply: true, all: true})
+              }
+            ]}
           />
         }
 

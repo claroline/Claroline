@@ -15,7 +15,7 @@
   justify-content: flex-start;
   align-items: center;
 
-  margin: 0 floor(math.div($grid-gutter-width, 2) - 5px);
+  margin: 0 ($grid-gutter-width * .5);
 
   .top-tabs {
     display: flex;
@@ -24,22 +24,6 @@
     list-style: none;
     flex-wrap: wrap;
   }
-
-  /*.top-tab.active::after {
-    position: absolute;
-    content: " ";
-    width: 0;
-    height: 0;
-    left: 50%;
-    top: 100%;
-    transform: translate(-50%, 0);
-    border-style: solid;
-    border-width: 5px 5px 0 5px;
-
-    // attention : this can not be written with short syntax
-    border-color: transparent;
-    border-top-color: inherit;
-  }*/
 
   .top-tab-item.dropdown {
     position: relative;
@@ -58,7 +42,7 @@
   }
 
   .nav-tab-hidden {
-    color: $text-muted;
+    color: var(--#{$prefix}secondary-color);
     text-decoration: line-through !important;
   }
 
@@ -107,7 +91,7 @@
       background: $home-tab-bg;
   
       border-left: 1px solid;
-      margin: $padding-xs-horizontal 0;
+      //margin: $padding-xs-horizontal 0;
 
       &:hover {
         color: $home-tab-hover-color;

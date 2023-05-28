@@ -9,7 +9,7 @@ import {trans} from '#/main/app/intl/translation'
 
 const PreviousButton = props =>
   <button
-    className="btn btn-previous btn-default btn-emphasis"
+    className="btn btn-previous btn-outline-secondary btn-lg"
     onClick={(e) => {
       props.onClick(e)
       scrollTo(`#resource-${props.resourceId} > .page-content`)
@@ -26,7 +26,7 @@ PreviousButton.propTypes = {
 
 const NextButton = props =>
   <button
-    className="btn btn-next btn-default btn-emphasis"
+    className="btn btn-next btn-outline-primary btn-lg"
     onClick={(e) => {
       props.onClick(e)
       scrollTo(`#resource-${props.resourceId} > .page-content`)
@@ -43,7 +43,7 @@ NextButton.propTypes = {
 
 const ValidateButton = props =>
   <button
-    className="btn btn-next btn-validate btn-default btn-emphasis"
+    className="btn btn-next btn-validate btn-outline-primary btn-lg"
     onClick={(e) => {
       props.onClick(e)
       scrollTo(`#resource-${props.resourceId} > .page-content`)
@@ -60,7 +60,7 @@ ValidateButton.propTypes = {
 
 const SubmitButton = props =>
   <button
-    className="btn btn-submit btn-success btn-emphasis"
+    className="btn btn-submit btn-primary btn-lg"
     onClick={(e) => {
       props.onClick(e)
       scrollTo(`#resource-${props.resourceId} > .page-content`)
@@ -77,7 +77,7 @@ SubmitButton.propTypes = {
 
 const FinishButton = props =>
   <button
-    className="btn btn-finish btn-primary btn-emphasis"
+    className="btn btn-finish btn-primary btn-lg"
     onClick={(e) => {
       props.onClick(e)
       scrollTo(`#resource-${props.resourceId} > .page-content`)

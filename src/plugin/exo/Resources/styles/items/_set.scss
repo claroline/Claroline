@@ -16,11 +16,11 @@
     .item-content,
     .text-fields {
       flex-grow: 1;
-      margin-right: floor(math.div($grid-gutter-width, 2));
+      margin-right: ($grid-gutter-width * .5);
     }
 
     .score {
-      margin-right: floor(math.div($grid-gutter-width, 2));
+      margin-right: ($grid-gutter-width * .5);
     }
 
     .content-html.form-control { // find a better selector
@@ -42,7 +42,7 @@
       // for editor
       display: flex;
       .text-fields {
-        margin-right: floor(math.div($grid-gutter-width, 2));
+        margin-right: ($grid-gutter-width * .5);
       }
     }
 

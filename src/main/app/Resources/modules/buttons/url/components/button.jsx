@@ -1,11 +1,11 @@
 import React, {forwardRef} from 'react'
-import classes from 'classnames'
 import omit from 'lodash/omit'
 
 import {url} from '#/main/app/api/router'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
 import {Button as ButtonTypes} from '#/main/app/buttons/prop-types'
+import {buttonClasses} from '#/main/app/buttons/utils'
 
 /**
  * URL button.
@@ -21,25 +21,22 @@ const UrlButton = forwardRef((props, ref) => {
 
   return (
     <a
-      {...omit(props, 'active', 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm')}
+      {...omit(props, 'variant', 'active', 'displayed', 'primary', 'dangerous', 'size', 'target', 'confirm')}
       role="link"
       tabIndex={props.tabIndex}
       href={!props.disabled ? target : ''}
       ref={ref}
       disabled={props.disabled}
-      className={classes(props.className, {
-        disabled: props.disabled,
-        default: !props.primary && !props.dangerous,
-        primary: props.primary,
-        danger: props.dangerous,
-        active: props.active // it may not be useful because by definition an url will change the context
-      }, props.size && `btn-${props.size}`)}
+      className={buttonClasses(props.className, props.variant, props.size, props.disabled, props.active, props.primary, props.dangerous)}
       target={props.open}
     >
       {props.children}
     </a>
   )
 })
+
+// for debug purpose, otherwise component is named after the HOC
+UrlButton.displayName = 'UrlButton'
 
 implementPropTypes(UrlButton, ButtonTypes, {
   target: T.oneOfType([

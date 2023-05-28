@@ -9,7 +9,7 @@
     .grid-score {
       display: inline-block; // display input on same line than delete btn
       width: 60px;
-      margin-right: floor(math.div($grid-gutter-width, 2));
+      margin-right: ($grid-gutter-width * .5);
     }
 
     .btn-link,
@@ -75,7 +75,7 @@
       // fix popover position
       // todo : find a more robust way to position popovers
       margin-left: -165px; // half size of the popover (180px) - 15px hack to center popover arrow and open btn
-      color: $text-color; // avoid having cell custom color in the edit popover
+      color: $body-color; // avoid having cell custom color in the edit popover
     }
 
     .dropdown-menu {

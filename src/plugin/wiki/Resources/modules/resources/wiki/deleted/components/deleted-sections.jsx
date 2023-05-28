@@ -72,7 +72,7 @@ const DeletedSectionsComponent = props =>
           callback: () => props.removeSections(props.wiki.id, rows.map(item => item.id)),
           confirm: {
             message: trans('remove_confirmation', {}, 'icap_wiki'),
-            button: trans('confirm')
+            button: trans('confirm', {}, 'actions')
           }
         }
       ]}

@@ -50,7 +50,9 @@ const UploadModal = (props) =>
     />
 
     <Button
-      className="modal-btn btn"
+      className="modal-btn"
+      variant="btn"
+      size="lg"
       type={CALLBACK_BUTTON}
       label={trans('upload', {}, 'actions')}
       primary={true}

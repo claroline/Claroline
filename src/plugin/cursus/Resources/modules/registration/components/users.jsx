@@ -60,8 +60,9 @@ const RegistrationUsers = (props) =>
 
     {props.add &&
       <Button
-        className="btn btn-block btn-emphasis component-container"
+        className="btn btn-primary w-100 mb-3"
         primary={true}
+        size="lg"
         {...props.add}
       />
     }

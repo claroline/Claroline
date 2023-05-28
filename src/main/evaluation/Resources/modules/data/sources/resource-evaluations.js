@@ -24,7 +24,7 @@ export default {
         },
         displayed: true,
         render: (row) => (
-          <span className={`label label-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
+          <span className={`badge rounded-pill text-bg-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
             {constants.EVALUATION_STATUSES_SHORT[row.status]}
           </span>
         )
@@ -58,7 +58,7 @@ export default {
         displayed: true,
         filterable: false,
         options: {
-          type: 'user'
+          type: 'learning'
         }
       }, {
         name: 'score',

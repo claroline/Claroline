@@ -14,45 +14,44 @@ import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/r
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
 import {PathSummary} from '#/plugin/path/resources/path/components/summary'
 
-const PathOverview = props => {
-  return (
-    <ResourceOverview
-      contentText={get(props.path, 'overview.message')}
-      evaluation={props.evaluation}
-      resourceNode={props.resourceNode}
-      display={{
-        score: get(props.path, 'display.showScore'),
-        scoreMax: get(props.path, 'score.total'),
-        successScore: get(props.path, 'score.success'),
-        feedback: !!get(props.path, 'evaluation.successMessage') || !!get(props.path, 'evaluation.failureMessage')
-      }}
-      feedbacks={{
-        success: get(props.path, 'evaluation.successMessage'),
-        failure: get(props.path, 'evaluation.failureMessage')
-      }}
-      actions={[
-        {
-          type: LINK_BUTTON,
-          label: trans('start_path', {}, 'path'),
-          target: `${props.basePath}/play`,
-          primary: true,
-          disabled: props.empty,
-          disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'path')]:[]
-        }
-      ]}
-    >
-      <section className="resource-parameters">
-        {!isEmpty(get(props.path, 'overview.resource')) &&
-          <ResourceEmbedded
-            className="step-primary-resource"
-            resourceNode={get(props.path, 'overview.resource')}
-            showHeader={false}
-          />
-        }
+const PathOverview = (props) =>
+  <ResourceOverview
+    contentText={get(props.path, 'overview.message')}
+    evaluation={props.evaluation}
+    resourceNode={props.resourceNode}
+    display={{
+      score: get(props.path, 'display.showScore'),
+      scoreMax: get(props.path, 'score.total'),
+      successScore: get(props.path, 'score.success'),
+      feedback: !!get(props.path, 'evaluation.successMessage') || !!get(props.path, 'evaluation.failureMessage')
+    }}
+    feedbacks={{
+      success: get(props.path, 'evaluation.successMessage'),
+      failure: get(props.path, 'evaluation.failureMessage')
+    }}
+    actions={[
+      {
+        type: LINK_BUTTON,
+        label: trans('start', {}, 'actions'),
+        target: `${props.basePath}/play`,
+        primary: true,
+        disabled: props.empty,
+        disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'path')]:[]
+      }
+    ]}
+  >
+    <section className="resource-parameters mb-3">
+      {!isEmpty(get(props.path, 'overview.resource')) &&
+        <ResourceEmbedded
+          className="step-primary-resource"
+          resourceNode={get(props.path, 'overview.resource')}
+          showHeader={false}
+        />
+      }
 
-        <h3 className="h2">{trans('summary')}</h3>
-
-        {!isEmpty(props.path.steps) &&
+      {!isEmpty(props.path.steps) &&
+        <>
+          <h3 className="h2">{trans('summary')}</h3>
           <PathSummary
             className="component-container"
             basePath={props.basePath}
@@ -65,19 +64,18 @@ const PathOverview = props => {
             overview={props.overview}
             showEndPage={props.showEndPage}
           />
-        }
+        </>
+      }
 
-        {isEmpty(props.path.steps) &&
-          <ContentPlaceholder
-            size="lg"
-            title={trans('no_step', {}, 'path')}
-          />
-        }
+      {isEmpty(props.path.steps) &&
+        <ContentPlaceholder
+          size="lg"
+          title={trans('no_step', {}, 'path')}
+        />
+      }
+    </section>
+  </ResourceOverview>
 
-      </section>
-    </ResourceOverview>
-  )
-}
 
 PathOverview.propTypes = {
   basePath: T.string.isRequired,

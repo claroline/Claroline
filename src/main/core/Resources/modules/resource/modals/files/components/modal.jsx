@@ -81,7 +81,9 @@ class ResourceFilesCreationModal extends Component {
         </div>
 
         <Button
-          className="modal-btn btn"
+          className="modal-btn"
+          variant="btn"
+          size="lg"
           type={CALLBACK_BUTTON}
           primary={true}
           label={trans('create', {}, 'actions')}

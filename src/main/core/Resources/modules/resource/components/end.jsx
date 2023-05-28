@@ -32,8 +32,10 @@ const WorkspaceCertificatesToolbar = (props) => {
 
   return (
     <Toolbar
-      className="component-container"
-      buttonName="btn btn-block btn-emphasis"
+      className="mb3"
+      variant="btn"
+      buttonName="w-100"
+      size="lg"
       actions={[
         {
           name: 'download-participation-certificate',
@@ -72,13 +74,14 @@ WorkspaceCertificatesToolbar.propTypes = {
 }
 
 const ResourceEnd = (props) =>
-  <section className="resource-end">
+  <section className="resource-end content-lg mt-3">
     <h2 className="sr-only">{trans('resource_end', {}, 'resource')}</h2>
 
     <div className="row">
       <div className="col-md-4">
         {!isEmpty(props.attempt) &&
           <EvaluationDetails
+            className="mb-3"
             evaluation={props.attempt}
             statusTexts={merge({}, constants.EVALUATION_STATUSES, props.statusTexts || {})}
             details={props.details}
@@ -108,12 +111,12 @@ const ResourceEnd = (props) =>
         }
 
         {props.contentText &&
-          <section className="resource-info">
-            <div className="panel panel-default">
+          <section className="resource-info mb-3">
+            <div className="card">
               {typeof props.contentText === 'string' ?
-                <ContentHtml className="panel-body">{props.contentText}</ContentHtml>
+                <ContentHtml className="card-body">{props.contentText}</ContentHtml>
                 :
-                <div className="panel-body">{props.contentText}</div>
+                <div className="card-body">{props.contentText}</div>
               }
             </div>
           </section>
@@ -121,8 +124,9 @@ const ResourceEnd = (props) =>
 
         {get(props, 'display.toolbar') &&
           <Toolbar
-            className="component-container"
-            buttonName="btn btn-block"
+            className="d-grid gap-1 mb-3"
+            variant="btn"
+            buttonName="w-100"
             actions={props.actions}
           />
         }

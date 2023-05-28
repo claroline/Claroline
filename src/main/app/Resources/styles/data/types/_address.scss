@@ -4,9 +4,9 @@
 
 // input
 .address-control {
-    background: $gray-lighter;
+    background: (--#{$prefix}tertiary-bg);
     border: 1px solid transparent;
-    padding: $panel-body-padding;
+    padding: $card-spacer-y $card-spacer-x;
 
-    @include border-radius($border-radius-base);
+    @include border-radius($border-radius);
 }

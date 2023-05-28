@@ -14,17 +14,17 @@
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    margin: 0 (-(floor(math.div($grid-gutter-width, 2))));
+    margin: 0 (-(($grid-gutter-width * .5)));
 
     .btn-overview {
         flex: 1;
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        font-size: $font-size-large;
+        font-size: $font-size-lg;
         text-align: center;
-        color: $text-color;
-        margin: floor(math.div($grid-gutter-width, 2));
+        color: $body-color;
+        margin: ($grid-gutter-width * .5);
         padding: 0;
         background: white;
         border: 1px solid #e5e5e5;
@@ -33,11 +33,11 @@
 
         .action-icon,
         .action-label {
-            padding: floor(math.div($grid-gutter-width, 2));
+            padding: ($grid-gutter-width * .5);
         }
 
         .action-icon {
-            color: $text-muted;
+            color: var(--#{$prefix}secondary-color);
             font-size: 72px;
             padding: 15px;
             background: $gray-lightest;
@@ -55,12 +55,12 @@
         &:focus {
             border-color: $primary;
 
-        @include box-shadow($dropdown-menu-box-shadow);
+            @include box-shadow($dropdown-box-shadow);
 
             .action-icon {
                 background: $primary;
                 color: rgba(255, 255, 255, 0.75);
-                border-color: $btn-primary-border;
+                border-color: $primary;
             }
         }
     }
@@ -83,7 +83,7 @@
         }
 
         // Scale up controls for tablets and up
-        @media screen and (min-width: $screen-sm-min) {
+        @media screen and (min-width: map-get($grid-breakpoints, 'sm')) {
             .btn-entry-nav {
                 font-size: ($carousel-control-font-size * 1.5);
             }
@@ -95,16 +95,16 @@
         flex: 1;
     }
 
-    .panel {
+    /*.panel {
         margin-bottom: 0;
-    }
+    }*/
 
-    .entry-title {
+    /*.entry-title {
         margin-top: 0;
-    }
+    }*/
 
     // TODO : make it generic (DataDetails in panels)
-    .data-details {
+    /*.data-details {
         .panel {
             border: none;
             box-shadow: none;
@@ -114,14 +114,15 @@
         .panel-body {
             padding: 0;
         }
-    }
+    }*/
 }
 
 .entry-help {
     padding: $panel-body-padding;
-    border-radius: $border-radius-base;
-    background: #EBEBEB;
+    background: var(--#{$prefix}secondary-bg);
     margin-bottom: $component-margin-bottom;
+
+    @include border-radius($border-radius);
 }
 
 // same as announce
@@ -145,7 +146,7 @@
 
         .date {
             padding: 0 10px;
-            font-size: $font-size-small;
+            font-size: $font-size-sm;
             font-style: italic;
         }
     }
@@ -168,7 +169,7 @@
     .title {
         display: inline-block;
         color: $gray-light;
-        font-size: $font-size-small;
+        font-size: $font-size-sm;
         min-width: 80px; // todo: find better
     }
 

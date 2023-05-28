@@ -2,22 +2,25 @@
  * Forms.
  */
 
-// FIXME: this is ugly to do it like it
-// if there are additional containers, I'm fucked and it may be required by some other components too
-/*
-.page-content > .data-form {
-    &:first-child {
-        margin-top: $component-margin-bottom;
-
-        > .h-title { // avoid double margin
-            margin-top: 0;
-        }
-    }
-}
-*/
-
 .data-form {
     flex: 1 0 auto; // to fill page if needed
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}
+
+.data-form-flush {
+    > .form-primary-section {
+        padding: $modal-inner-padding;
+
+        + .form-primary-section {
+            border-top: 1px solid $accordion-border-width solid $accordion-border-color;;
+        }
+
+        + .form-sections {
+            border-top: 1px solid $accordion-border-width solid $accordion-border-color;;
+        }
+    }
 }
 
 .form-mode {
@@ -30,75 +33,18 @@
     }
 }
 
-.read-only {
-    background: $input-bg-disabled;
-    border-radius: $input-border-radius;
-    border: 1px solid transparent;
-    line-height: $line-height-computed;
-    padding: $padding-base-vertical $padding-base-horizontal;
-}
-
-// adds some var to configure form controls
-.form-control {
-    padding: $input-padding; // adds a semantic var
-
-    @include box-shadow($input-box-shadow);
-    @include transition($input-transition);
-}
-
-
-// -
-// Checkboxes and radios
-// Rewrites some boostrap defaults (may not be needed anymore with bootstrap 5)
-// ---
-
-input[type=checkbox] {
-    cursor: pointer;
-}
-
-// rewrites Bootstrap checkboxes/radios in flex
-// TODO : manage inline mode in flex too
-.radio,
-.radio-inline,
-.checkbox,
-.checkbox-inline {
-    padding-left: 0; // remove bootstrap default
-
-    label {
-        // Fixes bootstrap that do not remove label font-weight like `.radio` and `.checkbox`
-        // And so do not work as expected
-        font-weight: normal;
-        cursor: pointer;
-        margin-bottom: 0;
-        display: flex;
-        align-items: center;
-        padding-left: 0; // remove bootstrap default
-    }
-
-    // remove bootstrap default
-    input[type="radio"],
-    input[type="checkbox"] {
-        position: static;
-        margin: 0;
-        margin-right: $icon-text-spacer;
-    }
-}
-
-.radio-inline + .radio-inline,
-.checkbox-inline + .checkbox-inline {
-    margin-left: 5px; // same space than vertical
-}
-
 
 // -
 // Errors & messages
 // ---
 
+// @deprecated
 .help-block-list {
     margin: 0;
     padding: 0;
 }
 
+// @deprecated
 .help-block {
     text-align: justify;
 
@@ -117,9 +63,11 @@ input[type=checkbox] {
 }
 
 .error-block {
-    padding: $padding-small-vertical $padding-base-horizontal;
+    padding: map-get($spacers, 1) map-get($spacers, 2);
     border: 1px solid transparent;
-    border-radius: $border-radius-small;
+    border-radius: $border-radius-sm;
+
+    @include border-radius($border-radius-sm);
 }
 
 .error-block-warning,
@@ -141,6 +89,16 @@ input[type=checkbox] {
     margin: 0 $padding-base-horizontal;
 }
 
+.has-warning .empty-placeholder {
+    color: $state-warning-text;
+    border-color: $state-warning-text;
+}
+
+.has-error .empty-placeholder {
+    color: $state-danger-text;
+    border-color: $state-danger-text;
+}
+
 
 // -
 // Multi steps Forms.
@@ -148,7 +106,7 @@ input[type=checkbox] {
 
 .form-stepper {
     .progress + .h-title {
-        margin-top: $line-height-computed - 4px; // 4px is to absorb progress bar height
+        margin-top: calc($line-height-computed - 4px); // 4px is to absorb progress bar height
     }
 }
 
@@ -170,85 +128,10 @@ input[type=checkbox] {
 // ---
 
 .sub-fields {
-    // this is used to conditionally display fields on radio/checkbox check
-    // we align the displayed fields with the label of the radio/checkbox
-    margin-left: 6px; // cheat to have the border in the center of the checkbox/radio of the parent field if any
-    padding-left: 17px;
-    border-left: 2px solid $input-border;
-}
+    padding-left: calc(map-get($spacers, 3) - 2px);
+    border-left: 2px solid $input-border-color;
 
-
-// -
-// Labels
-// ---
-
-.control-label {
-    display: block;
-    color: $input-label-color;
-
-    > small {
-        color: $text-muted;
-        margin-left: 5px;
-        font-style: italic;
-        font-weight: normal;
-    }
-}
-
-// Just permits to individually control the color of the label during validation
-.has-success .control-label {
-    color: $input-success-label-color;
-}
-.has-warning .control-label {
-    color: $input-warning-label-color;
-}
-.has-error .control-label {
-    color: $input-error-label-color;
-}
-
-
-// -
-// Embedded forms
-// ---
-
-// todo : maybe merge with override made for modals
-.embedded-form-section {
-    .content-meta {
-        background: $panel-default-heading-bg;
-        padding: 10px $panel-body-padding;
-        border-bottom: 1px solid $panel-default-border;
-        margin-bottom: 0;
-    }
-
-    .form {
-        margin: -$panel-body-padding; // maybe not the best way to handle it
-    }
-
-    .form-primary-section {
-        // removes panel styles
-        box-shadow: none;
-        border: none;
-        border-radius: 0;
-        margin-bottom: 0;
-
-        + .form-primary-section {
-            border-top: 1px solid $panel-default-border;
-        }
-    }
-
-    .form-sections {
-        margin: 0;
-        .panel {
-            box-shadow: none; // this may be applied to all panels in modals
-            border-radius: 0;
-            border-left: 0;
-            border-right: 0;
-
-            + .panel {
-                border-top: none;
-                margin: 0;
-            }
-        }
-    }
+    @include border-bottom-start-radius($input-border-radius);
 }
 
 
@@ -257,24 +140,22 @@ input[type=checkbox] {
 // ---
 
 .form-toolbar {
-    position: fixed;
-    display: block;
-    right: 45px;
-    bottom: 30px;
+    bottom: map-get($spacers, 3);
     z-index: $zindex-dropdown - 1;
 
     .btn {
-        width: 82px;
-        height: 82px;
+        width: 5rem;
+        height: 5rem;
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        font-size: 32px;
-        border-radius: 50%;
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+        font-size: $h2-font-size;
 
-        + .btn {
-            margin-left: 5px;
+        @include box-shadow($box-shadow);
+
+
+        &:first-child {
+            margin-left: auto;
         }
     }
 }
@@ -286,31 +167,12 @@ input[type=checkbox] {
 
 // Utility class to avoid extra space after a form.
 // meant to be used on a `.form-group`
+// @deprecated
 .form-last {
     margin-bottom: 0 !important;
 }
 
+// @deprecated
 .input-placeholder {
-    color: $input-color-placeholder;
-}
-
-// TODO : merge with placeholders
-.no-item-info {
-    font-style: italic;
-    text-align: center;
-
-    line-height: $line-height-base;
-    border: 1px dashed $input-color-placeholder;
-    border-radius: $input-border-radius;
-    padding: $padding-base-vertical $padding-base-horizontal;
-    color: $input-color-placeholder;
-}
-.has-warning .no-item-info {
-    color: $state-warning-text;
-    border-color: $state-warning-text;
-}
-
-.has-error .no-item-info {
-    color: $state-danger-text;
-    border-color: $state-danger-text;
+    color: $input-placeholder-color;
 }

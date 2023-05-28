@@ -3,3 +3,6 @@
 @import "components/users";
 @import "components/workspaces";
 @import "components/connection-messages";
+
+// TODO : do not load it in the main theme file. Create a stand-alone app
+@import "resources/text";

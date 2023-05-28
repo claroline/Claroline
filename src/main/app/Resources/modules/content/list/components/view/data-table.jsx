@@ -42,7 +42,8 @@ const DataCellContent = props => {
     cellRendering = createElement(props.definition.components.table, merge({}, props.column.options || {}, {
       id: toKey(props.column.name + '-' + props.rowData.id),
       label: props.column.label,
-      data: cellData
+      data: cellData,
+      placeholder: props.column.placeholder
     }))
   } else {
     // use render defined in the type definition
@@ -106,10 +107,11 @@ const DataTableRow = props => {
   }
 
   return (
-    <TableRow className={props.selected ? 'selected' : null}>
+    <TableRow className={props.selected ? 'selected table-primary' : null}>
       {props.onSelect &&
         <TableCell align="center" className="checkbox-cell">
           <input
+            className="form-check-input"
             type="checkbox"
             checked={props.selected}
             onChange={props.onSelect}
@@ -176,6 +178,7 @@ const DataTable = props =>
               tip={trans(0 < props.selection.current.length ? 'list_deselect_all' : 'list_select_all')}
             >
               <input
+                className="form-check-input"
                 type="checkbox"
                 checked={0 < props.selection.current.length}
                 onChange={() => {

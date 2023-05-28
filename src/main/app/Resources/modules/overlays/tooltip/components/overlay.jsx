@@ -1,8 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-
+import {OverlayTrigger} from '#/main/app/overlays/components/overlay'
 import {Tooltip} from '#/main/app/overlays/tooltip/components/tooltip'
 
 const TooltipOverlay = props => {

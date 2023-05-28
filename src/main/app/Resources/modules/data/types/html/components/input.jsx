@@ -41,13 +41,16 @@ class HtmlInput extends Component {
   render() {
     return (
       <div id={`${this.props.id}-container`} className={classes('editor-control text-editor', this.props.className, {
-        minimal: this.state.minimal,
+        minimal: this.state.minimal && !this.state.fullscreen,
         fullscreen: this.state.fullscreen
       })}>
         {!this.state.fullscreen &&
           <Toolbar
-            className="editor-toolbar"
-            buttonName="btn"
+            id={`${this.props.id}-toolbar`}
+            name="editor-toolbar"
+            className="btn-toolbar gap-1"
+            buttonName="btn btn-secondary rounded-pill"
+            size="sm"
             tooltip="bottom"
             actions={[
               {
@@ -104,7 +107,6 @@ implementPropTypes(HtmlInput, DataInputTypes, {
   workspace: T.object,
   onChangeMode: T.func
 }, {
-  //value: '',
   minRows: 4,
   minimal: true
 })

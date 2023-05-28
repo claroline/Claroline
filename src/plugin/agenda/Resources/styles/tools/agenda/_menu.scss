@@ -26,7 +26,7 @@
     }
 
     .agenda-menu-title {
-        margin-left: floor(math.div($grid-gutter-width, 2));
+        margin-left: ($grid-gutter-width * .5);
         font-size: 16px;
     }
 

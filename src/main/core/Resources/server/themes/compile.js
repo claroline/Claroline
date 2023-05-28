@@ -1,7 +1,6 @@
 const fs = require('fs')
 
 const sass = require('sass')
-const path = require('path')
 const postcss = require('postcss')
 const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
@@ -9,29 +8,14 @@ const cssnano = require('cssnano')
 const paths = require('../paths')
 
 function compile(srcFile, outputFile, additionalVarsFiles = []) {
-  const baseName = path.basename(outputFile, '.css')
-
   const compileOptions = {
-    style: 'compressed',
     loadPaths: [
       paths.root(),
       // this is required because `compileString` does not resolve paths like `compile`
       paths.dirname(srcFile),
       ...additionalVarsFiles.map(varsFile => paths.relative(paths.root(), paths.dirname(varsFile)))
-    ]
-    //style: outputFile
-    /*filename: srcFile,
-    paths: [
-      paths.root()
     ],
-    math: 'always',
-    sourceMap: {
-      // directly embed the less files in the map instead of referencing them
-      // this permits to avoid giving access to the original files
-      outputSourceFiles: true,
-      sourceMapBasepath: paths.root(),
-      sourceMapFilename:'./'+baseName+'.css.map'
-    }*/
+    sourceMap: true
   }
 
   let src = fs.readFileSync(srcFile, 'utf8')
@@ -49,16 +33,14 @@ function compile(srcFile, outputFile, additionalVarsFiles = []) {
   return sass.compileString(src, compileOptions)
 }
 
-function optimize(input) {
+function optimize(input, outputFile) {
   return postcss([
-    autoprefixer({
-      browsers: 'last 2 versions'
-    }),
+    autoprefixer(),
     cssnano({
-      safe: true
+      preset: 'default'
     })
   ])
-    .process(input)
+    .process(input, {from: outputFile})
     .then(result => result.css)
 }
 

@@ -17,6 +17,7 @@ const RightsModal = props =>
     title={trans('rights')}
     subtitle={trans(props.toolName, {}, 'tools')}
     onEntering={() => props.loadRights(props.toolName, props.currentContext)}
+    size="lg"
   >
     <ContentRights
       workspace={get(props.currentContext, 'data')}
@@ -25,7 +26,9 @@ const RightsModal = props =>
     />
 
     <Button
-      className="btn modal-btn"
+      className="modal-btn"
+      variant="btn"
+      size="lg"
       type={CALLBACK_BUTTON}
       primary={true}
       label={trans('save', {}, 'actions')}

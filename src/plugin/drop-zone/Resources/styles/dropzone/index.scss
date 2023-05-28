@@ -96,7 +96,7 @@
     }
 
     // Scale up controls for tablets and up
-    @media screen and (min-width: $screen-sm-min) {
+    @media screen and (min-width: map-get($grid-breakpoints, 'sm')) {
         .btn-drop-nav, .btn-revision-nav {
             font-size: ($carousel-control-font-size * 1.5);
         }

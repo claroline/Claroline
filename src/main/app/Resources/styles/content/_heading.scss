@@ -12,8 +12,8 @@
     .nav-tabs { // should replace the base tabs styles instead
         width: 100%;
         display: flex;
-        padding-left: floor(math.div($grid-gutter-width, 2));
-        padding-right: floor(math.div($grid-gutter-width, 2));
+        padding-left: ($grid-gutter-width * .5);
+        padding-right: ($grid-gutter-width * .5);
 
         > li > a,
         > li > button,
@@ -24,7 +24,7 @@
 
             &:hover,
             &:focus {
-                color: $text-color !important;
+                color: $body-color !important;
             }
         }
 
@@ -36,7 +36,7 @@
         > li.active > button:focus,
         > li.active > button:hover,
         .open > button {
-            color: $text-color !important;
+            color: $body-color !important;
             background: $body-bg !important;
         }
 
@@ -57,7 +57,7 @@
 
 .content-heading-image {
     flex-shrink: 0;
-    margin: $component-margin-bottom floor(math.div($grid-gutter-width, 2));
+    margin: $component-margin-bottom ($grid-gutter-width * .5);
     width: 200px;
     height: 200px;
     border-radius: 50%;
@@ -87,7 +87,7 @@
 .content-heading-info {
     flex: 1;
     color: white;
-    margin: $component-margin-bottom floor(math.div($grid-gutter-width, 2));
+    margin: $component-margin-bottom ($grid-gutter-width * .5);
 
     .content-heading-title {
         font-weight: 900;

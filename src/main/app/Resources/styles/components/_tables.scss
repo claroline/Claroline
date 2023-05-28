@@ -8,11 +8,11 @@
     // header
     > thead > tr > th {
         position: relative; // for positioning sorting indicator
-        border-bottom: none !important;
+        //border-bottom: none !important;
         font-weight: normal;
-        padding-top: floor(math.div($table-cell-padding-y, 2));
-        padding-bottom: floor(math.div($table-cell-padding-y, 2));
-        font-size: 14px/*$font-size-small*/;
+        //padding-top: floor(math.div($table-cell-padding-y, 2));
+        //padding-bottom: floor(math.div($table-cell-padding-y, 2));
+        font-size: $font-size-sm;
         text-transform: uppercase;
     }
 
@@ -27,7 +27,7 @@
     > tbody {
         //@include box-shadow($box-shadow);
 
-        th:first-child,
+        /*th:first-child,
         td:first-child {
             border-left: 1px solid $table-border-color;
         }
@@ -40,13 +40,13 @@
         > tr:last-child th,
         > tr:last-child td {
             border-bottom: 1px solid $table-border-color;
-        }
+        }*/
 
-        > tr {
-            background: $panel-bg;
-        }
+        /*> tr {
+            background: $card-bg;
+        }*/
 
-        > tr.selected {
+        /*> tr.selected {
             background-color: $state-info-bg;
             border-color: #abcfe0; // todo : use a var
 
@@ -63,7 +63,7 @@
 
         > tr.selected:hover {
             background-color: #b5d9ea !important; // important is required to override strips color
-        }
+        }*/
     }
 
     .selected-actions-row > td {
@@ -86,11 +86,11 @@
     }
 }
 
-.table-striped {
+/*.table-striped {
     > tbody > tr.selected:nth-of-type(odd) {
         background-color: #bfe3f4;
     }
-}
+}*/
 
 
 // -
@@ -127,22 +127,19 @@
     }
 }
 
-.table-condensed {
+.table-sm/*,
+.table-condensed*/ {
     .list-selected {
         .list-selected-label {
-            padding: $table-condensed-cell-padding 0;
+            padding: $table-cell-padding-y-sm 0;
             .fa {
-                margin-right: $table-condensed-cell-padding;
+                margin-right: $table-cell-padding-x-sm;
             }
-        }
-
-
-        .btn {
-            padding: $table-condensed-cell-padding - 1; // -1 to absorb btn border
         }
     }
 
+    .list-selected .btn,
     .actions-cell .btn {
-        padding: $table-condensed-cell-padding - 1;  // -1 to absorb btn border
+        padding: calc($table-cell-padding-y-sm - 1px) calc($table-cell-padding-x-sm - 1px); // -1 to absorb btn border
     }
 }

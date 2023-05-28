@@ -32,7 +32,7 @@
     flex-shrink: 0;
     align-self: flex-start; // make sure tick is always in the top left corner
     margin-top: 4px; // same as checkboxes/radios
-    margin-right: floor(math.div($grid-gutter-width, 2));
+    margin-right: ($grid-gutter-width * .5);
   }
 
   .choice-item-content {
@@ -44,18 +44,18 @@
   }
 
   .choice-item-feedback {
-    margin-left: floor(math.div($grid-gutter-width, 2));
+    margin-left: ($grid-gutter-width * .5);
   }
 }
 
 .choice-editor {
   .choice-answer-item {
     .text-fields {
-      margin-right: floor(math.div($grid-gutter-width, 2));
+      margin-right: ($grid-gutter-width * .5);
     }
 
     .score {
-      margin-right: floor(math.div($grid-gutter-width, 2));
+      margin-right: ($grid-gutter-width * .5);
     }
   }
 }
@@ -65,8 +65,8 @@
     cursor: pointer;
 
     &:hover:not(.selected-answer) {
-      background: darken($answer-item-bg, 10%);
-      border-color: darken($answer-item-border, 10%);
+      background: $answer-item-hover-bg;
+      border-color: $answer-item-hover-border-color;
     }
   }
 }

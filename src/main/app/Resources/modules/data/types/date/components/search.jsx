@@ -6,16 +6,16 @@ import {DataSearch as DataSearchTypes} from '#/main/app/data/types/prop-types'
 
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
-import {Calendar} from '#/main/core/layout/calendar/components/calendar'
+import {CalendarMenu} from '#/main/app/data/types/date/components/menu'
 
-const DateSearch = props =>
+const DateSearch = (props) =>
   <span className="data-filter date-filter">
     {props.isValid &&
       <span className="available-filter-value">{props.search}</span>
     }
 
     <Button
-      className="btn btn-filter"
+      className="btn btn-outline-secondary btn-filter"
       type={MENU_BUTTON}
       icon={props.calendarIcon}
       label={trans('show-calendar', {}, 'actions')}
@@ -23,17 +23,15 @@ const DateSearch = props =>
       size="sm"
       disabled={props.disabled}
       menu={
-        <div className="dropdown-menu">
-          <Calendar
-            selected={props.isValid ? props.search : ''}
-            onChange={props.updateSearch}
-            minDate={props.minDate}
-            maxDate={props.maxDate}
-            time={props.time}
-            minTime={props.minTime}
-            maxTime={props.maxTime}
-          />
-        </div>
+        <CalendarMenu
+          value={props.isValid ? props.search : ''}
+          onChange={props.updateSearch}
+          minDate={props.minDate}
+          maxDate={props.maxDate}
+          time={props.time}
+          minTime={props.minTime}
+          maxTime={props.maxTime}
+        />
       }
     />
   </span>

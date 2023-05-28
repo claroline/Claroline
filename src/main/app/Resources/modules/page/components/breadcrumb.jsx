@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import omit from 'lodash/omit'
 
 import {toKey} from '#/main/core/scaffolding/text'
@@ -38,7 +37,6 @@ const PageBreadcrumb = props => {
 
 PageBreadcrumb.propTypes = {
   className: T.string,
-  // TODO : should only accept label + target (not a full action)
   path: T.arrayOf(T.shape({
     id: T.string,
     type: T.string,

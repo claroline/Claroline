@@ -6,8 +6,8 @@
 @import "src/main/app/Resources/styles/variables";
 
 $agenda-bg:          white;
-$agenda-color:       $gray;
-$agenda-grid-border: $panel-default-border;
+$agenda-color:       $gray-500;
+$agenda-grid-border: var(--#{$prefix}border-color);
 
 $event-color-default: $gray-lighter;
-$event-poster-border-radius:   8px;
+$event-poster-border-radius:   $border-radius-lg;

@@ -67,7 +67,7 @@ const Overview = props =>
       }
     ]}
   >
-    <section className="resource-parameters">
+    <section className="resource-parameters mb-3">
       <h3 className="h2">{trans('evaluation_configuration', {}, 'dropzone')}</h3>
 
       <Parameters

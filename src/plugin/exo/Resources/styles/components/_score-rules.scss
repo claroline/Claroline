@@ -13,7 +13,7 @@
     background: $gray-lighter;
     margin-bottom: 5px;
 
-    @include border-radius($border-radius-base);
+    @include border-radius($border-radius);
 
     .form-group {
         margin: 0 !important;

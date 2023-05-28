@@ -1,5 +1,5 @@
+const fs = require('fs')
 const path = require('path')
-const shell = require('shelljs')
 
 const THEME_ROOT_FILE    = 'index.scss'
 const THEME_VARS_FILE    = '_variables.scss'
@@ -17,28 +17,41 @@ const Theme = function (themeName, themeLocation) {
   // Get root file of the theme
   const rootFile = path.join(this.location, this.name, THEME_ROOT_FILE)
   const oldRootFile = path.join(this.location, this.name+'.scss') // retro-compatibility : support single file themes
-  if (shell.test('-e', oldRootFile)) {
+
+  try {
+    fs.accessSync(oldRootFile, fs.constants.F_OK);
+
     // It's an old theme
     this.old = true
     this.root = oldRootFile
-  } else if (shell.test('-e', rootFile)) {
-    // It's a new theme
-    this.old = false
-    this.root = rootFile
+  } catch (err) {
+    try {
+      fs.accessSync(rootFile, fs.constants.F_OK);
+
+      // It's a new theme
+      this.old = false
+      this.root = rootFile
+    } catch (err) {
+      this.root = null
+    }
   }
 
   // Get global variables
   const globalVarsFile = path.join(this.location, this.name, THEME_VARS_FILE)
-  if (shell.test('-e', globalVarsFile)) {
-    this.globalVars = path.join(this.location, this.name, 'variables')
+  try {
+    fs.accessSync(globalVarsFile, fs.constants.F_OK);
+    this.globalVars = globalVarsFile
+  } catch (err) {
+    this.globalVars = null
   }
 
   // Get static assets
   this.staticAssets = [];
   ['fonts', 'images'].map(assetType => {
-    if (shell.test('-e', path.join(this.location, this.name, assetType))) {
+    try {
+      fs.accessSync(path.join(this.location, this.name, assetType), fs.constants.F_OK);
       this.staticAssets.push(assetType)
-    }
+    } catch (err) {}
   })
 }
 

@@ -24,11 +24,11 @@
 
 .transfer-schema-field {
     padding: 10px;
-    border: 1px solid $panel-default-border;
-    background: $panel-bg;
-    border-radius: $panel-border-radius;
+    border: 1px solid $card-border-color;
+    background: $card-bg;
+    border-radius: $card-border-radius;
 
-    @include box-shadow($panel-box-shadow);
+    @include box-shadow($card-box-shadow);
 
     &.selected,
     &.required {
@@ -49,8 +49,8 @@
 }
 
 .transfer-schema-one-of {
-    background: #EBEBEB;
-    border-radius: $border-radius-base;
+    background: var(--#{$prefix}secondary-bg);
+    border-radius: $border-radius;
     padding: 10px;
 
     &.required {
@@ -64,8 +64,8 @@
         .transfer-schema-or {
             order: 1;
             z-index: 1;
-            border: 2px solid $panel-default-border;
-            background: $panel-bg;
+            border: 2px solid $card-border-color;
+            background: $card-bg;
             text-transform: uppercase;
             display: flex;
             align-items: center;

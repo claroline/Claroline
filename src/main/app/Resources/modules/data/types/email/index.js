@@ -3,6 +3,7 @@ import {createElement} from 'react'
 import {trans, tval} from '#/main/app/intl/translation'
 import {chain, string, email, notExist} from '#/main/app/data/types/validators'
 
+import {EmailDisplay} from '#/main/app/data/types/email/components/display'
 import {EmailInput} from '#/main/app/data/types/email/components/input'
 
 const dataType = {
@@ -22,7 +23,8 @@ const dataType = {
     return chain(value, options, [string, email, notExist])
   },
   components: {
-    input: EmailInput
+    input: EmailInput,
+    display: EmailDisplay
   }
 }
 

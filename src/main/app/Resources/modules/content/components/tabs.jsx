@@ -8,12 +8,13 @@ import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
 
 const ContentTabs = (props) =>
-  <ul className={classes('nav nav-tabs', props.className)}>
+  <ul className={classes('nav nav-underline nav-justified', props.className)}>
     {!isEmpty(props.backAction) &&
-      <li className="nav-back">
+      <li className="nav-item">
         <Button
           label={trans('back')}
           {...props.backAction}
+          className="nav-link"
           icon="fa fa-fw fa-arrow-left"
           tooltip="bottom"
         />
@@ -25,19 +26,20 @@ const ContentTabs = (props) =>
       .map(section =>
         <li
           key={section.name}
-          className={classes({
-            active: section.active
-          })}
+          className="nav-item"
         >
           <Button
             {...section}
+            className={classes('nav-link', {
+              active: section.active
+            })}
           />
         </li>
       )
     }
 
     {!isEmpty(props.actions) &&
-      <li className="nav-actions">
+      <li className="nav-item nav-actions">
         <Button
           type={MENU_BUTTON}
           icon="fa fa-fw fa-ellipsis-v"

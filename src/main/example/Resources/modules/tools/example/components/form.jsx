@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {FormData} from '#/main/app/content/form/containers/data'
 
@@ -19,7 +19,19 @@ const ExampleForm = (props) =>
     subtitle="Forms"
   >
     <FormData
+      className="mt-3"
       name={selectors.FORM_NAME}
+      buttons={true}
+      save={{
+        type: CALLBACK_BUTTON,
+        label: trans('save', {}, 'actions'),
+        callback: () => true
+      }}
+      cancel={{
+        type: CALLBACK_BUTTON,
+        label: trans('save', {}, 'actions'),
+        callback: () => true
+      }}
       definition={[
         {
           id: 'general',
@@ -45,6 +57,14 @@ const ExampleForm = (props) =>
               type: 'html',
               placeholder: 'My placeholder'
             }, {
+              name: 'date',
+              label: 'Date',
+              type: 'date'
+            }, {
+              name: 'dateRange',
+              label: 'Date range',
+              type: 'date-range'
+            }, {
               name: 'file',
               label: 'File upload',
               type: 'file'
@@ -58,8 +78,103 @@ const ExampleForm = (props) =>
                   label: 'Another text',
                   type: 'string',
                   displayed: (data) => !!data.boolean
-                },
+                }
               ]
+            }
+          ]
+        }, {
+          title: 'Choices',
+          subtitle: 'An additional description to better explain the role of the fields inside the section.',
+          fields: [
+            {
+              name: 'choiceSimple',
+              label: 'Simple choice',
+              type: 'choice',
+              options: {
+                choices: {
+                  choice1: 'Choice 1',
+                  choice2: 'Choice 2',
+                  choice3: 'Choice 3'
+                }
+              }
+            }, {
+              name: 'choiceInlineSimple',
+              label: 'Inline simple choice',
+              type: 'choice',
+              options: {
+                inline: true,
+                choices: {
+                  choice1: 'Choice 1',
+                  choice2: 'Choice 2',
+                  choice3: 'Choice 3'
+                }
+              }
+            }, {
+              name: 'choiceCondensedSimple',
+              label: 'Condensed simple choice',
+              help: 'Condensed choices are not really mobile friendly. You should prefer the flat version when displaying short choices list.',
+              type: 'choice',
+              options: {
+                condensed: true,
+                choices: {
+                  choice1: 'Choice 1',
+                  choice2: 'Choice 2',
+                  choice3: 'Choice 3'
+                }
+              }
+            }, {
+              name: 'choiceMultiple',
+              label: 'Multiple choices',
+              type: 'choice',
+              options: {
+                multiple: true,
+                choices: {
+                  choice1: 'Choice 1',
+                  choice2: 'Choice 2',
+                  choice3: 'Choice 3'
+                }
+              }
+            }, {
+              name: 'choiceInlineMultiple',
+              label: 'Inline multiple choices',
+              type: 'choice',
+              options: {
+                inline: true,
+                multiple: true,
+                choices: {
+                  choice1: 'Choice 1',
+                  choice2: 'Choice 2',
+                  choice3: 'Choice 3'
+                }
+              }
+            }, {
+              name: 'choiceCondensedMultiple',
+              label: 'Condensed multiple choices',
+              type: 'choice',
+              help: 'Condensed choices are not really mobile friendly. You should prefer the flat version when displaying short choices list.',
+              options: {
+                multiple: true,
+                condensed: true,
+                choices: {
+                  choice1: 'Choice 1',
+                  choice2: 'Choice 2',
+                  choice3: 'Choice 3'
+                }
+              }
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-power-off',
+          title: 'Authentication',
+          fields: [
+            {
+              name: 'username',
+              label: 'Username',
+              type: 'username'
+            }, {
+              name: 'password',
+              label: 'Password',
+              type: 'password'
             }
           ]
         }, {
@@ -68,21 +183,17 @@ const ExampleForm = (props) =>
           fields: [
             {
               name: 'image',
-              label: 'image',
+              label: 'Image',
               type: 'image'
             }, {
               name: 'icon',
               label: 'FontAwesome icon',
               help: trans('resource_showIcon_help', {}, 'resource'),
-              type: 'boolean'
+              type: 'icon'
             }, {
               name: 'color',
               label: 'Color',
-              type: 'boolean'
-            }, {
-              name: 'display.fullscreen',
-              label: trans('resource_fullscreen', {}, 'resource'),
-              type: 'boolean'
+              type: 'color'
             }
           ]
         }

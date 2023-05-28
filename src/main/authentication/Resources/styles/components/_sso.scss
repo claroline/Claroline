@@ -6,9 +6,10 @@
 
 .btn-third-party-login {
   text-align: left;
-  border-radius: $sso-btn-border-radius;
+  //border-radius: $sso-btn-border-radius;
   color: $sso-btn-color !important;
   font-size: $sso-btn-font-size;
+  //box-shadow: none;
 
   &:hover,
   &:focus {
@@ -35,7 +36,7 @@
   text-align: center;
   max-width: floor(math.div($login-max-width, 2));
   width: 100%;
-  margin: 0 auto $component-margin-bottom;
+  margin: 0 auto map-get($spacers, 3);
 
   .img-thumbnail {
     border-radius: 50%;
@@ -65,13 +66,13 @@
 
   .external-link-panel {
     margin-top: -55px;
-    border: 1px solid $panel-default-border;
-    border-radius: $panel-border-radius;
-    background: $panel-bg;
+    border: 1px solid $card-border-color;
+    border-radius: $card-border-radius;
+    background: $card-bg;
     padding: 30px 45px;
     padding-top: 55px + 15px; // half-size of the app icon (4px comes from img-thumbnail) + standard padding
 
-    @include box-shadow($panel-box-shadow);
+    @include box-shadow($card-box-shadow);
   }
 
   &.dropbox      { @include external-app-variant($sso-dropbox-primary,    $sso-dropbox-primary); }

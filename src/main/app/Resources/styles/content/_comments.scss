@@ -1,7 +1,7 @@
 
 .comments-container {
-    padding: $panel-body-padding;
-    background: $gray-lighter;
+    padding: $card-spacer-y $card-spacer-y;
+    background: var(--#{$prefix}secondary-bg);
     margin-bottom: $component-margin-bottom;
 
     @include border(1px solid transparent); // for correct alignment
@@ -44,8 +44,8 @@
         height: 16px;
         bottom: -8px;
         right: -8px;
-        background: $label-primary-bg;
-        color: $label-color;
+        //background: $label-primary-bg;
+        //color: $label-color;
         font-size: 10px;
         font-weight: bold;
         border-radius: 50%;

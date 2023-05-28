@@ -142,9 +142,9 @@ function getDefaultAction(resourceNode, nodesRefresher, path, currentUser = null
  * @return {string}
  */
 function getToolbar(primaryAction = null) {
-  let toolbar = 'edit publish unpublish'
+  let toolbar = 'edit'
   if (primaryAction) {
-    toolbar = primaryAction + ' | ' + toolbar
+    toolbar = primaryAction + ' ' + toolbar
   }
 
   return toolbar

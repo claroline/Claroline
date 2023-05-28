@@ -8,6 +8,7 @@ import {
 } from '#/main/app/content/form/store'
 
 import {ParametersModal as ParametersModalComponent} from '#/main/core/resource/modals/parameters/components/modal'
+
 import {reducer, selectors, actions} from '#/main/core/resource/modals/parameters/store'
 
 const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(

@@ -42,7 +42,7 @@
 
     .permission-name {
         border-bottom: 1px solid $table-border-color;
-        padding: $table-cell-padding;
+        padding: $table-cell-padding-y $table-cell-padding-x;
         position: absolute;
         bottom: 0;
         width: 162px;

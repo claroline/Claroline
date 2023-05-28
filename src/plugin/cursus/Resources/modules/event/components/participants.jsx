@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
@@ -181,7 +181,7 @@ EventPresences.propTypes = {
 
 const EventParticipants = (props) =>
   <Fragment>
-    <div className="row" style={{marginTop: -20}}>
+    <div className="d-flex flex-direction-row">
       <ContentCounter
         icon="fa fa-chalkboard-teacher"
         label={trans('tutors', {}, 'cursus')}

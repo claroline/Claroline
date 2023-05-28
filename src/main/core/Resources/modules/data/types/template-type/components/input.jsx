@@ -13,8 +13,7 @@ import {MODAL_TEMPLATE_TYPES} from '#/main/core/modals/template-types'
 
 const TemplateTypeButton = (props) =>
   <Button
-    className="btn btn-block"
-    style={{marginTop: 10}}
+    className="btn btn-outline-primary w-100 mt-2"
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
     label={trans('add_template_type', {}, 'template')}

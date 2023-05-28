@@ -50,8 +50,8 @@ const CurrentStep = props => {
       }
 
       {props.items.map((item, index) => (
-        <div className="panel panel-default" key={item.id}>
-          <div className="panel-body">
+        <div className="card mb-3" key={item.id}>
+          <div className="card-body">
             {!isQuestionType(item.type) ?
               <ContentItemPlayer
                 showTitle={props.showQuestionTitles}
@@ -149,7 +149,7 @@ class PlayerComponent extends Component {
             className="progress-minimal"
             value={Math.floor((this.props.progression.current / this.props.progression.total) * 100)}
             size="xs"
-            type="user"
+            type="learning"
           />
         }
         {this.props.testMode &&

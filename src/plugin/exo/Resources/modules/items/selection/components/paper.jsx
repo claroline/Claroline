@@ -17,7 +17,7 @@ const SelectionPaper = (props) =>
     yours={
       <div>
         {props.item.hasExpectedAnswers && props.item.mode === 'find' &&
-          <div className="panel-body">
+          <div className="card-body">
             <span className="btn btn-danger" style={{ cursor: 'default'}}>
               {trans('selection_missing_click', {}, 'quiz')} <span className="badge">{props.item.penalty}</span>
             </span>

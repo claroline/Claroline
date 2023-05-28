@@ -4,7 +4,7 @@
     flex: 1; // fill .page-content
     display: flex;
     flex-direction: column;
-    margin: 0 (-(floor(math.div($grid-gutter-width, 2)))); // absorb .page-content padding
+    margin: 0 (-(($grid-gutter-width * .5))); // absorb .page-content padding
 
     .day {
         flex: 1;
@@ -36,7 +36,7 @@
             border: 1px solid transparent;
             font-weight: bold;
 
-            font-size: $font-size-large;
+            font-size: $font-size-lg;
         }
 
         &.now .day-number {
@@ -62,7 +62,7 @@
         align-items: baseline;
         text-align: center;
         padding: 5px 10px;
-        border-radius: $border-radius-base;
+        border-radius: $border-radius;
 
         .event-color {
             flex-shrink: 0;
@@ -79,7 +79,7 @@
         }
 
         &:hover {
-            background: $table-bg-hover;
+            background: var(--#{$prefix}tertiary-bg);
         }
     }
 }

@@ -43,8 +43,8 @@ const Chapter = props => {
           backAction={props.backAction}
         />
 
-        <div className="panel panel-default">
-          <ContentHtml className="panel-body">
+        <div className="card mb-3">
+          <ContentHtml className="card-body">
             {props.chapter.text ? props.chapter.text : ''}
           </ContentHtml>
         </div>

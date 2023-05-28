@@ -29,6 +29,7 @@ const AboutModal = props =>
 
     {props.user &&
       <DetailsData
+        flush={true}
         data={props.user}
         definition={[
           {

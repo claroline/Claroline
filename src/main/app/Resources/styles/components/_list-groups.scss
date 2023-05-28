@@ -1,10 +1,7 @@
-.list-group {
-    margin-bottom: $list-group-margin-bottom;
-}
 
 .list-group-striped {
     > .list-group-item:nth-of-type(odd) {
-        background-color: $table-bg-accent;
+        background-color: $table-striped-bg;
     }
 }
 
@@ -13,7 +10,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 14px/*$font-size-small*/;
+        font-size: $font-size-sm;
         text-transform: uppercase;
 
         .value {
@@ -26,20 +23,8 @@
     }
 }
 
-.checkbox.list-group-item {
-    margin-top: 0;
-
-    // Hover state
-    &:not(.list-group-item-selected):hover,
-    &:not(.list-group-item-selected):focus {
-        color: $list-group-link-hover-color;
-        background-color: $list-group-hover-bg;
-    }
-}
 
 .list-group-item {
-    padding: $list-group-item-padding-v $list-group-item-padding-h;
-
     .action-subscript {
         float: right; // todo : find a better approach
 

@@ -20,14 +20,14 @@
     display: flex;
 
     .text-fields {
-      margin-right: floor(math.div($grid-gutter-width, 2));
+      margin-right: ($grid-gutter-width * .5);
     }
   }
 
   .odd-score,
   .association-score {
     width: 60px;
-    margin-right: floor(math.div($grid-gutter-width, 2));
+    margin-right: ($grid-gutter-width * .5);
   }
 
   .pair {
@@ -51,7 +51,7 @@
       background-color: #fff;
       border: 1px solid white;
       padding: $padding-base-vertical $padding-base-horizontal;
-      border-radius: $border-radius-base;
+      border-radius: $border-radius;
       min-height: $input-height-base;
 
       .item-content {
@@ -92,7 +92,7 @@
       background-color: #fff;
       border: 1px solid white;
       padding: $padding-base-vertical $padding-base-horizontal;
-      border-radius: $border-radius-base;
+      border-radius: $border-radius;
     }
   }
 

@@ -5,14 +5,14 @@
     background: $event-color-default;
 
     text-align: left;
-    font-size: $font-size-small;
+    font-size: $font-size-sm;
     padding: 2px 5px;
     margin-bottom: 2px;
 
     &.event-start {
         margin-left: 5px;
-        border-top-left-radius: $border-radius-small;
-        border-bottom-left-radius: $border-radius-small;
+        border-top-left-radius: $border-radius-sm;
+        border-bottom-left-radius: $border-radius-sm;
     }
 
     &.event-start-out-range {
@@ -21,8 +21,8 @@
 
     &.event-end {
         margin-right: 5px;
-        border-top-right-radius: $border-radius-small;
-        border-bottom-right-radius: $border-radius-small;
+        border-top-right-radius: $border-radius-sm;
+        border-bottom-right-radius: $border-radius-sm;
     }
 
     &.event-end-out-range {

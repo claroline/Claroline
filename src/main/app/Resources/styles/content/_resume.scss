@@ -4,9 +4,10 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  background: $gray-lighter;
+  background: var(--#{$prefix}secondary-bg);
   margin-bottom: $component-margin-bottom;
-  border-radius: $border-radius-base;
+
+  @include border-radius($border-radius);
 
   .content-resume-info {
     padding: $panel-body-padding;
@@ -38,7 +39,7 @@
     height: 100%;
     display: flex;
     align-items: flex-end;
-    @include border-radius($border-radius-small);
+    @include border-radius($border-radius-sm);
 
     + .score-progress {
       margin-left: 5px;
@@ -49,8 +50,8 @@
 
   .score-progressbar {
     width: 100%;
-    background: $brand-secondary;
+    background: $learning;
 
-    @include border-radius($border-radius-small);
+    @include border-radius($border-radius-sm);
   }
 }

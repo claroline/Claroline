@@ -31,16 +31,16 @@ svg.chart {
 }
 
 .panel-analytics {
-    .panel-heading {
+    .card-header {
         background: transparent;
         padding: 20px $panel-body-padding * 2;
     }
 
-    .panel-title {
+    /*.card-title {
         font-weight: bold;
-    }
+    }*/
 
-    .panel-actions {
+    /*.panel-actions {
         right: $panel-body-padding;
 
         .btn-link {
@@ -51,11 +51,11 @@ svg.chart {
                 font-weight: bold;
             }
         }
-    }
+    }*/
 
     .chart-legend {
         .btn-link {
-            font-size: $font-size-small;
+            font-size: $font-size-sm;
             padding: 0;
             border: none;
 
@@ -65,7 +65,7 @@ svg.chart {
         }
     }
 
-    .panel-body {
+    .card-body {
         padding: $panel-body-padding * 2;
     }
 

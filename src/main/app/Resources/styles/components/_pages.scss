@@ -13,7 +13,7 @@
         top: 0;
         bottom: 0;
         right: 0;
-        background: $body-bg; // regular page container has no background. We need to hide what is under
+        background: var(--#{$prefix}body-bg); // regular page container has no background. We need to hide what is under
         overflow-y: auto; // get the scrollbar
     }
 }
@@ -21,10 +21,8 @@
 .fullscreen-close {
     position: absolute;
     z-index: $zindex-fullscreen;
-    top: floor(math.div($grid-gutter-width, 2));
+    top: ($grid-gutter-width * .5);
     right: $grid-gutter-width;
-    //font-weight: $close-font-weight;
-    //color: $close-color;
     font-size: 36px;
     line-height: 1;
     opacity: 0.6;
@@ -38,13 +36,10 @@
     &:active,
     &.active {
         opacity: 1;
-        //text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     }
 }
 
 .page-header {
-    // this is to make box shadow of page-header and footer appear over content with bg. I should find a better way to handle it (without z-index)
-    //z-index: 2;
     position: relative;
     display: flex;
     align-items: flex-end;
@@ -86,7 +81,7 @@
     flex-shrink: 0;
     width: 70px;
     height: 70px;
-    margin: 10px floor(math.div($grid-gutter-width, 2));
+    margin: 10px ($grid-gutter-width * .5);
 
     > * {
         max-width: 100%;
@@ -97,36 +92,17 @@
 .page-title {
     font-size: $page-header-font-size;
     font-weight: $page-header-font-weight;
-    margin: floor(math.div($grid-gutter-width, 2)) 0;
-    padding: 0 floor(math.div($grid-gutter-width, 2));
-
-    > small {
-        display: block;
-        margin-top: 5px;
-        font-size: 50%;
-        font-style: italic;
-    }
+    margin: $grid-gutter-width * .5 0;
+    padding: 0 $grid-gutter-width * .5;
 }
 
 .page-actions {
     order: 3;
     margin-left: auto;
-    margin-top: floor(math.div($grid-gutter-width, 2));
-    margin-bottom: floor(math.div($grid-gutter-width, 2));
-    padding: 0 floor(math.div($grid-gutter-width, 2));
+    margin-top: ($grid-gutter-width * .5);
+    margin-bottom: ($grid-gutter-width * .5);
+    padding: 0 ($grid-gutter-width * .5);
     white-space: nowrap;
-
-    > .page-actions-btn:first-child  {
-        margin-left: 0; // absorb first btn margin
-    }
-
-    .page-actions-btn {
-        margin-left: .2em;
-    }
-
-    .dropdown-menu {
-        margin-top: 5px; // increase margin to avoid overlap btn label if any
-    }
 }
 
 .page-actions-separator {
@@ -136,8 +112,6 @@
 
 // Current styles permit to have 7 buttons in one line on 360px screens (without btn groups)
 .page-actions-btn {
-    @include button-base();
-
     position: relative; // for buttons with labels
     text-align: center;
     border-radius: (.65em * 2) + 1.25em;
@@ -147,7 +121,7 @@
 
     border: 1px solid transparent !important; // not perfect, it's required to override default btn border
 
-    &.default {
+    /*&.default {
         @include button-variant($page-action-default-color, $page-action-default-bg, $page-action-default-border);
     }
 
@@ -157,7 +131,7 @@
 
     &.danger {
         @include button-variant($page-action-danger-color, $page-action-danger-bg, $page-action-danger-border);
-    }
+    }*/
 
     // displays icon as a square
     .action-icon {
@@ -170,24 +144,16 @@
         top: auto; // reset bootstrap default
         bottom: -5px;
         right: 0;
-        font-size: 14px;
+        font-size: .75rem;
         line-height: 1;
-
-        &.label {
-            font-size: 10px;
-            padding: .2em .4em;
-        }
     }
 }
 
 .page-content {
-    // this is to make box shadow of page-header and footer appear over content with bg. I should find a better way to handle it (without z-index)
-    //z-index: 1;
     position: relative;
     display: flex;
     flex-direction: column;
     flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
-    padding: 0 floor(math.div($grid-gutter-width, 2));
 }
 
 .page-icon {
@@ -199,8 +165,7 @@
         background: white;
         border-radius: 50%;
         font-size: 32px;
-        padding: floor(math.div($grid-gutter-width, 2));
-        //@include box-shadow(0 0px 4px rgba(0,0,0,.5));
+        padding: ($grid-gutter-width * .5);
     }
 
     .tool-icon {
@@ -209,7 +174,7 @@
     }
 }
 
-@media (max-width: $screen-sm-min) {
+@media (max-width: map-get($grid-breakpoints, 'sm')) {
     .page-header {
         flex-wrap: wrap;
     }

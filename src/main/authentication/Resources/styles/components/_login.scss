@@ -12,7 +12,7 @@ $auth-or-font-size: 20px;
   text-align: center;
 
   .login-container {
-    box-shadow: $modal-content-box-shadow;
+    @include box-shadow(var(--#{$prefix}modal-box-shadow));
   }
 
   .modal-content {
@@ -38,34 +38,36 @@ $auth-or-font-size: 20px;
   // if there is lots of space
   justify-content: center;
 
-  .login-logo {
+  /*.login-logo {
     align-self: center; // avoid image to be stretched
-    margin-bottom: $component-margin-bottom;
+    margin-bottom: map-get($spacers, 3);
     max-width: 100%;
-  }
+  }*/
 
-  .login-title {
+  /*.login-title {
     margin-top: 0;
     margin-bottom: $component-margin-bottom;
-  }
+  }*/
 
-  .login-info {
+  /*.login-info {
     text-align: justify;
     max-width: $login-max-width;
     align-self: center;
-    margin-bottom: $component-margin-bottom;
-  }
+    //margin-bottom: $component-margin-bottom;
+  }*/
 }
 
 // In screen > SM, Claroline login form and SSO btns
 // are displayed horizontally
 .login-container {
   display: flex;
-  border: 1px solid $panel-default-border;
-  box-shadow: $panel-box-shadow;
-  background-color: $panel-bg;
+  flex-direction: row;
+  //border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
+  //background-color: $card-bg;
   width: 100%;
-  margin: 0 auto $component-margin-bottom;
+  //margin: 0 auto $component-margin-bottom;
+
+  //@include box-shadow($box-shadow);
 
   // for cases when the auth block is not displayed in the login page
   max-width: floor(math.div($login-max-width, 2));
@@ -74,17 +76,17 @@ $auth-or-font-size: 20px;
   }
 
   .form-primary-section {
-    border: none;
-    box-shadow: none;
+    /*border: none;
+    box-shadow: none;*/
 
-    .panel-body {
+    /*.panel-body {
       padding: 0;
-    }
+    }*/
   }
 
   .authentication-help {
-    font-style: italic;
-    color: $gray-light;
+    //font-style: italic;
+    color: var(--#{$prefix}secondary-color);
     margin-bottom: 30px;
     text-align: center;
   }
@@ -102,8 +104,8 @@ $auth-or-font-size: 20px;
 
   .account-authentication-column {
     + .external-authentication-column {
-      border-left: 1px solid $panel-default-border;
-      background-color: $panel-footer-bg;
+      border-left: 1px solid $card-border-color;
+      background-color: var(--#{$prefix}tertiary-bg);
 
       // create shadow for the "or" circle
       &::before {
@@ -115,7 +117,7 @@ $auth-or-font-size: 20px;
 
         height: $auth-or-size;
         width: floor(math.div($auth-or-size, 2));
-        border: 1px solid $panel-default-border;
+        border: 1px solid $card-border-color;
         border-radius: 0 floor(math.div($auth-or-size, 2)) floor(math.div($auth-or-size, 2)) 0;
       }
     }
@@ -143,12 +145,12 @@ $auth-or-font-size: 20px;
 }
 
 .authentication-client-ip {
-  font-size: $font-size-small;
-  font-style: italic;
+  font-size: $font-size-sm;
+  //font-style: italic;
   text-align: right;
   max-width: floor(math.div($login-max-width, 2));
   width: floor(math.div($login-max-width, 2));
-  margin: -($component-margin-bottom - 5) auto $component-margin-bottom;
+  //margin: -($component-margin-bottom - 5) auto $component-margin-bottom;
 
   &.login-with-sso {
     max-width: $login-max-width;
@@ -156,7 +158,7 @@ $auth-or-font-size: 20px;
   }
 }
 
-@media (max-width: $screen-sm-min) {
+@media (max-width: map-get($grid-breakpoints, 'sm')) {
   // In screen < SM, Claroline login form and SSO btns
   // are displayed vertically
   .login-container {
@@ -171,7 +173,7 @@ $auth-or-font-size: 20px;
 
       + .external-authentication-column {
         border-left: none;
-        border-top: 1px solid $panel-default-border;
+        border-top: 1px solid $card-border-color;
         padding-top: 45px;
 
         // create shadow for the "or" circle
@@ -212,7 +214,7 @@ $auth-or-font-size: 20px;
 
 .btn-registration {
   align-self: center;
-  margin-bottom: $component-margin-bottom;
+  //margin-bottom: $component-margin-bottom;
   // for cases when the auth block is not displayed in the login page
   max-width: floor(math.div($login-max-width, 2));
   &.login-with-sso {

@@ -6,12 +6,12 @@
 //@import "bootstrap/mixins";
 @import "node_modules/bootstrap/scss/mixins";
 
-@import "mixins/legacy";
+//@import "mixins/legacy";
 @import "mixins/alerts";
 @import "mixins/buttons";
 @import "mixins/calendars";
 @import "mixins/gauges";
-@import "mixins/pagination";
+//@import "mixins/pagination";
 @import "mixins/placeholders";
 @import "mixins/summaries";
 
@@ -38,8 +38,8 @@
 
     // simulates borders
     text-shadow:
-         0.05em  0      1px rgba(0, 0, 0, 0.75),
-         0       0.05em 1px rgba(0, 0, 0, 0.75),
-        -0.05em  0      1px rgba(0, 0, 0, 0.75),
-         0      -0.05em 1px rgba(0, 0, 0, 0.75);
+         0.05rem  0      1px rgba(0, 0, 0, 0.75),
+         0       0.05rem 1px rgba(0, 0, 0, 0.75),
+        -0.05rem  0      1px rgba(0, 0, 0, 0.75),
+         0      -0.05rem 1px rgba(0, 0, 0, 0.75);
 }

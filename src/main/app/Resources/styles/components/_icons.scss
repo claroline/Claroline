@@ -36,8 +36,8 @@
     display: inline-block;
 
     // declare color vars to make it available in SVG
-    --primary-color: $icon-primary-color;
-    --secondary-color: $icon-secondary-color;
+    --primary-color: #{$icon-primary-color};
+    --secondary-color: #{$icon-secondary-color};
 }
 
 // TODO : should be merged with date picker and color picker
@@ -62,7 +62,7 @@
         background: $datepicker-alt-bg;
 
         .current-icon {
-            font-size: $font-size-h1;
+            font-size: $h1-font-size;
         }
     }
 
@@ -87,7 +87,7 @@
 
         .icon {
             padding: 5px;
-            font-size: $font-size-large;
+            font-size: $font-size-lg;
         }
 
         .selected {
@@ -101,7 +101,7 @@
 }
 
 // vertical layout for XS screens
-@media (max-width: $screen-xs-max) {
+@media (max-width: map-get($grid-breakpoints, 'sm')) {
     .icon-collection-container {
         flex-direction: column;
 

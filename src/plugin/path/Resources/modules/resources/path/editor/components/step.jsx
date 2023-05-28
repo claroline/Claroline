@@ -25,6 +25,7 @@ const EditorStep = props =>
     />
 
     <FormData
+      id={`step-${props.id}`}
       level={3}
       displayLevel={2}
       name={selectors.FORM_NAME}
@@ -36,7 +37,7 @@ const EditorStep = props =>
         target: props.basePath,
         exact: true
       }}
-      sections={[
+      definition={[
         {
           title: trans('general'),
           primary: true,

@@ -26,7 +26,7 @@
     font-weight: bold;
     padding: 15px;
     background: $loader-bg;
-    border-radius: $border-radius-base;
+    border-radius: $border-radius;
 
     @include content-not-found-sizing-variant(120px);
 }

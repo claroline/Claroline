@@ -4,13 +4,13 @@
 
 @use "sass:math";
 
-$color-chart-color: $text-color;
+$color-chart-color: $body-color;
 
 $color-chart-padding: 15px;
 $color-chart-slider-size: 20px;
 
-@color-dot-md: 42px;
-@color-dot-lg: 60px;
+$color-dot-md: 42px;
+$color-dot-lg: 60px;
 // classical gray squares representation for transparency
 // in base64 encoded to avoid external image
 $transparent-bg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==";
@@ -41,7 +41,7 @@ $transparent-bg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf
         }
 
         .current-color {
-            font-size: $font-size-h4;
+            font-size: $h4-font-size;
             font-weight: 900;
 
             // removes default input styles
@@ -115,13 +115,13 @@ $transparent-bg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf
     border-radius: 50%;
 
     &.md {
-        width: @color-dot-md;
-        height: @color-dot-md;
+        width: $color-dot-md;
+        height: $color-dot-md;
     }
 
     &.lg {
-        width: @color-dot-lg;
-        height: @color-dot-lg;
+        width: $color-dot-lg;
+        height: $color-dot-lg;
     }
 }
 
@@ -228,12 +228,12 @@ $transparent-bg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf
  */
 .dropdown-menu {
     .color-chart-container {
-        margin: (-$dropdown-menu-padding-v) (-$dropdown-menu-padding-h);
+        margin: (-$dropdown-padding-y) (-$dropdown-padding-x);
     }
 }
 
 // vertical layout for XS screens
-@media (max-width: $screen-xs-max) {
+@media (max-width: map-get($grid-breakpoints, 'sm')) {
     .color-chart-container {
         flex-direction: column;
 

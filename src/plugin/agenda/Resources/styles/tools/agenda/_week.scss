@@ -4,7 +4,7 @@
     flex: 1; // fill .page-content
     display: flex;
     flex-direction: row;
-    margin: 0 (-(floor(math.div($grid-gutter-width, 2)))); // absorb .page-content padding
+    margin: 0 (-(($grid-gutter-width * .5))); // absorb .page-content padding
     border-top: 1px solid $agenda-grid-border;
     border-bottom: 1px solid $agenda-grid-border;
 
@@ -25,7 +25,7 @@
         padding: 5px;
         color: $gray-light;
         font-family: $headings-font-family;
-        font-size: $font-size-small;
+        font-size: $font-size-sm;
         text-align: center;
         text-transform: uppercase; // todo : use a var
         border-bottom: 1px solid $agenda-grid-border;
@@ -39,7 +39,7 @@
         width: 42px;
         height: 42px;
         border-radius: 50%;
-        font-size: $font-size-large;
+        font-size: $font-size-lg;
         font-weight: bold;
 
         //color: $agenda-color;

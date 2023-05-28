@@ -79,7 +79,9 @@ const RightsModal = props =>
       />
 
       <Button
-        className="btn modal-btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         type={CALLBACK_BUTTON}
         primary={true}
         label={trans('save', {}, 'actions')}

@@ -67,7 +67,9 @@ const ParametersModal = props =>
       ]}
     >
       <Button
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         type={CALLBACK_BUTTON}
         htmlType="submit"
         primary={true}

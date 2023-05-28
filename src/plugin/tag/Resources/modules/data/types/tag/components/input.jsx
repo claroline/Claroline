@@ -58,7 +58,7 @@ const TagsList = props =>
 
     {props.canCreate &&
       <Button
-        className="btn btn-block"
+        className="btn btn-outline-primary w-100"
         type={CALLBACK_BUTTON}
         icon="fa fa-fw fa-plus"
         label={trans('create-named-tag', {tagName: props.currentTag}, 'actions')}

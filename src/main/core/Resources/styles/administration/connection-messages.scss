@@ -24,7 +24,7 @@ $content-preview-height: 140px;
         justify-content: center;
         width: $content-preview-width;
         height: $content-preview-height;
-        border: 1px solid $data-card-inner-border;
+        border: $data-card-inner-border-width solid $data-card-inner-border-color;
         border-radius: $thumbnail-border-radius;
         padding: 4px;
         margin: 5px;
@@ -40,7 +40,7 @@ $content-preview-height: 140px;
         .btn {
             padding: 4px;
 
-            @include border-radius(0 $thumbnail-border-radius 0 $btn-border-radius-base);
+            @include border-radius(0 $thumbnail-border-radius 0 $btn-border-radius);
         }
     }
 

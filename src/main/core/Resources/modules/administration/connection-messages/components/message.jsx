@@ -86,8 +86,9 @@ const SlidesForm = (props) =>
         )}
       </ul>
     }
+
     <CallbackButton
-      className="btn btn-block btn-emphasis component-container"
+      className="btn btn-primary w-100 mb-3"
       primary={true}
       disabled={props.disabled}
       callback={() => {

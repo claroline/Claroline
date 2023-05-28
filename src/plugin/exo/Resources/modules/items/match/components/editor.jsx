@@ -113,6 +113,7 @@ class MatchLinkPopover extends Component {
           {this.props.hasExpectedAnswers && !this.props.hasScore &&
             <input
               type="checkbox"
+              className="form-check-input"
               checked={0 < this.props.solution.score}
               onChange={(e) => {
                 const newSolution = cloneDeep(this.props.solution)
@@ -495,7 +496,7 @@ class MatchElements extends Component {
 
           <Button
             type={CALLBACK_BUTTON}
-            className="btn btn-block"
+            className="btn btn-outline-primary w-100"
             icon="fa fa-fw fa-plus"
             label={trans('match_add_item', {}, 'quiz')}
             callback={() => {
@@ -542,7 +543,7 @@ class MatchElements extends Component {
 
           <Button
             type={CALLBACK_BUTTON}
-            className="btn btn-block"
+            className="btn btn-outline-primary w-100"
             icon="fa fa-fw fa-plus"
             label={trans('match_add_item', {}, 'quiz')}
             callback={() => {

@@ -13,7 +13,6 @@ import {AppearanceIcons} from '#/main/theme/administration/appearance/containers
 import {AppearanceColorCharts} from '#/main/theme/administration/appearance/containers/colorCharts'
 import {MODAL_ICON_SET_CREATION} from '#/main/theme/administration/appearance/modals/icon-set-creation'
 import {MODAL_PARAMETERS_COLOR_CHART} from '#/main/theme/administration/appearance/modals/color-chart-parameters'
-import {Alert} from '#/main/app/alert/components/alert'
 
 class AppearanceTool extends Component {
   constructor(props) {
@@ -194,7 +193,8 @@ class AppearanceTool extends Component {
                 }]
               }
             ],
-            component: AppearanceColorCharts
+            component: AppearanceColorCharts,
+            fill: true
           }, {
             icon: 'fa fa-fw fa-copyright',
             title: trans('footer', {}, 'appearance'),
@@ -229,12 +229,7 @@ class AppearanceTool extends Component {
             ]
           }
         ]}
-      >
-        <Alert type="info">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In neque justo, dapibus non dui nec, porttitor viverra nisl. Aliquam erat volutpat. Nam sed luctus mi, sed blandit urna. In non vestibulum urna, vitae dignissim nisi. Aenean sodales rhoncus purus et lacinia. Duis dictum consequat sem. </Alert>
-        <Alert type="success">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In neque justo, dapibus non dui nec, porttitor viverra nisl.</Alert>
-        <Alert type="warning">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Alert>
-        <Alert type="danger">In sed tincidunt nisi, et pulvinar est. Nulla tincidunt ex quis nibh condimentum imperdiet. In hac habitasse platea dictumst. Aliquam nec ex non enim commodo pretium. Cras faucibus mi quis ex commodo, non finibus augue bibendum. Nunc porttitor eleifend ligula, tincidunt efficitur mi consectetur quis. Curabitur eget faucibus massa. Cras id diam malesuada quam placerat fringilla vitae nec diam. </Alert>
-      </FormData>
+      />
     )
   }
 }

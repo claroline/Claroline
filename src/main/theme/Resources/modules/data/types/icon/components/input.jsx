@@ -1,5 +1,6 @@
-import React, {Component} from 'react'
+import React, {Component, forwardRef} from 'react'
 import classes from 'classnames'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -7,7 +8,24 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
+import {Menu} from '#/main/app/overlays/menu'
 import {IconCollection} from '#/main/theme/icon/containers/collection'
+
+const IconMenu = forwardRef((props, ref) =>
+  <div {...omit(props, 'id', 'value', 'onChange', 'show', 'close')} ref={ref}>
+    <IconCollection
+      id={props.id}
+      selected={props.value}
+      onChange={props.onChange}
+    />
+  </div>
+)
+
+IconMenu.propTypes = {
+  id: T.string,
+  value: T.string,
+  onChange: T.func.isRequired
+}
 
 class IconInput extends Component {
   constructor(props) {
@@ -23,7 +41,7 @@ class IconInput extends Component {
   renderPickerButton(className) {
     return (
       <Button
-        className={classes('btn', className)}
+        className={classes('btn btn-outline-secondary', className)}
         type={MENU_BUTTON}
         icon={`fa fa-fw fa-${this.props.value}`}
         label={trans('show-icons', {}, 'actions')}
@@ -31,13 +49,12 @@ class IconInput extends Component {
         size={this.props.size}
         disabled={this.props.disabled}
         menu={
-          <div className="dropdown-menu">
-            <IconCollection
-              id={this.props.id}
-              selected={this.props.value}
-              onChange={this.props.onChange}
-            />
-          </div>
+          <Menu
+            as={IconMenu}
+            id={this.props.id}
+            selected={this.props.value}
+            onChange={this.props.onChange}
+          />
         }
       />
     )

@@ -48,7 +48,7 @@ const SimpleTab = props =>
 
     {props.customRules &&
       <p className="resource-custom-rules-info">
-        <span className="fa fa-asterisk" />
+        <span className="fa fa-asterisk icon-with-text-right" />
         {trans('resource_rights_custom_help', {}, 'resource')}
       </p>
     }

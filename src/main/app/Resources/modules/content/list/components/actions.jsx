@@ -94,7 +94,7 @@ const ListActions = props =>
   <Toolbar
     id={`${props.id}-btn`}
     className="data-actions"
-    buttonName="btn btn-link"
+    buttonName="btn btn-text-body"
     tooltip="left"
     toolbar="more"
     actions={props.actions}

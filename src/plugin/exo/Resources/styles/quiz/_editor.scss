@@ -14,7 +14,7 @@
     min-width: 0; // hack to avoid overflow in FF
 
     + .form-control {
-      margin-left: floor(math.div($grid-gutter-width, 2));
+      margin-left: ($grid-gutter-width * .5);
     }
   }
 

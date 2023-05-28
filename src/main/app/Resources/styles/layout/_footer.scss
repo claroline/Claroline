@@ -1,15 +1,13 @@
 @use "sass:math";
 
 .app-footer-container {
-    // this is to make box shadow of page-header and footer appear over content with bg. I should find a better way to handle it (without z-index)
-    //z-index: 1;
     display: flex; // just to have child content taking full height
     width: 100%;
     margin-top: auto;
 
     background: $footer-bg;
     color: $footer-color;
-    border-top: 1px solid $footer-border-color;
+    border-top: $footer-border-width solid $footer-border-color;
 
     @include box-shadow($footer-box-shadow);
 
@@ -24,26 +22,13 @@
         flex: 1 0 auto; // take parent full height
     }
 
-    // allow to customize links in footer
-    a {
-        color: $footer-link-color;
-
-        &:hover {
-            color: $footer-link-hover-color;
-        }
-        &:focus {
-            color: $footer-link-active-color;
-        }
-    }
-
     .app-footer-brand {
-        padding: $padding-base-vertical floor(math.div($grid-gutter-width, 2));
         margin-right: auto;
         display: flex;
         flex-direction: row;
         align-items: center;
         white-space: nowrap;
-        font-weight: bold;
+        font-weight: $font-weight-bolder;
 
         img {
             max-height: 18px;
@@ -60,18 +45,7 @@
         }
     }
 
-    .app-footer-btn {
-        .action-icon {
-            margin: 0;
-        }
-
-        span {
-            margin-left: $icon-text-spacer;
-        }
-    }
-
     .app-current-locale {
-        padding: $padding-base-vertical floor(math.div($grid-gutter-width, 2));
         display: flex;
         align-items: center;
         justify-content: center;
@@ -79,7 +53,7 @@
 
     .app-footer-content {
         min-width: 100%; // force display in a new line in flex container
-        padding: floor(math.div($grid-gutter-width, 2));
+        padding: ($grid-gutter-width * .5);
         border-bottom: 1px solid $footer-inner-border-color;
     }
 }

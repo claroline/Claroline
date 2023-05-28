@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
+import {CallbackButton} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ListData} from '#/main/app/content/list/containers/data'
 
@@ -14,7 +15,7 @@ const ListDataModal = props =>
   <Modal
     {...omit(props, 'name', 'confirmText', 'fetch', 'card', 'onlyId', 'display', 'definition', 'handleSelect')}
     className="data-picker-modal"
-    bsSize="lg"
+    size="xl"
     onExiting={() => props.resetSelect()}
   >
     <ListData
@@ -25,19 +26,22 @@ const ListDataModal = props =>
       display={props.display}
     />
 
-    <button
-      className="modal-btn btn btn-primary"
+    <CallbackButton
+      className="modal-btn"
+      variant="btn"
+      size="lg"
       disabled={0 === props.selected.length}
-      onClick={() => {
+      callback={() => {
         if (0 < props.selected.length) {
           props.fadeModal()
           props.handleSelect(props.onlyId ? props.selected : props.selectedFull)
           props.resetSelect()
         }
       }}
+      primary={true}
     >
       {props.confirmText}
-    </button>
+    </CallbackButton>
   </Modal>
 
 ListDataModal.propTypes = {

@@ -33,7 +33,7 @@
     .btn-summary {
         border: none;
         font-size: $summary-font; // required to override default button size
-        padding: floor(math.div($grid-gutter-width, 2)) 0;
+        padding: ($grid-gutter-width * .5) 0;
     }
 
     .btn-summary-primary {
@@ -42,6 +42,7 @@
         align-items: center;
         padding-left: $grid-gutter-width;
         padding-right: 5px;
+        text-decoration: none;
 
         .action-icon {
             flex-shrink: 0;
@@ -81,12 +82,12 @@
         $gray-lighter,
         $link-hover-color,
         $gray-lighter,
-        $text-color,
+        $body-color,
         $gray-lightest
     );
 
     .summary-link {
-        border-radius: $border-radius-small;
+        border-radius: $border-radius-sm;
         margin-top: 5px;
     }
 }

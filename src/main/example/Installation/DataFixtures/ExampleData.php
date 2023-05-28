@@ -22,7 +22,6 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 
 class ExampleData extends AbstractFixture implements PreInstallInterface, PreUpdateInterface, ContainerAwareInterface
@@ -49,7 +48,7 @@ class ExampleData extends AbstractFixture implements PreInstallInterface, PreUpd
         $poster = $this->createSampleFile('poster.jpg');
         $thumbnail = $this->createSampleFile('thumbnail.jpg');
 
-        for ($i = 0; $i < 60; $i++) {
+        for ($i = 0; $i < 60; ++$i) {
             $example = new Example();
             $example->setName("Example {$i}");
             $example->setThumbnail($thumbnail->getUrl());
@@ -74,5 +73,4 @@ class ExampleData extends AbstractFixture implements PreInstallInterface, PreUpd
 
         return $this->fileManager->createFile($file, $filename);
     }
-
 }

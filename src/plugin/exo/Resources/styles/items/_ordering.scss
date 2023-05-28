@@ -18,7 +18,7 @@
 
       .text-fields {
         order: 2;
-        margin-top: floor(math.div($grid-gutter-width, 2));
+        margin-top: ($grid-gutter-width * .5);
       }
 
       .right-controls {
@@ -35,7 +35,7 @@
       flex-direction: row;
 
       .text-fields {
-        margin-right: floor(math.div($grid-gutter-width, 2));
+        margin-right: ($grid-gutter-width * .5);
       }
     }
   }
@@ -55,7 +55,7 @@
   align-items: flex-start;
 
   .score {
-    margin-right: floor(math.div($grid-gutter-width, 2));
+    margin-right: ($grid-gutter-width * .5);
   }
 }
 

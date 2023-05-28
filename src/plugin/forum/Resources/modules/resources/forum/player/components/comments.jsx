@@ -78,7 +78,7 @@ class CommentForm extends Component {
           <div className="btn-save-container">
             <Button
               type={CALLBACK_BUTTON}
-              className="btn btn-block btn-primary btn-save"
+              className="btn btn-primary w-100 btn-save"
               label={trans('add_comment')}
               disabled={!this.state.pendingChanges || !this.state.content}
               callback={() => this.props.submit(this.state.content)}

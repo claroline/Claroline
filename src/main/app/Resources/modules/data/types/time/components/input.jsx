@@ -71,9 +71,9 @@ class TimeInput extends Component {
           onChange={this.changeHours}
         />
 
-        <span className="input-group-addon">
-          <span className="hidden-xs">{trans('hours')}</span>
-          <span className="visible-xs">{trans('hours_short')}</span>
+        <span className="input-group-text">
+          <span className="d-block d-md-none">{trans('hours')}</span>
+          <span className="d-none d-md-block">{trans('hours_short')}</span>
         </span>
 
         <input
@@ -85,9 +85,9 @@ class TimeInput extends Component {
           onChange={this.changeMinutes}
         />
 
-        <span className="input-group-addon">
-          <span className="hidden-xs">{trans('minutes')}</span>
-          <span className="visible-xs">{trans('minutes_short')}</span>
+        <span className="input-group-text">
+          <span className="d-block d-md-none">{trans('minutes')}</span>
+          <span className="d-none d-md-block">{trans('minutes_short')}</span>
         </span>
 
         <input
@@ -99,9 +99,9 @@ class TimeInput extends Component {
           onChange={this.changeSeconds}
         />
 
-        <span className="input-group-addon">
-          <span className="hidden-xs">{trans('seconds')}</span>
-          <span className="visible-xs">{trans('seconds_short')}</span>
+        <span className="input-group-text">
+          <span className="d-block d-md-none">{trans('seconds')}</span>
+          <span className="d-none d-md-block">{trans('seconds_short')}</span>
         </span>
       </div>
     )

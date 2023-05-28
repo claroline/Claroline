@@ -14,8 +14,7 @@ import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const WorkspacesButton = props =>
   <Button
-    className="btn btn-block"
-    style={{marginTop: 10}}
+    className="btn btn-outline-primary w-100 mt-2"
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
     label={props.model ? trans('add_workspace_model') : trans('add_workspace')}

@@ -6,82 +6,25 @@
     display: flex;
     align-items: flex-start;
     flex-direction: row;
-    //align-items: baseline;
     text-align: justify;
     padding: 0;
-    //border: none;
-
-    // @include box-shadow($flying-alert-box-shadow);
+    overflow: hidden; // for border-radius
 
     .alert-icon {
-        font-size: 16px;
-        padding: $alert-padding;
+        padding: var(--#{$prefix}alert-padding-y) var(--#{$prefix}alert-padding-x);
         flex-shrink: 0;
     }
 
     .alert-message {
         flex: 1;
-        font-size: $font-size-small;
-        padding: $alert-padding;
+        padding: var(--#{$prefix}alert-padding-y) var(--#{$prefix}alert-padding-x);
         color: $flying-alert-color;
         background: $flying-alert-bg;
-        @include border-radius(0 ($alert-border-radius - 1) ($alert-border-radius - 1) 0);
     }
 
-    .alert-title {
-        color: inherit;
-        display: block;
-        font-size: $font-size-base;
-        font-family: $headings-font-family;
-        font-weight: $headings-font-weight;
-        line-height: $headings-line-height;
-
-        margin-bottom: 5px;
+    .alert-heading {
+        font-size: $lead-font-size;
     }
-}
-
-/*.alert-default {
-    @include alert-variant($gray-lighter, $gray-lighter, $text-muted)
-}*/
-
-
-// -
-// Alert blocks
-// ---
-
-.alert-detailed {
-    //display: flex;
-    //align-items: flex-start !important; // to override base .alert align
-    //text-align: left;
-
-    .alert-icon {
-        //font-size: $flying-alert-icon-size;
-        //margin-right: 15px;
-        //opacity: .4;
-    }
-
-
-
-    /*.alert-content {
-        flex: 1;
-    }*/
-
-    /*.alert-title {
-        display: block;
-        font-size: $font-size-base;
-        font-family: $headings-font-family;
-        font-weight: $headings-font-weight;
-        line-height: $headings-line-height;
-
-        margin-bottom: 5px;
-    }*/
-
-    //.alert-text {
-        //text-align: justify;
-        //margin: 0;
-        //font-size: $font-size-small;
-        //font-style: italic;
-    //}
 }
 
 
@@ -99,51 +42,28 @@
     // position
     // like this, the gape for top bar still appear in fullscreen mode
     // TODO : find a way to remove it
-    top: $grid-gutter-width + $top-bar-height;
+    top: calc($grid-gutter-width + $top-bar-height);
     right: $grid-gutter-width;
 }
 
 .flying-alert {
-    //opacity: $flying-alert-opacity;
     display: flex;
     flex-direction: row;
     align-items: center;
     width: $flying-alert-width;
-    //padding: $flying-alert-padding;
-    margin-bottom: $flying-alert-margin-bottom;
 
-    //.border(1px solid transparent);
     @include border-radius($flying-alert-border-radius);
     @include box-shadow($flying-alert-box-shadow);
 
     .flying-alert-icon {
-        //position: relative;
         font-size: $flying-alert-icon-size;
-        //opacity: .5;
         padding: $flying-alert-padding;
         flex-shrink: 0;
     }
 
-    // todo : use .fa-composite
-    /*.flying-alert-icon-secondary {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        font-size: 14px;
-        width: 22px;
-        height: 22px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 100%;
-        border: 2px solid transparent;
-    }*/
-
     .flying-alert-message {
         flex: 1;
-        font-size: $font-size-small;
-        //font-style: italic;
-        //padding-left: $flying-alert-padding;
+        font-size: $font-size-sm;
         padding: $flying-alert-padding;
         color: $flying-alert-color;
         background: $flying-alert-bg;
@@ -154,42 +74,36 @@
         font-family: $headings-font-family;
         font-size: $font-size-base;
         font-weight: $headings-font-weight;
-        //font-style: normal;
     }
 
     &.removable {
         cursor: pointer;
     }
+}
 
-    /*&:hover {
-        opacity: 1;
-        box-shadow: 0 0 5px 1px rgba(0,0,0,.5);
-    }*/
+// variants
+.flying-alert-success {
+    @include flying-alert-variant($flying-alert-success-color, $flying-alert-success-bg, $flying-alert-success-border);
+}
+.flying-alert-warning,
+.flying-alert-unauthorized,
+.flying-alert-forbidden {
+    @include flying-alert-variant($flying-alert-warning-color, $flying-alert-warning-bg, $flying-alert-warning-border);
+}
+.flying-alert-error {
+    @include flying-alert-variant($flying-alert-error-color, $flying-alert-error-bg, $flying-alert-error-border);
+}
+.flying-alert-info {
+    @include flying-alert-variant($flying-alert-info-color, $flying-alert-info-bg, $flying-alert-info-border);
+}
+.flying-alert-pending {
+    @include flying-alert-variant($flying-alert-pending-color, $flying-alert-pending-bg, $flying-alert-pending-border);
 
-    // variants
-    &.flying-alert-success {
-        @include flying-alert-variant($flying-alert-success-color, $flying-alert-success-bg, $flying-alert-success-border);
-    }
-    &.flying-alert-warning,
-    &.flying-alert-unauthorized,
-    &.flying-alert-forbidden {
-        @include flying-alert-variant($flying-alert-warning-color, $flying-alert-warning-bg, $flying-alert-warning-border);
-    }
-    &.flying-alert-error {
-        @include flying-alert-variant($flying-alert-error-color, $flying-alert-error-bg, $flying-alert-error-border);
-    }
-    &.flying-alert-info {
-        @include flying-alert-variant($flying-alert-info-color, $flying-alert-info-bg, $flying-alert-info-border);
-    }
-    &.flying-alert-pending {
-        @include flying-alert-variant($flying-alert-pending-color, $flying-alert-pending-bg, $flying-alert-pending-border);
-
-        &.flying-alert-save,
-        &.flying-alert-create,
-        &.flying-alert-update,
-        &.flying-alert-send {
-            @include flying-alert-variant($flying-alert-primary-color, $flying-alert-primary-bg, $flying-alert-primary-border);
-        }
+    &.flying-alert-save,
+    &.flying-alert-create,
+    &.flying-alert-update,
+    &.flying-alert-send {
+        @include flying-alert-variant($flying-alert-primary-color, $flying-alert-primary-bg, $flying-alert-primary-border);
     }
 }
 

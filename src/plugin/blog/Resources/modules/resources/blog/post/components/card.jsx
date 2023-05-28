@@ -234,7 +234,7 @@ const PostCardComponent = props =>
         <ContentHtml>{`${props.data.content}${(props.data.abstract ? '[...]' : '')}`}</ContentHtml>
 
         {props.data.abstract &&
-          <LinkButton target={`${props.path}/${props.data.slug}`} className="btn btn-block">
+          <LinkButton target={`${props.path}/${props.data.slug}`} className="btn btn-link w-100">
             {trans('read_more', {}, 'icap_blog')}
           </LinkButton>
         }

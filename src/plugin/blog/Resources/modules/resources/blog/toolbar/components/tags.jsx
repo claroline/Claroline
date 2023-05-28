@@ -16,12 +16,12 @@ import {cleanTag} from '#/plugin/blog/resources/blog/utils'
 import {updateQueryParameters} from '#/plugin/blog/resources/blog/utils'
 
 const TagsComponent = props =>
-  <div key='redactors' className="panel panel-default">
-    <div className="panel-heading">
-      <h2 className="panel-title">{trans('tagcloud', {}, 'icap_blog')}</h2>
+  <div key='tags' className="card mb-3">
+    <div className="card-header">
+      <h2 className="card-title">{trans('tagcloud', {}, 'icap_blog')}</h2>
     </div>
 
-    <div className="panel-body">
+    <div className="card-body">
       {!isEmpty(props.tags) && props.tagMode !== constants.TAGCLOUD_TYPE_LIST &&
         <ContentTags
           tags={props.tags}

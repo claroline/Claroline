@@ -27,12 +27,12 @@
     padding: 15px;
     //background: $loader-bg;
 
-    @include border-radius($border-radius-base);
+    @include border-radius($border-radius);
     @include content-loader-sizing-variant(120px);
 }
 
-.panel > .content-loader,
-.panel-collapse > .content-loader {
+.card > .content-loader,
+/*.panel-collapse > .content-loader*/ {
     margin: 0;
     border-radius: 0;
 }

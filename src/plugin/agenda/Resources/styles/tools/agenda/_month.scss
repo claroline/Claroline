@@ -5,7 +5,7 @@
     flex: 1; // fill .page-content
     display: flex;
     flex-direction: column;
-    margin: 0 (-(floor(math.div($grid-gutter-width, 2)))); // absorb .page-content padding
+    margin: 0 (-(($grid-gutter-width * .5))); // absorb .page-content padding
     max-height: 100%;
     background: $agenda-bg;
 
@@ -19,7 +19,7 @@
     .day-names {
         font-family: $headings-font-family;
         color: $primary;
-        font-size: $font-size-small;
+        font-size: $font-size-sm;
     }
 
     .week {

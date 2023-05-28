@@ -20,7 +20,7 @@ const CoursesModal = props => {
       {...omit(props, 'url', 'selected', 'selectAction', 'reset')}
       icon="fa fa-fw fa-graduation-cap"
       className="data-picker-modal"
-      bsSize="lg"
+      size="xl"
       onExiting={props.reset}
     >
       <ListData
@@ -49,7 +49,9 @@ const CoursesModal = props => {
       <Button
         label={trans('select', {}, 'actions')}
         {...selectAction}
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         primary={true}
         disabled={0 === props.selected.length}
         onClick={props.fadeModal}

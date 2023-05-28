@@ -32,7 +32,7 @@ const LessonOverview = (props) => {
       actions={[
         {
           type: LINK_BUTTON,
-          label: trans('start_lesson', {}, 'lesson'),
+          label: trans('start', {}, 'actions'),
           target: `${props.path}/${get(chapters, '[0].slug')}`,
           primary: true,
           disabled: isEmpty(chapters),
@@ -50,7 +50,7 @@ const LessonOverview = (props) => {
         }}
       />
 
-      <section className="resource-parameters">
+      <section className="resource-parameters mb-3">
         <h3 className="h2">{trans('summary')}</h3>
 
         <ContentSummary

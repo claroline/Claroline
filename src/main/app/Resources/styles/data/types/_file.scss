@@ -2,7 +2,7 @@
  * Styles for `file` data type.
  */
 
-@mixin file-control-size-variant($font-size-title, $font-size-text, $padding-v, $padding-h, $border-radius) {
+/*@mixin file-control-size-variant($font-size-title, $font-size-text, $padding-v, $padding-h, $border-radius) {
     border-radius: $border-radius;
 
     .files-drop-placeholder {
@@ -43,7 +43,7 @@
         background: rgba($input-bg, .75);
         border: 3px dashed $input-color;
 
-        font-size: $font-size-h2;
+        font-size: $h2-font-size;
         text-transform: uppercase;
         font-weight: 900;
 
@@ -53,8 +53,8 @@
         bottom: 4px;
 
         &:hover {
-            color: $input-border-focus;
-            border-color: $input-border-focus;
+            color: $input-focus-color;
+            border-color: $input-focus-border-color;
         }
     }
 
@@ -63,7 +63,7 @@
         width: 100%;
         color: $input-color;
         background: $input-bg;
-        border: 1px solid $input-border;
+        border: $input-border-width solid $input-border-color;
         border-radius:$input-border-radius;
         box-shadow: $input-box-shadow;
 
@@ -87,22 +87,22 @@
 
     &.disabled {
         .files-drop-container {
-            cursor: $cursor-disabled;
-            background: $input-bg-disabled;
+            //cursor: $cursor-disabled;
+            background: $input-disabled-bg;
         }
     }
 
     // sizing
-    @include file-control-size-variant($font-size-h4, $font-size-base, $padding-base-vertical, $padding-base-horizontal, $input-border-radius);
+    @include file-control-size-variant($h4-font-size, $font-size-base, $padding-base-vertical, $padding-base-horizontal, $input-border-radius);
 
     &.input-sm {
-        @include file-control-size-variant($font-size-h5, $font-size-small, $padding-small-vertical, $padding-small-horizontal, $input-border-radius-small);
+        @include file-control-size-variant($h5-font-size, $font-size-sm, $padding-small-vertical, $padding-small-horizontal, $input-border-radius-sm);
     }
 
     &.input-lg {
-        @include file-control-size-variant($font-size-h3, $font-size-large, $padding-large-vertical, $padding-large-horizontal, $input-border-radius-large);
+        @include file-control-size-variant($h3-font-size, $font-size-lg, $padding-large-vertical, $padding-large-horizontal, $input-border-radius-lg);
     }
-}
+}*/
 
 
 // -

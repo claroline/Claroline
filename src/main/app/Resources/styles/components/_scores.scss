@@ -3,7 +3,7 @@
 // horizontal size of the separator between user and max scores
 // this is not exposed in the var file as it's just a dev utility
 // and is not intended to be customized.
-$separator-size: 10px;
+$separator-size: .75rem;
 
 // todo add mixin to generate size variant
 // todo add a mixin to force it in a panel corner
@@ -61,8 +61,8 @@ $separator-size: 10px;
 
         .user-score {
             padding-right: $separator-size + floor(math.div($score-padding-h-sm, 2));
-            border-bottom-left-radius: $score-border-radius-sm - 1;
-            border-top-left-radius: $score-border-radius-sm - 1;
+
+            @include border-start-radius($score-border-radius-sm - 1);
         }
 
         .max-score {
@@ -77,7 +77,7 @@ $separator-size: 10px;
     // large version of the box
     &.score-box-lg {
         font-size: $score-font-size-lg;
-        border-radius: $score-border-radius-lg;
+        @include border-radius($score-border-radius-lg);
 
         .user-score,
         .max-score {
@@ -86,8 +86,8 @@ $separator-size: 10px;
 
         .user-score {
             padding-right: $separator-size + floor(math.div($score-padding-h-lg, 2));
-            border-bottom-left-radius: $score-border-radius-lg - 1;
-            border-top-left-radius: $score-border-radius-lg - 1;
+
+            @include border-start-radius($score-border-radius-lg - 1);
         }
 
         .max-score {

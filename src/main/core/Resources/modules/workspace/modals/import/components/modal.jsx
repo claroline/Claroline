@@ -18,6 +18,7 @@ const ImportModal = props =>
     onExiting={() => props.reset()}
   >
     <FormData
+      flush={true}
       name={selectors.STORE_NAME}
       sections={[
         {
@@ -52,7 +53,9 @@ const ImportModal = props =>
       ]}
     >
       <Button
-        className="modal-btn btn btn-primary"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         type={CALLBACK_BUTTON}
         htmlType="submit"
         primary={true}

@@ -41,7 +41,7 @@ const CrudList = (props) =>
         label: trans('open', {}, 'actions'),
         target: `${props.path}/crud/${row.id}`
       })}
-      actions={(rows) => [
+      actions={() => [
         {
           name: 'primary',
           type: CALLBACK_BUTTON,

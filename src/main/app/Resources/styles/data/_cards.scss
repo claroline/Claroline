@@ -9,7 +9,7 @@
 // mixins
 @mixin data-card-size-variant($icon-size, $title-size, $icon-spacer) {
     .data-card-header {
-        min-height: $icon-size + $icon-spacer*2; // icon margin + height
+        min-height: calc($icon-size + $icon-spacer*2); // icon margin + height
     }
 
     .data-card-icon {
@@ -34,8 +34,7 @@
     flex-direction: column;
 
     .data-card-header {
-        /*border-bottom-width: 1px;
-        border-bottom-style: solid;*/
+        border-bottom: $data-card-border-width solid $data-card-border-color;
 
         @include border-radius($data-card-border-radius $data-card-border-radius 0 0);
     }
@@ -66,15 +65,14 @@
 
     .data-card-header {
         min-width: 40%;
-        /*border-right-width: 1px;
-        border-right-style: solid;*/
+        border-right: $data-card-border-width solid $data-card-border-color;
 
         @include border-radius($data-card-border-radius 0 0 $data-card-border-radius);
     }
 
     .data-card-content {
         flex: 1 0 0;
-        max-width: 60%;
+        min-width: 60%;
 
         @include border-radius(0 $data-card-border-radius $data-card-border-radius 0);
     }
@@ -88,7 +86,7 @@
     background: $data-card-bg;
     font-size: $data-card-font;
 
-    @include border(1px solid $data-card-border);
+    @include border($data-card-border-width solid $data-card-border-color);
     @include border-radius($data-card-border-radius);
     @include box-shadow($data-card-box-shadow);
 }
@@ -141,7 +139,7 @@
 // TODO : create a mixin to generate card styles variants
 .data-card-muted {
     //border-color: $data-card-muted-border;
-    box-shadow: none;
+    //box-shadow: none;
     /*color: $data-card-muted-color;
     background-color: $data-card-muted-bg;
     @include box-shadow($data-card-muted-box-shadow);
@@ -242,7 +240,7 @@
     margin: $data-card-padding;
     padding: 0;
     font-size: $data-card-font;
-    font-weight: bold;
+    //font-weight: $font-weight-bolder;
     overflow: hidden;
     text-overflow: ellipsis;
 
@@ -278,29 +276,58 @@
     text-align: right;
     padding: 0 $data-card-padding $data-card-padding;
     color: $data-card-color-muted;
-    font-style: italic;
+    //font-style: italic;
 }
 
+// to remove. use bootstrap margin utilities
 .data-card-row + .data-card-row {
     margin-top: 5px;
 }
 
-.data-cards-stacked .data-card-row {
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-    margin: 0;
+.data-cards-stacked {
+    .data-card {
+        box-shadow: none;
+        margin: 0;
 
-    .data-card-header,
-    .data-card-content {
-        border-radius: 0;
-    }
+        + .data-card {
+            border-top: none;
+        }
 
-    + .data-card {
-        border-top: 1px solid $data-card-border;
+        &:not(:first-child) {
+            @include border-top-radius(0);
+
+            .data-card-header,
+            .data-card-content {
+                @include border-top-radius(0);
+            }
+        }
+
+        &:not(:last-child) {
+            @include border-bottom-radius(0);
+
+            .data-card-header,
+            .data-card-content {
+                @include border-bottom-radius(0);
+            }
+        }
     }
 }
 
+.data-cards-stacked-flush {
+    .data-card {
+        border-radius: 0;
+        border: none;
+
+        .data-card-header,
+        .data-card-content {
+            border-radius: 0;
+        }
+
+        + .data-card {
+            border-top: $data-card-border-width solid $data-card-border-color;
+        }
+    }
+}
 
 // -
 // Sizing variants
@@ -362,7 +389,7 @@
 }
 
 // XS screens :
-@media (max-width: $screen-xs-max) {
+@media (max-width: map-get($grid-breakpoints, 'sm')) {
     .data-card-row {
         &.data-card-xs,
         &.data-card-sm {
@@ -377,7 +404,7 @@
 }
 
 // SM / MD / LG screens :
-@media (min-width: $screen-sm-min) {
+@media (min-width: map-get($grid-breakpoints, 'sm')) {
     .data-card-row {
         @include data-card-horizontal-variant();
     }

@@ -6,20 +6,20 @@
 @import "src/main/app/Resources/styles/variables";
 
 
-$path-summary-lvl-indent: 20px; // indent children of a step in the summary
+$path-summary-lvl-indent: map-get($spacers, 2); // indent children of a step in the summary
 
 
 // -
 // Step
 // ---
 
-$step-poster-border-radius:   8px;
-$step-resource-bg:            #f0f0f0;
+$step-poster-border-radius:   $border-radius-lg !default;
+$step-resource-bg:            var(--#{$prefix}tertiary-bg) !default;
 
 $step-status-size:            10px; // size of the dot status
 // colors for each progression status
-$step-status-unseen-color:    $text-muted;
-$step-status-seen-color:      $brand-secondary;
-$step-status-to_do-color:     $brand-warning;
-$step-status-done-color:      $brand-success;
-$step-status-to_review-color: $brand-danger;
+$step-status-unseen-color:    var(--#{$prefix}secondary-color) !default;
+$step-status-seen-color:      $learning;
+$step-status-to_do-color:     $warning;
+$step-status-done-color:      $success;
+$step-status-to_review-color: $danger;

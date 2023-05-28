@@ -6,7 +6,7 @@ import {
   FAVOURITE_LOAD,
   FAVOURITE_REMOVE,
   FAVOURITE_SET_LOADED
-} from '#/plugin/favourite/header/favourites/store/actions'
+} from '#/plugin/favourite/modals/favourites/store/actions'
 
 export const reducer = combineReducers({
   loaded: makeReducer(false, {

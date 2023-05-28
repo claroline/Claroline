@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {matchPath, Routes} from '#/main/app/router'
+import {Routes} from '#/main/app/router'
 
 import {ToolPage} from '#/main/core/tool/containers/page'
 
@@ -38,23 +38,21 @@ const CompetencyTool = (props) =>
     ]}
     subtitle={trans('competencies', {}, 'evaluation')}
   >
-    <header className="row content-heading">
-      <ContentTabs
-        sections={[
-          {
-            name: 'frameworks',
-            type: LINK_BUTTON,
-            label: trans('frameworks', {}, 'competency'),
-            target: `${props.path}/competencies/frameworks`
-          }, {
-            name: 'scales',
-            type: LINK_BUTTON,
-            label: trans('scales', {}, 'competency'),
-            target: `${props.path}/competencies/scales`
-          }
-        ]}
-      />
-    </header>
+    <ContentTabs
+      sections={[
+        {
+          name: 'frameworks',
+          type: LINK_BUTTON,
+          label: trans('frameworks', {}, 'competency'),
+          target: `${props.path}/competencies/frameworks`
+        }, {
+          name: 'scales',
+          type: LINK_BUTTON,
+          label: trans('scales', {}, 'competency'),
+          target: `${props.path}/competencies/scales`
+        }
+      ]}
+    />
 
     <Routes
       path={props.path+'/competencies'}

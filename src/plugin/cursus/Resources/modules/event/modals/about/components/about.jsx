@@ -17,9 +17,10 @@ const AboutModal = props =>
     poster={props.event.poster ? props.event.poster : undefined}
   >
     <DetailsData
+      flush={true}
       meta={true}
       data={props.event}
-      sections={[
+      definition={[
         {
           title: trans('general'),
           primary: true,

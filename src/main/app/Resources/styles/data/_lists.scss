@@ -105,7 +105,7 @@
 
 // FIXME: this is ugly to do it like it
 // if there are additional containers, I'm fucked and it may be required by some other components too
-.page-content > .data-list {
+/*.page-content > .data-list {
     margin-bottom: $component-margin-bottom;
 
     &:first-child {
@@ -115,16 +115,16 @@
     > .h-title { // avoid double margin
         margin-top: 0;
     }
-}
+}*/
 
 .list-header {
     display: flex;
     align-items: stretch;
 
     .list-header-btn {
-        font-size: $font-size-large; // same as search icon
+        font-size: $font-size-lg; // same as search icon
         line-height: $line-height-large;
-        height: $input-height-large;
+        height: $input-height-lg;
         padding: $padding-large-vertical $padding-large-horizontal;
     }
 
@@ -145,7 +145,7 @@
     background: $list-controls-bg;
 
     .list-selected-label {
-        font-weight: bold;
+        font-weight: $font-weight-bold;
         .fa {
             text-align: center;
         }
@@ -158,14 +158,15 @@
 
 a.list-primary-action,
 button.list-primary-action {
-    @include button-link-variant($link-color, $link-hover-color, $link-hover-decoration);
+    //@include button-link-variant($link-color, $link-hover-color, $link-hover-decoration);
+    @extend .btn-link;
 }
 
 .list-primary-action {
     text-align: inherit;
     display: block; // fill cell
     width: 100%;
-    font-weight: bold;
+    font-weight: $font-weight-bolder;
 }
 
 .list-options {
@@ -195,7 +196,7 @@ button.list-primary-action {
         //background: $list-controls-bg;
         border: 1px solid transparent;
         font-weight: 400;
-        //border-radius: $border-radius-base;
+        //border-radius: $border-radius;
     }
 
     .pagination-container {
@@ -223,7 +224,7 @@ button.list-primary-action {
     .list-empty-content {
         flex: 2;
         margin: 15px;
-        font-size: $font-size-large;
+        font-size: $font-size-lg;
     }
 
     .list-empty-actions {
@@ -258,7 +259,7 @@ button.list-primary-action {
     }
 }
 
-@media (max-width: $screen-xs-max) {
+@media (max-width: map-get($grid-breakpoints, 'sm')) {
     .list-empty {
         .list-empty-info {
             text-align: center;
@@ -301,7 +302,7 @@ button.list-primary-action {
 // ---
 
 .embedded-list-section {
-    @include embedded-list-variant($panel-default-heading-bg, $panel-footer-bg, $panel-inner-border, $panel-body-padding);
+    @include embedded-list-variant(var(--#{$prefix}tertiary-bg), var(--#{$prefix}tertiary-bg), $card-border-color, $card-spacer-y $card-spacer-x);
 
     .data-list {
         margin: (-$panel-body-padding); // maybe not the best way to handle it

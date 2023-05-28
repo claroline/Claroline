@@ -23,7 +23,7 @@ const Alert = props =>
 
     <span className="alert-message" role="presentation">
       {props.title &&
-        <b className="alert-title">{props.title}</b>
+        <h4 className={classes('alert-heading', `text-${props.type}-emphasis`)}>{props.title}</h4>
       }
 
       {props.children}
@@ -32,7 +32,7 @@ const Alert = props =>
 
 Alert.propTypes = {
   className: T.string,
-  type: T.oneOf(['primary', 'secondary', 'info', 'success', 'warning', 'danger']),
+  type: T.oneOf(['info', 'success', 'warning', 'danger']),
   icon: T.string,
   title: T.string,
   children: T.node.isRequired

@@ -5,11 +5,17 @@
 .editor-control {
     position: relative;
     text-align: justify;
-    border: 1px solid $input-border;
-    background: $input-bg;
-    @include border-radius($input-border-radius);
+    //border: 1px solid $input-border;
+    color: $input-color;
+    background-color: $input-bg;
+    background-clip: padding-box;
+    border: $input-border-width solid $input-border-color;
 
-    &.fullscreen{
+    @include border-radius($input-border-radius, 0);
+    @include box-shadow($input-box-shadow);
+    @include transition($input-transition);
+
+    &.fullscreen {
         position: fixed;
         top: 0;
         left: 0;
@@ -20,29 +26,30 @@
 
         &,
         .tox-tinymce {
-            @include border-radius(none);
+            @include border-radius(none !important);
         }
-
     }
 
-    &.sm {
-        &,
+    &:not(.fullscreen) { // precise selector is required to override tinymce styles
+        &.sm {
+            &,
+            .tox-tinymce {
+                @include border-radius($input-border-radius-sm !important);
+            }
+        }
+        &.lg {
+            &,
+            .tox-tinymce {
+                @include border-radius($input-border-radius-lg !important);
+            }
+        }
+
         .tox-tinymce {
-            @include border-radius($input-border-radius-small);
-        }
-    }
-    &.lg {
-        &,
-        .tox-tinymce {
-            @include border-radius($input-border-radius-small);
-        }
-    }
+            z-index: 1;
+            overflow: hidden;
 
-    .tox-tinymce {
-        z-index: 1;
-        overflow: hidden;
-
-        @include border-radius($input-border-radius);
+            @include border-radius($input-border-radius !important);
+        }
     }
 
     .mce-content-body {
@@ -60,29 +67,40 @@
 .editor-toolbar {
     z-index: 2;
     position: absolute;
-    top: -12px;
-    right: -12px;
+    //font-size: 0; // fix spacing
+    top: -13px;
+    right: -13px;
 
     .editor-toolbar-btn {
-        font-size: $font-size-small;
-        width: 24px;
-        height: 24px;
+        /*font-size: $font-size-sm;
+        width: 26px;
+        height: 26px;*/
+
+        width: 26px;
+        height: 26px;
 
         // removes default btn styles
         padding: 0;
-        border: none;
+        /*border: none;
         line-height: 1 !important;
-        color: #FFFFFF !important;
-        background: $gray !important;
-        border-radius: 50%;
+        color: $white !important;
+        background: $gray-500 !important;
+        border-radius: 50%;*/
 
-        &:hover,
+        /*&:hover,
         &:focus {
             background: $gray-dark !important;
         }
 
         + .editor-toolbar-btn {
             margin-left: 5px;
-        }
+        }*/
     }
 }
+
+/*[contenteditable=true]:empty:before {
+    content: attr(placeholder);
+    display: block; !* For Firefox *!
+    color: $input-placeholder-color;
+    cursor: text;
+}*/

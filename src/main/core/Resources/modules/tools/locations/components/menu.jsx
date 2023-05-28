@@ -13,8 +13,8 @@ const LocationsMenu = (props) =>
     title={trans('locations', {}, 'tools')}
   >
     <Toolbar
-      className="list-group"
-      buttonName="list-group-item"
+      className="list-group list-group-flush"
+      buttonName="list-group-item list-group-item-action"
       actions={[
         {
           name: 'locations',

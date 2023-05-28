@@ -17,7 +17,7 @@ const LessonCurrent = props => {
         className="progress-minimal"
         value={Math.floor(((currentIndex+1) / props.all.length) * 100)}
         size="xs"
-        type="user"
+        type="learning"
       />
 
       {props.children}

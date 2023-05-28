@@ -79,7 +79,7 @@ class ConnectionModal extends Component {
         className="connection-message-modal"
         title={message.title}
         subtitle={trans('current_of_total', {current: this.state.currentSlide + 1, total: message.slides.length})}
-        bsSize="lg"
+        size="lg"
       >
         {!isEmpty(slide.poster) &&
           <img className="img-fluid" src={slide.poster.absolute ? slide.poster : asset(slide.poster)} />
@@ -146,22 +146,24 @@ class ConnectionModal extends Component {
 
           {1 < message.slides.length &&
             <Button
-              className="btn-link btn-emphasis"
+              className="btn-link"
               type={CALLBACK_BUTTON}
               icon="fa fa-angle-double-left"
               label=""
               disabled={0 === this.state.currentSlide}
               callback={this.previous}
+              size="lg"
             />
           }
 
           {message.slides.length - 1 !== this.state.currentSlide &&
             <Button
-              className="btn btn-emphasis"
+              className="btn"
               type={CALLBACK_BUTTON}
               label={trans('next')}
               primary={true}
               callback={this.next}
+              size="lg"
             >
               <span className="fa fa-angle-double-right icon-with-text-left" aria-hidden="true" />
             </Button>
@@ -169,7 +171,8 @@ class ConnectionModal extends Component {
 
           {message.slides.length - 1 === this.state.currentSlide &&
             <Button
-              className="btn btn-emphasis"
+              variant="btn"
+              size="lg"
               type={CALLBACK_BUTTON}
               label={trans('close', {}, 'actions')}
               primary={true}

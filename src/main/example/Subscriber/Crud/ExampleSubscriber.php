@@ -64,7 +64,7 @@ class ExampleSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preUpdate(UpdateEvent$event): void
+    public function preUpdate(UpdateEvent $event): void
     {
         /** @var Example $example */
         $example = $event->getObject();

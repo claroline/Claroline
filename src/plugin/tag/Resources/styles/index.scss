@@ -17,7 +17,7 @@
         justify-content: stretch;
         border: 1px solid $gray-light;
         margin-bottom: 10px;
-        border-radius: $border-radius-base;
+        border-radius: $border-radius;
     }
 
     .tag-color {
@@ -38,7 +38,7 @@
         margin-top: 5px;
         margin-bottom: 0;
         font-size: small;
-        color: $text-muted;
+        color: var(--#{$prefix}secondary-color);
         font-style: italic;
     }
 
@@ -100,16 +100,16 @@
         .btn-link {
             border: none;
             padding: 0;
-            color: $label-color;
+            //color: $label-color;
             margin-left: $icon-text-spacer;
         }
     }
 
     .dropdown-menu {
-        padding: $dropdown-menu-padding-v;
+        padding: $dropdown-padding-y;
 
         .btn {
-            margin-top: $dropdown-menu-padding-v;
+            margin-top: $dropdown-padding-y;
 
             .fa {
                 margin-right: $icon-text-spacer; // because of an ugly rule on `.dropdown-menu .fa`
@@ -137,7 +137,7 @@
         height: 100%;
         display: block;
         text-align: left;
-        border-radius: $border-radius-base;
+        border-radius: $border-radius;
         padding: 5px;
 
         .label {
@@ -146,7 +146,7 @@
 
         .tag-description {
             text-align: justify;
-            font-size: $font-size-small;
+            font-size: $font-size-sm;
         }
 
         &:focus,

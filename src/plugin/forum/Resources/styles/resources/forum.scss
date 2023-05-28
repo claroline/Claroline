@@ -1,4 +1,6 @@
 
+// Claroline & bootstrap mixins
+@import "src/main/app/Resources/styles/mixins";
 // Forum variables
 @import "../variables";
 
@@ -10,8 +12,9 @@
 }
 
 .subject-poster {
-  border-radius: 8px;
-  margin-top: $line-height-computed - 4px;
+  margin-top: calc($line-height-computed - 4px);
+
+  @include border-radius($border-radius-lg);
 }
 
 .tag {
@@ -30,7 +33,7 @@
 
     h4 {
       a {
-        font-size: $font-size-small;
+        font-size: $font-size-sm;
       }
     }
     .user-message-container{
@@ -69,7 +72,7 @@
   align-items: flex-start;
   max-width: 100%;
   margin-bottom: 5px;
-  background-color: $gray-lighter;
+  background-color: var(--#{$prefix}secondary-bg);
   padding: 10px 0 0 10px;
 
   .user-avatar {
@@ -95,7 +98,7 @@
   justify-content: flex-end;
   align-items: center;
   color: $gray-light;
-  font-size: $font-size-small;
+  font-size: $font-size-sm;
   margin: 0 15px;
   padding-bottom: 10px;
   border-bottom: 1px solid $user-message-inner-border;
@@ -131,9 +134,10 @@
   position: relative;
   flex: 1;
   align-self: stretch;
-  background: $user-message-bg;
-  border-radius: $user-message-border-radius;
-  background-color: $gray-lighter;
+  //background: $user-message-bg;
+  background-color: var(--#{$prefix}secondary-bg);
+
+  @include border-radius($user-message-border-radius);
 }
 
 .user-comment-content {

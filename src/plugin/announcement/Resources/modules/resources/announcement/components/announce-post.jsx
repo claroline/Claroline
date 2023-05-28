@@ -15,10 +15,10 @@ import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources
 import {MODAL_ANNOUNCEMENT_SENDING} from '#/plugin/announcement/resources/announcement/modals/sending'
 
 const AnnouncePost = props =>
-  <div className={classes('announce-post panel panel-default', {
+  <div className={classes('announce-post card mb-3', {
     'active-post': props.active
   })}>
-    <div className="announce-content panel-body">
+    <div className="announce-content card-body">
       {props.announcement.title &&
         <h2 className="announce-title">{props.announcement.title}</h2>
       }

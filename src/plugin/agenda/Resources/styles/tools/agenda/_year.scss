@@ -10,7 +10,7 @@
     .day-name {
         font-size: 10px;
         font-weight: normal;
-        color: $text-muted;
+        color: var(--#{$prefix}secondary-color);
         text-transform: uppercase; // todo : use a var
     }
 
@@ -38,7 +38,7 @@
         }
 
         &.fill {
-            color: $text-muted;
+            color: var(--#{$prefix}secondary-color);
         }
     }
 
@@ -58,7 +58,7 @@
     .popover-title {
         color: $gray-light;
         font-family: $headings-font-family;
-        font-size: $font-size-small;
+        font-size: $font-size-sm;
         text-align: center;
         text-transform: uppercase; // todo : use a var
 
@@ -70,7 +70,7 @@
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            font-size: $font-size-large;
+            font-size: $font-size-lg;
             font-weight: bold;
 
             //color: $agenda-color;

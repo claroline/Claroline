@@ -40,14 +40,14 @@ class LoginMain extends Component {
     return (
       <Fragment>
         {this.props.help &&
-          <div className={classes('login-container', {
+          <div className={classes('card login-container mb-3 mx-auto', {
             'login-with-sso': internalAccount && otherSso.length
           })}>
-            <ContentHtml className="panel-body">{this.props.help}</ContentHtml>
+            <ContentHtml className="card-body">{this.props.help}</ContentHtml>
           </div>
         }
 
-        <div className={classes('login-container', {
+        <div className={classes('card login-container mb-3 mx-auto', {
           'login-with-sso': internalAccount && otherSso.length
         })}>
           {internalAccount &&
@@ -89,27 +89,31 @@ class LoginMain extends Component {
 
               <p className="authentication-help">{trans(!internalAccount ? 'login_auth_sso' : 'login_auth_sso_other')}</p>
 
-              {otherSso.map(sso => this.state.sso[sso.service] ?
-                createElement(this.state.sso[sso.service].components.button, Object.assign({}, sso, {
-                  key: sso.service,
-                  label: sso.label || trans('login_with_third_party_btn', {name: trans(sso.service, {}, 'oauth')})
-                })) : null
-              )}
+              <div role="presentation" className="d-grid gap-1">
+                {otherSso.map(sso => this.state.sso[sso.service] ?
+                  createElement(this.state.sso[sso.service].components.button, Object.assign({}, sso, {
+                    key: sso.service,
+                    label: sso.label || trans('login_with_third_party_btn', {name: trans(sso.service, {}, 'oauth')})
+                  })) : null
+                )}
+              </div>
             </div>
           }
         </div>
 
         {this.props.showClientIp &&
-          <div className={classes('authentication-client-ip', {
+          <div className={classes('authentication-client-ip  mb-3 mx-auto', {
             'login-with-sso': internalAccount && otherSso.length
           })}>{trans('location')} : {this.props.clientIp}</div>
         }
 
         {this.props.registration &&
           <Button
-            className={classes('btn btn-lg btn-block btn-registration', {
+            className={classes('mb-3 w-100 btn-registration', {
               'login-with-sso': internalAccount && 0 !== otherSso.length
             })}
+            variant="btn"
+            size="lg"
             type={LINK_BUTTON}
             label={trans('create-account', {}, 'actions')}
             target="/registration"

@@ -8,8 +8,7 @@ import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 /**
  * @todo : radios should switch to vertical on xs (maybe sm) screen (MUST be done in less).
  *
- * @param props
- * @constructor
+ * @deprecated
  */
 const RadiosGroup = props =>
   <FormGroup {...props}>

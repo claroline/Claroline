@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 import moment from 'moment'
 
 import {trans, apiDate} from '#/main/app/intl'
@@ -56,9 +56,9 @@ class ActivityChart extends Component {
 
   render() {
     return (
-      <div className="panel panel-default panel-analytics">
-        <div className="panel-heading">
-          <h2 className="panel-title">
+      <div className="card mb-3 panel-analytics">
+        <div className="card-header">
+          <h2 className="card-title">
             {trans('recent_activity', {}, 'analytics')}
           </h2>
 
@@ -89,7 +89,7 @@ class ActivityChart extends Component {
           />
         </div>
 
-        <div className="panel-body text-right" style={{paddingTop: '11px'}}>
+        <div className="card-body text-right" style={{paddingTop: '11px'}}>
           <Toolbar
             id="activity-legend"
             className="chart-legend"

@@ -2,7 +2,7 @@ import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isArray from 'lodash/isArray'
 import uniq from 'lodash/uniq'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import { implementPropTypes } from '#/main/app/prop-types'
 import {AxisChart as ChartTypes} from '#/main/core/layout/chart/prop-types'

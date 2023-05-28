@@ -2,9 +2,11 @@
  * Styles for `collection` data type.
  */
 
-@use "sass:math";
+// TODO : merge with field data type
 
 .collection-control {
+    position: relative; // constrains remove all btn
+
     ul {
         margin: 0;
         padding: 0;
@@ -16,32 +18,28 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        background: $gray-lighter;
-        border: 1px solid transparent;
-        padding: 5px;
+        background: var(--#{$prefix}secondary-bg);
+        border: var(--#{$prefix}border-width) solid transparent;
+        padding: map-get($spacers, 2);
 
-        + .collection-item {
-            margin-top: 5px;
-        }
-
-        @include border-radius($border-radius-base);
+        @include border-radius($border-radius);
 
         > .form-group {
             flex: 1;
-            margin-bottom: 0;
+            margin-bottom: 0 !important;
         }
 
         .btn-delete {
-            margin-left: floor(math.div($grid-gutter-width, 2));
+            margin-left: ($grid-gutter-width * .5);
             align-self: flex-start;
         }
     }
 
+    // moves remove all btn on the same line than the label
+    // code is not really aesthetic
     .btn-delete-all {
-        padding: 5px;
-    }
-
-    .btn-add {
-        margin-top: 5px;
+        position: absolute;
+        bottom: 100%;
+        right: 0;
     }
 }

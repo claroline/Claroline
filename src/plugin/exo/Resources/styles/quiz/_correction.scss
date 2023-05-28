@@ -7,7 +7,7 @@
     justify-content: space-between;
 
     // Same style as an H4 for now
-    font-size: $font-size-h4;
+    font-size: $h4-font-size;
     margin-top: 0;
     margin-bottom: floor(math.div($line-height-computed, 2));
   }
@@ -24,18 +24,18 @@
   // todo : adds custom rules for xs screen
   .text-fields {
     flex: 1;
-    margin-right: floor(math.div($grid-gutter-width, 2));
+    margin-right: ($grid-gutter-width * .5);
   }
 
   .right-controls {
-    margin-left: floor(math.div($grid-gutter-width, 2));
+    margin-left: ($grid-gutter-width * .5);
     display: flex;
     align-self: flex-end;
     align-items: flex-start;
 
     .score-input {
       width: 110px;
-      margin-right: floor(math.div($grid-gutter-width, 2));
+      margin-right: ($grid-gutter-width * .5);
     }
 
     .btn-link,

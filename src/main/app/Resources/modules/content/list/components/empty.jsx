@@ -18,18 +18,6 @@ const ListEmpty = props =>
         }
       </div>
     </div>
-
-    {/*<div className="list-empty-actions">
-      <button type="button" className="btn btn-block btn-link">
-        <span className="fa fa-fw fa-search" />
-        Changer votre recherche
-      </button>
-
-      <button type="button" className="btn btn-block btn-primary">
-        <span className="fa fa-fw fa-plus" />
-        Créer un nouveau lieu
-      </button>
-    </div>*/}
   </div>
 
 ListEmpty.propTypes = {

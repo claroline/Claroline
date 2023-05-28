@@ -23,7 +23,7 @@ const ButtonComponent = forwardRef((props, ref) => {
     props.hideLabel ? <span key="button-label" className="action-label sr-only">{props.label}</span> : props.label,
     props.children,
     props.subscript &&
-      <span key="button-subscript" className={classes('action-subscript', `${props.subscript.type} ${props.subscript.type}-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
+      <span key="button-subscript" className={classes('action-subscript badge rounded-pill', `text-bg-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
   ])
 })
 

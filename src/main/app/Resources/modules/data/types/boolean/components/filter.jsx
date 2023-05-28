@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataSearch as DataSearchTypes} from '#/main/app/data/types/prop-types'
@@ -15,21 +16,27 @@ const BooleanFilter = (props) => {
   return (
     <span className="data-filter boolean-filter">
       <Button
-        className="btn btn-filter"
+        className={classes('btn btn-filter', {
+          'btn-primary': props.isValid && searchValue,
+          'btn-outline-secondary': !props.isValid || !searchValue
+        })}
         type={CALLBACK_BUTTON}
         label={trans('yes')}
         callback={() => props.updateSearch(true)}
-        primary={props.isValid && searchValue}
+        //primary={props.isValid && searchValue}
         disabled={props.disabled}
         size="sm"
       />
 
       <Button
-        className="btn btn-filter"
+        className={classes('btn btn-filter', {
+          'btn-primary': props.isValid && !searchValue,
+          'btn-outline-secondary': !props.isValid || searchValue
+        })}
         type={CALLBACK_BUTTON}
         label={trans('no')}
         callback={() => props.updateSearch(false)}
-        primary={props.isValid && !searchValue}
+        //primary={props.isValid && !searchValue}
         disabled={props.disabled}
         size="sm"
       />

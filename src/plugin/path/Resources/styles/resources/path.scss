@@ -35,13 +35,13 @@
 
   .btn-previous {
     text-align: left;
-    margin-right: floor(math.div($grid-gutter-width, 2));
+    margin-right: ($grid-gutter-width * .5);
   }
 
   .btn-next {
     font-weight: bold;
     text-align: right;
-    margin-left: floor(math.div($grid-gutter-width, 2));
+    margin-left: ($grid-gutter-width * .5);
 
     &:first-child {
       margin-left: auto;
@@ -60,7 +60,7 @@
 
 .step-poster,
 .step-title {
-  margin-top: $line-height-computed - 4px; // 4px is to absorb progress bar height
+  margin-top: calc($line-height-computed - 4px); // 4px is to absorb progress bar height
 }
 
 .step-poster {
@@ -84,8 +84,6 @@
   font-size: $font-size-base;
 
   .dropdown-toggle {
-    font-weight: bold;
-
     &.unseen    { color: $step-status-unseen-color; }
     &.seen      { color: $step-status-seen-color; }
     &.to_do     { color: $step-status-to_do-color; }
@@ -96,7 +94,7 @@
 
 .step-primary-resource {
   background: $step-resource-bg;
-  border-radius: $border-radius-large;
+  border-radius: $border-radius;
 
   .page-header {
     background-color: $step-resource-bg;
@@ -120,7 +118,7 @@
 
 .step-status {
   margin-left: auto;
-  color: $brand-secondary;
+  color: $learning;
   font-style: normal; // override summary styles
 
   .not_started {

@@ -2,13 +2,13 @@
  * Styles for `url` data type.
  */
 
-.url-display {
+/*.url-display {
     max-width: 100%;
     display: flex;
     justify-content: space-between;
     background: $gray-lighter;
 
-    @include border-radius($border-radius-base);
+    @include border-radius($border-radius);
 
     a {
         flex: 1;
@@ -18,4 +18,4 @@
         overflow: hidden;
         white-space: nowrap;
     }
-}
+}*/

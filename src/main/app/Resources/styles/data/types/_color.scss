@@ -20,10 +20,11 @@
     }
 }
 
-.table-condensed .color-cell {
-    width: floor($table-condensed-cell-padding*2 + $line-height-base*$font-size-base);
+.table-sm .color-cell/*,
+.table-condensed .color-cell*/ {
+    width: floor($table-cell-padding-x-sm*2 + $line-height-base*$font-size-base);
 
     > span {
-        height: floor($table-condensed-cell-padding*2 + $line-height-base*$font-size-base);
+        height: floor($table-cell-padding-y-sm*2 + $line-height-base*$font-size-base);
     }
 }

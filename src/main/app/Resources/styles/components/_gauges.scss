@@ -1,7 +1,7 @@
 
 .gauge {
     .gauge-text {
-        fill: $text-color;
+        fill: $body-color;
     }
 
     .gauge-liquid {
@@ -9,26 +9,27 @@
     }
 
     // generates variants
-    &.gauge-default {
-        @include gauge-variant($gray);
+    &.gauge-secondary {
+        @include gauge-variant($secondary);
     }
     &.gauge-primary {
         @include gauge-variant($primary);
     }
     &.gauge-success {
-        @include gauge-variant($brand-success);
+        @include gauge-variant($success);
     }
     &.gauge-warning {
-        @include gauge-variant($brand-warning);
+        @include gauge-variant($warning);
     }
     &.gauge-danger {
-        @include gauge-variant($brand-danger);
+        @include gauge-variant($danger);
     }
     &.gauge-info {
-        @include gauge-variant($brand-info);
+        @include gauge-variant($info);
     }
+    &.gauge-learning,
     &.gauge-user {
-        @include gauge-variant($brand-secondary);
+        @include gauge-variant($learning);
     }
 }
 
@@ -44,50 +45,52 @@
     }
 
     // generates variants
-    &.gauge-default {
-        @include liquid-gauge-variant($gray);
+    &.gauge-secondary {
+        @include liquid-gauge-variant($secondary);
     }
     &.gauge-primary {
         @include liquid-gauge-variant($primary);
     }
     &.gauge-success {
-        @include liquid-gauge-variant($brand-success);
+        @include liquid-gauge-variant($success);
     }
     &.gauge-warning {
-        @include liquid-gauge-variant($brand-warning);
+        @include liquid-gauge-variant($warning);
     }
     &.gauge-danger {
-        @include liquid-gauge-variant($brand-danger);
+        @include liquid-gauge-variant($danger);
     }
     &.gauge-info {
-        @include liquid-gauge-variant($brand-info);
+        @include liquid-gauge-variant($info);
     }
+    &.gauge-learning,
     &.gauge-user {
-        @include liquid-gauge-variant($brand-secondary);
+        @include liquid-gauge-variant($learning);
     }
 }
 
 .score-gauge {
     // generates variants
-    &.gauge-default {
-        @include score-gauge-variant($gray);
+    &.gauge-secondary {
+        @include score-gauge-variant($secondary);
     }
     &.gauge-primary {
         @include score-gauge-variant($primary);
     }
     &.gauge-success {
-        @include score-gauge-variant($brand-success);
+        @include score-gauge-variant($success);
     }
     &.gauge-warning {
-        @include score-gauge-variant($brand-warning);
+        @include score-gauge-variant($warning);
     }
     &.gauge-danger {
-        @include score-gauge-variant($brand-danger);
+        @include score-gauge-variant($danger);
     }
     &.gauge-info {
-        @include score-gauge-variant($brand-info);
+        @include score-gauge-variant($info);
     }
+    &.gauge-learning,
     &.gauge-user {
-        @include score-gauge-variant($brand-secondary);
+        @include score-gauge-variant($learning);
     }
 }

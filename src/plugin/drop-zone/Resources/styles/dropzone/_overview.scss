@@ -7,10 +7,10 @@
 
     .evaluation-parameter {
         flex: 1;
-        background: $gray-lighter;
+        background: var(--#{$prefix}secondary-bg);
         padding: 10px $panel-body-padding;
         border: 1px solid transparent;
-        border-radius: $border-radius-small;
+        border-radius: $border-radius-sm;
 
         + .evaluation-parameter {
             margin-top: 5px;
@@ -35,7 +35,7 @@
         border-top: $timeline-lines-width solid $timeline-lines-color;
         left: 0;
         right: $timeline-endpoint-size;
-        top: math.div($timeline-endpoint-size, 2) - math.div($timeline-lines-width, 2);
+        top: calc(math.div($timeline-endpoint-size, 2) - math.div($timeline-lines-width, 2));
     }
 
     // timeline arrow
@@ -58,8 +58,8 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    background: $panel-bg;
-    border: 1px solid $panel-default-border;
+    background: $card-bg;
+    border: 1px solid $card-border-color;
     text-align: center;
 
     &:before {
@@ -93,7 +93,7 @@
     }
 
     &.active {
-        @include box-shadow($dropdown-menu-box-shadow);
+        @include box-shadow($dropdown-box-shadow);
 
         &:before,
         &:after {
@@ -103,11 +103,11 @@
         .evaluation-status-heading {
             background: $primary;
             color: white;
-            border-color: $btn-primary-border;
+            border-color: $primary;
         }
 
         .evaluation-planning {
-            color: $text-color;
+            color: $body-color;
         }
     }
 
@@ -116,7 +116,7 @@
         margin: 0;
         padding: $panel-body-padding;
         font-size: $font-size-base;
-        color: $text-muted;
+        color: var(--#{$prefix}secondary-color);
         background: $gray-lightest;
         border-bottom: 1px solid #e5e5e5; // todo : add var (same as feedback in exo)
 
@@ -132,11 +132,11 @@
         flex: 1 0 40%;
         padding: $panel-body-padding;
         font-style: italic;
-        color: $text-muted;
+        color: var(--#{$prefix}secondary-color);
     }
 }
 
-@media (max-width: $screen-sm-min) {
+@media (max-width: map-get($grid-breakpoints, 'sm')) {
     .evaluation-timeline {
         flex-direction: column;
     }

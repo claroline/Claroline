@@ -19,7 +19,7 @@ const WorkspacesModal = props => {
       {...omit(props, 'url', 'selected', 'selectAction', 'reset')}
       icon="fa fa-fw fa-book"
       className="data-picker-modal"
-      bsSize="lg"
+      size="xl"
       onExited={props.reset}
     >
       <WorkspaceList
@@ -32,7 +32,9 @@ const WorkspacesModal = props => {
       <Button
         label={trans('select', {}, 'actions')}
         {...selectAction}
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         primary={true}
         disabled={0 === props.selected.length}
         onClick={props.fadeModal}

@@ -90,6 +90,7 @@ class Modal extends Component {
         autoFocus={true}
         enforceFocus={false}
         dialogClassName={this.props.className}
+        fullscreen={this.props.fullscreen}
         show={this.props.show && !this.props.disabled}
 
         onHide={this.onHide}
@@ -110,7 +111,7 @@ class Modal extends Component {
               'modal-poster': !!this.props.poster
             })}
           >
-            <BaseModal.Title>
+            <BaseModal.Title className="h-title">
               {this.props.icon &&
                 <span className={classes('modal-icon', this.props.icon)} />
               }
@@ -133,11 +134,11 @@ class Modal extends Component {
 }
 
 Modal.propTypes = {
-  bsSize: T.string,
   fadeModal: T.func.isRequired,
   hideModal: T.func.isRequired,
   show: T.bool.isRequired,
-
+  size: T.oneOf(['sm', 'lg', 'xl']),
+  fullscreen: T.oneOf([true, 'sm-down','md-down', 'lg-down', 'xl-down', 'xxl-down']),
   // modal events (from react-bootstrap)
   onEnter: T.func,
   onEntering: T.func,

@@ -14,7 +14,7 @@ const OrganizationFilter = (props) =>
     {props.search}
 
     <Button
-      className="btn btn-filter"
+      className="btn btn-outline-secondary btn-filter"
       type={MODAL_BUTTON}
       tooltip="left"
       icon="fa fa-fw fa-building"

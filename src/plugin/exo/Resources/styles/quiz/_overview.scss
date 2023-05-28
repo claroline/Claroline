@@ -6,10 +6,10 @@
 
     .exercise-parameter {
         flex: 1;
-        background: $gray-lighter;
+        background: var(--#{$prefix}secondary-bg);
         padding: 10px $panel-body-padding;
         border: 1px solid transparent;
-        border-radius: $border-radius-small;
+        border-radius: $border-radius-sm;
 
         + .exercise-parameter {
             margin-top: 5px;

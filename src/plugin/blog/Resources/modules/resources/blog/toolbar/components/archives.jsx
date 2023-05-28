@@ -17,9 +17,11 @@ import {actions as postActions} from '#/plugin/blog/resources/blog/post/store'
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 
 const ArchivesComponent = props =>
-  <div key='redactors' className="panel panel-default">
-    <div className="panel-heading"><h2 className="panel-title">{trans('archives', {}, 'icap_blog')}</h2></div>
-    <div className="panel-body">
+  <div key='archives' className="card mb-3">
+    <div className="card-header">
+      <h2 className="card-title">{trans('archives', {}, 'icap_blog')}</h2>
+    </div>
+    <div className="card-body">
       {!isEmpty(props.archives) ? (
         <Sections accordion level={4}>
           {Object.keys(props.archives).reverse().map((year) => (

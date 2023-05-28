@@ -7,10 +7,6 @@
 }
 
 .results-per-page {
-    .btn {
-        @include pagination-btn-variant();
-    }
-
     .dropdown-menu {
         min-width: 100%;
         text-align: right;
@@ -22,10 +18,8 @@
     display: inline-flex;
 
     .btn {
-        @include pagination-btn-variant();
-
         &.btn-next {
-            font-weight: bold;
+            font-weight: $font-weight-bolder;
         }
     }
 

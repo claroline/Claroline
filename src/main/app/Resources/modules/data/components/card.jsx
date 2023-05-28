@@ -190,7 +190,7 @@ const DataCard = props =>
 
     <CardAction
       action={props.primaryAction}
-      className="data-card-content"
+      className="data-card-content text-reset text-decoration-none"
     >
       <Heading
         key="data-card-title"
@@ -221,8 +221,8 @@ const DataCard = props =>
     {0 !== props.actions.length &&
       <Toolbar
         id={`actions-${props.id}`}
-        className="data-card-toolbar"
-        buttonName="btn btn-link"
+        name="data-card-toolbar"
+        buttonName="btn btn-text-body"
         tooltip="left"
         toolbar={props.toolbar}
         actions={props.actions}

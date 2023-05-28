@@ -9,15 +9,12 @@ import {FormStatus} from '#/main/app/content/form/components/status'
 
 /**
  * Renders a form section.
- *
- * @param props
- * @constructor
  */
-const FormSection = props =>
+const FormSection = (props) =>
   <Section
     {...omit(props, 'validating', 'errors')}
     className={classes('form-section', props.className)}
-    bsStyle={!isEmpty(props.errors) ? (props.validating ? 'danger': 'warning') : 'default'}
+    //bsStyle={!isEmpty(props.errors) ? (props.validating ? 'danger': 'warning') : 'default'}
     status={!isEmpty(props.errors) ?
       <FormStatus id={props.id} validating={props.validating} position="left" /> :
       undefined
@@ -41,17 +38,20 @@ FormSection.defaultProps = {
 
 const FormSections = props =>
   <Sections
-    className="form-sections"
+    className={classes('form-sections', props.className)}
     level={props.level}
     displayLevel={props.displayLevel}
     accordion={props.accordion}
     defaultOpened={props.defaultOpened}
+    flush={props.flush}
   >
     {props.children}
   </Sections>
 
 FormSections.propTypes = {
+  className: T.string,
   accordion: T.bool,
+  flush: T.bool,
   level: T.number, // level for panel headings
   displayLevel: T.number, // modifier for headings level (used when some headings levels are hidden in the page)
   defaultOpened: T.string,

@@ -1,108 +1,35 @@
 @use "sass:math";
 
-@mixin button-base() {
-  display: inline-block;
-  margin-bottom: 0; // For input.btn
-  font-weight: $btn-font-weight;
-  text-align: center;
-  vertical-align: middle;
-  touch-action: manipulation;
-  cursor: pointer;
-  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-  border-width: 1px;
-  border-style: solid;
-  white-space: nowrap;
-  user-select: none;
-  @include button-size($padding-base-vertical, $padding-base-horizontal, $font-size-base, $btn-border-radius-base);
+@mixin button-text-variant(
+  $color,
+  $hover-color: if(color-contrast($color) == $color-contrast-light, shade-color($color, $btn-hover-bg-shade-amount), tint-color($color, $btn-hover-bg-tint-amount)),
+  $active-color: if(color-contrast($color) == $color-contrast-light, shade-color($color, $btn-active-bg-shade-amount), tint-color($color, $btn-active-bg-tint-amount))
+) {
+  --#{$prefix}btn-font-weight: #{$font-weight-normal};
+  --#{$prefix}btn-color: #{$color};
+  --#{$prefix}btn-bg: transparent;
+  --#{$prefix}btn-border-color: transparent;
 
-  &,
-  &:active,
-  &.active {
-    &:focus,
-    &.focus {
-      @include tab-focus();
-    }
-  }
+  --#{$prefix}btn-hover-color: #{$hover-color};
+  --#{$prefix}btn-hover-bg: transparent;
+  --#{$prefix}btn-hover-border-color: transparent;
 
-  &:hover,
-  &:focus,
-  &.focus {
-    text-decoration: none;
-  }
+  --#{$prefix}btn-active-color: #{$active-color};
+  --#{$prefix}btn-active-bg: transparent;
+  --#{$prefix}btn-active-border-color: transparent;
+  --#{$prefix}btn-active-shadow: none !important;
 
-  &:active,
-  &.active {
-    outline: 0;
-    background-image: none;
+  --#{$prefix}btn-disabled-color: #{$color};
+  --#{$prefix}btn-disabled-bg: transparent;
+  --#{$prefix}btn-disabled-border-color: transparent;
 
-    @include box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
-  }
+  --#{$prefix}btn-box-shadow: none;
+  --#{$prefix}gradient: none;
+  --#{$prefix}btn-focus-box-shadow: none;
 
-  &.disabled,
-  &[disabled],
-  fieldset[disabled] & {
-    cursor: $cursor-disabled;
-    opacity: .65;
-
-    @include box-shadow(none);
-  }
-
-  &a {
-    &.disabled,
-    fieldset[disabled] & {
-      pointer-events: none; // Future-proof disabling of clicks on `<a>` elements
-    }
-  }
-}
-
-@mixin button-link-base() {
-  @include button-base();
-
-  font-weight: normal;
-  border-radius: 0;
-
-  &,
-  &:active,
-  &.active,
-  &[disabled],
-  fieldset[disabled] & {
-    background-color: transparent;
-    @include box-shadow(none);
-  }
-  &,
-  &:hover,
-  &:focus,
-  &:active {
-    border-color: transparent;
-  }
-  &:hover,
-  &:focus {
-    background-color: transparent;
-  }
-  &[disabled],
-  fieldset[disabled] & {
-    &:hover,
-    &:focus {
-      text-decoration: none;
-    }
-  }
-}
-
-// expose a mixin to generate button links variant (this is not down by bootstrap)
-@mixin button-link-variant($color, $hover-color, $hover-decoration: none) {
-  color: $color;
-
-  &:hover,
-  &:focus {
-    color: $hover-color;
-    text-decoration: $hover-decoration;
-  }
-  &[disabled],
-  fieldset[disabled] & {
-    &:hover,
-    &:focus {
-      color: $color;
-    }
+  // override box shadow forced by dropdown container (rule: .btn-group.show .dropdown-toggle)
+  &.dropdown-toggle.show {
+    box-shadow: none !important;
   }
 }
 
@@ -138,7 +65,7 @@
 
 @mixin button-toggle-color($color, $border-color) {
   &[aria-pressed=false] {
-    @include button-variant($input-bg-disabled, $input-bg-disabled, $input-border);
+    @include button-variant($input-disabled-bg, $input-disabled-bg, $input-border-color);
   }
 
   &[aria-pressed=true] {

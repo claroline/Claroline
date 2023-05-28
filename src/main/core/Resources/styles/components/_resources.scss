@@ -1,12 +1,12 @@
 @use "sass:math";
 
-.embedded-resource {
+/*.embedded-resource {
     // removes floating form buttons when embedded (will overlaps the one from the main page if any)
     .form-toolbar {
         text-align: right;
         position: static !important;
     }
-}
+}*/
 
 .resource-user-progression {
     .gauge {
@@ -17,7 +17,7 @@
         box-shadow: none;
 
         .gauge {
-            box-shadow: 0 0 5px $brand-secondary;
+            box-shadow: 0 0 5px $learning;
         }
     }
 
@@ -28,7 +28,7 @@
     }
 
     .dropdown-menu-header {
-        padding: $list-group-item-padding-v $list-group-item-padding-h;
+        //padding: $list-group-item-padding-v $list-group-item-padding-h;
 
         margin: 0;
         display: flex;
@@ -48,7 +48,7 @@
 
             margin-right: 15px;
 
-            background: $gray;
+            //background: $gray;
 
             &.ended {
                 background: $brand-success;
@@ -102,16 +102,16 @@
 }
 
 .resource-overview {
-    .resource-feedbacks {
+    /*.resource-feedbacks {
         margin-top: $component-margin-bottom;
-    }
+    }*/
 }
 
 .overview-user-actions {
-    margin-top: $component-margin-bottom;
-    margin-bottom: $component-margin-bottom;
+    /*margin-top: $component-margin-bottom;
+    margin-bottom: $component-margin-bottom;*/
 
-    .alert,
+    /*.alert,
     .btn {
         margin-bottom: 0;
         //padding: $padding-large-vertical $padding-large-horizontal;
@@ -120,13 +120,13 @@
         + .btn {
             margin-top: 5px;
         }
-    }
+    }*/
 }
 
 
-.resource-end {
+/*.resource-end {
     margin-top: $component-margin-bottom;
-}
+}*/
 
 /**
  * Resource rights modal.
@@ -146,27 +146,37 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: floor(math.div($grid-gutter-width, 2));
-        color: $gray-light;
+        padding: map-get($spacers, 3);
+        color: var(--#{$prefix}tertiary-color);
         border: none;
-        border-radius: $border-radius-base;
-        background: $modal-content-bg;
+
+        @include border-radius($border-radius);
+        //background: $modal-content-bg;
 
         &:focus,
         &:hover,
         &:active {
-            color: $gray-light;
-            background: $gray-lightest;
+            color: var(--#{$prefix}secondary-color);
+            background: var(--#{$prefix}tertiary-bg);
             box-shadow: none;
+
+            .simple-right-icon {
+                border-color: var(--#{$prefix}secondary-color);
+            }
         }
 
         &.selected {
-            font-weight: bold;
-            background: $gray-lightest;
+            font-weight: $font-weight-bolder;
+            color: var(--#{$prefix}primary-text-emphasis);
+            background: var(--#{$prefix}primary-bg-subtle);
+
+            .simple-right-icon {
+                border-color: var(--#{$prefix}primary-text-emphasis);
+            }
         }
 
         & + .simple-right {
-            margin-left: 5px;
+            margin-left: map-get($spacers, 1);
         }
     }
 
@@ -175,16 +185,17 @@
         align-items: center;
         justify-content: center;
         padding: 10px;
-        margin-bottom: floor(math.div($grid-gutter-width, 2));
+        margin-bottom: map-get($spacers, 3);
         font-size: 40px;
         width: 80px;
         height: 80px;
-        border: 2px solid $gray-light;
-        border-radius: $border-radius-base;
+        border: 2px solid var(--#{$prefix}tertiary-color);
+
+        @include border-radius($border-radius);
     }
 
     .simple-right-label {
-        font-size: $font-size-small;
+        font-size: $font-size-sm;
         display: block;
         white-space: normal;
         max-width: 100%;
@@ -192,13 +203,13 @@
 }
 
 .resource-custom-rules-info {
-    color: $brand-danger;
+    color: var(--#{$prefix}danger);
     margin-top: $component-margin-bottom;
     margin-bottom: 0;
 
-    .fa {
+    /*.fa {
         margin-right: $icon-text-spacer;
-    }
+    }*/
 }
 
 // not the correct place to declare the next rules
@@ -226,7 +237,7 @@
                 justify-content: center;
 
                 color: white;
-                font-size: $font-size-small;
+                font-size: $font-size-sm;
                 width: 30px;
                 height: 30px;
                 border-radius: 50%;

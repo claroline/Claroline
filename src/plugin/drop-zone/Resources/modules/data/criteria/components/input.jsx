@@ -10,6 +10,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group'
 
 import {Criterion as CriterionTypes} from '#/plugin/drop-zone/data/criteria/prop-types'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const Criterion = props =>
   <li className="criterion-item">
@@ -82,11 +83,11 @@ const CriteriaInput = props =>
     }
 
     {0 === props.value.length &&
-      <div className="no-item-info">{props.placeholder}</div>
+      <ContentPlaceholder title={props.placeholder} size={props.size} />
     }
 
     <Button
-      className="btn btn-block"
+      className="btn btn-outline-primary w-100 mt-2"
       type={CALLBACK_BUTTON}
       icon="fa fa-fw fa-plus"
       label={trans('add_criterion', {}, 'dropzone')}

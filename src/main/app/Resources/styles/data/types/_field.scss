@@ -2,9 +2,11 @@
  * Styles for `field` data type.
  */
 
-@use "sass:math";
+// TODO : merge with collection data type
 
 .field-list-control {
+    position: relative; // constrains remove all btn
+
     ul {
         margin: 0;
         padding: 0;
@@ -15,11 +17,11 @@
         display: flex;
         flex-direction: row;
         align-items: flex-start;
-        background: $gray-lighter;
-        padding: 10px;
-        margin-bottom: $component-margin-bottom-small;
+        background: var(--#{$prefix}secondary-bg);
+        border: var(--#{$prefix}border-width) solid transparent;
+        padding: map-get($spacers, 2);
 
-        @include border-radius($border-radius-base);
+        @include border-radius($border-radius);
 
         .form-group {
             flex: 1;
@@ -31,25 +33,19 @@
         }
 
         .field-item-actions {
-            margin-left: floor(math.div($grid-gutter-width, 2));
+            margin-left: ($grid-gutter-width * .5);
 
             .btn {
                 padding: 4px;
             }
         }
     }
-}
 
-.form-group {
-    .field-list-control {
-        position: relative; // constrains remove all btn
-
-        // moves remove all btn on the same line than the label
-        // code is not really aesthetic
-        .btn-delete-all {
-            position: absolute;
-            bottom: 100%;
-            right: 0;
-        }
+    // moves remove all btn on the same line than the label
+    // code is not really aesthetic
+    .btn-delete-all {
+        position: absolute;
+        bottom: 100%;
+        right: 0;
     }
 }

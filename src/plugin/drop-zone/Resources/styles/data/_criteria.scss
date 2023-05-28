@@ -13,13 +13,13 @@
         align-items: flex-start;
         background-color: $gray-lighter;
         border: 1px solid $gray-lighter;
-        border-radius: $border-radius-base;
+        border-radius: $border-radius;
         padding: 10px;
         margin-bottom: 10px;
 
         .criterion-content {
             flex: 1;
-            margin-right: floor(math.div($grid-gutter-width, 2));
+            margin-right: ($grid-gutter-width * .5);
             margin-bottom: 0;
         }
 

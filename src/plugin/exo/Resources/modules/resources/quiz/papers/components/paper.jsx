@@ -2,7 +2,6 @@ import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
-import classes from 'classnames'
 
 import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
@@ -56,9 +55,6 @@ const PaperStep = props => {
     <Fragment>
       {props.showTitle &&
         <ContentTitle
-          className={classes({
-            'h-first': 0 === props.index
-          })}
           level={4}
           displayLevel={3}
           numbering={numbering}
@@ -69,8 +65,8 @@ const PaperStep = props => {
       {props.items
         .filter((item) => isQuestionType(item.type))
         .map((item, idxItem) =>
-          <div key={item.id} className="panel panel-default quiz-item item-paper">
-            <div className="panel-body">
+          <div key={item.id} className="card mb-3 quiz-item item-paper">
+            <div className="card-body">
               {props.showScore && item.hasExpectedAnswers && ScoreNone.name !== get(item, 'score.type') && getAnswerScore(item.id, props.answers) !== undefined && getAnswerScore(item.id, props.answers) !== null &&
                 <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.answers)} scoreMax={calculateTotal(item)}/>
               }
@@ -168,8 +164,8 @@ const PaperComponent = props =>
 
     <div className="row">
       <div className="col-md-4">
-        <div className="panel panel-default">
-          <div className="panel-heading">
+        <div className="card mb-3">
+          <div className="card-header">
             <UserMicro
               className="content-creator"
               {...get(props.paper, 'user', {})}
@@ -177,7 +173,7 @@ const PaperComponent = props =>
             />
           </div>
 
-          <div className="panel-body text-center">
+          <div className="card-body text-center">
             <ScoreGauge
               type="user"
               value={get(props.paper, 'score')}
@@ -188,7 +184,7 @@ const PaperComponent = props =>
             />
           </div>
 
-          <ul className="list-group list-group-values">
+          <ul className="list-group list-group-flush list-group-values">
             <li className="list-group-item">
               {trans('start_date')}
               <span className="value">{get(props.paper, 'startDate') ? displayDate(props.paper.startDate, false, true) : '-'}</span>

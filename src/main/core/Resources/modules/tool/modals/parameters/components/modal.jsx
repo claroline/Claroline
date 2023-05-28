@@ -39,8 +39,10 @@ class ParametersModal extends Component {
         title={trans('parameters')}
         subtitle={trans(this.props.toolName, {}, 'tools')}
         onEntering={() => this.props.reset(this.props.data)}
+        size="lg"
       >
         <FormData
+          flush={true}
           name={selectors.STORE_NAME}
           definition={[
             {
@@ -92,7 +94,9 @@ class ParametersModal extends Component {
           ]}
         >
           <Button
-            className="modal-btn btn btn-primary"
+            className="modal-btn"
+            variant="btn"
+            size="lg"
             type={CALLBACK_BUTTON}
             htmlType="submit"
             primary={true}
@@ -108,7 +112,6 @@ class ParametersModal extends Component {
     )
   }
 }
-
 
 ParametersModal.propTypes = {
   toolName: T.string.isRequired,

@@ -29,8 +29,8 @@ const AnswersStats = props =>
 
             {step.items.map((item, idxItem) => {
               return isQuestionType(item.type) && props.stats && props.stats[item.id] &&
-                <div className="panel panel-default" key={item.id}>
-                  <div className="panel-body">
+                <div className="card mb-3" key={item.id}>
+                  <div className="card-body">
                     {item.title &&
                       <h4 className="item-title">{item.title}</h4>
                     }

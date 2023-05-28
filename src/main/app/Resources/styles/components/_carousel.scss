@@ -54,7 +54,7 @@
 }
 
 // Scale up controls for tablets and up
-@media screen and (min-width: $screen-sm-min) {
+@media screen and (min-width: map-get($grid-breakpoints, 'sm')) {
     // Scale up the controls a smidge
     .carousel-control {
         .fa {

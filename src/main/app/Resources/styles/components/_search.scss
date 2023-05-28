@@ -3,16 +3,15 @@
     background: $list-controls-bg;
 
     .search-icon {
-        font-size: $font-size-large;
+        font-size: $font-size-lg;
         padding: $padding-large-vertical $padding-large-horizontal;
-        height: $input-height-large;
+        height: $input-height-lg;
         line-height: $line-height-large;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    @include input-size('.search-control', $input-height-large, 0, $padding-large-horizontal, $font-size-large, $line-height-large, 0);
     .search-control {
         flex: 1;
         border: none;
@@ -20,7 +19,11 @@
         background: transparent;
         text-overflow: ellipsis;
 
-
+        height: $input-height-lg;
+        padding: 0 $padding-large-horizontal;
+        font-size: $font-size-lg;
+        line-height: $line-height-large;
+        border-radius: 0;
 
         padding-left: 0; // ugly
     }
@@ -41,13 +44,15 @@
 }
 
 .search-unified {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    font-size: $font-size-large;
+    .search-current {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        font-size: $font-size-lg;
+    }
 
     .search-icon {
-        color: $gray; // same than btn default
+        color: $gray-500; // same than btn default
     }
 
     .search-control {
@@ -55,13 +60,10 @@
     }
 
     .search-btn {
-        font-size: $font-size-large;
+        font-size: $font-size-lg;
         padding: $padding-large-vertical $padding-large-horizontal;
-        height: $input-height-large;
+        height: $input-height-lg;
         line-height: $line-height-large;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
     .search-form {
@@ -79,10 +81,14 @@
             &:nth-of-type(odd) {
                 background: #fafafa;
             }
+
+            &:first-child {
+                @include border-top-radius($dropdown-border-radius);
+            }
         }
 
         .control-label {
-            font-size: $font-size-small;
+            font-size: $font-size-sm;
 
             text-align: right;
             margin-bottom: 0;
@@ -104,14 +110,14 @@
 
     .search-filter {
         display: inline-block;
-        font-size: $font-size-small;
+        font-size: $font-size-sm;
         margin: $padding-large-vertical $padding-large-horizontal $padding-large-vertical 0;
         line-height: $line-height-large;
         white-space: nowrap;
         background: $state-info-bg;
         color: $state-info-text;
 
-        @include border-radius($border-radius-small);
+        @include border-radius($border-radius-sm);
 
         .search-filter-prop {
             display: inline-block;
@@ -120,7 +126,7 @@
             padding: 0.4em 0.6em;
             font-weight: bold;
 
-            @include border-radius($border-radius-small 0 0 $border-radius-small);
+            @include border-radius($border-radius-sm 0 0 $border-radius-sm);
         }
 
         .search-filter-value {
@@ -128,7 +134,7 @@
             padding: 0.4em 0.6em;
 
             .btn {
-                font-size: $font-size-small;
+                font-size: $font-size-sm;
                 line-height: 1;
                 border: none;
                 color: $state-info-text;
@@ -143,12 +149,8 @@
         }
     }
 
-    .search-toolbar {
-        text-align: right;
-    }
-
     .search-submit {
-        min-width: 240px;
-        border-radius: 0;
+        @include border-radius($dropdown-border-radius);
+        @include border-top-radius(0);
     }
 }

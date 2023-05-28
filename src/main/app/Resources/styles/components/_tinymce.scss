@@ -9,7 +9,7 @@
 }
 
 .tox .tox-throbber {
-  z-index: $zindex-modal-background - 1 !important;
+  z-index: $zindex-modal-backdrop - 1 !important;
 }
 
 .tox-fullscreen {
@@ -18,10 +18,10 @@
 
 .mce-content-body {
   //padding: 0 floor(@grid-gutter-width / 2) !important;
-  padding: $input-padding !important;
+  padding: $input-padding-y $input-padding-x !important;
 
   .btn, .btn-link {
-    @include user-select(auto);
+    user-select: auto;
   }
 }
 

@@ -1,10 +1,7 @@
-import React, {PureComponent} from 'react'
-import classes from 'classnames'
+import React, {Fragment, PureComponent} from 'react'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-
-// TODO : use main/app/input/components/checkbox
 
 class BooleanInput extends PureComponent {
   constructor(props) {
@@ -19,33 +16,35 @@ class BooleanInput extends PureComponent {
 
   render() {
     return (
-      <div className={classes({
-        'checkbox'       : !this.props.inline,
-        'checkbox-inline': this.props.inline
-      })}>
-        <label>
-          <input
-            id={this.props.id}
-            type="checkbox"
-            checked={this.props.value}
-            disabled={this.props.disabled}
-            onChange={this.onChange}
-          />
-
+      <Fragment>
+        <input
+          id={this.props.id}
+          className="form-check-input"
+          type="checkbox"
+          checked={this.props.value}
+          disabled={this.props.disabled}
+          onChange={this.onChange}
+          role="switch"
+        />
+        <label
+          className="form-check-label"
+          htmlFor={this.props.id}
+        >
           {(this.props.value && this.props.labelChecked) ? this.props.labelChecked : this.props.label}
         </label>
-      </div>
+      </Fragment>
     )
   }
 }
 
 implementPropTypes(BooleanInput, DataInputTypes, {
   value: T.bool,
-  labelChecked: T.string,
-  inline: T.bool
+  /**
+   * @deprecated
+   */
+  labelChecked: T.string
 }, {
-  value: false,
-  inline: false
+  value: false
 })
 
 export {

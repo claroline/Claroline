@@ -1,7 +1,7 @@
 .item-paper {
     .score-box {
         margin: $score-margin;
-        border-radius: 0 $panel-border-radius 0 $score-border-radius;
+        border-radius: 0 $card-border-radius 0 $score-border-radius;
 
         .user-score {
             border-top-left-radius: 0;
@@ -10,8 +10,8 @@
 
     // todo : do not do it like this
     .nav-tabs {
-        padding-left: $panel-body-padding;
-        margin: 0 (-$panel-body-padding) $component-margin-bottom (-$panel-body-padding);
+        padding-left: $card-spacer-x;
+        margin: 0 (-$card-spacer-x) $card-title-spacer-y (-$card-spacer-x);
     }
 }
 
@@ -43,8 +43,8 @@
 .item-feedback {
     display: flex;
     text-align: justify; // justify HTML contents by default (can be overridden through HTMLs WYSIWYG)
-    background: $panel-footer-bg;
-    border-top: 1px solid #e5e5e5; // todo : add var
+    background: var(--#{$prefix}tertiary-bg);
+    border-top: 1px solid $card-border-color;
     margin: 20px -15px -15px; // todo : add var
     padding: 15px; // todo : add var
 
@@ -62,8 +62,8 @@
 .solution-score,
 .answer-stats {
     white-space: nowrap;
-    border-radius: $label-border-radius;
-    font-size: $label-font-size;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-sm;
     background: $gray-light;
     color: #eee;
     padding: 4px 6px;
@@ -77,7 +77,7 @@
 
 .no-answer {
     font-style: italic;
-    color: $text-muted;
+    color: var(--#{$prefix}secondary-color);
 }
 
 .answer-item {
@@ -94,14 +94,14 @@
     font-weight: normal;
 }
 
-.draggable-answer-item {
+/*.draggable-answer-item {
     cursor: move;
 
     &:hover:not(.selected-answer) {
-        background: darken($answer-item-bg, 10%);
-        border-color: darken($answer-item-border, 10%);
+        background: $answer-item-hover-bg;
+        border-color: $answer-item-hover-border-color;
     }
-}
+}*/
 
 .expected-answer {
     color: $expected-answer-color;

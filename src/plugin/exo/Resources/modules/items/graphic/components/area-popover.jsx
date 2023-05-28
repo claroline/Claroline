@@ -70,6 +70,7 @@ export class AreaPopover extends Component {
               <input
                 id="expected-answer"
                 type="checkbox"
+                className="form-check-input"
                 checked={0 < this.props.score}
                 onChange={(e) => this.props.onChangeScore(e.target.checked ? 1 : 0)}
               />

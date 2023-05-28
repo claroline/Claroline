@@ -28,42 +28,24 @@
     display: flex;
     flex-direction: row;
     align-items: stretch;
-
-    .dropdown {
-        display: flex;
-        justify-content: center;
-        align-items: stretch;
-
-        > .dropdown-menu {
-            margin-top: 0;
-            @include border-top-radius(0);
-        }
-
-        &.open > .dropdown-toggle {
-            &,
-            &:hover,
-            &:focus {
-                color: $top-bar-link-active-color;
-                background-color: $top-bar-link-active-bg;
-            }
-        }
-    }
 }
 
 .app-header-item {
-    padding: 0 floor(math.div($grid-gutter-width, 2));
+    padding: 0 ($grid-gutter-width * .5);
     display: flex;
     vertical-align: middle;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    border: none; // remove button borders
 }
 
 .app-header-brand {
     height: 100%;
-    padding: floor(math.div($grid-gutter-width, 2));
-    text-align: center;
+    padding: 0 ($grid-gutter-width * .5);
+    //text-align: center;
     margin-right: auto; // will stack button bar to the rights (TODO : it will not work if brand is not displayed)
+    //text-decoration: none; // remove <a> styles
 
     // permit to center the img
     display: flex;
@@ -80,38 +62,35 @@
 
     // declare colors var to make it usable inside the SVG
     --logo-default: $top-bar-brand-color;
-    --logo-primary: $primary;
+    --logo-primary: $top-bar-brand-secondary-color;
 
     + .app-header-title {
-        margin-left: floor(math.div($grid-gutter-width, 2));
+        margin-left: ($grid-gutter-width * .5);
     }
 }
 
 .app-header-title {
     text-align: left;
     margin: 0;
-    line-height: 1;
     font-size: $top-bar-brand-font-size;
-    font-weight: 900;
+    font-weight: $top-bar-brand-font-weight;
     color: $top-bar-brand-color;
 
     > small {
         display: block;
-        margin-top: 2px;
-        font-size: 70%;
-        font-weight: normal;
-        font-style: italic;
-        color: $primary;
+        font-weight: $font-weight-lighter;
+        color: $top-bar-brand-secondary-color;
     }
 }
 
 .app-header-btn {
+    position: relative; // to constrain action subscript
     color: $top-bar-link-color;
     background: $top-bar-link-bg;
 
     //.fa,
     .action-icon {
-        font-size: $font-size-base;
+        //font-size: $font-size-base;
     }
 
     // puts labels in the bottom right corner
@@ -120,12 +99,8 @@
         top: auto; // reset bootstrap default
         bottom: 5px;
         right: 5px;
-        line-height: 1;
-
-        &.label {
-            font-size: 12px;
-            padding: .2em .4em;
-        }
+        //line-height: 1;
+        font-size: .5rem;
     }
 
     &:hover,
@@ -153,83 +128,6 @@
     }
 }
 
-.app-header-dropdown {
-    width: 360px;
-    padding: 0; // reset default .dropdown-menu
-
-    .app-header-dropdown-header {
-        padding: floor(math.div($grid-gutter-width, 2));
-        text-align: center;
-        background: $panel-default-heading-bg;
-
-        .fa {
-            margin-right: 0; // because there is a hack in styles to add margins on dropdown icons
-        }
-
-        h2 {
-            margin: 0;
-            color: $text-color;
-            font-weight: 900;
-        }
-
-        em {
-            margin-top: 5px;
-        }
-    }
-
-    .app-header-dropdown-icon {
-        width: 80px;
-        height: 80px;
-        margin-bottom: 10px;
-        font-size: floor(math.div(80px, 2)); // for FA icons
-
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255, 255, 255, .6);
-        border-radius: 50%;
-        line-height: 0;
-
-        // for FA icons
-        color: $gray-light !important;
-
-        // for SVG icons
-        fill: $gray-light !important;
-        stroke: $gray-light !important;
-
-        img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-    }
-
-    .app-header-dropdown-empty {
-        padding: 15px;
-        text-align: center;
-        font-family: $headings-font-family;
-        font-weight: bold;
-
-        > small {
-            display: block;
-            margin-top: 5px;
-            font-family: $font-family-base;
-            font-weight: normal;
-            font-style: italic;
-        }
-    }
-
-    .app-header-dropdown-footer {
-        background: $panel-footer-bg;
-        border-top: 1px solid $list-group-border;
-    }
-
-    .alert {
-        font-weight: bold;
-        border-radius: 0;
-        margin: 0;
-    }
-}
-
 .app-header-user {
     .user-avatar {
         color: $top-bar-link-color;
@@ -252,102 +150,41 @@
     }
 }
 
-.app-current-user {
-    .app-current-user-body {
-        padding: floor(math.div($grid-gutter-width, 2));
-        border-top: 1px solid $list-group-border;
-
-        + .app-current-user-footer {
-            border-top: 1px solid $list-group-border;
-        }
-    }
-
-    .app-current-user-footer {
-        padding: 5px floor(math.div($grid-gutter-width, 2));
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        background: $panel-footer-bg;
-    }
-
-    .app-current-user-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 16px; // todo : calculate
-        background: white;
-
-        .fa {
-            margin-right: 0; // because there is a hack in styles to add margins on dropdown icons
-        }
-
-        + .app-current-user-btn {
-            margin-left: 5px;
-        }
-    }
-
-    .app-current-locale {
-        .locale-icon {
-            margin: 0 $icon-text-spacer 0 0;
-        }
-
-        + .app-current-user-btn {
-            margin-left: auto;
-        }
-    }
-}
-
 // TODO : move elsewhere. This is the styles for one implementation of .app-header-main
-.app-header-search {
-    padding: 0 15px;
-    flex: 1;
-    font-size: $font-size-large;
-    display: flex;
-    align-items: stretch;
+.app-search {
+    position: relative;
 
-    .dropdown {
-        width: 50%;
+    .app-search-icon,
+    .app-search-loader,
+    .app-search-clear {
+        position: absolute;
         display: flex;
-        justify-content: center;
         align-items: center;
+        font-size: $input-font-size-lg;
+        height: $input-height-lg;
+        line-height: $input-line-height;
+        padding: $input-padding-y-lg $input-padding-x-lg;
+        top: 1px; // because of the increased border size of the input
+    }
+
+    .app-search-icon {
+        left: 0;
+        color: var(--#{$prefix}primary);
     }
 
     .form-control {
-        font-family: $headings-font-family;
-        color: $top-bar-link-color;
-        background: lighten($top-bar-link-bg, 8%); // #393939 TODO : use a var (if the bg is light it will not work)
-        border-color: transparent;
-        box-shadow: none;
-
-        @include placeholder($top-bar-color);
+        padding-left: calc($input-padding-x-lg * 2 + $icon-fixed-width);
+        padding-right: calc($input-padding-x-lg * 2 + $icon-fixed-width);
+        border-color: var(--#{$prefix}primary);
+        border-width: 2px;
     }
 
-    .app-header-search-loader,
-    .app-header-search-close {
-        position: absolute;
-        right: $padding-large-horizontal;
+    .app-search-loader {
+        right: 0;
+        color: var(--#{$prefix}secondary);
     }
 
-    .result-header {
-        color: $primary;
-        font-weight: bold;
-        padding: 10px;
-        margin: 0;
-        font-style: italic;
-        background: $panel-default-heading-bg;
-        border-top: 1px solid $data-card-border;
-        border-bottom: 1px solid $data-card-border;
-
-        &:first-child {
-            border-top: none;
-        }
-    }
-}
-
-@media (max-width: $screen-md-max) {
-    .app-header-search {
-        .dropdown {
-            width: 100%;
-        }
+    .app-search-clear {
+        right: 0;
     }
 }

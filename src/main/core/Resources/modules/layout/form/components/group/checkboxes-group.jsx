@@ -6,8 +6,7 @@ import {FormGroup} from '#/main/app/content/form/components/group'
 import {Checkboxes} from '#/main/core/layout/form/components/field/checkboxes'
 
 /**
- * @param props
- * @constructor
+ * @deprecated
  */
 const CheckboxesGroup = props =>
   <FormGroup {...props}>

@@ -5,7 +5,7 @@
   margin: 0 auto;
 
   .progress {
-    margin-bottom: $component-margin-bottom - 4px;
+    margin-bottom: calc($component-margin-bottom - 4px);
   }
 
   .score-gauge {
@@ -55,7 +55,7 @@
 
   .progress + .current-step {
     .step-title {
-      margin-top: $line-height-computed - 4px; // 4px is to absorb progress bar height
+      margin-top: calc($line-height-computed - 4px); // 4px is to absorb progress bar height
     }
   }
 

@@ -20,6 +20,7 @@ const SectionParameters = props =>
     title={props.title || trans('facet_section')}
     subtitle={props.description}
     className="embedded-form-section"
+    fill={true}
     actions={[
       {
         name: 'delete',
@@ -36,6 +37,7 @@ const SectionParameters = props =>
     ]}
   >
     <FormData
+      flush={true}
       embedded={true}
       level={3}
       name={props.name}
@@ -110,7 +112,7 @@ SectionParameters.propTypes = {
 const FormParameters = (props) =>
   <Fragment>
     {0 < props.sections.length &&
-      <FormSections level={2}>
+      <FormSections level={2} className="mb-3">
         {props.sections.map((section, sectionIndex) =>
           <SectionParameters
             id={section.id}
@@ -146,6 +148,7 @@ const FormParameters = (props) =>
 
     {0 === props.sections.length &&
       <ContentPlaceholder
+        className="mb-3"
         size="lg"
         title={trans('facet_no_section')}
         help={trans('facet_no_section_help')}
@@ -154,7 +157,9 @@ const FormParameters = (props) =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-block btn-emphasis component-container"
+      className="w-100 mb-3"
+      variant="btn"
+      size="lg"
       label={trans('facet_section_add')}
       callback={() => props.update(props.name, props.dataPart, [].concat(props.sections, [{
         id: makeId(),

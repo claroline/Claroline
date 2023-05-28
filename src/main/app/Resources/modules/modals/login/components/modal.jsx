@@ -22,7 +22,7 @@ class LoginModal extends Component {
         autoFocus={true}
         enforceFocus={false}
         dialogClassName="login-modal"
-        bsSize="lg"
+        size="lg"
         onHide={this.props.fadeModal}
         onExited={() => {
           if (this.props.onAbort && this.state.aborted) {

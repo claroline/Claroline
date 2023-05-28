@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {forwardRef} from 'react'
 import omit from 'lodash/omit'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -9,17 +9,19 @@ import {UrlButton} from '#/main/app/buttons/url/components/button'
 /**
  * Download button.
  * Renders a component that will trigger a file download on click.
- *
- * @param props
- * @constructor
  */
-const DownloadButton = props =>
+const DownloadButton = forwardRef((props, ref) =>
   <UrlButton
     {...omit(props, 'file')}
+    ref={ref}
     target={props.file.url}
   >
     {props.children || props.file.name || props.file.url}
   </UrlButton>
+)
+
+// for debug purpose, otherwise component is named after the HOC
+DownloadButton.displayName = 'DownloadButton'
 
 implementPropTypes(DownloadButton, ButtonTypes, {
   file: T.shape({

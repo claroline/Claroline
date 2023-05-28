@@ -16,15 +16,15 @@
     margin-bottom: 20px;
     background-size: cover !important;
     border: 1px solid transparent;
-    border-radius: $panel-border-radius;
+    border-radius: $card-border-radius;
 
     .widget-title {
-        padding: $panel-body-padding;
+        padding: $card-title-spacer-y $card-spacer-x;
         margin: 0;
     }
 
     .widget-body {
-        padding: $panel-body-padding;
+        padding: $card-spacer-y $card-spacer-x;
     }
 }
 
@@ -47,7 +47,7 @@ button.widget-insert-content {
 
     .widget-col-preview {
         background: #f5f5f5;
-        border-radius: $border-radius-base;
+        border-radius: $border-radius;
         height: 60px;
         width: 100%;
     }

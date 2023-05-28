@@ -25,7 +25,7 @@
         padding: 5px 10px;
         background: $gray-lighter;
 
-        @include border-radius($border-radius-small);
+        @include border-radius($border-radius-sm);
 
         &:before {
             box-sizing: content-box;

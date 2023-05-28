@@ -8,15 +8,15 @@
   margin-bottom: $component-margin-bottom;
 
   // todo : use it's own vars
-  background: $list-controls-bg;
-  padding: 10px floor(math.div($grid-gutter-width, 2));
+  background: var(--#{$prefix}secondary-bg);
+  padding: map-get($spacers, 3);
   color: $list-controls-color;
 }
 
 .content-dates {
-  color: #777; // todo use a var same than user micro
+  color: var(--#{$prefix}secondary-color);
   font-style: italic;
-  font-size: $font-size-small; // same than .user-micro
+  font-size: $font-size-sm; // same than .user-micro
   text-align: right;
   > span {
     display: block;
