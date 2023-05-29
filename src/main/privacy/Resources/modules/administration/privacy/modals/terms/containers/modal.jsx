@@ -4,16 +4,16 @@ import {TermsModal as ThermsModalComponent} from '#/main/privacy/administration/
 import {selectors, reducer} from '#/main/privacy/administration/privacy/modals/terms/store'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
-const TermsModal = withReducer(selectors.FORM_NAME, reducer)(
+const TermsModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       formData:
-        formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)),
-      saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.FORM_NAME))
+        formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
+      saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
       save(formData, onSave) {
-        dispatch(formActions.saveForm(selectors.FORM_NAME,
+        dispatch(formActions.saveForm(selectors.STORE_NAME,
           ['apiv2_privacy_therms_update', {id: formData.id}]))
           .then((response) => {
             onSave(response)}

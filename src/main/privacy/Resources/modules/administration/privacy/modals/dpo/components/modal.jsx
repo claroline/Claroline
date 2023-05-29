@@ -17,29 +17,29 @@ const DpoModal = (props) =>
     title={trans('dpo_info', {}, 'privacy')}
   >
     <FormData
-      name={selectors.FORM_NAME}
+      name={selectors.STORE_NAME}
       definition={[
         {
           title: trans('general'),
           primary: true,
           fields: [
             {
-              name: 'privacy.dpo.name',
+              name: 'dpo.name',
               label: trans('name'),
               type: 'string'
             },
             {
-              name: 'privacy.dpo.email',
+              name: 'dpo.email',
               label: trans('email'),
               type: 'email'
             },
             {
-              name: 'privacy.dpo.phone',
+              name: 'dpo.phone',
               label: trans('phone'),
               type: 'string'
             },
             {
-              name: 'privacy.dpo.address',
+              name: 'dpo.address',
               label: trans('address'),
               type: 'address'
             }
@@ -66,15 +66,7 @@ DpoModal.propTypes = {
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
   fadeModal: T.func,
-  parameters: T.shape({
-    privacy: T.shape({
-      dpo: T.shape({
-        name: T.string,
-        email: T.string,
-        phone: T.string
-      })
-    })
-  })
+  reset: T.func.isRequired,
 }
 
 export {

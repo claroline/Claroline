@@ -28,5 +28,6 @@
   "terms_of_service_acceptance": "I accept the terms of service",
   "show-terms-of-service": "Show terms of service",
   "terms_ok": "The terms of use have been defined",
-  "no_terms": "No conditions of use are defined."
+  "no_terms": "No conditions of use are defined.",
+  "add_terms": "Add conditions of use"
 }

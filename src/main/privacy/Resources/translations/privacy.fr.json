@@ -28,5 +28,6 @@
   "terms_of_service_acceptance": "J'accepte les conditions d'utilisation",
   "show-terms-of-service": "Afficher les conditions d'utilisation",
   "terms_ok": "Les conditions d'utilisation sont définies.",
-  "no_terms": "Aucunes conditions d'utilisation n'ont été définies."
+  "no_terms": "Aucunes conditions d'utilisation n'ont été définies.",
+  "add_terms": "Ajouter des conditions d'utilisation"
 }

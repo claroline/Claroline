@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
@@ -17,14 +17,14 @@ const CountryModal = (props) =>
     title={trans('country_storage', {}, 'privacy')}
   >
     <FormData
-      name={selectors.FORM_NAME}
+      name={selectors.STORE_NAME}
       definition={[
         {
           title: trans('general'),
           primary: true,
           fields: [
             {
-              name: 'privacy.countryStorage',
+              name: 'countryStorage',
               label: trans('country_storage', {}, 'privacy'),
               type: 'country'
             }

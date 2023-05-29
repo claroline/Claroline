@@ -18,24 +18,25 @@ const TermsModal = (props) =>
     title={trans('terms_of_service', {}, 'privacy')}
   >
     <FormData
-      name={selectors.FORM_NAME}
+      name={selectors.STORE_NAME}
       definition={[
         {
           title: trans('general'),
           primary: true,
           fields: [
             {
-              name: 'tos.enabled',
+              name: 'isTermsOfServiceEnabled',
               type: 'boolean',
               label: trans('terms_of_service_activation_message', {}, 'privacy'),
               help: trans('terms_of_service_activation_help', {}, 'privacy'),
               linked: [
                 {
-                  name: 'tos.text',
-                  type: 'translated',
+                  name: 'props.item.termsOfService',
+                  type: 'string',
                   label: trans('terms_of_service', {}, 'privacy'),
+                  options: {long: true},
                   required: true,
-                  displayed: get(props.parameters, 'tos.enabled')
+                  displayed: get(props.item, 'isTermsOfServiceEnabled')
                 }
               ]
             }
@@ -62,11 +63,7 @@ TermsModal.propTypes = {
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
   fadeModal: T.func,
-  parameters: T.shape({
-    tos: T.shape({
-      enabled: T.bool
-    })
-  })
+  item: T.object
 }
 
 export {

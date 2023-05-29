@@ -4,16 +4,16 @@ import {CountryModal as CountryModalComponent} from '#/main/privacy/administrati
 import {selectors, reducer} from '#/main/privacy/administration/privacy/modals/country/store'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
-const CountryModal = withReducer(selectors.FORM_NAME, reducer)(
+const CountryModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       formData:
-        formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)),
-      saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.FORM_NAME))
+        formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
+      saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
       save(formData, onSave) {
-        dispatch(formActions.saveForm(selectors.FORM_NAME,
+        dispatch(formActions.saveForm(selectors.STORE_NAME,
           ['apiv2_privacy_country_storage_update', {id: formData.id}]))
           .then((response) => {
             onSave(response)}
