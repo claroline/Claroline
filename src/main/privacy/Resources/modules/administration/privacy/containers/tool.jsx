@@ -1,6 +1,6 @@
 import {connect} from 'react-redux'
 import {PrivacyTool as PrivacyToolComponent} from '#/main/privacy/administration/privacy/components/tool'
-import {selectors} from '#/main/privacy/administration/privacy/store/selectors'
+import {selectors} from '#/main/privacy/administration/privacy/store'
 const PrivacyTool = connect(
   (state) => ({
     parameters: selectors.store(state)

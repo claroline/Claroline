@@ -16,7 +16,7 @@ class PrivacySerializer
 
     public function serialize(Privacy $privacy, array $options = []): array
     {
-       $serializerPrivacy = [
+       return ([
             'id' => $privacy->getUuid(),
             'autoId' => $privacy->getId(),
             'dpo' =>[
@@ -35,8 +35,7 @@ class PrivacySerializer
             'countryStorage' => $privacy->getCountryStorage(),
             'termsOfService' => $privacy->getTermsOfService(),
             'isTermsOfServiceEnabled' => $privacy->getIsTermsOfServiceEnabled(),
-        ];
-       return $serializerPrivacy;
+        ]);
     }
 
     public function deserialize(array $data, Privacy $privacy, array $options = []): Privacy
