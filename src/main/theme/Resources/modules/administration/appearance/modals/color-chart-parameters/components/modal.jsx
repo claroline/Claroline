@@ -10,6 +10,7 @@ import {CALLBACK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 
 import {selectors} from '#/main/theme/administration/appearance/modals/color-chart-parameters/store/selectors'
 import {ColorChart} from '#/main/theme/color/containers/color-chart'
+import omit from "lodash/omit";
 
 const ColorDot = ( props ) => {
   return (
@@ -74,12 +75,12 @@ const ColorPalette = ({ formData: { colors = [], openedIndex }, hideInput, updat
   }
 
   return (
-    <div className="color-dot-list color-chart-library ">
+    <div className="color-dot-list color-chart-library">
       {current}
       <Button
         type={CALLBACK_BUTTON}
         id={'new-color'}
-        className="color-dot lg"
+        className="color-dot-lg"
         callback={() => {
           updateProp('colors[' + colors.length + ']', '#FFFFFF')
           updateProp('openedIndex', colors.length)
@@ -100,16 +101,16 @@ ColorPalette.propTypes = {
   hideInput: T.bool
 }
 
-const ColorChartParametersModal = ({ colorChart, saveEnabled, save, reset, onSave, ...props }) => {
+const ColorChartParametersModal = props => {
   return (
     <Modal
-      {...props}
-      icon={colorChart ? 'fa fa-fw fa-pencil' : 'fa fa-fw fa-plus'}
-      title={colorChart ? trans('edit_color_chart', {}, 'appearance') : trans('new_color_chart', {}, 'appearance')}
+      {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'updateProp', 'onSave')}
+      icon={props.colorChart ? 'fa fa-fw fa-pencil' : 'fa fa-fw fa-plus'}
+      title={props.colorChart ? trans('edit_color_chart', {}, 'appearance') : trans('new_color_chart', {}, 'appearance')}
       onEntering={() => {
-        reset(colorChart)
+        props.reset(props.colorChart)
       }}
-      onExited={reset}
+      onExited={props.reset}
     >
       <FormData
         name={selectors.STORE_NAME}
@@ -135,12 +136,12 @@ const ColorChartParametersModal = ({ colorChart, saveEnabled, save, reset, onSav
           primary={true}
           htmlType="submit"
           label={trans('save', {}, 'actions')}
-          disabled={!saveEnabled}
-          callback={() => save(props.formData).then((response) => {
+          disabled={!props.saveEnabled}
+          callback={() => props.save(props.formData).then((response) => {
             props.fadeModal()
 
-            if (onSave) {
-              onSave(response)
+            if (props.onSave) {
+              props.onSave(response)
             }
           })}
         />

@@ -23,7 +23,6 @@ class ColorChart extends Component {
     this.toggleView = this.toggleView.bind(this)
   }
 
-
   componentDidMount() {
     if (!this.props.noLibrary) {
       this.props.load().then(() => {
