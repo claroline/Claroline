@@ -21,17 +21,19 @@ const ColorChartLibrary = (props) => {
 
   return (
     <div className="select-color-chart">
-      <Select
-        id="color-chart-select"
-        size="md"
-        value={selectedColorChart}
-        onChange={handleColorChartSelect}
-        choices={(props.colorCharts || []).reduce((choices, colorChart) => {
-          return { ...choices, [colorChart.name]: colorChart.name }
-        }, {
-          'all': trans('all')
-        })}
-      />
+      {props.colorCharts && props.colorCharts.length > 1 && (
+        <Select
+          id="color-chart-select"
+          size="md"
+          value={selectedColorChart}
+          onChange={handleColorChartSelect}
+          choices={(props.colorCharts || []).reduce((choices, colorChart) => {
+            return { ...choices, [colorChart.name]: colorChart.name }
+          }, {
+            'all': trans('all')
+          })}
+        />
+      )}
 
       {(props.colorCharts || []).map((colorChart, index) => {
         const colorChartDots = (colorChart.colors || []).map(color => {
