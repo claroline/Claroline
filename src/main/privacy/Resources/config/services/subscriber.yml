@@ -1,5 +1,5 @@
 services:
-    Claroline\PrivacyBundle\Subscriber\Administration\PrivacySubscriber:
+    Claroline\PrivacyBundle\Subscriber\PrivacySubscriber:
         tags: [ kernel.event_subscriber ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

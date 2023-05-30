@@ -10,7 +10,7 @@ import {selectors} from '#/main/privacy/administration/privacy/modals/country/st
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
 
-const CountryModal = (props) =>
+const CountryModal = props =>
   <Modal
     {...omit(props, 'formData', 'saveEnabled', 'save')}
     icon="fa fa-fw fa-solid fa-globe"
@@ -18,6 +18,7 @@ const CountryModal = (props) =>
   >
     <FormData
       name={selectors.STORE_NAME}
+      data={props.formData}
       definition={[
         {
           title: trans('general'),
@@ -40,14 +41,14 @@ const CountryModal = (props) =>
         htmlType="submit"
         disabled={!props.saveEnabled}
         callback={() => {
-          props.save(props.formData, props.fadeModal)
+          props.save(props.item, props.fadeModal)
         }}
       />
     </FormData>
   </Modal>
 
 CountryModal.propTypes = {
-  formData: T.object,
+  formData: T.object.isRequired,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
   fadeModal: T.func

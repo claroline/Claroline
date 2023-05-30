@@ -19,6 +19,7 @@ const TermsModal = (props) =>
   >
     <FormData
       name={selectors.STORE_NAME}
+      data={props.formData}
       definition={[
         {
           title: trans('general'),
@@ -31,12 +32,10 @@ const TermsModal = (props) =>
               help: trans('terms_of_service_activation_help', {}, 'privacy'),
               linked: [
                 {
-                  name: 'props.item.termsOfService',
+                  name: 'termsOfService',
                   type: 'string',
                   label: trans('terms_of_service', {}, 'privacy'),
-                  options: {long: true},
-                  required: true,
-                  displayed: get(props.item, 'isTermsOfServiceEnabled')
+                  options: {long: true}
                 }
               ]
             }
@@ -59,7 +58,7 @@ const TermsModal = (props) =>
   </Modal>
 
 TermsModal.propTypes = {
-  formData: T.object,
+  formData: T.object.isRequired,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
   fadeModal: T.func,

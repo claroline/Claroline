@@ -1,12 +1,10 @@
 <?php
 
-namespace Claroline\PrivacyBundle\Subscriber\Administration;
+namespace Claroline\PrivacyBundle\Subscriber;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Entity\Tool\AbstractTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\PrivacyBundle\Entity\Privacy;
@@ -32,18 +30,18 @@ class PrivacySubscriber implements EventSubscriberInterface
     {
         return [
             ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::ADMINISTRATION, static::NAME) => 'onOpen',
+            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::DESKTOP, static::NAME) => 'onOpen',
+            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::WORKSPACE, static::NAME) => 'onOpen',
         ];
     }
 
     public function onOpen(OpenToolEvent $event): void
     {
         // Récupére les données de la base de données
-        $privacys = $this->objectManager->getRepository(Privacy::class)->findAll();
+        $firstPrivacy  = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
 
         // Transforme les données en un format approprié pour l'application React
-        $data = array_map(function (Privacy $privacy) {
-            return $this->privacySerializer->serialize($privacy);
-        }, $privacys);
+        $data = $this->privacySerializer->serialize($firstPrivacy);
 
         // Envoie les données à l'application React
         $event->setData(['parameters' => $data]);

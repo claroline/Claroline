@@ -1,15 +1,11 @@
 import {connect} from 'react-redux'
-
-import {selectors as configSelectors} from '#/main/app/config/store'
-import {selectors as securitySelectors} from '#/main/app/security/store'
-
 import {actions} from '#/main/privacy/account/privacy/store'
 import {PrivacyMain as PrivacyMainComponent} from '#/main/privacy/account/privacy/components/main'
+import {selectors} from '#/main/privacy/account/privacy/store'
 
 const PrivacyMain = connect(
   (state) => ({
-    privacy: configSelectors.param(state, 'privacy'),
-    currentUser: securitySelectors.currentUser(state)
+    parameters: selectors.store(state)
   }),
   (dispatch) => ({
     acceptTerms() {

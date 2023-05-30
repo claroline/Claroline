@@ -12,12 +12,13 @@ import {Button} from '#/main/app/action'
 
 const DpoModal = (props) =>
   <Modal
-    {...omit(props, 'formData', 'saveEnabled', 'save')}
+    {...omit(props, 'formData', 'saveEnabled', 'save', 'item')}
     icon="fa fa-fw fa-solid fa-pen-to-square"
     title={trans('dpo_info', {}, 'privacy')}
   >
     <FormData
       name={selectors.STORE_NAME}
+      data={props.formData}
       definition={[
         {
           title: trans('general'),
@@ -29,7 +30,7 @@ const DpoModal = (props) =>
               type: 'string'
             },
             {
-              name: 'dpo.email',
+              name: 'dpo.phone',
               label: trans('email'),
               type: 'email'
             },
@@ -62,11 +63,10 @@ const DpoModal = (props) =>
   </Modal>
 
 DpoModal.propTypes = {
-  formData: T.object,
+  formData: T.object.isRequired,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
-  fadeModal: T.func,
-  reset: T.func.isRequired,
+  fadeModal: T.func
 }
 
 export {

@@ -2,10 +2,9 @@
 
 namespace Claroline\PrivacyBundle\Controller;
 
-use Claroline\AppBundle\API\Utils\ArrayUtils;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,60 +17,31 @@ class PrivacyController extends AbstractSecurityController
 
     private AuthorizationCheckerInterface $authorization;
     private PlatformConfigurationHandler $config;
-    private ParametersSerializer $serializer;
+    private SerializerProvider $privacySerializer;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         PlatformConfigurationHandler $ch,
-        ParametersSerializer $serializer
+        SerializerProvider $privacySerializer
     ) {
         $this->authorization = $authorization;
         $this->config = $ch;
-        $this->serializer = $serializer;
+        $this->privacySerializer = $privacySerializer;
     }
 
     /**
-     * @Route("/privacy", name="apiv2_privacy_country_storage_update", methods={"PUT"})
+     * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
      */
-    public function updateCountryStorage(Request $request): JsonResponse
+    public function updatePrivacyStorage(Request $request): JsonResponse
     {
+        // todo
         $this->canOpenAdminTool('privacy');
 
-        $parametersData = $this->decodeRequest($request);
-
-        $parameters = $this->serializer->deserialize($parametersData);
+        $parameters = $this->decodeRequest($request);
+/*
+        $parameters = $this->privacySerializer->deserialize($parametersData);
         $this->config->setParameters($parameters);
-
-        return new JsonResponse($parameters);
-    }
-
-    /**
-     * @Route("/privacy", name="apiv2_privacy_dpo_update", methods={"PUT"})
-     */
-    public function updateInfosDpo(Request $request): JsonResponse
-    {
-        $this->canOpenAdminTool('privacy');
-
-        $parametersData = $this->decodeRequest($request);
-
-        $parameters = $this->serializer->deserialize($parametersData);
-        $this->config->setParameters($parameters);
-
-        return new JsonResponse($parameters);
-    }
-
-    /**
-     * @Route("/privacy", name="apiv2_privacy_therms_update", methods={"PUT"})
-     */
-    public function updateThermsOfService(Request $request): JsonResponse
-    {
-        $this->canOpenAdminTool('privacy');
-
-        $parametersData = $this->decodeRequest($request);
-
-        $parameters = $this->serializer->deserialize($parametersData);
-        $this->config->setParameters($parameters);
-
+*/
         return new JsonResponse($parameters);
     }
 }

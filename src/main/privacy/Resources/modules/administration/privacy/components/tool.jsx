@@ -1,17 +1,19 @@
 import React from 'react'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {PrivacyItem} from '#/main/privacy/administration/privacy/components/privacy-item'
+import {PrivacyLinkModals} from '#/main/privacy/administration/privacy/components/privacy-link-modals'
 
 const PrivacyTool = (props) => {
+  console.log('PrivacyTool', props.parameters)
   return(
     <ToolPage>
       <div className="privacy-item">
-        {props.parameters.map((privacy, index) => (
-          <PrivacyItem key={index} item={privacy} />
-        ))}
+        <PrivacyItem item={props.parameters} />
+        <PrivacyLinkModals item={props.parameters} />
       </div>
     </ToolPage>
-  )}
+  )
+}
 
 export {
   PrivacyTool
