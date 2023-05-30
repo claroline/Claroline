@@ -1,0 +1,6 @@
+claro_privacy:
+    resource: "@ClarolinePrivacyBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

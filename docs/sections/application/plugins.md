@@ -54,8 +54,12 @@ This file is located in `your_plugin/Resources/config/config.yml`.
 plugin: ~
 ```
 
-### The composer autoloading **[required]**
+and you must declare in bundles.ini file ``files/config/bundles.ini`` the plugin name and the bundle class name :
+```ini
+Claroline\YourPluginBundle\ClarolineYourPlugingBundle=true
+```
 
+### The composer autoloading **[required]**
 Claroline Connect uses a custom directory structure which don't fully follow the PSR-4 rules 
 (there are additional directories before the PSR-4 can be applied).
 
