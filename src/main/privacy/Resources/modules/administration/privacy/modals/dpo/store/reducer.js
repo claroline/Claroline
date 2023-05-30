@@ -10,10 +10,10 @@ import {selectors} from '#/main/privacy/administration/privacy/modals/dpo/store/
 const reducer = combineReducers({
   parameters: makeFormReducer(selectors.FORM_NAME, {}, {
     originalData: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
+      [makeInstanceAction(TOOL_LOAD, selectors.FORM_NAME)]: (state, action) => action.toolData.parameters
     }),
     data: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
+      [makeInstanceAction(TOOL_LOAD, selectors.FORM_NAME)]: (state, action) => action.toolData.parameters
     })
   })
 })

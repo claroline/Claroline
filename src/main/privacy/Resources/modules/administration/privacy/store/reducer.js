@@ -9,10 +9,10 @@ import { TOOL_LOAD } from '#/main/core/tool/store'
 const reducer = combineReducers({
   parameters: makeFormReducer(selectors.FORM_NAME, {}, {
     originalData: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters
     }),
     data: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters
     })
   })
 })

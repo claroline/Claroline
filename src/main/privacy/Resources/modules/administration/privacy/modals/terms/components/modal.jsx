@@ -14,7 +14,7 @@ const TermsModal = (props) => {
   console.log('TermsModal props', props)
   return(
     <Modal
-      {...omit(props, 'formData', 'saveEnabled', 'save')}
+      {...omit(props, 'formData', 'saveEnabled', 'save', 'item')}
       icon="fa fa-fw fa-solid fa-pen-to-square"
       title={trans('terms_of_service', {}, 'privacy')}
     >
@@ -26,13 +26,13 @@ const TermsModal = (props) => {
             primary: true,
             fields: [
               {
-                name: 'isTermsOfServiceEnabled',
+                name: 'item.isTermsOfServiceEnabled',
                 type: 'boolean',
                 label: trans('terms_of_service_activation_message', {}, 'privacy'),
                 help: trans('terms_of_service_activation_help', {}, 'privacy'),
                 linked: [
                   {
-                    name: 'termsOfService',
+                    name: 'item.termsOfService',
                     type: 'string',
                     label: trans('terms_of_service', {}, 'privacy'),
                     options: {long: true}

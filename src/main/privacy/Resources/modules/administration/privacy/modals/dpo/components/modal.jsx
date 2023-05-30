@@ -26,22 +26,22 @@ const DpoModal = (props) => {
             primary: true,
             fields: [
               {
-                name: 'dpo.name',
+                name: 'item.dpo.name',
                 label: trans('name'),
                 type: 'string'
               },
               {
-                name: 'dpo.email',
+                name: 'item.dpo.email',
                 label: trans('email'),
                 type: 'email'
               },
               {
-                name: 'dpo.phone',
+                name: 'item.dpo.phone',
                 label: trans('phone'),
                 type: 'string'
               },
               {
-                name: 'dpo.address',
+                name: 'item.dpo.address',
                 label: trans('address'),
                 type: 'address'
               }
