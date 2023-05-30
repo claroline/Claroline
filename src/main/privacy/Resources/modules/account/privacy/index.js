@@ -1,5 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
-import {PrivacyMain} from '#/main/privacy/account/privacy/containers/main'
+import {PrivacyMain} from '#/main/privacy/account/privacy/containers/tool'
 import {reducer} from '#/main/privacy/account/privacy/store/reducer'
 
 export default {

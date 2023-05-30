@@ -13,10 +13,10 @@ import {route} from '#/main/app/account/routing'
 import {User as UserTypes} from '#/main/community/prop-types'
 import {url} from '#/main/app/api'
 import {constants as actionConstants} from '#/main/app/action/constants'
-import {PrivacyItem} from '#/main/privacy/administration/privacy/components/privacy-item'
+import {PrivacyItem} from '#/main/privacy/account/privacy/components/privacy-item'
 
 const PrivacyMain = (props) =>{
-  console.log('PrivacyMain', props.parameters)
+  console.log('PrivacyMain', props)
   return(
     <AccountPage
       path={[

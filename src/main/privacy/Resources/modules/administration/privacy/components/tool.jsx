@@ -4,12 +4,12 @@ import {PrivacyItem} from '#/main/privacy/administration/privacy/components/priv
 import {PrivacyLinkModals} from '#/main/privacy/administration/privacy/components/privacy-link-modals'
 
 const PrivacyTool = (props) => {
-  console.log('PrivacyTool', props.parameters)
+  console.log('PrivacyTool', props.parameters.parameters.data)
   return(
     <ToolPage>
       <div className="privacy-item">
-        <PrivacyItem item={props.parameters} />
-        <PrivacyLinkModals item={props.parameters} />
+        <PrivacyItem item={props.parameters.parameters} />
+        <PrivacyLinkModals item={props.parameters.parameters} />
       </div>
     </ToolPage>
   )

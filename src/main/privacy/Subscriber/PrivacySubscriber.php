@@ -44,6 +44,8 @@ class PrivacySubscriber implements EventSubscriberInterface
         $data = $this->privacySerializer->serialize($firstPrivacy);
 
         // Envoie les données à l'application React
-        $event->setData(['parameters' => $data]);
+        $event->setData([
+            'parameters' => $data,
+        ]);
     }
 }
