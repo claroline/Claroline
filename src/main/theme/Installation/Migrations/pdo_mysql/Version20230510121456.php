@@ -19,7 +19,7 @@ final class Version20230510121456 extends AbstractMigration
             '#ABB8C3',
             '#EB144C',
             '#FFFFFF',
-            '#000000'
+            '#000000',
         ];
 
         $colorsJson = json_encode($colors);
