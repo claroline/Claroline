@@ -1,5 +1,3 @@
-import { API_REQUEST } from '#/main/app/api'
-
 import { actions as formActions } from '#/main/app/content/form/store/actions'
 
 import { selectors } from '#/main/theme/administration/appearance/modals/color-chart-parameters/store/selectors'
