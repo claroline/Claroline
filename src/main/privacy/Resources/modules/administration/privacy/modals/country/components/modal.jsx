@@ -11,13 +11,13 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
 
 const CountryModal = props =>{
-  console.log('je suis dans le modal ! ', props.item.countryStorage)
+  console.log('je suis dans le modal ! ', props)
+
   return(
     <Modal
       {...omit(props, 'formData', 'saveEnabled', 'save', 'item', 'reset')}
       icon="fa fa-fw fa-solid fa-globe"
       title={trans('country_storage', {}, 'privacy')}
-      onEntering={() => props.reset()}
     >
       <FormData
         name={selectors.FORM_NAME}
@@ -27,7 +27,7 @@ const CountryModal = props =>{
             primary: true,
             fields: [
               {
-                name: 'item.countryStorage',
+                name: 'countryStorage',
                 label: trans('country_storage', {}, 'privacy'),
                 type: 'country'
               }

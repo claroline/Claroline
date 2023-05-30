@@ -8,20 +8,20 @@ import {Button} from '#/main/app/action/components/button'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 
 const PrivacyLinkModals = (props) => {
-  console.log('merdeuh', props.item.data)
+  console.log('merdeuh', props)
 
   return(
     <div className="privacy">
       <div className="row">
         <div className="col-md-4">
-          {props.item.data.countryStorage ?
+          {props.item.countryStorage ?
             <AlertBlock type="success" title={trans('countryStorage_ok', {}, 'privacy')}>
               <Button
                 className="btn btn-default btn-block"
                 type={MODAL_BUTTON}
                 label={trans('change_storage_country', {}, 'privacy')}
                 modal={[MODAL_COUNTRY_STORAGE, {
-                  item: props.item.data
+                  item: props.item
                 }]}
               />
             </AlertBlock>
@@ -32,21 +32,21 @@ const PrivacyLinkModals = (props) => {
                 type={MODAL_BUTTON}
                 label={trans('add_country_storage', {}, 'privacy')}
                 modal={[MODAL_COUNTRY_STORAGE, {
-                  item: props.item.data
+                  item: props.item
                 }]}
               />
             </AlertBlock>
           }
         </div>
         <div className="col-md-4">
-          {props.item.data.dpo.email  ?
+          {props.item.dpo.email  ?
             <AlertBlock type="success" title={trans('dpo_ok', {}, 'privacy')}>
               <Button
                 className="btn btn-default btn-block"
                 type={MODAL_BUTTON}
                 label={trans('change_dpo', {}, 'privacy')}
                 modal={[MODAL_INFOS_DPO, {
-                  item: props.item.data
+                  item: props.item
                 }]}
               />
             </AlertBlock>
@@ -57,21 +57,21 @@ const PrivacyLinkModals = (props) => {
                 type={MODAL_BUTTON}
                 label={trans('add_dpo', {}, 'privacy')}
                 modal={[MODAL_INFOS_DPO, {
-                  item: props.item.data
+                  item: props.item
                 }]}
               />
             </AlertBlock>
           }
         </div>
         <div className="col-md-4">
-          {props.item.data.termsOfService ?
+          {props.item.termsOfService ?
             <AlertBlock type="success" title={trans('terms_ok', {}, 'privacy')}>
               <Button
                 className="btn btn-default btn-block"
                 type={MODAL_BUTTON}
                 label={trans('change_terms', {}, 'privacy')}
                 modal={[MODAL_TERMS_OF_SERVICE, {
-                  item: props.item.data
+                  item: props.item
                 }]}
               />
             </AlertBlock>
@@ -82,7 +82,7 @@ const PrivacyLinkModals = (props) => {
                 type={MODAL_BUTTON}
                 label={trans('add_terms', {}, 'privacy')}
                 modal={[MODAL_TERMS_OF_SERVICE, {
-                  item: props.item.data
+                  item: props.item
                 }]}
               />
             </AlertBlock>

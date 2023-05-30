@@ -8,8 +8,8 @@ const PrivacyTool = (props) => {
   return(
     <ToolPage>
       <div className="privacy-item">
-        <PrivacyItem item={props.parameters.parameters} />
-        <PrivacyLinkModals item={props.parameters.parameters} />
+        <PrivacyItem item={props.parameters.parameters.data} />
+        <PrivacyLinkModals item={props.parameters.parameters.data} />
       </div>
     </ToolPage>
   )

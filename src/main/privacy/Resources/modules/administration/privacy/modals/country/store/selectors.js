@@ -1,13 +1,12 @@
+import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
+
 const STORE_NAME = 'privacy'
-
-// state selectors
 const store = (state) => state[STORE_NAME]
-const data = (state) => store(state).data
-const originalData = (state) => store(state).originalData
-
+const FORM_NAME = STORE_NAME+'.parameters'
+const parameters = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
 export const selectors = {
   STORE_NAME,
   store,
-  data,
-  originalData
+  parameters,
+  FORM_NAME
 }
