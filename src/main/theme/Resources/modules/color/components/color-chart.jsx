@@ -15,8 +15,7 @@ class ColorChart extends Component {
     super(props)
 
     this.state = {
-      view: 'selector',
-      noLibrary: true
+      view: 'selector'
     }
 
     this.onInputChange = this.onInputChange.bind(this)
@@ -24,15 +23,19 @@ class ColorChart extends Component {
     this.toggleView = this.toggleView.bind(this)
   }
 
-  async componentDidMount() {
-    if( !this.props.noLibrary ) {
-      await this.props.load()
-      this.setState({
-        view: this.props.view ? this.props.view : this.props.colorChart.data.length > 0 ? 'library' : 'selector',
-        noLibrary: this.props.noLibrary || (this.props.colorChart.data && this.props.colorChart.data.length === 0)
+
+  componentDidMount() {
+    if (!this.props.noLibrary) {
+      this.props.load().then(() => {
+        const hasColorChart = this.props.colorChart && this.props.colorChart.data && this.props.colorChart.data.length > 0;
+        this.setState({
+          view: this.props.view ? this.props.view : hasColorChart ? 'library' : 'selector',
+          noLibrary: this.props.noLibrary || !hasColorChart
+        })
       })
     }
   }
+
 
   onInputChange(e) {
     this.props.onChange(e.target.value)

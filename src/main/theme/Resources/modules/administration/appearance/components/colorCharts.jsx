@@ -52,7 +52,7 @@ const AppearanceColorCharts = (props) => {
           </h3>
           <div className="color-chart-library color-chart-colors-list">
             {color.colors.map((color, index) => (
-              <div className="color color-dot" style={{backgroundColor: color}} key={index}></div>
+              <div className="color-dot md " style={{backgroundColor: color}} key={index}></div>
             ))}
           </div>
         </li>

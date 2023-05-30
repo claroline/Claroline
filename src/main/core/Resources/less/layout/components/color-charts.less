@@ -7,6 +7,8 @@
 @color-chart-padding: 15px;
 @color-chart-slider-size: 20px;
 
+@color-dot-md: 42px;
+@color-dot-lg: 60px;
 // classical gray squares representation for transparency
 // in base64 encoded to avoid external image
 @transparent-bg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==";
@@ -78,23 +80,13 @@
         // temp to have approx same sizing than calendar
         width: (420px / 3) * 2;
         height: 260px;
-
-        .select-color-chart {
-            display: flex;
-            flex-direction: column;
-
-            .color-chart-library {
-                padding-top: 5px;
-
-                .color {
-                    width: 42px;
-                    height: 42px;
-                }
-            }
-        }
     }
 }
 
+.select-color-chart {
+    display: flex;
+    flex-direction: column;
+}
 
 .color-chart-library {
     margin: -2px;
@@ -105,7 +97,7 @@
 
     // I have 250px width.
     // With this config I can align 10 colors before line break.
-    .color {
+    .color-dot {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -114,6 +106,16 @@
         margin: 4px;
         border: 1px solid rgba(0, 0, 0, .15);
         border-radius: 50%;
+
+        &.md {
+            width: @color-dot-md;
+            height: @color-dot-md;
+        }
+
+        &.lg {
+            width: @color-dot-lg;
+            height: @color-dot-lg;
+        }
 
         .fa {
             margin: 0;

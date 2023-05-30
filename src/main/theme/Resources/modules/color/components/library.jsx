@@ -42,7 +42,7 @@ const ColorChartLibrary = (props) => {
             return (
               <CallbackButton
                 key={color}
-                className="color"
+                className="color-dot md"
                 style={{
                   background: color
                 }}

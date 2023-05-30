@@ -1,5 +1,5 @@
 import React from 'react'
-import omit from 'lodash/omit'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action'
@@ -15,7 +15,7 @@ const ColorDot = ( props ) => {
   return (
     <Button
       type={MENU_BUTTON}
-      className="color-dot"
+      className="color-dot lg"
       style={{ backgroundColor: props.value }}
       opened={props.opened}
       onClick={props.onClick}
@@ -35,20 +35,27 @@ const ColorDot = ( props ) => {
   )
 }
 
-const ColorPalette = props => {
-  let current = null
-  let colors = props.formData.colors || []
+ColorDot.propTypes = {
+  value: T.string,
+  opened: T.bool,
+  onClick: T.func,
+  onChange: T.func,
+  children: T.node
+}
 
-  if( props.formData.colors && props.formData.colors.length > 0 ) {
-    current = props.formData.colors.map((color, index) => {
+const ColorPalette = ({ formData: { colors = [], openedIndex }, hideInput, updateProp }) => {
+  let current = null
+
+  if( colors && colors.length > 0 ) {
+    current = colors.map((color, index) => {
       return (
         <div className="color-dot-config" key={index}>
           <ColorDot
             id={`color-${index}`}
-            hideInput={props.hideInput}
-            onChange={(color) => props.updateProp('colors[' + index + ']', color)}
-            onClick={() => props.updateProp('openedIndex', props.formData.openedIndex === index ? -1 : index ) }
-            opened={props.formData.openedIndex === index}
+            hideInput={hideInput}
+            onChange={(color) => updateProp('colors[' + index + ']', color)}
+            onClick={() => updateProp('openedIndex', openedIndex === index ? -1 : index ) }
+            opened={openedIndex === index}
             value={color}
           />
           <Button
@@ -58,7 +65,7 @@ const ColorPalette = props => {
             label={trans('delete', {}, 'actions')}
             dangerous={true}
             type={CALLBACK_BUTTON}
-            callback={() => props.updateProp('colors', props.formData.colors.filter((c, i) => i !== index))}
+            callback={() => updateProp('colors', colors.filter((c, i) => i !== index))}
             icon="fa fa-fw fa-trash"
           />
         </div>
@@ -67,15 +74,15 @@ const ColorPalette = props => {
   }
 
   return (
-    <div className="color-dot-list">
+    <div className="color-dot-list color-chart-library ">
       {current}
       <Button
         type={CALLBACK_BUTTON}
         id={'new-color'}
-        className="color-dot"
+        className="color-dot lg"
         callback={() => {
-          props.updateProp('colors[' + colors.length + ']', '#FFFFFF')
-          props.updateProp('openedIndex', colors.length)
+          updateProp('colors[' + colors.length + ']', '#FFFFFF')
+          updateProp('openedIndex', colors.length)
         }}
       >
         <span className="fa fa-fw fa-plus"></span>
@@ -84,16 +91,25 @@ const ColorPalette = props => {
   )
 }
 
-const ColorChartParametersModal = props => {
+ColorPalette.propTypes = {
+  formData: T.shape({
+    colors: T.arrayOf(T.string),
+    openedIndex: T.number
+  }),
+  updateProp: T.func,
+  hideInput: T.bool
+}
+
+const ColorChartParametersModal = ({ colorChart, saveEnabled, save, reset, onSave, ...props }) => {
   return (
     <Modal
-      {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'updateProp', 'onSave')}
-      icon={props.colorChart ? 'fa fa-fw fa-pencil' : 'fa fa-fw fa-plus'}
-      title={props.colorChart ? trans('edit_color_chart', {}, 'appearance') : trans('new_color_chart', {}, 'appearance')}
+      {...props}
+      icon={colorChart ? 'fa fa-fw fa-pencil' : 'fa fa-fw fa-plus'}
+      title={colorChart ? trans('edit_color_chart', {}, 'appearance') : trans('new_color_chart', {}, 'appearance')}
       onEntering={() => {
-        props.reset(props.colorChart)
+        reset(colorChart)
       }}
-      onExited={props.reset}
+      onExited={reset}
     >
       <FormData
         name={selectors.STORE_NAME}
@@ -109,28 +125,42 @@ const ColorChartParametersModal = props => {
         }]}
       >
         <ColorPalette
-          hideInput={true}
-          {...props}
+          formData={props.formData}
+          updateProp={props.updateProp}
         />
 
         <Button
-          className="modal-btn btn btn-primary"
+          className="modal-btn btn"
           type={CALLBACK_BUTTON}
           primary={true}
           htmlType="submit"
           label={trans('save', {}, 'actions')}
-          disabled={!props.saveEnabled}
-          callback={() => props.save(props.formData).then((response) => {
+          disabled={!saveEnabled}
+          callback={() => save(props.formData).then((response) => {
             props.fadeModal()
 
-            if (props.onSave) {
-              props.onSave(response)
+            if (onSave) {
+              onSave(response)
             }
           })}
         />
       </FormData>
     </Modal>
   )
+}
+
+ColorChartParametersModal.propTypes = {
+  saveEnabled: T.bool.isRequired,
+  formData: T.shape({
+    colors: T.arrayOf(T.string),
+    openedIndex: T.number
+  }),
+  onSave: T.func,
+  updateProp: T.func.isRequired,
+  save: T.func.isRequired,
+  reset: T.func.isRequired,
+  fadeModal: T.func.isRequired,
+  colorChart: T.object,
 }
 
 export {
