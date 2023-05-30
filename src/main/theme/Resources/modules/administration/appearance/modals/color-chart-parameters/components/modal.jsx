@@ -160,7 +160,7 @@ ColorChartParametersModal.propTypes = {
   save: T.func.isRequired,
   reset: T.func.isRequired,
   fadeModal: T.func.isRequired,
-  colorChart: T.object,
+  colorChart: T.object
 }
 
 export {
