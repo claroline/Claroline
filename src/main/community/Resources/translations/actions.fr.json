@@ -1,5 +1,7 @@
 {
   "password_reset": "Réinitialiser le mot de passe",
+  "password_reset_confirm_title": "Réinitialisation du mot de passe",
+  "password_reset_confirm_message": "Un e-mail contenant un lien pour changer le mot de passe sera envoyé à l'utilisateur.<br> En cliquant sur le lien, l'utilisateur sera redirigé vers une page où il pourra définir un nouveau mot de passe.",
   "add_group": "Ajouter un groupe",
   "add_role": "Ajouter un rôle",
   "add_user": "Ajouter un utilisateur",

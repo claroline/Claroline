@@ -12,7 +12,10 @@ export default (users) => {
     icon: 'fa fa-fw fa-user-lock',
     label: trans('password_reset', {}, 'actions'),
     displayed: 0 !== processable.length,
-    confirm: true,
+    confirm: {
+      title: trans('password_reset_confirm_title', {}, 'actions'),
+      message: trans('password_reset_confirm_message', {}, 'actions')
+    },
     request: {
       url: url(['apiv2_user_password_reset'], {ids: processable.map(user => user.id)}),
       request: {
