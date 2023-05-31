@@ -22,7 +22,6 @@ const ColorDot = ( props ) => {
       style={{ backgroundColor: props.value }}
       opened={props.opened}
       onToggle={props.onClick}
-      onClick={props.onClick}
       menu={
         <div className="dropdown-menu">
           <ColorChart
@@ -48,7 +47,7 @@ ColorDot.propTypes = {
   children: T.node
 }
 
-const ColorPalette = ({ formData: { colors = [], openedIndex }, hideInput, updateProp }) => {
+const ColorPalette = ({ formData: { colors = [], openedIndex }, updateProp }) => {
   let current = null
 
   if( colors && colors.length > 0 ) {
