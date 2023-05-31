@@ -17,9 +17,11 @@ const ColorDot = ( props ) => {
     <Button
       type={MENU_BUTTON}
       className="color-dot lg"
+      label={props.value}
+      tooltip="bottom"
       style={{ backgroundColor: props.value }}
       opened={props.opened}
-      onClick={props.onClick}
+      onToggle={props.onClick}
       menu={
         <div className="dropdown-menu">
           <ColorChart
@@ -39,12 +41,13 @@ const ColorDot = ( props ) => {
 ColorDot.propTypes = {
   value: T.string,
   opened: T.bool,
+  onToggle: T.func,
   onClick: T.func,
   onChange: T.func,
   children: T.node
 }
 
-const ColorPalette = ({ formData: { colors = [], openedIndex }, hideInput, updateProp }) => {
+const ColorPalette = ({ formData: { colors = [], openedIndex }, updateProp }) => {
   let current = null
 
   if( colors && colors.length > 0 ) {
@@ -53,7 +56,6 @@ const ColorPalette = ({ formData: { colors = [], openedIndex }, hideInput, updat
         <div className="color-dot-config" key={index}>
           <ColorDot
             id={`color-${index}`}
-            hideInput={hideInput}
             onChange={(color) => updateProp('colors[' + index + ']', color)}
             onClick={() => updateProp('openedIndex', openedIndex === index ? -1 : index ) }
             opened={openedIndex === index}
@@ -99,8 +101,7 @@ ColorPalette.propTypes = {
     colors: T.arrayOf(T.string),
     openedIndex: T.number
   }),
-  updateProp: T.func,
-  hideInput: T.bool
+  updateProp: T.func
 }
 
 const ColorChartParametersModal = props => {
