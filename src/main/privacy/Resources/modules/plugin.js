@@ -7,6 +7,6 @@ registry.add('ClarolinePrivacyBundle', {
     }
   },
   account: {
-    'privacy'   : () => { return import(/* webpackChunkName: "main-privacy-account-privacy" */ '#/main/privacy/account/privacy') }
+    'privacy': () => { return import(/* webpackChunkName: "main-privacy-account-privacy" */ '#/main/privacy/account/privacy') }
   }
 })
