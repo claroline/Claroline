@@ -71,7 +71,7 @@ function openFileUpload(editor) {
 }
 
 // Register new plugin
-window.tinymce.PluginManager.add('file-upload', (editor) => {
+window.tinymce.PluginManager.add('file', (editor) => {
   editor.options.register('workspace', {
     processor: 'object'
   })
@@ -80,15 +80,14 @@ window.tinymce.PluginManager.add('file-upload', (editor) => {
   })
 
   // provides an insert menu item
-  editor.ui.registry.addMenuItem('file-upload', {
+  editor.ui.registry.addMenuItem('file', {
     icon: 'new-document',
     text: 'File...',
-    //context: 'insert',
     onAction: () => openFileUpload(editor)
   })
 
   // provides a toolbar button
-  editor.ui.registry.addButton('file-upload', {
+  editor.ui.registry.addButton('file', {
     icon: 'new-document',
     tooltip: 'Upload file',
     onAction: () => openFileUpload(editor)

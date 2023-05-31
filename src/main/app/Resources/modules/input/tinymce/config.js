@@ -17,22 +17,6 @@ const config = {
   // this is required for templates to work
   relative_urls: false,
 
-  setup: (editor) => {
-    editor.on('change', () =>  {
-      console.log('change')
-      editor.save()
-    })
-
-    //console.log(editor.isDirty())
-    /*console.log('setup')
-    editor.save()
-    editor.on('change', () => editor.save())*/
-
-    editor.on('init', function () {
-      editor.save()
-    })
-  },
-
   // styles
   skin: null, // we provide it through theme system
   content_css: [
@@ -63,8 +47,9 @@ const config = {
     'wordcount',
 
     // claroline plugins
-    'file-upload',
-    'resource-picker'
+    'file',
+    'resource-picker',
+    'formula'
   ],
 
   browser_spellcheck: true,
@@ -76,7 +61,7 @@ const config = {
   statusbar: false,
   branding: false,
   promotion: false,
-  contextmenu: 'resource-picker file-upload placeholders | link image media inserttable | charmap emoticons hr | insertdatetime',
+  contextmenu: 'resource-picker file placeholders | link image media inserttable | formula charmap emoticons hr | insertdatetime',
   link_context_toolbar: true,
 
   // add more font size (default stops at 36pt)

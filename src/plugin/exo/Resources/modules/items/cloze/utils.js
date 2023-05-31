@@ -15,7 +15,7 @@ utils.setEditorHtml = (text, holes, solutions, hasExpectedAnswers = true) => {
 }
 
 utils.makeTinyHtml = (hole, solution, hasExpectedAnswers = true) => {
-  let input = `<span class="cloze-hole answer-item" data-hole-id="${solution.holeId}" contentEditable="false">`
+  let input = `<span class="cloze-hole cloze-hole-editor answer-item" data-hole-id="${solution.holeId}" contentEditable="false">`
 
   if (hole.choices) {
     input += getSelectInput(hole, solution, hasExpectedAnswers)
@@ -144,14 +144,14 @@ function getEditButtons(solution) {
       class="btn btn-link default edit-hole-btn"
       data-hole-id="${solution.holeId}"
     >
-      <span class="fa fa-fw fa-pencil edit-hole-btn-icon" data-hole-id="${solution.holeId}"></span>
+      <span class="fa fa-fw fa-pencil edit-hole-btn-icon" data-hole-id="${solution.holeId}">&nbsp;</span>
     </button>
     <button
       type="button"
       class="btn btn-link default delete-hole-btn"
       data-hole-id="${solution.holeId}"
     >
-      <span class="fa fa-fw fa-trash delete-hole-btn-icon" data-hole-id="${solution.holeId}"></span>
+      <span class="fa fa-fw fa-trash delete-hole-btn-icon" data-hole-id="${solution.holeId}">&nbsp;</span>
     </button>
   `
 }

@@ -46,7 +46,7 @@ const EditorParameters = props => {
         displayLevel={2}
         embedded={true}
         name={props.formName}
-        sections={configureTypeEditor(props.quizType, [
+        definition={configureTypeEditor(props.quizType, [
           {
             title: trans('general'),
             primary: true,

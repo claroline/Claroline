@@ -17,6 +17,7 @@ import {ClozeItem as ClozeItemType} from '#/plugin/exo/items/cloze/prop-types'
 import {KeywordsPopover} from '#/plugin/exo/components/keywords'
 import {keywords as keywordsUtils} from '#/plugin/exo/utils/keywords'
 import {utils} from '#/plugin/exo/items/cloze/utils'
+import {theme} from '#/main/theme/config'
 
 function getHoleFromId(item, holeId) {
   return item.holes.find(hole => hole.id === holeId)
@@ -100,7 +101,7 @@ HolePopover.propTypes = {
   solution: T.shape({
     answers: T.array.isRequired
   }).isRequired,
-  validating: T.bool.isRequired,
+  validating: T.bool,
   hasExpectedAnswers: T.bool.isRequired,
   hasScore: T.bool.isRequired,
   _errors: T.object,
@@ -115,29 +116,57 @@ HolePopover.propTypes = {
 class MainField extends Component {
   constructor(props) {
     super(props)
-    this.selection = null
-    this.word = null
-    this.fnTextUpdate = () => {}
+    //this.selection = null
+    //this.word = null
+    //this.fnTextUpdate = () => {}
+
+    // the TinyMce editor object. Filled when the editor is initialized and used to be able to insert holes
+    // inside the text content
+    this.editor = null
+
+    let text = ''
+    if (this.props.item.text) {
+      text = utils.setEditorHtml(this.props.item.text, this.props.item.holes, this.props.item.solutions, this.props.item.hasExpectedAnswers)
+    }
+
     this.state = {
       allowCloze: true,
-      text: undefined
+      text: text,
+      selection: null
     }
+
+    this.addHole = this.addHole.bind(this)
     this.changeEditorMode = this.changeEditorMode.bind(this)
+    this.onHoleClick = this.onHoleClick.bind(this)
   }
 
-  onSelect(word, cb) {
-    this.word = word
-    this.fnTextUpdate = cb
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (get(prevProps, 'item.text') !== get(this.props, 'item.text')) {
+      let text = ''
+      if (this.props.item.text) {
+        text = utils.setEditorHtml(this.props.item.text, this.props.item.holes, this.props.item.solutions, this.props.item.hasExpectedAnswers)
+      }
+
+      this.setState({text: text})
+    }
   }
 
-  onHoleClick(el) {
+  changeEditorMode(editorState) {
+    this.setState({allowCloze: editorState.minimal})
+  }
+
+  onHoleClick(event) {
+    const el = event.target
     const newItem = cloneDeep(this.props.item)
 
+    let needUpdate = false
     if (el.classList.contains('edit-hole-btn') || el.classList.contains('edit-hole-btn-icon')) {
       const hole = getHoleFromId(newItem, el.dataset.holeId)
       hole._multiple = !!hole.choices
       newItem._popover = true
       newItem._holeId = el.dataset.holeId
+
+      needUpdate = true
     } else if (el.classList.contains('delete-hole-btn') || el.classList.contains('delete-hole-btn-icon')) {
       const holeId = el.dataset.holeId
       const holes = newItem.holes
@@ -172,21 +201,21 @@ class MainField extends Component {
       if (newItem._holeId && newItem._holeId === holeId) {
         newItem._popover = false
       }
+
+      needUpdate = true
     }
 
-    this.props.update('holes', newItem.holes)
-    this.props.update('solutions', newItem.solutions)
-    this.props.update('_popover', newItem._popover || false)
-    this.props.update('_holeId', newItem._holeId || null)
-    this.props.update('text', newItem.text)
+    if (needUpdate) {
+      this.props.update('holes', newItem.holes)
+      this.props.update('solutions', newItem.solutions)
+      this.props.update('_popover', newItem._popover || false)
+      this.props.update('_holeId', newItem._holeId || null)
+      this.props.update('text', newItem.text)
+    }
   }
 
-  changeEditorMode(editorState) {
-    this.setState({ allowCloze: editorState.minimal})
-  }
-
-  addHole(item) {
-    const newItem = cloneDeep(item)
+  addHole() {
+    const newItem = cloneDeep(this.props.item)
 
     const hole = {
       id: makeId(),
@@ -198,7 +227,12 @@ class MainField extends Component {
     }
 
     const keyword = keywordsUtils.createNew()
-    keyword.text = this.word
+    keyword.text = ''
+    if (this.editor.selection.getContent()) {
+      // initialize first keyword with selected text
+      keyword.text = this.editor.selection.getContent()
+    }
+
     keyword._deletable = false
 
     const solution = {
@@ -211,7 +245,17 @@ class MainField extends Component {
     newItem._popover = true
     newItem._holeId = hole.id
 
-    const text = this.fnTextUpdate(utils.makeTinyHtml(hole, solution, newItem.hasExpectedAnswers))
+    let text = this.state.text || ''
+
+    const holeHtml = utils.makeTinyHtml(hole, solution, newItem.hasExpectedAnswers)
+    if (this.editor.selection.getContent()) {
+      this.editor.selection.setContent(holeHtml)
+      text = this.editor.getContent({format: 'html'})
+    } else {
+      // extra space are added to be able to add content before/after the hole
+      text += (this.state.text && 0 > this.state.text ? ' ' : '')+holeHtml+ ' '
+    }
+
     newItem.text = utils.getTextWithPlacerHoldersFromHtml(text)
 
     this.props.update('holes', newItem.holes)
@@ -219,30 +263,32 @@ class MainField extends Component {
     this.props.update('_popover', newItem._popover)
     this.props.update('_holeId', newItem._holeId)
     this.props.update('text', newItem.text)
-
-    this.setState({text: text})
   }
 
   render() {
-    if (this.props.item.text && undefined === this.state.text) {
-      this.setState({text: utils.setEditorHtml(this.props.item.text, this.props.item.holes, this.props.item.solutions, this.props.item.hasExpectedAnswers)})
-    }
-
     return (
       <fieldset className="cloze-field">
         <HtmlInput
           id={`cloze-text-${this.props.item.id}`}
           className="component-container"
           value={this.state.text}
+          onInit={(evt, editor) => {
+            this.editor = editor
+          }}
+          config={{
+            content_css: [
+              theme('bootstrap'),
+              theme('claroline-distribution-plugin-exo-quiz-resource')
+            ]
+          }}
           onChange={(value) => {
-            //TODO: optimize this
             let item = Object.assign({}, this.props.item, {
               text: utils.getTextWithPlacerHoldersFromHtml(value)
             })
 
             const holesToRemove = []
             // we need to check if every hole is mapped to a placeholder
-            // if there is not placeholder, then remove the hole
+            // if there is no placeholder, then remove the hole
             this.props.item.holes.forEach(hole => {
               if (item.text.indexOf(`[[${hole.id}]]`) < 0) {
                 holesToRemove.push(hole.id)
@@ -258,15 +304,17 @@ class MainField extends Component {
               })
               item = Object.assign({}, item, {holes, solutions})
             }
+
+            if (this.props.item._popover && holesToRemove.includes(this.props.item._holeId)) {
+              this.props.update('_popover', false)
+              this.props.update('_holeId', null)
+            }
+
             this.props.update('text', item.text)
             this.props.update('holes', item.holes)
             this.props.update('solutions', item.solutions)
-
-            this.setState({text: value})
           }}
-          onSelect={this.onSelect.bind(this)}
-          onClick={this.onHoleClick.bind(this)}
-          onChangeMode={this.changeEditorMode}
+          onClick={this.onHoleClick}
         />
 
         <Button
@@ -275,7 +323,7 @@ class MainField extends Component {
           icon="fa fa-fw fa-plus"
           label={trans('create_cloze', {}, 'quiz')}
           disabled={!this.state.allowCloze}
-          callback={() => this.addHole(this.props.item)}
+          callback={this.addHole}
         />
 
         {(this.props.item._popover && this.props.item._holeId) &&
@@ -311,8 +359,6 @@ class MainField extends Component {
               this.props.update('text', newItem.text)
               this.props.update('holes', newItem.holes)
               this.props.update('solutions', newItem.solutions)
-
-              this.setState({text: utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions, newItem.hasExpectedAnswers)})
             }}
             onChange={(property, value) => {
               const newItem = cloneDeep(this.props.item)
@@ -401,7 +447,7 @@ const ClozeEditor = props => {
       embedded={true}
       name={props.formName}
       dataPart={props.path}
-      sections={[
+      definition={[
         {
           title: trans('general'),
           primary: true,

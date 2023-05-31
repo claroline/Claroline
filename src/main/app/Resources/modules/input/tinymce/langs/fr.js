@@ -76,7 +76,7 @@ window.tinymce.addI18n('fr',{
   'Special character...':'Caract\xe8re sp\xe9cial...',
   'Special Character':'Caract\xe8re sp\xe9cial',
   'Source code':'Code source',
-  'Insert/Edit code sample':'Ins\xe9rer / modifier un exemple de code',
+  'Insert/Edit code sample':'Ins\xe9rer/modifier un exemple de code',
   'Language':'Langue',
   'Code sample...':'Exemple de code...',
   'Left to right':'De gauche \xe0 droite',
@@ -410,5 +410,7 @@ window.tinymce.addI18n('fr',{
   'File...': 'File...',
   'Upload file': 'Uploader un fichier',
   'Dynamic value...': 'Valeur dynamique...',
-  'Insert dynamic value': 'Insérer une valeur dynamique'
+  'Insert dynamic value': 'Insérer une valeur dynamique',
+  'Equation...': 'Equation...',
+  'Insert/Edit equation': 'Ins\xe9rer/modifier une équation'
 })

@@ -33,7 +33,7 @@ const dialogConfig = (editor, placeholders = []) => ({
     }
   ],
   onSubmit: (api) => {
-    editor.execCommand('mceInsertContent', false, `%${placeholder}%`)
+    //editor.execCommand('mceInsertContent', false, `%${placeholder}%`)
 
     api.close()
   }

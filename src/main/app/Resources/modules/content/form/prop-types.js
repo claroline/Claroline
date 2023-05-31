@@ -56,7 +56,7 @@ const DataFormSection = {
         ))
       })
     )),
-    component: T.node,
+    component: T.oneOfType([T.func, T.object]),
     render: T.func
   },
   defaultProps: {

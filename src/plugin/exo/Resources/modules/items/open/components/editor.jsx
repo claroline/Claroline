@@ -12,7 +12,7 @@ const OpenEditor = (props) =>
     embedded={true}
     name={props.formName}
     dataPart={props.path}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,

@@ -29,7 +29,7 @@ const Editor = (props) =>
       id={props.text.id}
       mode="full"
       value={props.text.raw}
-      initialValue={props.originalText.raw}
+      //initialValue={props.originalText.raw}
       onChange={(newValue) => props.updateProp('raw', newValue)}
       config={{
         plugins: ['placeholders'],

@@ -252,7 +252,7 @@ KeywordItems.propTypes = {
   /**
    * Current validation state.
    */
-  validating: T.bool.isRequired,
+  validating: T.bool,
 
   /**
    * The list of validation error.
@@ -414,7 +414,7 @@ KeywordsPopover.propTypes = {
   /**
    * Current validation state.
    */
-  validating: T.bool.isRequired,
+  validating: T.bool,
 
   /**
    * The list of validation error.

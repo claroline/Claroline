@@ -2,22 +2,15 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {Editor} from '@tinymce/tinymce-react'
 import merge from 'lodash/merge'
+import omit from 'lodash/omit'
 
-import {withModal} from '#/main/app/overlays/modal'
-import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
-
-import {config} from '#/main/app/input/tinymce/config'
-
-const TinymceEditor = (props) =>
+/**
+ * @internal
+ */
+const TinymceClassic = (props) =>
   <Editor
-    id={props.id}
-    disabled={props.disabled}
-    value={props.value}
-    initialValue={props.initialValue}
-    init={merge({}, config, {
-      selector: props.id,
-      placeholder: props.placeholder,
-
+    {...omit(props, 'minRows', 'init')}
+    init={merge({}, props.init, {
       // customize toolbars
       menubar: false,
       toolbar: 'insert blocks fontsize | bold italic underline forecolor | alignleft aligncenter alignright alignjustify' + // undo redo
@@ -27,7 +20,7 @@ const TinymceEditor = (props) =>
         insert: {
           icon: 'plus',
           tooltip: 'Insert',
-          items: 'resource-picker file-upload placeholders | link image media table | charmap emoticons hr | insertdatetime'
+          items: 'resource-picker file placeholders | link image media table | formula charmap emoticons hr | insertdatetime'
         }
       },
 
@@ -35,33 +28,13 @@ const TinymceEditor = (props) =>
       plugins: ['autoresize'],
       min_height: `${props.minRows * 34}px`,
       max_height: 500
-    }, props.config || {}, {
-      // give access to the show modal action to tinymce plugins
-      // it's not really aesthetic but there is no other way
-      showModal: props.showModal,
-      // get the current workspace for the file upload and resource explorer plugins
-      workspace: props.workspace
     })}
-    onEditorChange={props.onChange}
   />
 
-TinymceEditor.propTypes = {
-  id: T.string.isRequired,
-  disabled: T.bool,
-  value: T.string,
-  initialValue: T.string,
-  placeholder: T.string,
-  config: T.object,
-  onChange: T.func,
-  minRows: T.number,
-
-  workspace: T.shape(
-    WorkspaceTypes.propTypes
-  ),
-  showModal: T.func.isRequired
+TinymceClassic.propTypes = {
+  init: T.object,
+  minRows: T.number
 }
-
-const TinymceClassic = withModal(TinymceEditor)
 
 export {
   TinymceClassic

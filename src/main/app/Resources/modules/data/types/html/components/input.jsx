@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import omit from 'lodash/omit'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
@@ -28,10 +29,12 @@ class HtmlInput extends Component {
       minimal: minimal,
       fullscreen: fullscreen
     }, () => {
-      this.props.onChangeMode({
-        minimal: minimal,
-        fullscreen: fullscreen
-      })
+      if (this.props.onChangeMode) {
+        this.props.onChangeMode({
+          minimal: minimal,
+          fullscreen: fullscreen
+        })
+      }
     })
   }
 
@@ -79,20 +82,13 @@ class HtmlInput extends Component {
         }
 
         <TinymceEditor
+          {...omit(this.props, 'onChangeMode')}
           id={this.props.id}
           mode={classes({
             inline: !this.state.fullscreen && this.state.minimal,
             classic: !this.state.fullscreen && !this.state.minimal,
             full: this.state.fullscreen
           })}
-          placeholder={this.props.placeholder}
-          value={this.props.value}
-          workspace={this.props.workspace}
-          disabled={this.props.disabled}
-          onChange={this.props.onChange}
-          minRows={this.props.minRows}
-          //onSelect={this.props.onSelect}
-          //onClick={this.props.onClick}
         />
       </div>
     )
@@ -106,16 +102,11 @@ implementPropTypes(HtmlInput, DataInputTypes, {
   minimal: T.bool,
   minRows: T.number,
   workspace: T.object,
-  onSelect: T.func,
-  onClick: T.func,
   onChangeMode: T.func
 }, {
   //value: '',
   minRows: 4,
-  minimal: true,
-  onClick: () => {},
-  onSelect: () => {},
-  onChangeMode: () => {}
+  minimal: true
 })
 
 export {

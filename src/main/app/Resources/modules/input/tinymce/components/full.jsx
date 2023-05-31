@@ -2,22 +2,16 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {Editor} from '@tinymce/tinymce-react'
 import merge from 'lodash/merge'
+import omit from 'lodash/omit'
 
-import {withModal} from '#/main/app/overlays/modal'
-import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
-
-import {config} from '#/main/app/input/tinymce/config'
-
-const TinymceEditor = (props) =>
+/**
+ * @internal
+ */
+const TinymceFull = (props) =>
   <Editor
-    id={props.id}
-    disabled={props.disabled}
-    value={props.value}
-    initialValue={props.initialValue}
+    {...omit(props, 'minRows', 'init')}
     inline={false}
-    init={merge({}, config, {
-      selector: props.id,
-      placeholder: props.placeholder,
+    init={merge({}, props.init, {
       auto_focus: props.id,
       height: '100%',
       menubar: 'edit view insert format help',
@@ -28,44 +22,19 @@ const TinymceEditor = (props) =>
         },
         insert: {
           title: 'Insert',
-          items: 'resource-picker file-upload placeholders | image link media template inserttable | charmap emoticons hr codesample | insertdatetime'
+          items: 'resource-picker file placeholders | image link media template inserttable | formula charmap emoticons hr codesample | insertdatetime'
         }
       },
       toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough ' +
         '| forecolor backcolor removeformat | alignleft aligncenter alignright alignjustify | outdent indent ' +
-        '| numlist bullist | link resource-picker file-upload placeholders insertfile image media table'
-    }, props.config, {
-      // give access to the show modal action to tinymce plugins
-      // it's not really aesthetic but there is no other way
-      showModal: props.showModal,
-      // get the current workspace for the file upload and resource explorer plugins
-      workspace: props.workspace
+        '| numlist bullist | link resource-picker file placeholders insertfile image media table'
     })}
-    onEditorChange={(v) => {
-      console.log('coucou')
-      if (v !== props.value) {
-        console.log(v)
-        props.onChange(v)
-      }
-    }}
   />
 
-TinymceEditor.propTypes = {
+TinymceFull.propTypes = {
   id: T.string.isRequired,
-  disabled: T.bool,
-  value: T.string,
-  initialValue: T.string,
-  placeholder: T.string,
-  config: T.object,
-  onChange: T.func,
-
-  workspace: T.shape(
-    WorkspaceTypes.propTypes
-  ),
-  showModal: T.func.isRequired
+  init: T.object
 }
-
-const TinymceFull = withModal(TinymceEditor)
 
 export {
   TinymceFull
