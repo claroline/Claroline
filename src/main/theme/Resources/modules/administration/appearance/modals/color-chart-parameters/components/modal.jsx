@@ -80,13 +80,15 @@ const ColorPalette = ({ formData: { colors = [], openedIndex }, hideInput, updat
       <Button
         type={CALLBACK_BUTTON}
         id={'new-color'}
-        className="color-dot-lg"
+        className="color-dot lg"
+        icon="fa fa-fw fa-plus"
+        tooltip="bottom"
+        label={trans('new_color', {}, 'appearance')}
         callback={() => {
           updateProp('colors[' + colors.length + ']', '#FFFFFF')
           updateProp('openedIndex', colors.length)
         }}
       >
-        <span className="fa fa-fw fa-plus"></span>
       </Button>
     </div>
   )

@@ -29,7 +29,6 @@ class ColorChart extends Component {
         const hasColorChart = this.props.colorChart && this.props.colorChart.data && this.props.colorChart.data.length > 0
         this.setState({
           view: this.props.view ? this.props.view : hasColorChart ? 'library' : 'selector',
-          noLibrary: this.props.noLibrary || !hasColorChart
         })
       })
     }
