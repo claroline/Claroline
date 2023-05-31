@@ -3,13 +3,18 @@
   "theme": "Theme",
   "icons": "Icons",
   "colors": "Colors",
-
+  "color_charts": "Color charts",
+  "edit_color_chart": "Edit color chart",
   "footer": "Footer",
-  "footer_show": "Show Claroline Connnect footer",
+  "footer_show": "Show Claroline Connect footer",
   "footer_show_locale": "Show language",
   "footer_show_help": "Show help",
   "footer_show_terms_of_service": "Show terms of service",
   "new_icon_set": "New icons set",
+  "new_color": "New color",
+  "new_color_chart": "New color chart",
+  "color_chart_delete_confirm_title": "Color chart deletion",
+  "color_chart_delete_confirm_message": "Are you sure you want to delete this color chart?",
   "icon_set_delete_confirm_title": "{1} Icons set deletion | [2,Inf[ Icons sets deletion",
   "icon_set_delete_confirm_message": "{1} Are you sure you want to delete this icons set? | [2,Inf[ Are you sure you want to delete these %count% icons sets?"
 }

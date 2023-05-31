@@ -6,8 +6,8 @@ import {implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 
-import {ColorChartLibrary} from '#/main/theme/color/components/view/library'
-import {ColorChartSelector} from '#/main/theme/color/components/view/selector'
+import {ColorChartLibrary} from '#/main/theme/color/components/library'
+import {ColorChartSelector} from '#/main/theme/color/components/selector'
 import {ColorChart as ColorChartTypes} from '#/main/theme/color/prop-types'
 
 class ColorChart extends Component {
@@ -15,13 +15,25 @@ class ColorChart extends Component {
     super(props)
 
     this.state = {
-      view: 'library'
+      view: 'selector'
     }
 
     this.onInputChange = this.onInputChange.bind(this)
     this.onInputBlur = this.onInputBlur.bind(this)
     this.toggleView = this.toggleView.bind(this)
   }
+
+  componentDidMount() {
+    if (!this.props.noLibrary) {
+      this.props.load().then(() => {
+        const hasColorChart = this.props.colorChart && this.props.colorChart.data && this.props.colorChart.data.length > 0
+        this.setState({
+          view: this.props.view ? this.props.view : hasColorChart ? 'library' : 'selector'
+        })
+      })
+    }
+  }
+
 
   onInputChange(e) {
     this.props.onChange(e.target.value)
@@ -54,6 +66,7 @@ class ColorChart extends Component {
       case 'library':
         return (
           <ColorChartLibrary
+            colorCharts={this.props.colorChart.data}
             selected={this.props.selected}
             onChange={this.props.onChange}
           />
@@ -73,6 +86,8 @@ class ColorChart extends Component {
     if (this.props.selected) {
       color = tinycolor(this.props.selected)
     }
+
+    const noLibrary = this.props.noLibrary || (this.props.colorChart.data && this.props.colorChart.data.length === 0)
 
     return (
       <div className="color-chart-container">
@@ -98,17 +113,18 @@ class ColorChart extends Component {
               onChange={this.onInputChange}
               onBlur={this.onInputBlur}
             />
-
-            <CallbackButton
-              className={classes('btn-link btn-view btn-block', {
-                'text-light': color && color.isDark(),
-                'text-dark': color && color.isLight()
-              })}
-              callback={this.toggleView}
-              size="sm"
-            >
-              {trans('library' === this.state.view ? 'colors-selector':'colors-library')}
-            </CallbackButton>
+            {!noLibrary &&
+              <CallbackButton
+                className={classes('btn-link btn-view btn-block', {
+                  'text-light': color && color.isDark(),
+                  'text-dark': color && color.isLight()
+                })}
+                callback={this.toggleView}
+                size="sm"
+              >
+                {trans('library' === this.state.view ? 'colors-selector':'colors-library')}
+              </CallbackButton>
+            }
           </div>
         }
 
@@ -119,7 +135,6 @@ class ColorChart extends Component {
     )
   }
 }
-
 
 implementPropTypes(ColorChart, ColorChartTypes)
 

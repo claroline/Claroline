@@ -11,3 +11,7 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\ThemeBundle\Manager\IconSetManager'
+
+    Claroline\ThemeBundle\Controller\ColorCollectionController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true

@@ -20,6 +20,11 @@ const availableIconSets = createSelector(
   (store) => store.availableIconSets
 )
 
+const availableColorCharts = createSelector(
+  [store],
+  (store) => store.availableColorCharts
+)
+
 const currentIconSet = createSelector(
   [paramSelectors.parameters, availableIconSets],
   (parameters, availableIconSets) => {
@@ -35,5 +40,6 @@ export const selectors = {
   store,
   availableThemes,
   availableIconSets,
-  currentIconSet
+  currentIconSet,
+  availableColorCharts
 }
