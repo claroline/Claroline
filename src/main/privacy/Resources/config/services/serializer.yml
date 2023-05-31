@@ -1,5 +1,10 @@
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
+        tags: ['claroline.serializer']
+        autowire: true
+        autoconfigure: true
+
+    Claroline\PrivacyBundle\Serializer\PrivacySerializer:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'

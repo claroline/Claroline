@@ -1,5 +1,6 @@
 services:
-    Claroline\PrivacyBundle\Subscriber\Administration\PrivacySubscriber:
+    Claroline\PrivacyBundle\Subscriber\PrivacySubscriber:
         tags: [ kernel.event_subscriber ]
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'

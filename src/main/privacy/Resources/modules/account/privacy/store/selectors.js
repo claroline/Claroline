@@ -1,6 +1,8 @@
-
-const STORE_NAME = 'accountPrivacy'
+const STORE_NAME = 'privacy'
+const store = (state) => state[STORE_NAME]
 
 export const selectors = {
-  STORE_NAME
+  STORE_NAME,
+  store
 }
+

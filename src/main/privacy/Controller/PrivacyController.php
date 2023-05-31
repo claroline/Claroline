@@ -2,55 +2,60 @@
 
 namespace Claroline\PrivacyBundle\Controller;
 
-use Claroline\AppBundle\API\Utils\ArrayUtils;
-use Claroline\AppBundle\Controller\AbstractSecurityController;
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\PrivacyBundle\Entity\Privacy;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class PrivacyController extends AbstractSecurityController
+class PrivacyController extends AbstractCrudController
 {
     use RequestDecoderTrait;
 
     private AuthorizationCheckerInterface $authorization;
-
     private PlatformConfigurationHandler $config;
-
-    private ParametersSerializer $serializer;
+    private SerializerProvider $privacySerializer;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         PlatformConfigurationHandler $ch,
-        ParametersSerializer $serializer
+        SerializerProvider $privacySerializer
     ) {
         $this->authorization = $authorization;
         $this->config = $ch;
-        $this->serializer = $serializer;
+        $this->privacySerializer = $privacySerializer;
     }
 
     /**
-     * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
+     * @Route("/privacy")
      */
-    public function updateAction(Request $request): JsonResponse
+    public function getName(): string
     {
+        return 'privacy';
+    }
+
+    public function getClass(): string
+    {
+       return Privacy::class;
+    }
+
+    /**
+     * @Route("/privacy/update", name="apiv2_privacy_update", methods={"PUT"})
+     */
+    public function updatePrivacyStorage(Request $request): JsonResponse
+    {
+        // todo
         $this->canOpenAdminTool('privacy');
 
-        $parametersData = $this->decodeRequest($request);
-
-        ArrayUtils::remove($parametersData, 'lockedParameters');
-
-        $locked = $this->config->getParameter('lockedParameters') ?? [];
-        foreach ($locked as $lockedParam) {
-            ArrayUtils::remove($parametersData, $lockedParam);
-        }
-
-        $parameters = $this->serializer->deserialize($parametersData);
+        $parameters = $this->decodeRequest($request);
+/*
+        $parameters = $this->privacySerializer->deserialize($parametersData);
         $this->config->setParameters($parameters);
-
+*/
         return new JsonResponse($parameters);
     }
 }
