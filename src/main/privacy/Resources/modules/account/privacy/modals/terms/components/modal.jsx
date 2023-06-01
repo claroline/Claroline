@@ -4,33 +4,40 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors} from '#/main/privacy/administration/privacy/modals/country/store/selectors'
+import {DetailsData} from '#/main/app/content/details/components/data'
+import {selectors} from '#/main/privacy/account/privacy/modals/terms/store/selectors'
 
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
 
-const CountryModal = props =>{
-  console.log('je suis dans le modal countryStorage ', props.countryStorage)
-
+const TermsModal = (props) => {
+  console.log('TermsModal props', props)
   return(
     <Modal
       {...omit(props, 'formData', 'saveEnabled', 'save', 'item')}
-      icon="fa fa-fw fa-solid fa-globe"
-      title={trans('country_storage', {}, 'privacy')}
-      onEntering={() => props.reset(props.countryStorage)}
+      icon="fa fa-fw fa-solid fa-pen-to-square"
+      title={trans('terms_of_service', {}, 'privacy')}
     >
-      <FormData
-        name={selectors.STORE_NAME}
+      <DetailsData
+        name={selectors.FORM_NAME}
         definition={[
           {
             title: trans('general'),
             primary: true,
             fields: [
               {
-                name: 'countryStorage',
-                label: trans('country_storage', {}, 'privacy'),
-                type: 'country'
+                name: 'item.isTermsOfServiceEnabled',
+                type: 'boolean',
+                label: trans('terms_of_service_activation_message', {}, 'privacy'),
+                help: trans('terms_of_service_activation_help', {}, 'privacy'),
+                linked: [
+                  {
+                    name: 'item.termsOfService',
+                    type: 'string',
+                    label: trans('terms_of_service', {}, 'privacy'),
+                    options: {long: true}
+                  }
+                ]
               }
             ]
           }
@@ -47,20 +54,19 @@ const CountryModal = props =>{
             props.save(props.formData, props.fadeModal)
           }}
         />
-      </FormData>
+      </DetailsData>
     </Modal>
   )
 }
 
-CountryModal.propTypes = {
-  formData: T.object,
+TermsModal.propTypes = {
+  formData: T.object.isRequired,
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
-  reset: T.func.isRequired,
   fadeModal: T.func,
-  countryStorage: T.strings
+  item: T.object
 }
 
 export {
-  CountryModal
+  TermsModal
 }

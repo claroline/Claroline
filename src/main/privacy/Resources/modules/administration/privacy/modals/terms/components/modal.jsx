@@ -14,25 +14,26 @@ const TermsModal = (props) => {
   console.log('TermsModal props', props)
   return(
     <Modal
-      {...omit(props, 'formData', 'saveEnabled', 'save', 'item')}
+      {...omit(props, 'formData', 'saveEnabled', 'save')}
       icon="fa fa-fw fa-solid fa-pen-to-square"
       title={trans('terms_of_service', {}, 'privacy')}
+      onEntering={() => props.reset(props.termsOfService, props.isTermsOfService)}
     >
       <FormData
-        name={selectors.FORM_NAME}
+        name={selectors.STORE_NAME}
         definition={[
           {
             title: trans('general'),
             primary: true,
             fields: [
               {
-                name: 'item.isTermsOfServiceEnabled',
+                name: 'isTermsOfService',
                 type: 'boolean',
                 label: trans('terms_of_service_activation_message', {}, 'privacy'),
                 help: trans('terms_of_service_activation_help', {}, 'privacy'),
                 linked: [
                   {
-                    name: 'item.termsOfService',
+                    name: 'termsOfService',
                     type: 'string',
                     label: trans('terms_of_service', {}, 'privacy'),
                     options: {long: true}
@@ -64,7 +65,8 @@ TermsModal.propTypes = {
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
   fadeModal: T.func,
-  item: T.object
+  terms: T.object,
+  reset: T.func.isRequired
 }
 
 export {

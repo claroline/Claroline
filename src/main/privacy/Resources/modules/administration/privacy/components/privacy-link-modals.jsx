@@ -8,83 +8,95 @@ import {Button} from '#/main/app/action/components/button'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 
 const PrivacyLinkModals = (props) =>
-  <div className="privacy">
-    <div className="row">
-      <div className="col-md-4">
-        {props.item.countryStorage ?
-          <AlertBlock type="success" title={trans('countryStorage_ok', {}, 'privacy')}>
-            <Button
-              className="btn btn-default btn-block"
-              type={MODAL_BUTTON}
-              label={trans('change_storage_country', {}, 'privacy')}
-              modal={[MODAL_COUNTRY_STORAGE, {
-                item: props.item
-              }]}
-            />
-          </AlertBlock>
-          :
-          <AlertBlock type="warning" title={trans('no_countryStorage', {}, 'privacy')}>
-            <Button
-              className="btn btn-default btn-block"
-              type={MODAL_BUTTON}
-              label={trans('add_country_storage', {}, 'privacy')}
-              modal={[MODAL_COUNTRY_STORAGE, {
-                item: props.item
-              }]}
-            />
-          </AlertBlock>
-        }
-      </div>
-      <div className="col-md-4">
-        {props.item.dpo.email  ?
-          <AlertBlock type="success" title={trans('dpo_ok', {}, 'privacy')}>
-            <Button
-              className="btn btn-default btn-block"
-              type={MODAL_BUTTON}
-              label={trans('change_dpo', {}, 'privacy')}
-              modal={[MODAL_INFOS_DPO, {
-                item: props.item
-              }]}
-            />
-          </AlertBlock>
-          :
-          <AlertBlock type="warning" title={trans('no_dpo', {}, 'privacy')}>
-            <Button
-              className="btn btn-default btn-block"
-              type={MODAL_BUTTON}
-              label={trans('add_dpo', {}, 'privacy')}
-              modal={[MODAL_INFOS_DPO, {
-                item: props.item
-              }]}
-            />
-          </AlertBlock>
-        }
-      </div>
-      <div className="col-md-4">
-        {props.item.termsOfService ?
-          <AlertBlock type="success" title={trans('terms_ok', {}, 'privacy')}>
-            <Button
-              className="btn btn-default btn-block"
-              type={MODAL_BUTTON}
-              label={trans('change_terms', {}, 'privacy')}
-              modal={[MODAL_TERMS_OF_SERVICE, {
-                item: props.item
-              }]}
-            />
-          </AlertBlock>
-          :
-          <AlertBlock type="warning" title={trans('no_terms', {}, 'privacy')}>
-            <Button
-              className="btn btn-default btn-block"
-              type={MODAL_BUTTON}
-              label={trans('add_terms', {}, 'privacy')}
-              modal={[MODAL_TERMS_OF_SERVICE, {
-                item: props.item
-              }]}
-            />
-          </AlertBlock>
-        }
-      </div>
+  <div className="row">
+    <div className="col-lg-4">
+      {props.item.countryStorage ?
+        <AlertBlock type="success" title={trans('countryStorage_ok', {}, 'privacy')}>
+          <Button
+            className="btn btn-default"
+            type={MODAL_BUTTON}
+            label={trans('change_country_storage', {}, 'privacy')}
+            modal={[MODAL_COUNTRY_STORAGE, {
+              countryStorage: props.item.countryStorage
+            }]}
+          />
+        </AlertBlock>
+        :
+        <AlertBlock type="warning" title={trans('no_countryStorage', {}, 'privacy')}>
+          <Button
+            className="btn btn-default"
+            type={MODAL_BUTTON}
+            label={trans('add_country_storage', {}, 'privacy')}
+            modal={[MODAL_COUNTRY_STORAGE, {
+              countryStorage: props.item.countryStorage
+            }]}
+          />
+        </AlertBlock>
+      }
+      <span className="help-block">
+        {trans('country_storage_help', {}, 'privacy')}
+      </span>
+    </div>
+    <div className="col-lg-4">
+      {props.item.dpo.email  ?
+        <AlertBlock type="success" title={trans('dpo_ok', {}, 'privacy')}>
+          <Button
+            className="btn btn-default"
+            type={MODAL_BUTTON}
+            label={trans('change_dpo', {}, 'privacy')}
+            modal={[MODAL_INFOS_DPO, {
+              dpo: props.item.dpo
+            }]}
+          />
+        </AlertBlock>
+        :
+        <AlertBlock type="warning" title={trans('no_dpo', {}, 'privacy')}>
+          <Button
+            className="btn btn-default"
+            type={MODAL_BUTTON}
+            label={trans('add_dpo', {}, 'privacy')}
+            modal={[MODAL_INFOS_DPO, {
+              dpo: props.item.dpo
+            }]}
+          />
+        </AlertBlock>
+      }
+      <span className="help-block">
+        {trans('dpo_help', {}, 'privacy')}
+      </span>
+    </div>
+    <div className="col-lg-4">
+      {props.item.termsOfService ?
+        <AlertBlock type="success" title={trans('terms_ok', {}, 'privacy')}>
+          <Button
+            className="btn btn-default"
+            type={MODAL_BUTTON}
+            label={trans('change_terms', {}, 'privacy')}
+            modal={[MODAL_TERMS_OF_SERVICE, {
+              termsOfService: props.item.termsOfService,
+              isTermsOfService : props.item.isTermsOfServiceEnabled
+            }]}
+          />
+          {!props.item.isTermsOfServiceEnabled ?
+            <p style={{color: 'red'}}>{trans('terms_not_enabled',{}, 'privacy')}</p>
+            :
+            <p>{trans('terms_enabled',{}, 'privacy')}</p>}
+        </AlertBlock>
+        :
+        <AlertBlock type="warning" title={trans('no_terms', {}, 'privacy')}>
+          <Button
+            className="btn btn-default"
+            type={MODAL_BUTTON}
+            label={trans('add_terms', {}, 'privacy')}
+            modal={[MODAL_TERMS_OF_SERVICE, {
+              terms: props.item.termsOfService
+            }]}
+          />
+        </AlertBlock>
+      }
+      <span className="help-block">
+        {trans('terms_help', {}, 'privacy')}
+      </span>
     </div>
   </div>
 

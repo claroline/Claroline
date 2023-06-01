@@ -1,8 +1,8 @@
 import React from 'react'
 import {trans} from '#/main/app/intl'
 
-const PrivacyItem = (props) => 
-  <div className="privacy-item">
+const PrivacyItem = (props) =>
+  <>
     <div className="panel panel-default" style={{marginTop: '25px'}}>
       <div className="panel-heading">
         {trans('country_storage', {}, 'privacy')}
@@ -32,6 +32,5 @@ const PrivacyItem = (props) =>
         {props.item.dpo.address.country}
       </div>
     </div>
-  </div>
-
+  </>
 export {PrivacyItem}

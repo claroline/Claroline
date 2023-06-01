@@ -18,7 +18,7 @@
   "countryStorage_ok": "The country of storage is defined.",
   "add_country_storage": "Add a country of storage",
   "no_countryStorage": "No country of storage has been defined",
-  "change_storage_country": "Update",
+  "change_country_storage": "Update",
   "change_dpo": "Update",
   "change_terms": "View/Edit terms of service",
   "terms_of_service": "Terms of service",
@@ -29,5 +29,10 @@
   "show-terms-of-service": "Show terms of service",
   "terms_ok": "The terms of use have been defined",
   "no_terms": "No conditions of use are defined.",
-  "add_terms": "Add conditions of use"
+  "add_terms": "Add conditions of use",
+  "terms_not_enabled": "The terms of use are not enabled",
+  "terms_enabled": "The terms of use are enabled",
+  "country_storage_help": "The storage country indicates where user data is kept and managed.",
+  "dpo_help": "The Data Protection Officer (DPO) is responsible for the organization's compliance with data protection rules and serves as a liaison with the supervisory authority and the individuals concerned",
+  "terms_help": "The terms of use are the conditions of use of the platform that the user must accept to be able to use it."
 }

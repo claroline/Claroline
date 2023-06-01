@@ -5,10 +5,8 @@ import {PrivacyLinkModals} from '#/main/privacy/administration/privacy/component
 
 const PrivacyTool = (props) =>
   <ToolPage>
-    <div className="privacy-item">
-      <PrivacyItem item={props.parameters} />
-      <PrivacyLinkModals item={props.parameters} />
-    </div>
+    <PrivacyItem item={props.parameters} />
+    <PrivacyLinkModals item={props.parameters} />
   </ToolPage>
 
 export {

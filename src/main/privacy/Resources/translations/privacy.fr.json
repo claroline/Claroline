@@ -18,7 +18,7 @@
   "countryStorage_ok": "Le pays de stockage est défini.",
   "add_country_storage": "Ajouter un pays de stockage",
   "no_countryStorage": "Aucun pays de stockage n'a été défini.",
-  "change_storage_country": "Mettre à jour",
+  "change_country_storage": "Mettre à jour",
   "change_dpo": "Mettre à jour",
   "change_terms": "Afficher/Modifier les conditions d'utilisation",
   "terms_of_service": "Conditions d'utilisation",
@@ -29,5 +29,10 @@
   "show-terms-of-service": "Afficher les conditions d'utilisation",
   "terms_ok": "Les conditions d'utilisation sont définies.",
   "no_terms": "Aucunes conditions d'utilisation n'ont été définies.",
-  "add_terms": "Ajouter des conditions d'utilisation"
+  "add_terms": "Ajouter des conditions d'utilisation",
+  "terms_enabled": "Les conditions d'utilisation sont activées.",
+  "terms_not_enabled": "Les conditions d'utilisation ne sont pas activées.",
+  "country_storage_help": "Le pays de stockage indique où sont conservées et gérées les données des utilisateurs.",
+  "dpo_help": "Le Délégué à la Protection des Données (DPO) est responsable de la conformité de l'organisation aux règles de protection des données et sert d'intermédiaire avec l'autorité de surveillance et les personnes concernées.",
+  "terms_help": "Les conditions d'utilisation sont affichées aux utilisateurs lors de leur première connexion à la plateforme. Ils doivent les accepter pour pouvoir utiliser la plateforme."
 }

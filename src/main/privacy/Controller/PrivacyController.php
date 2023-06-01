@@ -49,7 +49,6 @@ class PrivacyController extends AbstractCrudController
     public function updatePrivacyStorage(Request $request): JsonResponse
     {
         // todo
-        $this->canOpenAdminTool('privacy');
 
         $parameters = $this->decodeRequest($request);
 /*

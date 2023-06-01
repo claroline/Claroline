@@ -8,17 +8,18 @@ const CountryModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       parameters: selectors.store(state),
-      formData: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)),
-      saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.FORM_NAME))
+      formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
+      saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
       save(formData, onSave) {
-        dispatch(formActions.saveForm(selectors.FORM_NAME,
-          formData.id
-            ? ['apiv2_privacy_update', {id: formData.id}]
-            : ['apiv2_privacy_create'])).then((response) => {
-          onSave(response)
-        })
+        dispatch(formActions.saveForm(selectors.STORE_NAME,
+          ['apiv2_privacy_update', {id: formData.id}])).then((response) => {
+          onSave(response)}
+        )
+      },
+      reset(countryStorage) {
+        dispatch(formActions.resetForm(selectors.STORE_NAME, {'countryStorage':countryStorage}, false))
       }
     })
   )(CountryModalComponent)
