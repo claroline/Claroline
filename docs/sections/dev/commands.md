@@ -147,6 +147,13 @@ See [Code analysis](Claroline/sections/dev/code-analysis) for more information.
 $ vendor/bin/phpmd src/plugin/FooVendor/BarBundle text phpmd.xml
 ```
 
+### ESLint
+
+```sh
+$ node_modules/.bin/eslint path/to/the/file/to/fix --fix
+```
+
+
 ## Tests
 
 ## Translations
