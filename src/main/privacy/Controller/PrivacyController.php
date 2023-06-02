@@ -44,7 +44,7 @@ class PrivacyController extends AbstractCrudController
 
     public function getClass(): string
     {
-       return Privacy::class;
+        return Privacy::class;
     }
 
     /**
@@ -59,7 +59,7 @@ class PrivacyController extends AbstractCrudController
 
         return new JsonResponse([
             'message' => 'Privacy storage updated successfully',
-            'countryStorage' => $privacy->getCountryStorage()
+            'countryStorage' => $privacy->getCountryStorage(),
         ]);
     }
 
