@@ -19,7 +19,7 @@ class PrivacySerializer
         return [
             'id' => $privacy->getUuid(),
             'autoId' => $privacy->getId(),
-            'dpo' =>[
+            'dpo' => [
                 'name' => $privacy->getDpoName(),
                 'email' => $privacy->getDpoEmail(),
                 'phone' => $privacy->getDpoPhone(),
