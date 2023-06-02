@@ -321,52 +321,6 @@ class WorkspaceController extends AbstractCrudController
 
     /**
      * @ApiDoc(
-     *     description="Remove workspaces.",
-     *     queryString={
-     *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
-     *     }
-     * )
-     */
-    public function deleteBulkAction(Request $request, $class): JsonResponse
-    {
-        /** @var Workspace[] $workspaces */
-        $workspaces = parent::decodeIdsString($request, Workspace::class);
-        $errors = [];
-
-        foreach ($workspaces as $workspace) {
-            $notDeletableResources = $this->resourceManager->getNotDeletableResourcesByWorkspace($workspace);
-
-            if (count($notDeletableResources)) {
-                $errors[$workspace->getUuid()] = $this->translator->trans(
-                    'workspace_not_deletable_resources_error_message',
-                    ['%workspaceName%' => $workspace->getName()],
-                    'platform'
-                );
-            }
-        }
-
-        if (empty($errors)) {
-            return parent::deleteBulkAction($request, Workspace::class);
-        }
-
-        $validIds = [];
-        $ids = $request->query->get('ids');
-
-        foreach ($ids as $id) {
-            if (!isset($errors[$id])) {
-                $validIds[] = $id;
-            }
-        }
-        if (count($validIds) > 0) {
-            $request->query->set('ids', $validIds);
-            parent::deleteBulkAction($request, Workspace::class);
-        }
-
-        return new JsonResponse(['errors' => $errors], 422);
-    }
-
-    /**
-     * @ApiDoc(
      *     description="Archive workspaces.",
      *     queryString={
      *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
