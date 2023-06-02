@@ -7,33 +7,29 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentHtml} from '#/main/app/content/components/html'
 
-const TermsModal = (props) => {
-  console.log('TermsModal props', props)
-  return(
-    <Modal
-      {...omit(props, 'fetch')}
-      icon="fa fa-fw fa-shield"
-      title={trans('terms_of_service')}
-      bsSize="lg"
-      onEntering={() => {
-        if (!props.loaded) {
-          props.reset(props.termsOfService)
-        }
-      }}
-    >
-      {!props.loaded &&
+const TermsModal = (props) => 
+  <Modal
+    {...omit(props, 'fetch')}
+    icon="fa fa-fw fa-shield"
+    title={trans('terms_of_service')}
+    bsSize="lg"
+    onEntering={() => {
+      if (!props.loaded) {
+        props.reset(props.termsOfService)
+      }
+    }}
+  >
+    {!props.loaded &&
         <ContentLoader
           size="lg"
           description="Nous chargeons les conditions d'utilisation..."
         />
-      }
+    }
 
-      {(props.loaded && props.termsOfService) &&
+    {(props.loaded && props.termsOfService) &&
         <ContentHtml className="modal-body">{props.termsOfService}</ContentHtml>
-      }
-    </Modal>
-  )
-}
+    }
+  </Modal>
 
 TermsModal.propTypes = {
   fetch: T.func.isRequired,

@@ -34,13 +34,9 @@ class PrivacySubscriber implements EventSubscriberInterface
 
     public function onOpen(OpenToolEvent $event): void
     {
-        // Récupére les données de la base de données
         $firstPrivacy = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
-
-        // Transforme les données en un format approprié pour l'application React
         $data = $this->privacySerializer->serialize($firstPrivacy);
 
-        // Envoie les données à l'application React
         $event->setData([
             'parameters' => $data,
         ]);

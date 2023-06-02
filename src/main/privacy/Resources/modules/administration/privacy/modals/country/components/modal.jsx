@@ -10,47 +10,42 @@ import {selectors} from '#/main/privacy/administration/privacy/modals/country/st
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
 
-const CountryModal = props =>{
-  console.log('je suis dans le modal countryStorage ', props.countryStorage)
-
-  return(
-    <Modal
-      {...omit(props, 'formData', 'saveEnabled', 'save', 'item')}
-      icon="fa fa-fw fa-solid fa-globe"
-      title={trans('country_storage', {}, 'privacy')}
-      onEntering={() => props.reset(props.countryStorage)}
+const CountryModal = props =>
+  <Modal
+    {...omit(props, 'formData', 'saveEnabled', 'save', 'item')}
+    icon="fa fa-fw fa-solid fa-globe"
+    title={trans('country_storage', {}, 'privacy')}
+    onEntering={() => props.reset(props.countryStorage)}
+  >
+    <FormData
+      name={selectors.STORE_NAME}
+      definition={[
+        {
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              name: 'countryStorage',
+              label: trans('country_storage', {}, 'privacy'),
+              type: 'country'
+            }
+          ]
+        }
+      ]}
     >
-      <FormData
-        name={selectors.STORE_NAME}
-        definition={[
-          {
-            title: trans('general'),
-            primary: true,
-            fields: [
-              {
-                name: 'countryStorage',
-                label: trans('country_storage', {}, 'privacy'),
-                type: 'country'
-              }
-            ]
-          }
-        ]}
-      >
-        <Button
-          className="modal-btn btn"
-          type={CALLBACK_BUTTON}
-          primary={true}
-          label={trans('save', {}, 'actions')}
-          htmlType="submit"
-          disabled={!props.saveEnabled}
-          callback={() => {
-            props.save(props.formData, props.fadeModal)
-          }}
-        />
-      </FormData>
-    </Modal>
-  )
-}
+      <Button
+        className="modal-btn btn"
+        type={CALLBACK_BUTTON}
+        primary={true}
+        label={trans('save', {}, 'actions')}
+        htmlType="submit"
+        disabled={!props.saveEnabled}
+        callback={() => {
+          props.save(props.formData, props.fadeModal)
+        }}
+      />
+    </FormData>
+  </Modal>
 
 CountryModal.propTypes = {
   formData: T.object,

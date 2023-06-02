@@ -11,6 +11,7 @@ const PrivacyTool = withReducer(selectors.STORE_NAME, reducer)(
     })
   )(PrivacyToolComponent)
 )
+
 export {
   PrivacyTool
 }

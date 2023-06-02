@@ -33,4 +33,5 @@ const PrivacyItem = (props) =>
       </div>
     </div>
   </>
+
 export {PrivacyItem}
