@@ -358,11 +358,6 @@ class ResourceManager implements LoggerAwareInterface
         return null;
     }
 
-    public function getNotDeletableResourcesByWorkspace(Workspace $workspace)
-    {
-        return $this->resourceNodeRepo->findBy(['workspace' => $workspace, 'deletable' => false]);
-    }
-
     public function addView(ResourceNode $node)
     {
         $node->addView();
