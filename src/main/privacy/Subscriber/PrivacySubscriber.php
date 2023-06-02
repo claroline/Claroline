@@ -20,7 +20,7 @@ class PrivacySubscriber implements EventSubscriberInterface
     public function __construct(
         ObjectManager $objectManager,
         SerializerProvider $privacySerializer
-    ){
+    ) {
         $this->privacySerializer = $privacySerializer;
         $this->objectManager = $objectManager;
     }

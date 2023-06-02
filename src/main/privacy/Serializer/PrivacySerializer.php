@@ -16,7 +16,7 @@ class PrivacySerializer
 
     public function serialize(Privacy $privacy): array
     {
-       return [
+        return [
             'id' => $privacy->getUuid(),
             'autoId' => $privacy->getId(),
             'dpo' =>[
