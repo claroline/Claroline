@@ -1,11 +1,6 @@
-import {makeReducer} from '#/main/app/store/reducer'
-import {makeInstanceAction} from '#/main/app/store/actions'
-import {TOOL_LOAD} from '#/main/core/tool/store'
+import {selectors} from '#/main/privacy/account/privacy/store/selectors'
+import {makeFormReducer} from '#/main/app/content/form/store'
 
-const reducer = makeReducer({}, {
-  [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
-})
+const reducer = makeFormReducer(selectors.STORE_NAME)
 
-export {
-  reducer
-}
+export {reducer}

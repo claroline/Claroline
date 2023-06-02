@@ -18,6 +18,7 @@ const DpoModal = props => {
       {...omit(props, 'formData', 'saveEnabled', 'save', 'item')}
       icon="fa fa-fw fa-solid fa-pen-to-square"
       title={trans('dpo_info', {}, 'privacy')}
+      bsSize="lg"
       onEntering={() => props.reset(props.dpo)}
     >
       <FormData

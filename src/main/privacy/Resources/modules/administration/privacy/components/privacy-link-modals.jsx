@@ -11,7 +11,8 @@ const PrivacyLinkModals = (props) =>
   <div className="row">
     <div className="col-lg-4">
       {props.item.countryStorage ?
-        <AlertBlock type="success" title={trans('countryStorage_ok', {}, 'privacy')}>
+        <AlertBlock
+          type="success" title={trans('countryStorage_ok', {}, 'privacy')}>
           <Button
             className="btn btn-default"
             type={MODAL_BUTTON}

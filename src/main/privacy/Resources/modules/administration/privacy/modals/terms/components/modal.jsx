@@ -17,6 +17,7 @@ const TermsModal = (props) => {
       {...omit(props, 'formData', 'saveEnabled', 'save')}
       icon="fa fa-fw fa-solid fa-pen-to-square"
       title={trans('terms_of_service', {}, 'privacy')}
+      bsSize="lg"
       onEntering={() => props.reset(props.termsOfService, props.isTermsOfService)}
     >
       <FormData
@@ -65,7 +66,8 @@ TermsModal.propTypes = {
   saveEnabled: T.bool.isRequired,
   save: T.func.isRequired,
   fadeModal: T.func,
-  terms: T.object,
+  termsOfService: T.object,
+  isTermsOfService: T.bool.isRequired,
   reset: T.func.isRequired
 }
 

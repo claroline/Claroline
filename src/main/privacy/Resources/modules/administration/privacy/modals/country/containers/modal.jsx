@@ -14,7 +14,7 @@ const CountryModal = withReducer(selectors.STORE_NAME, reducer)(
     (dispatch) => ({
       save(formData, onSave) {
         dispatch(formActions.saveForm(selectors.STORE_NAME,
-          ['apiv2_privacy_update', {id: formData.id}])).then((response) => {
+          ['apiv2_privacy_update_country_storage'])).then((response) => {
           onSave(response)}
         )
       },
