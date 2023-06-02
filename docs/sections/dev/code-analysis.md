@@ -55,6 +55,13 @@ standard (here is a brief [description][11]).
 The configuration of ESLint used in this project is defined in
 *.eslintrc.json*.
 
+Usage example :
+
+```sh
+$ node_modules/.bin/eslint path/to/the/file/to/fix --fix
+```
+
+
 [3]:  http://phpmd.org/
 [5]:  http://cs.sensiolabs.org/
 [6]:  http://symfony.com/doc/current/contributing/code/standards.html
