@@ -63,7 +63,7 @@ class KeywordItem extends Component {
             <input
               type="text"
               id={`keyword-${this.props.keyword._id}-text`}
-              title={trans('keyword', {}, 'quiz')}
+              title={trans('keyword', {number: this.props.index + 1}, 'quiz')}
               value={this.props.keyword.text}
               className="form-control"
               placeholder={trans('keyword', {number: this.props.index + 1}, 'quiz')}

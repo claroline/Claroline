@@ -4,14 +4,16 @@ import {stripDiacritics} from '#/main/core/scaffolding/text'
 export const utils = {}
 
 utils.setEditorHtml = (text, holes, solutions, hasExpectedAnswers = true) => {
-  holes.forEach(hole => {
-    const solution = utils.getHoleSolution(hole, solutions)
-    const regex = new RegExp(`(\\[\\[${solution.holeId}\\]\\])`, 'gi')
+  if (text) {
+    holes.forEach(hole => {
+      const solution = utils.getHoleSolution(hole, solutions)
+      const regex = new RegExp(`(\\[\\[${solution.holeId}\\]\\])`, 'gi')
 
-    text = text.replace(regex, utils.makeTinyHtml(hole, solution, hasExpectedAnswers))
-  })
+      text = text.replace(regex, utils.makeTinyHtml(hole, solution, hasExpectedAnswers))
+    })
 
-  return text
+    return text
+  }
 }
 
 utils.makeTinyHtml = (hole, solution, hasExpectedAnswers = true) => {
@@ -26,7 +28,7 @@ utils.makeTinyHtml = (hole, solution, hasExpectedAnswers = true) => {
   input += getEditButtons(solution)
   input += '</span>'
 
-  return input
+  return window.tinymce.html.Serializer().serialize(window.tinymce.html.DomParser().parse(input))
 }
 
 /**

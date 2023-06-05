@@ -22,18 +22,18 @@ import {TinymceClassic} from '#/main/app/input/tinymce/components/classic'
  * @see https://www.tiny.cloud/docs/tinymce/6/react-ref/#using-the-tinymce-react-component-as-a-controlled-component
  */
 const Tinymce = (props) => {
-  const [value, setValue] = useState(props.initialValue || props.value || '')
-  useEffect(() => setValue(props.initialValue || ''), [props.initialValue])
-  useEffect(() => setValue(props.value || ''), [props.value])
+  const [value, setValue] = useState(props.initialValue || props.value || undefined)
+  useEffect(() => setValue(props.initialValue || undefined), [props.initialValue])
+  useEffect(() => setValue(props.value || undefined), [props.value])
 
   const editorProps = merge({}, omit(props, 'onChange', 'placeholder'), {
     value: value,
-    onEditorChange: (v) => {
+    onEditorChange: (v, editor) => {
       if (v !== value) {
         // store value locally to directly update tinymce state
         setValue(v)
         // propagate change to the parents
-        props.onChange(v)
+        props.onChange(v, editor)
       }
     },
     onSelectionChange: props.onSelect,
@@ -87,8 +87,7 @@ Tinymce.propTypes = {
 }
 
 Tinymce.defaultProps = {
-  mode: 'classic',
-  value: ''
+  mode: 'classic'
 }
 
 const TinymceEditor = withModal(Tinymce)

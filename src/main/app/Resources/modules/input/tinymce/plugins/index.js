@@ -3,7 +3,6 @@
  */
 
 import '#/main/app/input/tinymce/plugins/file-upload'
-//import '#/main/app/input/tinymce/plugins/file'
 import '#/main/app/input/tinymce/plugins/placeholders'
 import '#/main/app/input/tinymce/plugins/resource-picker'
 
