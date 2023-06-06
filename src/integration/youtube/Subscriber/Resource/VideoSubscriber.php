@@ -38,7 +38,7 @@ class VideoSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'resource.youtube_video.load' => 'onLoad'
+            'resource.youtube_video.load' => 'onLoad',
         ];
     }
 
