@@ -11,10 +11,28 @@
     "subject": "Demande de suppression de compte",
     "body": "L'utilisateur %name% <br/> ID : %id% <br/> souhaite supprimer son compte. Veuillez prendre les mesures appropriées.<br/><hr/>"
   },
-  
+  "dpo_info": "Délégué à la protection des données",
+  "add_dpo": "Ajouter un DPO",
+  "dpo_ok": "Le DPO est défini.",
+  "no_dpo": "Vous devez saisir une adresse email de contact pour le DPO.",
+  "countryStorage_ok": "Le pays de stockage est défini.",
+  "add_country_storage": "Ajouter un pays de stockage",
+  "no_countryStorage": "Aucun pays de stockage n'a été défini.",
+  "change_country_storage": "Mettre à jour",
+  "change_dpo": "Mettre à jour",
+  "change_terms": "Afficher/Modifier les conditions d'utilisation",
   "terms_of_service": "Conditions d'utilisation",
   "terms_of_service_activation_message": "Activer les conditions d'utilisation",
   "terms_of_service_activation_help": "Les nouveaux utilisateurs devront accepter les conditions avant de pouvoir utiliser la plateforme.",
   "terms_enabled_but_empty": "Les conditions d'utilisation ne peuvent être activées que si le texte est fourni dans au moins une langue.",
-  "terms_of_service_acceptance": "J'accepte les conditions d'utilisation"
+  "terms_of_service_acceptance": "J'accepte les conditions d'utilisation",
+  "show-terms-of-service": "Afficher les conditions d'utilisation",
+  "terms_ok": "Les conditions d'utilisation sont définies.",
+  "no_terms": "Aucunes conditions d'utilisation n'ont été définies.",
+  "add_terms": "Ajouter des conditions d'utilisation",
+  "terms_enabled": "Les conditions d'utilisation sont activées.",
+  "terms_not_enabled": "Les conditions d'utilisation ne sont pas activées.",
+  "country_storage_help": "Le pays de stockage indique où sont conservées et gérées les données des utilisateurs.",
+  "dpo_help": "Le Délégué à la Protection des Données (DPO) est responsable de la conformité de l'organisation aux règles de protection des données et sert d'intermédiaire avec l'autorité de surveillance et les personnes concernées.",
+  "terms_help": "Les conditions d'utilisation sont affichées aux utilisateurs lors de leur première connexion à la plateforme. Ils doivent les accepter pour pouvoir utiliser la plateforme."
 }

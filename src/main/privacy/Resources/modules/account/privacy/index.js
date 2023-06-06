@@ -1,11 +1,12 @@
 import {trans} from '#/main/app/intl/translation'
-
-import {PrivacyMain} from '#/main/privacy/account/privacy/containers/main'
+import {PrivacyTool} from '#/main/privacy/account/privacy/containers/tool'
+import {reducer} from '#/main/privacy/account/privacy/store/reducer'
 
 export default {
   name: 'privacy',
   icon: 'fa fa-fw fa-user-shield',
   label: trans('privacy'),
-  component: PrivacyMain,
+  component: PrivacyTool,
+  store: reducer,
   order: 3
 }

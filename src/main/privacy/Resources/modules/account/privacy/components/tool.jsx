@@ -1,21 +1,22 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
-
 import {trans} from '#/main/app/intl/translation'
+import {PropTypes as T} from 'prop-types'
+
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON, ASYNC_BUTTON} from '#/main/app/buttons'
+import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/account/privacy/modals/terms'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {ContentTitle} from '#/main/app/content/components/title'
-import {DetailsData} from '#/main/app/content/details/components/data'
-import {MODAL_TERMS_OF_SERVICE} from '#/main/app/modals/terms-of-service'
 import {AccountPage} from '#/main/app/account/containers/page'
 import {route} from '#/main/app/account/routing'
-import {User as UserTypes} from '#/main/community/prop-types'
 import {url} from '#/main/app/api'
+import {User as UserTypes} from '#/main/community/prop-types'
 import {constants as actionConstants} from '#/main/app/action/constants'
+import {selectors} from '#/main/privacy/account/privacy/store'
+import {DetailsData} from '#/main/app/content/details/components/data'
 
-const PrivacyMain = (props) =>
+const PrivacyTool = (props) => 
   <AccountPage
     path={[
       {
@@ -61,24 +62,28 @@ const PrivacyMain = (props) =>
     />
 
     <DetailsData
-      data={props.privacy}
-      sections={[
+      name={selectors.STORE_NAME}
+      definition={[
         {
-          title: trans('dpo'),
+          title: trans('general'),
+          primary: true,
           fields: [
             {
               name: 'dpo.name',
               label: trans('name'),
               type: 'string'
-            }, {
+            },
+            {
               name: 'dpo.email',
               label: trans('email'),
               type: 'email'
-            }, {
+            },
+            {
               name: 'dpo.phone',
               label: trans('phone'),
               type: 'string'
-            }, {
+            },
+            {
               name: 'dpo.address',
               label: trans('address'),
               type: 'address'
@@ -86,7 +91,8 @@ const PrivacyMain = (props) =>
           ]
         }
       ]}
-    />
+    >
+    </DetailsData>
 
     <ContentTitle
       title={trans('title_my_data', {}, 'privacy')}
@@ -123,37 +129,26 @@ const PrivacyMain = (props) =>
         message: trans('message_dialog_delete_account', {}, 'privacy')
       }}
     />
-  </AccountPage>
 
-PrivacyMain.propTypes = {
+  </AccountPage>
+  
+PrivacyTool.propTypes = {
   currentUser: T.shape(
     UserTypes.propTypes
   ).isRequired,
-  privacy: T.shape({
-    countryStorage: T.string,
-    dpo: T.shape({
-      name: T.string,
-      email: T.string,
-      address: T.shape({
-        street1: T.string,
-        street2: T.string,
-        postalCode: T.string,
-        city: T.string,
-        state: T.string,
-        country: T.string
-      }),
-      phone: T.string
-    })
-  }).isRequired,
+  dpo: T.object.isRequired,
+  formData: T.object.isRequired,
+  reset: T.func.isRequired,
   exportAccount: T.func.isRequired,
   acceptTerms: T.func.isRequired,
   messages: T.shape({
     pending: T.object,
     success: T.object,
     error: T.object
-  })
+  }),
+  parameters: T.object
 }
 
 export {
-  PrivacyMain
+  PrivacyTool
 }
