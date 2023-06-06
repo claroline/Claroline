@@ -10,7 +10,7 @@ class YouTubePlayer extends Component {
   }
 
   componentDidMount() {
-    this.player = new window.YT.Player(`youtube-player`, {
+    this.player = new window.YT.Player('youtube-player', {
       width: '560',
       height: '315',
       videoId: this.props.videoId,
@@ -38,7 +38,7 @@ class YouTubePlayer extends Component {
   render() {
     return (
       <div className="youtube-player-container">
-        <div id={`youtube-player`} />
+        <div id={'youtube-player'} />
       </div>
     )
   }
