@@ -211,7 +211,6 @@ export default {
 
 
     item.solutions.forEach(solution => solution.selectionId = mapIds[solution.selectionId])
-    item.id = makeId()
     
     return item
   }

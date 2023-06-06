@@ -129,8 +129,6 @@ export default {
   },
 
   refreshIdentifiers: (item) => {
-    item.id = makeId()
-
     item.solutions.forEach(solution => solution.area.id = makeId())
     item.image.id = makeId()
 
