@@ -29,6 +29,7 @@ class VideoSerializer
         $data['videoId'] = explode('=', $data['url'])[1];
 
         $this->sipe('videoId', 'setVideoId', $data, $video);
+
         return $video;
     }
 }
