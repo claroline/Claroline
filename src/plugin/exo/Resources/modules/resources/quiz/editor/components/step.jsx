@@ -15,7 +15,7 @@ import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {MODAL_ITEM_CREATION} from '#/plugin/exo/items/modals/creation'
 import {MODAL_ITEM_IMPORT} from '#/plugin/exo/items/modals/import'
 import {MODAL_ITEM_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/item-position'
-import {getNumbering, refreshIdentifiers} from '#/plugin/exo/resources/quiz/utils'
+import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 import {EditorItem} from '#/plugin/exo/resources/quiz/editor/components/item'
 
 // TODO : lock edition of protected items
@@ -111,11 +111,7 @@ const EditorStep = props =>
                   selectAction: (position) => ({
                     type: CALLBACK_BUTTON,
                     label: trans('copy', {}, 'actions'),
-                    callback: () => {
-                      refreshIdentifiers(item).then(item => {
-                        props.copyItem(item, position)
-                      })
-                    }
+                    callback: () => props.copyItem(item, position)
                   })
                 }],
                 group: trans('management')

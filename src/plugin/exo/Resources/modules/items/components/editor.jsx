@@ -140,7 +140,7 @@ const ItemEditor = props => {
             {
               name: 'hints',
               label: trans('hints', {}, 'quiz'),
-              type: 'collection', // TODO
+              type: 'collection',
               options: {
                 placeholder: trans('no_hint_info', {}, 'quiz'),
                 button: trans('add_hint', {}, 'quiz'),
@@ -149,7 +149,7 @@ const ItemEditor = props => {
                   const HintEditor = (
                     <div className="hint-control">
                       <HtmlInput
-                        id={`hint-${hintIndex}-text`}
+                        id={`hint-${props.item.id}-${hintIndex}-text`}
                         className="hint-value"
                         value={hint.value}
                         size="sm"
@@ -157,7 +157,7 @@ const ItemEditor = props => {
                       />
 
                       <NumberInput
-                        id={`hint-${hintIndex}-penalty`}
+                        id={`hint-${props.item.id}-${hintIndex}-penalty`}
                         className="hint-penalty"
                         min={0}
                         value={hint.penalty}

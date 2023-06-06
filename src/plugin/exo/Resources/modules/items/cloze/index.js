@@ -163,7 +163,6 @@ export default {
     })
 
     item.solutions.forEach(solution => solution.holeId = mapIds[solution.holeId])
-    item.id = makeId()
 
     Object.keys(mapIds).forEach(string => {
       item.text = item.text.replace(string, mapIds[string])
