@@ -45,6 +45,7 @@ actions.getItemLock = (className, id) => (dispatch) => {
     dispatch({
       [API_REQUEST]: {
         url: ['apiv2_object_lock_get', {class: className, id}],
+        silent: true,
         request: {
           method: 'GET'
         },
@@ -84,6 +85,7 @@ actions.validateLock = (lock) => (dispatch, getState) => {
 actions.lockItem = (className, id) => ({
   [API_REQUEST]: {
     url: ['apiv2_object_lock', {class: className, id}],
+    silent: true,
     request: {
       method: 'PUT'
     }
@@ -93,6 +95,7 @@ actions.lockItem = (className, id) => ({
 actions.unlockItem = (className, id) => ({
   [API_REQUEST]: {
     url: ['apiv2_object_unlock', {class: className, id}],
+    silent: true,
     request: {
       method: 'PUT'
     }

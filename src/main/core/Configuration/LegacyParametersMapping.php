@@ -58,7 +58,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'default_workspace_tag' => 'workspace.default_tag',
             'ssl_enabled' => 'ssl.enabled',
             'ssl_version_value' => 'ssl.version',
-            'enable_opengraph' => 'text.enable_opengraph',
             'resource_icon_set' => 'display.resource_icon_set',
             'direct_third_party_authentication' => 'authentication.direct_third_party',
             'platform_log_enabled' => 'logs.enabled',

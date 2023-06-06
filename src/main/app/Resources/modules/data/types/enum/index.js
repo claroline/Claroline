@@ -7,6 +7,9 @@ import {EnumInput} from '#/main/app/data/types/enum/components/input'
 
 // TODO : try to replace by collection
 
+/**
+ * @deprecated
+ */
 const dataType = {
   name: 'enum',
   validate: (value, options) => chain(value, options, [array, (value) => {

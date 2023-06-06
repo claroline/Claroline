@@ -22,7 +22,7 @@ class QuizCreation extends Component {
         name={selectors.STORE_NAME}
         dataPart={selectors.FORM_RESOURCE_PART}
         embedded={true}
-        sections={[
+        definition={[
           {
             title: trans('general'),
             primary: true,

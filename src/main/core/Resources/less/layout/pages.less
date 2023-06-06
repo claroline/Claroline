@@ -14,36 +14,33 @@
         right: 0;
         background: @body-bg; // regular page container has no background. We need to hide what is under
         overflow-y: auto; // get the scrollbar
+    }
+}
 
-        .fullscreen-close {
-            position: absolute;
-            z-index: @zindex-fullscreen;
-            top: floor(@grid-gutter-width / 2);
-            right: @grid-gutter-width;
-            //font-weight: @close-font-weight;
-            //color: @close-color;
-            font-size: 36px;
-            line-height: 1;
-            opacity: 0.6;
+.fullscreen-close {
+    position: absolute;
+    z-index: @zindex-fullscreen;
+    top: floor(@grid-gutter-width / 2);
+    right: @grid-gutter-width;
+    font-size: 36px;
+    line-height: 1;
+    opacity: 0.6;
 
-            .text-subtitles();
+    .text-subtitles();
 
-            &:hover,
-            &.hover,
-            &:focus,
-            &.focus,
-            &:active,
-            &.active {
-                opacity: 1;
-                //text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-            }
-        }
+    &:hover,
+    &.hover,
+    &:focus,
+    &.focus,
+    &:active,
+    &.active {
+        opacity: 1;
     }
 }
 
 .page-header {
     // this is to make box shadow of page-header and footer appear over content with bg. I should find a better way to handle it (without z-index)
-    z-index: 2;
+    //z-index: 2;
     position: relative;
     display: flex;
     align-items: flex-end;
@@ -179,7 +176,7 @@
 
 .page-content {
     // this is to make box shadow of page-header and footer appear over content with bg. I should find a better way to handle it (without z-index)
-    z-index: 1;
+    //z-index: 1;
     position: relative;
     display: flex;
     flex-direction: column;
