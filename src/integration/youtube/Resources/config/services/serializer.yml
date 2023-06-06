@@ -1,0 +1,5 @@
+services:
+    Claroline\YouTubeBundle\Serializer\VideoSerializer:
+        tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\YouTubeBundle\Manager\YouTubeManager'

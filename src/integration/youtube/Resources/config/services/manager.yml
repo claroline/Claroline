@@ -1,0 +1,7 @@
+services:
+    Claroline\YouTubeBundle\Manager\YouTubeManager: ~
+
+    Claroline\YouTubeBundle\Manager\EvaluationManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
