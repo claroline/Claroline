@@ -106,9 +106,6 @@ class ClientSerializer
                 'breadcrumb' => $this->config->getParameter('display.breadcrumb'),
             ],
             'restrictions' => $this->config->getParameter('restrictions'),
-            'openGraph' => [
-                'enabled' => $this->config->getParameter('enable_opengraph'),
-            ],
             'richTextScript' => $this->config->getParameter('rich_text_script'),
             'home' => $this->config->getParameter('home'),
             'resources' => [

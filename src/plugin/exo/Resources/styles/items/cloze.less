@@ -1,17 +1,5 @@
 .cloze-editor {
   position: relative; // contain hole popovers
-
-  .cloze-hole {
-    .form-control {
-      cursor: pointer; // don't know why it's not done by default
-      border-radius: @answer-item-border-radius 0 0 @answer-item-border-radius;
-    }
-
-    .btn-link,
-    .btn {
-      padding: 4px;
-    }
-  }
 }
 
 .cloze-editor,
@@ -75,6 +63,23 @@
     width: auto; // remove bootstrap default 100%
     max-width: 200px;
   }
+}
+
+.cloze-hole-editor {
+  padding: 0; // We need to adjust how answers are rendered
+
+  .form-control {
+    cursor: pointer; // don't know why it's not done by default
+    border: none;
+    border-radius: 0;
+  }
+
+  .btn-link,
+  .btn {
+    padding: 4px;
+  }
+
+  .user-select(none);
 }
 
 .cloze-stats {

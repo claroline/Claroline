@@ -28,8 +28,6 @@ FormWrapper.defaultProps = {
   embedded: false
 }
 
-// TODO : maybe manage ContentMeta display here
-
 class Form extends Component {
   constructor(props) {
     super(props)

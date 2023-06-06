@@ -7,11 +7,14 @@ const STORE_NAME = `${textSelectors.STORE_NAME}.editor`
 const FORM_NAME = `${STORE_NAME}.textForm`
 
 const text = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
+const originalText = (state) => formSelectors.originalData(formSelectors.form(state, FORM_NAME))
+
 const availablePlaceholders = (state) => get(state, STORE_NAME+'.availablePlaceholders', [])
 
 export const selectors = {
   FORM_NAME,
 
   text,
+  originalText,
   availablePlaceholders
 }
