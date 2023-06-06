@@ -57,8 +57,7 @@ class ApiListener
                 $response = new JsonResponse([
                     'message' => $exception->getMessage(),
                     'trace' => $exception->getTrace(),
-                    //if <200, not http error code
-                ], $exception->getCode() < 200 ? 500 : $exception->getCode());
+                ], $exception->getCode() < 100 || $exception->getCode() >= 600 ? 500 : $exception->getCode());
 
                 $event->setResponse($response);
             }
