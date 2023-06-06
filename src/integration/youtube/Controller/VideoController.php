@@ -6,7 +6,7 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-+use Claroline\YouTubeBundle\Entity\Video;
+use Claroline\YouTubeBundle\Entity\Video;
 use Claroline\YouTubeBundle\Manager\EvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
