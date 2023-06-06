@@ -14,7 +14,7 @@ final class Version20230606094215 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_youtube_video (
                 id INT AUTO_INCREMENT NOT NULL, 
                 video_id VARCHAR(255) NOT NULL, 
@@ -24,23 +24,23 @@ final class Version20230606094215 extends AbstractMigration
                 UNIQUE INDEX UNIQ_83751CC9B87FAB32 (resourceNode_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_youtube_video 
             ADD CONSTRAINT FK_83751CC9B87FAB32 FOREIGN KEY (resourceNode_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_youtube_video 
             DROP FOREIGN KEY FK_83751CC9B87FAB32
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_youtube_video
-        ");
+        ');
     }
 }

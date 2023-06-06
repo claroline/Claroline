@@ -9,7 +9,7 @@ use Twig\Environment;
 class PluginSubscriber implements EventSubscriberInterface
 {
     /** @var Environment */
-    private Environment $templating;
+    private $templating;
 
     public function __construct(
         Environment $templating

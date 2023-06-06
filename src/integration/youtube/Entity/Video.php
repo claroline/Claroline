@@ -28,6 +28,6 @@ class Video extends AbstractResource
 
     public function getUrl(): string
     {
-        return 'https://www.youtube.com/watch?v=' . $this->videoId;
+        return 'https://www.youtube.com/watch?v='.$this->videoId;
     }
 }

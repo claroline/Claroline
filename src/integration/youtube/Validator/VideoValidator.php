@@ -9,7 +9,7 @@ use Claroline\YouTubeBundle\Manager\YouTubeManager;
 class VideoValidator implements ValidatorInterface
 {
     /** @var YouTubeManager */
-    private YouTubeManager $youTubeManager;
+    private $youTubeManager;
 
     public function __construct(YouTubeManager $youTubeManager)
     {

@@ -66,4 +66,3 @@ class VideoController extends AbstractCrudController
         ]);
     }
 }
-

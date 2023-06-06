@@ -15,13 +15,13 @@ use Twig\Environment;
 class VideoSubscriber implements EventSubscriberInterface
 {
     /** @var TokenStorageInterface */
-    private TokenStorageInterface $tokenStorage;
+    private $tokenStorage;
     /** @var Environment */
-    private Environment $templating;
+    private $templating;
     /** @var SerializerProvider */
-    private SerializerProvider $serializer;
+    private $serializer;
     /** @var EvaluationManager */
-    private EvaluationManager $evaluationManager;
+    private $evaluationManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,

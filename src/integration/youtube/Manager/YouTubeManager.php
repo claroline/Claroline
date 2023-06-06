@@ -12,7 +12,7 @@ class YouTubeManager
             return 'The URL is not a correct YouTube URL.';
         }
 
-        $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=' . $videoId);
+        $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v='.$videoId);
         if (!(is_array($headers) ? preg_match('/^HTTP\\/\\d+\\.\\d+\\s+2\\d\\d\\s+.*$/', $headers[0]) : false)) {
             return 'This video does not exist.';
         }

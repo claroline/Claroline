@@ -14,13 +14,13 @@ use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 class EvaluationManager
 {
     /** @var ObjectManager */
-    private ObjectManager $om;
+    private $om;
 
     /** @var ResourceEvaluationManager */
-    private ResourceEvaluationManager $resourceEvalManager;
+    private $resourceEvalManager;
 
     /** @var ResourceEvaluationRepository */
-    private ResourceEvaluationRepository $resourceEvalRepo;
+    private $resourceEvalRepo;
 
     public function __construct(
         ObjectManager $om,
