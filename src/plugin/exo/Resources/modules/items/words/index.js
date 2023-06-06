@@ -6,7 +6,6 @@ import {CorrectedAnswer, Answerable} from '#/plugin/exo/items/utils'
 import {WordsItem as WordsItemTypes} from '#/plugin/exo/items/words/prop-types'
 import {keywords as keywordsUtils} from '#/plugin/exo/utils/keywords'
 import {utils} from '#/plugin/exo/items/words/utils'
-import {makeId} from '#/main/core/scaffolding/id'
 
 // components
 import {WordsPaper} from '#/plugin/exo/items/words/components/paper'
@@ -114,8 +113,6 @@ export default {
   },
 
   refreshIdentifiers: (item) => {
-    item.id = makeId()
-    
     return item
   }
 }

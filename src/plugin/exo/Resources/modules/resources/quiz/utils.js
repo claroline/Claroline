@@ -1,10 +1,18 @@
 import {constants} from '#/plugin/exo/resources/quiz/constants'
 import {getItem} from '#/plugin/exo/items'
 import cloneDeep from 'lodash/cloneDeep'
+import {makeId} from '#/main/core/scaffolding/id'
 
 function refreshIdentifiers(item) {
-  return getItem(item.type).then(definition => {
-    return definition.refreshIdentifiers(cloneDeep(item))
+  const copy = cloneDeep(item)
+
+  copy.id = makeId()
+
+  copy.hints = (copy.hints || []).map(hint => Object.assign({}, hint, {id: makeId()}))
+  copy.objects = (copy.objects || []).map(object => Object.assign({}, object, {id: makeId()}))
+
+  return getItem(copy.type).then(definition => {
+    return definition.refreshIdentifiers(copy)
   })
 }
 

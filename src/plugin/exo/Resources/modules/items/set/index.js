@@ -173,8 +173,6 @@ export default {
   },
 
   refreshIdentifiers: (item) => {
-    item.id = makeId()
-
     const mapIds = {}
 
     item.items.forEach(item => {
