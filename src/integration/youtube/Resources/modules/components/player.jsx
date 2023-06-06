@@ -9,7 +9,7 @@ class YouTubePlayer extends Component {
     this.timer = null
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.player = new window.YT.Player(`youtube-player`, {
       width: '560',
       height: '315',
@@ -31,11 +31,11 @@ class YouTubePlayer extends Component {
     })
   }
 
-  onTimer = () => {
+  onTimer() {
     this.props.onTimeUpdate( this.player.getCurrentTime(), this.player.getDuration() )
   }
 
-  render = () => {
+  render() {
     return (
       <div className="youtube-player-container">
         <div id={`youtube-player`} />
