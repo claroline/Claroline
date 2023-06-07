@@ -7,6 +7,8 @@ class YouTubePlayer extends Component {
 
     this.player = null
     this.timer = null
+
+    this.onTimer = this.onTimer.bind(this)
   }
 
   componentDidMount() {
