@@ -4,18 +4,20 @@ import {stripDiacritics} from '#/main/core/scaffolding/text'
 export const utils = {}
 
 utils.setEditorHtml = (text, holes, solutions, hasExpectedAnswers = true) => {
-  holes.forEach(hole => {
-    const solution = utils.getHoleSolution(hole, solutions)
-    const regex = new RegExp(`(\\[\\[${solution.holeId}\\]\\])`, 'gi')
+  if (text) {
+    holes.forEach(hole => {
+      const solution = utils.getHoleSolution(hole, solutions)
+      const regex = new RegExp(`(\\[\\[${solution.holeId}\\]\\])`, 'gi')
 
-    text = text.replace(regex, utils.makeTinyHtml(hole, solution, hasExpectedAnswers))
-  })
+      text = text.replace(regex, utils.makeTinyHtml(hole, solution, hasExpectedAnswers))
+    })
 
-  return text
+    return text
+  }
 }
 
 utils.makeTinyHtml = (hole, solution, hasExpectedAnswers = true) => {
-  let input = `<span class="cloze-hole answer-item" data-hole-id="${solution.holeId}" contentEditable="false">`
+  let input = `<span class="cloze-hole cloze-hole-editor answer-item" data-hole-id="${solution.holeId}" contentEditable="false">`
 
   if (hole.choices) {
     input += getSelectInput(hole, solution, hasExpectedAnswers)
@@ -26,7 +28,7 @@ utils.makeTinyHtml = (hole, solution, hasExpectedAnswers = true) => {
   input += getEditButtons(solution)
   input += '</span>'
 
-  return input
+  return window.tinymce.html.Serializer().serialize(window.tinymce.html.DomParser().parse(input))
 }
 
 /**
@@ -144,14 +146,14 @@ function getEditButtons(solution) {
       class="btn btn-link default edit-hole-btn"
       data-hole-id="${solution.holeId}"
     >
-      <span class="fa fa-fw fa-pencil edit-hole-btn-icon" data-hole-id="${solution.holeId}"></span>
+      <span class="fa fa-fw fa-pencil edit-hole-btn-icon" data-hole-id="${solution.holeId}">&nbsp;</span>
     </button>
     <button
       type="button"
       class="btn btn-link default delete-hole-btn"
       data-hole-id="${solution.holeId}"
     >
-      <span class="fa fa-fw fa-trash delete-hole-btn-icon" data-hole-id="${solution.holeId}"></span>
+      <span class="fa fa-fw fa-trash delete-hole-btn-icon" data-hole-id="${solution.holeId}">&nbsp;</span>
     </button>
   `
 }

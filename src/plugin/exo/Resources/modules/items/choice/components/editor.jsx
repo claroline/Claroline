@@ -55,6 +55,7 @@ class Choice extends Component {
           <HtmlInput
             id={`choice-${this.props.id}-data`}
             value={this.props.data}
+            //initialValue={this.props.data}
             onChange={data => this.props.update('data', data)}
             minRows={1}
           />
@@ -287,7 +288,7 @@ const ChoiceEditor = props => {
       embedded={true}
       name={props.formName}
       dataPart={props.path}
-      sections={[
+      definition={[
         {
           title: trans('general'),
           primary: true,

@@ -1,32 +1,53 @@
 /**
- * Style for rich editor inputs (aka TinyMCE.
+ * Style for rich editor inputs (aka TinyMCE).
  */
 
 .editor-control {
     position: relative;
-
-    .toolbar-toggle {
-        z-index: 1;
-        position: absolute;
-        padding: 0;
-        border: none;
-        top: -8px;
-        right: -8px;
-        line-height: 1;
-        background-color: white;
-        border-radius: 50%;
-        font-size: @font-size-large;
-    }
-}
-
-.text-editor {
     text-align: justify;
+    border: 1px solid @input-border;
+    background: @input-bg;
+    .border-radius(@input-border-radius);
 
-    > .form-control {
-        // mimic TinyMCE
+    &.fullscreen{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: @zindex-fullscreen;
+        border: none;
+
+        &,
+        .tox-tinymce {
+            .border-radius(none);
+        }
+    }
+
+    &.sm {
+        &,
+        .tox-tinymce {
+            .border-radius(@input-border-radius-small);
+        }
+    }
+    &.lg {
+        &,
+        .tox-tinymce {
+            .border-radius(@input-border-radius-small);
+        }
+    }
+
+    .tox-tinymce {
+        z-index: 1;
+        overflow: hidden;
+
+        .border-radius(@input-border-radius);
+    }
+
+    .mce-content-body {
         height: auto;
-        min-height: 160px;
-        max-height: 500px;
+        /*min-height: 160px;
+        max-height: 500px;*/
         overflow-y: auto;
 
         p:last-of-type {
@@ -35,9 +56,32 @@
     }
 }
 
-[contenteditable=true]:empty:before {
-    content: attr(placeholder);
-    display: block; /* For Firefox */
-    color: @input-color-placeholder;
-    cursor: text;
+.editor-toolbar {
+    z-index: 2;
+    position: absolute;
+    top: -12px;
+    right: -12px;
+
+    .editor-toolbar-btn {
+        font-size: @font-size-small;
+        width: 24px;
+        height: 24px;
+
+        // removes default btn styles
+        padding: 0;
+        border: none;
+        line-height: 1 !important;
+        color: #FFFFFF !important;
+        background: @gray !important;
+        border-radius: 50%;
+
+        &:hover,
+        &:focus {
+            background: @gray-dark !important;
+        }
+
+        + .editor-toolbar-btn {
+            margin-left: 5px;
+        }
+    }
 }

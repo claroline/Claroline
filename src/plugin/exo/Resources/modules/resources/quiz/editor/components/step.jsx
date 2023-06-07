@@ -36,7 +36,7 @@ const EditorStep = props =>
       embedded={true}
       name={props.formName}
       dataPart={props.path}
-      sections={[
+      definition={[
         {
           icon: 'fa fa-fw fa-circle-info',
           title: trans('information'),
@@ -68,7 +68,7 @@ const EditorStep = props =>
         {props.items.map((item, itemIndex) =>
           <EditorItem
             id={item.id}
-            key={itemIndex}
+            key={item.id}
             formName={props.formName}
             path={`${props.path}.items[${itemIndex}]`}
             errors={get(props.errors, `items[${itemIndex}]`)}
