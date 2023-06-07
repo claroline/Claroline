@@ -2,8 +2,8 @@
 
 namespace Claroline\PrivacyBundle\Controller;
 
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -38,7 +38,6 @@ class PrivacyController
         $this->objectManager = $objectManager;
         $this->crud = $crud;
     }
-
 
     public function getName(): string
     {
