@@ -2,7 +2,6 @@
 
 namespace Claroline\PrivacyBundle\Controller;
 
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -53,6 +52,7 @@ class PrivacyController
 
     /**
      * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
+     *
      * @throws InvalidDataException
      */
     public function updateAction(Request $request): JsonResponse
