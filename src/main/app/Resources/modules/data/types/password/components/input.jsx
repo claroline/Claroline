@@ -50,7 +50,7 @@ class PasswordInput extends PureComponent {
 
     this.setState({
       passwordStrength: strength,
-      strengthMessage: conditions.map((condition, index) => ({
+      strengthMessage: conditions.map((condition) => ({
         text: condition.message,
         checked: condition.regex.test(password)
       }))
@@ -99,7 +99,7 @@ class PasswordInput extends PureComponent {
           <div className="input-group-password-rules">
             {this.state.strengthMessage.map((msg, index) =>
               <div className="rules-block" key={index}>
-                <span className={"fa fa-2x fa-fw fa-" + (msg.checked ? "check" : "times" ) + "-circle" }/>
+                <span className={'fa fa-2x fa-fw fa-' + (msg.checked ? 'check' : 'times' ) + '-circle' }/>
                 <label className="password-label">{msg.text}</label>
               </div>
             )}
