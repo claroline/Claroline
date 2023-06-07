@@ -6,7 +6,7 @@ import {selectors, reducer} from '#/main/privacy/account/privacy/store'
 const PrivacyTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      parameters: selectors.store(state),
+      parameters: selectors.store(state)
     })
   )(PrivacyToolComponent)
 )

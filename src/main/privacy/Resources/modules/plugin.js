@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import {registry} from '#/main/app/plugins/registry'
 
 registry.add('ClarolinePrivacyBundle', {
@@ -10,5 +12,5 @@ registry.add('ClarolinePrivacyBundle', {
     'privacy': () => {
       return import(/* webpackChunkName: "main-privacy-admin-privacy" */ '#/main/privacy/administration/privacy')
     }
-  }
+  },
 })
