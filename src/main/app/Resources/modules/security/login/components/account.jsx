@@ -41,6 +41,9 @@ class LoginAccount extends Component {
                 placeholder: trans('password'),
                 autoComplete: 'current-password',
                 hideLabel: true,
+                options: {
+                  hideStrength: true
+                },
                 type: 'password',
                 required: true
               }
