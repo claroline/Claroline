@@ -57,7 +57,7 @@ const PositionModal = props => {
     >
       <FormData
         name={selectors.STORE_NAME}
-        sections={[
+        definition={[
           {
             title: trans('parent'),
             primary: true,

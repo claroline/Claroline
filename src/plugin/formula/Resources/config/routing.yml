@@ -1,4 +1,0 @@
-# Resource
-icap_formula_plugin:
-    resource: "@IcapFormulaPluginBundle/Controller/FormulaController.php"
-    type:     annotation

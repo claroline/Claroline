@@ -186,3 +186,13 @@
     border-bottom: 1px solid @modal-header-border-color;
     margin-bottom: 0;
 }
+
+// quickfix to make tinymce fullscreen in modals
+// this should be no longer required when bootstrap 5 because they seems to have change it
+// see https://stackoverflow.com/questions/27405138/tinymce-cannot-be-full-screen-when-placed-in-bootstrap-modal-dialog
+.modal.in .modal-dialog {
+    -webkit-transform: none;
+    -ms-transform: none;
+    -o-transform: none;
+    transform: none;
+}

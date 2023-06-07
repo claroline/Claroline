@@ -1,0 +1,12 @@
+{
+  "webpack": {
+    "entry": {
+      "formula-editor": "editor"
+    }
+  },
+  "styles": {
+    "entry": {
+      "formula-editor": "index.less"
+    }
+  }
+}

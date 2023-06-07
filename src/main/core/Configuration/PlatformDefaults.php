@@ -37,9 +37,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'show_email' => [PlatformRoles::USER],
             ],
             'country' => '-',
-            'text' => [
-                'enable_opengraph' => true,
-            ],
             'logs' => [
                 'enabled' => true,
             ],

@@ -19,7 +19,9 @@ const SimpleWidgetParameters = (props) =>
             label: trans('content'),
             type: 'html',
             required: true,
+            hideLabel: true,
             options: {
+              minimal: false,
               workspace: 'workspace' === props.currentContext.type ? props.currentContext.data : undefined
             }
           }
