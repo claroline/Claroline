@@ -97,29 +97,29 @@
 
     // I have 250px width.
     // With this config I can align 10 colors before line break.
-    .color-dot {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 50px;
-        height: 50px;
-        margin: 4px;
-        border: 1px solid rgba(0, 0, 0, .15);
-        border-radius: 50%;
+    .fa {
+        margin: 0;
+    }
+}
 
-        &.md {
-            width: @color-dot-md;
-            height: @color-dot-md;
-        }
+.color-dot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    margin: 4px;
+    border: 1px solid rgba(0, 0, 0, .15);
+    border-radius: 50%;
 
-        &.lg {
-            width: @color-dot-lg;
-            height: @color-dot-lg;
-        }
+    &.md {
+        width: @color-dot-md;
+        height: @color-dot-md;
+    }
 
-        .fa {
-            margin: 0;
-        }
+    &.lg {
+        width: @color-dot-lg;
+        height: @color-dot-lg;
     }
 }
 
