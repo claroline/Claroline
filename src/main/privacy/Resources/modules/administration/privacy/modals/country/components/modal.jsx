@@ -15,7 +15,7 @@ const CountryModal = props =>
     {...omit(props, 'formData', 'saveEnabled', 'save', 'item')}
     icon="fa fa-fw fa-solid fa-globe"
     title={trans('country_storage', {}, 'privacy')}
-    onEntering={() => props.reset(props.countryStorage)}
+    onEntering={() => props.reset(props.countryStorage, props.uuid)}
   >
     <FormData
       name={selectors.STORE_NAME}
@@ -53,7 +53,8 @@ CountryModal.propTypes = {
   save: T.func.isRequired,
   reset: T.func.isRequired,
   fadeModal: T.func,
-  countryStorage: T.strings
+  countryStorage: T.strings,
+  uuid: T.strings
 }
 
 export {
