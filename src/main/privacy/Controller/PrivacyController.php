@@ -16,9 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @Route("/privacy")
- */
 class PrivacyController
 {
     use RequestDecoderTrait;
@@ -55,7 +52,7 @@ class PrivacyController
     }
 
     /**
-     * @Route("/update", name="apiv2_privacy_update", methods={"PUT"})
+     * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
      * @throws InvalidDataException
      */
     public function updateAction(Request $request): JsonResponse

@@ -8,13 +8,6 @@ const PrivacyTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       parameters: selectors.store(state),
-      formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
-      saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
-    }),
-    (dispatch) => ({
-      reset(dpo) {
-        dispatch(formActions.resetForm(selectors.STORE_NAME, {'dpo':dpo}, false))
-      }
     })
   )(PrivacyToolComponent)
 )
