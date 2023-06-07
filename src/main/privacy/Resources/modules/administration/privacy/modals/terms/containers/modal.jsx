@@ -14,7 +14,7 @@ const TermsModal = withReducer(selectors.STORE_NAME, reducer)(
     (dispatch) => ({
       save(formData, onSave) {
         dispatch(formActions.saveForm(selectors.STORE_NAME,
-          ['apiv2_privacy_update_terms'])).then((response) => {
+          ['apiv2_privacy_update'])).then((response) => {
           onSave(response)}
         )
       },

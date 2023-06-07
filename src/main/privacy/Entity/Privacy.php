@@ -18,37 +18,43 @@ class Privacy
     use Address;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $dpoName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $dpoEmail;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $dpoPhone;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $countryStorage;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private ?string $termsOfService;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private ?bool $isTermsOfServiceEnabled;
 
     public function __construct()
     {
+        $this->dpoName = '';
+        $this->dpoEmail = '';
+        $this->dpoPhone = '';
+        $this->countryStorage = '';
+        $this->termsOfService = '';
+        $this->isTermsOfServiceEnabled = false;
         $this->refreshUuid();
     }
 
