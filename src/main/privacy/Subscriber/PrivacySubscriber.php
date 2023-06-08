@@ -14,14 +14,14 @@ class PrivacySubscriber implements EventSubscriberInterface
 {
     const NAME = 'privacy';
 
-    private SerializerProvider $privacySerializer;
+    private SerializerProvider $serializer;
     private ObjectManager $objectManager;
 
     public function __construct(
         ObjectManager $objectManager,
-        SerializerProvider $privacySerializer
+        SerializerProvider $serializer
     ) {
-        $this->privacySerializer = $privacySerializer;
+        $this->serializer = $serializer;
         $this->objectManager = $objectManager;
     }
 
@@ -35,7 +35,7 @@ class PrivacySubscriber implements EventSubscriberInterface
     public function onOpen(OpenToolEvent $event): void
     {
         $firstPrivacy = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
-        $data = $this->privacySerializer->serialize($firstPrivacy);
+        $data = $this->serializer->serialize($firstPrivacy);
 
         $event->setData([
             'parameters' => $data,

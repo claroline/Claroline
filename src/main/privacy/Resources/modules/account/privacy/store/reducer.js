@@ -1,6 +1,6 @@
 import {selectors} from '#/main/privacy/account/privacy/store/selectors'
-import {makeFormReducer} from '#/main/app/content/form/store'
+import {makeReducer} from '#/main/app/store/reducer'
 
-const reducer = makeFormReducer(selectors.STORE_NAME)
+const reducer = makeReducer(selectors.STORE_NAME)
 
 export {reducer}

@@ -12,11 +12,10 @@ import {Button} from '#/main/app/action'
 
 const TermsModal = (props) => 
   <Modal
-    {...omit(props, 'formData', 'saveEnabled', 'save')}
+    {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'termsOfService', 'termsOfServiceEnabled', 'fadeModal')}
     icon="fa fa-fw fa-solid fa-pen-to-square"
     title={trans('terms_of_service', {}, 'privacy')}
-    bsSize="lg"
-    onEntering={() => props.reset(props.termsOfService, props.isTermsOfService)}
+    onEntering={() => props.reset(props.termsOfService, props.termsOfServiceEnabled)}
   >
     <FormData
       name={selectors.STORE_NAME}
@@ -26,7 +25,7 @@ const TermsModal = (props) =>
           primary: true,
           fields: [
             {
-              name: 'isTermsOfService',
+              name: 'termsOfServiceEnabled',
               type: 'boolean',
               label: trans('terms_of_service_activation_message', {}, 'privacy'),
               help: trans('terms_of_service_activation_help', {}, 'privacy'),
@@ -63,7 +62,7 @@ TermsModal.propTypes = {
   save: T.func.isRequired,
   fadeModal: T.func,
   termsOfService: T.object,
-  isTermsOfService: T.bool.isRequired,
+  termsOfServiceEnabled: T.bool.isRequired,
   reset: T.func.isRequired
 }
 

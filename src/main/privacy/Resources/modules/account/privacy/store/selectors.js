@@ -1,4 +1,4 @@
-const STORE_NAME = 'privacyAccount'
+const STORE_NAME = 'accountPrivacy'
 const store = (state) => state[STORE_NAME]
 
 export const selectors = {

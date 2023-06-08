@@ -4,6 +4,7 @@ namespace Claroline\PrivacyBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -15,26 +16,23 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class PrivacyController
+class PrivacyController extends AbstractSecurityController
 {
     use RequestDecoderTrait;
 
     private AuthorizationCheckerInterface $authorization;
-    private PlatformConfigurationHandler $config;
-    private SerializerProvider $privacySerializer;
+    private SerializerProvider $serializer;
     private ObjectManager $objectManager;
     private Crud $crud;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        PlatformConfigurationHandler $ch,
-        SerializerProvider $privacySerializer,
+        SerializerProvider $serializer,
         ObjectManager $objectManager,
         Crud $crud
     ) {
         $this->authorization = $authorization;
-        $this->config = $ch;
-        $this->privacySerializer = $privacySerializer;
+        $this->serializer = $serializer;
         $this->objectManager = $objectManager;
         $this->crud = $crud;
     }
@@ -53,19 +51,22 @@ class PrivacyController
      * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
      *
      * @throws InvalidDataException
+     * @throws \Exception
      */
     public function updateAction(Request $request): JsonResponse
     {
+        $this->canOpenAdminTool('privacy');
+
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
         }
 
         $data = $this->decodeRequest($request);
-        $privacyRepository = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
-        $privacyUpdate = $this->crud->update($privacyRepository, $data, [Crud::THROW_EXCEPTION]);
+        $privacyEntity = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
+        $privacyUpdate = $this->crud->update($privacyEntity, $data, [Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(
-            $this->privacySerializer->serialize($privacyUpdate)
+            $this->serializer->serialize($privacyUpdate)
         );
     }
 }

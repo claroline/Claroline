@@ -22,7 +22,7 @@ const TermsModal = (props) =>
     {!props.loaded &&
         <ContentLoader
           size="lg"
-          description="Nous chargeons les conditions d'utilisation..."
+          description={trans('terms_of_services_load', {}, 'privacy')}
         />
     }
 

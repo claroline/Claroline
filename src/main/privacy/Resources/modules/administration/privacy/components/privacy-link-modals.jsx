@@ -1,104 +1,80 @@
 import React from 'react'
-import {trans} from '#/main/app/intl'
-import {MODAL_BUTTON} from '#/main/app/buttons'
-import {MODAL_COUNTRY_STORAGE} from '#/main/privacy/administration/privacy/modals/country'
-import {MODAL_INFOS_DPO} from '#/main/privacy/administration/privacy/modals/dpo'
-import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/administration/privacy/modals/terms'
-import {Button} from '#/main/app/action/components/button'
-import {AlertBlock} from '#/main/app/alert/components/alert-block'
+import {PropTypes as T} from 'prop-types'
+import {trans} from '#/main/app/intl/translation'
+import { MODAL_BUTTON } from '#/main/app/buttons'
+import { MODAL_COUNTRY_STORAGE } from '#/main/privacy/administration/privacy/modals/country'
+import { MODAL_INFO_DPO } from '#/main/privacy/administration/privacy/modals/dpo'
+import { MODAL_TERMS_OF_SERVICE } from '#/main/privacy/administration/privacy/modals/terms'
 
-const PrivacyLinkModals = (props) =>
-  <div className="row">
-    <div className="col-lg-4">
-      {props.item.countryStorage ?
-        <AlertBlock
-          type="success" title={trans('countryStorage_ok', {}, 'privacy')}>
-          <Button
-            className="btn btn-default"
-            type={MODAL_BUTTON}
-            label={trans('change_country_storage', {}, 'privacy')}
-            modal={[MODAL_COUNTRY_STORAGE, {
-              countryStorage: props.item.countryStorage
-            }]}
-          />
-        </AlertBlock>
-        :
-        <AlertBlock type="warning" title={trans('no_countryStorage', {}, 'privacy')}>
-          <Button
-            className="btn btn-default"
-            type={MODAL_BUTTON}
-            label={trans('add_country_storage', {}, 'privacy')}
-            modal={[MODAL_COUNTRY_STORAGE, {
-              countryStorage: props.item.countryStorage
-            }]}
-          />
-        </AlertBlock>
-      }
-      <span className="help-block">
-        {trans('country_storage_help', {}, 'privacy')}
-      </span>
-    </div>
-    <div className="col-lg-4">
-      {props.item.dpo.email  ?
-        <AlertBlock type="success" title={trans('dpo_ok', {}, 'privacy')}>
-          <Button
-            className="btn btn-default"
-            type={MODAL_BUTTON}
-            label={trans('change_dpo', {}, 'privacy')}
-            modal={[MODAL_INFOS_DPO, {
-              dpo: props.item.dpo
-            }]}
-          />
-        </AlertBlock>
-        :
-        <AlertBlock type="warning" title={trans('no_dpo', {}, 'privacy')}>
-          <Button
-            className="btn btn-default"
-            type={MODAL_BUTTON}
-            label={trans('add_dpo', {}, 'privacy')}
-            modal={[MODAL_INFOS_DPO, {
-              dpo: props.item.dpo
-            }]}
-          />
-        </AlertBlock>
-      }
-      <span className="help-block">
-        {trans('dpo_help', {}, 'privacy')}
-      </span>
-    </div>
-    <div className="col-lg-4">
-      {props.item.termsOfService ?
-        <AlertBlock type="success" title={trans('terms_ok', {}, 'privacy')}>
-          <Button
-            className="btn btn-default"
-            type={MODAL_BUTTON}
-            label={trans('change_terms', {}, 'privacy')}
-            modal={[MODAL_TERMS_OF_SERVICE, {
-              termsOfService: props.item.termsOfService,
-              isTermsOfService : props.item.isTermsOfServiceEnabled
-            }]}
-          />
-          {!props.item.isTermsOfServiceEnabled ?
-            <p style={{color: 'red'}}>{trans('terms_not_enabled',{}, 'privacy')}</p>
-            :
-            <p>{trans('terms_enabled',{}, 'privacy')}</p>}
-        </AlertBlock>
-        :
-        <AlertBlock type="warning" title={trans('no_terms', {}, 'privacy')}>
-          <Button
-            className="btn btn-default"
-            type={MODAL_BUTTON}
-            label={trans('add_terms', {}, 'privacy')}
-            modal={[MODAL_TERMS_OF_SERVICE, {
-              terms: props.item.termsOfService
-            }]}
-          />
-        </AlertBlock>
-      }
-      <span className="help-block">
-        {trans('terms_help', {}, 'privacy')}
-      </span>
-    </div>
-  </div>
+import { Button } from '#/main/app/action/components/button'
+import { AlertBlock } from '#/main/app/alert/components/alert-block'
 
-export {PrivacyLinkModals}
+const PrivacyLinkModals = (props) => {
+  console.log('PrivacyLinkModals props', props);
+  const blocks = [
+    {
+      type: props.item.countryStorage ? 'success' : 'warning',
+      titleKey: props.item.countryStorage ? 'countryStorage_ok' : 'no_countryStorage',
+      labelKey: props.item.countryStorage ? 'change_country_storage' : 'add_country_storage',
+      modalType: MODAL_COUNTRY_STORAGE,
+      modalData: {
+        countryStorage: props.item.countryStorage
+      },
+      helpKey: 'country_storage_help'
+    },
+    {
+      type: props.item.dpo.email ? 'success' : 'warning',
+      titleKey: props.item.dpo.email ? 'dpo_ok' : 'no_dpo',
+      labelKey: props.item.dpo.email ? 'change_dpo' : 'add_dpo',
+      modalType: MODAL_INFO_DPO,
+      modalData: {
+        dpo: props.item.dpo
+      },
+      helpKey: 'dpo_help'
+    },
+    {
+      type: props.item.termsOfService ? 'success' : 'warning',
+      titleKey: props.item.termsOfService ? 'terms_ok' : 'no_terms',
+      labelKey: props.item.termsOfService ? 'change_terms' : 'add_terms',
+      modalType: MODAL_TERMS_OF_SERVICE,
+      modalData: {
+        termsOfService: props.item.termsOfService,
+        termsOfServiceEnabled: props.item.termsOfServiceEnabled
+      },
+      helpKey: 'terms_help'
+    }
+  ];
+
+  return (
+    <div className="modal-body">
+      {blocks.map((block, index) => (
+        <AlertBlock key={index} type={block.type} title={trans(block.titleKey, {}, 'privacy')}>
+          <Button
+            className="btn btn-default"
+            type={MODAL_BUTTON}
+            label={trans(block.labelKey, {}, 'privacy')}
+            modal={[block.modalType, block.modalData]}
+          />
+          <span className="help-block">
+            {trans(block.helpKey, {}, 'privacy')}
+          </span>
+          {block.type === 'warning' && block.modalType === MODAL_TERMS_OF_SERVICE && (
+            block.modalData.termsOfServiceEnabled ? (
+              <p>{trans('terms_enabled', {}, 'privacy')}</p>
+            ) : (
+              <p style={{ color: 'red' }}>{trans('terms_not_enabled', {}, 'privacy')}</p>
+            )
+          )}
+        </AlertBlock>
+      ))}
+    </div>
+  );
+};
+
+PrivacyLinkModals.propTypes = {
+  item: T.object.isRequired
+};
+
+
+export { PrivacyLinkModals };
+

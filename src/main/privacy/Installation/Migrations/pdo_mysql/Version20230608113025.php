@@ -8,9 +8,9 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2023/06/06 11:24:35
+ * Generation date: 2023/06/08 11:30:41
  */
-final class Version20230606112415 extends AbstractMigration
+final class Version20230608113025 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
@@ -20,17 +20,15 @@ final class Version20230606112415 extends AbstractMigration
                 dpoName VARCHAR(255) DEFAULT NULL, 
                 dpoEmail VARCHAR(255) DEFAULT NULL, 
                 dpoPhone VARCHAR(255) DEFAULT NULL, 
-                countryStorage VARCHAR(255) NOT NULL, 
+                countryStorage VARCHAR(255) DEFAULT NULL, 
                 termsOfService LONGTEXT DEFAULT NULL, 
-                isTermsOfServiceEnabled TINYINT(1) DEFAULT NULL, 
-                uuid VARCHAR(36) NOT NULL, 
+                termsOfServiceEnabled TINYINT(1) NOT NULL, 
                 address_street1 VARCHAR(255) DEFAULT NULL, 
                 address_street2 VARCHAR(255) DEFAULT NULL, 
                 address_postal_code VARCHAR(255) DEFAULT NULL, 
                 address_city VARCHAR(255) DEFAULT NULL, 
                 address_state VARCHAR(255) DEFAULT NULL, 
                 address_country VARCHAR(255) DEFAULT NULL, 
-                UNIQUE INDEX UNIQ_5F8AD24DD17F50A6 (uuid), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');

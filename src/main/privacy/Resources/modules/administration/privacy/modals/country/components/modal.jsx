@@ -12,10 +12,10 @@ import {Button} from '#/main/app/action'
 
 const CountryModal = props =>
   <Modal
-    {...omit(props, 'formData', 'saveEnabled', 'save', 'item')}
+    {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'countryStorage', 'fadeModal')}
     icon="fa fa-fw fa-solid fa-globe"
     title={trans('country_storage', {}, 'privacy')}
-    onEntering={() => props.reset(props.countryStorage, props.uuid)}
+    onEntering={() => props.reset(props.countryStorage)}
   >
     <FormData
       name={selectors.STORE_NAME}
@@ -53,8 +53,7 @@ CountryModal.propTypes = {
   save: T.func.isRequired,
   reset: T.func.isRequired,
   fadeModal: T.func,
-  countryStorage: T.strings,
-  uuid: T.strings
+  countryStorage: T.strings
 }
 
 export {

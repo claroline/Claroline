@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON, ASYNC_BUTTON} from '#/main/app/buttons'
-import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/account/privacy/modals/terms'
+import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/modals/terms'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {AccountPage} from '#/main/app/account/containers/page'

@@ -34,5 +34,6 @@
   "terms_not_enabled": "Les conditions d'utilisation ne sont pas activées.",
   "country_storage_help": "Le pays de stockage indique où sont conservées et gérées les données des utilisateurs.",
   "dpo_help": "Le Délégué à la Protection des Données (DPO) est responsable de la conformité de l'organisation aux règles de protection des données et sert d'intermédiaire avec l'autorité de surveillance et les personnes concernées.",
-  "terms_help": "Les conditions d'utilisation sont affichées aux utilisateurs lors de leur première connexion à la plateforme. Ils doivent les accepter pour pouvoir utiliser la plateforme."
+  "terms_help": "Les conditions d'utilisation sont affichées aux utilisateurs lors de leur première connexion à la plateforme. Ils doivent les accepter pour pouvoir utiliser la plateforme.",
+  "terms_of_services_load": "Chargement des conditions d'utilisation"
 }

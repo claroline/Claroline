@@ -18,8 +18,8 @@ const TermsModal = withReducer(selectors.STORE_NAME, reducer)(
           onSave(response)}
         )
       },
-      reset(termsOfService, isTermsOfService) {
-        dispatch(formActions.resetForm(selectors.STORE_NAME, {'termsOfService':termsOfService, isTermsOfService:isTermsOfService}, false))
+      reset(termsOfService, termsOfServiceEnabled) {
+        dispatch(formActions.resetForm(selectors.STORE_NAME, {'termsOfService':termsOfService, termsOfServiceEnabled:termsOfServiceEnabled}, false))
       }
     })
   )(ThermsModalComponent)

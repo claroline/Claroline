@@ -17,8 +17,6 @@ class PrivacySerializer
     public function serialize(Privacy $privacy): array
     {
         return [
-            'id' => $privacy->getUuid(),
-            'autoId' => $privacy->getId(),
             'dpo' => [
                 'name' => $privacy->getDpoName(),
                 'email' => $privacy->getDpoEmail(),
@@ -34,14 +32,12 @@ class PrivacySerializer
             ],
             'countryStorage' => $privacy->getCountryStorage(),
             'termsOfService' => $privacy->getTermsOfService(),
-            'isTermsOfServiceEnabled' => $privacy->getIsTermsOfServiceEnabled(),
+            'termsOfServiceEnabled' => $privacy->IsTermsOfServiceEnabled(),
         ];
     }
 
     public function deserialize(array $data, Privacy $privacy): Privacy
     {
-        $this->sipe('id', 'setUuid', $data, $privacy);
-        $this->sipe('autoId', 'setId', $data, $privacy);
         $this->sipe('dpo.name', 'setDpoName', $data, $privacy);
         $this->sipe('dpo.email', 'setDpoEmail', $data, $privacy);
         $this->sipe('dpo.phone', 'setDpoPhone', $data, $privacy);
@@ -54,8 +50,9 @@ class PrivacySerializer
         $this->sipe('dpo.address.country', 'setAddressCountry', $data, $privacy);
 
         $this->sipe('countryStorage', 'setCountryStorage', $data, $privacy);
+
         $this->sipe('termsOfService', 'setTermsOfService', $data, $privacy);
-        $this->sipe('isTermsOfServiceEnabled', 'setIsTermsOfServiceEnabled', $data, $privacy);
+        $this->sipe('termsOfServiceEnabled', 'setTermsOfServiceEnabled', $data, $privacy);
 
         return $privacy;
     }
