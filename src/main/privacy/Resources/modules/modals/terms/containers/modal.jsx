@@ -1,6 +1,6 @@
 import {connect} from 'react-redux'
 import {withReducer} from '#/main/app/store/components/withReducer'
-import {TermsModal as ThermsModalComponent} from '#/main/privacy/account/privacy/modals/terms/components/modal'
+import {TermsModal as ThermsModalComponent} from '#/main/privacy/modals/terms/components/modal'
 import {selectors, reducer} from '#/main/privacy/modals/terms/store'
 
 const TermsModal = withReducer(selectors.STORE_NAME, reducer)(
