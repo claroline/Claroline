@@ -7,7 +7,6 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\PrivacyBundle\Entity\Privacy;
 use Symfony\Component\HttpFoundation\JsonResponse;
