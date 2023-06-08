@@ -6,7 +6,7 @@ import {selectors, reducer} from '#/main/privacy/modals/terms/store'
 const TermsModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      parameters: selectors.store(state),
+      parameters: selectors.store(state)
     })
   )(ThermsModalComponent)
 )

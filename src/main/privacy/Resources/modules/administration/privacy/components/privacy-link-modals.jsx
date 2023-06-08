@@ -10,7 +10,6 @@ import { Button } from '#/main/app/action/components/button'
 import { AlertBlock } from '#/main/app/alert/components/alert-block'
 
 const PrivacyLinkModals = (props) => {
-  console.log('PrivacyLinkModals props', props);
   const blocks = [
     {
       type: props.item.countryStorage ? 'success' : 'warning',
@@ -43,7 +42,7 @@ const PrivacyLinkModals = (props) => {
       },
       helpKey: 'terms_help'
     }
-  ];
+  ]
 
   return (
     <div className="modal-body">
@@ -68,13 +67,12 @@ const PrivacyLinkModals = (props) => {
         </AlertBlock>
       ))}
     </div>
-  );
-};
+  )
+}
 
 PrivacyLinkModals.propTypes = {
   item: T.object.isRequired
-};
+}
 
-
-export { PrivacyLinkModals };
+export { PrivacyLinkModals }
 
