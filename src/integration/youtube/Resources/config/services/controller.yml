@@ -1,0 +1,7 @@
+services:
+  Claroline\YouTubeBundle\Controller\VideoController:
+    public: true
+    parent: Claroline\AppBundle\Controller\AbstractCrudController
+    arguments:
+      - '@security.authorization_checker'
+      - '@Claroline\YouTubeBundle\Manager\EvaluationManager'

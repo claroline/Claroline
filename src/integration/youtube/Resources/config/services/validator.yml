@@ -1,0 +1,5 @@
+services:
+    Claroline\YouTubeBundle\Validator\VideoValidator:
+        tags: [claroline.validator]
+        arguments:
+            - '@Claroline\YouTubeBundle\Manager\YouTubeManager'

@@ -1,0 +1,6 @@
+claro_youtube_video:
+    resource: "@ClarolineYouTubeBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

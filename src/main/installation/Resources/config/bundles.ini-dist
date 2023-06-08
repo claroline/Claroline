@@ -46,5 +46,6 @@ Claroline\AudioPlayerBundle\ClarolineAudioPlayerBundle = true
 Claroline\CursusBundle\ClarolineCursusBundle = true
 Claroline\BigBlueButtonBundle\ClarolineBigBlueButtonBundle = false
 Claroline\PeerTubeBundle\ClarolinePeerTubeBundle = false
+Claroline\\YouTubeBundle\\ClarolineYouTubeBundle = true
 Claroline\LogBundle\ClarolineLogBundle=true
 Claroline\PrivacyBundle\ClarolinePrivacyBundle=true

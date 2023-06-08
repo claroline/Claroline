@@ -130,6 +130,7 @@
             "Claroline\\TransferBundle\\": "src/main/transfer",
             "Claroline\\VideoPlayerBundle\\": "src/plugin/video-player",
             "Claroline\\WebResourceBundle\\": "src/plugin/web-resource",
+            "Claroline\\YouTubeBundle\\": "src/integration/youtube",
             "HeVinci\\CompetencyBundle\\": "src/plugin/competency",
             "HeVinci\\FavouriteBundle\\": "src/plugin/favourite",
             "HeVinci\\UrlBundle\\": "src/plugin/url",

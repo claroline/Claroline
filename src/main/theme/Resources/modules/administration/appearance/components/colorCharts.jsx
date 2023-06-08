@@ -11,7 +11,7 @@ const AppearanceColorCharts = (props) => {
     <ul className="list-group list-group-striped">
       {props.availableColorCharts.map((color, index) => (
         <li className="list-group-item" key={index}>
-          <h3 className="h-first h4 color-chart-title">
+          <h3 className="h-first h5 color-chart-title">
             {color.name}
             <Toolbar
               buttonName='btn btn-link'
@@ -50,7 +50,7 @@ const AppearanceColorCharts = (props) => {
               ]}
             />
           </h3>
-          <div className="color-chart-library color-chart-colors-list">
+          <div className="color-chart-colors-list">
             {color.colors.map((color, index) => (
               <div className="color-dot md " style={{backgroundColor: color}} key={index}></div>
             ))}
