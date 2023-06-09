@@ -8,7 +8,6 @@ import {selectors} from '#/integration/youtube/resources/video/store'
 const VideoEditor = connect(
   (state) => ({
     path: resourceSelectors.path(state),
-    workspace: resourceSelectors.workspace(state),
     video: selectors.video(state)
   })
 )(VideoEditorComponent)
