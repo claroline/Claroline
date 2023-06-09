@@ -96,11 +96,11 @@ class PasswordInput extends PureComponent {
         </div>
 
         {!this.props.hideStrength &&
-          <div className="input-group-password-rules">
+          <div className="password-rules">
             {this.state.strengthMessage.map((msg, index) =>
-              <div className="rules-block" key={index}>
+              <div className="password-rules-block" key={index}>
                 <span className={'fa fa-2x fa-fw fa-' + (msg.checked ? 'check' : 'times' ) + '-circle' }/>
-                <label className="password-label">{msg.text}</label>
+                <label className="password-rules-label">{msg.text}</label>
               </div>
             )}
           </div>
