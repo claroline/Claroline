@@ -9,8 +9,8 @@ const VideoEditor = connect(
   (state) => ({
     path: resourceSelectors.path(state),
     workspace: resourceSelectors.workspace(state),
-    video: selectors.video(state),
-  }),
+    video: selectors.video(state)
+  })
 )(VideoEditorComponent)
 
 export {
