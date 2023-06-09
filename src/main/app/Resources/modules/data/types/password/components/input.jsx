@@ -7,6 +7,7 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ProgressBar} from '#/main/app/content/components/progress-bar'
 
 class PasswordInput extends PureComponent {
   constructor(props) {
@@ -15,14 +16,13 @@ class PasswordInput extends PureComponent {
     this.state = {
       visible: false,
       passwordStrength: 0,
-      strengthMessage: []
+      strengthMessage: 'très faible'
     }
 
     this.onChange = this.onChange.bind(this)
     this.toggleVisibility = this.toggleVisibility.bind(this)
     this.estimatePasswordStrength = this.estimatePasswordStrength.bind(this)
   }
-
   onChange(e) {
     this.props.onChange(e.target.value)
     this.estimatePasswordStrength(e.target.value)
@@ -33,31 +33,36 @@ class PasswordInput extends PureComponent {
   }
 
   estimatePasswordStrength(password) {
-    let strength = 0
     const conditions = [
-      {regex: /[a-z]/, message: trans('password-strength-lowercase', {}, 'security')},
-      {regex: /[A-Z]/, message: trans('password-strength-uppercase', {}, 'security')},
-      {regex: /[0-9]/, message: trans('password-strength-number', {}, 'security')},
-      {regex: /[^a-zA-Z0-9]/, message: trans('password-strength-special', {}, 'security')},
-      {regex: /^.{8,}$/, message: trans('password-strength-length', {}, 'security')}
+      /[a-z]/,
+      /[A-Z]/,
+      /[0-9]/,
+      /[^a-zA-Z0-9]/,
+      /^.{8,}$/
     ]
 
-    conditions.forEach(condition => {
-      if (condition.regex.test(password)) {
-        strength++
-      }
-    })
+    const strengthSum = conditions.reduce((sum, regex) => {
+      return regex.test(password) ? sum + 1 : sum
+    }, 0)
+
+    const labels = [
+      'très faible',
+      'faible',
+      'moyen',
+      'fort',
+      'très fort'
+    ]
 
     this.setState({
-      passwordStrength: strength,
-      strengthMessage: conditions.map((condition) => ({
-        text: condition.message,
-        checked: condition.regex.test(password)
-      }))
+      passwordStrength: strengthSum,
+      labels: labels[strengthSum]
     })
   }
 
   render() {
+    const progressBarTypes = ['danger', 'warning', 'info', 'success']
+    const progressBarType = this.state.passwordStrength > 0 ? progressBarTypes[this.state.passwordStrength - 1] : 'danger'
+
     return (
       <div>
         <div className={classes('input-group', this.props.className, {
@@ -96,17 +101,19 @@ class PasswordInput extends PureComponent {
         </div>
 
         {!this.props.hideStrength &&
-          <div className="password-rules">
-            {this.state.strengthMessage.map((msg, index) =>
-              <div className="password-rules-block" key={index}>
-                <span className={'fa fa-2x fa-fw fa-' + (msg.checked ? 'check' : 'times' ) + '-circle' }/>
-                <label className="password-rules-label">{msg.text}</label>
-              </div>
-            )}
+          <div className="password-strength">
+            <ProgressBar
+              className="progress-minimal"
+              value={this.state.passwordStrength * 25}
+              size="sm"
+              type={progressBarType}
+            />
+            <div className={`password-strength-message text-${progressBarType}`}>
+              {this.state.labels}
+            </div>
           </div>
         }
       </div>
-
     )
   }
 }
