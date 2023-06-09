@@ -35,38 +35,40 @@ const ColorChartLibrary = (props) => {
         />
       )}
 
-      {(props.colorCharts || []).map((colorChart, index) => {
-        const colorChartDots = (colorChart.colors || []).map(color => {
-          if (colorChart.name === selectedColorChart || selectedColorChart === 'all') {
-            const colorObject = tinycolor(color)
-            return (
-              <CallbackButton
-                key={color}
-                className="color-dot md"
-                style={{
-                  background: color
-                }}
-                callback={() => props.onChange(color)}
-              >
-                {(props.selected && selectedObject.toRgbString() === colorObject.toRgbString()) &&
-                  <span
-                    className={classes('fa fa-check', {
-                      'text-light': colorObject.isDark(),
-                      'text-dark': colorObject.isLight()
-                    })}/>}
-                <span className="sr-only">{color}</span>
-              </CallbackButton>
-            )
-          }
-          return null
-        })
-        return (
-          <span key={index} className="color-chart-library">
-            {colorChartDots}
-          </span>
-        )
-      })}
-    </div>
+      <div className="color-library-container">
+        {(props.colorCharts || []).map((colorChart, index) => {
+          const colorChartDots = (colorChart.colors || []).map(color => {
+            if (colorChart.name === selectedColorChart || selectedColorChart === 'all') {
+              const colorObject = tinycolor(color)
+              return (
+                <CallbackButton
+                  key={color}
+                  className="color-dot md"
+                  style={{
+                    background: color
+                  }}
+                  callback={() => props.onChange(color)}
+                >
+                  {(props.selected && selectedObject.toRgbString() === colorObject.toRgbString()) &&
+                    <span
+                      className={classes('fa fa-check', {
+                        'text-light': colorObject.isDark(),
+                        'text-dark': colorObject.isLight()
+                      })}/>}
+                  <span className="sr-only">{color}</span>
+                </CallbackButton>
+              )
+            }
+            return null
+          })
+          return (
+            <span key={index} className="color-chart-library">
+              {colorChartDots}
+            </span>
+          )
+        })}
+      </div>
+  </div>
   )
 }
 
