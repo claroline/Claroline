@@ -68,7 +68,7 @@ const ColorChartLibrary = (props) => {
           )
         })}
       </div>
-  </div>
+    </div>
   )
 }
 
