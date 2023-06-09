@@ -173,7 +173,6 @@ export default {
     })
 
     item.solutions.forEach(solution => solution.itemIds.forEach((itemId, idx) => solution.itemIds[idx] = mapIds[itemId]))
-    item.id = makeId()
 
     return item
   }

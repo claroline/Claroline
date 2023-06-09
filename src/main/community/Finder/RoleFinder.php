@@ -46,12 +46,13 @@ class RoleFinder extends AbstractFinder
             $isAdmin = true;
         }
 
-        // if not admin doesnt list platform_admin role, for security purpose
+        // if not admin, don't list platform_admin role, for security purpose
         if (!$isAdmin) {
             $qb->andWhere('obj.name != :roleAdmin');
             $qb->setParameter('roleAdmin', PlatformRoles::ADMIN);
         }
 
+        $groupJoin = false;
         $workspaceJoin = false;
 
         foreach ($searches as $filterName => $filterValue) {
@@ -74,12 +75,22 @@ class RoleFinder extends AbstractFinder
                 case 'user':
                 case 'users':
                     $qb->leftJoin('obj.users', 'ru');
-                    $qb->andWhere('ru.uuid IN (:userIds)');
+                    if (!$groupJoin) {
+                        $qb->leftJoin('obj.groups', 'g');
+                        $groupJoin = true;
+                    }
+                    $qb->leftJoin('g.users', 'gu');
+
+                    $qb->andWhere('(ru.uuid IN (:userIds) OR gu.uuid IN (:userIds))');
                     $qb->setParameter('userIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'group':
                 case 'groups':
-                    $qb->leftJoin('obj.groups', 'g');
+                    if (!$groupJoin) {
+                        $qb->leftJoin('obj.groups', 'g');
+                        $groupJoin = true;
+                    }
+
                     $qb->andWhere('g.uuid IN (:groupIds)');
                     $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;

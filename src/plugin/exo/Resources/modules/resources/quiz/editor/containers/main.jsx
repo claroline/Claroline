@@ -107,13 +107,15 @@ const EditorMain = withRouter(
       },
 
       /**
-       * Create a copy of a item and push it at the requested position.
+       * Create a copy of an item and push it at the requested position.
        *
-       * @param {string} itemId   - the id of the item to copy
+       * @param {string} item     - the item to copy
        * @param {object} position - the position to push the created item
        */
-      copyItem(itemId, position) {
-        dispatch(actions.copyItem(itemId, position))
+      copyItem(item, position) {
+        refreshIdentifiers(item).then(copy => {
+          dispatch(actions.copyItem(copy, position))
+        })
       },
 
       /**
