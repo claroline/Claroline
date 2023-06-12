@@ -100,7 +100,7 @@ class PasswordInput extends PureComponent {
         {!this.props.hideStrength && this.props.value &&
           <>
             <ProgressBar
-              className="progress-minimal password-strength"
+              className="password-strength"
               value={this.state.passwordStrength * 25}
               size="sm"
               type={progressBarType}
