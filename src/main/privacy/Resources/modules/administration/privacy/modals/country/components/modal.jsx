@@ -53,8 +53,8 @@ CountryModal.propTypes = {
   save: T.func.isRequired,
   reset: T.func.isRequired,
   fadeModal: T.func,
-  countryStorage: T.strings,
-  id: T.strings
+  countryStorage: T.string,
+  id: T.string
 }
 
 export {
