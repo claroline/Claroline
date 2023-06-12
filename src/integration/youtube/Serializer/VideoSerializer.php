@@ -26,7 +26,8 @@ class VideoSerializer
 
     public function deserialize(array $data, Video $video): Video
     {
-        $data['videoId'] = explode('=', $data['url'])[1];
+        parse_str(parse_url($data['url'], PHP_URL_QUERY), $params);
+        $data['videoId'] = $params['v'];
 
         $this->sipe('videoId', 'setVideoId', $data, $video);
 
