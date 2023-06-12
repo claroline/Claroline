@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\PrivacyBundle\Entity\Privacy;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -86,5 +87,21 @@ class PrivacyController extends AbstractSecurityController
         $this->privacyManager->sendRequestToDPO($user);
 
         return new JsonResponse(null, 204);
+    }
+
+    /**
+     * @Route("", name="apiv2_dpo_view", methods={"GET"})
+     */
+    public function viewAction(): JsonResponse
+    {
+        $privacy = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
+
+        if (!$privacy) {
+            throw new NotFoundHttpException('Privacy entity not found.');
+        }
+
+        return new JsonResponse([
+            'dpo' => $this->serializer->serialize($privacy)
+        ]);
     }
 }

@@ -1,6 +1,7 @@
-import {selectors} from '#/main/privacy/account/privacy/store/selectors'
 import {makeReducer} from '#/main/app/store/reducer'
+import {PRIVACY_LOAD} from '#/main/privacy/account/privacy/store/actions'
 
-const reducer = makeReducer(selectors.STORE_NAME)
-
-export {reducer}
+export const reducer =
+  makeReducer([], {
+  [PRIVACY_LOAD]: (state, action) => action.accountPrivacy
+})
