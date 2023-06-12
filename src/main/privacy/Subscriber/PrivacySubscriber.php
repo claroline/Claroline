@@ -4,7 +4,7 @@ namespace Claroline\PrivacyBundle\Subscriber;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Tool\AbstractTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\PrivacyBundle\Entity\Privacy;
@@ -28,7 +28,7 @@ class PrivacySubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::ADMINISTRATION, static::NAME) => 'onOpen',
+            ToolEvents::getEventName(ToolEvents::OPEN, Tool::ADMINISTRATION, static::NAME) => 'onOpen',
         ];
     }
 

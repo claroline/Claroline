@@ -1,8 +1,11 @@
 services:
     Claroline\PrivacyBundle\Controller\PrivacyController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
+            - '@security.token_storage'
+            - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
