@@ -80,24 +80,16 @@
         // temp to have approx same sizing than calendar
         width: (420px / 3) * 2;
         height: 260px;
+        display: flex;
+        flex-direction: column;
     }
-}
 
-.select-color-chart {
-    display: flex;
-    flex-direction: column;
     .color-chart-library {
-        margin-top: 10px;
+        overflow-y: auto;
     }
-}
-.color-library-container {
-    overflow-y: scroll;
-    overflow-x: hidden;
-    max-height: 200px;
 }
 
 .color-chart-library {
-    margin: -2px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
