@@ -44,12 +44,8 @@ class PasswordInput extends PureComponent {
       return regex.test(password) ? sum + 1 : sum
     }, 0)
 
-
-
     this.setState({
-      passwordStrength: strengthSum,
-      labels: labels[strengthSum]
-
+      passwordStrength: strengthSum
     })
   }
 
@@ -63,6 +59,7 @@ class PasswordInput extends PureComponent {
       trans('password_strength.strong', {}, 'security'),
       trans('password_strength.very_strong', {}, 'security')
     ]
+
     return (
       <>
         <div className={classes('input-group', this.props.className, {
@@ -99,6 +96,7 @@ class PasswordInput extends PureComponent {
             />
           </span>
         </div>
+
         {!this.props.hideStrength && this.props.value &&
           <>
             <ProgressBar
@@ -108,7 +106,7 @@ class PasswordInput extends PureComponent {
               type={progressBarType}
             />
             <span className={`text-${progressBarType}`}>
-              {this.state.labels}
+              {labels[this.state.passwordStrength]}
             </span>
           </>
         }
