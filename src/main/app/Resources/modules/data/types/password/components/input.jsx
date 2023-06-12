@@ -15,8 +15,7 @@ class PasswordInput extends PureComponent {
 
     this.state = {
       visible: false,
-      passwordStrength: 0,
-      strengthMessage: 'très faible'
+      passwordStrength: 0
     }
 
     this.onChange = this.onChange.bind(this)
@@ -100,18 +99,18 @@ class PasswordInput extends PureComponent {
           </span>
         </div>
 
-        {!this.props.hideStrength &&
-          <div className="password-strength">
+        {!this.props.hideStrength && this.props.value &&
+          <>
             <ProgressBar
-              className="progress-minimal"
+              className="progress-minimal password-strength"
               value={this.state.passwordStrength * 25}
               size="sm"
               type={progressBarType}
             />
-            <div className={`password-strength-message text-${progressBarType}`}>
+            <span className={`text-${progressBarType}`}>
               {this.state.labels}
-            </div>
-          </div>
+            </span>
+          </>
         }
       </div>
     )
