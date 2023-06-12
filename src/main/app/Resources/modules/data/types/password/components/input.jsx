@@ -44,6 +44,18 @@ class PasswordInput extends PureComponent {
       return regex.test(password) ? sum + 1 : sum
     }, 0)
 
+
+
+    this.setState({
+      passwordStrength: strengthSum,
+      labels: labels[strengthSum]
+
+    })
+  }
+
+  render() {
+    const progressBarTypes = ['danger', 'warning', 'info', 'success']
+    const progressBarType = this.state.passwordStrength > 0 ? progressBarTypes[this.state.passwordStrength - 1] : 'danger'
     const labels = [
       trans('password_strength.very_weak', {}, 'security'),
       trans('password_strength.weak', {}, 'security'),
@@ -51,19 +63,8 @@ class PasswordInput extends PureComponent {
       trans('password_strength.strong', {}, 'security'),
       trans('password_strength.very_strong', {}, 'security')
     ]
-
-    this.setState({
-      passwordStrength: strengthSum,
-      labels: labels[strengthSum]
-    })
-  }
-
-  render() {
-    const progressBarTypes = ['danger', 'warning', 'info', 'success']
-    const progressBarType = this.state.passwordStrength > 0 ? progressBarTypes[this.state.passwordStrength - 1] : 'danger'
-
     return (
-      <div>
+      <>
         <div className={classes('input-group', this.props.className, {
           [`input-group-${this.props.size}`]: !!this.props.size
         })}>
@@ -98,7 +99,6 @@ class PasswordInput extends PureComponent {
             />
           </span>
         </div>
-
         {!this.props.hideStrength && this.props.value &&
           <>
             <ProgressBar
@@ -112,7 +112,7 @@ class PasswordInput extends PureComponent {
             </span>
           </>
         }
-      </div>
+      </>
     )
   }
 }
