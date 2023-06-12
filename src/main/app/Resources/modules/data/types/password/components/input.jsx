@@ -46,11 +46,11 @@ class PasswordInput extends PureComponent {
     }, 0)
 
     const labels = [
-      'très faible',
-      'faible',
-      'moyen',
-      'fort',
-      'très fort'
+      trans('password_strength.very_weak', {}, 'security'),
+      trans('password_strength.weak', {}, 'security'),
+      trans('password_strength.medium', {}, 'security'),
+      trans('password_strength.strong', {}, 'security'),
+      trans('password_strength.very_strong', {}, 'security')
     ]
 
     this.setState({
