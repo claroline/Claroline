@@ -18,11 +18,6 @@ abstract class AbstractEvaluationManager
             'score' => false,
         ];
 
-        $evaluationDate = $date ?? new \DateTime();
-        if (empty($evaluation->getDate()) || $evaluationDate > $evaluation->getDate()) {
-            $evaluation->setDate($evaluationDate);
-        }
-
         if (isset($data['duration'])) {
             $evaluation->setDuration($evaluation->getDuration() + $data['duration']);
         }
@@ -51,6 +46,14 @@ abstract class AbstractEvaluationManager
             // only update the evaluation if the user progression has increased
             $evaluation->setProgression($data['progression']);
             $changes['progression'] = true;
+        }
+
+        if (empty($evaluation->getDate()) || $changes['score'] || $changes['progression'] || $changes['status']) {
+            $evaluationDate = $date ?? new \DateTime();
+            // only updates evaluation date if something interesting changes
+            if (empty($evaluation->getDate()) || $evaluationDate > $evaluation->getDate()) {
+                $evaluation->setDate($evaluationDate);
+            }
         }
 
         return $changes;
