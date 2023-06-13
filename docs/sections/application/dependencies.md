@@ -16,13 +16,6 @@ For the full list of dependencies, see `composer.json`.
 > See [composer documentation](https://getcomposer.org/) to know how to get it and use it.
 
 
-### Current
-
-### Development
-
-### For retro-compatibility
-
-
 ## User Interface
 
 For the full list of dependencies, see `package.json`.
@@ -34,9 +27,3 @@ For the full list of dependencies, see `package.json`.
 > - [NPM](https://www.npmjs.com/) : recommended
 > - [YARN](https://yarnpkg.com) : only use it if you know what you do (the documentation uses `npm`)
 
-
-### Current
-
-### Development
-
-### For retro-compatibility
