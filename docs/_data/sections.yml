@@ -37,7 +37,7 @@
     - title: Widgets
       doc: application/widgets
 
-    - title: Widgets
+    - title: Templates
       doc: application/templates
 
 - title: API
@@ -67,6 +67,9 @@
 
       - title: Localization
         doc: user-interface/localization
+
+      - title: Parameters
+        doc: user-interface/parameters
 
       #- title: Pages
       #  doc: user-interface/pages

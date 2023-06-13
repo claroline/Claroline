@@ -14,7 +14,6 @@ with the `Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandle
 Once you've injected the service, you can manipulate the platform parameters.
 
 ```php
-
 // save the parameter `my_parameter` into platform_options.json
 $this->config->setParameter('my_parameter', 'toto');
 
@@ -29,7 +28,6 @@ $this->config->getParameter('my_parameter') // return 'toto'
 All methods of the PlatformConfigurationHandler accepts lodash like notation to search parameters.
 
 ```php
-
 $this->config->setParameter('my_parameter', [
     'key' => 'toto',
 ]);

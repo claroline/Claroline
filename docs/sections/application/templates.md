@@ -102,7 +102,6 @@ You can use defined templates with the `Claroline\CoreBundle\Template\TemplateMa
 ### Default template
 
 ```php
-
 $locale = 'en';
 // provide values for the placeholders defined for the template type
 $placeholders = [
@@ -126,7 +125,6 @@ For example, each badge can define the template to use to generate their certifi
 Update your entity class :
 
 ```php
-
 namespace MyVendor\MyPluginBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Model\Template;
@@ -145,7 +143,6 @@ class MyEntity
 Don't forget to update your serializer :
 
 ```php
-
 namespace MyVendor\MyPluginBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
@@ -213,7 +210,6 @@ Add the field in your entity form (UI) :
 You can now use the custom template :
 
 ```php
-
 $myEntity = new MyEntity(); // in this example, we don't set a custom template for $myEntity so we will fallback on the default template 
 
 // ...
@@ -259,7 +255,6 @@ $this->dispatcher->dispatch(MessageEvents::MESSAGE_SENDING, SendMessageEvent::cl
 For template types with `type: pdf`.
 
 ```php
-
 $locale = 'en';
 // provide values for the placeholders defined for the template type
 $placeholders = [
