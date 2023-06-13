@@ -14,15 +14,16 @@ import { User as UserTypes } from '#/main/community/prop-types';
 import { constants as actionConstants } from '#/main/app/action/constants';
 
 const PrivacyTool = (props) => {
-console.log(props)
+  const { privacyData, currentUser } = props;
+
   return (
     <AccountPage
       path={[
         {
           type: LINK_BUTTON,
           label: trans('privacy'),
-          target: route('privacy')
-        }
+          target: route('privacy'),
+        },
       ]}
       title={trans('privacy')}
     >
@@ -32,13 +33,13 @@ console.log(props)
       />
 
       <AlertBlock
-        type={get(props.currentUser, 'meta.acceptedTerms') ? 'info' : 'warning'}
-        title={get(props.currentUser, 'meta.acceptedTerms') ?
-          trans('accept_terms', {}, 'privacy') :
-          trans('no_accept_terms', {}, 'privacy')
+        type={get(currentUser, 'meta.acceptedTerms') ? 'info' : 'warning'}
+        title={get(currentUser, 'meta.acceptedTerms')
+          ? trans('accept_terms', {}, 'privacy')
+          : trans('no_accept_terms', {}, 'privacy')
         }
       >
-        {!get(props.currentUser, 'meta.acceptedTerms') &&
+        {!get(currentUser, 'meta.acceptedTerms') && (
           <Button
             className="btn"
             type={CALLBACK_BUTTON}
@@ -46,7 +47,7 @@ console.log(props)
             callback={() => props.acceptTerms()}
             primary={true}
           />
-        }
+        )}
 
         <Button
           className="btn"
@@ -62,7 +63,7 @@ console.log(props)
         <p>
           <strong>Nom</strong>
         </p>
-        <p>{get(props.accountPrivacy, 'dpo.name')}</p>
+        <p>{get(privacyData, 'dpo.name')}</p>
       </div>
 
       <ContentTitle title={trans('title_my_data', {}, 'privacy')} />
@@ -72,47 +73,41 @@ console.log(props)
         type={CALLBACK_BUTTON}
         label={trans('export_data', {}, 'privacy')}
         callback={props.exportAccount}
-        />
+      />
 
-          <Button
-          className="btn btn-block component-container"
-          type={ASYNC_BUTTON}
-          label={trans('request_deletion', {}, 'privacy')}
-          request={{
+      <Button
+        className="btn btn-block component-container"
+        type={ASYNC_BUTTON}
+        label={trans('request_deletion', {}, 'privacy')}
+        request={{
           url: url(['apiv2_user_request_account_deletion']),
           request: { method: 'POST', type: actionConstants.ACTION_SEND },
           messages: {
-          pending: {
-          title: trans('send.pending.title', {}, 'alerts'),
-          message: trans('send.pending.message', {}, 'alerts')
-        },
-          success: {
-          title: trans('send.success.title', {}, 'alerts'),
-          message: trans('send.success.message', {}, 'alerts')
-        }
-        }
+            pending: {
+              title: trans('send.pending.title', {}, 'alerts'),
+              message: trans('send.pending.message', {}, 'alerts'),
+            },
+            success: {
+              title: trans('send.success.title', {}, 'alerts'),
+              message: trans('send.success.message', {}, 'alerts'),
+            },
+          },
         }}
-          dangerous={true}
-          confirm={{
+        dangerous={true}
+        confirm={{
           title: trans('title_dialog_delete_account', {}, 'privacy'),
-          message: trans('message_dialog_delete_account', {}, 'privacy')
+          message: trans('message_dialog_delete_account', {}, 'privacy'),
         }}
-          />
-          </AccountPage>
-          );
-        };
+      />
+    </AccountPage>
+  );
+};
 
-      PrivacyTool.propTypes = {
-      currentUser: T.shape(UserTypes.propTypes).isRequired,
-      accountPrivacy: T.object.isRequired,
-      exportAccount: T.func.isRequired,
-      acceptTerms: T.func.isRequired,
-      messages: T.shape({
-      pending: T.object,
-      success: T.object,
-      error: T.object
-    })
-    };
+PrivacyTool.propTypes = {
+  currentUser: T.shape(UserTypes.propTypes).isRequired,
+  exportAccount: T.func.isRequired,
+  acceptTerms: T.func.isRequired,
+  privacyData: T.object.isRequired,
+};
 
-      export { PrivacyTool };
-
+export { PrivacyTool };

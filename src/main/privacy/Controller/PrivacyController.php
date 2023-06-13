@@ -90,7 +90,7 @@ class PrivacyController extends AbstractSecurityController
     }
 
     /**
-     * @Route("", name="apiv2_dpo_view", methods={"GET"})
+     * @Route("", name="apiv2_privacy_view", methods={"GET"})
      */
     public function viewAction(): JsonResponse
     {
@@ -101,7 +101,7 @@ class PrivacyController extends AbstractSecurityController
         }
 
         return new JsonResponse([
-            'dpo' => $this->serializer->serialize($privacy)
+            'accountPrivacy' => $this->serializer->serialize($privacy)
         ]);
     }
 }

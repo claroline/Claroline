@@ -1,7 +1,8 @@
 const STORE_NAME = 'accountPrivacy'
-const accountPrivacy = (state) => state[STORE_NAME]
+
+const selectPrivacyData = (state) => state[STORE_NAME].privacyData
 
 export const selectors = {
   STORE_NAME,
-  accountPrivacy
+  selectPrivacyData
 }

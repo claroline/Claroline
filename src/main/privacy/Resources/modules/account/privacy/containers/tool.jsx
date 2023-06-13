@@ -1,31 +1,26 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux';
+import { withReducer } from '#/main/app/store/components/withReducer';
+import { PrivacyTool as PrivacyToolComponent } from '#/main/privacy/account/privacy/components/tool';
+import actions from '#/main/privacy/account/privacy/store/actions';
+import { selectors } from '#/main/privacy/account/privacy/store/selectors';
+import { selectors as securitySelectors } from '#/main/app/security/store/selectors';
 
-import {withReducer} from '#/main/app/store/components/withReducer'
+const mapStateToProps = (state) => ({
+  privacyData: selectors.selectPrivacyData(state),
+  currentUser: securitySelectors.currentUser(state),
+})
 
-import {PrivacyTool as PrivacyToolComponent} from '#/main/privacy/account/privacy/components/tool'
-import {actions, reducer, selectors} from '#/main/privacy/account/privacy/store'
-import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
+const mapDispatchToProps = {
+  acceptTerms: actions.acceptTerms,
+  exportAccount: actions.exportAccount,
+  fetchPrivacy: actions.fetchPrivacy
+}
 
 const PrivacyTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
-    (state) => ({
-      currentUser: securitySelectors.currentUser(state),
-      accountPrivacy: selectors.accountPrivacy(state)
-    }),
-    (dispatch) => ({
-      acceptTerms() {
-        dispatch(actions.acceptTerms())
-      },
-      exportAccount() {
-        dispatch(actions.exportAccount())
-      },
-      load() {
-        dispatch(actions.fetchAccountPrivacy())
-      }
-    })
+    mapStateToProps,
+    mapDispatchToProps
   )(PrivacyToolComponent)
 )
 
-export {
-  PrivacyTool
-}
+export { PrivacyTool }
