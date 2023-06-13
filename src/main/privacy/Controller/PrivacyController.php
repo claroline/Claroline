@@ -96,15 +96,11 @@ class PrivacyController extends AbstractSecurityController
     /**
      * @Route("", name="apiv2_privacy_view", methods={"GET"})
      */
-    public function viewAction(): JsonResponse
+    public function openAction(): JsonResponse
     {
         $privacy = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
-        if (!$privacy) {
-            throw new NotFoundHttpException('Privacy entity not found.');
-        }
-
         return new JsonResponse([
-            'privacyData' => $this->privacySerializer->serialize($privacy)
+            'privacyData' => $this->serializer->serialize($privacy)
         ]);
     }
 }

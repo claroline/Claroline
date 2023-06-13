@@ -8,7 +8,6 @@ export const NOTIFICATIONS_LOAD       = 'NOTIFICATIONS_LOAD'
 export const NOTIFICATIONS_SET_LOADED = 'NOTIFICATIONS_SET_LOADED'
 export const NOTIFICATIONS_COUNT      = 'NOTIFICATIONS_COUNT'
 
-// action creators
 export const actions = {}
 
 actions.setCount = makeActionCreator(NOTIFICATIONS_COUNT, 'count')

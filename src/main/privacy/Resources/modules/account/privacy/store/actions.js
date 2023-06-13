@@ -1,10 +1,10 @@
 import { API_REQUEST } from '#/main/app/api'
 import { actions as securityActions } from '#/main/app/security/store/actions'
 import { makeActionCreator } from '#/main/app/store/actions'
+import {TERMS_OF_SERVICE_LOAD} from '#/main/app/modals/terms-of-service/store/actions'
 
-export const FETCH_PRIVACY_REQUEST = 'FETCH_PRIVACY_REQUEST'
-export const FETCH_PRIVACY_SUCCESS = 'FETCH_PRIVACY_SUCCESS'
-export const FETCH_PRIVACY_FAILURE = 'FETCH_PRIVACY_FAILURE'
+export const PRIVACY_LOAD = 'PRIVACY_LOAD'
+
 export const actions = {}
 
 actions.acceptTerms = () => (dispatch) => dispatch({
@@ -23,15 +23,12 @@ actions.exportAccount = () => ({
   }
 })
 
-export const fetchPrivacyRequest = makeActionCreator(FETCH_PRIVACY_REQUEST)
-export const fetchPrivacySuccess = makeActionCreator(FETCH_PRIVACY_SUCCESS, 'privacyData')
-export const fetchPrivacyFailure = makeActionCreator(FETCH_PRIVACY_FAILURE, 'error')
+actions.load = makeActionCreator(PRIVACY_LOAD, 'privacyData')
 
-actions.fetchAccountPrivacy = () => (dispatch) => dispatch({
+actions.fetch = () => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: ['apiv2_privacy_view'],
-    onStart: () => dispatch(fetchPrivacyRequest()),
-    onSuccess: (response) => dispatch(fetchPrivacySuccess(response)),
-    onFailure: (error) => dispatch(fetchPrivacyFailure(error))
+    silent: true,
+    success: (response) => dispatch(actions.load(response))
   }
 })

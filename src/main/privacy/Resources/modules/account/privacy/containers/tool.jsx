@@ -4,21 +4,24 @@ import { PrivacyTool as PrivacyToolComponent } from '#/main/privacy/account/priv
 import { actions, reducer, selectors } from '#/main/privacy/account/privacy/store'
 import { selectors as securitySelectors } from '#/main/app/security/store/selectors'
 
-const mapStateToProps = (state) => ({
-  privacyData: selectors.selectPrivacyData(state),
-  currentUser: securitySelectors.currentUser(state)
-})
-
-const mapDispatchToProps = {
-  acceptTerms: actions.acceptTerms,
-  exportAccount: actions.exportAccount,
-  fetchPrivacy: actions.fetchPrivacy
-}
-
 const PrivacyTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
-    mapStateToProps,
-    mapDispatchToProps
+    (state) => ({
+        loaded: selectors.loaded(state),
+        privacyData: selectors.privacyData(state),
+        currentUser: securitySelectors.currentUser(state)
+      }),
+    (dispatch) => ({
+      fetch() {
+        dispatch(actions.fetch())
+      },
+      acceptTerms() {
+        dispatch(actions.acceptTerms())
+      },
+      exportAccount() {
+        dispatch(actions.exportAccount())
+      }
+    })
   )(PrivacyToolComponent)
 )
 
