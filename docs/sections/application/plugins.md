@@ -56,7 +56,7 @@ plugin: ~
 
 and you must declare in bundles.ini file ``files/config/bundles.ini`` the plugin name and the bundle class name :
 ```ini
-Claroline\YourPluginBundle\ClarolineYourPluginBundle=true
+Vendor\PluginNameBundle\VendorPluginNameBundle=true
 ```
 
 ### The composer autoloader **[required]**
