@@ -1,0 +1,7 @@
+services:
+  Claroline\PrivacyBundle\Manager\PrivacyManager:
+    arguments:
+      - '@Claroline\AppBundle\Persistence\ObjectManager'
+      - '@Claroline\CoreBundle\Manager\MailManager'
+      - '@translator'
+      - '@Claroline\CoreBundle\Manager\Template\TemplateManager'

@@ -15,7 +15,9 @@ import {User as UserTypes} from '#/main/community/prop-types'
 import {url} from '#/main/app/api'
 import {constants as actionConstants} from '#/main/app/action/constants'
 
-const PrivacyMain = (props) =>
+const PrivacyTool = (props) => {
+  console.log(props)
+  return(
   <AccountPage
     path={[
       {
@@ -124,27 +126,12 @@ const PrivacyMain = (props) =>
       }}
     />
   </AccountPage>
-
-PrivacyMain.propTypes = {
+  )
+}
+PrivacyTool.propTypes = {
   currentUser: T.shape(
     UserTypes.propTypes
   ).isRequired,
-  privacy: T.shape({
-    countryStorage: T.string,
-    dpo: T.shape({
-      name: T.string,
-      email: T.string,
-      address: T.shape({
-        street1: T.string,
-        street2: T.string,
-        postalCode: T.string,
-        city: T.string,
-        state: T.string,
-        country: T.string
-      }),
-      phone: T.string
-    })
-  }).isRequired,
   exportAccount: T.func.isRequired,
   acceptTerms: T.func.isRequired,
   messages: T.shape({
@@ -155,5 +142,5 @@ PrivacyMain.propTypes = {
 }
 
 export {
-  PrivacyMain
+  PrivacyTool
 }

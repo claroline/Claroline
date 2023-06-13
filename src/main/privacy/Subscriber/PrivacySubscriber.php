@@ -1,23 +1,28 @@
 <?php
 
-namespace Claroline\PrivacyBundle\Subscriber\Administration;
+namespace Claroline\PrivacyBundle\Subscriber;
 
-use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
+use Claroline\PrivacyBundle\Entity\Privacy;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PrivacySubscriber implements EventSubscriberInterface
 {
     const NAME = 'privacy';
 
-    private ParametersSerializer $serializer;
+    private SerializerProvider $serializer;
+    private ObjectManager $objectManager;
 
     public function __construct(
-    ParametersSerializer $serializer,
+        ObjectManager $objectManager,
+        SerializerProvider $serializer
     ) {
         $this->serializer = $serializer;
+        $this->objectManager = $objectManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -29,11 +34,11 @@ class PrivacySubscriber implements EventSubscriberInterface
 
     public function onOpen(OpenToolEvent $event): void
     {
-        $parameters = $this->serializer->serialize();
+        $firstPrivacy = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
+        $data = $this->serializer->serialize($firstPrivacy);
 
         $event->setData([
-            'lockedParameters' => $parameters['lockedParameters'] ?? [],
-            'parameters' => $parameters,
+            'parameters' => $data,
         ]);
     }
 }
