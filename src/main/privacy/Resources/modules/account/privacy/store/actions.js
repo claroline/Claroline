@@ -1,10 +1,8 @@
 import { API_REQUEST } from '#/main/app/api'
 import { actions as securityActions } from '#/main/app/security/store/actions'
 import { makeActionCreator } from '#/main/app/store/actions'
-import {TERMS_OF_SERVICE_LOAD} from '#/main/app/modals/terms-of-service/store/actions'
 
 export const PRIVACY_LOAD = 'PRIVACY_LOAD'
-
 export const actions = {}
 
 actions.acceptTerms = () => (dispatch) => dispatch({
@@ -32,3 +30,4 @@ actions.fetch = () => (dispatch) => dispatch({
     success: (response) => dispatch(actions.load(response))
   }
 })
+
