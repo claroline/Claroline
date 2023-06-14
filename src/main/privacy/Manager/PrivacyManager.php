@@ -2,7 +2,7 @@
 
 namespace Claroline\PrivacyBundle\Manager;
 
-use Claroline\PrivacyBundle\Entity\Privacy;
+use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -33,7 +33,7 @@ class PrivacyManager
         if ($this->mailManager->isMailerAvailable()) {
             $name = $user->getFullName();
             $idUser = $user->getId();
-            $privacyEntity = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
+            $privacyEntity = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
             $dpoEmail = $privacyEntity->getDpoEmail();
 
             $locale = $user->getLocale();

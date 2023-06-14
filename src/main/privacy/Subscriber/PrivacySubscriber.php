@@ -7,7 +7,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
-use Claroline\PrivacyBundle\Entity\Privacy;
+use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PrivacySubscriber implements EventSubscriberInterface
@@ -34,7 +34,7 @@ class PrivacySubscriber implements EventSubscriberInterface
 
     public function onOpen(OpenToolEvent $event): void
     {
-        $firstPrivacy = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
+        $firstPrivacy = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
         $data = $this->serializer->serialize($firstPrivacy);
 
         $event->setData([

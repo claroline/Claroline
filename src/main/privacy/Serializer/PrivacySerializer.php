@@ -3,7 +3,7 @@
 namespace Claroline\PrivacyBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\PrivacyBundle\Entity\Privacy;
+use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 
 class PrivacySerializer
 {
@@ -11,10 +11,10 @@ class PrivacySerializer
 
     public function getClass(): string
     {
-        return Privacy::class;
+        return PrivacyParameters::class;
     }
 
-    public function serialize(Privacy $privacy): array
+    public function serialize(PrivacyParameters $privacy): array
     {
         return [
             'dpo' => [
@@ -36,7 +36,7 @@ class PrivacySerializer
         ];
     }
 
-    public function deserialize(array $data, Privacy $privacy): Privacy
+    public function deserialize(array $data, PrivacyParameters $privacy): PrivacyParameters
     {
         $this->sipe('dpo.name', 'setDpoName', $data, $privacy);
         $this->sipe('dpo.email', 'setDpoEmail', $data, $privacy);

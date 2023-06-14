@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="claro_privacy_parameters")
  */
-class Privacy
+class PrivacyParameters
 {
     use Id;
     use Address;

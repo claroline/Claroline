@@ -10,10 +10,9 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\PrivacyBundle\Manager\PrivacyManager;
 use Claroline\PrivacyBundle\Serializer\PrivacySerializer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Claroline\PrivacyBundle\Entity\Privacy;
+use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -56,7 +55,7 @@ class PrivacyController extends AbstractSecurityController
 
     public function getClass(): string
     {
-        return Privacy::class;
+        return PrivacyParameters::class;
     }
 
     /**
@@ -74,7 +73,7 @@ class PrivacyController extends AbstractSecurityController
         }
 
         $data = $this->decodeRequest($request);
-        $privacyEntity = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
+        $privacyEntity = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
         $privacyUpdate = $this->crud->update($privacyEntity, $data, [Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(
@@ -95,10 +94,12 @@ class PrivacyController extends AbstractSecurityController
 
     /**
      * @Route("", name="apiv2_privacy_view", methods={"GET"})
+     *
+     * @throws \Exception
      */
     public function openAction(): JsonResponse
     {
-        $privacy = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
+        $privacy = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
         return new JsonResponse([
             'privacyData' => $this->serializer->serialize($privacy)
         ]);
