@@ -7,7 +7,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-class PrivacyData extends AbstractTemplateFixture
+class TermsOfServiceData extends AbstractTemplateFixture
 {
     protected static function getTemplateType(): string
     {

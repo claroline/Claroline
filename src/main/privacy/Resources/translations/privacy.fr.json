@@ -36,5 +36,5 @@
   "dpo_help": "Le Délégué à la Protection des Données (DPO) est responsable de la conformité de l'organisation aux règles de protection des données et sert d'intermédiaire avec l'autorité de surveillance et les personnes concernées.",
   "terms_help": "Les conditions d'utilisation sont affichées aux utilisateurs lors de leur première connexion à la plateforme. Ils doivent les accepter pour pouvoir utiliser la plateforme.",
   "terms_of_services_load": "Chargement des conditions d'utilisation...",
-  "terms_of_service_info": "Toutes modifications modifiera la date de dernière mise à jour des conditions d'utilisation, ce qui entraînera une nouvelle demande d'acceptation aux utilisateurs."
+  "terms_of_service_info": "Toute modification modifiera la date de dernière mise à jour des conditions d'utilisation, ce qui entraînera une nouvelle demande d'acceptation aux utilisateurs."
 }
