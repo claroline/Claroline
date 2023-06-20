@@ -2,12 +2,12 @@
 
 namespace Claroline\PrivacyBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Claroline\CoreBundle\Manager\Template\TemplateManager;
 
 class PrivacyManager
 {

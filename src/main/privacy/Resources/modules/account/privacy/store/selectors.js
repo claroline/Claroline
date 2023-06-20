@@ -9,13 +9,14 @@ const loaded = createSelector(
   (store) => store.loaded
 )
 
-const privacyData = createSelector(
+const fetch = createSelector(
   [store],
   (store) => store.privacyData
 )
 
 export const selectors = {
     STORE_NAME,
+    store,
     loaded,
-    privacyData
+    fetch
 }

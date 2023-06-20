@@ -7,10 +7,10 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\PrivacyBundle\Manager\PrivacyManager;
-use Claroline\PrivacyBundle\Serializer\PrivacySerializer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\PrivacyBundle\Entity\PrivacyParameters;
+use Claroline\PrivacyBundle\Manager\PrivacyManager;
+use Claroline\PrivacyBundle\Serializer\PrivacySerializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -73,8 +73,8 @@ class PrivacyController extends AbstractSecurityController
         }
 
         $data = $this->decodeRequest($request);
-        $privacyEntity = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
-        $privacyUpdate = $this->crud->update($privacyEntity, $data, [Crud::THROW_EXCEPTION]);
+        $privacyParameters = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+        $privacyUpdate = $this->crud->update($privacyParameters, $data, [Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(
             $this->serializer->serialize($privacyUpdate)
@@ -93,15 +93,19 @@ class PrivacyController extends AbstractSecurityController
     }
 
     /**
-     * @Route("", name="apiv2_privacy_view", methods={"GET"})
+     * @Route("", name="apiv2_add_privacy", methods={"GET"})
      *
      * @throws \Exception
      */
-    public function openAction(): JsonResponse
+    public function getAction(): JsonResponse
     {
         $privacy = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+
+        $privacyGet = $this->crud->get(PrivacyParameters::class, $privacy);
+
         return new JsonResponse([
-            'privacyData' => $this->serializer->serialize($privacy)
+
+            'privacyData' => $this->serializer->serialize($privacyGet)
         ]);
     }
 }

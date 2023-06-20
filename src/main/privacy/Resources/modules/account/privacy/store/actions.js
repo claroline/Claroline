@@ -1,9 +1,11 @@
 import { API_REQUEST } from '#/main/app/api'
 import { actions as securityActions } from '#/main/app/security/store/actions'
 import { makeActionCreator } from '#/main/app/store/actions'
+import {REGISTRATION_DATA_LOAD} from '#/main/app/security/registration/store/actions'
 
-export const PRIVACY_LOAD = 'PRIVACY_LOAD'
-export const actions = {}
+const PRIVACY_LOAD = 'PRIVACY_LOAD'
+
+const actions = {}
 
 actions.acceptTerms = () => (dispatch) => dispatch({
   [API_REQUEST]: {
@@ -25,9 +27,17 @@ actions.load = makeActionCreator(PRIVACY_LOAD, 'privacyData')
 
 actions.fetch = () => (dispatch) => dispatch({
   [API_REQUEST]: {
-    url: ['apiv2_privacy_view'],
-    silent: true,
-    success: (response) => dispatch(actions.load(response))
+    url: ['apiv2_add_privacy'],
+    request: {
+      method: 'GET'
+    },
+    success: (data, dispatch) => {
+      dispatch(actions.load(data))
+    }
   }
 })
 
+export {
+  actions,
+  PRIVACY_LOAD
+}

@@ -14,7 +14,7 @@ final class Version20230613151504 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_privacy_parameters (
                 id INT AUTO_INCREMENT NOT NULL, 
                 dpoName VARCHAR(255) DEFAULT NULL, 
@@ -31,13 +31,13 @@ final class Version20230613151504 extends AbstractMigration
                 address_country VARCHAR(255) DEFAULT NULL, 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             DROP TABLE claro_privacy_parameters
-        ");
+        ');
     }
 }

@@ -8,7 +8,7 @@ const PrivacyTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
         loaded: selectors.loaded(state),
-        privacyData: selectors.privacyData(state),
+        privacyData: selectors.fetch(state),
         currentUser: securitySelectors.currentUser(state)
       }),
     (dispatch) => ({

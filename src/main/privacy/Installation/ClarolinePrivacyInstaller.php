@@ -2,8 +2,8 @@
 
 namespace Claroline\PrivacyBundle\Installation;
 
-use Claroline\PrivacyBundle\Installation\Updater\Updater140000;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller;
+use Claroline\PrivacyBundle\Installation\Updater\Updater140000;
 
 class ClarolinePrivacyInstaller extends AdditionalInstaller
 {

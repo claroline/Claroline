@@ -15,6 +15,7 @@ import {constants as actionConstants} from '#/main/app/action/constants'
 
 const PrivacyTool = (props) => {
   console.log(props)
+
   return(
   <AccountPage
     path={[

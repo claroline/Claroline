@@ -14,7 +14,7 @@ final class Version20230620100712 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_privacy_parameters 
             ADD publication_date DATETIME DEFAULT NULL, 
             CHANGE dpoName dpoName VARCHAR(255) DEFAULT NULL, 
@@ -28,7 +28,7 @@ final class Version20230620100712 extends AbstractMigration
             CHANGE address_city address_city VARCHAR(255) DEFAULT NULL, 
             CHANGE address_state address_state VARCHAR(255) DEFAULT NULL, 
             CHANGE address_country address_country VARCHAR(255) DEFAULT NULL
-        ");
+        ');
     }
 
     public function down(Schema $schema): void

@@ -16,7 +16,8 @@ const PrivacyItem = (props) =>
         {trans('dpo_info', {}, 'privacy')}
       </div>
       <div className="panel-body">
-        <strong>{props.item.dpo.name}</strong>
+        <strong>Nom : </strong>
+        {props.item.dpo.name}
         <br/>
         <strong>Email :</strong> {props.item.dpo.email}
         <br/>
