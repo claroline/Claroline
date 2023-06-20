@@ -2,3 +2,17 @@ plugin:
     admin_tools:
         - name: privacy
           class: shield
+
+    data_sources:
+      - name: account_privacy
+        type: page
+        context: [ account ]
+        tags: [ account ]
+
+    templates:
+      - name: terms_of_service
+        type: other
+        placeholders:
+          - terms_of_service
+          - update_date
+          - terms_of_service_enabled

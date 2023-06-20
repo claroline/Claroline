@@ -1,0 +1,7 @@
+services:
+  _defaults:
+    tags: [ 'claroline.platform.updater' ]
+
+  Claroline\PrivacyBundle\Installation\Updater\Updater140000:
+    arguments:
+      - '@Claroline\AppBundle\Persistence\ObjectManager'
