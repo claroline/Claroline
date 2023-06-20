@@ -38,7 +38,8 @@ const TermsModal = (props) =>
                 }
               ]
             }
-          ]
+          ],
+          help: trans('terms_of_service_info', {}, 'privacy')
         }
       ]}
     >

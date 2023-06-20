@@ -33,6 +33,7 @@ class PrivacySerializer
             'countryStorage' => $privacy->getCountryStorage(),
             'termsOfService' => $privacy->getTermsOfService(),
             'termsOfServiceEnabled' => $privacy->IsTermsOfServiceEnabled(),
+            'publicationDate' => (new \DateTime())->format('Y-m-d H:i:s'),
         ];
     }
 
@@ -53,6 +54,7 @@ class PrivacySerializer
 
         $this->sipe('termsOfService', 'setTermsOfService', $data, $privacy);
         $this->sipe('termsOfServiceEnabled', 'setTermsOfServiceEnabled', $data, $privacy);
+        $this->sipe('publicationDate', 'setPublicationDate', $data, $privacy);
 
         return $privacy;
     }

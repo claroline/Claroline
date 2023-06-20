@@ -11,7 +11,7 @@ class PrivacyData extends AbstractTemplateFixture
 {
     protected static function getTemplateType(): string
     {
-        return 'privacy';
+        return 'terms_of_service';
     }
 
     /**

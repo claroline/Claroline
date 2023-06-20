@@ -74,6 +74,10 @@ class PrivacyController extends AbstractSecurityController
 
         $data = $this->decodeRequest($request);
         $privacyParameters = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+
+        // Mettre à jour la valeur du champ publicationDate avec la date actuelle
+        $data['publicationDate'] = new \DateTime();
+
         $privacyUpdate = $this->crud->update($privacyParameters, $data, [Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(

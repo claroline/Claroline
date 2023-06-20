@@ -15,4 +15,3 @@ plugin:
         placeholders:
           - terms_of_service
           - update_date
-          - terms_of_service_enabled
