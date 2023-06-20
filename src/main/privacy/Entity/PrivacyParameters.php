@@ -5,6 +5,7 @@ namespace Claroline\PrivacyBundle\Entity;
 use Claroline\AppBundle\Entity\Address;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
@@ -44,6 +45,14 @@ class PrivacyParameters
      * @ORM\Column(type="boolean")
      */
     private ?bool $termsOfServiceEnabled;
+
+    /**
+     * @var \Datetime
+     *
+     * @ORM\Column(type="datetime", name="publication_date", nullable=true)
+     * @Gedmo\Timestampable(on="change", field="status", value="1")
+     */
+    protected $publicationDate;
 
     public function getDpoName(): ?string
     {
@@ -103,5 +112,15 @@ class PrivacyParameters
     public function setTermsOfServiceEnabled(?bool $termsOfServiceEnabled = null): void
     {
         $this->termsOfServiceEnabled = $termsOfServiceEnabled;
+    }
+
+    public function getPublicationDate(): ?\DateTime
+    {
+        return $this->publicationDate;
+    }
+
+    public function setPublicationDate(?\DateTime $publicationDate = null): void
+    {
+        $this->publicationDate = $publicationDate;
     }
 }
