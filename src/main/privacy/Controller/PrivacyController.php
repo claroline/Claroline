@@ -103,9 +103,8 @@ class PrivacyController extends AbstractSecurityController
 
         $privacyGet = $this->crud->get(PrivacyParameters::class, $privacy);
 
-        return new JsonResponse([
-
-            'privacyData' => $this->serializer->serialize($privacyGet)
-        ]);
+        return new JsonResponse(
+            ['privacyData' => $this->serializer->serialize($privacyGet)],
+        );
     }
 }
