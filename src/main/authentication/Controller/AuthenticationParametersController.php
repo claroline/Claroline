@@ -8,6 +8,7 @@ use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -47,6 +48,7 @@ class AuthenticationParametersController extends AbstractSecurityController
 
     /**
      * @Route("/authentication_parameters", name="apiv2_authentication_parameters_update", methods={"PUT"})
+     * @throws InvalidDataException
      * @throws \Exception
      */
     public function updateAction(Request $request): JsonResponse
@@ -58,7 +60,7 @@ class AuthenticationParametersController extends AbstractSecurityController
         }
 
         $data = $this->decodeRequest($request);
-        $authenticationParameters = $this->objectManager->getRepository(AuthenticationParameters::class)->findOneBy([], ['id' => 'ASC']);
+        $authenticationParameters = $this->objectManager->getRepository(AuthenticationParameters::class)->findOneBy([]);
         $authenticationParametersUpdate = $this->crud->update($authenticationParameters, $data, [Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(

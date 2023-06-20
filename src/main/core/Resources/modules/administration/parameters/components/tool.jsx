@@ -9,6 +9,7 @@ import {Meta} from '#/main/core/administration/parameters/main/containers/meta'
 import {Technical} from '#/main/core/administration/parameters/technical/containers/technical'
 
 import {AppearanceTool} from '#/main/theme/administration/appearance/containers/tool'
+import {PasswordValidateTool} from "#/main/authentication/administration/password-validate/containers/tool";
 
 const ParametersTool = (props) => {
 
@@ -22,7 +23,8 @@ const ParametersTool = (props) => {
           routes={[
             {path: '/', exact: true, render: () => trans('general')},
             {path: '/technical',     render: () => trans('technical')},
-            {path: '/appearance',    render: () => trans('appearance')}
+            {path: '/appearance',    render: () => trans('appearance')},
+            {path: '/password-validate',    render: () => trans('password-validate')}
           ]}
         />
       }
@@ -41,6 +43,9 @@ const ParametersTool = (props) => {
           }, {
             path: '/appearance',
             component: AppearanceTool
+          }, {
+            path: '/password-validate',
+            component: PasswordValidateTool
           }
         ]}
       />

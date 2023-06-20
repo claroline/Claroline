@@ -36,6 +36,12 @@ const ParametersMenu = (props) =>
           icon: 'fa fa-fw fa-wrench',
           label: trans('technical'),
           target: props.path+'/technical'
+        }, {
+          name: 'password-validate',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-shield-alt',
+          label: trans('password-validate'),
+          target: props.path+'/password-validate'
         }
       ]}
       onClick={props.autoClose}
