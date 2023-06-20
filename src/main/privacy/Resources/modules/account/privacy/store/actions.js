@@ -1,7 +1,6 @@
 import { API_REQUEST } from '#/main/app/api'
 import { actions as securityActions } from '#/main/app/security/store/actions'
 import { makeActionCreator } from '#/main/app/store/actions'
-import {REGISTRATION_DATA_LOAD} from '#/main/app/security/registration/store/actions'
 
 const PRIVACY_LOAD = 'PRIVACY_LOAD'
 

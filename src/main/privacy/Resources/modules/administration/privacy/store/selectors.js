@@ -11,8 +11,7 @@ const getAdminRole = (state) => {
     }
   }
   return adminRole
-};
-
+}
 
 export const selectors = {
   STORE_NAME,

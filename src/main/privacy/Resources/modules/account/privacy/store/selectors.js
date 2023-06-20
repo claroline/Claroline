@@ -15,8 +15,8 @@ const fetch = createSelector(
 )
 
 export const selectors = {
-    STORE_NAME,
-    store,
-    loaded,
-    fetch
+  STORE_NAME,
+  store,
+  loaded,
+  fetch
 }

@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 import { withReducer } from '#/main/app/store/components/withReducer'
 import { PrivacyTool as PrivacyToolComponent } from '#/main/privacy/account/privacy/components/tool'
 import { actions, reducer, selectors } from '#/main/privacy/account/privacy/store'
@@ -7,10 +7,10 @@ import { selectors as securitySelectors } from '#/main/app/security/store/select
 const PrivacyTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-        loaded: selectors.loaded(state),
-        privacyData: selectors.fetch(state),
-        currentUser: securitySelectors.currentUser(state)
-      }),
+      loaded: selectors.loaded(state),
+      privacyData: selectors.fetch(state),
+      currentUser: securitySelectors.currentUser(state)
+    }),
     (dispatch) => ({
       fetch() {
         dispatch(actions.fetch())
