@@ -9,7 +9,8 @@ const PasswordValidateTool = (props) => {
   console.log('props', props)
   return (
       <FormData
-        name={selectors.STORE_NAME}
+        // name={selectors.STORE_NAME}
+        name={"main_settings.authenticationParameters"}
         target={['apiv2_parameters_update']}
         buttons={true}
         cancel={{
@@ -17,33 +18,33 @@ const PasswordValidateTool = (props) => {
           target: props.path,
           exact: true
         }}
-        locked={props.lockedParameters}
         definition={[
           {
-            title: trans('password-validate', {}, 'tools'),
+            title: trans('general'),
+            primary: true,
             fields: [
               {
-                name: 'passwordValidate.minLength',
+                name: 'minLength',
                 type: 'number',
                 label: trans('minLength', {}, 'tools'),
               },
               {
-                name: 'passwordValidate.requireLowercase',
+                name: 'requireLowercase',
                 type: 'boolean',
                 label: trans('requireLowercase', {}, 'tools'),
               },
               {
-                name: 'passwordValidate.requireUppercase',
+                name: 'requireUppercase',
                 type: 'boolean',
                 label: trans('requireUppercase', {}, 'tools'),
               },
               {
-                name: 'passwordValidate.requireNumber',
+                name: 'requireNumber',
                 type: 'boolean',
                 label: trans('requireNumber', {}, 'tools'),
               },
               {
-                name: 'passwordValidate.requireSpecialChar',
+                name: 'requireSpecialChar',
                 type: 'boolean',
                 label: trans('requireSpecialChar', {}, 'tools'),
               },
