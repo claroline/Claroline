@@ -11,7 +11,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class AuthenticationParametersSubscriber implements EventSubscriberInterface
 {
-
     private SerializerProvider $serializer;
     private ObjectManager $objectManager;
     private PlatformConfigurationHandler $config;

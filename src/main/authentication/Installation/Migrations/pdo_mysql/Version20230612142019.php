@@ -14,7 +14,7 @@ final class Version20230612142019 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_authentication_parameters (
                 id INT AUTO_INCREMENT NOT NULL, 
                 minLength INT NOT NULL, 
@@ -24,13 +24,13 @@ final class Version20230612142019 extends AbstractMigration
                 requireNumber TINYINT(1) NOT NULL, 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             DROP TABLE claro_authentication_parameters
-        ");
+        ');
     }
 }

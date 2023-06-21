@@ -37,6 +37,7 @@ class AuthenticationParametersController extends AbstractSecurityController
 
     /**
      * @Route("/authentication", name="apiv2_authentication_update", methods={"PUT"})
+     *
      * @throws InvalidDataException
      * @throws \Exception
      */
