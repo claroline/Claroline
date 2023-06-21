@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AuthenticationParametersController extends AbstractSecurityController
 {
@@ -36,28 +35,14 @@ class AuthenticationParametersController extends AbstractSecurityController
         $this->authorization = $authorization;
     }
 
-    public function getName(): string
-    {
-        return 'authentication_parameters';
-    }
-
-    public function getClass(): string
-    {
-        return AuthenticationParameters::class;
-    }
-
     /**
-     * @Route("/authentication_parameters", name="apiv2_authentication_parameters_update", methods={"PUT"})
+     * @Route("/authentication", name="apiv2_authentication_update", methods={"PUT"})
      * @throws InvalidDataException
      * @throws \Exception
      */
     public function updateAction(Request $request): JsonResponse
     {
-        $this->canOpenAdminTool('authentication_parameters');
-
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
+        $this->canOpenAdminTool('main_settings');
 
         $data = $this->decodeRequest($request);
         $authenticationParameters = $this->objectManager->getRepository(AuthenticationParameters::class)->findOneBy([]);

@@ -1,0 +1,7 @@
+{
+  "minLength": "Minimum password length",
+  "requireLowercase": "Lowercase password required",
+  "requireUppercase": "Uppercase password required",
+  "requireNumber": "Number password required",
+  "requireSpecialChar": "Special character password required"
+}

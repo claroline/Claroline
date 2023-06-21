@@ -1,0 +1,7 @@
+{
+  "minLength": "Longueur minimale du mot de passe",
+  "requireLowercase": "Minuscule requise pour le mot de passe",
+  "requireUppercase": "Majuscule requise pour le mot de passe",
+  "requireNumber": "Nombre requis pour le mot de passe",
+  "requireSpecialChar": "Caractère spécial requis pour le mot de passe"
+}

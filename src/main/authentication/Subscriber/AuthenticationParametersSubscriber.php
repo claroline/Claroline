@@ -36,11 +36,9 @@ class AuthenticationParametersSubscriber implements EventSubscriberInterface
     public function onPopulateConfig(GenericDataEvent $event): void
     {
         $event->setResponse([
-            'authentication_parameters' => [
-                "password-validate" => $this->serializer->serialize(
-                    $this->objectManager->getRepository(AuthenticationParameters::class)->findOneBy([]),
-                ),
-            ]
+            'authenticationParameters' => $this->serializer->serialize(
+                $this->objectManager->getRepository(AuthenticationParameters::class)->findOneBy([]),
+            ),
         ]);
     }
 }

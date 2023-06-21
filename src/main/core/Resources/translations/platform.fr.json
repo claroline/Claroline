@@ -470,7 +470,6 @@
     "password_initialized": "Mot de passe réinitialisé pour %user%",
     "password_mismatch": "Les mots de passe ne correspondent pas.",
     "password_ok": "Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.",
-    "password-validate": "Validation mot de passe",
     "paste": "Coller",
     "path": "Parcours",
     "pending": "En attente",

@@ -3,14 +3,12 @@ import React from 'react'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {selectors} from '#/main/authentication/administration/password-validate/store/selectors'
-const PasswordValidateTool = (props) => {
-  console.log(props)
+import {selectors} from '#/main/authentication/administration/authentication/store/selectors'
+const AuthenticationTool = (props) => {
   return (
       <FormData
         name={selectors.FORM_NAME}
-        // name={"main_settings.authenticationParameters"}
-        target={['apiv2_parameters_update']}
+        target={['apiv2_authentication_update']}
         buttons={true}
         cancel={{
           type: LINK_BUTTON,
@@ -25,27 +23,27 @@ const PasswordValidateTool = (props) => {
               {
                 name: 'minLength',
                 type: 'number',
-                label: trans('minLength', {}, 'password-validate'),
+                label: trans('minLength', {}, 'authentication'),
               },
               {
                 name: 'requireLowercase',
                 type: 'boolean',
-                label: trans('requireLowercase', {}, 'password-validate'),
+                label: trans('requireLowercase', {}, 'authentication'),
               },
               {
                 name: 'requireUppercase',
                 type: 'boolean',
-                label: trans('requireUppercase', {}, 'password-validate'),
+                label: trans('requireUppercase', {}, 'authentication'),
               },
               {
                 name: 'requireNumber',
                 type: 'boolean',
-                label: trans('requireNumber', {}, 'password-validate'),
+                label: trans('requireNumber', {}, 'authentication'),
               },
               {
                 name: 'requireSpecialChar',
                 type: 'boolean',
-                label: trans('requireSpecialChar', {}, 'password-validate'),
+                label: trans('requireSpecialChar', {}, 'authentication'),
               },
             ],
           }
@@ -55,5 +53,5 @@ const PasswordValidateTool = (props) => {
 }
 
 export {
-  PasswordValidateTool
+  AuthenticationTool
 }
