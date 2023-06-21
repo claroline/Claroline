@@ -454,6 +454,7 @@
     "password": "Password",
     "password_mismatch": "The passwords don't match",
     "password_ok": "Your password has been changed, you can login now",
+    "password-validate": "Password validate",
     "paste": "Paste",
     "path": "Path",
     "pending": "Pending",

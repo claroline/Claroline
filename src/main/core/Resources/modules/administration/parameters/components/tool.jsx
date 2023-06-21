@@ -9,7 +9,7 @@ import {Meta} from '#/main/core/administration/parameters/main/containers/meta'
 import {Technical} from '#/main/core/administration/parameters/technical/containers/technical'
 
 import {AppearanceTool} from '#/main/theme/administration/appearance/containers/tool'
-import {PasswordValidateTool} from "#/main/authentication/administration/password-validate/containers/tool";
+import {PasswordValidateTool} from '#/main/authentication/administration/password-validate/containers/tool'
 
 const ParametersTool = (props) => {
 

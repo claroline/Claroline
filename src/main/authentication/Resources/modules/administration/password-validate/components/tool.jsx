@@ -1,16 +1,15 @@
 import React from 'react'
 
-import {FormData} from '#/main/app/content/form/containers/data'
-import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {trans} from '#/main/app/intl/translation'
+import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors} from '#/main/authentication/administration/password-validate/store/selectors'
-
 const PasswordValidateTool = (props) => {
-  console.log('props', props)
+  console.log(props)
   return (
       <FormData
-        // name={selectors.STORE_NAME}
-        name={"main_settings.authenticationParameters"}
+        name={selectors.FORM_NAME}
+        // name={"main_settings.authenticationParameters"}
         target={['apiv2_parameters_update']}
         buttons={true}
         cancel={{
@@ -26,27 +25,27 @@ const PasswordValidateTool = (props) => {
               {
                 name: 'minLength',
                 type: 'number',
-                label: trans('minLength', {}, 'tools'),
+                label: trans('minLength', {}, 'password-validate'),
               },
               {
                 name: 'requireLowercase',
                 type: 'boolean',
-                label: trans('requireLowercase', {}, 'tools'),
+                label: trans('requireLowercase', {}, 'password-validate'),
               },
               {
                 name: 'requireUppercase',
                 type: 'boolean',
-                label: trans('requireUppercase', {}, 'tools'),
+                label: trans('requireUppercase', {}, 'password-validate'),
               },
               {
                 name: 'requireNumber',
                 type: 'boolean',
-                label: trans('requireNumber', {}, 'tools'),
+                label: trans('requireNumber', {}, 'password-validate'),
               },
               {
                 name: 'requireSpecialChar',
                 type: 'boolean',
-                label: trans('requireSpecialChar', {}, 'tools'),
+                label: trans('requireSpecialChar', {}, 'password-validate'),
               },
             ],
           }
