@@ -6,7 +6,7 @@ import {AuthenticationTool as AuthenticationComponent} from '#/main/authenticati
 const AuthenticationTool =
   connect(
     (state) => ({
-      path: toolSelectors.path(state),
+      path: toolSelectors.path(state)
     })
   )(AuthenticationComponent)
 

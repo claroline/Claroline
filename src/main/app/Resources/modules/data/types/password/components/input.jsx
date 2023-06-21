@@ -53,11 +53,11 @@ class PasswordInput extends PureComponent {
     const progressBarTypes = ['danger', 'warning', 'info', 'success']
     const progressBarType = this.state.passwordStrength > 0 ? progressBarTypes[this.state.passwordStrength - 1] : 'danger'
     const labels = [
-      trans('password_strength.very_weak', {}, 'security'),
-      trans('password_strength.weak', {}, 'security'),
-      trans('password_strength.medium', {}, 'security'),
-      trans('password_strength.strong', {}, 'security'),
-      trans('password_strength.very_strong', {}, 'security')
+      trans('password_strength.very_weak', {}, 'password'),
+      trans('password_strength.weak', {}, 'password'),
+      trans('password_strength.medium', {}, 'password'),
+      trans('password_strength.strong', {}, 'password'),
+      trans('password_strength.very_strong', {}, 'password')
     ]
 
     return (

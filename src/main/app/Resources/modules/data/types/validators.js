@@ -7,6 +7,7 @@ import {url as urlGenerator} from '#/main/app/api/router'
 import {trans, tval} from '#/main/app/intl/translation'
 import {isValidDate} from '#/main/app/intl/date'
 import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
+import {param} from '#/main/app/config'
 
 // TODO : break me
 
@@ -296,6 +297,36 @@ function notExist(value, options = {}) {
   }
 }
 
+function passwordComplexity(value) {
+  let errors = []
+
+  const minLength = param('authenticationParameters.minLength')
+
+  if (minLength > 0 && value.length < minLength) {
+    errors = errors.concat(trans('This value should be {{ limit }} or more.', {}, 'validators' ).replace('{{ limit }}', minLength ) )
+  }
+
+  if (param('authenticationParameters.requireLowercase') && match(value, {regex: /[a-z]/})) {
+    errors = errors.concat(trans('lowercase_required', {}, 'validators'))
+  }
+
+  if (param('authenticationParameters.requireUppercase') && match(value, {regex: /[A-Z]/})) {
+    errors = errors.concat(trans('uppercase_required', {}, 'validators'))
+  }
+
+  if (param('authenticationParameters.requireNumber') && match(value, {regex: /[0-9]/})) {
+    errors = errors.concat(trans('number_required', {}, 'validators'))
+  }
+
+  if (param('authenticationParameters.requireSpecialChar') && match(value, {regex: /[^a-zA-Z0-9]/})) {
+    errors = errors.concat( trans('special_required', {}, 'validators'))
+  }
+
+  if(errors.length > 0) {
+    return errors
+  }
+}
+
 export {
   validateIf,
   chain,
@@ -325,5 +356,6 @@ export {
   between,
   dateAfter,
   unique,
-  notExist
+  notExist,
+  passwordComplexity
 }

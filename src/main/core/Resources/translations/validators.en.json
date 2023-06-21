@@ -27,5 +27,9 @@
     "value_lower_or_equal_to": "This value must be lower or equal to %limit%.",
     "value_not_blank": "This value can not be blank.",
     "value_not_unique": "This value is already in use.",
-    "invalid_image": "This file is not a valid image."
+    "invalid_image": "This file is not a valid image.",
+    "lowercase_required": "Must be contain lowercase letter",
+    "uppercase_required": "Must be contain uppercase letter",
+    "number_required": "Must be contain number",
+    "special_required": "Must be contain special character"
 }
