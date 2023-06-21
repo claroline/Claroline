@@ -4,10 +4,10 @@ namespace Claroline\AuthenticationBundle\Subscriber\Administration;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
-use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ParametersSubscriber implements EventSubscriberInterface
