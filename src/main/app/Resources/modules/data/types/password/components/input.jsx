@@ -65,7 +65,7 @@ class PasswordInput extends PureComponent {
     const minLength = param('authentication.minLength')
     if (minLength > 0) {
       conditions.minlength_rules = {
-        text: minLength + " " + trans('minlength_rules', {}, 'security'),
+        text: minLength + ' ' + trans('minlength_rules', {}, 'security'),
         checked: password.length >= minLength
       }
     }
@@ -167,8 +167,8 @@ class PasswordInput extends PureComponent {
 
         <div className="password-rules">
           {this.state.passwordValidChecks.map((msg, index) =>
-            <div className={"password-check" + (this.props.value.length > 0 ? ( msg.checked ? "-valid" : "-invalid") : "" )} key={index}>
-              <span className={"fa fa-fw fa-" + (msg.checked ? "check" : "times" ) + "-circle icon-with-text-right"}/>
+            <div className={'password-check' + (this.props.value.length > 0 ? ( msg.checked ? '-valid' : '-invalid') : '' )} key={index}>
+              <span className={'fa fa-fw fa-' + (msg.checked ? "check" : "times" ) + '-circle icon-with-text-right'}/>
               <label className="validate-label">{msg.text}</label>
             </div>
           )}

@@ -7,7 +7,6 @@ import {url as urlGenerator} from '#/main/app/api/router'
 import {trans, tval} from '#/main/app/intl/translation'
 import {isValidDate} from '#/main/app/intl/date'
 import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
-import {param} from '#/main/app/config'
 
 // TODO : break me
 
@@ -326,5 +325,6 @@ export {
   lowerOrEqual,
   between,
   dateAfter,
-  unique
+  unique,
+  notExist
 }
