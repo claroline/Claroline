@@ -23,27 +23,27 @@ const AuthenticationTool = (props) => {
             {
               name: 'minLength',
               type: 'number',
-              label: trans('minLength', {}, 'authentication')
+              label: trans('minLength', {}, 'security')
             },
             {
               name: 'requireLowercase',
               type: 'boolean',
-              label: trans('requireLowercase', {}, 'authentication')
+              label: trans('requireLowercase', {}, 'security')
             },
             {
               name: 'requireUppercase',
               type: 'boolean',
-              label: trans('requireUppercase', {}, 'authentication')
+              label: trans('requireUppercase', {}, 'security')
             },
             {
               name: 'requireNumber',
               type: 'boolean',
-              label: trans('requireNumber', {}, 'authentication')
+              label: trans('requireNumber', {}, 'security')
             },
             {
               name: 'requireSpecialChar',
               type: 'boolean',
-              label: trans('requireSpecialChar', {}, 'authentication')
+              label: trans('requireSpecialChar', {}, 'security')
             }
           ]
         }
