@@ -326,6 +326,7 @@ class UserValidator implements ValidatorInterface
                 ];
             }
         }
+
         return $errors;
     }
 }
