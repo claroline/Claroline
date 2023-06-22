@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Controller;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -12,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Item\Item;
+use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Manager\Item\ItemManager;
 use UJM\ExoBundle\Manager\Item\ShareManager;
 
@@ -25,12 +27,8 @@ class ItemController extends AbstractCrudController
     use RequestDecoderTrait;
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ItemManager */
-    private $manager;
-    /** @var ShareManager */
-    private $shareManager;
+    private ItemManager $manager;
+    private ShareManager $shareManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -85,6 +83,13 @@ class ItemController extends AbstractCrudController
     public function getIgnore(): array
     {
         return ['get', 'create', 'update', 'copyBulk', 'exist', 'find'];
+    }
+
+    public static function getOptions(): array
+    {
+        return array_merge(parent::getOptions(), [
+            'list' => [Options::SERIALIZE_LIST, Transfer::INCLUDE_SOLUTIONS],
+        ]);
     }
 
     protected function getDefaultHiddenFilters(): array
