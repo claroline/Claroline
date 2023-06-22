@@ -34,7 +34,7 @@ class ParametersSubscriber implements EventSubscriberInterface
     public function onOpen(OpenToolEvent $event): void
     {
         $event->setData([
-            'authenticationParameters' => $this->serializer->serialize(
+            'authentication' => $this->serializer->serialize(
                 $this->objectManager->getRepository(AuthenticationParameters::class)->findOneBy([]),
             ),
         ]);

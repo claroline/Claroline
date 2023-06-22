@@ -8,7 +8,7 @@ const AuthenticationTool = (props) => {
   return (
     <FormData
       name={selectors.FORM_NAME}
-      target={['apiv2_authentication_update']}
+      target={['apiv2_authentication_parameters_update']}
       buttons={true}
       cancel={{
         type: LINK_BUTTON,

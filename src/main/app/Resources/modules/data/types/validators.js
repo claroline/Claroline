@@ -300,25 +300,25 @@ function notExist(value, options = {}) {
 function passwordComplexity(value) {
   let errors = []
 
-  const minLength = param('authenticationParameters.minLength')
+  const minLength = param('authentication.minLength')
 
   if (minLength > 0 && value.length < minLength) {
     errors = errors.concat(trans('This value should be {{ limit }} or more.', {}, 'validators' ).replace('{{ limit }}', minLength ) )
   }
 
-  if (param('authenticationParameters.requireLowercase') && match(value, {regex: /[a-z]/})) {
+  if (param('authentication.requireLowercase') && match(value, {regex: /[a-z]/})) {
     errors = errors.concat(trans('lowercase_required', {}, 'validators'))
   }
 
-  if (param('authenticationParameters.requireUppercase') && match(value, {regex: /[A-Z]/})) {
+  if (param('authentication.requireUppercase') && match(value, {regex: /[A-Z]/})) {
     errors = errors.concat(trans('uppercase_required', {}, 'validators'))
   }
 
-  if (param('authenticationParameters.requireNumber') && match(value, {regex: /[0-9]/})) {
+  if (param('authentication.requireNumber') && match(value, {regex: /[0-9]/})) {
     errors = errors.concat(trans('number_required', {}, 'validators'))
   }
 
-  if (param('authenticationParameters.requireSpecialChar') && match(value, {regex: /[^a-zA-Z0-9]/})) {
+  if (param('authentication.requireSpecialChar') && match(value, {regex: /[^a-zA-Z0-9]/})) {
     errors = errors.concat( trans('special_required', {}, 'validators'))
   }
 

@@ -9,9 +9,9 @@ import {selectors} from '#/main/authentication/administration/authentication/sto
 
 export const reducer = makeFormReducer( selectors.FORM_NAME, {}, {
   data: makeReducer({}, {
-    [makeInstanceAction(TOOL_LOAD, paramSelectors.STORE_NAME)]: (state, action) => action.toolData.authenticationParameters
+    [makeInstanceAction(TOOL_LOAD, paramSelectors.STORE_NAME)]: (state, action) => action.toolData.authentication
   }),
   originalData: makeReducer({}, {
-    [makeInstanceAction(TOOL_LOAD, paramSelectors.STORE_NAME)]: (state, action) => action.toolData.authenticationParameters
+    [makeInstanceAction(TOOL_LOAD, paramSelectors.STORE_NAME)]: (state, action) => action.toolData.authentication
   })
 } )
