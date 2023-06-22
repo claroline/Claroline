@@ -1,10 +1,12 @@
 import React, {PureComponent} from 'react'
 import classes from 'classnames'
 
-import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {param} from '#/main/app/config'
 import {trans} from '#/main/app/intl/translation'
-import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {match} from '#/main/app/data/types/validators'
 
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ProgressBar} from '#/main/app/content/components/progress-bar'
@@ -15,16 +17,24 @@ class PasswordInput extends PureComponent {
 
     this.state = {
       visible: false,
-      passwordStrength: 0
+      passwordStrength: 0,
+      passwordValidChecks: []
     }
 
     this.onChange = this.onChange.bind(this)
     this.toggleVisibility = this.toggleVisibility.bind(this)
     this.estimatePasswordStrength = this.estimatePasswordStrength.bind(this)
+    this.checkValidPassword = this.checkValidPassword.bind(this)
   }
+
+  componentDidMount() {
+    this.checkValidPassword(this.props.value)
+  }
+
   onChange(e) {
     this.props.onChange(e.target.value)
     this.estimatePasswordStrength(e.target.value)
+    this.checkValidPassword(e.target.value)
   }
 
   toggleVisibility() {
@@ -46,6 +56,50 @@ class PasswordInput extends PureComponent {
 
     this.setState({
       passwordStrength: strengthSum
+    })
+  }
+
+  checkValidPassword(password) {
+    let conditions = {}
+
+    const minLength = param('authentication.minLength')
+    if (minLength > 0) {
+      conditions.minlength_rules = {
+        text: minLength + " " + trans('minlength_rules', {}, 'security'),
+        checked: password.length >= minLength
+      }
+    }
+
+    if (param('authentication.requireLowercase')) {
+      conditions.lowercase_rules = {
+        text: trans('lowercase_rules', {}, 'security'),
+        checked: !match(password, {regex: /[a-z]/})
+      }
+    }
+
+    if (param('authentication.requireUppercase')) {
+      conditions.uppercase_rules = {
+        text: trans('uppercase_rules', {}, 'security'),
+        checked: !match(password, {regex: /[A-Z]/})
+      }
+    }
+
+    if (param('authentication.requireNumber')) {
+      conditions.number_rules = {
+        text: trans('number_rules', {}, 'security'),
+        checked: !match(password, {regex: /[0-9]/})
+      }
+    }
+
+    if (param('authentication.requireSpecialChar')) {
+      conditions.special_rules = {
+        text: trans('special_rules', {}, 'security'),
+        checked: !match(password, {regex: /[^a-zA-Z0-9]/})
+      }
+    }
+
+    this.setState({
+      passwordValidChecks: Object.values(conditions)
     })
   }
 
@@ -110,6 +164,16 @@ class PasswordInput extends PureComponent {
             </span>
           </>
         }
+
+        <div className="password-rules">
+          {this.state.passwordValidChecks.map((msg, index) =>
+            <div className={"password-check" + (this.props.value.length > 0 ? ( msg.checked ? "-valid" : "-invalid") : "" )} key={index}>
+              <span className={"fa fa-fw fa-" + (msg.checked ? "check" : "times" ) + "-circle icon-with-text-right"}/>
+              <label className="validate-label">{msg.text}</label>
+            </div>
+          )}
+        </div>
+
       </>
     )
   }

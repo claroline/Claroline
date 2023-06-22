@@ -1,6 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {passwordComplexity} from '#/main/app/data/types/validators'
+import {passwordComplexity} from '#/main/app/data/types/password/validators'
 import {PasswordInput} from '#/main/app/data/types/password/components/input'
 
 const dataType = {

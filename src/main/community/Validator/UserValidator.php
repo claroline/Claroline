@@ -123,42 +123,8 @@ class UserValidator implements ValidatorInterface
         }
 
         // Password strength
-        $authenticationParameters = $this->om->getRepository(AuthenticationParameters::class)->findOneBy([]);
-        if ($authenticationParameters) {
-            if ($authenticationParameters->getMinLength() > 0 && strlen($data['plainPassword']) < $authenticationParameters->getMinLength()) {
-                $errors[] = [
-                    'path' => 'plainPassword',
-                    'message' => 'The password must be at least '.$authenticationParameters->getMinLength().' characters long.',
-                ];
-            }
-
-            if ($authenticationParameters->getRequireLowercase() && !preg_match('/[a-z]/', $data['plainPassword'])) {
-                $errors[] = [
-                    'path' => 'plainPassword',
-                    'message' => 'The password must contain at least one lowercase letter.',
-                ];
-            }
-
-            if ($authenticationParameters->getRequireUppercase() && !preg_match('/[A-Z]/', $data['plainPassword'])) {
-                $errors[] = [
-                    'path' => 'plainPassword',
-                    'message' => 'The password must contain at least one uppercase letter.',
-                ];
-            }
-
-            if ($authenticationParameters->getRequireNumber() && !preg_match('/[0-9]/', $data['plainPassword'])) {
-                $errors[] = [
-                    'path' => 'plainPassword',
-                    'message' => 'The password must contain at least one number.',
-                ];
-            }
-
-            if ($authenticationParameters->getRequireSpecialChar() && !preg_match('/[^a-zA-Z0-9]/', $data['plainPassword'])) {
-                $errors[] = [
-                    'path' => 'plainPassword',
-                    'message' => 'The password must contain at least one special character.',
-                ];
-            }
+        if (isset($data['plainPassword'])) {
+            $errors = array_merge($errors, $this->validatePasswordStrength($data['plainPassword']));
         }
 
         // todo validate Facet values
@@ -318,5 +284,48 @@ class UserValidator implements ValidatorInterface
         }
 
         return false;
+    }
+
+    private function validatePasswordStrength(string $password): array
+    {
+        $errors = [];
+        $authenticationParameters = $this->om->getRepository(AuthenticationParameters::class)->findOneBy([]);
+        if ($authenticationParameters) {
+            if ($authenticationParameters->getMinLength() > 0 && strlen($password) < $authenticationParameters->getMinLength()) {
+                $errors[] = [
+                    'path' => 'plainPassword',
+                    'message' => 'The password must be at least '.$authenticationParameters->getMinLength().' characters long.',
+                ];
+            }
+
+            if ($authenticationParameters->getRequireLowercase() && !preg_match('/[a-z]/', $password)) {
+                $errors[] = [
+                    'path' => 'plainPassword',
+                    'message' => 'The password must contain at least one lowercase letter.',
+                ];
+            }
+
+            if ($authenticationParameters->getRequireUppercase() && !preg_match('/[A-Z]/', $password)) {
+                $errors[] = [
+                    'path' => 'plainPassword',
+                    'message' => 'The password must contain at least one uppercase letter.',
+                ];
+            }
+
+            if ($authenticationParameters->getRequireNumber() && !preg_match('/[0-9]/', $password)) {
+                $errors[] = [
+                    'path' => 'plainPassword',
+                    'message' => 'The password must contain at least one number.',
+                ];
+            }
+
+            if ($authenticationParameters->getRequireSpecialChar() && !preg_match('/[^a-zA-Z0-9]/', $password)) {
+                $errors[] = [
+                    'path' => 'plainPassword',
+                    'message' => 'The password must contain at least one special character.',
+                ];
+            }
+        }
+        return $errors;
     }
 }

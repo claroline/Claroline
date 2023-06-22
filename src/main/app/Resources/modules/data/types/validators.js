@@ -297,35 +297,6 @@ function notExist(value, options = {}) {
   }
 }
 
-function passwordComplexity(value) {
-  let errors = []
-
-  const minLength = param('authentication.minLength')
-
-  if (minLength > 0 && value.length < minLength) {
-    errors = errors.concat(trans('This value should be {{ limit }} or more.', {}, 'validators' ).replace('{{ limit }}', minLength ) )
-  }
-
-  if (param('authentication.requireLowercase') && match(value, {regex: /[a-z]/})) {
-    errors = errors.concat(trans('lowercase_required', {}, 'validators'))
-  }
-
-  if (param('authentication.requireUppercase') && match(value, {regex: /[A-Z]/})) {
-    errors = errors.concat(trans('uppercase_required', {}, 'validators'))
-  }
-
-  if (param('authentication.requireNumber') && match(value, {regex: /[0-9]/})) {
-    errors = errors.concat(trans('number_required', {}, 'validators'))
-  }
-
-  if (param('authentication.requireSpecialChar') && match(value, {regex: /[^a-zA-Z0-9]/})) {
-    errors = errors.concat( trans('special_required', {}, 'validators'))
-  }
-
-  if(errors.length > 0) {
-    return errors
-  }
-}
 
 export {
   validateIf,
@@ -355,7 +326,5 @@ export {
   lowerOrEqual,
   between,
   dateAfter,
-  unique,
-  notExist,
-  passwordComplexity
+  unique
 }
