@@ -24,7 +24,7 @@ const ItemList = props => {
       delete={props.delete}
       fetch={{
         url: ['apiv2_quiz_questions_list'],
-        autoload: true
+        autoload: !isEmpty(itemDefinitions)
       }}
       definition={[
         {
@@ -34,10 +34,13 @@ const ItemList = props => {
           alias: 'mimeType',
           render: (rowData) => {
             const itemType = itemDefinitions.find(type => type.type === rowData.type)
-            // variable is for eslint rule "Component definition is missing display name  react/display-name"
-            const itemIcon = <ItemIcon name={itemType.name} />
+            if (itemType) {
+              return (
+                <ItemIcon name={itemType.name} />
+              )
+            }
 
-            return itemIcon
+            return null
           },
           type: 'choice',
           options: {
