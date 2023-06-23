@@ -122,9 +122,9 @@ class UserValidator implements ValidatorInterface
             }
         }
 
-        // Password strength
+        // Password check
         if (isset($data['plainPassword'])) {
-            $errors = array_merge($errors, $this->validatePasswordStrength($data['plainPassword']));
+            $errors = array_merge($errors, $this->validatePasswordCheck($data['plainPassword']));
         }
 
         // todo validate Facet values
@@ -286,7 +286,7 @@ class UserValidator implements ValidatorInterface
         return false;
     }
 
-    private function validatePasswordStrength(string $password): array
+    private function validatePasswordCheck(string $password): array
     {
         $errors = [];
         $authenticationParameters = $this->om->getRepository(AuthenticationParameters::class)->findOneBy([]);

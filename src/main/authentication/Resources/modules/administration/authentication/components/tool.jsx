@@ -19,6 +19,9 @@ const AuthenticationTool = (props) => {
         {
           title: trans('general'),
           primary: true,
+        }, {
+          icon: 'fa fa-fw fa-lock',
+          title: trans('passwordValidate', {}, 'security'),
           fields: [
             {
               name: 'minLength',
