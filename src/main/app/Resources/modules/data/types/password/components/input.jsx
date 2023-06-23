@@ -1,13 +1,15 @@
 import React, {PureComponent} from 'react'
 import classes from 'classnames'
 
-import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
-import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
+import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ProgressBar} from '#/main/app/content/components/progress-bar'
+
+import {passwordStrength} from '#/main/app/data/types/password/utils'
 
 class PasswordInput extends PureComponent {
   constructor(props) {
@@ -32,20 +34,8 @@ class PasswordInput extends PureComponent {
   }
 
   estimatePasswordStrength(password) {
-    const conditions = [
-      /[a-z]/,
-      /[A-Z]/,
-      /[0-9]/,
-      /[^a-zA-Z0-9]/,
-      /^.{8,}$/
-    ]
-
-    const strengthSum = conditions.reduce((sum, regex) => {
-      return regex.test(password) ? sum + 1 : sum
-    }, 0)
-
     this.setState({
-      passwordStrength: strengthSum
+      passwordStrength: passwordStrength(password)
     })
   }
 
@@ -105,9 +95,14 @@ class PasswordInput extends PureComponent {
               size="sm"
               type={progressBarType}
             />
-            <span className={`text-${progressBarType}`}>
-              {labels[this.state.passwordStrength]}
-            </span>
+            <div className="password-strength-label">
+              <span className={`text-${progressBarType} strength-label`}>
+                {labels[this.state.passwordStrength]}
+              </span>
+              <a className="label-link" href="https://www.ssi.gouv.fr/administration/precautions-elementaires/calculer-la-force-dun-mot-de-passe/" target="_blank" rel="noopener noreferrer">
+                <span className="fa fa-fw fa-question-circle"/>
+              </a>
+            </div>
           </>
         }
       </>
