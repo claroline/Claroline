@@ -18,7 +18,7 @@ const AuthenticationTool = (props) => {
       definition={[
         {
           title: trans('general'),
-          primary: true,
+          primary: true
         }, {
           icon: 'fa fa-fw fa-lock',
           title: trans('passwordValidate', {}, 'security'),
