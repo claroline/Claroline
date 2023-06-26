@@ -20,11 +20,12 @@ const ColorChartLibrary = (props) => {
   const selectedObject = tinycolor(props.selected)
 
   return (
-    <div className="select-color-chart">
+    <>
       {props.colorCharts && props.colorCharts.length > 1 && (
         <Select
           id="color-chart-select"
-          size="md"
+          size="sm"
+          noEmpty={true}
           value={selectedColorChart}
           onChange={handleColorChartSelect}
           choices={(props.colorCharts || []).reduce((choices, colorChart) => {
@@ -35,10 +36,11 @@ const ColorChartLibrary = (props) => {
         />
       )}
 
-      {(props.colorCharts || []).map((colorChart, index) => {
-        const colorChartDots = (colorChart.colors || []).map(color => {
+      <div className="color-chart-library">
+        {(props.colorCharts || []).map((colorChart) => (colorChart.colors || []).map(color => {
           if (colorChart.name === selectedColorChart || selectedColorChart === 'all') {
             const colorObject = tinycolor(color)
+
             return (
               <CallbackButton
                 key={color}
@@ -58,15 +60,11 @@ const ColorChartLibrary = (props) => {
               </CallbackButton>
             )
           }
+
           return null
-        })
-        return (
-          <span key={index} className="color-chart-library">
-            {colorChartDots}
-          </span>
-        )
-      })}
-    </div>
+        }))}
+      </div>
+    </>
   )
 }
 

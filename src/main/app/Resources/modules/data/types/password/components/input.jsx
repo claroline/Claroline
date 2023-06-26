@@ -90,6 +90,7 @@ class PasswordInput extends PureComponent {
 
     this.setState({
       passwordValidChecks: Object.values(conditions)
+    this.setState({
     })
   }
 

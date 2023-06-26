@@ -5,11 +5,16 @@ title: Tools
 
 # Tools
 
+> This section only covers the API part of the tools.
+> To know how to declare and register UI for your tool, please see User Interface > Tools
+
+
 Desktop, Administration and Workspaces are composed of multiple tools.
 A plugin can define new tools.
 
 Each time the CoreBundle is opening a tool, 
 it'll fire the event `open_tool_workspace|desktop_*my_tool*`.
+
 
 ## Tool definition
 

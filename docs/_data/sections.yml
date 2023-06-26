@@ -22,6 +22,9 @@
     - title: Plugins
       doc: application/plugins
 
+    - title: Parameters
+      doc: application/parameters
+
     - title: Tools
       doc: application/tools
 
@@ -34,6 +37,8 @@
     - title: Widgets
       doc: application/widgets
 
+    - title: Templates
+      doc: application/templates
 
 - title: API
   home: api/index
@@ -47,11 +52,11 @@
       - title: Serializer
         doc: api/serializer
 
-      - title: Finder
-        doc: api/finder
+      #- title: Finder
+      #  doc: api/finder
 
-      - title: CRUD
-        doc: api/crud
+      #- title: CRUD
+      #  doc: api/crud
 
 
 - title: User Interface
@@ -63,14 +68,17 @@
       - title: Localization
         doc: user-interface/localization
 
-      - title: Pages
-        doc: user-interface/pages
+      - title: Parameters
+        doc: user-interface/parameters
 
-      - title: Modal
-        doc: user-interface/modal
+      #- title: Pages
+      #  doc: user-interface/pages
 
-      - title: Data
-        doc: user-interface/data
+      #- title: Modal
+      #  doc: user-interface/modal
+
+      #- title: Data
+      #  doc: user-interface/data
 
       - title: Actions
         doc: user-interface/actions

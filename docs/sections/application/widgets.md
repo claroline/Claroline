@@ -11,7 +11,7 @@ title: Widgets
 Your plugin must define its properties and the list of its widgets in the
 *Resources/config/config.yml file*.
 
-This file will be parsed by the plugin installator to install your plugin and
+This file will be parsed by the plugin installer to install your plugin and
 create all your declared widgets in the database.
 
 ```yml
@@ -19,7 +19,7 @@ plugin:
     # Widgets declared by your plugin.
     widgets:
           # Each widget requires a name.
-        - name: claroline_exemple
+        - name: claroline_example
           # Set this to true if the widget is configurable
           is_configurable: true
           # You can set an icon for your widget. The icon must be in your public/images/icons folder.
@@ -31,7 +31,7 @@ plugin:
 
 ## Translations
 
-* widget.xx.yml
+* widget.xx.json
 
 We use lower case for every translation keys.
 

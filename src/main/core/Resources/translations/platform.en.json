@@ -1085,5 +1085,6 @@
     "edition": "Edition",
     "after_today": "After today",
     "confirmed": "Confirmed",
-    "validated": "Validated"
+    "validated": "Validated",
+    "other": "Other"
 }

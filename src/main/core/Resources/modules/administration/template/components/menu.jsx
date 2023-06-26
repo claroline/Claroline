@@ -29,6 +29,11 @@ const TemplateMenu = (props) =>
           label: trans('pdf'),
           target: `${props.path}/pdf`
         }, {
+          name: 'other',
+          type: LINK_BUTTON,
+          label: trans('other'),
+          target: `${props.path}/other`
+        }, {
           name: 'sms',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-sms',
