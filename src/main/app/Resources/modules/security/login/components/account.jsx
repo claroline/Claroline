@@ -42,7 +42,8 @@ class LoginAccount extends Component {
                 autoComplete: 'current-password',
                 hideLabel: true,
                 options: {
-                  hideStrength: true
+                  hideStrength: true,
+                  disablePasswordCheck: true
                 },
                 type: 'password',
                 required: true
