@@ -82,7 +82,9 @@ class PrivacyController extends AbstractSecurityController
         // Mettre à jour la valeur du champ publicationDate avec la date actuelle
         if (isset($data['publicationDateOk'])) {
             $data['publicationDate'] = new \DateTime();
+
             //to do envoie un email aux utilisateurs
+            $this->privacyManager->sendEmailToUsersAcceptTerms();
         }
 
         $privacyUpdate = $this->crud->update($privacyParameters, $data, [Crud::THROW_EXCEPTION]); //verif maj terms pour changement date
@@ -110,10 +112,9 @@ class PrivacyController extends AbstractSecurityController
      */
     public function getCurrentAction(Request $request)
     {
+        // HS
         $terms = $request->query->get('termsOfService');
-        //if ($this->termsOfServiceManager->isActive()) {
-            $terms = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
-        //}
+        $terms = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
 
         return new JsonResponse(
             $this->privacySerializer->serialize($terms)

@@ -3,6 +3,7 @@
 namespace Claroline\PrivacyBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\PrivacyBundle\Entity\PrivacyParameters;
@@ -45,6 +46,27 @@ class PrivacyManager
             return $this->mailManager->send($subject, $body, [], null, ['to' => [$dpoEmail]], false, $user->getEmail());
         }
 
+        return false;
+    }
+
+    public function sendEmailToUsersAcceptTerms()
+    {
+        if ($this->mailManager->isMailerAvailable()) {
+            $users = $this->objectManager->getRepository(User::class)->findAll();
+            $locale = $users[0]->getLocale();
+
+            $subject = $this->translator->trans('update_terms_of_service_mail.subject', [], 'privacy', $locale);
+            $content = $this->translator->trans('update_terms_of_service_mail.body', [], 'privacy', $locale);
+
+            $body = $this->templateManager->getTemplate('email_layout', ['content' => $content], $locale);
+
+            $to = [];
+            foreach ($users as $user) {
+                $to[] = $user->getEmail();
+            }
+
+            return $this->mailManager->send($subject, $body, [], null, ['to' => $to], false);
+        }
         return false;
     }
 }

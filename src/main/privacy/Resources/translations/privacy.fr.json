@@ -37,5 +37,10 @@
   "terms_help": "Les conditions d'utilisation sont affichées aux utilisateurs lors de leur première connexion à la plateforme. Ils doivent les accepter pour pouvoir utiliser la plateforme.",
   "terms_of_services_load": "Chargement des conditions d'utilisation...",
   "terms_of_service_info": "Toute modification modifiera la date de dernière mise à jour des conditions d'utilisation, ce qui entraînera une nouvelle demande d'acceptation aux utilisateurs.",
-  "publication_date": "Modifier la date de publication à aujourd'hui"
+  "publication_date": "Modifier la date de publication à aujourd'hui",
+
+  "update_terms_of_service_mail": {
+    "subject": "Mise à jour des conditions d'utilisation",
+    "body": "Les conditions d'utilisation ont été mises à jour. Veuillez en prendre connaissance et les accepter à nouveau pour pouvoir continuer à utiliser la plateforme."
+  }
 }
