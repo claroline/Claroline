@@ -23,7 +23,7 @@
   "change_terms": "Afficher/Modifier les conditions d'utilisation",
   "terms_of_service": "Conditions d'utilisation",
   "terms_of_service_activation_message": "Activer les conditions d'utilisation",
-  "terms_of_service_activation_help": "Les nouveaux utilisateurs devront accepter les conditions avant de pouvoir utiliser la plateforme.",
+  "terms_of_service_activation_help": "Les utilisateurs vont recevoir un email de demande de validation des conditions.",
   "terms_enabled_but_empty": "Les conditions d'utilisation ne peuvent être activées que si le texte est fourni dans au moins une langue.",
   "terms_of_service_acceptance": "J'accepte les conditions d'utilisation",
   "show-terms-of-service": "Afficher les conditions d'utilisation",
@@ -36,5 +36,6 @@
   "dpo_help": "Le Délégué à la Protection des Données (DPO) est responsable de la conformité de l'organisation aux règles de protection des données et sert d'intermédiaire avec l'autorité de surveillance et les personnes concernées.",
   "terms_help": "Les conditions d'utilisation sont affichées aux utilisateurs lors de leur première connexion à la plateforme. Ils doivent les accepter pour pouvoir utiliser la plateforme.",
   "terms_of_services_load": "Chargement des conditions d'utilisation...",
-  "terms_of_service_info": "Toute modification modifiera la date de dernière mise à jour des conditions d'utilisation, ce qui entraînera une nouvelle demande d'acceptation aux utilisateurs."
+  "terms_of_service_info": "Toute modification modifiera la date de dernière mise à jour des conditions d'utilisation, ce qui entraînera une nouvelle demande d'acceptation aux utilisateurs.",
+  "publication_date": "Modifier la date de publication à aujourd'hui"
 }

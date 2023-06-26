@@ -23,7 +23,7 @@
   "change_terms": "View/Edit terms of service",
   "terms_of_service": "Terms of service",
   "terms_of_service_activation_message": "Activate the terms of service",
-  "terms_of_service_activation_help": "New users will need to accept the terms to be able to use the platform.",
+  "terms_of_service_activation_help": "Users will receive an email requesting validation of the terms and conditions of use.",
   "terms_enabled_but_empty": "Terms of service can only be enabled if a text is provided in at least one language.",
   "terms_of_service_acceptance": "I accept the terms of service",
   "show-terms-of-service": "Show terms of service",
@@ -36,5 +36,6 @@
   "dpo_help": "The Data Protection Officer (DPO) is responsible for the organization's compliance with data protection rules and serves as a liaison with the supervisory authority and the individuals concerned",
   "terms_help": "The terms of use are the conditions of use of the platform that the user must accept to be able to use it.",
   "terms_of_services_load": "Loading terms of service...",
-  "terms_of_service_info": "Any change will modify the date of the last update of the terms of service, which will result in a new request for acceptance from users."
+  "terms_of_service_info": "Any change will modify the date of the last update of the terms of service, which will result in a new request for acceptance from users.",
+  "publication_date": "Change the publication date to today."
 }
