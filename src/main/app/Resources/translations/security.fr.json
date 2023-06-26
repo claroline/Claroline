@@ -18,7 +18,6 @@
   "requireUppercase": "Majuscule requise pour le mot de passe",
   "requireNumber": "Nombre requis pour le mot de passe",
   "requireSpecialChar": "Caractère spécial requis pour le mot de passe",
-  "invalid_image": "Ce fichier n'est pas une image valide.",
   "lowercase_rules": "Une minuscule",
   "uppercase_rules": "Une majuscule",
   "number_rules": "Un chiffre",

@@ -1,0 +1,14 @@
+plugin:
+    resources:
+        - name: claroline_announcement_aggregate
+          class: Claroline\AnnouncementBundle\Entity\AnnouncementAggregate
+          tags: [community]
+          actions:
+              - name: create-announce
+                decoder: create-announce
+
+    data_sources:
+        - name: announcements
+          type: list
+          context: [workspace, desktop, home]
+          tags: [community]
