@@ -41,6 +41,6 @@
 
   "update_terms_of_service_mail": {
     "subject": "Terms of service updated",
-    "body": "The terms of service have been updated. Please review and accept them again in order to continue using the platform."
+    "body": "Hello, <br/>The terms of service have been updated. Please review and accept them again in order to continue using the platform."
   }
 }

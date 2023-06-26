@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
+use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -274,7 +275,7 @@ class MailManager
         if ($this->isMailerAvailable()) {
             $name = $user->getFullName();
             $idUser = $user->getId();
-            $privacyEntity = $this->objectManager->getRepository(Privacy::class)->findOneBy([], ['id' => 'ASC']);
+            $privacyEntity = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
             $dpoEmail = $privacyEntity['dpoEmail'];
             var_dump($dpoEmail);
             $locale = $user->getLocale();

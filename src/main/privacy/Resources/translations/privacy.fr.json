@@ -41,6 +41,6 @@
 
   "update_terms_of_service_mail": {
     "subject": "Mise à jour des conditions d'utilisation",
-    "body": "Les conditions d'utilisation ont été mises à jour. Veuillez en prendre connaissance et les accepter à nouveau pour pouvoir continuer à utiliser la plateforme."
+    "body": "Bonjour,<br/> Les conditions d'utilisation ont été mises à jour. Veuillez en prendre connaissance et les accepter à nouveau pour pouvoir continuer à utiliser la plateforme."
   }
 }
