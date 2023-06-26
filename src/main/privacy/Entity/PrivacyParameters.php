@@ -54,6 +54,8 @@ class PrivacyParameters
      */
     protected $publicationDate;
 
+    //relation vers template par defaut trait use template juste pour definition de la relation
+
     public function getDpoName(): ?string
     {
         return $this->dpoName;

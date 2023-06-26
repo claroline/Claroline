@@ -17,7 +17,7 @@ class Updater140000 extends Updater
 
     public function postUpdate()
     {
-        $file = 'C:\xampp\htdocs\Claroline\files\config\platform_options.json';
+        $file = 'C:\xampp\htdocs\Claroline\files\config\platform_options.json'; //platformConfigurationHandler
 
         if (file_exists($file)) {
             $jsonContent = file_get_contents($file);
@@ -28,6 +28,8 @@ class Updater140000 extends Updater
 
                 if (!$privacyParameters) {
                     $privacyParameters = new PrivacyParameters();
+                    //service getParameters
+                    //crud
                     $privacyParameters->setCountryStorage($platformOptions['privacy']['countryStorage']);
                     $privacyParameters->setDpoName($platformOptions['privacy']['dpo']['name']);
                     $privacyParameters->setDpoEmail($platformOptions['privacy']['dpo']['email']);
@@ -38,7 +40,7 @@ class Updater140000 extends Updater
                     $privacyParameters->setAddressState($platformOptions['privacy']['dpo']['address']['state']);
                     $privacyParameters->setAddressCountry($platformOptions['privacy']['dpo']['address']['country']);
                     $privacyParameters->setDpoPhone($platformOptions['privacy']['dpo']['phone']);
-                    $privacyParameters->setTermsOfServiceEnabled(false);
+                    //$privacyParameters->setTermsOfServiceEnabled(false);
 
                     $this->objectManager->persist($privacyParameters);
                     $this->objectManager->flush();

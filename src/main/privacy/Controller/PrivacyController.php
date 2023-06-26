@@ -4,6 +4,7 @@ namespace Claroline\PrivacyBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Manager\TermsOfServiceManager;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -29,6 +30,7 @@ class PrivacyController extends AbstractSecurityController
     private TokenStorageInterface $tokenStorage;
     private PrivacyManager $privacyManager;
     private PrivacySerializer $privacySerializer;
+    private TermsOfServiceManager $termsOfServiceManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -37,7 +39,8 @@ class PrivacyController extends AbstractSecurityController
         Crud $crud,
         TokenStorageInterface $tokenStorage,
         PrivacyManager $privacyManager,
-        PrivacySerializer $privacySerializer
+        PrivacySerializer $privacySerializer,
+        TermsOfServiceManager $termsOfServiceManager
     ) {
         $this->authorization = $authorization;
         $this->serializer = $serializer;
@@ -46,6 +49,7 @@ class PrivacyController extends AbstractSecurityController
         $this->tokenStorage = $tokenStorage;
         $this->privacyManager = $privacyManager;
         $this->privacySerializer = $privacySerializer;
+        $this->termsOfServiceManager = $termsOfServiceManager;
     }
 
     public function getName(): string
@@ -78,7 +82,7 @@ class PrivacyController extends AbstractSecurityController
         // Mettre à jour la valeur du champ publicationDate avec la date actuelle
         $data['publicationDate'] = new \DateTime();
 
-        $privacyUpdate = $this->crud->update($privacyParameters, $data, [Crud::THROW_EXCEPTION]);
+        $privacyUpdate = $this->crud->update($privacyParameters, $data, [Crud::THROW_EXCEPTION]); //verif maj terms pour changement date
 
         return new JsonResponse(
             $this->serializer->serialize($privacyUpdate)
@@ -97,18 +101,19 @@ class PrivacyController extends AbstractSecurityController
     }
 
     /**
-     * @Route("", name="apiv2_add_privacy", methods={"GET"})
+     * @Route("", name="apiv2_terms_of_service", methods={"GET"})
      *
      * @throws \Exception
      */
-    public function getAction(): JsonResponse
+    public function getCurrentAction(Request $request)
     {
-        $privacy = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
-
-        $privacyGet = $this->crud->get(PrivacyParameters::class, $privacy);
+        $terms = $request->query->get('termsOfService');
+        //if ($this->termsOfServiceManager->isActive()) {
+            $terms = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+        //}
 
         return new JsonResponse(
-            ['privacyData' => $this->serializer->serialize($privacyGet)],
+            $this->privacySerializer->serialize($terms)
         );
     }
 }

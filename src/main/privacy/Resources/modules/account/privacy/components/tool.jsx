@@ -7,18 +7,15 @@ import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON, ASYNC_BUTTON} from '#/main/app/buttons'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {ContentTitle} from '#/main/app/content/components/title'
-import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/modals/terms'
+import {MODAL_TERMS_OF_SERVICE} from '#/main/app/modals/terms-of-service'
 import {AccountPage} from '#/main/app/account/containers/page'
 import {User as UserTypes} from '#/main/community/prop-types'
+import {selectors} from '#/main/privacy/account/privacy/store/selectors'
 import {url} from '#/main/app/api'
 import {constants as actionConstants} from '#/main/app/action/constants'
-import {selectors} from '#/main/privacy/administration/privacy/modals/dpo/store'
 import {DetailsData} from '#/main/app/content/details/components/data'
 
-const PrivacyTool = (props) => {
-  console.log(props)
-
-  return(
+const PrivacyTool = (props) =>
   <AccountPage
     path={[
       {
@@ -131,8 +128,7 @@ const PrivacyTool = (props) => {
       }}
     />
   </AccountPage>
-  )
-}
+
 PrivacyTool.propTypes = {
   currentUser: T.shape(
     UserTypes.propTypes

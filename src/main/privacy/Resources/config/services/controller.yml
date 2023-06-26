@@ -10,3 +10,4 @@ services:
             - '@security.token_storage'
             - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
             - '@Claroline\PrivacyBundle\Serializer\PrivacySerializer'
+            - '@Claroline\AppBundle\Manager\TermsOfServiceManager'

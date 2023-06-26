@@ -12,7 +12,7 @@ import {Button} from '#/main/app/action'
 
 const TermsModal = (props) => 
   <Modal
-    {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'termsOfService', 'termsOfServiceEnabled', 'fadeModal')}
+    {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'termsOfService', 'termsOfServiceEnabled')}
     icon="fa fa-fw fa-solid fa-pen-to-square"
     title={trans('terms_of_service', {}, 'privacy')}
     onEntering={() => props.reset(props.termsOfService, props.termsOfServiceEnabled)}

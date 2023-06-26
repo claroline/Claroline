@@ -181,21 +181,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'storage' => null,
                 'used_storage' => null,
             ],
-            'privacy' => [
-                'countryStorage' => null,
-                'dpo' => [
-                    'name' => null,
-                    'email' => null,
-                    'address' => [
-                        'street1' => null,
-                        'street2' => null,
-                        'postalCode' => null,
-                        'city' => null,
-                        'state' => null,
-                        'country' => null,
-                    ],
-                ],
-            ],
             'pricing' => [
                 'enabled' => false,
                 'currency' => 'euro',

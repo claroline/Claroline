@@ -13,5 +13,4 @@ plugin:
       - name: terms_of_service
         type: other
         placeholders:
-          - terms_of_service
           - update_date

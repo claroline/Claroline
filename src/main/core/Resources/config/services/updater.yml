@@ -50,7 +50,3 @@ services:
             - '@doctrine.dbal.default_connection'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\CoreBundle\Installation\Updater\Updater140000:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'

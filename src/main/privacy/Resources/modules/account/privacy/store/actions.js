@@ -22,11 +22,11 @@ actions.exportAccount = () => ({
   }
 })
 
-actions.load = makeActionCreator(PRIVACY_LOAD, 'privacyData')
+actions.load = makeActionCreator(PRIVACY_LOAD, 'content')
 
 actions.fetch = () => (dispatch) => dispatch({
   [API_REQUEST]: {
-    url: ['apiv2_add_privacy'],
+    url: ['apiv2_terms_of_service'],
     request: {
       method: 'GET'
     },
