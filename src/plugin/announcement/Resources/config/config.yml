@@ -12,3 +12,17 @@ plugin:
           type: list
           context: [workspace, desktop, home]
           tags: [community]
+
+    templates:
+      - name: announcement_send
+        type: email
+        placeholders:
+            - announcement
+            - announcement_url
+            - subject
+            - subject_url
+            - message
+            - date
+            - author
+            - workspace
+            - workspace_url

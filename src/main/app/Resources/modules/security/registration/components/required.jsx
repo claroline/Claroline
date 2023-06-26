@@ -54,9 +54,6 @@ const Required = () =>
             name: 'plainPassword',
             type: 'password',
             label: trans('password'),
-            options: {
-              disablePasswordCheck: true
-            },
             required: true
           }
         ]
