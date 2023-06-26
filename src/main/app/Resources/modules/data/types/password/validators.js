@@ -1,6 +1,5 @@
 import {param} from '#/main/app/config'
 import {trans} from '#/main/app/intl'
-import {match} from '#/main/app/data/types/validators'
 
 function passwordComplexity(value) {
   let error = false
@@ -10,19 +9,19 @@ function passwordComplexity(value) {
     error = true
   }
 
-  if (param('authentication.requireLowercase') && !match(value, {regex: /[a-z]/})) {
+  if (param('authentication.requireLowercase') && !value.match(/[a-z]/)) {
     error = true
   }
 
-  if (param('authentication.requireUppercase') && !match(value, {regex: /[A-Z]/})) {
+  if (param('authentication.requireUppercase') && !value.match(/[A-Z]/)) {
     error = true
   }
 
-  if (param('authentication.requireNumber') && !match(value, {regex: /[0-9]/})) {
+  if (param('authentication.requireNumber') && !value.match(/[0-9]/)) {
     error = true
   }
 
-  if (param('authentication.requireSpecialChar') && !match(value, {regex: /[^a-zA-Z0-9]/})) {
+  if (param('authentication.requireSpecialChar') && !value.match(/[^a-zA-Z0-9]/)) {
     error = true
   }
 
@@ -30,6 +29,7 @@ function passwordComplexity(value) {
     return [trans('invalidPassword', {}, 'security')]
   }
 }
+
 
 export {
   passwordComplexity

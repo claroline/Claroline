@@ -90,7 +90,6 @@ class PasswordInput extends PureComponent {
 
     this.setState({
       passwordValidChecks: Object.values(conditions)
-    this.setState({
     })
   }
 
@@ -160,7 +159,7 @@ class PasswordInput extends PureComponent {
             </div>
           </>
         }
-        {!this.props.hidePasswordCheck &&
+        {!this.props.disablePasswordCheck &&
           <div className="password-rules">
             {this.state.passwordValidChecks.map((msg, index) =>
               <div className={'password-check' + (this.props.value.length > 0 ? ( msg.checked ? '-valid' : '-invalid') : '' )} key={index}>

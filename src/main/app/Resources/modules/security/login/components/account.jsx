@@ -43,7 +43,7 @@ class LoginAccount extends Component {
                 hideLabel: true,
                 options: {
                   hideStrength: true,
-                  hidePasswordCheck: true
+                  disablePasswordCheck: true
                 },
                 type: 'password',
                 required: true

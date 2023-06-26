@@ -55,7 +55,7 @@ const Required = () =>
             type: 'password',
             label: trans('password'),
             options: {
-              hidePasswordCheck: true
+              disablePasswordCheck: true
             },
             required: true
           }

@@ -10,7 +10,12 @@ const dataType = {
     label: trans('password', {}, 'data'),
     description: trans('password_desc', {}, 'data')
   },
-  validate: (value) => passwordComplexity(value),
+  validate: (value, options) => {
+    if (options && options.disablePasswordCheck) {
+      return []
+    }
+    return passwordComplexity(value)
+  },
   render: () => '******',
   components: {
     input: PasswordInput
