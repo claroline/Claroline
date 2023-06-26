@@ -110,14 +110,12 @@ class PrivacyController extends AbstractSecurityController
      *
      * @throws \Exception
      */
-    public function getCurrentAction(Request $request)
+    public function getTermsAction(Request $request): JsonResponse
     {
-        // HS
-        $terms = $request->query->get('termsOfService');
-        $terms = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+        // HS LA MODAL UTILISEE POUR LES TERMS DANS ACCOUNT src/main/app/Resources/modules/modals/terms-of-service HS AUSSI
+        $request = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+        $terms = $request->getTermsOfService();
 
-        return new JsonResponse(
-            $this->privacySerializer->serialize($terms)
-        );
+        return new JsonResponse($terms);
     }
 }

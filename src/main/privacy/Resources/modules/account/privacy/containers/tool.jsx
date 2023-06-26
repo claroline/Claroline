@@ -8,9 +8,9 @@ import {actions as formActions, selectors as formSelectors} from '#/main/app/con
 const PrivacyTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      loaded: selectors.loaded(state),
       formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
       currentUser: securitySelectors.currentUser(state),
+      parameters: state.parameters
     }),
     (dispatch) => ({
       reset(dpo) {
