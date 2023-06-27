@@ -72,10 +72,6 @@ class PrivacyController extends AbstractSecurityController
     {
         $this->canOpenAdminTool('privacy');
 
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
-
         $data = $this->decodeRequest($request);
         $privacyParameters = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
 
@@ -95,26 +91,12 @@ class PrivacyController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/request-deletion", name="apiv2_user_request_account_deletion", methods={"POST"})
-     */
-    public function requestAccountDeletionAction(): JsonResponse
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-        $this->privacyManager->sendRequestToDPO($user);
-
-        return new JsonResponse(null, 204);
-    }
-
-    /**
      * @Route("", name="apiv2_terms_of_service", methods={"GET"})
-     *
-     * @throws \Exception
      */
-    public function getTermsAction(Request $request): JsonResponse
+    public function getTermsAction(): JsonResponse
     {
-        // HS LA MODAL UTILISEE POUR LES TERMS DANS ACCOUNT src/main/app/Resources/modules/modals/terms-of-service HS AUSSI
-        $request = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
-        $terms = $request->getTermsOfService();
+        $termsOfService = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+        $terms = $termsOfService->getTermsOfService();
 
         return new JsonResponse($terms);
     }

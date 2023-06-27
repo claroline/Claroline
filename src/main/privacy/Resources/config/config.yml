@@ -3,12 +3,6 @@ plugin:
         - name: privacy
           class: shield
 
-    data_sources:
-      - name: account_privacy
-        type: page
-        context: [ account ]
-        tags: [ account ]
-
     templates:
       - name: terms_of_service
         type: other

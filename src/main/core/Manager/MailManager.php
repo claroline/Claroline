@@ -275,9 +275,8 @@ class MailManager
         if ($this->isMailerAvailable()) {
             $name = $user->getFullName();
             $idUser = $user->getId();
-            $privacyEntity = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+            $privacyEntity = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy(['id' => 'ASC']);
             $dpoEmail = $privacyEntity['dpoEmail'];
-            var_dump($dpoEmail);
             $locale = $user->getLocale();
 
             $subject = $this->translator->trans('account_deletion.subject', [], 'privacy', $locale);

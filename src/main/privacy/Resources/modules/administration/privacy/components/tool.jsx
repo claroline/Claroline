@@ -6,7 +6,7 @@ import { PrivacyLinkModals } from '#/main/privacy/administration/privacy/compone
 const PrivacyTool = (props) =>
   <ToolPage>
     <PrivacyItem item={props.parameters} />
-    {props.isAdmin && <PrivacyLinkModals item={props.parameters} />}
+    <PrivacyLinkModals item={props.parameters} />
   </ToolPage>
 
 export {

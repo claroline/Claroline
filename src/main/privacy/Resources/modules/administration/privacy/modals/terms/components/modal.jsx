@@ -25,12 +25,6 @@ const TermsModal = (props) =>
           primary: true,
           fields: [
             {
-              name: 'publicationDateOk',
-              type: 'boolean',
-              label: trans('publication_date', {}, 'privacy'),
-              help: trans('terms_of_service_activation_help', {}, 'privacy')
-            },
-            {
               name: 'termsOfServiceEnabled',
               type: 'boolean',
               label: trans('terms_of_service_activation_message', {}, 'privacy'),

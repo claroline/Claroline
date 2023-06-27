@@ -42,18 +42,4 @@ class PrivacySubscriber implements EventSubscriberInterface
             'parameters' => $data,
         ]);
     }
-
-    /*public function onOpen(OpenToolEvent $event): void
-    {
-        // Récupére les données de la base de données
-        $noteBookItems = $this->objectManager->getRepository(NoteBookItem::class)->findAll();
-
-        // Transforme les données en un format approprié pour l'application React
-        $data = array_map(function (NoteBookItem $noteBookItem) {
-            return $this->noteBookItemSerializer->serialize($noteBookItem);
-        }, $noteBookItems);
-
-        // Envoie les données à l'application React
-        $event->setData(['items' => $data]);
-    }*/
 }

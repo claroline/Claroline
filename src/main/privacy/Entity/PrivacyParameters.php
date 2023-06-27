@@ -50,7 +50,6 @@ class PrivacyParameters
      * @var \Datetime
      *
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
-     * @Gedmo\Timestampable(on="change", field="status", value="1")
      */
     protected $publicationDate;
 

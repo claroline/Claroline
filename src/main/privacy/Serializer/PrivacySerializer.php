@@ -3,6 +3,7 @@
 namespace Claroline\PrivacyBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 
 class PrivacySerializer
@@ -33,7 +34,7 @@ class PrivacySerializer
             'countryStorage' => $privacy->getCountryStorage(),
             'termsOfService' => $privacy->getTermsOfService(),
             'termsOfServiceEnabled' => $privacy->IsTermsOfServiceEnabled(),
-            'publicationDate' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'publicationDate' => DateNormalizer::normalize($privacy->getPublicationDate()),
         ];
     }
 
@@ -54,7 +55,7 @@ class PrivacySerializer
 
         $this->sipe('termsOfService', 'setTermsOfService', $data, $privacy);
         $this->sipe('termsOfServiceEnabled', 'setTermsOfServiceEnabled', $data, $privacy);
-        $this->sipe('publicationDate', 'setPublicationDate', $data, $privacy);
+        $privacy->setPublicationDate(DateNormalizer::denormalize($data['publicationDate']));
 
         return $privacy;
     }

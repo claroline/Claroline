@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import { withReducer } from '#/main/app/store/components/withReducer'
-import { PrivacyTool as PrivacyToolComponent } from '#/main/privacy/account/privacy/components/tool'
+import { PrivacyMain as PrivacyMainComponent } from '#/main/privacy/account/privacy/components/main'
 import { actions, reducer, selectors } from '#/main/privacy/account/privacy/store'
 import { selectors as securitySelectors } from '#/main/app/security/store/selectors'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
-const PrivacyTool = withReducer(selectors.STORE_NAME, reducer)(
+const PrivacyContainers = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
@@ -23,7 +23,7 @@ const PrivacyTool = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(actions.exportAccount())
       }
     })
-  )(PrivacyToolComponent)
+  )(PrivacyMainComponent)
 )
 
-export { PrivacyTool }
+export { PrivacyContainers }

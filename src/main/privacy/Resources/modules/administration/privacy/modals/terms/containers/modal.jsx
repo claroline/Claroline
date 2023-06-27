@@ -7,7 +7,6 @@ import {actions as formActions, selectors as formSelectors} from '#/main/app/con
 const TermsModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      parameters: selectors.store(state),
       formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
       saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
     }),

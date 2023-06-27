@@ -14,11 +14,6 @@ class TermsOfServiceData extends AbstractTemplateFixture
         return 'terms_of_service';
     }
 
-    /**
-     * @throws SyntaxError
-     * @throws RuntimeError
-     * @throws LoaderError
-     */
     protected function getSystemTemplates(): array
     {
         return [
