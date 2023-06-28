@@ -4,9 +4,9 @@ namespace Claroline\PrivacyBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Manager\TermsOfServiceManager;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Manager\TermsOfServiceManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 use Claroline\PrivacyBundle\Serializer\PrivacySerializer;

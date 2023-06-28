@@ -2,8 +2,8 @@
 
 namespace Claroline\PrivacyBundle\Installation\Updater;
 
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\InstallationBundle\Updater\Updater;
 use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 
@@ -11,6 +11,7 @@ class Updater140000 extends Updater
 {
     private PlatformConfigurationHandler $config;
     private ObjectManager $objectManager;
+
     public function __construct(
         PlatformConfigurationHandler $config,
         ObjectManager $objectManager

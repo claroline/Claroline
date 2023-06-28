@@ -22,9 +22,9 @@ final class Version20230620100712 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_privacy_parameters 
             DROP publication_date, 
-        ");
+        ');
     }
 }
