@@ -57,13 +57,6 @@ const PrivacyLinkModals = (props) => {
           <span className="help-block">
             {trans(block.helpKey, {}, 'privacy')}
           </span>
-          {block.type === 'warning' && block.modalType === MODAL_TERMS_OF_SERVICE && (
-            block.modalData.termsOfServiceEnabled ? (
-              <p>{trans('terms_enabled', {}, 'privacy')}</p>
-            ) : (
-              <p style={{ color: 'red' }}>{trans('terms_not_enabled', {}, 'privacy')}</p>
-            )
-          )}
         </AlertBlock>
       ))}
     </div>

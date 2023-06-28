@@ -12,7 +12,7 @@ import {Button} from '#/main/app/action'
 
 const CountryModal = props =>
   <Modal
-    {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'countryStorage', 'fadeModal', 'id')}
+    {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'countryStorage', 'id')}
     icon="fa fa-fw fa-solid fa-globe"
     title={trans('country_storage', {}, 'privacy')}
     onEntering={() => props.reset(props.countryStorage)}

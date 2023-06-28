@@ -71,15 +71,4 @@ class PrivacyController extends AbstractSecurityController
             $this->serializer->serialize($privacyUpdate)
         );
     }
-
-    /**
-     * @Route("", name="apiv2_terms_of_service", methods={"GET"})
-     */
-    public function getTermsAction(): JsonResponse
-    {
-        $termsOfService = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
-        $terms = $termsOfService->getTermsOfService();
-
-        return new JsonResponse($terms);
-    }
 }

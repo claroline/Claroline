@@ -12,7 +12,7 @@ import {Button} from '#/main/app/action'
 
 const DpoModal = props => 
   <Modal
-    {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'dpo', 'fadeModal')}
+    {...omit(props, 'formData', 'saveEnabled', 'save', 'reset', 'dpo')}
     icon="fa fa-fw fa-solid fa-pen-to-square"
     title={trans('dpo_info', {}, 'privacy')}
     onEntering={() => props.reset(props.dpo)}

@@ -34,7 +34,7 @@ class PrivacySerializer
             'countryStorage' => $privacy->getCountryStorage(),
             'termsOfService' => $privacy->getTermsOfService(),
             'termsOfServiceEnabled' => $privacy->IsTermsOfServiceEnabled(),
-            'publicationDate' => DateNormalizer::normalize($privacy->getPublicationDate()),
+            //'publicationDate' => DateNormalizer::normalize($privacy->getPublicationDate()),
         ];
     }
 
@@ -55,7 +55,7 @@ class PrivacySerializer
 
         $this->sipe('termsOfService', 'setTermsOfService', $data, $privacy);
         $this->sipe('termsOfServiceEnabled', 'setTermsOfServiceEnabled', $data, $privacy);
-        $privacy->setPublicationDate(DateNormalizer::denormalize($data['publicationDate']));
+        //$privacy->setPublicationDate(DateNormalizer::denormalize($data['publicationDate']));
 
         return $privacy;
     }
