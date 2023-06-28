@@ -8,6 +8,5 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@security.token_storage'
-            - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
             - '@Claroline\PrivacyBundle\Serializer\PrivacySerializer'
             - '@Claroline\AppBundle\Manager\TermsOfServiceManager'
