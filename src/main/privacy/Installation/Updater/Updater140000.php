@@ -10,8 +10,7 @@ use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 class Updater140000 extends Updater
 {
     private PlatformConfigurationHandler $config;
-    private ObjectManager $objectManager
-    ;
+    private ObjectManager $objectManager;
     public function __construct(
         PlatformConfigurationHandler $config,
         ObjectManager $objectManager
@@ -28,10 +27,15 @@ class Updater140000 extends Updater
             $privacyParameters->setDpoName($this->config->getParameter('privacy.dpo.name'));
             $privacyParameters->setDpoEmail($this->config->getParameter('privacy.dpo.email'));
             $privacyParameters->setDpoPhone($this->config->getParameter('privacy.dpo.phone'));
-            $privacyParameters->setDpoAddress($this->config->getParameter('privacy.dpo.address'));
+            $privacyParameters->setAddressStreet1($this->config->getParameter('privacy.dpo.address.street1'));
+            $privacyParameters->setAddressStreet2($this->config->getParameter('privacy.dpo.address.street2'));
+            $privacyParameters->setAddressPostalCode($this->config->getParameter('privacy.dpo.address.postalCode'));
+            $privacyParameters->setAddressCity($this->config->getParameter('privacy.dpo.address.city'));
+            $privacyParameters->setAddressCountry($this->config->getParameter('privacy.dpo.address.country'));
+            $privacyParameters->setAddressState($this->config->getParameter('privacy.dpo.address.state'));
+            $privacyParameters->setCountryStorage($this->config->getParameter('privacy.countryStorage'));
             $this->objectManager->persist($privacyParameters);
             $this->objectManager->flush();
         }
-
     }
 }

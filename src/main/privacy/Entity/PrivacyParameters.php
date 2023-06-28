@@ -5,7 +5,6 @@ namespace Claroline\PrivacyBundle\Entity;
 use Claroline\AppBundle\Entity\Address;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
@@ -47,11 +46,9 @@ class PrivacyParameters
     private ?bool $termsOfServiceEnabled;
 
     /**
-     * @var \Datetime
-     *
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      */
-    protected $publicationDate;
+    protected \Datetime $publicationDate;
 
     //relation vers template par defaut trait use template juste pour definition de la relation
 

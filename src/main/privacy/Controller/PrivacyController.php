@@ -8,16 +8,13 @@ use Claroline\AppBundle\Manager\TermsOfServiceManager;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\PrivacyBundle\Entity\PrivacyParameters;
-use Claroline\PrivacyBundle\Manager\PrivacyManager;
 use Claroline\PrivacyBundle\Serializer\PrivacySerializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PrivacyController extends AbstractSecurityController
 {
@@ -28,7 +25,6 @@ class PrivacyController extends AbstractSecurityController
     private ObjectManager $objectManager;
     private Crud $crud;
     private TokenStorageInterface $tokenStorage;
-    private PrivacyManager $privacyManager;
     private PrivacySerializer $privacySerializer;
     private TermsOfServiceManager $termsOfServiceManager;
 
@@ -38,7 +34,6 @@ class PrivacyController extends AbstractSecurityController
         ObjectManager $objectManager,
         Crud $crud,
         TokenStorageInterface $tokenStorage,
-        PrivacyManager $privacyManager,
         PrivacySerializer $privacySerializer,
         TermsOfServiceManager $termsOfServiceManager
     ) {
@@ -47,7 +42,6 @@ class PrivacyController extends AbstractSecurityController
         $this->objectManager = $objectManager;
         $this->crud = $crud;
         $this->tokenStorage = $tokenStorage;
-        $this->privacyManager = $privacyManager;
         $this->privacySerializer = $privacySerializer;
         $this->termsOfServiceManager = $termsOfServiceManager;
     }
@@ -64,9 +58,6 @@ class PrivacyController extends AbstractSecurityController
 
     /**
      * @Route("/privacy", name="apiv2_privacy_update", methods={"PUT"})
-     *
-     * @throws InvalidDataException
-     * @throws \Exception
      */
     public function updateAction(Request $request): JsonResponse
     {
@@ -74,16 +65,7 @@ class PrivacyController extends AbstractSecurityController
 
         $data = $this->decodeRequest($request);
         $privacyParameters = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
-
-        // Mettre à jour la valeur du champ publicationDate avec la date actuelle
-        if (isset($data['publicationDateOk'])) {
-            $data['publicationDate'] = new \DateTime();
-
-            //to do envoie un email aux utilisateurs
-            $this->privacyManager->sendEmailToUsersAcceptTerms();
-        }
-
-        $privacyUpdate = $this->crud->update($privacyParameters, $data, [Crud::THROW_EXCEPTION]); //verif maj terms pour changement date
+        $privacyUpdate = $this->crud->update($privacyParameters, $data, [Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(
             $this->serializer->serialize($privacyUpdate)

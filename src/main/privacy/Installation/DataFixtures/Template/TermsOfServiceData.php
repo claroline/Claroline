@@ -3,9 +3,6 @@
 namespace Claroline\PrivacyBundle\Installation\DataFixtures\Template;
 
 use Claroline\CoreBundle\Installation\DataFixtures\AbstractTemplateFixture;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 class TermsOfServiceData extends AbstractTemplateFixture
 {
