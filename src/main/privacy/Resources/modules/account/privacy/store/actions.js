@@ -1,6 +1,5 @@
 import { API_REQUEST } from '#/main/app/api'
 import { actions as securityActions } from '#/main/app/security/store/actions'
-import { makeActionCreator } from '#/main/app/store/actions'
 
 const PRIVACY_LOAD = 'PRIVACY_LOAD'
 
@@ -27,7 +26,7 @@ actions.fetch = () => (dispatch) => dispatch({
     url: ['apiv2_terms_of_service'],
     request: {
       method: 'GET'
-    },
+    }
   }
 })
 

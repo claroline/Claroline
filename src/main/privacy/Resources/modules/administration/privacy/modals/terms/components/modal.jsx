@@ -36,8 +36,8 @@ const TermsModal = (props) =>
                   options: {long: true}
                 }
               ]
-            },
-          ],
+            }
+          ]
         }
       ]}
     >
