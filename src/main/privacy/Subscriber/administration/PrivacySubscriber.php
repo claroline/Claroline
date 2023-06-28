@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\PrivacyBundle\Subscriber;
+namespace Claroline\PrivacyBundle\Subscriber\Administration;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
