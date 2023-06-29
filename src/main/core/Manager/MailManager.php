@@ -11,7 +11,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\ForgotPasswordEvent;
@@ -19,7 +18,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
-use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -34,7 +32,6 @@ class MailManager
     private UserManager $userManager;
     private StrictDispatcher $dispatcher;
     private TranslatorInterface $translator;
-    private ObjectManager $objectManager;
 
     public function __construct(
         Mailer $mailer,
@@ -44,8 +41,7 @@ class MailManager
         LocaleManager $localeManager,
         UserManager $userManager,
         StrictDispatcher $dispatcher,
-        TranslatorInterface $translator,
-        ObjectManager $objectManager
+        TranslatorInterface $translator
     ) {
         $this->mailer = $mailer;
         $this->router = $router;
@@ -55,7 +51,6 @@ class MailManager
         $this->userManager = $userManager;
         $this->dispatcher = $dispatcher;
         $this->translator = $translator;
-        $this->objectManager = $objectManager;
     }
 
     public function isMailerAvailable(): bool
@@ -275,8 +270,7 @@ class MailManager
         if ($this->isMailerAvailable()) {
             $name = $user->getFullName();
             $idUser = $user->getId();
-            $privacyEntity = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy(['id' => 'ASC']);
-            $dpoEmail = $privacyEntity['dpoEmail'];
+            $dpoEmail = $this->config->getParameter('privacy.dpo.email');
             $locale = $user->getLocale();
 
             $subject = $this->translator->trans('account_deletion.subject', [], 'privacy', $locale);

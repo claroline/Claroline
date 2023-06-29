@@ -1,5 +1,6 @@
-import { trans } from '#/main/app/intl/translation'
-import { PrivacyMain } from '#/main/privacy/account/privacy/components/main'
+import {trans} from '#/main/app/intl/translation'
+
+import {PrivacyMain} from '#/main/privacy/account/privacy/containers/main'
 
 export default {
   name: 'privacy',
