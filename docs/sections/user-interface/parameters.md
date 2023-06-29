@@ -15,8 +15,8 @@ There are two methods to access parameters
 ```js
 import {selectors as configSelectors} from '#/main/app/config/store'
 
-configSelectors.param('my_parameter')
-configSelectors.param('my_parameter.key')
+configSelectors.param(state, 'my_parameter')
+configSelectors.param(state, 'my_parameter.key')
 
 ```
 
