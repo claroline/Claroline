@@ -41,7 +41,7 @@ jobs:
 
       - name: "Install PHPCSFixer"
         if: ${{ env.DIFF != '' }}
-        run: wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer
+        run: wget https://cs.symfony.com/download/php-cs-fixer-v3.phar -O php-cs-fixer
         env:
           DIFF: ${{ steps.diff.outputs.diff_php }}
 
