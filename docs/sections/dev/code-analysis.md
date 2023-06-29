@@ -36,7 +36,7 @@ The coding standard used in the project is defined in *.php_cs*.
 Usage example :
 
 ```sh
-$ vendor/bin/php-cs-fixer fix --config=.php_cs src/plugin/FooVendor/BarBundle
+$ vendor/bin/php-cs-fixer fix src/plugin/FooVendor/BarBundle
 ```
 
 ### ESLint

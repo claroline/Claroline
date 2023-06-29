@@ -150,7 +150,7 @@ $ vendor/bin/phpmd src/plugin/FooVendor/BarBundle text phpmd.xml
 ### PHP CS Fixer
 
 ```sh
-$ vendor/bin/php-cs-fixer fix --config=.php_cs src/plugin/FooVendor/BarBundle
+$ vendor/bin/php-cs-fixer fix src/plugin/FooVendor/BarBundle
 ```
 
 ### ESLint
