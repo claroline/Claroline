@@ -15,4 +15,8 @@ use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
 class ClarolineAnnouncementInstaller extends AdditionalInstaller
 {
+    public function hasFixtures(): bool
+    {
+        return true;
+    }
 }
