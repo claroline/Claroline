@@ -37,7 +37,6 @@ class AnnouncementAggregate extends AbstractResource
     private $announcements;
 
     /**
-     * Template used to print the presence of a User.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
      * @ORM\JoinColumn(name="announcement_template_id", nullable=true, onDelete="SET NULL")
