@@ -19,3 +19,5 @@ plugin:
           placeholders:
               - announcement_subject
               - announcement_description
+              - date
+              - author

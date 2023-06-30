@@ -64,6 +64,15 @@ const AnnounceFormComponent = props =>
             name: 'poster',
             label: trans('poster'),
             type: 'image'
+          }, {
+            name: 'announcementTemplate',
+            label: trans('email_announcement', {}, 'template'),
+            type: 'template',
+            options: {
+              picker: {
+                filters: [{property: 'typeName', value: 'email_announcement', locked: true}]
+              }
+            }
           }
         ]
       }, {

@@ -10,17 +10,23 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
+use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SendAnnouncementHandler implements MessageHandlerInterface
 {
     private $objectManager;
     private $eventDispatcher;
+    private $templateManager;
 
-    public function __construct(ObjectManager $objectManager, StrictDispatcher $eventDispatcher)
-    {
+    public function __construct(
+        ObjectManager $objectManager,
+        StrictDispatcher $eventDispatcher,
+        TemplateManager $templateManager
+    ) {
         $this->objectManager = $objectManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->templateManager = $templateManager;
     }
 
     public function __invoke(SendAnnouncement $sendAnnouncement)

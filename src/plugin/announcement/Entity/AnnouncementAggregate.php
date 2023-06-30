@@ -12,6 +12,7 @@
 namespace Claroline\AnnouncementBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Template\Template;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -36,6 +37,16 @@ class AnnouncementAggregate extends AbstractResource
     private $announcements;
 
     /**
+     * Template used to print the presence of a User.
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
+     * @ORM\JoinColumn(name="announcement_template_id", nullable=true, onDelete="SET NULL")
+     *
+     * @var Template
+     */
+    private $announcementTemplate;
+
+    /**
      * AnnouncementAggregate constructor.
      */
     public function __construct()
@@ -53,5 +64,15 @@ class AnnouncementAggregate extends AbstractResource
     public function getAnnouncements()
     {
         return $this->announcements;
+    }
+
+    public function getAnnouncementTemplate(): ?Template
+    {
+        return $this->announcementTemplate;
+    }
+
+    public function setAnnouncementTemplate(?Template $template = null): void
+    {
+        $this->announcementTemplate = $template;
     }
 }
