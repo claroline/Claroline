@@ -23,3 +23,12 @@ services:
             - '@router'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AuthenticationBundle\Manager\OauthManager'
+
+    Claroline\AuthenticationBundle\Controller\AuthenticationParametersController:
+        parent: Claroline\AppBundle\Controller\AbstractSecurityController
+        public: true
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@security.authorization_checker'

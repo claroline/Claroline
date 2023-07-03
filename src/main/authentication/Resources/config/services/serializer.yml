@@ -22,3 +22,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+
+    Claroline\AuthenticationBundle\Serializer\AuthenticationParametersSerializer:
+        tags: [ claroline.serializer ]

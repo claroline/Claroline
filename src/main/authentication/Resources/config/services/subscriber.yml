@@ -4,3 +4,19 @@ services:
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
         tags:
             - { name: kernel.event_subscriber }
+
+    Claroline\AuthenticationBundle\Subscriber\AuthenticationParametersSubscriber:
+        arguments:
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: kernel.event_subscriber }
+
+    # Administration
+    Claroline\AuthenticationBundle\Subscriber\Administration\ParametersSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        tags:
+            - { name: kernel.event_subscriber }
