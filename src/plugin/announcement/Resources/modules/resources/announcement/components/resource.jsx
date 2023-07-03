@@ -19,47 +19,50 @@ const AnnouncementResource = props => {
   console.log('AnnouncementResource props', props)
 
   return <ResourcePage
-      primaryAction="create-announce"
-      customActions={[{
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-list',
-        label: trans('announcements_list', {}, 'announcement'),
-        target: props.path,
-        exact: true
-      }]}
-      routes={[{
-        path: '/',
-        exact: true,
-        component: Announces
-      }, {
-        path: '/edit',
-        component: AnnouncesEditor,
-        onEnter: () => props.resetForm(props.announcement)
-      }, {
-        path: '/add',
-        exact: true,
-        component: AnnounceForm,
-        onEnter: () => props.resetForm(merge({}, AnnouncementTypes.defaultProps, {
-          id: makeId()
-        }), true)
-      }, {
-        path: '/:id',
-        component: Announce,
-        exact: true,
-        onEnter: (params) => props.openDetail(params.id),
-        onLeave: props.resetDetail
-      }, {
-        path: '/:id/edit',
-        component: AnnounceForm,
-        onEnter: (params) => props.resetForm(props.posts.find(post => post.id === params.id))
-      }]}
-  />;
+    primaryAction="create-announce"
+    customActions={[{
+      type: LINK_BUTTON,
+      icon: 'fa fa-fw fa-list',
+      label: trans('announcements_list', {}, 'announcement'),
+      target: props.path,
+      exact: true
+    }]}
+    routes={[{
+      path: '/',
+      exact: true,
+      component: Announces
+    }, {
+      path: '/edit',
+      component: AnnouncesEditor,
+      onEnter: () => props.resetForm(props.announcement)
+    }, {
+      path: '/add',
+      exact: true,
+      component: AnnounceForm,
+      onEnter: () => props.resetForm(merge({}, AnnouncementTypes.defaultProps, {
+        id: makeId()
+      }), true)
+    }, {
+      path: '/:id',
+      component: Announce,
+      exact: true,
+      onEnter: (params) => props.openDetail(params.id),
+      onLeave: props.resetDetail
+    }, {
+      path: '/:id/edit',
+      component: AnnounceForm,
+      onEnter: (params) => props.resetForm(props.posts.find(post => post.id === params.id))
+    }]}
+  />
 }
 
 AnnouncementResource.propTypes = {
   path: T.string.isRequired,
   posts: T.arrayOf(
     T.shape(AnnouncementTypes.propTypes)
+  ).isRequired,
+  announcement: T.shape(
+        AnnouncementTypes.propTypes
   ).isRequired,
   openDetail: T.func.isRequired,
   resetDetail: T.func.isRequired,
