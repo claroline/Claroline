@@ -14,10 +14,10 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: "Install PHP 8.2"
+      - name: "Install PHP 8.1"
         uses: "shivammathur/setup-php@v2"
         with:
-          php-version: "8.2"
+          php-version: "8.1"
 
       - name: "List modified files"
         id: diff
@@ -47,7 +47,7 @@ jobs:
 
       - name: "Run PHPCSFixer checks"
         if: ${{ env.DIFF != '' }}
-        run: php php-cs-fixer fix --dry-run --diff --config=.php_cs --path-mode=intersection `echo "$DIFF"`
+        run: php php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.php --path-mode=intersection `echo "$DIFF"`
         env:
           PHP_CS_FIXER_IGNORE_ENV: 1
           DIFF: ${{ steps.diff.outputs.diff_php }}
