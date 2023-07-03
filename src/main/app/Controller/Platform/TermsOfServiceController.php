@@ -47,6 +47,7 @@ class TermsOfServiceController
 
     /**
      * @Route("/accept", name="apiv2_platform_terms_of_service_accept", methods={"PUT"})
+     *
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
      */
     public function acceptAction(User $currentUser): JsonResponse
