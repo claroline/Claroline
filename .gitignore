@@ -19,7 +19,7 @@ public/themes/*
 .env
 docker-compose.override.yml
 installed
-.php_cs.cache
+.php-cs-fixer.cache
 .phpunit.result.cache
 ###> symfony/framework-bundle ###
 /.env.local
