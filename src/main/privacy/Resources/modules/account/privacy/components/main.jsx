@@ -17,12 +17,12 @@ import {constants as actionConstants} from '#/main/app/action/constants'
 const PrivacyMain = (props) =>
   <AccountPage
     path={[
-        {
-          type: LINK_BUTTON,
-          label: trans('privacy'),
-          target: route('privacy')
-        }
-      ]}
+      {
+        type: LINK_BUTTON,
+        label: trans('privacy'),
+        target: route('privacy')
+      }
+    ]}
     title={trans('privacy')}
   >
     <ContentTitle
