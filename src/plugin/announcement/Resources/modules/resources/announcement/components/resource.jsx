@@ -12,24 +12,29 @@ import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources
 import {Announces} from '#/plugin/announcement/resources/announcement/components/announces'
 import {Announce} from '#/plugin/announcement/resources/announcement/components/announce'
 import {AnnounceForm} from '#/plugin/announcement/resources/announcement/components/announce-form'
+import {AnnouncesEditor} from '#/plugin/announcement/resources/announcement/containers/editor'
 
-const AnnouncementResource = props =>
-  <ResourcePage
-    primaryAction="create-announce"
-    customActions={[
-      {
+const AnnouncementResource = props => {
+
+  console.log('AnnouncementResource props', props)
+
+  return <ResourcePage
+      primaryAction="create-announce"
+      customActions={[{
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-list',
         label: trans('announcements_list', {}, 'announcement'),
         target: props.path,
         exact: true
-      }
-    ]}
-    routes={[
-      {
+      }]}
+      routes={[{
         path: '/',
         exact: true,
         component: Announces
+      }, {
+        path: '/edit',
+        component: AnnouncesEditor,
+        onEnter: () => props.resetForm(props.announcement)
       }, {
         path: '/add',
         exact: true,
@@ -47,9 +52,9 @@ const AnnouncementResource = props =>
         path: '/:id/edit',
         component: AnnounceForm,
         onEnter: (params) => props.resetForm(props.posts.find(post => post.id === params.id))
-      }
-    ]}
-  />
+      }]}
+  />;
+}
 
 AnnouncementResource.propTypes = {
   path: T.string.isRequired,

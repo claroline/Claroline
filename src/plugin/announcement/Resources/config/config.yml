@@ -17,7 +17,7 @@ plugin:
         - name: email_announcement
           type: email
           placeholders:
-              - announcement_subject
-              - announcement_description
+              - subject
+              - message
               - date
               - author

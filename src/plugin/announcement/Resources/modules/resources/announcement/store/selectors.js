@@ -2,7 +2,6 @@ import isEmpty from 'lodash/isEmpty'
 import {createSelector} from 'reselect'
 
 const STORE_NAME = 'claroline_announcement_aggregate'
-
 const resource = (state) => state[STORE_NAME]
 
 const pageSize = () => 5

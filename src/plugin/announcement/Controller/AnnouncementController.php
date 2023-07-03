@@ -165,4 +165,6 @@ class AnnouncementController
 
         return new JsonResponse($this->finder->search(User::class, $parameters, [Options::SERIALIZE_MINIMAL]));
     }
+
+
 }

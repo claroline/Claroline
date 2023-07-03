@@ -5,6 +5,9 @@ namespace Claroline\AnnouncementBundle\Messenger;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
 use Claroline\AnnouncementBundle\Messenger\Message\SendAnnouncement;
+use Claroline\AppBundle\Event\MandatoryEventException;
+use Claroline\AppBundle\Event\MissingEventClassException;
+use Claroline\AppBundle\Event\NotPopulatedEventException;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
@@ -17,6 +20,7 @@ class SendAnnouncementHandler implements MessageHandlerInterface
 {
     private $objectManager;
     private $eventDispatcher;
+    /** @var TemplateManager */
     private $templateManager;
 
     public function __construct(
@@ -29,7 +33,12 @@ class SendAnnouncementHandler implements MessageHandlerInterface
         $this->templateManager = $templateManager;
     }
 
-    public function __invoke(SendAnnouncement $sendAnnouncement)
+    /**
+     * @throws MandatoryEventException
+     * @throws NotPopulatedEventException
+     * @throws MissingEventClassException
+     */
+    public function __invoke(SendAnnouncement $sendAnnouncement): void
     {
         $announcement = $this->objectManager->getRepository(Announcement::class)->find($sendAnnouncement->getAnnouncementId());
         if (empty($announcement)) {
@@ -53,6 +62,22 @@ class SendAnnouncementHandler implements MessageHandlerInterface
             $sender = $this->objectManager->getRepository(User::class)->find($sendAnnouncement->getSenderId());
         }
 
+        $placeholders = [
+            'subject' => $announcement->getTitle(),
+            'message' => $announcement->getContent(),
+            'date' => $announcement->getCreationDate() ? $announcement->getCreationDate()->format('d/m/Y H:m:s') : null,
+            'author' => $announcement->getCreator() ? $announcement->getCreator()->getFullName() : null,
+        ];
+
+        $locale = 'en';
+        if ($announcement->getAggregate()->getTemplateEmail()) {
+            $title = $this->templateManager->getTemplateContent($announcement->getAggregate()->getTemplateEmail(), $placeholders, $locale, 'title');
+            $content = $this->templateManager->getTemplateContent($announcement->getAggregate()->getTemplateEmail(), $placeholders, $locale);
+        } else {
+            $title = $this->templateManager->getTemplate('email_announcement', $placeholders, $locale, 'title');
+            $content = $this->templateManager->getTemplate('email_announcement', $placeholders, $locale);
+        }
+
         $announcementSend = new AnnouncementSend();
         $announcementSend->setAnnouncement($announcement);
         $announcementSend->setData([
@@ -69,8 +94,8 @@ class SendAnnouncementHandler implements MessageHandlerInterface
             MessageEvents::MESSAGE_SENDING,
             SendMessageEvent::class,
             [
-                $sendAnnouncement->getContent(),
-                $sendAnnouncement->getObject(),
+                $content,
+                $title,
                 $receivers,
                 $sender,
             ]

@@ -39,11 +39,11 @@ class AnnouncementAggregate extends AbstractResource
     /**
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
-     * @ORM\JoinColumn(name="announcement_template_id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="email_template_id", nullable=true, onDelete="SET NULL")
      *
      * @var Template
      */
-    private $announcementTemplate;
+    private $templateEmail;
 
     /**
      * AnnouncementAggregate constructor.
@@ -65,13 +65,13 @@ class AnnouncementAggregate extends AbstractResource
         return $this->announcements;
     }
 
-    public function getAnnouncementTemplate(): ?Template
+    public function getTemplateEmail(): ?Template
     {
-        return $this->announcementTemplate;
+        return $this->templateEmail;
     }
 
-    public function setAnnouncementTemplate(?Template $template = null): void
+    public function setTemplateEmail(?Template $template = null): void
     {
-        $this->announcementTemplate = $template;
+        $this->templateEmail = $template;
     }
 }

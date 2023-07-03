@@ -41,8 +41,8 @@ class AnnouncementAggregateSerializer
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            if ($announcements->getAnnouncementTemplate()) {
-                $serialized['announcementTemplate'] = $this->templateSerializer->serialize($announcements->getAnnouncementTemplate(), [Options::SERIALIZE_MINIMAL]);
+            if ($announcements->getTemplateEmail()) {
+                $serialized['templateEmail'] = $this->templateSerializer->serialize($announcements->getTemplateEmail(), [Options::SERIALIZE_MINIMAL]);
             }
         }
 
@@ -58,15 +58,16 @@ class AnnouncementAggregateSerializer
             $aggregate->refreshUuid();
         }
 
-        if (array_key_exists('announcementTemplate', $data)) {
+        if (array_key_exists('templateEmail', $data)) {
             $template = null;
-            if (!empty($data['announcementTemplate']) && !empty($data['announcementTemplate']['id'])) {
-                $template = $this->om->getRepository(Template::class)->findOneBy(['uuid' => $data['announcementTemplate']['id']]);
+            if (!empty($data['templateEmail']) && !empty($data['templateEmail']['id'])) {
+                $template = $this->om->getRepository(Template::class)->findOneBy(['uuid' => $data['templateEmail']['id']]);
             }
 
-            $aggregate->setAnnouncementTemplate($template);
+            $aggregate->setTemplateEmail($template);
         }
 
         return $aggregate;
+
     }
 }
