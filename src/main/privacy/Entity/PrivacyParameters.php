@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro_privacy_parameters")
  */
 class PrivacyParameters
@@ -48,16 +49,16 @@ class PrivacyParameters
     /**
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      */
-    protected \Datetime $publicationDate;
+    protected \DateTime $publicationDate;
 
-    //relation vers template par defaut trait use template juste pour definition de la relation
+    // relation vers template par defaut trait use template juste pour definition de la relation
 
     public function getDpoName(): ?string
     {
         return $this->dpoName;
     }
 
-    public function setDpoName(?string $dpoName = null): void
+    public function setDpoName(string $dpoName = null): void
     {
         $this->dpoName = $dpoName;
     }
@@ -67,7 +68,7 @@ class PrivacyParameters
         return $this->dpoEmail;
     }
 
-    public function setDpoEmail(?string $dpoEmail = null): void
+    public function setDpoEmail(string $dpoEmail = null): void
     {
         $this->dpoEmail = $dpoEmail;
     }
@@ -77,7 +78,7 @@ class PrivacyParameters
         return $this->dpoPhone;
     }
 
-    public function setDpoPhone(?string $dpoPhone = null): void
+    public function setDpoPhone(string $dpoPhone = null): void
     {
         $this->dpoPhone = $dpoPhone;
     }
@@ -87,7 +88,7 @@ class PrivacyParameters
         return $this->countryStorage;
     }
 
-    public function setCountryStorage(?string $countryStorage = null): void
+    public function setCountryStorage(string $countryStorage = null): void
     {
         $this->countryStorage = $countryStorage;
     }
@@ -97,7 +98,7 @@ class PrivacyParameters
         return $this->termsOfService;
     }
 
-    public function setTermsOfService(?string $termsOfService = null): void
+    public function setTermsOfService(string $termsOfService = null): void
     {
         $this->termsOfService = $termsOfService;
     }
@@ -107,7 +108,7 @@ class PrivacyParameters
         return $this->termsOfServiceEnabled;
     }
 
-    public function setTermsOfServiceEnabled(?bool $termsOfServiceEnabled = null): void
+    public function setTermsOfServiceEnabled(bool $termsOfServiceEnabled = null): void
     {
         $this->termsOfServiceEnabled = $termsOfServiceEnabled;
     }
@@ -117,7 +118,7 @@ class PrivacyParameters
         return $this->publicationDate;
     }
 
-    public function setPublicationDate(?\DateTime $publicationDate = null): void
+    public function setPublicationDate(\DateTime $publicationDate = null): void
     {
         $this->publicationDate = $publicationDate;
     }
