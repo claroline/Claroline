@@ -4,7 +4,7 @@ import {makeActionCreator} from '#/main/app/store/actions'
 
 export const ACCOUNT_PRIVACY_LOAD = 'ACCOUNT_PRIVACY_LOAD'
 
-export const ACCOUNT_PRIVACY_UPDATE = 'ACCOUNT_PRIVACY_UPDATE';
+export const ACCOUNT_PRIVACY_UPDATE = 'ACCOUNT_PRIVACY_UPDATE'
 
 
 export const actions = {}
