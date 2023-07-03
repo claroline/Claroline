@@ -62,7 +62,7 @@ AnnouncementResource.propTypes = {
     T.shape(AnnouncementTypes.propTypes)
   ).isRequired,
   announcement: T.shape(
-        AnnouncementTypes.propTypes
+    AnnouncementTypes.propTypes
   ).isRequired,
   openDetail: T.func.isRequired,
   resetDetail: T.func.isRequired,
