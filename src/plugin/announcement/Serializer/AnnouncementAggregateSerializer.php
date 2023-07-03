@@ -47,7 +47,6 @@ class AnnouncementAggregateSerializer
         }
 
         return $serialized;
-
     }
 
     public function deserialize(array $data, AnnouncementAggregate $aggregate, ?array $options = []): AnnouncementAggregate
@@ -68,6 +67,5 @@ class AnnouncementAggregateSerializer
         }
 
         return $aggregate;
-
     }
 }

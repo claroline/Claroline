@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro_announcement_aggregate")
  */
 class AnnouncementAggregate extends AbstractResource
@@ -37,8 +38,8 @@ class AnnouncementAggregate extends AbstractResource
     private $announcements;
 
     /**
-     *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
+     *
      * @ORM\JoinColumn(name="email_template_id", nullable=true, onDelete="SET NULL")
      *
      * @var Template
@@ -70,7 +71,7 @@ class AnnouncementAggregate extends AbstractResource
         return $this->templateEmail;
     }
 
-    public function setTemplateEmail(?Template $template = null): void
+    public function setTemplateEmail(Template $template = null): void
     {
         $this->templateEmail = $template;
     }

@@ -2,16 +2,12 @@
 
 namespace Claroline\AnnouncementBundle\Controller;
 
-use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Serializer\AnnouncementAggregateSerializer;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,6 +19,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * Manages announces of an announcement resource.
  *
  * @Route("/announcement/{aggregateId}", options={"expose"=true})
+ *
  * @EXT\ParamConverter("aggregate", class="Claroline\AnnouncementBundle\Entity\AnnouncementAggregate", options={"mapping": {"aggregateId": "uuid"}})
  */
 class AnnouncementAggregateController
