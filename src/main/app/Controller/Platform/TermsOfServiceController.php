@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
