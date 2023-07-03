@@ -1,14 +1,14 @@
 import {connect} from 'react-redux'
 
-import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
-
+import {selectors} from '#/main/privacy/account/privacy/store'
 import {actions} from '#/main/privacy/account/privacy/store'
+
 import {PrivacyMain as PrivacyMainComponent} from '#/main/privacy/account/privacy/components/main'
 
 const PrivacyMain = connect(
   (state) => ({
-    privacy: configSelectors.param(state, 'privacy'),
+    /*privacy: selectors.privacy(state),*/
     currentUser: securitySelectors.currentUser(state)
   }),
   (dispatch) => ({
@@ -18,6 +18,12 @@ const PrivacyMain = connect(
     exportAccount() {
       dispatch(actions.exportAccount())
     }
+    /*fetchAccountPrivacy() {
+      dispatch(actions.fetchAccountPrivacy())
+    },
+    updateAccountPrivacy(privacy) {
+      dispatch(actions.updateAccountPrivacy(privacy))
+    }*/
   })
 )(PrivacyMainComponent)
 

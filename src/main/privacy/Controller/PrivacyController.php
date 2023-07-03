@@ -67,8 +67,20 @@ class PrivacyController extends AbstractSecurityController
         $privacyParameters = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
         $privacyUpdate = $this->crud->update($privacyParameters, $data, [Crud::THROW_EXCEPTION]);
 
+        $privacyData = $this->serializer->serialize($privacyUpdate);
+
+        return new JsonResponse($privacyData);
+    }
+
+    /**
+     * @Route("/privacy", name="apiv2_privacy_get", methods={"GET"})
+     */
+    public function getAction(): JsonResponse
+    {
+        $privacy = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+
         return new JsonResponse(
-            $this->serializer->serialize($privacyUpdate)
+            $this->serializer->serialize($privacy)
         );
     }
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
@@ -16,93 +16,88 @@ import {url} from '#/main/app/api'
 import {constants as actionConstants} from '#/main/app/action/constants'
 
 const PrivacyMain = (props) =>
-  <AccountPage
-    path={[
-      {
-        type: LINK_BUTTON,
-        label: trans('privacy'),
-        target: route('privacy')
-      }
-    ]}
-    title={trans('privacy')}
-  >
-    <ContentTitle
-      title={trans('terms_of_service',{}, 'privacy')}
-      style={{marginTop: 60}}
-    />
-
-    <AlertBlock
-      type={get(props.currentUser, 'meta.acceptedTerms') ? 'info' : 'warning'}
-      title={get(props.currentUser, 'meta.acceptedTerms') ?
-        trans('accept_terms', {}, 'privacy') :
-        trans('no_accept_terms', {}, 'privacy')
-      }
+    <AccountPage
+      path={[
+        {
+          type: LINK_BUTTON,
+          label: trans('privacy'),
+          target: route('privacy')
+        }
+      ]}
+      title={trans('privacy')}
     >
-      {!get(props.currentUser, 'meta.acceptedTerms') &&
+      <ContentTitle
+        title={trans('terms_of_service',{}, 'privacy')}
+        style={{marginTop: 60}}
+      />
+
+      <AlertBlock
+        type={get(props.currentUser, 'meta.acceptedTerms') ? 'info' : 'warning'}
+        title={get(props.currentUser, 'meta.acceptedTerms') ?
+          trans('accept_terms', {}, 'privacy') :
+          trans('no_accept_terms', {}, 'privacy')
+        }
+      >
+        {!get(props.currentUser, 'meta.acceptedTerms') &&
+          <Button
+            className="btn"
+            type={CALLBACK_BUTTON}
+            label={trans('accept-terms-of-service', {}, 'actions')}
+            callback={() => props.acceptTerms()}
+            primary={true}
+          />
+        }
+
         <Button
           className="btn"
-          type={CALLBACK_BUTTON}
-          label={trans('accept-terms-of-service', {}, 'actions')}
-          callback={() => props.acceptTerms()}
-          primary={true}
+          type={MODAL_BUTTON}
+          label={trans('show-terms-of-service', {}, 'actions')}
+          modal={[MODAL_TERMS_OF_SERVICE]}
         />
-      }
+      </AlertBlock>
+
+      <ContentTitle
+        title={trans('dpo')}
+      />
+
+      {/* AFFICHAGE DONNEES DPO */}
+
+      <ContentTitle
+        title={trans('title_my_data', {}, 'privacy')}
+      />
 
       <Button
-        className="btn"
-        type={MODAL_BUTTON}
-        label={trans('show-terms-of-service', {}, 'actions')}
-        modal={[MODAL_TERMS_OF_SERVICE]}
+        className="btn btn-block component-container"
+        type={CALLBACK_BUTTON}
+        label={trans('export_data', {}, 'privacy')}
+        callback={props.exportAccount}
       />
-    </AlertBlock>
 
-    <ContentTitle
-      title={trans('dpo')}
-    />
-
-
-
-
-
-
-
-
-    <ContentTitle
-      title={trans('title_my_data', {}, 'privacy')}
-    />
-
-    <Button
-      className="btn btn-block component-container"
-      type={CALLBACK_BUTTON}
-      label={trans('export_data', {}, 'privacy')}
-      callback={props.exportAccount}
-    />
-
-    <Button
-      className="btn btn-block component-container"
-      type={ASYNC_BUTTON}
-      label={trans('request_deletion', {}, 'privacy')}
-      request={{
-        url: url(['apiv2_user_request_account_deletion']),
-        request:{method: 'POST', type: actionConstants.ACTION_SEND},
-        messages: {
-          pending: {
-            title: trans('send.pending.title', {}, 'alerts'),
-            message: trans('send.pending.message', {}, 'alerts')
-          },
-          success: {
-            title: trans('send.success.title', {}, 'alerts'),
-            message: trans('send.success.message', {}, 'alerts')
-          }
+      <Button
+        className="btn btn-block component-container"
+        type={ASYNC_BUTTON}
+        label={trans('request_deletion', {}, 'privacy')}
+        request={{
+          url: url(['apiv2_user_request_account_deletion']),
+          request:{method: 'POST', type: actionConstants.ACTION_SEND},
+          messages: {
+            pending: {
+              title: trans('send.pending.title', {}, 'alerts'),
+              message: trans('send.pending.message', {}, 'alerts')
+            },
+            success: {
+              title: trans('send.success.title', {}, 'alerts'),
+              message: trans('send.success.message', {}, 'alerts')
+            }
+          }}
+        }
+        dangerous={true}
+        confirm={{
+          title: trans('title_dialog_delete_account', {}, 'privacy'),
+          message: trans('message_dialog_delete_account', {}, 'privacy')
         }}
-      }
-      dangerous={true}
-      confirm={{
-        title: trans('title_dialog_delete_account', {}, 'privacy'),
-        message: trans('message_dialog_delete_account', {}, 'privacy')
-      }}
-    />
-  </AccountPage>
+      />
+    </AccountPage>
 
 PrivacyMain.propTypes = {
   currentUser: T.shape(
