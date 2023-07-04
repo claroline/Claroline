@@ -3,17 +3,13 @@
 namespace Claroline\AnnouncementBundle\Controller;
 
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
-use Claroline\AnnouncementBundle\Serializer\AnnouncementAggregateSerializer;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Manages announces of an announcement resource.
@@ -25,35 +21,22 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class AnnouncementAggregateController
 {
     use RequestDecoderTrait;
-    use PermissionCheckerTrait;
-
-    /** @var AnnouncementAggregateSerializer */
-    private $serializer;
 
     /** @var Crud */
     private $crud;
 
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var FinderProvider */
-    private $finder;
+    /** @var SerializerProvider */
+    private $serializer;
 
     public function __construct(
-        AnnouncementAggregateSerializer $serializer,
         Crud $crud,
-        ObjectManager $om,
-        FinderProvider $finder,
-        AuthorizationCheckerInterface $authorization
+        SerializerProvider $serializer
     ) {
-        $this->serializer = $serializer;
         $this->crud = $crud;
-        $this->om = $om;
-        $this->finder = $finder;
-        $this->authorization = $authorization;
+        $this->serializer = $serializer;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return AnnouncementAggregate::class;
     }

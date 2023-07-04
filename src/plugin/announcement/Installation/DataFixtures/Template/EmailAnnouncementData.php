@@ -16,11 +16,11 @@ class EmailAnnouncementData extends AbstractTemplateFixture
         return [
             'Claroline Connect' => [
                 'en' => [
-                    'title' => '%subject%',
+                    'title' => '%title%',
                     'content' => $this->twig->render('@ClarolineAnnouncement/template/email_announcement.en.html.twig'),
                 ],
                 'fr' => [
-                    'title' => '%subject%',
+                    'title' => '%title%',
                     'content' => $this->twig->render('@ClarolineAnnouncement/template/email_announcement.fr.html.twig'),
                 ],
             ],

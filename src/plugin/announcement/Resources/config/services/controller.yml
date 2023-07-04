@@ -13,8 +13,5 @@ services:
 
     Claroline\AnnouncementBundle\Controller\AnnouncementAggregateController:
       arguments:
-        - '@Claroline\AnnouncementBundle\Serializer\AnnouncementAggregateSerializer'
         - '@Claroline\AppBundle\API\Crud'
-        - '@Claroline\AppBundle\Persistence\ObjectManager'
-        - '@Claroline\AppBundle\API\FinderProvider'
-        - '@security.authorization_checker'
+        - '@Claroline\AppBundle\API\SerializerProvider'
