@@ -5,6 +5,7 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {AnnouncesEditor as AnnouncesEditorComponent} from '#/plugin/announcement/resources/announcement/editor/components/editor'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {selectors} from '#/plugin/announcement/resources/announcement/store'
+import {selectors as editorSelectors} from '#/plugin/announcement/resources/announcement/editor/store/selectors'
 
 const AnnouncesEditor = connect(
   state => ({
@@ -14,7 +15,7 @@ const AnnouncesEditor = connect(
   dispatch => ({
     saveForm(aggregateId) {
       dispatch(formActions.saveForm(
-        selectors.STORE_NAME+'.announcementForm',
+        editorSelectors.FORM_NAME,
         ['claro_announcement_aggregate_update', {aggregateId: aggregateId}]
       ))
     }

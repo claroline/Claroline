@@ -66,6 +66,7 @@ class SendAnnouncementHandler implements MessageHandlerInterface
         }
 
         $workspace = $announcement->getResourceNode()->getWorkspace();
+        $publicationDate = $announcement->getPublicationDate() ?? $announcement->getCreationDate();
 
         $placeholders = array_merge([
             'title' => $announcement->getTitle(),
@@ -74,7 +75,7 @@ class SendAnnouncementHandler implements MessageHandlerInterface
             'workspace_name' => $workspace->getName(),
             'workspace_code' => $workspace->getCode(),
             'workspace_url' => $this->routing->workspaceUrl($workspace),
-            ], $this->templateManager->formatDatePlaceholder('publication', $announcement->getCreationDate())
+            ], $this->templateManager->formatDatePlaceholder('publication', $publicationDate)
         );
 
         $announcementSend = new AnnouncementSend();
@@ -89,24 +90,19 @@ class SendAnnouncementHandler implements MessageHandlerInterface
         $this->objectManager->persist($announcementSend);
         $this->objectManager->flush();
 
-        $receiversByLocale = [];
         foreach ($receivers as $receiver) {
-            $receiversByLocale[$receiver->getLocale()][] = $receiver;
-        }
-
-        foreach ($receiversByLocale as $locale => $localeReceivers) {
             if ($announcement->getAggregate()->getTemplateEmail()) {
-                $title = $this->templateManager->getTemplateContent($announcement->getAggregate()->getTemplateEmail(), $placeholders, $locale, 'title');
-                $content = $this->templateManager->getTemplateContent($announcement->getAggregate()->getTemplateEmail(), $placeholders, $locale);
+                $title = $this->templateManager->getTemplateContent($announcement->getAggregate()->getTemplateEmail(), $placeholders, $receiver->getLocale(), 'title');
+                $content = $this->templateManager->getTemplateContent($announcement->getAggregate()->getTemplateEmail(), $placeholders, $receiver->getLocale());
             } else {
-                $title = $this->templateManager->getTemplate('email_announcement', $placeholders, $locale, 'title');
-                $content = $this->templateManager->getTemplate('email_announcement', $placeholders, $locale);
+                $title = $this->templateManager->getTemplate('email_announcement', $placeholders, $receiver->getLocale(), 'title');
+                $content = $this->templateManager->getTemplate('email_announcement', $placeholders, $receiver->getLocale());
             }
 
             $this->eventDispatcher->dispatch(MessageEvents::MESSAGE_SENDING, SendMessageEvent::class, [
                 $content,
                 $title,
-                $localeReceivers,
+                $receiver,
                 $sender,
             ]);
         }

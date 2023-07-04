@@ -33,8 +33,7 @@ const AnnouncementResource = props =>
         component: Announces
       }, {
         path: '/edit',
-        component: AnnouncesEditor,
-        onEnter: () => props.resetForm(props.announcement)
+        component: AnnouncesEditor
       }, {
         path: '/add',
         exact: true,
