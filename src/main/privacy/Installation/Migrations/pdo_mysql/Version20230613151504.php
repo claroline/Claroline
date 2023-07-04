@@ -29,6 +29,7 @@ final class Version20230613151504 extends AbstractMigration
                 address_city VARCHAR(255) DEFAULT NULL, 
                 address_state VARCHAR(255) DEFAULT NULL, 
                 address_country VARCHAR(255) DEFAULT NULL, 
+                publication_date DATETIME DEFAULT NULL, 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
