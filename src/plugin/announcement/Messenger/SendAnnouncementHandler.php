@@ -25,7 +25,6 @@ class SendAnnouncementHandler implements MessageHandlerInterface
     private $eventDispatcher;
 
     public function __construct(
-
         RoutingHelper $routing,
         ObjectManager $objectManager,
         TemplateManager $templateManager,
@@ -104,12 +103,12 @@ class SendAnnouncementHandler implements MessageHandlerInterface
                 $content = $this->templateManager->getTemplate('email_announcement', $placeholders, $locale);
             }
 
-            $this->eventDispatcher->dispatch( MessageEvents::MESSAGE_SENDING, SendMessageEvent::class, [
+            $this->eventDispatcher->dispatch(MessageEvents::MESSAGE_SENDING, SendMessageEvent::class, [
                 $content,
                 $title,
                 $localeReceivers,
                 $sender,
-            ] );
+            ]);
         }
     }
 }

@@ -3,8 +3,8 @@
 namespace Claroline\AnnouncementBundle\Controller;
 
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
