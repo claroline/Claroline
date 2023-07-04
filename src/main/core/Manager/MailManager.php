@@ -82,7 +82,7 @@ class MailManager
             'claro_index',
             [],
             UrlGeneratorInterface::ABSOLUTE_URL
-            )."#/newpassword/{$user->getResetPasswordHash()}";
+        )."#/newpassword/{$user->getResetPasswordHash()}";
 
         $subject = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale);
@@ -98,7 +98,7 @@ class MailManager
             'claro_index',
             [],
             UrlGeneratorInterface::ABSOLUTE_URL
-            )."#/newpassword/{$hash}";
+        )."#/newpassword/{$hash}";
         $locale = $this->localeManager->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
