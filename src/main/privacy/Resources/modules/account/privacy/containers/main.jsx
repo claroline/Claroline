@@ -6,7 +6,6 @@ import {PrivacyMain as PrivacyMainComponent} from '#/main/privacy/account/privac
 
 const PrivacyMain = connect(
   (state) => ({
-    /*privacy: selectors.privacy(state),*/
     currentUser: securitySelectors.currentUser(state)
   }),
   (dispatch) => ({
@@ -16,12 +15,6 @@ const PrivacyMain = connect(
     exportAccount() {
       dispatch(actions.exportAccount())
     }
-    /*fetchAccountPrivacy() {
-      dispatch(actions.fetchAccountPrivacy())
-    },
-    updateAccountPrivacy(privacy) {
-      dispatch(actions.updateAccountPrivacy(privacy))
-    }*/
   })
 )(PrivacyMainComponent)
 
