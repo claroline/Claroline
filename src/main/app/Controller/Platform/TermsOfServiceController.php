@@ -34,9 +34,9 @@ class TermsOfServiceController
     }
 
     /**
-     * @Route("", name="apiv2_terms_of_service", methods={"GET"})
+     * @Route("", name="apiv2_platform_terms_of_service", methods={"GET"})
      */
-    public function getTermsAction(): JsonResponse
+    public function getCurrentAction(): JsonResponse
     {
         $termsOfService = $this->om->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
         $terms = $termsOfService->getTermsOfService();

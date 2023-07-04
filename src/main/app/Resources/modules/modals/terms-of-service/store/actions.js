@@ -9,7 +9,7 @@ actions.load = makeActionCreator(TERMS_OF_SERVICE_LOAD, 'content')
 
 actions.fetch = () => (dispatch) => dispatch({
   [API_REQUEST]: {
-    url: ['apiv2_terms_of_service'],
+    url: ['apiv2_platform_terms_of_service'],
     silent: true,
     success: (response) => dispatch(actions.load(response))
   }

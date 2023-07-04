@@ -78,7 +78,11 @@ class MailManager
 
         $this->userManager->initializePassword($user);
 
-        $placeholders['password_reset_link'] = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL)."#/newpassword/{$user->getResetPasswordHash()}";
+        $placeholders['password_reset_link'] = $this->router->generate(
+            'claro_index',
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
+            )."#/newpassword/{$user->getResetPasswordHash()}";
 
         $subject = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale);
@@ -90,7 +94,11 @@ class MailManager
     {
         $this->userManager->initializePassword($user);
         $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL)."#/newpassword/{$hash}";
+        $link = $this->router->generate(
+            'claro_index',
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
+            )."#/newpassword/{$hash}";
         $locale = $this->localeManager->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
@@ -107,7 +115,11 @@ class MailManager
     public function sendEnableAccountMessage(User $user)
     {
         $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate('claro_security_activate_user', ['hash' => $hash], UrlGeneratorInterface::ABSOLUTE_URL);
+        $link = $this->router->generate(
+            'claro_security_activate_user',
+            ['hash' => $hash],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
         $locale = $this->localeManager->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
@@ -147,7 +159,11 @@ class MailManager
     public function sendCreationMessage(User $user)
     {
         $locale = $this->localeManager->getLocale($user);
-        $url = $this->router->generate('claro_security_validate_email', ['hash' => $user->getEmailValidationHash()], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->router->generate(
+            'claro_security_validate_email',
+            ['hash' => $user->getEmailValidationHash()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
         $placeholders = [
             'first_name' => $user->getFirstName(),
             'last_name' => $user->getLastName(),

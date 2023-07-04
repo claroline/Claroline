@@ -7,9 +7,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentHtml} from '#/main/app/content/components/html'
 
-const TermsOfServiceModal = props => {
-  console.log('TermsOfServiceModal', props.content)
-  return(
+const TermsOfServiceModal = props =>
     <Modal
       {...omit(props, 'fetch')}
       icon="fa fa-fw fa-shield"
@@ -32,9 +30,6 @@ const TermsOfServiceModal = props => {
         <ContentHtml className="modal-body">{props.content}</ContentHtml>
       }
     </Modal>
-  )
-}
-
 
 TermsOfServiceModal.propTypes = {
   fetch: T.func.isRequired,
