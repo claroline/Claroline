@@ -84,10 +84,10 @@ class MailManager
         $this->userManager->initializePassword($user);
 
         $placeholders['password_reset_link'] = $this->router->generate(
-                'claro_index',
-                [],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            )."#/newpassword/{$user->getResetPasswordHash()}";
+            'claro_index',
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        )."#/newpassword/{$user->getResetPasswordHash()}";
 
         $subject = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale);
@@ -100,10 +100,10 @@ class MailManager
         $this->userManager->initializePassword($user);
         $hash = $user->getResetPasswordHash();
         $link = $this->router->generate(
-                'claro_index',
-                [],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            )."#/newpassword/{$hash}";
+            'claro_index',
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        )."#/newpassword/{$hash}";
         $locale = $this->localeManager->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
@@ -185,7 +185,7 @@ class MailManager
     public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false, $replyToMail = null)
     {
         if (0 === count($users) && (!isset($extra['to']) || 0 === count($extra['to']))) {
-            //obviously, if we're not going to send anything to anyone, it's better to stop
+            // obviously, if we're not going to send anything to anyone, it's better to stop
             return false;
         }
 

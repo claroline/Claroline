@@ -38,6 +38,10 @@ const PrivacyTool = (props) =>
     <PrivacyLinkModals item={props.parameters} />
   </ToolPage>
 
+PrivacyTool.propTypes = {
+  parameters: T.object.isRequired
+}
+
 export {
   PrivacyTool
 }
