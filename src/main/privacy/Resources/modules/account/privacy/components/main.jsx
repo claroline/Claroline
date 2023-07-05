@@ -7,6 +7,7 @@ import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON, ASYNC_BUTTON} from '#/main/app/buttons'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {ContentTitle} from '#/main/app/content/components/title'
+import {DetailsData} from '#/main/app/content/details/components/data'
 import {MODAL_TERMS_OF_SERVICE} from '#/main/app/modals/terms-of-service'
 import {AccountPage} from '#/main/app/account/containers/page'
 import {route} from '#/main/app/account/routing'
@@ -59,7 +60,33 @@ const PrivacyMain = (props) =>
       title={trans('dpo')}
     />
 
-    {/* AFFICHAGE DONNEES DPO */}
+    <DetailsData
+      data={props.privacy}
+      sections={[
+        {
+          title: trans('dpo'),
+          fields: [
+            {
+              name: 'dpo.name',
+              label: trans('name'),
+              type: 'string'
+            }, {
+              name: 'dpo.email',
+              label: trans('email'),
+              type: 'email'
+            }, {
+              name: 'dpo.phone',
+              label: trans('phone'),
+              type: 'string'
+            }, {
+              name: 'dpo.address',
+              label: trans('address'),
+              type: 'address'
+            }
+          ]
+        }
+      ]}
+    />
 
     <ContentTitle
       title={trans('title_my_data', {}, 'privacy')}
