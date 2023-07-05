@@ -2,3 +2,4 @@ imports:
     - { resource: services/controller.yml }
     - { resource: services/subscriber.yml }
     - { resource: services/serializer.yml }
+    - { resource: services/updater.yml }
