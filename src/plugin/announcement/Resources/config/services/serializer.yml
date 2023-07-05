@@ -16,3 +16,6 @@ services:
 
     Claroline\AnnouncementBundle\Serializer\AnnouncementAggregateSerializer:
         tags: [claroline.serializer]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer'

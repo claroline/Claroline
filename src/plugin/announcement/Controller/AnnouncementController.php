@@ -24,6 +24,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * Manages announces of an announcement resource.
  *
  * @Route("/announcement/{aggregateId}", options={"expose"=true})
+ *
  * @EXT\ParamConverter(
  *      "aggregate",
  *      class="Claroline\AnnouncementBundle\Entity\AnnouncementAggregate",
@@ -93,6 +94,7 @@ class AnnouncementController
      * Updates an existing announce.
      *
      * @Route("/{id}", name="claro_announcement_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter(
      *      "announcement",
      *      class="Claroline\AnnouncementBundle\Entity\Announcement",
@@ -112,6 +114,7 @@ class AnnouncementController
      * Deletes an announce.
      *
      * @Route("/{id}", name="claro_announcement_delete", methods={"DELETE"})
+     *
      * @EXT\ParamConverter(
      *      "announcement",
      *      class="Claroline\AnnouncementBundle\Entity\Announcement",
@@ -131,6 +134,7 @@ class AnnouncementController
      * Sends an announce (in current implementation, it's sent by email).
      *
      * @Route("/{id}/validate", name="claro_announcement_validate", methods={"GET"})
+     *
      * @EXT\ParamConverter(
      *      "announcement",
      *      class="Claroline\AnnouncementBundle\Entity\Announcement",

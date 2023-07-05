@@ -12,6 +12,7 @@ import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources
 import {Announces} from '#/plugin/announcement/resources/announcement/components/announces'
 import {Announce} from '#/plugin/announcement/resources/announcement/components/announce'
 import {AnnounceForm} from '#/plugin/announcement/resources/announcement/components/announce-form'
+import {AnnouncesEditor} from '#/plugin/announcement/resources/announcement/editor/containers/editor'
 
 const AnnouncementResource = props =>
   <ResourcePage
@@ -30,6 +31,9 @@ const AnnouncementResource = props =>
         path: '/',
         exact: true,
         component: Announces
+      }, {
+        path: '/edit',
+        component: AnnouncesEditor
       }, {
         path: '/add',
         exact: true,
@@ -56,6 +60,7 @@ AnnouncementResource.propTypes = {
   posts: T.arrayOf(
     T.shape(AnnouncementTypes.propTypes)
   ).isRequired,
+  announcement: T.object.isRequired,
   openDetail: T.func.isRequired,
   resetDetail: T.func.isRequired,
   resetForm: T.func.isRequired

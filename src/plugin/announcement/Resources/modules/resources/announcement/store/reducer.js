@@ -17,6 +17,8 @@ import {
   ANNOUNCES_PAGE_CHANGE
 } from '#/plugin/announcement/resources/announcement/store/actions'
 
+import {reducer as editorReducer} from '#/plugin/announcement/resources/announcement/editor/store/reducer'
+
 const reducer = combineReducers({
   /**
    * Manages announcement pagination.
@@ -76,6 +78,8 @@ const reducer = combineReducers({
     [ANNOUNCE_DETAIL_OPEN]: (state, action) => action.announceId,
     [ANNOUNCE_DETAIL_RESET]: () => null
   }),
+
+  announcementEditor: editorReducer,
 
   workspaceRoles: makeReducer([], {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.workspaceRoles
