@@ -2,34 +2,32 @@
 
 namespace Claroline\PrivacyBundle\Controller;
 
-use Claroline\AppBundle\API\Utils\ArrayUtils;
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\PrivacyBundle\Entity\PrivacyParameters;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class PrivacyController extends AbstractSecurityController
 {
     use RequestDecoderTrait;
 
-    private AuthorizationCheckerInterface $authorization;
-
-    private PlatformConfigurationHandler $config;
-
-    private ParametersSerializer $serializer;
+    private SerializerProvider $serializer;
+    private ObjectManager $objectManager;
+    private Crud $crud;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        PlatformConfigurationHandler $ch,
-        ParametersSerializer $serializer
+        SerializerProvider $serializer,
+        ObjectManager $objectManager,
+        Crud $crud
     ) {
-        $this->authorization = $authorization;
-        $this->config = $ch;
         $this->serializer = $serializer;
+        $this->objectManager = $objectManager;
+        $this->crud = $crud;
     }
 
     /**
@@ -39,18 +37,24 @@ class PrivacyController extends AbstractSecurityController
     {
         $this->canOpenAdminTool('privacy');
 
-        $parametersData = $this->decodeRequest($request);
+        $data = $this->decodeRequest($request);
+        $privacyParameters = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+        $privacyUpdate = $this->crud->update($privacyParameters, $data, [Crud::THROW_EXCEPTION]);
 
-        ArrayUtils::remove($parametersData, 'lockedParameters');
+        $privacyData = $this->serializer->serialize($privacyUpdate);
 
-        $locked = $this->config->getParameter('lockedParameters') ?? [];
-        foreach ($locked as $lockedParam) {
-            ArrayUtils::remove($parametersData, $lockedParam);
-        }
+        return new JsonResponse($privacyData);
+    }
 
-        $parameters = $this->serializer->deserialize($parametersData);
-        $this->config->setParameters($parameters);
+    /**
+     * @Route("/privacy", name="apiv2_privacy_get", methods={"GET"})
+     */
+    public function getAction(): JsonResponse
+    {
+        $privacy = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
 
-        return new JsonResponse($parameters);
+        return new JsonResponse(
+            $this->serializer->serialize($privacy)
+        );
     }
 }

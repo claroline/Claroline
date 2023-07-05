@@ -1,5 +1,3 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
+    Claroline\PrivacyBundle\Serializer\PrivacySerializer:
+        tags: ['claroline.serializer']
