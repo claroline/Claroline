@@ -1,22 +1,32 @@
 import {createSelector} from 'reselect'
-import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
 const STORE_NAME = 'privacy'
-const FORM_NAME = STORE_NAME+'.parameters'
+
 const store = (state) => state[STORE_NAME]
 
-const lockedParameters = createSelector(
+const dpo = createSelector(
   [store],
-  (store) => store.lockedParameters
+  (store) => store.dpo
 )
 
-const parameters = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
+const termsOfService = (state) => store(state).termsOfService
 
+const termsOfServiceEnabled = createSelector(
+  [store],
+  (store) => store.termsOfServiceEnabled
+)
+
+const countryStorage = createSelector(
+  [store],
+  (store) => store.countryStorage
+)
 
 export const selectors = {
   STORE_NAME,
+
   store,
-  lockedParameters,
-  parameters,
-  FORM_NAME
+  dpo,
+  termsOfService,
+  termsOfServiceEnabled,
+  countryStorage
 }

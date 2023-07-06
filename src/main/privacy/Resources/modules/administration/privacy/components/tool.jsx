@@ -1,93 +1,106 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import { ToolPage } from '#/main/core/tool/containers/page'
+import {trans} from '#/main/app/intl'
+import {MODAL_COUNTRY_STORAGE} from '#/main/privacy/administration/privacy/modals/country'
+import {MODAL_INFO_DPO} from '#/main/privacy/administration/privacy/modals/dpo'
+import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/administration/privacy/modals/terms'
+import {AlertBlock} from '#/main/app/alert/components/alert-block'
+import {Button} from '#/main/app/action'
+import {MODAL_BUTTON} from '#/main/app/buttons'
 
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {ToolPage} from '#/main/core/tool/containers/page'
-import {selectors} from '#/main/privacy/administration/privacy/store'
-import get from 'lodash/get'
-
-import {trans} from '#/main/app/intl/translation'
-
-const PrivacyTool = (props) =>
-  <ToolPage>
-    <FormData
-      level={2}
-      name={selectors.FORM_NAME}
-      target={['apiv2_privacy_update']}
-      buttons={true}
-      cancel={{
-        type: LINK_BUTTON,
-        target: props.path,
-        exact: true
-      }}
-      locked={props.lockedParameters}
-      sections={[
-        {
-          title: trans('general'),
-          primary: true,
-          fields: [
-            {
-              name: 'privacy.countryStorage',
-              label: trans('country_storage', {}, 'privacy'),
-              type: 'country'
-            }
-          ]
-        }, {
-          icon: 'fa fa-fw fa-user-shield',
-          title: trans('dpo'),
-          fields: [
-            {
-              name: 'privacy.dpo.name',
-              label: trans('name'),
-              type: 'string'
-            }, {
-              name: 'privacy.dpo.email',
-              label: trans('email'),
-              type: 'email'
-            }, {
-              name: 'privacy.dpo.phone',
-              label: trans('phone'),
-              type: 'string'
-            }, {
-              name: 'privacy.dpo.address',
-              label: trans('address'),
-              type: 'address'
-            }
-          ]
-        }, {
-          icon: 'fa fa-fw fa-copyright',
-          title: trans('terms_of_service', {}, 'privacy'),
-          fields: [
-            {
-              name: 'tos.enabled',
-              type: 'boolean',
-              label: trans('terms_of_service_activation_message', {}, 'privacy'),
-              help: trans('terms_of_service_activation_help', {}, 'privacy'),
-              linked: [
-                {
-                  name: 'tos.text',
-                  type: 'translated',
-                  label: trans('terms_of_service', {}, 'privacy'),
-                  required: true,
-                  displayed: get(props.parameters, 'tos.enabled')
-                }
-              ]
-            }
-          ]
+const PrivacyTool = (props) => {
+  const blocks = [
+    {
+      type: props.countryStorage ? 'success' : 'warning',
+      titleKey: props.countryStorage ? 'countryStorage_ok' : 'no_countryStorage',
+      labelKey: props.countryStorage ? 'change_country_storage' : 'add_country_storage',
+      modalType: MODAL_COUNTRY_STORAGE,
+      modalData: {
+        countryStorage: props.countryStorage,
+        onSave: (data) => props.updateCountry(data)
+      },
+      helpKey: 'country_storage_help'
+    },
+    {
+      type: props.dpo.email ? 'success' : 'warning',
+      titleKey: props.dpo.email ? 'dpo_ok' : 'no_dpo',
+      labelKey: props.dpo.email ? 'change_dpo' : 'add_dpo',
+      modalType: MODAL_INFO_DPO,
+      modalData: {
+        dpo: props.dpo,
+        onSave: (data) => props.updateDpo(data)
+      },
+      helpKey: 'dpo_help'
+    },
+    {
+      type: props.termsOfService ? 'success' : 'warning',
+      titleKey: props.termsOfService ? 'terms_ok' : 'no_terms',
+      labelKey: props.termsOfService ? 'change_terms' : 'add_terms',
+      modalType: MODAL_TERMS_OF_SERVICE,
+      modalData: {
+        termsOfService: props.termsOfService,
+        termsOfServiceEnabled: props.termsOfServiceEnabled,
+        onSave: (data) => {
+          props.updateTermsOfService(data)
+          props.updateTermsEnabled(data)
         }
-      ]}
-    />
-  </ToolPage>
+      },
+      helpKey: 'terms_help'
+    }
+  ]
 
-PrivacyTool.propTypes = {
-  path: T.string.isRequired,
-  lockedParameters: T.arrayOf(T.string),
-  parameters: T.shape({
-    tos: T.shape({
-      enabled: T.bool
-    })
-  })
+  const renderValueOrUndefined = (value) => {
+    return value !== '' ? value : <i>{trans('undefined', {}, 'privacy')}</i>
+  }
+
+  return(
+    <ToolPage>
+      <div className="panel panel-default" style={{marginTop: '25px'}}>
+        <div className="panel-heading">
+          {trans('country_storage', {}, 'privacy')}
+        </div>
+        <div className="panel-body">
+          {renderValueOrUndefined(props.countryStorage)}
+        </div>
+      </div>
+      <div className="panel panel-default">
+        <div className="panel-heading">
+          {trans('dpo_info', {}, 'privacy')}
+        </div>
+        <div className="panel-body">
+          <strong>{trans('name')} : </strong>
+          {renderValueOrUndefined(props.dpo.name)}
+          <br/>
+          <strong>{trans('email')} :</strong> {renderValueOrUndefined(props.dpo.email)}
+          <br/>
+          <strong>{trans('phone')} :</strong> {renderValueOrUndefined(props.dpo.phone)}
+          <br/>
+          <strong>{trans('address')} :</strong>
+          <br/>
+          {renderValueOrUndefined(props.dpo.address.street1)}<br/>
+          {trans('complement_address', {}, 'privacy')} : {renderValueOrUndefined(props.dpo.address.street2)}<br/>
+          {trans('postal_code')} : {renderValueOrUndefined(props.dpo.address.postalCode)}<br/>
+          {trans('city', {}, 'privacy')} : {renderValueOrUndefined(props.dpo.address.city)}<br/>
+          {trans('state', {}, 'privacy')} : {renderValueOrUndefined(props.dpo.address.state)}<br/>
+          {trans('country')} : {renderValueOrUndefined(props.dpo.address.country)}
+        </div>
+      </div>
+
+      {blocks.map((block, index) => (
+        <AlertBlock key={index} type={block.type} title={trans(block.titleKey, {}, 'privacy')}>
+          <Button
+            className="btn btn-default"
+            type={MODAL_BUTTON}
+            label={trans(block.labelKey, {}, 'privacy')}
+            modal={[block.modalType, block.modalData]}
+          />
+          <span className="help-block">
+            {trans(block.helpKey, {}, 'privacy')}
+          </span>
+        </AlertBlock>
+      ))}
+    </ToolPage>
+  )
 }
 
 export {
