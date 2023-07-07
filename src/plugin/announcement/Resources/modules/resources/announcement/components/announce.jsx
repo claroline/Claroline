@@ -50,6 +50,7 @@ AnnounceDetail.propTypes = {
   workspaceRoles: T.array,
   removePost: T.func.isRequired,
   editable: T.bool.isRequired,
+  exportPDF: T.func.isRequired,
   deletable: T.bool.isRequired
 }
 

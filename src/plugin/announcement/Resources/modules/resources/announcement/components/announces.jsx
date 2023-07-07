@@ -92,6 +92,7 @@ AnnouncesList.propTypes = {
   changePage: T.func.isRequired,
   editable: T.bool,
   deletable: T.bool,
+  exportPDF: T.func.isRequired,
   removePost: T.func.isRequired
 }
 

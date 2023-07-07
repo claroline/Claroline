@@ -120,6 +120,7 @@ AnnouncePost.propTypes = {
   active: T.bool,
   deletable: T.bool.isRequired,
   editable: T.bool.isRequired,
+  exportPDF: T.func.isRequired,
   removePost: T.func.isRequired
 }
 
