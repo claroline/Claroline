@@ -78,6 +78,7 @@ class AnnouncementAggregateController
 
     /**
      * @Route("/pdf/{announcementId}", name="claro_announcement_export_pdf", methods={"GET"})
+     *
      * @EXT\ParamConverter("announcement", class="Claroline\AnnouncementBundle\Entity\Announcement", options={"mapping": {"announcementId": "uuid"}})
      */
     public function downloadPdfAction(AnnouncementAggregate $aggregate, Announcement $announcement): StreamedResponse

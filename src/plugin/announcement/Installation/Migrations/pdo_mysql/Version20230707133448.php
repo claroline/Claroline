@@ -14,33 +14,33 @@ final class Version20230707133448 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_announcement_aggregate 
             ADD pdf_template_id INT DEFAULT NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_announcement_aggregate 
             ADD CONSTRAINT FK_79BF2C8CCA5AA7D3 FOREIGN KEY (pdf_template_id) 
             REFERENCES claro_template (id) 
             ON DELETE SET NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE INDEX IDX_79BF2C8CCA5AA7D3 ON claro_announcement_aggregate (pdf_template_id)
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_announcement_aggregate 
             DROP FOREIGN KEY FK_79BF2C8CCA5AA7D3
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP INDEX IDX_79BF2C8CCA5AA7D3 ON claro_announcement_aggregate
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_announcement_aggregate 
             DROP pdf_template_id
-        ");
+        ');
     }
 }
