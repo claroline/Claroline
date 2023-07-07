@@ -35,6 +35,7 @@ const AnnouncesList = props =>
         aggregateId={props.aggregateId}
         editable={props.editable}
         deletable={props.deletable}
+        exportPDF={() => props.exportPDF(props.aggregateId, post)}
         removePost={() => props.removePost(props.aggregateId, post)}
         path={props.path}
       />
@@ -123,6 +124,9 @@ const Announces = connect(
     },
     changePage(page) {
       dispatch(actions.changeAnnouncesPage(page))
+    },
+    exportPDF(aggregateId, announcePost) {
+      dispatch(actions.exportPDF(aggregateId, announcePost))
     }
   })
 )(AnnouncesList)

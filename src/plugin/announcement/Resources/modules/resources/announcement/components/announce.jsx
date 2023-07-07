@@ -33,6 +33,7 @@ const AnnounceDetail = props =>
       aggregateId={props.aggregateId}
       announcement={props.announcement}
       workspaceRoles={props.workspaceRoles}
+      exportPDF={() => props.exportPDF(props.aggregateId, props.announcement)}
       removePost={() => props.removePost(props.aggregateId, props.announcement)}
       editable={props.editable}
       deletable={props.deletable}
@@ -72,6 +73,9 @@ const Announce = connect(
           handleConfirm: () => dispatch(actions.removeAnnounce(aggregateId, announcePost))
         })
       )
+    },
+    exportPDF(aggregateId, announcePost) {
+      dispatch(actions.exportPDF(aggregateId, announcePost))
     }
   })
 )(AnnounceDetail)

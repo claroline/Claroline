@@ -44,6 +44,9 @@ class AnnouncementAggregateSerializer
             if ($announcements->getTemplateEmail()) {
                 $serialized['templateEmail'] = $this->templateSerializer->serialize($announcements->getTemplateEmail(), [Options::SERIALIZE_MINIMAL]);
             }
+            if ($announcements->getTemplatePdf()) {
+                $serialized['templatePdf'] = $this->templateSerializer->serialize($announcements->getTemplatePdf(), [Options::SERIALIZE_MINIMAL]);
+            }
         }
 
         return $serialized;
@@ -64,6 +67,15 @@ class AnnouncementAggregateSerializer
             }
 
             $aggregate->setTemplateEmail($template);
+        }
+
+        if (array_key_exists('templatePdf', $data)) {
+            $template = null;
+            if (!empty($data['templatePdf']) && !empty($data['templatePdf']['id'])) {
+                $template = $this->om->getRepository(Template::class)->findOneBy(['uuid' => $data['templatePdf']['id']]);
+            }
+
+            $aggregate->setTemplatePdf($template);
         }
 
         return $aggregate;

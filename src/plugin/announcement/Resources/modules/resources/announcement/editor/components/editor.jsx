@@ -36,6 +36,19 @@ const AnnouncesEditor = props =>
             }]
           }
         }
+      }, {
+        name: 'templatePdf',
+        label: trans('pdf_announcement', {}, 'template'),
+        type: 'template',
+        options: {
+          picker: {
+            filters: [{
+              property: 'typeName',
+              value: 'pdf_announcement',
+              locked: true
+            }]
+          }
+        }
       }]
     }]}
   />

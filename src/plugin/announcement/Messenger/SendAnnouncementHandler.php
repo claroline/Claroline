@@ -19,10 +19,10 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SendAnnouncementHandler implements MessageHandlerInterface
 {
-    private $routing;
-    private $objectManager;
-    private $templateManager;
-    private $eventDispatcher;
+    private RoutingHelper $routing;
+    private ObjectManager $objectManager;
+    private TemplateManager $templateManager;
+    private StrictDispatcher $eventDispatcher;
 
     public function __construct(
         RoutingHelper $routing,
@@ -65,7 +65,7 @@ class SendAnnouncementHandler implements MessageHandlerInterface
             $sender = $this->objectManager->getRepository(User::class)->find($sendAnnouncement->getSenderId());
         }
 
-        $workspace = $announcement->getResourceNode()->getWorkspace();
+        $workspace = $announcement->getAggregate()->getResourceNode()->getWorkspace();
         $publicationDate = $announcement->getPublicationDate() ?? $announcement->getCreationDate();
 
         $placeholders = array_merge([
@@ -102,7 +102,7 @@ class SendAnnouncementHandler implements MessageHandlerInterface
             $this->eventDispatcher->dispatch(MessageEvents::MESSAGE_SENDING, SendMessageEvent::class, [
                 $content,
                 $title,
-                $receiver,
+                [$receiver],
                 $sender,
             ]);
         }
