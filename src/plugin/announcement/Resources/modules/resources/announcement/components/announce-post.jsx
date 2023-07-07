@@ -84,7 +84,7 @@ const AnnouncePost = props =>
             className="btn-link"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-file-pdf"
-            label={trans('export_pdf')}
+            label={trans('export-pdf',{}, 'actions')}
             tooltip="top"
             callback={props.exportPDF}
           />
