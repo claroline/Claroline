@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\NotificationBundle\Installation\Migrations\pdo_mysql;
+namespace Icap\NotificationBundle\Installation\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -8,9 +8,9 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2020/07/01 08:27:11
+ * Generation date: 2023/07/10 02:50:26
  */
-class Version20161010101357 extends AbstractMigration
+final class Version20230421090555 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
@@ -22,7 +22,7 @@ class Version20161010101357 extends AbstractMigration
                 resource_id INT NOT NULL, 
                 follower_id INT NOT NULL, 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql("
             CREATE TABLE icap__notification (
@@ -34,7 +34,7 @@ class Version20161010101357 extends AbstractMigration
                 action_key VARCHAR(255) NOT NULL, 
                 details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json)', 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ");
         $this->addSql('
             CREATE TABLE icap__notification_plugin_configuration (
@@ -45,7 +45,7 @@ class Version20161010101357 extends AbstractMigration
                 purge_after_days INT NOT NULL, 
                 last_purge_date DATETIME DEFAULT NULL, 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql("
             CREATE TABLE icap__notification_user_parameters (
@@ -57,7 +57,7 @@ class Version20161010101357 extends AbstractMigration
                 UNIQUE INDEX UNIQ_F44A756DA9D08426 (rss_id), 
                 INDEX IDX_F44A756DA76ED395 (user_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ");
         $this->addSql('
             CREATE TABLE icap__notification_viewer (
@@ -68,7 +68,7 @@ class Version20161010101357 extends AbstractMigration
                 INDEX IDX_DB60418BEF1A9D84 (notification_id), 
                 INDEX viewer_idx (viewer_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql('
             ALTER TABLE icap__notification_user_parameters 
@@ -86,6 +86,10 @@ class Version20161010101357 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
+        $this->addSql('
+            ALTER TABLE icap__notification_user_parameters 
+            DROP FOREIGN KEY FK_F44A756DA76ED395
+        ');
         $this->addSql('
             ALTER TABLE icap__notification_viewer 
             DROP FOREIGN KEY FK_DB60418BEF1A9D84
