@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\PeerTubeBundle\Installation\Migrations\pdo_mysql;
+namespace Claroline\PeerTubeBundle\Installation\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -8,26 +8,25 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2023/01/01 07:36:37
+ * Generation date: 2023/07/10 03:09:06
  */
-class Version20230101073632 extends AbstractMigration
+final class Version20230101073632 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
         $this->addSql('
             CREATE TABLE claro_peertube_video (
                 id INT AUTO_INCREMENT NOT NULL, 
-                uuid VARCHAR(36) NOT NULL, 
-                resourceNode_id INT DEFAULT NULL, 
                 server VARCHAR(255) NOT NULL, 
                 originalUuid VARCHAR(255) NOT NULL, 
-                shortUuid VARCHAR(255) NOT NULL,
+                shortUuid VARCHAR(255) NOT NULL, 
+                uuid VARCHAR(36) NOT NULL, 
+                resourceNode_id INT DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_77719BDBD17F50A6 (uuid), 
                 UNIQUE INDEX UNIQ_77719BDBB87FAB32 (resourceNode_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
-
         $this->addSql('
             ALTER TABLE claro_peertube_video 
             ADD CONSTRAINT FK_77719BDBB87FAB32 FOREIGN KEY (resourceNode_id) 
@@ -38,6 +37,10 @@ class Version20230101073632 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
+        $this->addSql('
+            ALTER TABLE claro_peertube_video 
+            DROP FOREIGN KEY FK_77719BDBB87FAB32
+        ');
         $this->addSql('
             DROP TABLE claro_peertube_video
         ');
