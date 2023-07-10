@@ -1,16 +1,11 @@
 <?php
 
-namespace Claroline\ThemeBundle\Installation\Migrations\pdo_mysql;
+namespace Claroline\ThemeBundle\Installation\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-/**
- * Auto-generated migration based on mapping information: modify it with caution.
- *
- * Generation date: 2023/05/10 12:14:55
- */
-final class Version20230510121455 extends AbstractMigration
+final class Version20230510121456 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
@@ -24,6 +19,26 @@ final class Version20230510121455 extends AbstractMigration
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ");
+
+        $colors = [
+            '#FF6900',
+            '#FCB900',
+            '#7BDCB5',
+            '#00D084',
+            '#8ED1FC',
+            '#0693E3',
+            '#ABB8C3',
+            '#EB144C',
+            '#FFFFFF',
+            '#000000',
+        ];
+
+        $colorsJson = json_encode($colors);
+
+        $this->addSql("
+            INSERT INTO claro_color_collection (colors, uuid, entity_name)
+            VALUES (?, UUID(), 'Default')
+        ", [$colorsJson]);
     }
 
     public function down(Schema $schema): void
