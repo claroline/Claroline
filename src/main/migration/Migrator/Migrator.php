@@ -79,9 +79,6 @@ class Migrator
         $config = $this->getConfiguration($bundle);
         $currentVersion = $config->getCurrentVersion();
 
-        //$config->getMetadataStorage()->ensureInitialized();
-
-        $targetVersion = null;
         if (self::VERSION_LATEST === $version) {
             $targetVersion = $config->getVersion(self::DIRECTION_DOWN === $direction ? 'first' : 'latest');
         } elseif (self::VERSION_NEAREST === $version) {

@@ -29,10 +29,6 @@ class CollectUpdatersPass implements CompilerPassInterface
             $updaterRefs[$id] = new Reference($id);
         }
 
-        if (!$updaterRefs) {
-            return;
-        }
-
         $locatorId = ServiceLocatorTagPass::register($container, $updaterRefs);
         $container->setAlias('claroline.updater_locator', (string) $locatorId)->setPublic(true);
     }
