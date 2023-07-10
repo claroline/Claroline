@@ -19,7 +19,6 @@ imports:
     - { resource: services/session.yml }
     - { resource: services/subscriber.yml }
     - { resource: services/twig.yml }
-    - { resource: services/updater.yml }
     - { resource: services/validator.yml }
     - { resource: services/voter.yml }
 
