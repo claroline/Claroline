@@ -6,5 +6,4 @@ imports:
     - { resource: services/manager.yml }
     - { resource: services/messenger.yml }
     - { resource: services/subscriber.yml }
-    - { resource: services/updater.yml }
     - { resource: services/voter.yml }
