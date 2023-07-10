@@ -79,6 +79,16 @@ const AnnouncePost = props =>
             />
           }
 
+          <Button
+            id={`${props.announcement.id}-export`}
+            className="btn-link"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-file-pdf"
+            label={trans('export-pdf',{}, 'actions')}
+            tooltip="top"
+            callback={props.exportPDF}
+          />
+
           {props.deletable &&
             <Button
               id={`${props.announcement.id}-delete`}
@@ -110,6 +120,7 @@ AnnouncePost.propTypes = {
   active: T.bool,
   deletable: T.bool.isRequired,
   editable: T.bool.isRequired,
+  exportPDF: T.func.isRequired,
   removePost: T.func.isRequired
 }
 

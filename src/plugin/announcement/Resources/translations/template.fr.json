@@ -1,4 +1,6 @@
 {
   "email_announcement": "Envoi d'une annonce",
-  "email_announcement_desc": "Template utilisé pour envoyer une annonce"
+  "email_announcement_desc": "Template utilisé pour envoyer une annonce",
+  "pdf_announcement": "Export d'une annonce",
+  "pdf_announcement_desc": "Template utilisé pour exporter une annonce au format PDF"
 }

@@ -34,3 +34,12 @@ actions.removeAnnounce = (aggregateId, announce) => ({
     }
   }
 })
+
+actions.exportPDF = (aggregateId, announce) => ({
+  [API_REQUEST]: {
+    url: ['claro_announcement_export_pdf', {aggregateId: aggregateId, announcementId: announce.id}],
+    request: {
+      method: 'GET'
+    }
+  }
+})

@@ -15,3 +15,6 @@ services:
       arguments:
         - '@Claroline\AppBundle\API\Crud'
         - '@Claroline\AppBundle\API\SerializerProvider'
+        - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+        - '@Claroline\AppBundle\Manager\PdfManager'
+        - '@Claroline\CoreBundle\Library\RoutingHelper'

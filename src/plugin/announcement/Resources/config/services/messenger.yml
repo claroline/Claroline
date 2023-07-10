@@ -2,6 +2,7 @@ services:
     Claroline\AnnouncementBundle\Messenger\SendAnnouncementHandler:
         tags: [ messenger.message_handler ]
         arguments:
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
