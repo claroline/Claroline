@@ -3,12 +3,12 @@
 namespace Icap\BlogBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Manager\BlogManager;
 use Icap\BlogBundle\Manager\PostManager;
-use Claroline\AppBundle\Manager\PdfManager;
 use Icap\BlogBundle\Serializer\BlogOptionsSerializer;
 use Icap\BlogBundle\Serializer\BlogSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -23,6 +23,7 @@ use Twig\Environment;
 
 /**
  * @Route("blog/{blogId}", options={"expose"=true})
+ *
  * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
  */
 class BlogController
@@ -48,16 +49,15 @@ class BlogController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        UrlGeneratorInterface         $router,
-        Environment                   $templating,
-        FinderProvider                $finder,
-        BlogManager                   $blogManager,
-        PostManager                   $postManager,
-        BlogSerializer                $blogSerializer,
-        PdfManager                    $pdfManager,
-        BlogOptionsSerializer         $blogOptionsSerializer
-    )
-    {
+        UrlGeneratorInterface $router,
+        Environment $templating,
+        FinderProvider $finder,
+        BlogManager $blogManager,
+        PostManager $postManager,
+        BlogSerializer $blogSerializer,
+        PdfManager $pdfManager,
+        BlogOptionsSerializer $blogOptionsSerializer
+    ) {
         $this->authorization = $authorization;
         $this->router = $router;
         $this->templating = $templating;
@@ -147,7 +147,7 @@ class BlogController
         $feed = [
             'title' => $blog->getResourceNode()->getName(),
             'description' => $blog->getInfos(),
-            'siteUrl' => $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL) . '#/desktop/workspaces/open/' . $workspace->getSlug() . '/resources/' . $node->getSlug(),
+            'siteUrl' => $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).'#/desktop/workspaces/open/'.$workspace->getSlug().'/resources/'.$node->getSlug(),
             'feedUrl' => $this->router->generate('icap_blog_rss', ['blogId' => $blog->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
             'lang' => $request->getLocale(),
         ];
@@ -243,7 +243,7 @@ class BlogController
             echo $this->pdfManager->fromHtml($content);
         }, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename=' . $fileName . '.pdf',
+            'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',
         ]);
     }
 }
