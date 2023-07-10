@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AuthenticationBundle\Installation\Migrations\pdo_mysql;
+namespace Claroline\AuthenticationBundle\Installation\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
