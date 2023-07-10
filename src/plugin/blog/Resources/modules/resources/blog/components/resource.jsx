@@ -2,8 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {url} from '#/main/app/api'
-import {LINK_BUTTON, URL_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
+import {url}                                                       from '#/main/app/api'
+import {LINK_BUTTON, URL_BUTTON, CALLBACK_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
 
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
@@ -28,12 +28,14 @@ const BlogResource = props =>
         target: `${props.path}/moderation/posts`,
         group: trans('management')
       }, {
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-file-pdf',
+        name: 'export-pdf',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-download',
         label: trans('export-pdf', {}, 'actions'),
         displayed: props.canExport,
-        group: trans('transfer'),
-        callback:() => props.downloadBlogPdf(props.blogId)
+        file: {
+          url: ['icap_blog_pdf', {blogId: props.blogId}]
+        }
       }, {
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-rss',

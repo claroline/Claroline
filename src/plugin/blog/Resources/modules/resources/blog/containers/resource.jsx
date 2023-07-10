@@ -19,11 +19,6 @@ const BlogResource = withRouter(
         canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
         canPost: hasPermission('post', resourceSelect.resourceNode(state)),
         canModerate: hasPermission('moderate', resourceSelect.resourceNode(state))
-      }),
-      (dispatch) => ({
-        downloadBlogPdf(blogId) {
-          return dispatch(actions.downloadBlogPdf(blogId))
-        }
       })
     )(BlogResourceComponent)
   )
