@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AudioPlayerBundle\Installation\Migrations\pdo_mysql;
+namespace Claroline\AudioPlayerBundle\Installation\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -8,9 +8,9 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2020/07/01 08:12:45
+ * Generation date: 2023/07/10 01:49:53
  */
-class Version20191002143105 extends AbstractMigration
+final class Version20191002143105 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
@@ -37,7 +37,49 @@ class Version20191002143105 extends AbstractMigration
                 INDEX IDX_67587B08460D9FD7 (node_id), 
                 INDEX IDX_67587B08A76ED395 (user_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+        ');
+        $this->addSql('
+            CREATE TABLE claro_audio_interaction_waveform (
+                id INT AUTO_INCREMENT NOT NULL, 
+                question_id INT DEFAULT NULL, 
+                url VARCHAR(255) NOT NULL, 
+                tolerance DOUBLE PRECISION NOT NULL, 
+                answers_limit INT NOT NULL, 
+                penalty DOUBLE PRECISION NOT NULL, 
+                UNIQUE INDEX UNIQ_856E5BF91E27F6BF (question_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+        ');
+        $this->addSql('
+            CREATE TABLE claro_audio_section (
+                id INT AUTO_INCREMENT NOT NULL, 
+                waveform_id INT DEFAULT NULL, 
+                section_start DOUBLE PRECISION NOT NULL, 
+                section_end DOUBLE PRECISION NOT NULL, 
+                start_tolerance DOUBLE PRECISION NOT NULL, 
+                end_tolerance DOUBLE PRECISION NOT NULL, 
+                color VARCHAR(255) DEFAULT NULL, 
+                feedback LONGTEXT DEFAULT NULL, 
+                score DOUBLE PRECISION DEFAULT NULL, 
+                uuid VARCHAR(36) NOT NULL, 
+                UNIQUE INDEX UNIQ_3FFCA233D17F50A6 (uuid), 
+                INDEX IDX_3FFCA2335B93C951 (waveform_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+        ');
+        $this->addSql('
+            CREATE TABLE claro_audio_params (
+                id INT AUTO_INCREMENT NOT NULL, 
+                node_id INT NOT NULL, 
+                sections_type VARCHAR(255) NOT NULL, 
+                rate_control TINYINT(1) NOT NULL, 
+                uuid VARCHAR(36) NOT NULL, 
+                description LONGTEXT DEFAULT NULL, 
+                UNIQUE INDEX UNIQ_B7FF82AAD17F50A6 (uuid), 
+                INDEX IDX_B7FF82AA460D9FD7 (node_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql('
             CREATE TABLE claro_audio_resource_section_comment (
@@ -52,49 +94,7 @@ class Version20191002143105 extends AbstractMigration
                 INDEX IDX_16790DB2D823E37A (section_id), 
                 INDEX IDX_16790DB2A76ED395 (user_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ');
-        $this->addSql('
-            CREATE TABLE claro_audio_interaction_waveform (
-                id INT AUTO_INCREMENT NOT NULL, 
-                question_id INT DEFAULT NULL, 
-                url VARCHAR(255) NOT NULL, 
-                tolerance DOUBLE PRECISION NOT NULL, 
-                answers_limit INT NOT NULL, 
-                penalty DOUBLE PRECISION NOT NULL, 
-                UNIQUE INDEX UNIQ_856E5BF91E27F6BF (question_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ');
-        $this->addSql('
-            CREATE TABLE claro_audio_section (
-                id INT AUTO_INCREMENT NOT NULL, 
-                waveform_id INT DEFAULT NULL, 
-                section_start DOUBLE PRECISION NOT NULL, 
-                section_end DOUBLE PRECISION NOT NULL, 
-                start_tolerance DOUBLE PRECISION NOT NULL, 
-                end_tolerance DOUBLE PRECISION NOT NULL, 
-                color VARCHAR(255) DEFAULT NULL, 
-                uuid VARCHAR(36) NOT NULL, 
-                score DOUBLE PRECISION DEFAULT NULL, 
-                feedback LONGTEXT DEFAULT NULL, 
-                UNIQUE INDEX UNIQ_3FFCA233D17F50A6 (uuid), 
-                INDEX IDX_3FFCA2335B93C951 (waveform_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ');
-        $this->addSql('
-            CREATE TABLE claro_audio_params (
-                id INT AUTO_INCREMENT NOT NULL, 
-                node_id INT NOT NULL, 
-                sections_type VARCHAR(255) NOT NULL, 
-                rate_control TINYINT(1) NOT NULL, 
-                uuid VARCHAR(36) NOT NULL, 
-                description LONGTEXT DEFAULT NULL, 
-                UNIQUE INDEX UNIQ_B7FF82AAD17F50A6 (uuid), 
-                INDEX IDX_B7FF82AA460D9FD7 (node_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql('
             ALTER TABLE claro_audio_resource_section 
@@ -105,18 +105,6 @@ class Version20191002143105 extends AbstractMigration
         $this->addSql('
             ALTER TABLE claro_audio_resource_section 
             ADD CONSTRAINT FK_67587B08A76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
-            ON DELETE SET NULL
-        ');
-        $this->addSql('
-            ALTER TABLE claro_audio_resource_section_comment 
-            ADD CONSTRAINT FK_16790DB2D823E37A FOREIGN KEY (section_id) 
-            REFERENCES claro_audio_resource_section (id) 
-            ON DELETE CASCADE
-        ');
-        $this->addSql('
-            ALTER TABLE claro_audio_resource_section_comment 
-            ADD CONSTRAINT FK_16790DB2A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
             ON DELETE SET NULL
         ');
@@ -138,23 +126,52 @@ class Version20191002143105 extends AbstractMigration
             REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
         ');
+        $this->addSql('
+            ALTER TABLE claro_audio_resource_section_comment 
+            ADD CONSTRAINT FK_16790DB2D823E37A FOREIGN KEY (section_id) 
+            REFERENCES claro_audio_resource_section (id) 
+            ON DELETE CASCADE
+        ');
+        $this->addSql('
+            ALTER TABLE claro_audio_resource_section_comment 
+            ADD CONSTRAINT FK_16790DB2A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE SET NULL
+        ');
     }
 
     public function down(Schema $schema): void
     {
         $this->addSql('
-            ALTER TABLE claro_audio_resource_section_comment 
-            DROP FOREIGN KEY FK_16790DB2D823E37A
+            ALTER TABLE claro_audio_resource_section 
+            DROP FOREIGN KEY FK_67587B08460D9FD7
+        ');
+        $this->addSql('
+            ALTER TABLE claro_audio_resource_section 
+            DROP FOREIGN KEY FK_67587B08A76ED395
+        ');
+        $this->addSql('
+            ALTER TABLE claro_audio_interaction_waveform 
+            DROP FOREIGN KEY FK_856E5BF91E27F6BF
         ');
         $this->addSql('
             ALTER TABLE claro_audio_section 
             DROP FOREIGN KEY FK_3FFCA2335B93C951
         ');
         $this->addSql('
-            DROP TABLE claro_audio_resource_section
+            ALTER TABLE claro_audio_params 
+            DROP FOREIGN KEY FK_B7FF82AA460D9FD7
         ');
         $this->addSql('
-            DROP TABLE claro_audio_resource_section_comment
+            ALTER TABLE claro_audio_resource_section_comment 
+            DROP FOREIGN KEY FK_16790DB2D823E37A
+        ');
+        $this->addSql('
+            ALTER TABLE claro_audio_resource_section_comment 
+            DROP FOREIGN KEY FK_16790DB2A76ED395
+        ');
+        $this->addSql('
+            DROP TABLE claro_audio_resource_section
         ');
         $this->addSql('
             DROP TABLE claro_audio_interaction_waveform
@@ -164,6 +181,9 @@ class Version20191002143105 extends AbstractMigration
         ');
         $this->addSql('
             DROP TABLE claro_audio_params
+        ');
+        $this->addSql('
+            DROP TABLE claro_audio_resource_section_comment
         ');
     }
 }
