@@ -10,7 +10,7 @@ import {displayDate} from '#/main/app/intl/date'
 import {trans} from '#/main/app/intl/translation'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
@@ -106,10 +106,10 @@ const EntryActions = props =>
         group: trans('management')
       }, {
         name: 'pdf',
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-print',
-        label: trans('print_entry', {}, 'clacoform'),
-        callback: props.downloadPdf,
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-file-pdf',
+        label: trans('export-pdf', {}, 'actions'),
+        file: {url:['claro_claco_form_entry_pdf_download', {entry: props.entryId}]},
         displayed: props.canGeneratePdf,
         group: trans('transfer')
       }, {
