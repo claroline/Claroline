@@ -3,7 +3,6 @@ imports:
     - { resource: services/finder.yml }
     - { resource: services/manager.yml }
     - { resource: services/serializer.yml }
-    - { resource: services/updater.yml }
     - { resource: services/voter.yml }
 
 services:
