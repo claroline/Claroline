@@ -101,7 +101,7 @@ class AnnouncementAggregateController
         if ($aggregate->getTemplatePdf()) {
             $content = $this->templateManager->getTemplateContent($aggregate->getTemplatePdf(), $placeholders, '');
         } else {
-            $content = $this->templateManager->getTemplate('email_announcement', $placeholders, '');
+            $content = $this->templateManager->getTemplate('pdf_announcement', $placeholders, '');
         }
 
         return new StreamedResponse(function () use ($content) {
