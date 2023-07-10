@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\MessageBundle\Installation\Migrations\pdo_mysql;
+namespace Claroline\MessageBundle\Installation\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -8,9 +8,9 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2020/07/01 08:59:07
+ * Generation date: 2023/07/10 02:44:14
  */
-class Version20191020084647 extends AbstractMigration
+final class Version20230421090419 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
@@ -21,7 +21,7 @@ class Version20191020084647 extends AbstractMigration
                 options LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json)', 
                 UNIQUE INDEX UNIQ_BBCE147CA76ED395 (user_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ");
         $this->addSql('
             CREATE TABLE claro_contact_category (
@@ -32,7 +32,7 @@ class Version20191020084647 extends AbstractMigration
                 INDEX IDX_2C48C9BBA76ED395 (user_id), 
                 UNIQUE INDEX contact_unique_user_category (user_id, category_name), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql('
             CREATE TABLE claro_contact (
@@ -43,7 +43,7 @@ class Version20191020084647 extends AbstractMigration
                 INDEX IDX_2C215B9FE7A1254A (contact_id), 
                 UNIQUE INDEX contact_unique_user_contact (user_id, contact_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql('
             CREATE TABLE claro_contact_categories (
@@ -52,9 +52,9 @@ class Version20191020084647 extends AbstractMigration
                 INDEX IDX_69F02FC4E7A1254A (contact_id), 
                 INDEX IDX_69F02FC412469DE2 (category_id), 
                 PRIMARY KEY(contact_id, category_id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
-        $this->addSql('
+        $this->addSql("
             CREATE TABLE claro_message (
                 id INT AUTO_INCREMENT NOT NULL, 
                 sender_id INT DEFAULT NULL, 
@@ -67,7 +67,8 @@ class Version20191020084647 extends AbstractMigration
                 rgt INT NOT NULL, 
                 root INT DEFAULT NULL, 
                 sender_username VARCHAR(255) NOT NULL, 
-                receiver_string VARCHAR(16000) NOT NULL, 
+                receiver_string LONGTEXT NOT NULL, 
+                attachments LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json)', 
                 uuid VARCHAR(36) NOT NULL, 
                 UNIQUE INDEX UNIQ_D6FE8DD8D17F50A6 (uuid), 
                 INDEX IDX_D6FE8DD8F624B39D (sender_id), 
@@ -75,8 +76,8 @@ class Version20191020084647 extends AbstractMigration
                 INDEX level_idx (lvl), 
                 INDEX root_idx (root), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ');
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+        ");
         $this->addSql('
             CREATE TABLE claro_user_message (
                 id INT AUTO_INCREMENT NOT NULL, 
@@ -91,7 +92,7 @@ class Version20191020084647 extends AbstractMigration
                 INDEX IDX_D48EA38AA76ED395 (user_id), 
                 INDEX IDX_D48EA38A537A1329 (message_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql('
             ALTER TABLE claro_contact_options 
@@ -158,16 +159,40 @@ class Version20191020084647 extends AbstractMigration
     public function down(Schema $schema): void
     {
         $this->addSql('
-            ALTER TABLE claro_contact_categories 
-            DROP FOREIGN KEY FK_69F02FC412469DE2
+            ALTER TABLE claro_contact_options 
+            DROP FOREIGN KEY FK_BBCE147CA76ED395
+        ');
+        $this->addSql('
+            ALTER TABLE claro_contact_category 
+            DROP FOREIGN KEY FK_2C48C9BBA76ED395
+        ');
+        $this->addSql('
+            ALTER TABLE claro_contact 
+            DROP FOREIGN KEY FK_2C215B9FA76ED395
+        ');
+        $this->addSql('
+            ALTER TABLE claro_contact 
+            DROP FOREIGN KEY FK_2C215B9FE7A1254A
         ');
         $this->addSql('
             ALTER TABLE claro_contact_categories 
             DROP FOREIGN KEY FK_69F02FC4E7A1254A
         ');
         $this->addSql('
+            ALTER TABLE claro_contact_categories 
+            DROP FOREIGN KEY FK_69F02FC412469DE2
+        ');
+        $this->addSql('
+            ALTER TABLE claro_message 
+            DROP FOREIGN KEY FK_D6FE8DD8F624B39D
+        ');
+        $this->addSql('
             ALTER TABLE claro_message 
             DROP FOREIGN KEY FK_D6FE8DD8727ACA70
+        ');
+        $this->addSql('
+            ALTER TABLE claro_user_message 
+            DROP FOREIGN KEY FK_D48EA38AA76ED395
         ');
         $this->addSql('
             ALTER TABLE claro_user_message 

@@ -21,13 +21,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\Table(
  *     name="claro_message",
- *     indexes={
- *         @ORM\Index(name="level_idx", columns={"lvl"}),
- *         @ORM\Index(name="root_idx", columns={"root"})
- *     }
+ *     indexes={@ORM\Index(name="level_idx", columns={"lvl"}), @ORM\Index(name="root_idx", columns={"root"})}
  * )
+ *
  * @Gedmo\Tree(type="nested")
  */
 class Message
@@ -37,6 +36,7 @@ class Message
 
     /**
      * @ORM\Column()
+     *
      * @Assert\NotBlank()
      *
      * @var string
@@ -45,6 +45,7 @@ class Message
 
     /**
      * @ORM\Column(type="text")
+     *
      * @Assert\NotBlank()
      *
      * @var string
@@ -58,6 +59,7 @@ class Message
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
+     *
      * @ORM\JoinColumn(name="sender_id", onDelete="CASCADE", nullable=true)
      *
      * @var User
@@ -66,6 +68,7 @@ class Message
 
     /**
      * @ORM\Column(type="datetime")
+     *
      * @Gedmo\Timestampable(on="create")
      *
      * @var \DateTime
@@ -84,34 +87,40 @@ class Message
 
     /**
      * @Gedmo\TreeLeft
+     *
      * @ORM\Column(type="integer")
      */
     protected $lft;
 
     /**
      * @Gedmo\TreeLevel
+     *
      * @ORM\Column(type="integer")
      */
     protected $lvl;
 
     /**
      * @Gedmo\TreeRight
+     *
      * @ORM\Column(type="integer")
      */
     protected $rgt;
 
     /**
      * @Gedmo\TreeRoot
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $root;
 
     /**
      * @Gedmo\TreeParent
+     *
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\MessageBundle\Entity\Message",
      *     inversedBy="children"
      * )
+     *
      * @ORM\JoinColumn(onDelete="SET NULL")
      *
      * @var Message
@@ -123,6 +132,7 @@ class Message
      *     targetEntity="Claroline\MessageBundle\Entity\Message",
      *     mappedBy="parent"
      * )
+     *
      * @ORM\OrderBy({"lft" = "ASC"})
      *
      * @var Message[]|ArrayCollection
@@ -137,7 +147,7 @@ class Message
     protected $senderUsername = 'claroline-connect';
 
     /**
-     * @ORM\Column(name="receiver_string", length=16000)
+     * @ORM\Column(name="receiver_string", type="text")
      *
      * @var string
      */
@@ -189,7 +199,7 @@ class Message
         return $this->user;
     }
 
-    public function setSender(?User $sender = null)
+    public function setSender(User $sender = null)
     {
         $this->user = $sender;
         $this->senderUsername = $sender ? $sender->getUsername() : 'claroline-connect';
