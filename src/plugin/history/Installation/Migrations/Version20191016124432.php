@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\HistoryBundle\Installation\Migrations\pdo_mysql;
+namespace Claroline\HistoryBundle\Installation\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -8,9 +8,9 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2020/07/01 08:49:11
+ * Generation date: 2023/07/10 02:36:08
  */
-class Version20191016124432 extends AbstractMigration
+final class Version20191016124432 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
@@ -23,7 +23,7 @@ class Version20191016124432 extends AbstractMigration
                 INDEX IDX_544B72FE89329D25 (resource_id), 
                 INDEX user_idx (user_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql('
             CREATE TABLE claro_workspace_recent (
@@ -34,7 +34,7 @@ class Version20191016124432 extends AbstractMigration
                 INDEX IDX_ED82CA3B82D40A1F (workspace_id), 
                 INDEX user_idx (user_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql('
             ALTER TABLE claro_resource_recent 
@@ -64,6 +64,22 @@ class Version20191016124432 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
+        $this->addSql('
+            ALTER TABLE claro_resource_recent 
+            DROP FOREIGN KEY FK_544B72FEA76ED395
+        ');
+        $this->addSql('
+            ALTER TABLE claro_resource_recent 
+            DROP FOREIGN KEY FK_544B72FE89329D25
+        ');
+        $this->addSql('
+            ALTER TABLE claro_workspace_recent 
+            DROP FOREIGN KEY FK_ED82CA3BA76ED395
+        ');
+        $this->addSql('
+            ALTER TABLE claro_workspace_recent 
+            DROP FOREIGN KEY FK_ED82CA3B82D40A1F
+        ');
         $this->addSql('
             DROP TABLE claro_resource_recent
         ');
