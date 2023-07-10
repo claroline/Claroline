@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\YouTubeBundle\Installation\Migrations\pdo_mysql;
+namespace Claroline\YouTubeBundle\Installation\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -8,7 +8,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2023/06/06 09:42:16
+ * Generation date: 2023/07/10 03:09:12
  */
 final class Version20230606094215 extends AbstractMigration
 {
