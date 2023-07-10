@@ -2,8 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {url}                                                       from '#/main/app/api'
-import {LINK_BUTTON, URL_BUTTON, CALLBACK_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
+import {url} from '#/main/app/api'
+import {LINK_BUTTON, URL_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
 
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
