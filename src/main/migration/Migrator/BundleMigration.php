@@ -22,8 +22,8 @@ class BundleMigration
 
     public function __construct(Connection $connection, BundleInterface $bundle)
     {
-        $migrationsDir = implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', 'pdo_mysql']);
-        $this->namespace = "{$bundle->getNamespace()}\\Installation\\Migrations\\pdo_mysql";
+        $migrationsDir = implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations']);
+        $this->namespace = "{$bundle->getNamespace()}\\Installation\\Migrations";
         $migrationsTableName = 'doctrine_'.strtolower($bundle->getName()).'_versions';
 
         $metadata = new TableMetadataStorageConfiguration();
