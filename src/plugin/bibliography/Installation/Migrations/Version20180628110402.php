@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BibliographyBundle\Installation\Migrations\pdo_mysql;
+namespace Icap\BibliographyBundle\Installation\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -8,9 +8,9 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2020/07/01 08:32:50
+ * Generation date: 2023/07/10 01:57:55
  */
-class Version20180628110402 extends AbstractMigration
+final class Version20180628110402 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
@@ -33,14 +33,14 @@ class Version20180628110402 extends AbstractMigration
                 UNIQUE INDEX UNIQ_D961F495D17F50A6 (uuid), 
                 UNIQUE INDEX UNIQ_D961F495B87FAB32 (resourceNode_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql('
             CREATE TABLE icap__bibliography_book_reference_configuration (
                 id INT AUTO_INCREMENT NOT NULL, 
                 api_key VARCHAR(255) DEFAULT NULL, 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
         $this->addSql('
             ALTER TABLE icap__bibliography_book_reference 
@@ -52,6 +52,10 @@ class Version20180628110402 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
+        $this->addSql('
+            ALTER TABLE icap__bibliography_book_reference 
+            DROP FOREIGN KEY FK_D961F495B87FAB32
+        ');
         $this->addSql('
             DROP TABLE icap__bibliography_book_reference
         ');
