@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\SlideshowBundle\Installation\Migrations\pdo_mysql;
+namespace Claroline\SlideshowBundle\Installation\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -8,9 +8,9 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2020/07/01 09:08:20
+ * Generation date: 2023/07/10 03:00:36
  */
-class Version20200224142150 extends AbstractMigration
+final class Version20200224142150 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
@@ -27,23 +27,23 @@ class Version20200224142150 extends AbstractMigration
                 UNIQUE INDEX UNIQ_F8EC3970D17F50A6 (uuid), 
                 INDEX IDX_F8EC39708B14E343 (slideshow_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
         ');
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_slideshow (
                 id INT AUTO_INCREMENT NOT NULL, 
-                auto_play TINYINT(1) DEFAULT '0' NOT NULL, 
+                auto_play TINYINT(1) DEFAULT 0 NOT NULL, 
                 slide_interval INT NOT NULL, 
-                show_overview TINYINT(1) DEFAULT '0' NOT NULL, 
-                show_controls TINYINT(1) DEFAULT '0' NOT NULL, 
+                show_overview TINYINT(1) DEFAULT 0 NOT NULL, 
+                show_controls TINYINT(1) DEFAULT 0 NOT NULL, 
                 description LONGTEXT DEFAULT NULL, 
                 uuid VARCHAR(36) NOT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_3326614CD17F50A6 (uuid), 
                 UNIQUE INDEX UNIQ_3326614CB87FAB32 (resourceNode_id), 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB
-        ");
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
+        ');
         $this->addSql('
             ALTER TABLE claro_slide 
             ADD CONSTRAINT FK_F8EC39708B14E343 FOREIGN KEY (slideshow_id) 
@@ -62,6 +62,10 @@ class Version20200224142150 extends AbstractMigration
         $this->addSql('
             ALTER TABLE claro_slide 
             DROP FOREIGN KEY FK_F8EC39708B14E343
+        ');
+        $this->addSql('
+            ALTER TABLE claro_slideshow 
+            DROP FOREIGN KEY FK_3326614CB87FAB32
         ');
         $this->addSql('
             DROP TABLE claro_slide
