@@ -3,9 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
 
-// TODO : avoid hard dependency
-import html2pdf from 'html2pdf.js'
-
 import {url} from '#/main/app/api'
 import {withRouter} from '#/main/app/router'
 import {hasPermission} from '#/main/app/security'
