@@ -5,9 +5,6 @@ import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 import {LINK_BUTTON, URL_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 
-// TODO : avoid hard dependency
-import html2pdf from 'html2pdf.js'
-
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {Moderation} from '#/plugin/blog/resources/blog/moderation/components/moderation'
@@ -36,17 +33,7 @@ const BlogResource = props =>
         label: trans('export-pdf', {}, 'actions'),
         displayed: props.canExport,
         group: trans('transfer'),
-        callback: () => props.downloadBlogPdf(props.blogId).then(pdfContent => {
-          html2pdf()
-            .set({
-              filename: pdfContent.name,
-              image: { type: 'jpeg', quality: 1 },
-              html2canvas: { scale: 4 },
-              enableLinks: true
-            })
-            .from(pdfContent.content, 'string')
-            .save()
-        })
+        callback:() => props.downloadBlogPdf(props.blogId)
       }, {
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-rss',

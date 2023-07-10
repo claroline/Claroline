@@ -9,9 +9,6 @@ import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {actions} from '#/plugin/blog/resources/blog/store/actions'
 
-// TODO : avoid hard dependency
-import html2pdf from 'html2pdf.js'
-
 const ExportersComponent = props =>
   <div className="component-container">
     <Button
@@ -27,17 +24,7 @@ const ExportersComponent = props =>
       type={CALLBACK_BUTTON}
       icon="fa fa-fw fa-file-pdf"
       label={trans('export-pdf', {}, 'actions')}
-      callback={() => props.downloadBlogPdf(props.blogId).then(pdfContent => {
-        html2pdf()
-          .set({
-            filename: pdfContent.name,
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: { scale: 4 },
-            enableLinks: true
-          })
-          .from(pdfContent.content, 'string')
-          .save()
-      })}
+      callback={() => props.downloadBlogPdf(props.blogId)}
     />
   </div>
 

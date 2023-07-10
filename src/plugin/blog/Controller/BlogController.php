@@ -3,16 +3,19 @@
 namespace Icap\BlogBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Manager\BlogManager;
 use Icap\BlogBundle\Manager\PostManager;
+use Claroline\AppBundle\Manager\PdfManager;
 use Icap\BlogBundle\Serializer\BlogOptionsSerializer;
 use Icap\BlogBundle\Serializer\BlogSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -38,19 +41,23 @@ class BlogController
     private $postManager;
     /** @var BlogSerializer */
     private $blogSerializer;
+    /** @var PdfManager */
+    private $pdfManager;
     /** @var BlogOptionsSerializer */
     private $blogOptionsSerializer;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        UrlGeneratorInterface $router,
-        Environment $templating,
-        FinderProvider $finder,
-        BlogManager $blogManager,
-        PostManager $postManager,
-        BlogSerializer $blogSerializer,
-        BlogOptionsSerializer $blogOptionsSerializer
-      ) {
+        UrlGeneratorInterface         $router,
+        Environment                   $templating,
+        FinderProvider                $finder,
+        BlogManager                   $blogManager,
+        PostManager                   $postManager,
+        BlogSerializer                $blogSerializer,
+        PdfManager                    $pdfManager,
+        BlogOptionsSerializer         $blogOptionsSerializer
+    )
+    {
         $this->authorization = $authorization;
         $this->router = $router;
         $this->templating = $templating;
@@ -58,6 +65,7 @@ class BlogController
         $this->blogManager = $blogManager;
         $this->postManager = $postManager;
         $this->blogSerializer = $blogSerializer;
+        $this->pdfManager = $pdfManager;
         $this->blogOptionsSerializer = $blogOptionsSerializer;
     }
 
@@ -139,7 +147,7 @@ class BlogController
         $feed = [
             'title' => $blog->getResourceNode()->getName(),
             'description' => $blog->getInfos(),
-            'siteUrl' => $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL).'#/desktop/workspaces/open/'.$workspace->getSlug().'/resources/'.$node->getSlug(),
+            'siteUrl' => $this->router->generate('claro_index', [], UrlGeneratorInterface::ABSOLUTE_URL) . '#/desktop/workspaces/open/' . $workspace->getSlug() . '/resources/' . $node->getSlug(),
             'feedUrl' => $this->router->generate('icap_blog_rss', ['blogId' => $blog->getId()], UrlGeneratorInterface::ABSOLUTE_URL),
             'lang' => $request->getLocale(),
         ];
@@ -189,7 +197,7 @@ class BlogController
     /**
      * @Route("/pdf", name="icap_blog_pdf", methods={"GET"})
      */
-    public function viewPdfAction(Blog $blog): JsonResponse
+    public function viewPdfAction(Blog $blog): StreamedResponse
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
@@ -229,9 +237,13 @@ class BlogController
             ['_resource' => $blog, 'posts' => $items]
         );
 
-        return new JsonResponse([
-            'name' => $blog->getResourceNode()->getSlug(),
-            'content' => $content,
+        $fileName = TextNormalizer::toKey($blog->getResourceNode()->getName());
+
+        return new StreamedResponse(function () use ($content) {
+            echo $this->pdfManager->fromHtml($content);
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename=' . $fileName . '.pdf',
         ]);
     }
 }
