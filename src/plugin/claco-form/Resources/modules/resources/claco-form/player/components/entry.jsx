@@ -312,17 +312,7 @@ class EntryComponent extends Component {
                         canShare={this.canShare()}
 
                         changeOwner={(user) => this.props.changeEntryOwner(this.props.entry.id, user.id)}
-                        downloadPdf={() => this.props.downloadEntryPdf(this.props.entry.id).then(pdfContent => {
-                          html2pdf()
-                            .set({
-                              filename: pdfContent.name,
-                              image: { type: 'jpeg', quality: 1 },
-                              html2canvas: { scale: 2 },
-                              enableLinks: true
-                            })
-                            .from(pdfContent.content, 'string')
-                            .save()
-                        })}
+                        downloadPdf={() => this.props.downloadEntryPdf(this.props.entry.id)}
                         share={(users) => this.props.shareEntry(this.props.entryId, users)}
                         delete={() => this.props.deleteEntry(this.props.entry).then(() => this.props.history.push(`${this.props.path}/entries`))}
                         toggleStatus={() => this.props.switchEntryStatus(this.props.entry.id)}
