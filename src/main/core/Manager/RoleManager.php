@@ -83,6 +83,7 @@ class RoleManager
         if ($makeGroup) {
             $group = new Group();
             $group->setName($name);
+            $group->setCode($name);
             $group->setReadOnly($isReadOnly);
             $group->addRole($role);
             $this->om->persist($group);
