@@ -31,6 +31,16 @@ const GroupForm = props =>
             label: trans('name'),
             required: true,
             disabled: (group) => get(group, 'meta.readOnly')
+          }, {
+            name: 'code',
+            type: 'string',
+            required: true,
+            label: trans('code'),
+            options: {
+              unique: {
+                check: ['apiv2_group_exist', {field: 'code'}]
+              }
+            }
           }
         ]
       }, {

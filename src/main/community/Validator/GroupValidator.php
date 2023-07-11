@@ -15,7 +15,7 @@ class GroupValidator implements ValidatorInterface
     public function getUniqueFields()
     {
         return [
-            'name' => 'name',
+            'code' => 'code',
         ];
     }
 

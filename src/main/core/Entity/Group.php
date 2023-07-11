@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
@@ -37,9 +38,10 @@ class Group extends AbstractRoleSubject
     use Thumbnail;
     use Locked;
     use HasOrganizations;
+    use Code;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column()
      * @Assert\NotBlank()
      *
      * @var string
