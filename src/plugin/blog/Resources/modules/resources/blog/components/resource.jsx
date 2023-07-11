@@ -30,9 +30,10 @@ const BlogResource = props =>
       }, {
         name: 'export-pdf',
         type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-fw fa-download',
+        icon: 'fa fa-fw fa-file-pdf',
         label: trans('export-pdf', {}, 'actions'),
         displayed: props.canExport,
+        group: trans('transfer'),
         file: {
           url: ['icap_blog_pdf', {blogId: props.blogId}]
         }
