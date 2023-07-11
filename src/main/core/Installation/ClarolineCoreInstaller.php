@@ -11,12 +11,20 @@
 
 namespace Claroline\CoreBundle\Installation;
 
+use Claroline\CoreBundle\Installation\Updater\Updater140000;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
 class ClarolineCoreInstaller extends AdditionalInstaller
 {
+    public static function getUpdaters(): array
+    {
+        return [
+            '14.0.0' => Updater140000::class,
+        ];
+    }
+
     public function hasFixtures(): bool
     {
         return true;

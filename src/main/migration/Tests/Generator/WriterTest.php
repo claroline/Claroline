@@ -40,9 +40,7 @@ class WriterTest extends MockeryTestCase
                     'path' => [
                         'Installation' => [
                             'Migrations' => [
-                                'some_driver' => [
-                                    'Versionsome_version.php' => '',
-                                ],
+                                'Versionsome_version.php' => '',
                             ],
                         ],
                     ],
@@ -63,17 +61,17 @@ class WriterTest extends MockeryTestCase
         $bundle->shouldReceive('getPath')->once()->andReturn($bundlePath);
         $this->fileSystem->shouldReceive('exists')
             ->once()
-            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver']))
+            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations']))
             ->andReturn(false);
         $this->fileSystem->shouldReceive('mkdir')
             ->once()
-            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver']));
+            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations']));
         $this->twigEnvironment->shouldReceive('render')
             ->once()
             ->with(
                 '@ClarolineMigration/migration_class.html.twig',
                 [
-                    'namespace' => 'Bundle\Namespace\Installation\Migrations\some_driver',
+                    'namespace' => 'Bundle\Namespace\Installation\Migrations',
                     'class' => 'Versionsome_version',
                     'upQueries' => 'queries up',
                     'downQueries' => 'queries down',

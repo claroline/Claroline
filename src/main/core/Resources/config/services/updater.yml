@@ -1,0 +1,7 @@
+services:
+  _defaults:
+    tags: [ 'claroline.platform.updater' ]
+
+  Claroline\CoreBundle\Installation\Updater\Updater140000:
+    arguments:
+      - '@doctrine.dbal.default_connection'
