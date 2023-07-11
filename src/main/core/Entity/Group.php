@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Thumbnail;
@@ -27,6 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\GroupRepository")
+ *
  * @ORM\Table(name="claro_group")
  */
 class Group extends AbstractRoleSubject
@@ -42,6 +43,7 @@ class Group extends AbstractRoleSubject
 
     /**
      * @ORM\Column()
+     *
      * @Assert\NotBlank()
      *
      * @var string
@@ -63,6 +65,7 @@ class Group extends AbstractRoleSubject
      *     cascade={"persist"},
      *     inversedBy="groups"
      * )
+     *
      * @ORM\JoinTable(name="claro_group_role")
      */
     protected $roles;
