@@ -110,6 +110,7 @@ class Persister
     {
         $group = new Group();
         $group->setName($name);
+        $group->setCode($name);
         $this->om->persist($group);
 
         return $group;
