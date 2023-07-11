@@ -3,9 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
 
-// TODO : avoid hard dependency
-import html2pdf from 'html2pdf.js'
-
 import {url} from '#/main/app/api'
 import {withRouter} from '#/main/app/router'
 import {hasPermission} from '#/main/app/security'
@@ -13,7 +10,7 @@ import {displayDate} from '#/main/app/intl/date'
 import {trans} from '#/main/app/intl/translation'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
@@ -109,10 +106,10 @@ const EntryActions = props =>
         group: trans('management')
       }, {
         name: 'pdf',
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-print',
-        label: trans('print_entry', {}, 'clacoform'),
-        callback: props.downloadPdf,
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-file-pdf',
+        label: trans('export-pdf', {}, 'actions'),
+        file: {url:['claro_claco_form_entry_pdf_download', {entry: props.entryId}]},
         displayed: props.canGeneratePdf,
         group: trans('transfer')
       }, {
@@ -312,17 +309,7 @@ class EntryComponent extends Component {
                         canShare={this.canShare()}
 
                         changeOwner={(user) => this.props.changeEntryOwner(this.props.entry.id, user.id)}
-                        downloadPdf={() => this.props.downloadEntryPdf(this.props.entry.id).then(pdfContent => {
-                          html2pdf()
-                            .set({
-                              filename: pdfContent.name,
-                              image: { type: 'jpeg', quality: 1 },
-                              html2canvas: { scale: 2 },
-                              enableLinks: true
-                            })
-                            .from(pdfContent.content, 'string')
-                            .save()
-                        })}
+                        downloadPdf={() => this.props.downloadEntryPdf(this.props.entry.id)}
                         share={(users) => this.props.shareEntry(this.props.entryId, users)}
                         delete={() => this.props.deleteEntry(this.props.entry).then(() => this.props.history.push(`${this.props.path}/entries`))}
                         toggleStatus={() => this.props.switchEntryStatus(this.props.entry.id)}

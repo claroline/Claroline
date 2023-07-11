@@ -3,6 +3,8 @@
 namespace Icap\BlogBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Manager\PdfManager;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Manager\BlogManager;
@@ -13,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -20,6 +23,7 @@ use Twig\Environment;
 
 /**
  * @Route("blog/{blogId}", options={"expose"=true})
+ *
  * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
  */
 class BlogController
@@ -38,6 +42,8 @@ class BlogController
     private $postManager;
     /** @var BlogSerializer */
     private $blogSerializer;
+    /** @var PdfManager */
+    private $pdfManager;
     /** @var BlogOptionsSerializer */
     private $blogOptionsSerializer;
 
@@ -49,8 +55,9 @@ class BlogController
         BlogManager $blogManager,
         PostManager $postManager,
         BlogSerializer $blogSerializer,
+        PdfManager $pdfManager,
         BlogOptionsSerializer $blogOptionsSerializer
-      ) {
+    ) {
         $this->authorization = $authorization;
         $this->router = $router;
         $this->templating = $templating;
@@ -58,6 +65,7 @@ class BlogController
         $this->blogManager = $blogManager;
         $this->postManager = $postManager;
         $this->blogSerializer = $blogSerializer;
+        $this->pdfManager = $pdfManager;
         $this->blogOptionsSerializer = $blogOptionsSerializer;
     }
 
@@ -189,7 +197,7 @@ class BlogController
     /**
      * @Route("/pdf", name="icap_blog_pdf", methods={"GET"})
      */
-    public function viewPdfAction(Blog $blog): JsonResponse
+    public function viewPdfAction(Blog $blog): StreamedResponse
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
@@ -229,9 +237,13 @@ class BlogController
             ['_resource' => $blog, 'posts' => $items]
         );
 
-        return new JsonResponse([
-            'name' => $blog->getResourceNode()->getSlug(),
-            'content' => $content,
+        $fileName = TextNormalizer::toKey($blog->getResourceNode()->getName());
+
+        return new StreamedResponse(function () use ($content) {
+            echo $this->pdfManager->fromHtml($content);
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',
         ]);
     }
 }

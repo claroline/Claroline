@@ -13,6 +13,7 @@ services:
           - '@Icap\BlogBundle\Manager\BlogManager'
           - '@Icap\BlogBundle\Manager\PostManager'
           - '@Icap\BlogBundle\Serializer\BlogSerializer'
+          - '@Claroline\AppBundle\Manager\PdfManager'
           - '@Icap\BlogBundle\Serializer\BlogOptionsSerializer'
 
 
