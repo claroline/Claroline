@@ -66,7 +66,7 @@ class ManagerTest extends MockeryTestCase
         if (!$areQueriesEmpty) {
             $this->writer->shouldReceive('writeMigrationClass')
                 ->once()
-                ->with($bundle, 'driver', m::any(), $queries);
+                ->with($bundle, m::any(), $queries);
         }
 
         $manager->generateBundleMigration($bundle);
@@ -140,10 +140,10 @@ class ManagerTest extends MockeryTestCase
             ->andReturn('1');
         $this->writer->shouldReceive('deleteUpperMigrationClasses')
             ->once()
-            ->with($bundle, 'driver1', '1');
+            ->with($bundle, '1');
         $this->writer->shouldReceive('deleteUpperMigrationClasses')
             ->once()
-            ->with($bundle, 'driver2', '1');
+            ->with($bundle, '1');
 
         $manager->discardUpperMigrations($bundle);
 

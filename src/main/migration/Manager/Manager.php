@@ -55,7 +55,7 @@ class Manager implements LoggerAwareInterface
 
             if (count($queries[Generator::QUERIES_UP]) > 0 || count($queries[Generator::QUERIES_DOWN]) > 0) {
                 $this->log(" - Generating migration class for {$driverName} driver...");
-                $this->writer->writeMigrationClass($bundle, $driverName, $versionName, $queries);
+                $this->writer->writeMigrationClass($bundle, $versionName, $queries);
             } else {
                 $this->log('Nothing to generate: database and mapping are synced');
                 break;
@@ -102,7 +102,7 @@ class Manager implements LoggerAwareInterface
         $hasDeleted = false;
 
         foreach ($drivers as $driver) {
-            $deletedVersions = $this->writer->deleteUpperMigrationClasses($bundle, $driver, $currentVersion);
+            $deletedVersions = $this->writer->deleteUpperMigrationClasses($bundle, $currentVersion);
             if ($deletedVersions && count($deletedVersions) > 0) {
                 $hasDeleted = true;
 

@@ -21,14 +21,14 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
  */
 class Migrator
 {
-    const STATUS_CURRENT = 'current';
-    const STATUS_AVAILABLE = 'available';
+    public const STATUS_CURRENT = 'current';
+    public const STATUS_AVAILABLE = 'available';
 
-    const VERSION_NEAREST = 'nearest';
-    const VERSION_LATEST = 'latest';
+    public const VERSION_NEAREST = 'nearest';
+    public const VERSION_LATEST = 'latest';
 
-    const DIRECTION_UP = 'up';
-    const DIRECTION_DOWN = 'down';
+    public const DIRECTION_UP = 'up';
+    public const DIRECTION_DOWN = 'down';
 
     private Connection $connection;
     /** @var BundleMigration[] */
@@ -79,9 +79,6 @@ class Migrator
         $config = $this->getConfiguration($bundle);
         $currentVersion = $config->getCurrentVersion();
 
-        //$config->getMetadataStorage()->ensureInitialized();
-
-        $targetVersion = null;
         if (self::VERSION_LATEST === $version) {
             $targetVersion = $config->getVersion(self::DIRECTION_DOWN === $direction ? 'first' : 'latest');
         } elseif (self::VERSION_NEAREST === $version) {

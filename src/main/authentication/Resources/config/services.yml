@@ -8,5 +8,4 @@ imports:
     - { resource: services/security.yml }
     - { resource: services/serializer.yml }
     - { resource: services/subscriber.yml }
-    - { resource: services/updater.yml }
     - { resource: services/voter.yml }

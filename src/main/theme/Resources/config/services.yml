@@ -5,6 +5,5 @@ imports:
     - { resource: services/repository.yml }
     - { resource: services/subscriber.yml }
     - { resource: services/twig.yml }
-    - { resource: services/updater.yml }
     - { resource: services/voter.yml }
     - { resource: services/serializer.yml }

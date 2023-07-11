@@ -46,7 +46,7 @@ interface AdditionalInstallerInterface extends LoggerAwareInterface
     public function hasMigrations(): bool;
 
     /**
-     * Checks if the bundle has Fixtures that shopuld be loaded in the install/update process.
+     * Checks if the bundle has Fixtures that should be loaded in the install/update process.
      *
      * You can use PreInstallInterface / PostInstallInterface / PreUpdateInterface / PostUpdateInterface
      * to choose when you fixtures should be loaded.

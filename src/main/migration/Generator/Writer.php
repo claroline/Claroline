@@ -38,7 +38,7 @@ class Writer
     /**
      * Writes a bundle migration class for a given driver.
      */
-    public function writeMigrationClass(BundleInterface $bundle, string $driverName, string $className, array $queries): void
+    public function writeMigrationClass(BundleInterface $bundle, string $className, array $queries): void
     {
         if (!$this->hasSqlExtension) {
             $this->twigEnvironment->addExtension(new SqlFormatterExtension());
@@ -49,7 +49,7 @@ class Writer
 
         $class = array_pop($versionParts);
         $namespace = implode('\\', $versionParts);
-        $targetDir = implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', $driverName]);
+        $targetDir = implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations']);
 
         $classFile = implode(DIRECTORY_SEPARATOR, [$targetDir, $class.'.php']);
 
@@ -75,12 +75,12 @@ class Writer
      * Deletes bundle migration classes for a given driver which are above a
      * reference version.
      */
-    public function deleteUpperMigrationClasses(BundleInterface $bundle, string $driverName, string $referenceVersion): array
+    public function deleteUpperMigrationClasses(BundleInterface $bundle, string $referenceVersion): array
     {
         $versionParts = explode('\\', $referenceVersion);
         $currentVersion = array_pop($versionParts);
 
-        $migrations = new \DirectoryIterator(implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations', $driverName]));
+        $migrations = new \DirectoryIterator(implode(DIRECTORY_SEPARATOR, [$bundle->getPath(), 'Installation', 'Migrations']));
 
         $deletedVersions = [];
         foreach ($migrations as $migration) {

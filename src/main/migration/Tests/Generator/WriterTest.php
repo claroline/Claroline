@@ -40,9 +40,7 @@ class WriterTest extends MockeryTestCase
                     'path' => [
                         'Installation' => [
                             'Migrations' => [
-                                'some_driver' => [
-                                    'Versionsome_version.php' => '',
-                                ],
+                                'Versionsome_version.php' => '',
                             ],
                         ],
                     ],
@@ -63,17 +61,17 @@ class WriterTest extends MockeryTestCase
         $bundle->shouldReceive('getPath')->once()->andReturn($bundlePath);
         $this->fileSystem->shouldReceive('exists')
             ->once()
-            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver']))
+            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations']))
             ->andReturn(false);
         $this->fileSystem->shouldReceive('mkdir')
             ->once()
-            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver']));
+            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations']));
         $this->twigEnvironment->shouldReceive('render')
             ->once()
             ->with(
                 '@ClarolineMigration/migration_class.html.twig',
                 [
-                    'namespace' => 'Bundle\Namespace\Installation\Migrations\some_driver',
+                    'namespace' => 'Bundle\Namespace\Installation\Migrations',
                     'class' => 'Versionsome_version',
                     'upQueries' => 'queries up',
                     'downQueries' => 'queries down',
@@ -82,18 +80,17 @@ class WriterTest extends MockeryTestCase
             ->andReturn('migration class content');
         $this->fileSystem->shouldReceive('touch')
             ->once()
-            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver', 'Versionsome_version.php']));
+            ->with(implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'Versionsome_version.php']));
 
         $writer = new Writer($this->fileSystem, $this->twigEnvironment);
         $writer->writeMigrationClass(
             $bundle,
-            'some_driver',
-            'Bundle\Namespace\Installation\Migrations\some_driver\Versionsome_version',
+            'Bundle\Namespace\Installation\Migrations\Versionsome_version',
             [Generator::QUERIES_UP => 'queries up', Generator::QUERIES_DOWN => 'queries down']
         );
         $this->assertEquals(
             'migration class content',
-            file_get_contents(vfsStream::url('root').'/bundle/path/Installation/Migrations/some_driver/Versionsome_version.php')
+            file_get_contents(vfsStream::url('root').'/bundle/path/Installation/Migrations/Versionsome_version.php')
         );
     }
 
@@ -107,11 +104,9 @@ class WriterTest extends MockeryTestCase
                     'path' => [
                         'Installation' => [
                             'Migrations' => [
-                                'some_driver' => [
-                                    'Version1.php' => '',
-                                    'Version2.php' => '',
-                                    'Version3.php' => '',
-                                ],
+                                'Version1.php' => '',
+                                'Version2.php' => '',
+                                'Version3.php' => '',
                             ],
                         ],
                     ],
@@ -126,14 +121,14 @@ class WriterTest extends MockeryTestCase
 
         $this->fileSystem->shouldReceive('remove')
             ->once()
-            ->with([implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver', 'Version2.php'])]);
+            ->with([implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'Version2.php'])]);
 
         $this->fileSystem->shouldReceive('remove')
             ->once()
-            ->with([implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'some_driver', 'Version3.php'])]);
+            ->with([implode(DIRECTORY_SEPARATOR, [$bundlePath, 'Installation', 'Migrations', 'Version3.php'])]);
 
         $writer = new Writer($this->fileSystem, $this->twigEnvironment);
-        $deletedVersions = $writer->deleteUpperMigrationClasses($bundle, 'some_driver', 'Version1');
+        $deletedVersions = $writer->deleteUpperMigrationClasses($bundle, 'Version1');
         $this->assertEquals(2, count($deletedVersions));
     }
 }

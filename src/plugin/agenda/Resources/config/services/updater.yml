@@ -1,6 +1,0 @@
-services:
-    Claroline\AgendaBundle\Installation\Updater\Updater130013:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\PlanningManager'
-        tags: [ 'claroline.platform.updater' ]
