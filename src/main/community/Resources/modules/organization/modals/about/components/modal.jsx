@@ -42,6 +42,10 @@ const AboutModal = props =>
                 type: 'organization',
                 displayed: (organization) => !!organization.parent
               }, {
+                name: 'code',
+                type: 'string',
+                label: trans('code')
+              }, {
                 name: 'meta.description',
                 label: trans('description'),
                 type: 'string'
