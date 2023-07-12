@@ -44,6 +44,10 @@ const AboutModal = props =>
               label: trans('url', {}, 'data'),
               calculated: (resourceNode) => `${url(['claro_index', {}, true])}#${route(resourceNode)}`
             }, {
+              name: 'code',
+              type: 'string',
+              label: trans('code')
+            }, {
               name: 'meta.description',
               label: trans('description'),
               type: 'string'
