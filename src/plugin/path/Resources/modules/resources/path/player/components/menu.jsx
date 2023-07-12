@@ -42,11 +42,26 @@ const PlayerMenu = props => {
     }]
   }
 
+  let endLink = []
+  if (props.showEndPage) {
+    endLink = [{
+      type: LINK_BUTTON,
+      icon: 'fa fa-fw fa-flag-checkered',
+      label: trans('end'),
+      target: props.path + '/play/end',
+      exact: true,
+      onClick: (e) => {
+        props.autoClose(e)
+        scrollTo('.main-page-content')
+      }
+    }]
+  }
+
   return (
     <ContentSummary
       links={baseLinks.concat(
         props.steps.map(getStepSummary)
-      )}
+      ).concat(endLink)}
     />
   )
 }
@@ -57,6 +72,7 @@ PlayerMenu.propTypes = {
   }),
   path: T.string.isRequired,
   overview: T.bool,
+  showEndPage: T.bool,
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
   )),

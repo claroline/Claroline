@@ -11,6 +11,7 @@ const PlayerMenu = withRouter(
     (state) => ({
       path: resourceSelectors.path(state),
       overview: selectors.showOverview(state),
+      showEndPage: selectors.showEndPage(state),
       steps: selectors.steps(state),
       stepsProgression: selectors.stepsProgression(state)
     })

@@ -26,6 +26,11 @@ const showOverview = createSelector(
   (path) => get(path, 'overview.display') || false
 )
 
+const showEndPage = createSelector(
+  [path],
+  (path) => get(path, 'end.display') || false
+)
+
 // is step navigation enabled ?
 const navigationEnabled = createSelector(
   [resource],
@@ -56,6 +61,7 @@ export const selectors = {
   empty,
   navigationEnabled,
   showOverview,
+  showEndPage,
   attempt,
   resourceEvaluations,
   stepsProgression

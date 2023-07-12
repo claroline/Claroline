@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {scrollTo} from '#/main/app/dom/scroll'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, LinkButton} from '#/main/app/buttons'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
@@ -52,9 +52,24 @@ const PathOverview = props => {
 
         <h3 className="h2">{trans('summary')}</h3>
 
+        {props.overview &&
+          <LinkButton
+            className="summary"
+            target={props.basePath}
+          >
+            <div className="summary-link">
+              <div className="btn-summary-primary">
+                { trans('home') }
+                <span className="step-status">
+                  <span className="fa fa-fw fa-home"></span>
+                </span>
+              </div>
+            </div>
+          </LinkButton>
+        }
+
         {!isEmpty(props.path.steps) &&
           <PathSummary
-            className="component-container"
             basePath={props.basePath}
             path={props.path}
             stepsProgression={props.stepsProgression}
@@ -70,6 +85,22 @@ const PathOverview = props => {
             size="lg"
             title={trans('no_step', {}, 'path')}
           />
+        }
+
+        {props.showEndPage &&
+          <LinkButton
+            className="summary"
+            target={props.basePath+'/play/end'}
+          >
+            <div className="summary-link">
+              <div className="btn-summary-primary">
+                { trans('end') }
+                <span className="step-status">
+                  <span className="fa fa-fw fa-flag-checkered"></span>
+                </span>
+              </div>
+            </div>
+          </LinkButton>
         }
       </section>
     </ResourceOverview>

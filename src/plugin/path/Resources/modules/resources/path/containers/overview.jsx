@@ -11,6 +11,8 @@ const PathOverview = connect(
     resourceId: resourceSelectors.id(state),
     path: selectors.path(state),
     empty: selectors.empty(state),
+    overview: selectors.showOverview(state),
+    showEndPage: selectors.showEndPage(state),
     resourceNode: resourceSelectors.resourceNode(state),
     evaluation: resourceSelectors.resourceEvaluation(state),
     resourceEvaluations: selectors.resourceEvaluations(state),
