@@ -67,6 +67,7 @@ class GroupSerializer
             'id' => $group->getUuid(),
             'autoId' => $group->getId(),
             'name' => $group->getName(),
+            'code' => $group->getCode(),
             'thumbnail' => $group->getThumbnail(),
             'poster' => $group->getPoster(),
             'meta' => [
@@ -95,6 +96,7 @@ class GroupSerializer
     public function deserialize(array $data, Group $group): Group
     {
         $this->sipe('name', 'setName', $data, $group);
+        $this->sipe('code', 'setCode', $data, $group);
         $this->sipe('poster', 'setPoster', $data, $group);
         $this->sipe('thumbnail', 'setThumbnail', $data, $group);
         $this->sipe('meta.description', 'setDescription', $data, $group);

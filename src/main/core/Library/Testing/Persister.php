@@ -85,7 +85,7 @@ class Persister
         $workspace->setCreator($creator);
         $template = new SfFile($this->container->getParameter('claroline.param.default_template'));
 
-        //optimize this later
+        // optimize this later
         $this->container->get('claroline.manager.workspace_manager')->create($workspace, $template);
 
         return $workspace;
@@ -98,18 +98,19 @@ class Persister
         $dirType = $this->om->getRepository(ResourceType::class)->findOneByName('directory');
 
         return $this->container->get('claroline.manager.resource_manager')->create(
-          $directory,
-          $dirType,
-          $creator,
-          $workspace,
-          $parent
-      );
+            $directory,
+            $dirType,
+            $creator,
+            $workspace,
+            $parent
+        );
     }
 
     public function group($name)
     {
         $group = new Group();
         $group->setName($name);
+        $group->setCode($name);
         $this->om->persist($group);
 
         return $group;
