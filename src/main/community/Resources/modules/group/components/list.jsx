@@ -34,8 +34,7 @@ const Groups = props => {
           name: 'code',
           type: 'string',
           label: trans('code'),
-          displayed: true,
-          sortable: false
+          displayed: true
         }, {
           name: 'meta.description',
           type: 'string',
