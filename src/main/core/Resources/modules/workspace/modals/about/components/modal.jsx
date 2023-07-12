@@ -44,6 +44,10 @@ const AboutModal = props =>
                 label: trans('url', {}, 'data'),
                 calculated: (workspace) => `${url(['claro_index', {}, true])}#${route(workspace)}`
               }, {
+                name: 'code',
+                label: trans('code'),
+                type: 'string'
+              }, {
                 name: 'meta.description',
                 label: trans('description'),
                 type: 'string'
@@ -52,10 +56,6 @@ const AboutModal = props =>
                 label: trans('contact'),
                 type: 'email',
                 displayed: (workspace) => !!workspace.contactEmail
-              }, {
-                name: 'code',
-                label: trans('code'),
-                type: 'string'
               }, {
                 name: 'meta.model',
                 label: trans('workspace_model', {}, 'workspace'),
