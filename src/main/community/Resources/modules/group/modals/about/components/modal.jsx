@@ -36,6 +36,10 @@ const AboutModal = props =>
             primary: true,
             fields: [
               {
+                name: 'code',
+                label: trans('code'),
+                type: 'string'
+              }, {
                 name: 'meta.description',
                 label: trans('description'),
                 type: 'string'

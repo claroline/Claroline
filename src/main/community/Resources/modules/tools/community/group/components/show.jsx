@@ -42,6 +42,10 @@ const GroupShow = (props) =>
               options: {
                 long: true
               }
+            }, {
+              name: 'code',
+              type: 'string',
+              label: trans('code')
             }
           ]
         }
