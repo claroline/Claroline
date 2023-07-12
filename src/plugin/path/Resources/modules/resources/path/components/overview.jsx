@@ -113,6 +113,8 @@ PathOverview.propTypes = {
   path: T.shape(
     PathTypes.propTypes
   ).isRequired,
+  overview: T.bool.isRequired,
+  showEndPage: T.bool.isRequired,
   empty: T.bool.isRequired,
   evaluation: T.shape(
     ResourceEvaluationTypes.propTypes
