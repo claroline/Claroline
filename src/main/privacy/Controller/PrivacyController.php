@@ -47,14 +47,13 @@ class PrivacyController extends AbstractSecurityController
     }
 
     /**
-     * @Route("/privacy", name="apiv2_privacy_get", methods={"GET"})
+     * @Route("/privacy", name="apiv2_privacy_dpo_get", methods={"GET"})
      */
-    public function getAction(): JsonResponse
+    public function getCurrentAction(): JsonResponse
     {
-        $privacy = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+        $firstPrivacy = $this->objectManager->getRepository(PrivacyParameters::class)->findOneBy([], ['id' => 'ASC']);
+        $data = $this->serializer->serialize($firstPrivacy);
 
-        return new JsonResponse(
-            $this->serializer->serialize($privacy)
-        );
+        return new JsonResponse(['privacyParameters' => $data]);
     }
 }

@@ -9,7 +9,10 @@ const dpo = createSelector(
   (store) => store.dpo
 )
 
-const termsOfService = (state) => store(state).termsOfService
+const termsOfService = createSelector(
+  [store],
+  (store) => store.termsOfService
+)
 
 const termsOfServiceEnabled = createSelector(
   [store],
