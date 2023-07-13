@@ -11,7 +11,7 @@ import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {constants} from '#/main/evaluation/constants'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
-import {number} from '#/main/app/intl'
+import {number, trans} from '#/main/app/intl'
 
 const PathSummary = (props) => {
   function getStepSummary(step) {
@@ -69,10 +69,36 @@ const PathSummary = (props) => {
     }
   }
 
+  let baseLinks = []
+  if (props.overview) {
+    baseLinks = [{
+      type: LINK_BUTTON,
+      icon: 'fa fa-fw fa-home',
+      label: trans('home'),
+      target: props.basePath,
+      exact: true,
+      onClick: props.onNavigate
+    }]
+  }
+
+  let endLink = []
+  if (props.showEndPage) {
+    endLink = [{
+      type: LINK_BUTTON,
+      icon: 'fa fa-fw fa-flag-checkered',
+      label: trans('end'),
+      target: props.basePath + '/play/end',
+      exact: true,
+      onClick: props.onNavigate
+    }]
+  }
+
   return (
     <ContentSummary
       className={props.className}
-      links={props.path.steps.map(getStepSummary)}
+      links={baseLinks.concat(
+        props.path.steps.map(getStepSummary)
+      ).concat(endLink)}
       noCollapse={true}
     />
   )
@@ -88,7 +114,9 @@ PathSummary.propTypes = {
   resourceEvaluations: T.arrayOf(T.shape(
     ResourceEvaluationTypes.propTypes
   )),
-  onNavigate: T.func
+  onNavigate: T.func,
+  overview: T.bool,
+  showEndPage: T.bool
 }
 
 export {

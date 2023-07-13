@@ -52,22 +52,6 @@ const PathOverview = props => {
 
         <h3 className="h2">{trans('summary')}</h3>
 
-        {props.overview &&
-          <LinkButton
-            className="summary"
-            target={props.basePath}
-          >
-            <div className="summary-link">
-              <div className="btn-summary-primary">
-                { trans('home') }
-                <span className="step-status">
-                  <span className="fa fa-fw fa-home"></span>
-                </span>
-              </div>
-            </div>
-          </LinkButton>
-        }
-
         {!isEmpty(props.path.steps) &&
           <PathSummary
             basePath={props.basePath}
@@ -77,6 +61,8 @@ const PathOverview = props => {
             onNavigate={() => {
               scrollTo(`#resource-${props.resourceId} > .page-content`)
             }}
+            overview={props.overview}
+            showEndPage={props.showEndPage}
           />
         }
 
@@ -87,21 +73,6 @@ const PathOverview = props => {
           />
         }
 
-        {props.showEndPage &&
-          <LinkButton
-            className="summary"
-            target={props.basePath+'/play/end'}
-          >
-            <div className="summary-link">
-              <div className="btn-summary-primary">
-                { trans('end') }
-                <span className="step-status">
-                  <span className="fa fa-fw fa-flag-checkered"></span>
-                </span>
-              </div>
-            </div>
-          </LinkButton>
-        }
       </section>
     </ResourceOverview>
   )
