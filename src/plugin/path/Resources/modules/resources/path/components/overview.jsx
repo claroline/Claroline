@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {scrollTo} from '#/main/app/dom/scroll'
-import {LINK_BUTTON, LinkButton} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'

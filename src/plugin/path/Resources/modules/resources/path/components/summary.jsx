@@ -72,9 +72,18 @@ const PathSummary = (props) => {
   let baseLinks = []
   if (props.overview) {
     baseLinks = [{
+      id: 'home',
       type: LINK_BUTTON,
-      icon: 'fa fa-fw fa-home',
-      label: trans('home'),
+      label: (
+      <Fragment>
+        {trans('home')}
+        <span
+          className="step-status">
+              <span
+                className={classes('fa fa-fw fa-home')}/>
+          </span>
+      </Fragment>
+      ),
       target: props.basePath,
       exact: true,
       onClick: props.onNavigate
@@ -84,9 +93,18 @@ const PathSummary = (props) => {
   let endLink = []
   if (props.showEndPage) {
     endLink = [{
+      id: 'end',
       type: LINK_BUTTON,
-      icon: 'fa fa-fw fa-flag-checkered',
-      label: trans('end'),
+      label:(
+        <Fragment>
+          {trans('end')}
+          <span className="step-status">
+            <span className={classes('fa fa-fw fa-flag-checkered', {
+              'not_started': Object.values(props.stepsProgression).length <= 0 || Object.values(props.stepsProgression).map( (step) => ["seen"].includes(step) ).length !== props.path.steps.length,
+            } )} />
+          </span>
+        </Fragment>
+      ),
       target: props.basePath + '/play/end',
       exact: true,
       onClick: props.onNavigate
