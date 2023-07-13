@@ -10,13 +10,15 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentSummary} from '#/main/app/content/components/summary'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
+import {getNumbering} from '#/plugin/path/resources/path/utils'
+import {constants as PATH_NUMBERINGS} from '#/plugin/path/resources/path/constants'
 
 const PlayerMenu = props => {
   function getStepSummary(step) {
     return {
       type: LINK_BUTTON,
       icon: classes('step-progression fa fa-fw fa-circle', get(props.stepsProgression, step.id, 'unseen')),
-      label: step.title,
+      label: (props.stepsNumbering && props.stepsNumbering !== PATH_NUMBERINGS.NUMBERING_NONE ? `${getNumbering(props.stepsNumbering, props.steps, step)}. ` : '') + step.title,
       target: `${props.path}/play/${step.slug}`,
       active: !!matchPath(props.location.pathname, {path: `${props.path}/play/${step.slug}`}),
       children: step.children ? step.children.map(getStepSummary) : [],

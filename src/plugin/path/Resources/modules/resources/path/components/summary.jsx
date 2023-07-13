@@ -12,6 +12,8 @@ import {constants} from '#/main/evaluation/constants'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
 import {number, trans} from '#/main/app/intl'
+import {constants as PATH_NUMBERINGS} from '#/plugin/path/resources/path/constants'
+import {getNumbering} from '#/plugin/path/resources/path/utils'
 
 const PathSummary = (props) => {
   function getStepSummary(step) {
@@ -25,6 +27,7 @@ const PathSummary = (props) => {
       type: LINK_BUTTON,
       label: (
         <Fragment>
+          {(props.path.display.numbering && props.path.display.numbering !== PATH_NUMBERINGS.NUMBERING_NONE ? `${getNumbering(props.path.display.numbering, props.path.steps, step)}. ` : '')}
           {step.title}
 
           <span className="step-status">
