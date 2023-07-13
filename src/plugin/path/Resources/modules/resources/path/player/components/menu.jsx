@@ -78,6 +78,7 @@ PlayerMenu.propTypes = {
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
   )),
+  stepsNumbering: T.string,
   stepsProgression: T.object,
   autoClose: T.func
 }

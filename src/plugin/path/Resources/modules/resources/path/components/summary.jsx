@@ -78,14 +78,14 @@ const PathSummary = (props) => {
       id: 'home',
       type: LINK_BUTTON,
       label: (
-      <Fragment>
-        {trans('home')}
-        <span
-          className="step-status">
-              <span
-                className={classes('fa fa-fw fa-home')}/>
+        <Fragment>
+          {trans('home')}
+          <span
+            className="step-status">
+            <span
+              className={classes('fa fa-fw fa-home')}/>
           </span>
-      </Fragment>
+        </Fragment>
       ),
       target: props.basePath,
       exact: true,
@@ -103,7 +103,7 @@ const PathSummary = (props) => {
           {trans('end')}
           <span className="step-status">
             <span className={classes('fa fa-fw fa-flag-checkered', {
-              'not_started': Object.values(props.stepsProgression).length <= 0 || Object.values(props.stepsProgression).map( (step) => ["seen"].includes(step) ).length !== props.path.steps.length,
+              'not_started': Object.values(props.stepsProgression).length <= 0 || Object.values(props.stepsProgression).map( (step) => ['seen'].includes(step) ).length !== props.path.steps.length
             } )} />
           </span>
         </Fragment>

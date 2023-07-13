@@ -14,7 +14,7 @@ const PlayerMenu = withRouter(
       showEndPage: selectors.showEndPage(state),
       steps: selectors.steps(state),
       stepsProgression: selectors.stepsProgression(state),
-      stepsNumbering: selectors.path(state)?.display?.numbering
+      stepsNumbering: selectors.path(state).display.numbering
     })
   )(PlayerMenuComponent)
 )
