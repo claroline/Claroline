@@ -54,6 +54,7 @@ const PathOverview = props => {
 
         {!isEmpty(props.path.steps) &&
           <PathSummary
+            className="component-container"
             basePath={props.basePath}
             path={props.path}
             stepsProgression={props.stepsProgression}
