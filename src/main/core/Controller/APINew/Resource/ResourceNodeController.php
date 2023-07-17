@@ -77,7 +77,7 @@ class ResourceNodeController extends AbstractCrudController
     }
 
     /**
-     * @Route("/list/{parent}/{all}", name="apiv2_resource_list", defaults={"parent"=null}, requirements={"all": "all"})
+     * @Route("/{parent}/{all}", name="apiv2_resource_list", defaults={"parent"=null}, requirements={"all": "all"})
      *
      * @param string $parent
      * @param string $all

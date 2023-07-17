@@ -7,8 +7,8 @@ export const actions = {}
 
 actions.get = (resourceId) => (dispatch) => dispatch({
   [API_REQUEST]: {
-    url: ['apiv2_resource_node_get', {id: resourceId}],
+    url: ['apiv2_resource_get', {id: resourceId}],
     silent: true,
-    success: (data) => dispatch( formActions.resetForm(selectors.STORE_NAME, data.resourceNode ))
+    success: (data) => dispatch( formActions.resetForm(selectors.STORE_NAME, data))
   }
 })
