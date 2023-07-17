@@ -62,6 +62,8 @@ const PathOverview = props => {
             onNavigate={() => {
               scrollTo(`#resource-${props.resourceId} > .page-content`)
             }}
+            overview={props.overview}
+            showEndPage={props.showEndPage}
           />
         }
 
@@ -71,6 +73,7 @@ const PathOverview = props => {
             title={trans('no_step', {}, 'path')}
           />
         }
+
       </section>
     </ResourceOverview>
   )
@@ -82,6 +85,8 @@ PathOverview.propTypes = {
   path: T.shape(
     PathTypes.propTypes
   ).isRequired,
+  overview: T.bool.isRequired,
+  showEndPage: T.bool.isRequired,
   empty: T.bool.isRequired,
   evaluation: T.shape(
     ResourceEvaluationTypes.propTypes

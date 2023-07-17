@@ -11,7 +11,9 @@ import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {constants} from '#/main/evaluation/constants'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
-import {number} from '#/main/app/intl'
+import {number, trans} from '#/main/app/intl'
+import {constants as PATH_NUMBERINGS} from '#/plugin/path/resources/path/constants'
+import {getNumbering} from '#/plugin/path/resources/path/utils'
 
 const PathSummary = (props) => {
   function getStepSummary(step) {
@@ -25,6 +27,7 @@ const PathSummary = (props) => {
       type: LINK_BUTTON,
       label: (
         <Fragment>
+          {(props.path.display.numbering && props.path.display.numbering !== PATH_NUMBERINGS.NUMBERING_NONE ? `${getNumbering(props.path.display.numbering, props.path.steps, step)}. ` : '')}
           {step.title}
 
           <span className="step-status">
@@ -69,10 +72,54 @@ const PathSummary = (props) => {
     }
   }
 
+  let baseLinks = []
+  if (props.overview) {
+    baseLinks = [{
+      id: 'home',
+      type: LINK_BUTTON,
+      label: (
+        <Fragment>
+          {trans('home')}
+          <span
+            className="step-status">
+            <span
+              className={classes('fa fa-fw fa-home')}/>
+          </span>
+        </Fragment>
+      ),
+      target: props.basePath,
+      exact: true,
+      onClick: props.onNavigate
+    }]
+  }
+
+  let endLink = []
+  if (props.showEndPage) {
+    endLink = [{
+      id: 'end',
+      type: LINK_BUTTON,
+      label:(
+        <Fragment>
+          {trans('end')}
+          <span className="step-status">
+            <span className={classes('fa fa-fw fa-flag-checkered', {
+              'not_started': Object.values(props.stepsProgression).length <= 0 || Object.values(props.stepsProgression).map( (step) => ['seen'].includes(step) ).length !== props.path.steps.length
+            } )} />
+          </span>
+        </Fragment>
+      ),
+      target: props.basePath + '/play/end',
+      exact: true,
+      onClick: props.onNavigate
+    }]
+  }
+
   return (
     <ContentSummary
       className={props.className}
-      links={props.path.steps.map(getStepSummary)}
+      links={baseLinks.concat(
+        props.path.steps.map(getStepSummary)
+      ).concat(endLink)}
       noCollapse={true}
     />
   )
@@ -88,7 +135,9 @@ PathSummary.propTypes = {
   resourceEvaluations: T.arrayOf(T.shape(
     ResourceEvaluationTypes.propTypes
   )),
-  onNavigate: T.func
+  onNavigate: T.func,
+  overview: T.bool,
+  showEndPage: T.bool
 }
 
 export {

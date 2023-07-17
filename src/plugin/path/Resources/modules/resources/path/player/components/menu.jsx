@@ -10,13 +10,15 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentSummary} from '#/main/app/content/components/summary'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
+import {getNumbering} from '#/plugin/path/resources/path/utils'
+import {constants as PATH_NUMBERINGS} from '#/plugin/path/resources/path/constants'
 
 const PlayerMenu = props => {
   function getStepSummary(step) {
     return {
       type: LINK_BUTTON,
       icon: classes('step-progression fa fa-fw fa-circle', get(props.stepsProgression, step.id, 'unseen')),
-      label: step.title,
+      label: (props.stepsNumbering && props.stepsNumbering !== PATH_NUMBERINGS.NUMBERING_NONE ? `${getNumbering(props.stepsNumbering, props.steps, step)}. ` : '') + step.title,
       target: `${props.path}/play/${step.slug}`,
       active: !!matchPath(props.location.pathname, {path: `${props.path}/play/${step.slug}`}),
       children: step.children ? step.children.map(getStepSummary) : [],
@@ -42,11 +44,26 @@ const PlayerMenu = props => {
     }]
   }
 
+  let endLink = []
+  if (props.showEndPage) {
+    endLink = [{
+      type: LINK_BUTTON,
+      icon: 'fa fa-fw fa-flag-checkered',
+      label: trans('end'),
+      target: props.path + '/play/end',
+      exact: true,
+      onClick: (e) => {
+        props.autoClose(e)
+        scrollTo('.main-page-content')
+      }
+    }]
+  }
+
   return (
     <ContentSummary
       links={baseLinks.concat(
         props.steps.map(getStepSummary)
-      )}
+      ).concat(endLink)}
     />
   )
 }
@@ -57,9 +74,11 @@ PlayerMenu.propTypes = {
   }),
   path: T.string.isRequired,
   overview: T.bool,
+  showEndPage: T.bool,
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
   )),
+  stepsNumbering: T.string,
   stepsProgression: T.object,
   autoClose: T.func
 }
