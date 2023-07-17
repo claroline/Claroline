@@ -81,7 +81,7 @@ class ResourceNodeController extends AbstractCrudController
      *
      * @param string $parent
      * @param string $all
-     * @param string $cla
+     * @param string $class
      */
     public function listAction(Request $request, $parent, $all = null, $class = ResourceNode::class): JsonResponse
     {
