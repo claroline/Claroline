@@ -127,6 +127,7 @@ class ResourceNodeController extends AbstractCrudController
      * This may be directly managed by the standard action system (rights edition already is) instead.
      *
      * @Route("/{id}/rights", name="apiv2_resource_get_rights")
+     *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
     public function getRightsAction(ResourceNode $resourceNode): JsonResponse
@@ -146,21 +147,23 @@ class ResourceNodeController extends AbstractCrudController
 
     /**
      * @Route("/{workspace}/removed", name="apiv2_resource_workspace_removed_list")
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listRemovedAction(Workspace $workspace, Request $request): JsonResponse
     {
         return new JsonResponse(
             $this->finder->search(ResourceNode::class,
-            array_merge($request->query->all(), ['hiddenFilters' => [
-                'workspace' => $workspace->getUuid(),
-                'active' => false,
-            ]]))
+                array_merge($request->query->all(), ['hiddenFilters' => [
+                    'workspace' => $workspace->getUuid(),
+                    'active' => false,
+                ]]))
         );
     }
 
     /**
      * @Route("/{slug}/close", name="claro_resource_close", methods={"PUT"})
+     *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"slug": "slug"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
