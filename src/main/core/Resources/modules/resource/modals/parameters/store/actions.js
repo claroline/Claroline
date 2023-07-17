@@ -5,9 +5,9 @@ import {selectors} from '#/main/core/resource/modals/parameters/store/selectors'
 
 export const actions = {}
 
-actions.get = (resourceID) => (dispatch) => dispatch({
+actions.get = (resourceId) => (dispatch) => dispatch({
   [API_REQUEST]: {
-    url: ['claro_resource_load', {id: resourceID}],
+    url: ['apiv2_resource_node_get', {id: resourceId}],
     silent: true,
     success: (data) => dispatch( formActions.resetForm(selectors.STORE_NAME, data.resourceNode ))
   }

@@ -66,12 +66,22 @@ class ResourceNodeController extends AbstractCrudController
         return 'resource_node';
     }
 
+    public function getClass(): string
+    {
+        return ResourceNode::class;
+    }
+
+    public function getIgnore(): array
+    {
+        return ['list'];
+    }
+
     /**
-     * @Route("/{parent}/{all}", name="apiv2_resource_list", defaults={"parent"=null}, requirements={"all": "all"})
+     * @Route("/list/{parent}/{all}", name="apiv2_resource_list", defaults={"parent"=null}, requirements={"all": "all"})
      *
      * @param string $parent
      * @param string $all
-     * @param string $class
+     * @param string $cla
      */
     public function listAction(Request $request, $parent, $all = null, $class = ResourceNode::class): JsonResponse
     {
