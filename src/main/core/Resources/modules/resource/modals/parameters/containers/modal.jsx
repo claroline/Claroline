@@ -8,7 +8,7 @@ import {
 } from '#/main/app/content/form/store'
 
 import {ParametersModal as ParametersModalComponent} from '#/main/core/resource/modals/parameters/components/modal'
-import {reducer, selectors} from '#/main/core/resource/modals/parameters/store'
+import {reducer, selectors, actions} from '#/main/core/resource/modals/parameters/store'
 
 const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
@@ -17,7 +17,7 @@ const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
     }),
     (dispatch) => ({
       loadNode(resourceNode) {
-        dispatch(formActions.resetForm(selectors.STORE_NAME, resourceNode))
+        dispatch(actions.get(resourceNode.id))
       },
 
       save(resourceNode, update) {
