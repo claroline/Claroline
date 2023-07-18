@@ -109,46 +109,6 @@ const Meta = (props) =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-sign-in',
-        title: trans('login'),
-        fields: [
-          {
-            name: 'authentication.help',
-            type: 'html',
-            label: trans('message')
-          }, {
-            name: 'authentication.redirect_after_login_option',
-            type: 'choice',
-            label: trans('redirect_after_login_option'),
-            options: {
-              multiple: false,
-              condensed: false,
-              choices: {
-                'DESKTOP': 'DESKTOP',
-                'URL': 'URL',
-                'WORKSPACE_TAG': 'WORKSPACE_TAG',
-                'LAST': 'LAST'
-              }
-            }, linked: [{
-              name: 'authentication.redirect_after_login_url',
-              type: 'string',
-              label: trans('redirect_after_login_url'),
-              displayed: (data) => data.authentication.redirect_after_login_option === 'URL',
-              hideLabel: true
-            }, {
-              name: 'workspace.default_tag',
-              label: trans('default_workspace_tag'),
-              type: 'string',
-              displayed: (data) => data.authentication.redirect_after_login_option === 'WORKSPACE_TAG',
-              hideLabel: true
-            }]
-          }, {
-            name: 'registration.auto_logging',
-            type: 'boolean',
-            label: trans('auto_logging_after_registration')
-          }
-        ]
-      }, {
         icon: 'fa fa-fw fa-atlas',
         title: trans('desktop'),
         fields: [

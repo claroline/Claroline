@@ -15,7 +15,8 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\PlatformManager;
-use Claroline\AuthenticationBundle\Configuration\PlatformDefaults;
+use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
+use Claroline\AuthenticationBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
@@ -54,6 +55,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private $toolManager;
     /** @var ConnectionMessageManager */
     private $messageManager;
+    /** @var AuthenticationManager */
+    private $authenticationManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -64,7 +67,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         PlatformManager $platformManager,
         UserManager $userManager,
         ToolManager $toolManager,
-        ConnectionMessageManager $messageManager
+        ConnectionMessageManager $messageManager,
+        AuthenticationManager $authenticationManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->config = $config;
@@ -75,6 +79,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->userManager = $userManager;
         $this->toolManager = $toolManager;
         $this->messageManager = $messageManager;
+        $this->authenticationManager = $authenticationManager;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
@@ -130,17 +135,18 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $redirect = $this->config->getParameter('authentication.redirect_after_login_option');
+        $redirect = $this->authenticationManager->getParameters()->getRedirectAfterLoginOption();
+
         $referer = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
         $redirectPath = $request->getSession()->get('redirectPath');
-        if (PlatformDefaults::REDIRECT_OPTIONS['LAST'] === $redirect
+        if (AuthenticationParameters::REDIRECT_OPTIONS['LAST'] === $redirect
             && ($redirectPath || ($referer && 0 === strpos($referer, $this->platformManager->getUrl())))) {
             // only redirect to previous url if it's part of the claroline platform or the ui has sent us a path to redirect to
             return [
                 'type' => 'last',
             ];
         } elseif (
-            PlatformDefaults::REDIRECT_OPTIONS['WORKSPACE_TAG'] === $redirect
+            AuthenticationParameters::REDIRECT_OPTIONS['WORKSPACE_TAG'] === $redirect
             && $this->config->getParameter('workspace.default_tag')
         ) {
             /** @var GenericDataEvent $event */
@@ -166,12 +172,12 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 ];
             }
         } elseif (
-            PlatformDefaults::REDIRECT_OPTIONS['URL'] === $redirect
-            && $this->config->getParameter('authentication.redirect_after_login_url')
+            AuthenticationParameters::REDIRECT_OPTIONS['URL'] === $redirect
+            && $this->authenticationManager->getParameters()->getRedirectAfterLoginUrl()
         ) {
             return [
                 'type' => 'url',
-                'data' => $this->config->getParameter('authentication.redirect_after_login_url'),
+                'data' => $this->authenticationManager->getParameters()->getRedirectAfterLoginUrl()
             ];
         }
 

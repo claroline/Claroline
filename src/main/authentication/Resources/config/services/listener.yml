@@ -14,6 +14,7 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AuthenticationBundle\Manager\OauthManager'
+            - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
         tags:
             - { name: kernel.event_listener, event: claroline_populate_client_config, method: onConfig }
 

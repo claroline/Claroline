@@ -49,6 +49,42 @@ const AuthenticationTool = (props) => {
               label: trans('requireSpecialChar', {}, 'security')
             }
           ]
+        }, {
+          icon: 'fa fa-fw fa-sign-in',
+          title: trans('login'),
+          fields: [
+            {
+              name: 'helpMessage',
+              type: 'html',
+              label: trans('message')
+            }, {
+              name: 'redirectAfterLoginOption',
+              type: 'choice',
+              label: trans('redirect_after_login_option'),
+              options: {
+                multiple: false,
+                condensed: false,
+                choices: {
+                  'DESKTOP': 'DESKTOP',
+                  'URL': 'URL',
+                  'WORKSPACE_TAG': 'WORKSPACE_TAG',
+                  'LAST': 'LAST'
+                }
+              }, linked: [{
+                name: 'redirectAfterLoginUrl',
+                type: 'string',
+                label: trans('redirect_after_login_url'),
+                displayed: (data) => data.redirectAfterLoginOption === 'URL',
+                hideLabel: true
+              }, {
+                name: 'workspace.default_tag',
+                label: trans('default_workspace_tag'),
+                type: 'string',
+                displayed: (data) => data.redirectAfterLoginOption === 'WORKSPACE_TAG',
+                hideLabel: true
+              }]
+            }
+          ]
         }
       ]}
     />

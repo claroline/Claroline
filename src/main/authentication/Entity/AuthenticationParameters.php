@@ -38,6 +38,36 @@ class AuthenticationParameters
      */
     private bool $requireNumber;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private ?string $helpMessage;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $changePassword;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $internalAccount;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $showClientIp;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private string $redirectAfterLoginOption;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private ?string $redirectAfterLoginUrl;
+
     public function getMinLength(): int
     {
         return $this->minLength;
@@ -97,4 +127,85 @@ class AuthenticationParameters
 
         return $this;
     }
+
+    public function getHelpMessage(): ?string
+    {
+        return $this->helpMessage;
+    }
+
+    public function setHelpMessage(?string $help): self
+    {
+        $this->helpMessage = $help;
+
+        return $this;
+    }
+
+    public function getChangePassword(): bool
+    {
+        return $this->changePassword;
+    }
+
+    public function setChangePassword(bool $changePassword): self
+    {
+        $this->changePassword = $changePassword;
+
+        return $this;
+    }
+
+    public function getInternalAccount(): bool
+    {
+        return $this->internalAccount;
+    }
+
+    public function setInternalAccount(bool $internalAccount): self
+    {
+        $this->internalAccount = $internalAccount;
+
+        return $this;
+    }
+
+    public function getShowClientIp(): bool
+    {
+        return $this->showClientIp;
+    }
+
+    public function setShowClientIp(bool $showClientIp): self
+    {
+        $this->showClientIp = $showClientIp;
+
+        return $this;
+    }
+
+    public function getRedirectAfterLoginOption(): string
+    {
+        return $this->redirectAfterLoginOption;
+    }
+
+    public function setRedirectAfterLoginOption(string $redirectAfterLoginOption): self
+    {
+        $this->redirectAfterLoginOption = $redirectAfterLoginOption;
+
+        return $this;
+    }
+
+    public function getRedirectAfterLoginUrl(): ?string
+    {
+        return $this->redirectAfterLoginUrl;
+    }
+
+    public function setRedirectAfterLoginUrl(?string $redirectAfterLoginUrl): self
+    {
+        $this->redirectAfterLoginUrl = $redirectAfterLoginUrl;
+
+        return $this;
+    }
+
+    const DEFAULT_REDIRECT_OPTION = 'LAST';
+
+    const REDIRECT_OPTIONS = [
+        'DESKTOP' => 'DESKTOP',
+        'LAST' => 'LAST',
+        'URL' => 'URL',
+        'WORKSPACE_TAG' => 'WORKSPACE_TAG',
+    ];
 }

@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    tags: [ 'claroline.platform.updater' ]
+
+  Claroline\AuthenticationBundle\Installation\Updater\Updater140000:
+    arguments:
+      - '@Claroline\AppBundle\Persistence\ObjectManager'
+      - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

@@ -2,6 +2,7 @@
 
 namespace Claroline\AuthenticationBundle\Listener\Platform;
 
+use Claroline\AuthenticationBundle\Manager\AuthenticationManager;
 use Claroline\AuthenticationBundle\Manager\OauthManager;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -12,23 +13,27 @@ class OauthSsoListener
     private $config;
     /** @var OauthManager */
     private $oauthManager;
+    /** @var AuthenticationManager */
+    private $authenticationManager;
 
     public function __construct(
         PlatformConfigurationHandler $config,
-        OauthManager $oauthManager
+        OauthManager $oauthManager,
+        AuthenticationManager $authenticationManager
     ) {
         $this->config = $config;
         $this->oauthManager = $oauthManager;
+        $this->authenticationManager = $authenticationManager;
     }
 
     public function onConfig(GenericDataEvent $event)
     {
         $event->setResponse([
             'authentication' => [
-                'help' => $this->config->getParameter('authentication.help'),
-                'changePassword' => $this->config->getParameter('authentication.changePassword'),
-                'internalAccount' => $this->config->getParameter('authentication.internalAccount'),
-                'showClientIp' => $this->config->getParameter('authentication.showClientIp'),
+                'help' => $this->authenticationManager->getParameters()->getHelpMessage(),
+                'changePassword' => $this->authenticationManager->getParameters()->getChangePassword(),
+                'internalAccount' => $this->authenticationManager->getParameters()->getInternalAccount(),
+                'showClientIp' => $this->authenticationManager->getParameters()->getShowClientIp(),
                 'sso' => array_map(function (array $sso) {
                     return [
                         'service' => $sso['service'],

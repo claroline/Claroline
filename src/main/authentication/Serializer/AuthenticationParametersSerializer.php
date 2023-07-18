@@ -22,6 +22,12 @@ class AuthenticationParametersSerializer
             'requireUppercase' => $authenticationParameters->getRequireUppercase(),
             'requireSpecialChar' => $authenticationParameters->getRequireSpecialChar(),
             'requireNumber' => $authenticationParameters->getRequireNumber(),
+            'helpMessage' => $authenticationParameters->getHelpMessage(),
+            'changePassword' => $authenticationParameters->getChangePassword(),
+            'internalAccount' => $authenticationParameters->getInternalAccount(),
+            'showClientIp' => $authenticationParameters->getShowClientIp(),
+            'redirectAfterLoginOption' => $authenticationParameters->getRedirectAfterLoginOption(),
+            'redirectAfterLoginUrl' => $authenticationParameters->getRedirectAfterLoginUrl(),
         ];
     }
 
@@ -32,6 +38,12 @@ class AuthenticationParametersSerializer
         $this->sipe('requireUppercase', 'setRequireUppercase', $data, $authenticationParameters);
         $this->sipe('requireSpecialChar', 'setRequireSpecialChar', $data, $authenticationParameters);
         $this->sipe('requireNumber', 'setRequireNumber', $data, $authenticationParameters);
+        $this->sipe('helpMessage', 'setHelpMessage', $data, $authenticationParameters);
+        $this->sipe('changePassword', 'setChangePassword', $data, $authenticationParameters);
+        $this->sipe('internalAccount', 'setInternalAccount', $data, $authenticationParameters);
+        $this->sipe('showClientIp', 'setShowClientIp', $data, $authenticationParameters);
+        $this->sipe('redirectAfterLoginOption', 'setRedirectAfterLoginOption', $data, $authenticationParameters);
+        $this->sipe('redirectAfterLoginUrl', 'setRedirectAfterLoginUrl', $data, $authenticationParameters);
 
         return $authenticationParameters;
     }
