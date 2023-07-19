@@ -10,6 +10,12 @@ const CourseForm = connect(
     course: formSelectors.data(formSelectors.form(state, ownProps.name)),
   }),
   (dispatch) => ({
+    save(data, isNew, name) {
+      return dispatch( formActions.saveForm(name, isNew ?
+        ['apiv2_cursus_course_create'] :
+        ['apiv2_cursus_course_update', {id: data.id}])
+      )
+    },
     update(name, prop, value) {
       dispatch(formActions.updateProp(name, prop, value))
     }

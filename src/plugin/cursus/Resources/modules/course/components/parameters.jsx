@@ -4,7 +4,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {param} from '#/main/app/config'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {route} from '#/plugin/cursus/routing'
@@ -14,10 +14,14 @@ const CourseParameters = (props) =>
   <FormData
     name={props.name}
     buttons={true}
-    target={(data, isNew) => isNew ?
-      ['apiv2_cursus_course_create'] :
-      ['apiv2_cursus_course_update', {id: data.id}]
-    }
+    save={{
+      type: CALLBACK_BUTTON,
+      callback: () => props.save(props.course, props.isNew, props.name).then(course => {
+        if (props.isNew) {
+          props.history.push(route(course))
+        }
+      })
+    }}
     cancel={{
       type: LINK_BUTTON,
       target: props.isNew ? props.path : route(props.course),

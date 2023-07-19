@@ -40,6 +40,7 @@ const CatalogCreation = (props) =>
     <CourseForm
       path={props.path+'/catalog'}
       name={selectors.FORM_NAME}
+      history={props.history}
     />
   </ToolPage>
 

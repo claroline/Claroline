@@ -63,6 +63,7 @@ CourseForm.propTypes = {
   course: T.shape(
     CourseTypes.propTypes
   ),
+  save: T.func.isRequired,
   update: T.func.isRequired
 }
 
