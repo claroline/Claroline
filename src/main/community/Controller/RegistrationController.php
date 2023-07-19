@@ -125,7 +125,7 @@ class RegistrationController
             $this->crud->replace($user, 'mainOrganization', $organization);
         }
 
-        $selfLog = $this->config->getParameter('registration.auto_logging');
+        $selfLog = true;
         $validation = $this->config->getParameter('registration.validation');
         // auto log user if option is set and account doesn't need to be validated
         if ($selfLog && PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL !== $validation) {
