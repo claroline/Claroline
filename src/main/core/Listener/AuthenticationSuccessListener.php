@@ -177,7 +177,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         ) {
             return [
                 'type' => 'url',
-                'data' => $this->authenticationManager->getParameters()->getRedirectAfterLoginUrl()
+                'data' => $this->authenticationManager->getParameters()->getRedirectAfterLoginUrl(),
             ];
         }
 

@@ -14,7 +14,7 @@ final class Version20230718111413 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_authentication_parameters 
             ADD helpMessage LONGTEXT DEFAULT NULL, 
             ADD changePassword TINYINT(1) NOT NULL, 
@@ -22,12 +22,12 @@ final class Version20230718111413 extends AbstractMigration
             ADD showClientIp TINYINT(1) NOT NULL, 
             ADD redirectAfterLoginOption VARCHAR(255) NOT NULL, 
             ADD redirectAfterLoginUrl VARCHAR(255) DEFAULT NULL
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_authentication_parameters 
             DROP helpMessage, 
             DROP changePassword, 
@@ -35,6 +35,6 @@ final class Version20230718111413 extends AbstractMigration
             DROP showClientIp, 
             DROP redirectAfterLoginOption, 
             DROP redirectAfterLoginUrl
-        ");
+        ');
     }
 }

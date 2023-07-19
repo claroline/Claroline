@@ -2,8 +2,8 @@
 
 namespace Claroline\AuthenticationBundle\Manager;
 
-use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
 
 class AuthenticationManager
 {

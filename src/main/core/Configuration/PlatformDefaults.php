@@ -16,9 +16,9 @@ use Claroline\CoreBundle\Security\PlatformRoles;
 
 class PlatformDefaults implements ParameterProviderInterface
 {
-    const REGISTRATION_MAIL_VALIDATION_NONE = 0;
-    const REGISTRATION_MAIL_VALIDATION_PARTIAL = 1;
-    const REGISTRATION_MAIL_VALIDATION_FULL = 2;
+    public const REGISTRATION_MAIL_VALIDATION_NONE = 0;
+    public const REGISTRATION_MAIL_VALIDATION_PARTIAL = 1;
+    public const REGISTRATION_MAIL_VALIDATION_FULL = 2;
 
     public function getDefaultParameters()
     {
@@ -43,7 +43,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'community' => [
                 'username' => true,
             ],
-            //database_restoration section is not configurable nor documented
+            // database_restoration section is not configurable nor documented
             'database_restoration' => [
                 'auto_validate_email' => false,
                 'auto_enable_email_redirect' => false,

@@ -113,7 +113,7 @@ class RegistrationController
 
         /** @var array|User $user */
         $user = $this->crud->create(User::class, $this->decodeRequest($request), [
-            //maybe move these options in an other class
+            // maybe move these options in an other class
             Options::REGISTRATION,
             Options::ADD_NOTIFICATIONS,
             Options::WORKSPACE_VALIDATE_ROLES,

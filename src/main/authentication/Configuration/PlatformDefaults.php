@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Library\Configuration\ParameterProviderInterface;
 
 class PlatformDefaults implements ParameterProviderInterface
 {
-
     public function getDefaultParameters()
     {
         $parameters = [

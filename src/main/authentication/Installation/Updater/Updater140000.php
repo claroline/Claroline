@@ -3,15 +3,14 @@
 namespace Claroline\AuthenticationBundle\Installation\Updater;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\InstallationBundle\Updater\Updater;
-use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
 
 class Updater140000 extends Updater
 {
-    /** @var ObjectManager */
     private ObjectManager $om;
-    /** @var PlatformConfigurationHandler */
+
     private PlatformConfigurationHandler $config;
 
     public function __construct(
@@ -36,7 +35,7 @@ class Updater140000 extends Updater
         $authenticationParameters->setInternalAccount($this->config->getParameter('authentication.internalAccount'));
         $authenticationParameters->setShowClientIp($this->config->getParameter('authentication.showClientIp'));
         $redirectOption = $this->config->getParameter('authentication.redirect_after_login_option');
-        if ($redirectOption !== null) {
+        if (null !== $redirectOption) {
             $authenticationParameters->setRedirectAfterLoginOption(AuthenticationParameters::REDIRECT_OPTIONS[$redirectOption]);
         } else {
             $authenticationParameters->setRedirectAfterLoginOption(AuthenticationParameters::DEFAULT_REDIRECT_OPTION);

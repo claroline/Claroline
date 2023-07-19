@@ -2,8 +2,8 @@
 
 namespace Claroline\AuthenticationBundle\Installation;
 
-use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 use Claroline\AuthenticationBundle\Installation\Updater\Updater140000;
+use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
 class ClarolineAuthenticationInstaller extends AdditionalInstaller
 {

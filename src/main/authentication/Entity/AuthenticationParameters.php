@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro_authentication_parameters")
  */
 class AuthenticationParameters
@@ -200,9 +201,9 @@ class AuthenticationParameters
         return $this;
     }
 
-    const DEFAULT_REDIRECT_OPTION = 'LAST';
+    public const DEFAULT_REDIRECT_OPTION = 'LAST';
 
-    const REDIRECT_OPTIONS = [
+    public const REDIRECT_OPTIONS = [
         'DESKTOP' => 'DESKTOP',
         'LAST' => 'LAST',
         'URL' => 'URL',
