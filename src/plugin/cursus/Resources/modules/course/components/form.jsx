@@ -55,12 +55,14 @@ const CourseForm = (props) => {
 CourseForm.propTypes = {
   path: T.string.isRequired,
   name: T.string.isRequired,
+  history: T.object.isRequired,
 
   // from store
   isNew: T.bool.isRequired,
   course: T.shape(
     CourseTypes.propTypes
   ),
+  save: T.func.isRequired,
   update: T.func.isRequired
 }
 
