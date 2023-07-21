@@ -52,18 +52,20 @@ class ResourceParameters extends Component {
         meta={false}
         name={selectors.STORE_NAME}
         dataPart={selectors.FORM_NODE_PART}
+        flush={true}
+        customSection={this.renderCustomForm()}
       >
-        {this.renderCustomForm()}
+        {this.props.children}
       </ResourceForm>
     )
   }
 }
 
-
 ResourceParameters.propTypes = {
   resourceNode: T.shape(
     ResourceNodeTypes.propTypes
-  ).isRequired
+  ).isRequired,
+  children: T.any
 }
 
 export {

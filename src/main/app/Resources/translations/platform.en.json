@@ -26,5 +26,6 @@
   "image_error": "We are sorry, an error occurred while loading your image. Please contact an administrator.",
   "timezone": "Timezone",
   "date_format": "m/d/Y",
-  "time_format": "H:i"
+  "time_format": "H:i",
+  "action_confirm_message": "Are you sure you want to do this action?"
 }

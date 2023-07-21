@@ -5,6 +5,7 @@ const Button = {
     id: T.string,
     className: T.string,
     size: T.oneOf(['xs', 'sm', 'lg']),
+    variant: T.string,
     children: T.node.isRequired,
     disabled: T.bool,
     primary: T.bool,

@@ -11,7 +11,7 @@ const UsernameInput = props =>
   <div className={classes('input-group', props.className, {
     [`input-group-${props.size}`]: !!props.size
   })}>
-    <span className="input-group-addon">
+    <span className="input-group-text">
       <span className="fa fa-fw fa-user" role="presentation" />
     </span>
 

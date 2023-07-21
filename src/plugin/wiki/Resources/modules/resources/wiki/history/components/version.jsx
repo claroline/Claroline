@@ -7,7 +7,7 @@ const Version = props =>
   <div>
     <h2>{props.version.title && <ContentHtml>{props.version.title}</ContentHtml>}</h2>
     {props.version.meta && props.version.meta.creator &&
-    <h5 className="small text-muted">[ {props.version.meta.creator.username} ({props.version.meta.creator.name}) - {displayDate(props.version.meta.createdAt, true, true)} ]</h5>
+    <h5 className="small text-secondary">[ {props.version.meta.creator.username} ({props.version.meta.creator.name}) - {displayDate(props.version.meta.createdAt, true, true)} ]</h5>
     }
     <ContentHtml className="wiki-section-content">{props.version.text}</ContentHtml>
   </div>

@@ -13,8 +13,8 @@ const EventsMenu = (props) =>
     title={trans('training_events', {}, 'tools')}
   >
     <Toolbar
-      className="list-group"
-      buttonName="list-group-item"
+      className="list-group list-group-flush"
+      buttonName="list-group-item list-group-item-action"
       actions={[
         {
           name: 'registered',

@@ -1,7 +1,7 @@
 {
   "styles": {
     "entry": {
-      "path-resource": "resources/path/index.less"
+      "path-resource": "resources/path.scss"
     }
   }
 }

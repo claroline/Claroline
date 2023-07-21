@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from 'classnames'
 
 import {FormGroup} from '#/main/app/content/form/components/group'
 
@@ -9,7 +10,7 @@ import {FormGroup} from '#/main/app/content/form/components/group'
 const BooleanGroup = props =>
   <FormGroup
     id={props.id}
-    className={props.className}
+    className={classes('form-check form-switch', props.className)}
     help={props.help}
     error={props.error}
     warnOnly={props.warnOnly}

@@ -55,8 +55,8 @@ const ContentMessage = props => {
 
           {0 !== props.actions.length &&
             <Toolbar
-              className="user-message-actions"
-              buttonName="btn btn-link"
+              className="user-message-actions btn-toolbar"
+              buttonName="btn btn-text-secondary"
               tooltip="bottom"
               toolbar="more"
               actions={props.actions}

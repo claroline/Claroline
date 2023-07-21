@@ -1,0 +1,486 @@
+/*
+ * Default values for claroline vars
+ */
+
+
+//== Colors
+//
+//## Gray and brand colors for use across Bootstrap.
+
+$gray-base:              #000000;
+//$gray-darker:            #262626; // #222
+$gray-dark:              lighten($gray-base, 20%);   // #333
+//$gray:                   lighten($gray-base, 33.5%); // #555
+$gray-light:             lighten($gray-base, 46.7%); // #777
+$gray-lighter:           #ebebeb; // #eee
+$gray-lightest:          #F9F9F9;
+
+//$primary:         #148AC7 /*#046d8a*/; // bootstrap original : #337ab7
+$brand-success:         $success;
+$brand-info:            $info;
+$brand-warning:         $warning;
+$brand-danger:          $danger;
+//$brand-secondary:       $pink; // #C51162
+
+$enable-border:           true;
+
+
+//** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
+$line-height-computed:    floor(($font-size-base * $line-height-base)); // ~20px
+
+$component-margin-bottom:       map-get($spacers, 3);
+$component-margin-bottom-small: map-get($spacers, 2); // ~10px
+
+
+//== Components
+//
+//## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
+
+$padding-base-vertical:     6px;
+$padding-base-horizontal:   12px;
+
+$padding-large-vertical:    10px;
+$padding-large-horizontal:  15px;
+
+$padding-small-vertical:    5px;
+$padding-small-horizontal:  10px;
+
+$line-height-large:         1.3333333; // extra decimals for Win 8.1 Chrome
+$line-height-small:         1.5;
+
+//== Forms
+//
+//##
+
+//** Default `.form-control` height
+$input-height-base:              calc($line-height-computed + ($padding-base-vertical * 2) + 2);
+
+//** `.form-group` margin
+$form-group-margin-bottom:       map-get($spacers, 3);
+
+//== Form states and alerts
+//
+//## Define colors for form feedback states and, by default, alerts.
+
+$state-success-text:             $brand-success;
+$state-success-bg:               #dafd8d;
+$state-success-border:           $state-success-bg;
+
+$state-info-text:                $brand-info;
+$state-info-bg:                  #c9edfe;
+$state-info-border:              $state-info-bg;
+
+$state-warning-text:             #686733;
+$state-warning-bg:               #f4f3bf;
+$state-warning-border:           $state-warning-bg;
+
+$state-danger-text:              $brand-danger;
+$state-danger-bg:                #ffd5d5;
+$state-danger-border:            $state-danger-bg;
+
+
+//== Panels
+// @deprecated
+//##
+
+$panel-body-padding:          15px;
+
+
+// -
+// Base & utilities
+// ---
+
+
+
+// react strips whitespaces, so we need to move icons from text
+$icon-text-spacer:     15px;
+
+$icon-fixed-width: 1.25em; // same value as fa-fw (there is no var for it in font awesome)
+
+$images-path: "images/";
+
+// a color to use on background which is considered 'dark' by tinycolor2
+// $see https://www.npmjs.com/package/tinycolor2#isdark
+$text-light-color: $gray-100;
+
+// a color to use on background which is considered 'light' by tinycolor2
+// $see https://www.npmjs.com/package/tinycolor2#islight
+$text-dark-color:  $gray-900;
+
+// -
+// Z-indexes
+// ---
+
+$zindex-sidebar:       $zindex-fixed - 1;
+// z-index for full screen pages.
+// we want to pass over navbars but under tooltips, popovers and modals
+// modify with caution !
+$zindex-fullscreen:    $zindex-offcanvas;
+$zindex-flying-alerts: $zindex-toast;
+
+
+// -
+// States
+// ---
+
+$state-selected-text:   $state-info-text;
+$state-selected-border: $state-info-border;
+$state-selected-bg:     $state-info-bg;
+
+
+// -
+// Login
+// ---
+
+$login-bg-image:  "#{$images-path}login-bg.jpg"; // will fallback on $body-bg if theme has no image
+$login-max-width: 740px;
+
+
+// -
+// Header
+// ---
+
+$top-bar-bg:                  $gray-900 !default;
+$top-bar-border-bottom-size:  0 !default;
+$top-bar-max-width:           100%; // max width for the top bar content (do not affect top bar container)
+$top-bar-height:              60px + $top-bar-border-bottom-size !default;
+$top-bar-font-size:           $font-size-base !default;
+$top-bar-color:               lighten($top-bar-bg, 35%) !default;
+$top-bar-border-bottom-color: $primary !default;
+$top-bar-border-bottom:       $top-bar-border-bottom-size solid $top-bar-border-bottom-color !default;
+$top-bar-box-shadow:          0 0 5px 1px rgba(0, 0, 0, 0.5) !default;
+
+$top-bar-brand-color:           $white !default;
+$top-bar-brand-secondary-color: $primary !default;
+$top-bar-brand-font-size:       $font-size-lg !default;
+$top-bar-brand-font-weight:     $font-weight-medium !default;
+
+$top-bar-link-color:          lighten($top-bar-bg, 60%) !default;
+$top-bar-link-bg:             $top-bar-bg !default;
+$top-bar-link-hover-color:    lighten($top-bar-bg, 70%) !default;
+$top-bar-link-hover-bg:       darken($top-bar-bg, 5%) !default;
+$top-bar-link-active-color:   lighten($top-bar-bg, 80%) !default;
+$top-bar-link-active-bg:      $top-bar-link-hover-bg !default;
+$top-bar-link-disabled-color: lighten($top-bar-bg, 30%) !default;
+$top-bar-link-disabled-bg:    transparent !default;
+
+
+// -
+// Loader (aka hourglass)
+// ---
+
+$loader-primary:   $primary;
+$loader-secondary: $learning;
+$loader-color:     var(--#{$prefix}secondary-color);
+$loader-bg:        transparent !default;
+
+
+// -
+// Toolbars
+// By default it reuses some of the styles from the app header.
+// ---
+
+$toolbar-size:           360px;
+//$toolbar-font-size:      22px; // size for icons
+$toolbar-bg:             $top-bar-bg;
+$toolbar-color:          $white;
+$toolbar-active-color:   $primary;
+
+// links
+$toolbar-link-color:          $top-bar-link-color;
+$toolbar-link-bg:             $top-bar-link-bg;
+$toolbar-link-hover-color:    $top-bar-link-hover-color;
+$toolbar-link-hover-bg:       $top-bar-link-hover-bg;
+$toolbar-link-active-color:   $top-bar-link-active-color;
+$toolbar-link-active-bg:      $top-bar-link-active-bg;
+$toolbar-link-disabled-color: $top-bar-link-disabled-color;
+$toolbar-link-disabled-bg:    $top-bar-link-disabled-bg;
+
+
+// -
+// Page
+// ---
+
+$page-header-bg:          transparent  !default;
+$page-header-padding:     0 !default;
+$page-header-font-size:   $h1-font-size !default;
+$page-header-font-weight: $headings-font-weight !default;
+$page-header-box-shadow:  none  !default;
+
+
+// -
+// Page actions
+// ---
+
+$page-action-primary-color:  color-contrast($primary);
+$page-action-primary-bg:     $primary;
+$page-action-primary-border: transparent;
+
+$page-action-default-color:  $gray-dark;
+$page-action-default-bg:     transparent;
+$page-action-default-border: transparent;
+
+$page-action-danger-color:   color-contrast($primary);
+$page-action-danger-bg:      $primary;
+$page-action-danger-border:  transparent;
+
+
+// -
+// Flying alerts
+// ---
+
+$flying-alert-color:          var(--#{$prefix}body-color);
+$flying-alert-bg:             var(--#{$prefix}body-bg);
+$flying-alert-width:          420px;
+$flying-alert-padding:        10px;
+$flying-alert-border-radius:  0;
+$flying-alert-box-shadow:     $box-shadow/*0 0 3px rgba(0,0,0,.5)*/;
+$flying-alert-margin-bottom:  10px;
+$flying-alert-icon-size:      32px;
+
+// variants
+$flying-alert-primary-color:  white;
+$flying-alert-primary-bg:     $primary;
+$flying-alert-primary-border: $flying-alert-primary-bg;
+
+$flying-alert-success-color:  white;
+$flying-alert-success-bg:     $success;
+$flying-alert-success-border: $flying-alert-success-bg;
+
+$flying-alert-warning-color:  white;
+$flying-alert-warning-bg:     $warning;
+$flying-alert-warning-border: $flying-alert-warning-bg;
+
+$flying-alert-error-color:    white;
+$flying-alert-error-bg:       $danger;
+$flying-alert-error-border:   $flying-alert-error-bg;
+
+$flying-alert-info-color:     white;
+$flying-alert-info-bg:        $info;
+$flying-alert-info-border:    $flying-alert-info-bg;
+
+$flying-alert-pending-color:  white;
+$flying-alert-pending-bg:     #666;
+$flying-alert-pending-border: $flying-alert-pending-bg;
+
+
+// -
+// Summaries
+//
+// As summaries can have very different forms and usages (eg. path, quiz)
+// there is no default implementation in the base layout
+// but each UI component intended to be used as a summary MUST use this vars
+// and adapt to the use case in order to keep common look & feel between all summary implementations
+// ---
+
+$summary-font:              $font-size-base;
+$summary-font-style:        normal;
+$summary-color:             white;
+$summary-lvl-indent:        20px; // indent children of a step in the summary
+
+// deprecated (? still required by PDF player)
+$summary-padding:           15px;
+$summary-bg:                $toolbar-bg;
+$summary-border-radius:     0;
+$summary-box-shadow:        0 0 4px 0 rgba(0, 0, 0, 0.4);
+$summary-box-shadow-v:      2px 0 4px 0 rgba(0, 0, 0, 0.4); // box shadow for vertical summaries
+$summary-box-shadow-h:      0 2px 4px 0 rgba(0, 0, 0, 0.4); // box shadow for horizontal summaries
+
+// Links
+$summary-link-bg:             $toolbar-link-bg;
+$summary-link-color:          $toolbar-link-color;
+$summary-link-hover-bg:       $toolbar-link-hover-bg;
+$summary-link-hover-color:    $toolbar-link-hover-color;
+$summary-link-active-bg:      $toolbar-link-active-bg;
+$summary-link-active-color:   $toolbar-link-active-color;
+$summary-link-disabled-bg:    $toolbar-link-disabled-bg;
+$summary-link-disabled-color: $toolbar-link-disabled-color;
+
+
+// -
+// Footer
+// ---
+
+$footer-max-width:          none; // max width for the footer content (do not affect footer container)
+$footer-bg:                 none /*var(--#{$prefix}secondary-bg)*/;
+$footer-color:              var(--#{$prefix}secondary-color);
+$footer-border-width:       0 !default;
+$footer-border-color:       transparent !default;
+$footer-inner-border-color: var(--#{$prefix}border-color) !default;
+$footer-box-shadow:         none /*$box-shadow*/;
+
+// Links
+/*$footer-link-color:        $gray-500;
+$footer-link-hover-color:  $gray-dark;
+$footer-link-active-color: $gray-900;*/
+
+
+// -
+// Forms
+// @deprecated
+// ---
+
+$help-block-color:          var(--#{$prefix}secondary-color);
+$help-block-font-size:      $font-size-sm;
+
+
+// -
+// Lists
+// ---
+
+$list-controls-bg:             var(--#{$prefix}secondary-bg);
+$list-controls-color:          var(--#{$prefix}secondary-color);
+$list-controls-border:         #E1E1E1;
+$list-controls-disabled-bg:    #F4F4F4;
+$list-controls-disabled-color: #666666;
+$list-controls-active-bg:      #E4E4E4;
+$list-controls-active-color:   $gray-900;
+
+
+// -
+// Headings
+// ---
+
+$heading-numbering-padding:       2px 6px;
+$heading-numbering-bg:            $learning;
+$heading-numbering-color:         white;
+$heading-numbering-font:          100%;
+$heading-numbering-weight:        bold;
+$heading-numbering-border-radius: 0;
+$heading-numbering-box-shadow:    none;
+$heading-numbering-separator:     "."; // separator between numbering levels
+
+
+// -
+// Carousel
+// @deprecated
+// ---
+
+$carousel-indicator-size:        10px;
+$carousel-indicator-active-size: 12px;
+$carousel-control-font-size:     $font-size-lg;
+
+
+// -
+// Placeholders
+// ---
+
+$placeholder-bg:                 var(--#{$prefix}tertiary-bg) !default;
+$placeholder-color:              var(--#{$prefix}tertiary-color) !default;
+$placeholder-hover-color:        $primary !default;
+$placeholder-border-color:       var(--#{$prefix}tertiary-border-color) !default;
+$placeholder-border-style:       dashed;
+$placeholder-hover-border-color: $placeholder-hover-color;
+
+// default variant
+$placeholder-font-size:        $font-size-base;
+$placeholder-border-width:     var(--#{$prefix}border-width) !default;
+$placeholder-border-radius:    $border-radius !default;
+$placeholder-padding:          map-get($spacers, 3) !default;
+
+// small variant
+$placeholder-sm-font-size:     $font-size-sm !default;
+$placeholder-sm-border-width:  var(--#{$prefix}border-width) !default;
+$placeholder-sm-border-radius: $border-radius-sm !default;
+$placeholder-sm-padding:       map-get($spacers, 2) !default;
+
+// large variant
+$placeholder-lg-font-size:     $font-size-lg !default;
+$placeholder-lg-border-width:  var(--#{$prefix}border-width) !default;
+$placeholder-lg-border-radius: $border-radius-lg !default;
+$placeholder-lg-padding:       map-get($spacers, 4) !default;
+
+
+// -
+// User
+// ---
+
+$user-message-bg:            $card-bg;
+$user-message-border:        var(--#{$prefix}border-color);
+$user-message-inner-border:  var(--#{$prefix}border-color);
+$user-message-border-radius: $border-radius-lg;
+
+
+// -
+// Data grid
+// ---
+
+$data-grid-gutter: 15px;
+
+
+// -
+// Data card
+// ---
+
+$data-card-font:              $font-size-base !default;
+$data-card-content-font:      $font-size-sm !default;
+$data-card-padding:           $spacer;
+
+$data-card-color:             $card-color;
+$data-card-color-muted:       var(--#{$prefix}secondary-color) !default;
+$data-card-bg:                $card-bg;
+$data-card-border-radius:     $card-border-radius;
+$data-card-box-shadow:        $card-box-shadow;
+$data-card-header-bg:         $card-cap-bg;
+
+//$data-card-border:             var(--#{$prefix}border-color) !default; // deprecated
+$data-card-border-width:       $card-border-width !default;
+$data-card-border-color:       $card-border-color !default;
+//$data-card-inner-border:       $card-border-color !default; // deprecated
+$data-card-inner-border-width: $data-card-border-width !default;
+$data-card-inner-border-color: $data-card-border-color !default;
+
+// sizing
+$data-card-icon-sm-size:      80px;
+$data-card-title-sm-font:     $font-size-base;
+
+$data-card-icon-lg-size:      120px;
+$data-card-title-lg-font:     $font-size-base;
+
+// states
+$data-card-active-color:        $body-color;
+$data-card-active-bg:           $table-hover-bg;
+$data-card-active-box-shadow:   0 0 10px 2px rgba($primary, 0.25);
+$data-card-active-header-bg:    $primary;
+$data-card-active-border:       $data-card-border-color;
+$data-card-active-inner-border: $data-card-inner-border-color;
+
+$data-card-muted-color:         $gray-light;
+$data-card-muted-bg:            $gray-lightest;
+$data-card-muted-box-shadow:    0 0 2px rgba(0,0,0,.1);
+$data-card-muted-header-bg:     $gray-lighter;
+$data-card-muted-border:        #ededed;
+$data-card-muted-inner-border:  #ededed;
+
+
+// -
+// Progress bars
+// ---
+
+//$progress-box-shadow:     inset 0 1px 2px rgba(0,0,0,.1);
+//$progress-bar-box-shadow: none; // bootstrap default : inset 0 -1px 0 rgba(0,0,0,.15)
+
+
+// -
+// Scores
+// ---
+
+$score-border-radius:    $border-radius;
+$score-bg:               $learning;
+$score-color:            $white;
+$score-border:           none;
+$score-font-size:        $font-size-base;
+$score-padding-v:        .375rem; // same as button
+$score-padding-h:        .75rem; // same as button
+
+// small box variant
+$score-border-radius-sm: $border-radius-sm;
+$score-font-size-sm:     $font-size-sm;
+$score-padding-v-sm:     .25rem; // same as button
+$score-padding-h-sm:     .5rem; // same as button
+
+// large box variant
+$score-border-radius-lg: $border-radius-lg;
+$score-font-size-lg:     $font-size-lg;
+$score-padding-v-lg:     .5rem; // same as button
+$score-padding-h-lg:     1rem; // same as button

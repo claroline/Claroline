@@ -1,0 +1,78 @@
+@use "sass:math";
+
+.text-subtitles {
+    @include text-movie-subtitles();
+}
+
+.h-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+
+    // because of the flex layout the alignment helpers does not work
+    &.text-left {
+        justify-content: left;
+    }
+    &.text-center {
+        justify-content: center;
+    }
+    &.text-right {
+        justify-content: right;
+    }
+}
+
+.h-numbering {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start/*stretch*/;
+    font-size: $heading-numbering-font;
+    font-weight: $heading-numbering-weight;
+    padding: $heading-numbering-padding;
+    margin-right: map-get($spacers, 2);
+    background: $heading-numbering-bg;
+    color: $heading-numbering-color;
+
+    @include box-shadow($heading-numbering-box-shadow);
+    @include border-radius($heading-numbering-border-radius);
+
+    &:after {
+        content: $heading-numbering-separator;
+    }
+}
+
+.h-gauge {
+    margin-right: ($grid-gutter-width * .5);
+}
+
+.btn.h-back {
+    margin-right: ($grid-gutter-width * .5);
+    padding: $padding-base-horizontal;
+    border-radius: 50%;
+}
+
+
+.content-html {
+    img {
+        max-width: 100%; // avoids user images to overflow their container
+    }
+
+    p:last-child {
+        margin-bottom: 0;
+    }
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    .small,
+    small {
+        display: block;
+        font-weight: $font-weight-lighter;
+    }
+}
+
+::-moz-selection, /* Code for Firefox */
+::selection {
+    color: $text-selection-color;
+    background: $text-selection-bg;
+}

@@ -28,7 +28,7 @@ class TemplatesModal extends Component {
         {...omit(this.props, 'currentLocale', 'selected', 'selectAction', 'reset', 'resetFilters', 'filters')}
         className="data-picker-modal"
         icon="fa fa-fw fa-file-alt"
-        bsSize="lg"
+        size="xl"
         onEnter={() => {
           this.props.resetFilters(this.props.filters)
           this.setState({initialized: true})
@@ -77,7 +77,9 @@ class TemplatesModal extends Component {
         <Button
           label={trans('select', {}, 'actions')}
           {...selectAction}
-          className="modal-btn btn"
+          className="modal-btn"
+          variant="btn"
+          size="lg"
           primary={true}
           disabled={0 === this.props.selected.length}
           onClick={this.props.fadeModal}

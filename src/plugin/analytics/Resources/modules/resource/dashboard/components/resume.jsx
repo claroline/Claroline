@@ -9,18 +9,18 @@ import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types
 const DashboardResume = (props) =>
   <div className="content-resume">
     <div className="content-resume-info content-resume-primary">
-      <span className="text-muted">
+      <span className="text-secondary">
         {trans('status')}
       </span>
 
       {!get(props.resourceNode, 'meta.published') &&
-        <h1 className="content-resume-title h2 text-muted">
+        <h1 className="content-resume-title h2 text-secondary">
           {trans('not_published')}
         </h1>
       }
 
       {get(props.resourceNode, 'meta.published') && get(props.resourceNode, 'restrictions.hidden') &&
-        <h1 className="content-resume-title h2 text-muted">
+        <h1 className="content-resume-title h2 text-secondary">
           {trans('hidden')}
         </h1>
       }
@@ -33,7 +33,7 @@ const DashboardResume = (props) =>
     </div>
 
     <div className="content-resume-info">
-      <span className="text-muted">
+      <span className="text-secondary">
         {trans('last_modification')}
       </span>
 
@@ -45,7 +45,7 @@ const DashboardResume = (props) =>
     </div>
 
     <div className="content-resume-info">
-      <span className="text-muted">
+      <span className="text-secondary">
         {trans('creation_date')}
       </span>
 

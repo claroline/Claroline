@@ -3,11 +3,11 @@
 /* global require, process */
 
 const path = require('path')
-const shell = require('shelljs')
 
 // Theme utilities
 const themeConf = require('../config/theme')
 const themesBuilder = require('../build')
+const fs = require('fs')
 
 // Current script version
 const CURRENT_VERSION = 'v1.0.0'
@@ -68,11 +68,18 @@ if (getFlag(commandArgs, 'version', 'v')) {
  * @return {Theme}
  */
 function getThemeFromPath(themePath) {
-  if (!shell.test('-e', themePath) && !shell.test('-e', themePath+'.less')) {
-    throw new Error(`Theme '${themePath}' not found.`)
+  try {
+    fs.accessSync(themePath, fs.constants.F_OK);
+  } catch (err) {
+    // for retro-compatibility
+    try {
+      fs.accessSync(themePath+'.scss', fs.constants.F_OK);
+    } catch (err) {
+      throw new Error(`Theme '${themePath}' not found.`)
+    }
   }
 
-  return new themeConf.Theme(path.basename(themePath, '.less'), path.dirname(themePath))
+  return new themeConf.Theme(path.basename(themePath, '.scss'), path.dirname(themePath))
 }
 
 function getFlag(args, longName, shortName) {

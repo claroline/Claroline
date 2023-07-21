@@ -30,6 +30,7 @@ const AboutModal = props =>
 
     {props.organization &&
       <DetailsData
+        flush={true}
         data={props.organization}
         definition={[
           {

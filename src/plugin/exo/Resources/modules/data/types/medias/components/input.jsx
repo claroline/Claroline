@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {trans} from '#/main/app/intl/translation'
-import {ModalButton} from '#/main/app/buttons/modal/containers/button'
+import {ModalButton} from '#/main/app/buttons/modal'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'

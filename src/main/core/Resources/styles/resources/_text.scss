@@ -1,0 +1,8 @@
+
+.text-resource-editor {
+  .form-toolbar {
+    position: absolute !important;
+    bottom: 0;
+    right: map-get($spacers, 3);
+  }
+}

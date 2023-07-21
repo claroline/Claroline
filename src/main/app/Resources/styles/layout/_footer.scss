@@ -1,0 +1,59 @@
+@use "sass:math";
+
+.app-footer-container {
+    display: flex; // just to have child content taking full height
+    width: 100%;
+    margin-top: auto;
+
+    background: $footer-bg;
+    color: $footer-color;
+    border-top: $footer-border-width solid $footer-border-color;
+
+    @include box-shadow($footer-box-shadow);
+
+    .app-footer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        max-width: $footer-max-width;
+        width: 100%;
+        margin: 0 auto;
+        flex: 1 0 auto; // take parent full height
+    }
+
+    .app-footer-brand {
+        margin-right: auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        white-space: nowrap;
+        font-weight: $font-weight-bolder;
+
+        img {
+            max-height: 18px;
+            max-width: 12px;
+            margin-right: 10px;
+        }
+
+        span {
+            margin-right: 5px;
+        }
+
+        small {
+            font-weight: normal;
+        }
+    }
+
+    .app-current-locale {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .app-footer-content {
+        min-width: 100%; // force display in a new line in flex container
+        padding: ($grid-gutter-width * .5);
+        border-bottom: 1px solid $footer-inner-border-color;
+    }
+}

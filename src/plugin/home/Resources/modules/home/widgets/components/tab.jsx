@@ -21,6 +21,7 @@ const WidgetsTab = props => {
     >
       {0 === visibleWidgets.length &&
         <ContentPlaceholder
+          className="my-3 flex-fill"
           size="lg"
           icon="fa fa-face-frown"
           title={trans('no_section')}

@@ -271,8 +271,8 @@ class EntryComponent extends Component {
                 </ContentHtml>
               }
 
-              <div className="panel panel-default">
-                <div className="panel-body">
+              <div className="card mb-3">
+                <div className="card-body">
                   <h2 className="entry-title">{this.props.entry.title}</h2>
 
                   <div className="entry-meta">
@@ -334,7 +334,7 @@ class EntryComponent extends Component {
 
               {((this.props.displayCategories && this.props.entry.categories && 0 < this.props.entry.categories.length) ||
               (this.props.displayKeywords && this.props.entry.keywords && 0 < this.props.entry.keywords.length)) &&
-                <div className="entry-footer panel-footer">
+                <div className="entry-footer card-footer">
                   {this.props.displayCategories && this.props.entry.categories && 0 < this.props.entry.categories.length &&
                     <span className="title">{trans('categories')}</span>
                   }

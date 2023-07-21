@@ -38,7 +38,9 @@ const FileFormModal = props =>
     />
 
     <CallbackButton
-      className="modal-btn btn"
+      className="modal-btn"
+      variant="btn"
+      size="lg"
       disabled={!props.saveEnabled || !props.data.file}
       callback={() => {
         props.save(props.resourceNode, props.data.file, props.onChange)

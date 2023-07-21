@@ -10,23 +10,25 @@ const parseValue = (value) => !isNaN(value) ? parseFloat(value) : value
 
 const Radio = props =>
   <div
-    className={classes({
+    className={classes('form-check', {
+      'form-check-inline': props.inline/*,
       'radio'       : !props.inline,
       'radio-inline': props.inline,
       'selected': props.checked,
-      'disabled': props.disabled
+      'disabled': props.disabled*/
     })}
   >
-    <label htmlFor={props.id}>
-      <input
-        type="radio"
-        id={props.id}
-        value={props.value}
-        checked={props.checked}
-        disabled={props.disabled}
-        onChange={() => props.onChange(parseValue(props.value))}
-      />
+    <input
+      id={props.id}
+      className="form-check-input"
+      type="radio"
+      value={props.value}
+      checked={props.checked}
+      disabled={props.disabled}
+      onChange={() => props.onChange(parseValue(props.value))}
+    />
 
+    <label htmlFor={props.id} className="form-check-label">
       {props.label}
     </label>
   </div>
@@ -54,7 +56,7 @@ const Radios = props => {
 
   if (0 === choiceValues.length) {
     return (
-      <em className="text-muted">{trans('no_choice')}</em>
+      <em className="text-secondary d-block">{trans('no_choice')}</em>
     )
   }
 

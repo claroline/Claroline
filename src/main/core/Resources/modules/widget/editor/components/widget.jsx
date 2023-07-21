@@ -7,6 +7,7 @@ import times from 'lodash/times'
 import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action/components/button'
+import {Toolbar} from '#/main/app/action/components/toolbar'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
@@ -27,11 +28,12 @@ import {MODAL_CONTENT_PARAMETERS} from '#/main/core/widget/content/modals/parame
 const WidgetCol = props =>
   <div className={`widget-col col-md-${props.size}`}>
     {props.content &&
-      <div className="widget-col-configure" >
+      <div className="widget-col-configure btn-toolbar mb-2 gap-1 justify-content-center">
         <Button
-          className="btn-link"
+          className="btn btn-outline-secondary"
           type={MODAL_BUTTON}
           icon="fa fa-fw fa-pencil"
+          size="sm"
           label={trans('edit', {}, 'actions')}
           modal={[MODAL_CONTENT_PARAMETERS, {
             currentContext: props.currentContext,
@@ -42,9 +44,10 @@ const WidgetCol = props =>
         />
         {props.content.id !== props.isMoving &&
           <Button
-            className="btn-link"
+            className="btn btn-outline-secondary"
             type="callback"
             icon="fa fa-fw fa-arrows"
+            size="sm"
             label={trans('move', {}, 'actions')}
             callback={() => props.startMovingContent(props.content.id)}
             disabled={!!props.isMoving || props.disabled}
@@ -52,18 +55,20 @@ const WidgetCol = props =>
         }
         {props.content.id === props.isMoving &&
           <Button
-            className="btn-link"
+            className="btn btn-outline-secondary"
             type="callback"
             icon="fa fa-fw fa-ban"
+            size="sm"
             label={trans('cancel', {}, 'actions')}
             callback={() => props.stopMovingContent()}
             disabled={props.disabled}
           />
         }
         <Button
-          className="btn-link"
+          className="btn btn-outline-danger"
           type={MODAL_BUTTON}
           icon="fa fa-fw fa-trash"
+          size="sm"
           label={trans('delete', {}, 'actions')}
           dangerous={true}
           modal={[MODAL_CONFIRM, {
@@ -87,7 +92,7 @@ const WidgetCol = props =>
 
     {!props.content && !!props.isMoving &&
       <Button
-        className="btn btn-block widget-insert-content"
+        className="btn w-100 widget-insert-content"
         type="callback"
         label={trans('insert_widget', {}, 'widget')}
         callback={() => props.moveContent(props.isMoving)}
@@ -97,7 +102,7 @@ const WidgetCol = props =>
 
     {!props.content && !props.isMoving &&
       <Button
-        className="btn btn-block btn-emphasis btn-add-widget"
+        className="btn btn-outline-primary w-100 mb-3 btn-add-widget"
         type={MODAL_BUTTON}
         label={trans('add_widget', {}, 'widget')}
         modal={[MODAL_WIDGET_CONTENT, {
@@ -131,16 +136,17 @@ WidgetCol.defaultProps = {
 
 const WidgetEditor = props =>
   <div className="widget-container">
-    {props.actions.map(action =>
-      <Button
-        {...action}
-        key={toKey(action.label)}
-        id={`${toKey(action.label)}-${props.widget.id}`}
-        className="btn-link"
-        tooltip="top"
-        disabled={props.disabled}
-      />
-    )}
+    <Toolbar
+      className="btn-group mt-3"
+      tooltip="bottom"
+      size="sm"
+      disabled={props.disabled}
+      actions={props.actions.map(action => ({
+        ...action,
+        name: `${toKey(action.label)}-${props.widget.id}`,
+        className: action.dangerous ? 'btn btn-outline-danger' : 'btn btn-outline-secondary'
+      }))}
+    />
 
     <section className="widget" style={computeStyles(props.widget)}>
       {props.widget.name &&

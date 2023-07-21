@@ -5,6 +5,10 @@ import {DataGroup as DataGroupTypes, DataInput as DataInputTypes} from '#/main/a
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {Select} from '#/main/core/layout/form/components/field/select'
 
+/**
+ *
+ * @deprecated
+ */
 const SelectGroup = props =>
   <FormGroup {...props}>
     <Select

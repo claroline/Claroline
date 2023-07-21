@@ -1,0 +1,93 @@
+@use "sass:math";
+
+.agenda-year {
+    .month-name {
+        display: inline-block;
+        margin-top: $component-margin-bottom;
+        color: $primary;
+    }
+
+    .day-name {
+        font-size: 10px;
+        font-weight: normal;
+        color: var(--#{$prefix}secondary-color);
+        text-transform: uppercase; // todo : use a var
+    }
+
+    .day-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        border-radius: 50%;
+        background: transparent;
+        border: 1px solid transparent;
+
+        &.now {
+            color: $primary;
+            background: transparent;
+            border-color: $primary;
+        }
+
+        &.selected {
+            color: white;
+            background: $primary;
+            border-color: $primary;
+        }
+
+        &.fill {
+            color: var(--#{$prefix}secondary-color);
+        }
+    }
+
+    table {
+        th,
+        td {
+            padding: 1px;
+            text-align: center;
+            vertical-align: middle;
+        }
+    }
+}
+
+.day-popover {
+    width: 100%;
+
+    .popover-title {
+        color: $gray-light;
+        font-family: $headings-font-family;
+        font-size: $font-size-sm;
+        text-align: center;
+        text-transform: uppercase; // todo : use a var
+
+        .day-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px auto 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            font-size: $font-size-lg;
+            font-weight: bold;
+
+            //color: $agenda-color;
+            background: transparent;
+            border: 1px solid transparent;
+        }
+    }
+
+    &.now .day-number {
+        color: $primary;
+        background: transparent;
+        border-color: $primary;
+    }
+
+    &.selected .day-number {
+        color: white;
+        background: $primary;
+        border-color: $primary;
+    }
+}

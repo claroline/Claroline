@@ -60,7 +60,7 @@ const SectionConfiguration = (props) =>
       </CallbackButton>
 
       <div className="section-time-group input-group">
-        <span className="input-group-addon">
+        <span className="input-group-text">
           <b>{`${trans('start', {}, 'audio')} (${trans('second')})`}</b>
         </span>
         <input
@@ -72,7 +72,7 @@ const SectionConfiguration = (props) =>
         />
       </div>
       <div className="section-time-group input-group">
-        <span className="input-group-addon">
+        <span className="input-group-text">
           <b>{`${trans('end', {}, 'audio')} (${trans('second')})`}</b>
         </span>
         <input

@@ -19,6 +19,7 @@ const WidgetContentFormComponent = (props) => {
 
   return (
     <FormData
+      flush={true}
       level={props.level}
       name={props.name}
       sections={[

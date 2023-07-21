@@ -8,6 +8,7 @@ const SimpleWidgetParameters = (props) =>
   <FormData
     embedded={true}
     level={5}
+    flush={true}
     name={props.name}
     sections={[
       {

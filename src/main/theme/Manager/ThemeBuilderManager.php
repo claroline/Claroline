@@ -25,7 +25,7 @@ class ThemeBuilderManager
      *
      * @var string
      */
-    const INSTALLED_THEME_PATH = 'Resources'.DIRECTORY_SEPARATOR.'themes';
+    public const INSTALLED_THEME_PATH = 'Resources'.DIRECTORY_SEPARATOR.'themes';
 
     /**
      * Path for theme created by users in the current platform.
@@ -33,7 +33,7 @@ class ThemeBuilderManager
      *
      * @var string
      */
-    const CUSTOM_THEME_PATH = 'themes-src';
+    public const CUSTOM_THEME_PATH = 'themes-src';
 
     /** @var KernelInterface */
     private $kernel;
@@ -92,7 +92,7 @@ class ThemeBuilderManager
         if (!empty($themeSrc)) {
             $themeSrc .= DIRECTORY_SEPARATOR.$theme->getNormalizedName();
             // check expected source files exist
-            if (!file_exists($themeSrc) && !file_exists($themeSrc.'.less')) {
+            if (!file_exists($themeSrc) && !file_exists($themeSrc.'.scss')) {
                 return null;
             }
         }

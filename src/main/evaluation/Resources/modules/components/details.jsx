@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
 import {number, trans} from '#/main/app/intl'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
@@ -14,11 +15,12 @@ const EvaluationDetails = (props) => {
   }
 
   return (
-    <div className="panel panel-default">
-      <div className="panel-body text-center">
+    <div className={classes('card', props.className)}>
+      <div className="card-body text-center">
         {props.showScore &&
           <ScoreGauge
             type="user"
+            className="mb-3"
             value={props.evaluation.score && props.scoreMax ? (props.evaluation.score / props.evaluation.scoreMax) * props.scoreMax : props.evaluation.score}
             total={props.scoreMax || props.evaluation.scoreMax}
             width={140}
@@ -29,6 +31,7 @@ const EvaluationDetails = (props) => {
 
         {!props.showScore &&
           <LiquidGauge
+            className="mb-3"
             id={`user-progression-${props.evaluation.id}`}
             type="user"
             value={props.evaluation.progression || 0}
@@ -38,16 +41,16 @@ const EvaluationDetails = (props) => {
           />
         }
 
-        <h4 className="user-progression-status">
+        <div className="user-progression-status lead" role="presentation">
           {props.statusTexts[props.evaluation.status] ?
             props.statusTexts[props.evaluation.status] :
             constants.EVALUATION_STATUSES[props.evaluation.status]
           }
-        </h4>
+        </div>
       </div>
 
       {(props.estimatedDuration || successScore || (props.details && 0 !== props.details.length)) &&
-        <ul className="list-group list-group-values">
+        <ul className="list-group list-group-flush list-group-values">
           {props.estimatedDuration &&
             <li className="list-group-item">
               {trans('estimated_duration')}
@@ -80,6 +83,7 @@ EvaluationDetails.defaultProps = {
 }
 
 EvaluationDetails.propTypes = {
+  className: T.string,
   statusTexts: T.object,
   showScore: T.bool,
   scoreMax: T.number,

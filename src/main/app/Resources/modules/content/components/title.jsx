@@ -43,7 +43,7 @@ const ContentTitle = props =>
   >
     {!isEmpty(props.backAction) &&
       <Button
-        className="btn h-back"
+        className="btn btn-outline-secondary h-back"
         label={trans('back')}
         {...props.backAction}
         icon="fa fa-fw fa-arrow-left"
@@ -70,11 +70,10 @@ const ContentTitle = props =>
     {!isEmpty(props.actions) &&
       <Toolbar
         id={props.id || toKey(props.title)}
-        className="h-toolbar"
-        buttonName="btn"
+        className="btn-toolbar ms-auto align-self-start"
+        buttonName="btn btn-outline-secondary"
         tooltip="bottom"
         toolbar="more"
-        size="sm"
         actions={props.actions}
       />
     }
@@ -90,6 +89,9 @@ ContentTitle.propTypes = {
   subtitle: T.string,
   displayed: T.bool,
   align: T.oneOf(['left', 'center', 'right']),
+  /**
+   * @deprecated
+   */
   backAction: T.shape({
     // TODO : action types
   }),

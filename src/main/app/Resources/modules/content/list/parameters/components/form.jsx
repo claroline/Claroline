@@ -73,6 +73,7 @@ const ListForm = props => {
 
   return (
     <FormData
+      flush={props.flush}
       embedded={true}
       level={props.level}
       name={props.name}
@@ -478,6 +479,7 @@ ListForm.propTypes = {
   level: T.number,
   name: T.string.isRequired,
   dataPart: T.string,
+  flush: T.bool,
 
   // the list we want to configure
   list: T.shape({

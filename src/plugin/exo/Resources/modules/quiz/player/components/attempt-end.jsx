@@ -142,7 +142,7 @@ const AttemptEndComponent = props =>
       {
         name: 'restart',
         type: LINK_BUTTON,
-        label: trans('exercise_restart', {}, 'quiz'),
+        label: trans('restart', {}, 'actions'),
         target: `${props.path}/play`,
         exact: true,
         primary: true,

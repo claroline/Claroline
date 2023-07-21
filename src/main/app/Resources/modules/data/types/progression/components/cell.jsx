@@ -15,7 +15,6 @@ const ProgressionCell = (props) => {
     >
       <ProgressBar
         id={props.id}
-        size="sm"
         type={props.type}
         value={value}
       />
@@ -26,7 +25,11 @@ const ProgressionCell = (props) => {
 ProgressionCell.propTypes = {
   id: T.string.isRequired,
   data: T.number,
-  type: T.oneOf(['success', 'info', 'warning', 'danger', 'user'])
+  type: T.oneOf(['success', 'info', 'warning', 'danger', 'learning'])
+}
+
+ProgressionCell.defaultProps = {
+  type: 'learning'
 }
 
 export {

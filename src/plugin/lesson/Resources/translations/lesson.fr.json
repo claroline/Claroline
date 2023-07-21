@@ -11,7 +11,6 @@
     "move_relation" : "Relation avec le chapitre parent",
     "internal_note_visibility_help": "Les notes internes sont uniquement visibles par les utilisateurs ayant le droit 'Voir les notes internes'.",
     "chapter_loading": "Nous chargeons votre chapitre...",
-    "start_lesson": "Commencer le cours",
     "start_disabled_empty": "Le cours est vide.",
     "lesson_search": "Rechercher dans le cours"
 }

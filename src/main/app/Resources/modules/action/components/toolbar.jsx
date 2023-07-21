@@ -17,7 +17,7 @@ import {buildToolbar} from '#/main/app/action/utils'
 /**
  * Creates a toolbar of actions.
  */
-const StaticToolbar = props => {
+const StaticToolbar = (props) => {
   const toolbar = buildToolbar(props.toolbar, props.actions, props.scope)
 
   return (0 !== toolbar.length &&
@@ -26,7 +26,7 @@ const StaticToolbar = props => {
         0 !== groupIndex &&
           <span
             key={`separator-${groupIndex}`}
-            className={`${props.className}-separator`}
+            className={`${props.name || props.className}-separator`}
           />,
         ...group.map((action) =>
           <Button
@@ -34,9 +34,10 @@ const StaticToolbar = props => {
             id={`${props.id || props.name || ''}${action.id || action.name}`}
             key={action.id || action.name}
             disabled={props.disabled || action.disabled}
-            className={classes(`${props.name || props.className}-btn`, props.buttonName, action.className)}
+            className={classes(props.name ? `${props.name}-btn` : null, props.buttonName, action.className)}
             tooltip={undefined !== action.tooltip ? action.tooltip : props.tooltip}
-            size={props.size}
+            size={action.size || props.size}
+            variant={props.variant}
             onClick={action.onClick ? () => {
               action.onClick()
               if (props.onClick) {
@@ -59,12 +60,12 @@ implementPropTypes(StaticToolbar, ToolbarTypes, {
   actions: []
 })
 
-const PromisedToolbar = props =>
+const PromisedToolbar = (props) =>
   <Await
     for={props.actions}
     placeholder={
       <div className={props.className}>
-        <span className={classes(`${props.className}-btn`, props.buttonName, 'default')}>
+        <span className={classes(props.name ? `${props.name}-btn` : null, props.buttonName, 'default')}>
           <span className="fa fa-fw fa-spinner fa-spin" />
         </span>
       </div>
@@ -81,7 +82,7 @@ implementPropTypes(PromisedToolbar, ToolbarTypes, {
   )
 })
 
-const Toolbar = props => props.actions instanceof Promise ?
+const Toolbar =  (props) => props.actions instanceof Promise ?
   <PromisedToolbar {...props} /> :
   <StaticToolbar {...props} />
 

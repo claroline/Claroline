@@ -53,7 +53,9 @@ class LoginAccount extends Component {
         ]}
       >
         <Button
-          className="btn btn-block btn-emphasis"
+          className="w-100"
+          variant="btn"
+          size="lg"
           type={CALLBACK_BUTTON}
           htmlType="submit"
           label={!this.state.inProgress ? trans('login'):trans('login_in_progress')}
@@ -67,11 +69,10 @@ class LoginAccount extends Component {
 
         {this.props.resetPassword &&
           <Button
-            className="btn-link btn-block"
+            className="btn btn-link w-100 text-wrap"
             type={LINK_BUTTON}
             label={trans('forgot_password')}
             target="/reset_password"
-            primary={true}
           />
         }
       </FormData>

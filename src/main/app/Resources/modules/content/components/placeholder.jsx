@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 const PlaceholderWrapper = props =>
-  <div id={props.id} className={classes(props.className, props.size && `placeholder-${props.size}`)} style={props.style}>
+  <div id={props.id} className={classes('empty-placeholder', props.className, props.size && `empty-placeholder-${props.size}`)} style={props.style}>
     {props.children}
   </div>
 
@@ -18,7 +18,7 @@ PlaceholderWrapper.propTypes = {
 const ContentPlaceholder = props =>
   <PlaceholderWrapper
     id={props.id}
-    className="empty-placeholder"
+    className={props.className}
     size={props.size}
     style={props.style}
   >
@@ -41,6 +41,7 @@ ContentPlaceholder.propTypes = {
   id: T.string,
   icon: T.string,
   title: T.string.isRequired,
+  className: T.string,
   help: T.string,
   size: T.oneOf(['sm', 'md', 'lg']),
   style: T.object,

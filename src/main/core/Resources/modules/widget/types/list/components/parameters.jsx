@@ -70,6 +70,7 @@ class ListWidgetParameters extends Component {
         {this.state.parameters &&
           <ListForm
             level={5}
+            flush={true}
             name={this.props.name}
             dataPart="parameters"
             list={this.state.parameters}

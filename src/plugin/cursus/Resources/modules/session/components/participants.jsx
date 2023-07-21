@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
@@ -24,10 +24,9 @@ import {CourseStats} from '#/plugin/cursus/course/components/stats'
 import {SessionGroups} from '#/plugin/cursus/session/containers/groups'
 import {SessionUsers} from '#/plugin/cursus/session/containers/users'
 
-
 const SessionParticipants = (props) =>
   <Fragment>
-    <div className="row" style={{marginTop: -20}}>
+    <div className="d-flex flex-direction-row">
       <ContentCounter
         icon="fa fa-chalkboard-teacher"
         label={trans('tutors', {}, 'cursus')}
@@ -91,7 +90,7 @@ const SessionParticipants = (props) =>
         />
 
         <Button
-          className="btn btn-link btn-block"
+          className="btn btn-outline-primary w-100"
           type={CALLBACK_BUTTON}
           label="Voir pour toute la formation"
           callback={props.toggleVisibility}

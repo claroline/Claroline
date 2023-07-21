@@ -42,6 +42,7 @@ class GroupSubscriber implements EventSubscriberInterface
         return [
             Crud::getEventName('create', 'pre', Group::class) => 'preCreate',
             Crud::getEventName('create', 'post', Group::class) => 'postCreate',
+            Crud::getEventName('update', 'post', Group::class) => 'postUpdate',
             Crud::getEventName('patch', 'post', Group::class) => 'postPatch',
             Crud::getEventName('delete', 'post', Group::class) => 'postDelete',
         ];

@@ -1,11 +1,10 @@
 import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {HeaderBrand} from '#/main/app/layout/header/components/brand'
 import {HeaderUser} from '#/main/app/layout/header/components/user'
@@ -57,30 +56,8 @@ const HeaderMain = props =>
         administration={props.administration}
         registration={props.registration}
         locale={props.locale}
+        help={props.display.help && !!props.helpUrl ? props.helpUrl : undefined}
         sendValidationEmail={props.sendValidationEmail}
-        actions={[
-          {
-            type: URL_BUTTON,
-            icon: 'fa fa-fw fa-question',
-            label: trans('help'),
-            target: props.helpUrl,
-            displayed: props.display.help && !!props.helpUrl
-          }, {
-            type: URL_BUTTON,
-            icon: 'fa fa-fw fa-power-off',
-            label: trans('logout'),
-            target: ['claro_security_logout'],
-            displayed: props.authenticated && !props.impersonated,
-            dangerous: true
-          }, {
-            type: URL_BUTTON,
-            icon: 'fa fa-fw fa-power-off',
-            label: trans('logout'),
-            target: url(['claro_index', {_switch: '_exit'}])+'#'+props.location.pathname,
-            displayed: props.impersonated,
-            dangerous: true
-          }
-        ]}
       />
     </div>
   </header>
@@ -101,11 +78,6 @@ HeaderMain.propTypes = {
     about: T.bool.isRequired,
     help: T.bool.isRequired
   }).isRequired,
-
-  //from router
-  location: T.shape({
-    pathname: T.string.isRequired
-  }),
 
   /**
    * The currently logged user.

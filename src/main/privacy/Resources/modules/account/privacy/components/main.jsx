@@ -93,14 +93,14 @@ const PrivacyMain = (props) =>
     />
 
     <Button
-      className="btn btn-block component-container"
+      className="btn btn-outline-primary w-100 mb-3"
       type={CALLBACK_BUTTON}
       label={trans('export_data', {}, 'privacy')}
       callback={props.exportAccount}
     />
 
     <Button
-      className="btn btn-block component-container"
+      className="btn btn-outline-primary w-100 mb-3"
       type={ASYNC_BUTTON}
       label={trans('request_deletion', {}, 'privacy')}
       request={{

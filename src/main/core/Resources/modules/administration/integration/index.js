@@ -6,5 +6,5 @@ export default {
   component: IntegrationTool,
   menu: IntegrationMenu,
   store: reducer,
-  styles: ['claroline-distribution-main-core-swagger']
+  styles: ['claroline-distribution-main-core-administration-integration']
 }

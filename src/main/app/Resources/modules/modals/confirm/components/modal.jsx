@@ -14,17 +14,19 @@ const ConfirmModal = props =>
   <Modal
     {...omit(props, 'dangerous', 'question', 'additional', 'confirmAction', 'handleConfirm')}
   >
-    <ContentHtml className="modal-body">{props.question}</ContentHtml>
+    <ContentHtml className="modal-body">{props.question || trans('action_confirm_message')}</ContentHtml>
 
     {props.additional}
 
     {props.confirmAction &&
       <Button
-        label={trans('confirm')}
+        label={trans('confirm', {}, 'actions')}
 
         {...omit(props.confirmAction, 'icon', 'tooltip', 'size')}
 
-        className="btn modal-btn"
+        className="modal-btn"
+        size="lg"
+        variant="btn"
         onClick={props.fadeModal}
         dangerous={props.dangerous}
         primary={!props.dangerous}
@@ -33,7 +35,9 @@ const ConfirmModal = props =>
 
     {!props.confirmAction &&
       <CallbackButton
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         callback={() => {
           props.handleConfirm()
           props.fadeModal()
@@ -41,7 +45,7 @@ const ConfirmModal = props =>
         dangerous={props.dangerous}
         primary={!props.dangerous}
       >
-        {props.confirmButtonText || trans('confirm')}
+        {props.confirmButtonText || trans('confirm', {}, 'actions')}
       </CallbackButton>
     }
   </Modal>

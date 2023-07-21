@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component, forwardRef, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import omit from 'lodash/omit'
@@ -7,14 +7,69 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Calendar} from '#/main/core/layout/calendar/components/calendar'
+import {Menu} from '#/main/app/overlays/menu'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 import {ContentSummary} from '#/main/app/content/components/summary'
-import {ColorChart} from '#/main/theme/color/components/color-chart'
+import {ColorChart} from '#/main/theme/color/containers/color-chart'
 
 import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
 
 import {getEvents} from '#/plugin/agenda/events'
 import {route} from '#/plugin/agenda/tools/agenda/routing'
+
+const PlanningMenu = forwardRef((props, ref) =>
+  <ul
+    {...omit(props, 'forcePlanning', 'planning', 'plannings', 'forcePlanning', 'removePlanning', 'changePlanningColor')}
+    ref={ref}
+  >
+    {1 < props.plannings.length &&
+      <li>
+        <Button
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-eye"
+          label={trans('Afficher uniquement cet agenda', {}, 'actions')}
+          callback={() => props.forcePlanning(props.planning.id)}
+        />
+      </li>
+    }
+
+    {!props.planning.locked &&
+      <li>
+        <Button
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-trash"
+          label={trans('delete', {}, 'actions')}
+          callback={() => props.removePlanning(props.planning.id)}
+          dangerous={true}
+        />
+      </li>
+    }
+
+    {(1 < props.plannings.length || !props.planning.locked) &&
+      <li role="separator" className="divider" />
+    }
+
+    <li>
+      <ColorChart
+        showCurrent={false}
+        selected={props.planning.color}
+        onChange={(color) => props.changePlanningColor(props.planning.id, color)}
+      />
+    </li>
+  </ul>
+)
+
+PlanningMenu.propTypes = {
+  plannings: T.array.isRequired,
+  planning: T.shape({
+    id: T.string.isRequired,
+    locked: T.bool,
+    color: T.string
+  }).isRequired,
+  forcePlanning: T.func.isRequired,
+  removePlanning: T.func.isRequired,
+  changePlanningColor: T.func.isRequired
+}
 
 class AgendaMenu extends Component {
   constructor(props) {
@@ -104,42 +159,15 @@ class AgendaMenu extends Component {
               icon: 'fa fa-fw fa-ellipsis-v',
               label: trans('show-more-actions', {}, 'actions'),
               menu: (
-                <ul className="dropdown-menu dropdown-menu-right">
-                  {1 < this.props.plannings.length &&
-                    <li>
-                      <Button
-                        type={CALLBACK_BUTTON}
-                        icon="fa fa-fw fa-eye"
-                        label={trans('Afficher uniquement cet agenda', {}, 'actions')}
-                        callback={() => this.props.forcePlanning(planning.id)}
-                      />
-                    </li>
-                  }
-
-                  {!planning.locked &&
-                    <li>
-                      <Button
-                        type={CALLBACK_BUTTON}
-                        icon="fa fa-fw fa-trash"
-                        label={trans('delete', {}, 'actions')}
-                        callback={() => this.props.removePlanning(planning.id)}
-                        dangerous={true}
-                      />
-                    </li>
-                  }
-
-                  {(1 < this.props.plannings.length || !planning.locked) &&
-                    <li role="separator" className="divider" />
-                  }
-
-                  <li>
-                    <ColorChart
-                      showCurrent={false}
-                      selected={planning.color}
-                      onChange={(color) => this.props.changePlanningColor(planning.id, color)}
-                    />
-                  </li>
-                </ul>
+                <Menu
+                  as={PlanningMenu}
+                  align="end"
+                  plannings={this.props.plannings}
+                  planning={planning}
+                  forcePlanning={this.props.forcePlanning}
+                  removePlanning={this.props.removePlanning}
+                  changePlanningColor={this.props.changePlanningColor}
+                />
               )
             }]
           })).concat([

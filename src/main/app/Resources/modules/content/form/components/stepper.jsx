@@ -19,7 +19,8 @@ const FormStepperFooter = props =>
   <div className="form-stepper-footer">
     {!isUndefined(props.previousStep) &&
       <Button
-        className="btn btn-link btn-emphasis"
+        className="btn btn-outline-primary"
+        size="lg"
         type={CALLBACK_BUTTON}
         label={trans('previous')}
         callback={() => props.navigate(props.previousStep)}
@@ -29,7 +30,8 @@ const FormStepperFooter = props =>
 
     {!isUndefined(props.nextStep) &&
       <Button
-        className="btn btn-emphasis btn-next"
+        className="btn btn-primary btn-next"
+        size="lg"
         type={CALLBACK_BUTTON}
         label={trans('next')}
         callback={() => props.navigate(props.nextStep)}
@@ -40,9 +42,10 @@ const FormStepperFooter = props =>
 
     {isUndefined(props.nextStep) &&
       <Button
-        className="btn btn-emphasis btn-next"
+        className="btn btn-primary btn-next"
         {...props.submit}
         primary={true}
+        size="lg"
         onClick={() => scrollTo('.form-stepper')}
       />
     }
@@ -113,7 +116,7 @@ class FormStepper extends Component {
           className="progress-minimal"
           value={Math.floor(((this.state.activeStep + 1) / (this.props.steps.length)) * 100)}
           size="xs"
-          type="user"
+          type="learning"
         />
 
         <ContentTitle

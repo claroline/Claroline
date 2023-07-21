@@ -16,26 +16,24 @@ const CourseForm = (props) => {
 
   return (
     <Fragment>
-      <div className="row content-heading">
-        <ContentTabs
-          sections={[
-            {
-              name: 'parameters',
-              type: LINK_BUTTON,
-              icon: 'fa fa-fw fa-cog',
-              label: trans('parameters'),
-              target: `${basePath}`,
-              exact: true
-            }, {
-              name: 'registration',
-              type: LINK_BUTTON,
-              icon: 'fa fa-fw fa-user-plus',
-              label: trans('registration'),
-              target: `${basePath}/registration`
-            }
-          ]}
-        />
-      </div>
+      <ContentTabs
+        sections={[
+          {
+            name: 'parameters',
+            type: LINK_BUTTON,
+            icon: 'fa fa-fw fa-cog',
+            label: trans('parameters'),
+            target: `${basePath}`,
+            exact: true
+          }, {
+            name: 'registration',
+            type: LINK_BUTTON,
+            icon: 'fa fa-fw fa-user-plus',
+            label: trans('registration'),
+            target: `${basePath}/registration`
+          }
+        ]}
+      />
 
       <Routes
         path={basePath}

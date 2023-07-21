@@ -9,6 +9,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {TagTypeahead} from '#/plugin/tag/components/typeahead'
 import {Tag as TagTypes} from '#/plugin/tag/data/types/tag/prop-types'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const ObjectTagsModal = props =>
   <Modal
@@ -33,7 +34,7 @@ const ObjectTagsModal = props =>
       />
 
       {0 === props.tags.length &&
-        <div className="no-item-info">{trans('no_tag', {}, 'tag')}</div>
+        <ContentPlaceholder title={trans('no_tag', {}, 'tag')} size="lg" />
       }
 
       {0 !== props.tags.length &&

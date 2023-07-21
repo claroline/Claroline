@@ -2,9 +2,6 @@ import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
-import classes from 'classnames'
-
-import Panel from 'react-bootstrap/lib/Panel'
 
 import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'
@@ -58,9 +55,6 @@ const PaperStep = props => {
     <Fragment>
       {props.showTitle &&
         <ContentTitle
-          className={classes({
-            'h-first': 0 === props.index
-          })}
           level={4}
           displayLevel={3}
           numbering={numbering}
@@ -71,35 +65,37 @@ const PaperStep = props => {
       {props.items
         .filter((item) => isQuestionType(item.type))
         .map((item, idxItem) =>
-          <Panel key={item.id} className="quiz-item item-paper">
-            {props.showScore && item.hasExpectedAnswers && ScoreNone.name !== get(item, 'score.type') && getAnswerScore(item.id, props.answers) !== undefined && getAnswerScore(item.id, props.answers) !== null &&
-              <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.answers)} scoreMax={calculateTotal(item)}/>
-            }
+          <div key={item.id} className="card mb-3 quiz-item item-paper">
+            <div className="card-body">
+              {props.showScore && item.hasExpectedAnswers && ScoreNone.name !== get(item, 'score.type') && getAnswerScore(item.id, props.answers) !== undefined && getAnswerScore(item.id, props.answers) !== null &&
+                <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.answers)} scoreMax={calculateTotal(item)}/>
+              }
 
-            {props.showQuestionTitles && item.title &&
-              <h4 className="item-title">{item.title}</h4>
-            }
+              {props.showQuestionTitles && item.title &&
+                <h4 className="item-title">{item.title}</h4>
+              }
 
-            <ItemMetadata item={item} numbering={getNumbering(props.questionNumberingType, props.index, idxItem)} />
+              <ItemMetadata item={item} numbering={getNumbering(props.questionNumberingType, props.index, idxItem)} />
 
-            {React.createElement(getDefinition(item.type).paper, {
-              item: item,
-              answer: getAnswer(item.id, props.answers),
-              feedback: getAnswerFeedback(item.id, props.answers),
-              showScore: item.hasExpectedAnswers && ScoreNone.name !== get(item, 'score.type') && props.showScore,
-              showExpected: props.showExpectedAnswers && item.hasExpectedAnswers,
-              showStats: !!(props.showStatistics && props.stats && props.stats[item.id]),
-              showYours: true,
-              stats: props.showStatistics && props.stats && props.stats[item.id] ? props.stats[item.id] : {}
-            })}
+              {React.createElement(getDefinition(item.type).paper, {
+                item: item,
+                answer: getAnswer(item.id, props.answers),
+                feedback: getAnswerFeedback(item.id, props.answers),
+                showScore: item.hasExpectedAnswers && ScoreNone.name !== get(item, 'score.type') && props.showScore,
+                showExpected: props.showExpectedAnswers && item.hasExpectedAnswers,
+                showStats: !!(props.showStatistics && props.stats && props.stats[item.id]),
+                showYours: true,
+                stats: props.showStatistics && props.stats && props.stats[item.id] ? props.stats[item.id] : {}
+              })}
 
-            {(item.feedback && !isHtmlEmpty(item.feedback)) &&
-              <div className="item-feedback">
-                <span className="fa fa-comment" />
-                <ContentHtml>{item.feedback}</ContentHtml>
-              </div>
-            }
-          </Panel>
+              {(item.feedback && !isHtmlEmpty(item.feedback)) &&
+                <div className="item-feedback">
+                  <span className="fa fa-comment" />
+                  <ContentHtml>{item.feedback}</ContentHtml>
+                </div>
+              }
+            </div>
+          </div>
         )
       }
     </Fragment>
@@ -168,8 +164,8 @@ const PaperComponent = props =>
 
     <div className="row">
       <div className="col-md-4">
-        <div className="panel panel-default">
-          <div className="panel-heading">
+        <div className="card mb-3">
+          <div className="card-header">
             <UserMicro
               className="content-creator"
               {...get(props.paper, 'user', {})}
@@ -177,7 +173,7 @@ const PaperComponent = props =>
             />
           </div>
 
-          <div className="panel-body text-center">
+          <div className="card-body text-center">
             <ScoreGauge
               type="user"
               value={get(props.paper, 'score')}
@@ -188,7 +184,7 @@ const PaperComponent = props =>
             />
           </div>
 
-          <ul className="list-group list-group-values">
+          <ul className="list-group list-group-flush list-group-values">
             <li className="list-group-item">
               {trans('start_date')}
               <span className="value">{get(props.paper, 'startDate') ? displayDate(props.paper.startDate, false, true) : '-'}</span>

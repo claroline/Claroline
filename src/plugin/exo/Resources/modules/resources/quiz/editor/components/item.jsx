@@ -18,8 +18,8 @@ const EditorItem = props =>
   <Await
     for={getItem(props.item.type)}
     placeholder={
-      <div className="panel panel-default">
-        <div className="panel-heading">
+      <div className="card mb-3">
+        <div className="card-header">
           <span className="fa fa-fw fa-spinner fa-spin icon-with-text-right" />
           {trans('loading')}
         </div>
@@ -49,6 +49,7 @@ const EditorItem = props =>
 
           errors={props.errors}
           actions={props.actions}
+          fill={true}
         >
           <ItemEditor
             embedded={true}

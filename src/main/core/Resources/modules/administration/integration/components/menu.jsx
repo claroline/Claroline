@@ -15,8 +15,8 @@ const IntegrationMenu = (props) =>
     title={trans('integration', {}, 'tools')}
   >
     <Toolbar
-      className="list-group"
-      buttonName="list-group-item"
+      className="list-group list-group-flush"
+      buttonName="list-group-item list-group-item-action"
       actions={getIntegrations().then((apps) => apps.map(app => ({
         name: app.default.name,
         type: LINK_BUTTON,

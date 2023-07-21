@@ -14,17 +14,18 @@ namespace Claroline\CoreBundle\Entity\Resource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\FileRepository")
+ * @ORM\Entity()
+ *
  * @ORM\Table(name="claro_file")
  */
 class File extends AbstractResource
 {
     // propose to download raw file when opening the resource
-    const OPENING_DOWNLOAD = 'download';
+    public const OPENING_DOWNLOAD = 'download';
     // try to use the browser player to display the file
-    const OPENING_BROWSER = 'browser';
+    public const OPENING_BROWSER = 'browser';
     // use the claroline file player to display the file
-    const OPENING_PLAYER = 'player';
+    public const OPENING_PLAYER = 'player';
 
     /**
      * @ORM\Column(type="integer", nullable=false)

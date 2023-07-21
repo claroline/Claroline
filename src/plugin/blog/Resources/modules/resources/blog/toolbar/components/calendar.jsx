@@ -9,9 +9,9 @@ import {Calendar} from '#/main/core/layout/calendar/components/calendar'
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 
 const BlogCalendarComponent = props =>
-  <div key='redactors' className="panel panel-default">
-    <div className="panel-heading">
-      <h2 className="panel-title">{trans('calendar')}</h2>
+  <div key='calendar' className="card mb-3">
+    <div className="card-header">
+      <h2 className="card-title">{trans('calendar')}</h2>
     </div>
 
     <Calendar

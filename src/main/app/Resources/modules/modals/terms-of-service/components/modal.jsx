@@ -12,7 +12,7 @@ const TermsOfServiceModal = props =>
     {...omit(props, 'fetch')}
     icon="fa fa-fw fa-shield"
     title={trans('terms_of_service')}
-    bsSize="lg"
+    size="lg"
     onEntering={() => {
       if (!props.loaded) {
         props.fetch()

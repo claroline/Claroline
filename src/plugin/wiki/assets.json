@@ -1,8 +1,8 @@
 {
   "styles": {
     "entry": {
-      "wiki-resource": "resources/wiki/index.less",
-      "wiki-resource-pdf": "resources/wiki/pdf.less"
+      "wiki-resource": "resources/wiki.scss",
+      "wiki-resource-pdf": "pdf.scss"
     }
   }
 }

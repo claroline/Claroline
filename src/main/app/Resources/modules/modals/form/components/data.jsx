@@ -77,6 +77,7 @@ class FormDataModal extends Component {
     return (
       <Modal
         {...omit(this.props, 'saveButtonText', 'data', 'sections', 'save', 'onChange')}
+        size="lg"
       >
         <FormData
           level={5}
@@ -88,12 +89,15 @@ class FormDataModal extends Component {
           setErrors={this.setErrors}
           updateProp={this.updateProp}
           setMode={() => true}
+          flush={true}
         >
           {this.props.children}
 
           <CallbackButton
             htmlType="submit"
-            className="modal-btn btn"
+            className="modal-btn"
+            variant="btn"
+            size="lg"
             disabled={!this.state.pendingChanges || (this.state.validating && !isEmpty(this.state.errors))}
             callback={this.save}
             primary={true}

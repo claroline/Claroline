@@ -1,12 +1,10 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {trans} from '#/main/app/intl'
-import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
-import {ProgressBar} from '#/main/app/content/components/progress-bar'
 
 import {MODAL_MAINTENANCE} from '#/main/app/modals/maintenance'
 import {MODAL_PLATFORM_ABOUT} from '#/main/app/layout/sections/administration/modals/about'
@@ -14,120 +12,52 @@ import {MODAL_PLATFORM_ABOUT} from '#/main/app/layout/sections/administration/mo
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
 
-class PlatformStatus extends Component {
-  constructor(props) {
-    super(props)
+const PlatformStatus = (props) =>
+  <section className="app-menu-status">
+    <h2 className="sr-only">
+      {trans('status')}
+    </h2>
 
-    this.state = {
-      mode: 'status'
-    }
-  }
+    <LiquidGauge
+      id="platform-status"
+      type={classes({
+        success: !props.disabled && !props.maintenance,
+        warning: !props.disabled && props.maintenance,
+        danger: props.disabled
+      })}
+      value={50}
+      displayValue={() => {
+        if (props.disabled) {
+          return <tspan className="fa fa-power-off">&#xf011;</tspan>
+        }
 
-  changeMode(mode) {
-    this.setState({mode: mode})
-  }
+        if (props.maintenance) {
+          return <tspan className="fa fa-hard-hat">&#xf807;</tspan>
+        }
 
-  render() {
-    if ('usages' === this.state.mode) {
-      return (
-        <section className="app-menu-status">
-          <h2 className="sr-only">
-            {trans('usages')}
-          </h2>
+        return <tspan className="fa fa-check">&#xf00c;</tspan>
+      }}
+      width={70}
+      height={70}
+      preFilled={true}
+    />
 
-          <div>
-            {trans('users')}
-            <ProgressBar
-              className="progress-minimal"
-              value={25}
-              size="xs"
-              type="user"
-            />
-          </div>
+    <div className="app-menu-status-info">
+      <h3 className="h5">
+        {props.disabled && trans('platform_offline', {}, 'administration')}
+        {!props.disabled && !props.maintenance && trans('platform_online', {}, 'administration')}
+        {!props.disabled && props.maintenance && trans('platform_maintenance', {}, 'administration')}
+      </h3>
 
-          <div>
-            {trans('storage')}
-
-            <ProgressBar
-              className="progress-minimal"
-              value={25}
-              size="xs"
-              type="user"
-            />
-          </div>
-        </section>
-      )
-    }
-
-    return (
-      <section className="app-menu-status">
-        <h2 className="sr-only">
-          {trans('status')}
-        </h2>
-
-        <LiquidGauge
-          id="platform-status"
-          type={classes({
-            success: !this.props.disabled && !this.props.maintenance,
-            warning: !this.props.disabled && this.props.maintenance,
-            danger: this.props.disabled
-          })}
-          value={50}
-          displayValue={() => {
-            if (this.props.disabled) {
-              return <tspan className="fa fa-power-off">&#xf011;</tspan>
-            }
-
-            if (this.props.maintenance) {
-              return <tspan className="fa fa-hard-hat">&#xf807;</tspan>
-            }
-
-            return <tspan className="fa fa-check">&#xf00c;</tspan>
-          }}
-          width={70}
-          height={70}
-          preFilled={true}
-        />
-
-        <div className="app-menu-status-info">
-          <h3 className="h4">
-            {this.props.disabled && trans('platform_offline', {}, 'administration')}
-            {!this.props.disabled && !this.props.maintenance && trans('platform_online', {}, 'administration')}
-            {!this.props.disabled && this.props.maintenance && trans('platform_maintenance', {}, 'administration')}
-
-            {false &&
-              <Button
-                className="icon-with-text-left"
-                type={CALLBACK_BUTTON}
-                icon="fa fa-fw fa-circle-info"
-                label={trans('show-info', {}, 'actions')}
-                callback={() => this.changeMode('usages' === this.state.mode ? 'status' : 'usages')}
-                tooltip="right"
-              />
-            }
-          </h3>
-
-          {this.props.disabled && trans('platform_opened', {}, 'administration')}
-          {!this.props.disabled && !this.props.maintenance && trans('platform_desactive', {}, 'administration')}
-          {!this.props.disabled && this.props.maintenance && trans('platform_active_admin', {}, 'administration')}
-        </div>
-      </section>
-    )
-  }
-}
+      {props.disabled && trans('platform_opened', {}, 'administration')}
+      {!props.disabled && !props.maintenance && trans('platform_desactive', {}, 'administration')}
+      {!props.disabled && props.maintenance && trans('platform_active_admin', {}, 'administration')}
+    </div>
+  </section>
 
 PlatformStatus.propTypes = {
   disabled: T.bool.isRequired,
-  maintenance: T.bool.isRequired,
-  usages: T.shape({
-    users: T.number,
-    storage: T.number
-  }),
-  restrictions: T.shape({
-    users: T.number,
-    storage: T.number,
-    dates: T.arrayOf(T.string)
-  })
+  maintenance: T.bool.isRequired
 }
 
 const AdministrationMenu = props =>
@@ -207,16 +137,6 @@ AdministrationMenu.propTypes = {
     name: T.string.isRequired
   })),
   changeSection: T.func.isRequired,
-
-  usages: T.shape({
-    users: T.number,
-    storage: T.number
-  }),
-  restrictions: T.shape({
-    users: T.number,
-    storage: T.number,
-    dates: T.arrayOf(T.string)
-  }),
 
   disabled: T.bool.isRequired,
   maintenance: T.bool.isRequired,

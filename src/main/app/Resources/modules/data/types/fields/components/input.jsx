@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
-import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
 import get from 'lodash/get'
+import isNumber from 'lodash/isNumber'
 
+import {implementPropTypes, PropTypes as T} from '#/main/app/prop-types'
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
 
@@ -16,7 +17,8 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {getCreatableTypes} from '#/main/app/data/types'
 import {DataInput} from '#/main/app/data/components/input'
-import isNumber from 'lodash/isNumber'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 // todo try to avoid connexion to the store
 // todo create working preview
@@ -112,7 +114,7 @@ class FieldList extends Component {
       <div className={classes('field-list-control', this.props.className)}>
         {0 !== this.props.value.length &&
           <Button
-            className="btn-link btn-delete-all"
+            className="btn btn-text-danger btn-delete-all"
             type={CALLBACK_BUTTON}
             label={trans('delete_all')}
             disabled={this.props.disabled}
@@ -139,7 +141,7 @@ class FieldList extends Component {
                 return 0
               })
               .map((field, fieldIndex) =>
-                <li key={fieldIndex} className="field-item">
+                <li key={fieldIndex} className="field-item mb-2">
                   <FieldPreview {...this.formatField(field)} />
 
                   <div className="field-item-actions">
@@ -179,12 +181,13 @@ class FieldList extends Component {
         }
 
         {0 === this.props.value.length &&
-          <div className="no-field-info">{this.props.placeholder}</div>
+          <ContentPlaceholder className="mb-2" title={this.props.placeholder} size={this.props.size} />
         }
 
         <Button
           type={CALLBACK_BUTTON}
-          className="btn btn-block"
+          variant="btn"
+          className="w-100"
           icon="fa fa-fw fa-plus"
           label={trans('add_field')}
           callback={() => getCreatableTypes().then(types => {
@@ -207,26 +210,19 @@ class FieldList extends Component {
   }
 }
 
-FieldList.propTypes = {
-  id: T.string.isRequired,
-  placeholder: T.string,
-  className: T.string,
-  disabled: T.bool,
-  value: T.arrayOf(T.shape({
+implementPropTypes(FieldList, DataInputTypes, {
+  // more precise value type
+  value: T.arrayOf(T.object),
 
-  })),
   // a list of all fields for conditional rendering
   // it uses the current list of fields in `value` in missing
   // this is useful for profile where fields are propagated between multiple tabs/panels
   fields: T.array,
-  onChange: T.func.isRequired,
   showModal: T.func.isRequired
-}
-
-FieldList.defaultProps = {
+}, {
   placeholder: trans('empty_fields_list'),
   value: []
-}
+})
 
 const FieldsInput = connect(
   null,

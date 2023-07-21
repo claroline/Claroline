@@ -44,7 +44,8 @@ const PlayerRestrictions = props => {
           }
 
           <Toolbar
-            buttonName="btn btn-block btn-emphasis"
+            className="d-grid gap-1"
+            variant="btn"
             toolbar="restart correction statistics home"
             actions={[
               {
@@ -54,6 +55,7 @@ const PlayerRestrictions = props => {
                 label: trans('view_paper', {}, 'quiz'),
                 target: `${props.path}/papers/${props.lastAttempt.id}`,
                 displayed: showAttemptCorrection,
+                size: 'lg',
                 primary: true
               }, {
                 name: 'statistics',

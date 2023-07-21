@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {ContentCounter} from '#/main/app/content/components/counter'
@@ -11,12 +11,12 @@ const ForumInfo = (props) =>
     <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
 
     {props.forum.display.description &&
-      <div className="panel panel-default">
-        <ContentHtml className="panel-body">{props.forum.display.description}</ContentHtml>
+      <div className="card mb-3">
+        <ContentHtml className="card-body">{props.forum.display.description}</ContentHtml>
       </div>
     }
 
-    <div className="row">
+    <div className="d-flex flex-direction-row">
       <ContentCounter
         icon="fa fa-user"
         label={trans('participants')}

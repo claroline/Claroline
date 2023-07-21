@@ -40,7 +40,7 @@ class Choice extends Component {
       >
         {this.props.hasExpectedAnswers &&
           <input
-            className="choice-item-tick"
+            className="choice-item-tick form-check-input"
             disabled={this.props.hasScore}
             type={this.props.multiple ? 'checkbox' : 'radio'}
             checked={this.props.checked}
@@ -154,7 +154,7 @@ const Choices = props =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="btn btn-block"
+      className="btn btn-outline-primary w-100"
       icon="fa fa-fw fa-plus"
       label={trans('add_choice', {}, 'quiz')}
       callback={props.addChoice}

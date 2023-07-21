@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 import moment from 'moment'
 
 import {trans, apiDate} from '#/main/app/intl'
@@ -44,9 +44,9 @@ class ActionsChart extends Component {
   render() {
     return (
       <Fragment>
-        <div className="panel panel-default panel-analytics">
-          <div className="panel-heading">
-            <h2 className="panel-title">
+        <div className="card mb-3 panel-analytics">
+          <div className="card-header">
+            <h2 className="card-title">
               {trans('activity')}
             </h2>
 
@@ -77,7 +77,7 @@ class ActionsChart extends Component {
             />
           </div>
 
-          <div className="panel-body text-right">
+          <div className="card-body text-right">
             <LineChart
               data={[this.props.data.actions]}
               xAxisLabel={{
@@ -104,8 +104,8 @@ class ActionsChart extends Component {
           </div>
         </div>
 
-        <div className="panel panel-default embedded-list-section">
-          <div className="panel-body">
+        <div className="card mb-3 embedded-list-section">
+          <div className="card-body">
             <ListData
               name={selectors.STORE_NAME + '.logs'}
               fetch={{

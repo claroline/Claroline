@@ -1,0 +1,49 @@
+/*
+ * Buttons styles
+ */
+
+// removes default button styles everywhere
+// appears as a <a>
+button,
+input[type=button],
+input[type=submit],
+input[type=reset] {
+    font-weight: $font-weight-base;
+    background-color: transparent;
+    border: none;
+    text-decoration: none;
+    box-shadow: none;
+    padding: 0;
+
+    &:hover,
+    &:focus {
+        box-shadow: none;
+    }
+}
+
+.toolbar-separator {
+    display: inline-block;
+    margin: $component-margin-bottom-small;
+}
+
+
+// Button text variants
+
+@each $color, $value in $theme-colors {
+    .btn-text-#{$color} {
+        @include button-text-variant($value);
+    }
+}
+
+.btn-text-body {
+    @include button-text-variant($body-color);
+}
+
+.btn-text-menu {
+
+}
+
+.btn-text-subtitles {
+    @include button-text-variant($white, $white, $white);
+    @include text-movie-subtitles();
+}

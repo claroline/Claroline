@@ -42,7 +42,8 @@ class WorkspaceMain extends Component {
           description={trans('not_found_desc', {}, 'workspace')}
         >
           <Button
-            className="btn btn-emphasis"
+            variant="btn"
+            size="lg"
             type={LINK_BUTTON}
             label={trans('browse-workspaces', {}, 'actions')}
             target={toolRoute('workspaces')}

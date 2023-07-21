@@ -1,0 +1,190 @@
+/**
+ * Application top bar styles.
+ */
+
+@use "sass:math";
+
+.app-header-container {
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: $top-bar-height;
+    color: $top-bar-color;
+    font-size: $top-bar-font-size;
+    border-bottom: $top-bar-border-bottom;
+    background: $top-bar-bg;
+
+    @include box-shadow($top-bar-box-shadow);
+}
+
+.app-header {
+    max-width: $top-bar-max-width;
+    height: 100%;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.app-header-item {
+    padding: 0 ($grid-gutter-width * .5);
+    display: flex;
+    vertical-align: middle;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border: none; // remove button borders
+}
+
+.app-header-brand {
+    height: 100%;
+    padding: 0 ($grid-gutter-width * .5);
+    //text-align: center;
+    margin-right: auto; // will stack button bar to the rights (TODO : it will not work if brand is not displayed)
+    //text-decoration: none; // remove <a> styles
+
+    // permit to center the img
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-header-logo {
+    max-height: 40px;
+
+    // fallback for IE 11 and logos that don't define color schema
+    fill: $top-bar-brand-color;
+
+    // declare colors var to make it usable inside the SVG
+    --logo-default: $top-bar-brand-color;
+    --logo-primary: $top-bar-brand-secondary-color;
+
+    + .app-header-title {
+        margin-left: ($grid-gutter-width * .5);
+    }
+}
+
+.app-header-title {
+    text-align: left;
+    margin: 0;
+    font-size: $top-bar-brand-font-size;
+    font-weight: $top-bar-brand-font-weight;
+    color: $top-bar-brand-color;
+
+    > small {
+        display: block;
+        font-weight: $font-weight-lighter;
+        color: $top-bar-brand-secondary-color;
+    }
+}
+
+.app-header-btn {
+    position: relative; // to constrain action subscript
+    color: $top-bar-link-color;
+    background: $top-bar-link-bg;
+
+    //.fa,
+    .action-icon {
+        //font-size: $font-size-base;
+    }
+
+    // puts labels in the bottom right corner
+    .action-subscript {
+        position: absolute;
+        top: auto; // reset bootstrap default
+        bottom: 5px;
+        right: 5px;
+        //line-height: 1;
+        font-size: .5rem;
+    }
+
+    &:hover,
+    &:focus {
+        color: $top-bar-link-hover-color;
+        background: $top-bar-link-hover-bg;
+    }
+
+    &.active {
+        &,
+        &:hover,
+        &:focus {
+            color: $top-bar-link-active-color;
+            background-color: $top-bar-link-active-bg;
+        }
+    }
+
+    &.disabled {
+        &,
+        &:hover,
+        &:focus {
+            color: $top-bar-link-disabled-color;
+            background-color: $top-bar-link-disabled-bg;
+        }
+    }
+}
+
+.app-header-user {
+    .user-avatar {
+        color: $top-bar-link-color;
+        // for picture
+        max-height: 40px;
+
+        &.fa {
+            background: $top-bar-link-color;
+            width: 30px;
+            height: 30px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: $top-bar-bg;
+            font-size: 24px;
+            padding-top: 6px;
+            border: 2px solid $top-bar-link-color;
+        }
+    }
+}
+
+// TODO : move elsewhere. This is the styles for one implementation of .app-header-main
+.app-search {
+    position: relative;
+
+    .app-search-icon,
+    .app-search-loader,
+    .app-search-clear {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        font-size: $input-font-size-lg;
+        height: $input-height-lg;
+        line-height: $input-line-height;
+        padding: $input-padding-y-lg $input-padding-x-lg;
+        top: 1px; // because of the increased border size of the input
+    }
+
+    .app-search-icon {
+        left: 0;
+        color: var(--#{$prefix}primary);
+    }
+
+    .form-control {
+        padding-left: calc($input-padding-x-lg * 2 + $icon-fixed-width);
+        padding-right: calc($input-padding-x-lg * 2 + $icon-fixed-width);
+        border-color: var(--#{$prefix}primary);
+        border-width: 2px;
+    }
+
+    .app-search-loader {
+        right: 0;
+        color: var(--#{$prefix}secondary);
+    }
+
+    .app-search-clear {
+        right: 0;
+    }
+}

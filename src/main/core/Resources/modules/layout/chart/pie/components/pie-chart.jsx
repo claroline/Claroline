@@ -1,6 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {implementPropTypes} from '#/main/app/prop-types'
 import {Chart as ChartTypes} from '#/main/core/layout/chart/prop-types'

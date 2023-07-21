@@ -4,7 +4,7 @@ import classes from 'classnames'
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
-import Overlay from 'react-bootstrap/lib/Overlay'
+import Overlay from 'react-bootstrap/Overlay'
 
 import {FormData} from '#/main/app/content/form/containers/data'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'

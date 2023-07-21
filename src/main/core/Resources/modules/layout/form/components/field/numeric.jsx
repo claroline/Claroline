@@ -32,7 +32,7 @@ NumericInput.propTypes = {
 const Numeric = props => props.unit ?
   <div className="input-group">
     <NumericInput {...props} />
-    <span className="input-group-addon">
+    <span className="input-group-text">
       {props.unit}
     </span>
   </div>

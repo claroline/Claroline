@@ -3,87 +3,66 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
-// TODO : remove us
-import Panel      from 'react-bootstrap/lib/Panel'
-import PanelGroup from 'react-bootstrap/lib/PanelGroup'
+import Accordion from 'react-bootstrap/Accordion'
 
 import {toKey} from '#/main/core/scaffolding/text'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Toolbar} from '#/main/app/action/components/toolbar'
-import {Heading} from '#/main/core/layout/components/heading'
 
 /**
  * Renders a section.
- *
- * @param props
- * @constructor
  */
-const Section = props =>
-  <Panel
-    {...omit(props, ['level', 'displayLevel', 'title', 'subtitle', 'icon', 'actions', 'children'])}
-    collapsible={true}
-    expanded={props.disabled ? false : props.expanded}
-    className={classes(props.className, {
-      'panel-disabled': props.disabled
-    })}
-    header={
-      <Heading
-        level={props.level}
-        displayLevel={props.displayLevel}
-        className={classes({
-          opened: !props.disabled && props.expanded
-        })}
-      >
-        {(!props.icon || typeof props.icon === 'string') &&
-          <span
-            className={classes('icon-with-text-right', props.icon, {
-              'fa fa-fw fa-caret-down': !props.icon && !props.disabled && props.expanded,
-              'fa fa-fw fa-caret-right': !props.icon && (props.disabled || !props.expanded)
-            })}
-            aria-hidden={true}
-          />
-        }
-
-        {typeof props.icon !== 'string' && props.icon}
-
-        <span role="presentation">
-          {props.title}
-          {props.subtitle &&
-            <small>{props.subtitle}</small>
-          }
-        </span>
-
-        {(props.status || 0 !== props.actions.length) &&
-          <div className="panel-actions">
-            {props.status}
-
-            {0 !== props.actions.length &&
-              <Toolbar
-                id={`${props.id || toKey(props.title)}-actions`}
-                buttonName="btn btn-link"
-                tooltip="top"
-                toolbar="more"
-                actions={props.actions}
-              />
-            }
-          </div>
-        }
-      </Heading>
-    }
+const Section = (props) =>
+  <Accordion.Item
+    {...omit(props, ['level', 'title', 'subtitle', 'icon', 'actions', 'children', 'fill'])}
+    className={props.className}
   >
-    {props.children}
-  </Panel>
+    <Accordion.Header as={`h${props.level}`}>
+      {(typeof props.icon === 'string') &&
+        <span
+          className={classes('icon-with-text-right', props.icon)}
+          aria-hidden={true}
+        />
+      }
+
+      {typeof props.icon !== 'string' && props.icon}
+
+      <span role="presentation" className="flex-fill">
+        {props.title}
+        {props.subtitle &&
+          <small>{props.subtitle}</small>
+        }
+      </span>
+
+      {(props.status || 0 !== props.actions.length) &&
+        <div className="panel-actions d-flex align-items-center my-n3">
+          {props.status}
+
+          {0 !== props.actions.length &&
+            <Toolbar
+              id={`${props.id || toKey(props.title)}-actions`}
+              buttonName="btn btn-text-body text-reset me-3"
+              tooltip="top"
+              toolbar="more"
+              actions={props.actions}
+            />
+          }
+        </div>
+      }
+    </Accordion.Header>
+    <Accordion.Body bsPrefix={props.fill ? 'accordion-body-flush' : undefined}>
+      {props.children}
+    </Accordion.Body>
+  </Accordion.Item>
 
 Section.propTypes = {
   id: T.string,
   className: T.string,
   level: T.number,
-  displayLevel: T.number,
   icon: T.oneOfType([T.string, T.node]),
   title: T.string.isRequired,
   subtitle: T.string,
-  expanded: T.bool,
-  disabled: T.bool,
+  fill: T.bool,
   status: T.element, // only used by FormSection to show validation. Maybe find better
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
@@ -94,35 +73,37 @@ Section.propTypes = {
 Section.defaultProps = {
   actions: [],
   level: 5,
-  disabled: false
+  disabled: false,
+  fill: false
 }
 
 const Sections = props =>
-  <PanelGroup
+  <Accordion
     className={classes('sections', props.className)}
-    accordion={props.accordion}
+    alwaysOpen={!props.accordion}
     defaultActiveKey={props.defaultOpened}
+    flush={props.flush}
   >
     {React.Children.map(props.children, (child) => child &&
       React.cloneElement(child, {
         key: child.props.id || toKey(child.props.title),
         eventKey: child.props.id || toKey(child.props.title),
-        level: props.level,
-        displayLevel: props.displayLevel
+        level: props.level
       })
     )}
-  </PanelGroup>
+  </Accordion>
 
 Sections.propTypes = {
   className: T.string,
+  flush: T.bool,
   accordion: T.bool,
   level: T.number, // level for panel headings
-  displayLevel: T.number, // modifier for headings level (used when some headings levels are hidden in the page)
   defaultOpened: T.string,
   children: T.node.isRequired
 }
 
 Sections.defaultProps = {
+  flush: false,
   accordion: true,
   level: 5
 }

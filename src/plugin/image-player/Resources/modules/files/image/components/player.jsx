@@ -9,7 +9,7 @@ const ImagePlayer = props =>
       marginLeft: 'auto',
       marginRight: 'auto'
     }}
-    className="img-responsive"
+    className="img-fluid"
     src={props.file.url}
     alt={props.file.hashName}
     onContextMenu={(e)=> {

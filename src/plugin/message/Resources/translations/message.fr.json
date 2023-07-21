@@ -23,7 +23,8 @@
     "all_messages": "Voir tous mes messages",
     "empty_unread": "Vous n'avez pas de nouveaux messages",
     "empty_unread_help": "Lorsque vous recevrez un message, il apparaîtra ici",
-    "more_unread": "+ %count% autres nouveaux messages",
+    "more_unread": "{0, 1} + %count% autre nouveau message|[2,Inf[ + %count% autres nouveaux messages",
+    "count_unread": "{0, 1} %count% nouveau message|[2,Inf[ %count% nouveaux messages",
     "no_object": "(aucun objet)",
     "sent_at": "le %date%"
 }

@@ -1,7 +1,6 @@
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path')
-const shell = require('shelljs')
 
 const paths = require('../paths')
 const entries = require('./entries')
@@ -27,13 +26,12 @@ function build(theme, noCache) {
     previousBuild[theme.name] = {}
   }
 
-  buildTheme(theme, previousBuild[theme.name]).then(() => {
-    shell.echo('Theme state: ')
-    shell.echo(previousBuild[theme.name])
+  buildTheme(theme, previousBuild[theme.name]).then((results) => {
+    previousBuild[theme.name] = results.reduce((acc, result) => Object.assign(acc, result), {})
 
     dumpBuildState(previousBuild)
 
-    shell.echo('Rebuild theme finished.')
+    console.log(`[SUCCESS] Rebuild theme "${theme.name}" finished.`)
   })
 }
 
@@ -46,7 +44,7 @@ function build(theme, noCache) {
 function buildTheme(theme, themeState) {
   const errors = theme.validate()
   if (0 !== errors.length) {
-    errors.forEach(error => shell.echo(error))
+    errors.forEach(error => console.error(error))
   }
 
   if (theme.canCompile()) {
@@ -58,6 +56,8 @@ function buildTheme(theme, themeState) {
 
     // Copy static assets
     if (theme.hasStaticAssets()) {
+      console.log(`Copy static files :`)
+
       theme.getStaticAssets().map(assetDir =>
         copyStatic(
           // src
@@ -65,9 +65,12 @@ function buildTheme(theme, themeState) {
           // destination
           path.resolve(themeDir),
           // asset dir
-          assetDir)
+          assetDir
+        )
       )
     }
+
+    console.log(`Compile styles :`)
 
     return Promise.all([
       // 1. Build theme root file
@@ -76,7 +79,7 @@ function buildTheme(theme, themeState) {
         path.resolve(themeDir, 'bootstrap.css'),
         themeState['bootstrap.css']
       ).then(
-        newVersion => themeState['bootstrap.css'] = newVersion
+        newVersion => ({'bootstrap.css' : newVersion})
       ),
 
       // 2. Build plugins styles using theme vars
@@ -86,72 +89,57 @@ function buildTheme(theme, themeState) {
         themeState[packageAssets+'.css'],
         theme.getVars() // global vars
       ).then(
-        newVersion => themeState[packageAssets+'.css'] = newVersion)
-      )
-    ]).then(
-      result => onThemeSuccess(theme, result),
-      reject => onThemeError(theme, reject)
-    )
+        newVersion => ({[`${packageAssets}.css`] : newVersion})
+      ))
+    ])
   } else {
     return Promise.reject('Theme is not valid. Compilation aborted.')
   }
 }
 
-function onThemeSuccess(theme, result) {
-  shell.echo(`[SUCCESS] Theme '${theme.name}' has been successfully updated.`)
-
-  return result
-}
-
-function onThemeError(theme, reject) {
-  shell.echo(`[ERROR] Theme '${theme.name}' has not been updated.`)
-  shell.echo(reject)
-
-  return reject
-}
-
 function createAsset(asset, outputFile, currentVersion, globalVars) {
-  return compile.compile(asset, outputFile, globalVars).then(output => {
-    // Check if the result has change since last compilation
-    const newVersion = crypto.createHash('md5').update(output.css).digest('hex')
+  const output = compile.compile(asset, outputFile, globalVars)
 
-    if (currentVersion !== newVersion || !fs.existsSync(outputFile)) {
-      // Content has changed => update the build
-      shell.echo(`+++ ${outputFile}.`)
+  // Check if the result has changed since last compilation
+  const newVersion = crypto.createHash('md5').update(output.css).digest('hex')
 
-      // Post process
-      return compile.optimize(output.css).then(optimized => {
-        // Write new css file
-        fs.writeFileSync(outputFile, optimized)
+  if (currentVersion !== newVersion || !fs.existsSync(outputFile)) {
+    // Content has changed => update the build
+    console.info(`+++ ${outputFile}.`)
 
-        // Write new map file
-        if (output.map) {
-          fs.writeFileSync(outputFile + '.map', output.map)
-        }
+    // Post process
+    return compile.optimize(output.css, outputFile).then(optimized => {
+      const baseName = path.basename(outputFile, '.css')
 
-        return Promise.resolve(newVersion)
-      })
-    } else {
-      shell.echo(`    ${outputFile}.`)
+      // Write new css file
+      fs.writeFileSync(outputFile, '/*# sourceMappingURL=./'+baseName+'.css.map */\n' +optimized)
+
+      // Write new map file
+      if (output.sourceMap) {
+        fs.writeFileSync(outputFile+'.map', JSON.stringify(output.sourceMap))
+      }
 
       return Promise.resolve(newVersion)
-    }
-  })
+    })
+  } else {
+    console.info(`    ${outputFile}.`)
+
+    return Promise.resolve(newVersion)
+  }
 }
 
 /**
  * Recursively copies static files directories (eg. images, fonts)
  * @param {string} src
- * @param {string} destination
+ * @param {string} themeDir
  * @param {string} assetDir
  */
-function copyStatic(src, destination, assetDir) {
-  const pathToRemove = path.join(destination, assetDir)
-  console.log('Removing path: ', pathToRemove)
-  console.log('copy src: ', src)
-  console.log('copy destination: ', destination)
-  shell.rm('-rf', pathToRemove)
-  shell.cp('-R', src, destination)
+function copyStatic(src, themeDir, assetDir) {
+  const destination = path.join(themeDir, assetDir)
+  console.log(`    ${src} => ${destination}`)
+
+  fs.rmSync(destination, { recursive: true, force: true })
+  fs.cpSync(src, destination, { recursive: true })
 }
 
 /**
@@ -160,7 +148,7 @@ function copyStatic(src, destination, assetDir) {
  * @param {object} state
  */
 function dumpBuildState(state) {
-  shell.echo('Dump theme build state.')
+  console.info('Dump theme build state.')
   fs.writeFileSync(BUILD_FILE, JSON.stringify(state, null, 2))
 }
 
@@ -170,15 +158,9 @@ function dumpBuildState(state) {
  * @returns {object}
  */
 function getBuildState() {
-  shell.echo('Retrieving previous build state...')
-  if (shell.test('-e', BUILD_FILE)) {
-    // Themes have already been built once
-    shell.echo('Build state FOUND.')
-
-    return JSON.parse(shell.cat(BUILD_FILE)) || {}
-  } else {
-    shell.echo('Build state NOT FOUND.')
-
+  try {
+    return JSON.parse(fs.readFileSync(BUILD_FILE))
+  } catch (err) {
     return {}
   }
 }

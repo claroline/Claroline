@@ -8,10 +8,10 @@ import {MODAL_PARAMETERS_COLOR_CHART} from '#/main/theme/administration/appearan
 
 const AppearanceColorCharts = (props) => {
   return (
-    <ul className="list-group list-group-striped">
+    <ul className="list-group list-group-striped list-group-flush">
       {props.availableColorCharts.map((color, index) => (
         <li className="list-group-item" key={index}>
-          <h3 className="h-first h5 color-chart-title">
+          <h3 className="h5 color-chart-title">
             {color.name}
             <Toolbar
               buttonName='btn btn-link'

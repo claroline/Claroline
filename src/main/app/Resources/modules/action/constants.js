@@ -41,8 +41,8 @@ const ACTIONS = {
     icon: 'fa fa-save'
   },
   [ACTION_DELETE]: {
-    icon: 'fa fa-trash',
-    dangerous: true
+    icon: 'fa fa-trash'/*,
+    dangerous: true*/
   },
   [ACTION_SEND]: {
     icon: 'fa fa-paper-plane'

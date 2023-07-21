@@ -95,18 +95,19 @@ class EvaluationUser extends Component {
               estimatedDuration={get(this.props, 'workspace.evaluation.estimatedDuration')}
             />
 
-            <div className="component-container">
+            <div className="mb-3">
               <Toolbar
-                buttonName="btn btn-block"
+                className="d-grid gap-1"
+                variant="btn"
                 toolbar="show-profile send-message"
                 actions={[
                   {
                     name: 'show-profile',
-                    className: 'btn-emphasis',
                     type: LINK_BUTTON,
                     label: trans('show_profile', {}, 'actions'),
                     target: route(get(this.props.workspaceEvaluation, 'user')),
                     primary: true,
+                    size: 'lg',
                     displayed: this.props.userId !== this.props.currentUserId
                   }, {
                     name: 'send-message',
@@ -118,7 +119,6 @@ class EvaluationUser extends Component {
                     displayed: this.props.userId !== this.props.currentUserId
                   }, {
                     name: 'download-participation-certificate',
-                    className: 'btn-emphasis',
                     type: URL_BUTTON,
                     label: trans('download_participation_certificate', {}, 'actions'),
                     target: ['apiv2_workspace_download_participation_certificate', {
@@ -128,10 +128,11 @@ class EvaluationUser extends Component {
                     displayed: [
                       baseConstants.EVALUATION_STATUS_COMPLETED,
                       baseConstants.EVALUATION_STATUS_PARTICIPATED
-                    ].includes(get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN))
+                    ].includes(get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)),
+                    size: 'lg'
                   }, {
                     name: 'download-success-certificate',
-                    className: 'btn-emphasis',
+                    size: 'lg',
                     type: URL_BUTTON,
                     label: trans('download_success_certificate', {}, 'actions'),
                     target: ['apiv2_workspace_download_success_certificate', {

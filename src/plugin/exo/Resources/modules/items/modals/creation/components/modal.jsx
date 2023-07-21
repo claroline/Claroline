@@ -32,8 +32,10 @@ class CreationModal extends Component {
     return (
       <Modal
         icon="fa fa-fw fa-plus"
+        title={trans('add_question_from_new', {}, 'quiz')}
         {...omit(this.props, 'create')}
         onEntering={this.loadAvailableTypes}
+        size="lg"
       >
         <GridSelection
           items={this.state.types.map(type => ({

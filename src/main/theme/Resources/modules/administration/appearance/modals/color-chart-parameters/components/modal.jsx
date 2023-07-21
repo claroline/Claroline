@@ -134,7 +134,9 @@ const ColorChartParametersModal = props => {
         />
 
         <Button
-          className="modal-btn btn"
+          className="modal-btn"
+          variant="btn"
+          size="lg"
           type={CALLBACK_BUTTON}
           primary={true}
           htmlType="submit"

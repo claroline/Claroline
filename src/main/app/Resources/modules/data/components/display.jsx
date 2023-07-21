@@ -81,9 +81,6 @@ class DataDisplay extends Component {
   }
 
   renderInput() {
-    /*{(!props.value && false !== props.value) &&
-    <span className="data-details-empty">{trans('empty_value')}</span>
-    }*/
     if (!this.state.loaded) {
       return trans('loading')
     }
@@ -116,7 +113,7 @@ class DataDisplay extends Component {
 
     if (!this.props.value && false !== this.props.value && 0 !== this.props.value) {
       return (
-        <span className="data-details-empty">{trans('empty_value')}</span>
+        <em className="text-secondary d-block">{trans('empty_value')}</em>
       )
     }
 

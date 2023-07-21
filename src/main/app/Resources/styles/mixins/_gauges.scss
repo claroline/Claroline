@@ -1,0 +1,45 @@
+
+// mixin
+@mixin gauge-variant($color) {
+    .gauge-text {
+        fill: $color;
+    }
+
+    .gauge-border-filled {
+        fill: $color;
+    }
+
+    .gauge-border-empty  {
+        fill: lighten($color, 50%);
+    }
+}
+
+@mixin liquid-gauge-variant($color, $liquid-opacity: .3) {
+    .gauge-liquid {
+        fill: $color;
+        fill-opacity: $liquid-opacity;
+    }
+
+    .gauge-liquid-text {
+        fill: $color;
+    }
+}
+
+@mixin score-gauge-variant($color) {
+    .gauge-value {
+        circle {
+            fill: lighten($color, 50%);
+        }
+    }
+
+    .gauge-total {
+        circle {
+            fill: $color;
+        }
+
+        .gauge-text {
+            font-weight: 900;
+            fill: lighten($color, 50%);
+        }
+    }
+}

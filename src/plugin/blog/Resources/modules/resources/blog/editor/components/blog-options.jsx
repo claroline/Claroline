@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 
 import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'

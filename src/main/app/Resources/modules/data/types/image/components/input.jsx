@@ -10,6 +10,7 @@ import {actions} from '#/main/app/api/store'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Alert} from '#/main/app/alert/components/alert'
+import classes from 'classnames'
 
 class ImageInputComponent extends PureComponent {
   constructor(props) {
@@ -91,24 +92,24 @@ class ImageInputComponent extends PureComponent {
     return (
       <fieldset className={this.props.className}>
         {this.state.notFound && !this.state.file &&
-          <Alert type="warning" className="component-container">
-            <span>
-              {trans('image_not_found')}
+          <Alert type="warning" className="mb-3">
+            {trans('image_not_found')}
 
+            <div className="btn-toolbar mt-3 justify-content-end">
               <Button
-                className="alert-link"
-                style={{textTransform: 'uppercase'}}
+                className="btn btn-warning"
+                size="sm"
                 type={CALLBACK_BUTTON}
                 callback={() => this.input.click()}
                 label={trans('replace_image', {}, 'actions')}
                 disabled={this.props.disabled}
               />
-            </span>
+            </div>
           </Alert>
         }
 
         {this.state.error && !this.state.file &&
-          <Alert type="danger" className="component-container">
+          <Alert type="danger" className="mb-3">
             {trans('image_error')}
           </Alert>
         }
@@ -118,7 +119,9 @@ class ImageInputComponent extends PureComponent {
             id={this.props.id}
             style={this.state.notFound ? {display: 'none'} : undefined}
             type="file"
-            className="form-control"
+            className={classes('form-control', this.props.className, {
+              [`form-control-${this.props.size}`]: !!this.props.size
+            })}
             accept="image"
             ref={input => this.input = input}
             onChange={this.onChange}
@@ -131,16 +134,13 @@ class ImageInputComponent extends PureComponent {
             <img
               className="img-thumbnail"
               src={asset(this.props.value)}
-              style={{
-                maxWidth: this.props.size[0] + 'px',
-                maxHeight: this.props.size[1] + 'px'
-              }}
             />
 
             <Button
               id={`${this.props.id}-delete`}
               type={CALLBACK_BUTTON}
-              className="btn"
+              variant="btn"
+              size="sm"
               icon="fa fa-fw fa-trash"
               label={trans('delete', {}, 'actions')}
               tooltip="left"

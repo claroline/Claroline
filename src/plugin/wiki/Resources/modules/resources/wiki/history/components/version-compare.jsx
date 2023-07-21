@@ -1,7 +1,10 @@
 import React from 'react'
-import {Row, Col} from 'react-bootstrap'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+
 import {trans} from '#/main/app/intl/translation'
 import {Version} from '#/plugin/wiki/resources/wiki/history/components/version'
 import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'

@@ -12,6 +12,7 @@ const restrictedByRoles = (tab) => get(tab, 'restrictions.enableRoles') || !isEm
 
 const TabForm = (props) =>
   <FormData
+    flush={true}
     level={props.level}
     name={props.name}
     sections={[

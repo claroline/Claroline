@@ -58,12 +58,12 @@ const TransferDetails = props => {
     >
       <div className="row">
         <div className="col-md-3">
-          <div className="panel panel-default" style={{marginTop: 20}}>
-            <div className="panel-heading">
+          <div className="card my-3">
+            <div className="card-header">
               <UserMicro {...get(props.transferFile, 'meta.creator', {})} link={true} />
             </div>
 
-            <ul className="list-group list-group-values">
+            <ul className="list-group list-group-flush list-group-values">
               <li className="list-group-item">
                 {trans('action')}
                 <span className="value">{transAction(props.transferFile.action)}</span>
@@ -93,7 +93,8 @@ const TransferDetails = props => {
           </div>
 
           <Toolbar
-            buttonName="btn btn-block"
+            className="d-grid gap-1"
+            variant="btn"
             actions={props.actions}
           />
         </div>

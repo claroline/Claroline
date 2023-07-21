@@ -32,7 +32,7 @@ const Chapter = props => {
     >
       <section className="current-chapter">
         {props.chapter.poster &&
-          <img className="chapter-poster img-responsive" alt={props.chapter.title} src={asset(props.chapter.poster)} />
+          <img className="chapter-poster img-fluid" alt={props.chapter.title} src={asset(props.chapter.poster)} />
         }
 
         <ContentTitle
@@ -43,8 +43,8 @@ const Chapter = props => {
           backAction={props.backAction}
         />
 
-        <div className="panel panel-default">
-          <ContentHtml className="panel-body">
+        <div className="card mb-3">
+          <ContentHtml className="card-body">
             {props.chapter.text ? props.chapter.text : ''}
           </ContentHtml>
         </div>

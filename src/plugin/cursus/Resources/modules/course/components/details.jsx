@@ -19,48 +19,46 @@ import {SessionParticipants} from '#/plugin/cursus/session/containers/participan
 
 const CourseDetails = (props) =>
   <Fragment>
-    <header className="row content-heading">
-      <ContentTabs
-        sections={[
-          {
-            name: 'about',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-circle-info',
-            label: props.activeSession ? trans('session_about', {}, 'cursus') : trans('about'),
-            target: props.path,
-            exact: true
-          }, {
-            name: 'sessions',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-calendar-week',
-            label: trans('sessions', {}, 'cursus'),
-            target: `${props.path}/sessions`,
-            displayed: !get(props.course, 'display.hideSessions')
-          }, {
-            name: 'pending',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-hourglass-half',
-            label: trans('En attente'),
-            displayed: hasPermission('register', props.course) && get(props.course, 'registration.pendingRegistrations'),
-            target: `${props.path}/pending`
-          }, {
-            name: 'participants',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-users',
-            label: trans('participants'),
-            target: `${props.path}/participants`,
-            displayed: hasPermission('register', props.course) || (props.activeSession && hasPermission('register', props.activeSession))
-          }, {
-            name: 'events',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-clock',
-            label: trans('session_events', {}, 'cursus'),
-            target: `${props.path}/events`,
-            displayed: !!props.activeSession
-          }
-        ]}
-      />
-    </header>
+    <ContentTabs
+      sections={[
+        {
+          name: 'about',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-circle-info',
+          label: props.activeSession ? trans('session_about', {}, 'cursus') : trans('about'),
+          target: props.path,
+          exact: true
+        }, {
+          name: 'sessions',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-calendar-week',
+          label: trans('sessions', {}, 'cursus'),
+          target: `${props.path}/sessions`,
+          displayed: !get(props.course, 'display.hideSessions')
+        }, {
+          name: 'pending',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-hourglass-half',
+          label: trans('En attente'),
+          displayed: hasPermission('register', props.course) && get(props.course, 'registration.pendingRegistrations'),
+          target: `${props.path}/pending`
+        }, {
+          name: 'participants',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-users',
+          label: trans('participants'),
+          target: `${props.path}/participants`,
+          displayed: hasPermission('register', props.course) || (props.activeSession && hasPermission('register', props.activeSession))
+        }, {
+          name: 'events',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-clock',
+          label: trans('session_events', {}, 'cursus'),
+          target: `${props.path}/events`,
+          displayed: !!props.activeSession
+        }
+      ]}
+    />
 
     <Routes
       path={props.path}

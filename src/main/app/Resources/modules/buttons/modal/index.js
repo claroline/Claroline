@@ -6,7 +6,7 @@
 import {registry} from '#/main/app/buttons/registry'
 
 // gets the button component
-import {ModalButton} from '#/main/app/buttons/modal/containers/button'
+import {ModalButton} from '#/main/app/buttons/modal/components/button'
 
 const MODAL_BUTTON = 'modal'
 

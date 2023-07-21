@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
 import tinycolor from 'tinycolor2'
-import Carousel from 'react-bootstrap/lib/Carousel'
+import Carousel from 'react-bootstrap/Carousel'
 
 import {asset} from '#/main/app/config/asset'
 import {trans} from '#/main/app/intl/translation'

@@ -1,0 +1,25 @@
+/*
+ * Path plugin vars.
+ */
+
+// Claroline & bootstrap variables
+@import "src/main/app/Resources/styles/variables";
+
+
+$path-summary-lvl-indent: map-get($spacers, 2); // indent children of a step in the summary
+
+
+// -
+// Step
+// ---
+
+$step-poster-border-radius:   $border-radius-lg !default;
+$step-resource-bg:            var(--#{$prefix}tertiary-bg) !default;
+
+$step-status-size:            10px; // size of the dot status
+// colors for each progression status
+$step-status-unseen-color:    var(--#{$prefix}secondary-color) !default;
+$step-status-seen-color:      $learning;
+$step-status-to_do-color:     $warning;
+$step-status-done-color:      $success;
+$step-status-to_review-color: $danger;

@@ -10,8 +10,7 @@ import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group
 // todo : adds min and max values for multiple: true
 
 /**
- * @param props
- * @constructor
+ * @deprecated
  */
 const ChoiceGroup = props => {
   if (!props.condensed && props.multiple) {

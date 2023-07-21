@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {asset} from '#/main/app/config'
 import {toKey} from '#/main/core/scaffolding/text'
@@ -30,7 +30,7 @@ const ResourceCard = (props) =>
     }
     title={
       <Fragment>
-        <span className={`label label-${constants.EVALUATION_STATUS_COLOR[props.data.status]} icon-with-text-right`}>
+        <span className={`badge rounded-pill text-bg-${constants.EVALUATION_STATUS_COLOR[props.data.status]} icon-with-text-right`}>
           {constants.EVALUATION_STATUSES_SHORT[props.data.status]}
         </span>
 

@@ -61,7 +61,9 @@ class UserMessageForm extends Component {
 
         <Button
           type={CALLBACK_BUTTON}
-          className="btn btn-block btn-save btn-emphasis"
+          variant="btn"
+          className="w-100 btn-save"
+          size="lg"
           disabled={!this.state.pendingChanges || !this.state.content}
           label={this.props.submitLabel}
           callback={() => {

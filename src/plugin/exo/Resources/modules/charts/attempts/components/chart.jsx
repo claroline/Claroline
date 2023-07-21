@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {schemeCategory20} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
@@ -73,12 +73,12 @@ class AttemptsChart extends Component {
       {
         id: 'total',
         label: trans('total'),
-        color: schemeCategory20[0]
+        color: schemeCategory20c[0]
       }
     ].concat(
       ...this.props.steps.map((step, stepIndex) => step.items.filter(item => isQuestionType(item.type)).map((item, idx) => ({
         id: item.id,
-        color: schemeCategory20[(idx + 1) % schemeCategory20.length],
+        color: schemeCategory20c[(idx + 1) % schemeCategory20c.length],
         label: item.title || trans(getDefinition(item.type).name, {}, 'question_types'),
         stepIndex: stepIndex,
         index: idx
@@ -87,14 +87,14 @@ class AttemptsChart extends Component {
 
     return (
       <Fragment>
-        <div className="panel panel-default panel-analytics">
-          <div className="panel-heading">
-            <h2 className="panel-title">
+        <div className="card mb-3 panel-analytics">
+          <div className="card-header">
+            <h2 className="card-title">
               {trans(this.props.userId ? 'attempts_chart_user' : 'attempts_chart_all', {}, 'quiz')}
             </h2>
           </div>
 
-          <div className="panel-body">
+          <div className="card-body">
             <LineChart
               data={chartData
                 .filter(data => -1 !== this.state.display.indexOf(data.id))

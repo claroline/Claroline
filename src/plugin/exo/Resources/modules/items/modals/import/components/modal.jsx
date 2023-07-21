@@ -16,7 +16,7 @@ const ImportModal = props => {
       {...omit(props, 'name', 'selected', 'selectAction', 'resetSelect')}
       icon="fa fa-fw fa-upload"
       className="data-picker-modal"
-      bsSize="lg"
+      size="xl"
       title={trans('import')}
       onExiting={props.resetSelect}
     >
@@ -27,7 +27,9 @@ const ImportModal = props => {
       <Button
         label={trans('import', {}, 'actions')}
         {...selectAction}
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         primary={true}
         disabled={0 === props.selected.length}
         onClick={props.fadeModal}

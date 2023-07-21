@@ -22,6 +22,7 @@ const ParametersModal = props =>
     subtitle={get(props.workspace, 'name')}
     onEntering={() => props.loadWorkspace(props.workspaceId)}
     onExiting={() => props.reset()}
+    size="lg"
   >
     {isEmpty(props.workspace) &&
       <ContentLoader
@@ -31,9 +32,11 @@ const ParametersModal = props =>
     }
 
     {!isEmpty(props.workspace) &&
-      <WorkspaceForm name={selectors.STORE_NAME}>
+      <WorkspaceForm name={selectors.STORE_NAME} flush={true}>
         <Button
-          className="modal-btn btn"
+          className="modal-btn"
+          variant="btn"
+          size="lg"
           type={CALLBACK_BUTTON}
           primary={true}
           label={trans('save', {}, 'actions')}

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {ContentHtml} from '#/main/app/content/components/html'
+import {Alert} from '#/main/app/components/alert'
 
 const ContentRestriction = props => {
   let title, help
@@ -15,23 +15,19 @@ const ContentRestriction = props => {
   }
 
   return (
-    <div className={classes('access-restriction alert alert-detailed', {
-      'alert-success': !props.failed,
-      'alert-warning': props.failed && props.onlyWarn,
-      'alert-danger': props.failed && !props.onlyWarn
-    })}>
-      <span className={classes('alert-icon', props.icon)} />
+    <Alert
+      type={classes({
+        'success': !props.failed,
+        'warning': props.failed && props.onlyWarn,
+        'danger': props.failed && !props.onlyWarn
+      })}
+      icon={props.icon}
+      title={title}
+    >
+      {help}
 
-      <div className="alert-content">
-        <h5 className="alert-title h4">{title}</h5>
-
-        {help &&
-          <ContentHtml className="alert-text">{help}</ContentHtml>
-        }
-
-        {props.failed && props.children}
-      </div>
-    </div>
+      {props.failed && props.children}
+    </Alert>
   )
 }
 

@@ -11,45 +11,11 @@ import {FileDropContext} from '#/main/app/overlays/dnd/file-drop-context'
 import {getType} from '#/main/app/data/types/file/utils'
 import {FileThumbnail} from '#/main/app/data/types/file/components/thumbnail'
 
-// todo handle unzippable
-
-function getEventFiles(e) {
-  let files = []
-  if (e.dataTransfer.items) {
-    // Use DataTransferItemList interface to access the file(s)
-    for (let i = 0; i < e.dataTransfer.items.length; i++) {
-      // If dropped items aren't files, reject them
-      if (e.dataTransfer.items[i].kind === 'file') {
-        files.push(
-          e.dataTransfer.items[i].getAsFile()
-        )
-      }
-    }
-  } else {
-    // Use DataTransfer interface to access the file(s)
-    files = e.dataTransfer.files
-  }
-
-  return files
-}
-
 class FileComponent extends Component {
   constructor(props, context) {
     super(props, context)
 
-    this.onFileDrop = this.onFileDrop.bind(this)
     this.onFileSelect = this.onFileSelect.bind(this)
-  }
-
-  onFileDrop(e) {
-    e.preventDefault() // prevent file from being opened
-
-    // grab files from event to upload them
-    const files = getEventFiles(e)
-    if (!isEmpty(files)) {
-      // upload dropped files
-      this.onChange(files)
-    }
   }
 
   onFileSelect() {
@@ -78,43 +44,19 @@ class FileComponent extends Component {
 
   render() {
     return (
-      <div
-        className={classes('file-control', this.props.className, {
-          'highlight': this.context,
-          'disabled': this.props.disabled
-        })}
-        onDrop={this.onFileDrop}
-      >
-        {this.context &&
-          <div className="files-drop-placeholder">
-            Déposez vos fichiers ici
-          </div>
-        }
-
+      <div className={classes('file-control', this.props.className)}>
         <input
           id={this.props.id}
           type="file"
-          className="form-control"
-          disabled={this.props.disabled}
-          multiple={this.props.multiple}
+          className={classes('form-control', this.props.className, {
+            [`form-control-${this.props.size}`]: !!this.props.size
+          })}
           accept={this.props.types.join(',')}
+          multiple={this.props.multiple}
           ref={input => this.input = input}
           onChange={this.onFileSelect}
+          disabled={this.props.disabled}
         />
-
-        <button
-          type="button"
-          className="files-drop-container"
-          onClick={() => this.input.click()}
-        >
-          <div className="files-drop">
-            <span className="files-drop-icon fa fa-file-upload" />
-            <div className="files-drop-label">
-              Choisir un fichier
-              <span className="files-drop-info">Vous pouvez aussi glisser/déposer un fichier ici</span>
-            </div>
-          </div>
-        </button>
 
         {this.props.value &&
           <div className="file-thumbnails">

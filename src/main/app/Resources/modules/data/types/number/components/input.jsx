@@ -69,7 +69,7 @@ class NumberInput extends PureComponent {
             {...fieldProps}
           />
 
-          <span className="input-group-addon">
+          <span className="input-group-text">
             {this.props.unit}
           </span>
         </div>
@@ -80,7 +80,7 @@ class NumberInput extends PureComponent {
       <NumberField
         {...fieldProps}
         className={classes(this.props.className, {
-          [`input-${this.props.size}`]: !!this.props.size
+          [`form-control-${this.props.size}`]: !!this.props.size
         })}
       />
     )

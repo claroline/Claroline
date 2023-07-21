@@ -1,10 +1,9 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-// load from legacy otherwise webpack breaks
-import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf'
-import PDFJSWorker from 'pdfjs-dist/legacy/build/pdf.worker.entry'
-import {EventBus, PDFLinkService, PDFSinglePageViewer} from 'pdfjs-dist/legacy/web/pdf_viewer'
+import * as pdfjsLib from 'pdfjs-dist/build/pdf'
+import PDFJSWorker from 'pdfjs-dist/build/pdf.worker.entry'
+import {EventBus, PDFLinkService, PDFSinglePageViewer} from 'pdfjs-dist/web/pdf_viewer'
 pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJSWorker
 
 import {url} from '#/main/app/api'

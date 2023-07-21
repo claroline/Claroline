@@ -52,7 +52,7 @@ const ProfileMain = props =>
 
         <Button
           type={CALLBACK_BUTTON}
-          className="btn btn-emphasis btn-block btn-add-facet"
+          className="btn btn-outline-primary w-100 btn-add-facet"
           icon="fa fa-fw fa-plus"
           label={trans('profile_facet_add')}
           callback={props.addFacet}

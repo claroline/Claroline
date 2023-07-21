@@ -9,7 +9,7 @@ const MenuSection = props =>
   <nav className={classes('app-menu-section', props.className, {
     opened: props.opened
   })}>
-    <h2 className="h4 app-menu-section-title">
+    <h2 className="h5 app-menu-section-title">
       <Button
         className="app-menu-section-toggle"
         type={CALLBACK_BUTTON}

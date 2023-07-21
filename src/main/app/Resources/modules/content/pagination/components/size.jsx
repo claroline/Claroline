@@ -8,8 +8,8 @@ import {MenuButton} from '#/main/app/buttons/menu/components/button'
 const PaginationSize = props =>
   <MenuButton
     id="page-sizes-dropdown"
-    className="btn btn-link"
     containerClassName="results-per-page"
+    variant="btn"
     menu={{
       position: 'top',
       align: 'right',

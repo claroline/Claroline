@@ -21,7 +21,7 @@ class EmailInput extends PureComponent {
         id={this.props.id}
         type="email"
         className={classes('form-control', this.props.className, {
-          [`input-${this.props.size}`]: !!this.props.size
+          [`form-control-${this.props.size}`]: !!this.props.size
         })}
         autoComplete={this.props.autoComplete || 'email'}
         value={this.props.value || ''}

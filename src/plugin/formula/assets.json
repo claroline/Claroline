@@ -6,7 +6,7 @@
   },
   "styles": {
     "entry": {
-      "formula-editor": "index.less"
+      "formula-editor": "editor.scss"
     }
   }
 }

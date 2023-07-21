@@ -14,8 +14,8 @@ const ShortcutMenu = props =>
     title={trans('shortcut', {}, 'resource')}
   >
     <Toolbar
-      className="list-group"
-      buttonName="list-group-item"
+      className="list-group list-group-flush"
+      buttonName="list-group-item list-group-item-action"
       actions={[
         {
           name: 'open',

@@ -58,7 +58,7 @@ const Field = props => {
       <div className="schema-field-meta">
         <strong>
           {props.name}
-          <small className="text-muted">
+          <small className="text-secondary">
             ({types.map(type => {
               if (props.isArray) {
                 return trans('array_of', {type: trans(type, {}, 'data')}, 'data')

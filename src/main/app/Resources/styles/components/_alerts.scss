@@ -1,0 +1,127 @@
+/*
+ * Alerts.
+ */
+
+.alert {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    text-align: justify;
+    padding: 0;
+    overflow: hidden; // for border-radius
+
+    .alert-icon {
+        padding: var(--#{$prefix}alert-padding-y) var(--#{$prefix}alert-padding-x);
+        flex-shrink: 0;
+    }
+
+    .alert-message {
+        flex: 1;
+        padding: var(--#{$prefix}alert-padding-y) var(--#{$prefix}alert-padding-x);
+        color: $flying-alert-color;
+        background: $flying-alert-bg;
+    }
+
+    .alert-heading {
+        font-size: $lead-font-size;
+    }
+}
+
+
+// -
+// Flying alerts
+// ---
+
+.flying-alerts {
+    position: fixed;
+    z-index: $zindex-flying-alerts;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    // position
+    // like this, the gape for top bar still appear in fullscreen mode
+    // TODO : find a way to remove it
+    top: calc($grid-gutter-width + $top-bar-height);
+    right: $grid-gutter-width;
+}
+
+.flying-alert {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: $flying-alert-width;
+
+    @include border-radius($flying-alert-border-radius);
+    @include box-shadow($flying-alert-box-shadow);
+
+    .flying-alert-icon {
+        font-size: $flying-alert-icon-size;
+        padding: $flying-alert-padding;
+        flex-shrink: 0;
+    }
+
+    .flying-alert-message {
+        flex: 1;
+        font-size: $font-size-sm;
+        padding: $flying-alert-padding;
+        color: $flying-alert-color;
+        background: $flying-alert-bg;
+    }
+
+    .flying-alert-title {
+        display: block;
+        font-family: $headings-font-family;
+        font-size: $font-size-base;
+        font-weight: $headings-font-weight;
+    }
+
+    &.removable {
+        cursor: pointer;
+    }
+}
+
+// variants
+.flying-alert-success {
+    @include flying-alert-variant($flying-alert-success-color, $flying-alert-success-bg, $flying-alert-success-border);
+}
+.flying-alert-warning,
+.flying-alert-unauthorized,
+.flying-alert-forbidden {
+    @include flying-alert-variant($flying-alert-warning-color, $flying-alert-warning-bg, $flying-alert-warning-border);
+}
+.flying-alert-error {
+    @include flying-alert-variant($flying-alert-error-color, $flying-alert-error-bg, $flying-alert-error-border);
+}
+.flying-alert-info {
+    @include flying-alert-variant($flying-alert-info-color, $flying-alert-info-bg, $flying-alert-info-border);
+}
+.flying-alert-pending {
+    @include flying-alert-variant($flying-alert-pending-color, $flying-alert-pending-bg, $flying-alert-pending-border);
+
+    &.flying-alert-save,
+    &.flying-alert-create,
+    &.flying-alert-update,
+    &.flying-alert-send {
+        @include flying-alert-variant($flying-alert-primary-color, $flying-alert-primary-bg, $flying-alert-primary-border);
+    }
+}
+
+// pulsating pending alert
+.flying-alert-pending {
+    animation-name: pulse_animation;
+    animation-duration: 1500ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-direction: alternate;
+
+    // disabled animation on hover
+    &:hover {
+        animation: none !important;
+    }
+}
+
+@keyframes pulse_animation {
+    0% { opacity: 1; }
+    100% { opacity: .25; }
+}

@@ -19,25 +19,26 @@ import {LastMessages} from '#/plugin/forum/resources/forum/overview/components/l
 import {ForumInfo} from '#/plugin/forum/resources/forum/overview/components/forum-info'
 
 const OverviewComponent = props =>
-  <section className="resource-section resource-overview">
+  <section className="resource-section resource-overview content-lg mt-3">
     <h2 className="sr-only">{trans('resource_overview')}</h2>
     <div className="row">
       <div className="user-column col-md-4">
         <section className="user-progression">
           <h3 className="h2">{trans('my_participation', {}, 'forum')}</h3>
-          <div className="panel panel-default">
-            <div className="panel-body text-center">
+          <div className="card">
+            <div className="card-body text-center">
               <CountGauge
                 type="user"
+                className="mb-3"
                 value={props.myMessages}
                 displayValue={(value) => number(value, true)}
                 width={140}
                 height={140}
               />
 
-              <h4 className="user-progression-status">
+              <div className="user-progression-status lead">
                 {trans('my_messages', {}, 'forum')}
-              </h4>
+              </div>
             </div>
           </div>
         </section>
@@ -48,8 +49,9 @@ const OverviewComponent = props =>
             label={trans('see_subjects', {}, 'forum')}
             type={LINK_BUTTON}
             target={`${props.path}/subjects`}
-            className="btn btn-block btn-emphasis"
+            className="btn btn-primary w-100"
             primary={true}
+            size="lg"
           />
 
           {!props.bannedUser &&
@@ -57,7 +59,7 @@ const OverviewComponent = props =>
               label={trans('create_subject', {}, 'forum')}
               type={LINK_BUTTON}
               target={`${props.path}/subjects/form`}
-              className="btn btn-block"
+              className="btn btn-outline-primary w-100 mt-1"
             />
           }
         </section>

@@ -23,7 +23,7 @@ const SearchInput = props => {
   return (
     <input
       type="text"
-      className="data-filter form-control input-sm"
+      className="data-filter form-control form-control-sm"
       value={props.currentSearch || ''}
       placeholder={props.placeholder}
       disabled={props.disabled}

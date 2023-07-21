@@ -16,7 +16,7 @@ import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 const ResourcesButton = props =>
   <Button
     type={MODAL_BUTTON}
-    className="btn btn-block"
+    className="btn btn-outline-primary w-100 mt-2"
     icon="fa fa-fw fa-plus"
     label={trans('add_resources', {}, 'resource')}
     modal={[MODAL_RESOURCES, {
@@ -29,9 +29,6 @@ const ResourcesButton = props =>
         callback: () => props.onChange(selected)
       })
     }]}
-    style={{
-      marginTop: '10px' // todo
-    }}
     size={props.size}
     disabled={props.disabled}
   />

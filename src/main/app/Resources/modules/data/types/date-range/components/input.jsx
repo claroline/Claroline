@@ -28,7 +28,7 @@ class DateRangeInput extends Component {
   render() {
     return (
       <div className={classes('row', this.props.className)}>
-        <div className={classes('form-group col-md-6 col-xs-12', {
+        <div className={classes('form-group mb-3 col-md-6 col-xs-12', {
           'has-error'  : isArray(this.props.error) && get(this.props, 'error[0]') && this.props.validating,
           'has-warning': isArray(this.props.error) && get(this.props, 'error[0]') && !this.props.validating
         })}>
@@ -50,7 +50,7 @@ class DateRangeInput extends Component {
           }
         </div>
 
-        <div className={classes('form-group col-md-6 col-xs-12', {
+        <div className={classes('form-group mb-3 col-md-6 col-xs-12', {
           'has-error'  : isArray(this.props.error) && get(this.props, 'error[1]') && this.props.validating,
           'has-warning': isArray(this.props.error) && get(this.props, 'error[1]') && !this.props.validating
         })}>

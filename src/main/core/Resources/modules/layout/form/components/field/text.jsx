@@ -10,7 +10,7 @@ const Text = props => {
       <textarea
         id={props.id}
         key={props.id}
-        className={classes('form-control', {[`input-${props.size}`]: !!props.size})}
+        className={classes('form-control', {[`form-control-${props.size}`]: !!props.size})}
         value={props.value || ''}
         disabled={props.disabled}
         onChange={(e) => props.onChange(e.target.value)}
@@ -24,7 +24,7 @@ const Text = props => {
       id={props.id}
       key={props.id}
       type="text"
-      className={classes('form-control', {[`input-${props.size}`]: !!props.size})}
+      className={classes('form-control', {[`form-control-${props.size}`]: !!props.size})}
       value={props.value || ''}
       disabled={props.disabled}
       onChange={(e) => props.onChange(e.target.value)}

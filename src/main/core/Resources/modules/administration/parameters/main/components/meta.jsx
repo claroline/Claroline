@@ -23,7 +23,8 @@ const Meta = (props) =>
     cancel={{
       type: LINK_BUTTON,
       target: props.path,
-      exact: true
+      exact: true,
+      active: false
     }}
     locked={props.lockedParameters}
     sections={[

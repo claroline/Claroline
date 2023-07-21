@@ -34,7 +34,7 @@ class DocumentationModal extends Component {
       <Modal
         {...omit(this.props, 'open', 'loadList', 'reset', 'resetFilters', 'tags', 'current')}
         className="data-picker-modal"
-        bsSize="lg"
+        size="xl"
         icon="fa fa-fw fa-question-circle"
         title={trans('documentation', {}, 'documentation')}
         subtitle={get(this.props.current, 'resourceNode.name')}

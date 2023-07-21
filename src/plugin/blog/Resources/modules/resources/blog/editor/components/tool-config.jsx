@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import ButtonGroup from 'react-bootstrap/lib/ButtonGroup'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import {actions as optionsActions} from '#/plugin/blog/resources/blog/editor/store'
 
 const ToolConfigComponent = props =>

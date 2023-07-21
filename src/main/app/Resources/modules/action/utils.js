@@ -26,7 +26,7 @@ function createActionDefinition(action) {
       question: action.confirm.message,
       dangerous: action.dangerous,
 
-      // forward original action to the confirm modal
+      // forward original action to the confirmation modal
       confirmAction: Object.assign({}, omit(action, 'confirm'), {
         id: actionDef.id ? `${actionDef.id}-confirm` : undefined,
         label: action.confirm.button || action.label

@@ -5,7 +5,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
-import {ModalButton} from '#/main/app/buttons/modal/containers/button'
+import {ModalButton} from '#/main/app/buttons/modal'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
@@ -97,7 +97,7 @@ const ResourceInput = props => {
       size={props.size}
     >
       <ModalButton
-        className="btn btn-block"
+        className="btn btn-outline-primary w-100 mt-2"
         modal={[MODAL_RESOURCES, {
           title: props.picker.title,
           current: props.picker.current,
@@ -109,9 +109,6 @@ const ResourceInput = props => {
             callback: () => props.onChange(selected[0])
           })
         }]}
-        style={{
-          marginTop: '10px' // todo
-        }}
         size={props.size}
         disabled={props.disabled}
       >

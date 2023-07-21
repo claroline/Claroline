@@ -16,7 +16,7 @@ const Checkboxes = props => {
   const choiceValues = Object.keys(props.choices)
   if (0 === choiceValues.length) {
     return (
-      <em className="text-muted">{trans('no_choice')}</em>
+      <em className="text-secondary d-block">{trans('no_choice')}</em>
     )
   }
 

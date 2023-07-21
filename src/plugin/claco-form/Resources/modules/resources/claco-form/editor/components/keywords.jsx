@@ -95,7 +95,7 @@ const EditorKeywords = props =>
 
     <Button
       type={MODAL_BUTTON}
-      className="btn btn-block btn-emphasis component-container"
+      className="btn btn-primary w-100 mb-3"
       label={trans('create_a_keyword', {}, 'clacoform')}
       modal={[MODAL_KEYWORD_FORM, {
         clacoFormId: props.clacoForm.id,
