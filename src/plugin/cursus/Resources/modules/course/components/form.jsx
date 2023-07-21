@@ -1,6 +1,5 @@
-import React, {Fragment, useState} from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {useHistory} from 'react-router-dom'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router/components/routes'
