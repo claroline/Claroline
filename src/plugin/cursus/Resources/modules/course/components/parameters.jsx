@@ -11,6 +11,7 @@ import {route} from '#/plugin/cursus/routing'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 
 const CourseParameters = (props) =>
+  console.log(props) ||
   <FormData
     name={props.name}
     buttons={true}
@@ -267,6 +268,8 @@ const CourseParameters = (props) =>
 CourseParameters.propTypes = {
   path: T.string.isRequired,
   name: T.string.isRequired,
+  history: T.object.isRequired,
+  save: T.func.isRequired,
 
   // from store
   isNew: T.bool.isRequired,

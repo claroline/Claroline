@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useHistory} from 'react-router-dom'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router/components/routes'
@@ -13,6 +14,7 @@ import {route} from '#/plugin/cursus/routing'
 
 const CourseForm = (props) => {
   const basePath = props.isNew ? props.path + '/new' : route(props.course)+'/edit'
+  const history = useHistory()
 
   return (
     <Fragment>
@@ -43,7 +45,7 @@ const CourseForm = (props) => {
           {
             path: '/',
             exact: true,
-            render: () => <CourseParameters {...props} />
+            render: () => <CourseParameters {...props} history={history} />
           }, {
             path: '/registration',
             render: () => <CourseRegistration {...props} />
@@ -57,6 +59,7 @@ const CourseForm = (props) => {
 CourseForm.propTypes = {
   path: T.string.isRequired,
   name: T.string.isRequired,
+  history: T.object.isRequired,
 
   // from store
   isNew: T.bool.isRequired,

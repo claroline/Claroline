@@ -36,7 +36,6 @@ const Course = (props) => {
         title: `${trans('trainings', {}, 'tools')} - ${props.course.name}`,
         description: props.course.description
       }}
-      history={props.history}
       path={[
         {
           type: LINK_BUTTON,
