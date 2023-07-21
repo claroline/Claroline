@@ -64,7 +64,7 @@ class Section extends Component {
               width: '40%'
             }}
           >
-            <span className="input-group-addon">
+            <span className="input-group-text">
               <b>{`${trans('start', {}, 'audio')} (${trans('second')})`}</b>
             </span>
             <input
@@ -82,7 +82,7 @@ class Section extends Component {
               width: '40%'
             }}
           >
-            <span className="input-group-addon">
+            <span className="input-group-text">
               <b>{`${trans('end', {}, 'audio')} (${trans('second')})`}</b>
             </span>
             <input
@@ -158,7 +158,7 @@ class Section extends Component {
               width: '40%'
             }}
           >
-            <span className="input-group-addon">
+            <span className="input-group-text">
               <b>{trans('start_tolerance', {}, 'audio')}</b>
             </span>
             <input
@@ -185,7 +185,7 @@ class Section extends Component {
               width: '40%'
             }}
           >
-            <span className="input-group-addon">
+            <span className="input-group-text">
               <b>{trans('end_tolerance', {}, 'audio')}</b>
             </span>
             <input

@@ -20,7 +20,7 @@ const CompetenciesPickerModal = props => {
       {...omit(props, 'confirmText', 'selected', 'selectAction', 'resetSelect')}
       icon="fa fa-fw fa-atom"
       className="data-picker-modal"
-      bsSize="lg"
+      size="xl"
       onExiting={props.resetSelect}
     >
       <ListData
@@ -49,7 +49,9 @@ const CompetenciesPickerModal = props => {
       <Button
         label={props.confirmText}
         {...selectAction}
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         primary={true}
         disabled={0 === props.selected.length}
         onClick={props.fadeModal}

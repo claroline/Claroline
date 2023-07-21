@@ -2,7 +2,8 @@
     "notifications": "Notifications",
     "all_notifications": "Show all my notifications",
     "empty_unread": "You don't have any new notifications",
-    "more_unread": "+ %count% other new notifications",
+    "more_unread": "{0, 1} + %count% other new notification|[2,Inf[ + %count% other new notifications",
+    "count_unread": "{0, 1} %count% new notification|[2,Inf[ %count% new notifications",
     "done_at": "at %date%",
     "disable_notifications": "Stop following this resource",
     "enable_notifications": "Follow this resource"

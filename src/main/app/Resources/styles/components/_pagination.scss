@@ -1,0 +1,38 @@
+.pagination-container {
+    display: flex;
+
+    .pagination-condensed + .results-per-page {
+        margin-left: 10px;
+    }
+}
+
+.results-per-page {
+    .dropdown-menu {
+        min-width: 100%;
+        text-align: right;
+    }
+}
+
+.pagination-condensed {
+    flex: 1 0 auto;
+    display: inline-flex;
+
+    .btn {
+        &.btn-next {
+            font-weight: $font-weight-bolder;
+        }
+    }
+
+    .dropup {
+        flex: 1 0 auto;
+    }
+
+    // customize page selector dropdown
+    .dropdown-menu {
+        min-width: 100%;
+
+        // fix height if there is lots of pages
+        max-height: 220px;
+        overflow: auto;
+    }
+}

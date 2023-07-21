@@ -1,0 +1,19 @@
+
+@import "variables";
+@import "mixins";
+
+@import "components/login";
+@import "components/reset-password";
+@import "components/sso";
+
+// adds a bg on login, reset-password, registration
+.authentication-page {
+  background-color: $body-bg; // fallback to body color if theme has no image
+
+  // styles for bg image
+  background-image: url($login-bg-image);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+}

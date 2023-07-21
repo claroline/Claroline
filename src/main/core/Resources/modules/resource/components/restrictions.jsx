@@ -1,5 +1,6 @@
 import React, {Component}from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 import isUndefined from 'lodash/isUndefined'
 
 import {trans, displayDate} from '#/main/app/intl'
@@ -7,9 +8,10 @@ import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {PasswordInput} from '#/main/app/data/types/password/components/input'
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {ContentHelp} from '#/main/app/content/components/help'
 import {ContentRestriction} from '#/main/app/content/components/restriction'
 import {MODAL_LOGIN} from '#/main/app/modals/login'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 class ResourceRestrictions extends Component {
   constructor(props) {
@@ -35,9 +37,15 @@ class ResourceRestrictions extends Component {
 
   render() {
     return (
-      <div className="access-restrictions">
-        <h2>{trans('restricted_access')}</h2>
-        <p>{trans('restricted_access_message', {}, 'resource')}</p>
+      <div className="content-md mt-3">
+        {get(this.props.resourceNode, 'meta.description') &&
+          <div className="card mb-3">
+            <ContentHtml className="card-body">{get(this.props.resourceNode, 'meta.description')}</ContentHtml>
+          </div>
+        }
+
+        <h2 className="h3 text-center">{trans('restricted_access')}</h2>
+        <p className="lead text-center">{trans('restricted_access_message', {}, 'resource')}</p>
 
         <ContentRestriction
           icon="fa fa-fw fa-id-badge"
@@ -52,14 +60,15 @@ class ResourceRestrictions extends Component {
           }}
         >
           {!this.props.authenticated &&
-            <Button
-              style={{marginTop: 20}}
-              className="btn btn-block btn-emphasis"
-              type={MODAL_BUTTON}
-              label={trans('login', {}, 'actions')}
-              modal={[MODAL_LOGIN]}
-              primary={true}
-            />
+            <div className="btn-toolbar gap-1 mt-3 justify-content-end">
+              <Button
+                className="btn btn-warning"
+                type={MODAL_BUTTON}
+                label={trans('login', {}, 'actions')}
+                modal={[MODAL_LOGIN]}
+                primary={true}
+              />
+            </div>
           }
         </ContentRestriction>
 
@@ -111,7 +120,7 @@ class ResourceRestrictions extends Component {
             }}
           >
             {this.props.errors.locked && !(this.props.errors.noRights || this.props.errors.notPublished || this.props.errors.deleted || this.props.errors.notStarted || this.props.errors.ended) &&
-              <div style={{marginTop: 20}}>
+              <div className="mt-3">
                 <FormGroup
                   id="access-code"
                   label={trans('access_code')}
@@ -125,13 +134,11 @@ class ResourceRestrictions extends Component {
                 </FormGroup>
 
                 <Button
-                  className="btn btn-block btn-emphasis"
+                  className="btn btn-warning w-100"
                   type={CALLBACK_BUTTON}
-                  icon="fa fa-fw fa-sign-in-alt"
                   disabled={!this.state.codeAccess}
-                  label={trans('open-resource', {}, 'actions')}
+                  label={trans('unlock', {}, 'actions')}
                   callback={this.submitCodeAccess}
-                  primary={true}
                 />
               </div>
             }
@@ -154,20 +161,22 @@ class ResourceRestrictions extends Component {
         }
 
         {this.props.managed &&
-          <Button
-            className="btn btn-block btn-emphasis"
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-sign-in-alt"
-            label={trans('open-resource', {}, 'actions')}
-            callback={this.props.dismiss}
-            primary={true}
-          />
-        }
+          <>
+            <hr/>
+            <p className="text-secondary">
+              {trans('restrictions.dismiss_help', {}, 'resource')}
+            </p>
 
-        {this.props.managed &&
-          <ContentHelp
-            help={trans('restrictions.dismiss_help', {}, 'resource')}
-          />
+            <Button
+              className="w-100 mb-3"
+              variant="btn"
+              size="lg"
+              type={CALLBACK_BUTTON}
+              label={trans('open-resource', {}, 'actions')}
+              callback={this.props.dismiss}
+              primary={true}
+            />
+          </>
         }
       </div>
     )
@@ -176,6 +185,9 @@ class ResourceRestrictions extends Component {
 
 ResourceRestrictions.propTypes = {
   managed: T.bool,
+  resourceNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ),
   errors: T.shape({
     noRights: T.bool.isRequired,
     deleted: T.bool.isRequired,

@@ -453,6 +453,7 @@ const WorkspaceFormComponent = (props) =>
   </FormData>
 
 WorkspaceFormComponent.propTypes = {
+  flush: T.bool,
   tools: T.array,
   root: T.object,
   children: T.any,

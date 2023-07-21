@@ -5,6 +5,9 @@ import {HtmlInput} from '#/main/app/data/types/html/components/input'
 import {DataGroup as DataGroupTypes, DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {FormGroup} from '#/main/app/content/form/components/group'
 
+/**
+ * @deprecated
+ */
 const HtmlGroup = props =>
   <FormGroup {...props}>
     <HtmlInput {...props} />

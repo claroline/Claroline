@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 // TODO : use custom components instead
-import Tab from 'react-bootstrap/lib/Tab'
-import Tabs from 'react-bootstrap/lib/Tabs'
+import Tab from 'react-bootstrap/Tab'
+import Tabs from 'react-bootstrap/Tabs'
 
 import {param} from '#/main/app/config'
 import {trans}  from '#/main/app/intl/translation'
@@ -48,7 +48,7 @@ const SimpleTab = props =>
 
     {props.customRules &&
       <p className="resource-custom-rules-info">
-        <span className="fa fa-asterisk" />
+        <span className="fa fa-asterisk icon-with-text-right" />
         {trans('resource_rights_custom_help', {}, 'resource')}
       </p>
     }

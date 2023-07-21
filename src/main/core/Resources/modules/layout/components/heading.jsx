@@ -14,7 +14,6 @@ const Heading = props =>
       className: classes(
         props.className,
         props.displayLevel && `h${props.displayLevel}`,
-        props.first && 'h-first',
         !props.displayed && 'sr-only',
         `text-${props.align}`
       )

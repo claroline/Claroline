@@ -73,7 +73,8 @@ const TeamShow = (props) => {
 
       {!props.hasTeam && !full && get(props.team, 'registration.selfRegistration') &&
         <Button
-          className="btn btn-emphasis btn-block component-container"
+          className="btn btn-outline-primary w-100 mb-3"
+          size="lg"
           type={CALLBACK_BUTTON}
           label={trans('self_register', {}, 'actions')}
           callback={() => props.selfRegister(props.team)}
@@ -83,7 +84,8 @@ const TeamShow = (props) => {
 
       {props.hasTeam && get(props.team, 'registration.selfUnregistration') &&
         <Button
-          className="btn btn-emphasis btn-block component-container"
+          className="btn btn-outline-primary w-100 mb-3"
+          size="lg"
           type={CALLBACK_BUTTON}
           label={trans('self_unregister', {}, 'actions')}
           callback={() => props.selfUnregister(props.team)}

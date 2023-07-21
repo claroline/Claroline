@@ -17,13 +17,16 @@ const ParametersModal = props =>
     icon="fa fa-fw fa-cog"
     title={trans('parameters')}
     onEntering={() => props.loadContent(props.content)}
+    size="lg"
   >
     {!isEmpty(props.formData) &&
       <WidgetContentForm level={5} name={selectors.STORE_NAME} currentContext={props.currentContext} />
     }
 
     <Button
-      className="modal-btn btn"
+      className="modal-btn"
+      variant="btn"
+      size="lg"
       type={CALLBACK_BUTTON}
       primary={true}
       disabled={!props.saveEnabled}

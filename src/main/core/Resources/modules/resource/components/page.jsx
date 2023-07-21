@@ -106,6 +106,7 @@ const ResourcePage = (props) => {
     >
       {!isEmpty(props.accessErrors) &&
         <ResourceRestrictions
+          resourceNode={props.resourceNode}
           errors={props.accessErrors}
           dismiss={props.dismissRestrictions}
           managed={props.managed}

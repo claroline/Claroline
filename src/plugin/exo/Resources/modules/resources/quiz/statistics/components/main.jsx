@@ -12,29 +12,27 @@ import {Docimology} from '#/plugin/exo/resources/quiz/statistics/containers/doci
 
 const StatisticsMain = props =>
   <Fragment>
-    <header className="row content-heading">
-      <ContentTabs
-        sections={[
-          {
-            name: 'answers',
-            type: LINK_BUTTON,
-            label: trans('Réponses des utilisateurs'),
-            target: `${props.path}/statistics/answers`,
-            exact: true
-          }, {
-            name: 'attempts',
-            type: LINK_BUTTON,
-            label: trans('Evolution des tentatives', {}, 'quiz'),
-            target: `${props.path}/statistics/attempts`
-          }, {
-            name: 'docimology',
-            type: LINK_BUTTON,
-            label: trans('Docimologie', {}, 'quiz'),
-            target: `${props.path}/statistics/docimology`
-          }
-        ]}
-      />
-    </header>
+    <ContentTabs
+      sections={[
+        {
+          name: 'answers',
+          type: LINK_BUTTON,
+          label: trans('Réponses des utilisateurs'),
+          target: `${props.path}/statistics/answers`,
+          exact: true
+        }, {
+          name: 'attempts',
+          type: LINK_BUTTON,
+          label: trans('Evolution des tentatives', {}, 'quiz'),
+          target: `${props.path}/statistics/attempts`
+        }, {
+          name: 'docimology',
+          type: LINK_BUTTON,
+          label: trans('Docimologie', {}, 'quiz'),
+          target: `${props.path}/statistics/docimology`
+        }
+      ]}
+    />
 
     <Routes
       path={`${props.path}/statistics`}

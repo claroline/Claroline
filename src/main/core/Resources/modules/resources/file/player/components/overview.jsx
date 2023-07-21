@@ -12,12 +12,12 @@ import {route} from '#/main/core/workspace/routing'
 const PlayerOverview = (props) =>
   <Fragment>
     {get(props.resourceNode, 'meta.description') &&
-      <div className="panel panel-default" style={{marginTop: 20}}>
-        <ContentHtml className="panel-body">{get(props.resourceNode, 'meta.description')}</ContentHtml>
+      <div className="card my-3">
+        <ContentHtml className="card-body">{get(props.resourceNode, 'meta.description')}</ContentHtml>
       </div>
     }
 
-    <div className="well well-sm component-container" style={{marginTop: !get(props.resourceNode, 'meta.description') ? 20 : 0}}>
+    <div className="well well-sm mb-3" style={{marginTop: !get(props.resourceNode, 'meta.description') ? 20 : 0}}>
       <span className="fa fa-fw fa-file icon-with-text-right" />
       {props.file.name}
       <b className="pull-right">
@@ -28,8 +28,8 @@ const PlayerOverview = (props) =>
     <Alert type="info">{trans('auto_download_help', {}, 'file')}</Alert>
 
     <Toolbar
-      className="component-container"
-      buttonName="btn btn-block btn-emphasis"
+      className="d-grid gap-1 mb-3"
+      variant="btn"
       toolbar="download home"
       actions={[
         {
@@ -38,7 +38,8 @@ const PlayerOverview = (props) =>
           icon: 'fa fa-fw fa-download',
           label: trans('download', {}, 'actions'),
           callback: () => props.download(props.resourceNode),
-          primary: true
+          primary: true,
+          size: 'lg'
         }, {
           name: 'home',
           type: URL_BUTTON, // we require an URL_BUTTON here to escape the embedded resource router

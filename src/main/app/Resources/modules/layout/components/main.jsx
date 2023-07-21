@@ -24,8 +24,6 @@ import {WorkspaceMain} from '#/main/core/workspace/containers/main'
 const LayoutMain = props =>
   <Fragment>
     <div className="app" role="presentation">
-      {false && <div className="app-loader" />}
-
       <HeaderMain
         unavailable={props.unavailable}
         toggleMenu={props.toggleMenu}

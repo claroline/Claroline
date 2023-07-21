@@ -132,9 +132,10 @@ const EditorComponent = props =>
     }
 
     <Button
-      className="btn btn-block btn-emphasis"
+      className="btn btn-primary w-100"
       type={MODAL_BUTTON}
       primary={true}
+      size="lg"
       label={trans('add_slide', {}, 'slideshow')}
       modal={[MODAL_SLIDE, {
         save: (slide) => props.update('slides', [].concat(props.slides, [slide]))

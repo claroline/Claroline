@@ -52,7 +52,7 @@ const Radios = props => {
 
   if (0 === choiceValues.length) {
     return (
-      <em className="text-muted">{trans('no_choice')}</em>
+      <em className="text-secondary">{trans('no_choice')}</em>
     )
   }
 

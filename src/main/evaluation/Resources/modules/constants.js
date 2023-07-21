@@ -25,9 +25,9 @@ const EVALUATION_STATUS_PRIORITY = {
 }
 
 const EVALUATION_STATUS_COLOR = {
-  [EVALUATION_STATUS_NOT_ATTEMPTED]: 'default',
-  [EVALUATION_STATUS_TODO]:          'default',
-  [EVALUATION_STATUS_UNKNOWN]:       'default',
+  [EVALUATION_STATUS_NOT_ATTEMPTED]: 'secondary',
+  [EVALUATION_STATUS_TODO]:          'secondary',
+  [EVALUATION_STATUS_UNKNOWN]:       'secondary',
   [EVALUATION_STATUS_OPENED]:        'warning',
   [EVALUATION_STATUS_INCOMPLETE]:    'warning',
   [EVALUATION_STATUS_PARTICIPATED]:  'success',

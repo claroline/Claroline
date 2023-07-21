@@ -247,8 +247,8 @@ class EntryFormComponent extends Component {
               exact: true
             }}
           >
-            <div className="panel panel-default">
-              <div className="panel-body">
+            <div className="card mb-3">
+              <div className="card-body">
                 {parse(this.state.template, {
                   replace: (element) => {
                     if (element.attribs && element.attribs.class === 'clacoform-field' && element.attribs.id) {

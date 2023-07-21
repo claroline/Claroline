@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
-import Modal from 'react-bootstrap/lib/Modal'
+import Modal from 'react-bootstrap/Modal'
 
 import {getContentDefinition} from '#/plugin/exo/contents/utils'
 

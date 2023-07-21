@@ -1,8 +1,7 @@
 {
   "styles": {
     "entry": {
-      "clock": "header/clock.less",
-      "agenda": "tools/agenda/index.less"
+      "agenda": "tools/agenda/index.scss"
     }
   }
 }

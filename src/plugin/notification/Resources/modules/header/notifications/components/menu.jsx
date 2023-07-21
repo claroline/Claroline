@@ -1,71 +1,17 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {LINK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
-import {route as accountRoute} from '#/main/core/account/routing'
+import {MODAL_BUTTON} from '#/main/app/buttons'
 
-import {NotificationCard} from '#/plugin/notification/components/card'
-import {constants} from '#/plugin/notification/header/notifications/constants'
-
-const NotificationsDropdown = (props) =>
-  <div className="app-header-dropdown dropdown-menu dropdown-menu-right data-cards-stacked">
-    {isEmpty(props.results) &&
-      <div className="app-header-dropdown-empty">
-        {trans('empty_unread', {}, 'notification')}
-        <small>
-          {trans('empty_unread_help', {}, 'notification')}
-        </small>
-      </div>
-    }
-
-    {!isEmpty(props.results) && props.results.map(result =>
-      <NotificationCard
-        key={result.id}
-        size="xs"
-        direction="row"
-        data={result}
-      />
-    )}
-
-    {props.count > constants.LIMIT_RESULTS &&
-      <div className="app-header-dropdown-footer app-header-dropdown-empty">
-        {trans('more_unread', {count: props.count - constants.LIMIT_RESULTS}, 'notification')}
-      </div>
-    }
-
-    <div className="app-header-dropdown-footer">
-      <Button
-        className="btn-link btn-emphasis btn-block"
-        type={LINK_BUTTON}
-        label={trans('all_notifications', {}, 'notification')}
-        target={accountRoute('notifications')}
-        primary={true}
-        onClick={props.closeMenu}
-      />
-    </div>
-  </div>
-
-NotificationsDropdown.propTypes = {
-  count: T.number.isRequired,
-  results: T.arrayOf(T.shape({
-    // TODO
-  })).isRequired,
-  closeMenu: T.func.isRequired
-}
+import {MODAL_NOTIFICATIONS} from '#/plugin/notification/modals/notifications'
 
 class NotificationsMenu extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      opened: false
-    }
-
     this.count = this.count.bind(this)
-    this.setOpened = this.setOpened.bind(this)
 
     if (this.props.isAuthenticated) {
       this.count()
@@ -84,10 +30,6 @@ class NotificationsMenu extends Component {
 
   componentWillUnmount() {
     this.stopCount()
-  }
-
-  setOpened(opened) {
-    this.setState({opened: opened})
   }
 
   count() {
@@ -113,29 +55,14 @@ class NotificationsMenu extends Component {
     return (
       <Button
         id="app-notifications"
-        type={MENU_BUTTON}
+        type={MODAL_BUTTON}
         className="app-header-btn app-header-item"
-        icon={!this.props.loaded && this.state.opened ?
-          'fa fa-fw fa-spinner fa-spin' :
-          'fa fa-fw fa-bell'
-        }
+        icon="fa fa-fw fa-bell"
         label={trans('notifications', {}, 'notification')}
         tooltip="bottom"
-        opened={this.props.loaded && this.state.opened}
-        onToggle={(opened) => {
-          if (opened) {
-            this.props.getNotifications()
-          }
-
-          this.setOpened(opened)
-        }}
-        menu={
-          <NotificationsDropdown
-            count={this.props.count}
-            results={this.props.results}
-            closeMenu={() => this.setOpened(false)}
-          />
-        }
+        modal={[MODAL_NOTIFICATIONS, {
+          count: this.props.count
+        }]}
         subscript={0 !== this.props.count ? {
           type: 'label',
           status: 'primary',
@@ -150,12 +77,7 @@ NotificationsMenu.propTypes = {
   isAuthenticated: T.bool.isRequired,
   refreshDelay: T.number,
   count: T.number.isRequired,
-  loaded: T.bool.isRequired,
-  results: T.arrayOf(T.shape({
-    // TODO
-  })).isRequired,
-  countNotifications: T.func.isRequired,
-  getNotifications: T.func.isRequired
+  countNotifications: T.func.isRequired
 }
 
 export {

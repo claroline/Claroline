@@ -1,6 +1,7 @@
-import React, {Component} from 'react'
+import React, {Component, forwardRef} from 'react'
 import classes from 'classnames'
 import tinycolor from 'tinycolor2'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -8,7 +9,22 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
+import {Menu} from '#/main/app/overlays/menu'
 import {ColorChart} from '#/main/theme/color/containers/color-chart'
+
+const ColorMenu = forwardRef((props, ref) =>
+  <div {...omit(props, 'value', 'onChange', 'show', 'close')} ref={ref}>
+    <ColorChart
+      selected={props.value}
+      onChange={props.onChange}
+    />
+  </div>
+)
+
+ColorMenu.propTypes = {
+  value: T.string,
+  onChange: T.func.isRequired
+}
 
 class ColorInput extends Component {
   constructor(props) {
@@ -44,7 +60,7 @@ class ColorInput extends Component {
 
     return (
       <Button
-        className={classes('btn', className, {
+        className={classes('btn btn-outline-secondary', className, {
           'text-light': color && color.isDark(),
           'text-dark': color && color.isLight()
         })}
@@ -59,12 +75,11 @@ class ColorInput extends Component {
         size={this.props.size}
         disabled={this.props.disabled}
         menu={
-          <div className="dropdown-menu">
-            <ColorChart
-              selected={this.props.value}
-              onChange={this.props.onChange}
-            />
-          </div>
+          <Menu
+            as={ColorMenu}
+            value={this.props.value}
+            onChange={this.props.onChange}
+          />
         }
       />
     )

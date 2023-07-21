@@ -21,8 +21,8 @@ class AnswerRow extends Component {
 
   render() {
     return (
-      <div className="panel panel-default">
-        <div className="user-answer panel-body">
+      <div className="card mb-3">
+        <div className="user-answer card-body">
           <div className="text-fields">
             {this.props.data && 0 !== this.props.data.length ?
               <div>
@@ -58,7 +58,7 @@ class AnswerRow extends Component {
                 value={this.props.score !== undefined && this.props.score !== null ? this.props.score : ''}
                 onChange={(e) => this.props.updateScore(this.props.id, e.target.value)}
               />
-              <span className="input-group-addon">{`/ ${this.props.scoreMax}`}</span>
+              <span className="input-group-text">{`/ ${this.props.scoreMax}`}</span>
             </span>
 
             <Button

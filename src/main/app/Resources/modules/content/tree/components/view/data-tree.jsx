@@ -54,7 +54,7 @@ const TreeDataItemContent = props =>
     {props.onSelect &&
       <input
         type="checkbox"
-        className="data-tree-item-select"
+        className="data-tree-item-select form-check-input"
         checked={props.selected}
         onChange={props.onSelect}
       />
@@ -162,7 +162,7 @@ TreeDataItem.defaultProps = {
 
 const DataGridSort = props =>
   <div className="data-tree-sort">
-    <span className="hidden-xs">{trans('list_sort_by')}</span>
+    <span className="d-none d-sm-block">{trans('list_sort_by')}</span>
 
     <Button
       id="data-tree-sort-menu"
@@ -244,8 +244,8 @@ const DataTree = props => {
           {props.selection &&
             <Checkbox
               id="data-tree-select"
-              label={<span className="hidden-xs">{trans('list_select_all')}</span>}
-              labelChecked={<span className="hidden-xs">{trans('list_deselect_all')}</span>}
+              label={<span className="d-none d-sm-block">{trans('list_select_all')}</span>}
+              labelChecked={<span className="d-none d-sm-block">{trans('list_deselect_all')}</span>}
               checked={0 < props.selection.current.length}
               onChange={() => {
                 if (0 === props.selection.current.length) {

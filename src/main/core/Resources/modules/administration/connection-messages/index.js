@@ -4,5 +4,6 @@ import {ConnectionMessagesMenu} from '#/main/core/administration/connection-mess
 export default {
   component: ConnectionMessagesTool,
   menu: ConnectionMessagesMenu,
-  store: reducer
+  store: reducer,
+  styles: ['claroline-distribution-main-core-administration-connection-messages']
 }

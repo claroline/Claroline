@@ -21,7 +21,7 @@ const ChoiceFeedback = props =>
             :
             <input
               id={utils.answerId(solution.id)}
-              className="choice-item-tick"
+              className="choice-item-tick form-check-input"
               name={utils.answerId(props.item.id)}
               type={props.item.multiple ? 'checkbox': 'radio'}
               checked={utils.isSolutionChecked(solution, props.answer)}

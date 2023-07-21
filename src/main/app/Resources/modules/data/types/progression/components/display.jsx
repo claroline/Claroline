@@ -20,7 +20,11 @@ const ProgressionDisplay = (props) => {
 ProgressionDisplay.propTypes = {
   id: T.string.isRequired,
   data: T.number,
-  type: T.oneOf(['success', 'info', 'warning', 'danger', 'user'])
+  type: T.oneOf(['success', 'info', 'warning', 'danger', 'learning'])
+}
+
+ProgressionDisplay.defaultProps = {
+  type: 'learning'
 }
 
 export {

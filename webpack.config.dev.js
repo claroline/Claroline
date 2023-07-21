@@ -28,10 +28,13 @@ module.exports = {
     // https://webpack.js.org/guides/hot-module-replacement/#gotchas
     hot: false,
     client: {
+      logging: 'error',
+      progress: true,
       // display compile errors in browser
       overlay: {
         errors: true,
         warnings: false, // hide warning (there are circular deps I can't remove)
+        runtimeErrors: false // do not catch claroline errors
       },
     },
     port: 8080,
@@ -65,6 +68,7 @@ module.exports = {
     distributionShortcut(),
     // this is required by swagger-ui-react
     new webpack.ProvidePlugin({
+      process: "process/browser",
       Buffer: ['buffer', 'Buffer']
     }),
     // dev tools
@@ -107,6 +111,9 @@ module.exports = {
   },
   resolve: {
     modules: ['./node_modules'],
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    fallback: {
+      buffer: false
+    }
   }
 }

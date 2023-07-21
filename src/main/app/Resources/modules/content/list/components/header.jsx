@@ -23,7 +23,7 @@ const ListHeader = props =>
       <Toolbar
         id={props.id + '-toolbar'}
         className="list-toolbar"
-        buttonName="list-header-btn btn btn-link"
+        buttonName="list-header-btn btn btn-text-secondary"
         tooltip="bottom"
         actions={props.customActions}
       />

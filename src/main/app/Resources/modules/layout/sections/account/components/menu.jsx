@@ -21,7 +21,7 @@ const CurrentUser = (props) =>
     <UserAvatar className="user-avatar-md" picture={props.currentUser.picture} alt={false} />
 
     <div className="app-menu-status-info">
-      <h3 className="h4">
+      <h3 className="h5">
         {props.currentUser.name}
       </h3>
 
@@ -42,8 +42,8 @@ const Links = (props) =>
     toggle={() => true}
   >
     <Toolbar
-      className="list-group"
-      buttonName="list-group-item"
+      className="list-group list-group-flush"
+      buttonName="list-group-item list-group-item-action"
       actions={getSections().then(sections => sections.map(section => ({
         name: section.name,
         type: LINK_BUTTON,

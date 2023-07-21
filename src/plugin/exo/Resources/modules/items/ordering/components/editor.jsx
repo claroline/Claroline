@@ -2,8 +2,8 @@ import React, {Component, Fragment, forwardRef} from 'react'
 import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
-import Tooltip from 'react-bootstrap/lib/Tooltip'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
@@ -324,7 +324,7 @@ const OrderingItems = (props) =>
 
       <Button
         type={CALLBACK_BUTTON}
-        className="btn btn-block"
+        className="btn btn-outline-primary w-100"
         icon="fa fa-fw fa-plus"
         label={trans('ordering_add_item', {}, 'quiz')}
         callback={() => addItem(props.item.items, props.item.solutions, false, props.onChange)}
@@ -343,12 +343,12 @@ const OrderingItems = (props) =>
             isOdd={true}
           />
           :
-          <div className="no-item-info">{trans('no_odd_info', {}, 'quiz')}</div>
+          <div className="empty-placeholder empty-placeholder-md">{trans('no_odd_info', {}, 'quiz')}</div>
         }
 
         <Button
           type={CALLBACK_BUTTON}
-          className="btn btn-block"
+          className="btn btn-outline-primary w-100"
           icon="fa fa-fw fa-plus"
           label={trans('ordering_add_odd', {}, 'quiz')}
           callback={() => addItem(props.item.items, props.item.solutions, true, props.onChange)}

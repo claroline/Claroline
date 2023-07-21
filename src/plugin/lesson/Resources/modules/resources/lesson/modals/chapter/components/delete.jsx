@@ -63,10 +63,10 @@ class ChapterDeleteModal extends Component {
           ]}
         />
         <button
-          className="modal-btn btn btn-danger"
+          className="modal-btn btn btn-danger btn-lg"
           onClick={this.save}
         >
-          {trans('confirm')}
+          {trans('confirm', {}, 'actions')}
         </button>
       </Modal>
     )}

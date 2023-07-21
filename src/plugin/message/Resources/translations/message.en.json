@@ -23,7 +23,8 @@
     "all_notifications": "Show all my messages",
     "empty_unread": "You don't have any new messages",
     "empty_unread_help": "When you receive a message, it will appear here",
-    "more_unread": "+ %count% other new messages",
+    "more_unread": "{0, 1} + %count% other new message|[2,Inf[ + %count% other new messages",
+    "count_unread": "{0, 1} %count% new message|[2,Inf[ %count% new messages",
     "no_object": "(no object)",
     "sent_at": "at %date%"
 }

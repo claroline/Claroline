@@ -1,6 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {ContentCounter} from '#/main/app/content/components/counter'

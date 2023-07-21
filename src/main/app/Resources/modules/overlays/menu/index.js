@@ -3,13 +3,16 @@
  */
 
 import {MenuOverlay} from '#/main/app/overlays/menu/components/overlay'
-import {Menu}        from '#/main/app/overlays/menu/components/menu'
-import {MenuItem}    from '#/main/app/overlays/menu/components/menu-item'
+import {Menu, MenuToggle, MenuItem, MenuHeader, MenuDivider, MenuText} from '#/main/app/overlays/menu/components/menu'
 
 export {
   // overlay
   MenuOverlay,
   // display components in overlay
   Menu,
-  MenuItem
+  MenuToggle,
+  MenuItem,
+  MenuHeader,
+  MenuDivider,
+  MenuText
 }

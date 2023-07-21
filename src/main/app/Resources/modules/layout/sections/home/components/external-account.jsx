@@ -54,8 +54,9 @@ class HomeExternalAccountComponent extends Component {
 
               {!this.props.isAuthenticated &&
                 <Button
-                  style={{marginTop: 20}}
-                  className="btn btn-block btn-emphasis"
+                  className="w-100 mt-3"
+                  variant="btn"
+                  size="lg"
                   type={MODAL_BUTTON}
                   label={trans('login', {}, 'actions')}
                   modal={[MODAL_LOGIN, {
@@ -71,7 +72,8 @@ class HomeExternalAccountComponent extends Component {
 
               {!this.props.isAuthenticated && this.props.selfRegistration &&
                 <Button
-                  className="btn btn-block"
+                  className="w-100"
+                  variant="btn"
                   type={MODAL_BUTTON}
                   label={trans('create-account', {}, 'actions')}
                   modal={[MODAL_REGISTRATION, {

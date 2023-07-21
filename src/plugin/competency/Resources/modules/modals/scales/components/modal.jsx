@@ -20,7 +20,7 @@ const ScalesPickerModal = props => {
       {...omit(props, 'confirmText', 'selected', 'selectAction', 'resetSelect')}
       className="data-picker-modal"
       icon="fa fa-fw fa-arrow-up"
-      bsSize="lg"
+      size="xl"
       onExiting={() => props.resetSelect()}
     >
       <ListData
@@ -45,7 +45,9 @@ const ScalesPickerModal = props => {
       <Button
         label={props.confirmText}
         {...selectAction}
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         primary={true}
         disabled={0 === props.selected.length}
         onClick={props.fadeModal}

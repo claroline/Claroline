@@ -67,7 +67,8 @@ const PageHeader = props =>
     {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
       <Toolbar
         id={props.id || toKey(props.title)}
-        className="page-actions"
+        className="btn-toolbar gap-1"
+        name="page-actions"
         tooltip="bottom"
         toolbar={props.toolbar}
         actions={props.actions}

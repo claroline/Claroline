@@ -85,7 +85,9 @@ class TabCreationModal extends Component {
             administration={this.props.administration}
           >
             <Button
-              className="modal-btn btn"
+              className="modal-btn"
+              variant="btn"
+              size="lg"
               type={CALLBACK_BUTTON}
               primary={true}
               disabled={!this.props.saveEnabled}
@@ -115,6 +117,7 @@ class TabCreationModal extends Component {
         title={trans('new_tab', {}, 'home')}
         subtitle={this.renderStepTitle()}
         fadeModal={() => this.close()}
+        size="lg"
       >
         {this.renderStep()}
       </Modal>

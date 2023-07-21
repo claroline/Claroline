@@ -43,10 +43,11 @@ function transformAction(action, resourceNodes, embedded = false) {
 const PlayerMain = props =>
   <Fragment>
     {props.storageLock &&
-      <Alert type="warning" style={{marginTop: 20}}>{trans('storage_limit_reached_resources')}</Alert>
+      <Alert type="warning" className="mt-3">{trans('storage_limit_reached_resources')}</Alert>
     }
 
     <ListSource
+      className="my-3"
       name={props.listName}
       fetch={{
         url: ['apiv2_resource_list', {parent: get(props.currentNode, 'id', null), all: props.all}],

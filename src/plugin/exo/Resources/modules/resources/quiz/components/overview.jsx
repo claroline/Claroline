@@ -110,7 +110,7 @@ const QuizOverview = props => {
       actions={[
         {
           type: LINK_BUTTON,
-          label: trans('exercise_start', {}, 'quiz'),
+          label: trans('start', {}, 'actions'),
           target: `${props.path}/play`,
           primary: true,
           disabled: props.empty || (maxAttemptsReached && !props.editable),
@@ -119,14 +119,14 @@ const QuizOverview = props => {
           ].filter(value => !!value)
         }, {
           type: LINK_BUTTON,
-          label: trans('exercise_test', {}, 'quiz'),
+          label: trans('test', {}, 'actions'),
           displayed: props.editable && !props.empty,
           target: `${props.path}/test`
         }
       ]}
     >
       {props.quiz.parameters.showMetadata &&
-        <section className="resource-parameters">
+        <section className="resource-parameters mb-3">
           <h3 className="h2">{trans('configuration')}</h3>
 
           <Parameters

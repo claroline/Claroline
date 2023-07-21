@@ -1,0 +1,101 @@
+/*
+ * Blog resource styles.
+ */
+
+@import "../variables";
+
+// TODO : purge
+
+.user-picture {
+  width: 24px;
+}
+
+.user-name {
+  margin-left: 2px;
+}
+
+.link {
+  cursor: pointer;
+  color: #0076b3;
+}
+
+.unpublished {
+  border-color: #fbeed5;
+  background-color: #e0e0e0;
+}
+
+.order-widgets {
+   position:relative;
+}
+
+.widget-label{
+  margin-left: 12px;
+}
+
+.redactor-name{
+  padding-right: 10px;
+}
+
+.widget-ordering-button {
+  padding: 0;
+}
+
+.pinned-label {
+  font-size: 60%;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.toolmanager {
+  margin-top: -15px;
+}
+
+.post-header {
+  margin: 0;
+  padding: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-title {
+  margin-top: 0;
+}
+
+.post-infos {
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  float:left;
+}
+
+.post-actions{
+  position: relative;
+  float: right;
+
+  .post-button {
+    padding: 6px;
+  }
+}
+
+.post-content {
+  padding: 15px;
+}
+
+.post-tags {
+  max-width: 70%;
+
+  li {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+.blog-post {
+  .data-card {
+    margin-bottom: 20px;
+
+    ul {
+      margin-bottom: 0;
+    }
+  }
+}

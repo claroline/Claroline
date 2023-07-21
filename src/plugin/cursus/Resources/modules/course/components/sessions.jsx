@@ -110,7 +110,7 @@ const CourseSessions = (props) =>
 
     {hasPermission('edit', props.course) &&
       <Button
-        className="btn btn-block btn-emphasis component-container"
+        className="btn btn-primary w-100 mb-3"
         type={MODAL_BUTTON}
         label={trans('add_session', {}, 'cursus')}
         modal={[MODAL_SESSION_FORM, {
@@ -121,6 +121,7 @@ const CourseSessions = (props) =>
             props.reload(props.course.slug)
           }
         }]}
+        size="lg"
         primary={true}
       />
     }

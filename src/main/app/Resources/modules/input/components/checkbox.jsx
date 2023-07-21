@@ -3,21 +3,20 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 const Checkbox = props =>
-  <div className={classes({
-    'checkbox'       : !props.inline,
-    'checkbox-inline': props.inline,
-    'selected': props.checked,
-    'disabled': props.disabled
+  <div className={classes('form-check', {
+    'form-check-inline': props.inline,
+    'form-switch': props.switch
   }, props.className)}>
-    <label htmlFor={props.id}>
-      <input
-        id={props.id}
-        type="checkbox"
-        checked={props.checked}
-        disabled={props.disabled}
-        onChange={e => props.onChange(e.target.checked)}
-      />
+    <input
+      id={props.id}
+      className="form-check-input"
+      type="checkbox"
+      checked={props.checked}
+      disabled={props.disabled}
+      onChange={e => props.onChange(e.target.checked)}
+    />
 
+    <label htmlFor={props.id} className="form-check-label">
       {props.checked && props.labelChecked ? props.labelChecked : props.label}
     </label>
   </div>
@@ -30,12 +29,14 @@ Checkbox.propTypes = {
   checked: T.bool.isRequired,
   disabled: T.bool,
   inline: T.bool,
+  switch: T.bool,
   onChange: T.func.isRequired
 }
 
 Checkbox.defaultProps = {
   disabled: false,
-  inline: false
+  inline: false,
+  switch: false
 }
 
 export {

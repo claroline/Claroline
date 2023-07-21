@@ -1,36 +1,37 @@
-import React from 'react'
+import React, {forwardRef} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import Dropdown from 'react-bootstrap/lib/Dropdown'
+import Dropdown from 'react-bootstrap/Dropdown'
 
-const MenuOverlay = props =>
+// forwardRef is required for tooltip
+const MenuOverlay = forwardRef((props, ref) =>
   <Dropdown
     id={props.id}
-    open={props.open}
-    pullRight={'right' === props.align}
-    dropup={'top' === props.position}
+    show={props.show}
+    drop={'top' === props.position ? 'up' : 'down'}
+    autoClose={true}
     className={props.className}
     disabled={props.disabled}
     onToggle={props.onToggle}
+    ref={ref}
   >
     {props.children}
   </Dropdown>
+)
 
 MenuOverlay.propTypes = {
   id: T.string.isRequired,
-  open: T.bool,
+  show: T.bool,
   className: T.string,
   disabled: T.bool,
   position: T.oneOf(['top', 'bottom']),
-  align: T.oneOf(['left', 'right']),
   children: T.node.isRequired,
   onToggle: T.func
 }
 
 MenuOverlay.defaultProps = {
   disabled: false,
-  position: 'bottom',
-  align: 'left'
+  position: 'bottom'
 }
 
 export {

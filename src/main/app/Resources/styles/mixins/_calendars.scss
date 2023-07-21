@@ -1,0 +1,13 @@
+/*
+ * Calendars styles
+ */
+
+@mixin calendar-vertical-variant() {
+    flex-direction: column;
+
+    .current-container,
+    .calendar {
+        flex: auto; // otherwise it breaks on IE
+        width: 100%;
+    }
+}

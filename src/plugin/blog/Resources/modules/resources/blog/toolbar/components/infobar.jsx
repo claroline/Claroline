@@ -11,12 +11,12 @@ import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 const InfobarComponent = props => {
   if (!isEmpty(props.infos)) {
     return (
-      <div className="panel panel-default">
-        <div className="panel-heading">
-          <h2 className="panel-title">{trans('information')}</h2>
+      <div className="card mb-3">
+        <div className="card-header">
+          <h2 className="card-title">{trans('information')}</h2>
         </div>
 
-        <ContentHtml className="panel-body">{props.infos}</ContentHtml>
+        <ContentHtml className="card-body">{props.infos}</ContentHtml>
       </div>
     )
   }

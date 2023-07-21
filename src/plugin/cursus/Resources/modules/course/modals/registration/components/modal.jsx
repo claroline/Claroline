@@ -6,7 +6,7 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
-import {Button} from '#/main/app/action/components/button'
+import {Toolbar} from '#/main/app/action/components/toolbar'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {DetailsData} from '#/main/app/content/details/components/data'
@@ -43,6 +43,7 @@ const RegistrationModal = props =>
         }
 
         <DetailsData
+          flush={true}
           data={props.session}
           definition={[
             {
@@ -77,42 +78,47 @@ const RegistrationModal = props =>
       </Fragment>
     }
 
-    {props.session &&
-      <Button
-        className="btn modal-btn"
-        type={LINK_BUTTON}
-        label={trans('show_other_sessions', {}, 'actions')}
-        target={route(props.course, props.session)+'/sessions'}
-        onClick={() => props.fadeModal()}
-      />
-    }
-
-    {isEmpty(get(props.course, 'registration.form', [])) ?
-      <Button
-        className="btn modal-btn"
-        type={CALLBACK_BUTTON}
-        primary={true}
-        label={trans(!props.session || isFull(props.session) ? 'register_waiting_list' : 'self_register', {}, 'actions')}
-        callback={() => {
-          props.register(props.course, props.session ? props.session.id : null)
-          props.fadeModal()
-        }}
-      /> :
-      <Button
-        className="btn modal-btn"
-        type={MODAL_BUTTON}
-        primary={true}
-        label={trans(!props.session || isFull(props.session) ? 'register_waiting_list' : 'self_register', {}, 'actions')}
-        onClick={props.fadeModal}
-        modal={[MODAL_REGISTRATION_PARAMETERS, {
-          course: props.course,
-          session: props.session,
-          onSave: (registrationData) => {
-            props.register(props.course, props.session ? props.session.id : null, registrationData.data)
-          }
-        }]}
-      />
-    }
+    <Toolbar
+      className="btn-group-vertical"
+      variant="btn"
+      buttonName="modal-btn"
+      actions={[
+        {
+          name: 'show_other_sessions',
+          type: LINK_BUTTON,
+          label: trans('show_other_sessions', {}, 'actions'),
+          target: route(props.course, props.session)+'/sessions',
+          onClick: () => props.fadeModal(),
+          displayed: !!props.session
+        }, {
+          name: 'self_register',
+          type: CALLBACK_BUTTON,
+          primary: true,
+          label: trans(!props.session || isFull(props.session) ? 'register_waiting_list' : 'self_register', {}, 'actions'),
+          callback: () => {
+            props.register(props.course, props.session ? props.session.id : null)
+            props.fadeModal()
+          },
+          size: 'lg',
+          displayed: isEmpty(get(props.course, 'registration.form', []))
+        }, {
+          name: 'self_register',
+          type: MODAL_BUTTON,
+          primary: true,
+          label: trans(!props.session || isFull(props.session) ? 'register_waiting_list' : 'self_register', {}, 'actions'),
+          onClick: props.fadeModal,
+          modal: [MODAL_REGISTRATION_PARAMETERS, {
+            course: props.course,
+            session: props.session,
+            onSave: (registrationData) => {
+              props.register(props.course, props.session ? props.session.id : null, registrationData.data)
+            }
+          }],
+          size: 'lg',
+          displayed: !isEmpty(get(props.course, 'registration.form', []))
+        }
+      ]}
+    />
   </Modal>
 
 RegistrationModal.propTypes = {

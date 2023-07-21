@@ -21,7 +21,7 @@ const ManualProgression = props =>
 
     <Button
       id="step-progression"
-      className={classes('btn-link', props.status)}
+      className={classes('btn btn-text-secondary fw-bold', props.status)}
       type={MENU_BUTTON}
       label={constants.STEP_STATUS[props.status]}
       menu={{
@@ -43,7 +43,7 @@ ManualProgression.propTypes = {
 
 const SecondaryResources = props =>
   <div className={classes('step-secondary-resources', props.className)}>
-    <h4 className="h3 h-first">{trans('useful_links')}</h4>
+    <h4 className="h3">{trans('useful_links')}</h4>
     {props.resources.map(resource =>
       <ResourceCard
         key={resource.id}
@@ -74,7 +74,7 @@ SecondaryResources.propTypes = {
 const Step = props =>
   <section className="current-step">
     {props.poster &&
-      <img className="step-poster img-responsive" alt={props.title} src={asset(props.poster)} />
+      <img className="step-poster img-fluid" alt={props.title} src={asset(props.poster)} />
     }
 
     <h3 className="h2 h-title step-title">
@@ -100,8 +100,8 @@ const Step = props =>
           'col-md-12': 0 === props.secondaryResources.length
         })}>
           {props.description &&
-            <div className="step-description panel panel-default">
-              <ContentHtml className="panel-body">{props.description}</ContentHtml>
+            <div className="step-description card">
+              <ContentHtml className="card-body">{props.description}</ContentHtml>
             </div>
           }
 

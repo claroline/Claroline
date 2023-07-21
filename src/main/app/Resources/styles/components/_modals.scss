@@ -1,0 +1,46 @@
+/*
+ * Modals.
+ */
+
+.modal-poster {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    min-height: 160px; // TODO : adapt height according to modal size
+    align-items: flex-end;
+
+    .btn-close {
+        align-self: flex-start;
+
+        @include text-movie-subtitles();
+    }
+
+    // use movie subtitles styles to make title always readable
+    .modal-title,
+    .modal-title small {
+        @include text-movie-subtitles();
+    }
+}
+
+.modal-icon {
+    align-self: flex-start;
+    margin-right: $modal-header-padding-y;
+    line-height: $modal-title-line-height;
+}
+
+.modal-btn {
+    display: block;
+    width: 100%;
+    padding: var(--#{$prefix}modal-padding);
+
+    @include border-top-radius(0);
+    @include border-bottom-radius(var(--#{$prefix}modal-inner-border-radius));
+}
+
+
+// customize meta
+.modal-content .content-meta {
+    padding: 10px $modal-inner-padding;
+    border-bottom: 1px solid $modal-header-border-color;
+    margin-bottom: 0;
+}

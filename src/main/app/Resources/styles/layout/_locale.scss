@@ -1,0 +1,66 @@
+
+@mixin locale-icon-small() {
+  width: $icon-fixed-width;
+  height: 16px;
+}
+
+@mixin locale-icon-large() {
+  width: 32px;
+  height: 24px;
+}
+
+.locale-icon {
+  //margin: 4px 0;
+
+  @include locale-icon-small();
+}
+
+.locale-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 15px;
+  background: #EDEDED;
+  margin: 4px;
+
+  + .locale-btn {
+    margin-left: 6px !important;
+
+    &:active,
+    &.active,
+    &:hover,
+    &:focus {
+      margin-left: 2px !important;
+    }
+  }
+
+  .locale-icon {
+    opacity: .6;
+  }
+
+  &:hover,
+  &:focus {
+    margin: 0;
+    background: $gray-lightest;
+
+    .locale-icon {
+      opacity: 1;
+      @include locale-icon-large();
+    }
+  }
+
+  &:active,
+  &.active {
+    margin: 0;
+    background: white;
+    border-color: $primary;
+    @include box-shadow($box-shadow);
+
+    .locale-icon {
+      opacity: 1;
+      @include locale-icon-large();
+    }
+  }
+}

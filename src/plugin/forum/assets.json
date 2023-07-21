@@ -1,7 +1,7 @@
 {
   "styles": {
     "entry": {
-      "forum-resource": "resources/forum/index.less"
+      "forum-resource": "resources/forum.scss"
     }
   }
 }

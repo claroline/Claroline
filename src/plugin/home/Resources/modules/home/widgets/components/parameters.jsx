@@ -199,15 +199,15 @@ class WidgetsTabParameters extends Component {
 
         {0 === widgets.length &&
           <ContentPlaceholder
+            className="my-3 flex-fill"
             size="lg"
-            icon="fa fa-face-frown"
             title={trans('no_section')}
           />
         }
 
         {!this.props.readOnly &&
           <Button
-            className="btn btn-block btn-emphasis btn-add-section component-container"
+            className="btn btn-primary w-100 mb-3 btn-add-section"
             type={MODAL_BUTTON}
             label={trans('add_section')}
             modal={[MODAL_WIDGET_CREATION, {
@@ -216,6 +216,7 @@ class WidgetsTabParameters extends Component {
               )
             }]}
             primary={true}
+            size="lg"
           />
         }
       </div>

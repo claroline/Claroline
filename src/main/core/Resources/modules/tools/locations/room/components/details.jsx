@@ -99,32 +99,30 @@ const RoomDetails = (props) =>
   <RoomPage
     room={props.room}
   >
-    <header className="row content-heading">
-      <ContentTabs
-        backAction={{
+    <ContentTabs
+      backAction={{
+        type: LINK_BUTTON,
+        target: `${props.path}/rooms`,
+        exact: true
+      }}
+      sections={[
+        {
+          name: 'about',
           type: LINK_BUTTON,
-          target: `${props.path}/rooms`,
+          icon: 'fa fa-fw fa-circle-info',
+          label: trans('about'),
+          target: `${props.path}/rooms/${props.room.id}`,
           exact: true
-        }}
-        sections={[
-          {
-            name: 'about',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-circle-info',
-            label: trans('about'),
-            target: `${props.path}/rooms/${props.room.id}`,
-            exact: true
-          }, {
-            name: 'planning',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-calendar',
-            label: trans('planning', {}, 'location'),
-            target: `${props.path}/rooms/${props.room.id}/planning`,
-            displayed: false
-          }
-        ]}
-      />
-    </header>
+        }, {
+          name: 'planning',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-calendar',
+          label: trans('planning', {}, 'location'),
+          target: `${props.path}/rooms/${props.room.id}/planning`,
+          displayed: false
+        }
+      ]}
+    />
 
     <Routes
       path={`${props.path}/rooms/${props.room.id}`}

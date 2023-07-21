@@ -29,6 +29,7 @@ const AboutModal = props =>
 
     {props.team &&
       <DetailsData
+        flush={true}
         data={props.team}
         definition={[
           {

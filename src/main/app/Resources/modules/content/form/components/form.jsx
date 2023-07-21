@@ -9,11 +9,11 @@ import {ContentTitle} from '#/main/app/content/components/title'
 import {FormActions} from '#/main/app/content/form/components/actions'
 
 const FormWrapper = props => props.embedded ?
-  <fieldset id={props.id} className={classes('form data-form', props.className)}>
+  <fieldset id={props.id} className={classes('form data-form', props.className, props.flush && 'data-form-flush')}>
     {props.children}
   </fieldset>
   :
-  <form id={props.id} className={classes('form data-form', props.className)} action="#">
+  <form id={props.id} className={classes('form data-form', props.className, props.flush && 'data-form-flush', !props.flush && 'content-md')} action="#">
     {props.children}
   </form>
 
@@ -21,11 +21,13 @@ FormWrapper.propTypes = {
   id: T.string,
   className: T.string,
   embedded: T.bool,
+  flush: T.bool,
   children: T.node.isRequired
 }
 
 FormWrapper.defaultProps = {
-  embedded: false
+  embedded: false,
+  flush: false
 }
 
 class Form extends Component {
@@ -73,7 +75,7 @@ class Form extends Component {
 
   render() {
     return (
-      <FormWrapper id={this.props.id} embedded={this.props.embedded} className={this.props.className}>
+      <FormWrapper id={this.props.id} embedded={this.props.embedded} flush={this.props.flush} className={this.props.className}>
         {this.props.title &&
           <ContentTitle
             level={this.props.level}
@@ -106,6 +108,7 @@ Form.propTypes = {
    * Permits to know if we use a <form> or a <fieldset> tag.
    */
   embedded: T.bool,
+  flush: T.bool,
   disabled: T.bool,
   level: T.number,
   displayLevel: T.number,

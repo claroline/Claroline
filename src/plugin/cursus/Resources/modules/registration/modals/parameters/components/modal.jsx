@@ -41,8 +41,10 @@ const ParametersModal = props => {
         definition={sections}
       >
         <Button
-          className="btn modal-btn"
+          className="modal-btn"
           type={CALLBACK_BUTTON}
+          variant="btn"
+          size="lg"
           primary={true}
           htmlType="submit"
           label={props.isNew ?

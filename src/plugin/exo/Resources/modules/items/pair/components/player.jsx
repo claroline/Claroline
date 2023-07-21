@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import times from 'lodash/times'
 
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
-import Tooltip from 'react-bootstrap/lib/Tooltip'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'

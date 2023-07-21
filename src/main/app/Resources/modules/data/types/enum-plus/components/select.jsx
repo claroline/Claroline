@@ -85,7 +85,7 @@ class Select extends Component {
     return (
       <div
         value={props.value}
-        className={classes('form-control input-sm select-plus', props.className, selectedChoice.placeholder && 'placeholder')}
+        className={classes('form-control form-control-sm select-plus', props.className, selectedChoice.placeholder && 'placeholder')}
         onClick={this.handleOnClick}
         tabIndex={0}
         onBlur={this.collapse}

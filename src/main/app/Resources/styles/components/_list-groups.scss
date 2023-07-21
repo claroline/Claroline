@@ -1,0 +1,35 @@
+
+.list-group-striped {
+    > .list-group-item:nth-of-type(odd) {
+        background-color: $table-striped-bg;
+    }
+}
+
+.list-group-values {
+    .list-group-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: $font-size-sm;
+        text-transform: uppercase;
+
+        .value {
+            //color: $gray-light;
+            font-weight: 400;
+            font-size: $font-size-base;
+            text-align: right;
+            text-transform: none;
+        }
+    }
+}
+
+
+.list-group-item {
+    .action-subscript {
+        float: right; // todo : find a better approach
+
+        .fa {
+            margin: 0;
+        }
+    }
+}

@@ -17,7 +17,10 @@ const TinymceInline = (props) =>
       inline={true}
       init={merge({}, props.init, {
         toolbar: false,
-        menubar: false
+        menubar: false,
+        // we don't need to reload our default styles because the editor is directly mounted inside claroline page,
+        // and already inherits our styles
+        content_css: null
       })}
     />
   </div>

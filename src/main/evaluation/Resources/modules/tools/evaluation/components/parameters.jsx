@@ -69,7 +69,7 @@ const EvaluationParameters = (props) =>
     />
 
     <Button
-      className="btn btn-emphasis btn-block component-container"
+      className="btn btn-primary w-100 mb-3"
       type={MODAL_BUTTON}
       primary={true}
       label={trans('add_resources')}

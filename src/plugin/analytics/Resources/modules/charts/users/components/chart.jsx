@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -32,9 +32,9 @@ class UsersChart extends Component {
     }
 
     return (
-      <div className="panel panel-default panel-analytics">
-        <div className="panel-heading">
-          <h2 className="panel-title">
+      <div className="card mb-3 panel-analytics">
+        <div className="card-header">
+          <h2 className="card-title">
             {trans('users')}
           </h2>
 
@@ -62,7 +62,7 @@ class UsersChart extends Component {
         </div>
 
         {this.props.loaded && 'chart' === this.props.mode &&
-          <div className="panel-body">
+          <div className="card-body">
             <PieChart
               data={this.props.data.map(v => v.total) || {}}
               width={300}

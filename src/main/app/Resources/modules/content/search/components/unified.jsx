@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, forwardRef} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
@@ -11,6 +11,7 @@ import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {getType} from '#/main/app/data/types'
+import {Menu, MenuOverlay} from '#/main/app/overlays/menu'
 
 import {getPropDefinition} from '#/main/app/content/list/utils'
 import {SearchProp} from '#/main/app/content/search/components/prop'
@@ -124,19 +125,7 @@ class SearchForm extends Component {
 
   render() {
     return (
-      <div className="search-form dropdown-menu dropdown-menu-full">
-        {false &&
-          <ul className="nav nav-tabs">
-            <li className="active">
-              <a role="button" href="">Recherche avancée</a>
-            </li>
-
-            <li>
-              <a role="button" href="">Mes recherches</a>
-            </li>
-          </ul>
-        }
-
+      <>
         {this.props.available.map(filter =>
           <div key={filter.name} className="form-group">
             <label className="control-label" htmlFor={toKey(filter.name)}>
@@ -155,31 +144,21 @@ class SearchForm extends Component {
           </div>
         )}
 
-        <div className="search-toolbar">
-          {false &&
-            <Button
-              className="btn-link btn-emphasis"
-              type={CALLBACK_BUTTON}
-              label={trans('save', {}, 'actions')}
-              disabled={!this.state.updated}
-              callback={() => true}
-            />
-          }
-
-          <Button
-            className="btn btn-block btn-emphasis search-submit"
-            type={CALLBACK_BUTTON}
-            htmlType="submit"
-            label={trans('search', {}, 'actions')}
-            disabled={!this.state.updated && !this.props.updated}
-            callback={() => {
-              this.props.updateSearch(this.state.filters)
-              this.setState({updated: false})
-            }}
-            primary={true}
-          />
-        </div>
-      </div>
+        <Button
+          className="search-submit w-100"
+          type={CALLBACK_BUTTON}
+          variant="btn"
+          htmlType="submit"
+          size="lg"
+          label={trans('search', {}, 'actions')}
+          disabled={!this.state.updated && !this.props.updated}
+          callback={() => {
+            this.props.updateSearch(this.state.filters)
+            this.setState({updated: false})
+          }}
+          primary={true}
+        />
+      </>
     )
   }
 }
@@ -198,11 +177,15 @@ SearchForm.propTypes = {
   updateSearch: T.func.isRequired
 }
 
-/*<RootCloseWrapper
- disabled={this.props.disabled || !this.state.opened}
- event="click"
- onRootClose={() => this.setState({opened : !this.state.opened})}
- >*/
+const SearchMenu = forwardRef((props, ref) =>
+  <div
+    {...omit(props, 'updated', 'available', 'current', 'updateSearch', 'show', 'close')}
+    className={classes('search-form dropdown-menu-full', props.className)}
+    ref={ref}
+  >
+    <SearchForm {...props} />
+  </div>
+)
 
 class SearchUnified extends Component {
   constructor(props) {
@@ -250,51 +233,52 @@ class SearchUnified extends Component {
   render() {
     return (
       <form
-        className={classes('list-search search-unified dropdown', {
-          open: this.state.opened || 0 !== this.state.currentSearch.length
+        className={classes('list-search search-unified', {
+          //open: this.state.opened || 0 !== this.state.currentSearch.length
         })}
         action="#"
       >
-        <span className="search-icon fa fa-search" />
+        <div className="search-current" role="presentation">
+          <span className="search-icon fa fa-search" />
 
-        <div className="search-filters">
-          {this.props.current.map(activeFilter => {
-            const propDef = getPropDefinition(activeFilter.property, this.props.available)
+          <div className="search-filters">
+            {this.props.current.map(activeFilter => {
+              const propDef = getPropDefinition(activeFilter.property, this.props.available)
 
-            return (
-              <CurrentFilter
-                key={`current-filter-${activeFilter.property}`}
-                type={propDef.type}
-                label={propDef.label}
-                options={propDef.options}
-                value={activeFilter.value}
-                locked={activeFilter.locked}
-                remove={() => this.props.removeFilter(activeFilter)}
-              />
-            )
-          })}
+              return (
+                <CurrentFilter
+                  key={`current-filter-${activeFilter.property}`}
+                  type={propDef.type}
+                  label={propDef.label}
+                  options={propDef.options}
+                  value={activeFilter.value}
+                  locked={activeFilter.locked}
+                  remove={() => this.props.removeFilter(activeFilter)}
+                />
+              )
+            })}
 
-          <input
-            type="text"
-            className="form-control search-control"
-            placeholder={trans('list_search_placeholder')}
-            value={this.state.currentSearch}
+            <input
+              type="text"
+              className="form-control form-control-lg search-control"
+              placeholder={trans('list_search_placeholder')}
+              value={this.state.currentSearch}
+              disabled={this.props.disabled}
+              onChange={(e) => this.updateSearch(e.target.value)}
+            />
+          </div>
+
+          <Button
+            className="btn btn-text-secondary dropdown-toggle search-btn"
+            type={CALLBACK_BUTTON}
+            icon="fa fa-fw fa-caret-down"
+            label={trans('filters')}
+            tooltip="bottom"
+            callback={() => this.setState({opened : !this.state.opened})}
             disabled={this.props.disabled}
-            onChange={(e) => this.updateSearch(e.target.value)}
           />
         </div>
-
-        <Button
-          className="btn btn-link dropdown-toggle search-btn"
-          type={CALLBACK_BUTTON}
-          icon="fa fa-fw fa-caret-down"
-          label={trans('filters')}
-          tooltip="bottom"
-          callback={() => this.setState({opened : !this.state.opened})}
-          disabled={this.props.disabled}
-        />
-
-        <SearchForm
+        {/*<SearchForm
           updated={this.state.updated}
           current={this.getFormFilters()}
           available={this.props.available}
@@ -302,7 +286,27 @@ class SearchUnified extends Component {
             this.props.resetFilters(filters)
             this.setState({currentSearch: '', updated: false, opened: false})
           }}
-        />
+        />*/}
+
+        <MenuOverlay
+          id={`${this.props.id}-search-menu`}
+          show={this.state.opened || 0 !== this.state.currentSearch.length}
+        >
+          <Menu
+            align="end"
+            //show={menuOpened}
+            //onClose={this.reset}
+            as={SearchMenu}
+
+            updated={this.state.updated}
+            current={this.getFormFilters()}
+            available={this.props.available}
+            updateSearch={(filters) => {
+              this.props.resetFilters(filters)
+              this.setState({currentSearch: '', updated: false, opened: false})
+            }}
+          />
+        </MenuOverlay>
       </form>
     )
   }

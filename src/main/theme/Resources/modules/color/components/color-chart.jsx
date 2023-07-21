@@ -115,7 +115,7 @@ class ColorChart extends Component {
             />
             {!noLibrary &&
               <CallbackButton
-                className={classes('btn-link btn-view btn-block', {
+                className={classes('btn-link btn-view w-100', {
                   'text-light': color && color.isDark(),
                   'text-dark': color && color.isLight()
                 })}

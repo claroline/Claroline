@@ -17,7 +17,7 @@ const dialogConfig = (editor, placeholders = []) => ({
             `<a href="#" class="tox-collection__item" onclick="() => editor.execCommand('mceInsertContent', false, '%'+placeholder+'%')">
               <div class="tox-collection__item-label">
                 <b>%${placeholder}%</b>
-                <p class="text-muted">${trans(`${placeholder}_desc`, {}, 'template')}</p>
+                <p class="text-secondary">${trans(`${placeholder}_desc`, {}, 'template')}</p>
               </div>
             </a>`
           ), '')+'</div></div>'
@@ -87,7 +87,7 @@ window.tinymce.PluginManager.add(pluginName, (editor) => {
               }, {
                 type: 'cardtext',
                 text: trans(`${placeholder}_desc`, {}, 'template'),
-                classes: ['text-muted']
+                classes: ['text-secondary']
               }
             ]
           }

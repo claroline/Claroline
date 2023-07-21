@@ -1,13 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-
+import classes from 'classnames'
 import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config'
 import {LinkButton} from '#/main/app/buttons/link'
 
 const HeaderBrand = props =>
   <LinkButton
-    className="app-header-item app-header-brand hidden-xs"
+    className={classes('app-header-item app-header-brand text-decoration-none', !props.logo && 'd-none d-sm-block')}
     target="/"
   >
     {props.logo &&
@@ -19,7 +19,7 @@ const HeaderBrand = props =>
     }
 
     {props.showTitle && props.title &&
-      <h1 className="app-header-title hidden-sm">
+      <h1 className="app-header-title d-none d-md-block">
         {props.title}
 
         {props.subtitle &&

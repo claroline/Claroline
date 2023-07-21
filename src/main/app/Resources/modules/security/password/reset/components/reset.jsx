@@ -9,7 +9,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors} from '#/main/app/security/password/reset/store/selectors'
 
 const ResetPasswordForm = (props) =>
-  <div className="login-container">
+  <div className="card login-container">
     <div className="authentication-column account-authentication-column">
       <FormData
         name={selectors.FORM_NAME}
@@ -28,8 +28,8 @@ const ResetPasswordForm = (props) =>
               },
               {
                 name: 'confirm',
-                label: trans('confirm'),
-                placeholder: trans('confirm'),
+                label: trans('confirm', {}, 'actions'),
+                placeholder: trans('confirm', {}, 'actions'),
                 hideLabel: false,
                 type: 'password',
                 required: true
@@ -39,7 +39,9 @@ const ResetPasswordForm = (props) =>
         ]}
       >
         <Button
-          className="btn btn-block btn-emphasis"
+          className="w-100"
+          variant="btn"
+          size="lg"
           type={CALLBACK_BUTTON}
           label={trans('reset_password')}
           callback={() => props.reset({

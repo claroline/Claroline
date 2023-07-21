@@ -15,8 +15,8 @@ const EvaluationMenu = (props) =>
     title={trans('evaluation', {}, 'tools')}
   >
     <Toolbar
-      className="list-group"
-      buttonName="list-group-item"
+      className="list-group list-group-flush"
+      buttonName="list-group-item list-group-item-action"
       actions={getTabs(props.contextType, props.permissions).then((apps) => [
         {
           name: 'my-progression',

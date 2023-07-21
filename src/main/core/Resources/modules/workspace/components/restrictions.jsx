@@ -9,8 +9,8 @@ import {Button} from '#/main/app/action'
 import {PageFull} from '#/main/app/page/components/full'
 import {PasswordInput} from '#/main/app/data/types/password/components/input'
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {ContentHelp} from '#/main/app/content/components/help'
 import {ContentRestriction} from '#/main/app/content/components/restriction'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 import {MODAL_LOGIN} from '#/main/app/modals/login'
 import {MODAL_REGISTRATION} from '#/main/app/modals/registration'
@@ -18,6 +18,7 @@ import {MODAL_REGISTRATION} from '#/main/app/modals/registration'
 import {constants as toolConstants} from '#/main/core/tool/constants'
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
+import get from 'lodash/get'
 
 class WorkspaceRestrictions extends Component {
   constructor(props) {
@@ -42,6 +43,10 @@ class WorkspaceRestrictions extends Component {
   }
 
   render() {
+    const displayAuthenticationBtn =!this.props.authenticated
+    const displayWsRegistrationBtn = this.props.authenticated && !this.props.errors.archived && this.props.errors.selfRegistration
+    const displayPlatformRegistrationBtn = !this.props.authenticated && !this.props.errors.archived && this.props.platformSelfRegistration && this.props.errors.selfRegistration
+
     return (
       <PageFull
         showBreadcrumb={showToolBreadcrumb(toolConstants.TOOL_WORKSPACE, this.props.workspace)}
@@ -49,9 +54,15 @@ class WorkspaceRestrictions extends Component {
         title={this.props.workspace.name}
         poster={this.props.workspace.poster ? this.props.workspace.poster : undefined}
       >
-        <div className="access-restrictions">
-          <h2>{trans('restricted_access')}</h2>
-          <p>{trans('restricted_workspace.access_message', {}, 'workspace')}</p>
+        <div className="content-md mt-3">
+          {get(this.props.workspace, 'meta.description') &&
+            <div className="card mb-3">
+              <ContentHtml className="card-body">{get(this.props.workspace, 'meta.description')}</ContentHtml>
+            </div>
+          }
+
+          <h2 className="h3 text-center">{trans('restricted_access')}</h2>
+          <p className="lead text-center">{trans('restricted_workspace.access_message', {}, 'workspace')}</p>
 
           {!this.props.errors.pendingRegistration &&
             <ContentRestriction
@@ -80,49 +91,48 @@ class WorkspaceRestrictions extends Component {
                 })
               }}
             >
-              {this.props.authenticated && !this.props.errors.archived && this.props.errors.selfRegistration &&
-                <Button
-                  style={{marginTop: 20}}
-                  className="btn btn-block btn-emphasis"
-                  type={CALLBACK_BUTTON}
-                  label={trans('restricted_workspace.self_register', {}, 'workspace')}
-                  callback={this.props.selfRegister}
-                  primary={true}
-                />
-              }
+              {(displayWsRegistrationBtn || displayAuthenticationBtn || displayPlatformRegistrationBtn) &&
+                <div className="btn-toolbar gap-1 mt-3 justify-content-end">
+                  {displayWsRegistrationBtn &&
+                    <Button
+                      className="btn btn-warning"
+                      type={CALLBACK_BUTTON}
+                      label={trans('restricted_workspace.self_register', {}, 'workspace')}
+                      callback={this.props.selfRegister}
+                    />
+                  }
 
-              {!this.props.authenticated &&
-                <Button
-                  style={{marginTop: 20}}
-                  className="btn btn-block btn-emphasis"
-                  type={MODAL_BUTTON}
-                  label={trans('login', {}, 'actions')}
-                  modal={[MODAL_LOGIN, {
-                    onLogin: () => {
-                      if (!this.props.errors.archived && this.props.errors.selfRegistration) {
-                        this.props.selfRegister()
-                      }
-                    }
-                  }]}
-                  primary={true}
-                />
-              }
+                  {displayAuthenticationBtn &&
+                    <Button
+                      className="btn btn-warning"
+                      type={MODAL_BUTTON}
+                      label={trans('login', {}, 'actions')}
+                      modal={[MODAL_LOGIN, {
+                        onLogin: () => {
+                          if (!this.props.errors.archived && this.props.errors.selfRegistration) {
+                            this.props.selfRegister()
+                          }
+                        }
+                      }]}
+                      primary={true}
+                    />
+                  }
 
-              {!this.props.authenticated && !this.props.errors.archived && this.props.platformSelfRegistration && this.props.errors.selfRegistration &&
-                <Button
-                  className="btn btn-block"
-                  type={MODAL_BUTTON}
-                  label={trans('create-account', {}, 'actions')}
-                  modal={[MODAL_REGISTRATION, {
-                    onRegister: this.props.selfRegister
-                  }]}
-                />
-              }
+                  {displayPlatformRegistrationBtn &&
+                    <Button
+                      className="btn btn-outline-warning"
+                      type={MODAL_BUTTON}
+                      label={trans('create-account', {}, 'actions')}
+                      modal={[MODAL_REGISTRATION, {
+                        onRegister: this.props.selfRegister
+                      }]}
+                    />
+                  }
 
-              {!this.props.authenticated && !this.props.errors.archived && this.props.errors.selfRegistration &&
-                <ContentHelp
-                  help="Vous serez automatiquement inscrit à l'espace d'activités après votre connexion ou inscription."
-                />
+                  {!this.props.authenticated && !this.props.errors.archived && this.props.errors.selfRegistration &&
+                    <small className="text-secondary">{trans('restricted_workspace.login_help', {}, 'workspace')}</small>
+                  }
+                </div>
               }
             </ContentRestriction>
           }
@@ -166,7 +176,6 @@ class WorkspaceRestrictions extends Component {
             />
           }
 
-
           {(!isUndefined(this.props.errors.notStarted) || !isUndefined(this.props.errors.ended)) &&
             <ContentRestriction
               icon="fa fa-fw fa-calendar"
@@ -202,7 +211,7 @@ class WorkspaceRestrictions extends Component {
               }}
             >
               {this.props.errors.locked &&
-                <div style={{marginTop: 20}}>
+                <div className="mt-3">
                   <FormGroup
                     id="access-code"
                     label={trans('access_code')}
@@ -216,13 +225,11 @@ class WorkspaceRestrictions extends Component {
                   </FormGroup>
 
                   <Button
-                    className="btn btn-block btn-emphasis"
+                    className="btn btn-warning w-100"
                     type={CALLBACK_BUTTON}
-                    icon="fa fa-fw fa-sign-in-alt"
                     disabled={!this.state.codeAccess}
-                    label={trans('restricted_workspace.access', {}, 'workspace')}
+                    label={trans('unlock', {}, 'actions')}
                     callback={this.submitCodeAccess}
-                    primary={true}
                   />
                 </div>
               }
@@ -246,20 +253,22 @@ class WorkspaceRestrictions extends Component {
           }
 
           {this.props.managed &&
-            <Button
-              className="btn btn-block btn-emphasis"
-              type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-sign-in-alt"
-              label={trans('restricted_workspace.access', {}, 'workspace')}
-              callback={this.props.dismiss}
-              primary={true}
-            />
-          }
+            <>
+              <hr/>
+              <p className="text-secondary">
+                {trans('restricted_workspace.manager_info', {}, 'workspace')}
+              </p>
 
-          {this.props.managed &&
-            <ContentHelp
-              help={trans('restricted_workspace.manager_info', {}, 'workspace')}
-            />
+              <Button
+                className="w-100 mb-3"
+                variant="btn"
+                size="lg"
+                type={CALLBACK_BUTTON}
+                label={trans('open-workspace', {}, 'actions')}
+                callback={this.props.dismiss}
+                primary={true}
+              />
+            </>
           }
         </div>
       </PageFull>

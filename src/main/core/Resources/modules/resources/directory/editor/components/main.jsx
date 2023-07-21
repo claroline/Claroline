@@ -21,6 +21,7 @@ const EditorMain = (props) =>
 
     <FormData
       level={2}
+      className="mt-3"
       title={trans('parameters')}
       name={selectors.FORM_NAME}
       target={['apiv2_resource_directory_update', {id: props.directory.id}]}

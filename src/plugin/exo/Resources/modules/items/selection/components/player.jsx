@@ -88,7 +88,7 @@ class SelectionPlayer extends Component {
         }
         {this.props.item.mode !== 'find' &&
           <SelectionText
-            className="panel-body"
+            className="card-body"
             id={'selection-text-box-' + this.props.item.id}
             anchorPrefix="selection-element-yours"
             text={this.props.item.text}
@@ -96,7 +96,7 @@ class SelectionPlayer extends Component {
           />
         }
         {this.props.item.mode === 'find' &&
-          <div id={'selection-text-box-' + this.props.item.id} className="pointer panel-body" dangerouslySetInnerHTML={{__html: utils.makeFindHtml(
+          <div id={'selection-text-box-' + this.props.item.id} className="pointer card-body" dangerouslySetInnerHTML={{__html: utils.makeFindHtml(
             this.props.item.text,
             this.props.answer && this.props.answer.positions ?
               this.props.item.solutions.filter(solution => this.props.answer.positions.find(ans => ans >= solution.begin && ans <= solution.end)): []

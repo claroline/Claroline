@@ -1,0 +1,79 @@
+@use "sass:math";
+
+@mixin button-text-variant(
+  $color,
+  $hover-color: if(color-contrast($color) == $color-contrast-light, shade-color($color, $btn-hover-bg-shade-amount), tint-color($color, $btn-hover-bg-tint-amount)),
+  $active-color: if(color-contrast($color) == $color-contrast-light, shade-color($color, $btn-active-bg-shade-amount), tint-color($color, $btn-active-bg-tint-amount))
+) {
+  --#{$prefix}btn-font-weight: #{$font-weight-normal};
+  --#{$prefix}btn-color: #{$color};
+  --#{$prefix}btn-bg: transparent;
+  --#{$prefix}btn-border-color: transparent;
+
+  --#{$prefix}btn-hover-color: #{$hover-color};
+  --#{$prefix}btn-hover-bg: transparent;
+  --#{$prefix}btn-hover-border-color: transparent;
+
+  --#{$prefix}btn-active-color: #{$active-color};
+  --#{$prefix}btn-active-bg: transparent;
+  --#{$prefix}btn-active-border-color: transparent;
+  --#{$prefix}btn-active-shadow: none !important;
+
+  --#{$prefix}btn-disabled-color: #{$color};
+  --#{$prefix}btn-disabled-bg: transparent;
+  --#{$prefix}btn-disabled-border-color: transparent;
+
+  --#{$prefix}btn-box-shadow: none;
+  --#{$prefix}gradient: none;
+  --#{$prefix}btn-focus-box-shadow: none;
+
+  // override box shadow forced by dropdown container (rule: .btn-group.show .dropdown-toggle)
+  &.dropdown-toggle.show {
+    box-shadow: none !important;
+  }
+}
+
+@mixin button-toggle-size($outer-padding, $padding-vertical, $font-size, $line-height) {
+  $inner-padding: max($padding-vertical - $outer-padding, 0);
+  $handle-size: ceil(($font-size * $line-height) + ($inner-padding * 2));
+
+  padding: $outer-padding;
+  border-radius: math.div($handle-size, 2) + $outer-padding + 1;
+
+  .fa {
+    padding: $inner-padding;
+    line-height: $line-height;
+    height: $handle-size;
+    width: $handle-size;
+    border-radius: math.div($handle-size, 2);
+
+    transition: margin .25s ease-in-out;
+  }
+
+  &[aria-pressed=false] {
+    .fa {
+      margin-right: $handle-size + $outer-padding;
+    }
+  }
+
+  &[aria-pressed=true] {
+    .fa {
+      margin-left: $handle-size + $outer-padding;
+    }
+  }
+}
+
+@mixin button-toggle-color($color, $border-color) {
+  &[aria-pressed=false] {
+    @include button-variant($input-disabled-bg, $input-disabled-bg, $input-border-color);
+  }
+
+  &[aria-pressed=true] {
+    background-color: $color;
+    border-color: $border-color;
+
+    .fa {
+      color: $color;
+    }
+  }
+}

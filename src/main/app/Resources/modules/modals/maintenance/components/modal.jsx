@@ -61,7 +61,9 @@ const MaintenanceModal = props =>
     >
       <CallbackButton
         htmlType="submit"
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         callback={() => props.handleConfirm(props.message).then(() =>
           props.fadeModal()
         )}

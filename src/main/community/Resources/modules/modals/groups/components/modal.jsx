@@ -28,7 +28,7 @@ class GroupsModal extends Component {
         icon="fa fa-fw fa-users"
         {...omit(this.props, 'url', 'selected', 'selectAction', 'reset', 'resetFilters', 'filters')}
         className="data-picker-modal"
-        bsSize="lg"
+        size="xl"
         onEnter={() => {
           this.props.resetFilters(this.props.filters)
           this.setState({initialized: true})
@@ -46,7 +46,9 @@ class GroupsModal extends Component {
         <Button
           label={trans('select', {}, 'actions')}
           {...selectAction}
-          className="modal-btn btn"
+          className="modal-btn"
+          variant="btn"
+          size="lg"
           primary={true}
           disabled={0 === this.props.selected.length}
           onClick={this.props.fadeModal}

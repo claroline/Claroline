@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import classes from 'classnames'
-import Popover from 'react-bootstrap/lib/Popover'
+import Popover from 'react-bootstrap/Popover'
 
 import {trans} from '#/main/app/intl/translation'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
@@ -44,6 +44,7 @@ class KeywordItem extends Component {
               <input
                 id={`keyword-${this.props.keyword._id}-expected`}
                 type="checkbox"
+                className="form-check-input"
                 checked={this.props.keyword.score > 0}
                 onChange={e => this.props.updateKeyword('score', e.target.checked ? 1 : 0)}
               />
@@ -90,6 +91,7 @@ class KeywordItem extends Component {
               <input
                 id={`keyword-${this.props.keyword._id}-case-sensitive`}
                 type="checkbox"
+                className="form-check-input"
                 disabled={!this.props.showCaseSensitive}
                 title={trans('words_case_sensitive', {}, 'quiz')}
                 checked={this.props.keyword.caseSensitive}
@@ -208,7 +210,7 @@ const KeywordItems = props =>
 
     <Button
       type={CALLBACK_BUTTON}
-      className="add-keyword btn btn-block"
+      className="add-keyword btn btn-primary w-100"
       icon="fa fa-fw fa-plus"
       label={trans('words_add_word', {}, 'quiz')}
       callback={props.addKeyword}

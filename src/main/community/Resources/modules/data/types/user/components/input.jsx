@@ -14,8 +14,7 @@ import {MODAL_USERS} from '#/main/community/modals/users'
 
 const UserButton = props =>
   <Button
-    className="btn btn-block"
-    style={{marginTop: 10}}
+    className="btn btn-outline-primary w-100 mt-2"
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
     label={trans('add_user')}

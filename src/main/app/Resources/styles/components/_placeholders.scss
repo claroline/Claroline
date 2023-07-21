@@ -1,0 +1,61 @@
+// ATTENTION : never create a .placeholder class as bootstrap already define a mixin with that name.
+.empty-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: $placeholder-color;
+    background: $placeholder-bg;
+    border-color: $placeholder-border-color;
+    border-style: $placeholder-border-style;
+
+    .placeholder-icon {
+        color: $placeholder-color;
+        margin-right: map-get($spacers, 3);
+    }
+
+    .placeholder-body {
+        flex: 1;
+        text-align: center;
+    }
+
+    .placeholder-title {
+        display: block;
+        font-weight: $font-weight-bolder;
+    }
+}
+
+.empty-placeholder-sm {
+    @include placeholder-variant($placeholder-sm-font-size, $placeholder-sm-padding, $placeholder-sm-border-radius, $placeholder-sm-border-width);
+}
+.empty-placeholder-md {
+    @include placeholder-variant($placeholder-font-size, $placeholder-padding, $placeholder-border-radius, $placeholder-border-width);
+}
+.empty-placeholder-lg {
+    @include placeholder-variant($placeholder-lg-font-size, $placeholder-lg-padding, $placeholder-lg-border-radius, $placeholder-lg-border-width);
+}
+
+.drop-placeholder {
+    color: $placeholder-color;
+    background: $placeholder-bg;
+    border-color: $placeholder-border-color;
+    border-style: dashed;
+}
+
+.drop-placeholder-sm {
+    @include placeholder-variant($placeholder-sm-font-size, $placeholder-sm-padding, $placeholder-sm-border-radius, $placeholder-sm-border-width);
+}
+.drop-placeholder-md {
+    @include placeholder-variant($placeholder-font-size, $placeholder-padding, $placeholder-border-radius, $placeholder-border-width);
+}
+.drop-placeholder-lg {
+    @include placeholder-variant($placeholder-lg-font-size, $placeholder-lg-padding, $placeholder-lg-border-radius, $placeholder-lg-border-width);
+}
+
+.placeholder-hover {
+    &.hover,
+    &:hover {
+        color: $placeholder-hover-color;
+        border-color: $placeholder-hover-border-color;
+    }
+}

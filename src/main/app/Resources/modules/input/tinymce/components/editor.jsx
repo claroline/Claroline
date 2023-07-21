@@ -22,9 +22,9 @@ import {TinymceClassic} from '#/main/app/input/tinymce/components/classic'
  * @see https://www.tiny.cloud/docs/tinymce/6/react-ref/#using-the-tinymce-react-component-as-a-controlled-component
  */
 const Tinymce = (props) => {
-  const [value, setValue] = useState(props.initialValue || props.value || undefined)
-  useEffect(() => setValue(props.initialValue || undefined), [props.initialValue])
-  useEffect(() => setValue(props.value || undefined), [props.value])
+  const [value, setValue] = useState(props.initialValue || props.value || '')
+  useEffect(() => setValue(props.initialValue || ''), [props.initialValue])
+  useEffect(() => setValue(props.value || ''), [props.value])
 
   const editorProps = merge({}, omit(props, 'onChange', 'placeholder'), {
     value: value,

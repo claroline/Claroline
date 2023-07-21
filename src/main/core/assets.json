@@ -1,8 +1,9 @@
 {
   "styles": {
     "entry": {
-      "administration-parameters": "administration/parameters.less",
-      "swagger": "swagger/index.less"
+      "administration-connection-messages": "administration/connection-messages.scss",
+      "administration-integration": "administration/integration.scss",
+      "administration-parameters": "administration/parameters.scss"
     }
   }
 }

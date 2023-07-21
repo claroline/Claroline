@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 // TODO : remove me
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 
 import {asset} from '#/main/app/config'
 import {withRouter} from '#/main/app/router'
@@ -201,7 +201,7 @@ CardFooter.propTypes = {
 const PostCardComponent = props =>
   <div className="data-card data-card-col">
     {props.data.poster &&
-      <img className="img-responsive" alt={props.data.title} src={asset(props.data.poster)} />
+      <img className="img-fluid" alt={props.data.title} src={asset(props.data.poster)} />
     }
 
     <div className="post-header">
@@ -234,7 +234,7 @@ const PostCardComponent = props =>
         <ContentHtml>{`${props.data.content}${(props.data.abstract ? '[...]' : '')}`}</ContentHtml>
 
         {props.data.abstract &&
-          <LinkButton target={`${props.path}/${props.data.slug}`} className="btn btn-block">
+          <LinkButton target={`${props.path}/${props.data.slug}`} className="btn btn-link w-100">
             {trans('read_more', {}, 'icap_blog')}
           </LinkButton>
         }

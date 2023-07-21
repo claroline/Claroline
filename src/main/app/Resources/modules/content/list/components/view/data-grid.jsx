@@ -38,7 +38,7 @@ const DataGridItem = props =>
     {props.onSelect &&
       <input
         type="checkbox"
-        className="data-grid-item-select"
+        className="data-grid-item-select form-check-input"
         checked={props.selected}
         onChange={props.onSelect}
       />
@@ -83,11 +83,11 @@ DataGridItem.defaultProps = {
 
 const DataGridSort = props =>
   <div className="data-grid-sort">
-    <span className="hidden-xs">{trans('list_sort_by')}</span>
+    <span className="d-none d-sm-block">{trans('list_sort_by')}</span>
 
     <Button
       id="data-grid-sort-menu"
-      className="btn-link"
+      className="btn btn-text-primary fw-bold"
       type={MENU_BUTTON}
       label={props.current.property && getPropDefinition(props.current.property, props.available) ?
         getPropDefinition(props.current.property, props.available).label :
@@ -106,8 +106,10 @@ const DataGridSort = props =>
       }}
     />
 
+    <div className="vr" role="presentation" />
+
     <Button
-      className="btn-link"
+      className="btn btn-text-primary"
       type={CALLBACK_BUTTON}
       icon={classes('fa fa-fw', {
         'fa-sort'     :  0 === props.current.direction || !props.current.direction,
@@ -149,8 +151,8 @@ const DataGrid = props =>
         {props.selection &&
           <Checkbox
             id="data-grid-select"
-            label={<span className="hidden-xs">{trans('list_select_all')}</span>}
-            labelChecked={<span className="hidden-xs">{trans('list_deselect_all')}</span>}
+            label={<span className="d-none d-sm-block">{trans('list_select_all')}</span>}
+            labelChecked={<span className="d-none d-sm-block">{trans('list_deselect_all')}</span>}
             checked={0 < props.selection.current.length}
             onChange={() => {
               if (0 === props.selection.current.length) {

@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import BaseModal from 'react-bootstrap/lib/Modal'
+import BaseModal from 'react-bootstrap/Modal'
 
 import {LoginMain} from '#/main/app/security/login/containers/main'
 
@@ -22,7 +22,7 @@ class LoginModal extends Component {
         autoFocus={true}
         enforceFocus={false}
         dialogClassName="login-modal"
-        bsSize="lg"
+        size="lg"
         onHide={this.props.fadeModal}
         onExited={() => {
           if (this.props.onAbort && this.state.aborted) {

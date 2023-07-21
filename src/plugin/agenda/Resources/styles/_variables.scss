@@ -1,0 +1,13 @@
+/*
+ * Agenda plugin vars.
+ */
+
+// Claroline & bootstrap variables
+@import "src/main/app/Resources/styles/variables";
+
+$agenda-bg:          white;
+$agenda-color:       $gray-500;
+$agenda-grid-border: var(--#{$prefix}border-color);
+
+$event-color-default: $gray-lighter;
+$event-poster-border-radius:   $border-radius-lg;

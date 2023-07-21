@@ -38,7 +38,7 @@ const WorkspaceImpersonation = (props) =>
     />
 
     <div className="app-menu-status-info">
-      <h3 className="h4">
+      <h3 className="h5">
         {!isEmpty(props.roles) ?
           props.roles.map(role => trans(role.translationKey)).join(', ') :
           trans('guest')
@@ -81,7 +81,7 @@ const WorkspaceProgression = (props) =>
     />
 
     <div className="app-menu-status-info">
-      <h3 className="h4">
+      <h3 className="h5">
         {!isEmpty(props.roles) ?
           props.roles.map(role => trans(role.translationKey)).join(', ') :
           trans('guest')
@@ -104,8 +104,8 @@ WorkspaceProgression.propTypes = {
 const WorkspaceShortcuts = props =>
   <Toolbar
     id="app-menu-shortcuts"
-    className="app-menu-shortcuts"
-    buttonName="btn btn-link"
+    name="app-menu-shortcuts"
+    buttonName="btn"
     tooltip="bottom"
     actions={props.shortcuts}
     onClick={props.autoClose}

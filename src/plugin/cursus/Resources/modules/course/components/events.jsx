@@ -52,7 +52,7 @@ const CourseEvents = (props) =>
 
     {hasPermission('edit', props.activeSession) &&
       <Button
-        className="btn btn-block btn-emphasis component-container"
+        className="btn btn-primary w-100 mb-3"
         type={MODAL_BUTTON}
         label={trans('add_event', {}, 'cursus')}
         modal={[MODAL_TRAINING_EVENT_PARAMETERS, {

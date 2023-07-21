@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {ContentLoader} from '#/main/app/content/components/loader'
@@ -15,7 +15,7 @@ const COLOR_WARNING = '#F0AD4E'
 const COLOR_DANGER  = '#BF0404'
 
 const GeneralStats = props =>
-  <div className="row" style={{marginTop: '-20px'}}>
+  <div className="d-flex flex-direction-row">
     <ContentCounter label={trans('steps', {}, 'quiz')} icon="fa fa-table-list" value={props.statistics.nbSteps} color={schemeCategory20c[1]} />
     <ContentCounter label={trans('questions', {}, 'quiz')} icon="fa fa-question" value={props.statistics.nbQuestions} color={schemeCategory20c[5]} />
     <ContentCounter label={trans('users')} icon="fa fa-user" value={props.statistics.nbRegisteredUsers} color={schemeCategory20c[9]} />
@@ -92,8 +92,8 @@ const ScoreDistribution = props =>
 
     <div className="row">
       <div className="col-md-6">
-        <div className="panel panel-default">
-          <div className="panel-body">
+        <div className="card mb-3">
+          <div className="card-body">
             <BarChart
               data={props.paperScoreDistribution}
               width={540}
@@ -158,8 +158,8 @@ const DifficultyIndex = props =>
   <div className="difficulty-index">
     <h2>{trans('docimology_difficulty_index', {}, 'quiz')}</h2>
 
-    <div className="panel panel-default">
-      <div className="panel-body">
+    <div className="card mb-3">
+      <div className="card-body">
         <BarChart
           data={props.questionsDifficultyIndex}
           width={1200}
@@ -201,8 +201,8 @@ const DiscriminationIndex = props =>
   <div className="discrimination-index">
     <h2>{trans('docimology_discrimination_coefficient', {}, 'quiz')}</h2>
 
-    <div className="panel panel-default">
-      <div className="panel-body">
+    <div className="card mb-3">
+      <div className="card-body">
         <BarChart
           data={props.discriminationCoefficient}
           width={1200}

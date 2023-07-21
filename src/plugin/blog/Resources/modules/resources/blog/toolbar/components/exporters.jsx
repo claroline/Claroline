@@ -9,9 +9,9 @@ import {DOWNLOAD_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 
 const ExportersComponent = props =>
-  <div className="component-container">
+  <div className="d-grid gap-1 mb-3">
     <Button
-      className="btn btn-block btn-emphasis"
+      className="btn btn-outline-primary w-100"
       type={URL_BUTTON}
       icon="fa fa-fw fa-rss"
       label={trans('show_rss', {}, 'actions')}
@@ -19,7 +19,7 @@ const ExportersComponent = props =>
     />
 
     <Button
-      className="btn btn-block btn-emphasis"
+      className="btn btn-outline-primary w-100"
       type={DOWNLOAD_BUTTON}
       icon="fa fa-fw fa-file-pdf"
       label={trans('export-pdf', {}, 'actions')}

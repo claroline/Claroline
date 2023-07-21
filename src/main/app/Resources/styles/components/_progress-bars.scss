@@ -1,0 +1,18 @@
+/*
+ * Progress bars styles.
+ */
+
+.progress-sm {
+    height: 8px; // todo : use a var
+}
+
+.progress-xs {
+    height: 4px; // todo : use var
+}
+
+.progress-minimal {
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    margin: 0;
+}

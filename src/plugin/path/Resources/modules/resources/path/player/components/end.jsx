@@ -57,11 +57,11 @@ class PlayerEnd extends Component {
           {
             name: 'restart',
             type: LINK_BUTTON,
-            label: trans('restart_path', {}, 'path'),
+            label: trans('restart', {}, 'actions'),
             target: `${this.props.basePath}/play`,
             exact: true,
             primary: true,
-            className: 'btn-emphasis'
+            size: 'lg'
           }
         ].concat(get(this.props.path, 'end.back.type') ? [
           {
@@ -76,7 +76,7 @@ class PlayerEnd extends Component {
           }
         ] : [])}
       >
-        <section className="resource-parameters">
+        <section className="resource-parameters mb-3">
           <h3 className="h2">{trans('summary')}</h3>
           <PathSummary
             className="component-container"

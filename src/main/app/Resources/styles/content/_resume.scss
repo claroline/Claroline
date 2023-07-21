@@ -1,0 +1,57 @@
+// find a better naming
+// TODO : replace subscription-resume by this
+.content-resume {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background: var(--#{$prefix}secondary-bg);
+  margin-bottom: $component-margin-bottom;
+
+  @include border-radius($border-radius);
+
+  .content-resume-info {
+    padding: $panel-body-padding;
+  }
+
+  .content-resume-title {
+    font-weight: 900;
+    margin: 0;
+
+    > small {
+      display: block;
+    }
+  }
+
+  .content-resume-primary {
+    flex: 1;
+  }
+}
+
+.score-chart {
+  height: 64px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+
+  .score-progress {
+    width: 15px;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    @include border-radius($border-radius-sm);
+
+    + .score-progress {
+      margin-left: 5px;
+    }
+
+    cursor: help;
+  }
+
+  .score-progressbar {
+    width: 100%;
+    background: $learning;
+
+    @include border-radius($border-radius-sm);
+  }
+}

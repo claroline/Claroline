@@ -5,28 +5,21 @@ import uniq from 'lodash/uniq'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
+import {ContentTabs} from '#/main/app/content/components/tabs'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-// todo : enhance implementation (make it more generic)
 // todo : find better naming and location
 
 const GroupTabs = props =>
-  <ul className="nav nav-tabs">
-    {props.tabs.map(tab =>
-      <li key={tab} className={classes({active: tab === props.current})}>
-        <a
-          role="button"
-          href=""
-          onClick={(e) => {
-            e.preventDefault()
-            props.activate(tab)
-          }}
-        >
-          {tab}
-        </a>
-      </li>
-    )}
-  </ul>
+  <ContentTabs
+    sections={props.tabs.map(tab => ({
+      name: tab,
+      label: tab,
+      type: CALLBACK_BUTTON,
+      callback: () => props.activate(tab),
+      active: tab === props.current
+    }))}
+  />
 
 GroupTabs.propTypes = {
   current: T.string.isRequired,
@@ -84,7 +77,7 @@ class GridSelection extends Component {
               <Button
                 id={type.id || type.name}
                 key={type.id || type.name}
-                className="list-group-item type-control lg"
+                className="list-group-item list-group-item-action type-control lg"
                 role="option"
                 icon={typeof type.icon === 'string' ?
                   <span className={classes('type-icon', type.icon)} /> :

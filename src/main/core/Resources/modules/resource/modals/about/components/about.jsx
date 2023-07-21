@@ -23,6 +23,7 @@ const AboutModal = props =>
     <DetailsData
       meta={true}
       data={props.resourceNode}
+      flush={true}
       definition={[
         {
           title: trans('general'),

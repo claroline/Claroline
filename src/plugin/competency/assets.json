@@ -1,7 +1,7 @@
 {
   "styles": {
     "entry": {
-      "competency": "tools/competency.less"
+      "competency": "tools/competency.scss"
     }
   }
 }

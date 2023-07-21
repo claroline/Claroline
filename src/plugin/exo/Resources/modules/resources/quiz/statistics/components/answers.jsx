@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import Panel from 'react-bootstrap/lib/Panel'
 
 import {trans} from '#/main/app/intl/translation'
 import {ContentTitle} from '#/main/app/content/components/title'
@@ -30,25 +29,27 @@ const AnswersStats = props =>
 
             {step.items.map((item, idxItem) => {
               return isQuestionType(item.type) && props.stats && props.stats[item.id] &&
-                <Panel key={item.id}>
-                  {item.title &&
-                    <h4 className="item-title">{item.title}</h4>
-                  }
+                <div className="card mb-3" key={item.id}>
+                  <div className="card-body">
+                    {item.title &&
+                      <h4 className="item-title">{item.title}</h4>
+                    }
 
-                  <ItemMetadata
-                    item={item}
-                    numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
-                  />
+                    <ItemMetadata
+                      item={item}
+                      numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
+                    />
 
-                  {React.createElement(getDefinition(item.type).paper, {
-                    item,
-                    showYours: false,
-                    showExpected: false,
-                    showStats: true,
-                    showScore: false,
-                    stats: props.stats && props.stats[item.id] ? props.stats[item.id] : {}
-                  })}
-                </Panel>
+                    {React.createElement(getDefinition(item.type).paper, {
+                      item,
+                      showYours: false,
+                      showExpected: false,
+                      showStats: true,
+                      showScore: false,
+                      stats: props.stats && props.stats[item.id] ? props.stats[item.id] : {}
+                    })}
+                  </div>
+                </div>
             })}
           </div>
         )

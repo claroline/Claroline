@@ -1,0 +1,106 @@
+/**
+ * Styles for `html` data type.
+ */
+
+.editor-control {
+    position: relative;
+    text-align: justify;
+    //border: 1px solid $input-border;
+    color: $input-color;
+    background-color: $input-bg;
+    background-clip: padding-box;
+    border: $input-border-width solid $input-border-color;
+
+    @include border-radius($input-border-radius, 0);
+    @include box-shadow($input-box-shadow);
+    @include transition($input-transition);
+
+    &.fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: $zindex-fullscreen;
+        border: none;
+
+        &,
+        .tox-tinymce {
+            @include border-radius(none !important);
+        }
+    }
+
+    &:not(.fullscreen) { // precise selector is required to override tinymce styles
+        &.sm {
+            &,
+            .tox-tinymce {
+                @include border-radius($input-border-radius-sm !important);
+            }
+        }
+        &.lg {
+            &,
+            .tox-tinymce {
+                @include border-radius($input-border-radius-lg !important);
+            }
+        }
+
+        .tox-tinymce {
+            z-index: 1;
+            overflow: hidden;
+
+            @include border-radius($input-border-radius !important);
+        }
+    }
+
+    .mce-content-body {
+        height: auto;
+        /*min-height: 160px;
+        max-height: 500px;*/
+        overflow-y: auto;
+
+        p:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.editor-toolbar {
+    z-index: 2;
+    position: absolute;
+    //font-size: 0; // fix spacing
+    top: -13px;
+    right: -13px;
+
+    .editor-toolbar-btn {
+        /*font-size: $font-size-sm;
+        width: 26px;
+        height: 26px;*/
+
+        width: 26px;
+        height: 26px;
+
+        // removes default btn styles
+        padding: 0;
+        /*border: none;
+        line-height: 1 !important;
+        color: $white !important;
+        background: $gray-500 !important;
+        border-radius: 50%;*/
+
+        /*&:hover,
+        &:focus {
+            background: $gray-dark !important;
+        }
+
+        + .editor-toolbar-btn {
+            margin-left: 5px;
+        }*/
+    }
+}
+
+/*[contenteditable=true]:empty:before {
+    content: attr(placeholder);
+    display: block; !* For Firefox *!
+    color: $input-placeholder-color;
+    cursor: text;
+}*/

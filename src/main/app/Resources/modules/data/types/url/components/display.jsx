@@ -7,13 +7,12 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 const UrlDisplay = (props) =>
-  <div id={props.id} className="url-display">
+  <div id={props.id} className="url-display btn-group w-100">
     <Button
       type={URL_BUTTON}
       label={props.data}
-      className="btn-link"
+      className="btn btn-outline-primary text-truncate"
       target={props.data}
-      primary={true}
       onClick={props.onClick}
     />
 
@@ -22,7 +21,7 @@ const UrlDisplay = (props) =>
       type={CALLBACK_BUTTON}
       tooltip="left"
       label={trans('clipboard_copy')}
-      className="btn-link"
+      className="btn btn-primary"
       icon="fa fa-fw fa-clipboard"
       callback={() => copy(props.data)}
       size={props.size}

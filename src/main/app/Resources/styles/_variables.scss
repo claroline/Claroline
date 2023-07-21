@@ -1,0 +1,16 @@
+@import "variables.bootstrap";
+@import "variables.old";
+
+$fa-font-path: "../../packages/@fortawesome/fontawesome-free/webfonts";
+
+$text-selection-color: $white !default;
+$text-selection-bg:    $primary !default;
+
+// colors for SVG theme icons
+$icon-primary-color: $primary !default;
+$icon-secondary-color: $gray-900 !default;
+
+// content sizing
+$content-sm: 540px !default;
+$content-md: 860px !default;
+$content-lg: 1180px !default;
