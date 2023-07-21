@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React, {Fragment, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useHistory} from 'react-router-dom'
 
@@ -14,7 +14,6 @@ import {route} from '#/plugin/cursus/routing'
 
 const CourseForm = (props) => {
   const basePath = props.isNew ? props.path + '/new' : route(props.course)+'/edit'
-  const history = useHistory()
 
   return (
     <Fragment>
@@ -45,7 +44,7 @@ const CourseForm = (props) => {
           {
             path: '/',
             exact: true,
-            render: () => <CourseParameters {...props} history={history} />
+            render: () => <CourseParameters {...props} />
           }, {
             path: '/registration',
             render: () => <CourseRegistration {...props} />
