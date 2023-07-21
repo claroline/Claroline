@@ -271,9 +271,11 @@ abstract class AbstractCrudController
     public static function getOptions(): array
     {
         return [
+            'get' => [],
             'list' => [Options::SERIALIZE_LIST],
             'create' => [Crud::THROW_EXCEPTION],
             'update' => [Crud::THROW_EXCEPTION],
+            'copyBulk' => [],
         ];
     }
 
