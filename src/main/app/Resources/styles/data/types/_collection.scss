@@ -32,6 +32,8 @@
         .btn-delete {
             margin-left: ($grid-gutter-width * .5);
             align-self: flex-start;
+            padding-left: map-get($spacers, 1);
+            padding-right: map-get($spacers, 1);
         }
     }
 

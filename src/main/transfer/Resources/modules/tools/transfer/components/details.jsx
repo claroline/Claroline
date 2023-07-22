@@ -29,11 +29,11 @@ const TransferDetails = props => {
     <ToolPage
       subtitle={
         <Fragment>
-          <span className={classes('label icon-with-text-right', {
-            'label-default': 'pending' === props.transferFile.status,
-            'label-info': 'in_progress' === props.transferFile.status,
-            'label-success': 'success' === props.transferFile.status,
-            'label-danger': 'error' === props.transferFile.status
+          <span className={classes('badge icon-with-text-right', {
+            'text-bg-secondary': 'pending' === props.transferFile.status,
+            'text-bg-info': 'in_progress' === props.transferFile.status,
+            'text-bg-success': 'success' === props.transferFile.status,
+            'text-bg-danger': 'error' === props.transferFile.status
           })}>
             {trans(props.transferFile.status)}
           </span>

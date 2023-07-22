@@ -66,6 +66,10 @@ class ListExporter extends AbstractListExporter
                     'name' => 'restrictions.disabled',
                     'type' => 'boolean',
                     'description' => $this->translator->trans('Is the user disabled ?', [], 'schema'),
+                ], [
+                    'name' => 'restrictions.dates',
+                    'type' => 'date-range',
+                    'description' => $this->translator->trans('The user restrictions dates', [], 'schema'),
                 ],
             ],
         ];

@@ -49,9 +49,9 @@
 }
 
 .transfer-schema-one-of {
-    background: var(--#{$prefix}secondary-bg);
+    background: var(--#{$prefix}tertiary-bg);
     border-radius: $border-radius;
-    padding: 10px;
+    padding: map-get($spacers, 2);
 
     &.required {
         border: 1px solid $primary;
@@ -64,7 +64,7 @@
         .transfer-schema-or {
             order: 1;
             z-index: 1;
-            border: 2px solid $card-border-color;
+            border: 1px solid $card-border-color;
             background: $card-bg;
             text-transform: uppercase;
             display: flex;
@@ -72,7 +72,7 @@
             justify-content: center;
             width: 42px;
             height: 42px;
-            font-weight: 900;
+            font-weight: $font-weight-bolder;
             border-radius: 50%;
             margin-right: -22px;
         }
@@ -93,8 +93,8 @@
                     top: 0;
                     height: 50%;
                     margin-top: -1px;
-                    border-bottom: 1px solid #ccc;
-                    border-left: 2px solid #ccc;
+                    border-bottom: 1px solid var(--#{$prefix}border-color);
+                    border-left: 2px solid var(--#{$prefix}border-color);
                 }
 
                 &:after {
@@ -105,8 +105,8 @@
                     top: 50%;
                     bottom: -10px;
                     margin-top: -1px;
-                    border-top: 1px solid #ccc;
-                    border-left: 2px solid #ccc;
+                    border-top: 1px solid var(--#{$prefix}border-color);
+                    border-left: 2px solid var(--#{$prefix}border-color);
                 }
 
                 &:first-child {
@@ -114,13 +114,13 @@
                         display: none;
                     }
                     &:after {
-                        border-top: 2px solid #ccc;
+                        border-top: 2px solid var(--#{$prefix}border-color);
                     }
                 }
 
                 &:last-child {
                     &:before {
-                        border-bottom: 2px solid #ccc;
+                        border-bottom: 2px solid var(--#{$prefix}border-color);
                     }
                     &:after {
                         display: none;
@@ -135,7 +135,7 @@
 .transfer-schema-one-of {
     + .transfer-schema-field,
     + .transfer-schema-one-of {
-        margin-top: 5px;
+        margin-top: map-get($spacers, 2);
     }
 }
 
@@ -143,9 +143,9 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 5px;
+    //margin-bottom: 5px;
 
-    .label {
+    .badge {
         margin-left: auto;
     }
 }

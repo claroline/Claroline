@@ -18,29 +18,28 @@ const TransferForm = withRouter(props => {
 
   return (
     <ToolPage subtitle={props.title}>
-      <div className="row">
-        <div className="col-md-3">
-          <Vertical
-            style={{
-              marginTop: 20
-            }}
-            basePath={props.path}
-            tabs={entities}
-          />
-        </div>
+      <div className="content-lg">
+        <div className="row">
+          <div className="col-md-4">
+            <Vertical
+              basePath={props.path}
+              tabs={entities}
+            />
+          </div>
 
-        <div className="col-md-9">
-          <Routes
-            path={props.path}
-            redirect={!isEmpty(entities) ? [
-              {from: '/', exact: true, to: entities[0].path}
-            ] : undefined}
-            routes={[{
-              path: '/:entity/:action?',
-              onEnter: (params) => props.openForm(!isEmpty(props.contextData) ? merge({}, params, {workspace: props.contextData}) : params),
-              render: (routerProps) => React.cloneElement(props.children, merge({}, props.children.props, routerProps))
-            }]}
-          />
+          <div className="col-md-8">
+            <Routes
+              path={props.path}
+              redirect={!isEmpty(entities) ? [
+                {from: '/', exact: true, to: entities[0].path}
+              ] : undefined}
+              routes={[{
+                path: '/:entity/:action?',
+                onEnter: (params) => props.openForm(!isEmpty(props.contextData) ? merge({}, params, {workspace: props.contextData}) : params),
+                render: (routerProps) => React.cloneElement(props.children, merge({}, props.children.props, routerProps))
+              }]}
+            />
+          </div>
         </div>
       </div>
     </ToolPage>

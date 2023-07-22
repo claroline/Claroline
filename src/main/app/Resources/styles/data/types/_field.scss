@@ -32,7 +32,8 @@
             margin-left: ($grid-gutter-width * .5);
 
             .btn {
-                padding: 4px;
+                padding-left: map-get($spacers, 1);
+                padding-right: map-get($spacers, 1);
             }
         }
     }

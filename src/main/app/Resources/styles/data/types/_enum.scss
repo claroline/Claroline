@@ -22,10 +22,15 @@
 
         @include border-radius($border-radius);
 
-        .enum-item-content {
+        > .form-group {
             flex: 1;
-            margin-right: ($grid-gutter-width * .5);
-            margin-bottom: 0;
+            margin-bottom: 0 !important;
+        }
+
+        .right-controls .btn {
+            margin-left: ($grid-gutter-width * .5);
+            padding-left: map-get($spacers, 1);
+            padding-right: map-get($spacers, 1);
         }
     }
 }

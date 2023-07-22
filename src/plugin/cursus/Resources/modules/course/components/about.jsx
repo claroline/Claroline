@@ -322,7 +322,7 @@ const CourseAbout = (props) => {
         {!isEmpty(props.course.tags) &&
           <div className="component-container tags">
             {props.course.tags.map(tag =>
-              <span key={tag} className="tag label label-info">
+              <span key={tag} className="tag badge text-bg-primary">
                 <span className="fa fa-fw fa-tag icon-with-text-right" />
                 {tag}
               </span>

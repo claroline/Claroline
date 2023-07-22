@@ -56,13 +56,13 @@ const CardMeta = props =>
 
     {props.post.pinned &&
       <li>
-        <span className="label label-success">{trans('icap_blog_post_pinned', {}, 'icap_blog')}</span>
+        <span className="badge text-bg-primary">{trans('icap_blog_post_pinned', {}, 'icap_blog')}</span>
       </li>
     }
 
     {!props.post.isPublished &&
       <li>
-        <span className="label label-danger">{props.post.status ? trans('unpublished_date', {}, 'icap_blog') : trans('unpublished', {}, 'icap_blog')}</span>
+        <span className="badge text-bg-danger">{props.post.status ? trans('unpublished_date', {}, 'icap_blog') : trans('unpublished', {}, 'icap_blog')}</span>
       </li>
     }
   </ul>

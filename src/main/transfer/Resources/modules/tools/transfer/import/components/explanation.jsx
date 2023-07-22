@@ -22,11 +22,11 @@ const Field = props => {
       <div className={classes('transfer-schema-one-of', {
         required: props.required
       })}>
-        <div className="schema-field-meta">
+        <div className="schema-field-meta mb-1">
           {trans('one_of_field_list', {}, 'transfer')}
 
           {props.required &&
-            <span className="label label-primary">{trans('required')}</span>
+            <span className="badge text-bg-primary">{trans('required')}</span>
           }
         </div>
 
@@ -70,7 +70,7 @@ const Field = props => {
         </strong>
 
         {props.required &&
-          <span className="label label-primary">{trans('required')}</span>
+          <span className="badge text-bg-primary">{trans('required')}</span>
         }
       </div>
 

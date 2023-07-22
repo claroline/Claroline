@@ -30,7 +30,7 @@ const WorkspaceCard = (props) =>
     }
     title={
       <Fragment>
-        <span className={`badge rounded-pill text-bg-${constants.EVALUATION_STATUS_COLOR[props.data.status]} icon-with-text-right`}>
+        <span className={`badge text-bg-${constants.EVALUATION_STATUS_COLOR[props.data.status]} icon-with-text-right`}>
           {constants.EVALUATION_STATUSES_SHORT[props.data.status]}
         </span>
 

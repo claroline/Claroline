@@ -37,11 +37,11 @@ const ScheduledTaskList = (props) =>
           choices: constants.TASK_STATUSES
         },
         render: (row) => (
-          <span className={classes('label', {
-            'label-default': constants.TASK_STATUS_PENDING === row.status,
-            'label-success': constants.TASK_STATUS_SUCCESS === row.status,
-            'label-info': constants.TASK_STATUS_IN_PROGRESS === row.status,
-            'label-danger': constants.TASK_STATUS_ERROR === row.status
+          <span className={classes('badge', {
+            'text-bg-secondary': constants.TASK_STATUS_PENDING === row.status,
+            'text-bg-success': constants.TASK_STATUS_SUCCESS === row.status,
+            'text-bg-info': constants.TASK_STATUS_IN_PROGRESS === row.status,
+            'text-bg-danger': constants.TASK_STATUS_ERROR === row.status
           })}>
             {trans('task_'+row.status, {}, 'scheduler')}
           </span>

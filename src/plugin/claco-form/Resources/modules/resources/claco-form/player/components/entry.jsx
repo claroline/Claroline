@@ -339,7 +339,7 @@ class EntryComponent extends Component {
                     <span className="title">{trans('categories')}</span>
                   }
                   {this.props.displayCategories && this.props.entry.categories && this.props.entry.categories.map(c =>
-                    <span key={`category-${c.id}`} className="label label-primary">{c.name}</span>
+                    <span key={`category-${c.id}`} className="badge text-bg-primary">{c.name}</span>
                   )}
 
                   {this.props.displayKeywords && this.props.entry.keywords && 0 < this.props.entry.keywords.length &&
@@ -349,7 +349,7 @@ class EntryComponent extends Component {
                     <span className="title">{trans('keywords')}</span>
                   }
                   {this.props.displayKeywords && this.props.entry.keywords && this.props.entry.keywords.map(c =>
-                    <span key={`keyword-${c.id}`} className="label label-default">{c.name}</span>
+                    <span key={`keyword-${c.id}`} className="badge text-bg-secondary">{c.name}</span>
                   )}
                 </div>
               }

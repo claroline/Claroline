@@ -91,7 +91,7 @@ const CreatePermission = props =>
           />
         }
       >
-        <span className={classes('badge rounded-pill', {
+        <span className={classes('badge', {
           'text-bg-primary': props.permission && 0 < props.permission.length,
           'text-bg-secondary': !props.permission || 0 === props.permission.length
         })}>
