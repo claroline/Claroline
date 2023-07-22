@@ -113,7 +113,7 @@ class DataDisplay extends Component {
 
     if (!this.props.value && false !== this.props.value && 0 !== this.props.value) {
       return (
-        <em className="text-secondary d-block">{trans('empty_value')}</em>
+        <span className="text-secondary d-block">{trans('empty_value')}</span>
       )
     }
 

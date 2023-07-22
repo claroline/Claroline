@@ -154,7 +154,6 @@ const ItemEditor = props => {
                         id={`hint-${props.item.id}-${hintIndex}-text`}
                         className="hint-value"
                         value={hint.value}
-                        //size="sm"
                         onChange={value => props.update(`hints[${hintIndex}].value`, value)}
                       />
 
@@ -163,7 +162,6 @@ const ItemEditor = props => {
                         className="hint-penalty"
                         min={0}
                         value={hint.penalty}
-                        //size="sm"
                         onChange={value => props.update(`hints[${hintIndex}].penalty`, value)}
                       />
                     </div>

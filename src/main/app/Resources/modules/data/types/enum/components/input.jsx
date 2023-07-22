@@ -11,7 +11,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const EnumItem = props =>
-  <li className="enum-item">
+  <li className="enum-item mb-2">
     <TextGroup
       id={`item-${props.index}-value`}
       className="enum-item-content"
@@ -27,12 +27,13 @@ const EnumItem = props =>
       <Button
         id={`enum-item-${props.item.id}-delete`}
         type={CALLBACK_BUTTON}
-        className="btn-link"
+        className="btn btn-text-danger"
         icon="fa fa-fw fa-trash"
         label={props.deleteButtonLabel}
         tooltip="left"
         callback={props.onDelete}
         dangerous={true}
+        size={props.size}
       />
     </div>
   </li>
@@ -47,7 +48,8 @@ EnumItem.propTypes = {
   error: T.string,
   validating: T.bool,
   onChange: T.func.isRequired,
-  onDelete: T.func.isRequired
+  onDelete: T.func.isRequired,
+  size: T.string
 }
 
 EnumItem.defaultTypes = {
@@ -65,6 +67,7 @@ const EnumInput = (props) =>
             item={item}
             deleteButtonLabel={props.deleteButtonLabel}
             validating={props.validating}
+            size={props.size}
             error={props.error && typeof props.error !== 'string' ? props.error[index] : undefined}
             onChange={(propName, propValue) => {
               const newItem = Object.assign({}, item, {
@@ -92,7 +95,8 @@ const EnumInput = (props) =>
     }
 
     <Button
-      className="btn w-100"
+      variant="btn"
+      className="w-100"
       type={CALLBACK_BUTTON}
       icon="fa fa-fw fa-plus"
       label={props.addButtonLabel}

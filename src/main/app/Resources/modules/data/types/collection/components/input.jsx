@@ -60,9 +60,8 @@ const CollectionInput = props =>
                 id={`${props.id}-${index}`}
                 type={props.type}
                 options={props.options}
-
+                size={props.size}
                 label={`${props.label} #${index + 1}`}
-                size="sm"
                 hideLabel={true}
                 required={true}
                 disabled={props.disabled}
@@ -84,14 +83,14 @@ const CollectionInput = props =>
               </DataInput>
 
               <Button
-                className="btn btn-link btn-delete"
+                className="btn btn-text-danger btn-delete"
                 type={CALLBACK_BUTTON}
                 icon="fa fa-fw fa-trash"
                 label={trans('delete')}
                 tooltip="left"
                 disabled={props.disabled}
                 dangerous={true}
-                size="sm"
+                size={props.size}
                 callback={() => {
                   const newCollection = cloneDeep(props.value)
 
@@ -108,10 +107,11 @@ const CollectionInput = props =>
 
     <Button
       variant="btn"
-      className="btn w-100 btn-add"
+      className="w-100 btn-add"
       type={CALLBACK_BUTTON}
       icon="fa fa-fw fa-plus"
       label={props.button}
+      size={props.size}
       disabled={props.disabled || (props.max && props.value && props.max <= props.value.length)}
       callback={() => props.onChange([].concat(props.value || [], [props.defaultItem]))}
     />
