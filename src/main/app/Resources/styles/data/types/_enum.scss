@@ -4,6 +4,8 @@
 
 @use "sass:math";
 
+// TODO : merge with field/collection data type
+
 .enum-control {
     ul {
         padding: 0;
@@ -14,27 +16,16 @@
     .enum-item {
         display: flex;
         align-items: flex-start;
-        background-color: $gray-lighter;
-        border: 1px solid $gray-lighter;
-        border-radius: $border-radius;
-        padding: 10px;
-        margin-bottom: 4px;
+        background: var(--#{$prefix}secondary-bg);
+        border: var(--#{$prefix}border-width) solid transparent;
+        padding: map-get($spacers, 2);
+
+        @include border-radius($border-radius);
 
         .enum-item-content {
             flex: 1;
             margin-right: ($grid-gutter-width * .5);
             margin-bottom: 0;
-        }
-
-        .error-block {
-            margin-bottom: 0;
-        }
-
-        .right-controls {
-            .btn {
-                padding-left: 4px;
-                padding-right: 4px;
-            }
         }
     }
 }

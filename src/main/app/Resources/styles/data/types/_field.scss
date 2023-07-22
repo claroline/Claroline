@@ -2,7 +2,7 @@
  * Styles for `field` data type.
  */
 
-// TODO : merge with collection data type
+// TODO : merge with collection/enum data type
 
 .field-list-control {
     position: relative; // constrains remove all btn
@@ -25,11 +25,7 @@
 
         .form-group {
             flex: 1;
-            margin-bottom: 0;
-        }
-
-        .help-block {
-            margin-bottom: 0; // todo ugly. will break when there is error message
+            margin-bottom: 0 !important;;
         }
 
         .field-item-actions {

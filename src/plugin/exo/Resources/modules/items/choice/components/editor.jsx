@@ -55,7 +55,6 @@ class Choice extends Component {
           <HtmlInput
             id={`choice-${this.props.id}-data`}
             value={this.props.data}
-            //initialValue={this.props.data}
             onChange={data => this.props.update('data', data)}
             minRows={1}
           />
@@ -82,7 +81,7 @@ class Choice extends Component {
 
           <Button
             id={`choice-${this.props.id}-feedback-toggle`}
-            className="btn-link"
+            className="btn btn-text-secondary"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-comments"
             label={trans('choice_feedback_info', {}, 'quiz')}
@@ -92,7 +91,7 @@ class Choice extends Component {
 
           <Button
             id={`choice-${this.props.id}-delete`}
-            className="btn-link"
+            className="btn btn-text-danger"
             type={CALLBACK_BUTTON}
             disabled={!this.props.deletable}
             icon="fa fa-fw fa-trash"
