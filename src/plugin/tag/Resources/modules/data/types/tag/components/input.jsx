@@ -22,7 +22,7 @@ const TagPreview = props =>
     className="tag-preview"
     callback={props.select}
   >
-    <span className="label label-info">{props.name}</span>
+    <span className="badge text-bg-primary">{props.name}</span>
 
     {transChoice('count_elements', props.elements, {count: props.elements})}
 
@@ -229,7 +229,7 @@ class TagInput extends Component {
             focus: this.state.inputFocus
           })}>
             {this.props.value && this.props.value.map(tag =>
-              <span key={toKey(tag)} className="tag label label-info">
+              <span key={toKey(tag)} className="tag badge text-bg-primary">
                 {tag}
 
                 <Button

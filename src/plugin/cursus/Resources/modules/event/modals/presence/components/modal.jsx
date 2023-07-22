@@ -25,7 +25,7 @@ const PresenceModal = props =>
           }}
         >
           <h1 className="h2" style={{margin: 0}}>
-            <span className={`label label-${constants.PRESENCE_STATUS_COLORS[status]}`} style={{display: 'inline-block'}}>{trans(constants.PRESENCE_STATUSES[status], {}, 'cursus')}</span>
+            <span className={`badge text-bg-${constants.PRESENCE_STATUS_COLORS[status]}`} style={{display: 'inline-block'}}>{trans(constants.PRESENCE_STATUSES[status], {}, 'cursus')}</span>
             <small style={{display: 'block', marginTop: '5px'}}>{trans('presence_'+status+'_help', {}, 'cursus')}</small>
           </h1>
         </CallbackButton>

@@ -91,7 +91,7 @@ const EnumInput = (props) =>
     }
 
     {props.value.length === 0 &&
-      <ContentPlaceholder title={props.placeholder} size={props.size} />
+      <ContentPlaceholder title={props.placeholder} size={props.size} className="mb-2" />
     }
 
     <Button

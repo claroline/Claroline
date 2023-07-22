@@ -24,7 +24,7 @@ export default {
         },
         displayed: true,
         render: (row) => (
-          <span className={`badge rounded-pill text-bg-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
+          <span className={`badge text-bg-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
             {constants.EVALUATION_STATUSES_SHORT[row.status]}
           </span>
         )

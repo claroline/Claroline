@@ -135,7 +135,7 @@ const EventPresences = (props) =>
           choices: constants.PRESENCE_STATUSES
         },
         render: (row) => (
-          <span className={classes('label', `label-${constants.PRESENCE_STATUS_COLORS[row.status]}`)}>
+          <span className={classes('badge', `text-bg-${constants.PRESENCE_STATUS_COLORS[row.status]}`)}>
             {constants.PRESENCE_STATUSES[row.status]}
           </span>
         ),

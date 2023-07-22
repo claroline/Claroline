@@ -148,7 +148,7 @@ class FieldList extends Component {
                     <Button
                       id={`${this.props.id}-${fieldIndex}-edit`}
                       type={MODAL_BUTTON}
-                      className="btn-link"
+                      className="btn btn-text-secondary"
                       icon="fa fa-fw fa-pencil"
                       label={trans('edit', {}, 'actions')}
                       tooltip="top"
@@ -162,7 +162,7 @@ class FieldList extends Component {
                     <Button
                       id={`${this.props.id}-${fieldIndex}-delete`}
                       type={CALLBACK_BUTTON}
-                      className="btn-link"
+                      className="btn btn-text-danger"
                       icon="fa fa-fw fa-trash"
                       label={trans('delete', {}, 'actions')}
                       tooltip="top"

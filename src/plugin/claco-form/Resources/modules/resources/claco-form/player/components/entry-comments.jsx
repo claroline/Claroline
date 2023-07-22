@@ -78,7 +78,7 @@ class EntryCommentsComponent extends Component {
         <h3 className="comments-title">
           <span className="comments-icon">
             <span className="fa fa-fw fa-comments" />
-            <span className="comments-count badge bg-text-primary rounded-pill">{comments.length || '0'}</span>
+            <span className="comments-count badge text-bg-primary">{comments.length || '0'}</span>
           </span>
 
           {trans('comments', {}, 'clacoform')}

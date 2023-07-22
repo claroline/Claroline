@@ -135,7 +135,7 @@ class SubjectComponent extends Component {
             {!isEmpty(this.props.subject.tags)&&
               <div className="tag">
                 {this.props.subject.tags.map(tag =>
-                  <span key={tag} className="label label-primary"><span className="fa fa-fw fa-tag" />{tag}</span>
+                  <span key={tag} className="badge text-bg-primary"><span className="fa fa-fw fa-tag" />{tag}</span>
                 )}
               </div>
             }

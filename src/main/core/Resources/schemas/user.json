@@ -84,6 +84,21 @@
           }
         ]
       }
+    },
+    "restrictions": {
+      "type": "object",
+      "properties": {
+        "disabled": {
+          "type": "boolean",
+          "description": "Is the user disabled ?"
+        },
+        "dates": {
+          "type": "array",
+          "items": {
+            "type": ["string", "null"]
+          }
+        }
+      }
     }
   },
   "claroline": {

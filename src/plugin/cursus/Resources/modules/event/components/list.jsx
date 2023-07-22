@@ -118,10 +118,10 @@ const EventList = (props) =>
           }
 
           const EventStatus = (
-            <span className={classes('label', {
-              'label-success': 'not_started' === status,
-              'label-info': 'in_progress' === status,
-              'label-danger': 'ended' === status
+            <span className={classes('badge', {
+              'text-bg-success': 'not_started' === status,
+              'text-bg-info': 'in_progress' === status,
+              'text-bg-danger': 'ended' === status
             })}>
               {trans('session_'+status, {}, 'cursus')}
             </span>
