@@ -110,7 +110,10 @@ class SearchModal extends Component {
                         type: LINK_BUTTON,
                         label: trans('open', {}, 'actions'),
                         target: this.state.availableSearches[resultType].link(result),
-                        onClick: this.reset
+                        onClick: () => {
+                          this.reset()
+                          this.props.fadeModal()
+                        }
                       }
                     })
                   )}
