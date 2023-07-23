@@ -27,14 +27,6 @@ import {CourseCard} from '#/plugin/cursus/course/components/card'
 import {SessionCard} from '#/plugin/cursus/session/components/card'
 import {MODAL_COURSE_REGISTRATION} from '#/plugin/cursus/course/modals/registration'
 
-function canSelfRegister(course, session, registered = false) {
-  return !registered
-    && (!isEmpty(session) || get(course, 'registration.pendingRegistrations'))
-    && getInfo(course, session, 'registration.selfRegistration')
-    && !getInfo(course, session, 'registration.autoRegistration')
-    && (getInfo(course, session, 'registration.pendingRegistrations') || !isFull(session))
-}
-
 const CurrentRegistration = (props) => {
   let registrationTitle = trans('session_registration_pending', {}, 'cursus')
   if (constants.TEACHER_TYPE === props.registration.type) {
@@ -75,7 +67,16 @@ const CourseAbout = (props) => {
   const availableSessions = props.availableSessions
     .filter(session => (!props.activeSession || props.activeSession.id !== session.id) && !get(session, 'restrictions.hidden'))
 
-  const selfRegistration = canSelfRegister(props.course, props.activeSession, !isEmpty(props.activeSessionRegistration) || !isEmpty(props.courseRegistration))
+  const registered = !isEmpty(props.activeSessionRegistration) || !isEmpty(props.courseRegistration)
+  let selfRegistration = !registered
+    && (!isEmpty(props.activeSession) || !isEmpty(props.availableSessions) || get(props.course, 'registration.pendingRegistrations'))
+
+
+  if (props.activeSession) {
+    selfRegistration = selfRegistration && getInfo(props.course, props.activeSession, 'registration.selfRegistration')
+      && !getInfo(props.course, props.activeSession, 'registration.autoRegistration')
+      && (getInfo(props.course, props.activeSession, 'registration.pendingRegistrations') || !isFull(props.activeSession))
+  }
 
   return (
     <div className="row mt-3">
@@ -186,11 +187,18 @@ const CourseAbout = (props) => {
               {
                 name: 'self-register',
                 type: MODAL_BUTTON,
-                label: trans(isEmpty(props.activeSession) || isFull(props.activeSession) ? 'register_waiting_list' : 'self_register', {}, 'actions'),
+                label: trans(!isEmpty(props.activeSession) && isFull(props.activeSession) ? 'register_waiting_list' : 'self_register', {}, 'actions'),
                 modal: [MODAL_COURSE_REGISTRATION, {
                   course: props.course,
                   session: props.activeSession,
-                  register: props.register
+                  available: props.availableSessions,
+                  register: (course, sessionId = null, registrationData = null) => {
+                    props.register(course, sessionId, registrationData).then(() => {
+                      if (!isEmpty(sessionId)) {
+                        props.history.push(route(course, {id: sessionId}))
+                      }
+                    })
+                  }
                 }],
                 primary: true,
                 size: 'lg',
@@ -218,7 +226,6 @@ const CourseAbout = (props) => {
                 type: LINK_BUTTON,
                 label: trans('show_sessions', {}, 'actions'),
                 target: props.path+'/sessions',
-                primary: !selfRegistration && !isFullyRegistered(props.activeSessionRegistration),
                 displayed: isEmpty(props.activeSession) && !get(props.course, 'display.hideSessions')
               }, {
                 name: 'show-events',
