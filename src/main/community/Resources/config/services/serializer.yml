@@ -14,7 +14,6 @@ services:
 
     Claroline\CommunityBundle\Serializer\ProfileSerializer:
         arguments:
-            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer'
 

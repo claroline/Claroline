@@ -77,7 +77,7 @@ class CsvAdapter implements AdapterInterface
         return $builder->explainIdentifiers($schemas);
     }
 
-    public function dump(string $fileDest, array $data, ?array $options = [], ?array $extra = [], ?bool $append = false): void
+    public function dump(string $fileDest, array $data, array $schema, ?array $options = [], ?array $extra = [], ?bool $append = false): void
     {
         if (empty($data)) {
             return;
@@ -88,7 +88,9 @@ class CsvAdapter implements AdapterInterface
         $fs = new FileSystem();
 
         if (!$append) {
-            $fs->appendToFile($fileDest, implode(self::COLUMN_DELIMITER, $headers));
+            $fs->appendToFile($fileDest, implode(self::COLUMN_DELIMITER, array_map(function ($columnName) use ($schema) {
+                return $this->getLabelFromSchema($columnName, $schema);
+            }, $headers)));
         }
 
         $lines = [];
@@ -212,6 +214,22 @@ class CsvAdapter implements AdapterInterface
             }
         }
 
-        return implode($data, self::ARRAY_DELIMITER);
+        return implode(self::ARRAY_DELIMITER, $data);
+    }
+
+    /**
+     * Retrieves a column human label for a column from the action schema
+     */
+    private function getLabelFromSchema(string $columnName, ?array $schema = []): string
+    {
+        if (!empty($schema) && !empty($schema['properties'])) {
+            foreach ($schema['properties'] as $propDef) {
+                if ($propDef['name'] === $columnName) {
+                    return !empty($propDef['label']) ? $propDef['label'] : $columnName;
+                }
+            }
+        }
+
+        return $columnName;
     }
 }

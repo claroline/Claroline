@@ -153,7 +153,9 @@ abstract class AbstractListExporter extends AbstractExporter
                 'linked' => [
                     [
                         'name' => 'sortBy.direction',
+                        'label' => $this->translator->trans('sort_direction', [], 'platform'),
                         'type' => 'choice',
+                        'hideLabel' => true,
                         'options' => [
                             'choices' => [
                                 1 => $this->translator->trans('sort_asc', [], 'platform'),
