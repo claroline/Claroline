@@ -2,7 +2,6 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans, tval} from '#/main/app/intl/translation'
 import {chain, date, string} from '#/main/app/data/types/validators'
-import {displayDate, apiDate} from '#/main/app/intl/date'
 
 import {render, parse} from '#/main/app/data/types/date-range/utils'
 import {DateRangeInput} from '#/main/app/data/types/date-range/components/input'

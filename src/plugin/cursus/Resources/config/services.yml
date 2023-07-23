@@ -5,4 +5,5 @@ imports:
     - { resource: services/manager.yml }
     - { resource: services/serializer.yml }
     - { resource: services/subscriber.yml }
+    - { resource: services/transfer.yml }
     - { resource: services/voter.yml }

@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    tags: [claroline.transfer.exporter]
+
+  Claroline\CursusBundle\Transfer\Exporter\Registration\SessionUserListExporter:
+    parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter
+    arguments:
+      - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+  Claroline\CursusBundle\Transfer\Exporter\Registration\SessionGroupListExporter:
+    parent: Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter

@@ -23,16 +23,15 @@ function parse(display, options = {}) {
   return parsed
 }
 
-  /**
-   * Renders ISO date range into locale date.
-   *
-   * @param {array} raw
-   * @param {object} options
-   *
-   * @return {string}
-   */
+/**
+ * Renders ISO date range into locale date.
+ *
+ * @param {array} raw
+ * @param {object} options
+ *
+ * @return {string}
+ */
 function render(raw, options = {}) {
-
   let start = '-'
   if (raw[0]) {
     start = renderDate(raw[0], options)

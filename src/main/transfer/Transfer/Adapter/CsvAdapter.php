@@ -83,7 +83,18 @@ class CsvAdapter implements AdapterInterface
             return;
         }
 
-        $headers = !empty($extra['columns']) ? $extra['columns'] : ArrayUtils::getPropertiesName($data[0]);
+        if (!empty($extra['columns'])) {
+            // get user selected columns
+            $headers = $extra['columns'];
+        } elseif (!empty($schema) && !empty($schema['properties'])) {
+            // get all the columns defined into the action schema
+            $headers = array_map(function ($propDef) {
+                return $propDef['name'];
+            }, $schema['properties']);
+        } else {
+            // get all the columns from first data row
+            $headers = ArrayUtils::getPropertiesName($data[0]);
+        }
 
         $fs = new FileSystem();
 
@@ -118,7 +129,7 @@ class CsvAdapter implements AdapterInterface
         $object = [];
 
         foreach ($headers as $index => $property) {
-            //idiot condition proof in case something is wrong with the csv (like more lines or columns)
+            // idiot condition proof in case something is wrong with the csv (like more lines or columns)
             if (isset($properties[$index]) && $properties[$index]) {
                 $explainedProperty = $explanation->getProperty($property);
 
@@ -133,8 +144,6 @@ class CsvAdapter implements AdapterInterface
 
     /**
      * Build an object from an array of headers and properties path.
-     *
-     * @param mixed $value
      *
      * @return array
      */
@@ -218,7 +227,7 @@ class CsvAdapter implements AdapterInterface
     }
 
     /**
-     * Retrieves a column human label for a column from the action schema
+     * Retrieves a column human label for a column from the action schema.
      */
     private function getLabelFromSchema(string $columnName, ?array $schema = []): string
     {

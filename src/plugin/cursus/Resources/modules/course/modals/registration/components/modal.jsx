@@ -14,6 +14,7 @@ import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/pr
 import {getInfo, isFull} from '#/plugin/cursus/utils'
 import {MODAL_REGISTRATION_PARAMETERS} from '#/plugin/cursus/registration/modals/parameters'
 import {SessionCard} from '#/plugin/cursus/session/components/card'
+import {Alert} from '#/main/app/components/alert'
 
 const RegistrationModal = props => {
   let initialSession = props.session ? props.session : null
@@ -63,9 +64,9 @@ const RegistrationModal = props => {
         <Fragment>
           {isFull(activeSession) &&
             <div className="modal-body">
-              <AlertBlock type="warning" title={trans('session_full', {}, 'cursus')}>
+              <Alert type="warning" title={trans('session_full', {}, 'cursus')}>
                 {trans('Vous pouvez vous inscrire en liste d\'attente ou parcourir les autres sessions.', {}, 'cursus')}
-              </AlertBlock>
+              </Alert>
             </div>
           }
 

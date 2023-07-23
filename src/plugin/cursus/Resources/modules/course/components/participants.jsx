@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import {schemeCategory20c} from '#/main/theme/color/utils'
