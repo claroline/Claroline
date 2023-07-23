@@ -11,10 +11,13 @@
 
   .content-resume-info {
     padding: $panel-body-padding;
+
+    .text-secondary { // TODO : wrong selector. adds its own
+      text-transform: uppercase;
+    }
   }
 
   .content-resume-title {
-    font-weight: 900;
     margin: 0;
 
     > small {
@@ -24,34 +27,5 @@
 
   .content-resume-primary {
     flex: 1;
-  }
-}
-
-.score-chart {
-  height: 64px;
-
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-
-  .score-progress {
-    width: 15px;
-    height: 100%;
-    display: flex;
-    align-items: flex-end;
-    @include border-radius($border-radius-sm);
-
-    + .score-progress {
-      margin-left: 5px;
-    }
-
-    cursor: help;
-  }
-
-  .score-progressbar {
-    width: 100%;
-    background: $learning;
-
-    @include border-radius($border-radius-sm);
   }
 }

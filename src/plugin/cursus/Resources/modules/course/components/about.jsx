@@ -78,7 +78,7 @@ const CourseAbout = (props) => {
   const selfRegistration = canSelfRegister(props.course, props.activeSession, !isEmpty(props.activeSessionRegistration) || !isEmpty(props.courseRegistration))
 
   return (
-    <div className="row">
+    <div className="row mt-3">
       <div className="col-md-3">
         <div className="card mb-3">
           <ul className="list-group list-group-flush list-group-values">
@@ -160,14 +160,12 @@ const CourseAbout = (props) => {
             />
 
             {isEmpty(get(props.activeSession, 'location')) &&
-              <div className="component-container">
-                <em className="text-secondary">{trans('online_session', {}, 'cursus')}</em>
-              </div>
+              <div className="text-secondary mb-3">{trans('online_session', {}, 'cursus')}</div>
             }
 
             {!isEmpty(get(props.activeSession, 'location')) &&
               <LocationCard
-                className="component-container"
+                className="mb-3"
                 size="xs"
                 orientation="row"
                 data={get(props.activeSession, 'location')}
@@ -182,7 +180,7 @@ const CourseAbout = (props) => {
           }
 
           <Toolbar
-            className="d-grid gap-1"
+            className="d-grid gap-1 mb-3"
             variant="btn"
             actions={[
               {

@@ -18,8 +18,10 @@ const SessionFormModal = props =>
     title={trans('training_sessions', {}, 'cursus')}
     subtitle={props.session && props.session.id ? props.session.name : trans('new_session', {}, 'cursus')}
     onEntering={() => props.loadSession(props.session, props.course)}
+    size="lg"
   >
     <SessionForm
+      flush={true}
       name={selectors.STORE_NAME}
       update={props.update}
     >

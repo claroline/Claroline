@@ -27,6 +27,7 @@ function canSelfRegister(course, session, registrations) {
 const CourseSessions = (props) =>
   <Fragment>
     <SessionList
+      className="my-3"
       path={props.path}
       name={selectors.STORE_NAME+'.courseSessions'}
       url={['apiv2_cursus_course_list_sessions', {id: props.course.id}]}
@@ -110,7 +111,8 @@ const CourseSessions = (props) =>
 
     {hasPermission('edit', props.course) &&
       <Button
-        className="btn btn-primary w-100 mb-3"
+        className="w-100 mb-3"
+        variant="btn"
         type={MODAL_BUTTON}
         label={trans('add_session', {}, 'cursus')}
         modal={[MODAL_SESSION_FORM, {

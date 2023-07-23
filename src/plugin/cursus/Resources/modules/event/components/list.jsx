@@ -17,6 +17,7 @@ import {MODAL_TRAINING_EVENT_PARAMETERS} from '#/plugin/cursus/event/modals/para
 
 const EventList = (props) =>
   <ListData
+    className={props.className}
     name={props.name}
     fetch={{
       url: props.url,
@@ -192,6 +193,7 @@ const EventList = (props) =>
   />
 
 EventList.propTypes = {
+  className: T.string,
   path: T.string.isRequired,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,
