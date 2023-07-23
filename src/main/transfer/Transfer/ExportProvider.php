@@ -14,10 +14,12 @@ class ExportProvider extends AbstractProvider
             return;
         }
 
+        $schema = $executor->getSchema($options, $extra);
+
         $i = 0;
         do {
             $data = $executor->execute($i, $options, $extra);
-            $adapter->dump($fileDest, $data, $options, $extra, 0 !== $i);
+            $adapter->dump($fileDest, $data, $schema, $options, $extra, 0 !== $i);
 
             ++$i;
         } while (!empty($data));

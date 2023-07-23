@@ -29,7 +29,7 @@ class JsonAdapter implements AdapterInterface
         return new Explanation();
     }
 
-    public function dump(string $fileDest, array $data, ?array $options = [], ?array $extra = [], ?bool $append = false): void
+    public function dump(string $fileDest, array $data, array $schema, ?array $options = [], ?array $extra = [], ?bool $append = false): void
     {
         $fs = new FileSystem();
 

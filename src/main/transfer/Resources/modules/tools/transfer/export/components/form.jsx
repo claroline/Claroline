@@ -1,15 +1,16 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
+import merge from 'lodash/merge'
 
 import {trans, now} from '#/main/app/intl'
+import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/main/transfer/tools/transfer/export/store'
 import {ExportExplanation} from '#/main/transfer/tools/transfer/export/components/explanation'
-import merge from 'lodash/merge'
-import {Button} from '#/main/app/action'
 
 const isScheduled = (data) => get(data, 'scheduler._enable') || get(data, 'scheduler.scheduledDate')
 
@@ -87,7 +88,7 @@ class ExportForm extends Component {
           target: this.props.isNew ? `${this.props.path}/export/history` : `${this.props.path}/export/history/`+this.props.formData.id,
           exact: true
         }}
-        sections={[
+        definition={[
           {
             title: trans('general'),
             primary: true,
@@ -204,15 +205,16 @@ class ExportForm extends Component {
           }
         ]}
       >
-        {action &&
-          <Fragment>
-            <ul className="nav nav-tabs">
-              <li>
+        {!isEmpty(action) && 'undefined' !== action &&
+          <div className="mb-3" role="presentation">
+            <ul className="nav nav-pills nav-justified">
+              <li className="nav-item">
                 <Button
                   type={CALLBACK_BUTTON}
                   label={trans('format')}
                   callback={() => this.setState({currentSection: 'format'})}
                   active={'format' === this.state.currentSection}
+                  className="nav-link"
                 />
               </li>
             </ul>
@@ -222,7 +224,7 @@ class ExportForm extends Component {
               columns={get(props.formData, 'extra.columns', [])}
               update={(selectedColumns) => props.updateProp('extra.columns', selectedColumns)}
             />
-          </Fragment>
+          </div>
         }
       </FormData>
     )

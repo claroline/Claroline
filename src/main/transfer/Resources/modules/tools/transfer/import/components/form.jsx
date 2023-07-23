@@ -1,6 +1,7 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
 import {trans, now} from '#/main/app/intl'
@@ -94,7 +95,7 @@ class ImportForm extends Component {
           target: props.isNew ? `${this.props.path}/import/history` : `${this.props.path}/import/history/`+this.props.formData.id,
           exact: true
         }}
-        sections={[
+        definition={[
           {
             title: trans('general'),
             primary: true,
@@ -212,24 +213,26 @@ class ImportForm extends Component {
           }
         ]}
       >
-        {action &&
-          <Fragment>
-            <ul className="nav nav-tabs">
-              <li>
+        {!isEmpty(action) && 'undefined' !== action &&
+          <div className="mb-3" role="presentation">
+            <ul className="nav nav-pills nav-justified">
+              <li className="nav-item">
                 <Button
                   type={CALLBACK_BUTTON}
                   label={trans('format')}
                   callback={() => this.setState({currentSection: 'format'})}
                   active={'format' === this.state.currentSection}
+                  className="nav-link"
                 />
               </li>
 
-              <li>
+              <li className="nav-item">
                 <Button
                   type={CALLBACK_BUTTON}
                   label={trans('examples', {}, 'transfer')}
                   callback={() => this.setState({currentSection: 'samples'})}
                   active={'samples' === this.state.currentSection}
+                  className="nav-link"
                 />
               </li>
             </ul>
@@ -246,7 +249,7 @@ class ImportForm extends Component {
                 samples={get(this.props.samples, entity+'.'+action, [])}
               />
             }
-          </Fragment>
+          </div>
         }
       </FormData>
     )

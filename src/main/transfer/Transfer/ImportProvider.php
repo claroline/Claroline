@@ -60,7 +60,7 @@ class ImportProvider extends AbstractProvider
 
         $adapter = $this->getAdapter($format);
 
-        $schema = $executor->getSchema();
+        $schema = $executor->getSchema($options, $extra);
         //use the translator here
         $jsonLogger->info('Building objects from data...');
 

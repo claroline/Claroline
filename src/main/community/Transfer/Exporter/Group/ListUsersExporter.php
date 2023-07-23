@@ -104,6 +104,10 @@ class ListUsersExporter extends AbstractListExporter
                     'name' => 'group.name',
                     'type' => 'string',
                     'description' => $this->translator->trans('The group name', [], 'schema'),
+                ], [
+                    'name' => 'group.code',
+                    'type' => 'string',
+                    'description' => $this->translator->trans('The group code', [], 'schema'),
                 ],
             ],
         ];

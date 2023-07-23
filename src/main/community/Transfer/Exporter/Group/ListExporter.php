@@ -35,6 +35,10 @@ class ListExporter extends AbstractListExporter
                     'type' => 'string',
                     'description' => $this->translator->trans('The group name', [], 'schema'),
                 ], [
+                    'name' => 'code',
+                    'type' => 'string',
+                    'description' => $this->translator->trans('The group code', [], 'schema'),
+                ], [
                     'name' => 'meta.description',
                     'type' => 'string',
                     'description' => $this->translator->trans('The group description', [], 'schema'),
@@ -50,6 +54,10 @@ class ListExporter extends AbstractListExporter
                 'name' => 'name',
                 'label' => $this->translator->trans('name', [], 'platform'),
                 'type' => 'string',
+            ],[
+                'name' => 'code',
+                'label' => $this->translator->trans('code', [], 'platform'),
+                'type' => 'string',
             ],
         ];
     }
@@ -60,6 +68,9 @@ class ListExporter extends AbstractListExporter
             [
                 'name' => 'name',
                 'label' => $this->translator->trans('name', [], 'platform'),
+            ], [
+                'name' => 'code',
+                'label' => $this->translator->trans('code', [], 'platform'),
             ],
         ];
     }
