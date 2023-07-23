@@ -12,14 +12,14 @@ function parse(display, options = {}) {
   return display ? apiDate(display, false, options.time) : null
 }
 
-  /**
-   * Renders ISO date into locale date.
-   *
-   * @param {string} raw
-   * @param {object} options
-   *
-   * @return {string}
-   */
+/**
+ * Renders ISO date into locale date.
+ *
+ * @param {string} raw
+ * @param {object} options
+ *
+ * @return {string}
+ */
 function render(raw, options = {}) {
   return raw ? displayDate(raw, false, options.time) : null
 }

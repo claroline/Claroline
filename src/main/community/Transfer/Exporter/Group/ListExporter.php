@@ -54,7 +54,7 @@ class ListExporter extends AbstractListExporter
                 'name' => 'name',
                 'label' => $this->translator->trans('name', [], 'platform'),
                 'type' => 'string',
-            ],[
+            ], [
                 'name' => 'code',
                 'label' => $this->translator->trans('code', [], 'platform'),
                 'type' => 'string',

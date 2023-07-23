@@ -84,7 +84,7 @@ class ListExporter extends AbstractListExporter
                     'name' => 'restrictions.dates',
                     'type' => 'date-range',
                     'description' => $this->translator->trans('The user restriction dates', [], 'schema'),
-                ]
+                ],
             ],
         ];
 

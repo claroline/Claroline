@@ -11,8 +11,6 @@ interface AdapterInterface
     /**
      * Build the list of object from the content submitted by a user and the data Schema.
      *
-     * @param mixed $content
-     *
      * @return array
      */
     public function decodeSchema($content, Explanation $explanation);
