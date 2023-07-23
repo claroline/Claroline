@@ -7,6 +7,8 @@ import {Button, Toolbar} from '#/main/app/action'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {toKey} from '#/main/core/scaffolding/text'
 
+// TODO : allow other navigation action types
+
 const ContentNav = (props) =>
   <nav role="navigation" className={props.className}>
     <ul

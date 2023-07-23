@@ -18,7 +18,7 @@ const SessionCard = props =>
       'data-card-muted': get(props.data, 'restrictions.hidden', false)
     })}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
-    icon="fa fa-calendar-week"
+    icon={!props.data.thumbnail ? 'fa fa-calendar-week' : null}
     title={props.data.name}
     subtitle={trans('date_range', {
       start: displayDate(props.data.restrictions.dates[0]),

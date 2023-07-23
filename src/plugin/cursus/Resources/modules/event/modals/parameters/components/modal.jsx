@@ -18,8 +18,10 @@ const EventFormModal = props =>
     title={trans('session_events', {}, 'cursus')}
     subtitle={props.event && props.event.id ? props.event.name : trans('new_event', {}, 'cursus')}
     onEntering={() => props.loadEvent(props.event, props.session)}
+    size="lg"
   >
     <EventForm
+      flush={true}
       name={selectors.STORE_NAME}
       update={props.updateEvent}
       event={props.formData}

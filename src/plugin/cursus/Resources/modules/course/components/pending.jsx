@@ -27,7 +27,7 @@ const CoursePending = (props) => {
 
   return (
     <Fragment>
-      <Alert type="info">
+      <Alert type="info" className="mt-3">
         {trans('Les utilisateurs suivant doivent être inscrit manuellement à une session.', {}, 'cursus')}
       </Alert>
 

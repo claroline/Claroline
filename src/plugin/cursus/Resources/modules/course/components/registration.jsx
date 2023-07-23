@@ -18,6 +18,7 @@ const CourseRegistration = (props) => {
 
   return (
     <FormData
+      className="mt-3"
       name={props.name}
       buttons={true}
       save={{

@@ -15,6 +15,7 @@ import {SessionCard} from '#/plugin/cursus/session/components/card'
 
 const SessionList = (props) =>
   <ListData
+    className={props.className}
     name={props.name}
     fetch={{
       url: props.url,
@@ -157,6 +158,7 @@ const SessionList = (props) =>
   />
 
 SessionList.propTypes = {
+  className: T.string,
   path: T.string.isRequired,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,

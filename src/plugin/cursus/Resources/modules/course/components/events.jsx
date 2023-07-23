@@ -19,6 +19,7 @@ import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors
 const CourseEvents = (props) =>
   <Fragment>
     <EventList
+      className="my-3"
       name={selectors.STORE_NAME+'.courseEvents'}
       url={['apiv2_cursus_session_list_events', {id: props.activeSession.id}]}
       primaryAction={(row) => ({
@@ -52,7 +53,9 @@ const CourseEvents = (props) =>
 
     {hasPermission('edit', props.activeSession) &&
       <Button
-        className="btn btn-primary w-100 mb-3"
+        className="w-100 mb-3"
+        variant="btn"
+        size="lg"
         type={MODAL_BUTTON}
         label={trans('add_event', {}, 'cursus')}
         modal={[MODAL_TRAINING_EVENT_PARAMETERS, {

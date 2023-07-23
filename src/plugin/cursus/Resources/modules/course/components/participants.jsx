@@ -22,7 +22,7 @@ import {Button} from '#/main/app/action'
 import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
 
 const CourseParticipants = (props) =>
-  <Fragment>
+  <div className="mt-3" role="presentation">
     <div className="d-flex flex-direction-row">
       <ContentCounter
         icon="fa fa-chalkboard-teacher"
@@ -56,9 +56,10 @@ const CourseParticipants = (props) =>
       />
     </div>
 
-    <div className="row">
+    <div className="row mt-3">
       <div className="col-md-3">
         <Vertical
+          className="mb-3"
           basePath={props.path}
           tabs={[
             {
@@ -89,11 +90,10 @@ const CourseParticipants = (props) =>
 
         {props.activeSession &&
           <Button
-            className="btn btn-outline-primary w-100"
+            className="btn btn-outline-secondary w-100 mb-3"
             type={CALLBACK_BUTTON}
             label="Voir pour la session ouverte"
             callback={props.toggleVisibility}
-            primary={true}
           />
         }
       </div>
@@ -315,7 +315,7 @@ const CourseParticipants = (props) =>
         />
       </div>
     </div>
-  </Fragment>
+  </div>
 
 CourseParticipants.propTypes = {
   path: T.string.isRequired,
