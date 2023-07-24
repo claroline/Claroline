@@ -16,14 +16,10 @@ class ResourceWidgetSerializer
 {
     use SerializerTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var ResourceNodeSerializer */
-    private $nodeSerializer;
-    /** @var ResourceNodeRepository */
-    private $nodeRepo;
+    private TokenStorageInterface $tokenStorage;
+    private ObjectManager $om;
+    private ResourceNodeSerializer $nodeSerializer;
+    private ResourceNodeRepository $nodeRepo;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -54,8 +50,10 @@ class ResourceWidgetSerializer
         $resourceNode = null;
 
         $dataSource = $widget->getWidgetInstance()->getDataSource();
-        if (!empty($dataSource) && 'personal_workspace' === $dataSource->getName() && $user->getPersonalWorkspace()) {
-            $resourceNode = $this->nodeRepo->findWorkspaceRoot($user->getPersonalWorkspace());
+        if (!empty($dataSource) && 'personal_workspace' === $dataSource->getName()) {
+            if ($user instanceof User && $user->getPersonalWorkspace()) {
+                $resourceNode = $this->nodeRepo->findWorkspaceRoot($user->getPersonalWorkspace());
+            }
         } else {
             $resourceNode = $widget->getResourceNode();
         }
