@@ -9,23 +9,23 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Tag as TagTypes} from '#/plugin/tag/data/types/tag/prop-types'
 
 const TagsList = props =>
-  <ul className="tags-dropdown-menu dropdown-menu">
+  <div className="tags-dropdown-menu dropdown-menu">
     {props.isFetching &&
-      <li className="tags-fetching text-center">
+      <div className="tags-fetching text-center">
         <span className="fa fa-fw fa-circle-notch fa-spin" />
-      </li>
+      </div>
     }
 
     {props.tags.map((tag) =>
-      <li key={tag.id}>
-        <Button
-          type={CALLBACK_BUTTON}
-          label={tag.name}
-          callback={() => props.select(tag.name)}
-        />
-      </li>
+      <Button
+        key={tag.id}
+        className="dropdown-item"
+        type={CALLBACK_BUTTON}
+        label={tag.name}
+        callback={() => props.select(tag.name)}
+      />
     )}
-  </ul>
+  </div>
 
 TagsList.propTypes = {
   tags: T.arrayOf(T.shape(
@@ -35,6 +35,9 @@ TagsList.propTypes = {
   select: T.func.isRequired
 }
 
+/**
+ * @deprecated
+ */
 class TagTypeahead extends Component {
   constructor(props) {
     super(props)
