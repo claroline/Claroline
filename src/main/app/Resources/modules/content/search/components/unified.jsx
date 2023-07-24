@@ -203,7 +203,8 @@ class SearchUnified extends Component {
   updateSearch(search) {
     this.setState({
       currentSearch: search,
-      updated: 0 !== search.length
+      updated: 0 !== search.length,
+      opened: 0 !== search.length
     })
   }
 
@@ -232,12 +233,7 @@ class SearchUnified extends Component {
 
   render() {
     return (
-      <form
-        className={classes('list-search search-unified', {
-          //open: this.state.opened || 0 !== this.state.currentSearch.length
-        })}
-        action="#"
-      >
+      <form className="list-search search-unified" action="#">
         <div className="search-current" role="presentation">
           <span className="search-icon fa fa-search" />
 
@@ -278,24 +274,14 @@ class SearchUnified extends Component {
             disabled={this.props.disabled}
           />
         </div>
-        {/*<SearchForm
-          updated={this.state.updated}
-          current={this.getFormFilters()}
-          available={this.props.available}
-          updateSearch={(filters) => {
-            this.props.resetFilters(filters)
-            this.setState({currentSearch: '', updated: false, opened: false})
-          }}
-        />*/}
 
         <MenuOverlay
           id={`${this.props.id}-search-menu`}
-          show={this.state.opened || 0 !== this.state.currentSearch.length}
+          show={this.state.opened}
+          onToggle={() => this.setState({opened: false})}
         >
           <Menu
             align="end"
-            //show={menuOpened}
-            //onClose={this.reset}
             as={SearchMenu}
 
             updated={this.state.updated}
