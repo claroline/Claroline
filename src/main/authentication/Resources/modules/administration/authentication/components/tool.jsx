@@ -68,7 +68,7 @@ const AuthenticationTool = (props) => {
                   'DESKTOP': trans('desktop', {}, 'platform'),
                   'URL': trans('url', {}, 'platform'),
                   'WORKSPACE_TAG': trans('workspace_tag', {}, 'platform'),
-                  'LAST': trans('last_page', {}, 'platform'),
+                  'LAST': trans('last_page', {}, 'platform')
                 }
               }, linked: [{
                 name: 'login.redirectAfterLoginUrl',
