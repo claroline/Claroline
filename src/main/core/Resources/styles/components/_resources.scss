@@ -1,13 +1,5 @@
 @use "sass:math";
 
-/*.embedded-resource {
-    // removes floating form buttons when embedded (will overlaps the one from the main page if any)
-    .form-toolbar {
-        text-align: right;
-        position: static !important;
-    }
-}*/
-
 .resource-user-progression {
     .gauge {
         border-radius: 50%;
@@ -101,33 +93,6 @@
     }
 }
 
-.resource-overview {
-    /*.resource-feedbacks {
-        margin-top: $component-margin-bottom;
-    }*/
-}
-
-.overview-user-actions {
-    /*margin-top: $component-margin-bottom;
-    margin-bottom: $component-margin-bottom;*/
-
-    /*.alert,
-    .btn {
-        margin-bottom: 0;
-        //padding: $padding-large-vertical $padding-large-horizontal;
-
-        + .alert,
-        + .btn {
-            margin-top: 5px;
-        }
-    }*/
-}
-
-
-/*.resource-end {
-    margin-top: $component-margin-bottom;
-}*/
-
 /**
  * Resource rights modal.
  */
@@ -151,7 +116,6 @@
         border: none;
 
         @include border-radius($border-radius);
-        //background: $modal-content-bg;
 
         &:focus,
         &:hover,
@@ -202,21 +166,7 @@
     }
 }
 
-.resource-custom-rules-info {
-    color: var(--#{$prefix}danger);
-    margin-top: $component-margin-bottom;
-    margin-bottom: 0;
-
-    /*.fa {
-        margin-right: $icon-text-spacer;
-    }*/
-}
-
 // not the correct place to declare the next rules
-
-/*.user-progression-status {
-    font-weight: bold;
-}*/
 
 .workspace-evaluation-card,
 .resource-evaluation-card {
