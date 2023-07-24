@@ -7,83 +7,83 @@
 //
 //## Gray and brand colors for use across Bootstrap.
 
-$gray-base:              #000000;
+$gray-base:              #000000 !default;
 //$gray-darker:            #262626; // #222
-$gray-dark:              lighten($gray-base, 20%);   // #333
-//$gray:                   lighten($gray-base, 33.5%); // #555
-$gray-light:             lighten($gray-base, 46.7%); // #777
-$gray-lighter:           #ebebeb; // #eee
-$gray-lightest:          #F9F9F9;
+$gray-dark:              lighten($gray-base, 20%) !default;   // #333
+//$gray:                   lighten($gray-base, 33.5%) !default; // #555
+$gray-light:             lighten($gray-base, 46.7%) !default; // #777
+$gray-lighter:           #ebebeb !default; // #eee
+$gray-lightest:          #F9F9F9 !default;
 
 //$primary:         #148AC7 /*#046d8a*/; // bootstrap original : #337ab7
-$brand-success:         $success;
-$brand-info:            $info;
-$brand-warning:         $warning;
-$brand-danger:          $danger;
+$brand-success:         $success !default;
+$brand-info:            $info !default;
+$brand-warning:         $warning !default;
+$brand-danger:          $danger !default;
 //$brand-secondary:       $pink; // #C51162
 
-$enable-border:           true;
+$enable-border:           true !default;
 
 
 //** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
-$line-height-computed:    floor(($font-size-base * $line-height-base)); // ~20px
+$line-height-computed:    floor(($font-size-base * $line-height-base)) !default; // ~20px
 
-$component-margin-bottom:       map-get($spacers, 3);
-$component-margin-bottom-small: map-get($spacers, 2); // ~10px
+$component-margin-bottom:       map-get($spacers, 3) !default;
+$component-margin-bottom-small: map-get($spacers, 2) !default; // ~10px
 
 
 //== Components
 //
 //## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
 
-$padding-base-vertical:     6px;
-$padding-base-horizontal:   12px;
+$padding-base-vertical:     6px !default;
+$padding-base-horizontal:   12px !default;
 
-$padding-large-vertical:    10px;
-$padding-large-horizontal:  15px;
+$padding-large-vertical:    10px !default;
+$padding-large-horizontal:  15px !default;
 
-$padding-small-vertical:    5px;
-$padding-small-horizontal:  10px;
+$padding-small-vertical:    5px !default;
+$padding-small-horizontal:  10px !default;
 
-$line-height-large:         1.3333333; // extra decimals for Win 8.1 Chrome
-$line-height-small:         1.5;
+$line-height-large:         1.3333333 !default; // extra decimals for Win 8.1 Chrome
+$line-height-small:         1.5 !default;
 
 //== Forms
 //
 //##
 
 //** Default `.form-control` height
-$input-height-base:              calc($line-height-computed + ($padding-base-vertical * 2) + 2);
+$input-height-base:              calc($line-height-computed + ($padding-base-vertical * 2) + 2) !default;
 
 //** `.form-group` margin
-$form-group-margin-bottom:       map-get($spacers, 3);
+$form-group-margin-bottom:       map-get($spacers, 3) !default;
 
 //== Form states and alerts
 //
 //## Define colors for form feedback states and, by default, alerts.
 
-$state-success-text:             $brand-success;
-$state-success-bg:               #dafd8d;
-$state-success-border:           $state-success-bg;
+$state-success-text:             $success !default;
+$state-success-bg:               #dafd8d !default;
+$state-success-border:           $state-success-bg !default;
 
-$state-info-text:                $brand-info;
-$state-info-bg:                  #c9edfe;
-$state-info-border:              $state-info-bg;
+$state-info-text:                $info !default;
+$state-info-bg:                  #c9edfe !default;
+$state-info-border:              $state-info-bg !default;
 
-$state-warning-text:             #686733;
-$state-warning-bg:               #f4f3bf;
-$state-warning-border:           $state-warning-bg;
+$state-warning-text:             #686733 !default;
+$state-warning-bg:               #f4f3bf !default;
+$state-warning-border:           $state-warning-bg !default;
 
-$state-danger-text:              $brand-danger;
-$state-danger-bg:                #ffd5d5;
-$state-danger-border:            $state-danger-bg;
+$state-danger-text:              $brand-danger !default;
+$state-danger-bg:                #ffd5d5 !default;
+$state-danger-border:            $state-danger-bg !default;
 
 
 //== Panels
 // @deprecated
 //##
 
-$panel-body-padding:          15px;
+$panel-body-padding:          15px !default;
 
 
 // -
@@ -123,40 +123,41 @@ $zindex-flying-alerts: $zindex-toast;
 // States
 // ---
 
-$state-selected-text:   $state-info-text;
-$state-selected-border: $state-info-border;
-$state-selected-bg:     $state-info-bg;
+$state-selected-text:   $state-info-text !default;
+$state-selected-border: $state-info-border !default;
+$state-selected-bg:     $state-info-bg !default;
 
 
 // -
 // Login
 // ---
 
-$login-bg-image:  "#{$images-path}login-bg.jpg"; // will fallback on $body-bg if theme has no image
-$login-max-width: 740px;
+$login-bg-image:  "#{$images-path}login-bg.jpg" !default; // will fallback on $body-bg if theme has no image
+$login-max-width: 740px !default;
 
 
 // -
 // Header
 // ---
 
-$top-bar-bg:                  $gray-900 !default;
-$top-bar-border-bottom-size:  0 !default;
-$top-bar-max-width:           100%; // max width for the top bar content (do not affect top bar container)
-$top-bar-height:              60px + $top-bar-border-bottom-size !default;
+$top-bar-bg:                  $menu !default;
+$top-bar-color:               color-contrast($menu) !default;
 $top-bar-font-size:           $font-size-base !default;
-$top-bar-color:               lighten($top-bar-bg, 35%) !default;
+$top-bar-border-bottom-size:  0 !default;
 $top-bar-border-bottom-color: $primary !default;
 $top-bar-border-bottom:       $top-bar-border-bottom-size solid $top-bar-border-bottom-color !default;
 $top-bar-box-shadow:          0 0 5px 1px rgba(0, 0, 0, 0.5) !default;
 
-$top-bar-brand-color:           $white !default;
+$top-bar-max-width:           100%; // max width for the top bar content (do not affect top bar container)
+$top-bar-height:              60px + $top-bar-border-bottom-size !default;
+
+$top-bar-brand-color:           $top-bar-color !default;
 $top-bar-brand-secondary-color: $primary !default;
 $top-bar-brand-font-size:       $font-size-lg !default;
 $top-bar-brand-font-weight:     $font-weight-medium !default;
 
 $top-bar-link-color:          lighten($top-bar-bg, 60%) !default;
-$top-bar-link-bg:             $top-bar-bg !default;
+$top-bar-link-bg:             transparent !default;
 $top-bar-link-hover-color:    lighten($top-bar-bg, 70%) !default;
 $top-bar-link-hover-bg:       darken($top-bar-bg, 5%) !default;
 $top-bar-link-active-color:   lighten($top-bar-bg, 80%) !default;
@@ -169,9 +170,9 @@ $top-bar-link-disabled-bg:    transparent !default;
 // Loader (aka hourglass)
 // ---
 
-$loader-primary:   $primary;
-$loader-secondary: $learning;
-$loader-color:     var(--#{$prefix}secondary-color);
+$loader-primary:   $primary !default;
+$loader-secondary: $learning !default;
+$loader-color:     var(--#{$prefix}secondary-color) !default;
 $loader-bg:        transparent !default;
 
 
@@ -182,7 +183,7 @@ $loader-bg:        transparent !default;
 
 $toolbar-size:           360px;
 //$toolbar-font-size:      22px; // size for icons
-$toolbar-bg:             $top-bar-bg;
+$toolbar-bg:             $menu;
 $toolbar-color:          $white;
 $toolbar-active-color:   $primary;
 
@@ -280,7 +281,7 @@ $summary-lvl-indent:        20px; // indent children of a step in the summary
 
 // deprecated (? still required by PDF player)
 $summary-padding:           15px;
-$summary-bg:                $toolbar-bg;
+$summary-bg:                $menu;
 $summary-border-radius:     0;
 $summary-box-shadow:        0 0 4px 0 rgba(0, 0, 0, 0.4);
 $summary-box-shadow-v:      2px 0 4px 0 rgba(0, 0, 0, 0.4); // box shadow for vertical summaries
@@ -301,13 +302,13 @@ $summary-link-disabled-color: $toolbar-link-disabled-color;
 // Footer
 // ---
 
-$footer-max-width:          none; // max width for the footer content (do not affect footer container)
-$footer-bg:                 none /*var(--#{$prefix}secondary-bg)*/;
-$footer-color:              var(--#{$prefix}secondary-color);
+$footer-max-width:          none !default; // max width for the footer content (do not affect footer container)
+$footer-bg:                 none !default;
+$footer-color:              var(--#{$prefix}secondary-color) !default;
 $footer-border-width:       0 !default;
 $footer-border-color:       transparent !default;
 $footer-inner-border-color: var(--#{$prefix}border-color) !default;
-$footer-box-shadow:         none /*$box-shadow*/;
+$footer-box-shadow:         none !default;
 
 // Links
 /*$footer-link-color:        $gray-500;
@@ -320,35 +321,36 @@ $footer-link-active-color: $gray-900;*/
 // @deprecated
 // ---
 
-$help-block-color:          var(--#{$prefix}secondary-color);
-$help-block-font-size:      $font-size-sm;
+$help-block-color:          var(--#{$prefix}secondary-color) !default;
+$help-block-font-size:      $font-size-sm !default;
 
 
 // -
 // Lists
 // ---
 
-$list-controls-bg:             var(--#{$prefix}secondary-bg);
-$list-controls-color:          var(--#{$prefix}secondary-color);
-$list-controls-border:         #E1E1E1;
-$list-controls-disabled-bg:    #F4F4F4;
-$list-controls-disabled-color: #666666;
-$list-controls-active-bg:      #E4E4E4;
-$list-controls-active-color:   $gray-900;
+//$list-controls-bg:             var(--#{$prefix}secondary-bg-subtle) !default;
+//$list-controls-color:          var(--#{$prefix}secondary-color) !default;
+//$list-controls-border:         transparent !default;
+//$list-controls-disabled-bg:    #F4F4F4 !default;
+//$list-controls-disabled-color: #666666 !default;
+//$list-controls-active-bg:      transparent !default;
+//$list-controls-active-color:   $gray-900 !default;
 
 
 // -
 // Headings
 // ---
 
-$heading-numbering-padding:       2px 6px;
-$heading-numbering-bg:            $learning;
-$heading-numbering-color:         white;
-$heading-numbering-font:          100%;
-$heading-numbering-weight:        bold;
-$heading-numbering-border-radius: 0;
-$heading-numbering-box-shadow:    none;
-$heading-numbering-separator:     "."; // separator between numbering levels
+$heading-numbering-padding-y:     .125em !default;
+$heading-numbering-padding-x:     .375em !default;
+$heading-numbering-bg:            $learning !default;
+$heading-numbering-color:         color-contrast($learning) !default;
+$heading-numbering-font-size:     null !default;
+$heading-numbering-weight:        $font-weight-bold !default;
+$heading-numbering-border-radius: 0 !default;
+$heading-numbering-box-shadow:    none !default;
+$heading-numbering-separator:     "." !default; // separator between numbering levels
 
 
 // -

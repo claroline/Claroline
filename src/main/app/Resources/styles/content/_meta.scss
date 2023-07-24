@@ -5,12 +5,11 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: $component-margin-bottom;
+  margin-bottom: map-get($spacers, 3);
 
-  // todo : use it's own vars
   background: var(--#{$prefix}secondary-bg);
   padding: map-get($spacers, 3);
-  color: $list-controls-color;
+  color: var(--#{$prefix}secondary-color);
 }
 
 .content-dates {

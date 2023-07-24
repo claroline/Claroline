@@ -1,6 +1,6 @@
 .list-search {
     flex: 1;
-    background: $list-controls-bg;
+    background: var(--#{$prefix}secondary-bg);
 
     .search-icon {
         font-size: $font-size-lg;

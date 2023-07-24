@@ -30,6 +30,7 @@ const CrudList = (props) =>
     ]}
   >
     <ListData
+      className="my-3"
       name={selectors.LIST_NAME}
       fetch={{
         url: ['apiv2_example_list'],

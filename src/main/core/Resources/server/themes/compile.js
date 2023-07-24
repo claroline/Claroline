@@ -18,16 +18,21 @@ function compile(srcFile, outputFile, additionalVarsFiles = []) {
     sourceMap: true
   }
 
-  let src = fs.readFileSync(srcFile, 'utf8')
-
+  let src
   if (additionalVarsFiles) {
     // Add vars from all additional vars file
-    src = src.concat(...additionalVarsFiles.map(varsFile => {
+    let srcPath = paths.relative(paths.root(), srcFile)
+    srcPath = srcPath.replaceAll('\\', '/')
+
+    src = ''.concat(...additionalVarsFiles.map(varsFile => {
       let filePath = paths.relative(paths.root(), varsFile)
       filePath = filePath.replaceAll('\\', '/')
 
       return `@import "${filePath}";\n`
-    }))
+    }), `@import "${srcPath}";\n`)
+
+  } else {
+    src = fs.readFileSync(srcFile, 'utf8')
   }
 
   return sass.compileString(src, compileOptions)
