@@ -1,20 +1,20 @@
-- Updating of the platform themes: modernisation of the interface involving numerous changes to the layout of the graphical interface (margins, etc.). These changes are cosmetic and do not affect functionality.
+- Update of the platform themes: modernization of the interface, involving numerous changes to the layout of the graphical interface (margins, etc.). These changes are cosmetic and do not affect functionality.
 - Update of the rich text editor. This new version of the text editor introduces a number of visual changes and bug fixes
-    - images from the equation editor are now in vector format and can be enlarged without loss of quality
-    - access to the source code of the field is only possible in full-screen mode
+    - Images from the equation editor are now in vector format and can be enlarged without loss of quality
+    - Access to the source code of the field is only possible in full-screen mode
     - YouTube videos can now be easily integrated using the "insert media" action
-    - and much more...
+    - And much more...
 - Overhaul of the text resource editor
-- Addition of a code on groups in addition to the title (only the code needs to be unique from now on)
+- Add a code on groups in addition to the title (only the code needs to be unique from now on)
 - Start and end pages added to the course summary
-- Added PDF export of announcements
-- Addition of information on the security level of the password chosen in the password modification fields.
-- Possibility of restricting the complexity of user passwords using new administration options.
-- Addition of a YouTube video resource that lets users embed videos from YouTube and track their playback (progress through the video)
+- Add PDF export to announcements in ressource
+- Add information on the security level of the password chosen in the password modification fields.
+- Add administration options to restrict the complexity of user passwords.
+- Add a YouTube video resource that lets users embed videos from YouTube and track their playback (progress through the video)
 - Update of the platform's theme system
-- Ability to create custom colour palettes for the colour picker.
-- Added exports of profile fields, training participants, personalised registration forms, etc.
-- Addition of confidential fields not visible to the creator (in profile, database and training catalogue)
-- Improved course registration process
+- Add administration options to create custom colour palettes for the colour picker.
+- Add exports of profile fields, training participants, personalised registration forms, etc.
+- Add confidential fields not visible to the creator (in profile, database and training catalogue)
+- Improve course registration process
 - Many technical and/or technological improvements with no visible impact on end users (symfony 5, bootstrap 5, sass, etc.).
 - And a whole series of bug fixes.
