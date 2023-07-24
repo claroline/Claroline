@@ -47,7 +47,7 @@ const SimpleTab = props =>
     </div>
 
     {props.customRules &&
-      <p className="resource-custom-rules-info">
+      <p className="mt-3 mb-0 text-danger">
         <span className="fa fa-asterisk icon-with-text-right" />
         {trans('resource_rights_custom_help', {}, 'resource')}
       </p>
