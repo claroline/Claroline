@@ -34,7 +34,7 @@ const ChoicePaper = props =>
 
                 <input
                   id={utils.answerId(solution.id)}
-                  className="choice-item-tick"
+                  className="choice-item-tick form-check-input"
                   name={utils.answerId(props.item.id)}
                   type={props.item.multiple ? 'checkbox': 'radio'}
                   checked={utils.isSolutionChecked(solution, props.answer)}
@@ -73,12 +73,12 @@ const ChoicePaper = props =>
               })}
             >
               <input
-                className="choice-item-tick"
+                className="choice-item-tick form-check-input"
                 checked={solution.score > 0}
                 id={utils.expectedId(solution.id)}
                 name={utils.expectedId(props.item.id)}
                 type={props.item.multiple ? 'checkbox': 'radio'}
-                disabled
+                disabled={true}
               />
 
               <ContentHtml className="choice-item-content">

@@ -1,0 +1,12 @@
+/*
+ * DropZone plugin vars.
+ */
+
+// Claroline & bootstrap variables
+@import "src/main/app/Resources/styles/variables";
+
+// same as form stepper
+$timeline-icon-size:      $font-size-lg*3;
+$timeline-lines-width:    8px;
+$timeline-lines-color:    $gray-lighter; // same gray than lists
+$timeline-endpoint-size:  $font-size-lg*2;

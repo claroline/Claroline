@@ -112,32 +112,30 @@ const MaterialDetails = (props) =>
   <MaterialPage
     material={props.material}
   >
-    <header className="row content-heading">
-      <ContentTabs
-        backAction={{
+    <ContentTabs
+      backAction={{
+        type: LINK_BUTTON,
+        target: `${props.path}/materials`,
+        exact: true
+      }}
+      sections={[
+        {
+          name: 'about',
           type: LINK_BUTTON,
-          target: `${props.path}/materials`,
+          icon: 'fa fa-fw fa-circle-info',
+          label: trans('about'),
+          target: `${props.path}/materials/${props.material.id}`,
           exact: true
-        }}
-        sections={[
-          {
-            name: 'about',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-circle-info',
-            label: trans('about'),
-            target: `${props.path}/materials/${props.material.id}`,
-            exact: true
-          }, {
-            name: 'planning',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-calendar',
-            label: trans('planning', {}, 'location'),
-            target: `${props.path}/materials/${props.material.id}/planning`,
-            displayed: false
-          }
-        ]}
-      />
-    </header>
+        }, {
+          name: 'planning',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-calendar',
+          label: trans('planning', {}, 'location'),
+          target: `${props.path}/materials/${props.material.id}/planning`,
+          displayed: false
+        }
+      ]}
+    />
 
     <Routes
       path={`${props.path}/materials/${props.material.id}`}

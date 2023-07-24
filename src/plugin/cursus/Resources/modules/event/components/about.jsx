@@ -61,8 +61,8 @@ CurrentRegistration.propTypes = {
 const EventAbout = (props) =>
   <div className="row">
     <div className="col-md-3">
-      <div className="panel panel-default">
-        <ul className="list-group list-group-values">
+      <div className="card mb-3">
+        <ul className="list-group list-group-flush list-group-values">
           <li className="list-group-item">
             {trans('registration')}
             <span className="value">
@@ -105,7 +105,7 @@ const EventAbout = (props) =>
       {isEmpty(get(props.event, 'location')) &&
         <div className="component-container">
           {isEmpty(get(props.event, 'locationUrl')) &&
-            <em className="text-muted">{trans('online_session', {}, 'cursus')}</em>
+            <em className="text-secondary">{trans('online_session', {}, 'cursus')}</em>
           }
 
           {!isEmpty(get(props.event, 'locationUrl')) &&
@@ -143,7 +143,7 @@ const EventAbout = (props) =>
 
         {!isFull(props.event) && !isFullyRegistered(props.registration) && constants.REGISTRATION_PUBLIC === get(props.event, 'registration.registrationType') &&
           <Button
-            className="btn btn-block btn-emphasis"
+            className="btn btn-primary w-100"
             type={MODAL_BUTTON}
             label={trans('self_register', {}, 'actions')}
             modal={[MODAL_COURSE_REGISTRATION, {
@@ -151,13 +151,14 @@ const EventAbout = (props) =>
               session: props.event,
               register: props.register
             }]}
+            size="lg"
             primary={true}
           />
         }
 
         {isFullyRegistered(props.registration) && !isEmpty(get(props.event, 'primaryResource')) &&
           <Button
-            className="btn btn-block"
+            className="btn btn-outline-primary w-100"
             type={LINK_BUTTON}
             label={trans('open-resource', {}, 'actions')}
             target={resourceRoute(get(props.event, 'primaryResource'))}
@@ -169,12 +170,12 @@ const EventAbout = (props) =>
     <div className="col-md-9">
       <div className="content-resume">
         <div className="content-resume-info content-resume-primary">
-          <span className="text-muted">
+          <span className="text-secondary">
             {trans('status')}
           </span>
 
           {get(props.event, 'start') > now() &&
-            <h1 className="content-resume-title h2 text-muted">
+            <h1 className="content-resume-title h2 text-secondary">
               {trans('session_not_started', {}, 'cursus')}
             </h1>
           }
@@ -193,7 +194,7 @@ const EventAbout = (props) =>
         </div>
 
         <div className="content-resume-info">
-          <span className="text-muted">
+          <span className="text-secondary">
             {trans('start_date')}
           </span>
 
@@ -218,8 +219,8 @@ const EventAbout = (props) =>
         </AlertBlock>
       }
 
-      <div className="panel panel-default">
-        <ContentHtml className="panel-body">
+      <div className="card mb-3">
+        <ContentHtml className="card-body">
           {get(props.event, 'description') || trans('no_description')}
         </ContentHtml>
       </div>

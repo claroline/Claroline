@@ -97,7 +97,7 @@ const OverviewMain = props =>
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
-        label: trans('exercise_start', {}, 'quiz'),
+        label: trans('start', {}, 'actions'),
         target: `${props.path}/play`,
         primary: true,
         disabled: props.empty,
@@ -108,7 +108,7 @@ const OverviewMain = props =>
     ]}
   >
     {props.quiz.parameters.showMetadata &&
-      <section className="resource-parameters">
+      <section className="resource-parameters mb-3">
         <h3 className="h2">{trans('configuration')}</h3>
 
         <Parameters

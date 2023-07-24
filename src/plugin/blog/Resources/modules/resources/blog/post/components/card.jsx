@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 // TODO : remove me
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 
 import {asset} from '#/main/app/config'
 import {withRouter} from '#/main/app/router'
@@ -56,13 +56,13 @@ const CardMeta = props =>
 
     {props.post.pinned &&
       <li>
-        <span className="label label-success">{trans('icap_blog_post_pinned', {}, 'icap_blog')}</span>
+        <span className="badge text-bg-primary">{trans('icap_blog_post_pinned', {}, 'icap_blog')}</span>
       </li>
     }
 
     {!props.post.isPublished &&
       <li>
-        <span className="label label-danger">{props.post.status ? trans('unpublished_date', {}, 'icap_blog') : trans('unpublished', {}, 'icap_blog')}</span>
+        <span className="badge text-bg-danger">{props.post.status ? trans('unpublished_date', {}, 'icap_blog') : trans('unpublished', {}, 'icap_blog')}</span>
       </li>
     }
   </ul>
@@ -201,7 +201,7 @@ CardFooter.propTypes = {
 const PostCardComponent = props =>
   <div className="data-card data-card-col">
     {props.data.poster &&
-      <img className="img-responsive" alt={props.data.title} src={asset(props.data.poster)} />
+      <img className="img-fluid" alt={props.data.title} src={asset(props.data.poster)} />
     }
 
     <div className="post-header">
@@ -234,7 +234,7 @@ const PostCardComponent = props =>
         <ContentHtml>{`${props.data.content}${(props.data.abstract ? '[...]' : '')}`}</ContentHtml>
 
         {props.data.abstract &&
-          <LinkButton target={`${props.path}/${props.data.slug}`} className="btn btn-block">
+          <LinkButton target={`${props.path}/${props.data.slug}`} className="btn btn-link w-100">
             {trans('read_more', {}, 'icap_blog')}
           </LinkButton>
         }

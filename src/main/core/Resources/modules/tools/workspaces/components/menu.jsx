@@ -13,8 +13,8 @@ const WorkspacesMenu = (props) =>
     title={trans('workspaces', {}, 'tools')}
   >
     <Toolbar
-      className="list-group"
-      buttonName="list-group-item"
+      className="list-group list-group-flush"
+      buttonName="list-group-item list-group-item-action"
       actions={[
         {
           name: 'registered',
@@ -45,13 +45,6 @@ const WorkspacesMenu = (props) =>
           label: trans('workspace_archived', {}, 'workspace'),
           target: props.path+'/archived',
           displayed: props.canArchive
-        }, {
-          name: 'new',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-plus',
-          label: trans('create_workspace', {}, 'workspace'),
-          target: props.path+'/new',
-          displayed: props.canCreate
         }
       ]}
       onClick={props.autoClose}

@@ -1,164 +1,200 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import {useLocation} from 'react-router-dom'
 
 import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
 import {trans} from '#/main/app/intl/translation'
-import {toKey} from '#/main/core/scaffolding/text'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {ContentHelp} from '#/main/app/content/components/help'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {Offcanvas} from '#/main/app/overlays/offcanvas'
+import {Alert} from '#/main/app/components/alert'
 
 import {MODAL_LOCALE} from '#/main/app/modals/locale'
 
 import {getPlatformRoles} from '#/main/community/utils'
 import {UserAvatar} from '#/main/core/user/components/avatar'
+import {Toolbar} from '#/main/app/action'
+import {url} from '#/main/app/api'
 
-const UserMenu = props =>
-  <div className="app-header-dropdown app-current-user dropdown-menu dropdown-menu-right">
-    <div className="app-header-dropdown-header">
-      <div className="app-header-dropdown-icon">
+const UserMenu = (props) => {
+  const location = useLocation()
+
+  return (
+    <Offcanvas placement="end" show={props.show} onHide={props.closeMenu}>
+      <Offcanvas.Header closeButton={true}>
+        <Offcanvas.Title className="d-flex align-items-center flex-direction-row">
+          {props.authenticated &&
+            <UserAvatar className="me-3" size="sm" picture={props.currentUser.picture} alt={true} />
+          }
+
+          {!props.authenticated &&
+            <span className="user-avatar user-avatar-sm fa fa-user-secret me-3" />
+          }
+
+          <h2 className="h5 mb-0">
+            {props.currentUser.name}
+            <small>{getPlatformRoles(props.currentUser.roles).map(role => trans(role.translationKey)).join(', ')}</small>
+          </h2>
+        </Offcanvas.Title>
+      </Offcanvas.Header>
+
+      <Offcanvas.Body>
+        {props.unavailable &&
+          <Alert type="danger" icon="fa fa-fw fa-power-off">
+            {trans('platform_unavailable_alert', {}, 'administration')}
+          </Alert>
+        }
+
+        {props.authenticated && props.impersonated &&
+          <Alert type="warning" icon="fa fa-fw fa-mask">
+            {trans('impersonation_mode_alert')}
+
+            <div className="btn-toolbar gap-1 mt-3 justify-content-end">
+              <Button
+                className="btn btn-warning"
+                type={URL_BUTTON}
+                label={trans('exit', {}, 'actions')}
+                target={url(['claro_index', {_switch: '_exit'}])+'#'+location.pathname}
+                onClick={props.closeMenu}
+              />
+            </div>
+          </Alert>
+        }
+
+        {props.authenticated && !get(props.currentUser, 'meta.mailValidated') &&
+          <Alert type="warning" icon="fa fa-fw fa-at">
+            {trans('email_not_validated', {email: props.currentUser.email})}
+            <br/>
+            {trans('email_not_validated_help')}
+
+            <div className="btn-toolbar gap-1 mt-3 justify-content-end">
+              <Button
+                className="btn btn-warning"
+                type={CALLBACK_BUTTON}
+                label={trans('email_validation_send')}
+                callback={props.sendValidationEmail}
+                onClick={props.closeMenu}
+              />
+            </div>
+          </Alert>
+        }
+
         {props.authenticated &&
-          <UserAvatar picture={props.currentUser.picture} alt={true} />
+          <Toolbar
+            className="list-group"
+            buttonName="list-group-item list-group-item-action"
+            onClick={props.closeMenu}
+            actions={[
+              {
+                name: 'desktop',
+                type: LINK_BUTTON,
+                icon: 'fa fa-fw fa-atlas',
+                label: trans('desktop'),
+                target: '/desktop',
+                exact: true
+              }, {
+                name: 'account',
+                type: LINK_BUTTON,
+                icon: 'fa fa-fw fa-user',
+                label: trans('my_account'),
+                target: '/account'
+              }, {
+                name: 'administration',
+                type: LINK_BUTTON,
+                icon: 'fa fa-fw fa-cogs',
+                label: trans('administration'),
+                target: '/admin',
+                displayed: props.administration
+              }
+            ]}
+          />
         }
 
         {!props.authenticated &&
-          <span className="user-avatar fa fa-user-secret" />
+          <>
+            {props.unavailable &&
+              <p className="text-secondary">
+                {trans('only_admin_login_help', {}, 'administration')}
+              </p>
+            }
+
+            <Toolbar
+              className="d-grid gap-1"
+              variant="btn"
+              onClick={props.closeMenu}
+              actions={[
+                {
+                  name: 'login',
+                  type: LINK_BUTTON,
+                  label: trans('login', {}, 'actions'),
+                  target: '/login',
+                  size: 'lg',
+                  primary: true
+                }, {
+                  name: 'create-account',
+                  type: LINK_BUTTON,
+                  label: trans('create-account', {}, 'actions'),
+                  target: '/registration',
+                  displayed: !props.unavailable && props.registration
+                }
+              ]}
+            />
+          </>
         }
-      </div>
 
-      <h2 className="h4">
-        {props.currentUser.name}
-      </h2>
-
-      <em>
-        {getPlatformRoles(props.currentUser.roles).map(role => trans(role.translationKey)).join(', ')}
-      </em>
-    </div>
-
-    {props.unavailable &&
-      <div className="alert alert-danger">
-        <span className="fa fa-fw fa-power-off icon-with-text-right" />
-        {trans('platform_unavailable_alert', {}, 'administration')}
-      </div>
-    }
-
-    {props.authenticated && props.impersonated &&
-      <div className="alert alert-warning">
-        <span className="fa fa-fw fa-mask icon-with-text-right" />
-        {trans('impersonation_mode_alert')}
-      </div>
-    }
-
-    {props.authenticated && !get(props.currentUser, 'meta.mailValidated') &&
-      <div className="alert alert-warning">
-        <div>
-          {trans('email_not_validated', {email: props.currentUser.email})}
-          {trans('email_not_validated_help')}
-          {trans('email_not_validated_send')}
-        </div>
-        <Button
-          type={CALLBACK_BUTTON}
-          icon="fa fa-fw fa-envelope"
-          label={trans('email_validation_send')}
-          callback={() => props.sendValidationEmail()}
-          tooltip="bottom"
-        />
-      </div>
-    }
-
-    {!props.authenticated &&
-      <div className="app-current-user-body">
-        <Button
-          type={LINK_BUTTON}
-          className="btn btn-block btn-emphasis"
-          label={trans('login', {}, 'actions')}
-          primary={true}
-          target="/login"
+        <Toolbar
+          className="list-group mt-3"
+          buttonName="list-group-item list-group-item-action"
           onClick={props.closeMenu}
-          active={false}
+          actions={[
+            {
+              name: 'locale',
+              type: MODAL_BUTTON,
+              icon: <LocaleFlag className="icon-with-text-right" locale={props.locale.current} />,
+              label: trans(props.locale.current),
+              modal: [MODAL_LOCALE, props.locale]
+            }, {
+              name: 'help',
+              type: URL_BUTTON,
+              icon: 'fa fa-fw fa-question',
+              label: trans('help'),
+              target: props.help,
+              displayed: !!props.help
+            }
+          ]}
         />
 
-        {props.unavailable &&
-          <ContentHelp help={trans('only_admin_login_help', {}, 'administration')} />
-        }
-
-        {!props.unavailable && props.registration &&
-          <Button
-            type={LINK_BUTTON}
-            className="btn btn-block"
-            label={trans('create-account', {}, 'actions')}
-            target="/registration"
+        {props.authenticated &&
+          <Toolbar
+            className="list-group mt-3"
+            buttonName="list-group-item list-group-item-action"
             onClick={props.closeMenu}
-            active={false}
+            actions={[
+              {
+                name: 'logout',
+                type: URL_BUTTON,
+                icon: 'fa fa-fw fa-power-off',
+                label: trans('logout'),
+                target: ['claro_security_logout'],
+                displayed: props.authenticated
+              }
+            ]}
           />
         }
-      </div>
-    }
-
-    {props.authenticated &&
-      <div className="list-group">
-        <Button
-          type={LINK_BUTTON}
-          className="list-group-item"
-          icon="fa fa-fw fa-atlas"
-          label={trans('desktop')}
-          target="/desktop"
-          exact={true}
-          onClick={props.closeMenu}
-        />
-
-        <Button
-          type={LINK_BUTTON}
-          className="list-group-item"
-          icon="fa fa-fw fa-user"
-          label={trans('my_account')}
-          target="/account"
-          onClick={props.closeMenu}
-        />
-
-        {props.administration &&
-          <Button
-            type={LINK_BUTTON}
-            className="list-group-item"
-            icon="fa fa-fw fa-cogs"
-            label={trans('administration')}
-            target="/admin"
-            onClick={props.closeMenu}
-          />
-        }
-      </div>
-    }
-
-    <div className="app-current-user-footer">
-      <Button
-        className="app-current-locale app-current-user-btn btn-link"
-        type={MODAL_BUTTON}
-        modal={[MODAL_LOCALE, props.locale]}
-        icon={<LocaleFlag locale={props.locale.current} />}
-        label={trans(props.locale.current)}
-        onClick={props.closeMenu}
-      />
-
-      {props.actions.map(action =>
-        <Button
-          {...action}
-          key={toKey(action.label)}
-          className="app-current-user-btn btn-link"
-          tooltip="bottom"
-          onClick={props.closeMenu}
-        />
-      )}
-    </div>
-  </div>
+      </Offcanvas.Body>
+    </Offcanvas>
+  )
+}
 
 UserMenu.propTypes = {
+  show: T.bool,
+  className: T.string,
   unavailable: T.bool.isRequired,
   authenticated: T.bool.isRequired,
   impersonated: T.bool.isRequired,
   administration: T.bool.isRequired,
-  actions: T.array.isRequired,
   registration: T.bool,
   currentUser: T.shape({
     id: T.string,
@@ -175,6 +211,7 @@ UserMenu.propTypes = {
     current: T.string.isRequired,
     available: T.arrayOf(T.string).isRequired
   }).isRequired,
+  help: T.string,
   closeMenu: T.func.isRequired,
   sendValidationEmail: T.func.isRequired
 }
@@ -196,38 +233,46 @@ class HeaderUser extends Component {
 
   render() {
     return (
-      <Button
-        id="app-user"
-        className="app-header-user app-header-item app-header-btn"
-        type={MENU_BUTTON}
-        icon={this.props.authenticated ?
-          <UserAvatar picture={this.props.currentUser.picture} alt={true} /> :
-          <span className="user-avatar fa fa-user-secret" />
-        }
-        label={this.props.authenticated ? this.props.currentUser.username : trans('login')}
-        tooltip="bottom"
-        opened={this.state.opened}
-        onToggle={this.setOpened}
-        subscript={this.props.impersonated ? {
-          type: 'text',
-          status: 'danger',
-          value: (<span className="fa fa-mask" />)
-        } : undefined}
-        menu={
-          <UserMenu
-            unavailable={this.props.unavailable}
-            authenticated={this.props.authenticated}
-            impersonated={this.props.impersonated}
-            administration={this.props.administration}
-            currentUser={this.props.currentUser}
-            registration={this.props.registration}
-            locale={this.props.locale}
-            actions={this.props.actions.filter(action => undefined === action.displayed || action.displayed)}
-            closeMenu={() => this.setOpened(false)}
-            sendValidationEmail={this.props.sendValidationEmail}
-          />
-        }
-      />
+      <>
+        <Button
+          id="app-user"
+          className="app-header-user app-header-item app-header-btn"
+          type={CALLBACK_BUTTON}
+          icon={this.props.authenticated ?
+            <UserAvatar picture={this.props.currentUser.picture} alt={true} /> :
+            <span className="user-avatar fa fa-user-secret" />
+          }
+          label={this.props.authenticated ? this.props.currentUser.username : trans('login')}
+          tooltip="bottom"
+          callback={(e) => {
+            this.setOpened(true)
+
+            e.preventDefault()
+            e.stopPropagation()
+
+            e.target.blur()
+          }}
+          subscript={this.props.impersonated ? {
+            type: 'text',
+            status: 'danger',
+            value: (<span className="fa fa-mask" />)
+          } : undefined}
+        />
+
+        <UserMenu
+          show={this.state.opened}
+          unavailable={this.props.unavailable}
+          authenticated={this.props.authenticated}
+          impersonated={this.props.impersonated}
+          administration={this.props.administration}
+          currentUser={this.props.currentUser}
+          registration={this.props.registration}
+          locale={this.props.locale}
+          help={this.props.help}
+          closeMenu={() => this.setOpened(false)}
+          sendValidationEmail={this.props.sendValidationEmail}
+        />
+      </>
     )
   }
 }
@@ -256,6 +301,7 @@ HeaderUser.propTypes = {
     current: T.string.isRequired,
     available: T.arrayOf(T.string).isRequired
   }).isRequired,
+  help: T.string,
   sendValidationEmail: T.func.isRequired
 }
 

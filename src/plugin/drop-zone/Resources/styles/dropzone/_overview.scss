@@ -1,0 +1,152 @@
+@use "sass:math";
+
+.evaluation-parameters {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: $component-margin-bottom;
+
+    .evaluation-parameter {
+        flex: 1;
+        background: var(--#{$prefix}secondary-bg);
+        padding: 10px $panel-body-padding;
+        border: 1px solid transparent;
+        border-radius: $border-radius-sm;
+
+        + .evaluation-parameter {
+            margin-top: 5px;
+        }
+    }
+}
+
+.evaluation-timeline {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+    padding: 0 $timeline-endpoint-size;
+    padding-top: $timeline-endpoint-size + $component-margin-bottom;
+    margin: 0 0 $component-margin-bottom;
+
+    // timeline line
+    &:before {
+        //z-index: 1;
+        content: " ";
+        position: absolute;
+        border-top: $timeline-lines-width solid $timeline-lines-color;
+        left: 0;
+        right: $timeline-endpoint-size;
+        top: calc(math.div($timeline-endpoint-size, 2) - math.div($timeline-lines-width, 2));
+    }
+
+    // timeline arrow
+    &:after {
+        //z-index: 1;
+        content: " ";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: math.div($timeline-endpoint-size, 2) 0 math.div($timeline-endpoint-size, 2) $timeline-endpoint-size;
+        border-color: transparent transparent transparent $timeline-lines-color;
+    }
+}
+
+.evaluation-status {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: $card-bg;
+    border: 1px solid $card-border-color;
+    text-align: center;
+
+    &:before {
+        //z-index: 1;
+        content: " ";
+        position: absolute;
+        left: 50%;
+        bottom: 100%;
+        margin-left: math.div(-$timeline-lines-width, 2);
+        height: $timeline-endpoint-size + $component-margin-bottom;
+        width: $timeline-lines-width;
+        background: $timeline-lines-color;
+    }
+
+    &:after {
+        //z-index: 2;
+        content: " ";
+        position: absolute;
+        top: -($timeline-endpoint-size + $component-margin-bottom);
+        left: 50%;
+        margin-left: math.div(-$timeline-endpoint-size, 2);
+        border-radius: 50%;
+        width: $timeline-endpoint-size;
+        height: $timeline-endpoint-size;
+        background: $timeline-lines-color;
+    }
+
+    + .evaluation-status {
+        margin-left: 5px;
+        margin-top: 0;
+    }
+
+    &.active {
+        @include box-shadow($dropdown-box-shadow);
+
+        &:before,
+        &:after {
+            background: $primary;
+        }
+
+        .evaluation-status-heading {
+            background: $primary;
+            color: white;
+            border-color: $primary;
+        }
+
+        .evaluation-planning {
+            color: $body-color;
+        }
+    }
+
+    .evaluation-status-heading {
+        flex: 1 0 60%;
+        margin: 0;
+        padding: $panel-body-padding;
+        font-size: $font-size-base;
+        color: var(--#{$prefix}secondary-color);
+        background: $gray-lightest;
+        border-bottom: 1px solid #e5e5e5; // todo : add var (same as feedback in exo)
+
+        .fa {
+            opacity: .5;
+            display: block;
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+    }
+
+    .evaluation-planning {
+        flex: 1 0 40%;
+        padding: $panel-body-padding;
+        font-style: italic;
+        color: var(--#{$prefix}secondary-color);
+    }
+}
+
+@media (max-width: map-get($grid-breakpoints, 'sm')) {
+    .evaluation-timeline {
+        flex-direction: column;
+    }
+
+    .evaluation-status {
+        flex-direction: row;
+
+        + .evaluation-status {
+            margin-left: 0;
+            margin-top: 5px;
+        }
+    }
+}

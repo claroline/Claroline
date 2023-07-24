@@ -1,0 +1,96 @@
+
+.gauge {
+    .gauge-text {
+        fill: $body-color;
+    }
+
+    .gauge-liquid {
+        fill-opacity: .3;
+    }
+
+    // generates variants
+    &.gauge-secondary {
+        @include gauge-variant($secondary);
+    }
+    &.gauge-primary {
+        @include gauge-variant($primary);
+    }
+    &.gauge-success {
+        @include gauge-variant($success);
+    }
+    &.gauge-warning {
+        @include gauge-variant($warning);
+    }
+    &.gauge-danger {
+        @include gauge-variant($danger);
+    }
+    &.gauge-info {
+        @include gauge-variant($info);
+    }
+    &.gauge-learning,
+    &.gauge-user {
+        @include gauge-variant($learning);
+    }
+}
+
+.count-gauge {
+    .gauge-text {
+        font-weight: 900;
+    }
+}
+
+.liquid-gauge {
+    .gauge-text {
+        font-weight: 900;
+    }
+
+    // generates variants
+    &.gauge-secondary {
+        @include liquid-gauge-variant($secondary);
+    }
+    &.gauge-primary {
+        @include liquid-gauge-variant($primary);
+    }
+    &.gauge-success {
+        @include liquid-gauge-variant($success);
+    }
+    &.gauge-warning {
+        @include liquid-gauge-variant($warning);
+    }
+    &.gauge-danger {
+        @include liquid-gauge-variant($danger);
+    }
+    &.gauge-info {
+        @include liquid-gauge-variant($info);
+    }
+    &.gauge-learning,
+    &.gauge-user {
+        @include liquid-gauge-variant($learning);
+    }
+}
+
+.score-gauge {
+    // generates variants
+    &.gauge-secondary {
+        @include score-gauge-variant($secondary);
+    }
+    &.gauge-primary {
+        @include score-gauge-variant($primary);
+    }
+    &.gauge-success {
+        @include score-gauge-variant($success);
+    }
+    &.gauge-warning {
+        @include score-gauge-variant($warning);
+    }
+    &.gauge-danger {
+        @include score-gauge-variant($danger);
+    }
+    &.gauge-info {
+        @include score-gauge-variant($info);
+    }
+    &.gauge-learning,
+    &.gauge-user {
+        @include score-gauge-variant($learning);
+    }
+}

@@ -19,7 +19,7 @@ const TagsModal = props => {
       {...omit(props, 'url', 'selected', 'selectAction', 'resetSelect', 'objectClass')}
       icon="fa fa-fw fa-tags"
       className="data-picker-modal"
-      bsSize="lg"
+      size="xl"
       onExiting={() => props.resetSelect()}
     >
       <ListData
@@ -62,7 +62,9 @@ const TagsModal = props => {
       <Button
         label={trans('select', {}, 'actions')}
         {...selectAction}
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         primary={true}
         disabled={0 === props.selected.length}
         onClick={props.fadeModal}

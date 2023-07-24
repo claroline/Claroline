@@ -33,11 +33,11 @@ class UrlDisplay extends Component {
     return (
       <Button
         type={URL_BUTTON}
-        className="btn btn-block btn-emphasis component-container"
+        className="btn btn-primary w-100 mt-3"
         target={this.props.url}
-        style={{marginTop: 20}}
         label={trans('open', {}, 'actions')}
         primary={true}
+        size="lg"
       />
     )
   }

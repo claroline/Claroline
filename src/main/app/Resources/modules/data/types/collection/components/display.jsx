@@ -4,11 +4,12 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {DataDisplay} from '#/main/app/data/components/display'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const CollectionDisplay = (props) =>
   <div className="collection-control collection-display">
     {isEmpty(props.data) &&
-      <div className="no-item-info">{props.placeholder}</div>
+      <ContentPlaceholder title={props.placeholder} />
     }
 
     {!isEmpty(props.data) &&
@@ -45,6 +46,8 @@ const CollectionDisplay = (props) =>
   </div>
 
 CollectionDisplay.propTypes = {
+  id: T.string,
+  label: T.string,
   data: T.array,
   placeholder: T.string,
 

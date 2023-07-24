@@ -52,6 +52,7 @@ module.exports = {
     distributionShortcut(),
     // this is required by swagger-ui-react
     new webpack.ProvidePlugin({
+      process: "process/browser",
       Buffer: ['buffer', 'Buffer']
     })
   ],
@@ -92,6 +93,9 @@ module.exports = {
   },
   resolve: {
     modules: ['./node_modules'],
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    fallback: {
+      buffer: false
+    }
   }
 }

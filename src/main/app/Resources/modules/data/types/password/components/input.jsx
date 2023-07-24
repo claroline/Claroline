@@ -110,7 +110,7 @@ class PasswordInput extends PureComponent {
           [`input-group-${this.props.size}`]: !!this.props.size
         })}>
 
-          <span className="input-group-addon">
+          <span className="input-group-text">
             <span className="fa fa-fw fa-lock" role="presentation" />
           </span>
 
@@ -125,20 +125,19 @@ class PasswordInput extends PureComponent {
             autoComplete={this.props.autoComplete}
           />
 
-          <span className="input-group-btn">
-            <Button
-              className="btn"
-              type={CALLBACK_BUTTON}
-              icon={classes('fa fa-fw', {
-                'fa-eye'      : !this.state.visible,
-                'fa-eye-slash': this.state.visible
-              })}
-              label={trans(this.state.visible ? 'hide_password':'show_password')}
-              disabled={this.props.disabled}
-              callback={this.toggleVisibility}
-              tooltip="left"
-            />
-          </span>
+          <Button
+            className="btn btn-outline-secondary"
+            type={CALLBACK_BUTTON}
+            icon={classes('fa fa-fw', {
+              'fa-eye'      : !this.state.visible,
+              'fa-eye-slash': this.state.visible
+            })}
+            label={trans(this.state.visible ? 'hide_password':'show_password')}
+            disabled={this.props.disabled}
+            callback={this.toggleVisibility}
+            tooltip="left"
+            size={this.props.size}
+          />
         </div>
 
         {!this.props.hideStrength && this.props.value &&

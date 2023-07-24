@@ -27,14 +27,6 @@ import {CourseCard} from '#/plugin/cursus/course/components/card'
 import {SessionCard} from '#/plugin/cursus/session/components/card'
 import {MODAL_COURSE_REGISTRATION} from '#/plugin/cursus/course/modals/registration'
 
-function canSelfRegister(course, session, registered = false) {
-  return !registered
-    && (!isEmpty(session) || get(course, 'registration.pendingRegistrations'))
-    && getInfo(course, session, 'registration.selfRegistration')
-    && !getInfo(course, session, 'registration.autoRegistration')
-    && (getInfo(course, session, 'registration.pendingRegistrations') || !isFull(session))
-}
-
 const CurrentRegistration = (props) => {
   let registrationTitle = trans('session_registration_pending', {}, 'cursus')
   if (constants.TEACHER_TYPE === props.registration.type) {
@@ -75,13 +67,22 @@ const CourseAbout = (props) => {
   const availableSessions = props.availableSessions
     .filter(session => (!props.activeSession || props.activeSession.id !== session.id) && !get(session, 'restrictions.hidden'))
 
-  const selfRegistration = canSelfRegister(props.course, props.activeSession, !isEmpty(props.activeSessionRegistration) || !isEmpty(props.courseRegistration))
+  const registered = !isEmpty(props.activeSessionRegistration) || !isEmpty(props.courseRegistration)
+  let selfRegistration = !registered
+    && (!isEmpty(props.activeSession) || !isEmpty(props.availableSessions) || get(props.course, 'registration.pendingRegistrations'))
+
+
+  if (props.activeSession) {
+    selfRegistration = selfRegistration && getInfo(props.course, props.activeSession, 'registration.selfRegistration')
+      && !getInfo(props.course, props.activeSession, 'registration.autoRegistration')
+      && (getInfo(props.course, props.activeSession, 'registration.pendingRegistrations') || !isFull(props.activeSession))
+  }
 
   return (
-    <div className="row">
+    <div className="row mt-3">
       <div className="col-md-3">
-        <div className="panel panel-default">
-          <ul className="list-group list-group-values">
+        <div className="card mb-3">
+          <ul className="list-group list-group-flush list-group-values">
             <li className="list-group-item">
               {trans('public_registration')}
               <span className="value">
@@ -160,14 +161,12 @@ const CourseAbout = (props) => {
             />
 
             {isEmpty(get(props.activeSession, 'location')) &&
-              <div className="component-container">
-                <em className="text-muted">{trans('online_session', {}, 'cursus')}</em>
-              </div>
+              <div className="text-secondary mb-3">{trans('online_session', {}, 'cursus')}</div>
             }
 
             {!isEmpty(get(props.activeSession, 'location')) &&
               <LocationCard
-                className="component-container"
+                className="mb-3"
                 size="xs"
                 orientation="row"
                 data={get(props.activeSession, 'location')}
@@ -182,24 +181,31 @@ const CourseAbout = (props) => {
           }
 
           <Toolbar
-            className="component-container"
-            buttonName="btn btn-block"
+            className="d-grid gap-1 mb-3"
+            variant="btn"
             actions={[
               {
                 name: 'self-register',
-                className: 'btn-emphasis',
                 type: MODAL_BUTTON,
-                label: trans(isEmpty(props.activeSession) || isFull(props.activeSession) ? 'register_waiting_list' : 'self_register', {}, 'actions'),
+                label: trans(!isEmpty(props.activeSession) && isFull(props.activeSession) ? 'register_waiting_list' : 'self_register', {}, 'actions'),
                 modal: [MODAL_COURSE_REGISTRATION, {
                   course: props.course,
                   session: props.activeSession,
-                  register: props.register
+                  available: props.availableSessions,
+                  register: (course, sessionId = null, registrationData = null) => {
+                    props.register(course, sessionId, registrationData).then(() => {
+                      if (!isEmpty(sessionId)) {
+                        props.history.push(route(course, {id: sessionId}))
+                      }
+                    })
+                  }
                 }],
                 primary: true,
+                size: 'lg',
                 displayed: selfRegistration
               }, {
                 name: 'open',
-                className: 'btn-emphasis',
+                size: 'lg',
                 type: CALLBACK_BUTTON,
                 label: trans('open-training', {}, 'actions'),
                 callback: () => {
@@ -220,7 +226,6 @@ const CourseAbout = (props) => {
                 type: LINK_BUTTON,
                 label: trans('show_sessions', {}, 'actions'),
                 target: props.path+'/sessions',
-                primary: !selfRegistration && !isFullyRegistered(props.activeSessionRegistration),
                 displayed: isEmpty(props.activeSession) && !get(props.course, 'display.hideSessions')
               }, {
                 name: 'show-events',
@@ -238,12 +243,12 @@ const CourseAbout = (props) => {
         {!isEmpty(props.activeSession) &&
           <div className="content-resume">
             <div className="content-resume-info content-resume-primary">
-              <span className="text-muted">
+              <span className="text-secondary">
                 {trans('status')}
               </span>
 
               {get(props.activeSession, 'restrictions.dates[0]') > now() &&
-                <h1 className="content-resume-title h2 text-muted">
+                <h1 className="content-resume-title h2 text-secondary">
                   {trans('session_not_started', {}, 'cursus')}
                 </h1>
               }
@@ -262,7 +267,7 @@ const CourseAbout = (props) => {
             </div>
 
             <div className="content-resume-info">
-              <span className="text-muted">
+              <span className="text-secondary">
                 {trans('start_date')}
               </span>
 
@@ -275,7 +280,7 @@ const CourseAbout = (props) => {
             </div>
 
             <div className="content-resume-info">
-              <span className="text-muted">
+              <span className="text-secondary">
                 {trans('end_date')}
               </span>
 
@@ -312,8 +317,8 @@ const CourseAbout = (props) => {
         }
 
         {!isHtmlEmpty(get(props.course, 'description')) &&
-          <div className="panel panel-default">
-            <ContentHtml className="panel-body">
+          <div className="card mb-3">
+            <ContentHtml className="card-body">
               {get(props.course, 'description')}
             </ContentHtml>
           </div>
@@ -322,7 +327,7 @@ const CourseAbout = (props) => {
         {!isEmpty(props.course.tags) &&
           <div className="component-container tags">
             {props.course.tags.map(tag =>
-              <span key={tag} className="tag label label-info">
+              <span key={tag} className="tag badge text-bg-primary">
                 <span className="fa fa-fw fa-tag icon-with-text-right" />
                 {tag}
               </span>
@@ -337,8 +342,8 @@ const CourseAbout = (props) => {
               displayLevel={2}
               title={trans('session_info', {}, 'cursus')}
             />
-            <div className="panel panel-default">
-              <ContentHtml className="panel-body">
+            <div className="card mb-3">
+              <ContentHtml className="card-body">
                 {get(props.activeSession, 'description')}
               </ContentHtml>
             </div>

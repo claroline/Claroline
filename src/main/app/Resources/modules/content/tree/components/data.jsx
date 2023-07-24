@@ -62,7 +62,7 @@ const TreeDataItemContent = props =>
     {props.onSelect &&
       <input
         type="checkbox"
-        className="data-tree-item-select"
+        className="data-tree-item-select form-check-input"
         checked={props.selected}
         onChange={props.onSelect}
       />

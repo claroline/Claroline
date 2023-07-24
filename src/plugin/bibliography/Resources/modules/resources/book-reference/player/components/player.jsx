@@ -1,7 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-import {Row, Col} from 'react-bootstrap'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {DetailsData} from '#/main/app/content/details/containers/data'
@@ -15,7 +16,7 @@ const PlayerComponent = props =>
     {props.bookReference.cover &&
       <Col md={3}>
         <img
-          className={'img-responsive'}
+          className="img-fluid"
           src={props.bookReference.cover}
           alt={trans('cover', {}, 'icap_bibliography')}
           title={trans('cover', {}, 'icap_bibliography')}

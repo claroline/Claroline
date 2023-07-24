@@ -1,0 +1,52 @@
+@use "sass:math";
+
+.answers-list {
+  .question-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    // Same style as an H4 for now
+    font-size: $h4-font-size;
+    margin-top: 0;
+    margin-bottom: floor(math.div($line-height-computed, 2));
+  }
+
+  .user-answer {
+    display: flex;
+
+    .answer-item {
+      margin: 0;
+    }
+  }
+
+  // todo : merge with editor styles
+  // todo : adds custom rules for xs screen
+  .text-fields {
+    flex: 1;
+    margin-right: ($grid-gutter-width * .5);
+  }
+
+  .right-controls {
+    margin-left: ($grid-gutter-width * .5);
+    display: flex;
+    align-self: flex-end;
+    align-items: flex-start;
+
+    .score-input {
+      width: 110px;
+      margin-right: ($grid-gutter-width * .5);
+    }
+
+    .btn-link,
+    .btn {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+  }
+
+  .feedback-container {
+    margin-top: $form-group-margin-bottom;
+    padding-left: $grid-gutter-width;
+  }
+}

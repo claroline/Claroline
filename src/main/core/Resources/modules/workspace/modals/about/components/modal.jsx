@@ -32,8 +32,9 @@ const AboutModal = props =>
     {props.workspace &&
       <DetailsData
         meta={true}
+        flush={true}
         data={props.workspace}
-        sections={[
+        definition={[
           {
             title: trans('general'),
             primary: true,

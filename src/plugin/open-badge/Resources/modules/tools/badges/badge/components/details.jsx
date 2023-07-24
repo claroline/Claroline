@@ -37,13 +37,13 @@ const BadgeDetailsComponent = (props) => {
               </div>
             }
 
-            <div className="panel panel-default">
-              <ContentHtml className="panel-body">{!isEmpty(props.badge.criteria) ? props.badge.criteria : trans('no_criteria', {}, 'badge')}</ContentHtml>
+            <div className="card mb-3">
+              <ContentHtml className="card-body">{!isEmpty(props.badge.criteria) ? props.badge.criteria : trans('no_criteria', {}, 'badge')}</ContentHtml>
             </div>
 
             {get(props.badge, 'permissions.grant') &&
               <Button
-                className="btn btn-block btn-emphasis component-container"
+                className="btn btn-primary w-100 mb-3"
                 type={MODAL_BUTTON}
                 label={trans('grant_users', {}, 'badge')}
                 disabled={!props.badge.meta.enabled}
@@ -55,6 +55,7 @@ const BadgeDetailsComponent = (props) => {
                   })
                 }]}
                 primary={true}
+                size="lg"
               />
             }
           </Fragment>

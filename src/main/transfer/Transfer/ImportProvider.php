@@ -30,7 +30,7 @@ class ImportProvider extends AbstractProvider
         SerializerProvider $serializer,
         SchemaProvider $schema,
         string $logDir
-      ) {
+    ) {
         $this->projectDir = $projectDir;
         $this->om = $om;
         $this->serializer = $serializer;
@@ -39,7 +39,6 @@ class ImportProvider extends AbstractProvider
     }
 
     /**
-     * @param mixed $data
      * @param array $options currently only contains Options::WORKSPACE_IMPORT
      * @param array $extra   used to pass the workspace, and custom data coming from the ui form (and defined by ImporterInterface::getExtraDefinition())
      *
@@ -60,8 +59,8 @@ class ImportProvider extends AbstractProvider
 
         $adapter = $this->getAdapter($format);
 
-        $schema = $executor->getSchema();
-        //use the translator here
+        $schema = $executor->getSchema($options, $extra);
+        // use the translator here
         $jsonLogger->info('Building objects from data...');
 
         $jsonSchema = null;
@@ -80,8 +79,8 @@ class ImportProvider extends AbstractProvider
         } else {
             $identifiersSchema = [];
             foreach ($schema as $prop => $value) {
-                //this is for the custom schema defined in the transfer stuff (atm add user to roles for workspace)
-                //there is probably a better way to handle this
+                // this is for the custom schema defined in the transfer stuff (atm add user to roles for workspace)
+                // there is probably a better way to handle this
                 if (!$value instanceof \stdClass) {
                     $jsonSchema = $this->schema->getSchema($value, $options);
 
@@ -113,12 +112,12 @@ class ImportProvider extends AbstractProvider
 
         $loggedSuccess = [];
 
-        //look for duplicates here
-        //JsonSchema defined above
+        // look for duplicates here
+        // JsonSchema defined above
         if (array_key_exists('$root', $schema) && $jsonSchema && isset($jsonSchema->claroline) && isset($jsonSchema->claroline->ids)) {
             $ids = $jsonSchema->claroline->ids;
 
-            //make 3 array with the list of ids
+            // make 3 array with the list of ids
             $dataIds = [];
 
             foreach ($ids as $id) {

@@ -51,7 +51,9 @@ const EvidenceModal = props =>
     />
 
     <Button
-      className="btn modal-btn"
+      className="modal-btn"
+      variant="btn"
+      size="lg"
       type={CALLBACK_BUTTON}
       label={trans('save', {}, 'actions')}
       primary={true}

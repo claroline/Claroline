@@ -1,0 +1,36 @@
+/**
+ * Styles for `enum` data type.
+ */
+
+@use "sass:math";
+
+// TODO : merge with field/collection data type
+
+.enum-control {
+    ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+    .enum-item {
+        display: flex;
+        align-items: flex-start;
+        background: var(--#{$prefix}secondary-bg);
+        border: var(--#{$prefix}border-width) solid transparent;
+        padding: map-get($spacers, 2);
+
+        @include border-radius($border-radius);
+
+        > .form-group {
+            flex: 1;
+            margin-bottom: 0 !important;
+        }
+
+        .right-controls .btn {
+            margin-left: ($grid-gutter-width * .5);
+            padding-left: map-get($spacers, 1);
+            padding-right: map-get($spacers, 1);
+        }
+    }
+}

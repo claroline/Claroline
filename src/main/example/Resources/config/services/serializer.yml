@@ -2,4 +2,6 @@ services:
   _defaults:
     tags: [claroline.serializer]
 
-  Claroline\ExampleBundle\Serializer\ExampleSerializer: ~
+  Claroline\ExampleBundle\Serializer\ExampleSerializer:
+    arguments:
+      - '@Claroline\CommunityBundle\Serializer\UserSerializer'

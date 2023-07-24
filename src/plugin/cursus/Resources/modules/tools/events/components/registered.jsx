@@ -18,30 +18,28 @@ const EventsRegistered = (props) =>
     }]}
     subtitle={trans('my_events', {}, 'cursus')}
   >
-    <header className="row content-heading">
-      <ContentTabs
-        sections={[
-          {
-            name: 'current',
-            type: LINK_BUTTON,
-            label: trans('Actives', {}, 'cursus'),
-            target: `${props.path}/registered/`,
-            exact: true
-          }, {
-            name: 'ended',
-            type: LINK_BUTTON,
-            label: trans('Terminées', {}, 'cursus'),
-            target: `${props.path}/registered/ended`
-          }, {
-            name: 'pending',
-            type: LINK_BUTTON,
-            label: trans('pending_registrations'),
-            target: `${props.path}/registered/pending`,
-            displayed: false
-          }
-        ]}
-      />
-    </header>
+    <ContentTabs
+      sections={[
+        {
+          name: 'current',
+          type: LINK_BUTTON,
+          label: trans('Actives', {}, 'cursus'),
+          target: `${props.path}/registered/`,
+          exact: true
+        }, {
+          name: 'ended',
+          type: LINK_BUTTON,
+          label: trans('Terminées', {}, 'cursus'),
+          target: `${props.path}/registered/ended`
+        }, {
+          name: 'pending',
+          type: LINK_BUTTON,
+          label: trans('pending_registrations'),
+          target: `${props.path}/registered/pending`,
+          displayed: false
+        }
+      ]}
+    />
 
     <Routes
       path={`${props.path}/registered`}

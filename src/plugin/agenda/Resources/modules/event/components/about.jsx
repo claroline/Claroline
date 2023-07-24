@@ -15,8 +15,9 @@ import {MODAL_EVENT_PARAMETERS} from '#/plugin/agenda/event/modals/parameters'
 const EventAbout = (props) =>
   <DetailsData
     data={props.event}
+    flush={true}
     meta={true}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,
@@ -82,7 +83,10 @@ const EventAbout = (props) =>
 
     <Toolbar
       id={`event-${props.event.id}-actions`}
-      buttonName="modal-btn btn"
+      className="btn-group-vertical"
+      buttonName="modal-btn"
+      variant="btn"
+      size="lg"
       actions={props.actions.concat([
         {
           name: 'edit',

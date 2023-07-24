@@ -1,0 +1,74 @@
+
+@mixin type-control-sizing($icon-size, $label-font-size, $desc-font-size) {
+    .type-icon {
+        // for img
+        width: $icon-size;
+        height: $icon-size;
+        min-width: $icon-size; // for correct alignment
+        // for font-awesome
+        font-size: floor($icon-size * 0.7);
+    }
+
+    h1 {
+        font-size: $label-font-size;
+    }
+
+    p {
+        font-size: $desc-font-size;
+    }
+}
+
+.type-control {
+    display: flex;
+    align-items: center;
+
+    .type-icon {
+        color: $gray-light;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    svg.type-icon {
+        fill: $gray-light;
+        stroke: $gray-light;
+        /*width: 100%;
+        height: 100%;*/
+    }
+
+    h1 {
+        padding: 0;
+        margin: 0;
+        font-weight: bold;
+    }
+
+    p {
+        margin-top: 5px;
+        margin-bottom: 0;
+        font-style: italic;
+        color: $gray-light;
+    }
+
+    @include type-control-sizing(40px, $font-size-base, $font-size-sm);
+
+    &.lg {
+        @include type-control-sizing(64px, $font-size-lg, $font-size-base);
+    }
+}
+
+.type-control.list-group-item {
+    .type-icon {
+        margin-right: $list-group-item-padding-x;
+    }
+}
+
+.type-control:not(.list-group-item) {
+    border-radius: $border-radius;
+    background: var(--#{$prefix}tertiary-bg);
+    border: 1px solid transparent;
+    padding: $input-padding-y $input-btn-padding-x;
+
+    .type-icon {
+        margin-right: $icon-text-spacer;
+    }
+}

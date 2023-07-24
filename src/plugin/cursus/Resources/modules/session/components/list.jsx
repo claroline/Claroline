@@ -15,6 +15,7 @@ import {SessionCard} from '#/plugin/cursus/session/components/card'
 
 const SessionList = (props) =>
   <ListData
+    className={props.className}
     name={props.name}
     fetch={{
       url: props.url,
@@ -53,10 +54,10 @@ const SessionList = (props) =>
           }
 
           const SessionStatus = (
-            <span className={classes('label', {
-              'label-success': 'not_started' === status,
-              'label-info': 'in_progress' === status,
-              'label-danger': 'ended' === status
+            <span className={classes('badge', {
+              'text-bg-success': 'not_started' === status,
+              'text-bg-info': 'in_progress' === status,
+              'text-bg-danger': 'ended' === status
             })}>
               {trans('session_'+status, {}, 'cursus')}
             </span>
@@ -157,6 +158,7 @@ const SessionList = (props) =>
   />
 
 SessionList.propTypes = {
+  className: T.string,
   path: T.string.isRequired,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,

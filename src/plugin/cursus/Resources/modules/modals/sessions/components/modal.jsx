@@ -32,7 +32,7 @@ class SessionsModal extends Component {
         {...omit(this.props, 'url', 'selected', 'selectAction', 'reset', 'resetFilters')}
         icon="fa fa-fw fa-calendar-week"
         className="data-picker-modal"
-        bsSize="lg"
+        size="xl"
         onEnter={() => {
           this.props.resetFilters(this.props.filters)
           this.setState({initialized: true})
@@ -72,10 +72,10 @@ class SessionsModal extends Component {
                 }
 
                 const SessionStatus = (
-                  <span className={classes('label', {
-                    'label-success': 'not_started' === status,
-                    'label-info': 'in_progress' === status,
-                    'label-danger': 'ended' === status
+                  <span className={classes('badge', {
+                    'text-bg-success': 'not_started' === status,
+                    'text-bg-info': 'in_progress' === status,
+                    'text-bg-danger': 'ended' === status
                   })}>
                     {trans('session_'+status, {}, 'cursus')}
                   </span>
@@ -120,7 +120,9 @@ class SessionsModal extends Component {
         <Button
           label={trans('select', {}, 'actions')}
           {...selectAction}
-          className="modal-btn btn"
+          className="modal-btn"
+          variant="btn"
+          size="lg"
           primary={true}
           disabled={0 === this.props.selected.length}
           onClick={this.props.fadeModal}

@@ -77,18 +77,31 @@ class CsvAdapter implements AdapterInterface
         return $builder->explainIdentifiers($schemas);
     }
 
-    public function dump(string $fileDest, array $data, ?array $options = [], ?array $extra = [], ?bool $append = false): void
+    public function dump(string $fileDest, array $data, array $schema, ?array $options = [], ?array $extra = [], ?bool $append = false): void
     {
         if (empty($data)) {
             return;
         }
 
-        $headers = !empty($extra['columns']) ? $extra['columns'] : ArrayUtils::getPropertiesName($data[0]);
+        if (!empty($extra['columns'])) {
+            // get user selected columns
+            $headers = $extra['columns'];
+        } elseif (!empty($schema) && !empty($schema['properties'])) {
+            // get all the columns defined into the action schema
+            $headers = array_map(function ($propDef) {
+                return $propDef['name'];
+            }, $schema['properties']);
+        } else {
+            // get all the columns from first data row
+            $headers = ArrayUtils::getPropertiesName($data[0]);
+        }
 
         $fs = new FileSystem();
 
         if (!$append) {
-            $fs->appendToFile($fileDest, implode(self::COLUMN_DELIMITER, $headers));
+            $fs->appendToFile($fileDest, implode(self::COLUMN_DELIMITER, array_map(function ($columnName) use ($schema) {
+                return $this->getLabelFromSchema($columnName, $schema);
+            }, $headers)));
         }
 
         $lines = [];
@@ -116,7 +129,7 @@ class CsvAdapter implements AdapterInterface
         $object = [];
 
         foreach ($headers as $index => $property) {
-            //idiot condition proof in case something is wrong with the csv (like more lines or columns)
+            // idiot condition proof in case something is wrong with the csv (like more lines or columns)
             if (isset($properties[$index]) && $properties[$index]) {
                 $explainedProperty = $explanation->getProperty($property);
 
@@ -131,8 +144,6 @@ class CsvAdapter implements AdapterInterface
 
     /**
      * Build an object from an array of headers and properties path.
-     *
-     * @param mixed $value
      *
      * @return array
      */
@@ -212,6 +223,22 @@ class CsvAdapter implements AdapterInterface
             }
         }
 
-        return implode($data, self::ARRAY_DELIMITER);
+        return implode(self::ARRAY_DELIMITER, $data);
+    }
+
+    /**
+     * Retrieves a column human label for a column from the action schema.
+     */
+    private function getLabelFromSchema(string $columnName, ?array $schema = []): string
+    {
+        if (!empty($schema) && !empty($schema['properties'])) {
+            foreach ($schema['properties'] as $propDef) {
+                if ($propDef['name'] === $columnName) {
+                    return !empty($propDef['label']) ? $propDef['label'] : $columnName;
+                }
+            }
+        }
+
+        return $columnName;
     }
 }

@@ -15,7 +15,7 @@ const AddressDisplay = (props) => {
 
   if (isEmpty(filledAddressParts)) {
     return (
-      <span className="data-details-empty">{trans('empty_value')}</span>
+      <span className="text-secondary d-block">{trans('empty_value')}</span>
     )
   }
 

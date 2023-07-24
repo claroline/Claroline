@@ -99,7 +99,8 @@ class ResourceMain extends Component {
         >
           {!this.props.embedded &&
             <Button
-              className="btn btn-emphasis"
+              variant="btn"
+              size="lg"
               type={LINK_BUTTON}
               label={trans('browse-resources', {}, 'actions')}
               target={toolRoute('resources')}

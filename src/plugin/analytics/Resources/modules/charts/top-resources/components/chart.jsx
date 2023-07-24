@@ -17,9 +17,9 @@ class TopResourcesChart extends Component {
 
   render() {
     return (
-      <div className="panel panel-default panel-analytics">
-        <div className="panel-heading">
-          <h2 className="panel-title">
+      <div className="card mb-3 panel-analytics">
+        <div className="card-header">
+          <h2 className="card-title">
             Top ressources
           </h2>
 
@@ -56,7 +56,7 @@ class TopResourcesChart extends Component {
         </div>
 
         <div
-          className="data-cards-stacked data-cards-striped"
+          className="data-cards-stacked data-cards-stacked-flush"
           style={{
             height: '315px', // FIXME
             overflowY: 'auto'

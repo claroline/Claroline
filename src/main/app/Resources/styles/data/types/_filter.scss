@@ -1,0 +1,22 @@
+/**
+ * Styles for `filter` data type.
+ */
+
+.filter-control {
+    display: flex;
+    flex-direction: row;
+
+    .filter-property {
+        width: 50%;
+        margin-right: 15px;
+    }
+
+    .filter-value {
+        flex: 1;
+        margin-right: 15px;
+    }
+
+    .filter-value-placeholder {
+        flex: 1;
+    }
+}

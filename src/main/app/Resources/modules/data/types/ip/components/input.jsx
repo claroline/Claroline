@@ -18,7 +18,7 @@ const IpPartInput = props =>
     id={props.id}
     type="text"
     disabled={props.disabled}
-    className={classes('form-control', props.className, {[`input-${props.size}`]: !!props.size})}
+    className={classes('form-control', props.className, {[`form-control-${props.size}`]: !!props.size})}
     placeholder={props.placeholder}
     value={props.value}
     onChange={e => {

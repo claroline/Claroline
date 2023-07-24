@@ -14,7 +14,7 @@ import {Session as SessionTypes} from '#/plugin/cursus/prop-types'
 const RegistrationUsers = (props) =>
   <Fragment>
     <ListData
-      className="component-container"
+      className="mb-3"
       name={props.name}
       fetch={{
         url: props.url,
@@ -60,8 +60,10 @@ const RegistrationUsers = (props) =>
 
     {props.add &&
       <Button
-        className="btn btn-block btn-emphasis component-container"
+        className="w-100 mb-3"
+        variant="btn"
         primary={true}
+        size="lg"
         {...props.add}
       />
     }

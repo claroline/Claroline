@@ -9,7 +9,8 @@ import {MenuButton} from '#/main/app/buttons/menu/components/button'
 const PaginationPages = props =>
   <nav className="pagination-condensed btn-group">
     <CallbackButton
-      className="btn btn-link btn-previous"
+      className="btn-previous"
+      variant="btn"
       disabled={0 === props.current}
       callback={() => props.changePage(props.current - 1)}
     >
@@ -19,7 +20,8 @@ const PaginationPages = props =>
 
     <MenuButton
       id="pagination-pages-dropdown"
-      className="btn btn-link btn-block"
+      className="w-100"
+      variant="btn"
       disabled={1 === props.pages}
       menu={{
         position: 'top',
@@ -36,11 +38,12 @@ const PaginationPages = props =>
     </MenuButton>
 
     <CallbackButton
-      className="btn btn-link btn-next"
+      className="btn-next"
+      variant="btn"
       disabled={props.pages - 1 === props.current}
       callback={() => props.changePage(props.current + 1)}
     >
-      <span className="hidden-xs icon-with-text-right">{trans('next')}</span>
+      <span className="d-none d-sm-inline icon-with-text-right">{trans('next')}</span>
       <span className="fa fa-angle-double-right" aria-hidden="true" />
     </CallbackButton>
   </nav>

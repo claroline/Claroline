@@ -11,11 +11,10 @@ trait Creator
      * The user who created the entity.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(onDelete="SET NULL")
      *
-     * @var User
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    protected $creator;
+    protected ?User $creator = null;
 
     /**
      * Returns the entity creator.
@@ -28,7 +27,7 @@ trait Creator
     /**
      * Sets the entity creator.
      */
-    public function setCreator(?User $creator = null): void
+    public function setCreator(User $creator = null): void
     {
         $this->creator = $creator;
     }

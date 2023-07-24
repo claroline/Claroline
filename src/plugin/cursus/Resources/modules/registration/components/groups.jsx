@@ -60,8 +60,9 @@ const RegistrationGroups = (props) =>
     {props.add &&
       <Button
         {...props.add}
-        className="btn btn-block btn-emphasis component-container"
+        className="btn btn-primary w-100 mb-3"
         primary={true}
+        size="lg"
         disabled={isFull(props.session)}
       />
     }

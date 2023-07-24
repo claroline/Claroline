@@ -1,0 +1,23 @@
+@use "sass:math";
+
+.words-feedback,
+.words-paper,
+.words-stats {
+  .keyword {
+    border-radius: $answer-item-border-radius;
+    padding: 2px 4px;
+    border: 1px solid transparent;
+  }
+
+  .word-label {
+    flex-grow: 1;
+  }
+
+  .answer-warning-span {
+    margin-right: ($grid-gutter-width * .5);
+  }
+}
+
+.word-item {
+  display: flex;
+}

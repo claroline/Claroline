@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 // todo : remove me
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar'
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 
 import {withRouter} from '#/main/app/router'
 import {trans} from '#/main/app/intl/translation'

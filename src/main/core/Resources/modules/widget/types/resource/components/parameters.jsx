@@ -8,6 +8,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 const ResourceWidgetParameters = (props) =>
   <FormData
     embedded={true}
+    flush={true}
     level={5}
     name={props.name}
     sections={[

@@ -1,0 +1,17 @@
+.dropdown-header {
+  text-transform: uppercase;
+}
+
+.dropdown-menu-full {
+  width: 100% !important; // to be sure to override other dropdown sizing
+}
+
+.dropdown-item {
+  .action-subscript {
+    float: right; // todo : find a better approach
+
+    .fa {
+      margin: 0;
+    }
+  }
+}

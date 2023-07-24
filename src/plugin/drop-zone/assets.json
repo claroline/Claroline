@@ -1,7 +1,7 @@
 {
   "styles": {
     "entry": {
-      "dropzone-resource": "dropzone/index.less"
+      "dropzone-resource": "dropzone/index.scss"
     }
   }
 }

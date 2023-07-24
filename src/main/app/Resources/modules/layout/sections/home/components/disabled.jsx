@@ -64,7 +64,9 @@ const HomeDisabled = (props) => {
         }
 
         <Toolbar
-          buttonName="btn btn-block btn-emphasis"
+          buttonName="w-100"
+          variant="btn"
+          size="lg"
           actions={[
             {
               name: 'login',

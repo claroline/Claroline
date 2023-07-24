@@ -121,7 +121,8 @@ const EditorCategories = props =>
 
     <Button
       type={MODAL_BUTTON}
-      className="btn btn-block btn-emphasis component-container"
+      className="btn btn-primary w-100 mb-3"
+      size="lg"
       label={trans('create_a_category', {}, 'clacoform')}
       modal={[MODAL_CATEGORY_FORM, {
         fields: props.clacoForm.fields,

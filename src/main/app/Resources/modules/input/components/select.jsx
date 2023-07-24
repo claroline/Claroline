@@ -20,10 +20,10 @@ const Select = props =>
   <select
     id={props.id}
     autoComplete={props.autoComplete}
-    className={classes('form-control', props.className, {
-      [`input-${props.size}`]: !!props.size})
+    className={classes('form-select', props.className, {
+      [`form-select-${props.size}`]: !!props.size})
     }
-    value={props.value || ''}
+    value={props.value}
     disabled={props.disabled}
     onChange={e => {
       if ('' === e.target.value) {
@@ -58,7 +58,7 @@ implementPropTypes(Select, DataInputTypes, {
   multiple: T.bool,
   noEmpty: T.bool
 }, {
-  value: '',
+  //value: '',
   disabledChoices: [],
   multiple: false,
   noEmpty: false

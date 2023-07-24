@@ -1,7 +1,7 @@
 {
   "styles": {
     "entry": {
-      "home-tool": "home.less"
+      "home-tool": "tools/home.scss"
     }
   }
 }

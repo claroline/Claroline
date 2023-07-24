@@ -9,34 +9,36 @@ import {selectors} from '#/main/core/resources/text/editor/store'
 import {Text as TextTypes} from '#/main/core/resources/text/prop-types'
 
 const Editor = (props) =>
-  <Form
-    className="row"
-    name={selectors.FORM_NAME}
-    target={['apiv2_resource_text_update', {id: props.text.id}]}
-    buttons={true}
-    cancel={{
-      type: LINK_BUTTON,
-      target: props.path,
-      exact: true
-    }}
-    lock={{
-      id: props.text.id,
-      className: 'Claroline\\CoreBundle\\Entity\\Resource\\Text',
-      autoUnlock: true
-    }}
-  >
-    <TinymceEditor
-      id={props.text.id}
-      mode="full"
-      value={props.text.raw}
-      //initialValue={props.originalText.raw}
-      onChange={(newValue) => props.updateProp('raw', newValue)}
-      config={{
-        plugins: ['placeholders'],
-        placeholders: props.availablePlaceholders
+  <div className="row flex-fill text-resource-editor">
+    <Form
+      flush={true}
+      className="g-0"
+      name={selectors.FORM_NAME}
+      target={['apiv2_resource_text_update', {id: props.text.id}]}
+      buttons={true}
+      cancel={{
+        type: LINK_BUTTON,
+        target: props.path,
+        exact: true
       }}
-    />
-  </Form>
+      lock={{
+        id: props.text.id,
+        className: 'Claroline\\CoreBundle\\Entity\\Resource\\Text',
+        autoUnlock: true
+      }}
+    >
+      <TinymceEditor
+        id={props.text.id}
+        mode="full"
+        value={props.text.raw}
+        onChange={(newValue) => props.updateProp('raw', newValue)}
+        config={{
+          plugins: ['placeholders'],
+          placeholders: props.availablePlaceholders
+        }}
+      />
+    </Form>
+  </div>
 
 Editor.propTypes = {
   path: T.string.isRequired,

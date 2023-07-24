@@ -23,6 +23,7 @@ const RightsModal = props =>
     subtitle={props.resourceNode.name}
     onEntering={() => props.loadRights(props.resourceNode)}
     onExiting={props.reset}
+    size="lg"
   >
     {isEmpty(props.nodeForm) &&
       <ContentLoader
@@ -41,6 +42,7 @@ const RightsModal = props =>
         {'directory' === props.resourceNode.meta.type &&
           <div className="modal-footer">
             <Checkbox
+              className="form-switch form-check-reverse"
               id={'recursive-node-' + props.resourceNode.id}
               label={trans('apply_recursively_to_directories', {}, 'platform')}
               checked={props.recursiveEnabled}
@@ -51,9 +53,11 @@ const RightsModal = props =>
         }
 
         <Button
-          className="btn modal-btn"
+          className="modal-btn"
           type={CALLBACK_BUTTON}
           primary={true}
+          variant="btn"
+          size="lg"
           label={trans('save', {}, 'actions')}
           disabled={!props.saveEnabled}
           callback={() => {

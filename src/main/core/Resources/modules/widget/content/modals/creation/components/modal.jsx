@@ -84,12 +84,15 @@ const ContentCreationModal = props => {
         }
       }}
       fadeModal={close}
+      size="lg"
     >
       {renderStep()}
 
       {'parameters' === props.currentStep &&
         <Button
-          className="modal-btn btn"
+          className="modal-btn"
+          variant="btn"
+          size="lg"
           type={CALLBACK_BUTTON}
           primary={true}
           disabled={!props.saveEnabled}

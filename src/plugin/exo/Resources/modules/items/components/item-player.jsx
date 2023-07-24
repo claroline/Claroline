@@ -29,7 +29,7 @@ UsedHint.propTypes = {
 const Hint = props =>
   <button
     type="button"
-    className="btn btn-link btn-block hint-btn"
+    className="btn btn-outline-secondary w-100 hint-btn"
     onClick={props.showHint}
   >
     <span className="fa fa-fw fa-lightbulb"/>

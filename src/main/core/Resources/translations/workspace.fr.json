@@ -34,7 +34,6 @@
   "loading": "Nous chargeons votre espace d'activités...",
 
   "restricted_workspace": {
-    "access": "Accéder à l'espace d'activité",
     "access_message": "Vous ne pouvez pas accéder à cet espace d'activités car toutes les conditions d'accès ne sont pas satisfaites.",
     "authorized_ip": "Vous utilisez l'un des postes de travail authorisé.",
     "authorized_ip_required": "L'accès doit s'effectuer depuis un poste de travail authorisé.",
@@ -49,7 +48,7 @@
     "rights_access": "Vos droits vous permettent d'accéder à une ou plusieurs fonctions de l'espace d'activités.",
     "anonymous_rights_access": "L'espace d'activités est ouvert aux utilisateurs non connectés.",
     "self_registration": "Veuillez vous inscrire afin d'accéder à l'espace d'activités.",
-    "self_register": "M'inscire à l'espace d'activités",
+    "self_register": "M'inscrire à l'espace d'activités",
     "unlocked": "Vous avez déverrouillé l'espace d'activités.",
     "use_authorized_ip": "Veuillez utiliser l'un des postes de travail authorisés afin d'accéder à l'espace d'activités.",
     "period_opened": "La période d'accès à l'espace d'activités est actuellement en cours.",
@@ -63,7 +62,8 @@
     "pending_registration": "Votre demande d'inscription est en attente de validation.",
     "wait_validation": "Veuillez attendre qu'un gestionnaire valide votre demande afin d'accéder à l'espace d'activités.",
     "archived": "L'espace d'activités est archivé.",
-    "archived_help": "Vous ne pouvez plus accéder au contenu des espaces d'activités archivés."
+    "archived_help": "Vous ne pouvez plus accéder au contenu des espaces d'activités archivés.",
+    "login_help": "Vous serez automatiquement inscrit à l'espace d'activités après votre connexion ou inscription."
   },
   "forbidden": "Accès à l'espace d'activités impossible",
   "forbidden_desc": "Vous n'avez pas accès à cet espace d'activités. Veuillez contacter un administrateur afin qu'il vous donne les droits nécessaires."

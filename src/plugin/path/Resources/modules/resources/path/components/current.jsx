@@ -28,7 +28,7 @@ const PathCurrent = props => {
         className="progress-minimal"
         value={Math.floor(((currentIndex+1) / (props.all.length)) * 100)}
         size="xs"
-        type="user"
+        type="learning"
       />
 
       {props.children}
@@ -37,7 +37,7 @@ const PathCurrent = props => {
         <nav className="path-navigation">
           {previous &&
             <LinkButton
-              className="btn-link btn-previous"
+              className="btn btn-link btn-previous"
               size="lg"
               target={`${props.prefix}/${previous.slug}`}
               onClick={() => scrollTo(`#resource-${props.resourceId} > .page-content`)}
@@ -49,7 +49,7 @@ const PathCurrent = props => {
 
           {next &&
             <LinkButton
-              className="btn-link btn-next"
+              className="btn btn-link btn-next"
               primary={true}
               size="lg"
               target={`${props.prefix}/${next.slug}`}
@@ -62,7 +62,7 @@ const PathCurrent = props => {
 
           {!next && props.endPage &&
             <LinkButton
-              className="btn-link btn-next"
+              className="btn btn-link btn-next"
               primary={true}
               size="lg"
               target={`${props.prefix}/end`}

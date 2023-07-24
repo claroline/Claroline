@@ -1,9 +1,11 @@
 import {trans} from '#/main/app/intl/translation'
 import {chain, date, string} from '#/main/app/data/types/validators'
-import {displayDate, apiDate} from '#/main/app/intl/date'
 
+import {render, parse} from '#/main/app/data/types/date/utils'
 import {DateInput} from '#/main/app/data/types/date/components/input'
 import {DateSearch} from '#/main/app/data/types/date/components/search'
+import {DateDisplay} from '#/main/app/data/types/date/components/display'
+
 
 const dataType = {
   name: 'date',
@@ -14,25 +16,8 @@ const dataType = {
     description: trans('date_desc', {}, 'data')
   },
 
-  /**
-   * Parses display date into ISO 8601 date.
-   *
-   * @param {string} display
-   * @param {object} options
-   *
-   * @return {string}
-   */
-  parse: (display, options = {}) => display ? apiDate(display, false, options.time) : null,
-
-  /**
-   * Renders ISO date into locale date.
-   *
-   * @param {string} raw
-   * @param {object} options
-   *
-   * @return {string}
-   */
-  render: (raw, options = {}) => raw ? displayDate(raw, false, options.time) : null,
+  parse: parse,
+  render: render,
 
   /**
    * Validates input value for a date.
@@ -48,7 +33,8 @@ const dataType = {
     search: DateSearch,
 
     // new api
-    input: DateInput
+    input: DateInput,
+    display: DateDisplay
   }
 }
 

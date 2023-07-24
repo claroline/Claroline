@@ -215,7 +215,9 @@ const CategoryFormModal = props => {
       />
 
       <Button
-        className="modal-btn btn btn-primary"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         type={CALLBACK_BUTTON}
         primary={true}
         label={trans('save', {}, 'actions')}

@@ -3,8 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 import isNumber from 'lodash/isNumber'
 
-import RootCloseWrapper from 'react-overlays/lib/RootCloseWrapper'
-
 import {getWindowSize} from '#/main/app/dom/size/utils'
 import {constants} from '#/main/app/dom/size/constants'
 import {trans} from '#/main/app/intl/translation'
@@ -56,96 +54,95 @@ class MenuMain extends Component {
   }
 
   render() {
+    /*<RootCloseWrapper
+      disabled={constants.SIZE_SM !== this.state.computedSize && constants.SIZE_XS !== this.state.computedSize}
+      onRootClose={() => this.props.close()}
+    >*/
     return (
-      <RootCloseWrapper
-        disabled={constants.SIZE_SM !== this.state.computedSize && constants.SIZE_XS !== this.state.computedSize}
-        onRootClose={() => this.props.close()}
-      >
-        <Fragment>
-          <aside className="app-menu">
-            <header className="app-menu-header">
-              {this.props.backAction &&
-                <Button
-                  {...this.props.backAction}
-                  id="app-menu-back"
-                  className="app-menu-back"
-                  icon="fa fa-arrow-up"
-                  tooltip="right"
-                  onClick={this.autoClose}
-                />
-              }
-
-              {this.props.title &&
-                <h1 className="app-menu-title h5">{this.props.title}</h1>
-              }
-            </header>
-
-            {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
-              autoClose: this.autoClose
-            }))}
-
-            {0 !== this.props.tools.length &&
-              <MenuSection
-                className="tools"
-                icon="fa fa-fw fa-tools"
-                title={trans('tools')}
-                opened={'tools' === this.props.section}
-                toggle={() => this.props.changeSection('tools')}
-              >
-                <Toolbar
-                  className="list-group"
-                  buttonName="list-group-item"
-                  actions={this.props.tools
-                    .filter((tool) => undefined === tool.displayed || tool.displayed)
-                    .map((tool) => ({
-                      name: tool.name,
-                      type: LINK_BUTTON,
-                      icon: `fa fa-fw fa-${tool.icon}`,
-                      label: trans(tool.name, {}, 'tools'),
-                      target: tool.path,
-                      order: tool.order
-                    }))
-                    .sort((a, b) => {
-                      if (isNumber(a.order) && isNumber(b.order) && a.order !== b.order) {
-                        return a.order - b.order
-                      }
-
-                      if (a.label > b.label) {
-                        return 1
-                      }
-
-                      return -1
-                    })
-                  }
-                  onClick={this.autoClose}
-                />
-              </MenuSection>
+      <Fragment>
+        <aside className="app-menu">
+          <header className="app-menu-header">
+            {this.props.backAction &&
+              <Button
+                {...this.props.backAction}
+                id="app-menu-back"
+                className="app-menu-back"
+                icon="fa fa-arrow-up"
+                tooltip="right"
+                onClick={this.autoClose}
+              />
             }
 
-            {(!isEmpty(this.props.actions) || !Array.isArray(this.props.actions)) &&
-              <MenuSection
-                className="actions"
-                icon="fa fa-fw fa-ellipsis-v"
-                title={trans('more')}
-                opened={'actions' === this.props.section}
-                toggle={() => this.props.changeSection('actions')}
-              >
-                <Toolbar
-                  id="app-menu-actions"
-                  className="list-group"
-                  buttonName="list-group-item"
-                  actions={this.props.actions}
-                  onClick={this.autoClose}
-                />
-              </MenuSection>
+            {this.props.title &&
+              <h1 className="app-menu-title h6">{this.props.title}</h1>
             }
-          </aside>
+          </header>
 
-          {(constants.SIZE_SM === this.state.computedSize || constants.SIZE_XS === this.state.computedSize) &&
-            <div className="app-menu-backdrop" />
+          {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
+            autoClose: this.autoClose
+          }))}
+
+          {0 !== this.props.tools.length &&
+            <MenuSection
+              className="tools"
+              icon="fa fa-fw fa-tools"
+              title={trans('tools')}
+              opened={'tools' === this.props.section}
+              toggle={() => this.props.changeSection('tools')}
+            >
+              <Toolbar
+                className="list-group list-group-flush"
+                buttonName="list-group-item list-group-item-action"
+                actions={this.props.tools
+                  .filter((tool) => undefined === tool.displayed || tool.displayed)
+                  .map((tool) => ({
+                    name: tool.name,
+                    type: LINK_BUTTON,
+                    icon: `fa fa-fw fa-${tool.icon}`,
+                    label: trans(tool.name, {}, 'tools'),
+                    target: tool.path,
+                    order: tool.order
+                  }))
+                  .sort((a, b) => {
+                    if (isNumber(a.order) && isNumber(b.order) && a.order !== b.order) {
+                      return a.order - b.order
+                    }
+
+                    if (a.label > b.label) {
+                      return 1
+                    }
+
+                    return -1
+                  })
+                }
+                onClick={this.autoClose}
+              />
+            </MenuSection>
           }
-        </Fragment>
-      </RootCloseWrapper>
+
+          {(!isEmpty(this.props.actions) || !Array.isArray(this.props.actions)) &&
+            <MenuSection
+              className="actions"
+              icon="fa fa-fw fa-ellipsis-v"
+              title={trans('more')}
+              opened={'actions' === this.props.section}
+              toggle={() => this.props.changeSection('actions')}
+            >
+              <Toolbar
+                id="app-menu-actions"
+                className="list-group list-group-flush"
+                buttonName="list-group-item list-group-item-action"
+                actions={this.props.actions}
+                onClick={this.autoClose}
+              />
+            </MenuSection>
+          }
+        </aside>
+
+        {(constants.SIZE_SM === this.state.computedSize || constants.SIZE_XS === this.state.computedSize) &&
+          <div className="app-menu-backdrop" />
+        }
+      </Fragment>
     )
   }
 }

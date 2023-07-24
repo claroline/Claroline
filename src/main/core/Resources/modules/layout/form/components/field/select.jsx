@@ -21,7 +21,7 @@ const getSelectedValues = (e) => {
 const Select = props =>
   <select
     id={props.id}
-    className={classes('form-control', {[`input-${props.size}`]: !!props.size})}
+    className={classes('form-select', {[`form-select-${props.size}`]: !!props.size})}
     value={props.value || ''}
     disabled={props.disabled}
     onChange={e => props.multiple ?

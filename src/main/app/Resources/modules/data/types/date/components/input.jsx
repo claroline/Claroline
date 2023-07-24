@@ -8,7 +8,7 @@ import {isValidDate, getApiFormat, getDisplayFormat, displayDate, apiDate} from 
 
 import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
-import {Calendar} from '#/main/core/layout/calendar/components/calendar'
+import {CalendarMenu} from '#/main/app/data/types/date/components/menu'
 
 class DateInput extends Component {
   constructor(props) {
@@ -39,30 +39,26 @@ class DateInput extends Component {
       <div className={classes('date-control input-group', this.props.className, {
         [`input-group-${this.props.size}`]: !!this.props.size
       })}>
-        <span className="input-group-btn">
-          <Button
-            className="btn"
-            type={MENU_BUTTON}
-            icon={this.props.calendarIcon}
-            label={trans('show-calendar', {}, 'actions')}
-            tooltip="right"
-            size={this.props.size}
-            disabled={this.props.disabled}
-            menu={
-              <div className="dropdown-menu">
-                <Calendar
-                  selected={this.props.value}
-                  onChange={this.props.onChange}
-                  minDate={this.props.minDate}
-                  maxDate={this.props.maxDate}
-                  time={this.props.time}
-                  minTime={this.props.minTime}
-                  maxTime={this.props.maxTime}
-                />
-              </div>
-            }
-          />
-        </span>
+        <Button
+          className="btn btn-outline-secondary"
+          type={MENU_BUTTON}
+          icon={this.props.calendarIcon}
+          label={trans('show-calendar', {}, 'actions')}
+          tooltip="right"
+          size={this.props.size}
+          disabled={this.props.disabled}
+          menu={
+            <CalendarMenu
+              value={this.props.value}
+              onChange={this.props.onChange}
+              minDate={this.props.minDate}
+              maxDate={this.props.maxDate}
+              time={this.props.time}
+              minTime={this.props.minTime}
+              maxTime={this.props.maxTime}
+            />
+          }
+        />
 
         <input
           id={this.props.id}

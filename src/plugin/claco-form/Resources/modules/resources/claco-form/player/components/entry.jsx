@@ -271,8 +271,8 @@ class EntryComponent extends Component {
                 </ContentHtml>
               }
 
-              <div className="panel panel-default">
-                <div className="panel-body">
+              <div className="card mb-3">
+                <div className="card-body">
                   <h2 className="entry-title">{this.props.entry.title}</h2>
 
                   <div className="entry-meta">
@@ -334,12 +334,12 @@ class EntryComponent extends Component {
 
               {((this.props.displayCategories && this.props.entry.categories && 0 < this.props.entry.categories.length) ||
               (this.props.displayKeywords && this.props.entry.keywords && 0 < this.props.entry.keywords.length)) &&
-                <div className="entry-footer panel-footer">
+                <div className="entry-footer card-footer">
                   {this.props.displayCategories && this.props.entry.categories && 0 < this.props.entry.categories.length &&
                     <span className="title">{trans('categories')}</span>
                   }
                   {this.props.displayCategories && this.props.entry.categories && this.props.entry.categories.map(c =>
-                    <span key={`category-${c.id}`} className="label label-primary">{c.name}</span>
+                    <span key={`category-${c.id}`} className="badge text-bg-primary">{c.name}</span>
                   )}
 
                   {this.props.displayKeywords && this.props.entry.keywords && 0 < this.props.entry.keywords.length &&
@@ -349,7 +349,7 @@ class EntryComponent extends Component {
                     <span className="title">{trans('keywords')}</span>
                   }
                   {this.props.displayKeywords && this.props.entry.keywords && this.props.entry.keywords.map(c =>
-                    <span key={`keyword-${c.id}`} className="label label-default">{c.name}</span>
+                    <span key={`keyword-${c.id}`} className="badge text-bg-secondary">{c.name}</span>
                   )}
                 </div>
               }

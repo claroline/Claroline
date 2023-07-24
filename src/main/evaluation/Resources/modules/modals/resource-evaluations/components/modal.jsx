@@ -16,7 +16,7 @@ const ResourceEvaluationsModal = props =>
     icon="fa fa-fw fa-folder"
     title={props.userEvaluation.resourceNode.name}
     className="data-picker-modal"
-    bsSize="lg"
+    size="xl"
     onEnter={props.reset}
   >
     <ListData
@@ -35,7 +35,7 @@ const ResourceEvaluationsModal = props =>
           },
           displayed: true,
           render: (row) => (
-            <span className={`label label-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
+            <span className={`badge text-bg-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
               {constants.EVALUATION_STATUSES_SHORT[row.status]}
             </span>
           )
@@ -54,7 +54,7 @@ const ResourceEvaluationsModal = props =>
           displayed: true,
           filterable: false,
           options: {
-            type: 'user'
+            type: 'learning'
           }
         }, {
           name: 'score',

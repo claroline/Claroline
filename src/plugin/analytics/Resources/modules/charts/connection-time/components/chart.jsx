@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans, displayDuration} from '#/main/app/intl'
 import {Toolbar} from '#/main/app/action/components/toolbar'
@@ -36,9 +36,9 @@ class ConnectionTimeChart extends Component {
   render() {
     return (
       <Fragment>
-        <div className="panel panel-default panel-analytics">
-          <div className="panel-heading">
-            <h2 className="panel-title">
+        <div className="card mb-3 panel-analytics">
+          <div className="card-header">
+            <h2 className="card-title">
               {trans('connection_time')}
             </h2>
 
@@ -72,7 +72,7 @@ class ConnectionTimeChart extends Component {
           </div>
 
           {false &&
-            <div className="panel-body text-right" style={{paddingTop: '11px'}}>
+            <div className="card-body text-right" style={{paddingTop: '11px'}}>
               <Toolbar
                 id="activity-legend"
                 className="chart-legend"
@@ -124,8 +124,8 @@ class ConnectionTimeChart extends Component {
           }
         </div>
 
-        <div className="panel panel-default embedded-list-section">
-          <div className="panel-body">
+        <div className="card mb-3 embedded-list-section">
+          <div className="card-body">
             <ListData
               name={selectors.STORE_NAME + '.connections'}
               fetch={{

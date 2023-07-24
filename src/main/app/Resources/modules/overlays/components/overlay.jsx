@@ -1,7 +1,7 @@
-import BaseOverlay from 'react-overlays/lib/Overlay'
-
-const Overlay = BaseOverlay
+import Overlay from 'react-bootstrap/Overlay'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
 export {
-  Overlay
+  Overlay,
+  OverlayTrigger
 }

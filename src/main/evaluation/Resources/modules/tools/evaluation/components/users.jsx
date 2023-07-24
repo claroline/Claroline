@@ -34,7 +34,7 @@ const EvaluationUsers = (props) =>
           },
           displayed: true,
           render: (row) => (
-            <span className={`label label-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
+            <span className={`badge text-bg-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
               {constants.EVALUATION_STATUSES_SHORT[row.status]}
             </span>
           )
@@ -57,7 +57,8 @@ const EvaluationUsers = (props) =>
           name: 'user',
           type: 'user',
           label: trans('user'),
-          displayed: true
+          displayed: true,
+          primary: true
         }, {
           name: 'date',
           type: 'date',
@@ -79,7 +80,7 @@ const EvaluationUsers = (props) =>
           displayed: true,
           filterable: false,
           options: {
-            type: 'user'
+            type: 'learning'
           }
         }, {
           name: 'score',
@@ -116,6 +117,7 @@ const EvaluationUsers = (props) =>
           displayed: !!get(rows[0], 'user.id'),
           scope: ['object']
         }, {
+          name: 'send-message',
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-envelope',
           label: trans('send-message', {}, 'actions'),

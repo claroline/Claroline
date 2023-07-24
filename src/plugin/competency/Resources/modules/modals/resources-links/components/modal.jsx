@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {Button} from '#/main/app/action/components/button'
-import {ModalButton} from '#/main/app/buttons/modal/containers/button'
+import {ModalButton} from '#/main/app/buttons/modal'
 
 import {
   Competency as CompetencyType,

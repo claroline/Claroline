@@ -6,7 +6,7 @@ import {DataSearch as DataSearchTypes} from '#/main/app/data/types/prop-types'
 const ChoiceSearch = (props) =>
   <select
     value={props.search || undefined}
-    className="data-filter choice-filter form-control input-sm"
+    className="data-filter choice-filter form-control form-control-sm"
     onClick={e => {
       e.preventDefault()
       e.stopPropagation()

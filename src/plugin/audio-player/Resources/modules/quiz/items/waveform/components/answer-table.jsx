@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import Popover from 'react-bootstrap/lib/Popover'
-import Overlay from 'react-bootstrap/lib/Overlay'
+import Popover from 'react-bootstrap/Popover'
+import Overlay from 'react-bootstrap/Overlay'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
 

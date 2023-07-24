@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 const StringDisplay = (props) => {
   if (isEmpty(props.data)) {
     return (
-      <span id={props.id} className="string-display data-details-empty">{props.placeholder || trans('empty_value')}</span>
+      <div id={props.id} className="string-display text-secondary">{props.placeholder || trans('empty_value')}</div>
     )
   }
 

@@ -1,0 +1,47 @@
+/**
+ * Styles for `collection` data type.
+ */
+
+// TODO : merge with field/enum data type
+
+.collection-control {
+    position: relative; // constrains remove all btn
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .collection-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--#{$prefix}secondary-bg);
+        border: var(--#{$prefix}border-width) solid transparent;
+        padding: map-get($spacers, 2);
+
+        @include border-radius($border-radius);
+
+        > .form-group {
+            flex: 1;
+            margin-bottom: 0 !important;
+        }
+
+        .btn-delete {
+            margin-left: ($grid-gutter-width * .5);
+            align-self: flex-start;
+            padding-left: map-get($spacers, 1);
+            padding-right: map-get($spacers, 1);
+        }
+    }
+
+    // moves remove all btn on the same line than the label
+    // code is not really aesthetic
+    .btn-delete-all {
+        position: absolute;
+        bottom: 100%;
+        right: 0;
+    }
+}

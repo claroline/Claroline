@@ -19,7 +19,7 @@ const ImportDetails = props =>
     actions={[
       {
         name: 'download',
-        className: 'btn-emphasis',
+        size: 'lg',
         type: URL_BUTTON,
         label: trans('download', {}, 'actions'),
         target: get(props.importFile, 'file.url'),

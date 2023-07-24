@@ -20,7 +20,7 @@ const Date = props => {
   }
 
   return (
-    <div className="input-group">
+    <div className={classes('input-group', {[`input-group-${props.size}`]: !!props.size})}>
       <span className="input-group-btn">
         <Button
           className="btn"
@@ -50,7 +50,7 @@ const Date = props => {
         id={props.id}
         type="text"
         autoComplete="date"
-        className={classes('form-control', {[`input-${props.size}`]: !!props.size})}
+        className="form-control"
         placeholder={displayFormat}
         value={displayValue}
         disabled={props.disabled}

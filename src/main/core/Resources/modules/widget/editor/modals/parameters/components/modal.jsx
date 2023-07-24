@@ -19,13 +19,16 @@ const ParametersModal = props =>
     title={trans('parameters')}
     subtitle={props.widget.name}
     onEntering={() => props.loadWidget(props.widget)}
+    size="lg"
   >
     <WidgetForm
       level={5}
       name={selectors.STORE_NAME}
     >
       <Button
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         type={CALLBACK_BUTTON}
         primary={true}
         label={trans('save', {}, 'actions')}

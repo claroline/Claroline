@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
-import Popover from 'react-bootstrap/lib/Popover'
+import Popover from 'react-bootstrap/Popover'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
@@ -260,6 +260,7 @@ class ChoiceItem extends Component {
             <span>
               <input
                 type="checkbox"
+                className="form-check-input"
                 id={'selection-chk-' + this.getSelectionId()}
                 checked={this.props.score > 0}
                 onChange={(e) => updateAnswer('score', e.target.checked ? 1 : 0, this.getSelectionId(), this.props.item, this.props.update)}

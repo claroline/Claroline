@@ -5,8 +5,8 @@
 {% endif %}
 
 <main>
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card mb-3">
+        <div class="card-body">
             {% if template is empty or not useTemplate %}
                 {% for field in fields %}
                     {% if withMeta or not field.isMetadata() %}

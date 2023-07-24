@@ -1,7 +1,7 @@
 {
   "styles": {
     "entry": {
-      "resource": "resources/claco-form.less"
+      "resource": "resources/claco-form.scss"
     }
   }
 }

@@ -18,9 +18,7 @@ const ResourceCell = props => {
     )
   }
 
-  return (
-    <span className="text-muted">-</span>
-  )
+  return null
 }
 
 ResourceCell.propTypes = DataCellTypes.propTypes

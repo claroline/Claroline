@@ -12,7 +12,7 @@ const RegistrationModal = props =>
   <Modal
     {...omit(props, 'onRegister')}
     title={trans('registration')}
-    bsSize="lg"
+    size="lg"
   >
     <div className="modal-body">
       <Router embedded={true}>

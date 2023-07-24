@@ -16,9 +16,11 @@ import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {updateQueryParameters} from '#/plugin/blog/resources/blog/utils'
 
 const RedactorsComponent = props =>
-  <div key='redactors' className="panel panel-default">
-    <div className="panel-heading"><h2 className="panel-title">{trans('redactor', {}, 'icap_blog')}</h2></div>
-    <div className="panel-body">
+  <div key='redactors' className="card mb-3">
+    <div className="card-header">
+      <h2 className="panel-title">{trans('redactor', {}, 'icap_blog')}</h2>
+    </div>
+    <div className="card-body">
       {!isEmpty(props.authors) ? (props.authors.map((author, index) =>(
         <span key={index}>
           <LinkButton target={route(author)}>

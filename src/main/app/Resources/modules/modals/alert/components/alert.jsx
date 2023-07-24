@@ -9,6 +9,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 const AlertModal = props =>
   <Modal
     {...omit(props, 'type', 'message')}
+    size="sm"
     icon={classes('fa fa-fw', {
       'fa-circle-info':          props.type === 'info',
       'fa-circle-check':         props.type === 'success',

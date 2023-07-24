@@ -19,6 +19,7 @@ import {selectors} from '#/main/core/resources/file/editor/store/selectors'
 const EditorMain = (props) =>
   <FormData
     level={2}
+    className="mt-3"
     title={trans('parameters')}
     name={selectors.FORM_NAME}
     buttons={true}

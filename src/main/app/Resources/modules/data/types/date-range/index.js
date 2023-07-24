@@ -2,10 +2,11 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans, tval} from '#/main/app/intl/translation'
 import {chain, date, string} from '#/main/app/data/types/validators'
-import {displayDate, apiDate} from '#/main/app/intl/date'
 
+import {render, parse} from '#/main/app/data/types/date-range/utils'
 import {DateRangeInput} from '#/main/app/data/types/date-range/components/input'
 import {DateRangeGroup} from '#/main/app/data/types/date-range/components/group'
+import {DateRangeDisplay} from '#/main/app/data/types/date-range/components/display'
 
 // todo implements Search
 
@@ -17,40 +18,9 @@ const dataType = {
     description: trans('date_range_desc', {}, 'actions')
   },
 
-  /**
-   * Parses display date into ISO 8601 date.
-   *
-   * @param {string} display
-   * @param {object} options
-   *
-   * @return {Array}
-   */
-  parse: (display, options = {}) => {
-    let parsed = [null, null]
-    if (display) {
-      if (display[0]) {
-        parsed[0] = apiDate(display[0], false, options.time)
-      }
+  parse: parse,
 
-      if (display[1]) {
-        parsed[1] = apiDate(display[1], false, options.time)
-      }
-    }
-
-    return parsed
-  },
-
-  /**
-   * Renders ISO date into locale date.
-   *
-   * @param {string} raw
-   * @param {object} options
-   *
-   * @return {string}
-   */
-  render: (raw, options = {}) => {
-    return `${raw[0] ? displayDate(raw[0], false, options.time) : '-'} / ${raw[1] ? displayDate(raw[1], false, options.time) : '-'}`
-  },
+  render: render,
 
   /**
    * Validates input value for a date range.
@@ -81,7 +51,8 @@ const dataType = {
 
   components: {
     input: DateRangeInput,
-    group: DateRangeGroup
+    group: DateRangeGroup,
+    display: DateRangeDisplay
   }
 }
 

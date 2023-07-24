@@ -6,23 +6,17 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer;
 use Claroline\CoreBundle\Entity\Facet\Facet;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ProfileSerializer
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var FacetSerializer */
-    private $facetSerializer;
+    private FacetSerializer $facetSerializer;
 
     private $repository;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         FacetSerializer $facetSerializer
     ) {
-        $this->tokenStorage = $tokenStorage;
         $this->repository = $om->getRepository(Facet::class);
         $this->facetSerializer = $facetSerializer;
     }

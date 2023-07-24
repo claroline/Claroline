@@ -1,7 +1,7 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -22,8 +22,8 @@ import {Button} from '#/main/app/action'
 import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
 
 const CourseParticipants = (props) =>
-  <Fragment>
-    <div className="row" style={{marginTop: -20}}>
+  <div className="mt-3" role="presentation">
+    <div className="d-flex flex-direction-row">
       <ContentCounter
         icon="fa fa-chalkboard-teacher"
         label={trans('tutors', {}, 'cursus')}
@@ -56,9 +56,10 @@ const CourseParticipants = (props) =>
       />
     </div>
 
-    <div className="row">
+    <div className="row mt-3">
       <div className="col-md-3">
         <Vertical
+          className="mb-3"
           basePath={props.path}
           tabs={[
             {
@@ -89,11 +90,10 @@ const CourseParticipants = (props) =>
 
         {props.activeSession &&
           <Button
-            className="btn btn-link btn-block"
+            className="btn btn-outline-secondary w-100 mb-3"
             type={CALLBACK_BUTTON}
             label="Voir pour la session ouverte"
             callback={props.toggleVisibility}
-            primary={true}
           />
         }
       </div>
@@ -315,7 +315,7 @@ const CourseParticipants = (props) =>
         />
       </div>
     </div>
-  </Fragment>
+  </div>
 
 CourseParticipants.propTypes = {
   path: T.string.isRequired,

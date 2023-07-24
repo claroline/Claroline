@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import classes from 'classnames'
 import {PropTypes as T} from 'prop-types'
 
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
-import Tooltip from 'react-bootstrap/lib/Tooltip'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
 
 import {trans} from '#/main/app/intl/translation'
 import {ContentHtml} from '#/main/app/content/components/html'

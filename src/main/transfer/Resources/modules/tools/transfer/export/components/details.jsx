@@ -18,7 +18,7 @@ const ExportDetails = props =>
     actions={[
       {
         name: 'download',
-        className: 'btn-emphasis',
+        size: 'lg',
         type: URL_BUTTON,
         label: trans('download', {}, 'actions'),
         target: ['apiv2_transfer_export_download', {id: props.exportFile ? props.exportFile.id : null}],

@@ -1,7 +1,7 @@
 {
   "styles": {
     "entry": {
-      "tool": "tools/community.less"
+      "tool": "tools/community.scss"
     }
   }
 }

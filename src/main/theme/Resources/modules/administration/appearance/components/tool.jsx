@@ -193,7 +193,8 @@ class AppearanceTool extends Component {
                 }]
               }
             ],
-            component: AppearanceColorCharts
+            component: AppearanceColorCharts,
+            fill: true
           }, {
             icon: 'fa fa-fw fa-copyright',
             title: trans('footer', {}, 'appearance'),

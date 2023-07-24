@@ -1,77 +1,104 @@
-import React from 'react'
+import React, {forwardRef} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
+import omit from 'lodash/omit'
 import merge from 'lodash/merge'
 import uniq from 'lodash/uniq'
 
 import {trans}  from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, ModalButton, PopoverButton} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, ModalButton, MenuButton} from '#/main/app/buttons'
 
 import {constants} from '#/main/community/constants'
 import {MODAL_ROLES} from '#/main/community/modals/roles'
 import {isStandardRole, hasCustomRoles, roleWorkspace} from '#/main/community/permissions'
 
+import {Menu, MenuHeader} from '#/main/app/overlays/menu'
+import {Checkbox} from '#/main/app/input/components/checkbox'
+
+const CreateMenu = forwardRef((props, ref) =>
+  <ul
+    {...omit(props, 'editable', 'permission', 'creatable', 'onChange', 'show', 'close', 'id')}
+    ref={ref}
+  >
+    <MenuHeader>
+      <Checkbox
+        id={`${props.id}-all`}
+        className="mb-0"
+        switch={true}
+        label={trans('all')}
+        disabled={!props.editable}
+        checked={props.permission && 0 < props.permission.length}
+        onChange={(checked) => {
+          if (checked) {
+            props.onChange(Object.keys(props.creatable))
+          } else {
+            props.onChange([])
+          }
+        }}
+      />
+    </MenuHeader>
+
+    {Object.keys(props.creatable).map(type =>
+      <li key={type} className="dropdown-item" role="presentation">
+        <Checkbox
+          id={`${props.id}-${type}`}
+          className="mb-0"
+          switch={true}
+          label={props.creatable[type]}
+          disabled={!props.editable}
+          checked={props.permission && -1 !== props.permission.indexOf(type)}
+          onChange={(checked) => {
+            if (checked) {
+              props.onChange([].concat(props.permission || [], [type]))
+            } else {
+              const newPerm = props.permission ? props.permission.slice() : []
+              newPerm.splice(newPerm.indexOf(type), 1)
+              props.onChange(newPerm)
+            }
+          }}
+        />
+      </li>
+    )}
+  </ul>
+)
+
+CreateMenu.propTypes = {
+  id: T.string,
+  editable: T.bool,
+  permission: T.array,
+  creatable: T.object.isRequired,
+  onChange: T.func.isRequired
+}
+
 const CreatePermission = props =>
   <td key="create-cell" className="create-cell">
-    <PopoverButton
-      id={`${props.id}-rights-creation`}
-      className="btn btn-link"
-      popover={{
-        position: 'left',
-        className: 'popover-list-group',
-        label: (
-          <label className="checkbox-inline">
-            <input
-              type="checkbox"
-              disabled={!props.editable}
-              checked={props.permission && 0 < props.permission.length}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  props.onChange(Object.keys(props.creatable))
-                } else {
-                  props.onChange([])
-                }
-              }}
-            />
-            {trans('all')}
-          </label>
-        ),
-        content: (
-          <ul className="list-group">
-            {Object.keys(props.creatable).map(type =>
-              <li key={type} className="list-group-item">
-                <label className="checkbox-inline">
-                  <input
-                    type="checkbox"
-                    disabled={!props.editable}
-                    checked={props.permission && -1 !== props.permission.indexOf(type)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        props.onChange([].concat(props.permission || [], [type]))
-                      } else {
-                        const newPerm = props.permission ? props.permission.slice() : []
-                        newPerm.splice(newPerm.indexOf(type), 1)
-                        props.onChange(newPerm)
-                      }
-                    }}
-                  />
-                  {props.creatable[type]}
-                </label>
-              </li>
-            )}
-          </ul>
-        )
-      }}
-    >
-      <span className={classes('label', {
-        'label-primary': props.permission && 0 < props.permission.length,
-        'label-default': !props.permission || 0 === props.permission.length
-      })}>
-        {props.permission.length || '0'}
-      </span>
-    </PopoverButton>
+    <span className="align-top" style={{fontSize: 0}} role="presentation">
+      <MenuButton
+        id={`${props.id}-rights-creation`}
+        className="btn btn-link"
+        size="sm"
+        menu={
+          <Menu
+            id={props.id}
+            as={CreateMenu}
+            align="end"
+            permission={props.permission}
+            editable={props.editable}
+            creatable={props.creatable}
+            onChange={props.onChange}
+          />
+        }
+      >
+        <span className={classes('badge', {
+          'text-bg-primary': props.permission && 0 < props.permission.length,
+          'text-bg-secondary': !props.permission || 0 === props.permission.length
+        })}>
+          {props.permission.length || '0'}
+        </span>
+      </MenuButton>
+    </span>
   </td>
 
 CreatePermission.propTypes = {
@@ -97,12 +124,15 @@ const RolePermissions = props =>
             'create-cell': 'create' === permission
           })}
         >
-          <input
-            type="checkbox"
-            checked={props.permissions[permission]}
-            disabled={!props.editable}
-            onChange={() => props.update(merge({}, props.permissions, {[permission]: !props.permissions[permission]}))}
-          />
+          <div className="form-switch">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              checked={props.permissions[permission]}
+              disabled={!props.editable}
+              onChange={() => props.update(merge({}, props.permissions, {[permission]: !props.permissions[permission]}))}
+            />
+          </div>
         </td>
         :
         <CreatePermission
@@ -232,8 +262,8 @@ const ContentRights = props => {
         <tr>
           <td colSpan={allPerms.length + (hasNonStandardPerms ? 2 : 1)}>
             <ModalButton
-              className="btn btn-block"
-              size="sm"
+              className="w-100"
+              variant="btn"
               modal={[MODAL_ROLES, {
                 filters: [
                   {property: 'type', value: constants.ROLE_PLATFORM}

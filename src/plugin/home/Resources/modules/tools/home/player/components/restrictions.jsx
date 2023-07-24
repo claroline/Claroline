@@ -1,4 +1,4 @@
-import React, {Component}from 'react'
+import React, {Component, Fragment}from 'react'
 import {PropTypes as T} from 'prop-types'
 import isUndefined from 'lodash/isUndefined'
 
@@ -7,7 +7,6 @@ import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {PasswordInput} from '#/main/app/data/types/password/components/input'
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {ContentHelp} from '#/main/app/content/components/help'
 import {ContentRestriction} from '#/main/app/content/components/restriction'
 
 class PlayerRestrictions extends Component {
@@ -34,9 +33,9 @@ class PlayerRestrictions extends Component {
 
   render() {
     return (
-      <div className="access-restrictions">
-        <h2>{trans('restricted_access')}</h2>
-        <p>{trans('restricted_access_message', {}, 'home')}</p>
+      <div className="content-md mt-3">
+        <h2 className="h3 text-center">{trans('restricted_access')}</h2>
+        <p className="lead text-center">{trans('restricted_access_message', {}, 'home')}</p>
 
         {(!isUndefined(this.props.errors.notStarted) || !isUndefined(this.props.errors.ended)) &&
           <ContentRestriction
@@ -74,7 +73,7 @@ class PlayerRestrictions extends Component {
             }}
           >
             {this.props.errors.locked && !(this.props.errors.notStarted || this.props.errors.ended) &&
-              <div style={{marginTop: 20}}>
+              <div className="mt-3">
                 <FormGroup
                   id="access-code"
                   label={trans('access_code')}
@@ -88,9 +87,8 @@ class PlayerRestrictions extends Component {
                 </FormGroup>
 
                 <Button
-                  className="btn btn-block btn-emphasis"
+                  className="btn btn-warning w-100"
                   type={CALLBACK_BUTTON}
-                  icon="fa fa-fw fa-sign-in-alt"
                   disabled={!this.state.codeAccess}
                   label={trans('open-tab', {}, 'actions')}
                   callback={this.submitCodeAccess}
@@ -102,20 +100,21 @@ class PlayerRestrictions extends Component {
         }
 
         {this.props.managed &&
-          <Button
-            className="btn btn-block btn-emphasis"
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-sign-in-alt"
-            label={trans('open-tab', {}, 'actions')}
-            callback={this.props.dismiss}
-            primary={true}
-          />
-        }
+          <>
+            <p className="text-secondary">
+              {trans('restrictions.dismiss_help', {}, 'home')}
+            </p>
 
-        {this.props.managed &&
-          <ContentHelp
-            help={trans('restrictions.dismiss_help', {}, 'home')}
-          />
+            <Button
+              className="w-100 mb-3"
+              variant="btn"
+              size="lg"
+              type={CALLBACK_BUTTON}
+              label={trans('open-tab', {}, 'actions')}
+              callback={this.props.dismiss}
+              primary={true}
+            />
+          </>
         }
       </div>
     )

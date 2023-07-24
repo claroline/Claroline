@@ -20,12 +20,12 @@ import {EvaluationFeedback} from '#/main/evaluation/components/feedback'
 import {EvaluationDetails} from '#/main/evaluation/components/details'
 
 const ResourceOverview = props =>
-  <section className="resource-overview">
+  <section className="resource-overview content-lg mt-3">
     <h2 className="sr-only">{trans('resource_overview', {}, 'resource')}</h2>
 
     <div className="row">
       <div className="col-md-4">
-        <section className="user-progression">
+        <section className="user-progression mb-3">
           <h3 className="h2">{trans('my_progression')}</h3>
           {!isEmpty(props.evaluation) &&
             <EvaluationDetails
@@ -43,26 +43,29 @@ const ResourceOverview = props =>
         </section>
 
         {0 !== props.actions.length &&
-          <section className="overview-user-actions">
+          <section className="overview-user-actions mb-3">
             <h3 className="sr-only">{trans('resource_overview_actions', {}, 'resource')}</h3>
 
-            {props.actions
-              .filter(action => undefined === action.displayed || action.displayed)
-              .map((action, index) => !action.disabled ?
-                <Button
-                  {...omit(action, 'disabledMessages')}
-                  key={index}
-                  className={classes('btn btn-block', {
-                    'btn-default': !action.primary && !action.dangerous,
-                    'btn-primary': action.primary,
-                    'btn-danger': action.dangerous
-                  })}
-                /> :
-                action.disabledMessages && action.disabledMessages.map((message, messageIndex) =>
-                  <Alert key={messageIndex} type="warning">{message}</Alert>
+            <div className="d-grid gap-1" role="presentation">
+              {props.actions
+                .filter(action => undefined === action.displayed || action.displayed)
+                .map((action, index) => !action.disabled ?
+                  <Button
+                    {...omit(action, 'disabledMessages')}
+                    key={index}
+                    className={classes('btn', {
+                      'btn-outline-primary': !action.primary && !action.dangerous,
+                      'btn-primary': action.primary,
+                      'btn-danger': action.dangerous
+                    })}
+                    size={action.primary ? 'lg' : undefined}
+                  /> :
+                  action.disabledMessages && action.disabledMessages.map((message, messageIndex) =>
+                    <Alert key={messageIndex} type="warning">{message}</Alert>
+                  )
                 )
-              )
-            }
+              }
+            </div>
           </section>
         }
       </div>
@@ -86,14 +89,14 @@ const ResourceOverview = props =>
         }
 
         {props.contentText &&
-          <section className="resource-info">
+          <section className="resource-info mb-3">
             <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
 
-            <div className="panel panel-default">
+            <div className="card">
               {typeof props.contentText === 'string' ?
-                <ContentHtml className="panel-body">{props.contentText}</ContentHtml>
+                <ContentHtml className="card-body">{props.contentText}</ContentHtml>
                 :
-                <div className="panel-body">{props.contentText}</div>
+                <div className="card-body">{props.contentText}</div>
               }
             </div>
           </section>

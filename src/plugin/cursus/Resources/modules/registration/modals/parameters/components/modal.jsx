@@ -35,14 +35,18 @@ const ParametersModal = props => {
       subtitle={getInfo(props.course, props.session, 'name')}
       poster={getInfo(props.course, props.session, 'poster')}
       onEntering={() => props.reset(props.registration)}
+      size="lg"
     >
       <FormData
+        flush={true}
         name={selectors.STORE_NAME}
         definition={sections}
       >
         <Button
-          className="btn modal-btn"
+          className="modal-btn"
           type={CALLBACK_BUTTON}
+          variant="btn"
+          size="lg"
           primary={true}
           htmlType="submit"
           label={props.isNew ?

@@ -6,7 +6,7 @@
 import {registry} from '#/main/app/buttons/registry'
 
 // gets the button component
-import {AsyncButton} from '#/main/app/buttons/async/containers/button'
+import {AsyncButton} from '#/main/app/buttons/async/components/button'
 
 const ASYNC_BUTTON = 'async'
 

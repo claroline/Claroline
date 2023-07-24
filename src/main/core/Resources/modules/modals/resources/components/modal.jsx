@@ -48,7 +48,7 @@ class ResourcesModal extends Component {
           this.setState({initialized: true})
         }}
         className="data-picker-modal"
-        bsSize="lg"
+        size="xl"
       >
         <ListData
           name={`${selectors.STORE_NAME}.resources`}
@@ -88,7 +88,9 @@ class ResourcesModal extends Component {
         <Button
           label={trans('select', {}, 'actions')}
           {...selectAction}
-          className="modal-btn btn"
+          className="modal-btn"
+          variant="btn"
+          size="lg"
           primary={true}
           disabled={0 === this.props.selected.length || !this.state.initialized}
           onClick={this.props.fadeModal}

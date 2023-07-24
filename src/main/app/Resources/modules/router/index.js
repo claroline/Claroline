@@ -4,7 +4,8 @@ export {
   Switch,
   Redirect,
   withRouter,
-  matchPath
+  matchPath,
+  useLocation
 } from 'react-router-dom'
 
 // export custom routing components

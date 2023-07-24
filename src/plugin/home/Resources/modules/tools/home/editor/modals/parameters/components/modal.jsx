@@ -18,6 +18,7 @@ const ParametersModal = props =>
     title={trans('parameters')}
     subtitle={props.tab.longTitle}
     onEntering={() => props.loadTab(props.tab)}
+    size="lg"
   >
     <TabForm
       level={5}
@@ -30,7 +31,9 @@ const ParametersModal = props =>
       administration={props.administration}
     >
       <Button
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         type={CALLBACK_BUTTON}
         primary={true}
         label={trans('save', {}, 'actions')}

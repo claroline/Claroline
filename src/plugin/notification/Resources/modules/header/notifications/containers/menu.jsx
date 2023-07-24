@@ -12,16 +12,11 @@ const NotificationsMenu = withReducer(selectors.STORE_NAME, reducer)(
     (state) => ({
       isAuthenticated: securitySelectors.isAuthenticated(state),
       refreshDelay: configSelectors.param(state, 'notifications.refreshDelay'),
-      count: selectors.count(state),
-      loaded: selectors.loaded(state),
-      results: selectors.results(state)
+      count: selectors.count(state)
     }),
     (dispatch) => ({
       countNotifications() {
         return dispatch(actions.countNotifications())
-      },
-      getNotifications() {
-        dispatch(actions.getNotifications())
       }
     })
   )(NotificationsMenuComponent)

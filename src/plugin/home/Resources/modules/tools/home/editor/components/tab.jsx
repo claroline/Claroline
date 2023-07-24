@@ -147,6 +147,7 @@ class EditorTab extends Component {
         ]}
       >
         <Form
+          flush={true}
           name={selectors.FORM_NAME}
           dataPart={getFormDataPart(this.props.currentTab.id, this.props.tabs)}
           buttons={true}

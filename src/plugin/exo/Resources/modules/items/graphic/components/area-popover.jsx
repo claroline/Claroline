@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import Popover from 'react-bootstrap/lib/Popover'
+import Popover from 'react-bootstrap/Popover'
 
 import {trans} from '#/main/app/intl/translation'
 import {FormGroup} from '#/main/app/content/form/components/group'
@@ -70,6 +70,7 @@ export class AreaPopover extends Component {
               <input
                 id="expected-answer"
                 type="checkbox"
+                className="form-check-input"
                 checked={0 < this.props.score}
                 onChange={(e) => this.props.onChangeScore(e.target.checked ? 1 : 0)}
               />

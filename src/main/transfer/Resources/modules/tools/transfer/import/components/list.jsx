@@ -46,11 +46,11 @@ const ImportList = props =>
             }
           },
           render: (row) => (
-            <span className={classes('label', {
-              'label-default': 'pending' === row.status,
-              'label-info': 'in_progress' === row.status,
-              'label-success': 'success' === row.status,
-              'label-danger': 'error' === row.status
+            <span className={classes('badge', {
+              'text-bg-secondary': 'pending' === row.status,
+              'text-bg-info': 'in_progress' === row.status,
+              'text-bg-success': 'success' === row.status,
+              'text-bg-danger': 'error' === row.status
             })}>
               {trans(row.status)}
             </span>

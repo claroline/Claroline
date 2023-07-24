@@ -19,6 +19,7 @@ const ResourceFormComponent = (props) =>
     name={props.name}
     dataPart={props.dataPart}
     meta={props.meta}
+    flush={props.flush}
     definition={[
       {
         title: trans('general'),
@@ -50,8 +51,9 @@ const ResourceFormComponent = (props) =>
         className: 'embedded-form-section',
         title: trans('custom'),
         primary: true,
-        displayed: !!props.children,
-        render: () => props.children
+        fill: true,
+        displayed: !!props.customSection,
+        render: () => props.customSection
       }, {
         icon: 'fa fa-fw fa-circle-info',
         title: trans('information'),
@@ -220,13 +222,17 @@ const ResourceFormComponent = (props) =>
         ]
       }
     ]}
-  />
+  >
+    {props.children}
+  </FormData>
 
 ResourceFormComponent.propTypes = {
   level: T.number,
   name: T.string.isRequired,
+  flush: T.bool,
   dataPart: T.string,
   meta: T.bool,
+  customSection: T.any,
   children: T.any,
 
   // from redux
@@ -235,7 +241,8 @@ ResourceFormComponent.propTypes = {
 
 ResourceFormComponent.defaultProps = {
   level: 3,
-  meta: true
+  meta: true,
+  flush: false
 }
 
 const ResourceForm = connect(

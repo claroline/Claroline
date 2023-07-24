@@ -1,0 +1,24 @@
+@import "./correction";
+@import "./docimology";
+@import "./editor";
+@import "./overview";
+@import "./player";
+@import "./statistics";
+
+.quiz-type-control {
+    .dropdown {
+        width: 100%;
+    }
+}
+
+// this is a big c/c from .resource-type
+.quiz-type {
+    display: flex !important; // important because of dropdown styles
+    align-items: center;
+    text-align: left;
+
+    .fa {
+        font-size: 40px;
+        margin-right: $btn-padding-x-lg;
+    }
+}

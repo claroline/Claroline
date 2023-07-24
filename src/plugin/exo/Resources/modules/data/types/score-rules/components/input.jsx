@@ -13,6 +13,7 @@ import {AlertBlock} from '#/main/app/alert/components/alert-block'
 
 import {Rule as RuleType} from '#/plugin/exo/data/types/score-rules/prop-types'
 import {constants} from '#/plugin/exo/scores/rules/constants'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const ScoreRule = props =>
   <li className="score-rule-item">
@@ -217,11 +218,11 @@ const ScoreRulesInput = props =>
     }
 
     {0 === props.value.length &&
-      <div className="no-item-info">{props.placeholder}</div>
+      <ContentPlaceholder title={props.placeholder} size={props.size} />
     }
 
     <Button
-      className="btn btn-block "
+      className="btn btn-outline-primary w-100 mt-2"
       type={CALLBACK_BUTTON}
       icon="fa fa-fw fa-plus"
       label={trans('add_rule', {}, 'quiz')}

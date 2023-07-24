@@ -27,6 +27,7 @@ const ItemEditor = props => {
     <FormData
       id={`form-${props.item.id}`}
       className="quiz-item item-editor"
+      flush={true}
       embedded={props.embedded}
       name={props.formName}
       meta={props.meta}
@@ -62,6 +63,7 @@ const ItemEditor = props => {
         }, {
           title: trans('custom'),
           primary: true,
+          fill: true,
           render: () => createElement(props.definition.components.editor, {
             formName: props.formName,
             path: props.path,
@@ -152,7 +154,6 @@ const ItemEditor = props => {
                         id={`hint-${props.item.id}-${hintIndex}-text`}
                         className="hint-value"
                         value={hint.value}
-                        size="sm"
                         onChange={value => props.update(`hints[${hintIndex}].value`, value)}
                       />
 
@@ -161,7 +162,6 @@ const ItemEditor = props => {
                         className="hint-penalty"
                         min={0}
                         value={hint.penalty}
-                        size="sm"
                         onChange={value => props.update(`hints[${hintIndex}].penalty`, value)}
                       />
                     </div>

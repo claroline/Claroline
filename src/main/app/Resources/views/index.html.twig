@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="{{ app.request.locale }}" class="claroline-app {{ config.getParameter('theme') }}">
+<html lang="{{ app.request.locale }}" class="claroline-app {{ config.getParameter('theme') }}" data-bs-theme="light">
     <head>
         <meta charset="utf-8" />
 
@@ -71,9 +71,6 @@
             data-footer="{{ footer | json_encode | raw | escape }}"
             data-config="{{ parameters | json_encode | raw | escape }}"
         ></div>
-
-        {# Anchor for UI portals (eg. modals) #}
-        <div class="app-modal-container"></div>
 
         {# Router #}
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>

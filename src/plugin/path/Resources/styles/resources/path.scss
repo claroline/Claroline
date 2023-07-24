@@ -1,0 +1,132 @@
+/*
+ * Path resource styles.
+ */
+
+@use "sass:math";
+
+// Claroline & bootstrap mixins
+@import "src/main/app/Resources/styles/mixins";
+// Plugin vars
+@import "../variables";
+
+
+.resource-parameters {
+  .embedded-resource {
+    margin-top: $component-margin-bottom;
+  }
+}
+
+
+/*
+ * Styles navigation buttons between steps.
+ */
+
+.path-navigation {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  margin-bottom: $component-margin-bottom;
+
+  .btn-previous,
+  .btn-next {
+    flex: 1;
+    max-width: 50%;
+  }
+
+  .btn-previous {
+    text-align: left;
+    margin-right: ($grid-gutter-width * .5);
+  }
+
+  .btn-next {
+    font-weight: bold;
+    text-align: right;
+    margin-left: ($grid-gutter-width * .5);
+
+    &:first-child {
+      margin-left: auto;
+    }
+  }
+}
+
+
+/**
+ * Step
+ */
+
+.current-step {
+  flex: 1; // will push navigation to the bottom of the page
+}
+
+.step-poster,
+.step-title {
+  margin-top: calc($line-height-computed - 4px); // 4px is to absorb progress bar height
+}
+
+.step-poster {
+  border-radius: $step-poster-border-radius;
+
+  + .step-title {
+    margin-top: $line-height-computed; // restore default margin
+  }
+}
+
+.step-manual-progression {
+  margin-left: auto;
+
+  // fixes v-align
+  display: flex;
+  align-items: center;
+  line-height: $line-height-computed;
+
+  // remove title styles
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+
+  .dropdown-toggle {
+    &.unseen    { color: $step-status-unseen-color; }
+    &.seen      { color: $step-status-seen-color; }
+    &.to_do     { color: $step-status-to_do-color; }
+    &.done      { color: $step-status-done-color; }
+    &.to_review { color: $step-status-to_review-color; }
+  }
+}
+
+.step-primary-resource {
+  background: $step-resource-bg;
+  border-radius: $border-radius;
+
+  .page-header {
+    background-color: $step-resource-bg;
+  }
+}
+
+.step-primary-resource,
+.step-secondary-resources {
+  margin-bottom: $component-margin-bottom;
+}
+
+.step-progression {
+  font-size: $step-status-size !important; // override font-awesome
+
+  &.unseen    { color: $step-status-unseen-color; }
+  &.seen      { color: $step-status-seen-color; }
+  &.to_do     { color: $step-status-to_do-color; }
+  &.done      { color: $step-status-done-color; }
+  &.to_review { color: $step-status-to_review-color; }
+}
+
+.step-status {
+  margin-left: auto;
+  color: $learning;
+  font-style: normal; // override summary styles
+
+  .not_started {
+    color: $step-status-unseen-color;
+  }
+
+  .step-progression {
+    font-size: $font-size-base !important;
+    font-weight: bold;
+  }
+}

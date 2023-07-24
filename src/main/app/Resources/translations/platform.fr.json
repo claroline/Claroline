@@ -26,5 +26,6 @@
   "image_error": "Nous somme désolés, une erreur s'est produite lors du chargement de votre image. Veuillez contacter un administrateur.",
   "timezone": "Fuseau horaire",
   "date_format": "d/m/Y",
-  "time_format": "H:i"
+  "time_format": "H:i",
+  "action_confirm_message": "Êtes-vous sûr de vouloir effectuer cette action ?"
 }

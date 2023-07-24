@@ -12,12 +12,12 @@ import {User as UserTypes} from '#/main/community/prop-types'
 import {getMainFacet} from '#/main/community/profile/utils'
 
 const UserDetails = props =>
-  <div className="user-details panel panel-default">
-    <div className="panel-body text-center">
+  <div className="user-details card mb-3">
+    <div className="card-body text-center lead">
       {getPlatformRoles(props.user.roles).map(role => trans(role.translationKey)).join(', ')}
     </div>
 
-    <ul className="list-group list-group-values">
+    <ul className="list-group list-group-flush list-group-values">
       <li className="list-group-item">
         {trans('registered_at')}
         <span className="value">

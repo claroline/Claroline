@@ -6,6 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
@@ -15,12 +16,12 @@ import {DataInput} from '#/main/app/data/components/input'
 const CollectionInput = props =>
   <div id={props.id} className={classes('collection-control', props.className)}>
     {isEmpty(props.value) &&
-      <div className="no-item-info">{props.placeholder}</div>
+      <ContentPlaceholder title={props.placeholder} size={props.size} className="mb-2" />
     }
 
     {!isEmpty(props.value) &&
       <Button
-        className="btn-link btn-delete-all"
+        className="btn btn-text-danger btn-delete-all"
         type={CALLBACK_BUTTON}
         label={trans('delete_all')}
         disabled={props.disabled}
@@ -54,14 +55,13 @@ const CollectionInput = props =>
           }
 
           return (
-            <li key={index} className="collection-item">
+            <li key={index} className="collection-item mb-2">
               <DataInput
                 id={`${props.id}-${index}`}
                 type={props.type}
                 options={props.options}
-
+                size={props.size}
                 label={`${props.label} #${index + 1}`}
-                size="sm"
                 hideLabel={true}
                 required={true}
                 disabled={props.disabled}
@@ -83,14 +83,14 @@ const CollectionInput = props =>
               </DataInput>
 
               <Button
-                className="btn-link btn-delete"
+                className="btn btn-text-danger btn-delete"
                 type={CALLBACK_BUTTON}
                 icon="fa fa-fw fa-trash"
                 label={trans('delete')}
                 tooltip="left"
                 disabled={props.disabled}
                 dangerous={true}
-                size="sm"
+                size={props.size}
                 callback={() => {
                   const newCollection = cloneDeep(props.value)
 
@@ -106,10 +106,12 @@ const CollectionInput = props =>
     }
 
     <Button
-      className="btn btn-block btn-add"
+      variant="btn"
+      className="w-100 btn-add"
       type={CALLBACK_BUTTON}
       icon="fa fa-fw fa-plus"
       label={props.button}
+      size={props.size}
       disabled={props.disabled || (props.max && props.value && props.max <= props.value.length)}
       callback={() => props.onChange([].concat(props.value || [], [props.defaultItem]))}
     />

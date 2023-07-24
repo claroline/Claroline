@@ -33,7 +33,7 @@ const Section = props =>
           width: '100%'
         }}
       >
-        <span className="input-group-addon">
+        <span className="input-group-text">
           <b>{`${trans('start', {}, 'audio')} (${trans('second')})`}</b>
         </span>
         <input
@@ -51,7 +51,7 @@ const Section = props =>
           width: '100%'
         }}
       >
-        <span className="input-group-addon">
+        <span className="input-group-text">
           <b>{`${trans('end', {}, 'audio')} (${trans('second')})`}</b>
         </span>
         <input

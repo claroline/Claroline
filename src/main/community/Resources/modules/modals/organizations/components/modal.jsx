@@ -19,7 +19,7 @@ const OrganizationsModal = props => {
       {...omit(props, 'selected', 'selectAction', 'reset')}
       icon="fa fa-fw fa-building"
       className="data-picker-modal"
-      bsSize="lg"
+      size="xl"
       onExiting={props.reset}
     >
       <OrganizationList
@@ -32,7 +32,9 @@ const OrganizationsModal = props => {
       <Button
         label={trans('select', {}, 'actions')}
         {...selectAction}
-        className="modal-btn btn"
+        className="modal-btn"
+        variant="btn"
+        size="lg"
         primary={true}
         disabled={0 === props.selected.length}
         onClick={props.fadeModal}

@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    tags: [ kernel.event_subscriber ]
+
+  Claroline\ExampleBundle\Subscriber\Crud\ExampleSubscriber:
+    arguments:
+      - '@security.token_storage'
+      - '@Claroline\CoreBundle\Manager\FileManager'

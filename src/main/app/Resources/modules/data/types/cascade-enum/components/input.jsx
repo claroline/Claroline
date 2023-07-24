@@ -8,6 +8,7 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {TextGroup}  from '#/main/core/layout/form/components/group/text-group'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const EnumChildren = props =>
   <ul className="enum-children-list">
@@ -214,13 +215,11 @@ const CascadeEnumInput = (props) =>
     }
 
     {props.value.length === 0 &&
-      <div className="no-item-info">
-        {props.placeholder}
-      </div>
+      <ContentPlaceholder title={props.placeholder} size={props.size} />
     }
 
     <Button
-      className="btn btn-block"
+      className="btn w-100"
       type={CALLBACK_BUTTON}
       icon="fa fa-fw fa-plus"
       label={props.addButtonLabel}

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import moment from 'moment'
-import {schemeCategory20c} from 'd3-scale'
+import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {Toolbar} from '#/main/app/action/components/toolbar'
@@ -56,15 +56,16 @@ class RoleMetrics extends Component {
     }
 
     return (
-      <div className="row component-container" style={{display: 'flex', alignItems: 'center'}}>
+      <div className="d-flex flex-direction-row mb-3">
         <Toolbar
-          buttonName="btn-block"
-          style={{marginLeft: '15px'}}
+          className="btn-group-vertical"
+          buttonName="w-100"
+          variant="btn"
           toolbar={this.state.available.map(year => 'y'+year).join(' ')}
-          size="xs"
+          size="sm"
           actions={this.state.available.map(year => (
             {
-              className: year === this.state.current ? 'btn' : 'btn-link',
+              primary: year === this.state.current,
               name: 'y'+year,
               type: CALLBACK_BUTTON,
               label: year,

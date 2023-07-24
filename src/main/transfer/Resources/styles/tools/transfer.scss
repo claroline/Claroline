@@ -1,0 +1,151 @@
+
+@import "src/main/app/Resources/styles/mixins";
+@import "src/main/app/Resources/styles/variables";
+
+.transfer-schema-select {
+    margin-top: $component-margin-bottom;
+    margin-left: 11px; // padding + border width of .transfer-schema-field, to align checkboxes
+}
+
+.transfer-schema-filter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: $component-margin-bottom;
+    margin-bottom: 10px; // same as list grid sort
+
+    .btn {
+        font-weight: bold;
+        border: none;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.transfer-schema-field {
+    padding: 10px;
+    border: 1px solid $card-border-color;
+    background: $card-bg;
+    border-radius: $card-border-radius;
+
+    @include box-shadow($card-box-shadow);
+
+    &.selected,
+    &.required {
+        border: 1px solid $primary;
+    }
+
+    .schema-field-meta {
+        small {
+            margin-left: $icon-text-spacer;
+            /*font-weight: normal;
+            font-style: italic;*/
+        }
+    }
+
+    p {
+        margin-bottom: 0;
+    }
+}
+
+.transfer-schema-one-of {
+    background: var(--#{$prefix}tertiary-bg);
+    border-radius: $border-radius;
+    padding: map-get($spacers, 2);
+
+    &.required {
+        border: 1px solid $primary;
+    }
+
+    .transfer-schema-fields {
+        display: flex;
+        align-items: center;
+
+        .transfer-schema-or {
+            order: 1;
+            z-index: 1;
+            border: 1px solid $card-border-color;
+            background: $card-bg;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            font-weight: $font-weight-bolder;
+            border-radius: 50%;
+            margin-right: -22px;
+        }
+
+        .transfer-schema-fields-list {
+            order: 2;
+            flex: 1;
+            padding-left: 30px;
+
+            .transfer-schema-field {
+                position: relative;
+
+                &:before {
+                    content: " ";
+                    position: absolute;
+                    width: 30px;
+                    left: -30px;
+                    top: 0;
+                    height: 50%;
+                    margin-top: -1px;
+                    border-bottom: 1px solid var(--#{$prefix}border-color);
+                    border-left: 2px solid var(--#{$prefix}border-color);
+                }
+
+                &:after {
+                    content: " ";
+                    position: absolute;
+                    width: 30px;
+                    left: -30px;
+                    top: 50%;
+                    bottom: -10px;
+                    margin-top: -1px;
+                    border-top: 1px solid var(--#{$prefix}border-color);
+                    border-left: 2px solid var(--#{$prefix}border-color);
+                }
+
+                &:first-child {
+                    &:before {
+                        display: none;
+                    }
+                    &:after {
+                        border-top: 2px solid var(--#{$prefix}border-color);
+                    }
+                }
+
+                &:last-child {
+                    &:before {
+                        border-bottom: 2px solid var(--#{$prefix}border-color);
+                    }
+                    &:after {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.transfer-schema-field,
+.transfer-schema-one-of {
+    + .transfer-schema-field,
+    + .transfer-schema-one-of {
+        margin-top: map-get($spacers, 2);
+    }
+}
+
+.schema-field-meta {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    //margin-bottom: 5px;
+
+    .badge {
+        margin-left: auto;
+    }
+}

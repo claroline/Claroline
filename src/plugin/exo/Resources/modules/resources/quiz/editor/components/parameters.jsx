@@ -56,6 +56,7 @@ const EditorParameters = props => {
                 label: trans('type'),
                 type: 'string',
                 required: true,
+                hideLabel: true,
                 render: (quiz) => {
                   const CurrentType = (
                     <QuizType

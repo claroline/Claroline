@@ -34,7 +34,6 @@
   "loading": "We are loading your workspace...",
 
   "restricted_workspace": {
-    "access": "Access workspace",
     "access_message": "You can not access this workspace because all access conditions are not met.",
     "authorized_ip": "You are using an authorized work station.",
     "authorized_ip_required": "Access must be done from an authorized work station.",
@@ -60,7 +59,8 @@
     "pending_registration": "Your registration request is pending validation.",
     "wait_validation": "Please wait for a manager to validate your request to access the workspace.",
     "archived": "The workspace is archived.",
-    "archived_help": "You can no longer access the content of archived workspaces."
+    "archived_help": "You can no longer access the content of archived workspaces.",
+    "login_help": "You will automatically be registered for the workspace once you have logged in or registered."
   },
   "forbidden": "Access to the workspace not possible",
   "forbidden_desc": "You do not have access to this workspace. Please contact an administrator to give you the necessary rights."

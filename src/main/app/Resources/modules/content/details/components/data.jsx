@@ -34,7 +34,7 @@ const DetailsData = props => {
   const openedSection = otherSections.find(section => section.defaultOpened)
 
   return (
-    <div className={classes('data-details', props.className)}>
+    <div className={classes('data-details', props.className, props.flush && 'data-details-flush', !props.flush && 'content-md')}>
       {props.title &&
         <ContentTitle
           level={props.level}
@@ -52,26 +52,24 @@ const DetailsData = props => {
       }
 
       {primarySections.map(primarySection =>
-        <div key={toKey(primarySection.title)} className="panel panel-default primary-section">
-          <div className="panel-body">
-            <ContentTitle
-              level={hLevel}
-              displayed={false}
-              title={primarySection.title}
-            />
+        <section key={toKey(primarySection.title)} className={classes('details-primary-section', !props.flush && 'mb-3')}>
+          <ContentTitle
+            level={hLevel}
+            displayed={false}
+            title={primarySection.title}
+          />
 
-            <DetailsFieldset
-              id={getSectionId(primarySection, props.id)}
-              fields={primarySection.fields}
-              data={props.data}
-              errors={props.errors}
-              help={primarySection.help}
-            >
-              {primarySection.component && createElement(primarySection.component)}
-              {!primarySection.component && primarySection.render && primarySection.render()}
-            </DetailsFieldset>
-          </div>
-        </div>
+          <DetailsFieldset
+            id={getSectionId(primarySection, props.id)}
+            fields={primarySection.fields}
+            data={props.data}
+            errors={props.errors}
+            help={primarySection.help}
+          >
+            {primarySection.component && createElement(primarySection.component)}
+            {!primarySection.component && primarySection.render && primarySection.render()}
+          </DetailsFieldset>
+        </section>
       )}
 
       {props.affix}
@@ -81,6 +79,8 @@ const DetailsData = props => {
           level={hLevel}
           displayLevel={hDisplay}
           defaultOpened={openedSection ? openedSection.id : undefined}
+          flush={props.flush}
+          className={classes(!props.flush && 'mb-3')}
         >
           {otherSections.map(section =>
             <Section
@@ -88,11 +88,10 @@ const DetailsData = props => {
               icon={section.icon}
               title={section.title}
               className={section.className}
+              fill={section.fill}
             >
               <DetailsFieldset
                 id={getSectionId(section, props.id)}
-                fill={true}
-                className="panel-body"
                 fields={section.fields}
                 data={props.data}
                 errors={props.errors}
@@ -120,6 +119,7 @@ DetailsData.propTypes = {
   data: T.object,
   errors: T.object,
   meta: T.bool,
+  flush: T.bool,
   /**
    * @deprecated use definition instead
    */
@@ -136,7 +136,8 @@ DetailsData.propTypes = {
 DetailsData.defaultProps = {
   level: 2,
   data: {},
-  meta: false
+  meta: false,
+  flush: false
 }
 
 export {

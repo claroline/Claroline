@@ -1,0 +1,72 @@
+@use "sass:math";
+
+.choice-answer-items {
+  display: flex;
+  margin: -(floor(math.div($answer-item-margin-bottom, 2)));
+
+  // remove <ul> styles
+  padding: 0;
+  list-style-type: none;
+
+  &.horizontal {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  &.vertical {
+    flex-direction: column;
+  }
+
+  + .btn {
+    margin-top: $answer-item-margin-bottom;
+  }
+}
+
+.choice-answer-item {
+  flex: 1;
+  margin: floor(math.div($answer-item-margin-bottom, 2));
+  display: flex;
+  align-items: flex-start;
+
+  .choice-item-tick {
+    flex-shrink: 0;
+    align-self: flex-start; // make sure tick is always in the top left corner
+    margin-top: 4px; // same as checkboxes/radios
+    margin-right: ($grid-gutter-width * .5);
+  }
+
+  .choice-item-content {
+    flex: 1;
+
+    > p { // remove margin on tinyMCE container
+      margin-bottom: 0;
+    }
+  }
+
+  .choice-item-feedback {
+    margin-left: ($grid-gutter-width * .5);
+  }
+}
+
+.choice-editor {
+  .choice-answer-item {
+    .text-fields {
+      margin-right: ($grid-gutter-width * .5);
+    }
+
+    .score {
+      margin-right: ($grid-gutter-width * .5);
+    }
+  }
+}
+
+.choice-player {
+  .choice-answer-item {
+    cursor: pointer;
+
+    &:hover:not(.selected-answer) {
+      background: $answer-item-hover-bg;
+      border-color: $answer-item-hover-border-color;
+    }
+  }
+}

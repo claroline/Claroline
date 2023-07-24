@@ -61,6 +61,8 @@ abstract class AbstractCrudController
      * )
      *
      * @param string $class
+     *
+     * @deprecated. use the get or list endpoints
      */
     public function findAction(Request $request, $class): JsonResponse
     {
@@ -119,7 +121,6 @@ abstract class AbstractCrudController
      *
      * @param string $class
      * @param string $field
-     * @param mixed  $value
      */
     public function existAction($class, $field, $value): JsonResponse
     {
@@ -213,7 +214,7 @@ abstract class AbstractCrudController
             return new JsonResponse($object, 422);
         }
 
-        //just in case so we really returns the proper object
+        // just in case so we really returns the proper object
         $this->om->refresh($object);
 
         return new JsonResponse(
@@ -271,17 +272,19 @@ abstract class AbstractCrudController
     public static function getOptions(): array
     {
         return [
+            'get' => [],
             'list' => [Options::SERIALIZE_LIST],
             'create' => [Crud::THROW_EXCEPTION],
             'update' => [Crud::THROW_EXCEPTION],
+            'copyBulk' => [],
         ];
     }
 
     public function getRequirements(): array
     {
         return [
-            'get' => ['id' => '^(?!.*(copy|find|\/)).*'],
-            'update' => ['id' => '^(?!.*(find|\/)).*'],
+            'get' => ['id' => '^(?!.*(copy|find|exists\/)).*'],
+            'update' => ['id' => '^(?!.*(find|exist\/)).*'],
             'exist' => [],
         ];
     }

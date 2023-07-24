@@ -17,6 +17,7 @@ import {MODAL_TRAINING_EVENT_PARAMETERS} from '#/plugin/cursus/event/modals/para
 
 const EventList = (props) =>
   <ListData
+    className={props.className}
     name={props.name}
     fetch={{
       url: props.url,
@@ -118,10 +119,10 @@ const EventList = (props) =>
           }
 
           const EventStatus = (
-            <span className={classes('label', {
-              'label-success': 'not_started' === status,
-              'label-info': 'in_progress' === status,
-              'label-danger': 'ended' === status
+            <span className={classes('badge', {
+              'text-bg-success': 'not_started' === status,
+              'text-bg-info': 'in_progress' === status,
+              'text-bg-danger': 'ended' === status
             })}>
               {trans('session_'+status, {}, 'cursus')}
             </span>
@@ -192,6 +193,7 @@ const EventList = (props) =>
   />
 
 EventList.propTypes = {
+  className: T.string,
   path: T.string.isRequired,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,

@@ -34,11 +34,11 @@ const MessagingMenu = (props) => {
       {...omit(props, 'path')}
       title={trans('messaging', {}, 'tools')}
     >
-      <div className="list-group">
+      <div className="list-group list-group-flush">
         {links.map(link =>
           <Button
             key={toKey(link.label)}
-            className="list-group-item"
+            className="list-group-item list-group-item-action"
             type={LINK_BUTTON}
             icon={link.icon}
             label={link.label}

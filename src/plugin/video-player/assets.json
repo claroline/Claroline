@@ -7,7 +7,7 @@
 
   "styles": {
     "entry": {
-      "video-file": "files/video.less"
+      "video-file": "files/video.scss"
     }
   }
 }

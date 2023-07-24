@@ -107,7 +107,7 @@ export class CorrectionForm extends Component {
   render() {
     return (
       <form>
-        <div className="panel panel-default correction-form-panel">
+        <div className="card mb-3 correction-form-panel">
           {this.props.dropzone.display.correctionInstruction &&
             <div id="correction-instruction-container">
               <h2>{trans('correction_instruction', {}, 'dropzone')}</h2>

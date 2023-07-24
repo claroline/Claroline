@@ -29,11 +29,11 @@ const TransferDetails = props => {
     <ToolPage
       subtitle={
         <Fragment>
-          <span className={classes('label icon-with-text-right', {
-            'label-default': 'pending' === props.transferFile.status,
-            'label-info': 'in_progress' === props.transferFile.status,
-            'label-success': 'success' === props.transferFile.status,
-            'label-danger': 'error' === props.transferFile.status
+          <span className={classes('badge icon-with-text-right', {
+            'text-bg-secondary': 'pending' === props.transferFile.status,
+            'text-bg-info': 'in_progress' === props.transferFile.status,
+            'text-bg-success': 'success' === props.transferFile.status,
+            'text-bg-danger': 'error' === props.transferFile.status
           })}>
             {trans(props.transferFile.status)}
           </span>
@@ -58,12 +58,12 @@ const TransferDetails = props => {
     >
       <div className="row">
         <div className="col-md-3">
-          <div className="panel panel-default" style={{marginTop: 20}}>
-            <div className="panel-heading">
+          <div className="card my-3">
+            <div className="card-header">
               <UserMicro {...get(props.transferFile, 'meta.creator', {})} link={true} />
             </div>
 
-            <ul className="list-group list-group-values">
+            <ul className="list-group list-group-flush list-group-values">
               <li className="list-group-item">
                 {trans('action')}
                 <span className="value">{transAction(props.transferFile.action)}</span>
@@ -93,7 +93,8 @@ const TransferDetails = props => {
           </div>
 
           <Toolbar
-            buttonName="btn btn-block"
+            className="d-grid gap-1"
+            variant="btn"
             actions={props.actions}
           />
         </div>

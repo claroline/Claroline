@@ -12,32 +12,30 @@ import {EventParticipants} from '#/plugin/cursus/event/containers/participants'
 
 const EventDetails = (props) =>
   <Fragment>
-    <header className="row content-heading">
-      <ContentTabs
-        backAction={{
+    <ContentTabs
+      backAction={{
+        type: LINK_BUTTON,
+        target: props.path,
+        exact: true
+      }}
+      sections={[
+        {
+          name: 'about',
           type: LINK_BUTTON,
-          target: props.path,
+          icon: 'fa fa-fw fa-circle-info',
+          label: trans('about'),
+          target: `${props.path}/${props.event.id}`,
           exact: true
-        }}
-        sections={[
-          {
-            name: 'about',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-circle-info',
-            label: trans('about'),
-            target: `${props.path}/${props.event.id}`,
-            exact: true
-          }, {
-            name: 'participants',
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-users',
-            label: trans('participants'),
-            target: `${props.path}/${props.event.id}/participants`,
-            displayed: props.isAuthenticated
-          }
-        ]}
-      />
-    </header>
+        }, {
+          name: 'participants',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-users',
+          label: trans('participants'),
+          target: `${props.path}/${props.event.id}/participants`,
+          displayed: props.isAuthenticated
+        }
+      ]}
+    />
 
     <Routes
       path={props.path+'/'+props.event.id}

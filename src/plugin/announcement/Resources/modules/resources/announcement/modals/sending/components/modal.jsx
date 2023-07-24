@@ -22,7 +22,7 @@ const SendingModal = (props) =>
     title={trans('announcement_sending', {}, 'announcement')}
     subtitle={props.announcement.title}
     icon="fa fa-fw fa-paper-plane"
-    bsSize="lg"
+    size="xl"
     onEnter={() => props.reset(props.announcement, props.workspaceRoles)}
   >
     <FormData
@@ -105,7 +105,9 @@ const SendingModal = (props) =>
     </FormSections>
 
     <Button
-      className="btn modal-btn"
+      className="modal-btn"
+      variant="btn"
+      size="lg"
       type={CALLBACK_BUTTON}
       label={trans(2 === get(props.formData, 'meta.notifyUsers') ? 'plan-sending' : 'send', {}, 'actions')}
       primary={true}

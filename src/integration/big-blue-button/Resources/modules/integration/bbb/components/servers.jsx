@@ -21,15 +21,15 @@ const BBBServers = (props) =>
           <TableRow key={i}>
             <TableCell>
               {server.disabled &&
-                <span className="label label-danger">{trans('disabled')}</span>
+                <span className="badge text-bg-danger">{trans('disabled')}</span>
               }
 
               {!server.disabled && server.limit && server.participants >= server.limit &&
-                <span className="label label-warning">{trans('full')}</span>
+                <span className="badge text-bg-warning">{trans('full')}</span>
               }
 
               {!server.disabled && (!server.limit || server.participants < server.limit) &&
-                <span className="label label-success">{trans('available')}</span>
+                <span className="badge text-bg-success">{trans('available')}</span>
               }
             </TableCell>
             <TableCell>{server.url}</TableCell>

@@ -1,0 +1,35 @@
+// Full screen editor container
+
+@import "node_modules/tinymce/skins/content/default/content.min.css";
+@import "node_modules/tinymce/skins/ui/oxide/content.min.css";
+
+.tox-tinymce {
+  border-radius: 0 !important;
+  border: none !important;
+}
+
+.tox .tox-throbber {
+  z-index: $zindex-modal-backdrop - 1 !important;
+}
+
+.tox-fullscreen {
+  z-index: $zindex-fullscreen;
+}
+
+.mce-content-body {
+  //padding: 0 floor(@grid-gutter-width / 2) !important;
+  padding: $input-padding-y $input-padding-x !important;
+
+  .btn, .btn-link {
+    user-select: auto;
+  }
+}
+
+.tinymce-inline {
+  display: flex;
+  justify-content: stretch;
+
+  .mce-content-body {
+    flex: 1;
+  }
+}

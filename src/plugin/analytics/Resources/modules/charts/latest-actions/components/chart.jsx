@@ -21,9 +21,9 @@ class LatestActionsChart extends Component {
     }
 
     return (
-      <div className="panel panel-default panel-analytics">
-        <div className="panel-heading">
-          <h2 className="panel-title">
+      <div className="card mb-3 panel-analytics">
+        <div className="card-header">
+          <h2 className="card-title">
             {trans('latest_actions', {}, 'analytics')}
           </h2>
 
@@ -55,7 +55,7 @@ class LatestActionsChart extends Component {
         </div>
 
         <div
-          className="data-cards-stacked data-cards-striped"
+          className="data-cards-stacked data-cards-stacked-flush"
           style={{
             height: '315px', // FIXME
             overflowY: 'auto'
