@@ -19,6 +19,8 @@ class PlatformDefaults implements ParameterProviderInterface
     {
         $parameters = [
             'authentication' => [
+                // when true, it will automatically try to link on existing claroline account
+                // when a user log with an oauth account for the first time
                 'direct_third_party' => false,
             ],
             'external_authentication' => [],

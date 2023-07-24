@@ -28,12 +28,14 @@ class OauthSsoListener
 
     public function onConfig(GenericDataEvent $event)
     {
+        $parameters = $this->authenticationManager->getParameters();
+
         $event->setResponse([
             'authentication' => [
-                'help' => $this->authenticationManager->getParameters()->getHelpMessage(),
-                'changePassword' => $this->authenticationManager->getParameters()->getChangePassword(),
-                'internalAccount' => $this->authenticationManager->getParameters()->getInternalAccount(),
-                'showClientIp' => $this->authenticationManager->getParameters()->getShowClientIp(),
+                'help' => $parameters->getHelpMessage(),
+                'changePassword' => $parameters->getChangePassword(),
+                'internalAccount' => $parameters->getInternalAccount(),
+                'showClientIp' => $parameters->getShowClientIp(),
                 'sso' => array_map(function (array $sso) {
                     return [
                         'service' => $sso['service'],

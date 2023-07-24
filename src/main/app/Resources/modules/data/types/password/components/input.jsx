@@ -52,7 +52,7 @@ class PasswordInput extends PureComponent {
   checkValidPassword(password) {
     let conditions = {}
 
-    const minLength = param('authentication.minLength')
+    const minLength = param('password.minLength')
     if (minLength > 0) {
       conditions.minlength_rules = {
         text: minLength + ' ' + trans('minlength_rules', {}, 'security'),
@@ -60,28 +60,28 @@ class PasswordInput extends PureComponent {
       }
     }
 
-    if (param('authentication.requireLowercase')) {
+    if (param('password.requireLowercase')) {
       conditions.lowercase_rules = {
         text: trans('lowercase_rules', {}, 'security'),
         checked: !match(password, {regex: /[a-z]/})
       }
     }
 
-    if (param('authentication.requireUppercase')) {
+    if (param('password.requireUppercase')) {
       conditions.uppercase_rules = {
         text: trans('uppercase_rules', {}, 'security'),
         checked: !match(password, {regex: /[A-Z]/})
       }
     }
 
-    if (param('authentication.requireNumber')) {
+    if (param('password.requireNumber')) {
       conditions.number_rules = {
         text: trans('number_rules', {}, 'security'),
         checked: !match(password, {regex: /[0-9]/})
       }
     }
 
-    if (param('authentication.requireSpecialChar')) {
+    if (param('password.requireSpecialChar')) {
       conditions.special_rules = {
         text: trans('special_rules', {}, 'security'),
         checked: !match(password, {regex: /[^a-zA-Z0-9]/})

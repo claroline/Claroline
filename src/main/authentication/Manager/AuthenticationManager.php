@@ -16,6 +16,18 @@ class AuthenticationManager
 
     public function getParameters(): AuthenticationParameters
     {
-        return $this->om->getRepository(AuthenticationParameters::class)->findOneBy([], ['id' => 'DESC']);
+        $parameters = $this->om->getRepository(AuthenticationParameters::class)->findOneBy([], ['id' => 'DESC']);
+
+        if ($parameters === null) {
+            $parameters = new AuthenticationParameters();
+        }
+
+        return $parameters;
+    }
+
+    public function updateParameters(AuthenticationParameters $parameters): void
+    {
+        $this->om->persist($parameters);
+        $this->om->flush();
     }
 }

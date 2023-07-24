@@ -12,6 +12,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AuthenticationParameters
 {
+    public const DEFAULT_REDIRECT_OPTION = 'LAST';
+
+    public const REDIRECT_OPTIONS = [
+        'DESKTOP' => 'DESKTOP',
+        'LAST' => 'LAST',
+        'URL' => 'URL',
+        'WORKSPACE_TAG' => 'WORKSPACE_TAG',
+    ];
+
     use Id;
 
     /**
@@ -69,16 +78,30 @@ class AuthenticationParameters
      */
     private ?string $redirectAfterLoginUrl;
 
+    public function __construct()
+    {
+        $this->minLength = 0;
+        $this->requireLowercase = false;
+        $this->requireUppercase = false;
+        $this->requireSpecialChar = false;
+        $this->requireNumber = false;
+
+        $this->helpMessage = null;
+        $this->changePassword = true;
+        $this->internalAccount = true;
+        $this->showClientIp = false;
+        $this->redirectAfterLoginOption = self::DEFAULT_REDIRECT_OPTION;
+        $this->redirectAfterLoginUrl = null;
+    }
+
     public function getMinLength(): int
     {
         return $this->minLength;
     }
 
-    public function setMinLength(int $minLength): self
+    public function setMinLength(int $minLength): void
     {
         $this->minLength = $minLength;
-
-        return $this;
     }
 
     public function getRequireLowercase(): bool
@@ -86,11 +109,9 @@ class AuthenticationParameters
         return $this->requireLowercase;
     }
 
-    public function setRequireLowercase(bool $requireLowercase): self
+    public function setRequireLowercase(bool $requireLowercase): void
     {
         $this->requireLowercase = $requireLowercase;
-
-        return $this;
     }
 
     public function getRequireUppercase(): bool
@@ -98,11 +119,9 @@ class AuthenticationParameters
         return $this->requireUppercase;
     }
 
-    public function setRequireUppercase(bool $requireUppercase): self
+    public function setRequireUppercase(bool $requireUppercase): void
     {
         $this->requireUppercase = $requireUppercase;
-
-        return $this;
     }
 
     public function getRequireSpecialChar(): bool
@@ -110,11 +129,9 @@ class AuthenticationParameters
         return $this->requireSpecialChar;
     }
 
-    public function setRequireSpecialChar(bool $requireSpecialChar): self
+    public function setRequireSpecialChar(bool $requireSpecialChar): void
     {
         $this->requireSpecialChar = $requireSpecialChar;
-
-        return $this;
     }
 
     public function getRequireNumber(): bool
@@ -122,11 +139,9 @@ class AuthenticationParameters
         return $this->requireNumber;
     }
 
-    public function setRequireNumber(bool $requireNumber): self
+    public function setRequireNumber(bool $requireNumber): void
     {
         $this->requireNumber = $requireNumber;
-
-        return $this;
     }
 
     public function getHelpMessage(): ?string
@@ -134,11 +149,9 @@ class AuthenticationParameters
         return $this->helpMessage;
     }
 
-    public function setHelpMessage(?string $help): self
+    public function setHelpMessage(?string $help): void
     {
         $this->helpMessage = $help;
-
-        return $this;
     }
 
     public function getChangePassword(): bool
@@ -146,11 +159,9 @@ class AuthenticationParameters
         return $this->changePassword;
     }
 
-    public function setChangePassword(bool $changePassword): self
+    public function setChangePassword(bool $changePassword): void
     {
         $this->changePassword = $changePassword;
-
-        return $this;
     }
 
     public function getInternalAccount(): bool
@@ -158,11 +169,9 @@ class AuthenticationParameters
         return $this->internalAccount;
     }
 
-    public function setInternalAccount(bool $internalAccount): self
+    public function setInternalAccount(bool $internalAccount): void
     {
         $this->internalAccount = $internalAccount;
-
-        return $this;
     }
 
     public function getShowClientIp(): bool
@@ -170,11 +179,9 @@ class AuthenticationParameters
         return $this->showClientIp;
     }
 
-    public function setShowClientIp(bool $showClientIp): self
+    public function setShowClientIp(bool $showClientIp): void
     {
         $this->showClientIp = $showClientIp;
-
-        return $this;
     }
 
     public function getRedirectAfterLoginOption(): string
@@ -182,11 +189,9 @@ class AuthenticationParameters
         return $this->redirectAfterLoginOption;
     }
 
-    public function setRedirectAfterLoginOption(string $redirectAfterLoginOption): self
+    public function setRedirectAfterLoginOption(string $redirectAfterLoginOption): void
     {
         $this->redirectAfterLoginOption = $redirectAfterLoginOption;
-
-        return $this;
     }
 
     public function getRedirectAfterLoginUrl(): ?string
@@ -194,19 +199,8 @@ class AuthenticationParameters
         return $this->redirectAfterLoginUrl;
     }
 
-    public function setRedirectAfterLoginUrl(?string $redirectAfterLoginUrl): self
+    public function setRedirectAfterLoginUrl(?string $redirectAfterLoginUrl): void
     {
         $this->redirectAfterLoginUrl = $redirectAfterLoginUrl;
-
-        return $this;
     }
-
-    public const DEFAULT_REDIRECT_OPTION = 'LAST';
-
-    public const REDIRECT_OPTIONS = [
-        'DESKTOP' => 'DESKTOP',
-        'LAST' => 'LAST',
-        'URL' => 'URL',
-        'WORKSPACE_TAG' => 'WORKSPACE_TAG',
-    ];
 }

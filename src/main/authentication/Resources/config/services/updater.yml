@@ -4,5 +4,5 @@ services:
 
   Claroline\AuthenticationBundle\Installation\Updater\Updater140000:
     arguments:
-      - '@Claroline\AppBundle\Persistence\ObjectManager'
+      - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
       - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

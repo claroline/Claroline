@@ -2,22 +2,22 @@
 
 namespace Claroline\AuthenticationBundle\Installation\Updater;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Manager\AuthenticationManager;
 use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\InstallationBundle\Updater\Updater;
 
 class Updater140000 extends Updater
 {
-    private ObjectManager $om;
+    private AuthenticationManager $authenticationManager;
 
     private PlatformConfigurationHandler $config;
 
     public function __construct(
-        ObjectManager $om,
+        AuthenticationManager $authenticationManager,
         PlatformConfigurationHandler $config
     ) {
-        $this->om = $om;
+        $this->authenticationManager = $authenticationManager;
         $this->config = $config;
     }
 
@@ -25,10 +25,7 @@ class Updater140000 extends Updater
     {
         $this->log('Update AuthenticationParameters ...');
 
-        $authenticationParameters = $this->om->getRepository(AuthenticationParameters::class)->findOneBy([], ['id' => 'DESC']);
-        if (empty($authenticationParameters)) {
-            $authenticationParameters = new AuthenticationParameters();
-        }
+        $authenticationParameters = $this->authenticationManager->getParameters();
 
         $authenticationParameters->setHelpMessage($this->config->getParameter('authentication.help'));
         $authenticationParameters->setChangePassword($this->config->getParameter('authentication.changePassword'));
@@ -42,7 +39,6 @@ class Updater140000 extends Updater
         }
         $authenticationParameters->setRedirectAfterLoginUrl($this->config->getParameter('authentication.redirect_after_login_url'));
 
-        $this->om->persist($authenticationParameters);
-        $this->om->flush();
+        $this->authenticationManager->updateParameters($authenticationParameters);
     }
 }

@@ -135,7 +135,9 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $redirect = $this->authenticationManager->getParameters()->getRedirectAfterLoginOption();
+        $parameters = $this->authenticationManager->getParameters();
+
+        $redirect = $parameters->getRedirectAfterLoginOption();
 
         $referer = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
         $redirectPath = $request->getSession()->get('redirectPath');
@@ -173,11 +175,11 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             }
         } elseif (
             AuthenticationParameters::REDIRECT_OPTIONS['URL'] === $redirect
-            && $this->authenticationManager->getParameters()->getRedirectAfterLoginUrl()
+            && $parameters->getRedirectAfterLoginUrl()
         ) {
             return [
                 'type' => 'url',
-                'data' => $this->authenticationManager->getParameters()->getRedirectAfterLoginUrl(),
+                'data' => $parameters->getRedirectAfterLoginUrl(),
             ];
         }
 

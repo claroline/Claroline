@@ -17,33 +17,40 @@ class AuthenticationParametersSerializer
     public function serialize(AuthenticationParameters $authenticationParameters): array
     {
         return [
-            'minLength' => $authenticationParameters->getMinLength(),
-            'requireLowercase' => $authenticationParameters->getRequireLowercase(),
-            'requireUppercase' => $authenticationParameters->getRequireUppercase(),
-            'requireSpecialChar' => $authenticationParameters->getRequireSpecialChar(),
-            'requireNumber' => $authenticationParameters->getRequireNumber(),
-            'helpMessage' => $authenticationParameters->getHelpMessage(),
-            'changePassword' => $authenticationParameters->getChangePassword(),
-            'internalAccount' => $authenticationParameters->getInternalAccount(),
-            'showClientIp' => $authenticationParameters->getShowClientIp(),
-            'redirectAfterLoginOption' => $authenticationParameters->getRedirectAfterLoginOption(),
-            'redirectAfterLoginUrl' => $authenticationParameters->getRedirectAfterLoginUrl(),
+            'password' => [
+                'minLength' => $authenticationParameters->getMinLength(),
+                'requireLowercase' => $authenticationParameters->getRequireLowercase(),
+                'requireUppercase' => $authenticationParameters->getRequireUppercase(),
+                'requireSpecialChar' => $authenticationParameters->getRequireSpecialChar(),
+                'requireNumber' => $authenticationParameters->getRequireNumber(),
+            ],
+            'login' => [
+                'helpMessage' => $authenticationParameters->getHelpMessage(),
+                'changePassword' => $authenticationParameters->getChangePassword(),
+                'internalAccount' => $authenticationParameters->getInternalAccount(),
+                'showClientIp' => $authenticationParameters->getShowClientIp(),
+                'redirectAfterLoginOption' => $authenticationParameters->getRedirectAfterLoginOption(),
+                'redirectAfterLoginUrl' => $authenticationParameters->getRedirectAfterLoginUrl(),
+            ],
         ];
     }
 
     public function deserialize(array $data, AuthenticationParameters $authenticationParameters): AuthenticationParameters
     {
-        $this->sipe('minLength', 'setMinLength', $data, $authenticationParameters);
-        $this->sipe('requireLowercase', 'setRequireLowercase', $data, $authenticationParameters);
-        $this->sipe('requireUppercase', 'setRequireUppercase', $data, $authenticationParameters);
-        $this->sipe('requireSpecialChar', 'setRequireSpecialChar', $data, $authenticationParameters);
-        $this->sipe('requireNumber', 'setRequireNumber', $data, $authenticationParameters);
-        $this->sipe('helpMessage', 'setHelpMessage', $data, $authenticationParameters);
-        $this->sipe('changePassword', 'setChangePassword', $data, $authenticationParameters);
-        $this->sipe('internalAccount', 'setInternalAccount', $data, $authenticationParameters);
-        $this->sipe('showClientIp', 'setShowClientIp', $data, $authenticationParameters);
-        $this->sipe('redirectAfterLoginOption', 'setRedirectAfterLoginOption', $data, $authenticationParameters);
-        $this->sipe('redirectAfterLoginUrl', 'setRedirectAfterLoginUrl', $data, $authenticationParameters);
+        $passwordData = $data['password'] ?? [];
+        $this->sipe('minLength', 'setMinLength', $passwordData, $authenticationParameters);
+        $this->sipe('requireLowercase', 'setRequireLowercase', $passwordData, $authenticationParameters);
+        $this->sipe('requireUppercase', 'setRequireUppercase', $passwordData, $authenticationParameters);
+        $this->sipe('requireSpecialChar', 'setRequireSpecialChar', $passwordData, $authenticationParameters);
+        $this->sipe('requireNumber', 'setRequireNumber', $passwordData, $authenticationParameters);
+
+        $loginData = $data['login'] ?? [];
+        $this->sipe('helpMessage', 'setHelpMessage', $loginData, $authenticationParameters);
+        $this->sipe('changePassword', 'setChangePassword', $loginData, $authenticationParameters);
+        $this->sipe('internalAccount', 'setInternalAccount', $loginData, $authenticationParameters);
+        $this->sipe('showClientIp', 'setShowClientIp', $loginData, $authenticationParameters);
+        $this->sipe('redirectAfterLoginOption', 'setRedirectAfterLoginOption', $loginData, $authenticationParameters);
+        $this->sipe('redirectAfterLoginUrl', 'setRedirectAfterLoginUrl', $loginData, $authenticationParameters);
 
         return $authenticationParameters;
     }
