@@ -7,6 +7,7 @@
 // Modal
 // ---
 
+// @deprecated
 .tags-list {
     list-style-type: none;
     margin: 0;
@@ -47,6 +48,7 @@
     }
 }
 
+// @deprecated
 .tag-typehead {
     margin-bottom: $component-margin-bottom;
 
@@ -100,8 +102,8 @@
         .btn-link {
             border: none;
             padding: 0;
-            //color: $label-color;
-            margin-left: $icon-text-spacer;
+            color: $badge-color;
+            margin-left: map-get($spacers, 2);
         }
     }
 
@@ -110,13 +112,10 @@
 
         .btn {
             margin-top: $dropdown-padding-y;
-
-            .fa {
-                margin-right: $icon-text-spacer; // because of an ugly rule on `.dropdown-menu .fa`
-            }
         }
     }
 
+    // menu
     .tags {
         display: flex;
         flex-direction: row;
@@ -137,12 +136,8 @@
         height: 100%;
         display: block;
         text-align: left;
-        border-radius: $border-radius;
-        padding: 5px;
-
-        .label {
-            margin-right: 5px;
-        }
+        border-radius: $border-radius-sm;
+        padding: map-get($spacers, 2);
 
         .tag-description {
             text-align: justify;
@@ -151,7 +146,7 @@
 
         &:focus,
         &:hover {
-            background: #efefef;
+            background: var(--#{$prefix}tertiary-bg);
         }
     }
 }

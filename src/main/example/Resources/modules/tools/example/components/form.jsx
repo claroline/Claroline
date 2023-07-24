@@ -80,6 +80,14 @@ const ExampleForm = (props) =>
                   displayed: (data) => !!data.boolean
                 }
               ]
+            }, {
+              name: 'tags',
+              label: 'Tags',
+              type: 'tag',
+              help: [
+                'This field comes from a plugin.',
+                'It will simply disappear if the plugin is disabled.'
+              ]
             }
           ]
         }, {

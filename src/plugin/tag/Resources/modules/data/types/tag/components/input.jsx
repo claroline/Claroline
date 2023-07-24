@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
+import React, {Component, forwardRef} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import omit from 'lodash/omit'
 
 import {implementPropTypes} from '#/main/app/prop-types'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {makeCancelable, url} from '#/main/app/api'
 import {param} from '#/main/app/config'
 import {toKey} from '#/main/core/scaffolding/text'
-import {Overlay} from '#/main/app/overlays/components/overlay'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {CallbackButton} from '#/main/app/buttons/callback'
@@ -16,18 +16,19 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 import {MODAL_TAGS} from '#/plugin/tag/modals/tags'
 import {Tag as TagTypes} from '#/plugin/tag/data/types/tag/prop-types'
+import {Menu, MenuOverlay} from '#/main/app/overlays/menu'
 
 const TagPreview = props =>
   <CallbackButton
     className="tag-preview"
     callback={props.select}
   >
-    <span className="badge text-bg-primary">{props.name}</span>
+    <span className="badge text-bg-primary me-1">{props.name}</span>
 
     {transChoice('count_elements', props.elements, {count: props.elements})}
 
     {props.meta.description &&
-      <div className="tag-description">
+      <div className="tag-description mt-1">
         {props.meta.description}
       </div>
     }
@@ -37,8 +38,12 @@ implementPropTypes(TagPreview, TagTypes, {
   select: T.func.isRequired
 })
 
-const TagsList = props =>
-  <div className="dropdown-menu dropdown-menu-full">
+const TagsList = forwardRef((props, ref) =>
+  <div
+    {...omit(props, 'isFetching', 'currentTag', 'tags', 'select', 'canCreate', 'create')}
+    className={classes('dropdown-menu-full', props.className)}
+    ref={ref}
+  >
     {props.isFetching &&
       <ContentLoader />
     }
@@ -58,9 +63,9 @@ const TagsList = props =>
 
     {props.canCreate &&
       <Button
-        className="btn btn-outline-primary w-100"
+        className="w-100"
+        variant="btn"
         type={CALLBACK_BUTTON}
-        icon="fa fa-fw fa-plus"
         label={trans('create-named-tag', {tagName: props.currentTag}, 'actions')}
         callback={props.create}
         primary={true}
@@ -68,8 +73,10 @@ const TagsList = props =>
       />
     }
   </div>
+)
 
 TagsList.propTypes = {
+  className: T.string,
   currentTag: T.string,
   isFetching: T.bool,
   tags: T.arrayOf(T.shape(
@@ -257,7 +264,7 @@ class TagInput extends Component {
 
           <div className="input-group-btn">
             <Button
-              className="btn"
+              className="btn btn-outline-secondary"
               type={MODAL_BUTTON}
               icon="fa fa-fw fa-tags"
               label={trans('add-tags', {}, 'actions')}
@@ -273,14 +280,15 @@ class TagInput extends Component {
           </div>
         </div>
 
-        <Overlay
+        <MenuOverlay
+          id={`${this.props.id}-search-menu`}
           show={this.state.listOpened}
-          onHide={this.close}
-          rootClose={true}
-          container={this.input}
-          placement="bottom"
+          onToggle={this.close}
         >
-          <TagsList
+          <Menu
+            align="end"
+            as={TagsList}
+
             currentTag={this.state.currentTag}
             isFetching={this.state.isFetching}
             tags={this.state.results}
@@ -288,7 +296,7 @@ class TagInput extends Component {
             create={this.create}
             canCreate={param('canCreateTags')}
           />
-        </Overlay>
+        </MenuOverlay>
       </div>
     )
   }
