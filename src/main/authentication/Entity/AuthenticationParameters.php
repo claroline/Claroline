@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AuthenticationParameters
 {
+    use Id;
     public const DEFAULT_REDIRECT_OPTION = 'LAST';
 
     public const REDIRECT_OPTIONS = [
@@ -20,8 +21,6 @@ class AuthenticationParameters
         'URL' => 'URL',
         'WORKSPACE_TAG' => 'WORKSPACE_TAG',
     ];
-
-    use Id;
 
     /**
      * @ORM\Column(type="integer")

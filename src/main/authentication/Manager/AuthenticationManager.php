@@ -18,7 +18,7 @@ class AuthenticationManager
     {
         $parameters = $this->om->getRepository(AuthenticationParameters::class)->findOneBy([], ['id' => 'DESC']);
 
-        if ($parameters === null) {
+        if (null === $parameters) {
             $parameters = new AuthenticationParameters();
         }
 
