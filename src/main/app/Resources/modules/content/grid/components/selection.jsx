@@ -61,7 +61,7 @@ class GridSelection extends Component {
           />
         }
 
-        <ul className="list-group" role="listbox">
+        <ul className="list-group list-group-flush" role="listbox">
           {filteredItems.map((type) => {
             let selectAction
             if (this.props.selectAction) {

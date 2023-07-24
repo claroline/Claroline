@@ -47,7 +47,7 @@ class UrlInput extends PureComponent {
             type={CALLBACK_BUTTON}
             tooltip="left"
             label={trans('clipboard_copy')}
-            className="btn"
+            className="btn btn-outline-secondary"
             icon="fa fa-fw fa-clipboard"
             callback={this.copyToClipboard}
           />
