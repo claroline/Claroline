@@ -36,7 +36,7 @@ class AuthenticationParametersSubscriber implements EventSubscriberInterface
         $authenticationParameters = $this->authenticationManager->getParameters();
         $serializedParameters = $this->serializer->serialize($authenticationParameters);
         $event->setResponse([
-            'authentication' => $serializedParameters
+            'authentication' => $serializedParameters,
         ]);
     }
 }
