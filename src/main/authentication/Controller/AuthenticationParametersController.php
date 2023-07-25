@@ -34,6 +34,7 @@ class AuthenticationParametersController extends AbstractSecurityController
         $this->authorization = $authorization;
     }
 
+
     /**
      * @Route("/authentication", name="apiv2_authentication_parameters_update", methods={"PUT"})
      *
@@ -45,16 +46,11 @@ class AuthenticationParametersController extends AbstractSecurityController
         $this->canOpenAdminTool('main_settings');
 
         $data = $this->decodeRequest($request);
-        $passwordData = $data['password'] ?? [];
-        $loginData = $data['login'] ?? [];
         $authenticationParameters = $this->authenticationManager->getParameters();
-        $authenticationParametersUpdate = $this->crud->update($authenticationParameters, ['password' => $passwordData, 'login' => $loginData], [Crud::THROW_EXCEPTION]);
+        $authenticationParametersUpdate = $this->crud->update($authenticationParameters, $data, [Crud::THROW_EXCEPTION]);
 
         $serializedParameters = $this->serializer->serialize($authenticationParametersUpdate);
 
-        return new JsonResponse([
-            'password' => $serializedParameters['password'],
-            'login' => $serializedParameters['login'],
-        ]);
+        return new JsonResponse($serializedParameters);
     }
 }

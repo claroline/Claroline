@@ -37,20 +37,18 @@ class AuthenticationParametersSerializer
 
     public function deserialize(array $data, AuthenticationParameters $authenticationParameters): AuthenticationParameters
     {
-        $passwordData = $data['password'] ?? [];
-        $this->sipe('minLength', 'setMinLength', $passwordData, $authenticationParameters);
-        $this->sipe('requireLowercase', 'setRequireLowercase', $passwordData, $authenticationParameters);
-        $this->sipe('requireUppercase', 'setRequireUppercase', $passwordData, $authenticationParameters);
-        $this->sipe('requireSpecialChar', 'setRequireSpecialChar', $passwordData, $authenticationParameters);
-        $this->sipe('requireNumber', 'setRequireNumber', $passwordData, $authenticationParameters);
+        $this->sipe('password.minLength', 'setMinLength', $data, $authenticationParameters);
+        $this->sipe('password.requireLowercase', 'setRequireLowercase', $data, $authenticationParameters);
+        $this->sipe('password.requireUppercase', 'setRequireUppercase', $data, $authenticationParameters);
+        $this->sipe('password.requireSpecialChar', 'setRequireSpecialChar', $data, $authenticationParameters);
+        $this->sipe('password.requireNumber', 'setRequireNumber', $data, $authenticationParameters);
 
-        $loginData = $data['login'] ?? [];
-        $this->sipe('helpMessage', 'setHelpMessage', $loginData, $authenticationParameters);
-        $this->sipe('changePassword', 'setChangePassword', $loginData, $authenticationParameters);
-        $this->sipe('internalAccount', 'setInternalAccount', $loginData, $authenticationParameters);
-        $this->sipe('showClientIp', 'setShowClientIp', $loginData, $authenticationParameters);
-        $this->sipe('redirectAfterLoginOption', 'setRedirectAfterLoginOption', $loginData, $authenticationParameters);
-        $this->sipe('redirectAfterLoginUrl', 'setRedirectAfterLoginUrl', $loginData, $authenticationParameters);
+        $this->sipe('login.helpMessage', 'setHelpMessage', $data, $authenticationParameters);
+        $this->sipe('login.changePassword', 'setChangePassword', $data, $authenticationParameters);
+        $this->sipe('login.internalAccount', 'setInternalAccount', $data, $authenticationParameters);
+        $this->sipe('login.showClientIp', 'setShowClientIp', $data, $authenticationParameters);
+        $this->sipe('login.redirectAfterLoginOption', 'setRedirectAfterLoginOption', $data, $authenticationParameters);
+        $this->sipe('login.redirectAfterLoginUrl', 'setRedirectAfterLoginUrl', $data, $authenticationParameters);
 
         return $authenticationParameters;
     }

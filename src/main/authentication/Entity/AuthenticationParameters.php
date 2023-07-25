@@ -25,73 +25,57 @@ class AuthenticationParameters
     /**
      * @ORM\Column(type="integer")
      */
-    private int $minLength;
+    private int $minLength = 0;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $requireLowercase;
+    private bool $requireLowercase = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $requireUppercase;
+    private bool $requireUppercase = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $requireSpecialChar;
+    private bool $requireSpecialChar = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $requireNumber;
+    private bool $requireNumber = false;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private ?string $helpMessage;
+    private ?string $helpMessage = null;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $changePassword;
+    private bool $changePassword = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $internalAccount;
+    private bool $internalAccount = true;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private bool $showClientIp;
+    private bool $showClientIp = false;
 
     /**
      * @ORM\Column(type="string")
      */
-    private string $redirectAfterLoginOption;
+    private string $redirectAfterLoginOption = self::DEFAULT_REDIRECT_OPTION;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
-    private ?string $redirectAfterLoginUrl;
-
-    public function __construct()
-    {
-        $this->minLength = 0;
-        $this->requireLowercase = false;
-        $this->requireUppercase = false;
-        $this->requireSpecialChar = false;
-        $this->requireNumber = false;
-
-        $this->helpMessage = null;
-        $this->changePassword = true;
-        $this->internalAccount = true;
-        $this->showClientIp = false;
-        $this->redirectAfterLoginOption = self::DEFAULT_REDIRECT_OPTION;
-        $this->redirectAfterLoginUrl = null;
-    }
+    private ?string $redirectAfterLoginUrl = null;
 
     public function getMinLength(): int
     {

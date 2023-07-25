@@ -20,6 +20,8 @@ class AuthenticationManager
 
         if (null === $parameters) {
             $parameters = new AuthenticationParameters();
+            $this->om->persist($parameters);
+            $this->om->flush();
         }
 
         return $parameters;

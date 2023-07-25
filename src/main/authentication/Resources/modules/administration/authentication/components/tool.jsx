@@ -74,13 +74,13 @@ const AuthenticationTool = (props) => {
                 name: 'login.redirectAfterLoginUrl',
                 type: 'string',
                 label: trans('redirect_after_login_url'),
-                displayed: (data) => data.login.redirectAfterLoginOption === 'URL',
+                displayed: (data) => data && data.login && data.login.redirectAfterLoginOption === 'URL',
                 hideLabel: true
               }, {
                 name: 'workspace.default_tag',
                 label: trans('default_workspace_tag'),
                 type: 'string',
-                displayed: (data) => data.login.redirectAfterLoginOption === 'WORKSPACE_TAG',
+                displayed: (data) => data && data.login && data.login.redirectAfterLoginOption === 'WORKSPACE_TAG',
                 hideLabel: true
               }]
             }
