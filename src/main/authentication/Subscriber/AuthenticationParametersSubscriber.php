@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-
 class AuthenticationParametersSubscriber implements EventSubscriberInterface
 {
     private PlatformConfigurationHandler $config;
