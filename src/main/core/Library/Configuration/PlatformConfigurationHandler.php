@@ -60,7 +60,11 @@ class PlatformConfigurationHandler
             $forwarded = $request && $request->headers->get('X-Forwarded-For') ? $request->headers->get('X-Forwarded-For') : ''; // I can only get trusted proxies if I use symfony getClientIps()
             $domains = ArrayUtils::get($this->parameters, 'domains');
             if (!empty($domains) && $ip) {
-                $forwardedList = explode(', ', $forwarded);
+                $forwardedList = [];
+                if (!empty($forwarded)) {
+                    $forwardedList = explode(', ', $forwarded);
+                }
+
                 $callerDomain = null;
                 foreach ($domains as $domain) {
                     if ((empty($domain['ips']) || in_array($ip, $domain['ips'])) && (empty($domain['xForwardedFor']) || empty(array_diff($forwardedList, $domain['xForwardedFor'])))) {
@@ -126,7 +130,7 @@ class PlatformConfigurationHandler
         $newDefault = $config->getDefaultParameters();
         $newDefaultClass = get_class($config);
 
-        //check if the parameter already exists to avoid overriding stuff by mistake
+        // check if the parameter already exists to avoid overriding stuff by mistake
         foreach ($this->defaultConfigs as $defaultConfig) {
             $duplicates = array_intersect_key($defaultConfig, $newDefault);
 
