@@ -39,7 +39,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
+ *
  * @ORM\Table(name="claro_workspace", indexes={
+ *
  *     @ORM\Index(name="name_idx", columns={"entity_name"})
  * })
  */
@@ -68,6 +70,7 @@ class Workspace implements IdentifiableInterface
 
     /**
      * @Gedmo\Slug(fields={"code"})
+     *
      * @ORM\Column(length=128, unique=true)
      *
      * @var string
@@ -87,6 +90,7 @@ class Workspace implements IdentifiableInterface
      *     mappedBy="workspace",
      *     cascade={"persist", "merge"}
      * )
+     *
      * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var OrderedTool[]|ArrayCollection
@@ -113,6 +117,7 @@ class Workspace implements IdentifiableInterface
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     cascade={"persist"}
      * )
+     *
      * @ORM\JoinColumn(name="default_role_id", onDelete="SET NULL")
      *
      * @var Role
@@ -177,6 +182,7 @@ class Workspace implements IdentifiableInterface
      *     inversedBy="workspace",
      *     cascade={"persist"}
      * )
+     *
      * @ORM\JoinColumn(name="options_id", onDelete="SET NULL", nullable=true)
      *
      * @var WorkspaceOptions
@@ -207,7 +213,7 @@ class Workspace implements IdentifiableInterface
      *
      * @ORM\Column(type="json", nullable=true)
      */
-    private $successCondition = null;
+    private $successCondition;
 
     /**
      * @ORM\ManyToMany(
@@ -219,7 +225,7 @@ class Workspace implements IdentifiableInterface
      */
     private Collection $organizations;
 
-    //not mapped. Used for creation
+    // not mapped. Used for creation
     private $workspaceModel;
 
     /**
@@ -382,7 +388,7 @@ class Workspace implements IdentifiableInterface
     /**
      * @deprecated
      */
-    public function setMaxTeams(?int $maxTeams = null): void
+    public function setMaxTeams(int $maxTeams = null): void
     {
         $this->maxTeams = $maxTeams;
     }
@@ -455,7 +461,7 @@ class Workspace implements IdentifiableInterface
     /**
      * @deprecated
      */
-    public function setDefaultRole(?Role $role = null)
+    public function setDefaultRole(Role $role = null)
     {
         $this->defaultRole = $role;
     }
@@ -502,7 +508,7 @@ class Workspace implements IdentifiableInterface
         return $this->contactEmail;
     }
 
-    public function setContactEmail(?string $email = null)
+    public function setContactEmail(string $email = null)
     {
         $this->contactEmail = $email;
     }
@@ -546,7 +552,7 @@ class Workspace implements IdentifiableInterface
         return $this->estimatedDuration;
     }
 
-    public function setEstimatedDuration(?int $estimatedDuration = null)
+    public function setEstimatedDuration(int $estimatedDuration = null)
     {
         $this->estimatedDuration = $estimatedDuration;
     }

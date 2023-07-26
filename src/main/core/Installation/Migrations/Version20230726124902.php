@@ -14,17 +14,17 @@ final class Version20230726124902 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_workspace 
             ADD estimatedDuration INT DEFAULT NULL
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_workspace 
             DROP estimatedDuration
-        ");
+        ');
     }
 }

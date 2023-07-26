@@ -57,7 +57,7 @@ class ResourceEvaluationListExporter extends AbstractEvaluationListExporter
                 'name' => 'estimatedDuration',
                 'type' => 'number',
                 'description' => $this->translator->trans('The resource estimated duration', [], 'schema'),
-            ]
+            ],
         ]);
 
         return $schema;

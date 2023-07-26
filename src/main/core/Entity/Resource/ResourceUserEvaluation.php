@@ -20,21 +20,25 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  * There is only one for a user and a resource.
  *
  * @ORM\Entity
+ *
  * @ORM\Table(
  *     name="claro_resource_user_evaluation",
  *     uniqueConstraints={
+ *
  *         @ORM\UniqueConstraint(
  *             name="resource_user_evaluation",
  *             columns={"resource_node", "user_id"}
  *         )
  *     }
  * )
+ *
  * @DoctrineAssert\UniqueEntity({"resourceNode", "user"})
  */
 class ResourceUserEvaluation extends AbstractUserEvaluation
 {
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     *
      * @ORM\JoinColumn(name="resource_node", onDelete="CASCADE")
      *
      * @var ResourceNode
