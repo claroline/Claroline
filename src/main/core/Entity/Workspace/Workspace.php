@@ -232,6 +232,13 @@ class Workspace implements IdentifiableInterface
      */
     private $shortcuts;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int
+     */
+    protected $estimatedDuration;
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -532,5 +539,15 @@ class Workspace implements IdentifiableInterface
         if ($this->shortcuts->contains($shortcuts)) {
             $this->shortcuts->removeElement($shortcuts);
         }
+    }
+
+    public function getEstimatedDuration(): ?int
+    {
+        return $this->estimatedDuration;
+    }
+
+    public function setEstimatedDuration(?int $estimatedDuration = null)
+    {
+        $this->estimatedDuration = $estimatedDuration;
     }
 }

@@ -91,6 +91,9 @@ class WorkspaceSerializer
                     // move outside meta
                     'model' => $workspace->isModel(),
                 ],
+                'evaluation' => [
+                    'estimatedDuration' => $workspace->getEstimatedDuration(),
+                ],
             ];
         }
 
@@ -128,6 +131,7 @@ class WorkspaceSerializer
             ],
             'evaluation' => [
                 'successCondition' => $workspace->getSuccessCondition(),
+                'estimatedDuration' => $workspace->getEstimatedDuration(),
             ],
         ];
 
@@ -384,6 +388,7 @@ class WorkspaceSerializer
 
         if (isset($data['evaluation'])) {
             $this->sipe('evaluation.successCondition', 'setSuccessCondition', $data, $workspace);
+            $this->sipe('evaluation.estimatedDuration', 'setEstimatedDuration', $data, $workspace);
         }
 
         if (array_key_exists('organizations', $data)) {

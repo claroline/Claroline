@@ -94,6 +94,15 @@ class ResourceUserEvaluation extends AbstractUserEvaluation
         return false;
     }
 
+    public function getEstimatedDuration(): ?int
+    {
+        if ($this->resourceNode) {
+            return $this->resourceNode->getEstimatedDuration();
+        }
+
+        return 0;
+    }
+
     public function isEvaluated(): bool
     {
         if ($this->resourceNode) {

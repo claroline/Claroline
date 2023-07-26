@@ -346,6 +346,13 @@ const WorkspaceFormComponent = (props) =>
         title: trans('evaluation'),
         fields: [
           {
+            name: 'evaluation.estimatedDuration',
+            label: trans('estimated_duration'),
+            type: 'number',
+            options: {
+              unit: trans('minutes')
+            }
+          },{
             name: 'evaluation._enableSuccess',
             type: 'boolean',
             label: trans('enable_success_condition', {}, 'workspace'),
