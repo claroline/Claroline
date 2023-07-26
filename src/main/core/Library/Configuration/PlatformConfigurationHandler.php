@@ -130,7 +130,7 @@ class PlatformConfigurationHandler
         $newDefault = $config->getDefaultParameters();
         $newDefaultClass = get_class($config);
 
-        //check if the parameter already exists to avoid overriding stuff by mistake
+        // check if the parameter already exists to avoid overriding stuff by mistake
         foreach ($this->defaultConfigs as $defaultConfig) {
             $duplicates = array_intersect_key($defaultConfig, $newDefault);
 
