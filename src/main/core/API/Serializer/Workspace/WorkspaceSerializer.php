@@ -90,7 +90,7 @@ class WorkspaceSerializer
                 'meta' => [
                     // move outside meta
                     'model' => $workspace->isModel(),
-                ]
+                ],
             ];
         }
 
