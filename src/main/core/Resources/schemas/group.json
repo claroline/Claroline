@@ -11,6 +11,11 @@
       "description": "The group name",
       "minLength": 1
     },
+    "code": {
+      "type": "string",
+      "description": "The group code",
+      "minLength": 1
+    },
     "meta": {
       "type": "object",
       "properties": {
