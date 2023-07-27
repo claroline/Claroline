@@ -90,10 +90,7 @@ class WorkspaceSerializer
                 'meta' => [
                     // move outside meta
                     'model' => $workspace->isModel(),
-                ],
-                'evaluation' => [
-                    'estimatedDuration' => $workspace->getEstimatedDuration(),
-                ],
+                ]
             ];
         }
 

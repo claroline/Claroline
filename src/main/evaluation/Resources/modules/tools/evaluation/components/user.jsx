@@ -92,7 +92,7 @@ class EvaluationUser extends Component {
                   (get(this.props.workspaceEvaluation, 'score') ? number((get(this.props.workspaceEvaluation, 'score') / get(this.props.workspaceEvaluation, 'scoreMax')) * 100) : '?') + ' / 100'
                 ]
               ].filter(value => !!value)}
-              estimatedDuration={get(this.props, 'workspace.evaluation.estimatedDuration')}
+              estimatedDuration={get(this.props, 'workspace.estimatedDuration')}
             />
 
             <div className="mb-3">
