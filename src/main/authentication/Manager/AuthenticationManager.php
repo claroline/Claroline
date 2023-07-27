@@ -18,10 +18,8 @@ class AuthenticationManager
     {
         $parameters = $this->om->getRepository(AuthenticationParameters::class)->findOneBy([], ['id' => 'DESC']);
 
-        if (null === $parameters) {
+        if (empty($parameters)) {
             $parameters = new AuthenticationParameters();
-            $this->om->persist($parameters);
-            $this->om->flush();
         }
 
         return $parameters;
