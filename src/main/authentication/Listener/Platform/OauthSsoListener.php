@@ -23,7 +23,6 @@ class OauthSsoListener
 
     public function onConfig(GenericDataEvent $event)
     {
-
         $event->setResponse([
             'authentication' => [
                 'sso' => array_map(function (array $sso) {
