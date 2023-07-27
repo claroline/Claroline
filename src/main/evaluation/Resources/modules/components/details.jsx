@@ -58,7 +58,7 @@ const EvaluationDetails = (props) => {
             </li>
           }
 
-          {successScore &&
+          {!!successScore &&
             <li className="list-group-item">
               {trans('score_to_pass')}
               <span className="value">{successScore} ({props.successScore} %)</span>

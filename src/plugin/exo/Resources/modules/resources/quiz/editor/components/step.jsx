@@ -57,6 +57,7 @@ const EditorStep = props =>
     >
       {0 === props.items.length &&
         <ContentPlaceholder
+          className="mb-3"
           size="lg"
           title={trans('no_item_info', {}, 'quiz')}
         />

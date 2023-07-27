@@ -81,6 +81,10 @@ const ExampleForm = (props) =>
                 }
               ]
             }, {
+              name: 'url',
+              label: 'URL',
+              type: 'url'
+            }, {
               name: 'tags',
               label: 'Tags',
               type: 'tag',

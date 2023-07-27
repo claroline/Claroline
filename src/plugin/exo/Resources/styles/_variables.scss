@@ -10,53 +10,53 @@
 // Base & utilities
 // ---
 
-$quiz-container-width:         $content-md;
+$quiz-container-width:         $content-md !default;
 // only applied in paper, not in list
 // permits to stick box to the border (absorb panel padding)
-$score-margin:                 (-$panel-body-padding) (-$panel-body-padding) $panel-body-padding $panel-body-padding;
+$score-margin:                 (-$panel-body-padding) (-$panel-body-padding) $panel-body-padding $panel-body-padding !default;
 
 
 // -
 // Answers
 // ---
 
-$answer-item-bg:            var(--#{$prefix}secondary-bg-subtle) !default;
-$answer-item-border:        $answer-item-bg;
-$answer-item-inner-border:  var(--#{$prefix}secondary-border-color);
+$answer-item-bg:            var(--#{$prefix}secondary-bg) !default;
+$answer-item-border:        $answer-item-bg !default;
+$answer-item-inner-border:  var(--#{$prefix}secondary-border-color) !default;
 $answer-item-border-radius: var(--#{$prefix}border-radius) !default;
-$answer-item-padding:       10px;
-$answer-item-margin-bottom: 10px;
-$answer-item-box-shadow:    none;
+$answer-item-padding:       10px !default;
+$answer-item-margin-bottom: 10px !default;
+$answer-item-box-shadow:    none !default;
 
-$answer-item-hover-bg: var(--#{$prefix}secondary-bg);
-$answer-item-hover-border-color: $answer-item-hover-bg;
+$answer-item-hover-bg: var(--#{$prefix}secondary-bg) !default;
+$answer-item-hover-border-color: $answer-item-hover-bg !default;
 
 // highlight expected answers in editor
 $expected-answer-color:     inherit; // do not change text color in editor for readability
-$expected-answer-border:    $state-success-border;
-$expected-answer-bg:        $state-success-bg;
+$expected-answer-border:    $state-success-border !default;
+$expected-answer-bg:        $state-success-bg !default;
 
 // highlight unexpected answers in editor
 $unexpected-answer-color:   inherit; // do not change text color in editor for readability
-$unexpected-answer-border:  $state-danger-border;
-$unexpected-answer-bg:      $state-danger-bg;
+$unexpected-answer-border:  $state-danger-border !default;
+$unexpected-answer-bg:      $state-danger-bg !default;
 
 // highlight correct answers given by the user (in feedback / paper)
-$correct-answer-color:      $state-success-text;
-$correct-answer-border:     $expected-answer-border;
-$correct-answer-bg:         $expected-answer-bg;
+$correct-answer-color:      $state-success-text !default;
+$correct-answer-border:     $expected-answer-border !default;
+$correct-answer-bg:         $expected-answer-bg !default;
 
 // highlight incorrect answers given by the user (in feedback / paper)
-$incorrect-answer-color:    $state-danger-text;
-$incorrect-answer-border:   $unexpected-answer-border;
-$incorrect-answer-bg:       $unexpected-answer-bg;
+$incorrect-answer-color:    $state-danger-text !default;
+$incorrect-answer-border:   $unexpected-answer-border !default;
+$incorrect-answer-bg:       $unexpected-answer-bg !default;
 
 // highlight user selected answer (also used to show expected answer in papers)
-$selected-answer-color:     $state-selected-text;
-$selected-answer-border:    $state-selected-border;
-$selected-answer-bg:        $state-selected-bg;
+$selected-answer-color:     $state-selected-text !default;
+$selected-answer-border:    $state-selected-border !default;
+$selected-answer-bg:        $state-selected-bg !default;
 
 // highlight unanswered questions in stats (in paper)
-$unanswered-answer-color:   var(--#{$prefix}secondary-color);
-$unanswered-answer-border:  var(--#{$prefix}secondary-border-color);
-$unanswered-answer-bg:      var(--#{$prefix}secondary-bg);
+$unanswered-answer-color:   var(--#{$prefix}secondary-color) !default;
+$unanswered-answer-border:  var(--#{$prefix}secondary-border-color) !default;
+$unanswered-answer-bg:      var(--#{$prefix}secondary-bg) !default;

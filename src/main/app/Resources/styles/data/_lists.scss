@@ -113,14 +113,6 @@
         height: $input-height-lg;
         padding: $padding-large-vertical $padding-large-horizontal;
     }
-
-    .open {
-        .list-header-btn {
-            box-shadow: none;
-            background: $list-controls-active-bg;
-            color: $list-controls-active-color;
-        }
-    }
 }
 
 .list-selected {
@@ -128,7 +120,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background: $list-controls-bg;
+    background: var(--#{$prefix}secondary-bg);
 
     .list-selected-label {
         font-weight: $font-weight-bold;
@@ -156,14 +148,14 @@ button.list-primary-action {
 }
 
 .list-options {
-    background: $list-controls-bg;
+    background: var(--#{$prefix}secondary-bg);
     display: flex;
     align-items: flex-end;
     margin-left: auto; // force right alignment if no search
 }
 
 .list-toolbar {
-    background: $list-controls-bg;
+    background: var(--#{$prefix}secondary-bg);
     display: flex;
     align-items: flex-end;
 }
@@ -178,11 +170,8 @@ button.list-primary-action {
 
     .count {
         padding: $padding-base-vertical $padding-base-horizontal;
-        //color: $list-controls-color;
-        //background: $list-controls-bg;
         border: 1px solid transparent;
-        font-weight: 400;
-        //border-radius: $border-radius;
+        font-weight: $font-weight-bolder;
     }
 
     .pagination-container {
@@ -203,7 +192,7 @@ button.list-primary-action {
 
     .list-empty-icon {
         font-size: 120px;
-        color: #ddd;
+        color: var(--#{$prefix}secondary-color);
         margin: 15px;
     }
 
