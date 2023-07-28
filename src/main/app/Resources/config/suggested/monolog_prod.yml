@@ -5,6 +5,7 @@ monolog:
             action_level: error
             handler:      nested
             excluded_http_codes: [403, 404, 405, 422]
+            buffer_size:  30
 
         nested:
             type:  stream
