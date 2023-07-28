@@ -152,7 +152,7 @@ $top-bar-max-width:           100%; // max width for the top bar content (do not
 $top-bar-height:              60px + $top-bar-border-bottom-size !default;
 
 $top-bar-brand-color:           $top-bar-color !default;
-$top-bar-brand-secondary-color: $primary !default;
+$top-bar-brand-secondary-color: color-contrast($menu, $primary, $top-bar-brand-color) !default;
 $top-bar-brand-font-size:       $font-size-lg !default;
 $top-bar-brand-font-weight:     $font-weight-medium !default;
 
@@ -217,7 +217,7 @@ $page-action-primary-color:  color-contrast($primary);
 $page-action-primary-bg:     $primary;
 $page-action-primary-border: transparent;
 
-$page-action-default-color:  $gray-dark;
+$page-action-default-color:  $body-color;
 $page-action-default-bg:     transparent;
 $page-action-default-border: transparent;
 

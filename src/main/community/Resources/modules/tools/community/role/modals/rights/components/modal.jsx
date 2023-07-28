@@ -46,11 +46,14 @@ const ToolRights = (props) => {
                   className="checkbox-cell"
                 >
                   {!isUndefined(props.rights[toolName][toolPerm]) &&
-                    <input
-                      type="checkbox"
-                      checked={get(props.rights, `${toolName}.${toolPerm}`, false)}
-                      onChange={() => props.update(toolName, toolPerm, !get(props.rights, `${toolName}.${toolPerm}`, false))}
-                    />
+                    <div className="form-switch">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        checked={get(props.rights, `${toolName}.${toolPerm}`, false)}
+                        onChange={() => props.update(toolName, toolPerm, !get(props.rights, `${toolName}.${toolPerm}`, false))}
+                      />
+                    </div>
                   }
                 </td>
               ))}
@@ -69,9 +72,11 @@ const RightsModal = props =>
     title={trans('rights')}
     subtitle={props.title}
     onEntering={() => props.loadRights(props.rights)}
+    size="xl"
   >
     <Form
       name={selectors.STORE_NAME}
+      flush={true}
     >
       <ToolRights
         rights={props.formData}

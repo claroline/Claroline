@@ -65,7 +65,7 @@
     "no_started_resource_help": "Parcourez vos ressources pour voir apparaître votre progression dans chacune d'elles ici.",
     "show_resource_header" : "Afficher l'entête de la ressource",
 
-    "resourceOpen": "La resouce resourceName a été ouverte par l'utilisateur userName",
+    "resourceOpen": "La ressource resourceName a été ouverte par l'utilisateur userName",
     "resourceEvaluation": "resourceName - statusName : userName est actuellement à l'étape userProgression pour une durée de durationTime sec",
     "resourceScore": "resourceName - statusName : userName a eu un score de currentScore sur scoreMax. Le score min est de scoreMin",
 

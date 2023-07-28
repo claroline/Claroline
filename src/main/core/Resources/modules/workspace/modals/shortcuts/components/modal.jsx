@@ -22,6 +22,7 @@ const ShortcutRow = props =>
         key={`${props.type}-${props.name}-chk`}
         id={`${props.type}-${props.name}-chk`}
         checked={props.checked}
+        switch={true}
         onChange={checked => props.updateChecked(checked)}
       />
     </div>
@@ -79,27 +80,29 @@ class ShortcutsModal extends Component {
         title={trans('add_shortcut')}
         icon="fa fa-fw fa-external-link"
       >
-        {this.props.tools.map(toolName =>
-          <ShortcutRow
-            key={`shortcut-tool-${toolName}`}
-            name={toolName}
-            type="tool"
-            label={trans(toolName, {}, 'tools')}
-            checked={-1 < this.state.selected.findIndex(s => 'tool' === s.type && toolName === s.name)}
-            updateChecked={checked => this.handleSelection(checked, 'tool', toolName)}
-          />
-        )}
+        <div className="list-group list-group-striped">
+          {this.props.tools.map(toolName =>
+            <ShortcutRow
+              key={`shortcut-tool-${toolName}`}
+              name={toolName}
+              type="tool"
+              label={trans(toolName, {}, 'tools')}
+              checked={-1 < this.state.selected.findIndex(s => 'tool' === s.type && toolName === s.name)}
+              updateChecked={checked => this.handleSelection(checked, 'tool', toolName)}
+            />
+          )}
 
-        {this.state.actions.map(action =>
-          <ShortcutRow
-            key={`shortcut-action-${action.name}`}
-            name={action.name}
-            type="action"
-            label={this.getActionLabel(action.name)}
-            checked={-1 < this.state.selected.findIndex(s => 'action' === s.type && action.name === s.name)}
-            updateChecked={checked => this.handleSelection(checked, 'action', action.name)}
-          />
-        )}
+          {this.state.actions.map(action =>
+            <ShortcutRow
+              key={`shortcut-action-${action.name}`}
+              name={action.name}
+              type="action"
+              label={this.getActionLabel(action.name)}
+              checked={-1 < this.state.selected.findIndex(s => 'action' === s.type && action.name === s.name)}
+              updateChecked={checked => this.handleSelection(checked, 'action', action.name)}
+            />
+          )}
+        </div>
 
         <Button
           type={CALLBACK_BUTTON}

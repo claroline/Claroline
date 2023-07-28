@@ -99,21 +99,6 @@
     .btn {
         padding: $data-grid-gutter;
     }
-
-    .dropdown.open {
-        /*.btn {
-            position: relative;
-            background: $gray-lighter;
-            border-color: $dropdown-border;
-            border-bottom-color: $dropdown-bg;
-            box-shadow: $dropdown-menu-box-shadow;
-            background-clip: padding-box;
-        }*/
-    }
-
-    .dropdown-menu {
-        //margin-top: -1px;
-    }
 }
 
 // clickable variant
