@@ -27,5 +27,8 @@
   "timezone": "Timezone",
   "date_format": "m/d/Y",
   "time_format": "H:i",
+  "characters_typed": "character typed",
+  "charsMin_length": "minimum characters",
+  "charsMax_length": "maximum characters",
   "action_confirm_message": "Are you sure you want to do this action?"
 }
