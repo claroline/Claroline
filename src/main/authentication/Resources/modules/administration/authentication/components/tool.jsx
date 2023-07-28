@@ -1,4 +1,5 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
@@ -86,6 +87,15 @@ const AuthenticationTool = (props) => {
               type: 'boolean',
               label: trans('force_password_complexity', {}, 'security'),
               calculated: displayPasswordValidation,
+              onChange: (value) => {
+                if (!value) {
+                  props.update('password.minLength', 0)
+                  props.update('password.requireLowercase', false)
+                  props.update('password.requireUppercase', false)
+                  props.update('password.requireNumber', false)
+                  props.update('password.requireSpecialChar', false)
+                }
+              },
               linked: [
                 {
                   name: 'password.minLength',
@@ -120,6 +130,11 @@ const AuthenticationTool = (props) => {
       ]}
     />
   )
+}
+
+AuthenticationTool.propTypes = {
+  path: T.string.isRequired,
+  update: T.func.isRequired
 }
 
 export {
