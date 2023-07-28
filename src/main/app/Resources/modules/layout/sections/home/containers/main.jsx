@@ -22,7 +22,7 @@ const HomeMain = connect(
     homeData: selectors.homeData(state),
     authenticated: securitySelectors.isAuthenticated(state),
     selfRegistration: configSelectors.param(state, 'selfRegistration'),
-    changePassword: configSelectors.param(state, 'authentication.changePassword')
+    changePassword: configSelectors.param(state, 'authentication.login.changePassword')
   }),
   (dispatch) => ({
     open() {

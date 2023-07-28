@@ -11,7 +11,7 @@ export default (users) => ({
   icon: 'fa fa-fw fa-lock',
   label: trans('change_password'),
   scope: ['object'],
-  displayed: hasPermission('administrate', users[0]) || (param('authentication.changePassword') && hasPermission('edit', users[0])),
+  displayed: hasPermission('administrate', users[0]) || (param('authentication.login.changePassword') && hasPermission('edit', users[0])),
   modal: [MODAL_USER_PASSWORD, {
     user: users[0]
   }],

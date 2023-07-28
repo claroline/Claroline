@@ -67,7 +67,6 @@
   "enable_username": "Use custom usernames",
   "username_enabled_help": "If enabled, users will have a unique identifier that can be used to log in to the platform.",
   "username_disabled_help": "If disabled, the user's email address will be used.",
-  "allow_change_password": "Allow users to change their password",
   "managers": "Managers",
   "user_loading": "We are loading the user..."
 }
