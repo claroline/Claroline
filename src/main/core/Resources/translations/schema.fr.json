@@ -20,9 +20,21 @@
   "The organization code": "Le code de l'organisation",
   "The organization email": "L'adresse email de l'organisation",
 
+  "The resource id or uuid": "L'id de la ressource (uuid/id)",
+  "The resource name": "Le nom de la ressource",
+  "The resource code": "Le code de la ressource",
+  "The resource slug": "Le slug de la ressource",
+  "The evaluation is required": "L'évaluation est requise",
+  "The resource estimated duration": "La durée estimée de la ressource",
+  "The number of openings of the resource": "Le nombre d'ouvertures de la ressource",
+  "The number of attempts for the evaluation": "Le nombre de tentatives pour l'évaluation",
+
+
   "The workspace id or uuid": "L'id de l'espace d'activités (uuid/id)",
   "The workspace name": "Le nom de l'espace d'activités",
   "The workspace code": "Le code de l'espace d'activités",
+  "The workspace slug": "Le slug de l'espace d'activités",
+  "The workspace estimated duration": "La durée estimée de l'espace d'activités",
   "The workspace description": "La description de l'espace d'activités",
   "The workspace is a model": "L'espace d'activités est un modèle",
   "The workspace is a personal workspace": "L'espace d'activités est un espace personnel",

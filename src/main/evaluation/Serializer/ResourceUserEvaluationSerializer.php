@@ -50,6 +50,7 @@ class ResourceUserEvaluationSerializer
             'nbAttempts' => $resourceUserEvaluation->getNbAttempts(),
             'nbOpenings' => $resourceUserEvaluation->getNbOpenings(),
             'required' => $resourceUserEvaluation->isRequired(),
+            'estimatedDuration' => $resourceUserEvaluation->getEstimatedDuration(),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {

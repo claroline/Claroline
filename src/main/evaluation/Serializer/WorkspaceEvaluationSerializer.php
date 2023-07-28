@@ -45,6 +45,7 @@ class WorkspaceEvaluationSerializer
             'scoreMin' => $evaluation->getScoreMin(),
             'scoreMax' => $evaluation->getScoreMax(),
             'progression' => $evaluation->getProgression(),
+            'estimatedDuration' => $evaluation->getEstimatedDuration(),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
