@@ -46,10 +46,10 @@ class ParametersModal extends Component {
           name={selectors.STORE_NAME}
           definition={[
             {
-              className: 'embedded-form-section',
               title: trans('custom'),
               primary: true,
               displayed: !!this.state.customForm,
+              fill: true,
               render: () => createElement(this.state.customForm)
             }, {
               icon: 'fa fa-fw fa-desktop',

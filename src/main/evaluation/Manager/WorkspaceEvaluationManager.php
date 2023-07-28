@@ -100,7 +100,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
         return $evaluation;
     }
 
-    public function updateUserEvaluation(Workspace $workspace, User $user, ?array $data = [], ?\DateTimeInterface $date = null): Evaluation
+    public function updateUserEvaluation(Workspace $workspace, User $user, ?array $data = [], \DateTimeInterface $date = null): Evaluation
     {
         $this->om->startFlushSuite();
 

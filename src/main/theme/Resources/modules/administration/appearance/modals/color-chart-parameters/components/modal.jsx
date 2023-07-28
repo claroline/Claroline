@@ -1,16 +1,28 @@
-import React from 'react'
+import React, {forwardRef} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
+import {Menu} from '#/main/app/overlays/menu'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {CALLBACK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 
 import {selectors} from '#/main/theme/administration/appearance/modals/color-chart-parameters/store/selectors'
 import {ColorChart} from '#/main/theme/color/containers/color-chart'
+
+const ColorMenu = forwardRef((props, ref) =>
+  <div {...omit(props, 'value', 'onChange', 'show', 'close')} ref={ref}>
+    <ColorChart
+      view="selector"
+      noLibrary={true}
+      selected={props.value}
+      onChange={props.onChange}
+    />
+  </div>
+)
 
 const ColorDot = ( props ) => {
   return (
@@ -23,14 +35,11 @@ const ColorDot = ( props ) => {
       opened={props.opened}
       onToggle={props.onClick}
       menu={
-        <div className="dropdown-menu">
-          <ColorChart
-            view={'selector'}
-            noLibrary={true}
-            selected={props.value}
-            onChange={props.onChange}
-          />
-        </div>
+        <Menu
+          as={ColorMenu}
+          value={props.value}
+          onChange={props.onChange}
+        />
       }
     >
       {props.children}
@@ -47,12 +56,10 @@ ColorDot.propTypes = {
   children: T.node
 }
 
-const ColorPalette = ({ formData: { colors = [], openedIndex }, updateProp }) => {
-  let current = null
-
-  if( colors && colors.length > 0 ) {
-    current = colors.map((color, index) => {
-      return (
+const ColorPalette = ({ formData: { colors = [], openedIndex }, updateProp }) =>
+  <>
+    <div className="color-dot-list color-chart-library">
+      {colors && colors.map((color, index) =>
         <div className="color-dot-config" key={index}>
           <ColorDot
             id={`color-${index}`}
@@ -62,8 +69,8 @@ const ColorPalette = ({ formData: { colors = [], openedIndex }, updateProp }) =>
             value={color}
           />
           <Button
-            className="btn"
-            size="xs"
+            variant="btn"
+            size="sm"
             tooltip="bottom"
             label={trans('delete', {}, 'actions')}
             dangerous={true}
@@ -72,29 +79,22 @@ const ColorPalette = ({ formData: { colors = [], openedIndex }, updateProp }) =>
             icon="fa fa-fw fa-trash"
           />
         </div>
-      )
-    })
-  }
+      )}
+    </div>
 
-  return (
-    <div className="color-dot-list color-chart-library">
-      {current}
+    <div className="modal-body">
       <Button
         type={CALLBACK_BUTTON}
-        id={'new-color'}
-        className="color-dot lg"
-        icon="fa fa-fw fa-plus"
-        tooltip="bottom"
-        label={trans('new_color', {}, 'appearance')}
+        id="new-color"
+        className="btn btn-outline-primary w-100"
+        label={trans('add_color', {}, 'appearance')}
         callback={() => {
           updateProp('colors[' + colors.length + ']', '#FFFFFF')
           updateProp('openedIndex', colors.length)
         }}
-      >
-      </Button>
+      />
     </div>
-  )
-}
+  </>
 
 ColorPalette.propTypes = {
   formData: T.shape({
@@ -117,6 +117,7 @@ const ColorChartParametersModal = props => {
     >
       <FormData
         name={selectors.STORE_NAME}
+        flush={true}
         definition={[{
           title: trans('general'),
           primary: true,

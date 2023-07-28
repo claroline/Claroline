@@ -34,7 +34,6 @@ const EditorItem = props =>
         <FormSection
           {...omit(props, 'formName', 'path', 'index', 'item', 'update', 'enableScores')}
           id={props.item.id}
-          className="embedded-form-section"
           icon={
             <Fragment>
               {props.numbering &&

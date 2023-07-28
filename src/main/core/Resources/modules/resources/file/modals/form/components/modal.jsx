@@ -21,6 +21,7 @@ const FileFormModal = props =>
   >
     <FormData
       name={selectors.STORE_NAME}
+      flush={true}
       sections={[
         {
           title: trans('general'),

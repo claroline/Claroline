@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {Alert} from '#/main/app/components/alert'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 const ContentRestriction = props => {
   let title, help
@@ -24,7 +25,7 @@ const ContentRestriction = props => {
       icon={props.icon}
       title={title}
     >
-      {help}
+      <ContentHtml>{help}</ContentHtml>
 
       {props.failed && props.children}
     </Alert>

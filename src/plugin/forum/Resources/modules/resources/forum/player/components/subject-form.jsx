@@ -42,7 +42,7 @@ const SubjectFormWrapper = (props) =>
         }
       </div>
 
-      <div className="user-message-content embedded-form-section">
+      <div className="user-message-content">
         {props.children}
       </div>
 
