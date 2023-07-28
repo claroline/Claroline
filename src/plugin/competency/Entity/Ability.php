@@ -11,7 +11,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\AbilityRepository")
+ *
  * @ORM\Table(name="hevinci_ability")
+ *
  * @BR\UniqueEntity("name")
  */
 class Ability implements \JsonSerializable
@@ -20,27 +22,34 @@ class Ability implements \JsonSerializable
 
     /**
      * @ORM\Id
+     *
      * @ORM\Column(type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @ORM\Column(unique=true)
+     *
      * @Assert\NotBlank
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     *
      * @Assert\NotBlank
+     *
      * @Assert\Range(min="0", max="1000")
      */
     private $minResourceCount = 1;
 
     /**
      * @ORM\Column(type="integer")
+     *
      * @Assert\NotBlank
+     *
      * @Assert\Range(min="0", max="1000")
      */
     private $minEvaluatedResourceCount = 0;
@@ -52,6 +61,7 @@ class Ability implements \JsonSerializable
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     *
      * @ORM\JoinTable(name="hevinci_ability_resource")
      */
     private $resources;
@@ -202,7 +212,7 @@ class Ability implements \JsonSerializable
         });
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
