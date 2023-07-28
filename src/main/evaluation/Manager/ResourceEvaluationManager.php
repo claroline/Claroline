@@ -142,7 +142,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
             $evaluationDuration = $this->computeDuration($resUserEval);
         }
 
-        $resUserEval->setDuration($evaluationDuration + $duration);
+        $resUserEval->setDuration(round($evaluationDuration + $duration));
 
         $this->om->persist($resUserEval);
         $this->om->flush();
@@ -170,7 +170,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
             }
         }
 
-        $resUserEval->setDuration($duration);
+        $resUserEval->setDuration(round($duration));
 
         $this->om->persist($resUserEval);
         $this->om->flush();
