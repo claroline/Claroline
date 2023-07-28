@@ -184,6 +184,7 @@ services:
             - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
+            - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
 
     Claroline\CoreBundle\Listener\Entity\UserListener:
         arguments:

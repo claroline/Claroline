@@ -6,8 +6,7 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
+use Claroline\AuthenticationBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,18 +18,18 @@ class AuthenticationParametersController extends AbstractSecurityController
     use RequestDecoderTrait;
 
     private Crud $crud;
-    private ObjectManager $objectManager;
+    private AuthenticationManager $authenticationManager;
     private SerializerProvider $serializer;
     private AuthorizationCheckerInterface $authorization;
 
     public function __construct(
         Crud $crud,
-        ObjectManager $objectManager,
+        AuthenticationManager $authenticationManager,
         SerializerProvider $serializer,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->crud = $crud;
-        $this->objectManager = $objectManager;
+        $this->authenticationManager = $authenticationManager;
         $this->serializer = $serializer;
         $this->authorization = $authorization;
     }
@@ -46,7 +45,7 @@ class AuthenticationParametersController extends AbstractSecurityController
         $this->canOpenAdminTool('main_settings');
 
         $data = $this->decodeRequest($request);
-        $authenticationParameters = $this->objectManager->getRepository(AuthenticationParameters::class)->findOneBy([]);
+        $authenticationParameters = $this->authenticationManager->getParameters();
         $authenticationParametersUpdate = $this->crud->update($authenticationParameters, $data, [Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(

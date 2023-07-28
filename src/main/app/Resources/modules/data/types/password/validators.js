@@ -4,24 +4,24 @@ import {trans} from '#/main/app/intl'
 function passwordComplexity(value) {
   let error = false
 
-  const minLength = param('authentication.minLength')
+  const minLength = param('authentication.password.minLength')
   if (minLength > 0 && value.length < minLength) {
     error = true
   }
 
-  if (param('authentication.requireLowercase') && !value.match(/[a-z]/)) {
+  if (param('authentication.password.requireLowercase') && !value.match(/[a-z]/)) {
     error = true
   }
 
-  if (param('authentication.requireUppercase') && !value.match(/[A-Z]/)) {
+  if (param('authentication.password.requireUppercase') && !value.match(/[A-Z]/)) {
     error = true
   }
 
-  if (param('authentication.requireNumber') && !value.match(/[0-9]/)) {
+  if (param('authentication.password.requireNumber') && !value.match(/[0-9]/)) {
     error = true
   }
 
-  if (param('authentication.requireSpecialChar') && !value.match(/[^a-zA-Z0-9]/)) {
+  if (param('authentication.password.requireSpecialChar') && !value.match(/[^a-zA-Z0-9]/)) {
     error = true
   }
 

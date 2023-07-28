@@ -9,3 +9,4 @@ imports:
     - { resource: services/serializer.yml }
     - { resource: services/subscriber.yml }
     - { resource: services/voter.yml }
+    - { resource: services/updater.yml }

@@ -24,29 +24,65 @@ const AuthenticationTool = (props) => {
           title: trans('passwordValidate', {}, 'security'),
           fields: [
             {
-              name: 'minLength',
+              name: 'password.minLength',
               type: 'number',
               label: trans('minLength', {}, 'security')
             },
             {
-              name: 'requireLowercase',
+              name: 'password.requireLowercase',
               type: 'boolean',
               label: trans('requireLowercase', {}, 'security')
             },
             {
-              name: 'requireUppercase',
+              name: 'password.requireUppercase',
               type: 'boolean',
               label: trans('requireUppercase', {}, 'security')
             },
             {
-              name: 'requireNumber',
+              name: 'password.requireNumber',
               type: 'boolean',
               label: trans('requireNumber', {}, 'security')
             },
             {
-              name: 'requireSpecialChar',
+              name: 'password.requireSpecialChar',
               type: 'boolean',
               label: trans('requireSpecialChar', {}, 'security')
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-sign-in',
+          title: trans('login'),
+          fields: [
+            {
+              name: 'login.helpMessage',
+              type: 'html',
+              label: trans('message')
+            }, {
+              name: 'login.redirectAfterLoginOption',
+              type: 'choice',
+              label: trans('redirect_after_login_option'),
+              options: {
+                multiple: false,
+                condensed: false,
+                choices: {
+                  'DESKTOP': trans('desktop', {}, 'platform'),
+                  'URL': trans('url', {}, 'platform'),
+                  'WORKSPACE_TAG': trans('workspace_tag', {}, 'platform'),
+                  'LAST': trans('last_page', {}, 'platform')
+                }
+              }, linked: [{
+                name: 'login.redirectAfterLoginUrl',
+                type: 'string',
+                label: trans('redirect_after_login_url'),
+                displayed: (data) => data && data.login && data.login.redirectAfterLoginOption === 'URL',
+                hideLabel: true
+              }, {
+                name: 'workspace.default_tag',
+                label: trans('default_workspace_tag'),
+                type: 'string',
+                displayed: (data) => data && data.login && data.login.redirectAfterLoginOption === 'WORKSPACE_TAG',
+                hideLabel: true
+              }]
             }
           ]
         }

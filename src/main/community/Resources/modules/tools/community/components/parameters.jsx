@@ -119,12 +119,6 @@ const desktopDefinition = () => [
             label: trans('allow_workspace_registration'),
             displayed: (parameters) => get(parameters, 'registration.self', false)
           }, {
-            name: 'registration.auto_logging',
-            type: 'boolean',
-            label: trans('auto_logging_after_registration'),
-            displayed: (parameters) => get(parameters, 'registration.self', false)
-          },
-          {
             name: 'registration.organization_selection',
             type: 'choice',
             label: trans('organizations'),

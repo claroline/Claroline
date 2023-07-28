@@ -17,21 +17,38 @@ class AuthenticationParametersSerializer
     public function serialize(AuthenticationParameters $authenticationParameters): array
     {
         return [
-            'minLength' => $authenticationParameters->getMinLength(),
-            'requireLowercase' => $authenticationParameters->getRequireLowercase(),
-            'requireUppercase' => $authenticationParameters->getRequireUppercase(),
-            'requireSpecialChar' => $authenticationParameters->getRequireSpecialChar(),
-            'requireNumber' => $authenticationParameters->getRequireNumber(),
+            'password' => [
+                'minLength' => $authenticationParameters->getMinLength(),
+                'requireLowercase' => $authenticationParameters->getRequireLowercase(),
+                'requireUppercase' => $authenticationParameters->getRequireUppercase(),
+                'requireSpecialChar' => $authenticationParameters->getRequireSpecialChar(),
+                'requireNumber' => $authenticationParameters->getRequireNumber(),
+            ],
+            'login' => [
+                'helpMessage' => $authenticationParameters->getHelpMessage(),
+                'changePassword' => $authenticationParameters->getChangePassword(),
+                'internalAccount' => $authenticationParameters->getInternalAccount(),
+                'showClientIp' => $authenticationParameters->getShowClientIp(),
+                'redirectAfterLoginOption' => $authenticationParameters->getRedirectAfterLoginOption(),
+                'redirectAfterLoginUrl' => $authenticationParameters->getRedirectAfterLoginUrl(),
+            ],
         ];
     }
 
     public function deserialize(array $data, AuthenticationParameters $authenticationParameters): AuthenticationParameters
     {
-        $this->sipe('minLength', 'setMinLength', $data, $authenticationParameters);
-        $this->sipe('requireLowercase', 'setRequireLowercase', $data, $authenticationParameters);
-        $this->sipe('requireUppercase', 'setRequireUppercase', $data, $authenticationParameters);
-        $this->sipe('requireSpecialChar', 'setRequireSpecialChar', $data, $authenticationParameters);
-        $this->sipe('requireNumber', 'setRequireNumber', $data, $authenticationParameters);
+        $this->sipe('password.minLength', 'setMinLength', $data, $authenticationParameters);
+        $this->sipe('password.requireLowercase', 'setRequireLowercase', $data, $authenticationParameters);
+        $this->sipe('password.requireUppercase', 'setRequireUppercase', $data, $authenticationParameters);
+        $this->sipe('password.requireSpecialChar', 'setRequireSpecialChar', $data, $authenticationParameters);
+        $this->sipe('password.requireNumber', 'setRequireNumber', $data, $authenticationParameters);
+
+        $this->sipe('login.helpMessage', 'setHelpMessage', $data, $authenticationParameters);
+        $this->sipe('login.changePassword', 'setChangePassword', $data, $authenticationParameters);
+        $this->sipe('login.internalAccount', 'setInternalAccount', $data, $authenticationParameters);
+        $this->sipe('login.showClientIp', 'setShowClientIp', $data, $authenticationParameters);
+        $this->sipe('login.redirectAfterLoginOption', 'setRedirectAfterLoginOption', $data, $authenticationParameters);
+        $this->sipe('login.redirectAfterLoginUrl', 'setRedirectAfterLoginUrl', $data, $authenticationParameters);
 
         return $authenticationParameters;
     }
