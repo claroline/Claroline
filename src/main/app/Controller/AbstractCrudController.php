@@ -283,7 +283,7 @@ abstract class AbstractCrudController
     public function getRequirements(): array
     {
         return [
-            'get' => ['id' => '^(?!.*(copy|find|exists\/)).*'],
+            'get' => ['id' => '^(?!.*(copy|find|exist\/)).*', 'field' => '^(?!.*(copy|find|exist\/)).*'],
             'update' => ['id' => '^(?!.*(find|exist\/)).*'],
             'exist' => [],
         ];
