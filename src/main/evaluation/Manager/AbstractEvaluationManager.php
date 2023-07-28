@@ -24,7 +24,7 @@ abstract class AbstractEvaluationManager
         }
 
         if (isset($data['duration'])) {
-            $evaluation->setDuration($evaluation->getDuration() + $data['duration']);
+            $evaluation->setDuration(round($evaluation->getDuration() + $data['duration']));
         }
 
         if (isset($data['status'])) {

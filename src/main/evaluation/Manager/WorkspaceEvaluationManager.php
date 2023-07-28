@@ -267,7 +267,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             $evaluationDuration = $this->computeDuration($workspaceEval);
         }
 
-        $workspaceEval->setDuration($evaluationDuration + $duration);
+        $workspaceEval->setDuration(round($evaluationDuration + $duration));
 
         $this->om->persist($workspaceEval);
         $this->om->flush();
@@ -293,7 +293,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             }
         }
 
-        $workspaceEvaluation->setDuration($duration);
+        $workspaceEvaluation->setDuration(round($duration));
 
         $this->om->persist($workspaceEvaluation);
         $this->om->flush();
