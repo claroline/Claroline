@@ -56,8 +56,8 @@ class StringInput extends PureComponent {
         {(minLength || maxLength) && charsTyped !== 0 &&
           <div className="chars-remaining">
             {charsTyped} {
-            trans('characters_typed', {}, 'platform')
-          }
+              trans('characters_typed', {}, 'platform')
+            }
           </div>
         }
 
