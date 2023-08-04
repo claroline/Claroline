@@ -9,22 +9,20 @@
         <div class="card-body">
             {% if template is empty or not useTemplate %}
                 {% for field in fields %}
-                    {% if withMeta or not field.isMetadata() %}
-                        <div class="row entry-row">
-                            <label class="col-md-3 entry-label">
-                                {{ field.getLabel()|raw }}
-                            </label>
+                    <div class="row entry-row">
+                        <label class="col-md-3 entry-label">
+                            {{ field.getLabel()|raw }}
+                        </label>
 
-                            <div class="col-md-9 entry-value">
-                                {% if fieldValues[field.getId()] is defined %}
-                                    {{ fieldValues[field.getId()]|raw }}
-                                {% endif %}
-                            </div>
+                        <div class="col-md-9 entry-value">
+                            {% if fieldValues[field.getId()] is defined %}
+                                {{ fieldValues[field.getId()]|raw }}
+                            {% endif %}
                         </div>
+                    </div>
 
-                        {% if not loop.last %}
-                            <hr/>
-                        {% endif %}
+                    {% if not loop.last %}
+                        <hr/>
                     {% endif %}
                 {% endfor %}
             {% else %}

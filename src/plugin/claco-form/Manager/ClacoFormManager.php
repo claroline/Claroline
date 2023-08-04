@@ -681,7 +681,7 @@ class ClacoFormManager implements LoggerAwareInterface
         $newField->setType($field->getType());
         $newField->setOrder($field->getOrder());
         $newField->setRequired($field->isRequired());
-        $newField->setMetadata($field->isMetadata());
+        $newField->setConfidentiality($field->getConfidentiality());
         $newField->setLocked($field->isLocked());
         $newField->setLockedEditionOnly($field->getLockedEditionOnly());
         $newField->setOptions($field->getOptions());
@@ -904,10 +904,10 @@ class ClacoFormManager implements LoggerAwareInterface
 
         return $canEdit || (
             $canOpen && (
-               ($entry->getUser() === $user) ||
-               (!$isAnon && $this->isEntryManager($entry, $user)) ||
-               ((Entry::PUBLISHED === $entry->getStatus()) && $clacoForm->getSearchEnabled()) ||
-               (!$isAnon && $this->isEntryShared($entry, $user))
+                ($entry->getUser() === $user)
+                || (!$isAnon && $this->isEntryManager($entry, $user))
+                || ((Entry::PUBLISHED === $entry->getStatus()) && $clacoForm->getSearchEnabled())
+                || (!$isAnon && $this->isEntryShared($entry, $user))
             )
         );
     }
@@ -926,8 +926,8 @@ class ClacoFormManager implements LoggerAwareInterface
 
         return $canEdit || (
             $canOpen && (
-                ($editionEnabled && ($entry->getUser() === $user || $isEntryShared)) ||
-                (!$isAnon && $this->isEntryManager($entry, $user))
+                ($editionEnabled && ($entry->getUser() === $user || $isEntryShared))
+                || (!$isAnon && $this->isEntryManager($entry, $user))
             )
         );
     }
@@ -987,9 +987,9 @@ class ClacoFormManager implements LoggerAwareInterface
         $entry = $comment->getEntry();
         $clacoForm = $entry->getClacoForm();
 
-        if (!$this->hasEntryAccessRight($entry) ||
-            !$clacoForm->isCommentsEnabled() ||
-            (($user !== $comment->getUser()) && !$this->hasEntryModerationRight($entry))
+        if (!$this->hasEntryAccessRight($entry)
+            || !$clacoForm->isCommentsEnabled()
+            || (($user !== $comment->getUser()) && !$this->hasEntryModerationRight($entry))
         ) {
             throw new AccessDeniedException();
         }

@@ -15,37 +15,22 @@ class ClacoFormSerializer
 {
     use SerializerTrait;
 
-    /** @var CategorySerializer */
-    private $categorySerializer;
-
-    /** @var FieldSerializer */
-    private $fieldSerializer;
-
-    /** @var KeywordSerializer */
-    private $keywordSerializer;
-
-    /** @var ObjectManager */
-    private $om;
-
-    private $fieldRepo;
-
     public function __construct(
-        CategorySerializer $categorySerializer,
-        FieldSerializer $fieldSerializer,
-        KeywordSerializer $keywordSerializer,
-        ObjectManager $om
+        private CategorySerializer $categorySerializer,
+        private FieldSerializer $fieldSerializer,
+        private KeywordSerializer $keywordSerializer,
+        private ObjectManager $om
     ) {
-        $this->categorySerializer = $categorySerializer;
-        $this->fieldSerializer = $fieldSerializer;
-        $this->keywordSerializer = $keywordSerializer;
-        $this->om = $om;
-
-        $this->fieldRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Field');
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'clacoform';
+    }
+
+    public function getClass(): string
+    {
+        return ClacoForm::class;
     }
 
     /**
@@ -69,13 +54,10 @@ class ClacoFormSerializer
                 'edition_enabled' => $clacoForm->isEditionEnabled(),
                 'moderated' => $clacoForm->isModerated(),
                 'default_home' => $clacoForm->getDefaultHome(),
-                'display_nb_entries' => $clacoForm->getDisplayNbEntries(),
                 'menu_position' => $clacoForm->getMenuPosition(),
                 'search_enabled' => $clacoForm->getSearchEnabled(),
                 'display_metadata' => $clacoForm->getDisplayMetadata(),
-                'locked_fields_for' => $clacoForm->getLockedFieldsFor(),
                 'display_categories' => $clacoForm->getDisplayCategories(),
-                'open_categories' => $clacoForm->getOpenCategories(),
                 'comments_enabled' => $clacoForm->isCommentsEnabled(),
                 'anonymous_comments_enabled' => $clacoForm->isAnonymousCommentsEnabled(),
                 'moderate_comments' => $clacoForm->getModerateComments(),
@@ -85,15 +67,9 @@ class ClacoFormSerializer
                 'display_comment_date' => $clacoForm->getDisplayCommentDate(),
                 'comments_roles' => $clacoForm->getCommentsRoles(),
                 'comments_display_roles' => $clacoForm->getCommentsDisplayRoles(),
-                'votes_enabled' => $clacoForm->isVotesEnabled(),
-                'display_votes' => $clacoForm->getDisplayVotes(),
-                'open_votes' => $clacoForm->getOpenVotes(),
-                'votes_start_date' => $clacoForm->getVotesStartDate(),
-                'votes_end_date' => $clacoForm->getVotesEndDate(),
                 'keywords_enabled' => $clacoForm->isKeywordsEnabled(),
                 'new_keywords_enabled' => $clacoForm->isNewKeywordsEnabled(),
                 'display_keywords' => $clacoForm->getDisplayKeywords(),
-                'open_keywords' => $clacoForm->getOpenKeywords(),
                 'display_title' => $clacoForm->getDisplayTitle(),
                 'display_subtitle' => $clacoForm->getDisplaySubtitle(),
                 'display_content' => $clacoForm->getDisplayContent(),
@@ -216,7 +192,7 @@ class ClacoFormSerializer
                 if (isset($fieldData['id'])) {
                     $newFieldsUuids[] = $fieldData['id'];
                 }
-                $field = isset($fieldData['id']) ? $this->fieldRepo->findByFieldFacetUuid($fieldData['id']) : null;
+                $field = isset($fieldData['id']) ? $this->om->getRepository(Field::class)->findByFieldFacetUuid($fieldData['id']) : null;
 
                 if (empty($field)) {
                     $field = new Field();

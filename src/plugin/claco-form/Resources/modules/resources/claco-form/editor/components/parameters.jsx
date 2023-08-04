@@ -143,16 +143,6 @@ const EditorParameters = props =>
               choices: constants.DISPLAY_METADATA_CHOICES
             }
           }, {
-            name: 'details.locked_fields_for',
-            type: 'choice',
-            label: trans('lock_fields', {}, 'clacoform'),
-            required: true,
-            options: {
-              noEmpty: true,
-              condensed: true,
-              choices: constants.LOCKED_FIELDS_FOR_CHOICES
-            }
-          }, {
             name: 'details.max_entries',
             type: 'number',
             label: trans('label_max_entries', {}, 'clacoform'),

@@ -2,17 +2,23 @@ import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
-function formatSections(sections, allFields, dataPath = null, hasConfidentialRights = false, hasLockedRights = false) {
-  return sections.map(section => formatSection(section, allFields, dataPath, hasConfidentialRights, hasLockedRights))
+import {trans} from '#/main/app/intl'
+
+function formatSections(sections, allFields, dataPath = null, isOwner = false, hasConfidentialRights = false, hasLockedRights = false) {
+  return sections.map(section => formatSection(section, allFields, dataPath, isOwner, hasConfidentialRights, hasLockedRights))
 }
 
-function formatSection(section, allFields, dataPath = null, hasConfidentialRights = false, hasLockedRights = false) {
+function formatSection(section, allFields, dataPath = null, isOwner = false, hasConfidentialRights = false, hasLockedRights = false) {
   const sectionDefinition = cloneDeep(section)
 
   sectionDefinition.icon = get(section, 'display.icon') ? `fa fa-fw fa-${get(section, 'display.icon')}` : undefined
   sectionDefinition.subtitle = get(section, 'meta.description')
   sectionDefinition.fields = sectionDefinition.fields
-    .filter(field => !get(field, 'restrictions.metadata') || hasConfidentialRights)
+    .filter(field => !get(field, 'restrictions.confidentiality')
+      || 'none' === get(field, 'restrictions.confidentiality')
+      || hasConfidentialRights
+      || ('owner' === get(field, 'restrictions.confidentiality') && isOwner)
+    )
     .map(f => formatField(f, allFields, dataPath, hasLockedRights))
 
   return sectionDefinition
@@ -24,7 +30,9 @@ function formatField(fieldDef, allFields, dataPath = null, hasLockedRights = fal
     type: fieldDef.type,
     label: fieldDef.label,
     required: fieldDef.required,
-    help: fieldDef.help,
+    help: fieldDef.restrictions.confidentiality && 'manager' === fieldDef.restrictions.confidentiality ?
+      [trans('field_confidentiality_manager_help')].concat(Array.isArray(fieldDef.help) ? fieldDef.help : [fieldDef.help]).filter(help => !!help)
+      : fieldDef.help,
     options: fieldDef.options ? cloneDeep(fieldDef.options) : {},
     displayed: (data) => isFieldDisplayed(fieldDef, allFields, dataPath ? data[dataPath] : dataPath),
     disabled: (data) => {

@@ -52,8 +52,6 @@ class FieldFacetChoice
      */
     protected $position;
 
-    protected $value;
-
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice",

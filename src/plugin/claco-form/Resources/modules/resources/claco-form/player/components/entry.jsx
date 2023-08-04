@@ -35,6 +35,7 @@ import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {actions, selectors as playerSelectors} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/components/entry-comments'
 import {EntryMenu} from '#/plugin/claco-form/resources/claco-form/player/components/entry-menu'
+import isEmpty from 'lodash/isEmpty'
 
 // TODO : find a way to merge actions list with the one in entries list
 const EntryActions = props =>
@@ -197,7 +198,10 @@ class EntryComponent extends Component {
   }
 
   isFieldDisplayable(field) {
-    return this.canViewMetadata() || !field.restrictions.metadata
+    return isEmpty(field.restrictions.confidentiality)
+      || 'none' === field.restrictions.confidentiality
+      || this.props.isManager
+      || ('owner' === field.restrictions.confidentiality && this.props.isOwner)
   }
 
   getSections(fields) {
@@ -322,7 +326,7 @@ class EntryComponent extends Component {
 
                   {this.props.template && this.props.useTemplate ?
                     <ContentHtml>
-                      {generateFromTemplate(this.props.template, this.props.fields, this.props.entry, this.canViewMetadata())}
+                      {generateFromTemplate(this.props.template, this.props.fields, this.props.entry, this.props.isOwner, this.props.isManager)}
                     </ContentHtml> :
                     <DetailsData
                       name={selectors.STORE_NAME+'.entries.current'}

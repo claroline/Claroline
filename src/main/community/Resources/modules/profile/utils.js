@@ -181,16 +181,16 @@ function getFormDefaultSections(user, update, isNew = false) {
 }
 
 function formatFormSections(sections, allFields, userData, params = {}, currentUser = null) {
-  const hasConfidentialRights = currentUser ? currentUser.id === userData.id || hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params.roles_confidential)) : false
+  const hasConfidentialRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params.roles_confidential)) : false
   const hasLockedRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params.roles_locked)) : false
 
-  return formatSections(sections, allFields, 'profile', hasConfidentialRights, hasLockedRights)
+  return formatSections(sections, allFields, 'profile', currentUser ? currentUser.id === userData.id : false, hasConfidentialRights, hasLockedRights)
 }
 
 function formatDetailsSections(sections, allFields, userData, params, currentUser) {
-  const hasConfidentialRights = currentUser ? currentUser.id === userData.id || hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params.roles_confidential)) : false
+  const hasConfidentialRights = currentUser ? hasRoles(currentUser.roles, ['ROLE_ADMIN'].concat(params.roles_confidential)) : false
 
-  return formatSections(sections, allFields, 'profile', hasConfidentialRights, true)
+  return formatSections(sections, allFields, 'profile', currentUser ? currentUser.id === userData.id : false, hasConfidentialRights, true)
 }
 
 // should be declared elsewhere

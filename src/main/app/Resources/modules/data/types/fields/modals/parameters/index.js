@@ -6,7 +6,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {ParametersModal} from '#/main/app/data/types/fields/modals/parameters/components/parameters'
+import {ParametersModal} from '#/main/app/data/types/fields/modals/parameters/containers/modal'
 
 const MODAL_FIELD_PARAMETERS = 'MODAL_FIELD_PARAMETERS'
 
