@@ -59,7 +59,7 @@ class FieldFacetSerializer
                 ],
             ],
             'restrictions' => [
-                'metadata' => $fieldFacet->isMetadata(),
+                'confidentiality' => $fieldFacet->getConfidentiality(),
                 'locked' => $fieldFacet->isLocked(),
                 'lockedEditionOnly' => $fieldFacet->getLockedEditionOnly(),
             ],
@@ -96,7 +96,7 @@ class FieldFacetSerializer
         $this->sipe('display.condition.comparator', 'setConditionComparator', $data, $field);
         $this->sipe('display.condition.value', 'setConditionValue', $data, $field);
 
-        $this->sipe('restrictions.metadata', 'setMetadata', $data, $field);
+        $this->sipe('restrictions.confidentiality', 'setConfidentiality', $data, $field);
         $this->sipe('restrictions.locked', 'setLocked', $data, $field);
         $this->sipe('restrictions.lockedEditionOnly', 'setLockedEditionOnly', $data, $field);
 
@@ -134,13 +134,12 @@ class FieldFacetSerializer
 
             if (empty($choice)) {
                 $isNew = true;
-
                 $choice = new FieldFacetChoice();
-                $choice->setFieldFacet($field);
 
                 $this->om->persist($choice);
             }
 
+            $choice->setFieldFacet($field);
             $this->ffcSerializer->deserialize($choiceData, $choice, $options);
             $newChoicesUuids[] = $choice->getUuid();
 

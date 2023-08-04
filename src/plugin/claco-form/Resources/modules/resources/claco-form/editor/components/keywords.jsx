@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
@@ -14,46 +14,44 @@ import {ClacoForm as ClacoFormTypes} from '#/plugin/claco-form/resources/claco-f
 import {MODAL_KEYWORD_FORM} from '#/plugin/claco-form/modals/keyword'
 
 const EditorKeywords = props =>
-  <Fragment>
-    <FormData
-      level={2}
-      title={trans('keywords', {}, 'clacoform')}
-      name={selectors.STORE_NAME+'.clacoFormForm'}
-      buttons={true}
-      target={(clacoForm) => ['apiv2_clacoform_update', {id: clacoForm.id}]}
-      cancel={{
-        type: LINK_BUTTON,
-        target: props.path,
-        exact: true
-      }}
-      sections={[
-        {
-          id: 'general',
-          title: trans('general'),
-          primary: true,
-          fields: [
-            {
-              name: 'details.keywords_enabled',
-              type: 'boolean',
-              label: trans('label_keywords_enabled', {}, 'clacoform'),
-              linked: [
-                {
-                  name: 'details.new_keywords_enabled',
-                  type: 'boolean',
-                  label: trans('label_new_keywords_enabled', {}, 'clacoform'),
-                  displayed: (clacoForm) => get(clacoForm, 'details.keywords_enabled')
-                }
-              ]
-            }, {
-              name: 'details.display_keywords',
-              type: 'boolean',
-              label: trans('label_display_keywords', {}, 'clacoform')
-            }
-          ]
-        }
-      ]}
-    />
-
+  <FormData
+    level={2}
+    title={trans('keywords', {}, 'clacoform')}
+    name={selectors.STORE_NAME+'.clacoFormForm'}
+    buttons={true}
+    target={(clacoForm) => ['apiv2_clacoform_update', {id: clacoForm.id}]}
+    cancel={{
+      type: LINK_BUTTON,
+      target: props.path,
+      exact: true
+    }}
+    sections={[
+      {
+        id: 'general',
+        title: trans('general'),
+        primary: true,
+        fields: [
+          {
+            name: 'details.keywords_enabled',
+            type: 'boolean',
+            label: trans('label_keywords_enabled', {}, 'clacoform'),
+            linked: [
+              {
+                name: 'details.new_keywords_enabled',
+                type: 'boolean',
+                label: trans('label_new_keywords_enabled', {}, 'clacoform'),
+                displayed: (clacoForm) => get(clacoForm, 'details.keywords_enabled')
+              }
+            ]
+          }, {
+            name: 'details.display_keywords',
+            type: 'boolean',
+            label: trans('label_display_keywords', {}, 'clacoform')
+          }
+        ]
+      }
+    ]}
+  >
     <ListData
       name={selectors.STORE_NAME+'.clacoFormForm.keywords'}
       fetch={{
@@ -97,6 +95,7 @@ const EditorKeywords = props =>
       type={MODAL_BUTTON}
       className="btn btn-primary w-100 mb-3"
       label={trans('create_a_keyword', {}, 'clacoform')}
+      size="lg"
       modal={[MODAL_KEYWORD_FORM, {
         clacoFormId: props.clacoForm.id,
         onSave: (keyword) => props.addKeyword(keyword)
@@ -104,7 +103,7 @@ const EditorKeywords = props =>
       disabled={!props.clacoForm.details || !props.clacoForm.details.keywords_enabled}
       primary={true}
     />
-  </Fragment>
+  </FormData>
 
 EditorKeywords.propTypes = {
   path: T.string.isRequired,

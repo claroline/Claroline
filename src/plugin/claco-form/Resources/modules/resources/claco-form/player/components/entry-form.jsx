@@ -54,10 +54,7 @@ class EntryFormComponent extends Component {
   getSections() {
     const isShared = this.props.entryUser && this.props.entryUser.id ? this.props.entryUser.shared : false
 
-    const hasConfidentialRights = 'all' === this.props.displayMetadata
-      || ('manager' === this.props.displayMetadata && this.props.isManager)
-      || isShared
-      || (this.props.entry.user && this.props.entry.user.id === this.props.currentUser.id)
+    const hasConfidentialRights = this.props.isManager || isShared
 
     const hasLockedRights = this.props.isManager
 
@@ -79,7 +76,7 @@ class EntryFormComponent extends Component {
           return fieldDef
         })
       }
-    ], this.props.fields, 'values', hasConfidentialRights, hasLockedRights)
+    ], this.props.fields, 'values', this.props.entry.user && this.props.entry.user.id === this.props.currentUser.id, hasConfidentialRights, hasLockedRights)
 
     // add entry title to the generated form
     formSections[0].fields = [

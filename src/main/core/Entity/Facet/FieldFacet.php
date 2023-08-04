@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Facet\FieldFacetRepository")
+ *
  * @ORM\Table(name="claro_field_facet")
  */
 class FieldFacet
@@ -28,23 +29,39 @@ class FieldFacet
     use Order;
 
     /** @var string */
-    const NUMBER_TYPE = 'number';
+    public const NUMBER_TYPE = 'number';
     /** @var string */
-    const DATE_TYPE = 'date';
+    public const DATE_TYPE = 'date';
     /** @var string */
-    const COUNTRY_TYPE = 'country';
+    public const COUNTRY_TYPE = 'country';
     /** @var string */
-    const EMAIL_TYPE = 'email';
+    public const EMAIL_TYPE = 'email';
     /** @var string */
-    const HTML_TYPE = 'html';
+    public const HTML_TYPE = 'html';
     /** @var string */
-    const CASCADE_TYPE = 'cascade';
+    public const CASCADE_TYPE = 'cascade';
     /** @var string */
-    const FILE_TYPE = 'file';
+    public const FILE_TYPE = 'file';
     /** @var string */
-    const BOOLEAN_TYPE = 'boolean';
+    public const BOOLEAN_TYPE = 'boolean';
     /** @var string */
-    const CHOICE_TYPE = 'choice';
+    public const CHOICE_TYPE = 'choice';
+
+    /**
+     * No confidentiality. All users which can open the parent entity see the field.
+     */
+    public const CONFIDENTIALITY_NONE = 'none';
+
+    /**
+     * Only the user which own the parent entity or
+     * a user with the `administrate` right on the parent entity (eg. User, Training) can see the field.
+     */
+    public const CONFIDENTIALITY_OWNER = 'owner';
+
+    /**
+     * Only a user with the `administrate` right on the parent entity (eg. User, Training) can see the field.
+     */
+    public const CONFIDENTIALITY_MANAGER = 'manager';
 
     /**
      * @ORM\Column(name="name")
@@ -65,6 +82,7 @@ class FieldFacet
      *      targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacet",
      *      inversedBy="fieldsFacet"
      * )
+     *
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      *
      * @var PanelFacet
@@ -96,9 +114,9 @@ class FieldFacet
     private $options = [];
 
     /**
-     * @ORM\Column(name="is_metadata", type="boolean", options={"default" = 0})
+     * @ORM\Column(type="string")
      */
-    private $metadata = false;
+    private string $confidentiality = self::CONFIDENTIALITY_NONE;
 
     /**
      * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
@@ -143,7 +161,7 @@ class FieldFacet
         $this->fieldFacetChoices = new ArrayCollection();
     }
 
-    public function setPanelFacet(?PanelFacet $panelFacet = null): void
+    public function setPanelFacet(PanelFacet $panelFacet = null): void
     {
         $this->panelFacet = $panelFacet;
 
@@ -253,14 +271,22 @@ class FieldFacet
         $this->options = $options;
     }
 
-    public function isMetadata(): bool
+    public function getConfidentiality(): string
     {
-        return $this->metadata;
+        return $this->confidentiality;
     }
 
-    public function setMetadata(bool $isMetadata): void
+    public function setConfidentiality(string $confidentiality): void
     {
-        $this->metadata = $isMetadata;
+        $this->confidentiality = $confidentiality;
+    }
+
+    /**
+     * @deprecated
+     */
+    public function isMetadata(): bool
+    {
+        return self::CONFIDENTIALITY_NONE !== $this->confidentiality;
     }
 
     public function isLocked(): bool

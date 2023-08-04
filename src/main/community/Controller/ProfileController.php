@@ -12,7 +12,6 @@
 namespace Claroline\CommunityBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\File\TempFileManager;
@@ -38,20 +37,12 @@ class ProfileController
     use PermissionCheckerTrait;
     use RequestDecoderTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var TempFileManager */
-    private $tempManager;
-    /** @var Crud */
-    private $crud;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ParametersSerializer */
-    private $parametersSerializer;
-    /** @var ProfileSerializer */
-    private $profileSerializer;
+    private ObjectManager $om;
+    private TempFileManager $tempManager;
+    private Crud $crud;
+    private SerializerProvider $serializer;
+    private ParametersSerializer $parametersSerializer;
+    private ProfileSerializer $profileSerializer;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -78,6 +69,7 @@ class ProfileController
 
     /**
      * @Route("/export", name="apiv2_profile_export", methods={"GET"})
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function exportAction(User $user): BinaryFileResponse
@@ -108,26 +100,6 @@ class ProfileController
             'facets' => $this->profileSerializer->serialize(),
             'parameters' => $this->parametersSerializer->serialize()['profile'],
         ]);
-    }
-
-    /**
-     * @Route("/{username}", name="apiv2_profile_update", methods={"PUT"})
-     * @EXT\ParamConverter("user", options={"mapping": {"username": "username"}})
-     */
-    public function updateAction(User $user, Request $request): JsonResponse
-    {
-        $userData = $this->decodeRequest($request);
-        // removes main organization from the serialized structure because it will cause access issues.
-        unset($userData['mainOrganization']);
-        // removes roles from the serialized structure because it will cause access issues.
-        // those roles should not be here anyway.
-        unset($userData['roles']);
-
-        $updated = $this->crud->update($user, $userData, [Crud::THROW_EXCEPTION, Options::VALIDATE_FACET, Options::SERIALIZE_FACET]);
-
-        return new JsonResponse(
-            $this->serializer->serialize($updated, [Options::SERIALIZE_FACET])
-        );
     }
 
     /**
