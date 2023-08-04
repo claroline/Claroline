@@ -28,6 +28,10 @@
             margin-bottom: 0 !important;;
         }
 
+        .field-item-preview {
+            flex: 1;
+        }
+
         .field-item-actions {
             margin-left: ($grid-gutter-width * .5);
 

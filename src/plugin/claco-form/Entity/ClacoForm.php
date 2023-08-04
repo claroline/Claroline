@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\Table(name="claro_clacoformbundle_claco_form")
  */
 class ClacoForm extends AbstractResource
@@ -268,19 +269,6 @@ class ClacoForm extends AbstractResource
         $this->details['default_home'] = $defaultHome;
     }
 
-    public function getDisplayNbEntries()
-    {
-        return !is_null($this->details) && isset($this->details['display_nb_entries']) ? $this->details['display_nb_entries'] : 'none';
-    }
-
-    public function setDisplayNbEntries($displayNbEntries)
-    {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['display_nb_entries'] = $displayNbEntries;
-    }
-
     public function getMenuPosition()
     {
         return !is_null($this->details) && isset($this->details['menu_position']) ? $this->details['menu_position'] : 'down';
@@ -404,19 +392,6 @@ class ClacoForm extends AbstractResource
         $this->details['display_metadata'] = $displayMetadata;
     }
 
-    public function getLockedFieldsFor()
-    {
-        return !is_null($this->details) && isset($this->details['locked_fields_for']) ? $this->details['locked_fields_for'] : 'user';
-    }
-
-    public function setLockedFieldsFor($lockedFieldsFor)
-    {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['locked_fields_for'] = $lockedFieldsFor;
-    }
-
     public function getDisplayCategories()
     {
         return !is_null($this->details) && isset($this->details['display_categories']) ? $this->details['display_categories'] : false;
@@ -428,19 +403,6 @@ class ClacoForm extends AbstractResource
             $this->details = [];
         }
         $this->details['display_categories'] = $displayCategories;
-    }
-
-    public function getOpenCategories()
-    {
-        return !is_null($this->details) && isset($this->details['open_categories']) ? $this->details['open_categories'] : false;
-    }
-
-    public function setOpenCategories($openCategories)
-    {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['open_categories'] = $openCategories;
     }
 
     public function isCommentsEnabled()
@@ -534,75 +496,6 @@ class ClacoForm extends AbstractResource
         $this->details['display_comment_date'] = $displayCommentDate;
     }
 
-    public function isVotesEnabled()
-    {
-        return !is_null($this->details) && isset($this->details['votes_enabled']) ? $this->details['votes_enabled'] : false;
-    }
-
-    public function setVotesEnabled($votesEnabled)
-    {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['votes_enabled'] = $votesEnabled;
-    }
-
-    public function getDisplayVotes()
-    {
-        return !is_null($this->details) && isset($this->details['display_votes']) ? $this->details['display_votes'] : false;
-    }
-
-    public function setDisplayVotes($displayVotes)
-    {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['display_votes'] = $displayVotes;
-    }
-
-    public function getOpenVotes()
-    {
-        return !is_null($this->details) && isset($this->details['open_votes']) ? $this->details['open_votes'] : false;
-    }
-
-    public function setOpenVotes($openVotes)
-    {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['open_votes'] = $openVotes;
-    }
-
-    public function getVotesStartDate()
-    {
-        return !is_null($this->details) && isset($this->details['votes_start_date']) ?
-            new \DateTime($this->details['votes_start_date']) :
-            null;
-    }
-
-    public function setVotesStartDate(\DateTime $startDate = null)
-    {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['votes_start_date'] = !is_null($startDate) ? $startDate->format('Y-m-d') : null;
-    }
-
-    public function getVotesEndDate()
-    {
-        return !is_null($this->details) && isset($this->details['votes_end_date']) ?
-            new \DateTime($this->details['votes_end_date']) :
-            null;
-    }
-
-    public function setVotesEndDate(\DateTime $endDate = null)
-    {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['votes_end_date'] = !is_null($endDate) ? $endDate->format('Y-m-d') : null;
-    }
-
     public function isKeywordsEnabled()
     {
         return !is_null($this->details) && isset($this->details['keywords_enabled']) ? $this->details['keywords_enabled'] : false;
@@ -640,19 +533,6 @@ class ClacoForm extends AbstractResource
             $this->details = [];
         }
         $this->details['display_keywords'] = $displayKeywords;
-    }
-
-    public function getOpenKeywords()
-    {
-        return !is_null($this->details) && isset($this->details['open_keywords']) ? $this->details['open_keywords'] : false;
-    }
-
-    public function setOpenKeywords($openKeywords)
-    {
-        if (is_null($this->details)) {
-            $this->details = [];
-        }
-        $this->details['open_keywords'] = $openKeywords;
     }
 
     public function getUseTemplate()

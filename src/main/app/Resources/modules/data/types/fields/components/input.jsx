@@ -13,6 +13,7 @@ import {MODAL_SELECTION} from '#/main/app/modals/selection'
 import {MODAL_FIELD_PARAMETERS} from '#/main/app/data/types/fields/modals/parameters'
 
 import {Button} from '#/main/app/action/components/button'
+import {Toolbar} from '#/main/app/action/components/toolbar'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {getCreatableTypes} from '#/main/app/data/types'
@@ -20,8 +21,6 @@ import {DataInput} from '#/main/app/data/components/input'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
-// todo try to avoid connexion to the store
-// todo create working preview
 // todo find a way to use collections
 
 const FieldPreview = props =>
@@ -46,7 +45,6 @@ class FieldList extends Component {
     this.update      = this.update.bind(this)
     this.remove      = this.remove.bind(this)
     this.removeAll   = this.removeAll.bind(this)
-    this.open        = this.open.bind(this)
     this.formatField = this.formatField.bind(this)
   }
 
@@ -81,14 +79,6 @@ class FieldList extends Component {
     this.props.onChange([])
   }
 
-  open(field, allFields, callback) {
-    this.props.showModal(MODAL_FIELD_PARAMETERS, {
-      data: field,
-      fields: allFields.filter(otherField => otherField.id !== field.id),
-      save: callback
-    })
-  }
-
   formatField(field) {
     const options = field.options ? Object.assign({}, field.options) : {}
 
@@ -112,6 +102,10 @@ class FieldList extends Component {
 
     return (
       <div className={classes('field-list-control', this.props.className)}>
+        {0 === this.props.value.length &&
+          <ContentPlaceholder className="mb-2" title={this.props.placeholder} size={this.props.size} />
+        }
+
         {0 !== this.props.value.length &&
           <Button
             className="btn btn-text-danger btn-delete-all"
@@ -142,46 +136,52 @@ class FieldList extends Component {
               })
               .map((field, fieldIndex) =>
                 <li key={fieldIndex} className="field-item mb-2">
-                  <FieldPreview {...this.formatField(field)} />
-
-                  <div className="field-item-actions">
-                    <Button
-                      id={`${this.props.id}-${fieldIndex}-edit`}
-                      type={MODAL_BUTTON}
-                      className="btn btn-text-secondary"
-                      icon="fa fa-fw fa-pencil"
-                      label={trans('edit', {}, 'actions')}
-                      tooltip="top"
-                      modal={[MODAL_FIELD_PARAMETERS, {
-                        data: field,
-                        fields: allFields.filter(otherField => otherField.id !== field.id),
-                        save: (data) => this.update(fieldIndex, data)
-                      }]}
-                    />
-
-                    <Button
-                      id={`${this.props.id}-${fieldIndex}-delete`}
-                      type={CALLBACK_BUTTON}
-                      className="btn btn-text-danger"
-                      icon="fa fa-fw fa-trash"
-                      label={trans('delete', {}, 'actions')}
-                      tooltip="top"
-                      confirm={{
-                        title: trans('delete_field'),
-                        message: trans('delete_field_confirm')
-                      }}
-                      callback={() => this.remove(fieldIndex)}
-                      dangerous={true}
-                    />
+                  <div className="field-item-preview">
+                    <FieldPreview {...this.formatField(field)} />
+                    {get(field, 'restrictions.confidentiality') && 'none' !== get(field, 'restrictions.confidentiality') &&
+                      <div className="badge text-bg-primary mt-1">
+                        <span className="fa fa-fw fa-eye icon-with-text-right" />
+                        {trans('confidentiality_'+field.restrictions.confidentiality)}
+                      </div>
+                    }
                   </div>
+
+                  <Toolbar
+                    id={`${this.props.id}-${fieldIndex}-actions`}
+                    className="field-item-actions"
+                    tooltip="top"
+                    actions={[
+                      {
+                        name: 'edit',
+                        type: MODAL_BUTTON,
+                        className: 'btn btn-text-secondary',
+                        icon: 'fa fa-fw fa-pencil',
+                        label: trans('edit', {}, 'actions'),
+                        modal: [MODAL_FIELD_PARAMETERS, {
+                          field: field,
+                          isNew: false,
+                          fields: allFields.filter(otherField => otherField.id !== field.id),
+                          save: (data) => this.update(fieldIndex, data)
+                        }]
+                      }, {
+                        name: 'delete',
+                        type: CALLBACK_BUTTON,
+                        className: 'btn btn-text-danger',
+                        icon: 'fa fa-fw fa-trash',
+                        label: trans('delete', {}, 'actions'),
+                        confirm: {
+                          title: trans('delete_field'),
+                          message: trans('delete_field_confirm')
+                        },
+                        callback: () => this.remove(fieldIndex),
+                        dangerous: true
+                      }
+                    ]}
+                  />
                 </li>
               )
             }
           </ul>
-        }
-
-        {0 === this.props.value.length &&
-          <ContentPlaceholder className="mb-2" title={this.props.placeholder} size={this.props.size} />
         }
 
         <Button
@@ -192,16 +192,22 @@ class FieldList extends Component {
           label={trans('add_field')}
           callback={() => getCreatableTypes().then(types => {
             this.props.showModal(MODAL_SELECTION, {
-              title: trans('create_field'),
+              icon: 'fa fa-fw fa-plus',
+              title: trans('new_field'),
+              subtitle: trans('new_field_select'),
               items: types.map(type => Object.assign({}, type.meta, {name: type.name})),
-              handleSelect: (type) => this.open({
-                id: makeId(),
-                type: type.name,
-                restrictions: {
-                  locked: false,
-                  lockedEditionOnly: false
-                }
-              }, allFields, this.add)
+              selectAction: (type) => ({
+                type: MODAL_BUTTON,
+                modal: [MODAL_FIELD_PARAMETERS, {
+                  field: {
+                    id: makeId(),
+                    type: type.name
+                  },
+                  isNew: true,
+                  fields: allFields,
+                  save: this.add
+                }]
+              })
             })
           })}
         />

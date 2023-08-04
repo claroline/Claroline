@@ -26,7 +26,6 @@ const CHOICE_UP = 'up'
 const CHOICE_BOTH = 'both'
 
 const CHOICE_MANAGER = 'manager'
-const CHOICE_USER = 'user'
 const CHOICE_ANONYMOUS = 'anonymous'
 
 const DEFAULT_HOME_CHOICES = {
@@ -49,12 +48,6 @@ const DISPLAY_METADATA_CHOICES = {
   [CHOICE_MANAGER]: trans('choice_manager_only', {}, 'clacoform')
 }
 
-const LOCKED_FIELDS_FOR_CHOICES = {
-  [CHOICE_USER]: trans('choice_user_only', {}, 'clacoform'),
-  [CHOICE_MANAGER]: trans('choice_manager_only', {}, 'clacoform'),
-  [CHOICE_ALL]: trans('both', {}, 'clacoform')
-}
-
 const MODERATE_COMMENTS_CHOICES = {
   [CHOICE_ALL]: trans('yes'),
   [CHOICE_NONE]: trans('no'),
@@ -72,7 +65,6 @@ export const constants = {
   DEFAULT_HOME_CHOICES,
   MENU_POSITION_CHOICES,
   DISPLAY_METADATA_CHOICES,
-  LOCKED_FIELDS_FOR_CHOICES,
   MODERATE_COMMENTS_CHOICES,
   DISPLAY_MODES_CHOICES
 }

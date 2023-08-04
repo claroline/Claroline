@@ -1,4 +1,4 @@
-import React from 'react'
+import {createElement} from 'react'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
@@ -9,14 +9,16 @@ import {UserAvatar} from '#/main/core/user/components/avatar'
 import {displayDate} from '#/main/app/intl/date'
 import {constants as intlConstants} from '#/main/app/intl/constants'
 
-import {canViewEntryMetadata} from '#/plugin/claco-form/resources/claco-form/permissions'
+import {canViewEntryMetadata, isEntryManager, isEntryOwner} from '#/plugin/claco-form/resources/claco-form/permissions'
 
 function formatFieldValue(entry, field, value, clacoForm, currentUser) {
-  let formattedValue = ''
+  let formattedValue = '-'
 
-  if (field.restrictions.metadata && !canViewEntryMetadata(entry, clacoForm, false, currentUser)) {
-    formattedValue = '-'
-  } else {
+  if (!get(field, 'restrictions.confidentiality')
+    || 'none' === get(field, 'restrictions.confidentiality')
+    || isEntryManager(entry, currentUser)
+    || ('owner' === get(field, 'restrictions.confidentiality') && isEntryOwner(entry, currentUser))
+  ) {
     formattedValue = value
 
     if (value !== undefined && value !== null && value !== '') {
@@ -171,11 +173,12 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
       }, {
         name: 'user',
         label: trans('user'),
+        type: 'user',
         sortable: false,
         filterable: canViewMetadata,
         displayed: canViewMetadata,
         displayable: canViewMetadata,
-        calculated: (rowData) => canViewEntryMetadata(rowData, clacoForm, canEdit, currentUser) && rowData.user ? `${rowData.user.firstName} ${rowData.user.lastName}` : null
+        calculated: (rowData) => canViewEntryMetadata(rowData, clacoForm, canEdit, currentUser) && rowData.user ? rowData.user : null
       },
       // Categories
       {
@@ -215,7 +218,6 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
     ].concat(
       // Fields defined in ClacoForm
       fields
-        .filter(f => !f.restrictions.hidden && (!f.restrictions.metadata || canViewMetadata))
         .map(field => {
           const options = field.options ? Object.assign({}, field.options) : {}
 
@@ -231,23 +233,30 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
             name: 'values.' + field.id,
             label: field.label,
             type: field.type,
-            options: options
+            options: options,
+            calculated: (rowData) => {
+              if (!get(field, 'restrictions.confidentiality')
+                || 'none' === get(field, 'restrictions.confidentiality')
+                || isEntryManager(rowData, currentUser)
+                || ('owner' === get(field, 'restrictions.confidentiality') && isEntryOwner(rowData, currentUser))
+              ) {
+                return get(rowData, 'values.' + field.id)
+              }
+
+              return null
+            }
           }
         })
     ),
-    card: (props) => {
-      const EntryCard = React.createElement(DataCard, Object.assign({}, props, {
-        id: props.data.id,
-        icon: React.createElement(UserAvatar, {
-          picture: props.data.user ? props.data.user.picture : undefined,
-          alt: true
-        }),
-        title: getCardValue(clacoForm, props.data, 'title', currentUser),
-        subtitle: getCardValue(clacoForm, props.data, 'subtitle', currentUser),
-        contentText: getCardValue(clacoForm, props.data, 'content', currentUser)
-      }))
-
-      return EntryCard
-    }
+    card: (props) => createElement(DataCard, Object.assign({}, props, {
+      id: props.data.id,
+      icon: createElement(UserAvatar, {
+        picture: props.data.user ? props.data.user.picture : undefined,
+        alt: true
+      }),
+      title: getCardValue(clacoForm, props.data, 'title', currentUser),
+      subtitle: getCardValue(clacoForm, props.data, 'subtitle', currentUser),
+      contentText: getCardValue(clacoForm, props.data, 'content', currentUser)
+    }))
   }
 }

@@ -18,6 +18,7 @@
   "field_conditional_display": "Display based on the value of another field",
   "field": "Field",
   "field_comparator": "Comparison",
+  "field_condition_enable": "Display based on the value of another field",
   "equal": "is equal to",
   "different": "is different from",
   "empty": "is empty",

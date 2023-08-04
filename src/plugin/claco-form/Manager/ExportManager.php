@@ -71,6 +71,7 @@ class ExportManager
         $canEdit = $this->clacoFormManager->hasRight($clacoForm, 'EDIT');
         $displayMeta = $clacoForm->getDisplayMetadata();
         $isEntryManager = $user instanceof User && $this->clacoFormManager->isEntryManager($entry, $user);
+        $isEntryOwner = $user instanceof User && $entry->getUser() === $user;
         $withMeta = $canEdit || 'all' === $displayMeta || ('manager' === $displayMeta && $isEntryManager);
 
         $template = $clacoForm->getTemplate();
@@ -79,11 +80,19 @@ class ExportManager
             $template = str_replace('%clacoform_entry_title%', $entry->getTitle(), $template);
         }
 
+        $displayedFields = [];
         foreach ($fields as $field) {
-            if (($withMeta || !$field->isMetadata()) && isset($fieldValues[$field->getId()])) {
-                $fieldValues[$field->getId()] = $this->formatFieldValue($entry, $field, $fieldValues[$field->getId()]);
-            } else {
-                $fieldValues[$field->getId()] = '';
+            $fieldValues[$field->getId()] = '';
+
+            if (FieldFacet::CONFIDENTIALITY_NONE === $field->getConfidentiality()
+                || $isEntryManager
+                || (FieldFacet::CONFIDENTIALITY_OWNER === $field->getConfidentiality() && $isEntryOwner)
+            ) {
+                if (isset($fieldValues[$field->getId()])) {
+                    $fieldValues[$field->getId()] = $this->formatFieldValue($entry, $field, $fieldValues[$field->getId()]);
+                }
+
+                $displayedFields[] = $field;
             }
 
             if (!empty($template) && $useTemplate) {
@@ -111,7 +120,7 @@ class ExportManager
                 'template' => $template,
                 'useTemplate' => $useTemplate,
                 'withMeta' => $withMeta,
-                'fields' => $fields,
+                'fields' => $displayedFields,
                 'fieldValues' => $fieldValues,
                 'canViewComments' => $canViewComments,
                 'comments' => $comments,

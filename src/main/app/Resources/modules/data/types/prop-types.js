@@ -173,12 +173,17 @@ const DataCell = {
 const DataDetails = {
   propTypes: {
     id: T.string.isRequired,
+    /**
+     * @deprecated use `value`
+     */
     data: T.any,
+    value: T.any,
     label: T.string,
     hideLabel: T.bool
   },
   defaultTypes: {
     data: null,
+    value: null,
     hideLabel: false
   }
 }

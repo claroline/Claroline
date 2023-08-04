@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
@@ -11,34 +11,32 @@ import {MODAL_CATEGORY_FORM} from '#/plugin/claco-form/modals/category'
 import {Button} from '#/main/app/action'
 
 const EditorCategories = props =>
-  <Fragment>
-    <FormData
-      level={2}
-      title={trans('categories', {}, 'clacoform')}
-      name={selectors.STORE_NAME+'.clacoFormForm'}
-      buttons={true}
-      target={(clacoForm) => ['apiv2_clacoform_update', {id: clacoForm.id}]}
-      cancel={{
-        type: LINK_BUTTON,
-        target: props.path,
-        exact: true
-      }}
-      sections={[
-        {
-          id: 'general',
-          title: trans('general'),
-          fields: [
-            {
-              name: 'details.display_categories',
-              type: 'boolean',
-              label: trans('label_display_categories', {}, 'clacoform'),
-              help: trans('display_categories_help', {}, 'clacoform')
-            }
-          ]
-        }
-      ]}
-    />
-
+  <FormData
+    level={2}
+    title={trans('categories', {}, 'clacoform')}
+    name={selectors.STORE_NAME+'.clacoFormForm'}
+    buttons={true}
+    target={(clacoForm) => ['apiv2_clacoform_update', {id: clacoForm.id}]}
+    cancel={{
+      type: LINK_BUTTON,
+      target: props.path,
+      exact: true
+    }}
+    sections={[
+      {
+        id: 'general',
+        title: trans('general'),
+        fields: [
+          {
+            name: 'details.display_categories',
+            type: 'boolean',
+            label: trans('label_display_categories', {}, 'clacoform'),
+            help: trans('display_categories_help', {}, 'clacoform')
+          }
+        ]
+      }
+    ]}
+  >
     <ListData
       name={selectors.STORE_NAME+'.clacoFormForm.categories'}
       fetch={{
@@ -130,7 +128,7 @@ const EditorCategories = props =>
       }]}
       primary={true}
     />
-  </Fragment>
+  </FormData>
 
 EditorCategories.propTypes = {
   path: T.string.isRequired,
