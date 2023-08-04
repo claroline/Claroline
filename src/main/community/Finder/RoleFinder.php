@@ -40,10 +40,9 @@ class RoleFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
+        $isAdmin = false;
         if ($this->tokenStorage->getToken()) {
             $isAdmin = $this->authChecker->isGranted('ROLE_ADMIN');
-        } else {
-            $isAdmin = true;
         }
 
         // if not admin, don't list platform_admin role, for security purpose
@@ -74,14 +73,17 @@ class RoleFinder extends AbstractFinder
                     break;
                 case 'user':
                 case 'users':
-                    $qb->leftJoin('obj.users', 'ru');
-                    if (!$groupJoin) {
-                        $qb->leftJoin('obj.groups', 'g');
-                        $groupJoin = true;
-                    }
-                    $qb->leftJoin('g.users', 'gu');
+                    $qb->leftJoin('obj.users', 'ru', 'WITH', 'ru.uuid IN (:userIds)');
 
-                    $qb->andWhere('(ru.uuid IN (:userIds) OR gu.uuid IN (:userIds))');
+                    $qb->andWhere('(ru IS NOT NULL OR EXISTS (
+                        SELECT u2.id 
+                        FROM Claroline\CoreBundle\Entity\User AS u2
+                        JOIN u2.groups AS g2
+                        JOIN g2.roles AS r2
+                        WHERE u2.uuid IN (:userIds)
+                          AND r2.id = obj.id
+                    ))');
+
                     $qb->setParameter('userIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'group':
