@@ -10,15 +10,6 @@ textarea.form-control {
 }
 
 .chars-remaining {
-    font-size: 13px;
-    margin-top: 10px;
+    font-size: $font-size-sm;
     text-align: end;
-}
-
-.length-rules {
-    margin-top: 4px;
-    margin-bottom: 8px;
-    color: $secondary ;
-    font-size: 14px;
-    font-weight: lighter;
 }

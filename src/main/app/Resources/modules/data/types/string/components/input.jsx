@@ -54,33 +54,23 @@ class StringInput extends PureComponent {
         />
 
         {(minLength || maxLength) && charsTyped !== 0 &&
-          <div className="chars-remaining">
+          <div className="form-text chars-remaining">
             {charsTyped} {
               trans('characters_typed', {}, 'platform')
             }
           </div>
         }
 
-        <div className="length-rules">
+        <div className="form-text mb-2">
           {this.props.minLength &&
-            <div className="px-2">
-              <span className="icon-with-text-right">
-                <i className="fa fa-circle-exclamation" />
-              </span>
-              <span>
-                {minLength} {trans('charsMin_length', {}, 'platform')}
-              </span>
+            <div className="form-text">
+              {minLength} {trans('charsMin_length', {}, 'platform')}
             </div>
           }
 
           {this.props.maxLength &&
-            <div className="px-2">
-              <span className="icon-with-text-right">
-                <i className="fa fa-circle-exclamation" />
-              </span>
-              <span>
-                {maxLength} {trans('charsMax_length', {}, 'platform')}
-              </span>
+            <div className="form-text">
+              {maxLength} {trans('charsMax_length', {}, 'platform')}
             </div>
           }
         </div>
