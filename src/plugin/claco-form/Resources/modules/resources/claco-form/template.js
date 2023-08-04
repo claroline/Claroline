@@ -1,16 +1,22 @@
+import get from 'lodash/get'
+
 import {url} from '#/main/app/api'
 import {trans, displayDate} from '#/main/app/intl'
 
 import {getCountry, generateFieldKey} from '#/plugin/claco-form/resources/claco-form/utils'
 
 // TODO : find a way to use data api instead of big switch
-function generateFromTemplate(template, fields, entry, includeMeta = false) {
+function generateFromTemplate(template, fields, entry, isOwner = false, isManager = false) {
   let generated = template.replace('%clacoform_entry_title%', entry.title)
 
   fields.map(f => {
     let replacedField
 
-    if (includeMeta || !f.restrictions.metadata) {
+    if (!get(f, 'restrictions.confidentiality')
+      || 'none' === get(f, 'restrictions.confidentiality')
+      || isManager
+      || ('owner' === get(f, 'restrictions.confidentiality') && isOwner)
+    ) {
       const fieldValue = entry.values ? entry.values[f.id] : ''
 
       if (fieldValue) {
@@ -83,21 +89,19 @@ function getTemplateErrors(template, fields) {
     }
 
     fields.map(field => {
-      if (!field.restrictions.hidden) {
-        const fieldKey = generateFieldKey(field.id)
+      const fieldKey = generateFieldKey(field.id)
 
-        const matches = template.match(
-          new RegExp(fieldKey, 'g')
+      const matches = template.match(
+        new RegExp(fieldKey, 'g')
+      )
+      if (field.required && matches === null) {
+        errors.push(
+          trans('entry_field_required', {field: fieldKey}, 'validators')
         )
-        if (field.required && matches === null) {
-          errors.push(
-            trans('entry_field_required', {field: fieldKey}, 'validators')
-          )
-        } else if (matches !== null && matches.length > 1) {
-          errors.push(
-            trans('entry_field_duplicated', {field: fieldKey}, 'validators')
-          )
-        }
+      } else if (matches !== null && matches.length > 1) {
+        errors.push(
+          trans('entry_field_duplicated', {field: fieldKey}, 'validators')
+        )
       }
     })
   }
@@ -110,7 +114,6 @@ function getTemplateHelp(fields) {
     trans('template_variables_message', {}, 'clacoform'),
     `${trans('title')} : %clacoform_entry_title% (${trans('required')})`
   ].concat(fields
-    .filter(field => !field.restrictions.hidden)
     .map(field => field.required ?
       `${field.label} : ${generateFieldKey(field.id)}`
       :

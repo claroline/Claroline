@@ -24,7 +24,7 @@ const ParametersModal = props => {
     allFields = allFields.concat(section.fields)
   })
 
-  const sections = formatSections(get(props.course, 'registration.form', []), allFields, 'data', true, isManager)
+  const sections = formatSections(get(props.course, 'registration.form', []), allFields, 'data', true, isManager, isManager)
   sections[0].defaultOpened = true
 
   return (

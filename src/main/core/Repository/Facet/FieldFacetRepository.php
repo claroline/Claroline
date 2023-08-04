@@ -18,6 +18,8 @@ class FieldFacetRepository extends EntityRepository
 {
     /**
      * @return FieldFacet[]
+     *
+     * @deprecated
      */
     public function findPlatformFieldFacets()
     {

@@ -18,6 +18,7 @@
   "field_conditional_display": "Afficher en fonction de la valeur d'un autre champ",
   "field": "Champ",
   "field_comparator": "Comparaison",
+  "field_condition_enable": "Afficher en fonction de la valeur d'un autre champ",
   "equal": "est égal à",
   "different": "est différent de",
   "empty": "est vide",
