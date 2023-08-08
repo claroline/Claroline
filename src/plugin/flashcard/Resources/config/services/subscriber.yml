@@ -1,0 +1,7 @@
+services:
+    _defaults:
+        tags: [kernel.event_subscriber]
+
+    Claroline\FlashcardBundle\Subscriber\FlashcardDeckSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'

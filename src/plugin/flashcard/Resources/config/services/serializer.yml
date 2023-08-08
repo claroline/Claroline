@@ -1,0 +1,3 @@
+services:
+    Claroline\FlashcardBundle\Serializer\FlashcardDeckSerializer:
+        tags: ['claroline.serializer']
