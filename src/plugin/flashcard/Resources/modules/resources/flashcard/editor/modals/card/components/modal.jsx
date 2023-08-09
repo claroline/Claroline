@@ -42,7 +42,7 @@ const CardModal = props =>
             {
               name: 'question',
               label: trans('question', {}, 'flashcard'),
-              type: 'string',
+              type: 'string'
             }, {
               name: 'visibleContent',
               label: trans('visible_content', {}, 'flashcard'),

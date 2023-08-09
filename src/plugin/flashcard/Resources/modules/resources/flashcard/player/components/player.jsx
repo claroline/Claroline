@@ -21,7 +21,7 @@ const FlashcardDeckPlayer = props => {
       <h2 className="sr-only">{trans('play')}</h2>
       <Routes
         routes={[
-         {
+          {
             path: '/play/'
           }
         ]}

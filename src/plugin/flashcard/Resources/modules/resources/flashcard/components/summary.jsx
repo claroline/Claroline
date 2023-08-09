@@ -7,6 +7,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import {FlashcardDeck as FlashcardDeckTypes} from "#/plugin/flashcard/resources/flashcard/prop-types";
 
 const FlashcardDeckSummary = (props) => {
   if (0 === props.cards.length) {
@@ -92,6 +93,10 @@ const FlashcardDeckSummary = (props) => {
 FlashcardDeckSummary.propTypes = {
   className: T.string,
   basePath: T.string.isRequired,
+  cards: T.arrayOf(T.shape({
+    id: T.string.isRequired,
+    question: T.string
+  })).isRequired,
   onNavigate: T.func,
   overview: T.bool,
   showEndPage: T.bool

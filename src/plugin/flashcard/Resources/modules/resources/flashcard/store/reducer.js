@@ -11,7 +11,7 @@ const reducer = combineReducers(Object.assign({
   flashcardDeck: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.flashcardDeck || state,
     [makeInstanceAction(FORM_SUBMIT_SUCCESS, editorSelectors.FORM_NAME)]: (state, action) => action.updatedData
-  }),
+  })
 }, editorReducer))
 
 export {

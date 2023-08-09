@@ -13,7 +13,7 @@ const FlashcardDeckOverview = connect(
     empty: selectors.empty(state),
     overviewMessage: selectors.overviewMessage(state),
     overview: selectors.showOverview(state),
-    showEndPage: selectors.showEndPage(state),
+    showEndPage: selectors.showEndPage(state)
   })
 )(FlashcardDeckOverviewComponent)
 

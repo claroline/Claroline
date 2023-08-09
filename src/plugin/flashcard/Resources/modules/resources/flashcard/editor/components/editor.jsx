@@ -25,7 +25,7 @@ const EditorComponent = props => {
     title={trans('parameters')}
     name={selectors.FORM_NAME}
     buttons={true}
-    target={(flashcardDeck) => ['apiv2_flashcard_deck_update', {id: props.flashcardDeck.id}]}
+    target={() => ['apiv2_flashcard_deck_update', {id: props.flashcardDeck.id}]}
     cancel={{
       type: LINK_BUTTON,
       target: props.path,
@@ -121,7 +121,7 @@ const EditorComponent = props => {
         save: (card) => props.update('cards', [].concat(props.cards, [card]))
       }]}
     />
-  </FormData>;
+  </FormData>
 }
 
 EditorComponent.propTypes = {
@@ -129,6 +129,9 @@ EditorComponent.propTypes = {
   cards: T.arrayOf(T.shape(
     CardTypes.propTypes
   )),
+  flashcardDeck: T.shape({
+    id: T.string.isRequired
+  }).isRequired,
   update: T.func
 }
 

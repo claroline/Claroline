@@ -8,8 +8,6 @@ import {selectors} from '#/plugin/flashcard/resources/flashcard/store'
 const FlashcardDeckPlayer = withRouter(connect(
   state => ({
     cards: selectors.cards(state)
-  }),
-  dispatch => ({
   })
 )(FlashcardDeckPlayerComponent))
 

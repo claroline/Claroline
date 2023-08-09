@@ -23,7 +23,7 @@ const FlashcardDeck = {
     )),
     overview: T.shape({
       display: T.bool,
-      message: T.string,
+      message: T.string
     }),
     end: T.shape({
       display: T.bool,
