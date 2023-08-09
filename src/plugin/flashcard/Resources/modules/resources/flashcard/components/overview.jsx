@@ -64,7 +64,7 @@ FlashcardDeckOverview.propTypes = {
     FlashcardDeckTypes.propTypes
   ).isRequired,
   cards: T.arrayOf(T.shape(
-    FlashcardDeckTypes.propTypes,
+    FlashcardDeckTypes.propTypes
   )),
   overview: T.bool.isRequired,
   showEndPage: T.bool.isRequired,
