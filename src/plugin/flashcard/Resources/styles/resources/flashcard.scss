@@ -1,0 +1,42 @@
+/**
+ * Flashcard resource styles.
+ */
+
+@import "../variables";
+
+
+.card-preview {
+  display: inline-block;
+  width: 150px;
+  height: 200px;
+  background-color: #b59cf0;
+  border-radius: 8px;
+  margin: 10px;
+  transition: transform 0.2s;
+  position: relative;
+
+  .card-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+  }
+
+  .btn {
+    padding: 4px;
+    border-radius: 0;
+  }
+}
+
+.card-preview:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  padding: 5px;
+  font-size: 16px;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

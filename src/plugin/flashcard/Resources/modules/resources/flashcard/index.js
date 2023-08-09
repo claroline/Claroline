@@ -6,5 +6,6 @@ import {reducer} from '#/plugin/flashcard/resources/flashcard/store'
  */
 export default {
   component: FlashcardDeckResource,
-  store: reducer
+  store: reducer,
+  styles: ['claroline-distribution-plugin-flashcard-flashcard']
 }

@@ -36,15 +36,40 @@ class FlashcardDeck extends AbstractResource
         return $this->cards;
     }
 
+    public function getCardByUuid(string $uuid): ?Flashcard
+    {
+        foreach ($this->cards as $card) {
+            if ($card->getUuid() === $uuid) {
+                return $card;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param Flashcard $card
+     *
+     * @return bool
+     */
+    public function hasCard(Flashcard $card): bool
+    {
+        return $this->cards->contains($card);
+    }
+
     public function addCard(Flashcard $card): void
     {
         if (!$this->cards->contains($card)) {
             $this->cards->add($card);
+            $card->setDeck($this);
         }
     }
 
     public function removeCard(Flashcard $card): void
     {
-        $this->cards->removeElement($card);
+        if ($this->cards->contains($card)) {
+            $this->cards->removeElement($card);
+        }
     }
 }

@@ -3,39 +3,44 @@ import {PropTypes as T} from 'prop-types'
 const Card = {
   propTypes: {
     id: T.string.isRequired,
-    content: T.shape({
-      mimeType: T.string,
-    }),
-    meta: T.shape({
-      title: T.string,
-      description: T.string
-    }),
-    display: T.shape({
-      color: T.string
-    })
+    question: T.string,
+    visibleContent: T.string,
+    hiddenContent: T.string
   },
   defaultProps: {
-    meta: {},
-    display: {}
+    children: []
   }
 }
 
 const FlashcardDeck = {
   propTypes: {
     id: T.string,
-    autoPlay: T.bool,
-    interval: T.number,
     display: T.shape({
-      showOverview: T.bool,
-      showControls: T.bool
+      showOverview: T.bool
     }),
-    Cards: T.arrayOf(T.shape(
+    cards: T.arrayOf(T.shape(
       Card.propTypes
-    ))
+    )),
+    overview: T.shape({
+      display: T.bool,
+      message: T.string,
+    }),
+    end: T.shape({
+      display: T.bool,
+      message: T.string,
+      navigation: T.bool
+    })
+  },
+  defaultProps: {
+    display: {
+      showOverview: false,
+      showEndPage: false
+    },
+    cards: []
   }
 }
 
 export {
-  FlashcardDeck,
-  Card
+  Card,
+  FlashcardDeck
 }

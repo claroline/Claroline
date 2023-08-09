@@ -2,12 +2,12 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 
+import {FlashcardDeckOverview} from '#/plugin/flashcard/resources/flashcard/containers/overview'
 import {Editor} from '#/plugin/flashcard/resources/flashcard/editor/components/editor'
-import {Overview} from '#/plugin/flashcard/resources/flashcard/player/components/overview'
-import {Player} from '#/plugin/flashcard/resources/flashcard/player/components/player'
+import {FlashcardDeckPlayer} from '#/plugin/flashcard/resources/flashcard/player/containers/player'
 
 const FlashcardDeckResource = props =>
   <ResourcePage
@@ -16,7 +16,7 @@ const FlashcardDeckResource = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
-        displayed: props.showOverview,
+        displayed: props.overview,
         target: props.path,
         exact: true
       }, {
@@ -28,36 +28,28 @@ const FlashcardDeckResource = props =>
     ]}
     routes={[
       {
-        path: '/',
-        exact: true,
-        disabled: !props.showOverview,
-        component: Overview
-      }, {
-        path: '/play/:id?',
-        render: (routeProps) => {
-          const FlashcardPlayer = (
-            <Player
-              activeCard={routeProps.match.params.id}
-            />
-          )
-
-          return FlashcardPlayer
-        }
-      }, {
         path: '/edit',
         component: Editor,
         disabled: !props.editable
+      }, {
+        path: '/play',
+        component: FlashcardDeckPlayer
+      }, {
+        path: '/',
+        exact: true,
+        component: FlashcardDeckOverview,
+        disabled: !props.overview
       }
     ]}
     redirect={[
-      {from: '/', exact: true, to: '/play', disabled: props.showOverview}
+      {from: '/', exact: true, to: '/play', disabled: props.overview}
     ]}
   />
 
 FlashcardDeckResource.propTypes = {
-  path: T.string,
-  showOverview: T.bool,
-  editable: T.bool
+  path: T.string.isRequired,
+  editable: T.bool.isRequired,
+  overview: T.bool.isRequired
 }
 
 export {

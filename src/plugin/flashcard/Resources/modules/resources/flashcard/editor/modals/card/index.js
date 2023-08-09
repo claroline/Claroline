@@ -5,7 +5,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {CardModal} from '#/plugin/flashcard/resources/flashcard/editor/modals/card/components/card-modal.jsx'
+import {CardModal} from '#/plugin/flashcard/resources/flashcard/editor/modals/card/containers/modal'
 
 const MODAL_CARD = 'MODAL_CARD'
 

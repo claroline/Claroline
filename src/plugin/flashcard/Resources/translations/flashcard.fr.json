@@ -1,3 +1,20 @@
 {
-  "no_card": "Aucune carte."
+  "card": "Carte",
+  "cards": "Cartes",
+
+  "no_card": "Aucune carte.",
+  "add_card": "Ajouter une carte",
+  "new_card": "Nouvelle carte",
+  "card_delete_confirm": "Suppression de la carte",
+  "card_delete_message": "Êtes-vous sûr de vouloir supprimer cette carte ?",
+
+  "card_number" : "Carte n°",
+  "question": "Question",
+  "visible_content": "Face visible",
+  "hidden_content": "Face cachée",
+
+  "cards_list": "Liste des cartes",
+  "card_parameters": "Paramètres de la carte",
+
+  "start_disabled_empty": "La resource cartes-mémoire est vide."
 }

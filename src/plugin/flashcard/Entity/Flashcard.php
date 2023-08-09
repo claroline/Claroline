@@ -18,7 +18,7 @@ class Flashcard
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private ?string $question;
+    private ?string $question = null;
 
     /**
      * @ORM\Column(type="text")
@@ -32,6 +32,7 @@ class Flashcard
 
     /**
      * @ORM\ManyToOne(targetEntity="FlashcardDeck", inversedBy="cards")
+     * @ORM\JoinColumn(nullable=false)
      */
     private FlashcardDeck $deck;
 
@@ -84,7 +85,6 @@ class Flashcard
     public function setDeck(FlashcardDeck $deck): self
     {
         $this->deck = $deck;
-
         return $this;
     }
 

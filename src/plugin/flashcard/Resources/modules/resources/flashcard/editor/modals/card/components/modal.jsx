@@ -12,7 +12,7 @@ import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
-import {selectors} from '#/plugin/slideshow/resources/slideshow/editor/modals/slide/store/selectors'
+import {selectors} from '#/plugin/flashcard/resources/flashcard/editor/modals/card/store/selectors'
 
 const CardModal = props =>
   <Modal
@@ -36,47 +36,29 @@ const CardModal = props =>
       name={selectors.STORE_NAME}
       sections={[
         {
-          title: trans('general'),
-          primary: true,
-          fields: [
-            {
-              name: 'type',
-              label: trans('type'),
-              type: 'choice',
-              required: true,
-              options: {
-                condensed: true,
-                choices: {
-                  text: trans('text')
-                }
-              },
-              linked: [
-                {
-                  name: 'content',
-                  type: 'text',
-                  label: trans('text'),
-                  hideLabel: true,
-                  required: true,
-                  displayed: (card) => -1 !== ['text'].indexOf(card.type)
-                }
-              ]
-            }
-          ]
-        }, {
           icon: 'fa fa-fw fa-circle-info',
           title: trans('information'),
           fields: [
             {
-              name: 'meta.title',
-              label: trans('title'),
-              type: 'string'
+              name: 'question',
+              label: trans('question', {}, 'flashcard'),
+              type: 'string',
             }, {
-              name: 'meta.description',
-              label: trans('description'),
+              name: 'visibleContent',
+              label: trans('visible_content', {}, 'flashcard'),
               type: 'string',
               options: {
                 long: true
-              }
+              },
+              required: true
+            }, {
+              name: 'hiddenContent',
+              label: trans('hidden_content', {}, 'flashcard'),
+              type: 'string',
+              options: {
+                long: true
+              },
+              required: true
             }
           ]
         }
