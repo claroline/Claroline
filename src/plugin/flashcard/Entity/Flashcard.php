@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\Table(name="claro_flashcard_card")
  */
 class Flashcard
@@ -32,6 +33,7 @@ class Flashcard
 
     /**
      * @ORM\ManyToOne(targetEntity="FlashcardDeck", inversedBy="cards")
+     *
      * @ORM\JoinColumn(nullable=false)
      */
     private FlashcardDeck $deck;
@@ -85,7 +87,7 @@ class Flashcard
     public function setDeck(FlashcardDeck $deck): self
     {
         $this->deck = $deck;
+
         return $this;
     }
-
 }

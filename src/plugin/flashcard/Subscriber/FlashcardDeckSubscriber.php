@@ -2,10 +2,10 @@
 
 namespace Claroline\FlashcardBundle\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class FlashcardDeckSubscriber implements EventSubscriberInterface
 {
@@ -20,7 +20,7 @@ class FlashcardDeckSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'resource.flashcard.load' => 'onLoad'
+            'resource.flashcard.load' => 'onLoad',
         ];
     }
 

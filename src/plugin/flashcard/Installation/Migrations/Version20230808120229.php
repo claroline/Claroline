@@ -14,7 +14,7 @@ final class Version20230808120229 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             CREATE TABLE claro_flashcard_deck (
                 id INT AUTO_INCREMENT NOT NULL, 
                 end_back_target_id INT DEFAULT NULL, 
@@ -33,8 +33,8 @@ final class Version20230808120229 extends AbstractMigration
                 INDEX IDX_6251960648FD0A1B (end_back_target_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             CREATE TABLE claro_flashcard_card (
                 id INT AUTO_INCREMENT NOT NULL, 
                 deck_id INT NOT NULL, 
@@ -46,45 +46,45 @@ final class Version20230808120229 extends AbstractMigration
                 INDEX IDX_3BE938E2111948DC (deck_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_flashcard_deck 
             ADD CONSTRAINT FK_62519606B87FAB32 FOREIGN KEY (resourceNode_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_flashcard_deck 
             ADD CONSTRAINT FK_6251960648FD0A1B FOREIGN KEY (end_back_target_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE SET NULL
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_flashcard_card 
             ADD CONSTRAINT FK_3BE938E2111948DC FOREIGN KEY (deck_id) 
             REFERENCES claro_flashcard_deck (id)
-        ");
+        ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql("
+        $this->addSql('
             ALTER TABLE claro_flashcard_deck 
             DROP FOREIGN KEY FK_62519606B87FAB32
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_flashcard_deck 
             DROP FOREIGN KEY FK_6251960648FD0A1B
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             ALTER TABLE claro_flashcard_card 
             DROP FOREIGN KEY FK_3BE938E2111948DC
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_flashcard_deck
-        ");
-        $this->addSql("
+        ');
+        $this->addSql('
             DROP TABLE claro_flashcard_card
-        ");
+        ');
     }
 }

@@ -3,8 +3,8 @@
 namespace Claroline\FlashcardBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\FlashcardBundle\Entity\FlashcardDeck;
 use Claroline\FlashcardBundle\Entity\Flashcard;
+use Claroline\FlashcardBundle\Entity\FlashcardDeck;
 
 class FlashcardDeckSerializer
 {
@@ -39,7 +39,7 @@ class FlashcardDeckSerializer
                 'message' => $flashcardDeck->getEndMessage(),
                 'navigation' => $flashcardDeck->hasEndNavigation(),
             ],
-            'cards' => $this->serializeCards($flashcardDeck)
+            'cards' => $this->serializeCards($flashcardDeck),
         ];
     }
 
@@ -53,7 +53,7 @@ class FlashcardDeckSerializer
                 'id' => $card->getId(),
                 'question' => $card->getQuestion(),
                 'visibleContent' => $card->getVisibleContent(),
-                'hiddenContent' => $card->getHiddenContent()
+                'hiddenContent' => $card->getHiddenContent(),
             ];
         }
 
@@ -82,6 +82,7 @@ class FlashcardDeckSerializer
 
         return $flashcardDeck;
     }
+
     private function deserializeCards(array $cardsData, FlashcardDeck $flashcardDeck): void
     {
         $currentCardIds = [];

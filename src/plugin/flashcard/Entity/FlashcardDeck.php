@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\Table(name="claro_flashcard_deck")
  */
 class FlashcardDeck extends AbstractResource
@@ -47,12 +48,6 @@ class FlashcardDeck extends AbstractResource
         return null;
     }
 
-    /**
-     *
-     * @param Flashcard $card
-     *
-     * @return bool
-     */
     public function hasCard(Flashcard $card): bool
     {
         return $this->cards->contains($card);
