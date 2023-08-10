@@ -1,9 +1,5 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
-
-import {ContentSummary} from '#/main/app/content/components/summary'
-import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
@@ -18,47 +14,6 @@ const FlashcardDeckSummary = (props) => {
       />
     )
   }
-
-  let baseLinks = []
-  if (props.overview) {
-    baseLinks = [{
-      id: 'home',
-      type: LINK_BUTTON,
-      label: (
-        <Fragment>
-          {trans('home')}
-          <span
-            className="card-status">
-            <span
-              className={classes('fa fa-fw fa-home')}/>
-          </span>
-        </Fragment>
-      ),
-      target: props.basePath,
-      exact: true,
-      onClick: props.onNavigate
-    }]
-  }
-
-  let endLink = []
-  if (props.showEndPage) {
-    endLink = [{
-      id: 'end',
-      type: LINK_BUTTON,
-      label:(
-        <Fragment>
-          {trans('end')}
-          <span className="card-status">
-            <span className={classes('fa fa-fw fa-flag-checkered')} />
-          </span>
-        </Fragment>
-      ),
-      target: props.basePath + '/play/end',
-      exact: true,
-      onClick: props.onNavigate
-    }]
-  }
-
   return (
     <div className="flashcard-player row justify-content-start">
       <ul>
@@ -78,27 +33,15 @@ const FlashcardDeckSummary = (props) => {
           )
         })}
       </ul>
-
-      <ContentSummary
-        className={props.className}
-        links={baseLinks.concat(
-        ).concat(endLink)}
-        noCollapse={true}
-      />
     </div>
   )
 }
 
 FlashcardDeckSummary.propTypes = {
-  className: T.string,
-  basePath: T.string.isRequired,
   cards: T.arrayOf(T.shape({
     id: T.string.isRequired,
     question: T.string
-  })).isRequired,
-  onNavigate: T.func,
-  overview: T.bool,
-  showEndPage: T.bool
+  })).isRequired
 }
 
 export {

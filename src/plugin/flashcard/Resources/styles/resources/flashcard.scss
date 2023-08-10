@@ -4,14 +4,14 @@
 
 @import "../variables";
 
-
 .card-preview {
   display: inline-block;
   width: 150px;
   height: 200px;
-  background-color: #b59cf0;
+  background: #fff9ec;
   border-radius: 8px;
   margin: 10px;
+  box-shadow: 0 0 5px black;
   transition: transform 0.2s;
   position: relative;
 
@@ -39,4 +39,82 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.card-player {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.card-deck {
+  position: relative;
+  max-width: 500px;
+  width: 80vw;
+  height: 300px;
+  perspective: 1000px;
+  background-color: transparent;
+}
+
+.card-element {
+  position: absolute;
+  background: #fff9ec;
+  max-width: 500px;
+  width: 80vw;
+  height: 300px;
+  margin: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px black;
+  transition: transform 500ms;
+  transform-style: preserve-3d;
+
+  &-question {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  &-content {
+    overflow-y: auto;
+    white-space: pre-line;
+  }
+
+  &-visible {
+    width: 100%;
+    height: 250px;
+    padding: 20px;
+    position: absolute;
+    backface-visibility: hidden;
+  }
+
+  &-hidden {
+    width: 100%;
+    height: 250px;
+    padding: 20px;
+    position: absolute;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+  }
+
+  &-buttons {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+
+    & > button {
+      flex: 1;
+    }
+  }
+
+  @for $index from 0 through 100 {
+    &-#{$index} {
+      left: calc(-13.5px + calc(#{$index} * 10px));
+      top: calc(#{$index} * 10px);
+      z-index: calc(100 - #{$index});
+    }
+  }
+
+  &-flip {
+    transform: rotateY(180deg);
+  }
 }

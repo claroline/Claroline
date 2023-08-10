@@ -9,6 +9,11 @@ const flashcardDeck = createSelector(
   [resource],
   (resource) => resource.flashcardDeck)
 
+const id = createSelector(
+  [flashcardDeck],
+  (flashcardDeck) => flashcardDeck.id
+)
+
 const cards = createSelector(
   [flashcardDeck],
   (flashcardDeck) => flashcardDeck.cards || []
@@ -41,8 +46,10 @@ const showEndPage = createSelector(
 
 export const selectors = {
   STORE_NAME,
+
   resource,
   flashcardDeck,
+  id,
   cards,
   empty,
   overviewMessage,

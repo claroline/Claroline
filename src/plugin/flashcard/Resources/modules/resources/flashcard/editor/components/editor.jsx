@@ -18,9 +18,9 @@ import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-typ
 import {MODAL_CARD} from '#/plugin/flashcard/resources/flashcard/editor/modals/card'
 import {Cards} from '#/plugin/flashcard/resources/flashcard/components/cards'
 
-const EditorComponent = props => {
+const EditorComponent = props =>
 
-  return <FormData
+  <FormData
     level={2}
     title={trans('parameters')}
     name={selectors.FORM_NAME}
@@ -122,7 +122,6 @@ const EditorComponent = props => {
       }]}
     />
   </FormData>
-}
 
 EditorComponent.propTypes = {
   path: T.string,

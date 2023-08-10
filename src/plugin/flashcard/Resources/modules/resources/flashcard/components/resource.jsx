@@ -8,6 +8,7 @@ import {ResourcePage} from '#/main/core/resource/containers/page'
 import {FlashcardDeckOverview} from '#/plugin/flashcard/resources/flashcard/containers/overview'
 import {Editor} from '#/plugin/flashcard/resources/flashcard/editor/components/editor'
 import {FlashcardDeckPlayer} from '#/plugin/flashcard/resources/flashcard/player/containers/player'
+import {PlayerEnd} from '#/plugin/flashcard/resources/flashcard/player/components/end'
 
 const FlashcardDeckResource = props =>
   <ResourcePage
@@ -16,7 +17,6 @@ const FlashcardDeckResource = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
-        displayed: props.overview,
         target: props.path,
         exact: true
       }, {
@@ -31,6 +31,10 @@ const FlashcardDeckResource = props =>
         path: '/edit',
         component: Editor,
         disabled: !props.editable
+      }, {
+        path: '/play/end',
+        exact: true,
+        component: PlayerEnd
       }, {
         path: '/play',
         component: FlashcardDeckPlayer

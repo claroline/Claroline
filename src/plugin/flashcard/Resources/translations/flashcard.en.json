@@ -12,6 +12,9 @@
   "question": "Question",
   "visible_content": "Visible content",
   "hidden_content": "Hidden content",
+  "show_answer": "Flip the card",
+  "right_answer": "I know",
+  "wrong_answer": "I don't know",
 
   "cards_list": "Cards list",
   "card_parameters": "Card parameters",

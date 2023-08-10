@@ -12,6 +12,9 @@
   "question": "Question",
   "visible_content": "Face visible",
   "hidden_content": "Face cachée",
+  "show_answer": "Retourner la carte",
+  "right_answer": "Je sais",
+  "wrong_answer": "Je ne sais pas",
 
   "cards_list": "Liste des cartes",
   "card_parameters": "Paramètres de la carte",
