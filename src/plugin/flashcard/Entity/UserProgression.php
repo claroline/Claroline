@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Represents the progression of a User in a Card.
  *
  * @ORM\Table(name="claro_flashcard_progression")
+ *
  * @ORM\Entity()
  */
 class UserProgression
@@ -18,8 +19,8 @@ class UserProgression
     use Id;
 
     /**
-     *
      * @ORM\ManyToOne(targetEntity="Flashcard")
+     *
      * @ORM\JoinColumn(name="flashcard_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @var Flashcard
@@ -30,6 +31,7 @@ class UserProgression
      * User for which we track the progression.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @var User
@@ -37,10 +39,7 @@ class UserProgression
     protected $user;
 
     /**
-     *
      * @ORM\Column(name="is_successful", type="boolean")
-     *
-     * @var bool
      */
     protected bool $isSuccessful;
 
@@ -62,7 +61,6 @@ class UserProgression
     /**
      * Set Card.
      *
-     * @param Flashcard $card
      * @return UserProgression
      */
     public function setFlashcard(Flashcard $card)
@@ -74,8 +72,6 @@ class UserProgression
 
     /**
      * Get User.
-     *
-     * @return User
      */
     public function getUser(): User
     {
@@ -85,7 +81,6 @@ class UserProgression
     /**
      * Set User.
      *
-     * @param User $user
      * @return UserProgression
      */
     public function setUser(User $user)
@@ -97,8 +92,6 @@ class UserProgression
 
     /**
      * Get successful status.
-     *
-     * @return bool
      */
     public function isSuccessful(): bool
     {
@@ -108,13 +101,12 @@ class UserProgression
     /**
      * Set successful status.
      *
-     * @param bool $successful
      * @return UserProgression
      */
     public function setIsSuccessful(bool $successful)
     {
         $this->isSuccessful = $successful;
+
         return $this;
     }
-
 }

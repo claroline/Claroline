@@ -4,7 +4,6 @@ namespace Claroline\FlashcardBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\FlashcardBundle\Entity\UserProgression;
-use Claroline\FlashcardBundle\Serializer\FlashcardDeckSerializer;
 
 class UserProgressionSerializer
 {
@@ -32,7 +31,7 @@ class UserProgressionSerializer
         return [
             'id' => $userProgression->getId(),
             'flashcard' => $this->flashcardDeckSerializer->serializeCard($userProgression->getFlashcard()),
-            'is_successful' => $userProgression->isSuccessful()
+            'is_successful' => $userProgression->isSuccessful(),
         ];
     }
 }
