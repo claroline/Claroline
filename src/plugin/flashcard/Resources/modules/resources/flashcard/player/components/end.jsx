@@ -4,7 +4,6 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
-import {ResourceEnd} from '#/main/core/resource/components/end'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {selectors as baseSelectors} from '#/plugin/flashcard/resources/flashcard/store'
 

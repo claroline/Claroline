@@ -1,15 +1,53 @@
-import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import React, { useState } from 'react'
+import { useHistory, useRouteMatch } from 'react-router-dom'
+import { PropTypes as T } from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
+import { trans } from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
+import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import { ContentHtml } from '#/main/app/content/components/html'
+import { ContentPlaceholder } from '#/main/app/content/components/placeholder'
 
-import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
+import { FlashcardDeck } from '#/plugin/flashcard/resources/flashcard/prop-types'
 
-const FlashcardDeckPlayer = props => {
-  if (0 === props.cards.length) {
+const FlashcardDeckPlayer = ({ deck, updateUserProgression }) => {
+  const [currentCardIndex, setCurrentCardIndex] = useState(0)
+  const history = useHistory()
+  const match = useRouteMatch()
+  const [isFlipped, setIsFlipped] = useState(false)
+  const currentCard = deck.cards[currentCardIndex]
+
+  const goToNextCard = () => {
+    const isLastCard = currentCardIndex + 1 === deck.cards.length
+    if (isLastCard && deck.end.display) {
+      history.push(`${match.path}/end`)
+    } else {
+      const nextIndex = isLastCard ? 0 : currentCardIndex + 1
+      setCurrentCardIndex(nextIndex)
+    }
+  }
+
+  const handleAnswer = (isSuccessful) => {
+    updateUserProgression(currentCard.id, isSuccessful).then(() => {
+      setIsFlipped(false)
+      setTimeout(goToNextCard, 100)
+    })
+  }
+
+  const renderCardContent = (contentKey) => (
+    <>
+      {currentCard.question && <p className="card-element-question">{currentCard.question}</p>}
+      <div className={'card-element-counter'}>
+        {`${currentCardIndex + 1} / ${deck.cards.length}`}
+      </div>
+      <ContentHtml className="card-element-content">
+        {currentCard[contentKey]}
+      </ContentHtml>
+    </>
+  )
+
+  if (!deck.cards.length) {
     return (
       <ContentPlaceholder
         size="lg"
@@ -19,80 +57,52 @@ const FlashcardDeckPlayer = props => {
   }
 
   return (
-    <section className="card-player" style={{ display: 'flex', justifyContent : 'center', alignItems: "center" }}>
+    <section className="card-player">
       <div className="card-deck">
-        <div className={'card-element card-element-0'}>
-
+        <div className={`card-element card-element-0 ${isFlipped ? 'card-element-flip' : ''}`}>
           <div className="card-element-visible">
-            { props.cards[0].question.length > 0 &&
-              <p className="card-element-question">
-                {props.cards[0].question}
-              </p>
-            }
-            <p className="card-element-content">
-              {props.cards[0].visibleContent}
-            </p>
+            {renderCardContent('visibleContent')}
             <div className="card-element-buttons">
               <Button
+                label={trans('show_answer', {}, 'flashcard')}
                 type={CALLBACK_BUTTON}
                 className="btn btn-info"
-                callback={() => {
-                  document.querySelector('.card-element-0').classList.toggle('card-element-flip')
-                }}
-              >
-                {trans('show_answer', {}, 'flashcard')}
-              </Button>
+                callback={() => setIsFlipped(!isFlipped)}
+              />
             </div>
           </div>
-
           <div className="card-element-hidden">
-            { props.cards[0].question.length > 0 &&
-              <p className="card-element-question">
-                {props.cards[0].question}
-              </p>
-            }
-            <p>
-              {props.cards[0].hiddenContent}
-            </p>
-            <div className="card-element-buttons">
-              <Button
-                type={CALLBACK_BUTTON}
+            {renderCardContent('hiddenContent')}
+            <div className="card-element-buttons mt-3">
+              <CallbackButton
                 className="btn btn-success"
-                callback={() => {
-                  // TODO : Next card + status change
-                }}
+                callback={() => handleAnswer(true)}
               >
                 {trans('right_answer', {}, 'flashcard')}
-              </Button>
-              <Button
-                type={CALLBACK_BUTTON}
+              </CallbackButton>
+              <CallbackButton
                 className="btn btn-danger"
-                callback={() => {
-                  // TODO : Next card + status change
-                }}
+                label={trans('wrong_answer', {}, 'flashcard')}
+                callback={() => handleAnswer(false)}
               >
+
                 {trans('wrong_answer', {}, 'flashcard')}
-              </Button>
+              </CallbackButton>
             </div>
           </div>
         </div>
-
-        { props.cards.length > 1 &&
-          <div className={'card-element card-element-1'}></div>
-        }
-
-        { props.cards.length > 2 &&
-          <div className={'card-element card-element-2'}></div>
-        }
+        {deck.cards.length > 1 && <div className="card-element card-element-1"></div>}
+        {deck.cards.length > 2 && <div className="card-element card-element-2"></div>}
       </div>
     </section>
   )
 }
 
 FlashcardDeckPlayer.propTypes = {
-  cards: T.arrayOf(T.shape(
-    CardTypes.propTypes
-  ))
+  deck: T.shape(
+    FlashcardDeck.propTypes
+  ).isRequired,
+  updateUserProgression: T.func.isRequired
 }
 
 export {

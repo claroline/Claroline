@@ -69,6 +69,15 @@
   transition: transform 500ms;
   transform-style: preserve-3d;
 
+
+  &-counter {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    text-align: right;
+    font-size: 0.7em;
+  }
+
   &-question {
     text-align: center;
     font-weight: bold;
@@ -76,10 +85,9 @@
 
   &-content {
     overflow-y: auto;
-    white-space: pre-line;
   }
 
-  &-visible {
+  &-visible,&-hidden {
     width: 100%;
     height: 250px;
     padding: 20px;
@@ -88,12 +96,15 @@
   }
 
   &-hidden {
-    width: 100%;
-    height: 250px;
-    padding: 20px;
-    position: absolute;
-    backface-visibility: hidden;
     transform: rotateY(180deg);
+  }
+
+  &.flipped &-visible {
+    transform: rotateY(180deg);
+  }
+
+  &.flipped &-hidden {
+    transform: rotateY(0deg);
   }
 
   &-buttons {

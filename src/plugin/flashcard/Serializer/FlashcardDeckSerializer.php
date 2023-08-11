@@ -49,15 +49,23 @@ class FlashcardDeckSerializer
         $cardsData = [];
 
         foreach ($cards as $card) {
-            $cardsData[] = [
-                'id' => $card->getId(),
-                'question' => $card->getQuestion(),
-                'visibleContent' => $card->getVisibleContent(),
-                'hiddenContent' => $card->getHiddenContent(),
-            ];
+            $cardsData[] = $this->serializeCard($card);
         }
 
+        // TODO : Implement algorithm to shuffle cards based on user success
+        shuffle($cardsData);
+
         return $cardsData;
+    }
+
+    public function serializeCard(Flashcard $flashcard): array
+    {
+        return [
+            'id' => $flashcard->getId(),
+            'question' => $flashcard->getQuestion(),
+            'visibleContent' => $flashcard->getVisibleContent(),
+            'hiddenContent' => $flashcard->getHiddenContent(),
+        ];
     }
 
     public function deserialize(array $data, FlashcardDeck $flashcardDeck): FlashcardDeck

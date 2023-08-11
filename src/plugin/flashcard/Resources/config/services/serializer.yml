@@ -1,3 +1,8 @@
 services:
     Claroline\FlashcardBundle\Serializer\FlashcardDeckSerializer:
         tags: ['claroline.serializer']
+
+    Claroline\FlashcardBundle\Serializer\UserProgressionSerializer:
+        tags: [ 'claroline.serializer' ]
+        arguments:
+          [ '@Claroline\FlashcardBundle\Serializer\FlashcardDeckSerializer' ]

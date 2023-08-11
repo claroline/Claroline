@@ -31,53 +31,49 @@ const CardModal = props =>
       }
     }}
   >
-    <FormData
-      level={5}
-      name={selectors.STORE_NAME}
-      sections={[
-        {
-          icon: 'fa fa-fw fa-circle-info',
-          title: trans('information'),
-          fields: [
-            {
-              name: 'question',
-              label: trans('question', {}, 'flashcard'),
-              type: 'string'
-            }, {
-              name: 'visibleContent',
-              label: trans('visible_content', {}, 'flashcard'),
-              type: 'string',
-              options: {
-                long: true
-              },
-              required: true
-            }, {
-              name: 'hiddenContent',
-              label: trans('hidden_content', {}, 'flashcard'),
-              type: 'string',
-              options: {
-                long: true
-              },
-              required: true
-            }
-          ]
-        }
-      ]}
-    />
+    <div className="modal-body">
+      <FormData
+        level={5}
+        name={selectors.STORE_NAME}
+        sections={[
+          {
+            icon: 'fa fa-fw fa-circle-info',
+            title: trans('information'),
+            fields: [
+              {
+                name: 'question',
+                label: trans('question', {}, 'flashcard'),
+                type: 'string'
+              }, {
+                name: 'visibleContent',
+                label: trans('visible_content', {}, 'flashcard'),
+                type: 'html',
+                required: true
+              }, {
+                name: 'hiddenContent',
+                label: trans('hidden_content', {}, 'flashcard'),
+                type: 'html',
+                required: true
+              }
+            ]
+          }
+        ]}
+      />
 
-    <Button
-      className="modal-btn"
-      variant="btn"
-      size="lg"
-      type={CALLBACK_BUTTON}
-      label={trans('save', {}, 'actions')}
-      disabled={!props.saveEnabled}
-      callback={() => {
-        props.save(props.formData)
-        props.fadeModal()
-      }}
-      primary={true}
-    />
+      <Button
+        className="modal-btn"
+        variant="btn"
+        size="lg"
+        type={CALLBACK_BUTTON}
+        label={trans('save', {}, 'actions')}
+        disabled={!props.saveEnabled}
+        callback={() => {
+          props.save(props.formData)
+          props.fadeModal()
+        }}
+        primary={true}
+      />
+    </div>
   </Modal>
 
 CardModal.propTypes = {

@@ -2,3 +2,5 @@ services:
     Claroline\FlashcardBundle\Controller\FlashcardDeckController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
+        arguments:
+           - '@Claroline\FlashcardBundle\Serializer\UserProgressionSerializer'
