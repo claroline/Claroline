@@ -10,7 +10,7 @@ import {selectors as baseSelectors} from '#/plugin/flashcard/resources/flashcard
 import {selectors} from '#/plugin/flashcard/resources/flashcard/editor/store'
 import {FlashcardDeckSummary} from '#/plugin/flashcard/resources/flashcard/components/summary'
 import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
-import {ContentHtml} from "#/main/app/content/components/html";
+import {ContentHtml} from '#/main/app/content/components/html'
 
 class PlayerEndComponent extends Component {
   render() {
