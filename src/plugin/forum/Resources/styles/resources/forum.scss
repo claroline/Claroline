@@ -4,16 +4,22 @@
 // Forum variables
 @import "../variables";
 
-.subject-info {
+.current-subject{
+  margin-top: calc($line-height-computed - 4px);
+}
+
+.subjects-back {
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: space-between;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.subject-info {
   margin-bottom: $component-margin-bottom;
 }
 
 .subject-poster {
-  margin-top: calc($line-height-computed - 4px);
-
+  margin-bottom: 4px;
   @include border-radius($border-radius-lg);
 }
 
