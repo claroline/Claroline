@@ -113,7 +113,7 @@ class RegistrationController
 
         /** @var array|User $user */
         $user = $this->crud->create(User::class, $this->decodeRequest($request), [
-            //maybe move these options in an other class
+            // maybe move these options in an other class
             Options::REGISTRATION,
             Options::ADD_NOTIFICATIONS,
             Options::WORKSPACE_VALIDATE_ROLES,
@@ -125,10 +125,9 @@ class RegistrationController
             $this->crud->replace($user, 'mainOrganization', $organization);
         }
 
-        $selfLog = $this->config->getParameter('registration.auto_logging');
         $validation = $this->config->getParameter('registration.validation');
         // auto log user if option is set and account doesn't need to be validated
-        if ($selfLog && PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL !== $validation) {
+        if (PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL !== $validation) {
             return $this->authenticator->login($user, $request);
         }
 

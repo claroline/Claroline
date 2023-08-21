@@ -113,6 +113,19 @@ const AboutModal = props =>
                 calculated: (workspace) => workspace.id + ' / ' + workspace.autoId
               }
             ]
+          }, {
+            icon: 'fa fa-fw fa-award',
+            title: trans('evaluation'),
+            fields: [
+              {
+                name: 'evaluation.estimatedDuration',
+                label: trans('estimated_duration'),
+                type: 'number',
+                options: {
+                  unit: trans('minutes')
+                }
+              }
+            ]
           }
         ]}
       />

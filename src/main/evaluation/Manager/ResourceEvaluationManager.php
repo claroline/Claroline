@@ -55,7 +55,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $evaluation;
     }
 
-    public function createAttempt(ResourceNode $node, User $user, ?array $data = [], ?\DateTimeInterface $date = null): ResourceEvaluation
+    public function createAttempt(ResourceNode $node, User $user, ?array $data = [], \DateTimeInterface $date = null): ResourceEvaluation
     {
         // retrieve the parent evaluation for the attempt
         $evaluation = $this->getUserEvaluation($node, $user);
@@ -72,7 +72,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $attempt;
     }
 
-    public function updateAttempt(ResourceEvaluation $attempt, ?array $data = [], ?\DateTimeInterface $date = null): ResourceEvaluation
+    public function updateAttempt(ResourceEvaluation $attempt, ?array $data = [], \DateTimeInterface $date = null): ResourceEvaluation
     {
         // update the current attempt data
         $attemptUpdated = $this->updateEvaluation($attempt, $data, $date);
@@ -102,7 +102,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         return $attempt;
     }
 
-    public function updateUserEvaluation(ResourceNode $node, User $user, ?array $data = [], ?\DateTimeInterface $date = null, ?bool $withCreation = true): ?ResourceUserEvaluation
+    public function updateUserEvaluation(ResourceNode $node, User $user, ?array $data = [], \DateTimeInterface $date = null, ?bool $withCreation = true): ?ResourceUserEvaluation
     {
         $this->om->startFlushSuite();
 
@@ -142,7 +142,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
             $evaluationDuration = $this->computeDuration($resUserEval);
         }
 
-        $resUserEval->setDuration($evaluationDuration + $duration);
+        $resUserEval->setDuration(round($evaluationDuration + $duration));
 
         $this->om->persist($resUserEval);
         $this->om->flush();
@@ -170,7 +170,7 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
             }
         }
 
-        $resUserEval->setDuration($duration);
+        $resUserEval->setDuration(round($duration));
 
         $this->om->persist($resUserEval);
         $this->om->flush();

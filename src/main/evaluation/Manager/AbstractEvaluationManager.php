@@ -10,7 +10,7 @@ abstract class AbstractEvaluationManager
      * Updates some evaluation data and return whether the progression of the evaluation has changed.
      * (aka. the score, status or progression has been updated).
      */
-    protected function updateEvaluation(AbstractEvaluation $evaluation, ?array $data = [], ?\DateTimeInterface $date = null): array
+    protected function updateEvaluation(AbstractEvaluation $evaluation, ?array $data = [], \DateTimeInterface $date = null): array
     {
         $changes = [
             'status' => false,
@@ -24,7 +24,7 @@ abstract class AbstractEvaluationManager
         }
 
         if (isset($data['duration'])) {
-            $evaluation->setDuration($evaluation->getDuration() + $data['duration']);
+            $evaluation->setDuration(round($evaluation->getDuration() + $data['duration']));
         }
 
         if (isset($data['status'])) {
@@ -65,7 +65,7 @@ abstract class AbstractEvaluationManager
         return $evaluation;
     }
 
-    private function updateEvaluationScore(AbstractEvaluation $evaluation, float $scoreMax, ?float $score = null, ?float $scoreMin = null): AbstractEvaluation
+    private function updateEvaluationScore(AbstractEvaluation $evaluation, float $scoreMax, float $score = null, float $scoreMin = null): AbstractEvaluation
     {
         $oldScore = $evaluation->getScore() ? $evaluation->getScore() / $evaluation->getScoreMax() : null;
         $newScore = $score ? $score / $scoreMax : null;

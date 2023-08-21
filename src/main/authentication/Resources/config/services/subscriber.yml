@@ -9,7 +9,7 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
         tags:
             - { name: kernel.event_subscriber }
 
@@ -17,6 +17,6 @@ services:
     Claroline\AuthenticationBundle\Subscriber\Administration\ParametersSubscriber:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
         tags:
-            - { name: kernel.event_subscriber }
+            - { name: kernel.event_subscriber };

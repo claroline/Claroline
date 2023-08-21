@@ -59,7 +59,8 @@ const RoleListComponent = props => {
         }, {
           name: 'workspace',
           type: 'workspace',
-          label: trans('workspace')
+          label: trans('workspace'),
+          displayed: true
         }, {
           name: 'user',
           type: 'user',

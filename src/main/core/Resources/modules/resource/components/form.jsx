@@ -30,7 +30,7 @@ const ResourceFormComponent = (props) =>
             label: trans('type'),
             type: 'type',
             hideLabel: true,
-            calculated: (resourceNode) => !isEmpty(resourceNode) ? ({
+            calculated: (resourceNode) => !isEmpty(get(resourceNode, 'meta.mimeType')) ? ({
               icon: <ResourceIcon mimeType={resourceNode.meta.mimeType} />,
               name: trans(resourceNode.meta.type, {}, 'resource'),
               description: trans(`${resourceNode.meta.type}_desc`, {}, 'resource')
@@ -48,7 +48,6 @@ const ResourceFormComponent = (props) =>
           }
         ]
       }, {
-        className: 'embedded-form-section',
         title: trans('custom'),
         primary: true,
         fill: true,

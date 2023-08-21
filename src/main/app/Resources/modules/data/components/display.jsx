@@ -82,11 +82,19 @@ class DataDisplay extends Component {
 
   renderInput() {
     if (!this.state.loaded) {
-      return trans('loading')
+      return (
+        <div role="presentation" className="text-secondary">
+          {trans('loading')}
+        </div>
+      )
     }
 
     if (this.state.error) {
-      return trans('error')
+      return (
+        <div role="presentation" className="text-danger">
+          {trans('error')}
+        </div>
+      )
     }
 
     if (this.props.children) {
@@ -103,7 +111,8 @@ class DataDisplay extends Component {
         merge({}, this.props.options, {
           id: this.props.id,
           label: this.props.label,
-          data: this.props.value, // todo rename into `value` in implementations later
+          data: this.props.value, // deprecated
+          value: this.props.value,
           error: this.props.error,
           placeholder: this.props.placeholder,
           size: this.props.size
@@ -113,16 +122,24 @@ class DataDisplay extends Component {
 
     if (!this.props.value && false !== this.props.value && 0 !== this.props.value) {
       return (
-        <span className="text-secondary d-block">{trans('empty_value')}</span>
+        <div role="presentation" className="text-secondary">{trans('empty_value')}</div>
       )
     }
 
     if (this.state.render) {
       // type render method
-      return this.state.render(this.props.value, this.props.options || {})
+      return (
+        <div role="presentation">
+          {this.state.render(this.props.value, this.props.options || {})}
+        </div>
+      )
     }
 
-    return this.props.value
+    return (
+      <div role="presentation">
+        {this.props.value}
+      </div>
+    )
   }
 
   render() {

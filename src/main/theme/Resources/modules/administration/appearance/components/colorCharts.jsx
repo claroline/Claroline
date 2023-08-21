@@ -14,11 +14,13 @@ const AppearanceColorCharts = (props) => {
           <h3 className="h5 color-chart-title">
             {color.name}
             <Toolbar
-              buttonName='btn btn-link'
-              tooltip='bottom'
+              buttonName="btn"
+              tooltip="bottom"
+              size="sm"
               actions={[
                 {
                   name: 'edit',
+                  className: 'btn-text-secondary',
                   type: MODAL_BUTTON,
                   icon: 'fa fa-fw fa-pencil',
                   label: trans('edit', {}, 'actions'),
@@ -30,6 +32,7 @@ const AppearanceColorCharts = (props) => {
                 },
                 {
                   name: 'delete',
+                  className: 'btn-text-danger',
                   type: ASYNC_BUTTON,
                   icon: 'fa fa-fw fa-trash',
                   label: trans('delete', {}, 'actions'),

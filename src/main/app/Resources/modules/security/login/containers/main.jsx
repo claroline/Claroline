@@ -13,10 +13,10 @@ const LoginMain = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       platformName: configSelectors.param(state, 'name'),
-      help: configSelectors.param(state, 'authentication.help'),
+      help: configSelectors.param(state, 'authentication.login.helpMessage'),
       registration: configSelectors.param(state, 'selfRegistration'),
       username: configSelectors.param(state, 'community.username'),
-      resetPassword: configSelectors.param(state, 'authentication.changePassword'),
+      resetPassword: configSelectors.param(state, 'authentication.login.changePassword'),
       internalAccount: selectors.internalAccount(state),
       showClientIp: selectors.showClientIp(state),
       sso: selectors.sso(state),

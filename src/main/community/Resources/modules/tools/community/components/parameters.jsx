@@ -90,10 +90,6 @@ const desktopDefinition = () => [
           trans('username_enabled_help', {}, 'community'),
           trans('username_disabled_help', {}, 'community')
         ]
-      }, {
-        name: 'authentication.changePassword',
-        type: 'boolean',
-        label: trans('allow_change_password', {}, 'community')
       }
     ]
   }, {
@@ -119,12 +115,6 @@ const desktopDefinition = () => [
             label: trans('allow_workspace_registration'),
             displayed: (parameters) => get(parameters, 'registration.self', false)
           }, {
-            name: 'registration.auto_logging',
-            type: 'boolean',
-            label: trans('auto_logging_after_registration'),
-            displayed: (parameters) => get(parameters, 'registration.self', false)
-          },
-          {
             name: 'registration.organization_selection',
             type: 'choice',
             label: trans('organizations'),
@@ -199,6 +189,7 @@ class CommunityParameters extends Component {
     return (
       <FormData
         embedded={true}
+        flush={true}
         name={selectors.STORE_NAME}
         dataPart="parameters"
         definition={'desktop' === this.props.contextType ?

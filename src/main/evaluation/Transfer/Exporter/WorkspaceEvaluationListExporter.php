@@ -36,6 +36,10 @@ class WorkspaceEvaluationListExporter extends AbstractEvaluationListExporter
                 'name' => 'workspace.slug',
                 'type' => 'string',
                 'description' => $this->translator->trans('The workspace slug', [], 'schema'),
+            ], [
+                'name' => 'estimatedDuration',
+                'type' => 'number',
+                'description' => $this->translator->trans('The workspace estimated duration', [], 'schema'),
             ],
         ]);
 

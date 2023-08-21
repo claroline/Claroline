@@ -1,52 +1,84 @@
-
-// Sizing
-
-$font-size-root: 18px;
-$font-weight-base: 300;
+// Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "node_modules/bootstrap/scss/functions";
 
 // Colors
+//
+// Settings for theme color scheme.
+
+// Gray scale
+//$gray-100: #f8f9fa !default;
+//$gray-200: #e9ecef !default;
+//$gray-300: #dee2e6 !default;
+//$gray-400: #ced4da !default;
+//$gray-500: #adb5bd !default;
+//$gray-600: #6c757d !default;
+//$gray-700: #495057 !default;
+//$gray-800: #343a40 !default;
+//$gray-900: #212529 !default;
+
+// Theme colors
+// ATTENTION : every theme color SHOULD be unique
 //$primary:   #148AC7; // #046d8a
 //$success:   #4f7302;
 //$secondary: #C51162;
 //$info:      #335768;
 //$warning:   #ED9E2F;
 //$danger:    #bf0404;
-//$progression: #C51162;
-
-//$gray
+//$learning:  $pink !default;
+//$menu:      $gray-900 !default;
 
 // colors for SVG theme icons
-//$icon-primary-color: $primary;
-//$icon-secondary-color: $gray-900;
+//$icon-primary-color:   $primary !default;
+//$icon-secondary-color: $gray-900 !default;
 
-// Fonts
+// change links color (mostly for accessibility purpose)
+//$link-color: $primary !default;
 
+
+// Texts and Fonts
+//
+// Settings for theme customizing content texts.
+
+// fonts
 //$font-family-sans-serif: "Roboto", Arial, sans-serif;
 //$headings-font-family:   "Nunito", Arial, sans-serif;
 
+// sizing (may need adaptation based on the selected theme fonts)
+$font-size-root: 18px;
+$font-weight-base: 300;
+//$headings-font-weight: 500 !default;
+
 
 // Shadows
+//
+// Settings for enabling and customizing shadows.
 
+// globally enable shadows
 $enable-shadows: true;
 
 //$box-shadow: null;
 //$box-shadow-sm: null;
 //$box-shadow-lg: null;
-
 //$btn-box-shadow: null;
 
 
 // Rounding
+//
+// Settings for enabling and customizing rounding.
 
+// globally enable rounding
 $enable-rounded: true;
 
+// customize rounding values
 //$border-radius: null;
 //$border-radius-sm: null;
 //$border-radius-lg: null;
 
-// make some components fully rounded
-//$btn-border-radius:    $border-radius-pill;
-//$btn-border-radius-sm: $border-radius-pill;
-//$btn-border-radius-lg: $border-radius-pill;
+// make some components fully rounded (buttons and badges)
+$border-radius-pill: 50rem;
 
-//$badge-border-radius:  $border-radius-pill;
+$btn-border-radius:    $border-radius-pill;
+$btn-border-radius-sm: $border-radius-pill;
+$btn-border-radius-lg: $border-radius-pill;
+
+$badge-border-radius:  $border-radius-pill;

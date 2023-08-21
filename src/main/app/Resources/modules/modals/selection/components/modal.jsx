@@ -9,6 +9,7 @@ import {GridSelection} from '#/main/app/content/grid/components/selection'
 const SelectionModal = props =>
   <Modal
     {...omit(props, 'items', 'handleSelect', 'selectAction')}
+    size="lg"
   >
     <GridSelection
       items={props.items}

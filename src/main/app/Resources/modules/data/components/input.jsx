@@ -1,4 +1,4 @@
-import {createElement, Component} from 'react'
+import React, {createElement, Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
@@ -97,11 +97,19 @@ class DataInput extends Component {
 
   renderInput() {
     if (!this.state.loaded) {
-      return trans('loading')
+      return (
+        <div role="presentation" className="text-secondary">
+          {trans('loading')}
+        </div>
+      )
     }
 
     if (this.state.error) {
-      return trans('error')
+      return (
+        <div role="presentation" className="text-danger">
+          {trans('error')}
+        </div>
+      )
     }
 
     if (this.props.children) {

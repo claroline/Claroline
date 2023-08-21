@@ -1,9 +1,20 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+
 import {selectors} from '#/main/authentication/administration/authentication/store/selectors'
+
+const displayPasswordValidation = (data) => get(data, 'password._forceComplexity')
+  || get(data, 'password.minLength')
+  || get(data, 'password.requireLowercase')
+  || get(data, 'password.requireUppercase')
+  || get(data, 'password.requireNumber')
+  || get(data, 'password.requireSpecialChar')
+
 const AuthenticationTool = (props) => {
   return (
     <FormData
@@ -17,42 +28,113 @@ const AuthenticationTool = (props) => {
       }}
       definition={[
         {
-          title: trans('general'),
-          primary: true
-        }, {
-          icon: 'fa fa-fw fa-lock',
-          title: trans('passwordValidate', {}, 'security'),
+          icon: 'fa fa-fw fa-sign-in',
+          title: trans('login'),
+          defaultOpened: true,
           fields: [
             {
-              name: 'minLength',
-              type: 'number',
-              label: trans('minLength', {}, 'security')
-            },
-            {
-              name: 'requireLowercase',
+              name: 'login.helpMessage',
+              type: 'html',
+              label: trans('message')
+            }, {
+              name: 'login.internalAccount',
               type: 'boolean',
-              label: trans('requireLowercase', {}, 'security')
-            },
-            {
-              name: 'requireUppercase',
+              label: trans('display_internal_account', {}, 'security')
+            }, {
+              name: 'login.showClientIp',
               type: 'boolean',
-              label: trans('requireUppercase', {}, 'security')
-            },
+              label: trans('display_client_ip', {}, 'security')
+            }, {
+              name: 'login.redirectAfterLoginOption',
+              type: 'choice',
+              label: trans('redirect_after_login_option'),
+              options: {
+                multiple: false,
+                condensed: false,
+                choices: {
+                  'LAST': trans('last_page', {}, 'platform'),
+                  'DESKTOP': trans('desktop', {}, 'platform'),
+                  'URL': trans('url', {}, 'platform'),
+                  'WORKSPACE_TAG': trans('workspace_tag', {}, 'platform')
+                }
+              }, linked: [
+                {
+                  name: 'login.redirectAfterLoginUrl',
+                  type: 'string',
+                  label: trans('url'),
+                  displayed: (data) => 'URL' === get(data, 'login.redirectAfterLoginOption'),
+                  required: true
+                }, {
+                  name: 'workspace.default_tag',
+                  label: trans('tag', {}, 'tag'),
+                  type: 'string',
+                  displayed: (data) => 'WORKSPACE_TAG' === get(data, 'login.redirectAfterLoginOption'),
+                  required: true
+                }
+              ]
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-lock',
+          title: trans('password'),
+          fields: [
             {
-              name: 'requireNumber',
+              name: 'login.changePassword',
               type: 'boolean',
-              label: trans('requireNumber', {}, 'security')
-            },
-            {
-              name: 'requireSpecialChar',
+              label: trans('allow_change_password', {}, 'security')
+            }, {
+              name: 'password._forceComplexity',
               type: 'boolean',
-              label: trans('requireSpecialChar', {}, 'security')
+              label: trans('force_password_complexity', {}, 'security'),
+              calculated: displayPasswordValidation,
+              onChange: (value) => {
+                if (!value) {
+                  props.update('password.minLength', 0)
+                  props.update('password.requireLowercase', false)
+                  props.update('password.requireUppercase', false)
+                  props.update('password.requireNumber', false)
+                  props.update('password.requireSpecialChar', false)
+                }
+              },
+              linked: [
+                {
+                  name: 'password.minLength',
+                  type: 'number',
+                  label: trans('minLength', {}, 'security'),
+                  displayed: displayPasswordValidation
+                }, {
+                  name: 'password.requireLowercase',
+                  type: 'boolean',
+                  label: trans('requireLowercase', {}, 'security'),
+                  displayed: displayPasswordValidation
+                }, {
+                  name: 'password.requireUppercase',
+                  type: 'boolean',
+                  label: trans('requireUppercase', {}, 'security'),
+                  displayed: displayPasswordValidation
+                }, {
+                  name: 'password.requireNumber',
+                  type: 'boolean',
+                  label: trans('requireNumber', {}, 'security'),
+                  displayed: displayPasswordValidation
+                }, {
+                  name: 'password.requireSpecialChar',
+                  type: 'boolean',
+                  label: trans('requireSpecialChar', {}, 'security'),
+                  displayed: displayPasswordValidation
+                }
+              ]
             }
           ]
         }
       ]}
     />
   )
+}
+
+AuthenticationTool.propTypes = {
+  path: T.string.isRequired,
+  update: T.func.isRequired
 }
 
 export {

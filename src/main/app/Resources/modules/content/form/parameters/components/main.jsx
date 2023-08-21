@@ -19,7 +19,6 @@ const SectionParameters = props =>
     icon={props.icon ? `fa fa-fw fa-${props.icon}` : undefined}
     title={props.title || trans('facet_section')}
     subtitle={props.description}
-    className="embedded-form-section"
     fill={true}
     actions={[
       {

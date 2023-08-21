@@ -288,7 +288,7 @@ AudioConfiguration.propTypes = {
 
 const Audio = props =>
   <FormData
-    className="audio-editor embedded-form-section"
+    className="audio-editor"
     embedded={true}
     name={editorSelect.FORM_NAME}
     sections={[
