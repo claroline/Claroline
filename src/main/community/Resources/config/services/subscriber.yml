@@ -60,3 +60,9 @@ services:
             - '@Icap\NotificationBundle\Manager\NotificationUserParametersManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\FileManager'
+
+    Claroline\CommunityBundle\Subscriber\UserSourceSubscriber:
+      arguments:
+        - '@security.authorization_checker'
+        - '@security.token_storage'
+        - '@Claroline\AppBundle\API\FinderProvider'

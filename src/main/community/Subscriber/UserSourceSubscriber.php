@@ -1,17 +1,18 @@
 <?php
 
-namespace Claroline\CoreBundle\Listener\DataSource;
+namespace Claroline\CommunityBundle\Subscriber;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class UserSource
+class UserSourceSubscriber implements EventSubscriberInterface
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;
@@ -30,7 +31,14 @@ class UserSource
         $this->finder = $finder;
     }
 
-    public function getData(GetDataEvent $event)
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            GetDataEvent::class => 'getData',
+        ];
+    }
+
+    public function getData(GetDataEvent $event): void
     {
         $options = $event->getOptions();
         if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
