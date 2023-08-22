@@ -95,6 +95,11 @@ const ResourceFormComponent = (props) =>
             name: 'display.fullscreen',
             label: trans('resource_fullscreen', {}, 'resource'),
             type: 'boolean'
+          }, {
+            name: 'restrictions.hidden',
+            type: 'boolean',
+            label: trans('restrict_hidden'),
+            help: trans('restrict_hidden_help')
           }
         ]
       }, {
@@ -102,11 +107,6 @@ const ResourceFormComponent = (props) =>
         title: trans('access_restrictions'),
         fields: [
           {
-            name: 'restrictions.hidden',
-            type: 'boolean',
-            label: trans('restrict_hidden'),
-            help: trans('restrict_hidden_help')
-          }, {
             name: 'restrictions.enableDates',
             label: trans('restrict_by_dates'),
             type: 'boolean',

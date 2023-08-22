@@ -86,6 +86,11 @@ const SessionForm = (props) =>
             options: {
               min: 0
             }
+          }, {
+            name: 'restrictions.hidden',
+            type: 'boolean',
+            label: trans('restrict_hidden'),
+            help: trans('restrict_hidden_help')
           }
         ]
       }, {
@@ -247,11 +252,6 @@ const SessionForm = (props) =>
         title: trans('access_restrictions'),
         fields: [
           {
-            name: 'restrictions.hidden',
-            type: 'boolean',
-            label: trans('restrict_hidden'),
-            help: trans('restrict_hidden_help')
-          }, {
             name: 'restrictions._restrictUsers',
             type: 'boolean',
             label: trans('restrict_users_count'),

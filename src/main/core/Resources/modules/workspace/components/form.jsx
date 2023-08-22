@@ -146,6 +146,12 @@ const WorkspaceFormComponent = (props) =>
                 }
               }
             ]
+          }, {
+            name: 'restrictions.hidden',
+            type: 'boolean',
+            label: trans('restrict_hidden'),
+            help: trans('restrict_hidden_help'),
+            mode: 'expert'
           }
         ]
       }, {
@@ -268,12 +274,6 @@ const WorkspaceFormComponent = (props) =>
         mode: 'advanced',
         fields: [
           {
-            name: 'restrictions.hidden',
-            type: 'boolean',
-            label: trans('restrict_hidden'),
-            help: trans('restrict_hidden_help'),
-            mode: 'expert'
-          }, {
             name: 'restrictions.enableDates',
             label: trans('restrict_by_dates'),
             type: 'boolean',
