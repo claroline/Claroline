@@ -34,7 +34,6 @@ final class Version20230823120235 extends AbstractMigration
             ALTER TABLE claro_team 
             DROP INDEX UNIQ_A2FE580468CE17BA
         ');
-
     }
 
     public function down(Schema $schema): void

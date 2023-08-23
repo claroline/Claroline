@@ -64,6 +64,7 @@ class TeamController extends AbstractCrudController
 
     /**
      * @Route("/workspace/{id}/teams", name="apiv2_workspace_team_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"id": "uuid"}})
      */
     public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
@@ -83,6 +84,7 @@ class TeamController extends AbstractCrudController
 
     /**
      * @Route("/{id}/users/{role}", name="apiv2_team_list_users", methods={"GET"})
+     *
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
@@ -111,6 +113,7 @@ class TeamController extends AbstractCrudController
 
     /**
      * @Route("/{id}/users/{role}", name="apiv2_team_register", methods={"PATCH"})
+     *
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      */
     public function registerAction(Team $team, string $role, Request $request): JsonResponse
@@ -148,6 +151,7 @@ class TeamController extends AbstractCrudController
 
     /**
      * @Route("/{id}/users/{role}", name="apiv2_team_unregister", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      */
     public function unregisterAction(Team $team, string $role, Request $request): JsonResponse
@@ -167,6 +171,7 @@ class TeamController extends AbstractCrudController
 
     /**
      * @Route("/{id}/register", name="apiv2_team_self_register", methods={"PUT"})
+     *
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
@@ -196,6 +201,7 @@ class TeamController extends AbstractCrudController
 
     /**
      * @Route("/{id}/unregister", name="apiv2_team_self_unregister", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("team", class="Claroline\CommunityBundle\Entity\Team", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */

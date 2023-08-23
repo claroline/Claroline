@@ -129,7 +129,6 @@ class TeamSubscriber implements EventSubscriberInterface
 
             $team->setRole($teamRole);
             $team->setManagerRole($teamManagerRole);
-
         } else {
             // Checks and creates role for team members & team manager if needed.
             $teamRole = $team->getRole();

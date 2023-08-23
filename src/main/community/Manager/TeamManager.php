@@ -111,7 +111,7 @@ class TeamManager
     /**
      * Creates team directory.
      */
-    public function createTeamDirectory(Team $team, User $user, ?ResourceNode $resource = null, ?array $creatableResources = []): Directory
+    public function createTeamDirectory(Team $team, User $user, ResourceNode $resource = null, ?array $creatableResources = []): Directory
     {
         $workspace = $team->getWorkspace();
 
