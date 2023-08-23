@@ -53,6 +53,8 @@
   "delete_team_directory": "Delete team's directory at team deletion",
   "team_creatable_resources": "Resources that can be created by users",
   "team_default_resource": "Default resource",
+  "use_existing_roles": "Use existing roles",
+  "use_existing_roles_help": "If enabled, existing roles will be used for teams. Otherwise, team-specific roles will be created.",
 
   "user": "User",
   "users": "Users",

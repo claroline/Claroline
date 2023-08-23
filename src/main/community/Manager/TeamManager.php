@@ -95,21 +95,23 @@ class TeamManager
 
     public function deleteTeamRoles(Team $team): void
     {
-        if (!empty($team->getRole())) {
-            $this->om->remove($team->getRole());
-        }
+        if (!$team->isUsingExistingRoles()) {
+            if (!empty($team->getRole())) {
+                $this->om->remove($team->getRole());
+            }
 
-        if (!empty($team->getManagerRole())) {
-            $this->om->remove($team->getManagerRole());
-        }
+            if (!empty($team->getManagerRole())) {
+                $this->om->remove($team->getManagerRole());
+            }
 
-        $this->om->flush();
+            $this->om->flush();
+        }
     }
 
     /**
      * Creates team directory.
      */
-    public function createTeamDirectory(Team $team, User $user, ?ResourceNode $resource = null, ?array $creatableResources = []): Directory
+    public function createTeamDirectory(Team $team, User $user, ResourceNode $resource = null, ?array $creatableResources = []): Directory
     {
         $workspace = $team->getWorkspace();
 

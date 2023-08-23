@@ -39,6 +39,7 @@ const Team = {
     managerRole: T.shape(
       RoleTypes.propTypes
     ),
+    isUsingExistingRoles: T.bool.isRequired,
     directory: T.shape(
       ResourceNodeTypes.propTypes
     )

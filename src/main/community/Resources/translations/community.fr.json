@@ -53,6 +53,8 @@
   "delete_team_directory": "Supprimer le dossier à la suppression de l'équipe",
   "team_creatable_resources": "Ressources pouvant être créées par les utilisateurs",
   "team_default_resource": "Ressource par défaut",
+  "use_existing_roles": "Utiliser des rôles existants",
+  "use_existing_roles_help": "Si activé, des rôles existants seront utilisés pour les équipes. Sinon, des rôles spécifiques aux équipes seront créés.",
 
   "user": "Utilisateur",
   "users": "Utilisateurs",
