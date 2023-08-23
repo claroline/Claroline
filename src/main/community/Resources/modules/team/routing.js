@@ -8,6 +8,11 @@ function route(team, basePath = null) {
   return toolRoute('community') + '/teams/' + team.id
 }
 
+function teamRoute(team) {
+  return '/desktop/workspaces/open/' + team.workspace.slug + '/community' + '/teams/' + team.id
+}
+
 export {
-  route
+  route,
+  teamRoute
 }
