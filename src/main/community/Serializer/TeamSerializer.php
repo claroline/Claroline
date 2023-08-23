@@ -69,6 +69,7 @@ class TeamSerializer
             'name' => $team->getName(),
             'thumbnail' => $team->getThumbnail(),
             'poster' => $team->getPoster(),
+            'isUsingExistingRoles' => $team->isUsingExistingRoles(),
             'users' => $this->om->getRepository(Team::class)->countUsers($team),
             'meta' => [
                 'description' => $team->getDescription(),
@@ -127,6 +128,7 @@ class TeamSerializer
         $this->sipe('publicDirectory', 'setPublic', $data, $team);
         $this->sipe('deletableDirectory', 'setDirDeletable', $data, $team);
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $team);
+        $this->sipe('isUsingExistingRoles', 'setIsUsingExistingRoles', $data, $team);
 
         if (isset($data['directory'])) {
             /** @var ResourceNode $directoryNode */

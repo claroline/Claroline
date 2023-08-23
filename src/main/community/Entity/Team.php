@@ -46,7 +46,7 @@ class Team
     private $workspace;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Role", cascade={"remove"})
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      *
      * @var Role
@@ -62,7 +62,7 @@ class Team
     private $users;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Role", cascade={"remove"})
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
      * @ORM\JoinColumn(name="manager_role_id", nullable=true, onDelete="SET NULL")
      *
      * @var Role
@@ -104,6 +104,13 @@ class Team
      * @var bool
      */
     private $isPublic = false;
+
+    /**
+     * @ORM\Column(name="is_using_existing_roles", type="boolean")
+     *
+     * @var bool
+     */
+    private $isUsingExistingRoles = false;
 
     /**
      * @ORM\Column(name="dir_deletable", type="boolean", options={"default" = 0})
@@ -234,5 +241,15 @@ class Team
     public function setDirDeletable(bool $dirDeletable): void
     {
         $this->dirDeletable = $dirDeletable;
+    }
+
+    public function isUsingExistingRoles(): bool
+    {
+        return $this->isUsingExistingRoles;
+    }
+
+    public function setIsUsingExistingRoles(bool $isUsingExistingRoles): void
+    {
+        $this->isUsingExistingRoles = $isUsingExistingRoles;
     }
 }

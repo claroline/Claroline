@@ -95,15 +95,17 @@ class TeamManager
 
     public function deleteTeamRoles(Team $team): void
     {
-        if (!empty($team->getRole())) {
-            $this->om->remove($team->getRole());
-        }
+        if (!$team->isUsingExistingRoles()) {
+            if (!empty($team->getRole())) {
+                $this->om->remove($team->getRole());
+            }
 
-        if (!empty($team->getManagerRole())) {
-            $this->om->remove($team->getManagerRole());
-        }
+            if (!empty($team->getManagerRole())) {
+                $this->om->remove($team->getManagerRole());
+            }
 
-        $this->om->flush();
+            $this->om->flush();
+        }
     }
 
     /**

@@ -50,6 +50,43 @@ const TeamFormComponent = props =>
           }
         ]
       }, {
+        icon: 'fa fa-fw fa-chess',
+        title: trans('roles'),
+        fields: [{
+          name: 'isUsingExistingRoles',
+          type: 'boolean',
+          label: trans('use_existing_roles', {}, 'community'),
+          help: trans('use_existing_roles_help', {}, 'community'),
+          onChange: (value) => {
+            if (!value) {
+              props.updateProp('role', null)
+              props.updateProp('managerRole', null)
+            }
+          }
+        }, {
+          name: 'role',
+          type: 'role',
+          label: trans('role', {}, 'community'),
+          displayed: (team) => team.isUsingExistingRoles,
+          options: team => ({
+            picker: {
+              url: ['apiv2_workspace_list_roles', {id: get(team, 'workspace.id', null)}],
+              filters: []
+            }
+          })
+        }, {
+          name: 'managerRole',
+          type: 'role',
+          label: trans('manager_role', {}, 'community'),
+          displayed: (team) => team.isUsingExistingRoles,
+          options: team => ({
+            picker: {
+              url: ['apiv2_workspace_list_roles', {id: get(team, 'workspace.id', null)}],
+              filters: []
+            }
+          })
+        }]
+      }, {
         icon: 'fa fa-fw fa-desktop',
         title: trans('display_parameters'),
         fields: [

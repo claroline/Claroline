@@ -10,6 +10,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Entity\Team;
 use Claroline\CommunityBundle\Manager\TeamManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Manager\FileManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -113,22 +114,38 @@ class TeamSubscriber implements EventSubscriberInterface
 
     private function createDirectoryAndRoles(Team $team, array $data)
     {
-        // Checks and creates role for team members & team manager if needed.
-        $teamRole = $team->getRole();
-        $teamManagerRole = $team->getManagerRole();
+        if ($team->isUsingExistingRoles()) {
+            if (isset($data['role'])) {
+                $teamRole = $this->om->getRepository(Role::class)->findOneBy(['uuid' => $data['role']['id']]);
+            } else {
+                $teamRole = null;
+            }
 
-        if (empty($teamRole)) {
-            $teamRole = $this->manager->createTeamRole($team);
+            if (isset($data['managerRole'])) {
+                $teamManagerRole = $this->om->getRepository(Role::class)->findOneBy(['uuid' => $data['managerRole']['id']]);
+            } else {
+                $teamManagerRole = null;
+            }
+
             $team->setRole($teamRole);
-
-            $this->om->persist($teamRole);
-        }
-
-        if (empty($teamManagerRole)) {
-            $teamManagerRole = $this->manager->createTeamRole($team, true);
             $team->setManagerRole($teamManagerRole);
 
-            $this->om->persist($teamManagerRole);
+        } else {
+            // Checks and creates role for team members & team manager if needed.
+            $teamRole = $team->getRole();
+            $teamManagerRole = $team->getManagerRole();
+
+            if (empty($teamRole)) {
+                $teamRole = $this->manager->createTeamRole($team);
+                $team->setRole($teamRole);
+                $this->om->persist($teamRole);
+            }
+
+            if (empty($teamManagerRole)) {
+                $teamManagerRole = $this->manager->createTeamRole($team, true);
+                $team->setManagerRole($teamManagerRole);
+                $this->om->persist($teamManagerRole);
+            }
         }
 
         // Checks and creates team directory

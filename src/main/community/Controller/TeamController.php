@@ -90,9 +90,10 @@ class TeamController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $team, [], true);
 
-        $hiddenFilters = [
-            'role' => ['manager' === $role ? $team->getManagerRole()->getUuid() : $team->getRole()->getUuid()],
-        ];
+        $hiddenFilters = [];
+
+        $role = 'manager' === $role ? $team->getManagerRole() : $team->getRole();
+        $hiddenFilters['role'] = $role?->getUuid();
 
         if (!$this->checkPermission('ROLE_ADMIN')) {
             // only list users for the current user organizations
