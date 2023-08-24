@@ -1,4 +1,7 @@
 {
   "users": "List of users",
-  "users_desc": "Allows to list users visible by the current user."
+  "users_desc": "Allows to list users visible by the current user.",
+
+  "teams": "List of teams in the workspace",
+  "teams_desc": "Allows to list the teams in the workspace."
 }

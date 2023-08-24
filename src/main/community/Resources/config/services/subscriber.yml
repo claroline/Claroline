@@ -66,3 +66,8 @@ services:
             - '@security.authorization_checker'
             - '@security.token_storage'
             - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\TeamSourceSubscriber:
+      arguments:
+        - '@security.authorization_checker'
+        - '@Claroline\AppBundle\API\FinderProvider'

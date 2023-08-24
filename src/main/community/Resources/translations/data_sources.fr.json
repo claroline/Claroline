@@ -1,4 +1,7 @@
 {
   "users": "Liste d'utilisateurs",
-  "users_desc": "Permet de lister les utilisateurs visibles par l'utilisateur courant."
+  "users_desc": "Permet de lister les utilisateurs visibles par l'utilisateur courant.",
+
+  "teams": "Liste des équipes de l'espace d'activités",
+  "teams_desc": "Permet de lister les équipes de l'espace d'activités."
 }

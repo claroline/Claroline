@@ -100,7 +100,8 @@ registry.add('ClarolineCommunityBundle', {
       'users'        : () => { return import(/* webpackChunkName: "core-data-type-users" */         '#/main/community/data/types/users') },
     },
     sources: {
-      'users': () => { return import(/* webpackChunkName: "core-data-source-users" */ '#/main/community/data/sources/users') }
+      'users': () => { return import(/* webpackChunkName: "core-data-source-users" */ '#/main/community/data/sources/users') },
+      'teams': () => { return import(/* webpackChunkName: "core-data-source-teams" */ '#/main/community/data/sources/teams') }
     }
   }
 })
