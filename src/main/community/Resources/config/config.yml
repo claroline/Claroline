@@ -18,3 +18,8 @@ plugin:
           type: list
           context: [ desktop, workspace, administration ]
           tags: [ community ]
+
+        - name: my-teams
+          type: list
+          context: [ desktop, workspace, administration ]
+          tags: [ community ]

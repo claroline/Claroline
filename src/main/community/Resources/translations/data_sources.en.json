@@ -3,5 +3,8 @@
   "users_desc": "Allows to list users visible by the current user.",
 
   "teams": "List of teams in the workspace",
-  "teams_desc": "Allows to list the teams in the workspace."
+  "teams_desc": "Allows to list the teams in the workspace.",
+
+  "my-teams": "List of my teams",
+  "my-teams_desc": "Allows to list my teams."
 }

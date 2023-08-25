@@ -26,6 +26,12 @@ class TeamFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'user':
+                case 'users':
+                    $qb->leftJoin('obj.users', 'u');
+                    $qb->andWhere('u.uuid IN (:userIds)');
+                    $qb->setParameter('userIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
                 case 'workspace':
                 case 'workspaces':
                     $qb->leftJoin('obj.workspace', 'w');

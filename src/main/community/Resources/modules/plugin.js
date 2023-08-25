@@ -101,7 +101,8 @@ registry.add('ClarolineCommunityBundle', {
     },
     sources: {
       'users': () => { return import(/* webpackChunkName: "core-data-source-users" */ '#/main/community/data/sources/users') },
-      'teams': () => { return import(/* webpackChunkName: "core-data-source-teams" */ '#/main/community/data/sources/teams') }
+      'teams': () => { return import(/* webpackChunkName: "core-data-source-teams" */ '#/main/community/data/sources/teams') },
+      'my-teams': () => { return import(/* webpackChunkName: "core-data-source-my-teams" */ '#/main/community/data/sources/my-teams') }
     }
   }
 })
