@@ -6,5 +6,8 @@
   "teams_desc": "Allows to list the teams in the workspace.",
 
   "my-teams": "List of my teams",
-  "my-teams_desc": "Allows to list my teams."
+  "my-teams_desc": "Allows to list my teams.",
+
+  "groups": "List of groups",
+  "groups_desc": "Allows to list the groups."
 }

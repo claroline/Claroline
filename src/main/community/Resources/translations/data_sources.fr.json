@@ -6,5 +6,8 @@
   "teams_desc": "Permet de lister les équipes de l'espace d'activités.",
 
   "my-teams": "Liste de mes équipes",
-  "my-teams_desc": "Permet de lister mes équipes"
+  "my-teams_desc": "Permet de lister mes équipes",
+
+  "groups": "Liste des groupes",
+  "groups_desc": "Permet de lister les groupes."
 }

@@ -23,3 +23,8 @@ plugin:
           type: list
           context: [ desktop, workspace, administration ]
           tags: [ community ]
+
+        - name: groups
+          type: list
+          context: [ desktop, workspace, administration ]
+          tags: [ community ]
