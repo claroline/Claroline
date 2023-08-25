@@ -29,6 +29,11 @@ plugin:
           context: [ desktop, workspace, administration ]
           tags: [ community ]
 
+        - name: my-groups
+          type: list
+          context: [ desktop, workspace, administration ]
+          tags: [ community ]
+
         - name: roles
           type: list
           context: [ desktop, workspace, administration ]

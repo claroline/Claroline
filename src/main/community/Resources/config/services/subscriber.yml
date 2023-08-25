@@ -82,6 +82,11 @@ services:
         - '@security.authorization_checker'
         - '@Claroline\AppBundle\API\FinderProvider'
 
+    Claroline\CommunityBundle\Subscriber\DataSource\MyGroupSourceSubscriber:
+      arguments:
+        - '@security.token_storage'
+        - '@Claroline\AppBundle\API\FinderProvider'
+
     Claroline\CommunityBundle\Subscriber\DataSource\RoleSourceSubscriber:
       arguments:
         - '@security.authorization_checker'

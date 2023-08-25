@@ -4,12 +4,13 @@
 
   "teams": "List of teams in the workspace",
   "teams_desc": "Allows to list the teams in the workspace.",
-
   "my-teams": "List of my teams",
   "my-teams_desc": "Allows to list my teams.",
 
   "groups": "List of groups",
   "groups_desc": "Allows to list the groups.",
+  "my-groups": "List of my groups",
+  "my-groups_desc": "Allows to list my groups.",
 
   "roles": "List of roles",
   "roles_desc": "Allows to list the roles."
