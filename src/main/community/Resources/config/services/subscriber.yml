@@ -81,3 +81,8 @@ services:
       arguments:
         - '@security.authorization_checker'
         - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\RoleSourceSubscriber:
+      arguments:
+        - '@security.authorization_checker'
+        - '@Claroline\AppBundle\API\FinderProvider'

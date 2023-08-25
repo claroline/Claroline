@@ -9,5 +9,8 @@
   "my-teams_desc": "Allows to list my teams.",
 
   "groups": "List of groups",
-  "groups_desc": "Allows to list the groups."
+  "groups_desc": "Allows to list the groups.",
+
+  "roles": "List of roles",
+  "roles_desc": "Allows to list the roles."
 }

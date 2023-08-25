@@ -9,5 +9,8 @@
   "my-teams_desc": "Permet de lister mes équipes",
 
   "groups": "Liste des groupes",
-  "groups_desc": "Permet de lister les groupes."
+  "groups_desc": "Permet de lister les groupes.",
+
+  "roles": "Liste des rôles",
+  "roles_desc": "Permet de lister les rôles."
 }
