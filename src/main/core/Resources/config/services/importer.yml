@@ -60,6 +60,11 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
+    Claroline\CoreBundle\Transfer\Importer\Workspace\RemoveAllGroups:
+      arguments:
+        - '@Claroline\AppBundle\API\Crud'
+        - '@Claroline\AppBundle\Persistence\ObjectManager'
+
     Claroline\CoreBundle\Transfer\Importer\Workspace\EmptyRole:
         arguments:
             - '@Claroline\AppBundle\API\Crud'

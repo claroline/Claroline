@@ -5,6 +5,7 @@
     "archive": "Archiver",
     "unarchive": "Désarchiver",
     "empty_role": "Vider le rôle (utilisateurs et groupes)",
+    "remove_all_groups": "Supprimer tous les groupes",
 
     "directory_id": "L'id du dossier",
     "directory_name": "Le nom du dossier",
