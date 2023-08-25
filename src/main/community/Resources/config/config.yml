@@ -38,3 +38,8 @@ plugin:
           type: list
           context: [ desktop, workspace, administration ]
           tags: [ community ]
+
+        - name: my-roles
+          type: list
+          context: [ desktop, workspace, administration ]
+          tags: [ community ]

@@ -1,0 +1,52 @@
+<?php
+
+namespace Claroline\CommunityBundle\Subscriber\DataSource;
+
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\CoreBundle\Entity\DataSource;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
+class MyRoleSourceSubscriber implements EventSubscriberInterface
+{
+    private TokenStorageInterface $tokenStorage;
+    private FinderProvider $finder;
+
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        FinderProvider $finder
+    ) {
+        $this->tokenStorage = $tokenStorage;
+        $this->finder = $finder;
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            'data_source.my-roles.load' => 'getData',
+        ];
+    }
+
+    public function getData(GetDataEvent $event): void
+    {
+        $options = $event->getOptions();
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user) {
+            $options['hiddenFilters']['user'] = $user->getUuid();
+        }
+
+        if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
+            $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
+        }
+
+        $event->setData(
+            $this->finder->search(Role::class, $options)
+        );
+
+        $event->stopPropagation();
+    }
+}

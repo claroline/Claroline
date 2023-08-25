@@ -5,13 +5,15 @@
   "teams": "Liste des équipes de l'espace d'activités",
   "teams_desc": "Permet de lister les équipes de l'espace d'activités.",
   "my-teams": "Liste de mes équipes",
-  "my-teams_desc": "Permet de lister mes équipes",
+  "my-teams_desc": "Permet de lister mes équipes.",
 
   "groups": "Liste des groupes",
   "groups_desc": "Permet de lister les groupes.",
   "my-groups": "Liste de mes groupes",
-  "my-groups_desc": "Permet de lister mes groupes",
+  "my-groups_desc": "Permet de lister mes groupes.",
 
   "roles": "Liste des rôles",
-  "roles_desc": "Permet de lister les rôles."
+  "roles_desc": "Permet de lister les rôles.",
+  "my-roles": "Liste de mes rôles",
+  "my-roles_desc": "Permet de lister mes rôles."
 }
