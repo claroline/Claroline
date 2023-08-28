@@ -5,6 +5,8 @@
     "archive": "Archive",
     "unarchive": "Unarchive",
     "empty_role": "Empty role (users and groups)",
+    "remove_all_groups": "Delete all groups",
+    "remove_all_users": "Delete all users",
 
     "directory_id": "The directory id",
     "directory_name": "The directory name",
