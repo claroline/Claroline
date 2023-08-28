@@ -1,71 +1,45 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
+
+// TODO : use custom components instead
 import Tab from 'react-bootstrap/Tab'
-import Nav from 'react-bootstrap/Nav'
-import NavItem from 'react-bootstrap/NavItem'
+import Tabs from 'react-bootstrap/Tabs'
 
 import {trans} from '#/main/app/intl/translation'
 
-export class PaperTabs extends Component {
-  constructor(props) {
-    super(props)
-    this.handleSelect = this.handleSelect.bind(this)
-    this.defaultKey = 'first'
-    if (!props.showExpected && !props.showYours && props.showStats) {
-      this.defaultKey = 'third'
+const PaperTabs = (props) =>
+  <Tabs
+    id={`${props.id}-paper`}
+    defaultActiveKey={!props.showExpected && !props.showYours && props.showStats ? 'third':'first'}
+    mountOnEnter={true}
+  >
+    {props.showYours &&
+      <Tab
+        eventKey="first"
+        title={<><span className="fa fa-fw fa-user" /> {trans('your_answer', {}, 'quiz')}</>}
+      >
+        {props.yours}
+      </Tab>
     }
-  }
 
-  handleSelect(key) {
-    if (this.props.onTabChange) {
-      this.props.onTabChange(key)
+    {props.showExpected &&
+      <Tab
+        eventKey="second"
+        title={<><span className="fa fa-fw fa-check" /> {trans('expected_answer', {}, 'quiz')}</>}
+      >
+        {props.expected}
+      </Tab>
     }
-  }
 
-  render() {
-    return (
-      <Tab.Container id={`${this.props.id}-paper`} defaultActiveKey={this.defaultKey}>
-        <div>
-          <Nav bsStyle="tabs">
-            {this.props.showYours &&
-              <NavItem eventKey="first" onSelect={() => this.handleSelect('first')}>
-                <span className="fa fa-fw fa-user" /> {trans('your_answer', {}, 'quiz')}
-              </NavItem>
-            }
-            {this.props.showExpected &&
-              <NavItem eventKey="second" onSelect={() => this.handleSelect('second')}>
-                <span className="fa fa-fw fa-check" /> {trans('expected_answer', {}, 'quiz')}
-              </NavItem>
-            }
-            {this.props.showStats &&
-              <NavItem eventKey="third" onSelect={() => this.handleSelect('third')}>
-                <span className="fa fa-fw fa-bar-chart" /> {trans('stats', {}, 'quiz')}
-              </NavItem>
-            }
-          </Nav>
-
-          <Tab.Content animation>
-            {this.props.showYours &&
-              <Tab.Pane eventKey="first">
-                {this.props.yours}
-              </Tab.Pane>
-            }
-            {this.props.showExpected &&
-              <Tab.Pane eventKey="second">
-                {this.props.expected}
-              </Tab.Pane>
-            }
-            {this.props.showStats &&
-              <Tab.Pane eventKey="third">
-                {this.props.stats}
-              </Tab.Pane>
-            }
-          </Tab.Content>
-        </div>
-      </Tab.Container>
-    )
-  }
-}
+    {props.showStats &&
+      <Tab
+        eventKey="third"
+        title={<><span className="fa fa-fw fa-bar-chart" /> {trans('stats', {}, 'quiz')}</>}
+      >
+        {props.stats}
+      </Tab>
+    }
+  </Tabs>
 
 PaperTabs.propTypes = {
   id: T.string.isRequired,
@@ -80,4 +54,8 @@ PaperTabs.propTypes = {
 
 PaperTabs.defaultProps = {
   showYours: false
+}
+
+export {
+  PaperTabs
 }

@@ -3,7 +3,7 @@
 // horizontal size of the separator between user and max scores
 // this is not exposed in the var file as it's just a dev utility
 // and is not intended to be customized.
-$separator-size: .75rem;
+$separator-size: 1rem;
 
 // todo add mixin to generate size variant
 // todo add a mixin to force it in a panel corner
@@ -43,7 +43,7 @@ $separator-size: .75rem;
             left: -$separator-size;
             content: " ";
             display: block;
-            height: 0;
+            bottom: 0;
             border-bottom: ($score-font-size + $score-padding-v*2) solid $score-bg;
             border-left: $separator-size solid transparent;
         }

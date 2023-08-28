@@ -1,7 +1,12 @@
 .item-paper {
+    position: relative;
+
     .score-box {
-        margin: $score-margin;
-        border-radius: 0 $card-border-radius 0 $score-border-radius;
+        position: absolute;
+        top: 0;
+        right: 0;
+        //bottom: auto;
+        border-radius: 0 $card-inner-border-radius 0 $card-inner-border-radius;
 
         .user-score {
             border-top-left-radius: 0;
@@ -11,7 +16,7 @@
     // todo : do not do it like this
     .nav-tabs {
         padding-left: $card-spacer-x;
-        margin: 0 (-$card-spacer-x) $card-title-spacer-y (-$card-spacer-x);
+        margin: 0 (-$card-spacer-x) $card-spacer-y (-$card-spacer-x);
     }
 }
 
