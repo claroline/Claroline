@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {teamRoute} from '#/main/community/team/routing'
+import {route} from '#/main/community/team/routing'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors as configSelectors} from '#/main/app/config/store'
@@ -22,7 +22,7 @@ const TeamFormComponent = props => {
       save={{
         type: CALLBACK_BUTTON,
         callback: () => props.save(props.team, props.isNew, props.name).then(team => {
-          history.push(teamRoute(team))
+          history.push(route(team))
         })
       }}
       cancel={{
