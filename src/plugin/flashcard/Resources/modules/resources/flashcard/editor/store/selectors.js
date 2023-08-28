@@ -1,8 +1,9 @@
+import get from 'lodash/get'
 import {createSelector} from 'reselect'
 
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 import {selectors as baseSelectors} from '#/plugin/flashcard/resources/flashcard/store/selectors'
-import get                          from 'lodash/get'
+
 
 const STORE_NAME = 'editor'
 const FORM_NAME = `${baseSelectors.STORE_NAME}.flashcardForm`
