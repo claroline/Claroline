@@ -161,17 +161,19 @@ class EvaluationUser extends Component {
             }
 
             {!isEmpty(this.props.resourceEvaluations) &&
-              <ul className="nav nav-tabs component-container">
-                <li>
+              <ul className="nav nav-tabs mb-3">
+                <li className="nav-item">
                   <Button
+                    className="nav-link"
                     type={CALLBACK_BUTTON}
                     label={trans('required_resources', {}, 'resource')}
                     callback={() => this.setState({resources: 'required'})}
                     active={'required' === this.state.resources}
                   />
                 </li>
-                <li>
+                <li className="nav-item">
                   <Button
+                    className="nav-link"
                     type={CALLBACK_BUTTON}
                     label={trans('all_resources', {}, 'resource')}
                     callback={() => this.setState({resources: 'all'})}
