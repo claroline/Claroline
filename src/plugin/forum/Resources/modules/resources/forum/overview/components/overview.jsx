@@ -65,21 +65,25 @@ const OverviewComponent = props =>
         </section>
 
         {!isEmpty(props.forum.meta.tags) &&
-          <section>
+          <section className="mt-3">
             <h3 className="h2">{trans('tags')}</h3>
-            <ContentTags
-              tags={props.tagsCount}
-              minSize={12}
-              maxSize={28}
-              onClick={(tag) => {
-                const forumTag = props.forum.meta.tags.find(t => t.name === tag)
+            <div className="card">
+              <div className="card-body text-center">
+                <ContentTags
+                  tags={props.tagsCount}
+                  minSize={12}
+                  maxSize={28}
+                  onClick={(tag) => {
+                    const forumTag = props.forum.meta.tags.find(t => t.name === tag)
 
-                if (forumTag) {
-                  props.goToList(forumTag.id)
-                  props.history.push(`${props.path}/subjects`)
-                }
-              }}
-            />
+                    if (forumTag) {
+                      props.goToList(forumTag.id)
+                      props.history.push(`${props.path}/subjects`)
+                    }
+                  }}
+                />
+              </div>
+            </div>
           </section>
         }
       </div>

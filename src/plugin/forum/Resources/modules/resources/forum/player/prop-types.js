@@ -10,6 +10,7 @@ const Subject = {
     }),
     content: T.string,
     title: T.string,
+    poster: T.string,
     meta: T.shape({
       views: T.number,
       messages: T.number.isRequired,
