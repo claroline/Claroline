@@ -15,7 +15,7 @@ const EvaluationDetails = (props) => {
   }
 
   return (
-    <div className={classes('card', props.className)}>
+    <div className={classes('card mb-3', props.className)}>
       <div className="card-body text-center">
         {props.showScore &&
           <ScoreGauge
