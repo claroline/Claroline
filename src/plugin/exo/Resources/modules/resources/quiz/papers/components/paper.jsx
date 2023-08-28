@@ -133,13 +133,7 @@ const PaperComponent = props =>
         trans('attempt_loading', {}, 'quiz')
       }
       actions={[
-        /*{
-         name: 'about',
-         type: MODAL_BUTTON,
-         icon: 'fa fa-fw fa-info',
-         label: trans('show-info', {}, 'actions'),
-         modal: []
-         },*/ {
+        {
           name: 'delete',
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-trash',
