@@ -50,7 +50,7 @@ class RemoveAllGroups extends AbstractImporter
         return [];
     }
 
-    public function printError(array $el): string
+    private function printError(array $el): string
     {
         $string = '';
 
