@@ -17,7 +17,7 @@ const LastMessages = (props) =>
               label={trans('see_subject', {}, 'forum')}
               type={LINK_BUTTON}
               target={`${props.path}/subjects/show/${message.subject.id}`}
-              className="btn-link"
+              className="btn-link mx-2"
               primary={true}
             />
           </h4>

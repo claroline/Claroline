@@ -6,6 +6,7 @@ import get from 'lodash/get'
 
 import {withRouter} from '#/main/app/router'
 import {trans, transChoice} from '#/main/app/intl/translation'
+import {asset} from '#/main/app/config/asset'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 import {withModal} from '#/main/app/overlays/modal/withModal'
@@ -99,17 +100,21 @@ class SubjectComponent extends Component {
       )
     }
     return (
-      <section>
-        <header className="subject-info">
-          <Button
-            label={trans('forum_back_to_subjects', {}, 'forum')}
-            type={LINK_BUTTON}
-            target={`${this.props.path}/subjects`}
-            className="btn-link"
-            primary={true}
-          />
-
-          <div>
+      <section className="current-subject">
+        <header>
+          {(!this.props.showSubjectForm && !this.props.editingSubject) && get(this.props.subject, 'poster') &&
+            <img className="subject-poster img-fluid" alt={this.props.subject.title} src={asset(this.props.subject.poster)} />
+          }
+          <div className="subjects-back">
+            <Button
+              label={trans('forum_back_to_subjects', {}, 'forum')}
+              type={LINK_BUTTON}
+              target={`${this.props.path}/subjects`}
+              className="btn-link"
+              primary={true}
+            />
+          </div>
+          <div className="subject-info">
             {(!this.props.showSubjectForm && !this.props.editingSubject) &&
               <h3 className="h2">
                 {get(this.props.subject, 'meta.closed') &&
