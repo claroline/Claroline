@@ -100,7 +100,7 @@ class UserFinder extends AbstractFinder
                     $qb->setParameter('groupRoleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
-                // should not exist : used by the users DataSource
+                    // should not exist : used by the users DataSource
                 case 'roleTranslation':
                     if (!$roleJoin) {
                         $qb->leftJoin('obj.roles', 'r');
@@ -145,6 +145,13 @@ class UserFinder extends AbstractFinder
                     $qb->leftJoin('obj.locations', 'l');
                     $qb->andWhere('l.uuid IN (:locationIds)');
                     $qb->setParameter('locationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
+
+                case 'team':
+                case 'teams':
+                    $qb->leftJoin('obj.teams', 't');
+                    $qb->andWhere('t.uuid IN (:teamIds)');
+                    $qb->setParameter('teamIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
                 case 'organizationManager':
@@ -192,8 +199,8 @@ class UserFinder extends AbstractFinder
 
                     break;
 
-                // get users which are manager of at least one workspace (not their personal ws)
-                // used by Workspace\ListManagersExporter
+                    // get users which are manager of at least one workspace (not their personal ws)
+                    // used by Workspace\ListManagersExporter
                 case 'workspaceManager':
                     if (!$roleJoin) {
                         $qb->leftJoin('obj.roles', 'r');
@@ -234,13 +241,13 @@ class UserFinder extends AbstractFinder
         // manages custom sort properties
         if ($sortBy && 0 !== $sortBy['direction']) {
             switch ($sortBy['property']) {
-              case 'name':
-                  $qb->orderBy('obj.lastName', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
-                  break;
-              case 'isDisabled':
-                  $qb->orderBy('obj.isEnabled', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
-                  break;
-          }
+                case 'name':
+                    $qb->orderBy('obj.lastName', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                    break;
+                case 'isDisabled':
+                    $qb->orderBy('obj.isEnabled', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                    break;
+            }
         }
 
         return $qb;

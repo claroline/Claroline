@@ -96,3 +96,9 @@ services:
       arguments:
         - '@security.token_storage'
         - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\TeamsMembersSourceSubscriber:
+      arguments:
+        - '@security.token_storage'
+        - '@Claroline\AppBundle\API\FinderProvider'
+        - '@Claroline\CommunityBundle\Manager\TeamManager'

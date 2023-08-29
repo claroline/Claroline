@@ -6,6 +6,9 @@
   "teams_desc": "Allows to list the teams in the workspace.",
   "my-teams": "List of my teams",
   "my-teams_desc": "Allows to list my teams.",
+  "teams-members": "List members of my teams",
+  "teams-members_desc": "Allows to list members of my teams.",
+  "team": "Team",
 
   "groups": "List of groups",
   "groups_desc": "Allows to list the groups.",

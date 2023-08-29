@@ -43,3 +43,8 @@ plugin:
           type: list
           context: [ desktop, workspace, administration ]
           tags: [ community ]
+
+        - name: teams-members
+          type: list
+          context: [ desktop, workspace ]
+          tags: [ community ]
