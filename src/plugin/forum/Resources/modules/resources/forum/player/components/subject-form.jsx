@@ -136,9 +136,8 @@ const SubjectFormComponent = (props) => {
                   },
                   {
                     name: 'tags',
-                    type: 'string',
-                    label: trans('tags'),
-                    help: trans('tag_form_help', {}, 'forum')
+                    type: 'tag',
+                    label: trans('tags')
                   }
                 ]
               }, {
