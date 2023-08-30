@@ -261,7 +261,7 @@ class ResourceManager implements LoggerAwareInterface
         }
 
         foreach ($nodes as $node) {
-            //we only download is we can...
+            // we only download is we can...
             if ($this->authorization->isGranted('EXPORT', $node)) {
                 $resource = $this->getResourceFromNode($node);
 
@@ -269,7 +269,7 @@ class ResourceManager implements LoggerAwareInterface
                     $filename = $this->getRelativePath($currentDir, $node).$node->getName();
                     $resource = $this->getResourceFromNode($node);
 
-                    //if it's a file, we may have to add the extension back in case someone removed it from the name
+                    // if it's a file, we may have to add the extension back in case someone removed it from the name
                     if ('file' === $node->getResourceType()->getName()) {
                         $extension = '.'.pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
                         if (!preg_match("#$extension#", $filename)) {
@@ -329,8 +329,6 @@ class ResourceManager implements LoggerAwareInterface
     }
 
     /**
-     * @param mixed $id
-     *
      * @return ResourceNode
      */
     public function getById($id)
@@ -437,8 +435,9 @@ class ResourceManager implements LoggerAwareInterface
             return $code;
         }
 
+        $index = count($existingCodes);
         do {
-            $index = count($existingCodes) + 1;
+            ++$index;
             $currentCode = $code.'_'.$index;
             $upperCurrentCode = strtoupper($currentCode);
         } while (in_array($upperCurrentCode, $existingCodes));
