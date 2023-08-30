@@ -437,8 +437,9 @@ class ResourceManager implements LoggerAwareInterface
             return $code;
         }
 
+        $index = count($existingCodes);
         do {
-            $index = count($existingCodes) + 1;
+            ++$index;
             $currentCode = $code.'_'.$index;
             $upperCurrentCode = strtoupper($currentCode);
         } while (in_array($upperCurrentCode, $existingCodes));
