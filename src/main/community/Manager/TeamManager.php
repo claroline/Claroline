@@ -307,15 +307,18 @@ class TeamManager
     {
         $teamManagerRole = $team->getManagerRole();
 
-        if (!is_null($teamManagerRole) && 0 < count($users)) {
-            $this->om->startFlushSuite();
+        $this->om->startFlushSuite();
 
-            foreach ($users as $user) {
-                $this->crud->patch($user, 'role', Crud::COLLECTION_ADD, [$teamManagerRole], [Crud::NO_PERMISSIONS]);
+        foreach ($users as $user) {
+            $team->addUser($user);
+            if (!is_null($teamManagerRole)) {
+                if (!$user->hasRole($teamManagerRole->getName())) {
+                    $this->crud->patch($user, 'role', Crud::COLLECTION_ADD, [$teamManagerRole], [Crud::NO_PERMISSIONS]);
+                }
             }
-            $this->om->persist($team);
-            $this->om->endFlushSuite();
         }
+        $this->om->persist($team);
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -325,15 +328,18 @@ class TeamManager
     {
         $teamManagerRole = $team->getManagerRole();
 
-        if (!is_null($teamManagerRole)) {
-            $this->om->startFlushSuite();
+        $this->om->startFlushSuite();
 
-            foreach ($users as $user) {
-                $this->crud->patch($user, 'role', Crud::COLLECTION_REMOVE, [$teamManagerRole], [Crud::NO_PERMISSIONS]);
+        foreach ($users as $user) {
+            $team->removeUser($user);
+            if (!is_null($teamManagerRole)) {
+                if ($user->hasRole($teamManagerRole->getName())) {
+                    $this->crud->patch($user, 'role', Crud::COLLECTION_REMOVE, [$teamManagerRole], [Crud::NO_PERMISSIONS]);
+                }
             }
-            $this->om->persist($team);
-            $this->om->endFlushSuite();
         }
+        $this->om->persist($team);
+        $this->om->endFlushSuite();
     }
 
     /**

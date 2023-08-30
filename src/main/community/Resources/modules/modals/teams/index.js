@@ -1,7 +1,7 @@
 /**
  * Teams picker modal.
  *
- * Displays the groups picker inside the modal.
+ * Displays the teams picker inside the modal.
  */
 
 import {registry} from '#/main/app/modals/registry'

@@ -1,8 +1,7 @@
 import React, {Fragment} from 'react'
-import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
@@ -26,7 +25,7 @@ const TeamButton = props =>
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
         label: trans('select', {}, 'actions'),
-        callback: () => props.onChange(selected)
+        callback: () => props.onChange(selected[0])
       })
     }]}
     size={props.size}
@@ -44,60 +43,42 @@ TeamButton.propTypes = {
 }
 
 const TeamInput = props => {
-  if (!isEmpty(props.value)) {
+  const actions = props.disabled ? [] : [
+    {
+      name: 'delete',
+      type: CALLBACK_BUTTON,
+      icon: 'fa fa-fw fa-trash',
+      label: trans('delete', {}, 'actions'),
+      dangerous: true,
+      callback: () => props.onChange(null)
+    }
+  ]
+
+  if (props.value) {
     return(
       <Fragment>
-        {props.value.map(team =>
-          <TeamCard
-            key={`team-card-${team.id}`}
-            data={team}
-            size="xs"
-            actions={[
-              {
-                name: 'delete',
-                type: CALLBACK_BUTTON,
-                icon: 'fa fa-fw fa-trash',
-                label: trans('delete', {}, 'actions'),
-                dangerous: true,
-                disabled: props.disabled,
-                callback: () => {
-                  const newValue = props.value
-                  const index = newValue.findIndex(t => t.id === team.id)
-
-                  if (-1 < index) {
-                    newValue.splice(index, 1)
-                    props.onChange(newValue)
-                  }
-                }
-              }
-            ]}
-          />
-        )}
-
-        <TeamButton
-          {...props.picker}
-          disabled={props.disabled}
-          size={props.size}
-          onChange={(selected) => {
-            const newValue = props.value
-            selected.forEach(team => {
-              const index = newValue.findIndex(t => t.id === team.id)
-
-              if (-1 === index) {
-                newValue.push(team)
-              }
-            })
-            props.onChange(newValue)
-          }}
+        <TeamCard
+          data={props.value}
+          size="xs"
+          actions={actions}
         />
+
+        {!props.disabled &&
+          <TeamButton
+            {...props.picker}
+            size={props.size}
+            onChange={props.onChange}
+          />
+        }
       </Fragment>
     )
   }
 
   return (
     <ContentPlaceholder
+      id={props.id}
       icon="fa fa-users"
-      title={trans('no_group')}
+      title={trans('no_team')}
       size={props.size}
     >
       <TeamButton
@@ -111,9 +92,7 @@ const TeamInput = props => {
 }
 
 implementPropTypes(TeamInput, DataInputTypes, {
-  value: T.arrayOf(T.shape(
-    TeamType.propTypes
-  )),
+  value: T.arrayOf(T.shape(TeamType.propTypes)),
   picker: T.shape({
     url: T.oneOfType([T.string, T.array]),
     title: T.string,

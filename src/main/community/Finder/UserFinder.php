@@ -147,10 +147,9 @@ class UserFinder extends AbstractFinder
                     $qb->setParameter('locationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
-                case 'team':
                 case 'teams':
-                    $qb->leftJoin('obj.teams', 't');
-                    $qb->andWhere('t.uuid IN (:teamIds)');
+                    $qb->leftJoin('Claroline\CommunityBundle\Entity\Team', 't', 'WITH', 'obj MEMBER OF t.users')
+                        ->andWhere('t.uuid IN (:teamIds)');
                     $qb->setParameter('teamIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 

@@ -5,9 +5,11 @@ namespace Claroline\CommunityBundle\Subscriber\DataSource;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MyRoleSourceSubscriber implements EventSubscriberInterface
 {
@@ -35,12 +37,13 @@ class MyRoleSourceSubscriber implements EventSubscriberInterface
 
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user) {
+        if ($user instanceof User) {
             $options['hiddenFilters']['user'] = $user->getUuid();
-        }
-
-        if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
-            $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
+            if (DataSource::CONTEXT_WORKSPACE === $event->getContext()) {
+                $options['hiddenFilters']['workspace'] = $event->getWorkspace()->getUuid();
+            }
+        } else {
+            throw new AccessDeniedException();
         }
 
         $event->setData(

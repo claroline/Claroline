@@ -25,7 +25,7 @@ const TeamFilter = (props) =>
         selectAction: (selected) => ({
           type: CALLBACK_BUTTON,
           label: trans('select', {}, 'actions'),
-          callback: () => props.updateSearch([selected[0].id])
+          callback: () => props.updateSearch(selected[0].id)
         })
       }]}
       disabled={props.disabled}

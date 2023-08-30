@@ -8,8 +8,9 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class TeamsMembersSourceSubscriber implements EventSubscriberInterface
+class TeamMemberSourceSubscriber implements EventSubscriberInterface
 {
     private TokenStorageInterface $tokenStorage;
     private FinderProvider $finder;
@@ -35,27 +36,28 @@ class TeamsMembersSourceSubscriber implements EventSubscriberInterface
     public function getData(GetDataEvent $event): void
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $teams = $this->teamManager->getTeamsByUserAndWorkspace($user, $event->getWorkspace());
 
-        $options = $event->getOptions();
-        $filters = $options['filters'] ?? [];
-        $isFilteredByTeam = array_key_exists('team', $filters) && !empty($filters['team']);
-
-        $teamMembers = [];
-        foreach ($teams as $team) {
-            if ($isFilteredByTeam && !in_array($team->getUuid(), $filters['team'])) {
-                continue;
-            }
-            foreach ($team->getUsers() as $teamUser) {
-                $teamMembers[] = $teamUser;
-            }
+        if (!$user instanceof User) {
+            throw new AccessDeniedException();
         }
 
-        $teamIds = array_unique(array_map(function ($teamMember) use ($user) {
-            return $teamMember->getUuid() !== $user->getUuid() ? $teamMember->getUuid() : null;
-        }, $teamMembers));
+        $teams = $this->teamManager->getTeamsByUserAndWorkspace($user, $event->getWorkspace());
 
-        $teamMembers = $this->finder->search(User::class, ['hiddenFilters' => ['id' => $teamIds]]);
+        $teamUuids = array_map(function ($team) {
+            return $team->getUuid();
+        }, $teams);
+
+        $filters = $event->getOptions()['filters'] ?? [];
+        $teamFilter = $filters['team'] ?? [];
+
+        if ('string' === gettype($teamFilter)) {
+            $teamFilter = [$teamFilter];
+        }
+        if (!empty($teamFilter)) {
+            $teamUuids = array_intersect($teamUuids, $teamFilter);
+        }
+
+        $teamMembers = $this->finder->search(User::class, ['hiddenFilters' => ['teams' => $teamUuids]]);
 
         $event->setData($teamMembers);
         $event->stopPropagation();

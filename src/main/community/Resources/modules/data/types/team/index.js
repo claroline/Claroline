@@ -12,7 +12,7 @@ const dataType = {
     label: trans('team', {}, 'data'),
     description: trans('team_desc', {}, 'data')
   },
-  render: (raw) => raw && raw.map(t => t.uuid).join(', '),
+  render: (raw) => raw && raw.map(t => t.name).join(', '),
   components: {
     details: TeamDisplay,
     input: TeamInput,
