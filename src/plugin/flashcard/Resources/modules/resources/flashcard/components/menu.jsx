@@ -1,21 +1,22 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 
-const FlashcardDeckMenu = props =>
+const FlashcardMenu = props =>
   <MenuSection
-    {...omit(props, 'path', 'editable')}
+    {...props}
     title={trans('flashcard', {}, 'resource')}
   />
 
-FlashcardDeckMenu.propTypes = {
-  path: T.string.isRequired,
-  editable: T.bool.isRequired,
+FlashcardMenu.propTypes = {
+  // from menu
+  opened: T.bool.isRequired,
+  toggle: T.func.isRequired,
+  autoClose: T.func.isRequired
 }
 
 export {
-  FlashcardDeckMenu
+  FlashcardMenu
 }

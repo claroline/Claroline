@@ -5,12 +5,12 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ResourcePage} from '#/main/core/resource/containers/page'
 
-import {FlashcardDeckOverview} from '#/plugin/flashcard/resources/flashcard/containers/overview'
+import {Overview} from '#/plugin/flashcard/resources/flashcard/containers/overview'
 import {Editor} from '#/plugin/flashcard/resources/flashcard/editor/components/editor'
-import {FlashcardDeckPlayer} from '#/plugin/flashcard/resources/flashcard/player/containers/player'
+import {Player} from '#/plugin/flashcard/resources/flashcard/player/containers/player'
 import {PlayerEnd} from '#/plugin/flashcard/resources/flashcard/player/components/end'
 
-const FlashcardDeckResource = props =>
+const FlashcardResource = props =>
   <ResourcePage
     customActions={[
       {
@@ -37,11 +37,11 @@ const FlashcardDeckResource = props =>
         component: PlayerEnd
       }, {
         path: '/play',
-        component: FlashcardDeckPlayer
+        exact: true,
+        component: Player
       }, {
         path: '/',
-        exact: true,
-        component: FlashcardDeckOverview,
+        component: Overview,
         disabled: !props.overview
       }
     ]}
@@ -50,12 +50,12 @@ const FlashcardDeckResource = props =>
     ]}
   />
 
-FlashcardDeckResource.propTypes = {
+FlashcardResource.propTypes = {
   path: T.string.isRequired,
   editable: T.bool.isRequired,
   overview: T.bool.isRequired
 }
 
 export {
-  FlashcardDeckResource
+  FlashcardResource
 }

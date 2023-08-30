@@ -2,10 +2,10 @@ import {connect} from 'react-redux'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store/selectors'
 
-import {FlashcardDeckOverview as FlashcardDeckOverviewComponent} from '#/plugin/flashcard/resources/flashcard/components/overview'
+import {Overview as OverviewComponent} from '#/plugin/flashcard/resources/flashcard/components/overview'
 import {selectors} from '#/plugin/flashcard/resources/flashcard/store'
 
-const FlashcardDeckOverview = connect(
+const Overview = connect(
   (state) => ({
     basePath: resourceSelectors.path(state),
     flashcardDeck: selectors.flashcardDeck(state),
@@ -15,8 +15,8 @@ const FlashcardDeckOverview = connect(
     overview: selectors.showOverview(state),
     showEndPage: selectors.showEndPage(state)
   })
-)(FlashcardDeckOverviewComponent)
+)(OverviewComponent)
 
 export {
-  FlashcardDeckOverview
+  Overview
 }

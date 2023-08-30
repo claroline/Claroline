@@ -40,7 +40,7 @@ class FlashcardDeckController extends AbstractCrudController
      *
      * @Route("/flashcard/{id}/progression", name="apiv2_flashcard_progression_update", methods={"PUT"})
      *
-     * @EXT\ParamConverter("card", class="Claroline\FlashcardBundle\Entity\Flashcard")
+     * @EXT\ParamConverter("card", class="Claroline\FlashcardBundle\Entity\Flashcard", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function updateProgressionAction(Flashcard $card, User $user, Request $request): JsonResponse

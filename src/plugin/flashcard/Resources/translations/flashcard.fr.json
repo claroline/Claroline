@@ -8,7 +8,6 @@
   "card_delete_confirm": "Suppression de la carte",
   "card_delete_message": "Êtes-vous sûr de vouloir supprimer cette carte ?",
 
-  "card_number" : "Carte n°",
   "question": "Question",
   "visible_content": "Face visible",
   "hidden_content": "Face cachée",
@@ -16,8 +15,11 @@
   "right_answer": "Je sais",
   "wrong_answer": "Je ne sais pas",
 
-  "cards_list": "Liste des cartes",
   "card_parameters": "Paramètres de la carte",
+
+  "view": "vues",
+  "check": "réussies",
+  "fail": "échouées",
 
   "start_disabled_empty": "La resource cartes-mémoire est vide."
 }

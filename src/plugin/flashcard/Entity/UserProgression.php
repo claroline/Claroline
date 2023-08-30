@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * UserProgression
- * Represents the progression of a User in a Card.
+ * Represents the progression of a User on a Card.
  *
  * @ORM\Table(name="claro_flashcard_progression")
  *

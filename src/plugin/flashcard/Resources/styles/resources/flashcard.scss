@@ -57,6 +57,18 @@
   background-color: transparent;
 }
 
+.card-buttons {
+  display: flex;
+  justify-content: center;
+  max-width: 500px;
+  width: 80vw;
+  margin: auto;
+
+  & > button {
+    margin-left: 20px;
+  }
+}
+
 .card-element {
   position: absolute;
   background: #fff9ec;
@@ -105,16 +117,6 @@
 
   &.flipped &-hidden {
     transform: rotateY(0deg);
-  }
-
-  &-buttons {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-
-    & > button {
-      flex: 1;
-    }
   }
 
   @for $index from 0 through 100 {

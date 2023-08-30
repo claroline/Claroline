@@ -10,12 +10,13 @@ import { ContentHtml } from '#/main/app/content/components/html'
 import { ContentPlaceholder } from '#/main/app/content/components/placeholder'
 
 import { FlashcardDeck } from '#/plugin/flashcard/resources/flashcard/prop-types'
+import {ProgressBar} from '#/main/app/content/components/progress-bar'
 
-const FlashcardDeckPlayer = ({ deck, updateUserProgression }) => {
-  const [currentCardIndex, setCurrentCardIndex] = useState(0)
+const Player = ({ deck, updateUserProgression }) => {
   const history = useHistory()
   const match = useRouteMatch()
   const [isFlipped, setIsFlipped] = useState(false)
+  const [currentCardIndex, setCurrentCardIndex] = useState(0)
   const currentCard = deck.cards[currentCardIndex]
 
   const goToNextCard = () => {
@@ -38,9 +39,6 @@ const FlashcardDeckPlayer = ({ deck, updateUserProgression }) => {
   const renderCardContent = (contentKey) => (
     <>
       {currentCard.question && <p className="card-element-question">{currentCard.question}</p>}
-      <div className={'card-element-counter'}>
-        {`${currentCardIndex + 1} / ${deck.cards.length}`}
-      </div>
       <ContentHtml className="card-element-content">
         {currentCard[contentKey]}
       </ContentHtml>
@@ -57,48 +55,60 @@ const FlashcardDeckPlayer = ({ deck, updateUserProgression }) => {
   }
 
   return (
-    <section className="card-player">
-      <div className="card-deck">
-        <div className={`card-element card-element-0 ${isFlipped ? 'card-element-flip' : ''}`}>
-          <div className="card-element-visible">
-            {renderCardContent('visibleContent')}
-            <div className="card-element-buttons">
-              <Button
-                label={trans('show_answer', {}, 'flashcard')}
-                type={CALLBACK_BUTTON}
-                className="btn btn-info"
-                callback={() => setIsFlipped(!isFlipped)}
-              />
+    <section>
+      <ProgressBar
+        className="progress-minimal"
+        value={(currentCardIndex+1) / deck.cards.length * 100}
+        size="xs"
+        type="learning"
+      />
+      <div className="card-player">
+        <div className="card-deck">
+          <div className={`card-element card-element-0 ${isFlipped ? 'card-element-flip' : ''}`}>
+            <div className="card-element-visible">
+              {renderCardContent('visibleContent')}
+            </div>
+            <div className="card-element-hidden">
+              {renderCardContent('hiddenContent')}
             </div>
           </div>
-          <div className="card-element-hidden">
-            {renderCardContent('hiddenContent')}
-            <div className="card-element-buttons mt-3">
-              <CallbackButton
-                className="btn btn-success"
-                callback={() => handleAnswer(true)}
-              >
-                {trans('right_answer', {}, 'flashcard')}
-              </CallbackButton>
-              <CallbackButton
-                className="btn btn-danger"
-                label={trans('wrong_answer', {}, 'flashcard')}
-                callback={() => handleAnswer(false)}
-              >
-
-                {trans('wrong_answer', {}, 'flashcard')}
-              </CallbackButton>
-            </div>
-          </div>
+          {deck.cards.length > 1 && <div className="card-element card-element-1"></div>}
+          {deck.cards.length > 2 && <div className="card-element card-element-2"></div>}
         </div>
-        {deck.cards.length > 1 && <div className="card-element card-element-1"></div>}
-        {deck.cards.length > 2 && <div className="card-element card-element-2"></div>}
+      </div>
+
+      <div className="card-buttons mt-5">
+        { !isFlipped && <Button
+          label={trans('show_answer', {}, 'flashcard')}
+          type={CALLBACK_BUTTON}
+          className="btn btn-info"
+          callback={() => setIsFlipped(!isFlipped)}
+        />
+        }
+
+        { isFlipped && <CallbackButton
+          className="btn btn-success"
+          callback={() => handleAnswer(true)}
+        >
+          {trans('right_answer', {}, 'flashcard')}
+        </CallbackButton>
+        }
+
+        { isFlipped && <CallbackButton
+          className="btn btn-danger"
+          label={trans('wrong_answer', {}, 'flashcard')}
+          callback={() => handleAnswer(false)}
+        >
+          {trans('wrong_answer', {}, 'flashcard')}
+        </CallbackButton>
+        }
       </div>
     </section>
+
   )
 }
 
-FlashcardDeckPlayer.propTypes = {
+Player.propTypes = {
   deck: T.shape(
     FlashcardDeck.propTypes
   ).isRequired,
@@ -106,5 +116,5 @@ FlashcardDeckPlayer.propTypes = {
 }
 
 export {
-  FlashcardDeckPlayer
+  Player
 }

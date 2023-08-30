@@ -73,7 +73,8 @@ const EditorComponent = props =>
           size="lg"
           icon="fa fa-image"
           title={trans('no_card', {}, 'flashcard')}
-        />}
+        />
+      }
 
       {0 !== props.cards.length &&
         <Cards
@@ -141,10 +142,6 @@ EditorComponent.propTypes = {
   update: T.func
 }
 
-EditorComponent.defaultProps = {
-  cards: []
-}
-
 const Editor = connect(
   (state) => ({
     path: resourceSelectors.path(state),
@@ -153,6 +150,8 @@ const Editor = connect(
   }),
   (dispatch) => ({
     update(prop, value) {
+      console.log(prop)
+      console.log(value)
       dispatch(formActions.updateProp(selectors.FORM_NAME, prop, value))
     }
   })
