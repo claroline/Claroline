@@ -33,7 +33,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ResourcesSubscriber implements EventSubscriberInterface
 {
-    const NAME = 'resources';
+    public const NAME = 'resources';
 
     /** @var ObjectManager */
     private $om;
@@ -144,12 +144,19 @@ class ResourcesSubscriber implements EventSubscriberInterface
 
             $resourceNode = new ResourceNode();
             $resourceNode->setWorkspace($workspace);
+
+            // workspace name root directory based on the new workspace name
+            if (empty($nodeData['parent'])) {
+                $nodeData['name'] = $workspace->getName();
+                $nodeData['code'] = $workspace->getCode();
+            }
+
             if (!empty($nodeData['parent']) && $event->getCreatedEntity($nodeData['parent']['id'])) {
                 $resourceNode->setParent($event->getCreatedEntity($nodeData['parent']['id']));
                 unset($nodeData['parent']);
             }
 
-            $this->crud->create($resourceNode, $nodeData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::NO_RIGHTS/*, Options::REFRESH_UUID*/]);
+            $this->crud->create($resourceNode, $nodeData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::NO_RIGHTS/* , Options::REFRESH_UUID */]);
 
             $event->addCreatedEntity($nodeData['id'], $resourceNode);
 
@@ -201,14 +208,6 @@ class ResourcesSubscriber implements EventSubscriberInterface
 
             // we need the resources to be persisted in DB to be exploitable in listeners (eg. path do a DB call to retrieve linked resources)
             $this->om->forceFlush();
-        }
-
-        // rename root directory based on the new workspace name
-        $root = $this->resourceRepository->findWorkspaceRoot($workspace);
-        if ($root) {
-            $root->setName($workspace->getName());
-            $this->om->persist($root);
-            $this->om->flush();
         }
     }
 

@@ -64,7 +64,7 @@ class WorkspaceManager implements LoggerAwareInterface
         $this->shortcutsRepo = $om->getRepository(Shortcuts::class);
     }
 
-    public function createPersonalWorkspace(User $user, ?Workspace $model = null): Workspace
+    public function createPersonalWorkspace(User $user, Workspace $model = null): Workspace
     {
         if (empty($model)) {
             $model = $this->getDefaultModel(true);
@@ -104,7 +104,7 @@ class WorkspaceManager implements LoggerAwareInterface
         return $this->transferManager->export($workspace);
     }
 
-    public function import(string $archivePath, ?Workspace $workspace = null): Workspace
+    public function import(string $archivePath, Workspace $workspace = null): Workspace
     {
         return $this->transferManager->import($archivePath, $workspace ?? new Workspace());
     }
@@ -159,7 +159,7 @@ class WorkspaceManager implements LoggerAwareInterface
     {
         $workspaceOptions = $this->om->getRepository(WorkspaceOptions::class)->findOneBy(['workspace' => $workspace]);
 
-        //might not be required
+        // might not be required
         if (!$workspaceOptions) {
             $scheduledForInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
 
@@ -207,7 +207,7 @@ class WorkspaceManager implements LoggerAwareInterface
             return true;
         }
 
-        //or we have the role_manager
+        // or we have the role_manager
         $managerRole = $workspace->getManagerRole();
         if ($managerRole && in_array($managerRole->getName(), $token->getRoleNames())) {
             return true;
@@ -223,7 +223,7 @@ class WorkspaceManager implements LoggerAwareInterface
                 return true;
             }
 
-            //if we're amongst the administrators of the organizations
+            // if we're amongst the administrators of the organizations
             $adminOrganizations = $user->getAdministratedOrganizations();
             $workspaceOrganizations = $workspace->getOrganizations();
 
@@ -253,7 +253,7 @@ class WorkspaceManager implements LoggerAwareInterface
 
     public function archive(Workspace $workspace): Workspace
     {
-        //rename with [archive] and ids
+        // rename with [archive] and ids
         $workspace->setName('[archive]'.$workspace->getName());
         $workspace->setCode('[archive]'.$workspace->getCode().uniqid());
         $workspace->setArchived(true);
@@ -296,7 +296,7 @@ class WorkspaceManager implements LoggerAwareInterface
 
             $workspace = $this->import($this->defaultWorkspacePath, $workspace);
 
-            //just in case
+            // just in case
             $workspace->setPersonal($isPersonal);
             $workspace->setModel(true);
 
@@ -415,8 +415,9 @@ class WorkspaceManager implements LoggerAwareInterface
             return $code;
         }
 
+        $index = count($existingCodes);
         do {
-            $index = count($existingCodes) + 1;
+            ++$index;
             $currentCode = $code.'_'.$index;
             $upperCurrentCode = strtoupper($currentCode);
         } while (in_array($upperCurrentCode, $existingCodes));
