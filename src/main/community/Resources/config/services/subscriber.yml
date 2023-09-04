@@ -60,3 +60,46 @@ services:
             - '@Icap\NotificationBundle\Manager\NotificationUserParametersManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\FileManager'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\UserSourceSubscriber:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\TeamSourceSubscriber:
+      arguments:
+        - '@security.authorization_checker'
+        - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\MyTeamSourceSubscriber:
+      arguments:
+        - '@security.token_storage'
+        - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\GroupSourceSubscriber:
+      arguments:
+        - '@security.authorization_checker'
+        - '@security.token_storage'
+        - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\MyGroupSourceSubscriber:
+      arguments:
+        - '@security.token_storage'
+        - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\RoleSourceSubscriber:
+      arguments:
+        - '@security.authorization_checker'
+        - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\MyRoleSourceSubscriber:
+      arguments:
+        - '@security.token_storage'
+        - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\TeamMemberSourceSubscriber:
+      arguments:
+        - '@security.token_storage'
+        - '@Claroline\AppBundle\API\FinderProvider'
+        - '@Claroline\CommunityBundle\Manager\TeamManager'

@@ -1,17 +1,18 @@
 <?php
 
-namespace Claroline\CoreBundle\Listener\DataSource;
+namespace Claroline\CommunityBundle\Subscriber\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class UserSource
+class UserSourceSubscriber implements EventSubscriberInterface
 {
     /** @var AuthorizationCheckerInterface */
     private $authorization;
@@ -28,6 +29,13 @@ class UserSource
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
         $this->finder = $finder;
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            'data_source.users.load' => 'getData',
+        ];
     }
 
     public function getData(GetDataEvent $event)

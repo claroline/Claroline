@@ -13,3 +13,38 @@ plugin:
           type: list
           context: [ desktop, workspace, administration ]
           tags: [ community ]
+
+        - name: teams
+          type: list
+          context: [ desktop, workspace, administration ]
+          tags: [ community ]
+
+        - name: my-teams
+          type: list
+          context: [ desktop, workspace, administration ]
+          tags: [ community ]
+
+        - name: groups
+          type: list
+          context: [ desktop, workspace, administration ]
+          tags: [ community ]
+
+        - name: my-groups
+          type: list
+          context: [ desktop, workspace, administration ]
+          tags: [ community ]
+
+        - name: roles
+          type: list
+          context: [ desktop, workspace, administration ]
+          tags: [ community ]
+
+        - name: my-roles
+          type: list
+          context: [ desktop, workspace, administration ]
+          tags: [ community ]
+
+        - name: teams-members
+          type: list
+          context: [ workspace ]
+          tags: [ community ]
