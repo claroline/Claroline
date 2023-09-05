@@ -11,5 +11,6 @@
   "geolocate": "Geolocate",
   "book": "Book",
   "show-results": "Show results",
-  "plan-sending": "Plan sending"
+  "plan-sending": "Plan sending",
+  "ws-register": "Register to workspaces"
 }

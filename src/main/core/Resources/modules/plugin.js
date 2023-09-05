@@ -84,7 +84,12 @@ registry.add('ClarolineCoreBundle', {
 
     user: {
       'ws-disable': () => { return import(/* webpackChunkName: "core-action-user-ws-disable" */ '#/main/core/actions/user/ws-disable') },
-      'ws-enable' : () => { return import(/* webpackChunkName: "core-action-user-ws-enable" */  '#/main/core/actions/user/ws-enable') }
+      'ws-enable' : () => { return import(/* webpackChunkName: "core-action-user-ws-enable" */  '#/main/core/actions/user/ws-enable') },
+      'ws-register': () => { return import(/* webpackChunkName: "core-action-user-ws-register" */ '#/main/core/actions/user/ws-register') }
+    },
+
+    group: {
+      'ws-register': () => { return import(/* webpackChunkName: "core-action-group-ws-register" */ '#/main/core/actions/group/ws-register') }
     }
   },
 
