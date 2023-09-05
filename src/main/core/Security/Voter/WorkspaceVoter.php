@@ -77,6 +77,11 @@ class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
             if ($this->workspaceManager->hasAccess($object, $token, $toolPerm[0], $toolPerm[1])) {
                 return VoterInterface::ACCESS_GRANTED;
             }
+        } elseif (self::OPEN === $attributes[0]) {
+            // check if the user has access to at least one workspace tool to grant him access.
+            if ($this->workspaceManager->hasAccess($object, $token)) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
         }
 
         return VoterInterface::ACCESS_DENIED;
@@ -125,7 +130,7 @@ class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
 
     private function checkPatch(TokenInterface $token, Workspace $workspace, ObjectCollection $collection = null): int
     {
-        //single property: no check now
+        // single property: no check now
         if (!$collection) {
             return VoterInterface::ACCESS_GRANTED;
         }
@@ -134,7 +139,7 @@ class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        //maybe do something more complicated later
+        // maybe do something more complicated later
         return $this->isGranted(self::EDIT, $collection) ?
             VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
     }
@@ -151,7 +156,7 @@ class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
 
     public function getSupportedActions(): ?array
     {
-        //atm, null means "everything is supported... implement this later"
+        // atm, null means "everything is supported... implement this later"
         return null;
     }
 }
