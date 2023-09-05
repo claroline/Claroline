@@ -27,7 +27,10 @@ const PathSummary = (props) => {
       type: LINK_BUTTON,
       label: (
         <Fragment>
-          {(props.path.display.numbering && props.path.display.numbering !== PATH_NUMBERINGS.NUMBERING_NONE ? `${getNumbering(props.path.display.numbering, props.path.steps, step)}. ` : '')}
+          {(props.path.display.numbering && props.path.display.numbering !== PATH_NUMBERINGS.NUMBERING_NONE && getNumbering(props.path.display.numbering, props.path.steps, step) ?
+            <span className="h-numbering">{getNumbering(props.path.display.numbering, props.path.steps, step)}</span>
+            : ''
+          )}
           {step.title}
 
           <span className="step-status">
