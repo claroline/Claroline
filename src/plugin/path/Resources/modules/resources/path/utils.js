@@ -82,7 +82,7 @@ function getNumbering(type, steps, step) {
      * The numbering label is specified by each step.
      */
     case constants.NUMBERING_CUSTOM:
-      return step.display.numbering
+      return step.display.numbering || ''
 
     /**
      * The numbering feature is disabled.
