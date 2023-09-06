@@ -49,8 +49,8 @@ const PlatformStatus = (props) =>
         {!props.disabled && props.maintenance && trans('platform_maintenance', {}, 'administration')}
       </h3>
 
-      {props.disabled && trans('platform_opened', {}, 'administration')}
-      {!props.disabled && !props.maintenance && trans('platform_desactive', {}, 'administration')}
+      {props.disabled && trans('platform_disabled', {}, 'administration')}
+      {!props.disabled && !props.maintenance && trans('platform_opened', {}, 'administration')}
       {!props.disabled && props.maintenance && trans('platform_active_admin', {}, 'administration')}
     </div>
   </section>
