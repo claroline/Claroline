@@ -1,3 +1,5 @@
+import get from 'lodash/get'
+
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
 import {
@@ -15,6 +17,18 @@ const reducer = combineReducers({
     [PROFILE_SET_LOADED]: (state, action) => action.loaded
   }),
   currentFacet: makeReducer(getDefaultFacet().id, {
+    [PROFILE_LOAD]: (state, action) => {
+      const facets = action.facets || []
+
+      // quick fix, the main facet saved in DB may not have the same ID as the default facet,
+      // and so we loose the opened facet after load
+      const mainFacet = facets.find(facet => get(facet, 'meta.main', false))
+      if (mainFacet && getDefaultFacet().id === state) {
+        return mainFacet.id
+      }
+
+      return state
+    },
     [PROFILE_FACET_OPEN]: (state, action) => action.id
   }),
   facets: makeReducer(decorate([]), {
