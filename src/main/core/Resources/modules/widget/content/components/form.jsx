@@ -22,7 +22,7 @@ const WidgetContentFormComponent = (props) => {
       flush={true}
       level={props.level}
       name={props.name}
-      sections={[
+      definition={[
         {
           id: 'general',
           title: trans('general'),

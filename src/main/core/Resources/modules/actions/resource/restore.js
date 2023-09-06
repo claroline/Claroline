@@ -22,6 +22,7 @@ export default (resourceNodes, nodesRefresher) => {
     icon: 'fa fa-fw fa-trash-restore-alt',
     label: trans('restore', {}, 'actions'),
     displayed: 0 !== processable.length,
+    primary: true,
     confirm: {
       title: transChoice('resources_restore_confirm', processable.length, {}, 'resource'),
       subtitle: 1 === processable.length ? processable[0].name : transChoice('count_elements', processable.length, {count: processable.length}),

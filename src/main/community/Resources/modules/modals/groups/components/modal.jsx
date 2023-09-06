@@ -58,7 +58,6 @@ class GroupsModal extends Component {
   }
 }
 
-
 GroupsModal.propTypes = {
   url: T.oneOfType([T.string, T.array]),
   title: T.string,

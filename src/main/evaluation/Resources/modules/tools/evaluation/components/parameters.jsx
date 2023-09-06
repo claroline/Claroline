@@ -5,14 +5,12 @@ import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {ToolPage} from '#/main/core/tool/containers/page'
-import {AlertBlock} from '#/main/app/alert/components/alert-block'
+import {Alert} from '#/main/app/components/alert'
 
-import resourcesSource from '#/main/core/data/sources/resources'
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
+import {ResourceList} from '#/main/core/resource/components/list'
 
 import {selectors} from '#/main/evaluation/tools/evaluation/store'
-import {ListData} from '#/main/app/content/list/containers/data'
-import {constants as listConst} from '#/main/app/content/list/constants'
 
 const EvaluationParameters = (props) =>
   <ToolPage
@@ -43,35 +41,29 @@ const EvaluationParameters = (props) =>
       }
     ]}
   >
-    <AlertBlock
-      style={{marginTop: 20}}
+    <Alert
+      className="mt-3"
       type="info"
       title={trans('workspace_requirements_help_title', {}, 'evaluation')}
     >
       {trans('workspace_requirements_help_description', {}, 'evaluation')}
-    </AlertBlock>
+    </Alert>
 
-    <ListData
+    <ResourceList
+      className="mb-3"
       name={selectors.STORE_NAME+'.requiredResources'}
-      fetch={{
-        url: ['apiv2_workspace_required_resource_list', {workspace: props.contextId}],
-        autoload: true
-      }}
+      url={['apiv2_workspace_required_resource_list', {workspace: props.contextId}]}
       delete={{
         url: ['apiv2_workspace_required_resource_remove', {workspace: props.contextId}]
       }}
-      primaryAction={resourcesSource.parameters.primaryAction}
-      definition={resourcesSource.parameters.definition}
-      card={resourcesSource.parameters.card}
-      display={{
-        current: listConst.DISPLAY_TILES_SM
-      }}
+      actions={undefined}
     />
 
     <Button
       className="btn btn-primary w-100 mb-3"
       type={MODAL_BUTTON}
       primary={true}
+      size="lg"
       label={trans('add_resources')}
       modal={[MODAL_RESOURCES, {
         root: props.workspaceRoot,

@@ -1,6 +1,6 @@
 
 import {ListWidget} from '#/main/core/widget/types/list/containers/widget'
-import {ListWidgetParameters} from '#/main/core/widget/types/list/components/parameters'
+import {ListWidgetParameters} from '#/main/core/widget/types/list/containers/parameters'
 
 export const Parameters = () => ({
   component: ListWidgetParameters

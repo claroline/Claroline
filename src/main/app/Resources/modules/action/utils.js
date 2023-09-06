@@ -1,10 +1,12 @@
 import isEmpty from 'lodash/isEmpty'
+import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 import uniqWith from 'lodash/uniqWith'
 
+import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text'
-import {MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 const GROUP_SEPARATOR  = '|'
@@ -176,7 +178,22 @@ function buildToolbar(toolbarConfig, actions = [], scope) {
   return toolbar
 }
 
+/**
+ * Make the action a URL button to escape the embedded router.
+ */
+function makeAbsolute(action) {
+  if (LINK_BUTTON === action.type) {
+    return merge({}, action, {
+      type: URL_BUTTON,
+      target: url(['claro_index'])+'#'+action.target
+    })
+  }
+
+  return action
+}
+
 export {
   createActionDefinition,
-  buildToolbar
+  buildToolbar,
+  makeAbsolute
 }

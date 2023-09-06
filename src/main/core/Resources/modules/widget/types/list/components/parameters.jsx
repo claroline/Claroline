@@ -1,8 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
 import {ListForm} from '#/main/app/content/list/parameters/containers/form'
 import {getSource} from '#/main/app/data/sources'
 
@@ -13,7 +11,7 @@ class ListWidgetParameters extends Component {
     super(props)
 
     this.state = {
-      parameters: undefined
+      source: undefined
     }
   }
 
@@ -28,62 +26,36 @@ class ListWidgetParameters extends Component {
   }
 
   loadSourceDefinition(source) {
-    getSource(source).then(module => this.setState({
-      parameters: module.default.parameters
+    getSource(source, this.props.currentContext.type, this.props.currentContext.data, {}, this.props.currentUser).then(sourceDefinition => this.setState({
+      source: sourceDefinition
     }))
   }
 
-  /*hasPerformanceWarn() {
-    // lots of results
-    return (!this.props.instance.parameters.maxResults || this.props.instance.parameters.maxResults > 100)
-      // with no pagination or default pagination to all
-      && (!this.props.instance.parameters.paginated || -1 === this.props.instance.parameters.pageSize)
-  }*/
-
   render() {
+    if (!this.state.source) {
+      return null
+    }
+
     return (
-      <FormData
-        className="list-form"
-        embedded={true}
+      <ListForm
         level={5}
+        flush={true}
         name={this.props.name}
         dataPart="parameters"
-        sections={[
-          {
-            title: trans('general'),
-            primary: true,
-            fields: [
-              /*{
-                name: 'maxResults',
-                label: trans('list_total_results'),
-                type: 'number',
-                help: this.hasPerformanceWarn() ? trans('list_enable_pagination_perf_help') : undefined,
-                options: {
-                  placeholder: trans('all_results'),
-                  min: 1
-                }
-              }*/
-            ]
-          }
-        ]}
-      >
-        {this.state.parameters &&
-          <ListForm
-            level={5}
-            flush={true}
-            name={this.props.name}
-            dataPart="parameters"
-            list={this.state.parameters}
-            parameters={this.props.instance.parameters}
-          />
-        }
-      </FormData>
+        list={this.state.source}
+        parameters={this.props.instance.parameters}
+      />
     )
   }
 }
 
 ListWidgetParameters.propTypes = {
   name: T.string.isRequired,
+  currentUser: T.object,
+  currentContext: T.shape({
+    type: T.string,
+    data: T.object
+  }).isRequired,
   instance: T.shape(
     WidgetInstanceTypes.propTypes
   ).isRequired
