@@ -24,6 +24,6 @@
   "platform_ended_desc": "La plateforme est fermée depuis le %date%.",
 
   "platform_opened": "La plateforme est ouverte aux utilisateurs.",
-  "platform_desactive": "La plateforme est désactivée et n'est plus accessible.",
+  "platform_disabled": "La plateforme est désactivée et n'est plus accessible.",
   "platform_active_admin": "La plateforme est fermée et uniquement accessible aux administrateurs."
 }
