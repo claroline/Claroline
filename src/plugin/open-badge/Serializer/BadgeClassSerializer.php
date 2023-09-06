@@ -3,6 +3,7 @@
 namespace Claroline\OpenBadgeBundle\Serializer;
 
 use Claroline\AppBundle\API\Options as APIOptions;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\OrganizationSerializer;
@@ -97,12 +98,16 @@ class BadgeClassSerializer
             $image = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $badge->getImage()]);
 
             if ($image) {
-                //wtf, this is for mozilla backpack
+                // wtf, this is for mozilla backpack
                 $data['image'] = $this->imageSerializer->serialize($image)['id'];
             }
         } else {
             $data['workspace'] = $badge->getWorkspace() ? $this->workspaceSerializer->serialize($badge->getWorkspace(), [APIOptions::SERIALIZE_MINIMAL]) : null;
-            $data['permissions'] = $this->serializePermissions($badge);
+
+            if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+                $data['permissions'] = $this->serializePermissions($badge);
+            }
+
             $data['meta'] = [
                 'created' => DateNormalizer::normalize($badge->getCreated()),
                 'updated' => DateNormalizer::normalize($badge->getUpdated()),
