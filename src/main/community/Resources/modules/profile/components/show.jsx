@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {DetailsData} from '#/main/app/content/details/containers/data'
 
@@ -8,14 +9,14 @@ import {Profile} from '#/main/community/profile/containers/main'
 import {getDefaultFacet, formatDetailsSections, getDetailsDefaultSection} from '#/main/community/profile/utils'
 
 const ProfileShow = (props) => {
-  let facet = props.facet || getDefaultFacet()
+  let facet = !isEmpty(props.facet) ? props.facet : getDefaultFacet()
   let sections = []
 
   if (facet.sections) {
     sections = formatDetailsSections(facet.sections, props.allFields, props.user, props.parameters, props.currentUser)
   }
 
-  if (get(props.facet, 'meta.main')) {
+  if (get(facet, 'meta.main')) {
     sections.unshift(getDetailsDefaultSection(props.parameters, props.user))
   }
 
@@ -29,7 +30,7 @@ const ProfileShow = (props) => {
         name={props.name}
         title={facet.title}
         definition={sections}
-        affix={get(props.facet, 'meta.main') && props.children}
+        affix={get(facet, 'meta.main') && props.children}
       />
     </Profile>
   )

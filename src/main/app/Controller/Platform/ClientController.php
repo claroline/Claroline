@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\Controller\Platform;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Manager\SecurityManager;
 use Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer;
@@ -62,7 +63,7 @@ class ClientController
         $currentUser = null;
         if ($this->tokenStorage->getToken()->getUser() instanceof User) {
             $currentUser = $this->serializer->serialize(
-                $this->tokenStorage->getToken()->getUser()
+                $this->tokenStorage->getToken()->getUser(), [Options::SERIALIZE_FACET]
             );
         }
 
