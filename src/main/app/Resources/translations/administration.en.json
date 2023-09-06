@@ -25,6 +25,6 @@
   "platform_ended_desc": "The platform has been closed since %date%.",
 
   "platform_opened": "The platform is open to users.",
-  "platform_desactive": "The platform is deactivated and no longer accessible.",
+  "platform_disabled": "The platform is deactivated and no longer accessible.",
   "platform_active_admin": "The platform is closed and only accessible to administrators."
 }
