@@ -36,7 +36,7 @@ SimpleWidgetParameters.propTypes = {
   currentContext: T.shape({
     type: T.string,
     data: T.object
-  })
+  }).isRequired
 }
 
 export {

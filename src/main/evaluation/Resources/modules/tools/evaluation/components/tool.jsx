@@ -30,7 +30,7 @@ const EvaluationTool = (props) =>
         <Routes
           path={props.path}
           redirect={[
-            {from: '/', exact: true, to: '/users', disabled: props.currentUserId && props.contextId}
+            {from: '/', exact: true, to: '/users', disabled: !!props.currentUserId && !!props.contextId}
           ]}
           routes={[
             {

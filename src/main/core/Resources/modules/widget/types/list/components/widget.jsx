@@ -7,8 +7,6 @@ import {ListParameters as ListParametersTypes} from '#/main/app/content/list/par
 
 import {selectors} from '#/main/core/widget/types/list/store'
 
-// todo : implement actions
-
 class ListWidget extends Component {
   constructor(props) {
     super(props)
@@ -19,9 +17,16 @@ class ListWidget extends Component {
   }
 
   componentDidMount() {
-    getSource(this.props.source).then(module => this.setState({
-      source: module.default
-    }))
+    const refresher = {
+      add:    this.props.invalidate,
+      update: this.props.invalidate,
+      delete: this.props.invalidate
+    }
+
+    getSource(this.props.source, this.props.currentContext.type, this.props.currentContext.data, refresher, this.props.currentUser)
+      .then(sourceDefinition => this.setState({
+        source: sourceDefinition
+      }))
   }
 
   render() {
@@ -49,10 +54,12 @@ class ListWidget extends Component {
 
 ListWidget.propTypes = {
   source: T.string,
+  currentUser: T.object,
   currentContext: T.object.isRequired,
   parameters: T.shape(
     ListParametersTypes.propTypes
-  )
+  ),
+  invalidate: T.func.isRequired
 }
 
 export {
