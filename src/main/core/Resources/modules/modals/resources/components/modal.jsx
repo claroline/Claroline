@@ -8,11 +8,9 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
-import {ListData} from '#/main/app/content/list/containers/data'
-import {constants as listConst} from '#/main/app/content/list/constants'
 
-import resourcesSource from '#/main/core/data/sources/resources'
 import {selectors} from '#/main/core/modals/resources/store'
+import {ResourceList} from '#/main/core/resource/components/list'
 
 class ResourcesModal extends Component {
   constructor(props) {
@@ -50,24 +48,20 @@ class ResourcesModal extends Component {
         className="data-picker-modal"
         size="xl"
       >
-        <ListData
+        <ResourceList
           name={`${selectors.STORE_NAME}.resources`}
-          fetch={{
-            url: ['apiv2_resource_list', {parent: get(this.props.currentDirectory, 'slug')}],
-            autoload: this.state.initialized
+          url={['apiv2_resource_list', {parent: get(this.props.currentDirectory, 'slug')}]}
+          autoload={this.state.initialized}
+          backAction={{
+            name: 'back',
+            type: CALLBACK_BUTTON,
+            icon: 'fa fa-fw fa-arrow-left',
+            label: get(this.props.currentDirectory, 'parent') ?
+              trans('back_to', {target: get(this.props.currentDirectory, 'parent.name')}) :
+              trans('back'),
+            callback: () => this.props.setCurrent(get(this.props.currentDirectory, 'parent'), this.props.filters),
+            disabled: isEmpty(this.props.currentDirectory) || (this.props.root && this.props.currentDirectory.slug === this.props.root.slug)
           }}
-          customActions={[
-            {
-              name: 'back',
-              type: CALLBACK_BUTTON,
-              icon: 'fa fa-fw fa-arrow-left',
-              label: get(this.props.currentDirectory, 'parent') ?
-                trans('back_to', {target: get(this.props.currentDirectory, 'parent.name')}) :
-                trans('back'),
-              callback: () => this.props.setCurrent(get(this.props.currentDirectory, 'parent'), this.props.filters),
-              disabled: isEmpty(this.props.currentDirectory) || (this.props.root && this.props.currentDirectory.slug === this.props.root.slug)
-            }
-          ]}
           primaryAction={(resourceNode) => {
             if ('directory' === resourceNode.meta.type) {
               return ({
@@ -78,11 +72,7 @@ class ResourcesModal extends Component {
 
             return null
           }}
-          definition={resourcesSource.parameters.definition}
-          card={resourcesSource.parameters.card}
-          display={{
-            current: listConst.DISPLAY_TILES_SM
-          }}
+          actions={undefined}
         />
 
         <Button

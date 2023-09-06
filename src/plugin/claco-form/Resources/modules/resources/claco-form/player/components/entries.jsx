@@ -34,65 +34,63 @@ const EntriesComponent = props =>
       displayed: (rows) => rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length
     }}
     source={merge({}, entriesSource(props.clacoForm, props.canViewMetadata, props.canEdit, props.canAdministrate, props.isCategoryManager, props.path, props.currentUser), {
-      parameters: {
-        actions: (rows) => [
-          {
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-print',
-            label: trans('print_entry', {}, 'clacoform'),
-            displayed: true,
-            callback: () => {
-              if (1 < rows.length) {
-                // collection
-                rows.forEach(row => props.downloadEntryPdf(row.id))
-              } else {
-                // object
-                props.downloadEntryPdf(rows[0].id)
-              }
-            },
-            scope: ['object', 'collection'],
-            group: trans('transfer')
-          }, {
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-pencil',
-            label: trans('edit', {}, 'actions'),
-            target: `${props.path}/entry/form/${rows[0].id}`,
-            displayed: !rows[0].locked && canEditEntry(rows[0], props.clacoForm, props.currentUser),
-            scope: ['object'],
-            group: trans('management')
-          }, {
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-eye',
-            label: trans('publish', {}, 'actions'),
-            callback: () => props.switchEntriesStatus(rows, constants.ENTRY_STATUS_PUBLISHED),
-            displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length &&
-            rows.filter(e => e.status === constants.ENTRY_STATUS_PUBLISHED).length !== rows.length,
-            group: trans('management')
-          }, {
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-eye-slash',
-            label: trans('unpublish', {}, 'actions'),
-            callback: () => props.switchEntriesStatus(rows, constants.ENTRY_STATUS_UNPUBLISHED),
-            displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length &&
-            rows.filter(e => e.status !== constants.ENTRY_STATUS_PUBLISHED).length !== rows.length,
-            group: trans('management')
-          }, {
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-w fa-lock',
-            label: trans('lock', {}, 'actions'),
-            callback: () => props.switchEntriesLock(rows, true),
-            displayed: props.canAdministrate && rows.filter(e => e.locked).length !== rows.length,
-            group: trans('management')
-          }, {
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-w fa-unlock',
-            label: trans('unlock', {}, 'actions'),
-            callback: () => props.switchEntriesLock(rows, false),
-            displayed: props.canAdministrate && rows.filter(e => !e.locked).length !== rows.length,
-            group: trans('management')
-          }
-        ]
-      }
+      actions: (rows) => [
+        {
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-print',
+          label: trans('print_entry', {}, 'clacoform'),
+          displayed: true,
+          callback: () => {
+            if (1 < rows.length) {
+              // collection
+              rows.forEach(row => props.downloadEntryPdf(row.id))
+            } else {
+              // object
+              props.downloadEntryPdf(rows[0].id)
+            }
+          },
+          scope: ['object', 'collection'],
+          group: trans('transfer')
+        }, {
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-pencil',
+          label: trans('edit', {}, 'actions'),
+          target: `${props.path}/entry/form/${rows[0].id}`,
+          displayed: !rows[0].locked && canEditEntry(rows[0], props.clacoForm, props.currentUser),
+          scope: ['object'],
+          group: trans('management')
+        }, {
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-eye',
+          label: trans('publish', {}, 'actions'),
+          callback: () => props.switchEntriesStatus(rows, constants.ENTRY_STATUS_PUBLISHED),
+          displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length &&
+          rows.filter(e => e.status === constants.ENTRY_STATUS_PUBLISHED).length !== rows.length,
+          group: trans('management')
+        }, {
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-eye-slash',
+          label: trans('unpublish', {}, 'actions'),
+          callback: () => props.switchEntriesStatus(rows, constants.ENTRY_STATUS_UNPUBLISHED),
+          displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length &&
+          rows.filter(e => e.status !== constants.ENTRY_STATUS_PUBLISHED).length !== rows.length,
+          group: trans('management')
+        }, {
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-w fa-lock',
+          label: trans('lock', {}, 'actions'),
+          callback: () => props.switchEntriesLock(rows, true),
+          displayed: props.canAdministrate && rows.filter(e => e.locked).length !== rows.length,
+          group: trans('management')
+        }, {
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-w fa-unlock',
+          label: trans('unlock', {}, 'actions'),
+          callback: () => props.switchEntriesLock(rows, false),
+          displayed: props.canAdministrate && rows.filter(e => !e.locked).length !== rows.length,
+          group: trans('management')
+        }
+      ]
     })}
     parameters={props.listConfiguration}
   />

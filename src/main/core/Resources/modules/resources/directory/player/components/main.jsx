@@ -20,7 +20,7 @@ import {getActions, getDefaultAction} from '#/main/core/resource/utils'
  * When a directory is embedded, we want all other resources to open their actions in the full app
  * while we want the directory to be browsed directly in the embedded app.
  *
- * NB. Not sure this is the best way to handle it. But this allows to avoid a hard dependency to directories.
+ * NB. Not sure if this is the best way to handle it. But this allows to avoid a hard dependency to directories.
  *
  * @param {object}  action
  * @param {Array}   resourceNodes
@@ -30,7 +30,7 @@ import {getActions, getDefaultAction} from '#/main/core/resource/utils'
  */
 function transformAction(action, resourceNodes, embedded = false) {
   if (embedded && LINK_BUTTON === action.type && -1 === resourceNodes.findIndex(node => 'directory' === node.meta.type)) {
-    // make the action an URL button to escape the embedded router
+    // make the action a URL button to escape the embedded router
     return merge({}, action, {
       type: URL_BUTTON,
       target: url(['claro_index'])+'#'+action.target
@@ -66,26 +66,27 @@ const PlayerMain = props =>
           exact: true
         }
       ]}
-      source={merge({}, resourcesSource, {
+      source={merge({}, resourcesSource('workspace', get(props.currentNode, 'workspace'), {
+        update: props.updateNodes,
+        delete: props.deleteNodes
+      }, props.currentUser), {
         // adds actions to source
-        parameters: {
-          primaryAction: (resourceNode) => getDefaultAction(resourceNode, {
-            update: props.updateNodes,
-            delete: props.deleteNodes
-          }, props.path, props.currentUser).then((action) => {
-            if (action) {
-              return transformAction(action, [resourceNode], props.embedded)
-            }
+        primaryAction: (resourceNode) => getDefaultAction(resourceNode, {
+          update: props.updateNodes,
+          delete: props.deleteNodes
+        }, props.path, props.currentUser).then((action) => {
+          if (action) {
+            return transformAction(action, [resourceNode], props.embedded)
+          }
 
-            return null
-          }),
-          actions: (resourceNodes) => getActions(resourceNodes, {
-            update: props.updateNodes,
-            delete: props.deleteNodes
-          }, props.path, props.currentUser).then((actions) => actions
-            .filter(action => !props.storageLock || 'copy' !== action.name)
-            .map(action => transformAction(action, resourceNodes, props.embedded)))
-        }
+          return null
+        }),
+        actions: (resourceNodes) => getActions(resourceNodes, {
+          update: props.updateNodes,
+          delete: props.deleteNodes
+        }, props.path, props.currentUser).then((actions) => actions
+          .filter(action => !props.storageLock || 'copy' !== action.name)
+          .map(action => transformAction(action, resourceNodes, props.embedded)))
       })}
       parameters={props.listConfiguration}
     />

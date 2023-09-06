@@ -78,7 +78,7 @@ const ListForm = props => {
       level={props.level}
       name={props.name}
       dataPart={props.dataPart}
-      sections={[
+      definition={[
         {
           id: 'list-display',
           icon: 'fa fa-fw fa-layer-group',

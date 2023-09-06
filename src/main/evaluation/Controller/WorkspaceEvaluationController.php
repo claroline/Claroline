@@ -110,6 +110,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
     /**
      * @Route("/{workspace}", name="apiv2_workspace_evaluations_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
@@ -135,6 +136,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
     /**
      * @Route("/{workspace}/user/{user}", name="apiv2_workspace_evaluation_get", methods={"GET"})
+     *
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
@@ -158,6 +160,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
     /**
      * @Route("/{workspace}/init", name="apiv2_workspace_evaluations_init", methods={"PUT"})
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function initializeAction(Workspace $workspace): JsonResponse
@@ -171,6 +174,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
     /**
      * @Route("/{workspace}/recompute", name="apiv2_workspace_evaluations_recompute", methods={"PUT"})
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function recomputeAction(Workspace $workspace): JsonResponse
@@ -184,6 +188,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
     /**
      * @Route("/{workspace}/progression/{user}", name="apiv2_workspace_get_user_progression", methods={"GET"})
+     *
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
@@ -210,6 +215,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
     /**
      * @Route("/{workspace}/certificate/{user}/participation", name="apiv2_workspace_download_participation_certificate", methods={"GET"})
+     *
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
@@ -241,6 +247,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
     /**
      * @Route("/{workspace}/certificate/{user}/success", name="apiv2_workspace_download_success_certificate", methods={"GET"})
+     *
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
@@ -272,6 +279,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
     /**
      * @Route("/{workspace}/requirements", name="apiv2_workspace_required_resource_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listRequiredResourcesAction(Workspace $workspace, Request $request): JsonResponse
@@ -282,12 +290,13 @@ class WorkspaceEvaluationController extends AbstractSecurityController
             $this->finder->search(ResourceNode::class, array_merge($request->query->all(), ['hiddenFilters' => [
                 'workspace' => $workspace->getUuid(),
                 'required' => true,
-            ]]), [Options::SERIALIZE_MINIMAL])
+            ]]), [Options::SERIALIZE_LIST])
         );
     }
 
     /**
      * @Route("/{workspace}/requirements", name="apiv2_workspace_required_resource_add", methods={"PATCH"})
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function addRequiredResourcesAction(Workspace $workspace, Request $request): JsonResponse
@@ -311,6 +320,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
 
     /**
      * @Route("/{workspace}/requirements", name="apiv2_workspace_required_resource_remove", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function removeRequiredResourcesAction(Workspace $workspace, Request $request): JsonResponse
@@ -335,7 +345,7 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     /**
      * Checks user rights to access evaluation tool.
      */
-    private function checkToolAccess(string $permission, ?Workspace $workspace = null, bool $exception = true): bool
+    private function checkToolAccess(string $permission, Workspace $workspace = null, bool $exception = true): bool
     {
         if (!empty($workspace)) {
             $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndWorkspace('evaluation', $workspace);

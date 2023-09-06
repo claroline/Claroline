@@ -3,6 +3,8 @@ import {connect} from 'react-redux'
 import isEqual from 'lodash/isEqual'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
+import {selectors as securitySelectors} from '#/main/app/security/store'
+import {actions as listActions} from '#/main/app/content/list/store/actions'
 
 import {ListWidget as ListWidgetComponent} from '#/main/core/widget/types/list/components/widget'
 import {makeListWidgetReducer, selectors} from '#/main/core/widget/types/list/store'
@@ -29,15 +31,21 @@ class Widget extends Component {
 
 const ListWidget = connect(
   (state) => ({
-    source: contentSelectors.source(state),
     currentContext: contentSelectors.context(state),
+    currentUser: securitySelectors.currentUser(state),
 
+    source: contentSelectors.source(state),
     parameters: contentSelectors.parameters(state),
 
     // list configuration
     pageSize: selectors.pageSize(state),
     filters: selectors.filters(state),
     sorting: selectors.sorting(state)
+  }),
+  (dispatch) => ({
+    invalidate() {
+      dispatch(listActions.invalidateData(selectors.STORE_NAME))
+    }
   })
 )(Widget)
 

@@ -31,7 +31,7 @@ const UserShow = (props) =>
         name={selectors.FORM_NAME}
         user={props.user}
       >
-        <ContentSections level={3}>
+        <ContentSections level={3} className="mb-3">
           <ContentSection
             id="user-groups"
             icon="fa fa-fw fa-users"
