@@ -107,7 +107,7 @@ const Workspaces = (props) => {
         }
       ].concat(props.customDefinition)}
 
-      {...omit(props, 'path', 'url', 'autoload', 'customDefinition', 'refresher', 'invalidate')}
+      {...omit(props, 'path', 'url', 'autoload', 'customDefinition', 'customActions', 'refresher', 'invalidate')}
 
       name={props.name}
       fetch={{

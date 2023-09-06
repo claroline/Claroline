@@ -50,7 +50,7 @@ const EditorMain = (props) =>
         level={3}
         name={selectors.FORM_NAME}
         dataPart="list"
-        list={resourcesSource.parameters}
+        list={resourcesSource('workspace', props.workspace, {}, props.currentUser)}
         parameters={props.directory.list}
       />
     </FormData>
@@ -61,6 +61,8 @@ EditorMain.propTypes = {
   directory: T.shape(
     DirectoryTypes.propTypes
   ),
+  workspace: T.object,
+  currentUser: T.object,
   storageLock: T.bool.isRequired
 }
 

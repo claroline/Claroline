@@ -13,7 +13,7 @@ const WidgetForm = props =>
     className="widget-section-form"
     level={props.level}
     name={props.name}
-    sections={[
+    definition={[
       {
         id: 'general',
         title: trans('general'),

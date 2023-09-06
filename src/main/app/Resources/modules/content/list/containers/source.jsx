@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
@@ -8,12 +8,13 @@ import omit from 'lodash/omit'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {createListDefinition} from '#/main/app/content/list/utils'
 import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
+import {makeAbsolute} from '#/main/app/action/utils'
 
 const ListSource = props => {
-  // compute final list definition based an the source definition
+  // compute final list definition based on the source definition
   // and the configuration
   let computedDefinition = []
-  const definition = get(props.source, 'parameters.definition')
+  const definition = get(props.source, 'definition')
   if (definition) {
     computedDefinition = createListDefinition(definition)
 
@@ -35,11 +36,11 @@ const ListSource = props => {
 
   // compute final card
   let computedCard
-  const baseCard = get(props.source, 'parameters.card')
+  const baseCard = get(props.source, 'card')
   if (baseCard) {
     if (get(props.parameters, 'card.display')) {
       // append custom configuration to the card
-      const ConfiguredCard = cardProps => React.createElement(baseCard, merge({}, cardProps, {
+      const ConfiguredCard = cardProps => createElement(baseCard, merge({}, cardProps, {
         display: get(props.parameters, 'card.display')
       }))
 
@@ -53,8 +54,21 @@ const ListSource = props => {
     <ListData
       {...omit(props, 'source', 'parameters')}
 
-      primaryAction={get(props.source, 'parameters.primaryAction')}
-      actions={get(props.parameters, 'actions') ? get(props.source, 'parameters.actions') : undefined}
+      primaryAction={get(props.source, 'primaryAction') ? (row) => {
+        const definedAction = get(props.source, 'primaryAction')(row)
+        if (definedAction instanceof Promise) {
+          return definedAction.then(action => makeAbsolute(action))
+        }
+
+        return makeAbsolute(definedAction)
+      } : undefined}
+      actions={get(props.parameters, 'actions') && get(props.source, 'actions') ? (rows) => {
+        const definedActions = get(props.source, 'actions')(rows)
+        if (definedActions instanceof Promise) {
+          return definedActions.then(actions => actions.map(action => makeAbsolute(action)))
+        }
+        return definedActions.map(action => makeAbsolute(action))
+      } : undefined}
 
       definition={computedDefinition}
       card={computedCard}
@@ -65,7 +79,7 @@ const ListSource = props => {
       searchMode={get(props.parameters, 'searchMode') || undefined}
       pageSizes={get(props.parameters, 'availablePageSizes') || undefined}
       count={get(props.parameters, 'count', false)}
-      selectable={get(props.parameters, 'actions', false) && !!get(props.source, 'parameters.actions')}
+      selectable={get(props.parameters, 'actions', false) && !!get(props.source, 'actions')}
       filterable={isEmpty(props.parameters) || !isEmpty(props.parameters.availableFilters)}
       sortable={isEmpty(props.parameters) || !isEmpty(props.parameters.availableSort)}
       paginated={isEmpty(props.parameters) || props.parameters.paginated}
@@ -76,14 +90,12 @@ const ListSource = props => {
 ListSource.propTypes = {
   // list source definition
   source: T.shape({
-    parameters: T.shape({
-      primaryAction: T.func,
-      actions: T.func,
-      definition: T.arrayOf(
-        T.shape({}) // DataListProp
-      ).isRequired,
-      card: T.func
-    })
+    primaryAction: T.func,
+    actions: T.func,
+    definition: T.arrayOf(
+      T.shape({}) // DataListProp
+    ).isRequired,
+    card: T.func
   }),
 
   // list configuration

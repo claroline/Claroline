@@ -1,19 +1,37 @@
+import React from 'react'
+
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
 
-import {route} from '#/main/community/user/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
+import {route as toolRoute} from '#/main/core/tool/routing'
+
 import {UserCard} from '#/main/community/user/components/card'
+import {UserAvatar} from '#/main/core/user/components/avatar'
+import {getActions, getDefaultAction} from '#/main/community/user/utils'
 
-export default {
-  name: 'users',
-  icon: 'fa fa-fw fa-user',
-  parameters: {
-    primaryAction: (user) => ({
-      type: URL_BUTTON,
-      target: '#' + route(user)
-    }),
+export default (contextType, contextData, refresher, currentUser) => {
+  let basePath
+  if ('workspace' === contextType) {
+    basePath = workspaceRoute(contextData, 'community')
+  } else {
+    basePath = toolRoute('community')
+  }
+
+  return {
+    primaryAction: (user) => getDefaultAction(user, refresher, basePath, currentUser),
+    actions: (users) => getActions(users, refresher, basePath, currentUser),
     definition: [
       {
+        name: 'picture',
+        type: 'user', // required to get correct styles (no padding + small picture size)
+        label: trans('avatar'),
+        displayed: true,
+        filterable: false,
+        sortable: false,
+        render: (user) => (
+          <UserAvatar picture={user.picture} alt={false} />
+        )
+      }, {
         name: 'username',
         type: 'username',
         label: trans('username'),
@@ -64,10 +82,28 @@ export default {
           time: true
         }
       }, {
-        name: 'roleTranslation',
-        type: 'string',
-        label: trans('role'),
+        name: 'groups',
+        type: 'groups',
+        label: trans('groups'),
+        displayable: false,
         displayed: false,
+        sortable: false,
+        filterable: true
+      }, {
+        name: 'roles',
+        type: 'roles',
+        label: trans('roles'),
+        displayable: false,
+        displayed: false,
+        sortable: false,
+        filterable: true
+      }, {
+        name: 'organizations',
+        type: 'organizations',
+        label: trans('organizations'),
+        displayable: false,
+        displayed: false,
+        sortable: false,
         filterable: true
       }
     ],
