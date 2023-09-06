@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\File\File;
  */
 class BadgesSubscriber implements EventSubscriberInterface
 {
-    const NAME = 'badges';
+    public const NAME = 'badges';
 
     /** @var ObjectManager */
     private $om;
@@ -115,7 +115,7 @@ class BadgesSubscriber implements EventSubscriberInterface
             $badgeImage = $event->getFile($badgeData['id']);
             if ($badgeImage && !$this->fileManager->exists($badgeImage)) {
                 $file = $this->fileManager->createFile(new File($badgeImage));
-                $badgeData['image'] = ['url' => $file->getUrl()];
+                $badgeData['image'] = $file->getUrl();
             }
 
             $this->crud->create($new, $badgeData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
