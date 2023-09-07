@@ -103,3 +103,8 @@ services:
         - '@security.token_storage'
         - '@Claroline\AppBundle\API\FinderProvider'
         - '@Claroline\CommunityBundle\Manager\TeamManager'
+
+    Claroline\CommunityBundle\Subscriber\DataSource\OrganizationSourceSubscriber:
+      arguments:
+        - '@security.authorization_checker'
+        - '@Claroline\AppBundle\API\FinderProvider'
