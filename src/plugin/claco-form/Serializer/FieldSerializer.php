@@ -10,8 +10,7 @@ class FieldSerializer
 {
     use SerializerTrait;
 
-    /** @var FieldFacetSerializer */
-    private $fieldFacetSerializer;
+    private FieldFacetSerializer $fieldFacetSerializer;
 
     public function __construct(
         FieldFacetSerializer $fieldFacetSerializer
@@ -24,7 +23,7 @@ class FieldSerializer
         return Field::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'clacoform_field';
     }
