@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\EntryRepository")
+ *
  * @ORM\Table(name="claro_clacoformbundle_entry")
  */
 class Entry
@@ -27,12 +28,13 @@ class Entry
     use Id;
     use Uuid;
 
-    const PENDING = 0;
-    const PUBLISHED = 1;
-    const UNPUBLISHED = 2;
+    public const PENDING = 0;
+    public const PUBLISHED = 1;
+    public const UNPUBLISHED = 2;
 
     /**
      * @ORM\Column
+     *
      * @Assert\NotBlank()
      *
      * @var string
@@ -58,6 +60,7 @@ class Entry
      *     targetEntity="Claroline\ClacoFormBundle\Entity\ClacoForm",
      *     inversedBy="categories"
      * )
+     *
      * @ORM\JoinColumn(name="claco_form_id", nullable=false, onDelete="CASCADE")
      *
      * @var ClacoForm
@@ -66,6 +69,7 @@ class Entry
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
      * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
      *
      * @var User
@@ -84,14 +88,14 @@ class Entry
      *
      * @var \DateTime
      */
-    protected $editionDate = null;
+    protected $editionDate;
 
     /**
      * @ORM\Column(name="publication_date", type="datetime", nullable=true)
      *
      * @var \DateTime
      */
-    protected $publicationDate = null;
+    protected $publicationDate;
 
     /**
      * @ORM\OneToMany(
@@ -99,6 +103,7 @@ class Entry
      *     mappedBy="entry",
      *     cascade={"persist"}
      * )
+     *
      * @ORM\JoinTable(name="claro_clacoformbundle_entry_value")
      *
      * @var FieldValue[]
@@ -110,6 +115,7 @@ class Entry
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Comment",
      *     mappedBy="entry"
      * )
+     *
      * @ORM\OrderBy({"creationDate" = "DESC"})
      *
      * @var Comment[]
@@ -118,6 +124,7 @@ class Entry
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\ClacoFormBundle\Entity\Category")
+     *
      * @ORM\JoinTable(name="claro_clacoformbundle_entry_category")
      *
      * @var Category[]
@@ -126,6 +133,7 @@ class Entry
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\ClacoFormBundle\Entity\Keyword", cascade={"persist"})
+     *
      * @ORM\JoinTable(name="claro_clacoformbundle_entry_keyword")
      *
      * @var Keyword[]
@@ -321,7 +329,7 @@ class Entry
         $value = null;
 
         foreach ($this->fieldValues as $fieldValue) {
-            if ($field->getId() === $fieldValue->getField()->getId()) {
+            if ($field->getUuid() === $fieldValue->getField()->getUuid()) {
                 $value = $fieldValue;
                 break;
             }

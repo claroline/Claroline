@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\Table(name="claro_field_facet_choice")
  */
 class FieldFacetChoice
@@ -37,6 +38,7 @@ class FieldFacetChoice
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacet",
      *     inversedBy="fieldFacetChoices"
      * )
+     *
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var FieldFacet
@@ -50,9 +52,6 @@ class FieldFacetChoice
      */
     protected $position;
 
-    /**
-     * @var mixed
-     */
     protected $value;
 
     /**
@@ -60,6 +59,7 @@ class FieldFacetChoice
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice",
      *     inversedBy="children"
      * )
+     *
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      *
      * @var FieldFacetChoice
@@ -140,9 +140,6 @@ class FieldFacetChoice
         return $this->parent;
     }
 
-    /**
-     * @param FieldFacetChoice|null $parent
-     */
     public function setParent(self $parent = null)
     {
         $this->parent = $parent;
@@ -158,7 +155,7 @@ class FieldFacetChoice
 
     public function emptyChildren()
     {
-        return $this->children->clear();
+        $this->children->clear();
     }
 
     public function addChild(FieldFacetChoice $child)
