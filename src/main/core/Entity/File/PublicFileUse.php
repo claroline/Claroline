@@ -15,22 +15,23 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro_public_file_use")
  */
 class PublicFileUse
 {
     /**
      * @ORM\Id
+     *
      * @ORM\Column(type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\File\PublicFile",
-     *     inversedBy="publicFileUses"
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\File\PublicFile")
+     *
      * @ORM\JoinColumn(name="public_file_id", onDelete="CASCADE")
      */
     protected $publicFile;

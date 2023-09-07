@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * GridRowItem.
  *
  * @ORM\Entity()
+ *
  * @ORM\Table("ujm_grid_row_item")
  */
 class GridRowItem
@@ -17,7 +18,9 @@ class GridRowItem
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Misc\GridRow", inversedBy="stepQuestions")
+     *
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Misc\GridRow", inversedBy="rowItems")
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var GridRow
@@ -26,7 +29,9 @@ class GridRowItem
 
     /**
      * @ORM\Id
+     *
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Misc\GridItem", cascade={"persist"})
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var GridItem
