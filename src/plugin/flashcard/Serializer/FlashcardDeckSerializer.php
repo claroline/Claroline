@@ -3,12 +3,26 @@
 namespace Claroline\FlashcardBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\FlashcardBundle\Entity\Flashcard;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
+use Claroline\FlashcardBundle\Entity\UserProgression;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FlashcardDeckSerializer
 {
     use SerializerTrait;
+
+    private ObjectManager $om;
+    private TokenStorageInterface $tokenStorage;
+
+    public function __construct(
+        ObjectManager $om,
+        TokenStorageInterface $tokenStorage
+    ) {
+        $this->om = $om;
+        $this->tokenStorage = $tokenStorage;
+    }
 
     public function getClass(): string
     {
@@ -46,16 +60,32 @@ class FlashcardDeckSerializer
 
     private function serializeCards(FlashcardDeck $flashcardDeck): array
     {
+        $user = $this->tokenStorage->getToken()->getUser();
         $cards = $flashcardDeck->getCards();
-        $cardsData = [];
+        $unseenCards = [];
+        $failedCards = [];
+        $passedCards = [];
 
         foreach ($cards as $card) {
-            $cardsData[] = $this->serializeCard($card);
+            $userProgression = $this->om->getRepository(UserProgression::class)->findOneBy([
+                'user' => $user,
+                'flashcard' => $card,
+            ]);
+
+            if (!$userProgression) {
+                $unseenCards[] = $this->serializeCard($card);
+            } elseif (!$userProgression->isSuccessful()) {
+                $failedCards[] = $this->serializeCard($card);
+            } else {
+                $passedCards[] = $this->serializeCard($card);
+            }
         }
 
-        shuffle($cardsData);
+        shuffle($unseenCards);
+        shuffle($failedCards);
+        shuffle($passedCards);
 
-        return $cardsData;
+        return array_merge($unseenCards, $failedCards, $passedCards);
     }
 
     public function serializeCard(Flashcard $flashcard): array
