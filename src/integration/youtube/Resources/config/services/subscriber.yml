@@ -11,3 +11,7 @@ services:
             - '@twig'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\YouTubeBundle\Manager\EvaluationManager'
+            - '@Claroline\CoreBundle\Manager\FileManager'
+            - '@Claroline\YouTubeBundle\Manager\YouTubeManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
