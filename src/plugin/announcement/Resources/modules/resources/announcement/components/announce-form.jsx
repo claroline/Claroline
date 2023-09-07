@@ -64,6 +64,11 @@ const AnnounceFormComponent = props =>
             name: 'poster',
             label: trans('poster'),
             type: 'image'
+          }, {
+            name: 'restrictions.hidden',
+            type: 'boolean',
+            label: trans('restrict_hidden'),
+            help: trans('restrict_hidden_help')
           }
         ]
       }, {
@@ -71,11 +76,6 @@ const AnnounceFormComponent = props =>
         title: trans('access_restrictions'),
         fields: [
           {
-            name: 'restrictions.hidden',
-            type: 'boolean',
-            label: trans('restrict_hidden'),
-            help: trans('restrict_hidden_help')
-          }, {
             name: 'restrictions.enableDates',
             label: trans('restrict_by_dates'),
             type: 'boolean',

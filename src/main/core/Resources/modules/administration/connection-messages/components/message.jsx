@@ -153,13 +153,17 @@ const Message = (props) =>
         }
       }]
     }, {
-      icon: 'fa fa-fw fa-key',
-      title: trans('access_restrictions'),
+      icon: 'fa fa-fw fa-desktop',
+      title: trans('display_parameters'),
       fields: [{
         name: 'restrictions.hidden',
         type: 'boolean',
         label: trans('restrict_hidden')
-      }, {
+      }]
+    }, {
+      icon: 'fa fa-fw fa-key',
+      title: trans('access_restrictions'),
+      fields: [{
         name: 'restrictions.enableDates',
         label: trans('restrict_by_dates'),
         type: 'boolean',

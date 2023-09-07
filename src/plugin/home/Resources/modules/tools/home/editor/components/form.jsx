@@ -81,6 +81,10 @@ const TabForm = (props) =>
             name: 'poster',
             label: trans('poster'),
             type: 'image'
+          }, {
+            name: 'restrictions.hidden',
+            type: 'boolean',
+            label: trans('restrict_hidden')
           }
         ]
       }, {
@@ -89,10 +93,6 @@ const TabForm = (props) =>
         displayed: (props.administration || 'desktop' !== props.currentContext.type),
         fields: [
           {
-            name: 'restrictions.hidden',
-            type: 'boolean',
-            label: trans('restrict_hidden')
-          }, {
             name: 'restrictions.enableDates',
             label: trans('restrict_by_dates'),
             type: 'boolean',
