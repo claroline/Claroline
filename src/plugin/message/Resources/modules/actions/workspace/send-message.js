@@ -5,7 +5,7 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 
 export default (workspaces) => {
-  const processable = workspaces.filter(workspace => hasPermission('administrate', workspace))
+  const processable = workspaces.filter(workspace => !workspace.meta.model && hasPermission('administrate', workspace))
 
   return {
     name: 'send-message',
