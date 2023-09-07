@@ -2,12 +2,11 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Facet;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
-use Doctrine\Persistence\ObjectRepository;
 
 class FieldFacetSerializer
 {
@@ -15,7 +14,6 @@ class FieldFacetSerializer
 
     private ObjectManager $om;
     private FieldFacetChoiceSerializer $ffcSerializer;
-    private ObjectRepository $fieldFacetChoiceRepo;
 
     public function __construct(
         ObjectManager $om,
@@ -23,7 +21,6 @@ class FieldFacetSerializer
     ) {
         $this->om = $om;
         $this->ffcSerializer = $ffcSerializer;
-        $this->fieldFacetChoiceRepo = $om->getRepository(FieldFacetChoice::class);
     }
 
     public function getClass(): string
@@ -83,8 +80,10 @@ class FieldFacetSerializer
 
     public function deserialize(array $data, FieldFacet $field, ?array $options = []): FieldFacet
     {
-        if (!in_array(Options::REFRESH_UUID, $options)) {
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
             $this->sipe('id', 'setUuid', $data, $field);
+        } else {
+            $field->refreshUuid();
         }
 
         $this->sipe('label', 'setLabel', $data, $field);
@@ -103,7 +102,7 @@ class FieldFacetSerializer
 
         if (isset($data['options'])) {
             if (isset($data['options']['choices'])) {
-                $this->deserializeChoices($data['options']['choices'], $field);
+                $this->deserializeChoices($data['options']['choices'], $field, $options);
                 unset($data['options']['choices']);
             }
             $this->sipe('options', 'setOptions', $data, $field);
@@ -112,7 +111,7 @@ class FieldFacetSerializer
         return $field;
     }
 
-    private function deserializeChoices(array $choicesData, FieldFacet $field): void
+    private function deserializeChoices(array $choicesData, FieldFacet $field, ?array $options = []): void
     {
         $oldChoices = $field->getRootFieldFacetChoices();
         $newChoicesUuids = [];
@@ -120,25 +119,35 @@ class FieldFacetSerializer
 
         foreach ($choicesData as $key => $choiceData) {
             $isNew = false;
-            $newChoicesUuids[] = $choiceData['id'];
             $choiceData['name'] = $choiceData['value'];
             $choiceData['position'] = $key + 1;
-            $choice = $this->fieldFacetChoiceRepo->findOneBy(['uuid' => $choiceData['id']]);
+
+            $choice = null;
+            if (!empty($choiceData['id'])) {
+                foreach ($oldChoices as $oldChoice) {
+                    if ($oldChoice->getUuid() === $choiceData['id']) {
+                        $choice = $oldChoice;
+                        break;
+                    }
+                }
+            }
 
             if (empty($choice)) {
+                $isNew = true;
+
                 $choice = new FieldFacetChoice();
                 $choice->setFieldFacet($field);
-                $isNew = true;
-            }
-            $newChoice = $this->ffcSerializer->deserialize($choiceData, $choice);
-            $this->om->persist($newChoice);
 
-            $field->addFieldChoice($newChoice);
+                $this->om->persist($choice);
+            }
+
+            $this->ffcSerializer->deserialize($choiceData, $choice, $options);
+            $newChoicesUuids[] = $choice->getUuid();
 
             if (isset($choiceData['children'])) {
-                $this->deserializeChildrenChoices($choiceData['children'], $newChoice, $field);
+                $this->deserializeChildrenChoices($choiceData['children'], $choice, $field);
             } elseif (!$isNew) {
-                $children = $newChoice->getChildren();
+                $children = $choice->getChildren();
 
                 foreach ($children as $child) {
                     $this->om->remove($child);
@@ -154,7 +163,7 @@ class FieldFacetSerializer
         }
     }
 
-    private function deserializeChildrenChoices(array $choicesData, FieldFacetChoice $parent, FieldFacet $field): void
+    private function deserializeChildrenChoices(array $choicesData, FieldFacetChoice $parent, FieldFacet $field, ?array $options = []): void
     {
         $oldChoices = $parent->getChildren();
         $newChoicesUuids = [];
@@ -165,24 +174,35 @@ class FieldFacetSerializer
             $newChoicesUuids[] = $choiceData['id'];
             $choiceData['name'] = $choiceData['value'];
             $choiceData['position'] = $key + 1;
-            $choice = $this->fieldFacetChoiceRepo->findOneBy(['uuid' => $choiceData['id']]);
+
+            $choice = null;
+            if (!empty($choiceData['id'])) {
+                foreach ($oldChoices as $oldChoice) {
+                    if ($oldChoice->getUuid() === $choiceData['id']) {
+                        $choice = $oldChoice;
+                        break;
+                    }
+                }
+            }
 
             if (empty($choice)) {
-                $choice = new FieldFacetChoice();
-                $choice->setUuid($choiceData['id']);
-                $choice->setParent($parent);
-                $choice->setFieldFacet($field);
                 $isNew = true;
-            }
-            $newChoice = $this->ffcSerializer->deserialize($choiceData, $choice);
-            $this->om->persist($newChoice);
 
-            $parent->addChild($newChoice);
+                $choice = new FieldFacetChoice();
+                $choice->setFieldFacet($field);
+                $choice->setParent($parent);
+                $parent->addChild($choice);
+
+                $this->om->persist($choice);
+            }
+
+            $this->ffcSerializer->deserialize($choiceData, $choice, $options);
+            $newChoicesUuids[] = $choice->getUuid();
 
             if (isset($choiceData['children'])) {
-                $this->deserializeChildrenChoices($choiceData['children'], $newChoice, $field);
+                $this->deserializeChildrenChoices($choiceData['children'], $choice, $field);
             } elseif (!$isNew) {
-                $children = $newChoice->getChildren();
+                $children = $choice->getChildren();
 
                 foreach ($children as $child) {
                     $this->om->remove($child);

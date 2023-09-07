@@ -229,7 +229,7 @@ class ClacoFormSerializer
             }
             $this->om->startFlushSuite();
 
-            /* Removes previous fields that are not used anymore */
+            // Removes previous fields that are not used anymore
             foreach ($oldFields as $field) {
                 if (!in_array($field->getUuid(), $newFieldsUuids)) {
                     $this->deleteField($field);
