@@ -73,7 +73,7 @@ class ClacoFormListener
     /**
      * Loads the ClacoForm resource.
      */
-    public function onLoad(LoadResourceEvent $event)
+    public function onLoad(LoadResourceEvent $event): void
     {
         /** @var ClacoForm $clacoForm */
         $clacoForm = $event->getResource();
@@ -113,14 +113,14 @@ class ClacoFormListener
             'canGeneratePdf' => $canGeneratePdf,
             'cascadeLevelMax' => $cascadeLevelMax,
             'myEntriesCount' => count($myEntries),
-            // do not expose this and pre calculate missing user rights
+            // do not expose this and precalculate missing user rights
             'roles' => $roles,
             'myRoles' => $myRoles,
         ]);
         $event->stopPropagation();
     }
 
-    public function onCopy(CopyResourceEvent $event)
+    public function onCopy(CopyResourceEvent $event): void
     {
         /** @var ClacoForm $clacoForm */
         $clacoForm = $event->getResource();
@@ -132,7 +132,7 @@ class ClacoFormListener
         $event->stopPropagation();
     }
 
-    public function onExport(ExportResourceEvent $exportEvent)
+    public function onExport(ExportResourceEvent $exportEvent): void
     {
         /** @var ClacoForm $clacoForm */
         $clacoForm = $exportEvent->getResource();
@@ -150,7 +150,7 @@ class ClacoFormListener
         ]);
     }
 
-    public function onImport(ImportResourceEvent $event)
+    public function onImport(ImportResourceEvent $event): void
     {
         /** @var ClacoForm $clacoForm */
         $clacoForm = $event->getResource();

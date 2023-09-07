@@ -3,12 +3,12 @@
 namespace Claroline\ClacoFormBundle\Serializer;
 
 use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
-use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
@@ -58,7 +58,12 @@ class EntrySerializer
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
     }
 
-    public function getName()
+    public function getClass(): string
+    {
+        return Entry::class;
+    }
+
+    public function getName(): string
     {
         return 'clacoform_entry';
     }
@@ -84,8 +89,8 @@ class EntrySerializer
             'creationDate' => DateNormalizer::normalize($entry->getCreationDate()),
             'editionDate' => DateNormalizer::normalize($entry->getEditionDate()),
             'publicationDate' => DateNormalizer::normalize($entry->getPublicationDate()),
-            'user' => $user ? $this->userSerializer->serialize($user, [Options::SERIALIZE_MINIMAL]) : null,
-            'clacoForm' => [
+            'user' => $user ? $this->userSerializer->serialize($user, [SerializerInterface::SERIALIZE_MINIMAL]) : null,
+            'clacoForm' => [ // should not be exposed here
                 'id' => $entry->getClacoForm()->getUuid(),
             ],
             'values' => $this->serializeValues($entry),
@@ -104,7 +109,11 @@ class EntrySerializer
 
     public function deserialize(array $data, Entry $entry, array $options = []): Entry
     {
-        $currentDate = new \DateTime();
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $entry);
+        } else {
+            $entry->refreshUuid();
+        }
 
         $this->sipe('title', 'setTitle', $data, $entry);
         $this->sipe('status', 'setStatus', $data, $entry);
@@ -138,18 +147,14 @@ class EntrySerializer
                 $entry->setStatus($status);
 
                 if (Entry::PUBLISHED === $status) {
-                    $entry->setPublicationDate($currentDate);
+                    $entry->setPublicationDate(new \DateTime());
                 }
             }
 
             // Sets values for fields
-
-            /** @var Field[] $fields */
-            $fields = $this->fieldRepo->findBy(['clacoForm' => $clacoForm]);
+            $fields = $clacoForm->getFields();
             foreach ($fields as $field) {
-                $uuid = $field->getUuid();
-
-                if (array_key_exists($uuid, $data['values'])) {
+                if (array_key_exists($field->getUuid(), $data['values'])) {
                     $fieldValue = $entry->getFieldValue($field);
                     if (empty($fieldValue)) {
                         $fieldValue = new FieldValue();
@@ -168,7 +173,7 @@ class EntrySerializer
                         $this->facetManager->deserializeFieldValue(
                             $entry,
                             $field->getType(),
-                            $data['values'][$uuid]
+                            $data['values'][$field->getUuid()]
                         )
                     );
                 }
@@ -178,7 +183,7 @@ class EntrySerializer
         return $entry;
     }
 
-    private function serializeValues(Entry $entry)
+    private function serializeValues(Entry $entry): array
     {
         $fieldValues = $entry->getFieldValues();
 
@@ -195,7 +200,7 @@ class EntrySerializer
         return $values;
     }
 
-    private function getCategories(Entry $entry)
+    private function getCategories(Entry $entry): array
     {
         return array_map(
             function (Category $category) {
@@ -205,7 +210,7 @@ class EntrySerializer
         );
     }
 
-    private function getKeywords(Entry $entry)
+    private function getKeywords(Entry $entry): array
     {
         return $entry->getClacoForm()->isKeywordsEnabled() ?
             array_map(
@@ -217,7 +222,7 @@ class EntrySerializer
             [];
     }
 
-    private function getComments(Entry $entry)
+    private function getComments(Entry $entry): array
     {
         return $entry->getClacoForm()->isCommentsEnabled() ?
             array_map(
@@ -229,7 +234,7 @@ class EntrySerializer
             [];
     }
 
-    private function deserializeCategories(Entry $entry, array $categoriesData)
+    private function deserializeCategories(Entry $entry, array $categoriesData): Entry
     {
         $entry->emptyCategories();
 
@@ -244,7 +249,7 @@ class EntrySerializer
         return $entry;
     }
 
-    private function deserializeKeywords(Entry $entry, array $keywordsData)
+    private function deserializeKeywords(Entry $entry, array $keywordsData): Entry
     {
         $entry->emptyKeywords();
 
