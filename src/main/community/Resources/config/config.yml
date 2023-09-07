@@ -48,3 +48,8 @@ plugin:
           type: list
           context: [ workspace ]
           tags: [ community ]
+
+        - name: organizations
+          type: list
+          context: [ desktop, workspace ]
+          tags: [ community ]

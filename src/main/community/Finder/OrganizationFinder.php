@@ -60,6 +60,11 @@ class OrganizationFinder extends AbstractFinder
                     $qb->andWhere('u.uuid IN (:userIds)');
                     $qb->setParameter('userIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+                case 'workspace':
+                    $qb->leftJoin('obj.workspaces', 'w');
+                    $qb->andWhere('w.uuid IN (:workspaceIds)');
+                    $qb->setParameter('workspaceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
                 case 'administrated':
                     $qb->leftJoin('obj.userOrganizationReferences', 'ur2');
                     $qb->leftJoin('ur2.user', 'u2');
