@@ -2,6 +2,10 @@
   "card": "Carte",
   "cards": "Cartes",
 
+  "flashcard_options": "Options des cartes",
+  "draw_options": "Nombre de cartes à tirer",
+  "options_desc": "Permet de définir le nombre de cartes à tirer pour chaque partie. Laissez vide pour jouer avec toutes les cartes.",
+
   "no_card": "Aucune carte.",
   "add_card": "Ajouter une carte",
   "new_card": "Nouvelle carte",

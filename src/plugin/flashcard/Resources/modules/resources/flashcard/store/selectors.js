@@ -26,6 +26,11 @@ const cards = createSelector(
   (flashcardDeck) => flashcardDeck.cards || []
 )
 
+const draw = createSelector(
+  [flashcardDeck],
+  (flashcardDeck) => flashcardDeck.draw
+)
+
 const empty = createSelector(
   [cards],
   (cards) => 0 === cards.length
@@ -60,6 +65,7 @@ export const selectors = {
   flashcardDeckProgression,
   id,
   cards,
+  draw,
   empty,
   overviewMessage,
   showOverview,

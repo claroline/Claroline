@@ -2,6 +2,10 @@
   "card": "Card",
   "cards": "Cards",
 
+  "flashcard_options": "Cards options",
+  "draw_options": "Number of cards to draw",
+  "options_desc":"Defines number of cards to draw for each game. Leave empty to play with all the cards.",
+
   "no_card": "No card.",
   "add_card" : "Add card",
   "new_card": "New card",

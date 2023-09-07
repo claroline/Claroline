@@ -12,7 +12,7 @@ import { ContentPlaceholder } from '#/main/app/content/components/placeholder'
 import { FlashcardDeck } from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {ProgressBar} from '#/main/app/content/components/progress-bar'
 
-const Player = ({ deck, updateUserProgression }) => {
+const Player = ({ deck, updateUserProgression, draw }) => {
   const history = useHistory()
   const match = useRouteMatch()
   const [isFlipped, setIsFlipped] = useState(false)
@@ -20,7 +20,8 @@ const Player = ({ deck, updateUserProgression }) => {
   const currentCard = deck.cards[currentCardIndex]
 
   const goToNextCard = () => {
-    const isLastCard = currentCardIndex + 1 === deck.cards.length
+    const maxCards = draw > 0 ? Math.min(draw, deck.cards.length) : deck.cards.length
+    const isLastCard = currentCardIndex + 1 === maxCards
     if (isLastCard && deck.end.display) {
       history.push(`${match.path}/end`)
     } else {
@@ -72,8 +73,8 @@ const Player = ({ deck, updateUserProgression }) => {
               {renderCardContent('hiddenContent')}
             </div>
           </div>
-          {deck.cards.length > 1 && <div className="card-element card-element-1"></div>}
-          {deck.cards.length > 2 && <div className="card-element card-element-2"></div>}
+          { deck.cards.length > 1 && (!draw || currentCardIndex < draw - 1) && <div className="card-element card-element-1"></div> }
+          { deck.cards.length > 2 && (!draw || currentCardIndex < draw - 2) && <div className="card-element card-element-2"></div> }
         </div>
       </div>
 
@@ -112,6 +113,7 @@ Player.propTypes = {
   deck: T.shape(
     FlashcardDeck.propTypes
   ).isRequired,
+  draw: T.number,
   updateUserProgression: T.func.isRequired
 }
 

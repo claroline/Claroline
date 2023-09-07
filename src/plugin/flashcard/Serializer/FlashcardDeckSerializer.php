@@ -30,6 +30,7 @@ class FlashcardDeckSerializer
         return [
             'id' => $flashcardDeck->getUuid(),
             'name' => $flashcardDeck->getName(),
+            'draw' => $flashcardDeck->getDraw(),
             'overview' => [
                 'display' => $flashcardDeck->getShowOverview(),
                 'message' => $flashcardDeck->getOverviewMessage(),
@@ -71,6 +72,7 @@ class FlashcardDeckSerializer
     {
         $this->sipe('id', 'setUuid', $data, $flashcardDeck);
         $this->sipe('name', 'setName', $data, $flashcardDeck);
+        $this->sipe('draw', 'setDraw', $data, $flashcardDeck);
 
         if (!empty($data['overview'])) {
             $this->sipe('overview.display', 'setShowOverview', $data, $flashcardDeck);

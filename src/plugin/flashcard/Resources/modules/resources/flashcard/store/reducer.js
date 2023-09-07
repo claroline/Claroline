@@ -14,7 +14,17 @@ const reducer = combineReducers(Object.assign({
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData || state,
     [selectors.FLASHCARD_UPDATE_PROGRESSION]: (state, action) => {
       const newState = cloneDeep(state)
-      newState.flashcardDeckProgression.filter((data) => data.flashcard.id === action.id)[0].is_successful = action.is_successful
+      const cardProgression = newState.flashcardDeckProgression.filter((data) => data.flashcard.id === action.id)[0]
+      if (cardProgression) {
+        cardProgression.is_successful = action.is_successful
+      } else {
+        newState.flashcardDeckProgression.push({
+          flashcard: {
+            id: action.id
+          },
+          is_successful: action.is_successful
+        })
+      }
       return newState
     },
     [`${FORM_SUBMIT_SUCCESS}/${editorSelectors.FORM_NAME}`]: (state, action) => ({

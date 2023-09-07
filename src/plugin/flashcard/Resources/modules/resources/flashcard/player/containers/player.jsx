@@ -7,7 +7,8 @@ import {selectors, actions} from '#/plugin/flashcard/resources/flashcard/store'
 
 const Player = withRouter(connect(
   state => ({
-    deck: selectors.flashcardDeck(state)
+    deck: selectors.flashcardDeck(state),
+    draw: selectors.draw(state)
   }),
   (dispatch) => ({
     async updateUserProgression(cardId, isSuccessful) {

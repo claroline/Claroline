@@ -26,6 +26,11 @@ class FlashcardDeck extends AbstractResource
      */
     private $cards;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private ?int $draw = 0;
+
     public function __construct()
     {
         parent::__construct();
@@ -66,5 +71,15 @@ class FlashcardDeck extends AbstractResource
         if ($this->cards->contains($card)) {
             $this->cards->removeElement($card);
         }
+    }
+
+    public function getDraw(): ?int
+    {
+        return $this->draw;
+    }
+
+    public function setDraw($draw): void
+    {
+        $this->draw = $draw;
     }
 }

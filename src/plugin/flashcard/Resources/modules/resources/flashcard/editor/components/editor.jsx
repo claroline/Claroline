@@ -52,6 +52,19 @@ const EditorComponent = props =>
           }]
         }]
       }, {
+        icon: 'fa fa-fw fa-dice-d20',
+        title: trans('flashcard_options', {}, 'flashcard'),
+        fields: [{
+          name: 'draw',
+          type: 'number',
+          label: trans('draw_options', {}, 'flashcard'),
+          help: trans('options_desc', {}, 'flashcard'),
+          options: {
+            min: 1,
+            max: props.cards.length
+          }
+        }]
+      }, {
         icon: 'fa fa-fw fa-flag-checkered',
         title: trans('end_page'),
         fields: [{

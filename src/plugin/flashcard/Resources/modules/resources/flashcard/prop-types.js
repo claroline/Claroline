@@ -15,6 +15,7 @@ const Card = {
 const FlashcardDeck = {
   propTypes: {
     id: T.string,
+    draw: T.number,
     display: T.shape({
       showOverview: T.bool
     }),
