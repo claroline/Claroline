@@ -8,10 +8,6 @@ services:
         tags: [ kernel.event_subscriber ]
         arguments:
             - '@security.token_storage'
-            - '@twig'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\YouTubeBundle\Manager\EvaluationManager'
-            - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\YouTubeBundle\Manager\YouTubeManager'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
