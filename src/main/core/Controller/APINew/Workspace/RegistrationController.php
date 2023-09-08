@@ -84,11 +84,13 @@ class RegistrationController
      *         {"name": "id",  "type": {"string", "integer"}, "description": "The workspace id or uuid"}
      *     }
      * )
+     *
      * @Route(
      *    "/{id}/user/pending",
      *    name="apiv2_workspace_list_pending",
      *    methods={"GET"}
      * )
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     public function listPendingAction(Request $request, Workspace $workspace): JsonResponse
@@ -109,11 +111,13 @@ class RegistrationController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
+     *
      * @Route(
      *    "/{id}/registration/validate",
      *    name="apiv2_workspace_registration_validate",
      *    methods={"PATCH"}
      * )
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     public function validateRegistrationAction(Request $request, Workspace $workspace): JsonResponse
@@ -125,7 +129,7 @@ class RegistrationController
             /** @var WorkspaceRegistrationQueue $pending */
             $pending = $this->om->getRepository(WorkspaceRegistrationQueue::class)
                 ->findOneBy(['user' => $user, 'workspace' => $workspace]);
-            //maybe use the crud instead ? I don't know yet
+            // maybe use the crud instead ? I don't know yet
             $this->registrationQueueManager->validateRegistration($pending);
             $this->registrationQueueManager->removeRegistration($pending);
         }
@@ -146,11 +150,13 @@ class RegistrationController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
+     *
      * @Route(
      *    "/{id}/registration/remove",
      *    name="apiv2_workspace_registration_remove",
      *    methods={"DELETE"}
      * )
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     public function removeRegistrationAction(Request $request, Workspace $workspace): JsonResponse
@@ -181,11 +187,13 @@ class RegistrationController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
+     *
      * @Route(
      *    "/{id}/users/unregister",
      *    name="apiv2_workspace_unregister_users",
      *    methods={"DELETE"}
      * )
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     public function unregisterUsersAction(Request $request, Workspace $workspace): JsonResponse
@@ -214,11 +222,13 @@ class RegistrationController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
+     *
      * @Route(
      *    "/{id}/groups/unregister",
      *    name="apiv2_workspace_unregister_groups",
      *    methods={"DELETE"}
      * )
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     public function unregisterGroupsAction(Request $request, Workspace $workspace): JsonResponse
@@ -248,10 +258,12 @@ class RegistrationController
      *         {"name": "role", "type": {"string"}, "description": "The role translation key"}
      *     }
      * )
+     *
      * @Route(
      *    "/users/register/{role}",
      *    name="apiv2_workspace_bulk_register_users",
-     *    methods={"PATCH"}
+     *    methods={"PATCH"},
+     *    defaults={"role":""}
      * )
      */
     public function bulkRegisterUsersAction(string $role, Request $request): JsonResponse
@@ -260,9 +272,12 @@ class RegistrationController
         $users = $this->decodeIdsString($request, User::class, 'users');
 
         foreach ($workspaces as $workspace) {
-            $roleEntity = $this->om->getRepository(Role::class)
-                ->findOneBy(['translationKey' => $role, 'workspace' => $workspace]);
-
+            if ('' === $role) {
+                $roleEntity = $workspace->getDefaultRole();
+            } else {
+                $roleEntity = $this->om->getRepository(Role::class)
+                    ->findOneBy(['translationKey' => $role, 'workspace' => $workspace]);
+            }
             $this->crud->patch($roleEntity, 'user', Crud::COLLECTION_ADD, $users);
         }
 
@@ -282,10 +297,12 @@ class RegistrationController
      *         {"name": "role", "type": {"string"}, "description": "The role translation key"}
      *     }
      * )
+     *
      * @Route(
      *    "/groups/register/{role}",
      *    name="apiv2_workspace_bulk_register_groups",
-     *    methods={"PATCH"}
+     *    methods={"PATCH"},
+     *    defaults={"role":""}
      * )
      */
     public function bulkRegisterGroupsAction(string $role, Request $request): JsonResponse
@@ -294,8 +311,12 @@ class RegistrationController
         $groups = $this->decodeIdsString($request, Group::class, 'groups');
 
         foreach ($workspaces as $workspace) {
-            $roleEntity = $this->om->getRepository(Role::class)
-                ->findOneBy(['translationKey' => $role, 'workspace' => $workspace]);
+            if ('' === $role) {
+                $roleEntity = $workspace->getDefaultRole();
+            } else {
+                $roleEntity = $this->om->getRepository(Role::class)
+                    ->findOneBy(['translationKey' => $role, 'workspace' => $workspace]);
+            }
 
             $this->crud->patch($roleEntity, 'group', Crud::COLLECTION_ADD, $groups);
         }
@@ -315,13 +336,15 @@ class RegistrationController
      *         {"name": "user", "type": {"string"}, "description": "The user uuid"}
      *     }
      * )
+     *
      * @Route("/register/{user}", name="apiv2_workspace_register", methods={"PATCH"})
+     *
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      */
     public function registerAction(User $user, Request $request): JsonResponse
     {
         // If user is admin or registration validation is disabled, subscribe user
-        //see WorkspaceParametersController::userSubscriptionAction
+        // see WorkspaceParametersController::userSubscriptionAction
         /** @var Workspace[] $workspaces */
         $workspaces = $this->decodeIdsString($request, Workspace::class, 'workspaces');
 
@@ -351,7 +374,9 @@ class RegistrationController
      *         {"name": "user", "type": {"string"}, "description": "The user uuid"}
      *     }
      * )
+     *
      * @Route("/unregister/{user}", name="apiv2_workspace_unregister", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
      */
     public function unregisterAction(User $user, Request $request): JsonResponse
@@ -374,11 +399,13 @@ class RegistrationController
      *         {"name": "workspace", "type": {"string"}, "description": "The workspace uuid"}
      *     }
      * )
+     *
      * @Route(
      *     "/{workspace}/register/self",
      *     name="apiv2_workspace_self_register",
      *     methods={"PUT"}
      * )
+     *
      * @EXT\ParamConverter(
      *     "workspace",
      *     class = "Claroline\CoreBundle\Entity\Workspace\Workspace",
