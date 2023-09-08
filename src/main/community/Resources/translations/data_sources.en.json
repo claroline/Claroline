@@ -21,5 +21,7 @@
   "my-roles_desc": "Allows to list my roles.",
 
   "organizations": "List of organizations",
-  "organizations_desc": "Allows to list the organizations."
+  "organizations_desc": "Allows to list the organizations.",
+  "my-organizations": "List of my organizations",
+  "my-organizations_desc": "Allows to list my organizations."
 }
