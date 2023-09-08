@@ -190,8 +190,9 @@ class DirectoryListener
 
         try {
             /** @var AbstractResource $resource */
-            $resource = $this->crud->create($resourceClass, $resourceData, $options);
+            $resource = new $resourceClass();
             $resource->setResourceNode($resourceNode);
+            $this->crud->create($resource, $resourceData, $options);
         } catch (InvalidDataException $e) {
             // for resource creation we submit the resourceNode and resource data at once
             // we need to update the errors path for correct rendering in form
