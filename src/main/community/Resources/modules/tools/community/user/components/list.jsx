@@ -138,7 +138,7 @@ UserList.propTypes = {
   canAdministrate: T.bool.isRequired,
   limitReached: T.bool.isRequired,
   unregister: T.func.isRequired,
-  addUsers: T.func.isRequired
+  registerUsers: T.func.isRequired
 }
 
 export {

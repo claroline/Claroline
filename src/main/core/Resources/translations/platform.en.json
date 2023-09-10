@@ -868,7 +868,7 @@
     "validate_registration_help": "Registrations must be validated by a manager before users have access to the workspace.",
     "registration_url": "Registration URL",
     "workspace_register_select_users": "Select users to register",
-    "workspace_register_select_groups": "1. Select groups to register",
+    "workspace_register_select_groups": "Select groups to register",
     "clipboard_copy": "Copy to clipboard",
     "image": "Image",
     "titleColor": "Title color",
