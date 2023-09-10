@@ -1,18 +1,15 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
-import get from 'lodash/get'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {Alert} from '#/main/app/alert/components/alert'
 
-import {constants} from '#/main/community/constants'
 import {getPlatformRoles, getWorkspaceRoles} from '#/main/community/utils'
 import {UserList as BaseUserList} from '#/main/community/user/components/list'
 import {MODAL_USERS} from '#/main/community/modals/users'
-import {MODAL_ROLES} from '#/main/community/modals/roles'
 
 import {MODAL_USER_DISABLE_INACTIVE} from '#/main/community/tools/community/user/modals/disable-inactive'
 import {selectors} from '#/main/community/tools/community/user/store'
@@ -40,25 +37,19 @@ const UserList = props =>
           title: trans('register_users'),
           subtitle: trans('workspace_register_select_users'),
           selectAction: (selectedUsers) => ({
-            type: MODAL_BUTTON,
-            label: trans('select', {}, 'actions'),
-
-            // select roles to assign to selected users
-            modal: [MODAL_ROLES, {
-              url: ['apiv2_workspace_list_roles', {id: get(props.contextData, 'id')}],
-              filters: [
-                // those filters are not exploited as the url already do it for us. This is just to disable filters
-                {property: 'type', value: constants.ROLE_WORKSPACE, locked: true, hidden: false},
-                {property: 'workspace', value: get(props.contextData, 'id'), locked: true, hidden: false}
-              ],
-              title: trans('register_users'),
-              subtitle: trans('workspace_register_select_roles'),
-              selectAction: (selectedRoles) => ({
-                type: CALLBACK_BUTTON,
-                label: trans('register', {}, 'actions'),
-                callback: () => props.addUsersToRoles(selectedRoles, selectedUsers)
-              })
-            }]
+            type: ASYNC_BUTTON,
+            request: {
+              url: ['apiv2_workspace_bulk_register_users', {
+                workspaces: [props.contextData.id],
+                users: selectedUsers.map (user => user.id)
+              }],
+              request: {
+                method: 'PATCH'
+              },
+              success: () => {
+                props.registerUsers(selectedUsers)
+              }
+            }
           })
         }]
       }, {
@@ -147,7 +138,7 @@ UserList.propTypes = {
   canAdministrate: T.bool.isRequired,
   limitReached: T.bool.isRequired,
   unregister: T.func.isRequired,
-  addUsersToRoles: T.func.isRequired
+  addUsers: T.func.isRequired
 }
 
 export {
