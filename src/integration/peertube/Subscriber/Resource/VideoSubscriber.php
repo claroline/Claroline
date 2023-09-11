@@ -2,38 +2,40 @@
 
 namespace Claroline\PeerTubeBundle\Subscriber\Resource;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\PeerTubeBundle\Entity\Video;
 use Claroline\PeerTubeBundle\Manager\EvaluationManager;
+use Claroline\PeerTubeBundle\Manager\PeerTubeManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 
 class VideoSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var Environment */
-    private $templating;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var EvaluationManager */
-    private $evaluationManager;
+    private TokenStorageInterface $tokenStorage;
+    private Environment $templating;
+    private SerializerProvider $serializer;
+    private EvaluationManager $evaluationManager;
+    private PeerTubeManager $peerTubeManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
         Environment $templating,
         SerializerProvider $serializer,
-        EvaluationManager $evaluationManager
+        EvaluationManager $evaluationManager,
+        PeerTubeManager $peerTubeManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
         $this->serializer = $serializer;
         $this->evaluationManager = $evaluationManager;
+        $this->peerTubeManager = $peerTubeManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -41,6 +43,7 @@ class VideoSubscriber implements EventSubscriberInterface
         return [
             'resource.peertube_video.load' => 'onLoad',
             'resource.peertube_video.embed' => 'onEmbed',
+            Crud::getEventName('create', 'post', Video::class) => 'onCreate',
         ];
     }
 
@@ -67,5 +70,11 @@ class VideoSubscriber implements EventSubscriberInterface
                 'resource' => $event->getResource(),
             ])
         );
+    }
+
+    public function onCreate(CreateEvent $event): void
+    {
+        $video = $event->getObject();
+        $this->peerTubeManager->handleThumbnailForVideo($video);
     }
 }

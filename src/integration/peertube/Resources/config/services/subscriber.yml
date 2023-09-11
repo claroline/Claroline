@@ -11,3 +11,4 @@ services:
             - '@twig'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\PeerTubeBundle\Manager\EvaluationManager'
+            - '@Claroline\PeerTubeBundle\Manager\PeerTubeManager'
