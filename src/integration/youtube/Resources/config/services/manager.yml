@@ -1,5 +1,11 @@
 services:
-    Claroline\YouTubeBundle\Manager\YouTubeManager: ~
+    Claroline\YouTubeBundle\Manager\YouTubeManager:
+      arguments:
+            - '@Claroline\CoreBundle\Manager\CurlManager'
+            - '@Claroline\AppBundle\Manager\File\TempFileManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\YouTubeBundle\Manager\EvaluationManager:
         arguments:

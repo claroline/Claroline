@@ -18,5 +18,10 @@
   "roles": "Liste des rôles",
   "roles_desc": "Permet de lister les rôles.",
   "my-roles": "Liste de mes rôles",
-  "my-roles_desc": "Permet de lister mes rôles."
+  "my-roles_desc": "Permet de lister mes rôles.",
+
+  "organizations": "Liste des organisations",
+  "organizations_desc": "Permet de lister les organisations.",
+  "my-organizations": "Liste de mes organisations",
+  "my-organizations_desc": "Permet de lister mes organisations."
 }
