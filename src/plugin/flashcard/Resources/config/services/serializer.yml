@@ -3,6 +3,7 @@ services:
         tags: ['claroline.serializer']
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\FlashcardBundle\Manager\FlashcardManager'
             - '@security.token_storage'
 
     Claroline\FlashcardBundle\Serializer\UserProgressionSerializer:

@@ -4,7 +4,7 @@
 
 @import "../variables";
 
-.card-preview {
+.flashcard-preview {
   display: inline-block;
   width: 150px;
   height: 200px;
@@ -15,7 +15,7 @@
   transition: transform 0.2s;
   position: relative;
 
-  .card-actions {
+  .flashcard-actions {
     position: absolute;
     top: 0;
     right: 0;
@@ -28,11 +28,11 @@
   }
 }
 
-.card-preview:hover {
+.flashcard-preview:hover {
   transform: translateY(-5px);
 }
 
-.card-header {
+.flashcard-header {
   padding: 5px;
   font-size: 16px;
   height: 80%;
@@ -41,14 +41,14 @@
   justify-content: center;
 }
 
-.card-player {
+.flashcard-player {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 }
 
-.card-deck {
+.flashcard-deck {
   position: relative;
   max-width: 500px;
   width: 80vw;
@@ -57,7 +57,7 @@
   background-color: transparent;
 }
 
-.card-buttons {
+.flashcard-buttons {
   display: flex;
   justify-content: center;
   max-width: 500px;
@@ -69,7 +69,7 @@
   }
 }
 
-.card-element {
+.flashcard-element {
   position: absolute;
   background: #fff9ec;
   max-width: 500px;

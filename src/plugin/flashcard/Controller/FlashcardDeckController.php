@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\FlashcardBundle\Entity\Flashcard;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
 use Claroline\FlashcardBundle\Entity\UserProgression;
+use Claroline\FlashcardBundle\Manager\EvaluationManager;
 use Claroline\FlashcardBundle\Serializer\UserProgressionSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,10 +20,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class FlashcardDeckController extends AbstractCrudController
 {
     private UserProgressionSerializer $userProgressionSerializer;
+    private EvaluationManager $evaluationManager;
 
-    public function __construct(UserProgressionSerializer $userProgressionSerializer)
-    {
+    public function __construct(
+        UserProgressionSerializer $userProgressionSerializer,
+        EvaluationManager $evaluationManager
+    ) {
         $this->userProgressionSerializer = $userProgressionSerializer;
+        $this->evaluationManager = $evaluationManager;
     }
 
     public function getName(): string
@@ -59,6 +64,8 @@ class FlashcardDeckController extends AbstractCrudController
         $userProgression->setIsSuccessful('true' === $request->get('isSuccessful'));
         $this->om->persist($userProgression);
         $this->om->flush();
+
+        $this->evaluationManager->update($card->getDeck()->getResourceNode(), $user, $userProgression);
 
         return new JsonResponse([
             'progression' => $this->userProgressionSerializer->serialize($userProgression),

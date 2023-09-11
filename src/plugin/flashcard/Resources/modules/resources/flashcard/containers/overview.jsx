@@ -9,6 +9,7 @@ const Overview = connect(
   (state) => ({
     basePath: resourceSelectors.path(state),
     flashcardDeck: selectors.flashcardDeck(state),
+    evaluation: resourceSelectors.resourceEvaluation(state),
     cards: selectors.cards(state),
     empty: selectors.empty(state),
     overviewMessage: selectors.overviewMessage(state),

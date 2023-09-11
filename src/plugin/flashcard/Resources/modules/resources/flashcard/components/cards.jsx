@@ -4,14 +4,14 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 
 const Cards = props =>
-  <ul className="cards">
+  <ul className="flashcards">
     {props.cards.map((card) =>
-      <li key={card.id} className="card-preview">
+      <li key={card.id} className="flashcard-preview">
         {props.actions && (
-          <div className="card-actions">
+          <div className="flashcard-actions">
             <Toolbar
               id={`${card.id}-btn`}
-              className="slide-actions"
+              className="flashcard-actions"
               buttonName="btn"
               tooltip="bottom"
               size="sm"
@@ -20,7 +20,7 @@ const Cards = props =>
             />
           </div>
         )}
-        <div className="card-header">
+        <div className="flashcard-header">
           <strong>{card.question}</strong>
         </div>
       </li>

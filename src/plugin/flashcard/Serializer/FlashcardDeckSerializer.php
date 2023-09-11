@@ -6,7 +6,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\FlashcardBundle\Entity\Flashcard;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
-use Claroline\FlashcardBundle\Entity\UserProgression;
+use Claroline\FlashcardBundle\Manager\FlashcardManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FlashcardDeckSerializer
@@ -14,13 +14,16 @@ class FlashcardDeckSerializer
     use SerializerTrait;
 
     private ObjectManager $om;
+    private FlashcardManager $flashcardManager;
     private TokenStorageInterface $tokenStorage;
 
     public function __construct(
         ObjectManager $om,
+        FlashcardManager $flashcardManager,
         TokenStorageInterface $tokenStorage
     ) {
         $this->om = $om;
+        $this->flashcardManager = $flashcardManager;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -60,32 +63,14 @@ class FlashcardDeckSerializer
 
     private function serializeCards(FlashcardDeck $flashcardDeck): array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-        $cards = $flashcardDeck->getCards();
-        $unseenCards = [];
-        $failedCards = [];
-        $passedCards = [];
+        $cards = $this->flashcardManager->getShuffledCards($flashcardDeck);
 
+        $serializedCards = [];
         foreach ($cards as $card) {
-            $userProgression = $this->om->getRepository(UserProgression::class)->findOneBy([
-                'user' => $user,
-                'flashcard' => $card,
-            ]);
-
-            if (!$userProgression) {
-                $unseenCards[] = $this->serializeCard($card);
-            } elseif (!$userProgression->isSuccessful()) {
-                $failedCards[] = $this->serializeCard($card);
-            } else {
-                $passedCards[] = $this->serializeCard($card);
-            }
+            $serializedCards[] = $this->serializeCard($card);
         }
 
-        shuffle($unseenCards);
-        shuffle($failedCards);
-        shuffle($passedCards);
-
-        return array_merge($unseenCards, $failedCards, $passedCards);
+        return $serializedCards;
     }
 
     public function serializeCard(Flashcard $flashcard): array

@@ -18,10 +18,11 @@ const Player = ({ deck, updateUserProgression, draw }) => {
   const [isFlipped, setIsFlipped] = useState(false)
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
   const currentCard = deck.cards[currentCardIndex]
+  const maxCards = draw > 0 ? Math.min(draw, deck.cards.length) : deck.cards.length
 
   const goToNextCard = () => {
-    const maxCards = draw > 0 ? Math.min(draw, deck.cards.length) : deck.cards.length
     const isLastCard = currentCardIndex + 1 === maxCards
+
     if (isLastCard && deck.end.display) {
       history.push(`${match.path}/end`)
     } else {
@@ -39,14 +40,14 @@ const Player = ({ deck, updateUserProgression, draw }) => {
 
   const renderCardContent = (contentKey) => (
     <>
-      {currentCard.question && <p className="card-element-question">{currentCard.question}</p>}
-      <ContentHtml className="card-element-content">
+      {currentCard.question && <p className="flashcard-element-question">{currentCard.question}</p>}
+      <ContentHtml className="flashcard-element-content">
         {currentCard[contentKey]}
       </ContentHtml>
     </>
   )
 
-  if (!deck.cards.length) {
+  if (!maxCards) {
     return (
       <ContentPlaceholder
         size="lg"
@@ -59,26 +60,26 @@ const Player = ({ deck, updateUserProgression, draw }) => {
     <section>
       <ProgressBar
         className="progress-minimal"
-        value={(currentCardIndex+1) / deck.cards.length * 100}
+        value={(currentCardIndex+1) / maxCards * 100}
         size="xs"
         type="learning"
       />
-      <div className="card-player">
-        <div className="card-deck">
-          <div className={`card-element card-element-0 ${isFlipped ? 'card-element-flip' : ''}`}>
-            <div className="card-element-visible">
+      <div className="flashcard-player">
+        <div className="flashcard-deck">
+          <div className={`flashcard-element flashcard-element-0 ${isFlipped ? 'flashcard-element-flip' : ''}`}>
+            <div className="flashcard-element-visible">
               {renderCardContent('visibleContent')}
             </div>
-            <div className="card-element-hidden">
+            <div className="flashcard-element-hidden">
               {renderCardContent('hiddenContent')}
             </div>
           </div>
-          { deck.cards.length > 1 && (!draw || currentCardIndex < draw - 1) && <div className="card-element card-element-1"></div> }
-          { deck.cards.length > 2 && (!draw || currentCardIndex < draw - 2) && <div className="card-element card-element-2"></div> }
+          { maxCards > 1 && (!draw || currentCardIndex < draw - 1) && <div className="flashcard-element flashcard-element-1"></div> }
+          { maxCards > 2 && (!draw || currentCardIndex < draw - 2) && <div className="flashcard-element flashcard-element-2"></div> }
         </div>
       </div>
 
-      <div className="card-buttons mt-5">
+      <div className="flashcard-buttons mt-5">
         { !isFlipped && <Button
           label={trans('show_answer', {}, 'flashcard')}
           type={CALLBACK_BUTTON}

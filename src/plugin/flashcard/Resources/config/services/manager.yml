@@ -1,0 +1,10 @@
+services:
+    Claroline\FlashcardBundle\Manager\FlashcardManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.token_storage'
+
+    Claroline\FlashcardBundle\Manager\EvaluationManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
