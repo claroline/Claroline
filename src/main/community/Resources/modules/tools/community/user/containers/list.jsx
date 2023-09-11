@@ -20,8 +20,8 @@ const UserList = connect(
     unregister(users, workspace) {
       dispatch(actions.unregister(users, workspace))
     },
-    addUsersToRoles(roles, users) {
-      roles.map(role => dispatch(actions.addUsersToRole(role, users)))
+    registerUsers(users) {
+      dispatch(actions.registerUsers(users))
     }
   })
 )(UserListComponent)
