@@ -4,14 +4,20 @@
 
 @import "../variables";
 
+.flashcards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .flashcard-preview {
-  display: inline-block;
-  width: 150px;
+  width: 300px;
   height: 200px;
   background: #fff9ec;
-  border-radius: 8px;
   margin: 10px;
-  box-shadow: 0 0 5px black;
+  justify-content: center;
+  align-items: center;
   transition: transform 0.2s;
   position: relative;
 
@@ -20,6 +26,14 @@
     top: 0;
     right: 0;
     margin: 10px;
+  }
+
+  p {
+    overflow:hidden;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 4;
   }
 
   .btn {
@@ -32,13 +46,8 @@
   transform: translateY(-5px);
 }
 
-.flashcard-header {
-  padding: 5px;
-  font-size: 16px;
-  height: 80%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.flashcard-content  {
+  font-size: 14px;
 }
 
 .flashcard-player {
