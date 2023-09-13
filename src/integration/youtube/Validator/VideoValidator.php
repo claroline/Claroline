@@ -43,7 +43,7 @@ class VideoValidator implements ValidatorInterface
     public function getUniqueFields(): array
     {
         return [
-            'videoId' => 'videoId',
+            'id' => 'uuid',
         ];
     }
 }
