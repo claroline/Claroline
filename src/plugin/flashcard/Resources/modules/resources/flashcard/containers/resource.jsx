@@ -6,7 +6,7 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security/permissions'
 
 import {FlashcardResource as FlashcardResourceComponent} from '#/plugin/flashcard/resources/flashcard/components/resource'
-import {selectors} from '#/plugin/flashcard/resources/flashcard/store'
+import {actions, selectors} from '#/plugin/flashcard/resources/flashcard/store'
 
 const FlashcardResource = withRouter(
   connect(
@@ -14,6 +14,11 @@ const FlashcardResource = withRouter(
       flashcardDeck: selectors.flashcardDeck(state),
       overview: selectors.showOverview(state),
       editable: hasPermission('edit', resourceSelectors.resourceNode(state))
+    }),
+    (dispatch) => ({
+      async refreshDeck(deckId) {
+        return dispatch(actions.refreshDeck(deckId))
+      }
     })
   )(FlashcardResourceComponent)
 )

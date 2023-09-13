@@ -8,22 +8,22 @@ import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import { ContentHtml } from '#/main/app/content/components/html'
 import { ContentPlaceholder } from '#/main/app/content/components/placeholder'
-
-import { FlashcardDeck } from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {ProgressBar} from '#/main/app/content/components/progress-bar'
 
-const Player = ({ deck, updateUserProgression, draw }) => {
+import { FlashcardDeck } from '#/plugin/flashcard/resources/flashcard/prop-types'
+
+const Player = props => {
   const history = useHistory()
   const match = useRouteMatch()
   const [isFlipped, setIsFlipped] = useState(false)
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
-  const currentCard = deck.cards[currentCardIndex]
-  const maxCards = draw > 0 ? Math.min(draw, deck.cards.length) : deck.cards.length
+  const currentCard = props.flashcardDeck.cards[currentCardIndex]
+  const maxCards = props.draw > 0 ? Math.min(props.draw, props.flashcardDeck.cards.length) : props.flashcardDeck.cards.length
 
   const goToNextCard = () => {
     const isLastCard = currentCardIndex + 1 === maxCards
 
-    if (isLastCard && deck.end.display) {
+    if (isLastCard && props.flashcardDeck.end.display) {
       history.push(`${match.path}/end`)
     } else {
       const nextIndex = isLastCard ? 0 : currentCardIndex + 1
@@ -32,7 +32,7 @@ const Player = ({ deck, updateUserProgression, draw }) => {
   }
 
   const handleAnswer = (isSuccessful) => {
-    updateUserProgression(currentCard.id, isSuccessful).then(() => {
+    props.updateProgression(currentCard.id, isSuccessful).then(() => {
       setIsFlipped(false)
       setTimeout(goToNextCard, 100)
     })
@@ -74,8 +74,8 @@ const Player = ({ deck, updateUserProgression, draw }) => {
               {renderCardContent('hiddenContent')}
             </div>
           </div>
-          { maxCards > 1 && (!draw || currentCardIndex < draw - 1) && <div className="flashcard-element flashcard-element-1"></div> }
-          { maxCards > 2 && (!draw || currentCardIndex < draw - 2) && <div className="flashcard-element flashcard-element-2"></div> }
+          { maxCards > 1 && (!props.draw || currentCardIndex < props.draw - 1) && <div className="flashcard-element flashcard-element-1"></div> }
+          { maxCards > 2 && (!props.draw || currentCardIndex < props.draw - 2) && <div className="flashcard-element flashcard-element-2"></div> }
         </div>
       </div>
 
@@ -111,11 +111,11 @@ const Player = ({ deck, updateUserProgression, draw }) => {
 }
 
 Player.propTypes = {
-  deck: T.shape(
+  flashcardDeck: T.shape(
     FlashcardDeck.propTypes
   ).isRequired,
   draw: T.number,
-  updateUserProgression: T.func.isRequired
+  updateProgression: T.func.isRequired
 }
 
 export {

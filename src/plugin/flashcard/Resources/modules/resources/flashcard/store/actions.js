@@ -1,23 +1,39 @@
 import { API_REQUEST } from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
-import {selectors} from '#/plugin/flashcard/resources/flashcard/store/selectors'
+
+import {actions as resourceActions} from '#/main/core/resource/store'
+
+export const FLASHCARD_GET_DECK = 'FLASHCARD_GET_DECK'
+export const FLASHCARD_UPDATE_PROGRESSION = 'FLASHCARD_UPDATE_PROGRESSION'
 
 export const actions = {}
 
-actions.updateProgressionProp = makeActionCreator(selectors.FLASHCARD_UPDATE_PROGRESSION, 'id', 'is_successful')
+actions.updateCardProgression = makeActionCreator(FLASHCARD_UPDATE_PROGRESSION, 'id', 'is_successful')
+actions.refreshDeckAction = makeActionCreator(FLASHCARD_GET_DECK, 'data')
 
-actions.updateUserProgression = (cardId, isSuccessful) => (dispatch) => dispatch({
+actions.updateProgression = (cardId, isSuccessful, silent = true) => ({
   [API_REQUEST]: {
-    silent: true,
-    url: ['apiv2_flashcard_progression_update', {
-      id: cardId,
-      isSuccessful: isSuccessful
-    } ],
+    silent: silent,
+    url: ['apiv2_flashcard_progression_update', {id: cardId, isSuccessful: isSuccessful}],
     request: {
       method: 'PUT'
     },
     success: (data, dispatch) => {
-      dispatch(actions.updateProgressionProp(cardId, isSuccessful))
+      dispatch(resourceActions.updateUserEvaluation(data.userEvaluation))
+      dispatch(actions.updateCardProgression(cardId, isSuccessful))
+    }
+  }
+})
+
+actions.refreshDeck = (deckId, silent = true) => ({
+  [API_REQUEST]: {
+    silent: silent,
+    url: ['apiv2_flashcard_deck_get', {id: deckId}],
+    request: {
+      method: 'GET'
+    },
+    success: (data, dispatch) => {
+      dispatch(actions.refreshDeckAction(data))
     }
   }
 })

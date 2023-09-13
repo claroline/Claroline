@@ -5,8 +5,8 @@ import get from 'lodash/get'
 
 import {ResourceEnd} from '#/main/core/resource/components/end'
 
-import {selectors as baseSelectors} from '#/plugin/flashcard/resources/flashcard/store'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {selectors} from '#/plugin/flashcard/resources/flashcard/store'
 import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {FlashcardInfo} from '#/plugin/flashcard/resources/flashcard/components/info'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
@@ -21,7 +21,8 @@ class PlayerEndComponent extends Component {
       >
         <section className="resource-parameters mb-3">
           <FlashcardInfo
-            flashcard={this.props.flashcard}
+            flashcardDeck={this.props.flashcardDeck}
+            flashcardDeckProgression={this.props.flashcardDeckProgression}
           />
         </section>
       </ResourceEnd>
@@ -38,13 +39,17 @@ PlayerEndComponent.propTypes = {
   ).isRequired,
   evaluation: T.shape(
     ResourceEvaluationTypes.propTypes
-  )
+  ),
+  flashcardDeckProgression: T.shape(
+    FlashcardDeckTypes.propTypes
+  ).isRequired
 }
 
 const PlayerEnd = connect(
   (state) => ({
-    flashcardDeck: baseSelectors.flashcardDeck(state),
-    evaluation: resourceSelectors.resourceEvaluation(state)
+    flashcardDeck: selectors.flashcardDeck(state),
+    evaluation: resourceSelectors.resourceEvaluation(state),
+    flashcardDeckProgression: selectors.flashcardDeckProgression(state)
   })
 )(PlayerEndComponent)
 

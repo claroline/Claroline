@@ -2,6 +2,7 @@
 
 namespace Claroline\FlashcardBundle\Controller;
 
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\FlashcardBundle\Entity\Flashcard;
@@ -67,8 +68,11 @@ class FlashcardDeckController extends AbstractCrudController
 
         $this->evaluationManager->update($card->getDeck()->getResourceNode(), $user, $userProgression);
 
+        $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($card->getDeck()->getResourceNode(), $user);
+
         return new JsonResponse([
             'progression' => $this->userProgressionSerializer->serialize($userProgression),
+            'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
         ]);
     }
 }

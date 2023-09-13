@@ -38,7 +38,10 @@ const FlashcardResource = props =>
       }, {
         path: '/play',
         exact: true,
-        component: Player
+        component: Player,
+        onEnter: () => {
+          props.refreshDeck(props.flashcardDeck.id)
+        }
       }, {
         path: '/',
         component: Overview,
@@ -46,14 +49,23 @@ const FlashcardResource = props =>
       }
     ]}
     redirect={[
-      {from: '/', exact: true, to: '/play', disabled: props.overview}
+      {
+        from: '/',
+        exact: true,
+        to: '/play',
+        disabled: props.overview
+      }
     ]}
   />
 
 FlashcardResource.propTypes = {
   path: T.string.isRequired,
   editable: T.bool.isRequired,
-  overview: T.bool.isRequired
+  overview: T.bool.isRequired,
+  refreshDeck: T.func,
+  flashcardDeck: T.shape({
+    id: T.string
+  })
 }
 
 export {

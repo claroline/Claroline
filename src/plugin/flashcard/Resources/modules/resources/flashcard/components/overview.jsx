@@ -9,11 +9,11 @@ import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/r
 import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {FlashcardInfo} from '#/plugin/flashcard/resources/flashcard/components/info'
 
-const Overview = (props) => {
-  console.log(props)
-  return <ResourceOverview
+const Overview = (props) =>
+  <ResourceOverview
     contentText={get(props.flashcardDeck, 'overview.message')}
     evaluation={props.evaluation}
+    resourceNode={props.resourceNode}
     actions={[{
       type: LINK_BUTTON,
       label: trans('start', {}, 'actions'),
@@ -33,7 +33,6 @@ const Overview = (props) => {
       </div>
     </section>
   </ResourceOverview>
-}
 
 Overview.propTypes = {
   basePath: T.string.isRequired,
@@ -43,7 +42,8 @@ Overview.propTypes = {
   evaluation: T.shape(
     ResourceEvaluationTypes.propTypes
   ),
-  empty: T.bool.isRequired
+  empty: T.bool.isRequired,
+  resourceNode: T.object
 }
 
 Overview.defaultProps = {

@@ -163,8 +163,6 @@ const Editor = connect(
   }),
   (dispatch) => ({
     update(prop, value) {
-      console.log(prop)
-      console.log(value)
       dispatch(formActions.updateProp(selectors.FORM_NAME, prop, value))
     }
   })

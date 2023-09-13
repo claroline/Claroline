@@ -8,11 +8,17 @@ import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
 import {selectors} from '#/plugin/flashcard/resources/flashcard/store/selectors'
 import {selectors as editorSelectors, reducer as editorReducer} from '#/plugin/flashcard/resources/flashcard/editor/store'
+import {FLASHCARD_GET_DECK, FLASHCARD_UPDATE_PROGRESSION} from '#/plugin/flashcard/resources/flashcard/store/actions'
 
 const reducer = combineReducers(Object.assign({
   data: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData || state,
-    [selectors.FLASHCARD_UPDATE_PROGRESSION]: (state, action) => {
+    [FLASHCARD_GET_DECK] : (state, action) => {
+      const newState = cloneDeep(state)
+      newState.flashcardDeck = action.data
+      return newState
+    },
+    [FLASHCARD_UPDATE_PROGRESSION]: (state, action) => {
       const newState = cloneDeep(state)
       const cardProgression = newState.flashcardDeckProgression.filter((data) => data.flashcard.id === action.id)[0]
       if (cardProgression) {

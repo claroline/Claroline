@@ -2,7 +2,6 @@ import {createSelector} from 'reselect'
 import get from 'lodash/get'
 
 const STORE_NAME = 'flashcard'
-const FLASHCARD_UPDATE_PROGRESSION = 'FLASHCARD_UPDATE_PROGRESSION'
 
 const resource = (state) => state[STORE_NAME]
 
@@ -36,16 +35,6 @@ const empty = createSelector(
   (cards) => 0 === cards.length
 )
 
-const display = createSelector(
-  [flashcardDeck],
-  (flashcardDeck) => flashcardDeck.display || {}
-)
-
-const overviewMessage = createSelector(
-  [display],
-  (display) => display.description
-)
-
 const showOverview = createSelector(
   [flashcardDeck],
   (flashcardDeck) => get(flashcardDeck, 'overview.display') || false
@@ -58,7 +47,6 @@ const showEndPage = createSelector(
 
 export const selectors = {
   STORE_NAME,
-  FLASHCARD_UPDATE_PROGRESSION,
 
   resource,
   flashcardDeck,
@@ -67,7 +55,6 @@ export const selectors = {
   cards,
   draw,
   empty,
-  overviewMessage,
   showOverview,
   showEndPage
 }
