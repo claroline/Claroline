@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {Routes} from '#/main/app/router'
 
@@ -18,23 +19,35 @@ const CatalogDetails = (props) =>
     {props.course &&
       <Routes
         path={route(props.course)}
-        redirect={[
-          {from: '/', exact: true, to: '/'+get(props.defaultSession, 'id'), disabled: !props.defaultSession}
-        ]}
         routes={[
           {
             path: '/:id?',
-            onEnter: (params = {}) => props.openSession(params.id && !['sessions', 'participants', 'pending', 'events'].includes(params.id) ? params.id : null),
+            onEnter: (params = {}) => {
+              if (params.id && !['sessions', 'participants', 'pending', 'events'].includes(params.id)) {
+                props.openSession(params.id)
+              } else {
+                props.openSession(get(props.defaultSession, 'id') || null)
+              }
+            },
             render: (routerProps) => (
               <CourseDetails
-                path={props.path+'/catalog/'+props.course.slug+'/'+(routerProps.match.params.id && !['sessions', 'participants', 'pending', 'events'].includes(routerProps.match.params.id) ? routerProps.match.params.id : '')}
+                path={route(props.course)+'/'+(routerProps.match.params.id && !['sessions', 'participants', 'pending', 'events'].includes(routerProps.match.params.id) ? routerProps.match.params.id : '')}
                 course={props.course}
                 activeSession={props.activeSession}
-                activeSessionRegistration={props.activeSessionRegistration}
                 availableSessions={props.availableSessions}
-                courseRegistration={props.courseRegistration}
+                registrations={props.registrations}
                 participantsView={props.participantsView}
                 switchParticipantsView={props.switchParticipantsView}
+                reload={props.reload}
+                register={(course, sessionId = null, registrationData = null) => {
+                  props.register(course, sessionId, registrationData).then(() => {
+                    props.reload(course.slug)
+
+                    if (!isEmpty(sessionId)) {
+                      props.history.push(route(course, {id: sessionId}))
+                    }
+                  })
+                }}
               />
             )
           }
@@ -45,6 +58,9 @@ const CatalogDetails = (props) =>
 
 CatalogDetails.propTypes = {
   path: T.string.isRequired,
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
   course: T.shape(
     CourseTypes.propTypes
   ),
@@ -57,13 +73,16 @@ CatalogDetails.propTypes = {
   availableSessions: T.arrayOf(T.shape(
     SessionTypes.propTypes
   )),
-  activeSessionRegistration: T.shape({
-    // TODO : propTypes
+  registrations: T.shape({
+    users: T.array.isRequired,
+    groups: T.array.isRequired,
+    pending: T.array.isRequired
   }),
-  courseRegistration: T.shape({}),
   participantsView: T.string.isRequired,
   switchParticipantsView: T.func.isRequired,
-  openSession: T.func.isRequired
+  openSession: T.func.isRequired,
+  reload: T.func.isRequired,
+  register: T.func.isRequired
 }
 
 export {

@@ -1,5 +1,4 @@
 import {createSelector} from 'reselect'
-import isEmpty from 'lodash/isEmpty'
 
 const STORE_NAME = 'trainingCatalog'
 const LIST_NAME = STORE_NAME + '.courses'
@@ -32,35 +31,6 @@ const activeSession = createSelector(
   (catalog) => catalog.courseActiveSession
 )
 
-const activeSessionRegistration = createSelector(
-  [activeSession, sessionRegistrations],
-  (activeSession, sessionRegistrations) => {
-    let activeRegistration = null
-    if (activeSession) {
-      if (sessionRegistrations.users) {
-        activeRegistration = sessionRegistrations.users.find(registration => activeSession.id === registration.session.id)
-      }
-
-      if (!activeRegistration && sessionRegistrations.groups) {
-        activeRegistration = sessionRegistrations.groups.find(registration => activeSession.id === registration.session.id)
-      }
-    }
-
-    return activeRegistration
-  }
-)
-
-const courseRegistration = createSelector(
-  [sessionRegistrations],
-  (sessionRegistrations) => {
-    if (!isEmpty(sessionRegistrations.pending)) {
-      return sessionRegistrations.pending[0]
-    }
-
-    return null
-  }
-)
-
 const courseStats = createSelector(
   [catalog],
   (catalog) => catalog.courseStats
@@ -81,8 +51,6 @@ export const selectors = {
   defaultSession,
   availableSessions,
   sessionRegistrations,
-  activeSessionRegistration,
-  courseRegistration,
   courseStats,
   participantsView
 }

@@ -83,7 +83,7 @@ class SessionManager
         $this->sessionGroupRepo = $om->getRepository(SessionGroup::class);
     }
 
-    public function setDefaultSession(Course $course, ?Session $session = null): void
+    public function setDefaultSession(Course $course, Session $session = null): void
     {
         /** @var Session[] $defaultSessions */
         $defaultSessions = $this->sessionRepo->findBy(['course' => $course, 'defaultSession' => true]);
@@ -170,7 +170,7 @@ class SessionManager
                     'type' => $type,
                     'validated' => $validated,
                     'data' => !empty($registrationData[$user->getUuid()]) ? $registrationData[$user->getUuid()] : [],
-                ]);
+                ], [Crud::THROW_EXCEPTION]);
             }
 
             $results[] = $sessionUser;
@@ -304,7 +304,7 @@ class SessionManager
     /**
      * Gets/generates workspace role for session depending on given role name and type.
      */
-    public function generateRoleForSession(Workspace $workspace, ?Role $courseRole = null, ?string $type = 'learner'): Role
+    public function generateRoleForSession(Workspace $workspace, Role $courseRole = null, ?string $type = 'learner'): Role
     {
         if (empty($courseRole)) {
             if ('manager' === $type) {
