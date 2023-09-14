@@ -14,15 +14,9 @@ import {route} from '#/plugin/cursus/routing'
 import {MODAL_SESSION_FORM} from '#/plugin/cursus/session/modals/parameters'
 import {SessionList} from '#/plugin/cursus/session/components/list'
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
-import {getInfo, isRegistered, isFull} from '#/plugin/cursus/utils'
+import {getInfo, isRegistered, isFull, canSelfRegister} from '#/plugin/cursus/utils'
 import {MODAL_COURSE_REGISTRATION} from '#/plugin/cursus/course/modals/registration'
-
-function canSelfRegister(course, session, registrations) {
-  return getInfo(course, session, 'registration.selfRegistration')
-    && !getInfo(course, session, 'registration.autoRegistration')
-    && !isRegistered(session, registrations)
-    && (getInfo(course, session, 'registration.pendingRegistrations') || !isFull(session))
-}
+import {withRouter} from 'react-router-dom'
 
 const CourseSessions = (props) =>
   <Fragment>
@@ -145,6 +139,8 @@ CourseSessions.propTypes = {
   register: T.func.isRequired
 }
 
+const RoutedCourseSessions = withRouter(CourseSessions)
+
 export {
-  CourseSessions
+  RoutedCourseSessions as CourseSessions
 }

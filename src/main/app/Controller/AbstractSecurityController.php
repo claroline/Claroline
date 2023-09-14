@@ -12,9 +12,6 @@ abstract class AbstractSecurityController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
     /** @var ObjectManager */
     private $om;
 

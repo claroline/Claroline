@@ -258,9 +258,8 @@ actions.register = (course, sessionId = null, registrationData = null) => ({
       ['apiv2_cursus_course_self_register', {id: course.id}],
     request: {
       method: 'PUT',
-      body: JSON.stringify(registrationData)
-    },
-    success: (response, dispatch) => dispatch(actions.open(course.slug, true))
+      body: registrationData ? JSON.stringify(registrationData) : null
+    }
   }
 })
 

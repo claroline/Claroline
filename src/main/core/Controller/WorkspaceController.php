@@ -89,9 +89,10 @@ class WorkspaceController
 
     /**
      * @Route("/{slug}", name="claro_workspace_open")
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function openAction(string $slug, ?User $user = null): JsonResponse
+    public function openAction(string $slug, User $user = null): JsonResponse
     {
         /** @var Workspace $workspace */
         $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['slug' => $slug]);
@@ -143,9 +144,10 @@ class WorkspaceController
                 'tools' => array_values(array_map(function (OrderedTool $orderedTool) {
                     return $this->serializer->serialize($orderedTool, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $this->toolManager->getOrderedToolsByWorkspace($workspace))),
+                // do not expose root resource here (used in the WS to configure opening target)
                 'root' => $this->serializer->serialize($this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]), [SerializerInterface::SERIALIZE_MINIMAL]),
                 // TODO : only export current user shortcuts (we get all roles for the configuration in community/editor)
-                //'shortcuts' => $this->manager->getShortcuts($workspace, $this->tokenStorage->getToken()->getRoleNames()),
+                // 'shortcuts' => $this->manager->getShortcuts($workspace, $this->tokenStorage->getToken()->getRoleNames()),
                 'shortcuts' => array_values(array_map(function (Shortcuts $shortcuts) {
                     return $this->serializer->serialize($shortcuts);
                 }, $workspace->getShortcuts()->toArray())),
@@ -173,6 +175,7 @@ class WorkspaceController
      * Opens a tool.
      *
      * @Route("/{id}/tool/{toolName}", name="claro_workspace_open_tool")
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"id": "uuid"}})
      */
     public function openToolAction(Workspace $workspace, string $toolName): JsonResponse
@@ -216,6 +219,7 @@ class WorkspaceController
      * Submit access code.
      *
      * @Route("/unlock/{id}", name="claro_workspace_unlock", methods={"POST"})
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"id": "uuid"}})
      */
     public function unlockAction(Workspace $workspace, Request $request): JsonResponse

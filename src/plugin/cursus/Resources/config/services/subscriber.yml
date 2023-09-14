@@ -6,6 +6,15 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    Claroline\CursusBundle\Subscriber\WorkspaceSubscriber:
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CursusBundle\Manager\CourseManager'
+        tags:
+            - { name: kernel.event_subscriber }
+
     Claroline\CursusBundle\Subscriber\Crud\CourseSubscriber:
         arguments:
             - '@event_dispatcher'

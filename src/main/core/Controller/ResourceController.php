@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
-use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -44,22 +43,13 @@ class ResourceController
 {
     use RequestDecoderTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ResourceManager */
-    private $manager;
-    /** @var ResourceActionManager */
-    private $actionManager;
-    /** @var ResourceRestrictionsManager */
-    private $restrictionsManager;
-    /** @var ObjectManager */
-    private $om;
-    /** @var RoutingHelper */
-    private $routing;
+    private TokenStorageInterface $tokenStorage;
+    private AuthorizationCheckerInterface $authorization;
+    private SerializerProvider $serializer;
+    private ResourceManager $manager;
+    private ResourceActionManager $actionManager;
+    private ResourceRestrictionsManager $restrictionsManager;
+    private ObjectManager $om;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -68,8 +58,7 @@ class ResourceController
         ResourceActionManager $actionManager,
         ResourceRestrictionsManager $restrictionsManager,
         ObjectManager $om,
-        AuthorizationCheckerInterface $authorization,
-        RoutingHelper $routing
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->serializer = $serializer;
@@ -78,7 +67,6 @@ class ResourceController
         $this->restrictionsManager = $restrictionsManager;
         $this->om = $om;
         $this->authorization = $authorization;
-        $this->routing = $routing;
     }
 
     /**
@@ -187,6 +175,7 @@ class ResourceController
      * Submit access code.
      *
      * @Route("/unlock/{id}", name="claro_resource_unlock", methods={"POST"})
+     *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
     public function unlockAction(ResourceNode $resourceNode, Request $request): JsonResponse
@@ -240,6 +229,7 @@ class ResourceController
      * Executes an action on one resource.
      *
      * @Route("/{action}/{id}", name="claro_resource_action")
+     *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"id": "uuid"}})
      */
     public function executeAction(string $action, ResourceNode $resourceNode, Request $request): Response

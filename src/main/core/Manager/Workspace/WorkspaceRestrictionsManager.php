@@ -4,11 +4,13 @@ namespace Claroline\CoreBundle\Manager\Workspace;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\WorkspaceEvents;
+use Claroline\CoreBundle\Event\Workspace\AccessRestrictedWorkspaceEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * WorkspaceRestrictionsManager.
@@ -19,29 +21,13 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class WorkspaceRestrictionsManager
 {
-    /** @var RequestStack */
-    private $requestStack;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-    /** @var WorkspaceUserQueueManager */
-    private $workspaceUserQueueManager;
-
     public function __construct(
-        RequestStack $requestStack,
-        TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorization,
-        WorkspaceManager $workspaceManager,
-        WorkspaceUserQueueManager $workspaceUserQueueManager
+        private EventDispatcherInterface $dispatcher,
+        private RequestStack $requestStack,
+        private TokenStorageInterface $tokenStorage,
+        private WorkspaceManager $workspaceManager,
+        private WorkspaceUserQueueManager $workspaceUserQueueManager
     ) {
-        $this->requestStack = $requestStack;
-        $this->tokenStorage = $tokenStorage;
-        $this->authorization = $authorization;
-        $this->workspaceManager = $workspaceManager;
-        $this->workspaceUserQueueManager = $workspaceUserQueueManager;
     }
 
     /**
@@ -91,7 +77,10 @@ class WorkspaceRestrictionsManager
                 $errors['invalidLocation'] = !$this->isIpAuthorized($workspace);
             }
 
-            return $errors;
+            $event = new AccessRestrictedWorkspaceEvent($workspace, $errors);
+            $this->dispatcher->dispatch($event, WorkspaceEvents::ACCESS_RESTRICTED);
+
+            return $event->getErrors();
         }
 
         return [];
@@ -102,7 +91,7 @@ class WorkspaceRestrictionsManager
      */
     public function hasRights(Workspace $workspace): bool
     {
-        // we don't simply call the auth checker because it will checks all the restrictions (eg. dates, code)
+        // we don't simply call the auth checker because it will check all the restrictions (e.g. dates, code)
         // not only the user rights
         return $this->workspaceManager->hasAccess($workspace, $this->tokenStorage->getToken());
     }
@@ -187,7 +176,7 @@ class WorkspaceRestrictionsManager
      *
      * @throws InvalidDataException - If the submitted code is incorrect
      */
-    public function unlock(Workspace $workspace, string $code = null)
+    public function unlock(Workspace $workspace, string $code = null): void
     {
         $accessCode = $workspace->getAccessCode();
         if ($accessCode) {

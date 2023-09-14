@@ -154,7 +154,7 @@ const RolePermissions = props =>
       <td className="delete-cell">
         {props.deletable &&
           <Button
-            className="btn btn-link"
+            variant="btn-text"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}

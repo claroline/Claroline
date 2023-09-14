@@ -39,5 +39,11 @@ registry.add('ClarolineCursusBundle', {
       'export-pdf': () => { return import(/* webpackChunkName: "training-action-course-export-pdf" */ '#/plugin/cursus/actions/course/export-pdf') },
       'delete'    : () => { return import(/* webpackChunkName: "training-action-course-delete" */     '#/plugin/cursus/actions/course/delete') }
     }
+  },
+
+  restrictions: {
+    workspace: {
+      'training': () => { return import(/* webpackChunkName: "training-restriction-workspace" */     '#/plugin/cursus/workspace/restriction') }
+    }
   }
 })

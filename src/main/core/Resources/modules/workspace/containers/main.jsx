@@ -16,7 +16,7 @@ const WorkspaceMain = withRouter(
   withReducer(selectors.STORE_NAME, reducer)(
     connect(
       (state) => ({
-        authenticated: securitySelectors.isAuthenticated(state),
+        currentUser: securitySelectors.currentUser(state),
         loaded: selectors.loaded(state),
         notFound: selectors.notFound(state),
         managed: selectors.managed(state),

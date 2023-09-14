@@ -64,18 +64,16 @@ class WorkspaceMain extends Component {
     }
 
     if (!isEmpty(this.props.accessErrors)) {
-      const workspace = this.props.workspace
-
       return (
         <WorkspaceRestrictions
           errors={this.props.accessErrors}
           dismiss={this.props.dismissRestrictions}
-          authenticated={this.props.authenticated}
+          currentUser={this.props.currentUser}
           managed={this.props.managed}
           workspace={this.props.workspace}
-          checkAccessCode={(code) => this.props.checkAccessCode(workspace, code)}
+          checkAccessCode={(code) => this.props.checkAccessCode(this.props.workspace, code)}
           platformSelfRegistration={this.props.platformSelfRegistration}
-          selfRegister={() => this.props.selfRegister(workspace)}
+          selfRegister={() => this.props.selfRegister(this.props.workspace)}
         />
       )
     }
@@ -117,7 +115,7 @@ WorkspaceMain.propTypes = {
   }).isRequired,
   loaded: T.bool.isRequired,
   notFound: T.bool.isRequired,
-  authenticated: T.bool.isRequired,
+  currentUser: T.object,
   managed: T.bool.isRequired,
   workspace: T.shape(
     WorkspaceTypes.propTypes
