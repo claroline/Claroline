@@ -11,13 +11,19 @@ const CatalogDetails = withRouter(connect(
   (state) => ({
     path: toolSelectors.path(state),
     course: selectors.course(state),
+    defaultSession: selectors.defaultSession(state),
     activeSession: selectors.activeSession(state),
-    activeSessionRegistration: selectors.activeSessionRegistration(state),
-    courseRegistration: selectors.courseRegistration(state),
+    registrations: selectors.sessionRegistrations(state),
     availableSessions: selectors.availableSessions(state),
     participantsView: selectors.participantsView(state)
   }),
   (dispatch) => ({
+    reload(courseSlug) {
+      return dispatch(actions.open(courseSlug, true))
+    },
+    register(course, sessionId = null, registrationData = null) {
+      return dispatch(actions.register(course, sessionId, registrationData))
+    },
     openSession(sessionId) {
       dispatch(actions.openSession(sessionId))
     },

@@ -24,7 +24,6 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Registration\CourseUser;
-use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Manager\CourseManager;
@@ -117,6 +116,7 @@ class CourseController extends AbstractCrudController
 
     /**
      * @Route("/{slug}/open", name="apiv2_cursus_course_open", methods={"GET"})
+     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"slug": "slug"}})
      */
     public function openAction(Course $course): JsonResponse
@@ -129,62 +129,32 @@ class CourseController extends AbstractCrudController
         $user = $this->tokenStorage->getToken()->getUser();
         $registrations = [];
         if ($user instanceof User) {
-            $registeredSessions = [];
-            $userRegistrations = $this->finder->fetch(SessionUser::class, [
-                'user' => $user->getUuid(),
-                'course' => $course->getUuid(),
-            ]);
+            $registrations = $this->manager->getRegistrations($course, $user);
 
-            $groupRegistrations = $this->finder->fetch(SessionGroup::class, [
-                'user' => $user->getUuid(),
-                'course' => $course->getUuid(),
-            ]);
-
-            $courseRegistrations = $this->finder->fetch(CourseUser::class, [
-                'user' => $user->getUuid(),
-                'course' => $course->getUuid(),
-            ]);
-
-            $registrations = [
-                'users' => array_map(function (SessionUser $sessionUser) use (&$registeredSessions) {
-                    $registeredSessions[] = $sessionUser->getSession();
-
-                    return $this->serializer->serialize($sessionUser);
-                }, $userRegistrations),
-                'groups' => array_map(function (SessionGroup $sessionGroup) use (&$registeredSessions) {
-                    $registeredSessions[] = $sessionGroup->getSession();
-
-                    return $this->serializer->serialize($sessionGroup);
-                }, $groupRegistrations),
-                'pending' => array_map(function (CourseUser $courseUser) {
-                    return $this->serializer->serialize($courseUser);
-                }, $courseRegistrations),
-            ];
-
-            if (!empty($registeredSessions)) {
-                // by default display one of the session the user is registered to
-                $defaultSession = $this->serializer->serialize($registeredSessions[0]);
+            // by default display one of the session the user is registered to
+            if (!empty($registrations['users'])) {
+                $defaultSession = $this->om->getRepository(Session::class)->findOneBy([
+                    'uuid' => $registrations['users'][0]['session']['id'],
+                ]);
+            } elseif (!empty($registrations['groups'])) {
+                $defaultSession = $this->om->getRepository(Session::class)->findOneBy([
+                    'uuid' => $registrations['groups'][0]['session']['id'],
+                ]);
             }
         }
 
-        $sessions = $this->finder->search(Session::class, [
-            'filters' => [
-                'terminated' => false,
-                'course' => $course->getUuid(),
-            ],
-            'sortBy' => 'startDate',
-        ]);
+        $sessions = $this->om->getRepository(Session::class)->findAvailable($course);
 
         if (empty($defaultSession)) {
             // current user is not registered to any session yet
             // get the default session to open
             switch ($course->getSessionOpening()) {
                 case 'default':
-                    $defaultSession = $this->serializer->serialize($course->getDefaultSession());
+                    $defaultSession = $course->getDefaultSession();
                     break;
                 case 'first_available':
-                    if (!empty($sessions['data'])) {
-                        $defaultSession = $sessions['data'][0];
+                    if (!empty($sessions)) {
+                        $defaultSession = $sessions[0];
                     }
                     break;
             }
@@ -192,14 +162,17 @@ class CourseController extends AbstractCrudController
 
         return new JsonResponse([
             'course' => $this->serializer->serialize($course),
-            'defaultSession' => $defaultSession,
-            'availableSessions' => $sessions['data'],
+            'defaultSession' => $defaultSession ? $this->serializer->serialize($defaultSession) : null,
+            'availableSessions' => array_map(function (Session $session) {
+                return $this->serializer->serialize($session);
+            }, $sessions),
             'registrations' => $registrations,
         ]);
     }
 
     /**
      * @Route("/{id}/pdf", name="apiv2_cursus_course_download_pdf", methods={"GET"})
+     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
     public function downloadPdfAction(Course $course, Request $request): StreamedResponse
@@ -218,6 +191,7 @@ class CourseController extends AbstractCrudController
 
     /**
      * @Route("/{id}/sessions", name="apiv2_cursus_course_list_sessions", methods={"GET"})
+     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
     public function listSessionsAction(Course $course, Request $request): JsonResponse
@@ -243,6 +217,7 @@ class CourseController extends AbstractCrudController
 
     /**
      * @Route("/{id}/users", name="apiv2_cursus_course_add_pending", methods={"PATCH"})
+     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
     public function addPendingAction(Course $course, Request $request): JsonResponse
@@ -260,6 +235,7 @@ class CourseController extends AbstractCrudController
 
     /**
      * @Route("/{id}/move/users", name="apiv2_cursus_course_move_pending", methods={"PUT"})
+     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
     public function movePendingAction(Course $course, Request $request): JsonResponse
@@ -293,6 +269,7 @@ class CourseController extends AbstractCrudController
 
     /**
      * @Route("/{id}/move/pending", name="apiv2_cursus_course_move_to_pending", methods={"PUT"})
+     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
     public function moveToPendingAction(Course $course, Request $request): JsonResponse
@@ -322,6 +299,7 @@ class CourseController extends AbstractCrudController
 
     /**
      * @Route("/{id}/self/register", name="apiv2_cursus_course_self_register", methods={"PUT"})
+     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
@@ -344,6 +322,7 @@ class CourseController extends AbstractCrudController
 
     /**
      * @Route("/{id}/stats", name="apiv2_cursus_course_stats", methods={"GET"})
+     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
     public function getStatsAction(Course $course): JsonResponse

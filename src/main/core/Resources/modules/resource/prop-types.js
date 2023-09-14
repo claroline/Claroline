@@ -1,6 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
-import {User} from '#/main/community/prop-types'
+import {User} from '#/main/community/user/prop-types'
 
 const ResourceType = {
   propTypes: {

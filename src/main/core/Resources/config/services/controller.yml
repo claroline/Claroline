@@ -109,8 +109,6 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@messenger.default_bus'
             - '@Claroline\CoreBundle\Manager\RoleManager'
-            - '@Claroline\CoreBundle\Manager\ResourceManager'
-            - '@translator'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\LogConnectManager'
             - '@Claroline\AppBundle\Manager\File\TempFileManager'
@@ -210,7 +208,6 @@ services:
             - '@Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Library\RoutingHelper'
 
     Claroline\CoreBundle\Controller\SearchController:
         arguments:

@@ -12,6 +12,8 @@
 namespace Claroline\CursusBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Session;
@@ -31,6 +33,58 @@ class CourseRepository extends EntityRepository
             ->getResult();
     }
 
+    public function isFullyRegistered(Course $course, User $user): bool
+    {
+        $dql = '
+            SELECT COUNT(DISTINCT c) as count
+            FROM Claroline\CursusBundle\Entity\Course AS c
+            WHERE c = :course AND (EXISTS (
+              SELECT su.id
+              FROM Claroline\CursusBundle\Entity\Registration\SessionUser AS su
+              LEFT JOIN su.session AS s
+              WHERE s.course = c
+                AND su.user = :user
+                AND su.validated = 1
+                AND su.confirmed = 1
+            )
+            OR EXISTS (
+              SELECT sg.id
+              FROM Claroline\CursusBundle\Entity\Registration\SessionGroup AS sg
+              LEFT JOIN sg.group AS g
+              LEFT JOIN g.users AS gu
+              LEFT JOIN sg.session AS s2
+              WHERE s2.course = c
+                AND gu = :user
+            ))
+        ';
+
+        $query = $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameters([
+                'course' => $course,
+                'user' => $user,
+            ]);
+
+        return 0 < (int) $query->getSingleScalarResult();
+    }
+
+    public function findByWorkspace(Workspace $workspace)
+    {
+        $dql = '
+            SELECT DISTINCT c
+            FROM Claroline\CursusBundle\Entity\Course AS c
+            LEFT JOIN c.sessions AS s
+            WHERE c.workspace = :workspace
+               OR s.workspace = :workspace
+        ';
+
+        $query = $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('workspace', $workspace);
+
+        return $query->getResult() ?? [];
+    }
+
     public function countParticipants(Course $course): array
     {
         return [
@@ -40,7 +94,7 @@ class CourseRepository extends EntityRepository
         ];
     }
 
-    public function getRegistrationStats(Course $course, ?Session $session = null): array
+    public function getRegistrationStats(Course $course, Session $session = null): array
     {
         // count the total participants
         $total = $this->countUsers($course, AbstractRegistration::LEARNER, $session);
@@ -76,7 +130,7 @@ class CourseRepository extends EntityRepository
         return $stats;
     }
 
-    private function getRegistrationFieldStats(FieldFacet $field, Course $course, ?Session $session = null): array
+    private function getRegistrationFieldStats(FieldFacet $field, Course $course, Session $session = null): array
     {
         $dql = '
             SELECT COUNT(ffv) as count, ffv.value
@@ -162,7 +216,7 @@ class CourseRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    private function countUsers(Course $course, string $type, ?Session $session = null): int
+    private function countUsers(Course $course, string $type, Session $session = null): int
     {
         $dql = '
             SELECT COUNT(su) as count

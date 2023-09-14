@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Session;
 use Doctrine\ORM\EntityRepository;
@@ -27,6 +28,25 @@ class SessionRepository extends EntityRepository
             ')
             ->setParameters([
                 'workspace' => $workspace,
+            ])
+            ->getResult();
+    }
+
+    /**
+     * Finds all the Sessions which are not ended for a given Course.
+     */
+    public function findAvailable(Course $course)
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT s 
+                FROM Claroline\CursusBundle\Entity\Session AS s
+                WHERE s.course = :course
+                  AND (s.endDate IS NULL OR s.endDate >= :endDate)
+            ')
+            ->setParameters([
+                'course' => $course,
+                'endDate' => new \DateTime(),
             ])
             ->getResult();
     }

@@ -29,7 +29,6 @@ class FileController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    private $authorization;
     private $manager;
 
     public function __construct(
