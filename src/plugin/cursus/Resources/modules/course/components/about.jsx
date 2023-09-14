@@ -6,26 +6,23 @@ import isEmpty from 'lodash/isEmpty'
 import {trans, displayDate, now} from '#/main/app/intl'
 import {param} from '#/main/app/config'
 import {currency} from '#/main/app/intl/currency'
-import {hasPermission} from '#/main/app/security'
 import {Alert} from '#/main/app/alert/components/alert'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Button, Toolbar} from '#/main/app/action'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, POPOVER_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, POPOVER_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
 import {LocationCard} from '#/main/core/data/types/location/components/card'
 import {ResourceCard} from '#/main/core/resource/components/card'
-import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {route as resourceRoute} from '#/main/core/resource/routing'
 
 import {route} from '#/plugin/cursus/routing'
-import {getInfo, isFullyRegistered, isFull} from '#/plugin/cursus/utils'
+import {getInfo, isFullyRegistered, isFull, getSessionRegistration, getCourseRegistration} from '#/plugin/cursus/utils'
 import {constants} from '#/plugin/cursus/constants'
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 import {CourseCard} from '#/plugin/cursus/course/components/card'
 import {SessionCard} from '#/plugin/cursus/session/components/card'
-import {MODAL_COURSE_REGISTRATION} from '#/plugin/cursus/course/modals/registration'
 
 const CurrentRegistration = (props) => {
   let registrationTitle = trans('session_registration_pending', {}, 'cursus')
@@ -64,19 +61,11 @@ CurrentRegistration.propTypes = {
 }
 
 const CourseAbout = (props) => {
+  const activeSessionRegistration = props.activeSession ? getSessionRegistration(props.activeSession, props.registrations) : null
+  const courseRegistration = getCourseRegistration(props.registrations)
+
   const availableSessions = props.availableSessions
     .filter(session => (!props.activeSession || props.activeSession.id !== session.id) && !get(session, 'restrictions.hidden'))
-
-  const registered = !isEmpty(props.activeSessionRegistration) || !isEmpty(props.courseRegistration)
-  let selfRegistration = !registered
-    && (!isEmpty(props.activeSession) || !isEmpty(props.availableSessions) || get(props.course, 'registration.pendingRegistrations'))
-
-
-  if (props.activeSession) {
-    selfRegistration = selfRegistration && getInfo(props.course, props.activeSession, 'registration.selfRegistration')
-      && !getInfo(props.course, props.activeSession, 'registration.autoRegistration')
-      && (getInfo(props.course, props.activeSession, 'registration.pendingRegistrations') || !isFull(props.activeSession))
-  }
 
   return (
     <div className="row mt-3">
@@ -176,65 +165,14 @@ const CourseAbout = (props) => {
         }
 
         <section>
-          {!isFullyRegistered(props.activeSessionRegistration) && !getInfo(props.course, props.activeSession, 'registration.selfRegistration') &&
+          {!isFullyRegistered(activeSessionRegistration) && !getInfo(props.course, props.activeSession, 'registration.selfRegistration') &&
             <Alert type="warning" >{trans('registration_requires_manager', {}, 'cursus')}</Alert>
           }
 
           <Toolbar
             className="d-grid gap-1 mb-3"
             variant="btn"
-            actions={[
-              {
-                name: 'self-register',
-                type: MODAL_BUTTON,
-                label: trans(!isEmpty(props.activeSession) && isFull(props.activeSession) ? 'register_waiting_list' : 'self_register', {}, 'actions'),
-                modal: [MODAL_COURSE_REGISTRATION, {
-                  course: props.course,
-                  session: props.activeSession,
-                  available: props.availableSessions,
-                  register: (course, sessionId = null, registrationData = null) => {
-                    props.register(course, sessionId, registrationData).then(() => {
-                      if (!isEmpty(sessionId)) {
-                        props.history.push(route(course, {id: sessionId}))
-                      }
-                    })
-                  }
-                }],
-                primary: true,
-                size: 'lg',
-                displayed: selfRegistration
-              }, {
-                name: 'open',
-                size: 'lg',
-                type: CALLBACK_BUTTON,
-                label: trans('open-training', {}, 'actions'),
-                callback: () => {
-                  const workspaceUrl = workspaceRoute(getInfo(props.course, props.activeSession, 'workspace'))
-                  if (get(props.activeSession, 'registration.autoRegistration') && !isFullyRegistered(props.activeSessionRegistration)) {
-                    props.register(props.course, props.activeSession.id).then(() => props.history.push(workspaceUrl))
-                  } else {
-                    props.history.push(workspaceUrl)
-                  }
-                },
-                displayed: (isFullyRegistered(props.activeSessionRegistration)
-                  || get(props.activeSession, 'registration.autoRegistration')
-                  || hasPermission('edit', props.course)
-                ) && !isEmpty(getInfo(props.course, props.activeSession, 'workspace')),
-                primary: isFullyRegistered(props.activeSessionRegistration)
-              }, {
-                name: 'show-sessions',
-                type: LINK_BUTTON,
-                label: trans('show_sessions', {}, 'actions'),
-                target: props.path+'/sessions',
-                displayed: isEmpty(props.activeSession) && !get(props.course, 'display.hideSessions')
-              }, {
-                name: 'show-events',
-                type: LINK_BUTTON,
-                label: trans('show_training_events', {}, 'actions'),
-                target: props.path+'/events',
-                displayed: !isEmpty(props.activeSession)
-              }
-            ]}
+            actions={props.actions}
           />
         </section>
       </div>
@@ -294,7 +232,7 @@ const CourseAbout = (props) => {
           </div>
         }
 
-        {props.courseRegistration &&
+        {courseRegistration &&
           <AlertBlock
             type="warning"
             title={trans('course_registration_pending', {}, 'cursus')}
@@ -303,14 +241,14 @@ const CourseAbout = (props) => {
           </AlertBlock>
         }
 
-        {props.activeSessionRegistration &&
+        {activeSessionRegistration &&
           <CurrentRegistration
             sessionFull={isFull(props.activeSession)}
-            registration={props.activeSessionRegistration}
+            registration={activeSessionRegistration}
           />
         }
 
-        {!props.activeSessionRegistration && isFull(props.activeSession) &&
+        {!activeSessionRegistration && isFull(props.activeSession) &&
           <AlertBlock type="warning" title={trans('session_full', {}, 'cursus')}>
             {trans('session_full_help', {}, 'cursus')}
           </AlertBlock>
@@ -361,7 +299,7 @@ const CourseAbout = (props) => {
         {get(props.activeSession, 'resources', []).map((resource, index) =>
           <ResourceCard
             key={resource.id}
-            style={{marginBottom: index === props.activeSession.resources.length - 1 ? 20 : 5}}
+            className={index === props.activeSession.resources.length - 1 ? 'mb-3' : 'mb-1'}
             orientation="row"
             size="xs"
             data={resource}
@@ -383,7 +321,7 @@ const CourseAbout = (props) => {
 
         {props.course.parent &&
           <CourseCard
-            style={{marginBottom: 20}}
+            className="mb-3"
             orientation="row"
             size="xs"
             data={props.course.parent}
@@ -405,7 +343,7 @@ const CourseAbout = (props) => {
         {props.course.children.map((child, index) =>
           <CourseCard
             key={child.id}
-            style={{marginBottom: index === props.course.children.length - 1 ? 20 : 5}}
+            className={index === props.course.children.length - 1 ? 'mb-3' : 'mb-1'}
             orientation="row"
             size="xs"
             data={child}
@@ -427,7 +365,7 @@ const CourseAbout = (props) => {
             {availableSessions.map((session, index) =>
               <SessionCard
                 key={session.id}
-                style={{marginBottom: index === availableSessions.length - 1 ? 20 : 5}}
+                className={index === availableSessions.length - 1 ? 'mb-3' : 'mb-1'}
                 orientation="row"
                 size="xs"
                 data={session}
@@ -445,24 +383,21 @@ const CourseAbout = (props) => {
 }
 
 CourseAbout.propTypes = {
-  path: T.string.isRequired,
   course: T.shape(
     CourseTypes.propTypes
   ).isRequired,
   activeSession: T.shape(
     SessionTypes.propTypes
   ),
-  activeSessionRegistration: T.shape({
-
-  }),
-  courseRegistration: T.shape({}),
   availableSessions: T.arrayOf(T.shape(
     SessionTypes.propTypes
   )),
-  register: T.func.isRequired,
-  history: T.shape({
-    push: T.func.isRequired
-  }).isRequired
+  registrations: T.shape({
+    users: T.array.isRequired,
+    groups: T.array.isRequired,
+    pending: T.array.isRequired
+  }),
+  actions: T.array
 }
 
 export {

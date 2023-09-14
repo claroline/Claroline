@@ -1,6 +1,8 @@
-import React, {Component} from 'react'
+import React, {Component, createElement, useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import isUndefined from 'lodash/isUndefined'
 
 import {trans, displayDate} from '#/main/app/intl'
@@ -18,9 +20,9 @@ import {MODAL_REGISTRATION} from '#/main/app/modals/registration'
 import {constants as toolConstants} from '#/main/core/tool/constants'
 import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
-import get from 'lodash/get'
+import {getRestrictions} from '#/main/core/workspace/utils'
 
-class WorkspaceRestrictions extends Component {
+class StandardRestrictions extends Component {
   constructor(props) {
     super(props)
 
@@ -43,17 +45,13 @@ class WorkspaceRestrictions extends Component {
   }
 
   render() {
-    const displayAuthenticationBtn =!this.props.authenticated
-    const displayWsRegistrationBtn = this.props.authenticated && !this.props.errors.archived && this.props.errors.selfRegistration
-    const displayPlatformRegistrationBtn = !this.props.authenticated && !this.props.errors.archived && this.props.platformSelfRegistration && this.props.errors.selfRegistration
+    const authenticated = !isEmpty(this.props.currentUser)
+    const displayAuthenticationBtn = !authenticated
+    const displayWsRegistrationBtn = authenticated && !this.props.errors.archived && this.props.errors.selfRegistration
+    const displayPlatformRegistrationBtn = !authenticated && !this.props.errors.archived && this.props.platformSelfRegistration && this.props.errors.selfRegistration
 
     return (
-      <PageFull
-        showBreadcrumb={showToolBreadcrumb(toolConstants.TOOL_WORKSPACE, this.props.workspace)}
-        path={getToolBreadcrumb(null, toolConstants.TOOL_WORKSPACE, this.props.workspace)}
-        title={this.props.workspace.name}
-        poster={this.props.workspace.poster ? this.props.workspace.poster : undefined}
-      >
+      <>
         <div className="content-md mt-3">
           {get(this.props.workspace, 'meta.description') &&
             <div className="card mb-3">
@@ -72,13 +70,13 @@ class WorkspaceRestrictions extends Component {
               success={{
                 title: classes({
                   [trans('restricted_workspace.you_are_manager', {}, 'workspace')]: this.props.managed,
-                  [trans('restricted_workspace.can_access', {}, 'workspace')]: !this.props.managed && this.props.authenticated,
-                  [trans('restricted_workspace.anonymous_can_access', {}, 'workspace')]: !this.props.managed && !this.props.authenticated
+                  [trans('restricted_workspace.can_access', {}, 'workspace')]: !this.props.managed && authenticated,
+                  [trans('restricted_workspace.anonymous_can_access', {}, 'workspace')]: !this.props.managed && !authenticated
                 }),
                 help: classes({
                   [trans('restricted_workspace.manager_rights_access', {}, 'workspace')]: this.props.managed,
-                  [trans('restricted_workspace.rights_access', {}, 'workspace')]: !this.props.managed && this.props.authenticated,
-                  [trans('restricted_workspace.anonymous_rights_access', {}, 'workspace')]: !this.props.managed && !this.props.authenticated
+                  [trans('restricted_workspace.rights_access', {}, 'workspace')]: !this.props.managed && authenticated,
+                  [trans('restricted_workspace.anonymous_rights_access', {}, 'workspace')]: !this.props.managed && !authenticated
                 })
               }}
               fail={{
@@ -129,7 +127,7 @@ class WorkspaceRestrictions extends Component {
                     />
                   }
 
-                  {!this.props.authenticated && !this.props.errors.archived && this.props.errors.selfRegistration &&
+                  {!authenticated && !this.props.errors.archived && this.props.errors.selfRegistration &&
                     <small className="text-secondary">{trans('restricted_workspace.login_help', {}, 'workspace')}</small>
                   }
                 </div>
@@ -271,13 +269,46 @@ class WorkspaceRestrictions extends Component {
             </>
           }
         </div>
-      </PageFull>
+      </>
     )
   }
 }
 
+const WorkspaceRestrictions = (props) => {
+  const [restrictions, setRestrictions] = useState(undefined)
+
+  useEffect(() => {
+    getRestrictions(props.workspace, props.errors, props.managed).then((pluginRestrictions) => {
+      setRestrictions(pluginRestrictions)
+    })
+  }, [props.workspace.id])
+
+  return (
+    <PageFull
+      showBreadcrumb={showToolBreadcrumb(toolConstants.TOOL_WORKSPACE, props.workspace)}
+      path={getToolBreadcrumb(null, toolConstants.TOOL_WORKSPACE, props.workspace)}
+      title={props.workspace.name}
+      poster={props.workspace.poster ? props.workspace.poster : undefined}
+    >
+      {!isUndefined(restrictions) && 0 !== restrictions.length &&
+        createElement(restrictions[0].component, {
+          workspace: props.workspace,
+          errors: props.errors,
+          managed: props.managed,
+          currentUser: props.currentUser,
+          dismiss: props.dismiss
+        })
+      }
+
+      {!isUndefined(restrictions) && 0 === restrictions.length &&
+        <StandardRestrictions {...props} />
+      }
+    </PageFull>
+  )
+}
+
 WorkspaceRestrictions.propTypes = {
-  authenticated: T.bool.isRequired,
+  currentUser: T.object,
   managed: T.bool.isRequired,
   errors: T.shape({
     noRights: T.bool.isRequired,

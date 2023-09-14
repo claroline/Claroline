@@ -19,7 +19,6 @@ use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
-use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -28,7 +27,6 @@ use Claroline\CoreBundle\Event\CatalogEvents\WorkspaceEvents;
 use Claroline\CoreBundle\Event\Workspace\CloseWorkspaceEvent;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\LogConnectManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Messenger\Message\CopyWorkspace;
@@ -43,38 +41,23 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/workspace")
  */
 class WorkspaceController extends AbstractCrudController
 {
-    use HasGroupsTrait;
+    use HasGroupsTrait; // to remove : only the list endpoint is used
     use HasRolesTrait;
-    use HasUsersTrait;
     use PermissionCheckerTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var MessageBusInterface */
-    private $messageBus;
-    /** @var RoleManager */
-    private $roleManager;
-    /** @var ResourceManager */
-    private $resourceManager;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-    /** @var LogConnectManager */
-    private $logConnectManager;
-    /** @var TempFileManager */
-    private $tempManager;
+    private TokenStorageInterface $tokenStorage;
+    private StrictDispatcher $dispatcher;
+    private MessageBusInterface $messageBus;
+    private RoleManager $roleManager;
+    private WorkspaceManager $workspaceManager;
+    private LogConnectManager $logConnectManager;
+    private TempFileManager $tempManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -82,8 +65,6 @@ class WorkspaceController extends AbstractCrudController
         StrictDispatcher $dispatcher,
         MessageBusInterface $messageBus,
         RoleManager $roleManager,
-        ResourceManager $resourceManager,
-        TranslatorInterface $translator,
         WorkspaceManager $workspaceManager,
         LogConnectManager $logConnectManager,
         TempFileManager $tempManager
@@ -93,8 +74,6 @@ class WorkspaceController extends AbstractCrudController
         $this->dispatcher = $dispatcher;
         $this->messageBus = $messageBus;
         $this->roleManager = $roleManager;
-        $this->resourceManager = $resourceManager;
-        $this->translator = $translator;
         $this->workspaceManager = $workspaceManager;
         $this->logConnectManager = $logConnectManager;
         $this->tempManager = $tempManager;
@@ -120,6 +99,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
+     *
      * @Route("/list/registerable", name="apiv2_workspace_list_registerable", methods={"GET"})
      */
     public function listRegisterableAction(Request $request): JsonResponse
@@ -145,6 +125,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
+     *
      * @Route("/list/registered", name="apiv2_workspace_list_registered", methods={"GET"})
      */
     public function listRegisteredAction(Request $request): JsonResponse
@@ -171,6 +152,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
+     *
      * @Route("/list/administrated", name="apiv2_workspace_list_managed", methods={"GET"})
      */
     public function listManagedAction(Request $request): JsonResponse
@@ -178,7 +160,7 @@ class WorkspaceController extends AbstractCrudController
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         return new JsonResponse($this->finder->search(
-            Workspace:: class,
+            Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'administrated' => true,
                 'model' => false,
@@ -197,6 +179,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
+     *
      * @Route("/list/model", name="apiv2_workspace_list_model", methods={"GET"})
      */
     public function listModelAction(Request $request): JsonResponse
@@ -204,7 +187,7 @@ class WorkspaceController extends AbstractCrudController
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         return new JsonResponse($this->finder->search(
-            Workspace:: class,
+            Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'model' => true,
             ])]),
@@ -222,6 +205,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
      *     }
      * )
+     *
      * @Route("/list/archived", name="apiv2_workspace_list_archive", methods={"GET"})
      */
     public function listArchivedAction(Request $request): JsonResponse
@@ -229,7 +213,7 @@ class WorkspaceController extends AbstractCrudController
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
         return new JsonResponse($this->finder->search(
-            Workspace:: class,
+            Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'administrated' => true,
                 'archived' => true,
@@ -302,7 +286,9 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
      *     }
      * )
+     *
      * @Route("/{id}/export", name="apiv2_workspace_export", methods={"GET"})
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
     public function exportAction(Workspace $workspace): BinaryFileResponse
@@ -326,6 +312,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
      *     }
      * )
+     *
      * @Route("/archive", name="apiv2_workspace_archive", methods={"PUT"})
      */
     public function archiveBulkAction(Request $request): JsonResponse
@@ -356,6 +343,7 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "ids", "type": "array", "description": "the list of workspace uuids."}
      *     }
      * )
+     *
      * @Route("/unarchive", name="apiv2_workspace_unarchive", methods={"PUT"})
      */
     public function unarchiveBulkAction(Request $request): JsonResponse
@@ -380,31 +368,38 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
-     * @ApiDoc(
-     *     description="The manager list of a workspace.",
-     *     queryString={
-     *         "$finder=Claroline\CoreBundle\Entity\User&!role",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     },
-     *     parameters={
-     *         {"name": "id", "type": {"string", "integer"},  "description": "The workspace id or uuid"}
-     *     }
-     * )
-     * @Route("/{id}/managers", name="apiv2_workspace_list_managers", methods={"GET"})
+     * @Route("/{id}/users", name="apiv2_workspace_list_users", methods={"GET"})
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      */
-    public function listManagersAction(Workspace $workspace, Request $request): JsonResponse
+    public function listUsersAction(Workspace $workspace, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $workspace, [], true);
 
-        $role = $this->roleManager->getManagerRole($workspace);
+        $workspaceRoles = $this->roleManager->getWorkspaceRoles($workspace);
+        $hiddenFilters = [
+            'roles' => array_map(function (Role $role) {
+                return $role->getUuid();
+            }, $workspaceRoles),
+        ];
 
-        return new JsonResponse($this->finder->search(
-            User::class,
-            array_merge($request->query->all(), ['hiddenFilters' => ['role' => $role->getUuid()]])
-        ));
+        if (!$this->checkPermission('ROLE_ADMIN')) {
+            $hiddenFilters['organizations'] = [];
+
+            $currentUser = $this->tokenStorage->getToken()->getUser();
+            if ($currentUser instanceof User) {
+                // only list users for the current user organizations
+                $hiddenFilters['organizations'] = array_map(function (Organization $organization) {
+                    return $organization->getUuid();
+                }, $currentUser->getOrganizations());
+            }
+        }
+
+        return new JsonResponse(
+            $this->crud->list(User::class, array_merge($request->query->all(), [
+                'hiddenFilters' => $hiddenFilters,
+            ]))
+        );
     }
 
     /**
@@ -414,7 +409,10 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
      *     }
      * )
+     *
      * @Route("/roles/common", name="apiv2_workspace_roles_common", methods={"GET"})
+     *
+     * @deprecated
      */
     public function getCommonRolesAction(Request $request): JsonResponse
     {
@@ -459,7 +457,9 @@ class WorkspaceController extends AbstractCrudController
      *         {"name": "id", "type": {"string"}, "description": "The workspace uuid"}
      *     }
      * )
+     *
      * @Route("/{slug}/close", name="apiv2_workspace_close", methods={"PUT"})
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"slug": "slug"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */

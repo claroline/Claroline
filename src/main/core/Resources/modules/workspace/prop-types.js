@@ -1,7 +1,7 @@
 import {PropTypes as T} from 'prop-types'
 
 import {ResourceNode} from '#/main/core/resource/prop-types'
-import {User} from '#/main/community/prop-types'
+import {User} from '#/main/community/user/prop-types'
 
 const Workspace = {
   propTypes: {

@@ -12,13 +12,16 @@
 namespace Claroline\CursusBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\CourseUser;
+use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -29,6 +32,7 @@ class CourseManager
     private ObjectManager $om;
     private Crud $crud;
     private SerializerProvider $serializer;
+    private FinderProvider $finder;
     private PlatformManager $platformManager;
     private TemplateManager $templateManager;
     private SessionManager $sessionManager;
@@ -40,6 +44,7 @@ class CourseManager
         ObjectManager $om,
         Crud $crud,
         SerializerProvider $serializer,
+        FinderProvider $finder,
         PlatformManager $platformManager,
         TemplateManager $templateManager,
         SessionManager $sessionManager
@@ -47,6 +52,7 @@ class CourseManager
         $this->om = $om;
         $this->translator = $translator;
         $this->crud = $crud;
+        $this->finder = $finder;
         $this->serializer = $serializer;
         $this->platformManager = $platformManager;
         $this->templateManager = $templateManager;
@@ -70,6 +76,36 @@ class CourseManager
         return $this->templateManager->getTemplate('training_course', $placeholders, $locale);
     }
 
+    public function getRegistrations(Course $course, User $user): array
+    {
+        $userRegistrations = $this->finder->fetch(SessionUser::class, [
+            'user' => $user->getUuid(),
+            'course' => $course->getUuid(),
+        ]);
+
+        $groupRegistrations = $this->finder->fetch(SessionGroup::class, [
+            'user' => $user->getUuid(),
+            'course' => $course->getUuid(),
+        ]);
+
+        $courseRegistrations = $this->finder->fetch(CourseUser::class, [
+            'user' => $user->getUuid(),
+            'course' => $course->getUuid(),
+        ]);
+
+        return [
+            'users' => array_map(function (SessionUser $sessionUser) {
+                return $this->serializer->serialize($sessionUser);
+            }, $userRegistrations),
+            'groups' => array_map(function (SessionGroup $sessionGroup) use (&$registeredSessions) {
+                return $this->serializer->serialize($sessionGroup);
+            }, $groupRegistrations),
+            'pending' => array_map(function (CourseUser $courseUser) {
+                return $this->serializer->serialize($courseUser);
+            }, $courseRegistrations),
+        ];
+    }
+
     public function addUsers(Course $course, array $users, array $registrationData = []): array
     {
         $results = [];
@@ -87,7 +123,7 @@ class CourseManager
                 $this->crud->create($courseUser, [
                     'type' => AbstractRegistration::LEARNER,
                     'data' => !empty($registrationData[$user->getUuid()]) ? $registrationData[$user->getUuid()] : [],
-                ]);
+                ], [Crud::THROW_EXCEPTION]);
             }
 
             $results[] = $courseUser;

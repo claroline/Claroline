@@ -29,8 +29,6 @@ class TextController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
     /** @var PlaceholderManager */
     private $placeholderManager;
     /** @var PdfManager */
@@ -63,6 +61,7 @@ class TextController extends AbstractCrudController
 
     /**
      * @Route("/{id}/pdf", name="apiv2_resource_text_download_pdf", methods={"GET"})
+     *
      * @EXT\ParamConverter("text", class="Claroline\CoreBundle\Entity\Resource\Text", options={"mapping": {"id": "uuid"}})
      */
     public function downloadPdfAction(Text $text): StreamedResponse
