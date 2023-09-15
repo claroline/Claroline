@@ -1,10 +1,9 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {ContentTitle} from '#/main/app/content/components/title'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {actions as formActions} from '#/main/app/content/form/store'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -17,82 +16,90 @@ import {selectors} from '#/plugin/flashcard/resources/flashcard/editor/store'
 import {selectors as baseSelectors} from '#/plugin/flashcard/resources/flashcard/store/selectors'
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {MODAL_CARD} from '#/plugin/flashcard/resources/flashcard/editor/modals/card'
-import {Cards} from '#/plugin/flashcard/resources/flashcard/components/cards'
+import {Cards} from '#/plugin/flashcard/resources/flashcard/editor/components/cards'
 
 const EditorComponent = props =>
-  <Fragment>
-    <ContentTitle
-      level={3}
-      displayLevel={2}
-      title={trans('parameters')}
-    />
-
-    <FormData
-      level={2}
-      name={selectors.FORM_NAME}
-      buttons={true}
-      target={() => ['apiv2_flashcard_deck_update', {id: props.flashcardDeck.id}]}
-      cancel={{
-        type: LINK_BUTTON,
-        target: props.path,
-        exact: true
-      }}
-      definition={[{
+  <FormData
+    level={2}
+    className="mt-2"
+    title={trans('parameters')}
+    name={selectors.FORM_NAME}
+    buttons={true}
+    target={() => ['apiv2_flashcard_deck_update', {id: props.flashcardDeck.id}]}
+    cancel={{
+      type: LINK_BUTTON,
+      target: props.path,
+      exact: true
+    }}
+    definition={[
+      {
         icon: 'fa fa-fw fa-home',
         title: trans('overview'),
-        fields: [{
-          name: 'overview.display',
-          type: 'boolean',
-          label: trans('enable_overview'),
-          linked: [{
-            name: 'overview.message',
-            type: 'html',
-            label: trans('overview_message'),
-            displayed: (flashcardDeck) => get(flashcardDeck, 'overview.display')
-          }]
-        }]
+        fields: [
+          {
+            name: 'overview.display',
+            type: 'boolean',
+            label: trans('enable_overview'),
+            linked: [
+              {
+                name: 'overview.message',
+                type: 'html',
+                label: trans('overview_message'),
+                displayed: (flashcardDeck) => get(flashcardDeck, 'overview.display')
+              }
+            ]
+          }
+        ]
       }, {
         icon: 'fa fa-fw fa-dice-d20',
         title: trans('flashcard_options', {}, 'flashcard'),
-        fields: [{
-          name: 'draw',
-          type: 'number',
-          label: trans('draw_options', {}, 'flashcard'),
-          help: trans('options_desc', {}, 'flashcard'),
-          options: {
-            min: 1,
-            max: props.cards.length
+        fields: [
+          {
+            name: 'draw',
+            type: 'number',
+            label: trans('draw_options', {}, 'flashcard'),
+            help: trans('options_desc', {}, 'flashcard'),
+            options: {
+              min: 1,
+              max: props.cards.length
+            }
           }
-        }]
+        ]
       }, {
         icon: 'fa fa-fw fa-flag-checkered',
         title: trans('end_page'),
-        fields: [{
-          name: 'end.display',
-          type: 'boolean',
-          label: trans('show_end_page'),
-          linked: [{
-            name: 'end.message',
-            type: 'html',
-            label: trans('end_message'),
-            displayed: (flashcardDeck) => get(flashcardDeck, 'end.display')
-          }]
-        }]
-      }]}
-    >
-      {0 === props.cards.length &&
-        <ContentPlaceholder
-          className={'flashcard-empty'}
-          size="lg"
-          icon="fa fa-image"
-          title={trans('no_card', {}, 'flashcard')}
-        />
+        fields: [
+          {
+            name: 'end.display',
+            type: 'boolean',
+            label: trans('show_end_page'),
+            linked: [
+              {
+                name: 'end.message',
+                type: 'html',
+                label: trans('end_message'),
+                displayed: (flashcardDeck) => get(flashcardDeck, 'end.display')
+              }
+            ]
+          }
+        ]
       }
+    ]}
+  >
+    {0 === props.cards.length &&
+      <ContentPlaceholder
+        className={'flashcard-empty'}
+        size="lg"
+        icon="fa fa-image"
+        title={trans('no_card', {}, 'flashcard')}
+      />
+    }
 
-      {0 !== props.cards.length &&
-        <Cards
-          cards={props.cards}
-          actions={(card) => [{
+    {0 !== props.cards.length &&
+      <Cards
+        cards={props.cards}
+        actions={(card) => [
+          {
             name: 'configure',
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-cog',
@@ -128,21 +135,22 @@ const EditorComponent = props =>
               message: trans('card_delete_message', {}, 'flashcard'),
               button: trans('delete', {}, 'actions')
             }
-          }]}
-        />}
-
-      <Button
-        className="btn btn-primary w-100"
-        type={MODAL_BUTTON}
-        primary={true}
-        size="lg"
-        label={trans('add_card', {}, 'flashcard')}
-        modal={[MODAL_CARD, {
-          save: (card) => props.update('cards', [].concat(props.cards, [card]))
-        }]}
+          }
+        ]}
       />
-    </FormData>
-  </Fragment>
+    }
+
+    <Button
+      className="btn btn-primary w-100"
+      type={MODAL_BUTTON}
+      primary={true}
+      size="lg"
+      label={trans('add_card', {}, 'flashcard')}
+      modal={[MODAL_CARD, {
+        save: (card) => props.update('cards', [].concat(props.cards, [card]))
+      }]}
+    />
+  </FormData>
 
 EditorComponent.propTypes = {
   path: T.string,
@@ -152,7 +160,10 @@ EditorComponent.propTypes = {
   flashcardDeck: T.shape({
     id: T.string.isRequired
   }).isRequired,
-  update: T.func
+  update: T.func.isRequired
+}
+EditorComponent.defaultProps = {
+  cards: []
 }
 
 const Editor = connect(

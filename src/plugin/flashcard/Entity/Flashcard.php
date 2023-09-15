@@ -28,9 +28,19 @@ class Flashcard
     private string $visibleContent;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private string $visibleContentType;
+
+    /**
      * @ORM\Column(type="text")
      */
     private string $hiddenContent;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private string $hiddenContentType;
 
     /**
      * @ORM\ManyToOne(targetEntity="FlashcardDeck", inversedBy="cards")
@@ -73,6 +83,18 @@ class Flashcard
         return $this;
     }
 
+    public function getVisibleContentType(): string
+    {
+        return $this->visibleContentType;
+    }
+
+    public function setVisibleContentType(string $visibleContentType): self
+    {
+        $this->visibleContentType = $visibleContentType;
+
+        return $this;
+    }
+
     public function getHiddenContent(): string
     {
         return $this->hiddenContent;
@@ -81,6 +103,18 @@ class Flashcard
     public function setHiddenContent(string $hiddenContent): self
     {
         $this->hiddenContent = $hiddenContent;
+
+        return $this;
+    }
+
+    public function getHiddenContentType(): string
+    {
+        return $this->hiddenContentType;
+    }
+
+    public function setHiddenContentType(string $hiddenContentType): self
+    {
+        $this->hiddenContentType = $hiddenContentType;
 
         return $this;
     }

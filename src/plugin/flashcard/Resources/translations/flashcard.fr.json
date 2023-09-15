@@ -13,7 +13,9 @@
   "card_delete_message": "Êtes-vous sûr de vouloir supprimer cette carte ?",
 
   "question": "Question",
+  "visible_content_type": "Type de contenu pour la face visible",
   "visible_content": "Face visible",
+  "hidden_content_type": "Type de contenu pour la face cachée",
   "hidden_content": "Face cachée",
   "show_answer": "Retourner la carte",
   "right_answer": "Je sais",

@@ -30,12 +30,15 @@ const CardModal = props =>
         props.reset(Object.assign({}, CardTypes.defaultProps, {id: makeId()}), true)
       }
     }}
+    onExiting={() => {
+      props.reset(Object.assign({}, CardTypes.defaultProps, {id: makeId()}), true)
+    }}
   >
     <div className="modal-body">
       <FormData
         level={5}
         name={selectors.STORE_NAME}
-        sections={[
+        definition={[
           {
             icon: 'fa fa-fw fa-circle-info',
             title: trans('information'),
@@ -45,15 +48,120 @@ const CardModal = props =>
                 label: trans('question', {}, 'flashcard'),
                 type: 'string'
               }, {
-                name: 'visibleContent',
-                label: trans('visible_content', {}, 'flashcard'),
-                type: 'html',
-                required: true
+                name: 'visibleContentType',
+                label: trans('visible_content_type', {}, 'flashcard'),
+                type: 'choice',
+                required: true,
+                onChange: (newType) => {
+                  if(!props.card)
+                    return
+                  const newCard = JSON.parse(JSON.stringify(props.card))
+                  newCard.visibleContentType = newType
+                  newCard.visibleContent = newType === 'text' ? '' : null
+                  props.reset(newCard)
+                },
+                options: {
+                  condensed: true,
+                  choices: {
+                    text: trans('text'),
+                    image: trans('image'),
+                    video: trans('video'),
+                    audio: trans('audio')
+                  }
+                },
+                linked: [
+                  {
+                    name: 'visibleContent',
+                    type: 'file',
+                    label: trans('file'),
+                    hideLabel: true,
+                    displayed: (card) => -1 !== ['image'].indexOf(card.visibleContentType),
+                    options: {
+                      types: ['image/*']
+                    }
+                  }, {
+                    name: 'visibleContent',
+                    type: 'file',
+                    label: trans('file'),
+                    hideLabel: true,
+                    displayed: (card) => -1 !== ['video'].indexOf(card.visibleContentType),
+                    options: {
+                      types: ['video/*']
+                    }
+                  }, {
+                    name: 'visibleContent',
+                    type: 'file',
+                    label: trans('file'),
+                    hideLabel: true,
+                    displayed: (card) => -1 !== ['audio'].indexOf(card.visibleContentType),
+                    options: {
+                      types: ['audio/*']
+                    }
+                  }, {
+                    name: 'visibleContent',
+                    label: trans('visible_content', {}, 'flashcard'),
+                    type: 'html',
+                    displayed: (card) => -1 !== ['text'].indexOf(card.visibleContentType)
+                  }
+                ]
               }, {
-                name: 'hiddenContent',
-                label: trans('hidden_content', {}, 'flashcard'),
-                type: 'html',
-                required: true
+                name: 'hiddenContentType',
+                label: trans('hidden_content_type', {}, 'flashcard'),
+                type: 'choice',
+                required: true,
+                onChange: (newType) => {
+                  if(!props.card)
+                    return
+                  const newCard = JSON.parse(JSON.stringify(props.card))
+                  newCard.hiddenContentType = newType
+                  newCard.hiddenContent = newType === 'text' ? '' : null
+                  props.reset(newCard)
+                },
+                options: {
+                  condensed: true,
+                  choices: {
+                    text: trans('text'),
+                    image: trans('image'),
+                    video: trans('video'),
+                    audio: trans('audio')
+                  }
+                },
+                linked: [
+                  {
+                    name: 'hiddenContent',
+                    type: 'file',
+                    label: trans('file'),
+                    hideLabel: true,
+                    displayed: (card) => -1 !== ['image'].indexOf(card.hiddenContentType),
+                    options: {
+                      types: ['image/*']
+                    }
+                  }, {
+                    name: 'hiddenContent',
+                    type: 'file',
+                    label: trans('file'),
+                    hideLabel: true,
+                    displayed: (card) => -1 !== ['video'].indexOf(card.hiddenContentType),
+                    options: {
+                      types: ['video/*']
+                    }
+                  }, {
+                    name: 'hiddenContent',
+                    type: 'file',
+                    label: trans('file'),
+                    hideLabel: true,
+                    displayed: (card) => -1 !== ['audio'].indexOf(card.hiddenContentType),
+                    options: {
+                      types: ['audio/*']
+                    }
+                  }, {
+                    name: 'hiddenContent',
+                    label: trans('hidden_content', {}, 'flashcard'),
+                    type: 'html',
+                    displayed: (card) => -1 !== ['text'].indexOf(card.hiddenContentType),
+                    required: true
+                  }
+                ]
               }
             ]
           }
@@ -82,7 +190,6 @@ CardModal.propTypes = {
   ),
   isNew: T.bool.isRequired,
   saveEnabled: T.bool.isRequired,
-
   formData: T.shape(
     CardTypes.propTypes
   ).isRequired,

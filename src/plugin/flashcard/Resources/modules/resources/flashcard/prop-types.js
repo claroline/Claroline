@@ -3,9 +3,7 @@ import {PropTypes as T} from 'prop-types'
 const Card = {
   propTypes: {
     id: T.string.isRequired,
-    question: T.string,
-    visibleContent: T.string,
-    hiddenContent: T.string
+    question: T.string
   },
   defaultProps: {
     children: []

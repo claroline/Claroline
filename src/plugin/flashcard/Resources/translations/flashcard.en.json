@@ -13,7 +13,9 @@
   "card_delete_message": "Are you sure you want to delete this card ?",
 
   "question": "Question",
+  "visible_content_type": "Visible content type",
   "visible_content": "Visible content",
+  "hidden_content_type": "Hidden content type",
   "hidden_content": "Hidden content",
   "show_answer": "Flip the card",
   "right_answer": "I know",

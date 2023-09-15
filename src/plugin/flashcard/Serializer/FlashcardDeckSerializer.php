@@ -78,8 +78,10 @@ class FlashcardDeckSerializer
         return [
             'id' => $flashcard->getUuid(),
             'question' => $flashcard->getQuestion(),
-            'visibleContent' => $flashcard->getVisibleContent(),
-            'hiddenContent' => $flashcard->getHiddenContent(),
+            'visibleContent' => 'text' !== $flashcard->getVisibleContentType() ? json_decode($flashcard->getVisibleContent()) : $flashcard->getVisibleContent(),
+            'hiddenContent' => 'text' !== $flashcard->getHiddenContentType() ? json_decode($flashcard->getHiddenContent()) : $flashcard->getHiddenContent(),
+            'visibleContentType' => $flashcard->getVisibleContentType(),
+            'hiddenContentType' => $flashcard->getHiddenContentType(),
         ];
     }
 
@@ -115,8 +117,24 @@ class FlashcardDeckSerializer
             $card = $flashcardDeck->getCardByUuid($cardData['id']) ?? new Flashcard();
 
             $this->sipe('question', 'setQuestion', $cardData, $card);
-            $this->sipe('visibleContent', 'setVisibleContent', $cardData, $card);
-            $this->sipe('hiddenContent', 'setHiddenContent', $cardData, $card);
+
+            $cardData['visibleContentType'] = $cardData['visibleContentType'] ?? 'text';
+            $cardData['visibleContentType'] = '' != $cardData['visibleContentType'] ? $cardData['visibleContentType'] : 'text';
+            if ('string' !== gettype($cardData['visibleContent'])) {
+                $card->setVisibleContent(json_encode($cardData['visibleContent']));
+            } else {
+                $this->sipe('visibleContent', 'setVisibleContent', $cardData, $card);
+            }
+            $card->setVisibleContentType($cardData['visibleContentType']);
+
+            $cardData['hiddenContentType'] = $cardData['hiddenContentType'] ?? 'text';
+            $cardData['hiddenContentType'] = '' != $cardData['hiddenContentType'] ? $cardData['hiddenContentType'] : 'text';
+            if ('string' !== gettype($cardData['hiddenContent'])) {
+                $card->setHiddenContent(json_encode($cardData['hiddenContent']));
+            } else {
+                $this->sipe('hiddenContent', 'setHiddenContent', $cardData, $card);
+            }
+            $card->setHiddenContentType($cardData['hiddenContentType']);
 
             if (!$flashcardDeck->hasCard($card)) {
                 $flashcardDeck->addCard($card);

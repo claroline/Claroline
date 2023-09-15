@@ -3,6 +3,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom'
 import { PropTypes as T } from 'prop-types'
 
 import { trans } from '#/main/app/intl/translation'
+import {asset} from '#/main/app/config'
 import {Button} from '#/main/app/action/components/button'
 import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -40,10 +41,27 @@ const Player = props => {
 
   const renderCardContent = (contentKey) => (
     <>
-      {currentCard.question && <p className="flashcard-element-question">{currentCard.question}</p>}
-      <ContentHtml className="flashcard-element-content">
-        {currentCard[contentKey]}
-      </ContentHtml>
+      {currentCard.question &&
+        <p className="flashcard-element-question">{currentCard.question}</p>
+      }
+      <div className="flashcard-element-content">
+        { currentCard[contentKey+'Type'] === 'text' &&
+          <ContentHtml>{currentCard[contentKey]}</ContentHtml>
+        }
+        { currentCard[contentKey+'Type'] === 'image' &&
+          <img src={asset(currentCard[contentKey].url)} alt={currentCard.question} className="flashcard-media" />
+        }
+        { currentCard[contentKey+'Type'] === 'video' &&
+          <video className="flashcard-video flashcard-media not-video-js vjs-default-skin vjs-16-9" controls>
+            <source src={asset(currentCard[contentKey].url)} type={currentCard.type}/>
+          </video>
+        }
+        { currentCard[contentKey+'Type'] === 'audio' &&
+          <audio controls>
+            <source src={asset(currentCard[contentKey].url)} type={currentCard.type}/>
+          </audio>
+        }
+      </div>
     </>
   )
 
@@ -59,7 +77,7 @@ const Player = props => {
   return (
     <section>
       <ProgressBar
-        className="progress-minimal"
+        className="mb-2"
         value={(currentCardIndex+1) / maxCards * 100}
         size="xs"
         type="learning"
