@@ -11,7 +11,6 @@ Claroline\AuthenticationBundle\ClarolineAuthenticationBundle = true
 Claroline\EvaluationBundle\ClarolineEvaluationBundle = true
 Claroline\AgendaBundle\ClarolineAgendaBundle = true
 Claroline\AnalyticsBundle\ClarolineAnalyticsBundle = true
-Claroline\DocumentationBundle\ClarolineDocumentationBundle = true
 Claroline\ImagePlayerBundle\ClarolineImagePlayerBundle = true
 Claroline\MessageBundle\ClarolineMessageBundle = true
 Claroline\ForumBundle\ClarolineForumBundle = true
