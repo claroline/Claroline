@@ -41,9 +41,12 @@ actions.open = (id, reload = false) => (dispatch) => {
 
 actions.registerGroups = (groups) => ({
   [API_REQUEST]: {
-    url: ['apiv2_workspace_bulk_register_groups', {ids: groups.map(group => group.id)}],
+    url: ['apiv2_workspace_register'],
     request: {
-      method: 'PATCH'
+      method: 'PATCH',
+      body: JSON.stringify({
+        ids: groups.map(group => group.id)
+      })
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData(selectors.LIST_NAME))

@@ -861,6 +861,7 @@
     "following_workspace_registration": "Registration to the following workspaces",
     "register_users": "Register users",
     "register_groups": "Register groups",
+    "register_users_groups": "Register users/groups",
     "add_workspaces": "Add workspaces",
     "pending_registrations": "Pending registrations",
     "self_registration_platform_help": "Users will be able to register themselves on the platform.",

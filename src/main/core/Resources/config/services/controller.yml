@@ -92,6 +92,7 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager'
+            - '@security.token_storage'
 
     Claroline\CoreBundle\Controller\APINew\Workspace\RoleController:
         arguments:

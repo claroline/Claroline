@@ -23,10 +23,12 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -55,13 +57,17 @@ class RegistrationController
     /** @var WorkspaceUserQueueManager */
     private $registrationQueueManager;
 
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         SerializerProvider $serializer,
         Crud $crud,
         WorkspaceManager $workspaceManager,
-        WorkspaceUserQueueManager $registrationQueueManager
+        WorkspaceUserQueueManager $registrationQueueManager,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
@@ -69,6 +75,7 @@ class RegistrationController
         $this->crud = $crud;
         $this->workspaceManager = $workspaceManager;
         $this->registrationQueueManager = $registrationQueueManager;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -249,27 +256,28 @@ class RegistrationController
 
     /**
      * @ApiDoc(
-     *     description="Register users in different workspaces.",
-     *     queryString={
-     *         {"name": "users", "type": "array", "description": "The list of user uuids."},
-     *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
-     *     },
+     *     description="Register users/groups in different workspaces.",
      *     parameters={
-     *         {"name": "role", "type": {"string"}, "description": "The role translation key"}
+     *         {"name": "role", "type": {"string"}, "description": "The role translation key"},
      *     }
      * )
      *
      * @Route(
-     *    "/users/register/{role}",
-     *    name="apiv2_workspace_bulk_register_users",
+     *    "/register/{role}",
+     *    name="apiv2_workspace_register",
      *    methods={"PATCH"},
      *    defaults={"role":""}
      * )
+     *
+     * @throws InvalidDataException
      */
-    public function bulkRegisterUsersAction(string $role, Request $request): JsonResponse
+    public function registerAction(string $role, Request $request): JsonResponse
     {
-        $workspaces = $this->decodeIdsString($request, Workspace::class, 'workspaces');
-        $users = $this->decodeIdsString($request, User::class, 'users');
+        $data = $this->decodeRequest($request);
+
+        $workspaces = isset($data['workspaces']) ? $this->om->findList(Workspace::class, 'uuid', $data['workspaces']) : [];
+        $users = isset($data['users']) ? $this->om->findList(User::class, 'uuid', $data['users']) : [];
+        $groups = isset($data['groups']) ? $this->om->findList(Group::class, 'uuid', $data['groups']) : [];
 
         foreach ($workspaces as $workspace) {
             if ('' === $role) {
@@ -278,88 +286,15 @@ class RegistrationController
                 $roleEntity = $this->om->getRepository(Role::class)
                     ->findOneBy(['translationKey' => $role, 'workspace' => $workspace]);
             }
-            $this->crud->patch($roleEntity, 'user', Crud::COLLECTION_ADD, $users);
-        }
-
-        return new JsonResponse(array_map(function ($workspace) {
-            return $this->serializer->serialize($workspace);
-        }, $workspaces));
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Register groups in different workspaces.",
-     *     queryString={
-     *         {"name": "groups", "type": "array", "description": "The list of group uuids."},
-     *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
-     *     },
-     *     parameters={
-     *         {"name": "role", "type": {"string"}, "description": "The role translation key"}
-     *     }
-     * )
-     *
-     * @Route(
-     *    "/groups/register/{role}",
-     *    name="apiv2_workspace_bulk_register_groups",
-     *    methods={"PATCH"},
-     *    defaults={"role":""}
-     * )
-     */
-    public function bulkRegisterGroupsAction(string $role, Request $request): JsonResponse
-    {
-        $workspaces = $this->decodeIdsString($request, Workspace::class, 'workspaces');
-        $groups = $this->decodeIdsString($request, Group::class, 'groups');
-
-        foreach ($workspaces as $workspace) {
-            if ('' === $role) {
-                $roleEntity = $workspace->getDefaultRole();
-            } else {
-                $roleEntity = $this->om->getRepository(Role::class)
-                    ->findOneBy(['translationKey' => $role, 'workspace' => $workspace]);
+            if (!empty($users)) {
+                $this->crud->patch($roleEntity, 'user', Crud::COLLECTION_ADD, $users);
             }
-
-            $this->crud->patch($roleEntity, 'group', Crud::COLLECTION_ADD, $groups);
-        }
-
-        return new JsonResponse(array_map(function ($workspace) {
-            return $this->serializer->serialize($workspace);
-        }, $workspaces));
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Register a user in a list of workspace.",
-     *     queryString={
-     *         {"name": "workspaces", "type": "array", "description": "The list of workspace uuids."},
-     *     },
-     *     parameters={
-     *         {"name": "user", "type": {"string"}, "description": "The user uuid"}
-     *     }
-     * )
-     *
-     * @Route("/register/{user}", name="apiv2_workspace_register", methods={"PATCH"})
-     *
-     * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
-     */
-    public function registerAction(User $user, Request $request): JsonResponse
-    {
-        // If user is admin or registration validation is disabled, subscribe user
-        // see WorkspaceParametersController::userSubscriptionAction
-        /** @var Workspace[] $workspaces */
-        $workspaces = $this->decodeIdsString($request, Workspace::class, 'workspaces');
-
-        foreach ($workspaces as $workspace) {
-            if ($this->authorization->isGranted('ROLE_ADMIN') || !$workspace->getRegistrationValidation()) {
-                $this->workspaceManager->addUser($workspace, $user);
-            } else {
-                // Otherwise add user to validation queue if not already there
-                if (!$this->registrationQueueManager->isUserInValidationQueue($workspace, $user)) {
-                    $this->registrationQueueManager->addUserQueue($workspace, $user);
-                }
+            if (!empty($groups)) {
+                $this->crud->patch($roleEntity, 'group', Crud::COLLECTION_ADD, $groups);
             }
         }
 
-        return new JsonResponse(array_map(function (Workspace $workspace) {
+        return new JsonResponse(array_map(function ($workspace) {
             return $this->serializer->serialize($workspace);
         }, $workspaces));
     }
@@ -375,12 +310,12 @@ class RegistrationController
      *     }
      * )
      *
-     * @Route("/unregister/{user}", name="apiv2_workspace_unregister", methods={"DELETE"})
-     *
-     * @EXT\ParamConverter("user", class = "Claroline\CoreBundle\Entity\User",  options={"mapping": {"user": "uuid"}})
+     * @Route("/unregister", name="apiv2_workspace_self_unregister", methods={"DELETE"})
      */
-    public function unregisterAction(User $user, Request $request): JsonResponse
+    public function selfUnregisterAction(Request $request): JsonResponse
     {
+        $token = $this->tokenStorage->getToken();
+        $user = $token->getUser();
         $workspaces = $this->decodeIdsString($request, Workspace::class, 'workspaces');
 
         foreach ($workspaces as $workspace) {
