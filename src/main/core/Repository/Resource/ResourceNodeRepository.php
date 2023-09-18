@@ -22,7 +22,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
     {
         return $this->createQueryBuilder('n')
             ->join('n.workspace', 'w')
-            ->where('UPPER(n.name) LIKE :search')
+            ->where('(UPPER(n.name) LIKE :search OR UPPER(n.code) LIKE :search)')
             ->andWhere('w.archived = false')
             ->andWhere('n.active = true')
             ->andWhere('n.published = true')
