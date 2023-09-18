@@ -103,7 +103,6 @@
             "Claroline\\CoreBundle\\": "src/main/core",
             "Claroline\\CursusBundle\\": "src/plugin/cursus",
             "Claroline\\DevBundle\\": "src/main/dev",
-            "Claroline\\DocumentationBundle\\": "src/plugin/documentation",
             "Claroline\\DropZoneBundle\\": "src/plugin/drop-zone",
             "Claroline\\EvaluationBundle\\": "src/main/evaluation",
             "Claroline\\ExampleBundle\\": "src/main/example",
