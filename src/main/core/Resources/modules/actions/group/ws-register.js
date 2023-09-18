@@ -13,12 +13,13 @@ export default (groups, refresher) => ({
     selectAction: (workspaces) => ({
       type: ASYNC_BUTTON,
       request: {
-        url: ['apiv2_workspace_bulk_register_groups', {
-          workspaces: workspaces.map(workspace => workspace.id),
-          groups: groups.map(groups => groups.id)
-        }],
+        url: ['apiv2_workspace_register'],
         request: {
-          method: 'PATCH'
+          method: 'PATCH',
+          body: JSON.stringify({
+            workspaces: workspaces.map(workspace => workspace.id),
+            groups: groups.map(group => group.id)
+          })
         },
         success: () => refresher.update(groups)
       }

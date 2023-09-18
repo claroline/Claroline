@@ -47,12 +47,13 @@ const GroupList = props =>
             type: ASYNC_BUTTON,
             label: trans('select', {}, 'actions'),
             request: {
-              url: ['apiv2_workspace_bulk_register_groups', {
-                workspaces: [props.contextData.id],
-                groups: selectedGroups.map(group => group.id)
-              }],
+              url: ['apiv2_workspace_register'],
               request: {
-                method: 'PATCH'
+                method: 'PATCH',
+                body: JSON.stringify({
+                  workspaces: [props.contextData.id],
+                  groups: selectedGroups.map(group => group.id)
+                })
               },
               success: () => {
                 props.registerGroups(selectedGroups)

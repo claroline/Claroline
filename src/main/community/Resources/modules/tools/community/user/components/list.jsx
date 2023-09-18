@@ -39,12 +39,13 @@ const UserList = props =>
           selectAction: (selectedUsers) => ({
             type: ASYNC_BUTTON,
             request: {
-              url: ['apiv2_workspace_bulk_register_users', {
-                workspaces: [props.contextData.id],
-                users: selectedUsers.map (user => user.id)
-              }],
+              url: ['apiv2_workspace_register'],
               request: {
-                method: 'PATCH'
+                method: 'PATCH',
+                body: JSON.stringify({
+                  workspaces: [props.contextData.id],
+                  users: selectedUsers.map(user => user.id)
+                })
               },
               success: () => {
                 props.registerUsers(selectedUsers)

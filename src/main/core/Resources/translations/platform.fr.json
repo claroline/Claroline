@@ -883,6 +883,7 @@
     "following_workspace_registration": "Inscription aux espaces d'activités suivant",
     "register_users": "Inscrire des utilisateurs",
     "register_groups": "Inscrire des groupes",
+    "register_users_groups": "Inscrire des utilisateurs/groupes",
     "add_workspaces": "Ajouter des espaces d'activités",
     "pending_registrations": "Inscriptions en attente",
     "self_registration_platform_help": "Les utilisateurs pourront s'inscrire eux-même à la plateforme.",

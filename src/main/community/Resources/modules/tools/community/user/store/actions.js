@@ -47,9 +47,12 @@ actions.open = (username, reload = false) => (dispatch, getState) => {
 
 actions.registerUsers = (users)  => ({
   [API_REQUEST]: {
-    url: ['apiv2_workspace_bulk_register_users', {ids: users.map(user => user.id)}],
+    url: ['apiv2_workspace_register'],
     request: {
-      method: 'PATCH'
+      method: 'PATCH',
+      body: JSON.stringify({
+        ids: users.map(user => user.id)
+      })
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData(selectors.LIST_NAME))
