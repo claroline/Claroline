@@ -71,7 +71,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
@@ -87,7 +87,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
@@ -101,7 +101,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
@@ -122,7 +122,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         );
     }
 
-    public function preDelete(DeleteEvent $event)
+    public function preDelete(DeleteEvent $event): void
     {
         /** @var ResourceNode $node */
         $node = $event->getObject();
@@ -133,6 +133,9 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         $resource = $this->resourceManager->getResourceFromNode($node);
         if (empty($resource)) {
             // partially broken data found, we cannot go further but don't want to break everything
+            // we don't use soft delete here because data are broken anyway
+            $this->om->remove($node);
+
             return;
         }
 
@@ -143,7 +146,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         $this->crud->delete($resource, array_merge([], $options, $event->isSoftDelete() ? [Options::SOFT_DELETE] : []));
 
         // we check softDelete flag from custom event because some resource can force it
-        // if they don't want to be removed (eg. quizzes with papers attached on it)
+        // if they don't want to be removed (e.g. quizzes with papers attached on it)
         if ($event->isSoftDelete()) {
             $node->setActive(false);
             $this->om->persist($node);
@@ -163,7 +166,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preCopy(CopyEvent $event)
+    public function preCopy(CopyEvent $event): void
     {
         /** @var ResourceNode $node */
         $node = $event->getObject();
@@ -209,7 +212,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         $this->lifeCycleManager->copy($resource, $copy);
     }
 
-    public function postCopy(CopyEvent $event)
+    public function postCopy(CopyEvent $event): void
     {
         /** @var ResourceNode $node */
         $node = $event->getObject();
