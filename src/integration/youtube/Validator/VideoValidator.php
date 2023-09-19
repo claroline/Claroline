@@ -8,8 +8,7 @@ use Claroline\YouTubeBundle\Manager\YouTubeManager;
 
 class VideoValidator implements ValidatorInterface
 {
-    /** @var YouTubeManager */
-    private $youTubeManager;
+    private YouTubeManager $youTubeManager;
 
     public function __construct(YouTubeManager $youTubeManager)
     {
@@ -43,7 +42,7 @@ class VideoValidator implements ValidatorInterface
     public function getUniqueFields(): array
     {
         return [
-            'videoId' => 'videoId',
+            'id' => 'uuid',
         ];
     }
 }

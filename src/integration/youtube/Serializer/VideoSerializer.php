@@ -14,6 +14,11 @@ class VideoSerializer
         return Video::class;
     }
 
+    public function getSchema(): string
+    {
+        return '#/integration/youtube/video.json';
+    }
+
     public function serialize(Video $video): array
     {
         return [
