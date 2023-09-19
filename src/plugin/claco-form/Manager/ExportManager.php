@@ -82,17 +82,19 @@ class ExportManager
 
         $displayedFields = [];
         foreach ($fields as $field) {
-            $fieldValues[$field->getId()] = '';
-
             if (FieldFacet::CONFIDENTIALITY_NONE === $field->getConfidentiality()
                 || $isEntryManager
                 || (FieldFacet::CONFIDENTIALITY_OWNER === $field->getConfidentiality() && $isEntryOwner)
             ) {
                 if (isset($fieldValues[$field->getId()])) {
                     $fieldValues[$field->getId()] = $this->formatFieldValue($entry, $field, $fieldValues[$field->getId()]);
+                } else {
+                    $fieldValues[$field->getId()] = '';
                 }
 
                 $displayedFields[] = $field;
+            } else {
+                $fieldValues[$field->getId()] = '';
             }
 
             if (!empty($template) && $useTemplate) {
@@ -257,7 +259,7 @@ class ExportManager
                 break;
 
             case FieldFacet::CASCADE_TYPE:
-                $value = implode(', ', $value);
+                $value = !empty($value) ? implode(', ', $value) : '';
                 break;
 
             case FieldFacet::COUNTRY_TYPE:
