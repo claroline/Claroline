@@ -10,7 +10,7 @@ import {displayDate} from '#/main/app/intl/date'
 import {trans} from '#/main/app/intl/translation'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {actions as modalActions} from '#/main/app/overlays/modal/store'
-import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON, DOWNLOAD_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
@@ -56,6 +56,14 @@ const EntryActions = props =>
         group: trans('management'),
         primary: true
       }, {
+        name: 'export-pdf',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-file-pdf',
+        label: trans('export-pdf', {}, 'actions'),
+        callback: props.downloadPdf,
+        displayed: props.canGeneratePdf,
+        group: trans('transfer')
+      }, {
         name: 'publish',
         type: CALLBACK_BUTTON,
         icon: classes('fa fa-fw', {
@@ -71,7 +79,6 @@ const EntryActions = props =>
         type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-user-edit',
         label: trans('change_entry_owner', {}, 'clacoform'),
-        callback: props.changeOwner,
         modal: [MODAL_USERS, {
           selectAction: (users) => ({
             type: CALLBACK_BUTTON,
@@ -105,14 +112,6 @@ const EntryActions = props =>
         dangerous: true,
         displayed: !props.locked && props.canManage,
         group: trans('management')
-      }, {
-        name: 'pdf',
-        type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-fw fa-file-pdf',
-        label: trans('export-pdf', {}, 'actions'),
-        file: {url:['claro_claco_form_entry_pdf_download', {entry: props.entryId}]},
-        displayed: props.canGeneratePdf,
-        group: trans('transfer')
       }, {
         name: 'share',
         type: MODAL_BUTTON,

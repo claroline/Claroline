@@ -36,9 +36,20 @@ const EntriesComponent = props =>
     source={merge({}, entriesSource(props.clacoForm, props.canViewMetadata, props.canEdit, props.canAdministrate, props.isCategoryManager, props.path, props.currentUser), {
       actions: (rows) => [
         {
+          name: 'edit',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-pencil',
+          label: trans('edit', {}, 'actions'),
+          target: `${props.path}/entry/form/${rows[0].id}`,
+          displayed: !rows[0].locked && canEditEntry(rows[0], props.clacoForm, props.currentUser),
+          scope: ['object'],
+          group: trans('management'),
+          primary: true
+        }, {
+          name: 'export-pdf',
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-print',
-          label: trans('print_entry', {}, 'clacoform'),
+          icon: 'fa fa-fw fa-file-pdf',
+          label: trans('export-pdf', {}, 'actions'),
           displayed: true,
           callback: () => {
             if (1 < rows.length) {
@@ -52,22 +63,16 @@ const EntriesComponent = props =>
           scope: ['object', 'collection'],
           group: trans('transfer')
         }, {
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-pencil',
-          label: trans('edit', {}, 'actions'),
-          target: `${props.path}/entry/form/${rows[0].id}`,
-          displayed: !rows[0].locked && canEditEntry(rows[0], props.clacoForm, props.currentUser),
-          scope: ['object'],
-          group: trans('management')
-        }, {
+          name: 'publish',
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-eye',
           label: trans('publish', {}, 'actions'),
           callback: () => props.switchEntriesStatus(rows, constants.ENTRY_STATUS_PUBLISHED),
           displayed: rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length &&
-          rows.filter(e => e.status === constants.ENTRY_STATUS_PUBLISHED).length !== rows.length,
+            rows.filter(e => e.status === constants.ENTRY_STATUS_PUBLISHED).length !== rows.length,
           group: trans('management')
         }, {
+          name: 'unpublish',
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-eye-slash',
           label: trans('unpublish', {}, 'actions'),
@@ -76,6 +81,7 @@ const EntriesComponent = props =>
           rows.filter(e => e.status !== constants.ENTRY_STATUS_PUBLISHED).length !== rows.length,
           group: trans('management')
         }, {
+          name: 'lock',
           type: CALLBACK_BUTTON,
           icon: 'fa fa-w fa-lock',
           label: trans('lock', {}, 'actions'),
@@ -83,6 +89,7 @@ const EntriesComponent = props =>
           displayed: props.canAdministrate && rows.filter(e => e.locked).length !== rows.length,
           group: trans('management')
         }, {
+          name: 'unlock',
           type: CALLBACK_BUTTON,
           icon: 'fa fa-w fa-unlock',
           label: trans('unlock', {}, 'actions'),
@@ -112,8 +119,7 @@ EntriesComponent.propTypes = {
 
   downloadEntryPdf: T.func.isRequired,
   switchEntriesStatus: T.func.isRequired,
-  switchEntriesLock: T.func.isRequired,
-  downloadFieldValueFile: T.func.isRequired
+  switchEntriesLock: T.func.isRequired
 }
 
 const Entries = connect(
@@ -137,9 +143,6 @@ const Entries = connect(
     },
     switchEntriesLock(entries, locked) {
       dispatch(actions.switchEntriesLock(entries, locked))
-    },
-    downloadFieldValueFile(fieldValueId) {
-      dispatch(actions.downloadFieldValueFile(fieldValueId))
     }
   })
 )(EntriesComponent)
