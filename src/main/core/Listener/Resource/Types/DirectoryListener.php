@@ -37,43 +37,21 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class DirectoryListener
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var Crud */
-    private $crud;
-    /** @var FileManager */
-    private $fileManager;
-    /** @var ResourceManager */
-    private $resourceManager;
-    /** @var ResourceActionManager */
-    private $actionManager;
-    /** @var RightsManager */
-    private $rightsManager;
-
     public function __construct(
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        Crud $crud,
-        FileManager $fileManager,
-        ResourceManager $resourceManager,
-        ResourceActionManager $actionManager,
-        RightsManager $rightsManager
+        private ObjectManager $om,
+        private SerializerProvider $serializer,
+        private Crud $crud,
+        private FileManager $fileManager,
+        private ResourceManager $resourceManager,
+        private ResourceActionManager $actionManager,
+        private RightsManager $rightsManager
     ) {
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->crud = $crud;
-        $this->fileManager = $fileManager;
-        $this->resourceManager = $resourceManager;
-        $this->rightsManager = $rightsManager;
-        $this->actionManager = $actionManager;
     }
 
     /**
      * Loads a directory.
      */
-    public function onLoad(LoadResourceEvent $event)
+    public function onLoad(LoadResourceEvent $event): void
     {
         $event->setData([
             'directory' => $this->serializer->serialize($event->getResource()),
@@ -86,7 +64,7 @@ class DirectoryListener
     /**
      * Adds a new resource inside a directory.
      */
-    public function onAdd(ResourceActionEvent $event)
+    public function onAdd(ResourceActionEvent $event): void
     {
         $data = $event->getData();
         $parent = $event->getResourceNode();

@@ -194,17 +194,16 @@ class ResourceNodeRepository extends MaterializedPathRepository
      */
     public function findCodesWithPrefix(string $prefix): array
     {
-        return array_map(
-            function (array $ws) {
-                return $ws['code'];
-            },
-            $this->getEntityManager()->createQuery('
+        $results = $this->getEntityManager()->createQuery('
                 SELECT UPPER(n.code) AS code
                 FROM Claroline\CoreBundle\Entity\Resource\ResourceNode n
                 WHERE UPPER(n.code) LIKE :search
             ')
-                ->setParameter('search', strtoupper($prefix).'%')
-                ->getResult()
-        );
+            ->setParameter('search', strtoupper($prefix).'%')
+            ->getResult();
+
+        return array_map(function (array $resource) {
+            return $resource['code'];
+        }, $results);
     }
 }

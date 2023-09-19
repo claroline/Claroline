@@ -43,7 +43,7 @@ class Create extends AbstractImporter
 
     public function execute(array $data): array
     {
-        //todo find a generic way to find the identifiers
+        // todo find a generic way to find the identifiers
         /** @var Workspace $workspace */
         $workspace = $this->om->getObject($data['workspace'], Workspace::class, ['code']);
         if (!$workspace) {
@@ -138,6 +138,10 @@ class Create extends AbstractImporter
             'rights' => $rights,
         ];
 
+        if (!empty($data['code'])) {
+            $dataResourceNode['code'] = $data['code'];
+        }
+
         /** @var ResourceNode $resourceNode */
         $resourceNode = $this->crud->create(ResourceNode::class, $dataResourceNode);
 
@@ -167,6 +171,10 @@ class Create extends AbstractImporter
                 'name' => [
                     'type' => 'string',
                     'description' => $this->translator->trans('directory_name', [], 'transfer'),
+                ],
+                'code' => [
+                    'type' => 'string',
+                    'description' => $this->translator->trans('directory_code', [], 'transfer'),
                 ],
                 'open' => [
                     'type' => 'boolean',
@@ -227,10 +235,10 @@ class Create extends AbstractImporter
                 ],
             ],
 
-            //this kind of hacky because this is not the true permissions description to begin with
-            //if you remove this section it will not show because it'll go through the explainIdentifiers method (not $root in schema)
+            // this kind of hacky because this is not the true permissions description to begin with
+            // if you remove this section it will not show because it'll go through the explainIdentifiers method (not $root in schema)
             'claroline' => [
-                'requiredAtCreation' => ['name'],
+                'requiredAtCreation' => ['name', 'code'],
                 'class' => Directory::class,
             ],
         ];
