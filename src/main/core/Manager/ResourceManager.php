@@ -420,7 +420,7 @@ class ResourceManager implements LoggerAwareInterface
         throw new ResourceNotFoundException();
     }
 
-    public function isManager(ResourceNode $resourceNode)
+    public function isManager(ResourceNode $resourceNode): bool
     {
         return $this->rightsManager->isManager($resourceNode);
     }
@@ -446,15 +446,9 @@ class ResourceManager implements LoggerAwareInterface
     }
 
     /**
-     * @param bool $throwException
-     *
-     * @return ResourceNode|null
-     *
-     * @throws \Exception
-     *
      * @deprecated
      */
-    private function getRealTarget(ResourceNode $node, $throwException = true)
+    private function getRealTarget(ResourceNode $node, bool $throwException = true): ?ResourceNode
     {
         if ('Claroline\LinkBundle\Entity\Resource\Shortcut' === $node->getClass()) {
             /** @var \Claroline\LinkBundle\Entity\Resource\Shortcut $resource */
@@ -481,12 +475,8 @@ class ResourceManager implements LoggerAwareInterface
 
     /**
      * Gets the relative path between 2 instances (not optimized yet).
-     *
-     * @param string $path
-     *
-     * @return string
      */
-    private function getRelativePath(ResourceNode $root, ResourceNode $node, $path = '')
+    private function getRelativePath(ResourceNode $root, ResourceNode $node, ?string $path = ''): string
     {
         if ($node->getParent() !== $root->getParent() && null !== $node->getParent()) {
             $path = $node->getParent()->getName().DIRECTORY_SEPARATOR.$path;
@@ -496,7 +486,7 @@ class ResourceManager implements LoggerAwareInterface
         return $path;
     }
 
-    private function updateWorkspace(ResourceNode $node, Workspace $workspace)
+    private function updateWorkspace(ResourceNode $node, Workspace $workspace): void
     {
         $this->om->startFlushSuite();
         $node->setWorkspace($workspace);
@@ -515,7 +505,7 @@ class ResourceManager implements LoggerAwareInterface
         $this->om->endFlushSuite();
     }
 
-    private function setActive(ResourceNode $node)
+    private function setActive(ResourceNode $node): void
     {
         foreach ($node->getChildren() as $child) {
             $this->setActive($child);
@@ -528,7 +518,7 @@ class ResourceManager implements LoggerAwareInterface
     /**
      * Set the $node at the last position of the $parent.
      */
-    private function setLastIndex(ResourceNode $parent, ResourceNode $node)
+    private function setLastIndex(ResourceNode $parent, ResourceNode $node): void
     {
         $max = $this->resourceNodeRepo->findLastIndex($parent);
         $node->setIndex($max + 1);
@@ -540,10 +530,8 @@ class ResourceManager implements LoggerAwareInterface
     /**
      * Checks if an array of resource type name exists.
      * Expects an array of types array(array('name' => 'type'),...).
-     *
-     * @return array
      */
-    private function checkResourceTypes(array $resourceTypes)
+    private function checkResourceTypes(array $resourceTypes): array
     {
         $typeNames = array_map(function (array $type) {
             return $type['name'];
@@ -574,10 +562,8 @@ class ResourceManager implements LoggerAwareInterface
      * array $rights should be defined that way:
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
      * 'create' => array('directory', ...), 'role' => $entity))
-     *
-     * @return ResourceNode
      */
-    private function setRights(ResourceNode $node, ResourceNode $parent = null, array $rights = [])
+    private function setRights(ResourceNode $node, ResourceNode $parent = null, array $rights = []): ResourceNode
     {
         if (0 === count($rights) && null !== $parent) {
             $node = $this->rightsManager->copy($parent, $node);
@@ -589,13 +575,11 @@ class ResourceManager implements LoggerAwareInterface
     }
 
     /**
-     * Returns every children of every resource (includes the start node).
+     * Returns every child of every resource (includes the start node).
      *
      * @param ResourceNode[] $nodes
-     *
-     * @return ResourceNode[]
      */
-    private function expandResources(array $nodes, bool $onlyActive = false)
+    private function expandResources(array $nodes, bool $onlyActive = false): array
     {
         $resources = [];
         foreach ($nodes as $node) {
