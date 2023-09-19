@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The uuid of the YouTUbe video"
+    },
+    "videoId": {
+      "type": "string",
+      "description": "The original uuid of the YouTube video"
+    },
+    "url": {
+      "type": "string",
+      "description": "The original URL of the YouTube video"
+    }
+  },
+  "required": ["url"],
+  "claroIds": ["id"]
+}
