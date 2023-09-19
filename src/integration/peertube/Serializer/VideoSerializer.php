@@ -11,8 +11,7 @@ class VideoSerializer
 {
     use SerializerTrait;
 
-    /** @var PeerTubeManager */
-    private $peerTubeManager;
+    private PeerTubeManager $peerTubeManager;
 
     public function __construct(PeerTubeManager $peerTubeManager)
     {
@@ -22,6 +21,11 @@ class VideoSerializer
     public function getClass(): string
     {
         return Video::class;
+    }
+
+    public function getSchema(): string
+    {
+        return '#/integration/peertube/video.json';
     }
 
     public function serialize(Video $video, ?array $options = []): array
