@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\Table(name="claro_peertube_video")
  */
 class Video extends AbstractResource
@@ -30,7 +31,7 @@ class Video extends AbstractResource
     private $originalUuid;
 
     /**
-     * The short UUID of the video (retrieved from the the PeerTube share URL).
+     * The short UUID of the video (retrieved from the PeerTube share URL).
      *
      * @ORM\Column(type="string")
      *
