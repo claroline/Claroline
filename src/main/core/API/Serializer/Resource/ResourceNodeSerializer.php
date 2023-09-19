@@ -24,7 +24,7 @@ class ResourceNodeSerializer
 {
     use SerializerTrait;
 
-    const NO_PARENT = 'no_parent';
+    public const NO_PARENT = 'no_parent';
 
     private ObjectManager $om;
     private EventDispatcherInterface $eventDispatcher;
@@ -160,33 +160,6 @@ class ResourceNodeSerializer
     }
 
     /**
-     * Dispatches an event to let plugins add some custom data to the serialized node.
-     * For example, Notification adds a flag to know if the current user follows the resource.
-     */
-    private function decorate(ResourceNode $resourceNode, array $serializedNode, array $options = []): array
-    {
-        // avoid plugins override the standard node properties
-        $unauthorizedKeys = array_keys($serializedNode);
-
-        $event = new DecorateResourceNodeEvent($resourceNode, $unauthorizedKeys, $options);
-        $this->eventDispatcher->dispatch($event, 'serialize_resource_node');
-
-        return array_merge($serializedNode, $event->getInjectedData());
-    }
-
-    private function serializeTags(ResourceNode $resourceNode): array
-    {
-        $event = new GenericDataEvent([
-            'class' => ResourceNode::class,
-            'ids' => [$resourceNode->getUuid()],
-        ]);
-
-        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
-
-        return $event->getResponse() ?? [];
-    }
-
-    /**
      * Deserializes resource node data into entities.
      */
     public function deserialize(array $data, ResourceNode $resourceNode, array $options = []): ResourceNode
@@ -266,6 +239,33 @@ class ResourceNodeSerializer
         }
 
         return $resourceNode;
+    }
+
+    /**
+     * Dispatches an event to let plugins add some custom data to the serialized node.
+     * For example, Notification adds a flag to know if the current user follows the resource.
+     */
+    private function decorate(ResourceNode $resourceNode, array $serializedNode, array $options = []): array
+    {
+        // avoid plugins override the standard node properties
+        $unauthorizedKeys = array_keys($serializedNode);
+
+        $event = new DecorateResourceNodeEvent($resourceNode, $unauthorizedKeys, $options);
+        $this->eventDispatcher->dispatch($event, 'serialize_resource_node');
+
+        return array_merge($serializedNode, $event->getInjectedData());
+    }
+
+    private function serializeTags(ResourceNode $resourceNode): array
+    {
+        $event = new GenericDataEvent([
+            'class' => ResourceNode::class,
+            'ids' => [$resourceNode->getUuid()],
+        ]);
+
+        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
+
+        return $event->getResponse() ?? [];
     }
 
     public function deserializeRights($rights, ResourceNode $resourceNode, array $options = [])
