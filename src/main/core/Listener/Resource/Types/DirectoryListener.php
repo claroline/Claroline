@@ -166,10 +166,12 @@ class DirectoryListener
 
     private function createResource(ResourceNode $parent, array $nodeData, ?array $resourceData = [], ?array $options = [])
     {
+        $this->om->startFlushSuite();
+
         // initialize resource node Entity
         try {
             /** @var ResourceNode $resourceNode */
-            $resourceNode = $this->crud->create(ResourceNode::class, $nodeData, array_merge([Options::NO_RIGHTS], $options));
+            $resourceNode = $this->crud->create(ResourceNode::class, $nodeData, array_merge([Options::NO_RIGHTS, Crud::THROW_EXCEPTION], $options));
             $resourceNode->setParent($parent);
             $resourceNode->setWorkspace($parent->getWorkspace());
         } catch (InvalidDataException $e) {
@@ -190,8 +192,10 @@ class DirectoryListener
 
         try {
             /** @var AbstractResource $resource */
-            $resource = $this->crud->create($resourceClass, $resourceData, $options);
+            $resource = new $resourceClass();
             $resource->setResourceNode($resourceNode);
+
+            $this->crud->create($resource, $resourceData, array_merge([Crud::THROW_EXCEPTION], $options));
         } catch (InvalidDataException $e) {
             // for resource creation we submit the resourceNode and resource data at once
             // we need to update the errors path for correct rendering in form
@@ -204,6 +208,8 @@ class DirectoryListener
 
             throw new InvalidDataException(sprintf('%s is not valid', $resourceClass), $errors);
         }
+
+        $this->om->endFlushSuite();
 
         // initialize resource rights
         if (!empty($nodeData['rights'])) {
@@ -222,11 +228,6 @@ class DirectoryListener
             // copy parent rights on the new resource
             $this->rightsManager->copy($parent, $resourceNode);
         }
-
-        $this->om->persist($resource);
-        $this->om->persist($resourceNode);
-
-        $this->om->flush();
 
         return [
             'resourceNode' => $resourceNode,
