@@ -20,14 +20,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class CreateOrUpdate extends AbstractImporter
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var TranslatorInterface */
-    private $translator;
+    private ObjectManager $om;
+    private Crud $crud;
+    private SerializerProvider $serializer;
+    private TranslatorInterface $translator;
 
     public function __construct(
         Crud $crud,
@@ -43,7 +39,7 @@ class CreateOrUpdate extends AbstractImporter
 
     public function execute(array $data): array
     {
-        //todo find a generic way to find the identifiers
+        // todo find a generic way to find the identifiers
         /** @var Workspace $workspace */
         $workspace = $this->om->getObject($data['workspace'], Workspace::class, ['code']);
         if (!$workspace) {
@@ -138,21 +134,21 @@ class CreateOrUpdate extends AbstractImporter
             'rights' => $rights,
         ];
 
-        // try to update an existing node
-        $resourceNode = null;
-        if (!empty($data['id']) || !empty($data['slug'])) {
-            if (!empty($data['id'])) {
-                $dataResourceNode['id'] = $data['id'];
-            }
-
-            if (!empty($data['slug'])) {
-                $dataResourceNode['slug'] = $data['slug'];
-            }
-
-            /** @var ResourceNode $resourceNode */
-            $resourceNode = $this->om->getObject($data, ResourceNode::class, ['slug']);
+        if (!empty($data['id'])) {
+            $dataResourceNode['id'] = $data['id'];
         }
 
+        if (!empty($data['slug'])) {
+            $dataResourceNode['slug'] = $data['slug'];
+        }
+
+        if (!empty($data['code'])) {
+            $dataResourceNode['code'] = $data['code'];
+        }
+
+        // try to update an existing node
+        /** @var ResourceNode $resourceNode */
+        $resourceNode = $this->om->getObject($data, ResourceNode::class, ['code', 'slug']);
         if ($resourceNode) {
             $options = [];
             if (isset($data['recursive']) && $data['recursive']) {
@@ -161,9 +157,11 @@ class CreateOrUpdate extends AbstractImporter
             $this->crud->update($resourceNode, $dataResourceNode, $options);
         } else {
             $resourceNode = $this->crud->create(ResourceNode::class, $dataResourceNode);
-            $resource = $this->crud->create(Directory::class, []);
+
+            $resource = new Directory();
             $resource->setResourceNode($resourceNode);
-            $this->om->persist($resource);
+
+            $this->crud->create($resource, []);
         }
 
         $resourceNode->setParent($parent);
@@ -196,6 +194,10 @@ class CreateOrUpdate extends AbstractImporter
                 'name' => [
                     'type' => 'string',
                     'description' => $this->translator->trans('directory_name', [], 'transfer'),
+                ],
+                'code' => [
+                    'type' => 'string',
+                    'description' => $this->translator->trans('directory_code', [], 'transfer'),
                 ],
                 'open' => [
                     'type' => 'boolean',
@@ -263,7 +265,7 @@ class CreateOrUpdate extends AbstractImporter
             // this kind of hacky because this is not the true permissions description to begin with
             // if you remove this section it will not show because it'll go through the explainIdentifiers method (not $root in schema)
             'claroline' => [
-                'requiredAtCreation' => ['name'],
+                'requiredAtCreation' => ['name', 'code'],
                 'class' => Directory::class,
             ],
         ];
