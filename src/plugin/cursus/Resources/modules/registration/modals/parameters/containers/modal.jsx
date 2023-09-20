@@ -21,12 +21,19 @@ const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
       reset(registrationData) {
         dispatch(formActions.reset(selectors.STORE_NAME, registrationData, isEmpty(registrationData) || !registrationData.id))
       },
-      save(fields, formData, onSave) {
+      save(fields, formData, isOwner, hasConfidentialRights, onSave) {
         const errors = {
           data: {}
         }
 
-        const requiredFields = fields.filter(field => field.required && isFieldDisplayed(field, fields, formData.data))
+        const requiredFields = fields
+          .filter(field => field.required && isFieldDisplayed(field, fields, formData.data))
+          .filter(field => !get(field, 'restrictions.confidentiality')
+            || 'none' === get(field, 'restrictions.confidentiality')
+            || hasConfidentialRights
+            || ('owner' === get(field, 'restrictions.confidentiality') && isOwner)
+          )
+
         errors.data = requiredFields.reduce((fieldErrors, field) => Object.assign(fieldErrors, {
           [field.id]: notEmpty(get(formData, `data[${field.id}]`))
         }), {})
