@@ -22,7 +22,9 @@ const CourseParameters = (props) => {
       save={{
         type: CALLBACK_BUTTON,
         callback: () => props.save(props.course, props.isNew, props.name).then(course => {
-          history.push(route(course))
+          if (props.isNew) {
+            history.push(route(course))
+          }
         })
       }}
       cancel={{

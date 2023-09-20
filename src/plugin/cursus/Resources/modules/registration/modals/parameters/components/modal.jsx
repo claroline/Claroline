@@ -54,7 +54,7 @@ const ParametersModal = props => {
             trans('save', {}, 'actions')
           }
           callback={() => {
-            props.save(allFields, props.formData, (data) => {
+            props.save(allFields, props.formData, true, isManager, (data) => {
               props.onSave(data)
               props.fadeModal()
             })

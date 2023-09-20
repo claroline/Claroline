@@ -195,6 +195,11 @@ class ParametersModal extends Component {
                   type: 'boolean',
                   label: trans('lock'),
                   help: trans('required_locked_conflict'),
+                  onChange: (checked) => {
+                    if (!checked) {
+                      this.props.update('restrictions.lockedEditionOnly', false)
+                    }
+                  },
                   linked: [
                     {
                       name: 'restrictions.lockedEditionOnly',
@@ -223,19 +228,15 @@ class ParametersModal extends Component {
               let normalizedName = this.props.formData.label.replace(new RegExp(' ', 'g'), '-') // Replaces all spaces with hyphens.
               normalizedName = normalizedName.replace(/[^A-Za-z0-9-]/g, '') // Removes special chars.
               normalizedName = normalizedName.replace(/-+/g, '-') // Replaces multiple hyphens with single one.
-              const required = this.props.formData.restrictions.locked && !this.props.formData.restrictions.lockedEditionOnly ?
-                false :
-                this.props.formData.required
-              const restrictions = merge({}, this.props.formData.restrictions)
 
-              if (!this.props.formData.restrictions.locked) {
-                restrictions['lockedEditionOnly'] = false
+              let required = this.props.formData.required || false
+              if (get(this.props.formData, 'restrictions.locked') && !get(this.props.formData, 'restrictions.lockedEditionOnly')) {
+                required = false
               }
 
               this.props.save(merge({}, this.props.formData, {
                 name: normalizedName,
-                required: required,
-                restrictions: restrictions
+                required: required
               }))
 
               this.props.fadeModal()
