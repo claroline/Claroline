@@ -30,6 +30,7 @@ class UserFinder extends AbstractFinder
         $groupJoin = false;
         $groupRoleJoin = false;
         $organizationJoin = false;
+        $groupOrganizationJoin = false;
 
         $this->addFilter(UserFilter::class, $qb, 'obj', [
             'disabled' => in_array('isDisabled', array_keys($searches)) && $searches['isDisabled'],
@@ -100,7 +101,7 @@ class UserFinder extends AbstractFinder
                     $qb->setParameter('groupRoleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
-                // should not exist : used by the users DataSource
+                    // should not exist : used by the users DataSource
                 case 'roleTranslation':
                     if (!$roleJoin) {
                         $qb->leftJoin('obj.roles', 'r');
@@ -135,10 +136,14 @@ class UserFinder extends AbstractFinder
                         $qb->leftJoin('obj.groups', 'g');
                         $groupJoin = true;
                     }
-                    $qb->leftJoin('g.organizations', 'go');
 
-                    $qb->andWhere('(o.uuid IN (:organizations) OR go.uuid IN (:organizations))');
-                    $qb->setParameter('organizations', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    if (!$groupOrganizationJoin) {
+                        $qb->leftJoin('g.organizations', 'go');
+                        $groupOrganizationJoin = true;
+                    }
+
+                    $qb->andWhere("(o.uuid IN (:$filterName) OR go.uuid IN (:$filterName))");
+                    $qb->setParameter($filterName, is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
                 case 'location':
@@ -192,8 +197,8 @@ class UserFinder extends AbstractFinder
 
                     break;
 
-                // get users which are manager of at least one workspace (not their personal ws)
-                // used by Workspace\ListManagersExporter
+                    // get users which are manager of at least one workspace (not their personal ws)
+                    // used by Workspace\ListManagersExporter
                 case 'workspaceManager':
                     if (!$roleJoin) {
                         $qb->leftJoin('obj.roles', 'r');
@@ -234,13 +239,13 @@ class UserFinder extends AbstractFinder
         // manages custom sort properties
         if ($sortBy && 0 !== $sortBy['direction']) {
             switch ($sortBy['property']) {
-              case 'name':
-                  $qb->orderBy('obj.lastName', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
-                  break;
-              case 'isDisabled':
-                  $qb->orderBy('obj.isEnabled', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
-                  break;
-          }
+                case 'name':
+                    $qb->orderBy('obj.lastName', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                    break;
+                case 'isDisabled':
+                    $qb->orderBy('obj.isEnabled', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                    break;
+            }
         }
 
         return $qb;
