@@ -13,8 +13,8 @@ import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/pr
 
 import {RegistrationUsers} from '#/plugin/cursus/registration/components/users'
 import {MODAL_REGISTRATION_PARAMETERS} from '#/plugin/cursus/registration/modals/parameters'
+import {MODAL_REGISTRATION_ABOUT} from '#/plugin/cursus/registration/modals/about'
 import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
-
 
 const SessionUsers = (props) => {
   let customDefinition = [].concat(props.customDefinition || [])
@@ -36,6 +36,17 @@ const SessionUsers = (props) => {
       customDefinition={customDefinition}
       actions={(rows) => [
         {
+          name: 'about',
+          type: MODAL_BUTTON,
+          icon: 'fa fa-fw fa-circle-info',
+          label: trans('show-info', {}, 'actions'),
+          displayed: constants.LEARNER_TYPE === props.type && !isEmpty(get(props.course, 'registration.form')),
+          modal: [MODAL_REGISTRATION_ABOUT, {
+            course: props.course,
+            registration: rows[0]
+          }],
+          scope: ['object']
+        }, {
           name: 'edit',
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-pencil',
