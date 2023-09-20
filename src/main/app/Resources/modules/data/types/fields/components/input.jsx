@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 import get from 'lodash/get'
 import isNumber from 'lodash/isNumber'
+import merge from 'lodash/merge'
 
 import {implementPropTypes, PropTypes as T} from '#/main/app/prop-types'
 import {makeId} from '#/main/core/scaffolding/id'
@@ -20,6 +21,7 @@ import {getCreatableTypes} from '#/main/app/data/types'
 import {DataInput} from '#/main/app/data/components/input'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import {Field as FieldTypes} from '#/main/app/data/types/fields/prop-types'
 
 // todo find a way to use collections
 
@@ -199,10 +201,10 @@ class FieldList extends Component {
               selectAction: (type) => ({
                 type: MODAL_BUTTON,
                 modal: [MODAL_FIELD_PARAMETERS, {
-                  field: {
+                  field: merge({}, FieldTypes.defaultProps, {
                     id: makeId(),
                     type: type.name
-                  },
+                  }),
                   isNew: true,
                   fields: allFields,
                   save: this.add

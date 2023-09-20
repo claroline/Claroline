@@ -12,7 +12,6 @@ import {FormParameters} from '#/main/app/content/form/parameters/containers/main
 import {route} from '#/plugin/cursus/routing'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 
-
 const CourseRegistration = (props) => {
   const history = useHistory()
 
@@ -24,7 +23,9 @@ const CourseRegistration = (props) => {
       save={{
         type: CALLBACK_BUTTON,
         callback: () => props.save(props.course, props.isNew, props.name).then(course => {
-          history.push(route(course))
+          if (props.isNew) {
+            history.push(route(course))
+          }
         })
       }}
       cancel={{
