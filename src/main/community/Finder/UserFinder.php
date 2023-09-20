@@ -30,6 +30,7 @@ class UserFinder extends AbstractFinder
         $groupJoin = false;
         $groupRoleJoin = false;
         $organizationJoin = false;
+        $groupOrganizationJoin = false;
 
         $this->addFilter(UserFilter::class, $qb, 'obj', [
             'disabled' => in_array('isDisabled', array_keys($searches)) && $searches['isDisabled'],
@@ -135,10 +136,14 @@ class UserFinder extends AbstractFinder
                         $qb->leftJoin('obj.groups', 'g');
                         $groupJoin = true;
                     }
-                    $qb->leftJoin('g.organizations', 'go');
 
-                    $qb->andWhere('(o.uuid IN (:organizations) OR go.uuid IN (:organizations))');
-                    $qb->setParameter('organizations', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    if (!$groupOrganizationJoin) {
+                        $qb->leftJoin('g.organizations', 'go');
+                        $groupOrganizationJoin = true;
+                    }
+
+                    $qb->andWhere("(o.uuid IN (:$filterName) OR go.uuid IN (:$filterName))");
+                    $qb->setParameter($filterName, is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
                 case 'location':
