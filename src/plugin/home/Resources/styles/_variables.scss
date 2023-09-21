@@ -5,8 +5,6 @@
 // Claroline & bootstrap variables
 @import "src/main/app/Resources/styles/variables";
 
-$home-tab-color:         $body-color;
-$home-tab-bg:            $gray-lighter;
-$home-tab-border-radius: $border-radius-sm;
-$home-tab-hover-color:   $body-color;
-$home-tab-hover-bg:      white;
+$home-tab-color:         $body-color !default;
+$home-tab-bg:            var(--#{$prefix}tertiary-bg) !default;
+$home-tab-border-radius: $nav-pills-border-radius !default;

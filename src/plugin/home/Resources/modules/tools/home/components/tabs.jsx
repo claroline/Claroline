@@ -1,28 +1,22 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import {get, isEmpty} from 'lodash'
+import tinycolor from 'tinycolor2'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
+import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {MENU_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 
-const Tab = ({tab, prefix, closeTab, isChild = false}) =>
+const Tab = ({tab, prefix}) =>
   <LinkButton
     key={tab.id}
-    className={classes('nav-tab', {
-      'nav-tab-hidden': get(tab, 'restrictions.hidden'),
-      'top-tab': !isChild,
-      'dropdown-tab': isChild
-    })}
+    className="home-nav-link nav-link"
     target={`${prefix}/${tab.slug}`}
-    activeStyle={{
-      backgroundColor: get(tab, 'display.color'),
-      borderColor: get(tab, 'display.color')
-    }}
-    onClick={closeTab}
   >
     {tab.icon &&
       <span className={classes('fa fa-fw', `fa-${tab.icon}`, tab.title && 'icon-with-text-right')} />
@@ -30,75 +24,91 @@ const Tab = ({tab, prefix, closeTab, isChild = false}) =>
     {tab.title}
   </LinkButton>
 
-const Tabs = props => {
-  const [expandedTab, setExpandedTab] = useState('')
-  useEffect(() => {
-    const previousWindowOnClick = window.onclick
-
-    window.onclick = ({target}) => !target.matches('top-tabs') && setExpandedTab('')
-
-    return () => {
-      window.onclick = previousWindowOnClick
-    }
-  }, [])
-
-  const toggleTab = tab => {
-    const newState = tab.id === expandedTab ? '' : tab.id
-    setExpandedTab(newState)
-  }
-  const isTabExpanded = tab => tab.id === expandedTab
-
-  const getSubtabs = (subtabs) =>
-    <ul className="dropdown-tabs">
-      {subtabs.filter(subTab => props.showHidden || !get(subTab, 'restrictions.hidden', false)).map(subtab =>
-        <li className="dropdown-tab-item" key={subtab.id}>
-          <Tab tab={subtab} prefix={props.prefix} isChild={true} closeTab={() => setExpandedTab('')} />
-        </li>
-      )}
-    </ul>
-
-  return <nav className="tool-nav">
-    <ul className="top-tabs">
+const HomeTabs = props =>
+  <nav className="home-nav mt-3">
+    <ul className="nav gap-1">
       {props.tabs
         .filter(tab => props.showHidden || !get(tab, 'restrictions.hidden', false))
         .map((tab) => {
-          const canShowSubTabs = !isEmpty(tab.children) && props.showSubMenu
+          const children = tab.children
+            .filter(subTab => props.showHidden || !get(subTab, 'restrictions.hidden', false))
+          const canShowSubTabs = !isEmpty(children) && props.showSubMenu
 
-          return <li className={classes('top-tab-item', {'dropdown': canShowSubTabs})} key={tab.id}>
-            <div className="top-item">
-              <Tab tab={tab} prefix={props.prefix} closeTab={() => setExpandedTab('')} />
-              {canShowSubTabs && <Button
-                className="expand-sub-menu"
-                type={CALLBACK_BUTTON}
-                icon={classes('fa fa-fw', {
-                  'fa-caret-up': isTabExpanded(tab),
-                  'fa-caret-down': !isTabExpanded(tab)
-                })}
-                label=""
-                callback={() => toggleTab(tab)}
-              />}
-            </div>
-            {canShowSubTabs && isTabExpanded(tab) && getSubtabs(tab.children)}
-          </li>
+          let color
+          if (get(tab, 'display.color')) {
+            color = tinycolor(get(tab, 'display.color'))
+          }
+
+          return (
+            <li
+              key={tab.id}
+              className={classes('home-nav-item nav-item', canShowSubTabs && 'btn-group', {
+                'home-nav-item-hidden': get(tab, 'restrictions.hidden')
+              }, props.currentTabId === tab.id && {
+                'active': props.currentTabId === tab.id,
+                'text-light': color && color.isDark(),
+                'text-dark': color && color.isLight()
+              })}
+              style={props.currentTabId === tab.id ? {
+                backgroundColor: get(tab, 'display.color'),
+                borderColor: get(tab, 'display.color')
+              } : undefined}
+            >
+              <Tab tab={tab} prefix={props.prefix} />
+              {canShowSubTabs &&
+                <Button
+                  className="home-nav-expand"
+                  type={MENU_BUTTON}
+                  icon="fa fa-fw fa-caret-down"
+                  label={trans('show_sub_tabs')}
+                  tooltip="bottom"
+                  menu={{
+                    align: 'right',
+                    items: children.map(subTab => {
+                      let childColor
+                      if (get(subTab, 'display.color')) {
+                        childColor = tinycolor(get(subTab, 'display.color'))
+                      }
+
+                      return {
+                        type: LINK_BUTTON,
+                        className: classes(props.currentTabId === subTab.id && {
+                          'text-light': childColor && childColor.isDark(),
+                          'text-dark': childColor && childColor.isLight()
+                        }),
+                        target: `${props.prefix}/${subTab.slug}`,
+                        icon: subTab.icon ? `fa fa-fw fa-${subTab.icon}` : undefined,
+                        label: subTab.title,
+                        activeStyle: props.currentTabId === subTab.id && {
+                          backgroundColor: get(subTab, 'display.color'),
+                          borderColor: get(subTab, 'display.color')
+                        }
+                      }
+                    })
+                  }}
+                />
+              }
+            </li>
+          )
         })
       }
     </ul>
   </nav>
-}
 
-Tabs.propTypes = {
-  showHidden: T.bool,
-  showSubMenu: T.bool,
+HomeTabs.propTypes = {
   prefix: T.string,
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
-  ))
+  )),
+  currentTabId: T.string,
+  showHidden: T.bool,
+  showSubMenu: T.bool
 }
 
-Tabs.defaultProps = {
+HomeTabs.defaultProps = {
   prefix: ''
 }
 
 export {
-  Tabs
+  HomeTabs
 }
