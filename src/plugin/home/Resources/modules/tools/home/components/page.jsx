@@ -8,7 +8,7 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {getTabTitle} from '#/plugin/home/tools/home/utils'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
-import {Tabs} from '#/plugin/home/tools/home/components/tabs'
+import {HomeTabs} from '#/plugin/home/tools/home/components/tabs'
 
 const HomePage = props =>
   <ToolPage
@@ -21,10 +21,10 @@ const HomePage = props =>
     }] : [], props.breadcrumb || [])}
 
     header={1 < props.tabs.length  ?
-      <Tabs
+      <HomeTabs
         prefix={props.basePath+props.path}
         tabs={props.tabs}
-        currentContext={props.currentContext}
+        currentTabId={get(props.currentTab, 'id')}
         showSubMenu={props.showSubMenu}
         showHidden={props.showHidden}
       /> : undefined
