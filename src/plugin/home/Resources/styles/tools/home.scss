@@ -5,100 +5,36 @@
 @import "../variables";
 @import "../components/widget";
 
-.tool-nav {
+.home-nav {
   order: 0;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   width: 100%;
   align-self: flex-start;
-  justify-content: flex-start;
-  align-items: center;
-
   margin: 0 ($grid-gutter-width * .5);
 
-  .top-tabs {
-    display: flex;
-    padding-left: 0;
-    margin-bottom: 0;
-    list-style: none;
-    flex-wrap: wrap;
-  }
-
-  .top-tab-item.dropdown {
-    position: relative;
-
-    .top-tab {
-      margin-right: 0;
-      padding: $padding-large-vertical $padding-large-horizontal;
-    }
-  }
-
-  .dropdown-tabs {
-    position: absolute;
-    padding-left: math.div($padding-large-vertical, 2);
-    list-style: none;
-    z-index: 1;
-  }
-
-  .nav-tab-hidden {
-    color: var(--#{$prefix}secondary-color);
-    text-decoration: line-through !important;
-  }
-
-  .nav-tab {
-    position: relative;
+  .home-nav-item {
     color: $home-tab-color;
-    padding: $padding-large-vertical $padding-large-horizontal;
-    margin: 5px;
     background: $home-tab-bg;
     border: 1px solid transparent;
     border-radius: $home-tab-border-radius;
 
-    &:hover {
-      color: $home-tab-hover-color;
-      background: $home-tab-hover-bg;
-    }
-
     &.active {
-      border-color: $primary; // can be overridden by tab config
-      background: $primary; // can be overridden by tab config
-
-      @include text-movie-subtitles();
-      @include box-shadow($box-shadow);
+      color: $nav-pills-link-active-color;
+      background: $nav-pills-link-active-bg;
     }
   }
 
-  .nav-tab {
-    display: block;
-    text-decoration: none;
-    white-space: nowrap;
-
-    &.dropdown-tab {
-      margin: 0;
-      border-radius: unset;
-    }
+  .home-nav-item-hidden {
+    color: var(--#{$prefix}secondary-color);
+    text-decoration: line-through !important;
   }
 
-  .top-item {
-    display: flex;
+  .home-nav-expand {
+    padding: $nav-link-padding-y ($nav-link-padding-x*.5);
+  }
 
-    .expand-sub-menu {
-      height: auto;
-      padding-left: 7px;
-  
-      color: $home-tab-color;
-      background: $home-tab-bg;
-  
-      border-left: 1px solid;
-      //margin: $padding-xs-horizontal 0;
-
-      &:hover {
-        color: $home-tab-hover-color;
-        background: $home-tab-hover-bg;
-        @include box-shadow($box-shadow);
-      }
-    }
+  .home-nav-expand,
+  .home-nav-link {
+    color: inherit;
   }
 }
 
