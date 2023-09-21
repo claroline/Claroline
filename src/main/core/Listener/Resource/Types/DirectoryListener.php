@@ -38,13 +38,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class DirectoryListener
 {
     public function __construct(
-        private ObjectManager $om,
-        private SerializerProvider $serializer,
-        private Crud $crud,
-        private FileManager $fileManager,
-        private ResourceManager $resourceManager,
-        private ResourceActionManager $actionManager,
-        private RightsManager $rightsManager
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly Crud $crud,
+        private readonly FileManager $fileManager,
+        private readonly ResourceManager $resourceManager,
+        private readonly ResourceActionManager $actionManager,
+        private readonly RightsManager $rightsManager
     ) {
     }
 
@@ -149,7 +149,7 @@ class DirectoryListener
         // initialize resource node Entity
         try {
             /** @var ResourceNode $resourceNode */
-            $resourceNode = $this->crud->create(ResourceNode::class, $nodeData, array_merge([Options::NO_RIGHTS, Crud::THROW_EXCEPTION], $options));
+            $resourceNode = $this->crud->create(ResourceNode::class, $nodeData, array_merge([Options::PERSIST_TAG, Options::NO_RIGHTS, Crud::THROW_EXCEPTION], $options));
             $resourceNode->setParent($parent);
             $resourceNode->setWorkspace($parent->getWorkspace());
         } catch (InvalidDataException $e) {

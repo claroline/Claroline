@@ -77,6 +77,10 @@ const WorkspaceFormComponent = (props) =>
             },
             mode: 'standard'
           }, {
+            name: 'tags',
+            type: 'tag',
+            label: trans('tags')
+          }, {
             name: 'organizations',
             type: 'organizations',
             label: trans('organizations'),

@@ -4,9 +4,3 @@ plugin:
           icon: tags
           tool_rights:
               - create
-
-    resource_actions:
-        - name: tags
-          group: management
-          decoder: administrate
-          scope: [object, collection]

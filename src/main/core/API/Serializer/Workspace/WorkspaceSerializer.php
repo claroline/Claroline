@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Workspace;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -158,113 +159,6 @@ class WorkspaceSerializer
         return $serialized;
     }
 
-    private function isRegistered(Workspace $workspace): bool
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ($user instanceof User) {
-            return $this->workspaceManager->isRegistered($workspace, $user);
-        }
-
-        return false;
-    }
-
-    private function getOpening(Workspace $workspace): array
-    {
-        $details = $this->workspaceManager->getWorkspaceOptions($workspace)->getDetails();
-        $openingData = [
-            'type' => 'tool',
-            'target' => 'home',
-            'menu' => null,
-        ];
-
-        if ($details && isset($details['hide_tools_menu'])) {
-            // test for bool values is for retro-compatibility to avoid having to migrate a json col in a huge table
-            if (is_string($details['hide_tools_menu'])) {
-                $openingData['menu'] = $details['hide_tools_menu'];
-            } else {
-                $openingData['menu'] = !$details['hide_tools_menu'] ? 'open' : 'close';
-            }
-        }
-
-        if ($details && isset($details['opening_type'])) {
-            $openingData['type'] = $details['opening_type'];
-        }
-        if ($details && isset($details['opening_target'])) {
-            $openingData['target'] = $details['opening_target'];
-        }
-        if ('resource' === $openingData['type'] && isset($details['workspace_opening_resource']) && $details['workspace_opening_resource']) {
-            /** @var ResourceNode $resource */
-            $resource = $this->om->find(ResourceNode::class, $details['workspace_opening_resource']);
-
-            if (!empty($resource)) {
-                $openingData['target'] = $this->resNodeSerializer->serialize($resource, [SerializerInterface::SERIALIZE_MINIMAL]);
-            }
-        }
-
-        return $openingData;
-    }
-
-    private function getDisplay(Workspace $workspace): array
-    {
-        $options = $workspace->getOptions()->getDetails();
-
-        return [
-            'color' => !empty($options['background_color']) ? $options['background_color'] : null,
-            'showProgression' => $workspace->getShowProgression(),
-        ];
-    }
-
-    private function getBreadcrumb(Workspace $workspace): array
-    {
-        $options = $workspace->getOptions();
-
-        return [
-            'displayed' => $options->getShowBreadcrumb(),
-            'items' => $options->getBreadcrumbItems(),
-        ];
-    }
-
-    private function getRegistration(Workspace $workspace, array $options): array
-    {
-        $defaultRole = null;
-        if ($workspace->getDefaultRole()) {
-            // this should use RoleSerializer, but we will get a circular reference if we do it
-            $defaultRole = [
-                'id' => $workspace->getDefaultRole()->getUuid(),
-                'name' => $workspace->getDefaultRole()->getName(),
-                'type' => $workspace->getDefaultRole()->getType(),
-                'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
-            ];
-        }
-
-        $serialized = [
-            'validation' => $workspace->getRegistrationValidation(),
-            'selfRegistration' => $workspace->getSelfRegistration(),
-            'selfUnregistration' => $workspace->getSelfUnregistration(),
-            'defaultRole' => $defaultRole,
-            'maxTeams' => $workspace->getMaxTeams(),
-        ];
-
-        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
-            // this is a huge performances bottleneck
-            $serialized['waitingForRegistration'] = $workspace->getSelfRegistration() && $workspace->getRegistrationValidation() ? $this->waitingForRegistration($workspace) : false;
-        }
-
-        return $serialized;
-    }
-
-    private function serializeTags(Workspace $workspace)
-    {
-        $event = new GenericDataEvent([
-            'class' => Workspace::class,
-            'ids' => [$workspace->getUuid()],
-        ]);
-        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
-
-        return $event->getResponse() ?? [];
-    }
-
     /**
      * Deserializes Workspace data into entities.
      */
@@ -407,7 +301,137 @@ class WorkspaceSerializer
             $workspace->setOrganizations(array_values($organizations));
         }
 
+        if (isset($data['tags'])) {
+            $this->deserializeTags($workspace, $data['tags'], $options);
+        }
+
         return $workspace;
+    }
+
+    private function isRegistered(Workspace $workspace): bool
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user instanceof User) {
+            return $this->workspaceManager->isRegistered($workspace, $user);
+        }
+
+        return false;
+    }
+
+    private function getOpening(Workspace $workspace): array
+    {
+        $details = $this->workspaceManager->getWorkspaceOptions($workspace)->getDetails();
+        $openingData = [
+            'type' => 'tool',
+            'target' => 'home',
+            'menu' => null,
+        ];
+
+        if ($details && isset($details['hide_tools_menu'])) {
+            // test for bool values is for retro-compatibility to avoid having to migrate a json col in a huge table
+            if (is_string($details['hide_tools_menu'])) {
+                $openingData['menu'] = $details['hide_tools_menu'];
+            } else {
+                $openingData['menu'] = !$details['hide_tools_menu'] ? 'open' : 'close';
+            }
+        }
+
+        if ($details && isset($details['opening_type'])) {
+            $openingData['type'] = $details['opening_type'];
+        }
+        if ($details && isset($details['opening_target'])) {
+            $openingData['target'] = $details['opening_target'];
+        }
+        if ('resource' === $openingData['type'] && isset($details['workspace_opening_resource']) && $details['workspace_opening_resource']) {
+            /** @var ResourceNode $resource */
+            $resource = $this->om->find(ResourceNode::class, $details['workspace_opening_resource']);
+
+            if (!empty($resource)) {
+                $openingData['target'] = $this->resNodeSerializer->serialize($resource, [SerializerInterface::SERIALIZE_MINIMAL]);
+            }
+        }
+
+        return $openingData;
+    }
+
+    private function getDisplay(Workspace $workspace): array
+    {
+        $options = $workspace->getOptions()->getDetails();
+
+        return [
+            'color' => !empty($options['background_color']) ? $options['background_color'] : null,
+            'showProgression' => $workspace->getShowProgression(),
+        ];
+    }
+
+    private function getBreadcrumb(Workspace $workspace): array
+    {
+        $options = $workspace->getOptions();
+
+        return [
+            'displayed' => $options->getShowBreadcrumb(),
+            'items' => $options->getBreadcrumbItems(),
+        ];
+    }
+
+    private function getRegistration(Workspace $workspace, array $options): array
+    {
+        $defaultRole = null;
+        if ($workspace->getDefaultRole()) {
+            // this should use RoleSerializer, but we will get a circular reference if we do it
+            $defaultRole = [
+                'id' => $workspace->getDefaultRole()->getUuid(),
+                'name' => $workspace->getDefaultRole()->getName(),
+                'type' => $workspace->getDefaultRole()->getType(),
+                'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
+            ];
+        }
+
+        $serialized = [
+            'validation' => $workspace->getRegistrationValidation(),
+            'selfRegistration' => $workspace->getSelfRegistration(),
+            'selfUnregistration' => $workspace->getSelfUnregistration(),
+            'defaultRole' => $defaultRole,
+            'maxTeams' => $workspace->getMaxTeams(),
+        ];
+
+        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+            // this is a huge performances bottleneck
+            $serialized['waitingForRegistration'] = $workspace->getSelfRegistration() && $workspace->getRegistrationValidation() ? $this->waitingForRegistration($workspace) : false;
+        }
+
+        return $serialized;
+    }
+
+    private function serializeTags(Workspace $workspace): array
+    {
+        $event = new GenericDataEvent([
+            'class' => Workspace::class,
+            'ids' => [$workspace->getUuid()],
+        ]);
+        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
+
+        return $event->getResponse() ?? [];
+    }
+
+    private function deserializeTags(Workspace $workspace, array $tags = [], array $options = []): void
+    {
+        if (in_array(Options::PERSIST_TAG, $options)) {
+            $event = new GenericDataEvent([
+                'tags' => $tags,
+                'data' => [
+                    [
+                        'class' => Workspace::class,
+                        'id' => $workspace->getUuid(),
+                        'name' => $workspace->getName(),
+                    ],
+                ],
+                'replace' => true,
+            ]);
+
+            $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
+        }
     }
 
     private function waitingForRegistration(Workspace $workspace): bool

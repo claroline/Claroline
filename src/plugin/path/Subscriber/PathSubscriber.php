@@ -204,7 +204,7 @@ class PathSubscriber implements EventSubscriberInterface
 
         if (!isset($copiedResources[$resourceNode->getUuid()])) {
             // resource not already copied, create a new copy
-            $resourceCopy = $this->crud->copy($resourceNode, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $destination]);
+            $resourceCopy = $this->crud->copy($resourceNode, [Options::PERSIST_TAG, Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['user' => $user, 'parent' => $destination]);
 
             if ($resourceCopy) {
                 $copiedResources[$resourceNode->getUuid()] = $resourceCopy;
