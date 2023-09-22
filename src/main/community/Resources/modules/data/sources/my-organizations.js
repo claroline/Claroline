@@ -1,17 +1,22 @@
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
 
-import {route} from '#/main/community/organization/routing'
+import {route as toolRoute} from '#/main/core/tool/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
+
 import {OrganizationCard} from '#/main/community/organization/components/card'
+import {getActions, getDefaultAction} from '#/main/community/organization/utils'
 
-export default {
-  name: 'my-organizations',
-  icon: 'fa fa-fw fa-building',
-  parameters: {
-    primaryAction: (organization) => ({
-      type: URL_BUTTON,
-      target: '#' + route(organization)
-    }),
+export default (contextType, contextData, refresher, currentUser) => {
+  let basePath
+  if ('workspace' === contextType) {
+    basePath = workspaceRoute(contextData, 'community')
+  } else {
+    basePath = toolRoute('community')
+  }
+
+  return {
+    primaryAction: (organization) => getDefaultAction(organization, refresher, basePath, currentUser),
+    actions: (organizations) => getActions(organizations, refresher, basePath, currentUser),
     definition: [
       {
         name: 'name',
