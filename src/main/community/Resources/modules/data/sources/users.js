@@ -2,11 +2,11 @@ import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
 
-import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {route as toolRoute} from '#/main/core/tool/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
-import {UserCard} from '#/main/community/user/components/card'
 import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserCard} from '#/main/community/user/components/card'
 import {getActions, getDefaultAction} from '#/main/community/user/utils'
 
 export default (contextType, contextData, refresher, currentUser) => {

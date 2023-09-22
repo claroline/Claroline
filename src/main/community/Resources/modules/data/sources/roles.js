@@ -1,17 +1,23 @@
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
 
-import {route} from '#/main/community/role/routing'
+import {route as toolRoute} from '#/main/core/tool/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
+
+import {constants} from '#/main/community/constants'
 import {RoleCard} from '#/main/community/role/components/card'
+import {getActions, getDefaultAction} from '#/main/community/role/utils'
 
-export default {
-  name: 'roles',
-  icon: 'fa fa-fw fa-chess',
-  parameters: {
-    primaryAction: (role) => ({
-      type: URL_BUTTON,
-      target: '#' + route(role)
-    }),
+export default (contextType, contextData, refresher, currentUser) => {
+  let basePath
+  if ('workspace' === contextType) {
+    basePath = workspaceRoute(contextData, 'community')
+  } else {
+    basePath = toolRoute('community')
+  }
+
+  return {
+    primaryAction: (role) => getDefaultAction(role, refresher, basePath, currentUser),
+    actions: (roles) => getActions(roles, refresher, basePath, currentUser),
     definition: [
       {
         name: 'name',
@@ -23,7 +29,10 @@ export default {
         name: 'type',
         type: 'choice',
         label: trans('type'),
-        displayed: true
+        displayed: true,
+        options: {
+          choices: constants.ROLE_TYPES
+        }
       }, {
         name: 'meta.description',
         type: 'string',

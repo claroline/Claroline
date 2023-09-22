@@ -1,17 +1,22 @@
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
 
-import {route} from '#/main/community/team/routing'
+import {route as toolRoute} from '#/main/core/tool/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
+
 import {TeamCard} from '#/main/community/team/components/card'
+import {getActions, getDefaultAction} from '#/main/community/team/utils'
 
-export default {
-  name: 'teams',
-  icon: 'fa fa-fw fa-users',
-  parameters: {
-    primaryAction: (team) => ({
-      type: URL_BUTTON,
-      target: '#' + route(team)
-    }),
+export default (contextType, contextData, refresher, currentUser) => {
+  let basePath
+  if ('workspace' === contextType) {
+    basePath = workspaceRoute(contextData, 'community')
+  } else {
+    basePath = toolRoute('community')
+  }
+
+  return {
+    primaryAction: (team) => getDefaultAction(team, refresher, basePath, currentUser),
+    actions: (teams) => getActions(teams, refresher, basePath, currentUser),
     definition: [
       {
         name: 'name',

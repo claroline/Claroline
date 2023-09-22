@@ -1,17 +1,22 @@
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
 
-import {route} from '#/main/community/group/routing'
+import {route as toolRoute} from '#/main/core/tool/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
+
 import {GroupCard} from '#/main/community/group/components/card'
+import {getActions, getDefaultAction} from '#/main/community/group/utils'
 
-export default {
-  name: 'my-groups',
-  icon: 'fa fa-fw fa-users',
-  parameters: {
-    primaryAction: (group) => ({
-      type: URL_BUTTON,
-      target: '#' + route(group)
-    }),
+export default  (contextType, contextData, refresher, currentUser) => {
+  let basePath
+  if ('workspace' === contextType) {
+    basePath = workspaceRoute(contextData, 'community')
+  } else {
+    basePath = toolRoute('community')
+  }
+
+  return {
+    primaryAction: (group) => getDefaultAction(group, refresher, basePath, currentUser),
+    actions: (groups) => getActions(groups, refresher, basePath, currentUser),
     definition: [
       {
         name: 'name',
