@@ -41,7 +41,7 @@ class MailManager
         LocaleManager $localeManager,
         UserManager $userManager,
         StrictDispatcher $dispatcher,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ) {
         $this->mailer = $mailer;
         $this->router = $router;
@@ -79,10 +79,10 @@ class MailManager
         $this->userManager->initializePassword($user);
 
         $placeholders['password_reset_link'] = $this->router->generate(
-                'claro_index',
-                [],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            )."#/newpassword/{$user->getResetPasswordHash()}";
+            'claro_index',
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        )."#/newpassword/{$user->getResetPasswordHash()}";
 
         $subject = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale, 'title');
         $body = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale);
@@ -95,10 +95,10 @@ class MailManager
         $this->userManager->initializePassword($user);
         $hash = $user->getResetPasswordHash();
         $link = $this->router->generate(
-                'claro_index',
-                [],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            )."#/newpassword/{$hash}";
+            'claro_index',
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        )."#/newpassword/{$hash}";
         $locale = $this->localeManager->getLocale($user);
         $placeholders = [
             'first_name' => $user->getFirstName(),
@@ -180,7 +180,7 @@ class MailManager
     public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false, $replyToMail = null)
     {
         if (0 === count($users) && (!isset($extra['to']) || 0 === count($extra['to']))) {
-            //obviously, if we're not going to send anything to anyone, it's better to stop
+            // obviously, if we're not going to send anything to anyone, it's better to stop
             return false;
         }
 
@@ -197,11 +197,11 @@ class MailManager
             $body = $this->templateManager->getTemplate('email_layout', ['content' => $body], $locale);
 
             if ($from) {
-                $body = str_replace('%first_name%', $from->getFirstName(), $body);
-                $body = str_replace('%last_name%', $from->getLastName(), $body);
+                $body = str_replace('%sender_first_name%', $from->getFirstName(), $body);
+                $body = str_replace('%sender_last_name%', $from->getLastName(), $body);
             } else {
-                $body = str_replace('%first_name%', $this->config->getParameter('display.name'), $body);
-                $body = str_replace('%last_name%', '', $body);
+                $body = str_replace('%sender_first_name%', $this->config->getParameter('display.name'), $body);
+                $body = str_replace('%sender_last_name%', '', $body);
             }
 
             foreach ($users as $user) {
