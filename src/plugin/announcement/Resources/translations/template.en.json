@@ -1,6 +1,8 @@
 {
   "email_announcement": "Sending an announce",
   "email_announcement_desc": "Template used to send an announce",
+  "publication_datetime_desc": "Date and time of publication",
   "pdf_announcement": "Export an announce",
-  "pdf_announcement_desc": "Template used to export an advert in PDF format"
+  "pdf_announcement_desc": "Template used to export an advert in PDF format",
+  "title_desc": "Title of the announce"
 }
