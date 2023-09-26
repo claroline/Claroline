@@ -1,6 +1,8 @@
 {
   "email_announcement": "Envoi d'une annonce",
   "email_announcement_desc": "Template utilisé pour envoyer une annonce",
+  "publication_datetime_desc": "Date de publication de l'annonce",
   "pdf_announcement": "Export d'une annonce",
-  "pdf_announcement_desc": "Template utilisé pour exporter une annonce au format PDF"
+  "pdf_announcement_desc": "Template utilisé pour exporter une annonce au format PDF",
+  "title_desc": "Titre de l'annonce"
 }
