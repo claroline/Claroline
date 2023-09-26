@@ -1,4 +1,9 @@
 {
     "forum_new_message": "Nouveau message dans un forum",
-    "forum_new_message_desc": "Template utilisé pour notifier les utilisateurs qu'un nouveau message a été posté dans une forum."
+    "forum_new_message_desc": "Template utilisé pour notifier les utilisateurs qu'un nouveau message a été posté dans une forum.",
+    "forum_desc": "Nom du forum",
+    "forum_url_desc": "URL du forum",
+    "subject_desc": "Nom du sujet",
+    "subject_url_desc": "URL du sujet",
+    "message_desc": "Message"
 }

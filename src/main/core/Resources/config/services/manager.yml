@@ -95,6 +95,7 @@ services:
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@translator'
 
+
     Claroline\CoreBundle\Manager\LogManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
