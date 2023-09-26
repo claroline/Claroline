@@ -1,5 +1,6 @@
 {
     "assertion_id_desc": "The id of the issued badge",
+    "assertion_url_desc": "The url of the issued badge",
     "badge_certificate": "Badge certificate",
     "badge_certificate_desc": "Template used for badge certificate",
     "badge_granted": "Awarding a badge",
@@ -7,6 +8,7 @@
     "badge_description_desc": "Description of the badge",
     "badge_duration_desc": "Validity duration of the badge",
     "badge_image_desc": "The image of the badge",
+    "badge_image_url_desc": "The url of the image of the badge",
     "badge_name_desc": "The name of the badge",
     "issued_on_desc": "The date when the badge has been issued",
     "issuer_box_number_desc": "The box number of the organization that has issued the badge",

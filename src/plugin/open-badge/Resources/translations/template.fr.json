@@ -1,5 +1,6 @@
 {
     "assertion_id_desc": "L'identifiant d'attribution du badge",
+    "assertion_url_desc": "L'URL d'attribution du badge",
     "badge_certificate": "Certificat d'un badge",
     "badge_certificate_desc": "Template utilisé pour le certificat d'un badge.",
     "badge_granted": "Attribution d'un badge",
@@ -7,6 +8,7 @@
     "badge_description_desc": "La description du badge",
     "badge_duration_desc": "La durée de validité du badge",
     "badge_image_desc": "L'icône du badge",
+    "badge_image_url_desc": "L'URL de l'icône du badge",
     "badge_name_desc": "Le nom du badge",
     "issued_on_desc": "La date d'attribution du badge",
     "issuer_box_number_desc": "Le numéro de boîte de l'organisme ayant attribué le badge",

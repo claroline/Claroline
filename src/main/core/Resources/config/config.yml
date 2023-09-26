@@ -233,31 +233,50 @@ plugin:
         - name: user_activation
           type: email
           placeholders:
+              - first_name
+              - last_name
+              - username
               - user_activation_link
 
         - name: user_registration
           type: email
           placeholders:
+              - first_name
+              - last_name
+              - username
               - validation_mail
               - password
 
         - name: user_email_validation
           type: email
           placeholders:
+              - first_name
+              - last_name
+              - username
               - validation_mail
 
         - name: password_initialization
           type: email
           placeholders:
+              - first_name
+              - last_name
+              - username
               - password_initialization_link
 
         - name: forgotten_password
           type: email
           placeholders:
+              - first_name
+              - last_name
+              - username
               - password_reset_link
 
         - name: user_disabled
           type: email
+          placeholders:
+              - first_name
+              - last_name
+              - username
 
         # not sent
         - name: workspace_registration
