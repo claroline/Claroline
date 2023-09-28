@@ -43,13 +43,6 @@
         .data-card-toolbar .data-card-toolbar-btn {
             @include text-movie-subtitles();
         }
-
-        /*.data-card-toolbar {
-            > .data-card-toolbar-btn,
-            .dropdown:not(.open) .dropdown-toggle {
-                @include text-movie-subtitles();
-            }
-        }*/
     }
 
     .data-card-content {
@@ -103,12 +96,19 @@
 
 // clickable variant
 .data-card-clickable {
+    transition-property: box-shadow, transform;
+    transition-duration: .3s;
+    box-shadow: rgba(19,19,19,.08) 0 2px 4px 0;
+
     &:hover {
-        //z-index: 2;
+        z-index: 2;
+        transform: translateY(-2px);
+        box-shadow: 0 18px 35px rgba(50,50,93,.1),0 8px 15px rgba(0,0,0,.07);
+
         /*border-color: $data-card-active-border;
         color: $data-card-active-color;*/
         //background-color: $data-card-active-bg;
-        @include box-shadow($data-card-active-box-shadow);
+        //@include box-shadow($data-card-active-box-shadow);
 
         .data-card-header {
             //background: $data-card-active-header-bg;
@@ -140,7 +140,10 @@
 }
 
 .data-grid-item-container:hover {
-    //padding: 0 !important;
+    .data-grid-item-select {
+        z-index: 3;
+        transform: translateY(-2px);
+    }
 }
 
 .data-card-selected {
@@ -176,7 +179,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    //border-color: $data-card-inner-border;
     background: $data-card-header-bg;
 }
 
@@ -189,7 +191,7 @@
     line-height: 0;
 
     // for FA icons
-    color: $data-card-header-bg;
+    color: $data-card-icon-color;
 
     // for SVG icons
     //fill: rgba(0, 0, 0, 0.5) !important;
