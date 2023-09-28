@@ -37,13 +37,7 @@
 
     .btn {
         padding: 0 $data-grid-gutter;
-        //border: none;
-        //font-weight: bold;
     }
-
-    /*> .btn-link { // really ugly
-        border-left: 1px solid #ccc;
-    }*/
 }
 
 // customizes bulk actions
@@ -51,19 +45,7 @@
     border: 1px solid transparent;
     margin-bottom: $data-grid-gutter;
 
-    // mimic checkboxes for proper alignment with "select all" checkbox
-    .list-selected-label {
-        position: relative;
-        padding: $data-grid-gutter $data-grid-gutter $data-grid-gutter ($data-grid-gutter + 20px);
-
-        .fa {
-            position: absolute;
-            margin-left: -20px;
-            margin-top: 3px; // arbitrary
-            width: 16px;
-        }
-    }
-
+    .list-selected-label,
     .btn {
         padding: $data-grid-gutter;
     }
@@ -98,6 +80,8 @@
     position: absolute;
     margin: 0 !important;
     left: $data-grid-gutter * 2;
+    transition-property: box-shadow, transform;
+    transition-duration: .3s;
 }
 
 
@@ -107,17 +91,17 @@
 
 .data-grid-row {
     .data-grid-content {
-        margin: math.div($data-grid-gutter, 2) (-$data-grid-gutter); // absorb items margin
+        margin: -$data-grid-gutter*.5 (-$data-grid-gutter); // absorb items margin
     }
 
     .data-grid-item-container {
-        padding: math.div($data-grid-gutter, 2) $data-grid-gutter;
+        padding: $data-grid-gutter*.5 $data-grid-gutter;
         flex: 0 0 100%;
         max-width: 100%;
     }
 
     .data-grid-item-select {
-        top: $data-grid-gutter + math.div($data-grid-gutter, 2);
+        top: $data-grid-gutter + $data-grid-gutter*.5;
     }
 }
 
