@@ -407,7 +407,7 @@ $user-message-border-radius: $border-radius-lg;
 // Data grid
 // ---
 
-$data-grid-gutter: 15px;
+$data-grid-gutter: $grid-gutter-width*.5;
 
 
 // -
@@ -419,18 +419,17 @@ $data-card-content-font:      $font-size-sm !default;
 $data-card-padding:           $spacer;
 
 $data-card-color:             $card-color;
-$data-card-color-muted:       var(--#{$prefix}secondary-color) !default;
 $data-card-bg:                $card-bg;
 $data-card-border-radius:     $card-border-radius;
 $data-card-box-shadow:        $card-box-shadow;
-$data-card-header-bg:         $card-cap-bg;
 
-//$data-card-border:             var(--#{$prefix}border-color) !default; // deprecated
 $data-card-border-width:       $card-border-width !default;
 $data-card-border-color:       $card-border-color !default;
-//$data-card-inner-border:       $card-border-color !default; // deprecated
 $data-card-inner-border-width: $data-card-border-width !default;
 $data-card-inner-border-color: $data-card-border-color !default;
+
+$data-card-header-bg:  $card-cap-bg;
+$data-card-icon-color: var(--#{$prefix}secondary-color) !default;
 
 // sizing
 $data-card-icon-sm-size:      80px;
@@ -440,6 +439,7 @@ $data-card-icon-lg-size:      120px;
 $data-card-title-lg-font:     $font-size-base;
 
 // states
+$data-card-color-muted:         var(--#{$prefix}secondary-color) !default;
 $data-card-active-color:        $body-color;
 $data-card-active-bg:           $table-hover-bg;
 $data-card-active-box-shadow:   0 0 10px 2px rgba($primary, 0.25);
