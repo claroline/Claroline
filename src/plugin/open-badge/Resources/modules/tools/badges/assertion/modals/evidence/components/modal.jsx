@@ -17,10 +17,11 @@ const EvidenceModal = props =>
     title={trans('evidence', {}, 'badge')}
     subtitle={props.assertion.badge.name}
     onEntering={() => props.initForm(props.evidence)}
+    size="lg"
   >
     <FormData
       name={selectors.STORE_NAME}
-      target={['apiv2_evidence_create']}
+      flush={true}
       disabled={props.disabled}
       sections={[
         {
@@ -48,20 +49,20 @@ const EvidenceModal = props =>
           ]
         }
       ]}
-    />
-
-    <Button
-      className="modal-btn"
-      variant="btn"
-      size="lg"
-      type={CALLBACK_BUTTON}
-      label={trans('save', {}, 'actions')}
-      primary={true}
-      callback={() => {
-        props.saveEvidence(props.assertion)
-        props.fadeModal()
-      }}
-    />
+    >
+      <Button
+        className="modal-btn"
+        variant="btn"
+        size="lg"
+        type={CALLBACK_BUTTON}
+        label={trans('save', {}, 'actions')}
+        primary={true}
+        callback={() => {
+          props.saveEvidence(props.assertion)
+          props.fadeModal()
+        }}
+      />
+    </FormData>
   </Modal>
 
 EvidenceModal.propTypes = {

@@ -83,7 +83,7 @@ const EntriesComponent = props =>
         }, {
           name: 'lock',
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-w fa-lock',
+          icon: 'fa fa-fw fa-lock',
           label: trans('lock', {}, 'actions'),
           callback: () => props.switchEntriesLock(rows, true),
           displayed: props.canAdministrate && rows.filter(e => e.locked).length !== rows.length,
@@ -91,7 +91,7 @@ const EntriesComponent = props =>
         }, {
           name: 'unlock',
           type: CALLBACK_BUTTON,
-          icon: 'fa fa-w fa-unlock',
+          icon: 'fa fa-fw fa-unlock',
           label: trans('unlock', {}, 'actions'),
           callback: () => props.switchEntriesLock(rows, false),
           displayed: props.canAdministrate && rows.filter(e => !e.locked).length !== rows.length,
