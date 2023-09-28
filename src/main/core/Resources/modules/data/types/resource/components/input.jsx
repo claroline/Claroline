@@ -1,21 +1,18 @@
 import React from 'react'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans, transChoice} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
-import {ModalButton} from '#/main/app/buttons/modal'
+import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 import {route} from '#/main/core/resource/routing'
 import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
-
-// TODO : manage disabled state
 
 const ResourceInput = props => {
   if (!isEmpty(props.value) && !props.embedded) {
@@ -48,16 +45,12 @@ const ResourceInput = props => {
             }]
           }, {
             name: 'delete',
-            type: MODAL_BUTTON,
+            type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-trash',
             label: trans('delete', {}, 'actions'),
             dangerous: true,
             disabled: props.disabled,
-            modal: [MODAL_CONFIRM, {
-              title: transChoice('resources_delete_confirm', 1, {}, 'resource'),
-              question: transChoice('resources_delete_message', 1, {count: 1}, 'resource'),
-              handleConfirm: () => props.onChange(null)
-            }]
+            callback: () => props.onChange(null)
           }
         ]}
       />
@@ -65,22 +58,17 @@ const ResourceInput = props => {
   }
   else if (!isEmpty(props.value) && props.embedded) {
     return (
-      <div id={props.id}>
-        <ModalButton
-          className="btn btn-sm btn-link"
-          title={trans('delete')}
+      <div id={props.id} className="position-relative">
+        <Button
+          className="position-absolute bottom-100 end-0 text-lowercase"
+          variant="btn-text"
+          type={CALLBACK_BUTTON}
+          label={trans('delete', {}, 'actions')}
           dangerous={true}
+          size="sm"
           disabled={props.disabled}
-          modal={[MODAL_CONFIRM, {
-            dangerous: true,
-            icon: 'fa fa-fw fa-trash',
-            title: transChoice('resources_delete_confirm', 1, {}, 'resource'),
-            question: transChoice('resources_delete_message', 1, {count: 1}, 'resource'),
-            handleConfirm: () => props.onChange(null)
-          }]}
-        >
-          <span>{trans('delete', {}, 'actions')}</span>
-        </ModalButton>
+          callback={() => props.onChange(null)}
+        />
 
         <ResourceEmbedded
           resourceNode={props.value}
@@ -96,8 +84,11 @@ const ResourceInput = props => {
       title={trans('no_resource', {}, 'resource')}
       size={props.size}
     >
-      <ModalButton
+      <Button
         className="btn btn-outline-primary w-100 mt-2"
+        type={MODAL_BUTTON}
+        icon="fa fa-fw fa-plus"
+        label={trans('add_resource', {}, 'resource')}
         modal={[MODAL_RESOURCES, {
           title: props.picker.title,
           current: props.picker.current,
@@ -111,10 +102,7 @@ const ResourceInput = props => {
         }]}
         size={props.size}
         disabled={props.disabled}
-      >
-        <span className="fa fa-fw fa-plus icon-with-text-right" />
-        {trans('add_resource', {}, 'resource')}
-      </ModalButton>
+      />
     </ContentPlaceholder>
   )
 }

@@ -134,9 +134,11 @@ const CategoryFormModal = props => {
       title={trans('category')}
       subtitle={(props.category && props.category.name) || trans('new_category')}
       onEntering={() => props.loadCategory(props.category)}
+      size="lg"
     >
       <FormData
         name={selectors.STORE_NAME}
+        flush={true}
         sections={[
           {
             id: 'general',

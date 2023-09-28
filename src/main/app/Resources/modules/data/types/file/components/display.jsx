@@ -9,7 +9,7 @@ const FileDisplay = props => {
     }
 
     return (
-      <a href={file.url}>
+      <a href={file.url} className="d-block">
         {file.name || file.url}
       </a>
     )

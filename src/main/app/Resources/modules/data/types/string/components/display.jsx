@@ -12,7 +12,7 @@ const StringDisplay = (props) => {
   }
 
   return (
-    <div id={props.id} className="string-display text-justify">
+    <div id={props.id} className="string-display text-justify" style={props.long ? {whiteSpace: 'pre-wrap'} : undefined}>
       {props.data}
     </div>
   )
@@ -21,7 +21,8 @@ const StringDisplay = (props) => {
 StringDisplay.propTypes = {
   id: T.string.isRequired,
   data: T.string,
-  placeholder: T.string
+  placeholder: T.string,
+  long: T.bool
 }
 
 export {

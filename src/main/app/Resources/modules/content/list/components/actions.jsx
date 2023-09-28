@@ -121,7 +121,7 @@ ListActions.propTypes = {
 const ListBulkActions = props =>
   <div className="data-bulk-actions list-selected">
     <div className="list-selected-label">
-      <span className="fa fa-level-up fa-rotate-90" />
+      <span className="fa fa-level-up fa-rotate-90 fa-fw icon-with-text-right" />
       {transChoice('list_selected_count', props.count, {count: props.count}, 'platform')}
     </div>
 
