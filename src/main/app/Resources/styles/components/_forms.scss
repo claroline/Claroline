@@ -158,6 +158,12 @@
             margin-left: auto;
         }
     }
+
+    .btn-cancel {
+        // outline btns have transparent background
+        // this will avoid seeing trough the button when it overlaps the content
+        background: $body-bg;
+    }
 }
 
 
