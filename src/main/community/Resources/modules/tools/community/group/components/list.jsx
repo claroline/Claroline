@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {MODAL_GROUPS} from '#/main/community/modals/groups'
@@ -44,21 +44,9 @@ const GroupList = props =>
           title: trans('register_groups'),
           subtitle: trans('workspace_register_select_groups'),
           selectAction: (selectedGroups) => ({
-            type: ASYNC_BUTTON,
-            label: trans('select', {}, 'actions'),
-            request: {
-              url: ['apiv2_workspace_register'],
-              request: {
-                method: 'PATCH',
-                body: JSON.stringify({
-                  workspaces: [props.contextData.id],
-                  groups: selectedGroups.map(group => group.id)
-                })
-              },
-              success: () => {
-                props.registerGroups(selectedGroups)
-              }
-            }
+            type: CALLBACK_BUTTON,
+            label: trans('register', {}, 'actions'),
+            callback: () => props.registerGroups(selectedGroups, props.contextData)
           })
         }]
       }
@@ -77,7 +65,7 @@ const GroupList = props =>
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-user-minus',
           label: trans('unregister', {}, 'actions'),
-          callback: () => props.unregister(rows, props.contextData),
+          callback: () => props.unregisterGroups(rows, props.contextData),
           displayed: props.canRegister,
           confirm: {
             title: transChoice('group_unregister_confirm_title', rows.length, {}, 'community'),
@@ -126,7 +114,7 @@ GroupList.propTypes = {
   contextData: T.object,
   canRegister: T.bool.isRequired,
   canEdit: T.bool.isRequired,
-  unregister: T.func.isRequired,
+  unregisterGroups: T.func.isRequired,
   registerGroups: T.func.isRequired
 }
 
