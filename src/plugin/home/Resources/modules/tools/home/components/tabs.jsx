@@ -30,7 +30,7 @@ const HomeTabs = props =>
       {props.tabs
         .filter(tab => props.showHidden || !get(tab, 'restrictions.hidden', false))
         .map((tab) => {
-          const children = tab.children
+          const children = get(tab, 'children', [])
             .filter(subTab => props.showHidden || !get(subTab, 'restrictions.hidden', false))
           const canShowSubTabs = !isEmpty(children) && props.showSubMenu
 
