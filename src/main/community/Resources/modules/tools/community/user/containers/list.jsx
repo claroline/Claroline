@@ -17,11 +17,11 @@ const UserList = connect(
     limitReached: selectors.limitReached(state)
   }),
   dispatch => ({
-    unregister(users, workspace) {
-      dispatch(actions.unregister(users, workspace))
+    unregisterUsers(users, workspace) {
+      dispatch(actions.unregisterUsers(users, workspace))
     },
-    registerUsers(users) {
-      dispatch(actions.registerUsers(users))
+    registerUsers(users, workspace) {
+      dispatch(actions.registerUsers(users, workspace))
     }
   })
 )(UserListComponent)

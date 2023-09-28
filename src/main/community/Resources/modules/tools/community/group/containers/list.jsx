@@ -16,11 +16,11 @@ const GroupList = connect(
     canEdit: hasPermission('edit', toolSelectors.toolData(state))
   }),
   dispatch => ({
-    unregister(users, workspace) {
-      dispatch(actions.unregister(users, workspace))
+    unregisterGroups(groups, workspace) {
+      dispatch(actions.unregisterGroups(groups, workspace))
     },
-    registerGroups(groups) {
-      dispatch(actions.registerGroups(groups))
+    registerGroups(groups, workspace) {
+      dispatch(actions.registerGroups(groups, workspace))
     }
   })
 )(GroupListComponent)

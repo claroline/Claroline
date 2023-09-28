@@ -37,20 +37,9 @@ const UserList = props =>
           title: trans('register_users'),
           subtitle: trans('workspace_register_select_users'),
           selectAction: (selectedUsers) => ({
-            type: ASYNC_BUTTON,
-            request: {
-              url: ['apiv2_workspace_register'],
-              request: {
-                method: 'PATCH',
-                body: JSON.stringify({
-                  workspaces: [props.contextData.id],
-                  users: selectedUsers.map(user => user.id)
-                })
-              },
-              success: () => {
-                props.registerUsers(selectedUsers)
-              }
-            }
+            type: CALLBACK_BUTTON,
+            label: trans('register', {}, 'actions'),
+            callback: () => props.registerUsers(selectedUsers, props.contextData)
           })
         }]
       }, {
@@ -88,7 +77,7 @@ const UserList = props =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-user-minus',
         label: trans('unregister', {}, 'actions'),
-        callback: () => props.unregister(rows, props.contextData),
+        callback: () => props.unregisterUsers(rows, props.contextData),
         dangerous: true,
         displayed: props.canRegister,
         disabled: -1 === rows.findIndex(row => -1 !== row.roles.findIndex(r => r.context !== 'group' && r.workspace && r.workspace.id === props.contextData.id)),
@@ -138,7 +127,7 @@ UserList.propTypes = {
   canRegister: T.bool.isRequired,
   canAdministrate: T.bool.isRequired,
   limitReached: T.bool.isRequired,
-  unregister: T.func.isRequired,
+  unregisterUsers: T.func.isRequired,
   registerUsers: T.func.isRequired
 }
 

@@ -39,23 +39,24 @@ actions.open = (id, reload = false) => (dispatch) => {
   })
 }
 
-actions.registerGroups = (groups) => ({
+actions.registerGroups = (groups, workspace) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: ['apiv2_workspace_register'],
     request: {
       method: 'PATCH',
       body: JSON.stringify({
-        ids: groups.map(group => group.id)
+        workspaces: [workspace.id],
+        groups: groups.map(group => group.id)
       })
     },
-    success: (data, dispatch) => {
+    success: () => {
       dispatch(listActions.invalidateData(selectors.LIST_NAME))
       dispatch(listActions.invalidateData(baseSelectors.STORE_NAME + '.users.list'))
     }
   }
 })
 
-actions.unregister = (groups, workspace) => (dispatch) => dispatch({
+actions.unregisterGroups = (groups, workspace) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: url(['apiv2_workspace_unregister_groups', {id: workspace.id}]) + '?'+ groups.map(group => 'ids[]='+group.id).join('&'),
     request: {
