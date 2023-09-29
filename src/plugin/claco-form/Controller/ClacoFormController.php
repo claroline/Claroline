@@ -28,9 +28,9 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -83,9 +83,10 @@ class ClacoFormController
      * Returns the keyword.
      *
      * @Route("/{clacoForm}/keyword/get/by/name/{value}/excluding/uuid/{uuid}", name="claro_claco_form_get_keyword_by_name_excluding_uuid", defaults={"uuid"=null})
+     *
      * @EXT\ParamConverter( "clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
-    public function getKeywordByNameExcludingUuidAction(ClacoForm $clacoForm, $value, ?string $uuid = null): JsonResponse
+    public function getKeywordByNameExcludingUuidAction(ClacoForm $clacoForm, $value, string $uuid = null): JsonResponse
     {
         $this->checkPermission('EDIT', $clacoForm->getResourceNode(), [], true);
 
@@ -102,6 +103,7 @@ class ClacoFormController
      * Returns id of a random entry.
      *
      * @Route("/{clacoForm}/entry/random", name="claro_claco_form_entry_random")
+     *
      * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
     public function entryRandomAction(ClacoForm $clacoForm): JsonResponse
@@ -117,6 +119,7 @@ class ClacoFormController
      * Retrieves comments of an entry.
      *
      * @Route("/entry/{entry}/comments/retrieve", name="claro_claco_form_entry_comments_retrieve")
+     *
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      */
     public function entryCommentsRetrieveAction(Entry $entry): JsonResponse
@@ -143,6 +146,7 @@ class ClacoFormController
      * Creates a comment.
      *
      * @Route("/entry/{entry}/comment/create", name="claro_claco_form_entry_comment_create")
+     *
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      */
     public function commentCreateAction(Entry $entry, Request $request): JsonResponse
@@ -162,6 +166,7 @@ class ClacoFormController
      * Edits a comment.
      *
      * @Route("/entry/comment/{comment}/edit", name="claro_claco_form_entry_comment_edit")
+     *
      * @EXT\ParamConverter("comment", class="Claroline\ClacoFormBundle\Entity\Comment", options={"mapping": {"comment": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")
      */
@@ -179,6 +184,7 @@ class ClacoFormController
      * Deletes a comment.
      *
      * @Route("/entry/comment/{comment}/delete", name="claro_claco_form_entry_comment_delete")
+     *
      * @EXT\ParamConverter("comment", class="Claroline\ClacoFormBundle\Entity\Comment", options={"mapping": {"comment": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")
      */
@@ -194,6 +200,7 @@ class ClacoFormController
      * Activates a comment.
      *
      * @Route("/entry/comment/{comment}/activate", name="claro_claco_form_entry_comment_activate")
+     *
      * @EXT\ParamConverter("comment", class="Claroline\ClacoFormBundle\Entity\Comment", options={"mapping": {"comment": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")
      */
@@ -210,6 +217,7 @@ class ClacoFormController
      * Blocks a comment.
      *
      * @Route("/entry/comment/{comment}/block", name="claro_claco_form_entry_comment_block")
+     *
      * @EXT\ParamConverter("comment", class="Claroline\ClacoFormBundle\Entity\Comment", options={"mapping": {"comment": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")
      */
@@ -226,6 +234,7 @@ class ClacoFormController
      * Retrieves an entry options for current user.
      *
      * @Route("/entry/{entry}/user/retrieve", name="claro_claco_form_entry_user_retrieve")
+     *
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")
      */
@@ -242,6 +251,7 @@ class ClacoFormController
      * Saves entry options for current user.
      *
      * @Route("/entry/{entry}/user/save", name="claro_claco_form_entry_user_save")
+     *
      * @EXT\ParamConverter("user", converter="current_user")
      */
     public function entryUserSaveAction(User $user, Entry $entry, Request $request): JsonResponse
@@ -266,7 +276,8 @@ class ClacoFormController
         if (isset($entryUserData['notifyVote'])) {
             $entryUser->setNotifyVote($entryUserData['notifyVote']);
         }
-        $this->clacoFormManager->persistEntryUser($entryUser);
+        $this->om->persist($entryUser);
+        $this->om->flush();
 
         return new JsonResponse(null, 204);
     }
@@ -275,6 +286,7 @@ class ClacoFormController
      * Downloads pdf version of entry.
      *
      * @Route("/entry/{entry}/pdf/download", name="claro_claco_form_entry_pdf_download")
+     *
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user")
      */
@@ -296,6 +308,7 @@ class ClacoFormController
      * Retrieves list of users the entry is shared with.
      *
      * @Route("/entry/{entry}/shared/users/list", name="claro_claco_form_entry_shared_users_list")
+     *
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      */
     public function entrySharedUsersListAction(Entry $entry): JsonResponse
@@ -317,6 +330,7 @@ class ClacoFormController
      * Shares entry ownership to users.
      *
      * @Route("/entry/{entry}/users/share", name="claro_claco_form_entry_users_share")
+     *
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      */
     public function entryUsersShareAction(Entry $entry, Request $request): JsonResponse
@@ -335,6 +349,7 @@ class ClacoFormController
      * Unshares entry ownership from user.
      *
      * @Route("/entry/{entry}/unshare", name="claro_claco_form_entry_user_unshare")
+     *
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      */
     public function entryUserUnshareAction(Entry $entry, Request $request): JsonResponse
@@ -356,48 +371,25 @@ class ClacoFormController
      * Exports entries.
      *
      * @Route("/{clacoForm}/entries/export", name="claro_claco_form_entries_export")
-     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      *
-     * @return Response
+     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
-    public function clacoFormEntriesExportAction(ClacoForm $clacoForm)
+    public function clacoFormEntriesExportAction(ClacoForm $clacoForm): BinaryFileResponse
     {
         $this->checkPermission('EDIT', $clacoForm->getResourceNode(), [], true);
 
-        $content = $this->exportManager->exportEntries($clacoForm);
+        $exportPath = $this->exportManager->exportEntries($clacoForm);
 
-        if ($this->clacoFormManager->hasFiles($clacoForm)) {
-            $file = $this->exportManager->zipEntries($content, $clacoForm);
-
-            $response = new StreamedResponse();
-            $response->setCallBack(
-                function () use ($file) {
-                    readfile($file);
-                }
-            );
-            $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-            $response->headers->set('Content-Type', 'application/force-download');
-            $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($clacoForm->getResourceNode()->getName().'.zip'));
-            $response->headers->set('Content-Type', 'application/zip; charset=utf-8');
-            $response->headers->set('Connection', 'close');
-            $response->send();
-
-            return new Response();
-        } else {
-            $headers = [
-                'Content-Transfer-Encoding' => 'octet-stream',
-                'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
-                'Content-Disposition' => 'attachment; filename="'.$clacoForm->getResourceNode()->getName().'.xls"',
-            ];
-
-            return new Response($content, 200, $headers);
-        }
+        return new BinaryFileResponse($exportPath, 200, [
+            'Content-Disposition' => 'attachment; filename='.urlencode($clacoForm->getResourceNode()->getName()),
+        ]);
     }
 
     /**
      * Changes owner of an entry.
      *
      * @Route("/entry/{entry}/user/{user}/change", name="claro_claco_form_entry_user_change")
+     *
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      */
@@ -415,6 +407,7 @@ class ClacoFormController
      * Switches lock of an entry.
      *
      * @Route("/entry/{entry}/lock/switch", name="claro_claco_form_entry_lock_switch")
+     *
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      */
     public function entryLockSwitchAction(Entry $entry): JsonResponse
@@ -466,6 +459,7 @@ class ClacoFormController
      * Downloads a file associated to a FieldValue.
      *
      * @Route("/entry/{entry}/field/{field}/file/download", name="claro_claco_form_field_value_file_download")
+     *
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      *
      * @return StreamedResponse|JsonResponse
@@ -503,6 +497,7 @@ class ClacoFormController
      * Returns list of codes of all countries present in all entries.
      *
      * @Route("/{clacoForm}/entries/used/countries", name="claro_claco_form_used_countries_load")
+     *
      * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
     public function entriesUsedCountriesLoadAction(ClacoForm $clacoForm): JsonResponse

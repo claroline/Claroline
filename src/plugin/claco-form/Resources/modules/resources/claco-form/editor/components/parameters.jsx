@@ -54,9 +54,25 @@ const EditorParameters = props =>
           }
         ]
       }, {
-        id: 'general',
-        icon: 'fa fa-fw fa-cogs',
-        title: trans('general'),
+        icon: 'fa fa-fw fa-home',
+        title: trans('overview'),
+        fields: [
+          {
+            name: 'details.default_home',
+            type: 'choice',
+            label: trans('label_default_home', {}, 'clacoform'),
+            required: true,
+            options: {
+              noEmpty: true,
+              condensed: true,
+              choices: constants.DEFAULT_HOME_CHOICES
+            }
+          }
+        ]
+      }, {
+        id: 'help',
+        icon: 'fa fa-fw fa-circle-question',
+        title: trans('help'),
         fields: [
           {
             name: 'details.helpMessage',
@@ -74,16 +90,6 @@ const EditorParameters = props =>
             name: 'details.title_field_label',
             type: 'string',
             label: trans('title_field_label', {}, 'clacoform')
-          }, {
-            name: 'details.default_home',
-            type: 'choice',
-            label: trans('label_default_home', {}, 'clacoform'),
-            required: true,
-            options: {
-              noEmpty: true,
-              condensed: true,
-              choices: constants.DEFAULT_HOME_CHOICES
-            }
           }, {
             name: 'details.menu_position',
             type: 'choice',
@@ -136,6 +142,7 @@ const EditorParameters = props =>
             name: 'details.display_metadata',
             type: 'choice',
             label: trans('label_display_metadata', {}, 'clacoform'),
+            help: trans('help_display_metadata', {}, 'clacoform'),
             required: true,
             options: {
               noEmpty: true,

@@ -18,7 +18,7 @@ const FormActions = props =>
       label={trans('save', {}, 'actions')}
       {...props.save}
       variant="btn"
-      className="rounded-pill"
+      className="form-btn-save rounded-pill"
       tooltip="top"
       primary={true}
       htmlType="submit"
@@ -27,7 +27,7 @@ const FormActions = props =>
     {props.cancel &&
       <Button
         {...props.cancel}
-        className="rounded-pill"
+        className="form-btn-cancel rounded-pill"
         tooltip="top"
         icon="fa fa-fw fa-times"
         label={trans('exit', {}, 'actions')}

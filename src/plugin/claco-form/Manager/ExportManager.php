@@ -68,11 +68,10 @@ class ExportManager
             $fieldValues[$field->getId()] = $fieldValue->getFieldFacetValue()->getValue();
         }
 
-        $canEdit = $this->clacoFormManager->hasRight($clacoForm, 'EDIT');
         $displayMeta = $clacoForm->getDisplayMetadata();
         $isEntryManager = $user instanceof User && $this->clacoFormManager->isEntryManager($entry, $user);
         $isEntryOwner = $user instanceof User && $entry->getUser() === $user;
-        $withMeta = $canEdit || 'all' === $displayMeta || ('manager' === $displayMeta && $isEntryManager);
+        $withMeta = 'all' === $displayMeta || ('manager' === $displayMeta && $isEntryManager);
 
         $template = $clacoForm->getTemplate();
         $useTemplate = $clacoForm->getUseTemplate();
@@ -130,17 +129,17 @@ class ExportManager
         );
     }
 
-    public function exportEntries(ClacoForm $clacoForm)
+    public function exportEntries(ClacoForm $clacoForm): string
     {
+        $files = [];
         $entriesData = [];
+
         $fields = $clacoForm->getFields();
         $entries = $this->clacoFormManager->getAllEntries($clacoForm);
-
         foreach ($entries as $entry) {
             $user = $entry->getUser();
-            $publicationDate = $entry->getPublicationDate();
-            $editionDate = $entry->getEditionDate();
             $fieldValues = $entry->getFieldValues();
+
             $data = [];
             $data['id'] = $entry->getId();
             $data['uuid'] = $entry->getUuid();
@@ -155,66 +154,55 @@ class ExportManager
                 $data['author_email'] = $user->getEmail();
             }
 
-            $data['publicationDate'] = empty($publicationDate) ? '' : $publicationDate->format('d/m/Y');
-            $data['editionDate'] = empty($editionDate) ? '' : $editionDate->format('d/m/Y');
+            $data['publicationDate'] = empty($entry->getPublicationDate()) ? '' : $entry->getPublicationDate()->format('d/m/Y');
+            $data['editionDate'] = empty($entry->getEditionDate()) ? '' : $entry->getEditionDate()->format('d/m/Y');
 
             foreach ($fieldValues as $fieldValue) {
                 $field = $fieldValue->getField();
                 $fieldFacetValue = $fieldValue->getFieldFacetValue();
 
                 $data[$field->getId()] = $this->formatFieldValue($entry, $field, $fieldFacetValue->getValue(), true);
-            }
-
-            $entriesData[] = $data;
-        }
-
-        return $this->templating->render(
-            '@ClarolineClacoForm/claco_form/entries_export.html.twig',
-            [
-                'fields' => $fields,
-                'entries' => $entriesData,
-            ]
-        );
-    }
-
-    public function zipEntries($content, ClacoForm $clacoForm)
-    {
-        $archive = new \ZipArchive();
-        $pathArch = $this->tempManager->generate();
-        $archive->open($pathArch, \ZipArchive::CREATE);
-        $archive->addFromString(TextNormalizer::toKey($clacoForm->getResourceNode()->getName()).'.xls', $content);
-
-        $entries = $this->clacoFormManager->getAllEntries($clacoForm);
-
-        foreach ($entries as $entry) {
-            $fieldValues = $entry->getFieldValues();
-
-            foreach ($fieldValues as $fieldValue) {
-                $field = $fieldValue->getField();
-                $fieldFacetValue = $fieldValue->getFieldFacetValue();
 
                 if (FieldFacet::FILE_TYPE === $field->getType()) {
-                    /* TODO: change this when FILE_TYPE can accept an array of files again */
                     $file = $fieldFacetValue->getValue();
-
                     if (!empty($file) && is_array($file)) {
                         $fileUrl = preg_replace('#^\.\.\/files\/#', '', $file['url']); // TODO : files part should not be stored in the DB
                         $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$fileUrl;
 
                         $ext = pathinfo($filePath, PATHINFO_EXTENSION);
                         $fileName = TextNormalizer::toKey($entry->getTitle().'-'.$field->getLabel()).'.'.$ext;
-
-                        $archive->addFile(
-                            $filePath,
-                            'files'.DIRECTORY_SEPARATOR.TextNormalizer::toKey($entry->getTitle()).DIRECTORY_SEPARATOR.$fileName
-                        );
+                        $files[$filePath] = 'files'.DIRECTORY_SEPARATOR.TextNormalizer::toKey($entry->getTitle()).DIRECTORY_SEPARATOR.$fileName;
                     }
                 }
             }
-        }
-        $archive->close();
 
-        return $pathArch;
+            $entriesData[] = $data;
+        }
+
+        $entryList = $this->templating->render(
+            '@ClarolineClacoForm/claco_form/entries_export.html.twig',
+            [
+                'fields' => $fields,
+                'entries' => $entriesData,
+            ]
+        );
+
+        $exportedFile = $this->tempManager->generate();
+        if (empty($files)) {
+            file_put_contents($exportedFile, $entryList);
+        } else {
+            $archive = new \ZipArchive();
+            $archive->open($exportedFile, \ZipArchive::CREATE);
+
+            $archive->addFromString(TextNormalizer::toKey($clacoForm->getResourceNode()->getName()).'.xls', $entryList);
+            foreach ($files as $filePath => $fileName) {
+                $archive->addFile($filePath, $fileName);
+            }
+
+            $archive->close();
+        }
+
+        return $exportedFile;
     }
 
     private function formatFieldValue(Entry $entry, Field $field, $value, ?bool $stripHtml = false)
