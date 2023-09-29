@@ -5,7 +5,6 @@ import classes from 'classnames'
 
 import {url} from '#/main/app/api'
 import {withRouter} from '#/main/app/router'
-import {hasPermission} from '#/main/app/security'
 import {displayDate} from '#/main/app/intl/date'
 import {trans} from '#/main/app/intl/translation'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
@@ -72,7 +71,7 @@ const EntryActions = props =>
         }),
         label: trans(props.status === 1 ? 'unpublish':'publish', {}, 'actions'),
         callback: props.toggleStatus,
-        displayed: !props.locked && props.canManage,
+        displayed: !props.locked && props.canAdministrate,
         group: trans('management')
       }, {
         name: 'change-owner',
@@ -110,14 +109,13 @@ const EntryActions = props =>
           message: trans('delete_entry_confirm_message', {title: props.entryTitle}, 'clacoform')
         },
         dangerous: true,
-        displayed: !props.locked && props.canManage,
+        displayed: !props.locked && props.canAdministrate,
         group: trans('management')
       }, {
         name: 'share',
         type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-share-alt',
         label: trans('share', {}, 'actions'),
-        callback: props.share,
         modal: [MODAL_USERS, {
           selectAction: (users) => ({
             type: CALLBACK_BUTTON,
@@ -125,7 +123,7 @@ const EntryActions = props =>
             callback: () => props.share(users.map(user => user.id))
           })
         }],
-        displayed: props.canShare,
+        displayed: props.canEdit,
         group: trans('community')
       }, {
         name: 'notify-edit',
@@ -164,8 +162,6 @@ EntryActions.propTypes = {
   canAdministrate: T.bool.isRequired,
   canEdit: T.bool.isRequired,
   canGeneratePdf: T.bool.isRequired,
-  canManage: T.bool.isRequired,
-  canShare: T.bool.isRequired,
 
   notifyEdition: T.bool,
   notifyComment: T.bool,
@@ -183,23 +179,15 @@ EntryActions.propTypes = {
 
 class EntryComponent extends Component {
   canViewMetadata() {
-    return this.canShare() ||
+    return this.props.canEditEntry ||
       this.props.displayMetadata === 'all' ||
-      (this.props.displayMetadata === 'manager' && this.props.isManager)
-  }
-
-  canManageEntry() {
-    return this.props.canEdit || this.props.isManager
-  }
-
-  canShare() {
-    return this.props.canEdit || this.props.isOwner || this.props.entryUser.shared
+      (this.props.displayMetadata === 'manager' && this.props.canAdministrate)
   }
 
   isFieldDisplayable(field) {
     return isEmpty(field.restrictions.confidentiality)
       || 'none' === field.restrictions.confidentiality
-      || this.props.isManager
+      || this.props.canAdministrate
       || ('owner' === field.restrictions.confidentiality && this.props.isOwner)
   }
 
@@ -233,7 +221,7 @@ class EntryComponent extends Component {
   }
 
   render() {
-    if (!this.props.canViewEntry && !this.canShare()) {
+    if (!this.props.canViewEntry && !this.props.canEditEntry) {
       return (
         <div className="alert alert-danger">
           {trans('unauthorized')}
@@ -308,8 +296,6 @@ class EntryComponent extends Component {
                         canAdministrate={this.props.canAdministrate}
                         canEdit={this.props.canEditEntry}
                         canGeneratePdf={this.props.canGeneratePdf}
-                        canManage={this.canManageEntry()}
-                        canShare={this.canShare()}
 
                         changeOwner={(user) => this.props.changeEntryOwner(this.props.entry.id, user.id)}
                         downloadPdf={() => this.props.downloadEntryPdf(this.props.entry.id)}
@@ -325,7 +311,7 @@ class EntryComponent extends Component {
 
                   {this.props.template && this.props.useTemplate ?
                     <ContentHtml>
-                      {generateFromTemplate(this.props.template, this.props.fields, this.props.entry, this.props.isOwner, this.props.isManager)}
+                      {generateFromTemplate(this.props.template, this.props.fields, this.props.entry, this.props.isOwner, this.props.canAdministrate)}
                     </ContentHtml> :
                     <DetailsData
                       name={selectors.STORE_NAME+'.entries.current'}
@@ -382,7 +368,7 @@ class EntryComponent extends Component {
           }
         </div>
 
-        {this.canShare() &&
+        {this.props.canEditEntry &&
           <FormSections level={3}>
             <FormSection
               id="shared-users"
@@ -428,7 +414,7 @@ class EntryComponent extends Component {
           <EntryComments
             opened={this.props.openComments}
             canComment={this.props.canComment}
-            canManage={this.canManageEntry()}
+            canManage={this.props.canAdministrate}
             canViewComments={this.props.canViewComments}
           />
         }
@@ -451,7 +437,6 @@ EntryComponent.propTypes = {
   canViewComments: T.bool,
 
   isOwner: T.bool,
-  isManager: T.bool,
 
   showEntryNav: T.bool.isRequired,
   helpMessage: T.string,
@@ -496,13 +481,13 @@ const Entry = withRouter(connect(
     entry: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
     entryUser: selectors.entryUser(state),
 
-    canEdit: hasPermission('edit', resourceSelectors.resourceNode(state)),
     canEditEntry: selectors.canEditCurrentEntry(state),
     canViewEntry: selectors.canOpenCurrentEntry(state),
-    canAdministrate: selectors.canAdministrate(state),
+    canAdministrate: selectors.canManageCurrentEntry(state),
     canGeneratePdf: selectors.canGeneratePdf(state),
     canComment: selectors.canComment(state),
     canViewComments: selectors.canViewComments(state),
+
     fields: selectors.visibleFields(state),
     showEntryNav: selectors.showEntryNav(state),
     helpMessage: selectors.params(state).helpMessage,
@@ -515,7 +500,6 @@ const Entry = withRouter(connect(
     anonymousCommentsEnabled: selectors.params(state).anonymous_comments_enabled,
     menuPosition: selectors.params(state).menu_position,
     isOwner: selectors.isCurrentEntryOwner(state),
-    isManager: selectors.isCurrentEntryManager(state),
     randomEnabled: selectors.clacoForm(state).random.enabled,
     useTemplate: selectors.useTemplate(state),
     template: selectors.template(state),
