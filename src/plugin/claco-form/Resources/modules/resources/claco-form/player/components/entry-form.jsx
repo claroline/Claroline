@@ -7,7 +7,6 @@ import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
 import {trans} from '#/main/app/intl/translation'
-import {hasPermission} from '#/main/app/security'
 import {withRouter} from '#/main/app/router'
 import {Alert} from '#/main/app/alert/components/alert'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -54,9 +53,9 @@ class EntryFormComponent extends Component {
   getSections() {
     const isShared = this.props.entryUser && this.props.entryUser.id ? this.props.entryUser.shared : false
 
-    const hasConfidentialRights = this.props.isManager || isShared
+    const hasConfidentialRights = this.props.canAdministrate || isShared
 
-    const hasLockedRights = this.props.isManager
+    const hasLockedRights = this.props.canAdministrate
 
     // generate form based on claco-form defined fields
     const formSections = formatSections([
@@ -144,7 +143,7 @@ class EntryFormComponent extends Component {
         type: field.type,
         label: field.label,
         required: field.required,
-        disabled: !this.props.isManager && ((this.props.isNew && field.restrictions.locked && !field.restrictions.lockedEditionOnly) || (!this.props.isNew && field.restrictions.locked)),
+        disabled: !this.props.canAdministrate && ((this.props.isNew && field.restrictions.locked && !field.restrictions.lockedEditionOnly) || (!this.props.isNew && field.restrictions.locked)),
         help: field.help,
         hideLabel: true,
         value: this.props.entry.values ? this.props.entry.values[field.id] : undefined,
@@ -162,10 +161,10 @@ class EntryFormComponent extends Component {
   }
 
   renderCategories() {
-    if (this.props.canEdit || this.props.isManager || this.props.isKeywordsEnabled) {
+    if (this.props.canAdministrate || this.props.isKeywordsEnabled) {
       return (
         <FormSections level={3}>
-          {(this.props.canEdit || this.props.isManager) &&
+          {this.props.canAdministrate &&
             <FormSection
               id="entry-categories"
               className="embedded-list-section"
@@ -180,6 +179,7 @@ class EntryFormComponent extends Component {
               />
             </FormSection>
           }
+
           {this.props.isKeywordsEnabled &&
             <FormSection
               id="entry-keywords"
@@ -301,7 +301,7 @@ class EntryFormComponent extends Component {
 EntryFormComponent.propTypes = {
   path: T.string.isRequired,
   currentUser: T.object,
-  canEdit: T.bool.isRequired,
+  canAdministrate: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,
   clacoFormId: T.string.isRequired,
   fields: T.arrayOf(T.shape(FieldType.propTypes)).isRequired,
@@ -311,7 +311,6 @@ EntryFormComponent.propTypes = {
   displayMetadata: T.string.isRequired,
   isKeywordsEnabled: T.bool.isRequired,
   isNewKeywordsEnabled: T.bool.isRequired,
-  isManager: T.bool.isRequired,
   isNew: T.bool.isRequired,
   errors: T.object,
   entry: T.shape(EntryType.propTypes),
@@ -337,8 +336,8 @@ const EntryForm = withRouter(connect(
     currentUser: securitySelectors.currentUser(state),
     path: resourceSelectors.path(state),
 
+    canAdministrate: selectors.canManageCurrentEntry(state),
     canAddEntry: selectors.canAddEntry(state),
-    canEdit: hasPermission('edit', resourceSelectors.resourceNode(state)),
     clacoFormId: selectors.clacoForm(state).id,
     fields: selectors.visibleFields(state),
     useTemplate: selectors.useTemplate(state),
@@ -349,7 +348,6 @@ const EntryForm = withRouter(connect(
     displayMetadata: selectors.params(state).display_metadata,
     isKeywordsEnabled: selectors.params(state).keywords_enabled,
     isNewKeywordsEnabled: selectors.params(state).new_keywords_enabled,
-    isManager: selectors.isCurrentEntryManager(state),
     isNew: formSelect.isNew(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
     errors: formSelect.errors(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),
     entry: formSelect.data(formSelect.form(state, selectors.STORE_NAME+'.entries.current')),

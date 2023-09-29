@@ -15,36 +15,21 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
+use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\LocationManager;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class EntryFinder extends AbstractFinder
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var LocationManager */
-    private $locationManager;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    private $usedJoin = [];
+    private array $usedJoin = [];
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        LocationManager $locationManager,
-        TokenStorageInterface $tokenStorage
+        private TokenStorageInterface $tokenStorage,
+        private ClacoFormManager $manager
     ) {
-        $this->authorization = $authorization;
-        $this->locationManager = $locationManager;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public static function getClass(): string
@@ -63,15 +48,14 @@ class EntryFinder extends AbstractFinder
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $isAnon = !$currentUser instanceof User;
-        $clacoForm = null;
         $canEdit = false;
         $isCategoryManager = false;
         $searchEnabled = false;
         if (isset($searches['clacoForm'])) {
-            $clacoForm = $clacoFormRepo->findOneById($searches['clacoForm']);
+            $clacoForm = $clacoFormRepo->findOneBy(['id' => $searches['clacoForm']]);
             if ($clacoForm) {
-                $canEdit = $this->hasRight($clacoForm, 'EDIT');
-                $isCategoryManager = !$isAnon && $this->isCategoryManager($clacoForm, $currentUser);
+                $canEdit = $this->manager->hasRight($clacoForm, 'EDIT');
+                $isCategoryManager = !$isAnon && $this->manager->isCategoryManager($clacoForm, $currentUser);
                 $searchEnabled = $clacoForm->getSearchEnabled();
             }
         }
@@ -266,7 +250,7 @@ class EntryFinder extends AbstractFinder
         return $qb;
     }
 
-    private function filterField(QueryBuilder $qb, $filterName, $filterValue, $field)
+    private function filterField(QueryBuilder $qb, $filterName, $filterValue, $field): void
     {
         $parsedFilterName = str_replace('-', '', $filterName);
 
@@ -305,7 +289,7 @@ class EntryFinder extends AbstractFinder
         }
     }
 
-    private function sortField(QueryBuilder $qb, $sortBy, $direction, $field)
+    private function sortField(QueryBuilder $qb, $sortBy, $direction, $field): void
     {
         $parsedSortBy = str_replace('-', '', $sortBy);
 
@@ -320,29 +304,5 @@ class EntryFinder extends AbstractFinder
 
             $qb->orderBy("fvffv{$parsedSortBy}.value", $direction);
         }
-    }
-
-    private function hasRight(ClacoForm $clacoForm, $right)
-    {
-        $collection = new ResourceCollection([$clacoForm->getResourceNode()]);
-
-        return $this->authorization->isGranted($right, $collection);
-    }
-
-    private function isCategoryManager(ClacoForm $clacoForm, User $user)
-    {
-        $categories = $clacoForm->getCategories();
-
-        foreach ($categories as $category) {
-            $managers = $category->getManagers();
-
-            foreach ($managers as $manager) {
-                if ($manager->getId() === $user->getId()) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 }

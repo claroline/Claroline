@@ -42,7 +42,6 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Messenger\Message\SendMessage;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerAwareInterface;
 use Ramsey\Uuid\Uuid;
@@ -159,13 +158,6 @@ class ClacoFormManager implements LoggerAwareInterface
         return count($categoriesIds) > 0 ?
             $this->getPublishedEntriesByCategoriesAndDates($clacoForm, $categoriesIds, $startDate, $endDate) :
             $this->getPublishedEntriesByDates($clacoForm, $startDate, $endDate);
-    }
-
-    public function getRandomEntriesByCategories(ClacoForm $clacoForm, array $categoriesIds)
-    {
-        return count($categoriesIds) > 0 ?
-            $this->getPublishedEntriesByCategoriesAndDates($clacoForm, $categoriesIds) :
-            $this->getPublishedEntriesByDates($clacoForm);
     }
 
     public function getAllUsedCountriesCodes(ClacoForm $clacoForm)
@@ -442,12 +434,6 @@ class ClacoFormManager implements LoggerAwareInterface
         return $entryUser;
     }
 
-    public function persistEntryUser(EntryUser $entryUser)
-    {
-        $this->om->persist($entryUser);
-        $this->om->flush();
-    }
-
     public function notifyUsers(Entry $entry, $type, $data = null)
     {
         $sendMessage = false;
@@ -536,21 +522,6 @@ class ClacoFormManager implements LoggerAwareInterface
         if ($sendMessage && count($receiverIds) > 0) {
             $this->messageBus->dispatch(new SendMessage($content, $subject, $receiverIds));
         }
-    }
-
-    public function hasFiles(ClacoForm $clacoForm)
-    {
-        $hasFiles = false;
-        $fields = $clacoForm->getFields();
-
-        foreach ($fields as $field) {
-            if (FieldFacet::FILE_TYPE === $field->getType()) {
-                $hasFiles = true;
-                break;
-            }
-        }
-
-        return $hasFiles;
     }
 
     public function switchEntryUserShared(Entry $entry, User $user, $shared)
@@ -851,14 +822,12 @@ class ClacoFormManager implements LoggerAwareInterface
         return $this->commentRepo->findAvailableCommentsForUser($entry, $user);
     }
 
-    public function hasRight(ClacoForm $clacoForm, $right)
+    public function hasRight(ClacoForm $clacoForm, $right): bool
     {
-        $collection = new ResourceCollection([$clacoForm->getResourceNode()]);
-
-        return $this->authorization->isGranted($right, $collection);
+        return $this->authorization->isGranted($right, $clacoForm->getResourceNode());
     }
 
-    public function isCategoryManager(ClacoForm $clacoForm, User $user)
+    public function isCategoryManager(ClacoForm $clacoForm, User $user): bool
     {
         $categories = $clacoForm->getCategories();
 
@@ -875,10 +844,13 @@ class ClacoFormManager implements LoggerAwareInterface
         return false;
     }
 
-    public function isEntryManager(Entry $entry, User $user)
+    public function isEntryManager(Entry $entry, User $user): bool
     {
-        $categories = $entry->getCategories();
+        if ($this->hasRight($entry->getClacoForm(), 'EDIT')) {
+            return true;
+        }
 
+        $categories = $entry->getCategories();
         foreach ($categories as $category) {
             $managers = $category->getManagers();
 
@@ -913,26 +885,6 @@ class ClacoFormManager implements LoggerAwareInterface
     }
 
     // TODO : move to Voter
-    public function hasEntryEditionRight(Entry $entry)
-    {
-        /** @var User|string $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-        $clacoForm = $entry->getClacoForm();
-        $canOpen = $this->hasRight($clacoForm, 'OPEN');
-        $canEdit = $this->hasRight($clacoForm, 'EDIT');
-        $editionEnabled = $clacoForm->isEditionEnabled();
-        $isAnon = !$user instanceof User;
-        $isEntryShared = $isAnon ? false : $this->isEntryShared($entry, $user);
-
-        return $canEdit || (
-            $canOpen && (
-                ($editionEnabled && ($entry->getUser() === $user || $isEntryShared))
-                || (!$isAnon && $this->isEntryManager($entry, $user))
-            )
-        );
-    }
-
-    // TODO : move to Voter
     public function hasEntryModerationRight(Entry $entry)
     {
         /** @var User|string $user */
@@ -947,13 +899,6 @@ class ClacoFormManager implements LoggerAwareInterface
     public function checkEntryAccess(Entry $entry)
     {
         if (!$this->hasEntryAccessRight($entry)) {
-            throw new AccessDeniedException();
-        }
-    }
-
-    public function checkEntryEdition(Entry $entry)
-    {
-        if ($entry->isLocked() || !$this->hasEntryEditionRight($entry)) {
             throw new AccessDeniedException();
         }
     }
