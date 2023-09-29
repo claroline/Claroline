@@ -3,5 +3,4 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
-           - '@Claroline\FlashcardBundle\Serializer\UserProgressionSerializer'
            - '@Claroline\FlashcardBundle\Manager\EvaluationManager'

@@ -182,8 +182,3 @@ const Editor = connect(
 export {
   Editor
 }
-
-
-
-
-

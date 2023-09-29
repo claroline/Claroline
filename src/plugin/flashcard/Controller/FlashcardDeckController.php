@@ -7,9 +7,7 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\FlashcardBundle\Entity\Flashcard;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
-use Claroline\FlashcardBundle\Entity\UserProgression;
 use Claroline\FlashcardBundle\Manager\EvaluationManager;
-use Claroline\FlashcardBundle\Serializer\UserProgressionSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,14 +18,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class FlashcardDeckController extends AbstractCrudController
 {
-    private UserProgressionSerializer $userProgressionSerializer;
     private EvaluationManager $evaluationManager;
 
     public function __construct(
-        UserProgressionSerializer $userProgressionSerializer,
         EvaluationManager $evaluationManager
     ) {
-        $this->userProgressionSerializer = $userProgressionSerializer;
         $this->evaluationManager = $evaluationManager;
     }
 
@@ -51,27 +46,12 @@ class FlashcardDeckController extends AbstractCrudController
      */
     public function updateProgressionAction(Flashcard $card, User $user, Request $request): JsonResponse
     {
-        $userProgression = $this->om->getRepository(UserProgression::class)->findOneBy([
-            'user' => $user,
-            'flashcard' => $card,
-        ]);
-
-        if (!$userProgression) {
-            $userProgression = new UserProgression();
-            $userProgression->setUser($user);
-            $userProgression->setFlashcard($card);
-        }
-
-        $userProgression->setIsSuccessful('true' === $request->get('isSuccessful'));
-        $this->om->persist($userProgression);
-        $this->om->flush();
-
-        $this->evaluationManager->update($card->getDeck()->getResourceNode(), $user, $userProgression);
+        $userProgression = $this->evaluationManager->updateUserProgression($card, $user, $request->get('isSuccessful'));
 
         $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($card->getDeck()->getResourceNode(), $user);
 
         return new JsonResponse([
-            'progression' => $this->userProgressionSerializer->serialize($userProgression),
+            'progression' => $this->serializer->serialize($userProgression),
             'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
         ]);
     }

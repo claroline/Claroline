@@ -23,15 +23,9 @@ const Overview = (props) =>
       disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'flashcard')] : []
     }]}
   >
-    <section
-      className="resource-parameters mb-3">
-      <div
-        className="resource-column col-md-8">
-        <FlashcardInfo
-          flashcard={props.flashcardDeck}
-        />
-      </div>
-    </section>
+    <FlashcardInfo
+      flashcard={props.flashcardDeck}
+    />
   </ResourceOverview>
 
 Overview.propTypes = {

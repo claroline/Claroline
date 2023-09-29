@@ -27,7 +27,7 @@ const Cards = props =>
           <img src={asset(card.visibleContent.url)} alt={card.question} className="flashcard-thumbnail" />
         }
         { card.visibleContentType === 'video' &&
-          <video className="flashcard-thumbnail not-video-js vjs-default-skin vjs-16-9">
+          <video controls  className="flashcard-thumbnail">
             <source src={asset(card.visibleContent.url)} />
           </video>
         }

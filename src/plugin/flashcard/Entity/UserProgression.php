@@ -19,13 +19,13 @@ class UserProgression
     use Id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Flashcard")
+     * @ORM\ManyToOne(targetEntity="Claroline\FlashcardBundle\Entity\Flashcard")
      *
      * @ORM\JoinColumn(name="flashcard_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @var Flashcard
      */
-    protected $flashcard;
+    private $flashcard;
 
     /**
      * User for which we track the progression.
@@ -36,12 +36,12 @@ class UserProgression
      *
      * @var User
      */
-    protected $user;
+    private $user;
 
     /**
      * @ORM\Column(name="is_successful", type="boolean")
      */
-    protected bool $isSuccessful;
+    private bool $isSuccessful;
 
     public function __construct()
     {
