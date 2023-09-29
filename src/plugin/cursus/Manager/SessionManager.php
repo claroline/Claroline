@@ -110,6 +110,7 @@ class SessionManager
             'session_max_users' => $session->getMaxUsers(),
             'session_start' => $session->getStartDate()->format('d/m/Y'),
             'session_end' => $session->getEndDate()->format('d/m/Y'),
+            'workspace_url' => $this->routingHelper->workspaceUrl($session->getWorkspace()),
         ];
 
         return $this->templateManager->getTemplate('training_session', $placeholders, $locale);
@@ -420,6 +421,7 @@ class SessionManager
             'session_start' => $session->getStartDate()->format('d/m/Y'),
             'session_end' => $session->getEndDate()->format('d/m/Y'),
             'session_trainers' => $trainersList,
+            'workspace_url' => $this->routingHelper->workspaceUrl($course->getWorkspace()),
             'registration_confirmation_url' => $this->router->generate('apiv2_cursus_session_self_confirm', ['id' => $session->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL), // TODO
         ];
 
