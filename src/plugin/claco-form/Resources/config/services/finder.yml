@@ -7,9 +7,8 @@ services:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
         arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Manager\LocationManager'
             - '@security.token_storage'
+            - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
 
     Claroline\ClacoFormBundle\Finder\KeywordFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder

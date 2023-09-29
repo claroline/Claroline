@@ -154,7 +154,7 @@ const isCurrentEntrySharedUser = createSelector(
   }
 )
 
-const isCurrentEntryManager = createSelector(
+const isCurrentEntryCategoryManager = createSelector(
   [authenticatedUser, isAnon, currentEntry],
   (authenticatedUser, isAnon, currentEntry) => {
     let isManager = false
@@ -176,37 +176,21 @@ const isCurrentEntryManager = createSelector(
 )
 
 const canManageCurrentEntry = createSelector(
-  authenticatedUser,
-  isAnon,
   resourceSelect.resourceNode,
-  currentEntry,
-  (authenticatedUser, isAnon, resourceNode, currentEntry) => {
-    let canManage = hasPermission('edit', resourceNode)
-
-    if (!canManage && !isAnon && authenticatedUser && currentEntry && currentEntry.categories) {
-      currentEntry.categories.forEach(category => {
-        if (!canManage && category.managers) {
-          category.managers.forEach(manager => {
-            if (manager.id === authenticatedUser.id) {
-              canManage = true
-            }
-          })
-        }
-      })
-    }
-
-    return canManage
+  isCurrentEntryCategoryManager,
+  (resourceNode, isCurrentEntryCategoryManager) => {
+    return hasPermission('edit', resourceNode)
+      || isCurrentEntryCategoryManager
   }
 )
 
 const canEditCurrentEntry = createSelector(
-  canAdministrate,
   params,
   isCurrentEntryOwner,
   canManageCurrentEntry,
   isCurrentEntrySharedUser,
-  (canAdministrate, params, isCurrentEntryOwner, canManageCurrentEntry, isCurrentEntrySharedUser) => {
-    return canAdministrate || (params && params['edition_enabled'] && (isCurrentEntryOwner || isCurrentEntrySharedUser)) || canManageCurrentEntry
+  (params, isCurrentEntryOwner, canManageCurrentEntry, isCurrentEntrySharedUser) => {
+    return canManageCurrentEntry || (params && params['edition_enabled'] && (isCurrentEntryOwner || isCurrentEntrySharedUser))
   }
 )
 
@@ -222,18 +206,15 @@ const canAddEntry = createSelector(
 )
 
 const canOpenCurrentEntry = createSelector(
-  canAdministrate,
   params,
   currentEntry,
   isCurrentEntryOwner,
   canManageCurrentEntry,
-  (canAdministrate, params, currentEntry, isCurrentEntryOwner, canManageCurrentEntry) => {
-    return canAdministrate || (
-      currentEntry && (
-        (params && params['search_enabled'] && currentEntry.status === 1) ||
-        isCurrentEntryOwner ||
-        canManageCurrentEntry
-      )
+  (params, currentEntry, isCurrentEntryOwner, canManageCurrentEntry) => {
+    return currentEntry && (
+      (params && params['search_enabled'] && currentEntry.status === 1) ||
+      isCurrentEntryOwner ||
+      canManageCurrentEntry
     )
   }
 )
@@ -314,7 +295,6 @@ export const selectors = {
   entries,
   isCurrentEntryOwner,
   isCurrentEntrySharedUser,
-  isCurrentEntryManager,
   canManageCurrentEntry,
   canEditCurrentEntry,
   canViewMetadata,
