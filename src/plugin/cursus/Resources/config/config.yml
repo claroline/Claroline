@@ -81,6 +81,7 @@ plugin:
               - session_start
               - session_end
               - session_trainers
+              - workspace_url
 
         - name: training_session_confirmation
           type: email
@@ -96,6 +97,7 @@ plugin:
               - session_end
               - session_trainers
               - registration_confirmation_url
+              - workspace_url
 
         - name: training_event
           type: pdf
