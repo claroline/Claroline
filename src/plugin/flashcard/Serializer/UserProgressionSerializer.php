@@ -31,7 +31,7 @@ class UserProgressionSerializer
         return [
             'id' => $userProgression->getId(),
             'flashcard' => $this->flashcardDeckSerializer->serializeCard($userProgression->getFlashcard()),
-            'is_successful' => $userProgression->isSuccessful(),
+            'isSuccessful' => $userProgression->isSuccessful(),
         ];
     }
 }

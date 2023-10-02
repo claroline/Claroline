@@ -3,8 +3,6 @@
 namespace Claroline\FlashcardBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\FlashcardBundle\Entity\Flashcard;
-use Claroline\FlashcardBundle\Entity\UserProgression;
 use Doctrine\ORM\EntityRepository;
 
 class UserProgressionRepository extends EntityRepository
@@ -19,13 +17,5 @@ class UserProgressionRepository extends EntityRepository
             ->setParameter('cards', $deckCards)
             ->getQuery()
             ->getSingleScalarResult();
-    }
-
-    public function findOneByUserAndFlashcard(User $user, Flashcard $flashcard): ?UserProgression
-    {
-        return $this->findOneBy([
-            'user' => $user,
-            'flashcard' => $flashcard,
-        ]);
     }
 }

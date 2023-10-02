@@ -4,9 +4,11 @@ namespace Claroline\FlashcardBundle\Subscriber;
 
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
+use Claroline\FlashcardBundle\Entity\UserProgression;
 use Claroline\FlashcardBundle\Manager\EvaluationManager;
 use Claroline\FlashcardBundle\Serializer\UserProgressionSerializer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -18,17 +20,20 @@ class FlashcardDeckSubscriber implements EventSubscriberInterface
     private UserProgressionSerializer $userProgressionSerializer;
     private TokenStorageInterface $tokenStorage;
     private EvaluationManager $evaluationManager;
+    private ObjectManager $om;
 
     public function __construct(
         SerializerProvider $serializer,
         UserProgressionSerializer $userProgressionSerializer,
         TokenStorageInterface $tokenStorage,
-        EvaluationManager $evaluationManager
+        EvaluationManager $evaluationManager,
+        ObjectManager $om
     ) {
         $this->serializer = $serializer;
         $this->userProgressionSerializer = $userProgressionSerializer;
         $this->tokenStorage = $tokenStorage;
         $this->evaluationManager = $evaluationManager;
+        $this->om = $om;
     }
 
     public static function getSubscribedEvents(): array
@@ -47,7 +52,10 @@ class FlashcardDeckSubscriber implements EventSubscriberInterface
         $progressionArray = [];
 
         foreach ($flashcardDeck->getCards() as $card) {
-            $progression = $card->getProgressionByUser($user);
+            $progression = $this->om->getRepository(UserProgression::class)->findOneBy([
+                'user' => $user,
+                'flashcard' => $card,
+            ]);
             if ($progression) {
                 $progressionArray[] = $this->userProgressionSerializer->serialize($progression);
             }

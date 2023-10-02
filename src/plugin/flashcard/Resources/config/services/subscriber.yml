@@ -8,4 +8,5 @@ services:
             - '@Claroline\FlashcardBundle\Serializer\UserProgressionSerializer'
             - '@security.token_storage'
             - '@Claroline\FlashcardBundle\Manager\EvaluationManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 

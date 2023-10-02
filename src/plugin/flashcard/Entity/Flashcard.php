@@ -4,7 +4,6 @@ namespace Claroline\FlashcardBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -48,11 +47,6 @@ class Flashcard
      * @ORM\JoinColumn(nullable=false)
      */
     private FlashcardDeck $deck;
-
-    /**
-     * @ORM\OneToMany(targetEntity="UserProgression", mappedBy="flashcard")
-     */
-    private $progression;
 
     public function __construct()
     {
@@ -129,16 +123,5 @@ class Flashcard
         $this->deck = $deck;
 
         return $this;
-    }
-
-    public function getProgressionByUser(User $user): ?UserProgression
-    {
-        foreach ($this->progression as $progression) {
-            if ($progression->getUser() === $user) {
-                return $progression;
-            }
-        }
-
-        return null;
     }
 }

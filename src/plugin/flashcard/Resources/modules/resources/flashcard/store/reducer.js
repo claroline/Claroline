@@ -22,13 +22,13 @@ const reducer = combineReducers(Object.assign({
       const newState = cloneDeep(state)
       const cardProgression = newState.flashcardDeckProgression.filter((data) => data.flashcard.id === action.id)[0]
       if (cardProgression) {
-        cardProgression.is_successful = action.is_successful
+        cardProgression.isSuccessful = action.isSuccessful
       } else {
         newState.flashcardDeckProgression.push({
           flashcard: {
             id: action.id
           },
-          is_successful: action.is_successful
+          isSuccessful: action.isSuccessful
         })
       }
       return newState

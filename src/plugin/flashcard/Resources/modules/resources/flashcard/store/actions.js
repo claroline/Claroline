@@ -8,8 +8,8 @@ export const FLASHCARD_UPDATE_PROGRESSION = 'FLASHCARD_UPDATE_PROGRESSION'
 
 export const actions = {}
 
-actions.updateCardProgression = makeActionCreator(FLASHCARD_UPDATE_PROGRESSION, 'id', 'is_successful')
-actions.refreshDeckAction = makeActionCreator(FLASHCARD_GET_DECK, 'data')
+actions.updateCardProgression = makeActionCreator(FLASHCARD_UPDATE_PROGRESSION, 'id', 'isSuccessful')
+actions.startAttemptAction = makeActionCreator(FLASHCARD_GET_DECK, 'data')
 
 actions.updateProgression = (cardId, isSuccessful, silent = true) => ({
   [API_REQUEST]: {
@@ -25,15 +25,14 @@ actions.updateProgression = (cardId, isSuccessful, silent = true) => ({
   }
 })
 
-actions.refreshDeck = (deckId, silent = true) => ({
+actions.startAttempt = (deckId, silent = true) => ({
   [API_REQUEST]: {
-    silent: silent,
     url: ['apiv2_flashcard_deck_get', {id: deckId}],
     request: {
       method: 'GET'
     },
     success: (data, dispatch) => {
-      dispatch(actions.refreshDeckAction(data))
+      dispatch(actions.startAttemptAction(data))
     }
   }
 })

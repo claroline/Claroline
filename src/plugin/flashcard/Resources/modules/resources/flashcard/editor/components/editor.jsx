@@ -16,7 +16,7 @@ import {selectors} from '#/plugin/flashcard/resources/flashcard/editor/store'
 import {selectors as baseSelectors} from '#/plugin/flashcard/resources/flashcard/store/selectors'
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {MODAL_CARD} from '#/plugin/flashcard/resources/flashcard/editor/modals/card'
-import {Cards} from '#/plugin/flashcard/resources/flashcard/editor/components/cards'
+import {Card} from '#/plugin/flashcard/resources/flashcard/components/card'
 
 const EditorComponent = props =>
   <FormData
@@ -96,7 +96,7 @@ const EditorComponent = props =>
     }
 
     {0 !== props.cards.length &&
-      <Cards
+      <Card
         cards={props.cards}
         actions={(card) => [
           {

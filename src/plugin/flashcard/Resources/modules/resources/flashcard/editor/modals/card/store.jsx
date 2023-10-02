@@ -1,9 +1,14 @@
 import {makeFormReducer} from '#/main/app/content/form/store'
 
-import {selectors} from '#/plugin/flashcard/resources/flashcard/editor/modals/card/store/selectors'
+const STORE_NAME = 'CardForm'
+
+const selectors = {
+  STORE_NAME
+}
 
 const reducer = makeFormReducer(selectors.STORE_NAME)
 
 export {
-  reducer
+  reducer,
+  selectors
 }

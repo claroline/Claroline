@@ -7,7 +7,7 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 
-const Cards = props =>
+const Card = props =>
   <ul className="flashcards">
     {props.cards.map((card) =>
       <li key={card.id} className="flashcard-preview">
@@ -27,12 +27,12 @@ const Cards = props =>
           <img src={asset(card.visibleContent.url)} alt={card.question} className="flashcard-thumbnail" />
         }
         { card.visibleContentType === 'video' &&
-          <video controls  className="flashcard-thumbnail">
+          <video controls={true}  className="flashcard-thumbnail">
             <source src={asset(card.visibleContent.url)} />
           </video>
         }
         { card.visibleContentType === 'audio' &&
-          <audio controls style={{margin: '50px 10px'}} controlsList="noremoteplayback nodownload noplaybackrate">
+          <audio controls controlsList="noremoteplayback nodownload noplaybackrate">
             <source src={asset(card.visibleContent.url)}/>
           </audio>
         }
@@ -45,14 +45,13 @@ const Cards = props =>
     )}
   </ul>
 
-Cards.propTypes = {
+Card.propTypes = {
   cards: T.arrayOf(T.shape(
     CardTypes.propTypes
   )),
-  visibleContentType: T.string,
   actions: T.func
 }
 
 export {
-  Cards
+  Card
 }

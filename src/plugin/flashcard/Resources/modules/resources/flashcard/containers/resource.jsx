@@ -16,8 +16,8 @@ const FlashcardResource = withRouter(
       editable: hasPermission('edit', resourceSelectors.resourceNode(state))
     }),
     (dispatch) => ({
-      async refreshDeck(deckId) {
-        return dispatch(actions.refreshDeck(deckId))
+      async startAttempt(deckId) {
+        return dispatch(actions.startAttempt(deckId))
       }
     })
   )(FlashcardResourceComponent)

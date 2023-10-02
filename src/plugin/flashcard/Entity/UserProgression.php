@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="claro_flashcard_progression")
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\FlashcardBundle\Repository\UserProgressionRepository")
  */
 class UserProgression
 {

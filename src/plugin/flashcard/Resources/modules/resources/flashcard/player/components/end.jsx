@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
@@ -11,24 +11,18 @@ import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/
 import {FlashcardInfo} from '#/plugin/flashcard/resources/flashcard/components/info'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
-class PlayerEndComponent extends Component {
-  render() {
-    return (
-      <ResourceEnd
-        contentText={get(this.props.flashcardDeck, 'end.message')}
-        feedbacks={{}}
-        attempt={this.props.evaluation}
-      >
-        <section className="resource-parameters mb-3">
-          <FlashcardInfo
-            flashcardDeck={this.props.flashcardDeck}
-            flashcardDeckProgression={this.props.flashcardDeckProgression}
-          />
-        </section>
-      </ResourceEnd>
-    )
-  }
-}
+const PlayerEndComponent = (props) =>
+  <ResourceEnd
+    contentText={get(props.flashcardDeck, 'end.message')}
+    feedbacks={{}}
+    attempt={props.evaluation}
+  >
+    <FlashcardInfo
+      flashcardDeck={props.flashcardDeck}
+      flashcardDeckProgression={props.flashcardDeckProgression}
+    />
+  </ResourceEnd>
+
 
 PlayerEndComponent.propTypes = {
   flashcardDeck: T.shape(

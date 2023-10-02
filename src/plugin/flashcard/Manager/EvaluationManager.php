@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\FlashcardBundle\Repository\UserProgressionRepository;
 use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
@@ -40,14 +39,7 @@ class EvaluationManager
 
         $deck = $progression->getFlashcard()->getDeck();
 
-        $cardsSeen = $this->om->getRepository(UserProgression::class)->createQueryBuilder('up')
-            ->select('count(up)')
-            ->where('up.user = :user')
-            ->andWhere('up.flashcard IN (:cards)')
-            ->setParameter('user', $user->getId())
-            ->setParameter('cards', $deck->getCards())
-            ->getQuery()
-            ->getSingleScalarResult();
+        $cardsSeen = $this->om->getRepository(UserProgression::class)->countCardsSeenByUserForDeck($user, $deck->getCards());
 
         $allCards = $deck->getCards()->count();
 

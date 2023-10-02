@@ -5,7 +5,6 @@ import { PropTypes as T } from 'prop-types'
 import { trans } from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config'
 import {Button} from '#/main/app/action/components/button'
-import {CallbackButton} from '#/main/app/buttons/callback/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import { ContentHtml } from '#/main/app/content/components/html'
 import { ContentPlaceholder } from '#/main/app/content/components/placeholder'
@@ -65,6 +64,7 @@ const Player = props => {
     </>
   )
 
+
   if (!maxCards) {
     return (
       <ContentPlaceholder
@@ -75,9 +75,9 @@ const Player = props => {
   }
 
   return (
-    <section>
+    <>
       <ProgressBar
-        className="mb-2"
+        className="mb-3"
         value={(currentCardIndex+1) / maxCards * 100}
         size="xs"
         type="learning"
@@ -99,31 +99,33 @@ const Player = props => {
 
       <div className="flashcard-buttons mt-5">
         { !isFlipped && <Button
+          className="btn btn-primary"
           label={trans('show_answer', {}, 'flashcard')}
           type={CALLBACK_BUTTON}
-          className="btn btn-info"
+          size="lg"
           callback={() => setIsFlipped(!isFlipped)}
         />
         }
 
-        { isFlipped && <CallbackButton
+        { isFlipped && <Button
           className="btn btn-success"
+          label={trans('right_answer', {}, 'flashcard')}
+          type={CALLBACK_BUTTON}
+          size="lg"
           callback={() => handleAnswer(true)}
-        >
-          {trans('right_answer', {}, 'flashcard')}
-        </CallbackButton>
+        />
         }
 
-        { isFlipped && <CallbackButton
+        { isFlipped && <Button
           className="btn btn-danger"
           label={trans('wrong_answer', {}, 'flashcard')}
+          type={CALLBACK_BUTTON}
+          size="lg"
           callback={() => handleAnswer(false)}
-        >
-          {trans('wrong_answer', {}, 'flashcard')}
-        </CallbackButton>
+        />
         }
       </div>
-    </section>
+    </>
 
   )
 }

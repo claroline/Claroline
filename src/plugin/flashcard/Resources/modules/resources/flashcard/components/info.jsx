@@ -8,8 +8,7 @@ import {schemeCategory20c} from '#/main/theme/color/utils'
 import {selectors} from '#/plugin/flashcard/resources/flashcard/store'
 
 const FlashcardInfoComponent = (props) =>
-  <section className="deck-info">
-    <div className="d-flex flex-direction-row">
+  <section className="flashcards-info">
       <ContentCounter
         icon="fa fa-layer-group"
         label={trans('cartes', {}, 'flashcard')}
@@ -29,7 +28,7 @@ const FlashcardInfoComponent = (props) =>
         label={trans('check', {}, 'flashcard')}
         color={schemeCategory20c[10]}
         value={props.cards.filter( (card) => props.progress.find( (progression) =>
-          progression.flashcard.id === card.id && progression && progression.is_successful === true
+          progression.flashcard.id === card.id && progression && progression.isSuccessful === true
         ) ).length}
       />
 
@@ -38,10 +37,9 @@ const FlashcardInfoComponent = (props) =>
         label={trans('fail', {}, 'flashcard')}
         color={schemeCategory20c[5]}
         value={props.cards.filter( (card) => props.progress.find( (progression) =>
-          progression.flashcard.id === card.id && progression && progression.is_successful === false
+          progression.flashcard.id === card.id && progression && progression.isSuccessful === false
         )).length}
       />
-    </div>
   </section>
 
 const FlashcardInfo = connect(

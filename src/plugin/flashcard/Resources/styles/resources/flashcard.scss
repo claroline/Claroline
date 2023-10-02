@@ -16,11 +16,17 @@ $flashcard-preview-height: 200px;
   padding: 0;
 }
 
+.flashcards-info {
+  display: flex;
+  flex-direction: row;
+}
+
 .flashcard-preview {
   margin: 10px;
   display: flex;
   overflow: hidden;
   position: relative;
+  align-items: center;
   transition: transform 0.2s;
   width: $flashcard-preview-width;
   border-radius: $card-border-radius;
@@ -82,8 +88,6 @@ $flashcard-preview-height: 200px;
 .flashcard-buttons {
   display: flex;
   justify-content: center;
-  max-width: 500px;
-  width: 80vw;
   margin: auto;
 
   & > button {
