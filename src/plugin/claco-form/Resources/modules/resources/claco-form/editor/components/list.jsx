@@ -39,7 +39,7 @@ const EditorList = props =>
       target: props.path,
       exact: true
     }}
-    sections={[
+    definition={[
       {
         id: 'general',
         title: trans('general'),
@@ -112,7 +112,7 @@ const EditorList = props =>
       level={3}
       name={selectors.STORE_NAME+'.clacoFormForm'}
       dataPart="list"
-      list={entriesSource(props.clacoForm, true, true, true, true)}
+      list={entriesSource(props.clacoForm, true, true, true)}
       parameters={props.clacoForm.list}
     />
   </FormData>
