@@ -125,6 +125,15 @@ abstract class AbstractEvaluation implements EvaluationInterface
         $this->score = $score;
     }
 
+    public function getRelativeScore(): ?float
+    {
+        if (!empty($this->scoreMax)) {
+            return $this->score ? $this->score / $this->scoreMax : null;
+        }
+
+        return null;
+    }
+
     public function getScoreMin(): ?float
     {
         return $this->scoreMin;
