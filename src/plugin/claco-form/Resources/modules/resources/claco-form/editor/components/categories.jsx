@@ -22,7 +22,7 @@ const EditorCategories = props =>
       target: props.path,
       exact: true
     }}
-    sections={[
+    definition={[
       {
         id: 'general',
         title: trans('general'),

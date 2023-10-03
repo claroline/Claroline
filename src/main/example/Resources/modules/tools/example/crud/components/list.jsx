@@ -97,11 +97,13 @@ const CrudList = (props) =>
           displayed: true
         }, {
           name: 'meta.createdAt',
+          alias: 'createdAt',
           type: 'date',
           label: trans('creation_date'),
           displayed: false
         }, {
           name: 'meta.updatedAt',
+          alias: 'updatedAt',
           type: 'date',
           label: trans('modification_date'),
           displayed: true
