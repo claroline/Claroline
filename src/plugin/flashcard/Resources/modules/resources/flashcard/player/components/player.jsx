@@ -51,12 +51,12 @@ const Player = props => {
           <img src={asset(currentCard[contentKey].url)} alt={currentCard.question} className="flashcard-media" />
         }
         { currentCard[contentKey+'Type'] === 'video' &&
-          <video className="flashcard-video flashcard-media not-video-js vjs-default-skin vjs-16-9" controls>
+          <video className="flashcard-video flashcard-media not-video-js vjs-default-skin vjs-16-9" controls={true}>
             <source src={asset(currentCard[contentKey].url)} type={currentCard.type}/>
           </video>
         }
         { currentCard[contentKey+'Type'] === 'audio' &&
-          <audio controls>
+          <audio controls={true}>
             <source src={asset(currentCard[contentKey].url)} type={currentCard.type}/>
           </audio>
         }

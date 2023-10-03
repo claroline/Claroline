@@ -16,6 +16,9 @@ const CardModal = withReducer(selectors.STORE_NAME, reducer)(
     (dispatch) => ({
       reset(formData, isNew = false) {
         dispatch(formActions.reset(selectors.STORE_NAME, formData, isNew))
+      },
+      update(prop, value) {
+        dispatch(formActions.updateProp(selectors.STORE_NAME, prop, value))
       }
     })
   )(CardModalComponent)

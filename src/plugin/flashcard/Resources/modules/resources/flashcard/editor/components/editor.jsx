@@ -96,48 +96,68 @@ const EditorComponent = props =>
     }
 
     {0 !== props.cards.length &&
-      <Card
-        cards={props.cards}
-        actions={(card) => [
-          {
-            name: 'configure',
-            type: MODAL_BUTTON,
-            icon: 'fa fa-fw fa-cog',
-            label: trans('configure', {}, 'actions'),
-            modal: [MODAL_CARD, {
-              card: card,
-              save: (updated) => {
-                const updatedPos = props.cards.findIndex(current => current.id === updated.id)
+      <ul className="flashcards">
+        {props.cards.map((card) =>
+          <li
+            key={card.id}
+            className="flashcard-element-hoverable"
+            style={{
+              width: "calc( 50% - 30px )",
+              height: "250px",
+              margin: "15px",
+              background: "#fff9ec",
+              padding: "5px",
+              borderRadius: "10px",
+              overflow: "hidden",
+              boxSizing: "border-box",
+              position: "relative"
+            }}
+          >
+            <Card
+              card={card}
+              actions={(card) => [
+                {
+                  name: 'configure',
+                  type: MODAL_BUTTON,
+                  icon: 'fa fa-fw fa-cog',
+                  label: trans('configure', {}, 'actions'),
+                  modal: [MODAL_CARD, {
+                    card: card,
+                    save: (updated) => {
+                      const updatedPos = props.cards.findIndex(current => current.id === updated.id)
 
-                const newCards = props.cards.slice(0)
-                newCards[updatedPos] = updated
+                      const newCards = props.cards.slice(0)
+                      newCards[updatedPos] = updated
 
-                props.update('cards', newCards)
-              }
-            }]
-          }, {
-            name: 'delete',
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-trash',
-            label: trans('delete', {}, 'actions'),
-            callback: () => {
-              const deletedPos = props.cards.findIndex(current => current.id === card.id)
-              if (-1 !== deletedPos) {
-                const newCards = props.cards.slice(0)
-                newCards.splice(deletedPos, 1)
+                      props.update('cards', newCards)
+                    }
+                  }]
+                }, {
+                  name: 'delete',
+                  type: CALLBACK_BUTTON,
+                  icon: 'fa fa-fw fa-trash',
+                  label: trans('delete', {}, 'actions'),
+                  callback: () => {
+                    const deletedPos = props.cards.findIndex(current => current.id === card.id)
+                    if (-1 !== deletedPos) {
+                      const newCards = props.cards.slice(0)
+                      newCards.splice(deletedPos, 1)
 
-                props.update('cards', newCards)
-              }
-            },
-            dangerous: true,
-            confirm: {
-              title: trans('card_delete_confirm', {}, 'flashcard'),
-              message: trans('card_delete_message', {}, 'flashcard'),
-              button: trans('delete', {}, 'actions')
-            }
-          }
-        ]}
-      />
+                      props.update('cards', newCards)
+                    }
+                  },
+                  dangerous: true,
+                  confirm: {
+                    title: trans('card_delete_confirm', {}, 'flashcard'),
+                    message: trans('card_delete_message', {}, 'flashcard'),
+                    button: trans('delete', {}, 'actions')
+                  }
+                }
+              ]}
+            />
+          </li>
+        )}
+      </ul>
     }
 
     <Button

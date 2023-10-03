@@ -7,10 +7,30 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 
-const Card = props =>
-  <ul className="flashcards">
-    {props.cards.map((card) =>
-      <li key={card.id} className="flashcard-preview">
+const Card = props => {
+
+  const renderCardContent = (card, contentKey) => (
+    <>
+      <div>
+        <p className="flashcard-element-question">{card.question}</p>
+        <div className="flashcard-element-content">
+          { card[contentKey+'Type'] === 'text' &&
+            <ContentHtml>{card[contentKey]}</ContentHtml>
+          }
+          { card[contentKey+'Type'] === 'image' &&
+            <img src={asset(card[contentKey].url)} alt={card.question} className="flashcard-media" />
+          }
+          { card[contentKey+'Type'] === 'video' &&
+            <video className="flashcard-video flashcard-media not-video-js vjs-default-skin vjs-16-9" controls={true}>
+              <source src={asset(card[contentKey].url)} type={card.type}/>
+            </video>
+          }
+          { card[contentKey+'Type'] === 'audio' &&
+            <audio controls={true}>
+              <source src={asset(card[contentKey].url)} type={card.type}/>
+            </audio>
+          }
+        </div>
         {props.actions &&
           <div className="flashcard-actions">
             <Toolbar
@@ -23,32 +43,17 @@ const Card = props =>
             />
           </div>
         }
-        { card.visibleContentType === 'image' &&
-          <img src={asset(card.visibleContent.url)} alt={card.question} className="flashcard-thumbnail" />
-        }
-        { card.visibleContentType === 'video' &&
-          <video controls={true}  className="flashcard-thumbnail">
-            <source src={asset(card.visibleContent.url)} />
-          </video>
-        }
-        { card.visibleContentType === 'audio' &&
-          <audio controls controlsList="noremoteplayback nodownload noplaybackrate">
-            <source src={asset(card.visibleContent.url)}/>
-          </audio>
-        }
-        { card.visibleContentType === 'text' &&
-          <div className="flashcard-content">
-            <ContentHtml>{card.visibleContent}</ContentHtml>
-          </div>
-        }
-      </li>
-    )}
-  </ul>
+      </div>
+    </>
+  )
+
+  return renderCardContent( props.card, props.contentKey ?? 'visibleContent' )
+}
 
 Card.propTypes = {
-  cards: T.arrayOf(T.shape(
+  card: T.shape(
     CardTypes.propTypes
-  )),
+  ),
   actions: T.func
 }
 

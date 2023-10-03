@@ -21,6 +21,14 @@ $flashcard-preview-height: 200px;
   flex-direction: row;
 }
 
+.flashcard-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 2px;
+  z-index: 3;
+}
+
 .flashcard-preview {
   margin: 10px;
   display: flex;
@@ -32,14 +40,6 @@ $flashcard-preview-height: 200px;
   border-radius: $card-border-radius;
   border: solid 1px $table-border-color;
   min-height: $flashcard-preview-height;
-
-  .flashcard-actions {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 4px;
-    z-index: 3;
-  }
 
   .flashcard-thumbnail {
     width: 100%;
@@ -60,12 +60,6 @@ $flashcard-preview-height: 200px;
       text-overflow: ellipsis;
       -webkit-line-clamp: 4;
     }
-  }
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 5px 1px #66afe9;
-    border-color: #337ab7;
   }
 }
 
@@ -95,6 +89,39 @@ $flashcard-preview-height: 200px;
   }
 }
 
+.flashcard-media {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.flashcard-element-question {
+  text-align: center;
+  font-weight: bold;
+  margin: 0;
+  min-height: 1.5em;
+}
+
+.flashcard-element-content {
+  overflow-y: hidden;
+
+  audio, video
+  {
+    display: block;
+    margin: auto;
+  }
+}
+
+.flashcard-element-hoverable {
+  transition: all linear 175ms;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 5px 1px #66afe9;
+    border: 1px solid #337ab7;
+  }
+}
+
 .flashcard-element {
   position: absolute;
   background: #fff9ec;
@@ -115,23 +142,6 @@ $flashcard-preview-height: 200px;
   .flashcard-video {
     width: 100%;
     border-radius: 5px;
-  }
-
-  .flashcard-media {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 5px;
-  }
-
-  &-question {
-    text-align: center;
-    font-weight: bold;
-    margin: 0;
-  }
-
-  &-content {
-    overflow-y: hidden;
   }
 
   &-visible,&-hidden {

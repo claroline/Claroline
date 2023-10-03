@@ -13,31 +13,11 @@ import {FormData} from '#/main/app/content/form/containers/data'
 
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {selectors} from '#/plugin/flashcard/resources/flashcard/editor/modals/card/store'
+import { generateInputFields } from '#/plugin/flashcard/resources/flashcard/utils'
 
-const CardModal = props => {
-
-  let visibleContentTypes = []
-  if (props.card && -1 !== ['audio'].indexOf(props.card.visibleContentType)) {
-    visibleContentTypes = ['audio/*']
-  } else if (props.card && -1 !== ['video'].indexOf(props.card.visibleContentType)) {
-    visibleContentTypes = ['video/*']
-  } else if (props.card && -1 !== ['image'].indexOf(props.card.visibleContentType)) {
-    visibleContentTypes = ['image/*']
-  } else {
-    visibleContentTypes = ['image/*', 'video/*', 'audio/*']
-  }
-
-  let hiddenContentTypes = []
-  if (props.card && -1 !== ['audio'].indexOf(props.card.hiddenContentType)) {
-    hiddenContentTypes = ['audio/*']
-  } else if (props.card && -1 !== ['video'].indexOf(props.card.hiddenContentType)) {
-    hiddenContentTypes = ['video/*']
-  } else if (props.card && -1 !== ['image'].indexOf(props.card.hiddenContentType)) {
-    hiddenContentTypes = ['image/*']
-  }
-
-  return <Modal
-    {...omit(props, 'card', 'formData', 'isNew', 'saveEnabled', 'reset', 'save')}
+const CardModal = props =>
+  <Modal
+    {...omit(props, 'card', 'formData', 'isNew', 'saveEnabled', 'reset', 'save', 'update')}
     icon={classes('fa fa-fw', {
       'fa-plus': props.isNew,
       'fa-cog': !props.isNew
@@ -48,11 +28,8 @@ const CardModal = props => {
       if (props.card) {
         props.reset(props.card)
       } else {
-        props.reset(Object.assign({}, CardTypes.defaultProps, {id: makeId()}), true)
+        props.reset({ ...CardTypes.defaultProps, id: makeId() }, true)
       }
-    }}
-    onExiting={() => {
-      props.reset(Object.assign({}, CardTypes.defaultProps, {id: makeId()}), true)
     }}
     size="lg"
     flush={true}
@@ -60,88 +37,55 @@ const CardModal = props => {
     <FormData
       level={5}
       name={selectors.STORE_NAME}
-      definition={[{
-        icon: 'fa fa-fw fa-circle-info',
-        title: trans('information'),
-        fields: [{
-          name: 'question',
-          label: trans('question', {}, 'flashcard'),
-          type: 'string'
-        }, {
-          name: 'visibleContentType',
-          label: trans('visible_content_type', {}, 'flashcard'),
-          type: 'choice',
-          required: true,
-          onChange: (newType) => {
-            if (!props.card) return
-            const newCard = JSON.parse(JSON.stringify(props.card))
-            newCard.visibleContentType = newType
-            newCard.visibleContent = newType === 'text' ? '' : null
-            props.reset(newCard)
-          },
-          options: {
-            condensed: true,
-            choices: {
-              text: trans('text'),
-              image: trans('image'),
-              video: trans('video'),
-              audio: trans('audio')
+      definition={[
+        {
+          icon: 'fa fa-fw fa-circle-info',
+          title: trans('information'),
+          fields: [
+            {
+              name: 'question',
+              label: trans('question', {}, 'flashcard'),
+              type: 'string'
+            }, {
+              name: 'visibleContentType',
+              label: trans('visible_content_type', {}, 'flashcard'),
+              type: 'choice',
+              required: true,
+              onChange: () => {
+                props.update('visibleContent', null)
+              },
+              options: {
+                condensed: true,
+                choices: {
+                  text: trans('text'),
+                  image: trans('image'),
+                  video: trans('video'),
+                  audio: trans('audio')
+                }
+              },
+              linked: generateInputFields('visible')
+            }, {
+              name: 'hiddenContentType',
+              label: trans('hidden_content_type', {}, 'flashcard'),
+              type: 'choice',
+              required: true,
+              onChange: () => {
+                props.update('hiddenContent', null)
+              },
+              options: {
+                condensed: true,
+                choices: {
+                  text: trans('text'),
+                  image: trans('image'),
+                  video: trans('video'),
+                  audio: trans('audio')
+                }
+              },
+              linked: generateInputFields('hidden')
             }
-          },
-          linked: [{
-            name: 'visibleContent',
-            type: 'file',
-            label: trans('file'),
-            hideLabel: true,
-            displayed: (card) => -1 !== visibleContentTypes.indexOf(card.visibleContentType),
-            options: {
-              types: visibleContentTypes
-            }
-          }, {
-            name: 'visibleContent',
-            label: trans('visible_content', {}, 'flashcard'),
-            type: 'html',
-            displayed: (card) => -1 !== ['text'].indexOf(card.visibleContentType)
-          }]
-        }, {
-          name: 'hiddenContentType',
-          label: trans('hidden_content_type', {}, 'flashcard'),
-          type: 'choice',
-          required: true,
-          onChange: (newType) => {
-            if (!props.card) return
-            const newCard = JSON.parse(JSON.stringify(props.card))
-            newCard.hiddenContentType = newType
-            newCard.hiddenContent = newType === 'text' ? '' : null
-            props.reset(newCard)
-          },
-          options: {
-            condensed: true,
-            choices: {
-              text: trans('text'),
-              image: trans('image'),
-              video: trans('video'),
-              audio: trans('audio')
-            }
-          },
-          linked: [{
-            name: 'hiddenContent',
-            type: 'file',
-            label: trans('file'),
-            hideLabel: true,
-            displayed: (card) => -1 !== hiddenContentTypes.indexOf(card.hiddenContentType),
-            options: {
-              types: hiddenContentTypes
-            }
-          }, {
-            name: 'hiddenContent',
-            label: trans('hidden_content', {}, 'flashcard'),
-            type: 'html',
-            displayed: (card) => -1 !== ['text'].indexOf(card.hiddenContentType),
-            required: true
-          }]
-        }]
-      }]}
+          ]
+        }
+      ]}
     />
 
     <Button
@@ -158,7 +102,6 @@ const CardModal = props => {
       primary={true}
     />
   </Modal>
-}
 
 CardModal.propTypes = {
   card: T.shape(
