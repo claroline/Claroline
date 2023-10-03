@@ -32,14 +32,17 @@ abstract class AbstractEvaluationManager
         }
 
         if (!empty($data['scoreMax'])) {
-            $score = $data['score'] ?? null;
-            $scoreMin = $data['scoreMin'] ?? null;
+            $oldScore = $evaluation->getRelativeScore();
+            $this->updateEvaluationScore($evaluation, $data['scoreMax'], $data['score'] ?? null, $data['scoreMin'] ?? null);
 
-            if ($score !== $evaluation->getScore() || $scoreMin !== $evaluation->getScoreMin() || $data['scoreMax'] !== $evaluation->getScoreMax()) {
+            // checks if the user score has changed
+            // ATTENTION : never directly compare floats together !
+            // @see https://www.php.net/manual/en/language.types.float.php
+            // In this case, checking for changes higher than 0.001 is safe because we round
+            // the result for users to 2 digits anyway
+            if (abs($oldScore - $evaluation->getRelativeScore()) > 0.001) {
                 $changes['score'] = true;
             }
-
-            $this->updateEvaluationScore($evaluation, $data['scoreMax'], $score, $scoreMin);
         }
 
         if (isset($data['progression']) && $data['progression'] > $evaluation->getProgression()) {
@@ -70,7 +73,7 @@ abstract class AbstractEvaluationManager
 
     private function updateEvaluationScore(AbstractEvaluation $evaluation, float $scoreMax, float $score = null, float $scoreMin = null): AbstractEvaluation
     {
-        $oldScore = $evaluation->getScore() ? $evaluation->getScore() / $evaluation->getScoreMax() : null;
+        $oldScore = $evaluation->getRelativeScore();
         $newScore = $score ? $score / $scoreMax : null;
 
         // update evaluation score if the user has never been evaluated, has a better score
