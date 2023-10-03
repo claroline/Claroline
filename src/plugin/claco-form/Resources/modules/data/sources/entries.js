@@ -95,10 +95,10 @@ function getCardValue(clacoForm, row, type, currentUser) {
  * NB. This is not registered as a standard Claroline source
  * because it requires additional data to be computed
  */
-export default (clacoForm, canViewMetadata = false, canEdit = false, canAdministrate = false, isCategoryManager = false, path = null, currentUser = null) => {
+export default (clacoForm, canViewMetadata = false, canEdit = false, isCategoryManager = false, path = null, currentUser = null) => {
   const fields = clacoForm.fields || []
   const titleLabel = get(clacoForm, 'details.title_field_label') || trans('title')
-  const hasCategories = get(clacoForm, 'details.display_categories') || false
+  const hasCategories = canEdit || isCategoryManager || get(clacoForm, 'details.display_categories') || false
   const hasKeywords = get(clacoForm, 'details.display_keywords') || false
 
   return {
@@ -139,10 +139,10 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, canAdminist
         name: 'locked',
         label: trans('locked'),
         type: 'boolean',
-        displayed: canAdministrate,
-        displayable: canAdministrate,
-        filterable: canAdministrate,
-        sortable: canAdministrate
+        displayed: canEdit,
+        displayable: canEdit,
+        filterable: canEdit,
+        sortable: canEdit
       },
       // Metadata
       {
