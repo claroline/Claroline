@@ -33,7 +33,7 @@ const EntriesComponent = props =>
       url: ['apiv2_clacoformentry_delete_bulk'],
       displayed: (rows) => rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length
     }}
-    source={merge({}, entriesSource(props.clacoForm, props.canViewMetadata, props.canEdit, props.canAdministrate, props.isCategoryManager, props.path, props.currentUser), {
+    source={merge({}, entriesSource(props.clacoForm, props.canViewMetadata, props.canEdit, props.isCategoryManager, props.path, props.currentUser), {
       actions: (rows) => [
         {
           name: 'edit',
@@ -86,7 +86,7 @@ const EntriesComponent = props =>
           icon: 'fa fa-fw fa-lock',
           label: trans('lock', {}, 'actions'),
           callback: () => props.switchEntriesLock(rows, true),
-          displayed: props.canAdministrate && rows.filter(e => e.locked).length !== rows.length,
+          displayed: -1 !== rows.findIndex(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)),
           group: trans('management')
         }, {
           name: 'unlock',
@@ -94,7 +94,7 @@ const EntriesComponent = props =>
           icon: 'fa fa-fw fa-unlock',
           label: trans('unlock', {}, 'actions'),
           callback: () => props.switchEntriesLock(rows, false),
-          displayed: props.canAdministrate && rows.filter(e => !e.locked).length !== rows.length,
+          displayed: -1 !== rows.findIndex(e => e.locked && canManageEntry(e, props.canEdit, props.currentUser)),
           group: trans('management')
         }
       ]
@@ -112,7 +112,6 @@ EntriesComponent.propTypes = {
     ListParametersTypes.propTypes
   ),
   canEdit: T.bool.isRequired,
-  canAdministrate: T.bool.isRequired,
   canViewMetadata: T.bool.isRequired,
   isCategoryManager: T.bool.isRequired,
   canGeneratePdf: T.bool.isRequired,
@@ -130,7 +129,6 @@ const Entries = connect(
     clacoForm: selectors.clacoForm(state),
     canEdit: selectors.canEdit(state),
     canViewMetadata: selectors.canViewMetadata(state),
-    canAdministrate: selectors.canAdministrate(state),
     canGeneratePdf: selectors.canGeneratePdf(state),
     isCategoryManager: selectors.isCategoryManager(state)
   }),

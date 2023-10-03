@@ -24,7 +24,7 @@ const EditorParameters = props =>
       target: props.path,
       exact: true
     }}
-    sections={[
+    definition={[
       {
         id: 'fields',
         icon: 'fa fa-fw fa-table-list',
