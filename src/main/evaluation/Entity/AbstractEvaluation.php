@@ -22,17 +22,17 @@ abstract class AbstractEvaluation implements EvaluationInterface
 {
     use Id;
 
-    const STATUS_NOT_ATTEMPTED = 'not_attempted';
-    const STATUS_TODO = 'todo';
-    const STATUS_UNKNOWN = 'unknown';
-    const STATUS_OPENED = 'opened';
-    const STATUS_PARTICIPATED = 'participated';
-    const STATUS_INCOMPLETE = 'incomplete';
-    const STATUS_FAILED = 'failed';
-    const STATUS_COMPLETED = 'completed';
-    const STATUS_PASSED = 'passed';
+    public const STATUS_NOT_ATTEMPTED = 'not_attempted';
+    public const STATUS_TODO = 'todo';
+    public const STATUS_UNKNOWN = 'unknown';
+    public const STATUS_OPENED = 'opened';
+    public const STATUS_PARTICIPATED = 'participated';
+    public const STATUS_INCOMPLETE = 'incomplete';
+    public const STATUS_FAILED = 'failed';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_PASSED = 'passed';
 
-    const STATUS_PRIORITY = [
+    public const STATUS_PRIORITY = [
         self::STATUS_NOT_ATTEMPTED => 0,
         self::STATUS_TODO => 0,
         self::STATUS_UNKNOWN => 1,
@@ -90,7 +90,7 @@ abstract class AbstractEvaluation implements EvaluationInterface
         return $this->date;
     }
 
-    public function setDate(?\DateTimeInterface $date = null): void
+    public function setDate(\DateTimeInterface $date = null): void
     {
         $this->date = $date;
     }
@@ -120,9 +120,18 @@ abstract class AbstractEvaluation implements EvaluationInterface
         return $this->score;
     }
 
-    public function setScore(?float $score = null): void
+    public function setScore(float $score = null): void
     {
         $this->score = $score;
+    }
+
+    public function getRelativeScore(): ?float
+    {
+        if (!empty($this->scoreMax)) {
+            return $this->score ? $this->score / $this->scoreMax : null;
+        }
+
+        return null;
     }
 
     public function getScoreMin(): ?float
@@ -130,7 +139,7 @@ abstract class AbstractEvaluation implements EvaluationInterface
         return $this->scoreMin;
     }
 
-    public function setScoreMin(?float $scoreMin = null): void
+    public function setScoreMin(float $scoreMin = null): void
     {
         $this->scoreMin = $scoreMin;
     }
@@ -140,7 +149,7 @@ abstract class AbstractEvaluation implements EvaluationInterface
         return $this->scoreMax;
     }
 
-    public function setScoreMax(?float $scoreMax = null): void
+    public function setScoreMax(float $scoreMax = null): void
     {
         $this->scoreMax = $scoreMax;
     }
