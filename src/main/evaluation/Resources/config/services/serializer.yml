@@ -2,6 +2,7 @@ services:
     Claroline\EvaluationBundle\Serializer\WorkspaceEvaluationSerializer:
         tags: [ claroline.serializer ]
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 

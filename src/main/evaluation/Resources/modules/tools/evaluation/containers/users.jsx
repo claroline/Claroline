@@ -16,6 +16,9 @@ const EvaluationUsers = connect(
     },
     downloadSuccessCertificate(evaluation) {
       dispatch(actions.downloadSuccessCertificate(evaluation))
+    },
+    deleteEvaluation(workspaceId, userId) {
+      dispatch(actions.deleteUserProgression(workspaceId, userId))
     }
   })
 )(EvaluationUsersComponent)

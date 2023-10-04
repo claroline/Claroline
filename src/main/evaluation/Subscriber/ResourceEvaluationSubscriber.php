@@ -19,13 +19,9 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class ResourceEvaluationSubscriber implements EventSubscriberInterface
 {
-    /** @var MessageBusInterface */
-    private $messageBus;
-    /** @var ResourceEvaluationManager */
-    private $manager;
-
-    /** @var UserRepository */
-    private $userRepo;
+    private MessageBusInterface $messageBus;
+    private ResourceEvaluationManager $manager;
+    private UserRepository $userRepo;
 
     public function __construct(
         MessageBusInterface $messageBus,
@@ -47,7 +43,7 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function createEvaluations(CreateEvent $event)
+    public function createEvaluations(CreateEvent $event): void
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
@@ -66,7 +62,7 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function updateEvaluations(UpdateEvent $event)
+    public function updateEvaluations(UpdateEvent $event): void
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
@@ -92,7 +88,7 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function open(LoadResourceEvent $event)
+    public function open(LoadResourceEvent $event): void
     {
         // Update current user evaluation
         if ($event->getUser() instanceof User) {

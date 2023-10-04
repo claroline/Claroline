@@ -9,7 +9,7 @@ import {
   RESOURCE_LOAD,
   RESOURCE_SET_LOADED,
   RESOURCE_UPDATE_NODE,
-  USER_EVALUATION_UPDATE,
+  RESOURCE_EVALUATION_UPDATE,
   RESOURCE_RESTRICTIONS_DISMISS,
   RESOURCE_NOT_FOUND,
   RESOURCE_COMMENT_ADD,
@@ -89,7 +89,7 @@ const reducer = combineReducers({
    */
   userEvaluation: makeReducer(null, {
     [RESOURCE_LOAD]: (state, action) => action.resourceData.userEvaluation || null,
-    [USER_EVALUATION_UPDATE]: (state, action) => action.userEvaluation
+    [RESOURCE_EVALUATION_UPDATE]: (state, action) => action.userEvaluation
   }),
 
   lifecycle: makeReducer({}),

@@ -15,7 +15,6 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -25,6 +24,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\EvaluationBundle\Manager\PdfManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -36,54 +36,26 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/evaluations/workspace")
  */
-class WorkspaceEvaluationController extends AbstractSecurityController
+class WorkspaceEvaluationController
 {
     use RequestDecoderTrait;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var FinderProvider */
-    private $finder;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var WorkspaceEvaluationManager */
-    private $manager;
-    /** @var PdfManager */
-    private $pdfManager;
+    use PermissionCheckerTrait;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
+        private TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
-        TranslatorInterface $translator,
-        ObjectManager $om,
-        Crud $crud,
-        FinderProvider $finder,
-        SerializerProvider $serializer,
-        WorkspaceEvaluationManager $manager,
-        PdfManager $pdfManager
+        private ObjectManager $om,
+        private Crud $crud,
+        private FinderProvider $finder,
+        private SerializerProvider $serializer,
+        private WorkspaceEvaluationManager $manager,
+        private PdfManager $pdfManager
     ) {
-        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
-        $this->translator = $translator;
-        $this->om = $om;
-        $this->crud = $crud;
-        $this->finder = $finder;
-        $this->serializer = $serializer;
-        $this->manager = $manager;
-        $this->pdfManager = $pdfManager;
     }
 
     /**
@@ -159,6 +131,42 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     }
 
     /**
+     * @Route("/{workspace}/user/{user}", name="apiv2_workspace_evaluation_delete", methods={"DELETE"})
+     *
+     * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function deleteAction(Workspace $workspace, User $user): JsonResponse
+    {
+        $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
+            'workspace' => $workspace,
+            'user' => $user,
+        ]);
+
+        $this->checkPermission('DELETE', $workspaceEvaluation, [], true);
+
+        $this->om->startFlushSuite();
+
+        // delete workspace evaluation
+        $this->crud->delete($workspaceEvaluation, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS]);
+
+        // delete all resource evaluations for the current workspace
+        $resourceEvaluations = $this->finder->searchEntities(ResourceUserEvaluation::class, [
+            'filters' => ['workspace' => $workspace->getUuid(), 'user' => $user->getUuid()],
+        ])['data'];
+
+        foreach ($resourceEvaluations as $resourceEvaluation) {
+            $this->crud->delete($resourceEvaluation, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS]);
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
+     * Initializes evaluations for all the users of a workspace.
+     *
      * @Route("/{workspace}/init", name="apiv2_workspace_evaluations_init", methods={"PUT"})
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
@@ -173,6 +181,8 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     }
 
     /**
+     * Recalculates (score, status, progression, ...) evaluations for all the users of a workspace.
+     *
      * @Route("/{workspace}/recompute", name="apiv2_workspace_evaluations_recompute", methods={"PUT"})
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspace": "uuid"}})
@@ -353,14 +363,6 @@ class WorkspaceEvaluationController extends AbstractSecurityController
             $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndDesktop('evaluation');
         }
 
-        if ($this->authorization->isGranted($permission, $evaluationTool)) {
-            return true;
-        }
-
-        if ($exception) {
-            throw new AccessDeniedException();
-        }
-
-        return false;
+        return $this->checkPermission($permission, $evaluationTool, [], $exception);
     }
 }
