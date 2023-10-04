@@ -11,6 +11,7 @@ import {constants} from '#/plugin/exo/items/ordering/constants'
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from '#/plugin/exo/utils/sortable'
 import {makeDraggable, makeDroppable} from '#/plugin/exo/utils/dragAndDrop'
 import {OrderingItemDragPreview} from '#/plugin/exo/items/ordering/components/ordering-item-drag-preview'
+import {ContentHtml} from '#/main/app/content/components/html'
 
 let DropBox = props => props.connectDropTarget(
   <div className={classes('drop-container', {
@@ -32,7 +33,7 @@ DropBox = makeDroppable(DropBox, 'ITEM')
 let SortableItem = forwardRef((props, ref) => {
   const element =
     <div className="item answer-item" ref={ref}>
-      <div className="item-data" dangerouslySetInnerHTML={{__html: props.data}} />
+      <ContentHtml className="item-data">{props.data}</ContentHtml>
       <div className="item-actions">
         {props.canDelete &&
           <Button
@@ -163,7 +164,7 @@ class OrderingPlayer extends Component {
   render() {
 
     return (
-      <div className="ordering-player">
+      <div className="ordering-player user-select-none">
         <div className="row">
           <div className={classes(
             {'horizontal': this.props.item.direction === constants.DIRECTION_HORIZONTAL},

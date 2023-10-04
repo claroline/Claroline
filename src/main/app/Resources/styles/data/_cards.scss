@@ -36,7 +36,7 @@
     .data-card-header {
         border-bottom: $data-card-border-width solid $data-card-border-color;
 
-        @include border-radius($data-card-border-radius $data-card-border-radius 0 0);
+        @include border-radius($data-card-inner-border-radius $data-card-inner-border-radius 0 0);
     }
 
     &.data-card-poster {
@@ -47,8 +47,6 @@
 
     .data-card-content {
         flex: 1 0 auto;
-
-        @include border-radius(0 0 $data-card-border-radius $data-card-border-radius);
     }
 }
 
@@ -60,14 +58,12 @@
         min-width: 40%;
         border-right: $data-card-border-width solid $data-card-border-color;
 
-        @include border-radius($data-card-border-radius 0 0 $data-card-border-radius);
+        @include border-radius($data-card-inner-border-radius 0 0 $data-card-inner-border-radius);
     }
 
     .data-card-content {
         flex: 1 0 0;
         min-width: 60%;
-
-        @include border-radius(0 $data-card-border-radius $data-card-border-radius 0);
     }
 }
 
@@ -104,20 +100,6 @@
         z-index: 2;
         transform: translateY(-2px);
         box-shadow: 0 18px 35px rgba(50,50,93,.1),0 8px 15px rgba(0,0,0,.07);
-
-        /*border-color: $data-card-active-border;
-        color: $data-card-active-color;*/
-        //background-color: $data-card-active-bg;
-        //@include box-shadow($data-card-active-box-shadow);
-
-        .data-card-header {
-            //background: $data-card-active-header-bg;
-            //border-color: $data-card-active-inner-border;
-        }
-
-        .data-card-content {
-            //color: $data-card-active-color;
-        }
     }
 }
 
@@ -147,23 +129,29 @@
 }
 
 .data-card-selected {
-    background-color: $state-info-bg;
-    border-color: #abcfe0; // todo : use a var same as .table
+    color: $data-card-active-color;
+    background-color: $data-card-active-bg;
+    //border-color: $data-card-active-border-color;
 
-    @include box-shadow(0 0 2px rgba($brand-info, .35));
+    //@include box-shadow(0 0 2px rgba($brand-info, .35));
 
     .data-card-header {
-        background: #bfe3f4;
-        border-color: #abcfe0 !important;
+        background: $data-card-active-header-bg;
+        //border-color: $data-card-active-inner-border-color;
     }
 
-    &:hover {
+    .data-card-icon {
+        color: $data-card-active-icon-color;
+        background-color: $data-card-active-bg;
+    }
+
+    /*&:hover {
         background-color: #bfe3f4;
 
         .data-card-header {
             background: #b5d9ea;
         }
-    }
+    }*/
 }
 
 // with poster image variant
@@ -283,8 +271,7 @@
         &:not(:first-child) {
             @include border-top-radius(0);
 
-            .data-card-header,
-            .data-card-content {
+            .data-card-header {
                 @include border-top-radius(0);
             }
         }
@@ -292,8 +279,7 @@
         &:not(:last-child) {
             @include border-bottom-radius(0);
 
-            .data-card-header,
-            .data-card-content {
+            .data-card-header {
                 @include border-bottom-radius(0);
             }
         }
@@ -305,8 +291,7 @@
         border-radius: 0;
         border: none;
 
-        .data-card-header,
-        .data-card-content {
+        .data-card-header {
             border-radius: 0;
         }
 

@@ -46,12 +46,8 @@ function getDisplayFormat(long = false, withTime = false) {
   return displayFormat
 }
 
-function isValidDate(value, format = null) {
-  if (format) {
-    return moment(value, format, true).isValid()
-  } else {
-    return moment(value).isValid()
-  }
+function isValidDate(value, format = getApiFormat()) {
+  return moment(value, format, true).isValid()
 }
 
 /**

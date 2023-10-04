@@ -12,11 +12,11 @@
     }
 
     .cascade-enum-item.item-root {
-        background-color: $gray-lighter;
-        border: 1px solid $gray-lighter;
-        border-radius: $border-radius;
-        padding: 10px;
-        margin-bottom: 10px;
+        background: var(--#{$prefix}secondary-bg);
+        border: var(--#{$prefix}border-width) solid transparent;
+        padding: map-get($spacers, 2);
+
+        @include border-radius($border-radius);
     }
 
     .enum-children-list {
@@ -33,12 +33,11 @@
         .item-container {
             display: flex;
             align-items: flex-start;
-            margin-bottom: 5px;
 
             .enum-item-content {
                 flex: 1;
                 margin-right: ($grid-gutter-width * .5);
-                margin-bottom: 0;
+                margin-bottom: 0 !important;
             }
 
             .error-block {

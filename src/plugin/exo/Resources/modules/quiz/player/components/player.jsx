@@ -143,7 +143,7 @@ class PlayerComponent extends Component {
   // TODO : better error display
   render() {
     return (
-      <div className="quiz-player">
+      <div className="quiz-player content-md">
         {this.props.progression &&
           <ProgressBar
             className="progress-minimal"
@@ -152,30 +152,9 @@ class PlayerComponent extends Component {
             type="learning"
           />
         }
-        {this.props.testMode &&
-          <AlertBlock
-            type="info"
-            icon="fa fa-fw fa-flask"
-            title={trans('test_mode', {}, 'quiz')} className="alert-test-mode"
-          >
-            {trans('test_mode_desc', {}, 'quiz')}
-          </AlertBlock>
-        }
 
         {(this.props.progression || this.props.isTimed) &&
           <div className="quiz-gauges-container">
-            {this.props.progression &&
-              <div className="quiz-progression-container">
-                <ScoreGauge
-                  type="user"
-                  value={this.props.progression.current}
-                  total={this.props.progression.total}
-                  width={70}
-                  height={70}
-                />
-              </div>
-            }
-
             {this.props.isTimed && this.props.duration > 0 && this.props.paper.startDate &&
               <div className="timer-container">
                 <Timer
@@ -191,7 +170,29 @@ class PlayerComponent extends Component {
                 />
               </div>
             }
+
+            {this.props.progression &&
+              <div className="quiz-progression-container">
+                <ScoreGauge
+                  type="user"
+                  value={this.props.progression.current}
+                  total={this.props.progression.total}
+                  width={70}
+                  height={70}
+                />
+              </div>
+            }
           </div>
+        }
+
+        {this.props.testMode &&
+          <AlertBlock
+            type="info"
+            icon="fa fa-fw fa-flask"
+            title={trans('test_mode', {}, 'quiz')} className="alert-test-mode"
+          >
+            {trans('test_mode_desc', {}, 'quiz')}
+          </AlertBlock>
         }
 
         {this.state.fetching &&

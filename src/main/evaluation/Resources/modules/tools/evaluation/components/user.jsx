@@ -151,6 +151,34 @@ class EvaluationUser extends Component {
           </div>
 
           <div className="col-md-8">
+            <ul className="nav nav-tabs mb-3">
+              <li className="nav-item">
+                <Button
+                  className="nav-link"
+                  type={CALLBACK_BUTTON}
+                  label={trans('required_resources', {}, 'resource')}
+                  callback={() => this.setState({resources: 'required'})}
+                  active={'required' === this.state.resources}
+                />
+              </li>
+              <li className="nav-item">
+                <Button
+                  className="nav-link"
+                  type={CALLBACK_BUTTON}
+                  label={trans('all_resources', {}, 'resource')}
+                  callback={() => this.setState({resources: 'all'})}
+                  active={'all' === this.state.resources}
+                />
+              </li>
+            </ul>
+
+            <Alert type="info">
+              {'all' === this.state.resources ?
+                trans('all_resources_help', {}, 'resource') :
+                trans('required_resources_help', {}, 'resource')
+              }
+            </Alert>
+
             {isEmpty(this.props.resourceEvaluations) &&
               <ContentPlaceholder
                 size="lg"
@@ -159,36 +187,6 @@ class EvaluationUser extends Component {
                 help={trans('no_started_resource_help', {}, 'resource')}
               />
             }
-
-            {!isEmpty(this.props.resourceEvaluations) &&
-              <ul className="nav nav-tabs mb-3">
-                <li className="nav-item">
-                  <Button
-                    className="nav-link"
-                    type={CALLBACK_BUTTON}
-                    label={trans('required_resources', {}, 'resource')}
-                    callback={() => this.setState({resources: 'required'})}
-                    active={'required' === this.state.resources}
-                  />
-                </li>
-                <li className="nav-item">
-                  <Button
-                    className="nav-link"
-                    type={CALLBACK_BUTTON}
-                    label={trans('all_resources', {}, 'resource')}
-                    callback={() => this.setState({resources: 'all'})}
-                    active={'all' === this.state.resources}
-                  />
-                </li>
-              </ul>
-            }
-
-            <Alert type="info">
-              {'all' === this.state.resources ?
-                trans('all_resources_help', {}, 'resource') :
-                trans('required_resources_help', {}, 'resource')
-              }
-            </Alert>
 
             {this.props.resourceEvaluations
               .filter(evaluation => 'all' === this.state.resources || evaluation.required)

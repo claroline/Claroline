@@ -9,7 +9,7 @@ const PlaceholderWrapper = props =>
 
 PlaceholderWrapper.propTypes = {
   id: T.string,
-  className: T.string.isRequired,
+  className: T.string,
   size: T.oneOf(['sm', 'md', 'lg']),
   style: T.object,
   children: T.node.isRequired

@@ -53,6 +53,7 @@ const EditorKeywords = props =>
     ]}
   >
     <ListData
+      className="mb-3"
       name={selectors.STORE_NAME+'.clacoFormForm.keywords'}
       fetch={{
         url: ['apiv2_clacoformkeyword_list', {clacoForm: props.clacoForm.id}],
