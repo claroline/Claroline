@@ -88,7 +88,7 @@ class EditorMain extends Component {
   render() {
     return (
       <Form
-        className="user-select-disabled mt-3"
+        className="user-select-none mt-3"
         validating={this.props.validating}
         pendingChanges={this.props.pendingChanges}
         errors={!isEmpty(this.props.errors)}

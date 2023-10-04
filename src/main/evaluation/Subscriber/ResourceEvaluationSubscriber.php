@@ -68,7 +68,7 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
         $resourceNode = $event->getObject();
         $oldData = $event->getOldData();
 
-        if ((empty($oldData['evaluation']) || $resourceNode->isRequired() !== $oldData['evaluation']['required'])) {
+        if (empty($oldData['evaluation']) || $resourceNode->isRequired() !== $oldData['evaluation']['required']) {
             $registeredUsers = $this->userRepo->findByWorkspaces([$resourceNode->getWorkspace()]);
             if (!empty($registeredUsers)) {
                 $registeredUserIds = array_map(function (User $user) {

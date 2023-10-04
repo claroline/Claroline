@@ -38,6 +38,7 @@ const EditorCategories = props =>
     ]}
   >
     <ListData
+      className="mb-3"
       name={selectors.STORE_NAME+'.clacoFormForm.categories'}
       fetch={{
         url: ['apiv2_clacoformcategory_list', {clacoForm: props.clacoForm.id}],

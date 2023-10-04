@@ -19,7 +19,7 @@ const PlayerRestrictions = props => {
   const showAttemptCorrection = showCorrection(props.lastAttempt, false)
 
   return (
-    <div className="quiz-player">
+    <div className="quiz-player content-md">
       <div className="row">
         {showAttemptScore &&
           <div className="col-md-3 text-center">

@@ -10,7 +10,7 @@ import {constants} from '#/plugin/exo/resources/quiz/constants'
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 
 const AnswersStats = props =>
-  <div className="quiz-statistics">
+  <div className="quiz-statistics content-md">
     {props.quiz.steps
       .filter(step => step.items && 0 < step.items.length)
       .map((step, idx) => {

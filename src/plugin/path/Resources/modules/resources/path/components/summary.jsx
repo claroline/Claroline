@@ -83,10 +83,9 @@ const PathSummary = (props) => {
       label: (
         <Fragment>
           {trans('home')}
-          <span
-            className="step-status">
-            <span
-              className={classes('fa fa-fw fa-home')}/>
+
+          <span className="step-status">
+            <span className={classes('fa fa-fw fa-home')} />
           </span>
         </Fragment>
       ),

@@ -1,5 +1,6 @@
 import React from 'react'
-import {ReactReduxContext} from 'react-redux'
+
+import {useReducer} from '#/main/app/store/hooks/useReducer'
 
 /**
  * HOC permitting to dynamically append the reducer needed by a container.
@@ -11,19 +12,14 @@ import {ReactReduxContext} from 'react-redux'
  */
 function withReducer(key, reducer) {
   return function appendReducers(WrappedComponent) {
-    const WithReducer = (props) => (
-      <ReactReduxContext.Consumer>
-        {({ store }) => {
-          // this will mount the requested reducer into the current redux store
-          store.injectReducer(key, reducer)
+    const WithReducer = (props) => {
+      // this will mount the requested reducer into the current redux store
+      useReducer(key, reducer)
 
-          // just render the original component and forward its props
-          return (
-            <WrappedComponent {...props} />
-          )
-        }}
-      </ReactReduxContext.Consumer>
-    )
+      return (
+        <WrappedComponent {...props} />
+      )
+    }
 
     WithReducer.displayName = `WithReducer(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`
 

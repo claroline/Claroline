@@ -8,6 +8,9 @@ import {registry} from '#/main/app/modals/registry'
 // gets the modal component
 import {FormDataModal} from '#/main/app/modals/form/components/data'
 
+/**
+ * @deprecated
+ */
 const MODAL_DATA_FORM = 'MODAL_DATA_FORM'
 
 // make the modal available for use

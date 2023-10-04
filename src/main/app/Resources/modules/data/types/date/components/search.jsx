@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
+import {displayDate} from '#/main/app/intl/date'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataSearch as DataSearchTypes} from '#/main/app/data/types/prop-types'
 
@@ -25,7 +26,11 @@ const DateSearch = (props) =>
       menu={
         <CalendarMenu
           value={props.isValid ? props.search : ''}
-          onChange={props.updateSearch}
+          onChange={(value) => {
+            // this is a little weird but the updateSearch will automatically parse() the value sent to it
+            // so in the case of dates it expects a render value
+            props.updateSearch(displayDate(value, false, props.time), true)
+          }}
           minDate={props.minDate}
           maxDate={props.maxDate}
           time={props.time}

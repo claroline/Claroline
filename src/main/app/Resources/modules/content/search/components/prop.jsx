@@ -16,7 +16,7 @@ const SearchInput = props => {
       search: props.currentSearch,
       isValid: isValidSearch,
       disabled: props.disabled,
-      updateSearch: (value) => props.updateSearch(props.definition.parse(value, props.options))
+      updateSearch: (value, autoSubmit) => props.updateSearch(props.definition.parse(value, props.options), autoSubmit)
     }))
   }
 

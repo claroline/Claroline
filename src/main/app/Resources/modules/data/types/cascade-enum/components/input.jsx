@@ -200,11 +200,11 @@ const CascadeEnumInput = (props) =>
     }
 
     {props.value.length === 0 &&
-      <ContentPlaceholder title={props.placeholder} size={props.size} />
+      <ContentPlaceholder className="mb2" title={props.placeholder} size={props.size} />
     }
 
     <Button
-      className="btn btn-outline-primary w-100 mt-3"
+      className="btn btn-outline-primary w-100"
       type={CALLBACK_BUTTON}
       icon="fa fa-fw fa-plus"
       label={props.addButtonLabel}
