@@ -7,19 +7,20 @@ use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class WorkspaceEvaluationSerializer
 {
-    /** @var UserSerializer */
-    private $userSerializer;
-
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
+    private AuthorizationCheckerInterface $authorization;
+    private UserSerializer $userSerializer;
+    private WorkspaceSerializer $workspaceSerializer;
 
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         UserSerializer $userSerializer,
         WorkspaceSerializer $workspaceSerializer
     ) {
+        $this->authorization = $authorization;
         $this->userSerializer = $userSerializer;
         $this->workspaceSerializer = $workspaceSerializer;
     }
@@ -49,6 +50,11 @@ class WorkspaceEvaluationSerializer
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            $serialized['permissions'] = [
+                'open' => $this->authorization->isGranted('OPEN', $evaluation),
+                'delete' => $this->authorization->isGranted('DELETE', $evaluation),
+            ];
+
             $serialized['user'] = null;
             if ($evaluation->getUser()) {
                 $serialized['user'] = $this->userSerializer->serialize($evaluation->getUser(), [SerializerInterface::SERIALIZE_MINIMAL]);

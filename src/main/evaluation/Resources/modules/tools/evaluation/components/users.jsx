@@ -11,6 +11,7 @@ import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 import {constants} from '#/main/evaluation/constants'
 import {WorkspaceCard} from '#/main/evaluation/workspace/components/card'
 import {selectors} from '#/main/evaluation/tools/evaluation/store'
+import {hasPermission} from '#/main/app/security'
 
 const EvaluationUsers = (props) =>
   <ToolPage
@@ -161,6 +162,18 @@ const EvaluationUsers = (props) =>
           },
           group: trans('transfer'),
           scope: ['object', 'collection']
+        }, {
+          name: 'delete',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-trash',
+          label: trans('delete', {}, 'actions'),
+          displayed: hasPermission('delete', rows[0]),
+          callback: () => props.deleteEvaluation(rows[0].workspace.id, rows[0].user.id),
+          dangerous: true,
+          confirm: {
+            title: 'Blabla',
+            message: 'blblablbl'
+          }
         }
       ]}
       card={WorkspaceCard}
@@ -171,7 +184,8 @@ EvaluationUsers.propTypes = {
   path: T.string.isRequired,
   contextId: T.string.isRequired,
   downloadParticipationCertificate: T.func.isRequired,
-  downloadSuccessCertificate: T.func.isRequired
+  downloadSuccessCertificate: T.func.isRequired,
+  deleteEvaluation: T.func.isRequired
 }
 
 export {

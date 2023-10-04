@@ -28,12 +28,9 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class WorkspaceEvaluationManager extends AbstractEvaluationManager
 {
-    /** @var MessageBusInterface */
-    private $messageBus;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var ObjectManager */
-    private $om;
+    private MessageBusInterface $messageBus;
+    private EventDispatcherInterface $eventDispatcher;
+    private ObjectManager $om;
 
     public function __construct(
         MessageBusInterface $messageBus,
@@ -256,7 +253,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
     /**
      * Add duration to a workspace user evaluation.
      */
-    public function addDurationToWorkspaceEvaluation(Workspace $workspace, User $user, int $duration)
+    public function addDurationToWorkspaceEvaluation(Workspace $workspace, User $user, int $duration): void
     {
         $this->om->startFlushSuite();
 

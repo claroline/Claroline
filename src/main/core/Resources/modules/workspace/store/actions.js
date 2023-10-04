@@ -3,6 +3,7 @@ import get from 'lodash/get'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as menuActions} from '#/main/app/layout/menu/store/actions'
+import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 
 import {selectors} from '#/main/core/workspace/store/selectors'
 
@@ -12,6 +13,7 @@ export const WORKSPACE_LOAD                 = 'WORKSPACE_LOAD'
 export const WORKSPACE_SET_LOADED           = 'WORKSPACE_SET_LOADED'
 export const WORKSPACE_RESTRICTIONS_DISMISS = 'WORKSPACE_RESTRICTIONS_DISMISS'
 export const WORKSPACE_NOT_FOUND            = 'WORKSPACE_NOT_FOUND'
+export const WORKSPACE_EVALUATION_UPDATE    = 'WORKSPACE_EVALUATION_UPDATE'
 
 // this ones should not be here
 export const SHORTCUTS_LOAD                 = 'SHORTCUTS_LOAD'
@@ -25,13 +27,12 @@ actions.setLoaded = makeActionCreator(WORKSPACE_SET_LOADED, 'loaded')
 actions.setNotFound = makeActionCreator(WORKSPACE_NOT_FOUND)
 actions.dismissRestrictions = makeActionCreator(WORKSPACE_RESTRICTIONS_DISMISS)
 actions.loadShortcuts = makeActionCreator(SHORTCUTS_LOAD, 'shortcuts')
+actions.updateEvaluation = makeActionCreator(WORKSPACE_EVALUATION_UPDATE, 'userEvaluation')
 
 /**
  * Fetch the required data to open the current Workspace.
  *
- * @param {number} slug
- *
- * @TODO : manage workspaces which change the current ui locale
+ * @param {string} slug
  */
 actions.fetch = (slug) => (dispatch, getState) => {
   const workspace = selectors.workspace(getState())
@@ -94,6 +95,29 @@ actions.closeWorkspace = (slug) => ({
     }
   }
 })
+
+actions.fetchEvaluation = () => (dispatch, getState) => {
+  const currentUser = securitySelectors.currentUser(getState())
+  if (!currentUser) {
+    // we don't have evaluation for anonymous users
+    return
+  }
+
+  const workspace = selectors.workspace(getState())
+  if (!workspace) {
+    // this method is used when a resource evaluation is updated
+    // there may be no workspace if the resource is played on the desktop
+    return
+  }
+
+  return dispatch({
+    [API_REQUEST] : {
+      silent: true,
+      url: ['apiv2_workspace_evaluation_get', {workspace: workspace.id, user: currentUser.id}],
+      success: (data) => dispatch(actions.updateEvaluation(data))
+    }
+  })
+}
 
 actions.checkAccessCode = (workspace, code) => (dispatch) => dispatch({
   [API_REQUEST] : {

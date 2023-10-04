@@ -4,11 +4,12 @@ import {makeActionCreator, makeInstanceActionCreator} from '#/main/app/store/act
 import {API_REQUEST} from '#/main/app/api'
 
 import {actions as toolActions} from '#/main/core/tool/store/actions'
+import {actions as workspaceActions} from '#/main/core/workspace/store/actions'
 import {selectors} from '#/main/core/resource/store/selectors'
 
 // actions
 export const RESOURCE_UPDATE_NODE          = 'RESOURCE_UPDATE_NODE'
-export const USER_EVALUATION_UPDATE        = 'USER_EVALUATION_UPDATE'
+export const RESOURCE_EVALUATION_UPDATE    = 'RESOURCE_EVALUATION_UPDATE'
 export const RESOURCE_OPEN                 = 'RESOURCE_OPEN'
 export const RESOURCE_LOAD                 = 'RESOURCE_LOAD'
 export const RESOURCE_SET_LOADED           = 'RESOURCE_SET_LOADED'
@@ -92,7 +93,14 @@ actions.triggerLifecycleAction = (action) => (dispatch, getState) => {
   }
 }
 
-actions.updateUserEvaluation = makeActionCreator(USER_EVALUATION_UPDATE, 'userEvaluation')
+actions.updateUserEvaluation = (userEvaluation) => (dispatch) => {
+  dispatch(workspaceActions.fetchEvaluation())
+
+  return dispatch({
+    type: RESOURCE_EVALUATION_UPDATE,
+    userEvaluation: userEvaluation
+  })
+}
 
 actions.dismissRestrictions = makeActionCreator(RESOURCE_RESTRICTIONS_DISMISS)
 

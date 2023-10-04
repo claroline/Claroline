@@ -3,12 +3,9 @@ services:
         public: true
 
     Claroline\EvaluationBundle\Controller\WorkspaceEvaluationController:
-        parent: Claroline\AppBundle\Controller\AbstractSecurityController
-        public: true
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
-            - '@translator'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\FinderProvider'

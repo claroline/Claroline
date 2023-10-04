@@ -37,15 +37,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var MessageBusInterface */
-    private $messageBus;
-    /** @var WorkspaceEvaluationManager */
-    private $manager;
-
-    /** @var WorkspaceRepository */
-    private $workspaceRepo;
+    private TokenStorageInterface $tokenStorage;
+    private MessageBusInterface $messageBus;
+    private WorkspaceEvaluationManager $manager;
+    private WorkspaceRepository $workspaceRepo;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -74,7 +69,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     /**
      * Updates the workspace evaluation status to "opened".
      */
-    public function onOpen(OpenWorkspaceEvent $event)
+    public function onOpen(OpenWorkspaceEvent $event): void
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
@@ -91,7 +86,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     /**
      * Initializes evaluations for newly registered users.
      */
-    public function onAddRole(AddRoleEvent $event)
+    public function onAddRole(AddRoleEvent $event): void
     {
         $role = $event->getRole();
 
@@ -111,7 +106,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     /**
      * Updates WorkspaceEvaluation each time a user is evaluated for a Resource.
      */
-    public function onResourceEvaluate(ResourceEvaluationEvent $event)
+    public function onResourceEvaluate(ResourceEvaluationEvent $event): void
     {
         $resourceUserEvaluation = $event->getEvaluation();
         $resourceNode = $resourceUserEvaluation->getResourceNode();
@@ -124,7 +119,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     /**
      * Recomputes WorkspaceEvaluations when a resource is deleted.
      */
-    public function onResourceDelete(DeleteEvent $event)
+    public function onResourceDelete(DeleteEvent $event): void
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
@@ -132,7 +127,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         $this->manager->recompute($resourceNode->getWorkspace());
     }
 
-    public function onResourcePublicationChange(UpdateEvent $event)
+    public function onResourcePublicationChange(UpdateEvent $event): void
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();

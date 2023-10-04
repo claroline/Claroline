@@ -7,7 +7,8 @@ import {
   WORKSPACE_SET_LOADED,
   WORKSPACE_RESTRICTIONS_DISMISS,
   SHORTCUTS_LOAD,
-  WORKSPACE_NOT_FOUND
+  WORKSPACE_NOT_FOUND,
+  WORKSPACE_EVALUATION_UPDATE
 } from '#/main/core/workspace/store/actions'
 
 const reducer = combineReducers({
@@ -52,7 +53,8 @@ const reducer = combineReducers({
   }),
   userEvaluation: makeReducer(null, {
     [WORKSPACE_OPEN]: () => null,
-    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.userEvaluation || state
+    [WORKSPACE_LOAD]: (state, action) => action.workspaceData.userEvaluation || state,
+    [WORKSPACE_EVALUATION_UPDATE]: (state, action) => action.userEvaluation
   }),
   accessErrors: combineReducers({
     dismissed: makeReducer(false, {
