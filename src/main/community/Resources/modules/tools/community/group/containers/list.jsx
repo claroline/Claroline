@@ -19,8 +19,8 @@ const GroupList = connect(
     unregister(users, workspace) {
       dispatch(actions.unregister(users, workspace))
     },
-    registerGroups(groups) {
-      dispatch(actions.registerGroups(groups))
+    addGroupsToRoles(roles, groups) {
+      roles.map(role => dispatch(actions.addGroupsToRole(role, groups)))
     }
   })
 )(GroupListComponent)

@@ -45,15 +45,15 @@ actions.open = (username, reload = false) => (dispatch, getState) => {
   })
 }
 
-actions.registerUsers = (users)  => ({
+actions.addUsersToRole = (role, users)  => ({
   [API_REQUEST]: {
-    url: ['apiv2_workspace_bulk_register_users', {ids: users.map(user => user.id)}],
+    url: url(['apiv2_role_add_users', {id: role.id}], {ids: users.map(user => user.id)}),
     request: {
       method: 'PATCH'
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData(selectors.LIST_NAME))
-      dispatch(listActions.invalidateData(selectors.FORM_NAME + '.users'))
+      dispatch(listActions.invalidateData(selectors.FORM_NAME + '.roles'))
     }
   }
 })

@@ -39,15 +39,16 @@ actions.open = (id, reload = false) => (dispatch) => {
   })
 }
 
-actions.registerGroups = (groups) => ({
+actions.addGroupsToRole = (role, groups) => (dispatch) => dispatch({
   [API_REQUEST]: {
-    url: ['apiv2_workspace_bulk_register_groups', {ids: groups.map(group => group.id)}],
+    url: url(['apiv2_role_add_groups', {id: role.id}], {ids: groups.map(group => group.id)}),
     request: {
       method: 'PATCH'
     },
-    success: (data, dispatch) => {
+    success: () => {
       dispatch(listActions.invalidateData(selectors.LIST_NAME))
       dispatch(listActions.invalidateData(baseSelectors.STORE_NAME + '.users.list'))
+      dispatch(listActions.invalidateData(selectors.FORM_NAME + '.roles'))
     }
   }
 })
