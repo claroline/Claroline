@@ -1,12 +1,15 @@
 import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
+import get from 'lodash/get'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
-import {ASYNC_BUTTON, CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {MODAL_GROUPS} from '#/main/community/modals/groups'
+import {MODAL_ROLES} from '#/main/community/modals/roles'
+import {constants} from '#/main/community/constants'
 import {getPlatformRoles, getWorkspaceRoles} from '#/main/community/utils'
 
 import {GroupList as BaseGroupList} from '#/main/community/group/components/list'
@@ -44,20 +47,25 @@ const GroupList = props =>
           title: trans('register_groups'),
           subtitle: trans('workspace_register_select_groups'),
           selectAction: (selectedGroups) => ({
-            type: ASYNC_BUTTON,
+            type: MODAL_BUTTON,
             label: trans('select', {}, 'actions'),
-            request: {
-              url: ['apiv2_workspace_bulk_register_groups', {
-                workspaces: [props.contextData.id],
-                groups: selectedGroups.map(group => group.id)
-              }],
-              request: {
-                method: 'PATCH'
-              },
-              success: () => {
-                props.registerGroups(selectedGroups)
-              }
-            }
+
+            // select roles to assign to selected groups
+            modal: [MODAL_ROLES, {
+              url: ['apiv2_workspace_list_roles', {id: get(props.contextData, 'id')}],
+              filters: [
+                // those filters are not exploited as the url already do it for us. This is just to disable filters
+                {property: 'type', value: constants.ROLE_WORKSPACE, locked: true},
+                {property: 'workspace', value: get(props.contextData, 'id'), locked: true, hidden: true}
+              ],
+              title: trans('register_groups'),
+              subtitle: trans('workspace_register_select_roles'),
+              selectAction: (selectedRoles) => ({
+                type: CALLBACK_BUTTON,
+                label: trans('register', {}, 'actions'),
+                callback: () => props.addGroupsToRoles(selectedRoles, selectedGroups)
+              })
+            }]
           })
         }]
       }
@@ -126,7 +134,7 @@ GroupList.propTypes = {
   canRegister: T.bool.isRequired,
   canEdit: T.bool.isRequired,
   unregister: T.func.isRequired,
-  registerGroups: T.func.isRequired
+  addGroupsToRoles: T.func.isRequired
 }
 
 export {
