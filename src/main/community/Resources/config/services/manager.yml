@@ -1,4 +1,11 @@
 services:
+    Claroline\CommunityBundle\Manager\MailManager:
+        arguments:
+            - '@router'
+            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+
     Claroline\CommunityBundle\Manager\TeamManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

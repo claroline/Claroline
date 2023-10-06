@@ -9,7 +9,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors} from '#/main/app/security/password/reset/store/selectors'
 
 const ResetPasswordForm = (props) =>
-  <div className="card login-container">
+  <div className="card login-container mx-auto">
     <div className="authentication-column account-authentication-column">
       <FormData
         name={selectors.FORM_NAME}

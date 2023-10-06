@@ -17,6 +17,7 @@ export default (users) => {
       message: trans('password_reset_confirm_message', {}, 'actions')
     },
     request: {
+      type: 'send',
       url: url(['apiv2_user_password_reset'], {ids: processable.map(user => user.id)}),
       request: {
         method: 'PUT'

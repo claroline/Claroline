@@ -8,24 +8,14 @@ use Twig\Environment;
 
 class PdfManager
 {
-    /** @var Environment */
-    private $templating;
-    /** @var TempFileManager */
-    private $tempFileManager;
-    /** @var PlatformManager */
-    private $platformManager;
-
     public function __construct(
-        Environment $templating,
-        TempFileManager $tempFileManager,
-        PlatformManager $platformManager
+        private Environment $templating,
+        private TempFileManager $tempFileManager,
+        private PlatformManager $platformManager
     ) {
-        $this->templating = $templating;
-        $this->tempFileManager = $tempFileManager;
-        $this->platformManager = $platformManager;
     }
 
-    public function fromHtml(string $htmlContent): ?string
+    public function fromHtml(string $htmlContent, string $title = null): ?string
     {
         $domPdf = new Dompdf([
             'isHtml5ParserEnabled' => true,
@@ -35,8 +25,11 @@ class PdfManager
             'fontCache' => $this->tempFileManager->getDirectory(),
         ]);
 
-        $domPdf->loadHtml($this->templating->render('@ClarolineApp/pdf.html.twig', [
+        $domPdf->setBasePath($this->platformManager->getUrl().'/');
+
+        $domPdf->loadHtml($this->templating->render('@ClarolineApp/external.html.twig', [
             'baseUrl' => $this->platformManager->getUrl(),
+            'title' => $title,
             'content' => $htmlContent,
         ]));
 

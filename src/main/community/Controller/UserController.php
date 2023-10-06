@@ -15,13 +15,13 @@ use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AuthenticationBundle\Manager\MailManager;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -44,18 +44,11 @@ class UserController extends AbstractCrudController
     use HasOrganizationsTrait;
     use HasGroupsTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var UserManager */
-    private $manager;
-    /** @var MailManager */
-    private $mailManager;
-    /** @var ToolManager */
-    private $toolManager;
-    /** @var WorkspaceManager */
-    private $workspaceManager;
+    private TokenStorageInterface $tokenStorage;
+    private UserManager $manager;
+    private MailManager $mailManager;
+    private ToolManager $toolManager;
+    private WorkspaceManager $workspaceManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -113,6 +106,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
+     *
      * @Route("/pws", name="apiv2_users_pws_create", methods={"POST"})
      */
     public function createPersonalWorkspaceAction(Request $request): JsonResponse
@@ -143,6 +137,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
+     *
      * @Route("/pws", name="apiv2_users_pws_delete", methods={"DELETE"})
      */
     public function deletePersonalWorkspaceAction(Request $request): JsonResponse
@@ -174,6 +169,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
+     *
      * @Route("/enable", name="apiv2_users_enable", methods={"PUT"})
      */
     public function enableAction(Request $request): JsonResponse
@@ -204,6 +200,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
+     *
      * @Route("/disable", name="apiv2_users_disable", methods={"PUT"})
      */
     public function disableAction(Request $request): JsonResponse
@@ -252,6 +249,7 @@ class UserController extends AbstractCrudController
      *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
      *     }
      * )
+     *
      * @Route("/password/reset", name="apiv2_user_password_reset", methods={"PUT"})
      */
     public function resetPasswordAction(Request $request): JsonResponse
@@ -280,7 +278,7 @@ class UserController extends AbstractCrudController
         return array_merge(parent::getOptions(), [
             'deleteBulk' => [Options::SOFT_DELETE],
             'create' => [
-                //maybe move these options in an other class
+                // maybe move these options in an other class
                 Options::ADD_NOTIFICATIONS,
                 Options::WORKSPACE_VALIDATE_ROLES,
                 Options::SERIALIZE_FACET,
@@ -319,6 +317,8 @@ class UserController extends AbstractCrudController
 
     /**
      * @Route("/request-deletion", name="apiv2_user_request_account_deletion", methods={"POST"})
+     *
+     * @todo : to move in privacy plugin when available.
      */
     public function requestAccountDeletionAction(): JsonResponse
     {

@@ -14,13 +14,13 @@ namespace Claroline\CoreBundle\Manager\Template;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use Doctrine\Persistence\ObjectRepository;
 
 class TemplateManager
 {
     private ObjectManager $om;
-    private PlatformConfigurationHandler $config;
+    private LocaleManager $localeManager;
     private PlaceholderManager $placeholderManager;
 
     private ObjectRepository $templateTypeRepo;
@@ -28,11 +28,11 @@ class TemplateManager
 
     public function __construct(
         ObjectManager $om,
-        PlatformConfigurationHandler $config,
+        LocaleManager $localeManager,
         PlaceholderManager $placeholderManager
     ) {
         $this->om = $om;
-        $this->config = $config;
+        $this->localeManager = $localeManager;
         $this->placeholderManager = $placeholderManager;
 
         $this->templateTypeRepo = $om->getRepository(TemplateType::class);
@@ -54,7 +54,7 @@ class TemplateManager
         $templateType = $this->templateTypeRepo->findOneBy(['name' => $templateTypeName]);
 
         if (!$locale) {
-            $locale = $this->config->getParameter('locales.default');
+            $locale = $this->localeManager->getDefault();
         }
 
         // Checks if a template is associated to the template type
@@ -81,7 +81,7 @@ class TemplateManager
         }
 
         // content for the requested locale does not exist. Try with platform default locale
-        $defaultLocale = $this->config->getParameter('locales.default');
+        $defaultLocale = $this->localeManager->getDefault();
         if (empty($content) && $locale !== $defaultLocale) {
             $content = $template->getTemplateContent($defaultLocale);
         }

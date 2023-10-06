@@ -1,0 +1,26 @@
+{#
+    Template used to print content outside of the claroline app.
+    This is used to print PDFs and Emails.
+#}
+
+<!DOCTYPE html>
+
+<html lang="{{ app.request.locale }}" class="claroline-app {{ config.getParameter('theme') }}" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8" />
+        {% if title is not empty %}
+            <title>{{ title }}</title>
+        {% endif %}
+
+        {# This is required in order to correctly manage relative path (mostly for tinyMce contents) #}
+        <base href="{{ baseUrl ~ '/' }}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        {# We will need to load a specific stylesheets later #}
+        <link rel="stylesheet" type="text/css" href="{{ absolute_url(themeAsset('bootstrap.css')) }}" media="all" />
+    </head>
+
+    <body>
+        {{ content | raw }}
+    </body>
+</html>

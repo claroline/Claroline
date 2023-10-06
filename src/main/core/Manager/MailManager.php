@@ -10,276 +10,129 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\Security\ForgotPasswordEvent;
+use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Mailer;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class MailManager
 {
-    private Mailer $mailer;
-    private UrlGeneratorInterface $router;
-    private PlatformConfigurationHandler $config;
-    private TemplateManager $templateManager;
-    private LocaleManager $localeManager;
-    private UserManager $userManager;
-    private StrictDispatcher $dispatcher;
-    private TranslatorInterface $translator;
-
     public function __construct(
-        Mailer $mailer,
-        UrlGeneratorInterface $router,
-        PlatformConfigurationHandler $config,
-        TemplateManager $templateManager,
-        LocaleManager $localeManager,
-        UserManager $userManager,
-        StrictDispatcher $dispatcher,
-        TranslatorInterface $translator,
+        private Environment $templating,
+        private Mailer $mailer,
+        private PlatformConfigurationHandler $config,
+        private PlatformManager $platformManager,
+        private TemplateManager $templateManager
     ) {
-        $this->mailer = $mailer;
-        $this->router = $router;
-        $this->config = $config;
-        $this->templateManager = $templateManager;
-        $this->localeManager = $localeManager;
-        $this->userManager = $userManager;
-        $this->dispatcher = $dispatcher;
-        $this->translator = $translator;
     }
 
     public function isMailerAvailable(): bool
     {
-        return $this->config->getParameter('mailer.enabled');
+        return $this->config->getParameter('mailer.enabled') ?? false;
     }
 
-    public function sendForgotPassword(User $user): bool
+    public function send($subject, $body, array $users, $from = null, array $extra = [], bool $force = false): bool
     {
-        $this->dispatcher->dispatch(SecurityEvents::FORGOT_PASSWORD, ForgotPasswordEvent::class, [$user]);
-
-        $locale = $this->localeManager->getLocale($user);
-        $placeholders = [
-            'first_name' => $user->getFirstName(),
-            'last_name' => $user->getLastName(),
-            'username' => $user->getUsername(),
-        ];
-
-        if (!$user->isEnabled()) {
-            $subject = $this->templateManager->getTemplate('user_disabled', $placeholders, $locale, 'title');
-            $body = $this->templateManager->getTemplate('user_disabled', $placeholders, $locale);
-
-            return $this->send($subject, $body, [$user], null, [], true);
+        if (!$this->isMailerAvailable()) {
+            return false;
         }
 
-        $this->userManager->initializePassword($user);
-
-        $placeholders['password_reset_link'] = $this->router->generate(
-            'claro_index',
-            [],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        )."#/newpassword/{$user->getResetPasswordHash()}";
-
-        $subject = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale, 'title');
-        $body = $this->templateManager->getTemplate('forgotten_password', $placeholders, $locale);
-
-        return $this->send($subject, $body, [$user], null, [], true);
-    }
-
-    public function sendInitPassword(User $user)
-    {
-        $this->userManager->initializePassword($user);
-        $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate(
-            'claro_index',
-            [],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        )."#/newpassword/{$hash}";
-        $locale = $this->localeManager->getLocale($user);
-        $placeholders = [
-            'first_name' => $user->getFirstName(),
-            'last_name' => $user->getLastName(),
-            'username' => $user->getUsername(),
-            'password_initialization_link' => $link,
-        ];
-        $subject = $this->templateManager->getTemplate('password_initialization', $placeholders, $locale, 'title');
-        $body = $this->templateManager->getTemplate('password_initialization', $placeholders, $locale);
-
-        return $this->send($subject, $body, [$user], null, [], true);
-    }
-
-    public function sendEnableAccountMessage(User $user)
-    {
-        $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate(
-            'claro_security_activate_user',
-            ['hash' => $hash],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        $locale = $this->localeManager->getLocale($user);
-        $placeholders = [
-            'first_name' => $user->getFirstName(),
-            'last_name' => $user->getLastName(),
-            'username' => $user->getUsername(),
-            'user_activation_link' => $link,
-        ];
-        $subject = $this->templateManager->getTemplate('user_activation', $placeholders, $locale, 'title');
-        $body = $this->templateManager->getTemplate('user_activation', $placeholders, $locale);
-
-        return $this->send($subject, $body, [$user], null, [], true);
-    }
-
-    public function sendValidateEmail(User $user)
-    {
-        $url = $this->router->generate(
-            'claro_security_validate_email',
-            ['hash' => $user->getEmailValidationHash()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        $locale = $this->localeManager->getLocale($user);
-        $placeholders = [
-            'first_name' => $user->getFirstName(),
-            'last_name' => $user->getLastName(),
-            'username' => $user->getUsername(),
-            'validation_mail' => $url,
-        ];
-        $subject = $this->templateManager->getTemplate('user_email_validation', $placeholders, $locale, 'title');
-        $body = $this->templateManager->getTemplate('user_email_validation', $placeholders, $locale);
-
-        $this->send($subject, $body, [$user], null, [], true);
-    }
-
-    /**
-     * @return bool
-     */
-    public function sendCreationMessage(User $user)
-    {
-        $locale = $this->localeManager->getLocale($user);
-        $url = $this->router->generate(
-            'claro_security_validate_email',
-            ['hash' => $user->getEmailValidationHash()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        $placeholders = [
-            'first_name' => $user->getFirstName(),
-            'last_name' => $user->getLastName(),
-            'username' => $user->getUsername(),
-            'password' => $user->getPlainPassword(),
-            'validation_mail' => $url,
-        ];
-        $subject = $this->templateManager->getTemplate('user_registration', $placeholders, $locale, 'title');
-        $body = $this->templateManager->getTemplate('user_registration', $placeholders, $locale);
-
-        return $this->send($subject, $body, [$user], null, [], true);
-    }
-
-    public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false, $replyToMail = null)
-    {
         if (0 === count($users) && (!isset($extra['to']) || 0 === count($extra['to']))) {
             // obviously, if we're not going to send anything to anyone, it's better to stop
             return false;
         }
 
-        if ($this->isMailerAvailable()) {
-            $to = [];
-
-            $fromEmail = $this->getMailerFrom();
-            $locale = 1 === count($users) ? $users[0]->getLocale() : $this->localeManager->getDefault();
-
-            if (!$locale) {
-                $locale = $this->localeManager->getDefault();
-            }
-
-            $body = $this->templateManager->getTemplate('email_layout', ['content' => $body], $locale);
-
-            if ($from) {
-                $body = str_replace('%sender_first_name%', $from->getFirstName(), $body);
-                $body = str_replace('%sender_last_name%', $from->getLastName(), $body);
-            } else {
-                $body = str_replace('%sender_first_name%', $this->config->getParameter('display.name'), $body);
-                $body = str_replace('%sender_last_name%', '', $body);
-            }
-
-            foreach ($users as $user) {
-                $email = $user->getEmail();
-
-                if ($user->isMailValidated() || $force) {
-                    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                        $to[] = $email;
-                    }
-                }
-            }
-
-            if (isset($extra['to'])) {
-                foreach ($extra['to'] as $email) {
-                    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                        $to[] = $email;
-                    }
-                }
-            }
-
-            $message = new Message();
-            $message->subject($subject);
-            $message->from($fromEmail);
-            $message->body($body);
-
-            (null !== $from && filter_var($from->getEmail(), FILTER_VALIDATE_EMAIL)) ?
-                $message->replyTo($from->getEmail()) :
-                $message->replyTo($replyToMail);
-
-            if (count($to) > 1) {
-                $message->bcc($to);
-            } else {
-                $message->to($to);
-            }
-
-            if (isset($extra['attachments'])) {
-                foreach ($extra['attachments'] as $attachment) {
-                    $message->attach($attachment['name'], $attachment['url'], $attachment['type']);
-                }
-            }
-
-            return $this->mailer->send($message);
+        $fromEmail = $this->getMailerFrom();
+        $replyToEmail = $this->getMailerReplyTo();
+        $locale = null;
+        if (1 === count($users)) {
+            $locale = $users[0]->getLocale();
         }
 
-        return false;
+        $body = $this->templateManager->getTemplate('email_layout', ['content' => $body], $locale);
+
+        if ($from) {
+            $body = str_replace('%sender_first_name%', $from->getFirstName(), $body);
+            $body = str_replace('%sender_last_name%', $from->getLastName(), $body);
+
+            if (filter_var($from->getEmail(), FILTER_VALIDATE_EMAIL)) {
+                $replyToEmail = $from->getEmail();
+            }
+        } else {
+            $body = str_replace('%sender_first_name%', $this->config->getParameter('display.name'), $body);
+            $body = str_replace('%sender_last_name%', '', $body);
+        }
+
+        $to = [];
+        foreach ($users as $user) {
+            $email = $user->getEmail();
+
+            if ($user->isMailValidated() || $force) {
+                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $to[] = $email;
+                }
+            }
+        }
+
+        if (isset($extra['to'])) {
+            foreach ($extra['to'] as $email) {
+                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $to[] = $email;
+                }
+            }
+        }
+
+        $message = new Message();
+        $message->subject($subject);
+        $message->from($fromEmail);
+        $message->replyTo($replyToEmail);
+        $message->body($this->templating->render('@ClarolineApp/external.html.twig', [
+            'baseUrl' => $this->platformManager->getUrl(),
+            'title' => $subject,
+            'content' => $body,
+        ]));
+
+        if (count($to) > 1) {
+            $message->bcc($to);
+        } else {
+            $message->to($to);
+        }
+
+        if (isset($extra['attachments'])) {
+            foreach ($extra['attachments'] as $attachment) {
+                $message->attach($attachment['name'], $attachment['url'], $attachment['type']);
+            }
+        }
+
+        return $this->mailer->send($message);
     }
 
-    public function getMailerFrom(): ?string
+    private function getMailerFrom(): ?string
     {
-        $from = $this->config->getParameter('mailer.from');
-        if ($from) {
+        if ($this->config->getParameter('internet.domain_name') && '' !== trim($this->config->getParameter('internet.domain_name'))) {
+            $from = 'noreply@'.$this->config->getParameter('internet.domain_name');
             if (filter_var($from, FILTER_VALIDATE_EMAIL)) {
                 return $from;
             }
         }
 
-        if ($this->config->getParameter('internet.domain_name') && '' !== trim($this->config->getParameter('internet.domain_name'))) {
-            return 'noreply@'.$this->config->getParameter('internet.domain_name');
+        $from = $this->config->getParameter('mailer.from');
+        if (filter_var($from, FILTER_VALIDATE_EMAIL)) {
+            return $from;
         }
 
-        return $this->config->getParameter('help.support_email');
+        return null;
     }
 
-    public function sendRequestToDPO(UserInterface $user)
+    private function getMailerReplyTo(): ?string
     {
-        if ($this->isMailerAvailable()) {
-            $name = $user->getFullName();
-            $idUser = $user->getId();
-            $dpoEmail = $this->config->getParameter('privacy.dpo.email');
-            $locale = $user->getLocale();
-
-            $subject = $this->translator->trans('account_deletion.subject', [], 'privacy', $locale);
-            $content = $this->translator->trans('account_deletion.body', ['%name%' => $name, '%id%' => $idUser], 'privacy', $locale);
-            $body = $this->templateManager->getTemplate('email_layout', ['content' => $content], $locale);
-
-            return $this->send($subject, $body, [], null, ['to' => [$dpoEmail]], false, $user->getEmail());
+        $contactEmail = $this->config->getParameter('help.support_email');
+        if ($contactEmail && filter_var($contactEmail, FILTER_VALIDATE_EMAIL)) {
+            return $contactEmail;
         }
 
-        return false;
+        return $this->getMailerFrom();
     }
 }

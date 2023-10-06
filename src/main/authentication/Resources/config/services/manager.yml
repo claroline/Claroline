@@ -1,8 +1,6 @@
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
+        public: true # should not be public
 
     Claroline\AuthenticationBundle\Manager\OauthManager:
         arguments:
@@ -13,6 +11,17 @@ services:
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
         tags:
             - { name: kernel.event_listener, event: refresh_cache, method: refreshCache } # TODO : create a listener for that
+
+    Claroline\AuthenticationBundle\Manager\MailManager:
+        arguments:
+            - '@translator'
+            - '@router'
+            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\CoreBundle\Manager\UserManager'
 
     Claroline\AuthenticationBundle\Manager\AuthenticationManager:
         arguments:

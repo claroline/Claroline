@@ -17,8 +17,10 @@ const ParametersModal = props =>
     title={props.isNew ? trans('new_token', {}, 'security') : trans('parameters')}
     subtitle={!props.isNew && props.token ? props.token.description || props.token.token : ''}
     onEntering={() => props.load(props.token)}
+    size="lg"
   >
     <FormData
+      flush={true}
       name={selectors.STORE_NAME}
       sections={[
         {

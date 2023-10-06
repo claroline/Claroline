@@ -119,8 +119,6 @@ class MessageManager
         }
 
         if (!empty($mailNotifiedUsers)) {
-            $replyToMail = !empty($message->getSender()) ? $message->getSender()->getEmail() : null;
-
             $extra = [];
             if (!empty($message->getAttachments())) {
                 $extra['attachments'] = $message->getAttachments();
@@ -131,9 +129,7 @@ class MessageManager
                 $message->getContent(),
                 $mailNotifiedUsers,
                 $message->getSender(),
-                $extra,
-                false,
-                $replyToMail
+                $extra
             );
         }
 
@@ -150,7 +146,7 @@ class MessageManager
         $content,
         $object,
         array $receivers = null,
-        ?User $sender = null,
+        User $sender = null,
         array $attachments = []
     ) {
         $users = [];
