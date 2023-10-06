@@ -32,6 +32,7 @@ const CatalogDetails = (props) =>
             render: (routerProps) => (
               <CourseDetails
                 path={route(props.course)+'/'+(routerProps.match.params.id && !['sessions', 'participants', 'pending', 'events'].includes(routerProps.match.params.id) ? routerProps.match.params.id : '')}
+                history={props.history}
                 course={props.course}
                 activeSession={props.activeSession}
                 availableSessions={props.availableSessions}
