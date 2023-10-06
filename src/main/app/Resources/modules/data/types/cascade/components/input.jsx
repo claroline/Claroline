@@ -52,7 +52,7 @@ const CascadeInput = props =>
   <fieldset className="cascade-select">
     {props.choices && props.choices.length > 0 &&
       <Select
-        id="cascade-select-lvl-0"
+        id={`${props.id}-select-lvl-0`}
         choices={
           props.choices.reduce((acc, choice) => {
             acc[choice.value] = choice.label
@@ -68,10 +68,11 @@ const CascadeInput = props =>
         }}
       />
     }
+
     {props.value.map((v, index) => hasChildren(props, index) ?
       <Select
-        id={`cascade-select-lvl-${index + 1}`}
-        key={`cascade-select-level-${index + 1}`}
+        id={`${props.id}-select-lvl-${index + 1}`}
+        key={`select-level-${index + 1}`}
         choices={generateChoices(props, index)}
         value={props.value[index + 1] || ''}
         disabled={props.disabled}
