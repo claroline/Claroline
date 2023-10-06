@@ -112,7 +112,7 @@ const Technical = props =>
     locked={props.lockedParameters}
     sections={[
       {
-        icon: 'fa fa-fw fa-internet-explorer',
+        icon: 'fa fa-fw fa-globe',
         title: trans('internet'),
         defaultOpened: true,
         fields: [

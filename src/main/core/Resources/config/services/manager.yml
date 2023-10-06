@@ -86,15 +86,11 @@ services:
 
     Claroline\CoreBundle\Manager\MailManager:
         arguments:
+            - '@twig'
             - '@Claroline\CoreBundle\Library\Mailing\Mailer'
-            - '@router'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
-            - '@Claroline\CoreBundle\Manager\LocaleManager'
-            - '@Claroline\CoreBundle\Manager\UserManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@translator'
-
 
     Claroline\CoreBundle\Manager\LogManager:
         arguments:
@@ -207,7 +203,7 @@ services:
     Claroline\CoreBundle\Manager\Template\TemplateManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
 
     Claroline\CoreBundle\Manager\Resource\RightsManager:

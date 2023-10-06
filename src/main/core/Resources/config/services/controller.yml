@@ -174,7 +174,7 @@ services:
         arguments:
           - '@Claroline\CoreBundle\Manager\UserManager'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\CoreBundle\Manager\MailManager'
+          - '@Claroline\AuthenticationBundle\Manager\MailManager'
           - '@Claroline\CoreBundle\Library\RoutingHelper'
           - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
           - '@Claroline\AppBundle\Event\StrictDispatcher'

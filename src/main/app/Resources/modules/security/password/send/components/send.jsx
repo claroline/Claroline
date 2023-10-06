@@ -9,7 +9,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {selectors} from '#/main/app/security/password/send/store/selectors'
 
 const SendPasswordForm = (props) =>
-  <div className="card login-container">
+  <div className="card login-container mx-auto">
     <div className="authentication-column account-authentication-column">
       <p className="authentication-help">{trans('send_password_help')}</p>
 
@@ -35,6 +35,7 @@ const SendPasswordForm = (props) =>
           className="w-100"
           variant="btn"
           size="lg"
+          htmlType="submit"
           type={CALLBACK_BUTTON}
           label={trans('send_password')}
           callback={() => props.reset(props.form.data.email, () => {
@@ -44,7 +45,7 @@ const SendPasswordForm = (props) =>
         />
 
         <Button
-          className="w-100"
+          className="w-100 mt-1"
           variant="btn"
           type={LINK_BUTTON}
           label={trans('login', {}, 'actions')}
