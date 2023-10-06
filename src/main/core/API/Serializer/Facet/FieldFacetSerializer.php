@@ -115,7 +115,6 @@ class FieldFacetSerializer
     {
         $oldChoices = $field->getRootFieldFacetChoices();
         $newChoicesUuids = [];
-        $field->emptyFieldFacetChoices();
 
         foreach ($choicesData as $key => $choiceData) {
             $isNew = false;
@@ -166,7 +165,6 @@ class FieldFacetSerializer
     {
         $oldChoices = $parent->getChildren();
         $newChoicesUuids = [];
-        $parent->emptyChildren();
 
         foreach ($choicesData as $key => $choiceData) {
             $isNew = false;
@@ -186,14 +184,14 @@ class FieldFacetSerializer
 
             if (empty($choice)) {
                 $isNew = true;
-
                 $choice = new FieldFacetChoice();
-                $choice->setFieldFacet($field);
-                $choice->setParent($parent);
-                $parent->addChild($choice);
 
                 $this->om->persist($choice);
             }
+
+            $choice->setFieldFacet($field);
+            $choice->setParent($parent);
+            $parent->addChild($choice);
 
             $this->ffcSerializer->deserialize($choiceData, $choice, $options);
             $newChoicesUuids[] = $choice->getUuid();

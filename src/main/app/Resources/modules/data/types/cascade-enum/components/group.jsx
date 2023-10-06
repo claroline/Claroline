@@ -16,7 +16,6 @@ const CascadeEnumGroup = props =>
 
 CascadeEnumGroup.propTypes = FormGroup.propTypes
 
-
 export {
   CascadeEnumGroup
 }
