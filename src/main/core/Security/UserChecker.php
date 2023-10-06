@@ -41,7 +41,7 @@ class UserChecker implements UserCheckerInterface
 
         if (!$user->isEnabled() || $user->isRemoved()) {
             $message = $this->translator->trans('account_deleted', [
-                '%support_email%' => $this->config->getParameter('help.support_email'),
+                '%support_email%' => $this->config->getParameter('help.support_email') ?? '',
             ], 'security');
 
             throw new AccessDeniedException($message);
@@ -56,7 +56,7 @@ class UserChecker implements UserCheckerInterface
 
         if (!$user->isAccountNonExpired()) {
             $message = $this->translator->trans('account_expired', [
-                '%support_email%' => $this->config->getParameter('help.support_email'),
+                '%support_email%' => $this->config->getParameter('help.support_email') ?? '',
             ], 'security');
 
             throw new AccessDeniedException($message);

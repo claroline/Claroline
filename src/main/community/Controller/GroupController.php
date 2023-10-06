@@ -13,12 +13,12 @@ namespace Claroline\CommunityBundle\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AuthenticationBundle\Manager\MailManager;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,14 +37,8 @@ class GroupController extends AbstractCrudController
     use HasOrganizationsTrait;
     use PermissionCheckerTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var MailManager */
-    private $mailManager;
+    private TokenStorageInterface $tokenStorage;
+    private MailManager $mailManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,

@@ -17,8 +17,10 @@ const ParametersModal = props =>
     title={props.isNew ? trans('new_ip', {}, 'security') : trans('parameters')}
     subtitle={!props.isNew && props.ip ? props.ip.ip : ''}
     onEntering={() => props.loadIp(props.ip)}
+    size="lg"
   >
     <FormData
+      flush={true}
       name={selectors.STORE_NAME}
       sections={[
         {

@@ -16,9 +16,9 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 class Mailer
 {
-    private $ch;
-    private $clients = [];
-    private $logger;
+    private PlatformConfigurationHandler $ch;
+    private array $clients = [];
+    private FileLogger $logger;
 
     public function __construct(
         PlatformConfigurationHandler $ch,
@@ -28,7 +28,7 @@ class Mailer
         $this->logger = FileLogger::get($logDir.'/email.log');
     }
 
-    public function send(Message $message)
+    public function send(Message $message): bool
     {
         $client = $this->getClient();
 
@@ -53,7 +53,7 @@ class Mailer
         }
     }
 
-    public function add($client)
+    public function add($client): void
     {
         $this->clients[] = $client;
     }
