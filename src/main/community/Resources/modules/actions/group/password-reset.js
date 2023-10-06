@@ -13,12 +13,11 @@ export default (groups) => {
     label: trans('password_reset', {}, 'actions'),
     displayed: 0 !== processable.length,
     confirm: {
-      title: trans('group_password_reset'),
-      message: trans('send_password_reset', {
-        groups: processable.map(group => group.name).join(', ')
-      })
+      title: trans('password_reset_confirm_title', {}, 'actions'),
+      message: trans('password_reset_confirm_message', {}, 'actions')
     },
     request: {
+      type: 'send',
       url: url(['apiv2_group_password_reset'], {ids: processable.map(group => group.id)}),
       request: {
         method: 'PUT'

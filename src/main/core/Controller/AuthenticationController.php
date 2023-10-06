@@ -14,12 +14,12 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Manager\MailManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\ValidateEmailEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,27 +32,14 @@ class AuthenticationController
 {
     use RequestDecoderTrait;
 
-    private $userManager;
-    private $om;
-    private $mailManager;
-    private $routingHelper;
-    private $authenticator;
-    private $eventDispatcher;
-
     public function __construct(
-        UserManager $userManager,
-        ObjectManager $om,
-        MailManager $mailManager,
-        RoutingHelper $routingHelper,
-        Authenticator $authenticator,
-        StrictDispatcher $eventDispatcher
+        private UserManager $userManager,
+        private ObjectManager $om,
+        private MailManager $mailManager,
+        private RoutingHelper $routingHelper,
+        private Authenticator $authenticator,
+        private StrictDispatcher $eventDispatcher
     ) {
-        $this->userManager = $userManager;
-        $this->om = $om;
-        $this->mailManager = $mailManager;
-        $this->routingHelper = $routingHelper;
-        $this->authenticator = $authenticator;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -78,7 +65,7 @@ class AuthenticationController
     }
 
     /**
-     * Resets a user password and send an email to the user to let him choose a new one.
+     * Resets a user password and email the user to let him choose a new one.
      *
      * @Route("/sendmail", name="claro_security_send_token", methods={"POST"})
      */
@@ -94,11 +81,6 @@ class AuthenticationController
         $user = $this->om->getRepository(User::class)->findOneBy(['email' => $data['email']]);
 
         if ($user) {
-            $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
-            $user->setResetPasswordHash($password);
-            $this->om->persist($user);
-            $this->om->flush();
-
             if ($this->mailManager->sendForgotPassword($user)) {
                 return new JsonResponse('password_reset_send', 200);
             }
@@ -168,6 +150,7 @@ class AuthenticationController
 
     /**
      * @Route("/send/email/validation", name="claro_security_validate_email_send", options={"expose"=true})
+     *
      * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=false})
      */
     public function sendEmailValidationAction(User $currentUser): JsonResponse

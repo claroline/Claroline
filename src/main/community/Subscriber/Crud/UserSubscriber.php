@@ -11,6 +11,7 @@ use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CommunityBundle\Manager\MailManager;
 use Claroline\CoreBundle\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
@@ -21,7 +22,6 @@ use Claroline\CoreBundle\Event\Security\NewPasswordEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\FileManager;
-use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
@@ -129,7 +129,7 @@ class UserSubscriber implements EventSubscriberInterface
             ArrayUtils::get($data, 'meta.mailValidated', $this->config->getParameter('auto_validate_email'))
         );
 
-        if ($this->mailManager->isMailerAvailable() && !in_array(Options::NO_EMAIL, $options)) {
+        if (!in_array(Options::NO_EMAIL, $options)) {
             // send a validation by hash
             $mailValidation = $this->config->getParameter('registration.validation');
             if (PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL === $mailValidation) {
@@ -153,7 +153,7 @@ class UserSubscriber implements EventSubscriberInterface
 
         if (empty($user->getMainOrganization())) {
             $token = $this->tokenStorage->getToken();
-            //we want a main organization
+            // we want a main organization
             if ($token && $token->getUser() instanceof User && $token->getUser()->getMainOrganization()) {
                 $user->setMainOrganization($token->getUser()->getMainOrganization());
             } else {
@@ -261,7 +261,7 @@ class UserSubscriber implements EventSubscriberInterface
         $user = $event->getObject();
         $userRole = $this->roleManager->getUserRole($user->getUsername());
 
-        //soft delete~
+        // soft delete~
         $user->setRemoved(true);
         $user->setEmail('email#'.$user->getId());
         $user->setFirstName('firstname#'.$user->getId());

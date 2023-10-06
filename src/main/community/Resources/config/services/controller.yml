@@ -18,7 +18,7 @@ services:
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\AuthenticationBundle\Manager\MailManager'
 
     Claroline\CommunityBundle\Controller\OrganizationController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
@@ -70,6 +70,6 @@ services:
             - '@security.token_storage'
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Manager\UserManager'
-            - '@Claroline\CoreBundle\Manager\MailManager'
+            - '@Claroline\AuthenticationBundle\Manager\MailManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'

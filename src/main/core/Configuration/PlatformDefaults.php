@@ -50,7 +50,7 @@ class PlatformDefaults implements ParameterProviderInterface
             ],
             'help' => [
                 'url' => 'http://doc.claroline.com',
-                'support_email' => 'noreply@claroline.com',
+                'support_email' => null,
                 'show' => true,
             ],
             'tos' => [
@@ -107,7 +107,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 'password' => null,
                 'api_key' => null,
                 'tag' => null,
-                'from' => null,
+                'from' => 'noreply@claroline.com',
             ],
             'ssl' => [
                 'enabled' => false,
