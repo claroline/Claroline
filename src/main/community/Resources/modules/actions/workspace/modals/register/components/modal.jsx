@@ -10,7 +10,6 @@ import {Button} from '#/main/app/action/components/button'
 import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {Checkbox} from '#/main/app/input/components/checkbox'
-import {actions as roleActions} from '#/main/community/tools/community/role/store/actions'
 
 import {selectors} from '#/main/community/actions/workspace/modals/register/store'
 import {UserList}  from '#/main/community/user/components/list'
@@ -19,13 +18,18 @@ import {MODAL_ROLES} from '#/main/community/modals/roles'
 
 const RegisterModal = props => {
   const [roleSelectionEnabled, setRoleSelectionEnabled] = useState(false)
-  const registerAction = ( roles = '' ) => {
-    const role = typeof roles === 'string' ? roles : (roles[0] && roles[0].translationKey) || undefined
+
+  const registerAction = (selectedRoles = []) => {
+    let selectedRole = null
+    if (selectedRoles && 0 !== selectedRoles.length) {
+      selectedRole = selectedRoles[0].translationKey
+    }
 
     return ({
       type: ASYNC_BUTTON,
+      label: trans('register', {}, 'actions'),
       request: {
-        url: url(['apiv2_workspace_register', {role: role}]),
+        url: url(['apiv2_workspace_register', {role: selectedRole || ''}]),
         request: {
           method: 'PATCH',
           body: JSON.stringify({
@@ -34,24 +38,13 @@ const RegisterModal = props => {
             users: props.selectedUsers.map(user => user.id)
           })
         },
-        success: (workspaces, dispatch) => {
-          if( roles && typeof roles !== 'string' ) {
-            roles.map(role => {
-              if( props.selectedGroups.length > 0 ) {
-                dispatch(roleActions.addGroups(role.id, props.selectedGroups, true))
-              }
-              if( props.selectedUsers.length > 0 ) {
-                dispatch(roleActions.addUsers(role.id, props.selectedUsers, true))
-              }
-            })
-          }
-        }
+        success: () => props.onRegister(props.workspaces)
       }
     })
   }
 
   const registerWithRoleAction = () => ({
-    label: trans('workspace_register_select_roles'),
+    label: trans('workspace_register_select_role'),
     type: MODAL_BUTTON,
     modal: [MODAL_ROLES, {
       title: trans('roles'),
@@ -103,7 +96,6 @@ const RegisterModal = props => {
       </div>
 
       <Button
-        label={trans('register', {}, 'actions')}
         {...(roleSelectionEnabled ? registerWithRoleAction() : registerAction() )}
         className="modal-btn"
         variant="btn"
@@ -123,7 +115,8 @@ RegisterModal.propTypes = {
   selectedGroups: T.array.isRequired,
   resetGroups: T.func.isRequired,
   resetUsers: T.func.isRequired,
-  fadeModal: T.func.isRequired
+  fadeModal: T.func.isRequired,
+  onRegister: T.func.isRequired
 }
 
 RegisterModal.defaultProps = {
