@@ -11,5 +11,6 @@
   "show_profile": "Voir le profil de l'utilisateur",
   "fill": "Remplir",
   "empty": "Vider",
-  "show_activity": "Voir l'activité"
+  "show_activity": "Voir l'activité",
+  "choose_role": "Choisir le rôle auquel inscrire les utilisateurs/groupes"
 }

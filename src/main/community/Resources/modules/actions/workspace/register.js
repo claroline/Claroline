@@ -1,6 +1,6 @@
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_REGISTER} from '#/main/community/actions/workspace/modals/register'
 
@@ -15,22 +15,8 @@ export default (workspaces, refresher) => ({
   displayed: -1 !== workspaces.findIndex(workspace => !workspace.meta.model && !workspace.meta.archived && hasPermission('administrate', workspace)),
   modal: [MODAL_REGISTER, {
     title: trans('register_users_groups'),
-
-    selectAction: (groups, users) => ({
-      type: ASYNC_BUTTON,
-      request: {
-        url: ['apiv2_workspace_register'],
-        request: {
-          method: 'PATCH',
-          body: JSON.stringify({
-            workspaces: workspaces.map(workspace => workspace.id),
-            groups: groups.map(group => group.id),
-            users: users.map(user => user.id)
-          })
-        },
-        success: () => refresher.update(workspaces)
-      }
-    })
+    workspaces: workspaces,
+    onRegister: refresher.update
   }],
   group: trans('registration'),
   scope: ['object', 'collection']
