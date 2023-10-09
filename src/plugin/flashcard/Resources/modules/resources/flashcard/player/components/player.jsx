@@ -52,7 +52,7 @@ const Player = props => {
         size="xs"
         type="learning"
       />
-      <div className="flashcard-player">
+      <div className="flashcard-player content-sm">
         <div className="flashcard-deck">
           <div className={`flashcard flashcard-0 ${isFlipped ? 'flashcard-flip' : ''}`}>
             <div className="flashcard-visible">

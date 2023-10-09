@@ -32,11 +32,11 @@ const CardModal = props =>
       }
     }}
     size="lg"
-    flush={true}
   >
     <FormData
       level={5}
       name={selectors.STORE_NAME}
+      flush={true}
       definition={[
         {
           icon: 'fa fa-fw fa-circle-info',
@@ -114,6 +114,7 @@ CardModal.propTypes = {
   ).isRequired,
   reset: T.func.isRequired,
   save: T.func.isRequired,
+  update: T.func.isRequired,
   fadeModal: T.func.isRequired
 }
 

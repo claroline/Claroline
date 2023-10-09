@@ -16,7 +16,6 @@
     width: calc(50% - 30px);
     height: 250px;
     margin: 15px;
-    padding: 5px;
     border-radius: $flashcard-border-radius;
     border: $flashcard-border-width solid $flashcard-border-color;
     position: relative;
@@ -24,8 +23,7 @@
 
     &:hover {
       transform: translateY(-5px);
-      box-shadow: 0 0 5px 1px #66afe9;
-      border: $flashcard-border-width solid #337ab7;
+      box-shadow: 0 18px 35px rgba(50,50,93,.1),0 8px 15px rgba(0,0,0,.07);
     }
   }
 }
@@ -41,27 +39,17 @@
   margin: 2px;
 }
 
-.flashcard-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+.flashcard-deck {
+  width: 80vw;
+  height: 300px;
+  perspective: 1000px;
+  background-color: transparent;
 }
-
 
 .flashcard-player {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-}
-
-.flashcard-deck {
-  position: relative;
-  max-width: 500px;
-  width: 80vw;
-  height: 300px;
-  perspective: 1000px;
-  background-color: transparent;
 }
 
 .flashcard-buttons {
@@ -75,19 +63,23 @@
 }
 
 .flashcard-media {
-  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .flashcard-question {
   font-weight: bold;
   min-height: 1.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
 }
 
 .flashcard-content {
   overflow-y: hidden;
   height: 100%;
   display: flex;
-  justify-content: space-evenly;
   flex-direction: column;
   align-items: center;
 
@@ -104,7 +96,7 @@
   background: #fff9ec;
   max-width: 500px;
   width: 80vw;
-  height: 300px;
+  height: 100%;
   margin: 10px;
   border-radius: $flashcard-border-radius;
   box-shadow: 0 0 5px black;
@@ -134,7 +126,7 @@
 
   @for $index from 0 through 3 {
     &-#{$index} {
-      left: calc(-13.5px + calc(#{$index} * 10px));
+      left: calc(-13px + calc(#{$index} * 10px));
       top: calc(#{$index} * 10px);
       z-index: calc(100 - #{$index});
     }

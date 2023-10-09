@@ -10,7 +10,18 @@ import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-typ
 const Card = (props) => {
 
   const renderCardContent = (card, contentKey) => (
-    <div className="flashcard-card">
+    <>
+      {props.actions &&
+        <Toolbar
+          id={`${card.id}-btn`}
+          buttonName="action-button"
+          tooltip="right"
+          size="sm"
+          toolbar="more"
+          className="flashcard-actions"
+          actions={props.actions(card)}
+        />
+      }
       {card.question && (
         <div className="flashcard-question">
           {card.question}
@@ -37,21 +48,11 @@ const Card = (props) => {
           </audio>
         )}
       </div>
-      {props.actions &&
-        <Toolbar
-          id={`${card.id}-btn`}
-          buttonName="action-button"
-          tooltip="right"
-          size="sm"
-          toolbar="more"
-          className="flashcard-actions"
-          actions={props.actions(card)}
-        />
-      }
-    </div>
+
+    </>
   )
 
-  return renderCardContent( props.card, props.contentKey ?? 'visibleContent' )
+  return renderCardContent(props.card, (props.contentKey !== null && props.contentKey !== undefined) ? props.contentKey : 'visibleContent')
 }
 
 Card.propTypes = {

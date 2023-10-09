@@ -27,6 +27,7 @@ actions.updateProgression = (cardId, isSuccessful, silent = true) => ({
 
 actions.startAttempt = (deckId, silent = true) => ({
   [API_REQUEST]: {
+    silent: silent,
     url: ['apiv2_flashcard_deck_get', {id: deckId}],
     request: {
       method: 'GET'
