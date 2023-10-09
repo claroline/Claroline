@@ -2,21 +2,22 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {actions as formActions} from '#/main/app/content/form/store'
-import {FormData} from '#/main/app/content/form/containers/data'
 import {Button} from '#/main/app/action/components/button'
-
-import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {FormData} from '#/main/app/content/form/containers/data'
+import {actions as formActions} from '#/main/app/content/form/store'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {selectors} from '#/plugin/flashcard/resources/flashcard/editor/store'
 import {selectors as baseSelectors} from '#/plugin/flashcard/resources/flashcard/store/selectors'
-import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
-import {MODAL_CARD} from '#/plugin/flashcard/resources/flashcard/editor/modals/card'
+
 import {Card} from '#/plugin/flashcard/resources/flashcard/components/card'
+import {MODAL_CARD} from '#/plugin/flashcard/resources/flashcard/editor/modals/card'
+import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 
 const EditorComponent = props =>
   <FormData
@@ -86,41 +87,26 @@ const EditorComponent = props =>
       }
     ]}
   >
-    {0 === props.cards.length &&
+    {isEmpty(props.cards) &&
       <ContentPlaceholder
-        className={'flashcard-empty'}
-        size="lg"
         icon="fa fa-image"
+        size="lg"
         title={trans('no_card', {}, 'flashcard')}
       />
     }
 
-    {0 !== props.cards.length &&
+    {!isEmpty(props.cards) &&
       <ul className="flashcards">
         {props.cards.map((card) =>
-          <li
-            key={card.id}
-            className="flashcard-element-hoverable"
-            style={{
-              width: "calc( 50% - 30px )",
-              height: "250px",
-              margin: "15px",
-              background: "#fff9ec",
-              padding: "5px",
-              borderRadius: "10px",
-              overflow: "hidden",
-              boxSizing: "border-box",
-              position: "relative"
-            }}
-          >
+          <li key={card.id} className="flashcard-hoverable">
             <Card
               card={card}
               actions={(card) => [
                 {
-                  name: 'configure',
+                  name: 'edit',
                   type: MODAL_BUTTON,
-                  icon: 'fa fa-fw fa-cog',
-                  label: trans('configure', {}, 'actions'),
+                  icon: 'fa fa-fw fa-pencil',
+                  label: trans('edit', {}, 'actions'),
                   modal: [MODAL_CARD, {
                     card: card,
                     save: (updated) => {
