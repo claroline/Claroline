@@ -5,14 +5,15 @@
 // Claroline & bootstrap variables
 @import "src/main/app/Resources/styles/variables";
 
-$flashcard-spacer-y: $card-spacer-y !default;
-$flashcard-spacer-x: $card-spacer-x !default;
-$flashcard-title-color: $card-title-color !default;
-$flashcard-border-width: $card-border-width !default;
-$flashcard-border-color: $card-border-color !default;
-$flashcard-border-radius: $card-border-radius !default;
-$flashcard-box-shadow: $card-box-shadow !default;
-$flashcard-inner-border-radius: $card-inner-border-radius !default;
-$flashcard-height: $card-height !default;
-$flashcard-color: $card-color !default;
-$flashcard-bg: $card-bg !default;
+$flashcard-spacer-y:            $card-spacer-y !default;
+$flashcard-spacer-x:            $card-spacer-x !default;
+$flashcard-title-spacer-y:      $spacer * .5 !default;
+$flashcard-title-color:         $card-title-color !default;
+$flashcard-border-width:        $card-border-width !default;
+$flashcard-border-color:        $card-border-color !default;
+$flashcard-border-radius:       $card-border-radius !default;
+$flashcard-box-shadow:          $box-shadow-sm !default;
+//$flashcard-inner-border-radius: subtract($flashcard-border-radius, $flashcard-border-width) !default;
+$flashcard-height:              300px !default;
+$flashcard-color:               $card-color !default;
+$flashcard-bg:                  $card-bg !default;

@@ -2,6 +2,7 @@
  * Flashcard resource styles.
  */
 
+@import "../mixins";
 @import "../variables";
 
 .flashcards {
@@ -11,34 +12,40 @@
   justify-content: center;
   list-style: none;
   padding: 0;
+  margin: -(map-get($spacers, 1)); // absorb items padding
+
+  > li {
+    padding: map-get($spacers, 1);
+    max-width: 50%;
+    flex: 0 0 50%;
+  }
 
   .flashcard-hoverable {
-    width: calc(50% - 30px);
-    height: 250px;
-    margin: 15px;
-    border-radius: $flashcard-border-radius;
-    border: $flashcard-border-width solid $flashcard-border-color;
-    position: relative;
+    //width: calc(50% - 30px);
+
+    //padding: 5px;
+    //position: relative;
     transition: all linear 185ms;
 
     &:hover {
-      transform: translateY(-5px);
+      transform: translateY(-2px);
       box-shadow: 0 18px 35px rgba(50,50,93,.1),0 8px 15px rgba(0,0,0,.07);
     }
   }
 }
 
-.flashcards-info {
+/*.flashcards-info {
   display: flex;
-}
+}*/
 
 .flashcard-actions {
   position: absolute;
   top: 0;
   right: 0;
-  margin: 2px;
+  //margin: 2px;
 }
 
+<<<<<<< HEAD
 .flashcard-deck {
   width: 80vw;
   height: 300px;
@@ -46,78 +53,107 @@
   background-color: transparent;
 }
 
-.flashcard-player {
+=======
+.flashcard-card {
   display: flex;
+  flex-direction: column;
+  height: $flashcard-height;
+  //height: 100%;
+  width: 100%;
+
+  position: relative;
+  color: $flashcard-color;
+  background-color: $flashcard-bg;
+  border: $flashcard-border-width solid $flashcard-border-color;
+  padding: $flashcard-spacer-y $flashcard-spacer-x;
+  @include border-radius($flashcard-border-radius);
+  @include box-shadow($flashcard-box-shadow);
+}
+
+.flashcard-player {
+  /*display: flex;
   align-items: center;
   justify-content: center;
+
+  position: relative;*/
+}
+
+.flashcard-deck {
+  position: relative;
+  //max-width: 500px;
+  //width: 80vw;
+  height: 300px;
+  perspective: 1000px;
+  //background-color: transparent;
 }
 
 .flashcard-buttons {
-  display: flex;
+  /*display: flex;
   justify-content: center;
-  margin: auto;
+  margin: auto;*/
 
-  & > button {
+  /*& > button {
     margin-left: 20px;
-  }
+  }*/
 }
 
 .flashcard-media {
   max-width: 100%;
   max-height: 100%;
+
+  //@include border-radius($flashcard-inner-border-radius);
+}
+
+.flashcard-video {
+  width: 100%;
+  max-height: 100%;
 }
 
 .flashcard-question {
-  font-weight: bold;
-  min-height: 1.5em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 10px;
+  color: $flashcard-title-color;
+  margin-bottom: $flashcard-title-spacer-y;
+  //font-weight: bold;
 }
 
 .flashcard-content {
   overflow-y: hidden;
-  height: 100%;
+  //height: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  audio, video
-  {
+  /*audio, video {
     display: block;
     margin: auto;
-  }
+  }*/
 }
-
 
 .flashcard {
   position: absolute;
-  background: #fff9ec;
-  max-width: 500px;
-  width: 80vw;
+  //max-width: 500px;
+  //width: 80vw;
+  width: 100%;
   height: 100%;
-  margin: 10px;
-  border-radius: $flashcard-border-radius;
-  box-shadow: 0 0 5px black;
+  //margin: 10px;
   transition: transform 500ms;
   transform-style: preserve-3d;
-  display: flex;
+  /*display: flex;
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: column;*/
   overflow: hidden;
 
-  .flashcard-video {
+  /*.flashcard-video {
     width: 100%;
     border-radius: $flashcard-inner-border-radius;
-  }
+  }*/
 
   &-visible, &-hidden {
-    width: 100%;
-    max-height: calc( 100% - 7px );
-    padding: 7px;
+    //width: 100%;
+    //max-height: calc( 100% - 7px );
+    //padding: 7px;
     position: absolute;
     backface-visibility: hidden;
     transition: transform 500ms;
@@ -126,9 +162,9 @@
 
   @for $index from 0 through 3 {
     &-#{$index} {
-      left: calc(-13px + calc(#{$index} * 10px));
-      top: calc(#{$index} * 10px);
-      z-index: calc(100 - #{$index});
+      left: $index * map-get($spacers, 2);
+      top: $index * map-get($spacers, 2);
+      z-index: 100 - $index;
     }
   }
 

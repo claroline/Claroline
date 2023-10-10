@@ -8,7 +8,7 @@ import {schemeCategory20c} from '#/main/theme/color/utils'
 import {selectors} from '#/plugin/flashcard/resources/flashcard/store'
 
 const FlashcardInfoComponent = (props) =>
-  <section className="flashcards-info">
+  <section className="d-flex flex-direction-row">
     <ContentCounter
       icon="fa fa-layer-group"
       label={trans('cartes', {}, 'flashcard')}

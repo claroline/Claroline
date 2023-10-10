@@ -22,7 +22,7 @@ import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-typ
 const EditorComponent = props =>
   <FormData
     level={2}
-    className="mt-2"
+    className="mt-3"
     title={trans('parameters')}
     name={selectors.FORM_NAME}
     buttons={true}
@@ -98,8 +98,9 @@ const EditorComponent = props =>
     {!isEmpty(props.cards) &&
       <ul className="flashcards">
         {props.cards.map((card) =>
-          <li key={card.id} className="flashcard-hoverable">
+          <li key={card.id}>
             <Card
+              className="flashcard-hoverable"
               card={card}
               actions={(card) => [
                 {
@@ -147,7 +148,7 @@ const EditorComponent = props =>
     }
 
     <Button
-      className="btn btn-primary w-100"
+      className="btn btn-primary w-100 my-3"
       type={MODAL_BUTTON}
       primary={true}
       size="lg"

@@ -1,31 +1,22 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
 import {asset} from '#/main/app/config/asset'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {Toolbar} from '#/main/app/action/components/toolbar'
+import {Video} from '#/main/app/components/video'
 
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 
 const Card = (props) => {
 
   const renderCardContent = (card, contentKey) => (
-    <>
-      {props.actions &&
-        <Toolbar
-          id={`${card.id}-btn`}
-          buttonName="action-button"
-          tooltip="right"
-          size="sm"
-          toolbar="more"
-          className="flashcard-actions"
-          actions={props.actions(card)}
-        />
-      }
+    <div className={classes('flashcard-card', props.className)}>
       {card.question && (
-        <div className="flashcard-question">
+        <h5 className="flashcard-question">
           {card.question}
-        </div>
+        </h5>
       )}
       <div className="flashcard-content">
         { card[contentKey+'Type'] === 'text' &&
@@ -37,9 +28,17 @@ const Card = (props) => {
         }
 
         { card[contentKey+'Type'] === 'video' && (
-          <video controls={true} className="flashcard-media not-video-js vjs-default-skin vjs-16-9">
-            <source src={asset(card[contentKey].url)} type={card.type}/>
-          </video>
+          <Video
+            className="flashcard-video"
+            options={{
+              controls: true,
+              responsive: true,
+              fluid: true
+            }}
+            sources={[{
+              src: asset(card[contentKey].url)
+            }]}
+          />
         )}
 
         { card[contentKey+'Type'] === 'audio' && (
@@ -49,13 +48,24 @@ const Card = (props) => {
         )}
       </div>
 
-    </>
+      {props.actions &&
+        <Toolbar
+          id={`${card.id}-btn`}
+          buttonName="btn btn-text-body action-button"
+          tooltip="bottom"
+
+          className="flashcard-actions"
+          actions={props.actions(card)}
+        />
+      }
+    </div>
   )
 
   return renderCardContent(props.card, (props.contentKey !== null && props.contentKey !== undefined) ? props.contentKey : 'visibleContent')
 }
 
 Card.propTypes = {
+  className: T.string,
   card: T.shape(
     CardTypes.propTypes
   ),

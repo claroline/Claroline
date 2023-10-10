@@ -94,7 +94,7 @@
 .data-card-clickable {
     transition-property: box-shadow, transform;
     transition-duration: .3s;
-    box-shadow: rgba(19,19,19,.08) 0 2px 4px 0;
+    box-shadow: $box-shadow-sm;
 
     &:hover {
         z-index: 2;

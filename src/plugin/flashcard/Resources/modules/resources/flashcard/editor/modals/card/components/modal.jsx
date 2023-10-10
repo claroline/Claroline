@@ -35,6 +35,7 @@ const CardModal = props =>
   >
     <FormData
       level={5}
+      flush={true}
       name={selectors.STORE_NAME}
       flush={true}
       definition={[
