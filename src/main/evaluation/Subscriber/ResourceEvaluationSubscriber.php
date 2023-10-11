@@ -4,9 +4,11 @@ namespace Claroline\EvaluationBundle\Subscriber;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
@@ -44,6 +46,7 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
             Crud::getEventName('create', 'post', ResourceNode::class) => 'createEvaluations',
             Crud::getEventName('update', 'post', ResourceNode::class) => 'updateEvaluations',
             ResourceEvents::RESOURCE_OPEN => ['open', 10],
+            Crud::getEventName('delete', 'pre', ResourceEvaluation::class) => 'updateNbAttempts',
         ];
     }
 
@@ -101,6 +104,17 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
                 $event->getUser(),
                 ['status' => AbstractEvaluation::STATUS_OPENED]
             );
+        }
+    }
+
+    public function updateNbAttempts(DeleteEvent $event): void
+    {
+        /** @var ResourceEvaluation $resourceAttempt */
+        $resourceAttempt = $event->getObject();
+
+        $evaluation = $resourceAttempt->getResourceUserEvaluation();
+        if ($evaluation) {
+            $evaluation->setNbAttempts($evaluation->getNbAttempts() - 1);
         }
     }
 }

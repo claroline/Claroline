@@ -91,14 +91,10 @@ class AttemptManager
      *
      * Based on the maximum attempt allowed and the number of already done by the user.
      *
-     * @param User $user
-     *
      * @return bool
      */
     public function canPass(Exercise $exercise, User $user = null)
     {
-        // TODO : max attempts by day
-
         $canPass = true;
         if ($user) {
             $max = $exercise->getMaxAttempts();
@@ -115,8 +111,6 @@ class AttemptManager
 
     public function getErrors(Exercise $exercise, User $user = null)
     {
-        // TODO : max attempts by day
-
         $errors = [];
         if ($user) {
             $max = $exercise->getMaxAttempts();
@@ -139,8 +133,6 @@ class AttemptManager
      *
      * A user can submit to a paper only if it is its own and the paper is not closed (= no end).
      * ATTENTION : As is, anonymous have access to all the other anonymous Papers !!!
-     *
-     * @param User $user
      *
      * @return bool
      */

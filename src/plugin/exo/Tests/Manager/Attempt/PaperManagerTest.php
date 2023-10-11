@@ -27,6 +27,7 @@ class PaperManagerTest extends TestCase
             $this->mock('Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface'),
             $this->om,
             $this->mock('Symfony\Component\EventDispatcher\EventDispatcherInterface'),
+            $this->mock('Claroline\AppBundle\API\Crud'),
             $this->serializer,
             $this->mock('UJM\ExoBundle\Manager\Item\ItemManager'),
             $this->mock('UJM\ExoBundle\Manager\Attempt\ScoreManager'),

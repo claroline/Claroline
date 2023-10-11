@@ -13,6 +13,7 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@event_dispatcher'
+            - '@Claroline\AppBundle\API\Crud'
             - '@ujm_exo.serializer.paper'
             - '@UJM\ExoBundle\Manager\Item\ItemManager'
             - '@UJM\ExoBundle\Manager\Attempt\ScoreManager'
