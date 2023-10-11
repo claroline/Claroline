@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Installation;
 
 use Claroline\CoreBundle\Installation\Updater\Updater140000;
+use Claroline\CoreBundle\Installation\Updater\Updater140010;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller;
@@ -22,6 +23,7 @@ class ClarolineCoreInstaller extends AdditionalInstaller
     {
         return [
             '14.0.0' => Updater140000::class,
+            '14.0.10' => Updater140010::class,
         ];
     }
 
