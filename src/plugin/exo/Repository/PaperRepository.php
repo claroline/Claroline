@@ -55,36 +55,6 @@ class PaperRepository extends EntityRepository
     }
 
     /**
-     * Returns the unfinished papers of a user for a given exercise for the current day, if any.
-     *
-     * @return int
-     */
-    public function countUserFinishedDayPapers(Exercise $exercise, User $user)
-    {
-        $today = new \DateTime();
-        $today->setTime(0, 0);
-        $tomorrow = clone $today;
-        $tomorrow->add(new \DateInterval('P1D'));
-
-        return (int) $this->getEntityManager()
-          ->createQuery('
-              SELECT COUNT(p)
-              FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
-              WHERE p.user = :user
-                AND p.exercise = :exercise
-                AND p.end >= :today
-                AND p.end <= :tomorrow
-          ')
-          ->setParameters([
-              'user' => $user,
-              'exercise' => $exercise,
-              'today' => $today,
-              'tomorrow' => $tomorrow,
-          ])
-          ->getSingleScalarResult();
-    }
-
-    /**
      * Finds the score of a paper by summing the score of each answer.
      *
      * @return float
@@ -122,6 +92,23 @@ class PaperRepository extends EntityRepository
                 'paper' => $paper,
             ])
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Retrieve a Claroline attempt (ResourceEvaluation) from a paper.
+     */
+    public function getPaperAttempt(Paper $paper)
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT a
+                FROM Claroline\CoreBundle\Entity\Resource\ResourceEvaluation AS a
+                WHERE a.data LIKE :paperId
+            ')
+            ->setParameters([
+                'paperId' => '%'.$paper->getUuid().'%',
+            ])
+            ->getOneOrNullResult();
     }
 
     /**
