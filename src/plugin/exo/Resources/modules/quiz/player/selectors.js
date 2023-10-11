@@ -1,4 +1,5 @@
 import {createSelector} from 'reselect'
+import get from 'lodash/get'
 import uniq from 'lodash/uniq'
 
 import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
@@ -128,14 +129,12 @@ const maxAttempts = createSelector(
   [paperParameters],
   (parameters) => parameters.maxAttempts || 0
 )
-const maxAttemptsPerDay = createSelector(
-  [paperParameters],
-  (parameters) => parameters.maxAttemptsPerDay || 0
-)
 
 const hasMoreAttempts = createSelector(
-  [maxAttempts, maxAttemptsPerDay, playerSelectors.userPaperCount, playerSelectors.userPaperDayCount],
-  (maxAttempts, maxAttemptsPerDay, userPaperCount, userPaperDayCount) => (!maxAttempts || maxAttempts > userPaperCount) && (!maxAttemptsPerDay || maxAttemptsPerDay > userPaperDayCount)
+  [maxAttempts, quizSelectors.evaluation],
+  (maxAttempts, evaluation) => {
+    return !evaluation || !maxAttempts || maxAttempts > get(evaluation, 'nbAttempts')
+  }
 )
 
 const steps = createSelector(
@@ -311,7 +310,6 @@ export const select = {
   progressionDisplayed,
   hasMoreAttempts,
   maxAttempts,
-  maxAttemptsPerDay,
   attemptsReachedMessage,
   items,
   countItems,

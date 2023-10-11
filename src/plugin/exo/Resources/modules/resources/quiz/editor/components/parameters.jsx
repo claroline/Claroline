@@ -716,58 +716,6 @@ const EditorParameters = props => {
                     }
                   }
                 ]
-              }, {
-                name: 'parameters._maxAttemptsPerDay',
-                label: trans('restrict_user_attempts_per_day', {}, 'quiz'),
-                help: trans('restrict_user_attempts_per_day_help', {}, 'quiz'),
-                type: 'boolean',
-                displayed: false, // not implemented
-                calculated: (quiz) => get(quiz, 'parameters._maxAttemptsPerDay') || 0 < get(quiz, 'parameters.maxAttemptsPerDay'),
-                onChange: (restrict) => {
-                  if (restrict) {
-                    props.update('parameters.maxAttemptsPerDay', null)
-                  } else {
-                    props.update('parameters.maxAttemptsPerDay', 0)
-                  }
-                },
-                linked: [
-                  {
-                    name: 'parameters.maxAttemptsPerDay',
-                    label: trans('attempts_count', {}, 'quiz'),
-                    type: 'number',
-                    required: true,
-                    displayed: (quiz) => get(quiz, 'parameters._maxAttemptsPerDay') || 0 < get(quiz, 'parameters.maxAttemptsPerDay'),
-                    options: {
-                      min: 0
-                    }
-                  }
-                ]
-              }, {
-                name: 'parameters._maxPapers',
-                label: trans('restrict_total_attempts', {}, 'quiz'),
-                help: trans('restrict_total_attempts_help', {}, 'quiz'),
-                type: 'boolean',
-                displayed: false, // not implemented
-                calculated: (quiz) => get(quiz, 'parameters._maxPapers') || 0 < get(quiz, 'parameters.maxPapers'),
-                onChange: (restrict) => {
-                  if (restrict) {
-                    props.update('parameters.maxPapers', null)
-                  } else {
-                    props.update('parameters.maxPapers', 0)
-                  }
-                },
-                linked: [
-                  {
-                    name: 'parameters.maxPapers',
-                    label: trans('attempts_count', {}, 'quiz'),
-                    type: 'number',
-                    required: true,
-                    displayed: (quiz) => get(quiz, 'parameters._maxPapers') || 0 < get(quiz, 'parameters.maxPapers'),
-                    options: {
-                      min: 0
-                    }
-                  }
-                ]
               }
             ]
           }
