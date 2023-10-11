@@ -49,6 +49,11 @@ class ApiTokenController extends AbstractCrudController
         return 'apitoken';
     }
 
+    public function getIgnore(): array
+    {
+        return ['exist', 'copyBulk', 'schema', 'find'];
+    }
+
     protected function getDefaultHiddenFilters(): array
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
