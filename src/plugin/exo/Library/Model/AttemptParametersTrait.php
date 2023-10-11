@@ -68,8 +68,10 @@ trait AttemptParametersTrait
      * @ORM\Column(name="max_day_attempts", type="integer")
      *
      * @var int
+     *
+     * @todo not implemented, to remove
      */
-    private $maxAttemptsPerDay = 0;
+    public $maxAttemptsPerDay = 0;
 
     /**
      * Sets random order.
@@ -169,30 +171,5 @@ trait AttemptParametersTrait
     public function getMaxAttempts()
     {
         return $this->maxAttempts;
-    }
-
-    /**
-     * Sets max attempts.
-     *
-     * @param int $maxAttemptsPerDay
-     */
-    public function setMaxAttemptsPerDay($maxAttemptsPerDay)
-    {
-        if ($maxAttemptsPerDay > $this->maxAttempts) {
-            //we can't try more times per day than the maximum allowed attempts defined
-            $this->maxAttemptsPerDay = $this->maxAttempts;
-        }
-
-        $this->maxAttemptsPerDay = $maxAttemptsPerDay;
-    }
-
-    /**
-     * Gets max attempts.
-     *
-     * @return int
-     */
-    public function getMaxAttemptsPerDay()
-    {
-        return $this->maxAttemptsPerDay;
     }
 }

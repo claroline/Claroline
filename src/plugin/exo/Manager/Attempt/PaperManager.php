@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Manager\Attempt;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
@@ -36,6 +37,9 @@ class PaperManager
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
+    /** @var Crud */
+    private $crud;
+
     /** @var PaperSerializer */
     private $serializer;
 
@@ -52,6 +56,7 @@ class PaperManager
         AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
         EventDispatcherInterface $eventDispatcher,
+        Crud $crud,
         PaperSerializer $serializer,
         ItemManager $itemManager,
         ScoreManager $scoreManager,
@@ -61,6 +66,7 @@ class PaperManager
         $this->om = $om;
         $this->repository = $om->getRepository(Paper::class);
         $this->eventDispatcher = $eventDispatcher;
+        $this->crud = $crud;
         $this->serializer = $serializer;
         $this->itemManager = $itemManager;
         $this->scoreManager = $scoreManager;
@@ -201,7 +207,7 @@ class PaperManager
     /**
      * Returns the papers for a given exercise, in a JSON format.
      */
-    public function serializeExercisePapers(Exercise $exercise, ?User $user = null): array
+    public function serializeExercisePapers(Exercise $exercise, User $user = null): array
     {
         if (!empty($user)) {
             // Load papers for of a single user
@@ -229,7 +235,12 @@ class PaperManager
     public function delete(array $papers): void
     {
         foreach ($papers as $paper) {
+            $resourceAttempt = $this->repository->getPaperAttempt($paper);
+
             $this->om->remove($paper);
+            if ($resourceAttempt) {
+                $this->crud->delete($resourceAttempt);
+            }
         }
 
         $this->om->flush();
@@ -241,14 +252,6 @@ class PaperManager
     public function countUserFinishedPapers(Exercise $exercise, User $user): int
     {
         return $this->repository->countUserFinishedPapers($exercise, $user);
-    }
-
-    /**
-     * Returns the number of finished papers already done by the user for a given exercise for the current day.
-     */
-    public function countUserFinishedDayPapers(Exercise $exercise, User $user): int
-    {
-        return $this->repository->countUserFinishedDayPapers($exercise, $user);
     }
 
     /**
@@ -358,7 +361,7 @@ class PaperManager
         if (isset($structure['steps'])) {
             foreach ($structure['steps'] as $step) {
                 $nbQuestions += count(array_filter($step['items'], function (array $item) {
-                    /// only get answerable items
+                    // / only get answerable items
                     return $this->itemManager->isQuestionType($item['type']);
                 }));
             }
