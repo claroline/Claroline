@@ -263,7 +263,7 @@ class UserSubscriber implements EventSubscriberInterface
 
         // soft delete~
         $user->setRemoved(true);
-        $user->setEmail('email#'.$user->getId());
+        $user->setEmail('email'.$user->getId().'@deleted.com');
         $user->setFirstName('firstname#'.$user->getId());
         $user->setLastName('lastname#'.$user->getId());
         $user->setPlainPassword(uniqid());
