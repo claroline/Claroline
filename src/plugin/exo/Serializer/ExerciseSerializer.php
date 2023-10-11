@@ -120,8 +120,6 @@ class ExerciseSerializer
         $parameters = [
             'type' => $exercise->getType(),
             'maxAttempts' => $exercise->getMaxAttempts(),
-            'maxAttemptsPerDay' => $exercise->getMaxAttemptsPerDay(),
-            'maxPapers' => $exercise->getMaxPapers(),
             'showFeedback' => $exercise->getShowFeedback(),
             'progressionDisplayed' => $exercise->isProgressionDisplayed(),
             'timeLimited' => $exercise->isTimeLimited(), // todo : remove me
@@ -199,8 +197,6 @@ class ExerciseSerializer
         $this->sipe('showTitles', 'setShowTitles', $parameters, $exercise);
         $this->sipe('showQuestionTitles', 'setShowQuestionTitles', $parameters, $exercise);
         $this->sipe('mandatoryQuestions', 'setMandatoryQuestions', $parameters, $exercise);
-        $this->sipe('maxAttemptsPerDay', 'setMaxAttemptsPerDay', $parameters, $exercise);
-        $this->sipe('maxPapers', 'setMaxPapers', $parameters, $exercise);
         $this->sipe('successMessage', 'setSuccessMessage', $parameters, $exercise);
         $this->sipe('failureMessage', 'setFailureMessage', $parameters, $exercise);
         $this->sipe('showScoreAt', 'setMarkMode', $parameters, $exercise);
@@ -226,10 +222,10 @@ class ExerciseSerializer
         if (isset($parameters['showFullCorrection'])) {
             $exercise->setMinimalCorrection(!$parameters['showFullCorrection']);
         }
-        $success = isset($parameters['successScore']) &&
-            '' !== $parameters['successScore'] &&
-            0 <= $parameters['successScore'] &&
-            100 >= $parameters['successScore'] ?
+        $success = isset($parameters['successScore'])
+            && '' !== $parameters['successScore']
+            && 0 <= $parameters['successScore']
+            && 100 >= $parameters['successScore'] ?
             $parameters['successScore'] :
             null;
         $exercise->setSuccessScore($success);
@@ -365,8 +361,6 @@ class ExerciseSerializer
     /**
      * The client may send dirty data, we need to clean them before storing it in DB.
      * (duplicated from ItemSerializer).
-     *
-     * @param $score
      *
      * @return array
      */
