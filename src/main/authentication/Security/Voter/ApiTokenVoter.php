@@ -33,7 +33,7 @@ class ApiTokenVoter extends AbstractVoter
                     }
                     // no break
                 case self::CREATE:
-                case self::VIEW:
+                case self::OPEN:
                     $isAdmin = $this->hasAdminToolAccess($token, 'integration');
                     if ($isAdmin || (!empty($object->getUser()) && $object->getUser()->getUuid() === $token->getUser()->getUuid())) {
                         return VoterInterface::ACCESS_GRANTED;
@@ -52,6 +52,6 @@ class ApiTokenVoter extends AbstractVoter
 
     public function getSupportedActions(): array
     {
-        return [self::VIEW, self::CREATE, self::EDIT, self::DELETE];
+        return [self::OPEN, self::CREATE, self::EDIT, self::DELETE];
     }
 }
