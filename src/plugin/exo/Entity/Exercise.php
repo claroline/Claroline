@@ -17,6 +17,7 @@ use UJM\ExoBundle\Library\Options\ShowScoreAt;
 
 /**
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseRepository")
+ *
  * @ORM\Table(name="ujm_exercise")
  */
 class Exercise extends AbstractResource
@@ -236,8 +237,10 @@ class Exercise extends AbstractResource
      * @ORM\Column(name="max_papers", type="integer")
      *
      * @var int
+     *
+     * @todo to remove. not implemented.
      */
-    private $maxPapers = 0;
+    public $maxPapers = 0;
 
     /**
      * Use all papers to compute stats.
@@ -289,6 +292,7 @@ class Exercise extends AbstractResource
 
     /**
      * @ORM\OneToMany(targetEntity="Step", mappedBy="exercise", cascade={"all"}, orphanRemoval=true)
+     *
      * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var ArrayCollection|Step[]
@@ -313,7 +317,7 @@ class Exercise extends AbstractResource
         return $this->correctionMode;
     }
 
-    public function setDateCorrection(?\DateTimeInterface $dateCorrection = null): void
+    public function setDateCorrection(\DateTimeInterface $dateCorrection = null): void
     {
         $this->dateCorrection = $dateCorrection;
     }
@@ -378,12 +382,12 @@ class Exercise extends AbstractResource
         return $this->intermediateScores;
     }
 
-    public function setIntermediateScores(?string $intermediateScores = null): void
+    public function setIntermediateScores(string $intermediateScores = null): void
     {
         $this->intermediateScores = $intermediateScores;
     }
 
-    public function setAttemptsReachedMessage(?string $attemptsReachedMessage = null): void
+    public function setAttemptsReachedMessage(string $attemptsReachedMessage = null): void
     {
         $this->attemptsReachedMessage = $attemptsReachedMessage;
     }
@@ -543,7 +547,7 @@ class Exercise extends AbstractResource
         $this->scoreRule = $scoreRule;
     }
 
-    public function setSuccessScore(?float $successScore = null): void
+    public function setSuccessScore(float $successScore = null): void
     {
         $this->successScore = $successScore;
     }
@@ -601,16 +605,6 @@ class Exercise extends AbstractResource
     public function getPicking(): string
     {
         return $this->picking;
-    }
-
-    public function setMaxPapers(?int $maxPapers = null): void
-    {
-        $this->maxPapers = $maxPapers;
-    }
-
-    public function getMaxPapers(): ?int
-    {
-        return $this->maxPapers;
     }
 
     public function isAllPapersStatistics(): bool

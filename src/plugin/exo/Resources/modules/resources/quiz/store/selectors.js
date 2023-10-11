@@ -1,6 +1,7 @@
 import {createSelector} from 'reselect'
 
 import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
+import {selectors as resourceSelectors} from '#/main/core/resource/store/selectors'
 
 const STORE_NAME = 'ujm_exercise'
 
@@ -10,6 +11,8 @@ const STORE_NAME = 'ujm_exercise'
  * @type {object}
  */
 const resource = (state) => state[STORE_NAME]
+
+const evaluation = resourceSelectors.resourceEvaluation
 
 /**
  * Gets the full quiz data.
@@ -104,6 +107,7 @@ export const selectors = {
   STORE_NAME,
 
   resource,
+  evaluation,
   quiz,
   id,
   steps,
