@@ -111,13 +111,6 @@ class MailManager
 
     private function getMailerFrom(): ?string
     {
-        if ($this->config->getParameter('internet.domain_name') && '' !== trim($this->config->getParameter('internet.domain_name'))) {
-            $from = 'noreply@'.$this->config->getParameter('internet.domain_name');
-            if (filter_var($from, FILTER_VALIDATE_EMAIL)) {
-                return $from;
-            }
-        }
-
         $from = $this->config->getParameter('mailer.from');
         if (filter_var($from, FILTER_VALIDATE_EMAIL)) {
             return $from;
