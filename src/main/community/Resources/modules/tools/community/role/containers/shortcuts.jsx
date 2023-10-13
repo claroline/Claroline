@@ -1,22 +1,22 @@
 import {connect} from 'react-redux'
 
-import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {actions as workspaceActions, selectors as workspaceSelectors} from '#/main/core/workspace/store'
+import {selectors as contextSelectors} from '#/main/app/context/store'
 
+import {actions} from '#/main/community/tools/community/role/store'
 import {RoleShortcuts as RoleShortcutsComponent} from '#/main/community/tools/community/role/components/shortcuts'
 
 const RoleShortcuts = connect(
   (state) => ({
-    workspace: toolSelectors.contextData(state) ? toolSelectors.contextData(state) : null,
-    tools: toolSelectors.contextData(state) ? workspaceSelectors.tools(state) : null,
-    shortcuts: toolSelectors.contextData(state) ? workspaceSelectors.shortcuts(state) : null
+    workspace: contextSelectors.data(state),
+    tools: contextSelectors.tools(state),
+    shortcuts: contextSelectors.allShortcuts(state)
   }),
   (dispatch) => ({
     addShortcuts(workspaceId, roleId, shortcuts) {
-      dispatch(workspaceActions.addShortcuts(workspaceId, roleId, shortcuts))
+      dispatch(actions.addShortcuts(workspaceId, roleId, shortcuts))
     },
     removeShortcut(workspaceId, roleId, type, name) {
-      dispatch(workspaceActions.removeShortcut(workspaceId, roleId, type, name))
+      dispatch(actions.removeShortcut(workspaceId, roleId, type, name))
     }
   })
 )(RoleShortcutsComponent)

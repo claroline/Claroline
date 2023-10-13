@@ -58,14 +58,14 @@ class OrderedTool
      *
      * @ORM\Column(type="boolean", options={"default": 0})
      */
-    private $showIcon = false;
+    private bool $showIcon = false;
 
     /**
      * Display in fullscreen when the tool is opened.
      *
      * @ORM\Column(type="boolean", nullable=false)
      */
-    private $fullscreen = false;
+    private bool $fullscreen = false;
 
     /**
      * @ORM\ManyToOne(

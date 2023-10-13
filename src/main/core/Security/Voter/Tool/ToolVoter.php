@@ -25,11 +25,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  */
 class ToolVoter extends AbstractVoter
 {
-    /** @var ToolMaskDecoderManager */
-    private $maskManager;
-
-    /** @var ToolRightsRepository */
-    private $rightsRepository;
+    private ToolMaskDecoderManager $maskManager;
+    private ToolRightsRepository $rightsRepository;
 
     public function __construct(
         ObjectManager $om,

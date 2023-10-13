@@ -14,6 +14,8 @@ namespace Claroline\AppBundle\Event;
 /**
  * Interface of the events which are expected to be populated in some way
  * by the listener(s) observing them.
+ *
+ * @deprecated
  */
 interface DataConveyorEventInterface
 {

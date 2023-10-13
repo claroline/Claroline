@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager\Tool;
 use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -158,16 +159,16 @@ class ToolManager implements LoggerAwareInterface
         /** @var OrderedTool|null $orderedTool */
         $orderedTool = null;
         switch ($context) {
-            case Tool::DESKTOP:
+            case AbstractTool::DESKTOP:
                 $orderedTool = $this->orderedToolRepo->findOneByNameAndDesktop($name);
 
                 break;
-            case Tool::WORKSPACE:
+            case AbstractTool::WORKSPACE:
                 $contextObject = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $contextId]);
                 $orderedTool = $this->orderedToolRepo->findOneByNameAndWorkspace($name, $contextObject);
 
                 break;
-            case Tool::ADMINISTRATION:
+            case AbstractTool::ADMINISTRATION:
                 // implement later
                 break;
         }
@@ -177,6 +178,32 @@ class ToolManager implements LoggerAwareInterface
 
     /**
      * @return OrderedTool[]
+     */
+    public function getOrderedTools(string $context, ?string $contextId = null): array
+    {
+        $tools = [];
+
+        switch ($context) {
+            case AbstractTool::DESKTOP:
+                return $this->orderedToolRepo->findByDesktop();
+
+            case AbstractTool::WORKSPACE:
+                $contextObject = $this->om->getRepository(Workspace::class)->findOneBy(['slug' => $contextId]);
+
+                return $this->orderedToolRepo->findByWorkspace($contextObject);
+
+            case AbstractTool::ADMINISTRATION:
+                // TODO : implement later
+                break;
+        }
+
+        return $tools;
+    }
+
+    /**
+     * @return OrderedTool[]
+     *
+     * @deprecated
      */
     public function getOrderedToolsByDesktop(array $roles = []): array
     {
@@ -189,6 +216,8 @@ class ToolManager implements LoggerAwareInterface
 
     /**
      * @return OrderedTool[]
+     *
+     * @deprecated
      */
     public function getOrderedToolsByWorkspace(Workspace $workspace, array $roles = []): array
     {
@@ -208,6 +237,8 @@ class ToolManager implements LoggerAwareInterface
 
     /**
      * @return AdminTool[]
+     *
+     * @deprecated
      */
     public function getAdminToolsByRoles(array $roles)
     {

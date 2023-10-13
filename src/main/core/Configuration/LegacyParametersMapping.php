@@ -38,7 +38,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'mailer_api_key' => 'mailer.api_key',
             'mailer_tag' => 'mailer.tag',
             'terms_of_service' => 'tos.enabled',
-            'google_meta_tag' => 'internet.google_meta_tag',
             'account_duration' => 'security.account_duration',
             'username_regex' => 'registration.username_regex',
             'footer_login' => 'display.footer_login',

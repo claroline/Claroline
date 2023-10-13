@@ -54,10 +54,10 @@ class MenuMain extends Component {
   }
 
   render() {
-    /*<RootCloseWrapper
-      disabled={constants.SIZE_SM !== this.state.computedSize && constants.SIZE_XS !== this.state.computedSize}
-      onRootClose={() => this.props.close()}
-    >*/
+    if (!this.props.opened) {
+      return null
+    }
+
     return (
       <Fragment>
         <aside className="app-menu">
@@ -172,8 +172,9 @@ MenuMain.propTypes = {
 
   children: T.node,
 
+  opened: T.bool.isRequired,
   untouched: T.bool.isRequired,
-  section: T.oneOf(['tool', 'history', 'tools', 'actions']),
+  section: T.oneOf(['tool', 'tools', 'actions']),
   changeSection: T.func.isRequired,
   close: T.func.isRequired
 }

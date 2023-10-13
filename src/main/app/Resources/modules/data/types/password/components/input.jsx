@@ -174,7 +174,9 @@ class PasswordInput extends PureComponent {
 }
 
 implementPropTypes(PasswordInput, DataInputTypes, {
-  value: T.string
+  value: T.string,
+  hideStrength: T.bool,
+  disablePasswordCheck: T.bool
 }, {
   value: ''
 })

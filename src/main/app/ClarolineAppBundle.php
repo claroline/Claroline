@@ -16,7 +16,6 @@ use Claroline\AppBundle\DependencyInjection\Compiler\RouterPass;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use FOS\JsRoutingBundle\FOSJsRoutingBundle;
-use Http\HttplugBundle\HttplugBundle;
 use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
 use Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -51,7 +50,6 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
             new DoctrineBundle(),
             new FOSJsRoutingBundle(),
             new TwigBundle(),
-            new HttplugBundle(),
             new StofDoctrineExtensionsBundle(),
             new SensioFrameworkExtraBundle(),
             new BazingaJsTranslationBundle(),
@@ -65,7 +63,6 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
         $configs = [
             // simple container configuration, same for every environment
             'twig' => false,
-            'httplug' => false,
             'stof_doctrine_extensions' => false,
             'sensio_framework_extra' => false,
 

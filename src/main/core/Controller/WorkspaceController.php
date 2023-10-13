@@ -17,16 +17,12 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\WorkspaceEvents;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
-use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
@@ -39,7 +35,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/workspaces", options={"expose" = true})
@@ -169,50 +164,6 @@ class WorkspaceController
             'workspace' => $this->serializer->serialize($workspace),
             'accessErrors' => $accessErrors,
         ], $statusCode);
-    }
-
-    /**
-     * Opens a tool.
-     *
-     * @Route("/{id}/tool/{toolName}", name="claro_workspace_open_tool")
-     *
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"id": "uuid"}})
-     */
-    public function openToolAction(Workspace $workspace, string $toolName): JsonResponse
-    {
-        $orderedTool = $this->toolManager->getOrderedTool($toolName, Tool::WORKSPACE, $workspace->getUuid());
-        if (!$orderedTool) {
-            throw new NotFoundHttpException(sprintf('Tool "%s" not found', $toolName));
-        }
-
-        if (!$this->authorization->isGranted('OPEN', $orderedTool)) {
-            throw new AccessDeniedException();
-        }
-
-        $currentUser = $this->tokenStorage->getToken()->getUser();
-        $eventParams = [
-            $workspace,
-            $currentUser instanceof User ? $currentUser : null,
-            AbstractTool::WORKSPACE,
-            $toolName,
-        ];
-
-        $this->strictDispatcher->dispatch(
-            ToolEvents::OPEN,
-            OpenToolEvent::class,
-            $eventParams
-        );
-
-        /** @var OpenToolEvent $event */
-        $event = $this->strictDispatcher->dispatch(
-            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::WORKSPACE, $toolName),
-            OpenToolEvent::class,
-            $eventParams
-        );
-
-        return new JsonResponse(array_merge($event->getData(), [
-            'data' => $this->serializer->serialize($orderedTool),
-        ]));
     }
 
     /**

@@ -74,9 +74,17 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
 
-    Claroline\CoreBundle\Controller\APINew\Tool\ToolController:
+    Claroline\CoreBundle\Controller\APINew\Context\ContextController:
+        arguments:
+            - '@security.token_storage'
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Component\Context\ContextProvider'
+
+    Claroline\CoreBundle\Controller\APINew\Context\ToolController:
         arguments:
             - '@security.authorization_checker'
+            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@event_dispatcher'
             - '@Claroline\AppBundle\API\Crud'

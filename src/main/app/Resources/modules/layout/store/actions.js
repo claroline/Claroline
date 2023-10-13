@@ -39,13 +39,3 @@ actions.extend = () => ({
     success: () => window.location.href = url(['claro_index'])
   }
 })
-
-actions.disablePlatform = () => ({
-  [API_REQUEST]: {
-    url: ['apiv2_platform_disable'],
-    request: {
-      method: 'PUT'
-    },
-    success: () => true
-  }
-})

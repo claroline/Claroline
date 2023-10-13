@@ -68,13 +68,3 @@ actions.logout = () => ({
     success: (response, dispatch) => dispatch(actions.changeUser(null, false, false))
   }
 })
-
-actions.linkExternalAccount = (service, username, onSuccess) => ({
-  [apiConst.API_REQUEST]: {
-    url: ['claro_oauth_link_account', {service: service, username: username}],
-    request: {
-      method: 'POST'
-    },
-    success: onSuccess
-  }
-})

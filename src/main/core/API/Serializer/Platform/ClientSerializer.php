@@ -21,66 +21,22 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class ClientSerializer
 {
-    /** @var string */
-    private $env;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var RequestStack */
-    private $requestStack;
-
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var PlatformConfigurationHandler */
-    private $config;
-
-    /** @var PlatformManager */
-    private $platformManager;
-
-    /** @var VersionManager */
-    private $versionManager;
-
-    /** @var PluginManager */
-    private $pluginManager;
-
-    /** @var UserManager */
-    private $userManager;
-
-    /** @var ResourceTypeSerializer */
-    private $resourceTypeSerializer;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
     public function __construct(
-        string $env,
-        EventDispatcherInterface $eventDispatcher,
-        TokenStorageInterface $tokenStorage,
-        RequestStack $requestStack,
-        ObjectManager $om,
-        PlatformConfigurationHandler $config,
-        PlatformManager $platformManager,
-        VersionManager $versionManager,
-        PluginManager $pluginManager,
-        UserManager $userManager,
-        ResourceTypeSerializer $resourceTypeSerializer
+        private readonly string $env,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly RequestStack $requestStack,
+        private readonly ObjectManager $om,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly PlatformManager $platformManager,
+        private readonly VersionManager $versionManager,
+        private readonly PluginManager $pluginManager,
+        private readonly UserManager $userManager,
+        private readonly ResourceTypeSerializer $resourceTypeSerializer
     ) {
-        $this->env = $env;
-        $this->tokenStorage = $tokenStorage;
-        $this->requestStack = $requestStack;
-        $this->om = $om;
-        $this->config = $config;
-        $this->platformManager = $platformManager;
-        $this->versionManager = $versionManager;
-        $this->pluginManager = $pluginManager;
-        $this->userManager = $userManager;
-        $this->resourceTypeSerializer = $resourceTypeSerializer;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'client';
     }
@@ -88,7 +44,7 @@ class ClientSerializer
     /**
      * Serializes required information for FrontEnd rendering.
      */
-    public function serialize()
+    public function serialize(): array
     {
         $data = [
             'logo' => $this->config->getParameter('logo'),
@@ -108,7 +64,7 @@ class ClientSerializer
             'restrictions' => $this->config->getParameter('restrictions'),
             'richTextScript' => $this->config->getParameter('rich_text_script'),
             'home' => $this->config->getParameter('home'),
-            'resources' => [
+            'resources' => [ // TODO : find a better way to store and expose this
                 'types' => array_map(function (ResourceType $resourceType) {
                     return $this->resourceTypeSerializer->serialize($resourceType);
                 }, $this->om->getRepository(ResourceType::class)->findAll()),

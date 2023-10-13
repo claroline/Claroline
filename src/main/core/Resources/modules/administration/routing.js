@@ -1,6 +1,6 @@
 
 function route(toolName) {
-  return `/admin/${toolName}`
+  return `/administration/${toolName}`
 }
 
 export {

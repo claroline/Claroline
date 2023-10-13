@@ -34,7 +34,7 @@ plugin:
           scope: [object, collection]
           api: [PUT]
 
-        # Unpublishes one ore more resources
+        # Unpublishes one or more resources
         - name: unpublish
           decoder: administrate
           group: management

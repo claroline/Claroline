@@ -105,7 +105,7 @@ const UserMenu = (props) => {
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-cogs',
                 label: trans('administration'),
-                target: '/admin',
+                target: '/administration',
                 displayed: props.administration
               }
             ]}

@@ -14,21 +14,14 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * User desktop.
@@ -84,67 +77,11 @@ class DesktopController
         return new JsonResponse(array_merge($event->getResponse() ?? [], [
             'userProgression' => null,
             // get all enabled tools for the desktop, even those inaccessible to the current user
-            // this will allow the ui to know if a user try to access a closed tool or an non existent one.
+            // this will allow the ui to know if a user try to access a closed tool or a non existent one.
             'tools' => array_values(array_map(function (OrderedTool $orderedTool) {
                 return $this->serializer->serialize($orderedTool, [Options::SERIALIZE_MINIMAL]);
             }, $this->toolManager->getOrderedToolsByDesktop())),
             'shortcuts' => $this->config->getParameter('desktop.shortcuts') ?? [],
         ]));
-    }
-
-    /**
-     * Opens a tool.
-     *
-     * @Route("/tool/{toolName}", name="claro_desktop_open_tool")
-     */
-    public function openToolAction(string $toolName): JsonResponse
-    {
-        $orderedTool = $this->toolManager->getOrderedTool($toolName, Tool::DESKTOP);
-        if (!$orderedTool) {
-            throw new NotFoundHttpException(sprintf('Tool "%s" not found', $toolName));
-        }
-
-        if (!$this->authorization->isGranted('OPEN', $orderedTool)) {
-            throw new AccessDeniedException();
-        }
-
-        $currentUser = $this->tokenStorage->getToken()->getUser();
-        $eventParams = [
-            null,
-            $currentUser instanceof User ? $currentUser : null,
-            AbstractTool::DESKTOP,
-            $toolName,
-        ];
-
-        $this->strictDispatcher->dispatch(
-            ToolEvents::OPEN,
-            OpenToolEvent::class,
-            $eventParams
-        );
-
-        /** @var OpenToolEvent $event */
-        $event = $this->strictDispatcher->dispatch(
-            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::DESKTOP, $toolName),
-            OpenToolEvent::class,
-            $eventParams
-        );
-
-        return new JsonResponse(array_merge($event->getData(), [
-            'data' => $this->serializer->serialize($orderedTool),
-        ]));
-    }
-
-    /**
-     * Lists desktop tools accessible by the current user.
-     *
-     * @Route("/tools", name="claro_desktop_tools")
-     */
-    public function listToolsAction(): JsonResponse
-    {
-        $orderedTools = $this->toolManager->getOrderedToolsByDesktop($this->tokenStorage->getToken()->getRoleNames());
-
-        return new JsonResponse(array_values(array_map(function (OrderedTool $orderedTool) {
-            return $this->serializer->serialize($orderedTool, [Options::SERIALIZE_MINIMAL]);
-        }, $orderedTools)));
     }
 }

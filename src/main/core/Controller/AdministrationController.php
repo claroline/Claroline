@@ -105,10 +105,10 @@ class AdministrationController
 
         $currentUser = $this->tokenStorage->getToken()->getUser();
         $eventParams = [
+            $toolName,
+            AbstractTool::ADMINISTRATION,
             null,
             $currentUser instanceof User ? $currentUser : null,
-            AbstractTool::ADMINISTRATION,
-            $toolName,
         ];
 
         $this->strictDispatcher->dispatch(

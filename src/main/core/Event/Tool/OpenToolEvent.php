@@ -13,49 +13,27 @@ namespace Claroline\CoreBundle\Event\Tool;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class OpenToolEvent extends Event
+class OpenToolEvent extends AbstractToolEvent
 {
-    private $workspace;
-    private $user;
-    private $context;
-    private $toolName;
-
-    /** @var array */
-    private $data = [];
+    private ?User $user;
+    private array $data = [];
 
     public function __construct(
+        string $toolName,
+        string $context,
         ?Workspace $workspace = null,
-        ?User $user = null,
-        ?string $context = null,
-        ?string $toolName = null
+        ?User $user = null
     ) {
-        $this->workspace = $workspace;
-        $this->user = $user;
-        $this->context = $context;
-        $this->toolName = $toolName;
-    }
+        parent::__construct($toolName, $context, $workspace);
 
-    public function getWorkspace(): ?Workspace
-    {
-        return $this->workspace;
+        $this->user = $user;
     }
 
     public function getUser(): ?User
     {
         return $this->user;
-    }
-
-    public function getContext(): string
-    {
-        return $this->context;
-    }
-
-    public function getToolName(): string
-    {
-        return $this->toolName;
     }
 
     /**
@@ -72,8 +50,11 @@ class OpenToolEvent extends Event
         return $this->data;
     }
 
+    /**
+     * @deprecated nope
+     */
     public function getMessage(TranslatorInterface $translator): string
     {
-        return $translator->trans('toolOpen', ['userName' => $this->user->getUsername(), 'context' => $this->context, 'toolName' => $this->toolName], 'tools');
+        return $translator->trans('toolOpen', ['userName' => $this->user->getUsername(), 'context' => $this->getContext(), 'toolName' => $this->getToolName()], 'tools');
     }
 }

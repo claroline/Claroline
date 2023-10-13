@@ -12,25 +12,18 @@ class OrderedToolSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var ToolManager */
-    private $toolManager;
-
     public function __construct(
-        ObjectManager $om,
-        ToolManager $toolManager
+        private readonly ObjectManager $om,
+        private readonly ToolManager $toolManager
     ) {
-        $this->om = $om;
-        $this->toolManager = $toolManager;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return OrderedTool::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'ordered_tool';
     }

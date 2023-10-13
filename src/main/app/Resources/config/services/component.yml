@@ -1,0 +1,13 @@
+# Declares all services required for the management of Claroline Components (eg. tools, resources, widgets).
+services:
+    # Contexts
+    Claroline\AppBundle\Component\Context\ContextProvider:
+        arguments:
+            - !tagged_iterator claroline.component.context
+
+    Claroline\AppBundle\Component\Context\AbstractContext:
+        abstract: true
+        calls:
+            - method: setToolManager
+              arguments:
+                  - '@Claroline\CoreBundle\Manager\Tool\ToolManager'

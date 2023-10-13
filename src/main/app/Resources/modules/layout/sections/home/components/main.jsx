@@ -9,7 +9,6 @@ import {HomeLogin} from '#/main/app/layout/sections/home/components/login'
 import {SendPassword} from '#/main/app/layout/sections/home/components/send-password'
 import {NewPassword} from '#/main/app/layout/sections/home/components/new-password'
 import {HomeRegistration} from '#/main/app/layout/sections/home/components/registration'
-import {HomeExternalAccount} from '#/main/app/layout/sections/home/components/external-account'
 
 // TODO : move all security sections in main/authentication
 
@@ -62,16 +61,6 @@ class HomeMain extends Component {
             path: '/registration',
             disabled: this.props.unavailable || !this.props.selfRegistration || this.props.authenticated,
             component: HomeRegistration
-          }, { // TODO : disable if no sso
-            path: '/external/:app',
-            render: (routeProps) => (
-              <HomeExternalAccount
-                isAuthenticated={this.props.authenticated}
-                selfRegistration={this.props.selfRegistration}
-                serviceName={routeProps.match.params.app}
-                linkExternalAccount={this.props.linkExternalAccount}
-              />
-            )
           }, {
             path: '/home',
             disabled: this.props.unavailable || !this.props.hasHome,
@@ -102,7 +91,6 @@ HomeMain.propTypes = {
   homeData: T.string,
   open: T.func.isRequired,
   openHome: T.func.isRequired,
-  linkExternalAccount: T.func.isRequired,
   restrictions: T.shape({
     disabled: T.bool,
     dates: T.arrayOf(T.string)

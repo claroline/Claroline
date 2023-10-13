@@ -2,6 +2,14 @@
 
 <html lang="{{ app.request.locale }}" class="claroline-app {{ config.getParameter('theme') }}" data-bs-theme="light">
     <head>
+        <title>
+            {% if config.getParameter('name') is not empty %}
+                {{ config.getParameter('name') }}
+            {% else %}
+                Claroline Connect
+            {% endif %}
+        </title>
+
         <meta charset="utf-8" />
 
         {#
@@ -15,17 +23,7 @@
         {# This is required to make css responsive work properly #}
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <title>
-            {% if config.getParameter('name') is not empty %}
-                {{ config.getParameter('name') }}
-            {% else %}
-                Claroline Connect
-            {% endif %}
-        </title>
 
-        {% if config.getParameter('google_meta_tag') is not empty %}
-            {{ config.getParameter('google_meta_tag') | raw }}
-        {% endif %}
 
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
         <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png')}}" />
@@ -55,11 +53,11 @@
         <script src="{{ hotAsset('plugins') }}"></script>
     </head>
 
-    <body>
+    <body class="app-container">
         {# Anchor for react app to mount in #}
         <div
             id="claroline-app"
-            class="app-container"
+            class="app"
             role="presentation"
 
             data-maintenance="{{ maintenance | json_encode | raw | escape }}"
@@ -76,7 +74,7 @@
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
         {# Main Claroline UI app #}
-        <script src="{{ hotAsset('claroline-distribution-main-app-layout') }}"></script>
+        <script src="{{ hotAsset('claroline-distribution-main-app-bootstrap') }}"></script>
 
         {# JS from loaded plugins #}
         {{ injectedJavascripts | raw }}

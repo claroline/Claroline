@@ -18,14 +18,9 @@ use Claroline\CoreBundle\Repository\Tool\ToolMaskDecoderRepository;
 
 class ToolMaskDecoderManager
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var ToolMaskDecoderRepository */
-    private $maskRepo;
+    private ObjectManager $om;
+    private ToolMaskDecoderRepository $maskRepo;
 
-    /**
-     * ToolMaskDecoderManager constructor.
-     */
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
@@ -35,7 +30,7 @@ class ToolMaskDecoderManager
     /**
      * Create a mask decoder with default actions for a tool.
      */
-    public function createDefaultToolMaskDecoders(Tool $tool)
+    public function createDefaultToolMaskDecoders(Tool $tool): void
     {
         foreach (ToolMaskDecoder::$defaultActions as $action) {
             $maskDecoder = $this->maskRepo
@@ -55,11 +50,8 @@ class ToolMaskDecoderManager
 
     /**
      * Create a specific mask decoder for a tool.
-     *
-     * @param string $action
-     * @param int    $value
      */
-    public function createToolMaskDecoder(Tool $tool, $action, $value)
+    public function createToolMaskDecoder(Tool $tool, string $action, int $value): void
     {
         $maskDecoder = new ToolMaskDecoder();
         $maskDecoder->setTool($tool);
@@ -72,12 +64,8 @@ class ToolMaskDecoderManager
 
     /**
      * Returns an array containing the permission for a mask and a tool.
-     *
-     * @param int $mask
-     *
-     * @return array
      */
-    public function decodeMask($mask, Tool $tool)
+    public function decodeMask(int $mask, Tool $tool): array
     {
         $decoders = $this->maskRepo->findMaskDecodersByTool($tool);
         $perms = [];
@@ -94,10 +82,8 @@ class ToolMaskDecoderManager
      * The array of permissions should be defined that way:.
      *
      * array('open' => true, 'edit' => false, ...)
-     *
-     * @return int
      */
-    public function encodeMask(array $perms, Tool $tool)
+    public function encodeMask(array $perms, Tool $tool): int
     {
         $decoders = $this->maskRepo->findMaskDecodersByTool($tool);
 
@@ -120,11 +106,9 @@ class ToolMaskDecoderManager
     }
 
     /**
-     * @param string $name
-     *
      * @return ToolMaskDecoder
      */
-    public function getMaskDecoderByToolAndName(Tool $tool, $name)
+    public function getMaskDecoderByToolAndName(Tool $tool, string $name): ?ToolMaskDecoder
     {
         return $this->maskRepo->findMaskDecoderByToolAndName($tool, $name);
     }

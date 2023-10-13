@@ -59,7 +59,6 @@ class PlatformDefaults implements ParameterProviderInterface
             'internet' => [
                 'domain_name' => null,
                 'platform_url' => null,
-                'google_meta_tag' => null,
             ],
             'workspace' => [
                 'default_tag' => null,

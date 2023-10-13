@@ -130,6 +130,8 @@ class ResourceRestrictions extends Component {
                     id="access-code"
                     value={this.state.codeAccess}
                     onChange={this.updateCodeAccess}
+                    disablePasswordCheck={true}
+                    hideStrength={true}
                   />
                 </FormGroup>
 

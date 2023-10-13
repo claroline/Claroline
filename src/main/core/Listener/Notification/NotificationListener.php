@@ -113,7 +113,7 @@ class NotificationListener
             if (isset($notification->getDetails()['resource']['guid'])) {
                 if ('directory' === $notification->getDetails()['resource']['resourceType'] && isset($notification->getDetails()['workspace']['id'])) {
                     $event->setPrimaryAction([
-                    'url' => 'claro_workspace_open_tool',
+                    'url' => 'claro_open_tool',
                     'parameters' => [
                       'workspaceId' => $notification->getDetails()['workspace']['id'],
                       'resourceType' => $notification->getDetails()['resource']['resourceType'],
@@ -140,7 +140,7 @@ class NotificationListener
             if (isset($notification->getDetails()['resource']['guid'])) {
                 if ('directory' === $notification->getDetails()['resource']['resourceType'] && isset($notification->getDetails()['workspace']['id'])) {
                     $event->setPrimaryAction([
-                    'url' => 'claro_workspace_open_tool',
+                    'url' => 'claro_open_tool',
                     'parameters' => [
                       'workspaceId' => $notification->getDetails()['workspace']['id'],
                       'resourceType' => $notification->getDetails()['resource']['resourceType'],

@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * automatically throw an exception if this communication went wrong (i.e. if the
  * plugin didn't respond as expected).
  *
- * @todo : move me inside \EventDispatcher namespace
+ * @deprecated use standard event_dispatcher instead
  */
 class StrictDispatcher
 {

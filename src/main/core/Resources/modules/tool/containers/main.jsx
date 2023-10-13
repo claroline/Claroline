@@ -10,18 +10,19 @@ const ToolMain = withReducer(selectors.STORE_NAME, reducer)(
     (state) => ({
       path: selectors.path(state),
       toolName: selectors.name(state),
-      toolContext: selectors.context(state),
+      contextType: selectors.contextType(state),
+      contextId: selectors.contextId(state),
       loaded: selectors.loaded(state),
       accessDenied: selectors.accessDenied(state),
       notFound: selectors.notFound(state)
     }),
     (dispatch) => ({
-      open(toolName, context) {
-        return dispatch(actions.fetch(toolName, context))
+      open(toolName, context, contextId) {
+        return dispatch(actions.fetch(toolName, context, contextId))
       },
-      close(toolName, context) {
+      close(toolName, context, contextId) {
         if (toolName) {
-          dispatch(actions.closeTool(toolName, context))
+          dispatch(actions.closeTool(toolName, context, contextId))
         }
       }
     })

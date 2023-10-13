@@ -132,10 +132,6 @@ const Technical = props =>
                 displayed: (parameters) => parameters.ssl.enabled
               }
             ]
-          }, {
-            name: 'internet.google_meta_tag',
-            type: 'string',
-            label: trans('google_tag_validation')
           }
         ]
       }, {

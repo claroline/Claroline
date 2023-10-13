@@ -14,6 +14,8 @@ namespace Claroline\AppBundle\Event;
 /**
  * Interface of the events which are supposed to have at least one
  * listener observing them.
+ *
+ * @deprecated
  */
 interface MandatoryEventInterface
 {

@@ -4,7 +4,7 @@ import {makeActionCreator, makeInstanceActionCreator} from '#/main/app/store/act
 import {API_REQUEST} from '#/main/app/api'
 
 import {actions as toolActions} from '#/main/core/tool/store/actions'
-import {actions as workspaceActions} from '#/main/core/workspace/store/actions'
+import {actions as workspaceActions} from '#/main/app/contexts/workspace/store/actions'
 import {selectors} from '#/main/core/resource/store/selectors'
 
 // actions

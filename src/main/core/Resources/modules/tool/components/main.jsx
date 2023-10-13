@@ -94,12 +94,12 @@ class ToolMain extends Component {
       if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
         if (!this.pending) {
           // close previous tool
-          if (this.props.toolName && prevProps.toolName && this.props.toolContext && prevProps.toolContext && (
+          if (this.props.toolName && prevProps.toolName && (
             this.props.toolName !== prevProps.toolName ||
-            this.props.toolContext.type !== prevProps.toolContext.type ||
-            (this.props.toolContext.data && prevProps.toolContext.data && this.props.toolContext.data.id !== prevProps.toolContext.data.id)
+            this.props.contextType !== prevProps.contextType ||
+            this.props.contextId !== prevProps.contextId
           )) {
-            this.props.close(prevProps.toolName, prevProps.toolContext)
+            this.props.close(prevProps.toolName, prevProps.contextType, prevProps.contextId)
           }
 
           // open current tool
@@ -111,7 +111,7 @@ class ToolMain extends Component {
 
   open() {
     this.pending = makeCancelable(
-      this.props.open(this.props.toolName, this.props.toolContext)
+      this.props.open(this.props.toolName, this.props.contextType, this.props.contextId)
     )
 
     this.pending.promise
@@ -126,7 +126,7 @@ class ToolMain extends Component {
       this.setState({appLoaded: false})
 
       let app
-      if (constants.TOOL_ADMINISTRATION === this.props.toolContext.type) {
+      if (constants.TOOL_ADMINISTRATION === this.props.contextType) {
         app = getAdminTool(this.props.toolName)
       } else {
         app = getTool(this.props.toolName)
@@ -173,7 +173,7 @@ class ToolMain extends Component {
 
     // only request close on tools effectively opened
     if (this.props.toolName && this.props.loaded && !this.props.notFound && !this.props.accessDenied) {
-      this.props.close(this.props.toolName, this.props.toolContext)
+      this.props.close(this.props.toolName, this.props.contextType, this.props.contextId)
     }
   }
 
@@ -224,11 +224,8 @@ class ToolMain extends Component {
 ToolMain.propTypes = {
   path: T.string,
   toolName: T.string.isRequired,
-  toolContext: T.shape({
-    type: T.string.isRequired,
-    url: T.oneOfType([T.array, T.string]),
-    data: T.object
-  }).isRequired,
+  contextType: T.string.isRequired,
+  contextId: T.string,
   loaded: T.bool.isRequired,
   notFound: T.bool.isRequired,
   accessDenied: T.bool.isRequired,
