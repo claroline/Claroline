@@ -2,24 +2,27 @@ import {PropTypes as T} from 'prop-types'
 
 const Card = {
   propTypes: {
-    id: T.string.isRequired,
-    question: T.string
-  },
-  defaultProps: {
-    children: []
+    id: T.string,
+    question: T.string,
+    visibleContent: T.oneOfType([
+      T.string,
+      T.object
+    ]),
+    hiddenContent: T.oneOfType([
+      T.string,
+      T.object
+    ]),
+    visibleContentType: T.string,
+    hiddenContentType: T.string
   }
 }
 
 const FlashcardDeck = {
   propTypes: {
     id: T.string,
+    name: T.string,
+    showProgression: T.bool,
     draw: T.number,
-    display: T.shape({
-      showOverview: T.bool
-    }),
-    cards: T.arrayOf(T.shape(
-      Card.propTypes
-    )),
     overview: T.shape({
       display: T.bool,
       message: T.string
@@ -28,7 +31,10 @@ const FlashcardDeck = {
       display: T.bool,
       message: T.string,
       navigation: T.bool
-    })
+    }),
+    cards: T.arrayOf(T.shape(
+      Card.propTypes
+    ))
   },
   defaultProps: {
     display: {
@@ -39,7 +45,18 @@ const FlashcardDeck = {
   }
 }
 
+const FlashcardDeckProgression = {
+  propTypes: {
+    id: T.number,
+    isSuccessful: T.bool,
+    flashcard: T.shape(
+      Card.propTypes
+    )
+  }
+}
+
 export {
   Card,
-  FlashcardDeck
+  FlashcardDeck,
+  FlashcardDeckProgression
 }

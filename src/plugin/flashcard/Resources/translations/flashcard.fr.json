@@ -2,6 +2,10 @@
   "card": "Carte",
   "cards": "Cartes",
 
+  "show_progression": "Afficher la progression",
+  "custom_button_labels": "Personnaliser le label des boutons de réponse",
+  "right_button_label": "Label du bouton de réponse correct",
+  "wrong_button_label": "Label du bouton de réponse incorrect",
   "flashcard_options": "Options des cartes",
   "draw_options": "Nombre de cartes à tirer",
   "options_desc": "Permet de définir le nombre de cartes à tirer pour chaque partie. Laissez vide pour jouer avec toutes les cartes.",
@@ -17,11 +21,12 @@
   "visible_content": "Face visible",
   "hidden_content_type": "Type de contenu pour la face cachée",
   "hidden_content": "Face cachée",
-  "show_answer": "Retourner la carte",
+  "flip_card": "Retourner la carte",
   "right_answer": "Je sais",
   "wrong_answer": "Je ne sais pas",
 
   "card_parameters": "Paramètres de la carte",
+  "card_preview": "Aperçu de la carte",
 
   "view": "vues",
   "check": "réussies",

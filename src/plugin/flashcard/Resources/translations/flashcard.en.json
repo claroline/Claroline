@@ -2,6 +2,10 @@
   "card": "Card",
   "cards": "Cards",
 
+  "show_progression": "Show progression",
+  "custom_button_labels": "Custom button labels",
+  "right_button_label": "Right button label",
+  "wrong_button_label": "Wrong button label",
   "flashcard_options": "Cards options",
   "draw_options": "Number of cards to draw",
   "options_desc":"Defines number of cards to draw for each game. Leave empty to play with all the cards.",
@@ -17,11 +21,12 @@
   "visible_content": "Visible content",
   "hidden_content_type": "Hidden content type",
   "hidden_content": "Hidden content",
-  "show_answer": "Flip the card",
+  "flip_card": "Flip the card",
   "right_answer": "I know",
   "wrong_answer": "I don't know",
 
   "card_parameters": "Card parameters",
+  "card_preview": "Card preview",
 
   "view": "view",
   "check": "successful",

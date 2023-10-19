@@ -31,6 +31,26 @@ class FlashcardDeck extends AbstractResource
      */
     private ?int $draw = 0;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $showProgression = true;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $customButtons = false;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private ?string $rightButtonLabel = null;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private ?string $wrongButtonLabel = null;
+
     public function __construct()
     {
         parent::__construct();
@@ -81,5 +101,45 @@ class FlashcardDeck extends AbstractResource
     public function setDraw($draw): void
     {
         $this->draw = $draw;
+    }
+
+    public function getShowProgression(): bool
+    {
+        return $this->showProgression;
+    }
+
+    public function setShowProgression(bool $showProgression): void
+    {
+        $this->showProgression = $showProgression;
+    }
+
+    public function getCustomButtons(): bool
+    {
+        return $this->customButtons;
+    }
+
+    public function setCustomButtons(bool $customButtons): void
+    {
+        $this->customButtons = $customButtons;
+    }
+
+    public function getRightButtonLabel(): ?string
+    {
+        return $this->rightButtonLabel;
+    }
+
+    public function setRightButtonLabel(?string $rightButtonLabel): void
+    {
+        $this->rightButtonLabel = $rightButtonLabel;
+    }
+
+    public function getWrongButtonLabel(): ?string
+    {
+        return $this->wrongButtonLabel;
+    }
+
+    public function setWrongButtonLabel(?string $wrongButtonLabel): void
+    {
+        $this->wrongButtonLabel = $wrongButtonLabel;
     }
 }

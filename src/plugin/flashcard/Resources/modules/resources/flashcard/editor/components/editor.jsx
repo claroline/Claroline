@@ -52,6 +52,33 @@ const EditorComponent = props =>
           }
         ]
       }, {
+        icon: 'fa fa-fw fa-desktop',
+        title: trans('display_parameters'),
+        fields: [
+          {
+            name: 'showProgression',
+            type: 'boolean',
+            label: trans('show_progression', {}, 'flashcard')
+          }, {
+            name: 'customButtons',
+            type: 'boolean',
+            label: trans('custom_button_labels', {}, 'flashcard'),
+            linked: [
+              {
+                name: 'rightButtonLabel',
+                type: 'string',
+                label: trans('right_button_label', {}, 'flashcard'),
+                displayed: (flashcardDeck) => get(flashcardDeck, 'customButtons')
+              }, {
+                name: 'wrongButtonLabel',
+                type: 'string',
+                label: trans('wrong_button_label', {}, 'flashcard'),
+                displayed: (flashcardDeck) => get(flashcardDeck, 'customButtons')
+              }
+            ]
+          }
+        ]
+      },{
         icon: 'fa fa-fw fa-dice-d20',
         title: trans('flashcard_options', {}, 'flashcard'),
         fields: [
@@ -102,6 +129,7 @@ const EditorComponent = props =>
             <Card
               className="flashcard-hoverable"
               card={card}
+              mode="edit"
               actions={(card) => [
                 {
                   name: 'edit',
@@ -112,10 +140,8 @@ const EditorComponent = props =>
                     card: card,
                     save: (updated) => {
                       const updatedPos = props.cards.findIndex(current => current.id === updated.id)
-
                       const newCards = props.cards.slice(0)
                       newCards[updatedPos] = updated
-
                       props.update('cards', newCards)
                     }
                   }]
@@ -129,7 +155,6 @@ const EditorComponent = props =>
                     if (-1 !== deletedPos) {
                       const newCards = props.cards.slice(0)
                       newCards.splice(deletedPos, 1)
-
                       props.update('cards', newCards)
                     }
                   },
@@ -168,9 +193,6 @@ EditorComponent.propTypes = {
     id: T.string.isRequired
   }).isRequired,
   update: T.func.isRequired
-}
-EditorComponent.defaultProps = {
-  cards: []
 }
 
 const Editor = connect(

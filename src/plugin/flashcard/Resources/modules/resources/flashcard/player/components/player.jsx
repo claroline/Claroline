@@ -15,6 +15,7 @@ const Player = props => {
   const history = useHistory()
   const match = useRouteMatch()
   const [isFlipped, setIsFlipped] = useState(false)
+  const [isAnswering, setIsAnswering] = useState(false)
   const [currentCardIndex, setCurrentCardIndex] = useState(0)
   const currentCard = props.flashcardDeck.cards[currentCardIndex]
   const maxCards = props.draw > 0 ? Math.min(props.draw, props.flashcardDeck.cards.length) : props.flashcardDeck.cards.length
@@ -22,8 +23,12 @@ const Player = props => {
   const goToNextCard = useCallback(() => {
     const isLastCard = currentCardIndex + 1 === maxCards
 
-    if (isLastCard && props.flashcardDeck.end.display) {
-      history.push(`${match.path}/end`)
+    if (isLastCard) {
+      if (props.flashcardDeck.end.display) {
+        history.push(`${match.path}/end`)
+      } else {
+        history.push(props.overview ? `${match.path}/overview` : props.path)
+      }
     } else {
       const nextIndex = isLastCard ? 0 : currentCardIndex + 1
       setCurrentCardIndex(nextIndex)
@@ -32,12 +37,14 @@ const Player = props => {
 
   const handleAnswer = useCallback(
     (isSuccessful) => {
+      setIsAnswering(true)
       props.updateProgression(currentCard.id, isSuccessful).then(() => {
+        setIsAnswering(false)
         setIsFlipped(false)
-        setTimeout(goToNextCard, 100)
+        goToNextCard()
       })
     },
-    [props.updateProgression, currentCard.id, setIsFlipped, goToNextCard]
+    [props.updateProgression, currentCard.id, setIsFlipped, goToNextCard, setIsAnswering]
   )
 
   if (!maxCards) {
@@ -46,34 +53,34 @@ const Player = props => {
 
   return (
     <>
-      <ProgressBar
-        className="mb-3 progress-minimal"
-        value={(currentCardIndex+1) / maxCards * 100}
-        size="xs"
-        type="learning"
-      />
+      {props.flashcardDeck.showProgression &&
+        <ProgressBar
+          className="mb-3 progress-minimal"
+          value={(currentCardIndex+1) / maxCards * 100}
+          size="xs"
+          type="learning"
+        />
+      }
 
       <div className="flashcard-player content-sm">
-        <div className="flashcard-deck">
-          <div className={`flashcard flashcard-0 ${isFlipped ? 'flashcard-flip' : ''}`}>
-            <Card
-              className="flashcard-visible"
-              card={currentCard}
-              contentKey="visibleContent"
-            />
-            <Card
-              className="flashcard-hidden"
-              card={currentCard}
-              contentKey="hiddenContent"
-            />
+        {props.flashcardDeck.showProgression &&
+          <div className="flashcard-counter mt-3">
+            {`${currentCardIndex + 1} / ${maxCards}`}
           </div>
+        }
+        <div className="flashcard-deck">
+          <Card
+            card={currentCard}
+            flipped={isFlipped}
+            mode="play"
+          />
 
-          { maxCards > 1 && (!props.draw || currentCardIndex < props.draw - 1) &&
+          { maxCards > 1 && currentCardIndex < maxCards - 1 &&
             <div className="flashcard flashcard-1">
               <div className="flashcard-card" />
             </div>
           }
-          { maxCards > 2 && (!props.draw || currentCardIndex < props.draw - 2) &&
+          { maxCards > 2 && currentCardIndex < maxCards - 2 &&
             <div className="flashcard flashcard-2">
               <div className="flashcard-card" />
             </div>
@@ -89,23 +96,25 @@ const Player = props => {
               name: 'flip',
               type: CALLBACK_BUTTON,
               className: 'btn-primary w-100',
-              label: trans('show_answer', {}, 'flashcard'),
+              label: trans('flip_card', {}, 'flashcard'),
               callback: () => setIsFlipped(!isFlipped),
               displayed: !isFlipped
             }, {
               name: 'answer-correct',
               type: CALLBACK_BUTTON,
               className: 'btn-success w-50',
-              label: trans('right_answer', {}, 'flashcard'),
+              label: (props.flashcardDeck.customButtons && props.flashcardDeck.rightButtonLabel) || trans('right_answer', {}, 'flashcard'),
               callback: () => handleAnswer(true),
-              displayed: isFlipped
+              displayed: isFlipped,
+              disabled: isAnswering
             }, {
               name: 'answer-incorrect',
               type: CALLBACK_BUTTON,
               className: 'btn-danger w-50',
-              label: trans('wrong_answer', {}, 'flashcard'),
+              label: (props.flashcardDeck.customButtons && props.flashcardDeck.wrongButtonLabel) || trans('wrong_answer', {}, 'flashcard'),
               callback: () => handleAnswer(false),
-              displayed: isFlipped
+              displayed: isFlipped,
+              disabled: isAnswering
             }
           ]}
         />
@@ -119,7 +128,9 @@ Player.propTypes = {
     FlashcardDeckTypes.propTypes
   ).isRequired,
   draw: T.number,
-  updateProgression: T.func.isRequired
+  path: T.string,
+  updateProgression: T.func.isRequired,
+  overview: T.bool
 }
 
 export {

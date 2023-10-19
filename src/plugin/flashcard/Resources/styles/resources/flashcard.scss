@@ -45,15 +45,6 @@
   //margin: 2px;
 }
 
-<<<<<<< HEAD
-.flashcard-deck {
-  width: 80vw;
-  height: 300px;
-  perspective: 1000px;
-  background-color: transparent;
-}
-
-=======
 .flashcard-card {
   display: flex;
   flex-direction: column;
@@ -76,6 +67,11 @@
   justify-content: center;
 
   position: relative;*/
+}
+
+.flashcard-counter {
+  text-align: end;
+  font-size: 12px;
 }
 
 .flashcard-deck {
@@ -104,7 +100,7 @@
   //@include border-radius($flashcard-inner-border-radius);
 }
 
-.flashcard-video {
+ .flashcard-video {
   width: 100%;
   max-height: 100%;
 }
@@ -113,6 +109,7 @@
   color: $flashcard-title-color;
   margin-bottom: $flashcard-title-spacer-y;
   //font-weight: bold;
+  text-align: center;
 }
 
 .flashcard-content {
@@ -150,14 +147,13 @@
     border-radius: $flashcard-inner-border-radius;
   }*/
 
-  &-visible, &-hidden {
-    //width: 100%;
-    //max-height: calc( 100% - 7px );
-    //padding: 7px;
-    position: absolute;
-    backface-visibility: hidden;
-    transition: transform 500ms;
-    overflow: hidden;
+  &-preview
+  {
+    position: static;
+    margin: auto;
+    max-width: 75%;
+    aspect-ratio: 16/9;
+
   }
 
   @for $index from 0 through 3 {
@@ -168,23 +164,7 @@
     }
   }
 
-  &-visible {
-    transform: rotateY(0deg);
-  }
-
-  &-hidden {
-    transform: rotateY(180deg);
-  }
-
   &-flip {
-    transform: rotateY(180deg);
-
-    .flashcard-visible {
-      transform: rotateY(180deg);
-    }
-
-    .flashcard-hidden {
-      transform: rotateY(0deg) scaleX(-1);
-    }
+    transform: rotateY(180deg) scaleX(-1);
   }
 }

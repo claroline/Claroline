@@ -6,8 +6,8 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
-import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {FlashcardInfo} from '#/plugin/flashcard/resources/flashcard/components/info'
+import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 
 const Overview = (props) =>
   <ResourceOverview
@@ -30,12 +30,12 @@ const Overview = (props) =>
 
 Overview.propTypes = {
   basePath: T.string.isRequired,
-  flashcardDeck: T.shape(
-    FlashcardDeckTypes.propTypes
-  ).isRequired,
   evaluation: T.shape(
     ResourceEvaluationTypes.propTypes
   ),
+  flashcardDeck: T.shape(
+    FlashcardDeckTypes.propTypes
+  ).isRequired,
   empty: T.bool.isRequired,
   resourceNode: T.object
 }

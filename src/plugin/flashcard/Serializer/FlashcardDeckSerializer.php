@@ -32,11 +32,6 @@ class FlashcardDeckSerializer
         return FlashcardDeck::class;
     }
 
-    public function getSchema(): string
-    {
-        return '#/plugin/flashcard/flashcard.json';
-    }
-
     public function getName(): string
     {
         return 'flashcard_deck';
@@ -47,6 +42,10 @@ class FlashcardDeckSerializer
         return [
             'id' => $flashcardDeck->getUuid(),
             'name' => $flashcardDeck->getName(),
+            'showProgression' => $flashcardDeck->getShowProgression(),
+            'customButtons' => $flashcardDeck->getCustomButtons(),
+            'rightButtonLabel' => $flashcardDeck->getRightButtonLabel(),
+            'wrongButtonLabel' => $flashcardDeck->getWrongButtonLabel(),
             'draw' => $flashcardDeck->getDraw(),
             'overview' => [
                 'display' => $flashcardDeck->getShowOverview(),
@@ -89,6 +88,10 @@ class FlashcardDeckSerializer
     {
         $this->sipe('id', 'setUuid', $data, $flashcardDeck);
         $this->sipe('name', 'setName', $data, $flashcardDeck);
+        $this->sipe('showProgression', 'setShowProgression', $data, $flashcardDeck);
+        $this->sipe('customButtons', 'setCustomButtons', $data, $flashcardDeck);
+        $this->sipe('rightButtonLabel', 'setRightButtonLabel', $data, $flashcardDeck);
+        $this->sipe('wrongButtonLabel', 'setWrongButtonLabel', $data, $flashcardDeck);
         $this->sipe('draw', 'setDraw', $data, $flashcardDeck);
 
         if (!empty($data['overview'])) {

@@ -11,9 +11,8 @@ export const actions = {}
 actions.updateCardProgression = makeActionCreator(FLASHCARD_UPDATE_PROGRESSION, 'id', 'isSuccessful')
 actions.startAttemptAction = makeActionCreator(FLASHCARD_GET_DECK, 'data')
 
-actions.updateProgression = (cardId, isSuccessful, silent = true) => ({
+actions.updateProgression = (cardId, isSuccessful) => ({
   [API_REQUEST]: {
-    silent: silent,
     url: ['apiv2_flashcard_progression_update', {id: cardId, isSuccessful: isSuccessful}],
     request: {
       method: 'PUT'

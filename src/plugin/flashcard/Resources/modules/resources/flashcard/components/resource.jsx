@@ -18,7 +18,7 @@ const FlashcardResource = props =>
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         target: props.path,
-        disabled: props.overview,
+        displayed: props.overview,
         exact: true
       }, {
         type: LINK_BUTTON,

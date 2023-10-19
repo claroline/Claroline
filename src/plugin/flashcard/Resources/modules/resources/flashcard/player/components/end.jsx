@@ -7,7 +7,10 @@ import {ResourceEnd} from '#/main/core/resource/components/end'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {selectors} from '#/plugin/flashcard/resources/flashcard/store'
-import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
+import {
+  FlashcardDeck as FlashcardDeckTypes,
+  FlashcardDeckProgression as FlashcardDeckProgressionTypes
+} from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {FlashcardInfo} from '#/plugin/flashcard/resources/flashcard/components/info'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
@@ -23,20 +26,18 @@ const PlayerEndComponent = (props) =>
     />
   </ResourceEnd>
 
-
 PlayerEndComponent.propTypes = {
   flashcardDeck: T.shape(
-    FlashcardDeckTypes.propTypes
-  ).isRequired,
-  flashcard: T.shape(
     FlashcardDeckTypes.propTypes
   ).isRequired,
   evaluation: T.shape(
     ResourceEvaluationTypes.propTypes
   ),
-  flashcardDeckProgression: T.shape(
-    FlashcardDeckTypes.propTypes
-  ).isRequired
+  flashcardDeckProgression: T.arrayOf(
+    T.shape(
+      FlashcardDeckProgressionTypes.propTypes
+    )
+  )
 }
 
 const PlayerEnd = connect(
