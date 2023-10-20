@@ -90,6 +90,26 @@ class MailManager
         return $this->mailManager->send($subject, $body, [$user], null, [], true);
     }
 
+    public function sendValidateEmail(User $user): bool
+    {
+        $locale = $this->localeManager->getLocale($user);
+        $placeholders = [
+            'first_name' => $user->getFirstName(),
+            'last_name' => $user->getLastName(),
+            'username' => $user->getUsername(),
+            'validation_mail' => $this->router->generate(
+                'claro_security_validate_email',
+                ['hash' => $user->getEmailValidationHash()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ),
+        ];
+
+        $subject = $this->templateManager->getTemplate('user_email_validation', $placeholders, $locale, 'title');
+        $body = $this->templateManager->getTemplate('user_email_validation', $placeholders, $locale);
+
+        return $this->mailManager->send($subject, $body, [$user], null, [], true);
+    }
+
     // TODO : move in Privacy plugin when available
     public function sendRequestToDPO(User $user): bool
     {
