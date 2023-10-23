@@ -239,7 +239,7 @@ class PaperManager
 
             $this->om->remove($paper);
             if ($resourceAttempt) {
-                $this->crud->delete($resourceAttempt);
+                $this->crud->delete($resourceAttempt, [Crud::NO_PERMISSIONS]);
             }
         }
 
