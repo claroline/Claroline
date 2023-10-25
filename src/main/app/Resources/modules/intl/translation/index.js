@@ -13,7 +13,7 @@ import {Translator as BaseTranslator} from './translator'
  */
 function getTranslator() {
   // we reuse the instance from browser, because it already contains messages loaded from <script>
-  return window.Translator || BaseTranslator
+  return window.Translator/* || BaseTranslator*/
 }
 
 /**
@@ -51,6 +51,8 @@ export function transChoice(key, count, placeholders = {}, domain = PLATFORM_DOM
  * @param {object} placeholders
  *
  * @returns {string}
+ *
+ * @deprecated use trans(key, placeholders, 'validators')
  */
 export function tval(message, placeholders = {}) {
   return trans(message, placeholders, VALIDATION_DOMAIN)

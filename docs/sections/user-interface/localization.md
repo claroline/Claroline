@@ -13,7 +13,7 @@ The library will transform the JSON translations defined in `MY_PLUGIN/Resources
 the command :
 
 ```shell
-$ php bin/console bazing:js-translation:dump public/js
+$ php bin/console bazing:js-translation:dump public/js --format=js --merge-domains
 ```
 
 > You may need to empty the symfony cache and your browser cache to see the changes.

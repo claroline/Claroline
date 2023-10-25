@@ -40,6 +40,11 @@
             <link rel="stylesheet" type="text/css" href="{{ asset(file) }}" />
         {% endfor %}
 
+        <script src="{{ asset('bundles/bazingajstranslation/js/translator.min.js') }}"></script>
+        <script src="{{ asset('js/translations/config.js') }}"></script>
+        <script src="{{ asset('js/translations/' ~ app.request.locale ~ '.js') }}"></script>
+        {#<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform', '_format': 'json' }) }}"></script>#}
+
         {# Adds javascripts #}
         <script src="{{ hotAsset('runtime') }}"></script>
         {# Base libraries #}

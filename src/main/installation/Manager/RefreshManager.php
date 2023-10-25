@@ -87,6 +87,8 @@ class RefreshManager
         $this->commandManager->run(new ArrayInput([
             'command' => 'bazinga:js-translation:dump',
             'target' => $this->publicDir.DIRECTORY_SEPARATOR.'js',
+            '--format' => ['js'],
+            '--merge-domains' => true
         ]), $this->output);
     }
 

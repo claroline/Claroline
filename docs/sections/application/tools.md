@@ -110,4 +110,4 @@ Where `my_tool` is the name you defined in your config file.
 
 > You'll need to rebuild the js translation in order to see the changes in your application.
 > 
-> $ rm -rf var/cache/* && php bin/console bazinga:js-translation:dump public/js && rm -rf var/cache/*
+> $ rm -rf var/cache/* && php bin/console bazinga:js-translation:dump public/js --format=js --merge-domains && rm -rf var/cache/*

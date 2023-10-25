@@ -63,6 +63,7 @@ class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
         $configs = [
             // simple container configuration, same for every environment
             'twig' => false,
+            'bazinga_js_translation' => false,
             'stof_doctrine_extensions' => false,
             'sensio_framework_extra' => false,
 
