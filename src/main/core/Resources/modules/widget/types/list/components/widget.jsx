@@ -47,6 +47,7 @@ class ListWidget extends Component {
         }}
         source={this.state.source}
         parameters={this.props.parameters}
+        absolute={true}
       />
     )
   }
