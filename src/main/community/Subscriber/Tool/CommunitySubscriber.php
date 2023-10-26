@@ -269,10 +269,10 @@ class CommunitySubscriber implements EventSubscriberInterface
 
         // only grab platform options we want
         return [
-            'registration' => $parameters['registration'],
-            'authentication' => $parameters['authentication'],
-            'profile' => $parameters['profile'],
-            'community' => $parameters['community'],
+            'registration' => $parameters['registration'] ?? [],
+            'authentication' => $parameters['authentication'] ?? [],
+            'profile' => $parameters['profile'] ?? [],
+            'community' => $parameters['community'] ?? [],
         ];
     }
 }

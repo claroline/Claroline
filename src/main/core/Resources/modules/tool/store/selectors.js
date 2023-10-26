@@ -54,7 +54,11 @@ const permissions = createSelector(
 
 const contextType = contextSelectors.type
 
-const contextData = contextSelectors.data
+const contextData = createSelector(
+  [contextSelectors.data],
+  // FIXME : for retro compatibility, tools expect empty data for every context except workspace
+  (contextData) => contextData && contextData.id ? contextData : null
+)
 
 const contextId = createSelector(
   [contextData],

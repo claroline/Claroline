@@ -1,0 +1,12 @@
+services:
+    Claroline\AppBundle\Subscriber\CorsSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '%kernel.debug%'
+            - '@security.token_storage'
+
+    Claroline\AppBundle\Subscriber\ExceptionSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '%kernel.debug%'
+            - '@security.token_storage'

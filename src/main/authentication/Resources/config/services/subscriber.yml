@@ -1,22 +1,19 @@
 services:
     Claroline\AuthenticationBundle\Subscriber\RefreshTokenSubscriber:
+        tags: [ kernel.event_subscriber ]
         arguments:
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
-        tags:
-            - { name: kernel.event_subscriber }
 
     Claroline\AuthenticationBundle\Subscriber\AuthenticationParametersSubscriber:
+        tags: [ kernel.event_subscriber ]
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
-        tags:
-            - { name: kernel.event_subscriber }
 
     # Administration
     Claroline\AuthenticationBundle\Subscriber\Administration\ParametersSubscriber:
+        tags: [ kernel.event_subscriber ]
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
-        tags:
-            - { name: kernel.event_subscriber };
