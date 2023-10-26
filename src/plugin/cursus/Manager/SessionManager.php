@@ -392,6 +392,7 @@ class SessionManager
             $templateName = 'training_session_confirmation';
         }
 
+        $workspace = $session->getWorkspace();
         $course = $session->getCourse();
         $trainersList = '';
         /** @var SessionUser[] $sessionTrainers */
@@ -421,7 +422,7 @@ class SessionManager
             'session_start' => $session->getStartDate()->format('d/m/Y'),
             'session_end' => $session->getEndDate()->format('d/m/Y'),
             'session_trainers' => $trainersList,
-            'workspace_url' => $this->routingHelper->workspaceUrl($course->getWorkspace()),
+            'workspace_url' => $workspace ? $this->routingHelper->workspaceUrl($workspace) : '',
             'registration_confirmation_url' => $this->router->generate('apiv2_cursus_session_self_confirm', ['id' => $session->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL), // TODO
         ];
 
