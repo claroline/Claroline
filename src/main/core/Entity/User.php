@@ -32,9 +32,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\UserRepository")
+ *
  * @ORM\Table(
  *     name="claro_user",
  *     indexes={
+ *
  *         @ORM\Index(name="code_idx", columns={"administrative_code"}),
  *         @ORM\Index(name="enabled_idx", columns={"is_enabled"}),
  *         @ORM\Index(name="is_removed", columns={"is_removed"})
@@ -53,6 +55,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      * @var string
      *
      * @ORM\Column(name="first_name", length=50)
+     *
      * @Assert\NotBlank()
      */
     private $firstName;
@@ -61,6 +64,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      * @var string
      *
      * @ORM\Column(name="last_name", length=50)
+     *
      * @Assert\NotBlank()
      */
     private $lastName;
@@ -69,7 +73,9 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      * @var string
      *
      * @ORM\Column(unique=true)
+     *
      * @Assert\NotBlank()
+     *
      * @Assert\Length(min="3")
      */
     private $username;
@@ -99,6 +105,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      * @var string
      *
      * @Assert\NotBlank(groups={"registration"})
+     *
      * @Assert\Length(min="4", groups={"registration"})
      */
     private $plainPassword;
@@ -114,7 +121,9 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      * @var string
      *
      * @ORM\Column(unique=true, name="mail")
+     *
      * @Assert\NotBlank()
+     *
      * @Assert\Email(mode="strict")
      */
     private $email;
@@ -133,6 +142,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      *      targetEntity="Claroline\CoreBundle\Entity\Group",
      *      inversedBy="users"
      * )
+     *
      * @ORM\JoinTable(name="claro_user_group")
      */
     private $groups;
@@ -146,6 +156,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      *     fetch="EXTRA_LAZY",
      *     cascade={"merge", "refresh"}
      * )
+     *
      * @ORM\JoinTable(name="claro_user_role")
      */
     protected $roles;
@@ -157,6 +168,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     cascade={"persist", "remove"}
      * )
+     *
      * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */
     private $personalWorkspace;
@@ -165,6 +177,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      * @var \DateTime
      *
      * @ORM\Column(name="creation_date", type="datetime")
+     *
      * @Gedmo\Timestampable(on="create")
      */
     private $created;
@@ -278,6 +291,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      *     mappedBy="user",
      *     cascade={"all"}
      *  )
+     *
      * @ORM\JoinColumn(name="user_id", nullable=false)
      *
      * @var ArrayCollection|UserOrganizationReference[]
@@ -771,11 +785,10 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
             $ref = new UserOrganizationReference();
             $ref->setOrganization($organization);
             $ref->setUser($this);
+            $ref->setManager($managed);
 
             $this->userOrganizationReferences->add($ref);
         }
-
-        $ref->setManager($managed);
     }
 
     public function removeOrganization(Organization $organization): void
@@ -791,7 +804,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
 
         if ($found) {
             $this->userOrganizationReferences->removeElement($found);
-            //this is the line doing all the work. I'm not sure the previous one is useful
+            // this is the line doing all the work. I'm not sure the previous one is useful
             $found->getOrganization()->removeUser($this);
         }
     }
@@ -849,7 +862,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         $this->isRemoved = $isRemoved;
     }
 
-    //alias
+    // alias
     public function remove(): void
     {
         $this->setRemoved(true);
