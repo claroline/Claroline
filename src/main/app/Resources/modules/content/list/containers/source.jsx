@@ -57,17 +57,17 @@ const ListSource = props => {
       primaryAction={get(props.source, 'primaryAction') ? (row) => {
         const definedAction = get(props.source, 'primaryAction')(row)
         if (definedAction instanceof Promise) {
-          return definedAction.then(action => makeAbsolute(action))
+          return definedAction.then(action => props.absolute ? makeAbsolute(action) : action)
         }
 
-        return makeAbsolute(definedAction)
+        return props.absolute ? makeAbsolute(definedAction) : definedAction
       } : undefined}
       actions={get(props.parameters, 'actions') && get(props.source, 'actions') ? (rows) => {
         const definedActions = get(props.source, 'actions')(rows)
         if (definedActions instanceof Promise) {
-          return definedActions.then(actions => actions.map(action => makeAbsolute(action)))
+          return definedActions.then(actions => actions.map(action => props.absolute ? makeAbsolute(action) : action))
         }
-        return definedActions.map(action => makeAbsolute(action))
+        return definedActions.map(action => props.absolute ? makeAbsolute(action) : action)
       } : undefined}
 
       definition={computedDefinition}
@@ -101,7 +101,16 @@ ListSource.propTypes = {
   // list configuration
   parameters: T.shape(
     ListParametersTypes.propTypes
-  )
+  ),
+
+  // do we need to convert all link actions into url ?
+  // this is useful when a list is embedded inside a widget app,
+  // and we don't want the embedded router to catch our links (aka open links directly inside the widget)
+  absolute: T.bool
+}
+
+ListSource.defaultProps = {
+  absolute: false
 }
 
 export {

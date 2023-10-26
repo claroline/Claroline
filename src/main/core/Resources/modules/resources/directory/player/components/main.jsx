@@ -4,9 +4,9 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
-import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {makeAbsolute} from '#/main/app/action/utils'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListSource} from '#/main/app/content/list/containers/source'
 import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
 import {Alert} from '#/main/app/alert/components/alert'
@@ -29,12 +29,8 @@ import {getActions, getDefaultAction} from '#/main/core/resource/utils'
  * @return {object}
  */
 function transformAction(action, resourceNodes, embedded = false) {
-  if (embedded && LINK_BUTTON === action.type && -1 === resourceNodes.findIndex(node => 'directory' === node.meta.type)) {
-    // make the action a URL button to escape the embedded router
-    return merge({}, action, {
-      type: URL_BUTTON,
-      target: url(['claro_index'])+'#'+action.target
-    })
+  if (embedded && -1 === resourceNodes.findIndex(node => 'directory' === node.meta.type)) {
+    return makeAbsolute(action)
   }
 
   return action
