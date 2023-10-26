@@ -60,6 +60,8 @@ class CorsSubscriber implements EventSubscriberInterface
         $origin = $request->headers->get('Origin');
         // TODO : check origin is authorized
         $response->headers->set('Access-Control-Allow-Origin', $origin);
+        $response->headers->set('Access-Control-Allow-Credentials', 'true');
+        $response->headers->set('Access-Control-Allow-Credentials', 'true');
     }
 
     /**
@@ -87,6 +89,6 @@ class CorsSubscriber implements EventSubscriberInterface
     private function isCorsRequest(Request $request): bool
     {
         return $request->headers->has('Origin')
-            && $request->headers->get('Origin') === $request->getSchemeAndHttpHost();
+            && $request->headers->get('Origin') !== $request->getSchemeAndHttpHost();
     }
 }

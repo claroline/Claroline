@@ -64,9 +64,6 @@ final class Options
     // avoid copying model (this is used by import)
     const NO_MODEL = 'no_model';
 
-    //for role
-    const SERIALIZE_ROLE_TOOLS_RIGHTS = 'serialize_role_tools_rights';
-
     /**
      * for resource node.
      *

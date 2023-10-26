@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -102,7 +103,7 @@ class ResourceController
             return new JsonResponse(
                 array_merge($loaded, [
                     'managed' => $isManager,
-                    'resourceNode' => $this->serializer->serialize($resourceNode),
+                    'resourceNode' => $this->serializer->serialize($resourceNode, [Options::NO_RIGHTS]),
                     // append access restrictions to the loaded node if any
                     // to let the manager knows that other users can not enter the resource
                     'accessErrors' => $accessErrors,
@@ -112,17 +113,17 @@ class ResourceController
 
         // UX quality of life : if the user is anonymous and has no rights on the resource
         // we want to directly display the login modal (by throwing a 401, the app will do it for us)
-        $statusCode = 403;
+        /*$statusCode = 403;
         if (!$embedded && !$this->authorization->isGranted('IS_AUTHENTICATED_FULLY') && !$this->restrictionsManager->hasRights($resourceNode, $this->tokenStorage->getToken()->getRoleNames())) {
             // we check if the resource is embedded to avoid multiple modals in homes and paths
             $statusCode = 401;
-        }
+        }*/
 
         return new JsonResponse([
-            'managed' => $isManager,
-            'resourceNode' => $this->serializer->serialize($resourceNode),
+            'managed' => false,
+            'resourceNode' => $this->serializer->serialize($resourceNode, [Options::NO_RIGHTS]),
             'accessErrors' => $accessErrors,
-        ], $statusCode);
+        ], 403);
     }
 
     /**

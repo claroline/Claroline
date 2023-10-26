@@ -13,6 +13,7 @@ const WorkspaceContext = (props) =>
   <ContextMain
     {...props}
     parent="desktop"
+    name="workspace"
 
     menu={WorkspaceMenu}
     loadingPage={WorkspaceLoading}
