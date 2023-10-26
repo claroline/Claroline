@@ -8,14 +8,12 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class CommandManager
 {
-    private $kernel;
-
-    public function __construct(KernelInterface $kernel)
-    {
-        $this->kernel = $kernel;
+    public function __construct(
+        private readonly KernelInterface $kernel
+    ) {
     }
 
-    public function run(ArrayInput $input, $output)
+    public function run(ArrayInput $input, $output): void
     {
         $application = new Application($this->kernel);
         $application->setAutoExit(false);

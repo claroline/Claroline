@@ -178,7 +178,7 @@ Add the new item type in
 Create or duplicate a folder named by your question type in:
 `/Distribution/plugin/exo/Resources/modules/items/`.
 
-You need to create a file named `index.js` which specifies:
+You need to create a file named `translation.js` which specifies:
 - MIME type (same as API)
 - question type name (same as folder)
 - paper, editor, player and feedback views

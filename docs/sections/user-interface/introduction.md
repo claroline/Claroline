@@ -66,7 +66,7 @@ import {PageFull} from '#/main/app/page/components/full'
 
 #### Original path
 ```
-/vendor/vendor-name/package-name/plugin/MY_PLUGIN/Resources/modules/tools/my-tool/index.js
+/vendor/vendor-name/package-name/plugin/MY_PLUGIN/Resources/modules/tools/my-tool/translation.js
 ```
 
 #### Alias
