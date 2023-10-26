@@ -27,8 +27,8 @@ class CorsSubscriber implements EventSubscriberInterface
 
         $request = $event->getRequest();
 
-        // skip if not a CORS request
-        if (!$request->headers->has('Origin')) {
+        if (!$this->isCorsRequest($request)) {
+            // skip if not a CORS request
             return;
         }
 
@@ -49,8 +49,8 @@ class CorsSubscriber implements EventSubscriberInterface
 
         $request = $event->getRequest();
 
-        // skip if not a CORS request
-        if (!$request->headers->has('Origin')) {
+        if (!$this->isCorsRequest($request)) {
+            // skip if not a CORS request
             return;
         }
 
@@ -62,7 +62,12 @@ class CorsSubscriber implements EventSubscriberInterface
         $response->headers->set('Access-Control-Allow-Origin', $origin);
     }
 
-    protected function getPreflightResponse(Request $request): Response
+    /**
+     * Generates Response for CORS preflight Requests.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request
+     */
+    private function getPreflightResponse(Request $request): Response
     {
         $response = new Response();
         $response->setVary(['Origin']);
@@ -73,7 +78,15 @@ class CorsSubscriber implements EventSubscriberInterface
         $origin = $request->headers->get('Origin');
         // TODO : check origin is authorized
         $response->headers->set('Access-Control-Allow-Origin', $origin);
+        $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
+        $response->headers->set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
         return $response;
+    }
+
+    private function isCorsRequest(Request $request): bool
+    {
+        return $request->headers->has('Origin')
+            && $request->headers->get('Origin') === $request->getSchemeAndHttpHost();
     }
 }
