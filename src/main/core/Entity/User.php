@@ -767,9 +767,8 @@ class User extends AbstractRoleSubject implements \Serializable, UserInterface, 
             $ref->setUser($this);
 
             $this->userOrganizationReferences->add($ref);
+            $ref->setManager($managed);
         }
-
-        $ref->setManager($managed);
     }
 
     public function removeOrganization(Organization $organization): void
