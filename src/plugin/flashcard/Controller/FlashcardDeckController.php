@@ -46,12 +46,12 @@ class FlashcardDeckController extends AbstractCrudController
      */
     public function updateProgressionAction(Flashcard $card, User $user, Request $request): JsonResponse
     {
-        $userProgression = $this->evaluationManager->updateUserProgression($card, $user, $request->get('isSuccessful'));
+        $cardDrawnProgression = $this->evaluationManager->updateCardDrawnProgression($card, $user, $request->get('isSuccessful'));
 
         $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($card->getDeck()->getResourceNode(), $user);
 
         return new JsonResponse([
-            'progression' => $this->serializer->serialize($userProgression),
+            'progression' => $this->serializer->serialize($cardDrawnProgression),
             'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
         ]);
     }

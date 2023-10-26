@@ -2,7 +2,7 @@ services:
     Claroline\FlashcardBundle\Manager\FlashcardManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@security.token_storage'
+            - '@Claroline\FlashcardBundle\Serializer\FlashcardDeckSerializer'
 
     Claroline\FlashcardBundle\Manager\EvaluationManager:
         arguments:

@@ -3,50 +3,60 @@
 namespace Claroline\FlashcardBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
+use Claroline\FlashcardBundle\Entity\CardDrawnProgression;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
-use Claroline\FlashcardBundle\Entity\UserProgression;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Claroline\FlashcardBundle\Serializer\FlashcardDeckSerializer;
 
 class FlashcardManager
 {
     private ObjectManager $om;
-    private TokenStorageInterface $tokenStorage;
+    private FlashcardDeckSerializer $flashcardDeckSerializer;
 
-    public function __construct(
-        ObjectManager $om,
-        TokenStorageInterface $tokenStorage
-    ) {
+    public function __construct(ObjectManager $om, FlashcardDeckSerializer $flashcardDeckSerializer)
+    {
         $this->om = $om;
-        $this->tokenStorage = $tokenStorage;
+        $this->flashcardDeckSerializer = $flashcardDeckSerializer;
     }
 
-    public function getShuffledCards(FlashcardDeck $flashcardDeck): array
+    public function getCardDraw(FlashcardDeck $flashcardDeck, ResourceEvaluation $currentAttempt): array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-        $cards = $flashcardDeck->getCards();
+        $cards = self::shuffleCardByAttempt($flashcardDeck->getCards(), $currentAttempt);
         $unseenCards = [];
-        $failedCards = [];
-        $passedCards = [];
+        $seenCards = [];
 
         foreach ($cards as $card) {
-            $userProgression = $this->om->getRepository(UserProgression::class)->findOneBy([
-                'user' => $user,
-                'flashcard' => $card,
+            $cardDrawnProgression = $this->om->getRepository(CardDrawnProgression::class)->findOneBy([
+                'resourceEvaluation' => $currentAttempt,
+                'flashcard' => $card
             ]);
 
-            if (!$userProgression) {
-                $unseenCards[] = $card;
-            } elseif (!$userProgression->isSuccessful()) {
-                $failedCards[] = $card;
+            if ($cardDrawnProgression) {
+                $seenCards[] = $this->flashcardDeckSerializer->serializeCard($card);
             } else {
-                $passedCards[] = $card;
+                $unseenCards[] = $this->flashcardDeckSerializer->serializeCard($card);
             }
         }
 
-        shuffle($unseenCards);
-        shuffle($failedCards);
-        shuffle($passedCards);
+        return [
+            'unseen' => $unseenCards,
+            'seen' => $seenCards,
+        ];
+    }
 
-        return array_merge($unseenCards, $failedCards, $passedCards);
+    private static function shuffleCardByAttempt($cards, ?ResourceEvaluation $attempt)
+    {
+        // Mélange les cartes de la même façon en fonction de l'ID de l'essai en cours
+        // Algo : https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
+
+        mt_srand($attempt ? $attempt->getId() : 0);
+        for ($i = count($cards) - 1; $i > 0; $i--) {
+            $j = mt_rand(0, $i);
+            $tmp = $cards[$i];
+            $cards[$i] = $cards[$j];
+            $cards[$j] = $tmp;
+        }
+
+        return $cards;
     }
 }

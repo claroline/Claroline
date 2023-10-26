@@ -15,6 +15,7 @@ import {Card} from '#/plugin/flashcard/resources/flashcard/components/card'
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {selectors} from '#/plugin/flashcard/resources/flashcard/editor/modals/card/store'
 import { generateInputFields } from '#/plugin/flashcard/resources/flashcard/editor/utils'
+import {Slide as SlideTypes} from "#/plugin/slideshow/resources/slideshow/prop-types";
 
 const CardModal = props => {
   const [isFlipped, setIsFlipped] = useState(false)
@@ -32,15 +33,25 @@ const CardModal = props => {
         if (props.card) {
           props.reset(props.card)
         } else {
-          props.reset({
-            ...CardTypes.propTypes,
-            id: makeId()
-          }, true)
+          props.reset(Object.assign({}, CardTypes.defaultProps, {id: makeId()}), true)
         }
       }}
-      onExiting={() => {props.reset({...CardTypes.propTypes}, true)}}
+      onExiting={() => props.reset(Object.assign({}, CardTypes.defaultProps, {id: makeId()}), true)}
       size="lg"
     >
+      <div className="flashcard-editor">
+        <Card
+          card={props.formData}
+          flipped={isFlipped}
+          mode="preview"
+        />
+        <Button
+          className="btn btn-outline-primary"
+          type={CALLBACK_BUTTON}
+          callback={() => setIsFlipped(!isFlipped)}
+          label={trans('flip_card', {}, 'flashcard')}
+        />
+      </div>
       <FormData
         level={5}
         flush={true}
@@ -48,21 +59,6 @@ const CardModal = props => {
         definition={[{
           title: trans('general'),
           fields: [{
-            name: 'preview',
-            label: trans('card_preview', {}, 'flashcard'),
-            required: true,
-            render: (card) =>
-              // Ce onClick ne marche pas dans le formData
-              // En dehors du formData, il marche mais les données ne sont
-              // pas mise à jours en temps réel
-              <div onClick={() => setIsFlipped(!isFlipped)}>
-                <Card
-                  card={card}
-                  flipped={isFlipped}
-                  mode="preview"
-                />
-              </div>
-          }, {
             name: 'question',
             label: trans('question', {}, 'flashcard'),
             type: 'string'

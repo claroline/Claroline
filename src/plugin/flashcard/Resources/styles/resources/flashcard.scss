@@ -61,6 +61,13 @@
   @include box-shadow($flashcard-box-shadow);
 }
 
+.flashcard-editor {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  align-items: center
+}
+
 .flashcard-player {
   /*display: flex;
   align-items: center;

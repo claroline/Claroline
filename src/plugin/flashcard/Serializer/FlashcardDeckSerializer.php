@@ -14,16 +14,13 @@ class FlashcardDeckSerializer
     use SerializerTrait;
 
     private ObjectManager $om;
-    private FlashcardManager $flashcardManager;
     private TokenStorageInterface $tokenStorage;
 
     public function __construct(
         ObjectManager $om,
-        FlashcardManager $flashcardManager,
         TokenStorageInterface $tokenStorage
     ) {
         $this->om = $om;
-        $this->flashcardManager = $flashcardManager;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -62,7 +59,7 @@ class FlashcardDeckSerializer
 
     private function serializeCards(FlashcardDeck $flashcardDeck): array
     {
-        $cards = $this->flashcardManager->getShuffledCards($flashcardDeck);
+        $cards = $flashcardDeck->getCards();
 
         $serializedCards = [];
         foreach ($cards as $card) {
