@@ -54,14 +54,14 @@ class CorsSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $response = $event->getResponse();
+        if ($this->checkOrigin($request)) {
+            $response = $event->getResponse();
 
-        // add CORS response headers
-        $origin = $request->headers->get('Origin');
-        // TODO : check origin is authorized
-        $response->headers->set('Access-Control-Allow-Origin', $origin);
-        $response->headers->set('Access-Control-Allow-Credentials', 'true');
-        $response->headers->set('Access-Control-Allow-Credentials', 'true');
+            // add CORS response headers
+            $origin = $request->headers->get('Origin');
+            $response->headers->set('Access-Control-Allow-Origin', $origin);
+            $response->headers->set('Access-Control-Allow-Credentials', 'true');
+        }
     }
 
     /**
@@ -76,12 +76,17 @@ class CorsSubscriber implements EventSubscriberInterface
 
         $response->headers->set('Access-Control-Allow-Credentials', 'true');
         $response->headers->set('Access-Control-Max-Age', 3600);
+        $response->headers->set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+        if (!$this->checkOrigin($request)) {
+            $response->headers->remove('Access-Control-Allow-Origin');
+
+            return $response;
+        }
 
         $origin = $request->headers->get('Origin');
-        // TODO : check origin is authorized
         $response->headers->set('Access-Control-Allow-Origin', $origin);
         $response->headers->set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
-        $response->headers->set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
         return $response;
     }
@@ -90,5 +95,19 @@ class CorsSubscriber implements EventSubscriberInterface
     {
         return $request->headers->has('Origin')
             && $request->headers->get('Origin') !== $request->getSchemeAndHttpHost();
+    }
+
+    private function checkOrigin(Request $request): bool
+    {
+        // check origin
+        $origin = $request->headers->get('Origin');
+
+        if (!in_array($origin, [
+
+        ])) {
+            return false;
+        }
+
+        return true;
     }
 }

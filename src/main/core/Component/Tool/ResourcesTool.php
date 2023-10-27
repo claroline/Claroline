@@ -2,13 +2,12 @@
 
 namespace Claroline\CoreBundle\Component\Tool;
 
-use Claroline\AppBundle\Component\Tool\AbstractToolComponent;
+use Claroline\AppBundle\Component\Tool\AbstractTool;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 
-class ResourcesTool extends AbstractToolComponent
+class ResourcesTool extends AbstractTool
 {
-
     public static function getShortName(): string
     {
         return 'resources';

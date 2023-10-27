@@ -4,7 +4,6 @@ import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
 import {
   CONTEXT_OPEN,
   CONTEXT_LOAD,
-  CONTEXT_SET_LOADED,
   CONTEXT_NOT_FOUND,
   CONTEXT_RESTRICTIONS_DISMISS,
   CONTEXT_SHORTCUTS_LOAD
@@ -36,8 +35,7 @@ const reducer = combineReducers({
     [SECURITY_USER_CHANGE]: () => false,
     [CONTEXT_OPEN]: () => false,
     [CONTEXT_LOAD]: () => true,
-    [CONTEXT_NOT_FOUND]: () => true,
-    [CONTEXT_SET_LOADED]: (state, action) => action.loaded
+    [CONTEXT_NOT_FOUND]: () => true
   }),
   notFound: makeReducer(false, {
     [CONTEXT_OPEN]: () => false,

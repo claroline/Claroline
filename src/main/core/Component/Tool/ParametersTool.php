@@ -2,12 +2,11 @@
 
 namespace Claroline\CoreBundle\Component\Tool;
 
-use Claroline\AppBundle\Component\Tool\AbstractToolComponent;
+use Claroline\AppBundle\Component\Tool\AbstractTool;
 use Claroline\CoreBundle\Component\Context\AdministrationContext;
 
-class ParametersTool extends AbstractToolComponent
+class ParametersTool extends AbstractTool
 {
-
     public static function getShortName(): string
     {
         return 'parameters';

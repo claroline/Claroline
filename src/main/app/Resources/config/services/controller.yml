@@ -36,6 +36,7 @@ services:
             - '@twig'
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+            - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\AppBundle\Manager\SecurityManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\AppBundle\API\SerializerProvider'

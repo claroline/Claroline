@@ -4,6 +4,7 @@ namespace Claroline\AppBundle\Controller\Platform;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Manager\SecurityManager;
 use Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer;
 use Claroline\CoreBundle\Entity\User;
@@ -24,33 +25,17 @@ use Twig\Environment;
  */
 class ClientController
 {
-    private TokenStorageInterface $tokenStorage;
-    private Environment $templating;
-    private EventDispatcherInterface $dispatcher;
-    private PlatformConfigurationHandler $configHandler;
-    private SecurityManager $securityManager;
-    private ToolManager $toolManager;
-    private SerializerProvider $serializer;
-    private ClientSerializer $clientSerializer;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        Environment $templating,
-        EventDispatcherInterface $dispatcher,
-        PlatformConfigurationHandler $configHandler,
-        SecurityManager $securityManager,
-        ToolManager $toolManager,
-        SerializerProvider $serializer,
-        ClientSerializer $clientSerializer
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly Environment $templating,
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly PlatformConfigurationHandler $configHandler,
+        private readonly PlatformManager $platformManager,
+        private readonly SecurityManager $securityManager,
+        private readonly ToolManager $toolManager,
+        private readonly SerializerProvider $serializer,
+        private readonly ClientSerializer $clientSerializer
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->templating = $templating;
-        $this->dispatcher = $dispatcher;
-        $this->configHandler = $configHandler;
-        $this->securityManager = $securityManager;
-        $this->toolManager = $toolManager;
-        $this->serializer = $serializer;
-        $this->clientSerializer = $clientSerializer;
     }
 
     /**
@@ -63,12 +48,13 @@ class ClientController
         $currentUser = null;
         if ($this->tokenStorage->getToken()->getUser() instanceof User) {
             $currentUser = $this->serializer->serialize(
-                $this->tokenStorage->getToken()->getUser(), [Options::SERIALIZE_FACET]
+                $this->tokenStorage->getToken()->getUser(), [Options::SERIALIZE_FACET] // TODO : we should only get the minimal representation of user here
             );
         }
 
         return new Response(
             $this->templating->render('@ClarolineApp/index.html.twig', [
+                'baseUrl' => $this->platformManager->getUrl(),
                 'parameters' => $this->clientSerializer->serialize(),
                 'maintenance' => [
                     'enabled' => MaintenanceHandler::isMaintenanceEnabled() || $this->configHandler->getParameter('maintenance.enable'),

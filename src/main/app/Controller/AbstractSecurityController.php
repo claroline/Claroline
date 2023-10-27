@@ -8,6 +8,9 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * @deprecated
+ */
 abstract class AbstractSecurityController
 {
     use PermissionCheckerTrait;

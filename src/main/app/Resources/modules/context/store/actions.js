@@ -18,7 +18,7 @@ export const CONTEXT_LOAD = 'CONTEXT_LOAD'
 /**
  * Action dispatched when the requested context has been fully loaded.
  */
-export const CONTEXT_SET_LOADED = 'CONTEXT_SET_LOADED'
+//export const CONTEXT_SET_LOADED = 'CONTEXT_SET_LOADED'
 
 /**
  * Action dispatched when the current context is closed.
@@ -40,7 +40,7 @@ export const CONTEXT_SHORTCUTS_LOAD = 'CONTEXT_SHORTCUTS_LOAD'
 export const actions = {}
 
 actions.load = makeActionCreator(CONTEXT_LOAD, 'contextData')
-actions.setLoaded = makeActionCreator(CONTEXT_SET_LOADED, 'loaded')
+//actions.setLoaded = makeActionCreator(CONTEXT_SET_LOADED, 'loaded')
 actions.setNotFound = makeActionCreator(CONTEXT_NOT_FOUND)
 actions.dismissRestrictions = makeActionCreator(CONTEXT_RESTRICTIONS_DISMISS)
 actions.loadShortcuts = makeActionCreator(CONTEXT_SHORTCUTS_LOAD, 'shortcuts')

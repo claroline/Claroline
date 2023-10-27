@@ -28,7 +28,14 @@ import {getApps} from '#/main/app/plugins'
  * @param {boolean}     embedded      - is the mounted app is mounted into another ?
  * @param {string}      defaultPath   - the path to match when mounting the router.
  */
-function mount(container, rootComponent, reducers = {}, initialData = {}, embedded = false, defaultPath = '') {
+function mount(
+  container,
+  rootComponent,
+  reducers = {},
+  initialData = {},
+  embedded = false,
+  defaultPath = ''
+) {
   // append plugin reducers
   const pluginStores = getApps('store') || {}
 
