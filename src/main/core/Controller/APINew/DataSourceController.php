@@ -3,7 +3,6 @@
 namespace Claroline\CoreBundle\Controller\APINew;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Manager\DataSourceManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,58 +16,32 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DataSourceController
 {
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
-    /** @var DataSourceManager */
-    private $manager;
-
-    /**
-     * DataSourceController constructor.
-     */
     public function __construct(
-        StrictDispatcher $eventDispatcher,
-        SerializerProvider $serializer,
-        DataSourceManager $manager)
-    {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->serializer = $serializer;
-        $this->manager = $manager;
+        private readonly SerializerProvider $serializer,
+        private readonly DataSourceManager $manager
+    ) {
     }
 
     /**
      * Lists available data sources for a given context.
      *
      * @Route("/{context}", name="apiv2_data_source_list", defaults={"context"=null}, methods={"GET"})
-     *
-     * @param string $context
-     *
-     * @return JsonResponse
      */
-    public function listAction($context = null)
+    public function listAction(string $context = null): JsonResponse
     {
-        $widgets = $this->manager->getAvailable($context);
+        $dataSources = $this->manager->getAvailable($context);
 
         return new JsonResponse(array_map(function (DataSource $dataSource) {
             return $this->serializer->serialize($dataSource);
-        }, $widgets));
+        }, $dataSources));
     }
 
     /**
      * Gets data from a data source.
      *
      * @Route("/{type}/{context}/{contextId}", name="apiv2_data_source", defaults={"contextId"=null}, methods={"GET"})
-     *
-     * @param string $type
-     * @param string $context
-     * @param string $contextId
-     *
-     * @return JsonResponse
      */
-    public function loadAction(Request $request, $type, $context, $contextId = null)
+    public function loadAction(Request $request, string $type, string $context, string $contextId = null): JsonResponse
     {
         if (!$this->manager->check($type, $context)) {
             return new JsonResponse('Unknown data source.', 404);

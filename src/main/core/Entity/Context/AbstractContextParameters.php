@@ -9,6 +9,10 @@ abstract class AbstractContextParameters
     private bool $breadcrumbs = true;
     private ?string $menu;
 
+    // contact email
+    // help url
+    // poster
     // shortcuts
     // footer
+    // terms and service ?
 }

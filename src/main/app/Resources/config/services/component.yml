@@ -11,3 +11,10 @@ services:
             - method: setToolManager
               arguments:
                   - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+
+    # Tools
+    Claroline\AppBundle\Component\Tool\ToolProvider:
+        arguments:
+            - !tagged_iterator claroline.component.tool
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Manager\SecurityManager'

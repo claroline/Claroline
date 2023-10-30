@@ -26,23 +26,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class WidgetController
 {
-    /** @var SerializerProvider */
-    private $serializer;
-
-    /** @var WidgetManager */
-    private $widgetManager;
-
-    /** @var DataSourceManager */
-    private $dataSourceManager;
-
     public function __construct(
-        SerializerProvider $serializer,
-        WidgetManager $widgetManager,
-        DataSourceManager $dataSourceManager
+        private readonly SerializerProvider $serializer,
+        private readonly WidgetManager $widgetManager,
+        private readonly DataSourceManager $dataSourceManager
     ) {
-        $this->serializer = $serializer;
-        $this->widgetManager = $widgetManager;
-        $this->dataSourceManager = $dataSourceManager;
     }
 
     /**

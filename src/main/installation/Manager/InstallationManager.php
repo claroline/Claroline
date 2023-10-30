@@ -31,37 +31,21 @@ class InstallationManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 
-    /** @var ContainerInterface */
-    private $container;
-    /** @var string */
-    private $environment;
-    /** @var Manager */
-    private $migrationManager;
-    /** @var FixtureLoader */
-    private $fixtureLoader;
-    /** @var Recorder */
-    private $recorder;
-
     /**
-     * @var bool whether additional installers should re-execute updaters that have been previously executed
+     * Whether additional installers should re-execute updaters that have been previously executed.
      */
-    private $shouldReplayUpdaters = false;
+    private bool $shouldReplayUpdaters = false;
 
     public function __construct(
-        ContainerInterface $container,
-        Manager $migrationManager,
-        FixtureLoader $fixtureLoader,
-        Recorder $recorder,
-        string $environment
+        private readonly ContainerInterface $container,
+        private readonly Manager $migrationManager,
+        private readonly FixtureLoader $fixtureLoader,
+        private readonly Recorder $recorder,
+        private readonly string $environment
     ) {
-        $this->container = $container;
-        $this->migrationManager = $migrationManager;
-        $this->fixtureLoader = $fixtureLoader;
-        $this->recorder = $recorder;
-        $this->environment = $environment;
     }
 
-    public function install(InstallableInterface $bundle)
+    public function install(InstallableInterface $bundle): void
     {
         $this->log(sprintf('<comment>Installing %s %s... </comment>', $bundle->getName(), $bundle->getVersion()));
 
@@ -105,7 +89,7 @@ class InstallationManager implements LoggerAwareInterface
         }
     }
 
-    public function update(InstallableInterface $bundle, $currentVersion, $targetVersion)
+    public function update(InstallableInterface $bundle, $currentVersion, $targetVersion): void
     {
         $this->log(sprintf('<comment>Updating %s from %s to %s...</comment>', $bundle->getName(), $currentVersion, $targetVersion));
 
@@ -150,10 +134,10 @@ class InstallationManager implements LoggerAwareInterface
         }
     }
 
-    //This function is fired at the end of a plugin installation/update.
-    //This is the stuff we do no matter what, at the very end.
-    //It allows us to override some stuff and it's just easier that way.
-    public function end(InstallableInterface $bundle, $currentVersion = null, $targetVersion = null)
+    // This function is fired at the end of a plugin installation/update.
+    // This is the stuff we do no matter what, at the very end.
+    // It allows us to override some stuff, and it's just easier that way.
+    public function end(InstallableInterface $bundle, $currentVersion = null, $targetVersion = null): void
     {
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
@@ -162,7 +146,7 @@ class InstallationManager implements LoggerAwareInterface
         }
     }
 
-    public function uninstall(InstallableInterface $bundle)
+    public function uninstall(InstallableInterface $bundle): void
     {
         $this->log(sprintf('<comment>Uninstalling %s...</comment>', $bundle->getName()));
 
@@ -205,16 +189,5 @@ class InstallationManager implements LoggerAwareInterface
         }
 
         return null;
-    }
-
-    public function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true)
-    {
-        $this->log(sprintf('<fg=blue>Checking installation status for plugin %s</fg=blue>', $plugin->getName()));
-
-        if ($this->recorder->isRegistered($plugin) !== $shouldBeInstalled) {
-            $state = $shouldBeInstalled ? 'not' : 'already';
-
-            throw new \LogicException("Plugin '{$plugin->getName()}' is {$state} installed.");
-        }
     }
 }

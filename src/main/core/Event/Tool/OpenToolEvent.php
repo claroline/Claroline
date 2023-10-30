@@ -37,17 +37,36 @@ class OpenToolEvent extends AbstractToolEvent
     }
 
     /**
+     * Sets response data to return in the api.
+     * NB. It MUST contain serialized structures.
+     */
+    public function addResponse(array $responseData): void
+    {
+        $this->data = array_merge($responseData, $this->data);
+    }
+
+    public function getResponse(): array
+    {
+        return $this->data;
+    }
+
+    /**
      * Sets data to return in the api.
      * NB. It MUST contain serialized structures.
+     *
+     * @deprecated use addResponse(array $responseData).
      */
     public function setData(array $data): void
     {
-        $this->data = array_merge($data, $this->data);
+        $this->addResponse($data);
     }
 
+    /**
+     * @deprecated use getResponse().
+     */
     public function getData(): array
     {
-        return $this->data;
+        return $this->getResponse();
     }
 
     /**

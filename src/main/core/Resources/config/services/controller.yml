@@ -130,7 +130,6 @@ services:
 
     Claroline\CoreBundle\Controller\APINew\DataSourceController:
         arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\DataSourceManager'
 

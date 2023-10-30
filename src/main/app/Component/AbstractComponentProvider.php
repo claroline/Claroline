@@ -2,7 +2,7 @@
 
 namespace Claroline\AppBundle\Component;
 
-abstract class AbstractComponentProvider
+abstract class AbstractComponentProvider implements ComponentProviderInterface
 {
     public function getComponent(string $componentName): ComponentInterface
     {

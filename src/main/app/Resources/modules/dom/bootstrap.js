@@ -42,14 +42,16 @@ function getInitialData(container) {
  * @param {*}        rootComponent     - the React root component of the app.
  * @param {object}   reducers          - an object containing the reducers of the app.
  * @param {function} transformData     - a function to transform data before adding them to the store.
- * @param {string}   defaultPath   - the path to match when mounting the router.
+ * @param {string}   defaultPath       - the path to match when mounting the router.
+ * @param {array}    customMiddlewares - a list of custom middlewares to append to the store (will be added to the default ones)
  */
 function bootstrap(
   containerSelector,
   rootComponent,
   reducers = null,
   transformData = (data) => data,
-  defaultPath = ''
+  defaultPath = '',
+  customMiddlewares = []
 ) {
   // retrieve app container
   const container = getContainer(containerSelector)
@@ -58,7 +60,7 @@ function bootstrap(
   const initialData = getInitialData(container)
 
   // mount the application
-  mount(container, rootComponent, reducers, transformData(initialData), false, defaultPath)
+  mount(container, rootComponent, reducers, transformData(initialData), false, defaultPath, customMiddlewares)
 }
 
 export {

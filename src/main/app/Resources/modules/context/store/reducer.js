@@ -6,7 +6,8 @@ import {
   CONTEXT_LOAD,
   CONTEXT_NOT_FOUND,
   CONTEXT_RESTRICTIONS_DISMISS,
-  CONTEXT_SHORTCUTS_LOAD
+  CONTEXT_SHORTCUTS_LOAD,
+  CONTEXT_SET_LOADED
 } from '#/main/app/context/store/actions'
 
 const reducer = combineReducers({
@@ -35,7 +36,8 @@ const reducer = combineReducers({
     [SECURITY_USER_CHANGE]: () => false,
     [CONTEXT_OPEN]: () => false,
     [CONTEXT_LOAD]: () => true,
-    [CONTEXT_NOT_FOUND]: () => true
+    [CONTEXT_NOT_FOUND]: () => true,
+    [CONTEXT_SET_LOADED]: (state, action) => action.loaded
   }),
   notFound: makeReducer(false, {
     [CONTEXT_OPEN]: () => false,

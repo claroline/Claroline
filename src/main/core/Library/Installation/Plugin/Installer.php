@@ -125,7 +125,7 @@ class Installer implements LoggerAwareInterface
         $this->baseInstaller->end($plugin, $currentVersion, $targetVersion);
     }
 
-    private function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true)
+    private function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true): void
     {
         $this->log(sprintf('<fg=blue>Checking installation status for plugin %s</fg=blue>', $plugin->getName()));
 

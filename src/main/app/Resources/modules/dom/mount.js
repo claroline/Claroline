@@ -21,12 +21,13 @@ import {getApps} from '#/main/app/plugins'
 /**
  * Mounts a new React/Redux app into the DOM.
  *
- * @param {HTMLElement} container     - the HTML element which will hold the JS app.
- * @param {*}           rootComponent - the React root component of the app.
- * @param {object}      reducers      - an object containing the reducers of the app.
- * @param {object}      initialData   - the data to preload in store on app mount.
- * @param {boolean}     embedded      - is the mounted app is mounted into another ?
- * @param {string}      defaultPath   - the path to match when mounting the router.
+ * @param {HTMLElement} container         - the HTML element which will hold the JS app.
+ * @param {*}           rootComponent     - the React root component of the app.
+ * @param {object}      reducers          - an object containing the reducers of the app.
+ * @param {object}      initialData       - the data to preload in store on app mount.
+ * @param {boolean}     embedded          - is the mounted app is mounted into another ?
+ * @param {string}      defaultPath       - the path to match when mounting the router.
+ * @param {array}       customMiddlewares - a list of custom middlewares to append to the store (will be added to the default ones)
  */
 function mount(
   container,
@@ -34,7 +35,8 @@ function mount(
   reducers = {},
   initialData = {},
   embedded = false,
-  defaultPath = ''
+  defaultPath = '',
+  customMiddlewares
 ) {
   // append plugin reducers
   const pluginStores = getApps('store') || {}
@@ -49,9 +51,9 @@ function mount(
 
     // create store
     // we initialize a new store even if the mounted app does not declare reducers
-    // we have dynamic reducers which can be added during runtime and they will be fucked up
+    // we have dynamic reducers which can be added during runtime, and they will be fucked up
     // if they don't find a store to use.
-    const store = createStore(rootComponent.displayName, reducers, initialData)
+    const store = createStore(rootComponent.displayName, reducers, initialData, customMiddlewares)
 
     const appRoot = createElement(
       Main, {
