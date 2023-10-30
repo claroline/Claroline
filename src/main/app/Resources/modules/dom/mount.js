@@ -36,7 +36,7 @@ function mount(
   initialData = {},
   embedded = false,
   defaultPath = '',
-  customMiddlewares
+  customMiddlewares= []
 ) {
   // append plugin reducers
   const pluginStores = getApps('store') || {}

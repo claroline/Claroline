@@ -67,7 +67,7 @@ function createStore(name, reducers, initialState = {}, customMiddlewares = []) 
     createReducer(reducers),
     initialState,
     composeEnhancers(
-      applyMiddleware(...merge([], middleware, customMiddlewares))
+      applyMiddleware(...[].concat(customMiddlewares, middleware))
     )
   )
 

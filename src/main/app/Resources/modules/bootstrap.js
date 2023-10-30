@@ -23,5 +23,6 @@ bootstrap(
       administration: initialData.administration,
       client: initialData.client
     }
-  })
+  }),
+  ''
 )
