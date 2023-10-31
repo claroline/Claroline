@@ -106,7 +106,7 @@ class Recorder
         }
     }
 
-    public function setLogger(LoggerInterface $logger = null)
+    public function setLogger(LoggerInterface $logger = null): void
     {
         $this->dbWriter->setLogger($logger);
     }

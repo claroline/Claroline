@@ -4,6 +4,10 @@ namespace Claroline\AppBundle\Component\Context;
 
 use Claroline\AppBundle\Component\AbstractComponentProvider;
 
+// $wsContext = $this->contextManager->getContext(WorkspaceContext::class, $contextId);
+// $desktopContext = $this->contextManager->getContext(DesktopContext::class);
+// $this->>toolManager->getTool(ResourcesTool::class, $wsContext);
+
 /**
  * Aggregates all the contexts defined in the Claroline app.
  *

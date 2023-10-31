@@ -88,7 +88,7 @@ class AttemptController
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function submitAnswersAction(Paper $paper, ?User $user = null, Request $request): JsonResponse
+    public function submitAnswersAction(Paper $paper, Request $request, ?User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $paper->getExercise());
         $this->assertHasPaperAccess($paper, $user);
