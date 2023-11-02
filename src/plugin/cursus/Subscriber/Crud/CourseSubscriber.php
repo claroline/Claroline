@@ -58,7 +58,7 @@ class CourseSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
@@ -90,7 +90,7 @@ class CourseSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var Course $course */
         $course = $event->getObject();
@@ -106,7 +106,7 @@ class CourseSubscriber implements EventSubscriberInterface
         $this->eventDispatcher->dispatch(new LogCourseCreateEvent($course), 'log');
     }
 
-    public function preUpdate(UpdateEvent $event)
+    public function preUpdate(UpdateEvent $event): void
     {
         /** @var Course $course */
         $course = $event->getObject();
@@ -114,7 +114,7 @@ class CourseSubscriber implements EventSubscriberInterface
         $course->setUpdatedAt(new \DateTime());
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var Course $course */
         $course = $event->getObject();
@@ -137,7 +137,7 @@ class CourseSubscriber implements EventSubscriberInterface
         $this->eventDispatcher->dispatch(new LogCourseEditEvent($course), 'log');
     }
 
-    public function preDelete(DeleteEvent $event)
+    public function preDelete(DeleteEvent $event): void
     {
         $this->eventDispatcher->dispatch(new LogCourseDeleteEvent($event->getObject()), 'log');
     }

@@ -16,47 +16,31 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\File\PublicFileUse;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
 
-class FileManager
+class FileManager implements LoggerAwareInterface
 {
-    const MAX_FILES = 1000;
+    use LoggerAwareTrait;
 
-    /** @var string */
-    private $fileDir;
-    /** @var string */
-    private $publicFileDir;
-
-    /** @var Filesystem */
-    private $filesystem;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
+    public const MAX_FILES = 1000;
 
     public function __construct(
-        string $fileDir,
-        string $publicFileDir,
-        Filesystem $filesystem,
-        PlatformConfigurationHandler $config,
-        ObjectManager $om,
-        Crud $crud
+        private readonly string $fileDir,
+        private readonly string $publicFileDir,
+        private readonly Filesystem $filesystem,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly ObjectManager $om,
+        private readonly Crud $crud
     ) {
-        $this->fileDir = $fileDir;
-        $this->publicFileDir = $publicFileDir;
-        $this->filesystem = $filesystem;
-        $this->config = $config;
-        $this->om = $om;
-        $this->crud = $crud;
     }
 
     /**
-     * Get the path to the files directory.
+     * Get the path to the file directory.
      */
     public function getDirectory(): string
     {
@@ -64,7 +48,7 @@ class FileManager
     }
 
     /**
-     * Get the path to the public files directory.
+     * Get the path to the public file directory.
      */
     public function getPublicDirectory(): string
     {
@@ -114,9 +98,8 @@ class FileManager
         if ($content) {
             // remove BOM if any
             $bom = pack('H*', 'EFBBBF');
-            $content = preg_replace("/^$bom/", '', $content);
 
-            return $content;
+            return preg_replace("/^$bom/", '', $content);
         }
 
         return null;
@@ -210,13 +193,23 @@ class FileManager
         return $publicFile;
     }
 
-    public function updateFile(string $linkedClass, string $linkedId, ?string $fileUrl = null, ?string $oldFileUrl = null)
+    public function updateFile(string $linkedClass, string $linkedId, string $fileUrl = null, string $oldFileUrl = null): void
     {
         if (empty($fileUrl) && empty($oldFileUrl)) {
             return;
         }
 
+        $this->logger->debug('Public File : update the link for {linkedClass}[{linkedId}].', [
+            'linkedClass' => $linkedClass,
+            'linkedId' => $linkedId,
+        ]);
+
         if ($fileUrl === $oldFileUrl) {
+            $this->logger->debug('Public File : nothing to do for {linkedClass}[{linkedId}].', [
+                'linkedClass' => $linkedClass,
+                'linkedId' => $linkedId,
+            ]);
+
             return;
         }
 
@@ -229,20 +222,46 @@ class FileManager
         }
     }
 
-    public function linkFile(string $linkedClass, string $linkedId, string $fileUrl)
-    {
-        $file = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $fileUrl]);
-        if ($file) {
-            $this->createFileUse($file, $linkedClass, $linkedId);
-        }
-    }
-
-    public function unlinkFile(string $linkedClass, string $linkedId, string $fileUrl)
+    public function linkFile(string $linkedClass, string $linkedId, string $fileUrl): void
     {
         $file = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $fileUrl]);
         if (!$file) {
+            $this->logger->error('Public File : PublicFile {fileUrl} does not exist. Cannot create a link for {linkedClass}[{linkedId}].', [
+                'fileUrl' => $fileUrl,
+                'linkedClass' => $linkedClass,
+                'linkedId' => $linkedId,
+            ]);
+
             return;
         }
+
+        $this->logger->debug('Public File : create a link to the file {fileUrl} for {linkedClass}[{linkedId}].', [
+            'fileUrl' => $fileUrl,
+            'linkedClass' => $linkedClass,
+            'linkedId' => $linkedId,
+        ]);
+
+        $this->createFileUse($file, $linkedClass, $linkedId);
+    }
+
+    public function unlinkFile(string $linkedClass, string $linkedId, string $fileUrl): void
+    {
+        $file = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $fileUrl]);
+        if (!$file) {
+            $this->logger->info('Public File : PublicFile {fileUrl} does not exist. Cannot remove link for {linkedClass}[{linkedId}].', [
+                'fileUrl' => $fileUrl,
+                'linkedClass' => $linkedClass,
+                'linkedId' => $linkedId,
+            ]);
+
+            return;
+        }
+
+        $this->logger->debug('Public File : remove the link to the file {fileUrl} for {linkedClass}[{linkedId}].', [
+            'fileUrl' => $fileUrl,
+            'linkedClass' => $linkedClass,
+            'linkedId' => $linkedId,
+        ]);
 
         $count = $this->om->getRepository(PublicFileUse::class)->count([
             'publicFile' => $file,
@@ -261,12 +280,19 @@ class FileManager
 
         if (0 === $count || (1 === $count && $publicFileUse)) {
             // the current object is the only user of the file, we can remove it now
+            $this->logger->error('Public File : PublicFile {fileUrl} is no longer used. It will be removed.', [
+                'fileUrl' => $fileUrl,
+            ]);
+
             $this->crud->delete($file);
         }
 
         $this->om->endFlushSuite();
     }
 
+    /**
+     * Checks if a file exists in the filesystem.
+     */
     public function exists(string $filePath, bool $isAbsolutePath = false): bool
     {
         return $this->filesystem->exists(
@@ -274,7 +300,7 @@ class FileManager
         );
     }
 
-    public function remove(string $filePath, bool $isAbsolutePath = false)
+    public function remove(string $filePath, bool $isAbsolutePath = false): void
     {
         $path = !$isAbsolutePath ? $this->getDirectory().DIRECTORY_SEPARATOR.$filePath : $filePath;
         if ($this->filesystem->exists($path)) {
@@ -282,7 +308,7 @@ class FileManager
         }
     }
 
-    public function getActiveDirectoryName()
+    public function getActiveDirectoryName(): string
     {
         $finder = new Finder();
         $finder->depth('== 0');
@@ -318,7 +344,7 @@ class FileManager
         return $activeDirectoryName;
     }
 
-    private function generateNextDirectoryName($name = null)
+    private function generateNextDirectoryName(string $name = null): string
     {
         if (is_null($name)) {
             $next = 'aaaaaaaaaaaaaaaaaaaa';
@@ -336,11 +362,14 @@ class FileManager
         return $next;
     }
 
-    private function createFileUse(PublicFile $publicFile, $class, $uuid, $name = null)
+    private function createFileUse(PublicFile $publicFile, string $class, string $uuid, string $name = null): PublicFileUse
     {
         $cleanClass = str_replace('Proxies\\__CG__\\', '', $class);
-        $repo = $this->om->getRepository(PublicFileUse::class);
-        $publicFileUse = $repo->findOneBy(['publicFile' => $publicFile, 'objectClass' => $class, 'id' => $uuid]);
+        $publicFileUse = $this->om->getRepository(PublicFileUse::class)->findOneBy([
+            'publicFile' => $publicFile,
+            'objectClass' => $class,
+            'id' => $uuid,
+        ]);
 
         if (!$publicFileUse) {
             $publicFileUse = new PublicFileUse();
@@ -348,6 +377,7 @@ class FileManager
             $publicFileUse->setObjectClass($cleanClass);
             $publicFileUse->setObjectUuid($uuid);
             $publicFileUse->setObjectName($name);
+
             $this->om->persist($publicFileUse);
             $this->om->flush();
         }
