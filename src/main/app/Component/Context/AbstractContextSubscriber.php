@@ -13,8 +13,8 @@ abstract class AbstractContextSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ContextEvents::OPEN => 'onOpen',
-            ContextEvents::CLOSE => 'onClose',
+            ContextEvents::OPEN => 'open',
+            ContextEvents::CLOSE => 'close',
         ];
     }
 

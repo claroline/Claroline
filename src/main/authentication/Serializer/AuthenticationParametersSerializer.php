@@ -29,8 +29,6 @@ class AuthenticationParametersSerializer
                 'changePassword' => $authenticationParameters->getChangePassword(),
                 'internalAccount' => $authenticationParameters->getInternalAccount(),
                 'showClientIp' => $authenticationParameters->getShowClientIp(),
-                'redirectAfterLoginOption' => $authenticationParameters->getRedirectAfterLoginOption(),
-                'redirectAfterLoginUrl' => $authenticationParameters->getRedirectAfterLoginUrl(),
             ],
         ];
     }
@@ -47,8 +45,6 @@ class AuthenticationParametersSerializer
         $this->sipe('login.changePassword', 'setChangePassword', $data, $authenticationParameters);
         $this->sipe('login.internalAccount', 'setInternalAccount', $data, $authenticationParameters);
         $this->sipe('login.showClientIp', 'setShowClientIp', $data, $authenticationParameters);
-        $this->sipe('login.redirectAfterLoginOption', 'setRedirectAfterLoginOption', $data, $authenticationParameters);
-        $this->sipe('login.redirectAfterLoginUrl', 'setRedirectAfterLoginUrl', $data, $authenticationParameters);
 
         return $authenticationParameters;
     }

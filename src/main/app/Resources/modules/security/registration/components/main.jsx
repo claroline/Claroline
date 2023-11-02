@@ -69,6 +69,7 @@ class RegistrationMain extends Component {
 
     return (
       <FormStepper
+        className={this.props.className}
         submit={{
           type: CALLBACK_BUTTON,
           label: trans('create-account', {}, 'actions'),
@@ -102,6 +103,7 @@ class RegistrationMain extends Component {
 
 RegistrationMain.propTypes = {
   path: T.string,
+  className: T.string,
   history: T.shape({
     push: T.func.isRequired
   }).isRequired,

@@ -44,34 +44,6 @@ const AuthenticationTool = (props) => {
               name: 'login.showClientIp',
               type: 'boolean',
               label: trans('display_client_ip', {}, 'security')
-            }, {
-              name: 'login.redirectAfterLoginOption',
-              type: 'choice',
-              label: trans('redirect_after_login_option'),
-              options: {
-                multiple: false,
-                condensed: false,
-                choices: {
-                  'LAST': trans('last_page', {}, 'platform'),
-                  'DESKTOP': trans('desktop', {}, 'platform'),
-                  'URL': trans('url', {}, 'platform'),
-                  'WORKSPACE_TAG': trans('workspace_tag', {}, 'platform')
-                }
-              }, linked: [
-                {
-                  name: 'login.redirectAfterLoginUrl',
-                  type: 'string',
-                  label: trans('url'),
-                  displayed: (data) => 'URL' === get(data, 'login.redirectAfterLoginOption'),
-                  required: true
-                }, {
-                  name: 'workspace.default_tag',
-                  label: trans('tag', {}, 'tag'),
-                  type: 'string',
-                  displayed: (data) => 'WORKSPACE_TAG' === get(data, 'login.redirectAfterLoginOption'),
-                  required: true
-                }
-              ]
             }
           ]
         }, {

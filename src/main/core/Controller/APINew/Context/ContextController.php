@@ -103,8 +103,7 @@ class ContextController
     {
         // retrieve the requested context
         try {
-            /** @var ContextInterface $contextHandler */
-            $contextHandler = $this->contextProvider->getComponent($context);
+            $this->contextProvider->getComponent($context);
         } catch (\Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }

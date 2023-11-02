@@ -42,12 +42,12 @@ and in `MY_PLUGIN/Resources/modules/administration`.
 Each tool MUST have its own directory.
 
 The entrypoint of the tool app exposes the components and the redux store of the tool.
-It's located in an `translation.js` file at the root of your tool module directory.
+It's located in an `index.js` file at the root of your tool module directory.
 
 ### Minimal configuration
 
 ```js
-// MY_PLUGIN/Resources/modules/tools/my-tool/translation.js
+// MY_PLUGIN/Resources/modules/tools/my-tool/index.js
 
 import {MyToolTool} from '#/plugin/my-plugin/tools/my-tool/components/tool'
 
@@ -59,7 +59,7 @@ export default {
 ### Full configuration
 
 ```js
-// MY_PLUGIN/Resources/modules/tools/my-tool/translation.js
+// MY_PLUGIN/Resources/modules/tools/my-tool/index.js
 
 import {MyToolTool} from '#/plugin/my-plugin/tools/my-tool/containers/tool'
 import {MyToolMenu} from '#/plugin/my-plugin/tools/my-tool/components/menu'

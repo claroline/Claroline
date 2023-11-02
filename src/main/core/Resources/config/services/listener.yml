@@ -167,16 +167,13 @@ services:
 
     Claroline\CoreBundle\Listener\AuthenticationSuccessListener:
         arguments:
-            - '@security.token_storage'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
-            - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
 
     Claroline\CoreBundle\Listener\Entity\UserListener:
         arguments:

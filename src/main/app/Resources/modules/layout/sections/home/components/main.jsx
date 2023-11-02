@@ -21,7 +21,7 @@ class HomeMain extends Component {
     return (
       <Routes
         redirect={[
-          {from: '/', exact: true, to: '/unavailable', disabled: !this.props.unavailable},
+          //{from: '/', exact: true, to: '/unavailable', disabled: !this.props.unavailable},
           {from: '/home', to: '/unavailable', disabled: !this.props.unavailable},
           {from: '/unavailable', to: '/', disabled: this.props.unavailable},
 
@@ -33,7 +33,7 @@ class HomeMain extends Component {
           {from: '/registration', to: '/', disabled: !this.props.unavailable || this.props.selfRegistration || !this.props.authenticated}
         ]}
         routes={[
-          {
+          /*{
             path: '/unavailable',
             disabled: !this.props.unavailable,
             render: () => (
@@ -46,7 +46,7 @@ class HomeMain extends Component {
                 reactivate={this.props.reactivate}
               />
             )
-          }, {
+          }, */{
             path: '/reset_password',
             disabled: this.props.authenticated || !this.props.changePassword,
             component: SendPassword

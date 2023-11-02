@@ -31,13 +31,6 @@ class Updater140000 extends Updater
         $authenticationParameters->setChangePassword($this->config->getParameter('authentication.changePassword'));
         $authenticationParameters->setInternalAccount($this->config->getParameter('authentication.internalAccount'));
         $authenticationParameters->setShowClientIp($this->config->getParameter('authentication.showClientIp'));
-        $redirectOption = $this->config->getParameter('authentication.redirect_after_login_option');
-        if (null !== $redirectOption) {
-            $authenticationParameters->setRedirectAfterLoginOption(AuthenticationParameters::REDIRECT_OPTIONS[$redirectOption]);
-        } else {
-            $authenticationParameters->setRedirectAfterLoginOption(AuthenticationParameters::DEFAULT_REDIRECT_OPTION);
-        }
-        $authenticationParameters->setRedirectAfterLoginUrl($this->config->getParameter('authentication.redirect_after_login_url'));
 
         $this->authenticationManager->updateParameters($authenticationParameters);
     }

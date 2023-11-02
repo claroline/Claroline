@@ -13,14 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 class AuthenticationParameters
 {
     use Id;
-    public const DEFAULT_REDIRECT_OPTION = 'LAST';
-
-    public const REDIRECT_OPTIONS = [
-        'DESKTOP' => 'DESKTOP',
-        'LAST' => 'LAST',
-        'URL' => 'URL',
-        'WORKSPACE_TAG' => 'WORKSPACE_TAG',
-    ];
 
     /**
      * @ORM\Column(type="integer")
@@ -66,16 +58,6 @@ class AuthenticationParameters
      * @ORM\Column(type="boolean")
      */
     private bool $showClientIp = false;
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    private string $redirectAfterLoginOption = self::DEFAULT_REDIRECT_OPTION;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private ?string $redirectAfterLoginUrl = null;
 
     public function getMinLength(): int
     {
@@ -165,25 +147,5 @@ class AuthenticationParameters
     public function setShowClientIp(bool $showClientIp): void
     {
         $this->showClientIp = $showClientIp;
-    }
-
-    public function getRedirectAfterLoginOption(): string
-    {
-        return $this->redirectAfterLoginOption;
-    }
-
-    public function setRedirectAfterLoginOption(string $redirectAfterLoginOption): void
-    {
-        $this->redirectAfterLoginOption = $redirectAfterLoginOption;
-    }
-
-    public function getRedirectAfterLoginUrl(): ?string
-    {
-        return $this->redirectAfterLoginUrl;
-    }
-
-    public function setRedirectAfterLoginUrl(?string $redirectAfterLoginUrl): void
-    {
-        $this->redirectAfterLoginUrl = $redirectAfterLoginUrl;
     }
 }

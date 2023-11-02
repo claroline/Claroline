@@ -15,71 +15,32 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\PlatformManager;
-use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
-use Claroline\AuthenticationBundle\Manager\AuthenticationManager;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\Security\UserLoginEvent;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\ConnectionMessageManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
 class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var RoutingHelper */
-    private $routingHelper;
-    /** @var PlatformManager */
-    private $platformManager;
-    /** @var UserManager */
-    private $userManager;
-    /** @var ToolManager */
-    private $toolManager;
-    /** @var ConnectionMessageManager */
-    private $messageManager;
-    /** @var AuthenticationManager */
-    private $authenticationManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        PlatformConfigurationHandler $config,
-        StrictDispatcher $eventDispatcher,
-        SerializerProvider $serializer,
-        RoutingHelper $routingHelper,
-        PlatformManager $platformManager,
-        UserManager $userManager,
-        ToolManager $toolManager,
-        ConnectionMessageManager $messageManager,
-        AuthenticationManager $authenticationManager
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly SerializerProvider $serializer,
+        private readonly RoutingHelper $routingHelper,
+        private readonly PlatformManager $platformManager,
+        private readonly UserManager $userManager,
+        private readonly ToolManager $toolManager,
+        private readonly ConnectionMessageManager $messageManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->config = $config;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->serializer = $serializer;
-        $this->routingHelper = $routingHelper;
-        $this->platformManager = $platformManager;
-        $this->userManager = $userManager;
-        $this->toolManager = $toolManager;
-        $this->messageManager = $messageManager;
-        $this->authenticationManager = $authenticationManager;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
@@ -93,98 +54,34 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $request->setLocale($user->getLocale());
         }
 
-        $this->eventDispatcher->dispatch(SecurityEvents::USER_LOGIN, UserLoginEvent::class, [$user]);
-
-        $redirect = $this->getRedirection($request);
+        $this->eventDispatcher->dispatch(new UserLoginEvent($user), SecurityEvents::USER_LOGIN);
 
         if ($request->isXmlHttpRequest()) {
             return new JsonResponse([
-                'user' => $this->serializer->serialize($user),
-                'administration' => !empty($this->toolManager->getAdminToolsByRoles($token->getRoleNames())),
-                'redirect' => $redirect,
+                'user' => $this->serializer->serialize($user, [Options::SERIALIZE_FACET]), // TODO : we should only get the minimal representation of user here,
                 'messages' => $this->messageManager->getConnectionMessagesByUser($user),
+
+                'administration' => !empty($this->toolManager->getAdminToolsByRoles($token->getRoleNames())),
             ]);
         }
 
-        switch ($redirect['type']) {
-            case 'url':
-                $redirectUrl = $redirect['data'];
-                break;
-            case 'workspace':
-                $redirectUrl = $this->routingHelper->workspacePath($redirect['data']);
-                break;
-            case 'last':
-                // use the fragment sent by the ui to redirect user
-                $redirectPath = $request->getSession()->get('redirectPath');
-                if (!empty($redirectPath)) {
-                    $redirectUrl = $this->routingHelper->indexUrl().$redirectPath;
-                } else {
-                    $redirectUrl = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
-                }
-                break;
-            case 'desktop':
-            default:
-                $redirectUrl = $this->routingHelper->desktopPath();
-                break;
-        }
-
-        return new RedirectResponse($redirectUrl);
+        return new RedirectResponse($this->getRedirectUrl($request));
     }
 
-    private function getRedirection(Request $request)
+    private function getRedirectUrl(Request $request): string
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        $parameters = $this->authenticationManager->getParameters();
-
-        $redirect = $parameters->getRedirectAfterLoginOption();
-
-        $referer = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
+        // SSO has stored where to redirect in session or the ui has sent us a path to redirect to
         $redirectPath = $request->getSession()->get('redirectPath');
-        if (AuthenticationParameters::REDIRECT_OPTIONS['LAST'] === $redirect
-            && ($redirectPath || ($referer && 0 === strpos($referer, $this->platformManager->getUrl())))) {
-            // only redirect to previous url if it's part of the claroline platform or the ui has sent us a path to redirect to
-            return [
-                'type' => 'last',
-            ];
-        } elseif (
-            AuthenticationParameters::REDIRECT_OPTIONS['WORKSPACE_TAG'] === $redirect
-            && $this->config->getParameter('workspace.default_tag')
-        ) {
-            /** @var GenericDataEvent $event */
-            $event = $this->eventDispatcher->dispatch(
-                'claroline_retrieve_user_workspaces_by_tag',
-                GenericDataEvent::class,
-                [
-                    [
-                        'tag' => $this->config->getParameter('workspace.default_tag'),
-                        'user' => $user,
-                        'ordered_by' => 'id',
-                        'order' => 'ASC',
-                        'type' => Role::WS_ROLE,
-                    ],
-                ]
-            );
-            $workspaces = $event->getResponse();
-
-            if (is_array($workspaces) && count($workspaces) > 0) {
-                return [
-                    'type' => 'workspace',
-                    'data' => $this->serializer->serialize($workspaces[0], [Options::SERIALIZE_MINIMAL]),
-                ];
-            }
-        } elseif (
-            AuthenticationParameters::REDIRECT_OPTIONS['URL'] === $redirect
-            && $parameters->getRedirectAfterLoginUrl()
-        ) {
-            return [
-                'type' => 'url',
-                'data' => $parameters->getRedirectAfterLoginUrl(),
-            ];
+        if ($redirectPath) {
+            return $this->routingHelper->indexUrl().$redirectPath;
         }
 
-        return [
-            'type' => 'desktop',
-        ];
+        // only redirect to previous url if it's part of the claroline platform
+        $referer = filter_var($request->headers->get('referer'), FILTER_SANITIZE_URL);
+        if ($referer && str_starts_with($referer, $this->platformManager->getUrl())) {
+            return $referer;
+        }
+
+        return $this->routingHelper->desktopPath();
     }
 }

@@ -80,27 +80,6 @@ class TagListener
         $event->setResponse($taggedObject);
     }
 
-    public function onRetrieveUserWorkspacesByTag(GenericDataEvent $event)
-    {
-        $workspaces = [];
-        $data = $event->getData();
-
-        if (is_array($data) && isset($data['user']) && isset($data['tag'])) {
-            $user = $data['user'];
-            $tag = $data['tag'];
-            $orderedBy = isset($data['ordered_by']) ? $data['ordered_by'] : 'id';
-            $order = isset($data['order']) ? $data['order'] : 'ASC';
-            $workspaces = $this->manager->getTaggedWorkspacesByRoles(
-                $user,
-                $tag,
-                $orderedBy,
-                $order,
-                isset($data['type']) ? $data['type'] : null
-            );
-        }
-        $event->setResponse($workspaces);
-    }
-
     /**
      * Used by serializers to retrieves tags.
      */

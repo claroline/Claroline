@@ -5,11 +5,14 @@ import {actions as menuActions} from '#/main/app/layout/menu/store'
 
 import {LayoutMain as LayoutMainComponent} from '#/main/app/layout/components/main'
 import {selectors} from '#/main/app/layout/store'
+import {selectors as configSelectors} from '#/main/app/config/store'
 
 const LayoutMain = connect(
   (state) => ({
     unavailable: selectors.unavailable(state),
-    authenticated: securitySelectors.isAuthenticated(state)
+    authenticated: securitySelectors.isAuthenticated(state),
+    selfRegistration: selectors.selfRegistration(state),
+    changePassword: configSelectors.param(state, 'authentication.login.changePassword')
   }),
   (dispatch) => ({
     /**
