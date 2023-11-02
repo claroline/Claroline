@@ -1,16 +1,17 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
+import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
 import {asset} from '#/main/app/config/asset'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {actions} from '#/main/app/api/store'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Alert} from '#/main/app/alert/components/alert'
-import classes from 'classnames'
+
+import {actions} from '#/main/app/api/store'
+import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
 class ImageInputComponent extends PureComponent {
   constructor(props) {
@@ -80,12 +81,8 @@ class ImageInputComponent extends PureComponent {
   }
 
   onDelete() {
-    if (this.state.file) {
-      this.props.deleteFile(this.state.file.id, this.props.onChange)
-    } else {
-      // this permits to empty missing file
-      this.props.onChange(null)
-    }
+    // the file will be automatically deleted by the API if no longer used.
+    this.props.onChange(null)
   }
 
   render() {
@@ -174,9 +171,6 @@ const ImageInput = connect(
         (response) => onSuccess(Array.isArray(response) ? response[0].url : response.url),
         () => onError(trans('invalid_image', {}, 'validators'))
       )
-    },
-    deleteFile(file, callback) {
-      dispatch(actions.deleteFile(file, callback))
     }
   })
 )(ImageInputComponent)
