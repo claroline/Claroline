@@ -2,7 +2,7 @@
   "name": "claroline-app",
   "version": "1.0.0",
   "description": "Claroline distribution frontend dependencies",
-  "license": "GPL-3.0",
+  "license": "AGPL-3.0",
   "repository": "https://github.com/claroline/Claroline",
   "engines": {
     "node": ">=18",
