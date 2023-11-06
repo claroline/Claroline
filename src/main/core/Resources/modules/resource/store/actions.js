@@ -94,7 +94,7 @@ actions.triggerLifecycleAction = (action) => (dispatch, getState) => {
 }
 
 actions.updateUserEvaluation = (userEvaluation) => (dispatch) => {
-  dispatch(workspaceActions.fetchEvaluation())
+  dispatch(workspaceActions.fetchCurrentEvaluation())
 
   return dispatch({
     type: RESOURCE_EVALUATION_UPDATE,

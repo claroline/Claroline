@@ -14,7 +14,7 @@ actions.updateEvaluation = makeActionCreator(WORKSPACE_EVALUATION_UPDATE, 'userE
 
 actions.reload = () => contextActions.setLoaded(false)
 
-actions.fetchEvaluation = () => (dispatch, getState) => {
+actions.fetchCurrentEvaluation = () => (dispatch, getState) => {
   const currentUser = securitySelectors.currentUser(getState())
   if (!currentUser) {
     // we don't have evaluation for anonymous users
