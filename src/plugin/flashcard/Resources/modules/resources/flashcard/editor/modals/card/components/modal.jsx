@@ -15,7 +15,6 @@ import {Card} from '#/plugin/flashcard/resources/flashcard/components/card'
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {selectors} from '#/plugin/flashcard/resources/flashcard/editor/modals/card/store'
 import { generateInputFields } from '#/plugin/flashcard/resources/flashcard/editor/utils'
-import {Slide as SlideTypes} from "#/plugin/slideshow/resources/slideshow/prop-types";
 
 const CardModal = props => {
   const [isFlipped, setIsFlipped] = useState(false)

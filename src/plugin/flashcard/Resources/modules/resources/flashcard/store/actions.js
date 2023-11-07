@@ -1,15 +1,15 @@
-import { API_REQUEST } from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
+import { API_REQUEST } from '#/main/app/api'
 
 import {actions as resourceActions} from '#/main/core/resource/store'
 
-export const FLASHCARD_GET_DECK = 'FLASHCARD_GET_DECK'
+export const ATTEMPT_LOAD = 'ATTEMPT_LOAD'
 export const FLASHCARD_UPDATE_PROGRESSION = 'FLASHCARD_UPDATE_PROGRESSION'
 
 export const actions = {}
 
+actions.getAttemptAction = makeActionCreator(ATTEMPT_LOAD, 'data')
 actions.updateCardProgression = makeActionCreator(FLASHCARD_UPDATE_PROGRESSION, 'id', 'isSuccessful')
-actions.startAttemptAction = makeActionCreator(FLASHCARD_GET_DECK, 'data')
 
 actions.updateProgression = (cardId, isSuccessful) => ({
   [API_REQUEST]: {
@@ -19,20 +19,17 @@ actions.updateProgression = (cardId, isSuccessful) => ({
     },
     success: (data, dispatch) => {
       dispatch(resourceActions.updateUserEvaluation(data.userEvaluation))
-      dispatch(actions.updateCardProgression(cardId, isSuccessful))
+      dispatch(actions.getAttemptAction(data))
     }
   }
 })
 
-actions.startAttempt = (deckId, silent = true) => ({
+actions.getAttempt = (deckId) => ({
   [API_REQUEST]: {
-    silent: silent,
-    url: ['apiv2_flashcard_deck_get', {id: deckId}],
+    url: ['apiv2_flashcard_deck_current_attempt', {id: deckId}],
     request: {
       method: 'GET'
     },
-    success: (data, dispatch) => {
-      dispatch(actions.startAttemptAction(data))
-    }
+    success: (response, dispatch) => dispatch(actions.getAttemptAction(response))
   }
 })

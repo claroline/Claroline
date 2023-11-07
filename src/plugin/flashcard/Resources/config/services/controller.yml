@@ -3,4 +3,7 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@Claroline\FlashcardBundle\Manager\FlashcardManager'
            - '@Claroline\FlashcardBundle\Manager\EvaluationManager'
+           - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'

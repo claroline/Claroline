@@ -43,7 +43,7 @@ class CardDrawnProgression
 
     public function __construct()
     {
-        $this->successCount = 0;
+        $this->successCount = -1;
     }
 
     /**
@@ -96,6 +96,14 @@ class CardDrawnProgression
     public function isSuccessful(): bool
     {
         return $this->successCount > 0;
+    }
+
+    /**
+     * Get successful status.
+     */
+    public function isAnswered(): bool
+    {
+        return $this->successCount > -1;
     }
 
     /**

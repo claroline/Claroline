@@ -41,7 +41,7 @@ const FlashcardResource = props =>
         exact: true,
         component: Player,
         onEnter: () => {
-          props.startAttempt(props.flashcardDeck.id)
+          props.getAttempt(props.flashcardDeck.id)
         }
       }, {
         path: '/',
@@ -63,7 +63,7 @@ FlashcardResource.propTypes = {
   path: T.string.isRequired,
   editable: T.bool.isRequired,
   overview: T.bool.isRequired,
-  startAttempt: T.func,
+  getAttempt: T.func,
   flashcardDeck: T.shape({
     id: T.string
   })

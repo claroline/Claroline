@@ -9,24 +9,55 @@ import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/r
 import {FlashcardInfo} from '#/plugin/flashcard/resources/flashcard/components/info'
 import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 
-const Overview = (props) =>
-  <ResourceOverview
-    contentText={get(props.flashcardDeck, 'overview.message')}
-    evaluation={props.evaluation}
-    resourceNode={props.resourceNode}
-    actions={[{
+const Overview = (props) => {
+
+  let action = null
+
+  if (props.attempt?.data?.nextCardIndex > 0) {
+    action = {
+      type: LINK_BUTTON,
+      label: trans('continue', {}, 'actions'),
+      target: `${props.basePath}/play`,
+      primary: true
+    }
+  } else if (props.attempt?.data?.session === 7 && props.attempt?.status === 'completed') {
+    action = {
+      type: LINK_BUTTON,
+      label: trans('restart', {}, 'actions'),
+      target: `${props.basePath}/play`,
+      primary: true,
+      disabled: props.empty,
+      disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'flashcard')] : []
+    }
+  } else {
+    action = {
       type: LINK_BUTTON,
       label: trans('start', {}, 'actions'),
       target: `${props.basePath}/play`,
       primary: true,
       disabled: props.empty,
       disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'flashcard')] : []
-    }]}
-  >
-    <FlashcardInfo
-      flashcard={props.flashcardDeck}
-    />
-  </ResourceOverview>
+    }
+  }
+
+  return (
+    <ResourceOverview
+      contentText={get(props.flashcardDeck, 'overview.message')}
+      evaluation={props.evaluation}
+      attempt={props.attempt}
+      resourceNode={props.resourceNode}
+      actions={[action]}
+    >
+      <h5>
+        Session {props.attempt?.data?.nextCardIndex === 0 ? (props.attempt?.data?.session + ((props.attempt?.status === 'completed') ? ' terminée' : ' à venir')) : props.attempt?.data?.session + ' en cours'}
+      </h5>
+
+      <FlashcardInfo
+        flashcardProgression={props.flashcardProgression}
+      />
+    </ResourceOverview>
+  )
+}
 
 Overview.propTypes = {
   basePath: T.string.isRequired,

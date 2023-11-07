@@ -10,12 +10,13 @@ const Overview = connect(
     basePath: resourceSelectors.path(state),
     flashcardDeck: selectors.flashcardDeck(state),
     evaluation: resourceSelectors.resourceEvaluation(state),
+    attempt: selectors.attempt(state),
     cards: selectors.cards(state),
     empty: selectors.empty(state),
     overview: selectors.showOverview(state),
     resourceNode: resourceSelectors.resourceNode(state),
     showEndPage: selectors.showEndPage(state),
-    flashcardDeckProgression: selectors.flashcardDeckProgression(state)
+    flashcardProgression: selectors.flashcardProgression(state)
   })
 )(OverviewComponent)
 

@@ -16,6 +16,9 @@
   "card_delete_confirm": "Card's delete",
   "card_delete_message": "Are you sure you want to delete this card ?",
 
+  "deck_confirm_edit_title" : "Resource edition",
+  "deck_confirm_edit_question" : "Changes requires resetting users attempt progression. Are you sure you want to continue ?",
+
   "question": "Question",
   "visible_content_type": "Visible content type",
   "visible_content": "Visible content",

@@ -16,9 +16,9 @@ const Player = props => {
   const match = useRouteMatch()
   const [isFlipped, setIsFlipped] = useState(false)
   const [isAnswering, setIsAnswering] = useState(false)
-  const [currentCardIndex, setCurrentCardIndex] = useState(0)
-  const currentCard = props.flashcardDeck.cards[currentCardIndex]
-  const maxCards = props.draw > 0 ? Math.min(props.draw, props.flashcardDeck.cards.length) : props.flashcardDeck.cards.length
+  const [currentCardIndex, setCurrentCardIndex] = useState(props.attempt?.data?.nextCardIndex ?? 0)
+  const maxCards = props.draw > 0 ? Math.min(props.draw, props.flashcardProgression.length) : props.flashcardProgression.length
+  const currentCard = props.flashcardProgression[currentCardIndex] ? props.flashcardProgression[currentCardIndex].flashcard : props.flashcardProgression[0].flashcard
 
   const goToNextCard = useCallback(() => {
     const isLastCard = currentCardIndex + 1 === maxCards
@@ -65,6 +65,9 @@ const Player = props => {
       <div className="flashcard-player content-sm">
         {props.flashcardDeck.showProgression &&
           <div className="flashcard-counter mt-3">
+            {/*Test affichage*/}
+            Attempt #{`${props.attempt?.id}`} -
+            Session {`${props.attempt?.data?.session}`} -
             {`${currentCardIndex + 1} / ${maxCards}`}
           </div>
         }

@@ -34,71 +34,84 @@ class EvaluationManager
         return $this->resourceEvalManager->getUserEvaluation($node, $user);
     }
 
-    public function update(ResourceEvaluation $evaluation, FlashcardDeck $deck ): ResourceEvaluation
+    public function update(ResourceEvaluation $evaluation, FlashcardDeck $deck): ResourceEvaluation
     {
-        $drawnCardCount = $deck->getDraw();
+        $drawnCardCount = $deck->getDraw() ?? count($deck->getCards());
 
-        if( !$drawnCardCount ){
-            $drawnCardCount = count( $deck->getCards() );
+        $attemptCards = $this->om->getRepository(CardDrawnProgression::class)->findBy([
+            'resourceEvaluation' => $evaluation
+        ]);
+
+        $seenCount = array_key_exists('nextCardIndex', $evaluation->getData()) ? $evaluation->getData()['nextCardIndex'] : 0;
+        $seenCount++;
+
+        $successCount = 0;
+        foreach ($attemptCards as $attemptCard) {
+            $successCount += $attemptCard->getSuccessCount() > 0;
         }
 
-        $successCount = count( $this->om->getRepository(CardDrawnProgression::class)->findBy([
-            'resourceEvaluation' => $evaluation
-        ]));
-
+        $session = $evaluation->getData()['session'] ?? 1;
         $progression = ($successCount / $drawnCardCount) * 100;
 
-        if ($progression >= 100) {
+        if ($session === 7 && $seenCount >= $drawnCardCount) {
             $status = AbstractEvaluation::STATUS_COMPLETED;
         } else {
             $status = AbstractEvaluation::STATUS_INCOMPLETE;
         }
 
+        if ( $seenCount >= $drawnCardCount ) {
+            if( $status != AbstractEvaluation::STATUS_COMPLETED ) {
+                $session++;
+            }
+            $seenCount = 0;
+        }
+
+        if ($progression > 100) {
+            $progression = 100;
+        }
+
         $evaluationData = [
             'status' => $status,
             'progression' => $progression,
+            'data' => [
+                'session' => $session,
+                'nextCardIndex' => $seenCount,
+            ],
         ];
 
         return $this->resourceEvalManager->updateAttempt($evaluation, $evaluationData);
     }
 
-    public function updateCardDrawnProgression(Flashcard $card, User $user, $isSuccessful): CardDrawnProgression
+    public function updateCardDrawnProgression(Flashcard $card, User $user, $isSuccessful): array
     {
         $node = $card->getDeck()->getResourceNode();
-        $attempt = $this->resourceEvalRepo->findOneInProgress( $node, $user );
+        $attempt = $this->resourceEvalRepo->findOneInProgress($node, $user);
 
-        // On vérifie qu'une tentative en cours existe, sinon on en crée une
-        if ($attempt) {
-            $cardDrawnProgression = $this->om->getRepository(CardDrawnProgression::class)->findOneBy([
-                'resourceEvaluation' => $attempt,
-                'flashcard' => $card
-            ]);
-        } else {
-            $attempt = $this->resourceEvalManager->createAttempt($node, $user, [
-                'status' => AbstractEvaluation::STATUS_OPENED,
-                'progression' => 0,
-            ]);
+        $cardsDrawnProgression = $this->om->getRepository(CardDrawnProgression::class)->findBy([
+            'resourceEvaluation' => $attempt
+        ]);
+
+        foreach ($cardsDrawnProgression as $cardProgression) {
+            if ($cardProgression->getFlashcard()->getId() === $card->getId()) {
+                $cardDrawnProgression = $cardProgression;
+
+                if(!$cardDrawnProgression->isAnswered()) {
+                    $cardDrawnProgression->setSuccessCount(0);
+                }
+
+                if ('true' === $isSuccessful) {
+                    $cardDrawnProgression->setSuccessCount($cardDrawnProgression->getSuccessCount() + 1);
+                } else {
+                    $cardDrawnProgression->setSuccessCount(0);
+                }
+
+                $this->om->persist($cardDrawnProgression);
+                $this->om->flush();
+            }
         }
 
-        // Si la carte n'a jamais été tirée, on crée une progression et on la lie à cette tentative
-        if( !isset( $cardDrawnProgression ) ){
-            $cardDrawnProgression = new CardDrawnProgression();
-            $cardDrawnProgression->setResourceEvaluation($attempt);
-            $cardDrawnProgression->setFlashcard($card);
-        }
-
-        if ('true' === $isSuccessful) {
-            $cardDrawnProgression->setSuccessCount($cardDrawnProgression->getSuccessCount() + 1);
-        } else {
-            $cardDrawnProgression->setSuccessCount(0);
-        }
-
-        $this->om->persist($cardDrawnProgression);
-        $this->om->flush();
-
-        // On met à jour la tentative et sa progression
         $this->update($attempt, $card->getDeck());
 
-        return $cardDrawnProgression;
+        return $cardsDrawnProgression;
     }
 }

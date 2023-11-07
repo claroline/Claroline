@@ -10,11 +10,6 @@ const flashcardDeck = createSelector(
   (resource) => resource.data.flashcardDeck
 )
 
-const flashcardDeckProgression = createSelector(
-  [resource],
-  (resource) => resource.data.flashcardDeckProgression
-)
-
 const id = createSelector(
   [flashcardDeck],
   (flashcardDeck) => flashcardDeck.id
@@ -25,9 +20,9 @@ const cards = createSelector(
   (flashcardDeck) => flashcardDeck.cards || []
 )
 
-const draw = createSelector(
-  [flashcardDeck],
-  (flashcardDeck) => flashcardDeck.draw
+const flashcardProgression = createSelector(
+  [resource],
+  (resource) => resource.data.flashcardProgression
 )
 
 const empty = createSelector(
@@ -45,16 +40,26 @@ const showEndPage = createSelector(
   (flashcardDeck) => get(flashcardDeck, 'end.display') || false
 )
 
+const draw = createSelector(
+  [flashcardDeck],
+  (flashcardDeck) => flashcardDeck.draw
+)
+
+const attempt = createSelector(
+  [resource],
+  (resource) => resource.data.attempt
+)
+
 export const selectors = {
   STORE_NAME,
-
   resource,
   flashcardDeck,
-  flashcardDeckProgression,
   id,
   cards,
-  draw,
+  flashcardProgression,
   empty,
   showOverview,
-  showEndPage
+  showEndPage,
+  draw,
+  attempt
 }

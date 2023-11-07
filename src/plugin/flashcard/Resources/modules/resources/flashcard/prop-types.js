@@ -46,7 +46,7 @@ const FlashcardDeck = {
   }
 }
 
-const FlashcardDeckProgression = {
+const FlashcardProgression = {
   propTypes: {
     id: T.number,
     isSuccessful: T.bool,
@@ -59,5 +59,5 @@ const FlashcardDeckProgression = {
 export {
   Card,
   FlashcardDeck,
-  FlashcardDeckProgression
+  FlashcardProgression
 }

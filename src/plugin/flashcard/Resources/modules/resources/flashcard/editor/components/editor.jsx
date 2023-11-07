@@ -6,9 +6,12 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
+import {API_REQUEST} from '#/main/app/api'
+import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {actions as formActions} from '#/main/app/content/form/store'
+import {FormData}                                                                    from '#/main/app/content/form/containers/data'
+import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
+
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
@@ -18,6 +21,7 @@ import {selectors as baseSelectors} from '#/plugin/flashcard/resources/flashcard
 import {Card} from '#/plugin/flashcard/resources/flashcard/components/card'
 import {MODAL_CARD} from '#/plugin/flashcard/resources/flashcard/editor/modals/card'
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
+import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
 const EditorComponent = props =>
   <FormData
@@ -26,7 +30,10 @@ const EditorComponent = props =>
     title={trans('parameters')}
     name={selectors.FORM_NAME}
     buttons={true}
-    target={() => ['apiv2_flashcard_deck_update', {id: props.flashcardDeck.id}]}
+    save={{
+      type: CALLBACK_BUTTON,
+      callback: () => props.saveForm(props.flashcardDeck.id, props.flashcardDeckData)
+    }}
     cancel={{
       type: LINK_BUTTON,
       target: props.path,
@@ -198,12 +205,40 @@ EditorComponent.propTypes = {
 const Editor = connect(
   (state) => ({
     path: resourceSelectors.path(state),
+    cards: selectors.cards(state),
     flashcardDeck: baseSelectors.flashcardDeck(state),
-    cards: selectors.cards(state)
+    flashcardDeckData: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME))
   }),
   (dispatch) => ({
     update(prop, value) {
       dispatch(formActions.updateProp(selectors.FORM_NAME, prop, value))
+    },
+    saveForm(id, data) {
+      dispatch({
+        [API_REQUEST]: {
+          url: ['apiv2_flashcard_deck_update_check', {id: id}],
+          request: {
+            method: 'PUT',
+            body: JSON.stringify(data)
+          },
+          silent: true,
+          success: (response) => {
+            if(response.resetAttempts) {
+              dispatch(modalActions.showModal(MODAL_CONFIRM, {
+                icon: 'fa fa-fw fa-exclamation-triangle',
+                title: trans('deck_confirm_edit_title', {}, 'flashcard'),
+                question: trans('deck_confirm_edit_question', {}, 'flashcard'),
+                confirmButtonText: trans('confirm', {}, 'actions'),
+                handleConfirm: () => {
+                  dispatch(formActions.saveForm(selectors.FORM_NAME, ['apiv2_flashcard_deck_update', {id: id}]))
+                }
+              }))
+            } else {
+              dispatch(formActions.saveForm(selectors.FORM_NAME, ['apiv2_flashcard_deck_update', {id: id}]))
+            }
+          }
+        }
+      } )
     }
   })
 )(EditorComponent)
