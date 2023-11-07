@@ -378,10 +378,10 @@ class ClacoFormController
     {
         $this->checkPermission('EDIT', $clacoForm->getResourceNode(), [], true);
 
-        $exportPath = $this->exportManager->exportEntries($clacoForm);
+        $export = $this->exportManager->exportEntries($clacoForm);
 
-        return new BinaryFileResponse($exportPath, 200, [
-            'Content-Disposition' => 'attachment; filename='.urlencode($clacoForm->getResourceNode()->getName()),
+        return new BinaryFileResponse($export[0], 200, [
+            'Content-Disposition' => 'attachment; filename='.$export[1],
         ]);
     }
 
