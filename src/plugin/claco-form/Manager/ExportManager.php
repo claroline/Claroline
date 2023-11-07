@@ -129,7 +129,7 @@ class ExportManager
         );
     }
 
-    public function exportEntries(ClacoForm $clacoForm): string
+    public function exportEntries(ClacoForm $clacoForm): array
     {
         $files = [];
         $entriesData = [];
@@ -190,19 +190,21 @@ class ExportManager
         $exportedFile = $this->tempManager->generate();
         if (empty($files)) {
             file_put_contents($exportedFile, $entryList);
-        } else {
-            $archive = new \ZipArchive();
-            $archive->open($exportedFile, \ZipArchive::CREATE);
 
-            $archive->addFromString(TextNormalizer::toKey($clacoForm->getResourceNode()->getName()).'.xls', $entryList);
-            foreach ($files as $filePath => $fileName) {
-                $archive->addFile($filePath, $fileName);
-            }
-
-            $archive->close();
+            return [$exportedFile, TextNormalizer::toKey($clacoForm->getResourceNode()->getName()).'.xls'];
         }
 
-        return $exportedFile;
+        $archive = new \ZipArchive();
+        $archive->open($exportedFile, \ZipArchive::CREATE);
+
+        $archive->addFromString(TextNormalizer::toKey($clacoForm->getResourceNode()->getName()).'.xls', $entryList);
+        foreach ($files as $filePath => $fileName) {
+            $archive->addFile($filePath, $fileName);
+        }
+
+        $archive->close();
+
+        return [$exportedFile, TextNormalizer::toKey($clacoForm->getResourceNode()->getName()).'.zip'];
     }
 
     private function formatFieldValue(Entry $entry, Field $field, $value, ?bool $stripHtml = false)
