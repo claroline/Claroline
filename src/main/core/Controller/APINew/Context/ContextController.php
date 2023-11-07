@@ -11,7 +11,6 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Event\CatalogEvents\ContextEvents;
 use Claroline\CoreBundle\Event\Context\OpenContextEvent;
-use Claroline\CoreBundle\Event\Context\CloseContextEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Manages the different application contexts (public, desktop, administration, ...)
+ * Manages the different application contexts (public, desktop, administration, ...).
  *
  * @Route("/context/{context}/{contextId}")
  * @Route("/context/{context}")
@@ -39,7 +38,7 @@ class ContextController
      *
      * @Route("", name="claro_context_open", methods={"GET"})
      */
-    public function openAction(string $context, ?string $contextId = null): JsonResponse
+    public function openAction(string $context, string $contextId = null): JsonResponse
     {
         // retrieve the requested context
         try {
@@ -92,25 +91,5 @@ class ContextController
             }, $contextRoles),
             'accessErrors' => $accessErrors,
         ], 403);
-    }
-
-    /**
-     * Closes a context.
-     *
-     * @Route("/close", name="claro_context_close", methods={"PUT"})
-     */
-    public function closeAction(string $context, ?string $contextId = null): JsonResponse
-    {
-        // retrieve the requested context
-        try {
-            $this->contextProvider->getComponent($context);
-        } catch (\Exception $e) {
-            throw new NotFoundHttpException($e->getMessage());
-        }
-
-        $closeEvent = new CloseContextEvent($context, $contextId);
-        $this->eventDispatcher->dispatch($closeEvent, ContextEvents::CLOSE);
-
-        return new JsonResponse(null, 204);
     }
 }

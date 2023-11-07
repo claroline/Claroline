@@ -60,9 +60,9 @@ class AdministrationController
      * @Route("/", name="claro_admin_index")
      * @Route("/", name="claro_admin_open")
      *
-     * @throws AccessDeniedException
-     *
      * @return JsonResponse
+     *
+     * @throws AccessDeniedException
      */
     public function openAction()
     {
@@ -86,11 +86,9 @@ class AdministrationController
      *
      * @Route("/open/{toolName}", name="claro_admin_open_tool")
      *
-     * @param $toolName
+     * @return JsonResponse
      *
      * @throws AccessDeniedException
-     *
-     * @return JsonResponse
      */
     public function openToolAction($toolName)
     {

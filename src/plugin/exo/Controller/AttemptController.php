@@ -24,6 +24,7 @@ use UJM\ExoBundle\Manager\AttemptManager;
  * Attempt Controller.
  *
  * @Route("/exercises/{exerciseId}/attempts")
+ *
  * @EXT\ParamConverter("exercise", class="UJM\ExoBundle\Entity\Exercise", options={"mapping": {"exerciseId": "uuid"}})
  */
 class AttemptController
@@ -60,9 +61,10 @@ class AttemptController
      * Also check that max attempts are not reached if needed.
      *
      * @Route("", name="exercise_attempt_start", methods={"POST"})
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function startAction(Exercise $exercise, ?User $user = null): JsonResponse
+    public function startAction(Exercise $exercise, User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $exercise);
 
@@ -85,10 +87,11 @@ class AttemptController
      * Submits answers to an Exercise.
      *
      * @Route("/{id}", name="exercise_attempt_submit", methods={"PUT"})
+     *
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function submitAnswersAction(Paper $paper, Request $request, ?User $user = null): JsonResponse
+    public function submitAnswersAction(Paper $paper, Request $request, User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $paper->getExercise());
         $this->assertHasPaperAccess($paper, $user);
@@ -121,10 +124,11 @@ class AttemptController
      * Flags a paper as finished.
      *
      * @Route("/{id}/end", name="exercise_attempt_finish", methods={"PUT"})
+     *
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function finishAction(Paper $paper, ?User $user = null): JsonResponse
+    public function finishAction(Paper $paper, User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $paper->getExercise());
         $this->assertHasPaperAccess($paper, $user);
@@ -147,10 +151,11 @@ class AttemptController
      * been consulted within the context of a given paper.
      *
      * @Route("/{id}/{questionId}/hints/{hintId}", name="exercise_attempt_hint_show", methods={"GET"})
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
      */
-    public function useHintAction(Paper $paper, string $questionId, string $hintId, Request $request, ?User $user = null): JsonResponse
+    public function useHintAction(Paper $paper, string $questionId, string $hintId, Request $request, User $user = null): JsonResponse
     {
         $this->assertHasPermission('OPEN', $paper->getExercise());
         $this->assertHasPaperAccess($paper, $user);
@@ -170,7 +175,7 @@ class AttemptController
     /**
      * Checks whether a User has access to a Paper.
      */
-    private function assertHasPaperAccess(Paper $paper, ?User $user = null): void
+    private function assertHasPaperAccess(Paper $paper, User $user = null): void
     {
         if (!$this->attemptManager->canUpdate($paper, $user)) {
             throw new AccessDeniedException();

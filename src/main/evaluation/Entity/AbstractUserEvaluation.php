@@ -21,11 +21,10 @@ abstract class AbstractUserEvaluation extends AbstractEvaluation
 {
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE")
      *
-     * @var User
+     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE")
      */
-    protected $user;
+    protected ?User $user = null;
 
     public function getUser(): ?User
     {

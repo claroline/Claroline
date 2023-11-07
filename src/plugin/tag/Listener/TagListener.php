@@ -93,7 +93,7 @@ class TagListener
             $taggedObjects = $this->manager->getTaggedObjects($data['class'], $data['ids']);
 
             if (isset($data['frequency']) && $data['frequency']) {
-                //array [tagName => frequency]
+                // array [tagName => frequency]
                 foreach ($taggedObjects as $taggedObject) {
                     $tag = $taggedObject->getTag();
                     if (!array_key_exists($tag->getName(), $tags)) {
@@ -102,7 +102,7 @@ class TagListener
                     ++$tags[$tag->getName()];
                 }
             } else {
-                //array [tagName]
+                // array [tagName]
                 foreach ($taggedObjects as $taggedObject) {
                     $tag = $taggedObject->getTag();
                     $tags[$tag->getId()] = $tag->getName();
@@ -126,7 +126,7 @@ class TagListener
             $taggedObjects = $this->manager->getTaggedObjects($data['class'], $data['ids']);
 
             if (isset($data['frequency']) && $data['frequency']) {
-                //array [tagName => frequency]
+                // array [tagName => frequency]
                 foreach ($taggedObjects as $taggedObject) {
                     $tag = $taggedObject->getTag();
                     if (!array_key_exists($tag->getName(), $tags)) {
@@ -135,7 +135,7 @@ class TagListener
                     ++$tags[$tag->getName()];
                 }
             } else {
-                //array [tagName]
+                // array [tagName]
                 foreach ($taggedObjects as $taggedObject) {
                     $tag = $taggedObject->getTag();
                     $tags[$tag->getId()] = [

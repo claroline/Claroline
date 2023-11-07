@@ -1,6 +1,5 @@
-/* global window */
 
-const DEFAULT_DOMAIN    = 'platform'
+const DEFAULT_DOMAIN = 'platform'
 
 // We reuse BazingaJsTranslation Translator object which has been loaded through another script tag in index.html
 // (Translator is not bundled by webpack)

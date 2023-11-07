@@ -6,16 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid as BaseUuid;
 
 /**
- * Gives an entity the ability to have an UUID.
+ * Gives an entity the ability to have a UUID.
  */
 trait Uuid
 {
     /**
-     * @var string
-     *
      * @ORM\Column("uuid", type="string", length=36, unique=true)
      */
-    protected $uuid;
+    protected string $uuid;
 
     /**
      * Gets UUID.
@@ -28,7 +26,7 @@ trait Uuid
     /**
      * Sets UUID.
      */
-    public function setUuid(string $uuid)
+    public function setUuid(string $uuid): void
     {
         $this->uuid = $uuid;
     }
@@ -36,13 +34,8 @@ trait Uuid
     /**
      * Generates a new UUID.
      */
-    public function refreshUuid()
+    public function refreshUuid(): void
     {
-        $this->uuid = $this->generateUuid();
-    }
-
-    public function generateUuid(): string
-    {
-        return BaseUuid::uuid4()->toString();
+        $this->uuid = BaseUuid::uuid4()->toString();
     }
 }

@@ -130,14 +130,6 @@ const isTerminated = createSelector(
   ].inArray(evaluationStatus)
 )
 
-const isSuccessful = createSelector(
-  [evaluationStatus],
-  (evaluationStatus) => [
-    baseConstants.EVALUATION_STATUS_COMPLETED,
-    baseConstants.EVALUATION_STATUS_PASSED
-  ].inArray(evaluationStatus)
-)
-
 export const selectors = {
   STORE_NAME,
 
@@ -167,6 +159,5 @@ export const selectors = {
   resourceEvaluation,
   hasEvaluation,
   evaluationStatus,
-  isTerminated,
-  isSuccessful
+  isTerminated
 }

@@ -16,7 +16,7 @@ class PlatformSubscriber implements EventSubscriberInterface
         $this->config = $config;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             'claroline_populate_client_config' => 'onClientConfig',

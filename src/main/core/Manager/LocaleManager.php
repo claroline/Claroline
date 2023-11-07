@@ -82,7 +82,7 @@ class LocaleManager
      *
      * @return string The locale string as en, fr, es, etc
      */
-    public function getUserLocale(Request $request)
+    public function getUserLocale(Request $request): string
     {
         $locales = $this->getEnabledLocales();
         $preferred = explode('_', $request->getPreferredLanguage());

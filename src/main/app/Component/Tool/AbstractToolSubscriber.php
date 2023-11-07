@@ -4,7 +4,6 @@ namespace Claroline\AppBundle\Component\Context;
 
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\AbstractToolEvent;
-use Claroline\CoreBundle\Event\Tool\CloseToolEvent;
 use Claroline\CoreBundle\Event\Tool\ConfigureToolEvent;
 use Claroline\CoreBundle\Event\Tool\ExportToolEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
@@ -16,7 +15,6 @@ abstract class AbstractToolSubscriber implements EventSubscriberInterface
     {
         return [
             ToolEvents::OPEN => 'open',
-            ToolEvents::CLOSE => 'close',
             ToolEvents::CONFIGURE => 'configure',
             ToolEvents::EXPORT => 'export',
             ToolEvents::IMPORT => 'import',
@@ -32,11 +30,6 @@ abstract class AbstractToolSubscriber implements EventSubscriberInterface
      * Do something when the tool is opened.
      */
     abstract protected function onOpen(OpenToolEvent $event): void;
-
-    /**
-     * Do something when the tool is closed.
-     */
-    abstract protected function onClose(CloseToolEvent $event): void;
 
     /**
      * Do something when the tool is configured.

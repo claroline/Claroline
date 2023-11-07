@@ -65,12 +65,7 @@ function mount(
     )
 
     // Render app
-    try {
-      render(appRoot, container)
-    } catch (error) {
-      // rethrow errors (in some case they are swallowed)
-      throw error
-    }
+    render(appRoot, container)
   })
 }
 

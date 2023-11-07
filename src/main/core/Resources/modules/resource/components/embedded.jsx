@@ -77,11 +77,7 @@ class ResourceEmbedded extends Component {
       },
       tool: {
         loaded: true,
-        name: 'resources',
-        /*basePath: '/desktop',
-        currentContext: {
-          type: 'desktop'
-        }*/
+        name: 'resources'
       },
       resources: {
         root: this.props.resourceNode // I don't know why this is required

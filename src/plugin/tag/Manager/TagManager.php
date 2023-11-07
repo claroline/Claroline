@@ -19,7 +19,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class TagManager
 {
-    /** @var TaggedObjectRepository */
     private TaggedObjectRepository $taggedObjectRepo;
 
     public function __construct(

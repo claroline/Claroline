@@ -32,18 +32,11 @@ class PathController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var EvaluationManager */
-    private $evaluationManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        EvaluationManager $evaluationManager
+        private readonly EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
-        $this->evaluationManager = $evaluationManager;
     }
 
     public function getClass(): string
@@ -63,9 +56,10 @@ class PathController extends AbstractCrudController
     }
 
     /**
-     * Update step progression for an user.
+     * Update step progression for a user.
      *
      * @Route("/step/{id}/progression", name="innova_path_progression_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter("step", class="Innova\PathBundle\Entity\Step", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
@@ -97,10 +91,11 @@ class PathController extends AbstractCrudController
 
     /**
      * @Route("/{id}/attempt", name="innova_path_current_attempt", methods={"GET"})
+     *
      * @EXT\ParamConverter("path", class="Innova\PathBundle\Entity\Path\Path", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function getAttemptAction(Path $path, ?User $user = null): JsonResponse
+    public function getAttemptAction(Path $path, User $user = null): JsonResponse
     {
         $this->checkPermission('OPEN', $path->getResourceNode(), [], true);
 
@@ -123,6 +118,7 @@ class PathController extends AbstractCrudController
      * Fetch user progressions for path.
      *
      * @Route("/{id}/user/{user}/steps/progression/fetch", name="innova_path_user_steps_progression_fetch", methods={"GET"})
+     *
      * @EXT\ParamConverter("path", class="Innova\PathBundle\Entity\Path\Path", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      */

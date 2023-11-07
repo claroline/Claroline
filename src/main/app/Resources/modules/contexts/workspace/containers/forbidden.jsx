@@ -1,4 +1,3 @@
-import React from 'react'
 import {connect} from 'react-redux'
 
 import {selectors as securitySelectors} from '#/main/app/security/store'

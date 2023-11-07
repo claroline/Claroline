@@ -11,7 +11,6 @@
 
 namespace Claroline\TagBundle\Repository;
 
-use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\TagBundle\Entity\Tag;
 use Doctrine\ORM\EntityRepository;
 

@@ -26,8 +26,6 @@ trait LoggableTrait
 
     /**
      * Sets a logger.
-     *
-     * @param LoggerInterface $logger
      */
     public function setLogger(LoggerInterface $logger = null): void
     {

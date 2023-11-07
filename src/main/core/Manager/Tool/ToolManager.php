@@ -31,7 +31,7 @@ class ToolManager implements LoggerAwareInterface
     use LoggableTrait;
 
     // todo adds a config in tools to avoid this
-    const WORKSPACE_MODEL_TOOLS = ['home', 'resources', 'community', 'badges'];
+    public const WORKSPACE_MODEL_TOOLS = ['home', 'resources', 'community', 'badges'];
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
@@ -179,7 +179,7 @@ class ToolManager implements LoggerAwareInterface
     /**
      * @return OrderedTool[]
      */
-    public function getOrderedTools(string $context, ?string $contextId = null): array
+    public function getOrderedTools(string $context, string $contextId = null): array
     {
         $tools = [];
 
@@ -271,7 +271,7 @@ class ToolManager implements LoggerAwareInterface
                 'tool' => $undisplayedTool,
             ]);
 
-            //create a WorkspaceOrderedTool for each Tool that hasn't already one
+            // create a WorkspaceOrderedTool for each Tool that hasn't already one
             if (null === $wot) {
                 $this->setWorkspaceTool(
                     $undisplayedTool,

@@ -250,6 +250,8 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
      * @param string $class
      *
      * @return int
+     *
+     * @deprecated
      */
     public function count($class)
     {

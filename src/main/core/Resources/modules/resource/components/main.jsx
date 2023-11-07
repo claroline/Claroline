@@ -37,10 +37,6 @@ class ResourceMain extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.notFound && this.props.resourceSlug !== prevProps.resourceSlug) {
-      this.props.close(prevProps.resourceSlug, prevProps.embedded)
-    }
-
     if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
       this.props.open(this.props.resourceSlug, this.props.embedded, this.loadApp)
     }
@@ -50,10 +46,6 @@ class ResourceMain extends Component {
     if (this.pending) {
       this.pending.cancel()
       this.pending = null
-    }
-
-    if (!this.props.notFound) {
-      this.props.close(this.props.resourceSlug, this.props.embedded)
     }
   }
 
@@ -159,8 +151,7 @@ ResourceMain.propTypes = {
   embedded: T.bool.isRequired,
   loaded: T.bool.isRequired,
   notFound: T.bool.isRequired,
-  open: T.func.isRequired,
-  close: T.func.isRequired
+  open: T.func.isRequired
 }
 
 export {

@@ -2,30 +2,10 @@
 
 namespace Claroline\AppBundle\Entity\Restriction;
 
-use Doctrine\ORM\Mapping as ORM;
-
+/**
+ * @deprecated use \Claroline\AppBundle\Entity\Display\Hidden
+ */
 trait Hidden
 {
-    /**
-     * @ORM\Column(type="boolean", options={"default" = 0})
-     *
-     * @var bool
-     */
-    protected $hidden = false;
-
-    /**
-     * Is the entity hidden ?
-     */
-    public function isHidden(): bool
-    {
-        return $this->hidden;
-    }
-
-    /**
-     * Sets the hidden flag.
-     */
-    public function setHidden(bool $hidden): void
-    {
-        $this->hidden = $hidden;
-    }
+    use \Claroline\AppBundle\Entity\Display\Hidden;
 }

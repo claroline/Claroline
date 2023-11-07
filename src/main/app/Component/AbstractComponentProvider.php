@@ -8,8 +8,7 @@ abstract class AbstractComponentProvider implements ComponentProviderInterface
     {
         $components = $this->getRegisteredComponents();
         foreach ($components as $component) {
-            if ($component->getShortName() === $componentName)
-            {
+            if ($component->getShortName() === $componentName) {
                 return $component;
             }
         }

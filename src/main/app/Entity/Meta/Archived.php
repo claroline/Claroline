@@ -8,10 +8,8 @@ trait Archived
 {
     /**
      * @ORM\Column(name="archived", type="boolean")
-     *
-     * @var bool
      */
-    protected $archived = false;
+    protected bool $archived = false;
 
     /**
      * Returns whether the entity is archived.
@@ -24,7 +22,7 @@ trait Archived
     /**
      * Sets the entity archived state.
      */
-    public function setArchived(bool $archived)
+    public function setArchived(bool $archived): void
     {
         $this->archived = $archived;
     }

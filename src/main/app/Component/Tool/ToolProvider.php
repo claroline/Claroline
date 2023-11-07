@@ -38,7 +38,7 @@ class ToolProvider extends AbstractComponentProvider
         return $this->registeredTools;
     }
 
-    public function open(string $toolName, string $context, ?string $contextId = null): array
+    public function open(string $toolName, string $context, string $contextId = null): array
     {
         /** @var ToolInterface $tool */
         $tool = $this->getComponent($toolName);
@@ -56,16 +56,13 @@ class ToolProvider extends AbstractComponentProvider
 
     public function configure()
     {
-
     }
 
     public function import()
     {
-
     }
 
     public function export()
     {
-
     }
 }

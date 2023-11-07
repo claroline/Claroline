@@ -10,11 +10,6 @@ final class WorkspaceEvents
     public const OPEN = 'workspace.open';
 
     /**
-     * @Event("Claroline\CoreBundle\Event\Workspace\CloseWorkspaceEvent")
-     */
-    public const CLOSE = 'workspace.close';
-
-    /**
      * Event fired when a User try to open a Workspace he can not.
      * This allows plugin to integrate custom processes in order to grant him access if possible.
      *

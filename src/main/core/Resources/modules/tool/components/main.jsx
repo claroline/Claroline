@@ -93,15 +93,6 @@ class ToolMain extends Component {
     appPromise.then(() => {
       if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
         if (!this.pending) {
-          // close previous tool
-          if (this.props.toolName && prevProps.toolName && (
-            this.props.toolName !== prevProps.toolName ||
-            this.props.contextType !== prevProps.contextType ||
-            this.props.contextId !== prevProps.contextId
-          )) {
-            this.props.close(prevProps.toolName, prevProps.contextType, prevProps.contextId)
-          }
-
           // open current tool
           this.open()
         }
@@ -170,11 +161,6 @@ class ToolMain extends Component {
       this.pending.cancel()
       this.pending = null
     }
-
-    // only request close on tools effectively opened
-    if (this.props.toolName && this.props.loaded && !this.props.notFound && !this.props.accessDenied) {
-      this.props.close(this.props.toolName, this.props.contextType, this.props.contextId)
-    }
   }
 
   render() {
@@ -229,8 +215,7 @@ ToolMain.propTypes = {
   loaded: T.bool.isRequired,
   notFound: T.bool.isRequired,
   accessDenied: T.bool.isRequired,
-  open: T.func.isRequired,
-  close: T.func.isRequired
+  open: T.func.isRequired
 }
 
 ToolMain.defaultProps = {

@@ -9,7 +9,9 @@ namespace Claroline\AppBundle\Component\Context;
 interface ContextualInterface
 {
     /**
-     * Checks if the component supports a defined context.
+     * Checks if the component supports a defined context type.
      */
     public function supportsContext(string $context): bool;
+
+    public function supportsSubject(ContextSubjectInterface $subject): bool;
 }

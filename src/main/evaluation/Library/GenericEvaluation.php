@@ -2,16 +2,13 @@
 
 namespace Claroline\EvaluationBundle\Library;
 
-class GenericEvaluation implements EvaluationInterface
+final class GenericEvaluation implements EvaluationInterface
 {
-    /** @var float */
-    private $progression;
-    /** @var float */
-    private $score;
-    /** @var float */
-    private $scoreMax;
+    private ?float $progression = 0;
+    private ?float $score = null;
+    private ?float $scoreMax = null;
 
-    public function __construct(?float $progression = 0, ?float $scoreMax = null, ?float $score = null)
+    public function __construct(?float $progression = 0, float $scoreMax = null, float $score = null)
     {
         if ($progression < 0 || $progression > 100) {
             throw new \InvalidArgumentException('progression should be a percentage (range: 0-100).');
@@ -52,5 +49,10 @@ class GenericEvaluation implements EvaluationInterface
     public function isTerminated(): bool
     {
         return 100 <= $this->progression;
+    }
+
+    public function getStatus(): ?string
+    {
+        return EvaluationStatus::UNKNOWN;
     }
 }

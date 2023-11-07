@@ -1,4 +1,4 @@
-/* global require, window */
+/* global require */
 
 import {
   applyMiddleware,

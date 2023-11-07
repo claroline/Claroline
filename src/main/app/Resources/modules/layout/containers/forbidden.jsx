@@ -12,7 +12,7 @@ const LayoutForbidden = connect(
     disabled: selectors.disabled(state),
     maintenance: selectors.maintenance(state),
     maintenanceMessage: selectors.maintenanceMessage(state),
-    restrictions: configSelectors.param(state, 'restrictions'),
+    restrictions: configSelectors.param(state, 'restrictions')
   }),
   (dispatch) => ({
     reactivate() {

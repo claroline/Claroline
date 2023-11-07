@@ -50,7 +50,7 @@ class StrictDispatcher
      */
     public function dispatch($eventName, $shortEventClassName, array $eventArgs = [])
     {
-        //@todo CoreBundle should be removed from that code
+        // @todo CoreBundle should be removed from that code
         $className = class_exists($shortEventClassName) ?
             $shortEventClassName :
             "Claroline\CoreBundle\Event\\{$shortEventClassName}Event";

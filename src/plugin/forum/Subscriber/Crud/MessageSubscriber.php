@@ -52,7 +52,7 @@ class MessageSubscriber implements EventSubscriberInterface
         $this->messageBus = $messageBus;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Crud::getEventName('create', 'pre', Message::class) => 'preCreate',
@@ -71,7 +71,7 @@ class MessageSubscriber implements EventSubscriberInterface
         $message = $event->getObject();
         $forum = $message->getSubject()->getForum();
 
-        //create user if not here
+        // create user if not here
         $user = $this->om->getRepository(UserValidation::class)->findOneBy([
             'user' => $message->getCreator(),
             'forum' => $forum,
@@ -110,7 +110,7 @@ class MessageSubscriber implements EventSubscriberInterface
 
     public function postUpdate(UpdateEvent $event)
     {
-        //c'est ici aussi qu'on catch le flag d'un message
+        // c'est ici aussi qu'on catch le flag d'un message
         $message = $event->getObject();
 
         $old = $event->getOldData();

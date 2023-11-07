@@ -10,10 +10,8 @@ trait CreatedAt
      * The creation date of the entity.
      *
      * @ORM\Column(name="createdAt", type="datetime", nullable=true)
-     *
-     * @var \DateTimeInterface
      */
-    protected $createdAt;
+    protected ?\DateTimeInterface $createdAt = null;
 
     /**
      * Returns the entity's creation date.
@@ -26,7 +24,7 @@ trait CreatedAt
     /**
      * Sets the entity's creation date.
      */
-    public function setCreatedAt(?\DateTimeInterface $createdAt = null): void
+    public function setCreatedAt(\DateTimeInterface $createdAt = null): void
     {
         $this->createdAt = $createdAt;
     }

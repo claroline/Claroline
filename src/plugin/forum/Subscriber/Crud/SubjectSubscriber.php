@@ -57,7 +57,7 @@ class SubjectSubscriber implements EventSubscriberInterface
         $this->fileManager = $fileManager;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Crud::getEventName('create', 'pre', Subject::class) => 'preCreate',
@@ -67,13 +67,13 @@ class SubjectSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var Subject $subject */
         $subject = $event->getObject();
         $forum = $subject->getForum();
 
-        //create user if not here
+        // create user if not here
         if ($subject->getCreator()) {
             $user = $this->om->getRepository(UserValidation::class)->findOneBy([
                 'user' => $subject->getCreator(),
@@ -111,7 +111,7 @@ class SubjectSubscriber implements EventSubscriberInterface
     /**
      * Send notifications after creation.
      */
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var Subject $subject */
         $subject = $event->getObject();
@@ -130,7 +130,7 @@ class SubjectSubscriber implements EventSubscriberInterface
         $this->dispatchSubjectEvent($subject, 'forum_subject-create');
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var Subject $subject */
         $subject = $event->getObject();
@@ -176,7 +176,7 @@ class SubjectSubscriber implements EventSubscriberInterface
         $this->dispatchSubjectEvent($subject, 'forum_subject-update');
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var Subject $subject */
         $subject = $event->getObject();
@@ -191,7 +191,7 @@ class SubjectSubscriber implements EventSubscriberInterface
     /**
      * @deprecated
      */
-    private function dispatchSubjectEvent(Subject $subject, $action)
+    private function dispatchSubjectEvent(Subject $subject, $action): void
     {
         $forum = $subject->getForum();
 

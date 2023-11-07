@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false #change to true
-        autoconfigure: false
-        public: true #because controller
-
     Icap\NotificationBundle\Listener\Platform\ClientListener:
         arguments:
             - '@twig'
@@ -11,10 +6,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: claroline_populate_client_config, method: onConfig }
             - { name: kernel.event_listener, event: layout.inject.stylesheet, method: onInjectCss }
-
-    Icap\NotificationBundle\Listener\Tool\NotificationListener:
-        tags:
-            - { name: kernel.event_listener, event: tool.open.desktop.notification, method: onDisplayDesktop }
 
     Icap\NotificationBundle\Listener\Resource\ResourceNodeListener:
         arguments:

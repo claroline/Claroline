@@ -35,11 +35,6 @@ class ContextMain extends Component {
         this.openQuery.cancel()
         this.openQuery = null
       }
-
-      if (prevProps.loaded && !prevProps.notFound && isEmpty(prevProps.accessErrors)) {
-        // the previous context was fully loaded, with no error, close it
-        this.props.close(prevProps.name, prevProps.id)
-      }
     }
 
     if (needOpen) {
@@ -53,8 +48,6 @@ class ContextMain extends Component {
       this.openQuery.cancel()
       this.openQuery = null
     }
-
-    this.close()
   }
 
   open() {
@@ -71,18 +64,6 @@ class ContextMain extends Component {
         () => this.openQuery = null,
         () => this.openQuery = null
       )
-  }
-
-  close() {
-    if (this.openQuery) {
-      this.openQuery.cancel()
-      this.openQuery = null
-    }
-
-    // only request close on contexts effectively opened
-    if (this.props.name && this.props.loaded && !this.props.notFound && isEmpty(this.props.accessErrors)) {
-      this.props.close(this.props.name, this.props.id)
-    }
   }
 
   render() {
@@ -176,7 +157,6 @@ ContextMain.propTypes = {
   forbiddenPage: T.elementType,
 
   open: T.func.isRequired,
-  close: T.func.isRequired,
   openTool: T.func.isRequired,
   history: T.shape({
     replace: T.func.isRequired

@@ -13,6 +13,7 @@ namespace Claroline\EvaluationBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\EvaluationBundle\Library\EvaluationInterface;
+use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,68 +23,62 @@ abstract class AbstractEvaluation implements EvaluationInterface
 {
     use Id;
 
-    public const STATUS_NOT_ATTEMPTED = 'not_attempted';
-    public const STATUS_TODO = 'todo';
-    public const STATUS_UNKNOWN = 'unknown';
-    public const STATUS_OPENED = 'opened';
-    public const STATUS_PARTICIPATED = 'participated';
-    public const STATUS_INCOMPLETE = 'incomplete';
-    public const STATUS_FAILED = 'failed';
-    public const STATUS_COMPLETED = 'completed';
-    public const STATUS_PASSED = 'passed';
+    /** @deprecated use Claroline\EvaluationBundle\Library\EvaluationStatus instead */
+    public const STATUS_NOT_ATTEMPTED = EvaluationStatus::NOT_ATTEMPTED;
+    /** @deprecated use Claroline\EvaluationBundle\Library\EvaluationStatus instead */
+    public const STATUS_TODO = EvaluationStatus::TODO;
+    /** @deprecated use Claroline\EvaluationBundle\Library\EvaluationStatus instead */
+    public const STATUS_UNKNOWN = EvaluationStatus::UNKNOWN;
+    /** @deprecated use Claroline\EvaluationBundle\Library\EvaluationStatus instead */
+    public const STATUS_OPENED = EvaluationStatus::OPENED;
+    /** @deprecated use Claroline\EvaluationBundle\Library\EvaluationStatus instead */
+    public const STATUS_PARTICIPATED = EvaluationStatus::PARTICIPATED;
+    /** @deprecated use Claroline\EvaluationBundle\Library\EvaluationStatus instead */
+    public const STATUS_INCOMPLETE = EvaluationStatus::INCOMPLETE;
+    /** @deprecated use Claroline\EvaluationBundle\Library\EvaluationStatus instead */
+    public const STATUS_FAILED = EvaluationStatus::FAILED;
+    /** @deprecated use Claroline\EvaluationBundle\Library\EvaluationStatus instead */
+    public const STATUS_COMPLETED = EvaluationStatus::COMPLETED;
+    /** @deprecated use Claroline\EvaluationBundle\Library\EvaluationStatus instead */
+    public const STATUS_PASSED = EvaluationStatus::PASSED;
 
-    public const STATUS_PRIORITY = [
-        self::STATUS_NOT_ATTEMPTED => 0,
-        self::STATUS_TODO => 0,
-        self::STATUS_UNKNOWN => 1,
-        self::STATUS_OPENED => 2,
-        self::STATUS_PARTICIPATED => 3,
-        self::STATUS_INCOMPLETE => 4,
-        self::STATUS_COMPLETED => 5,
-        self::STATUS_FAILED => 6,
-        self::STATUS_PASSED => 7,
-    ];
+    /** @deprecated use Claroline\EvaluationBundle\Library\EvaluationStatus instead */
+    public const STATUS_PRIORITY = EvaluationStatus::PRIORITY;
 
     /**
      * @ORM\Column(name="evaluation_date", type="datetime", nullable=true)
-     *
-     * @var \DateTimeInterface
      */
-    protected $date;
+    protected ?\DateTimeInterface $date = null;
 
     /**
      * @ORM\Column(name="evaluation_status")
-     *
-     * @var string
      */
-    protected $status = self::STATUS_NOT_ATTEMPTED;
+    protected string $status = EvaluationStatus::NOT_ATTEMPTED;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $duration = 0;
+    protected int $duration = 0;
 
     /**
      * @ORM\Column(name="score", type="float", nullable=true)
      */
-    protected $score;
+    protected ?float $score = null;
 
     /**
      * @ORM\Column(name="score_min", type="float", nullable=true)
      */
-    protected $scoreMin;
+    protected ?float $scoreMin = 0;
 
     /**
      * @ORM\Column(name="score_max", type="float", nullable=true)
      */
-    protected $scoreMax;
+    protected ?float $scoreMax = null;
 
     /**
-     * @ORM\Column(name="progression", type="integer")
+     * @ORM\Column(name="progression", type="float")
      */
-    protected $progression = 0;
+    protected ?float $progression = 0;
 
     public function getDate(): ?\DateTimeInterface
     {
@@ -166,19 +161,6 @@ abstract class AbstractEvaluation implements EvaluationInterface
 
     public function isTerminated(): bool
     {
-        return in_array($this->status, [
-            self::STATUS_COMPLETED,
-            self::STATUS_PASSED,
-            self::STATUS_PARTICIPATED,
-            self::STATUS_FAILED,
-        ]);
-    }
-
-    public function isSuccessful(): bool
-    {
-        return in_array($this->status, [
-            self::STATUS_COMPLETED,
-            self::STATUS_PASSED,
-        ]);
+        return EvaluationStatus::isTerminated($this->status);
     }
 }

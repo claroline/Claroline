@@ -25,7 +25,6 @@ use Claroline\CoreBundle\Security\ToolPermissions;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -72,11 +71,10 @@ class LogConnectController
      *     "/platform/list",
      *     name="apiv2_log_connect_platform_list"
      * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
-     * @return JsonResponse
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
-    public function logConnectPlatformListAction(User $user, Request $request)
+    public function logConnectPlatformListAction(User $user, Request $request): JsonResponse
     {
         $this->checkAdminToolAccess();
         $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
@@ -98,47 +96,10 @@ class LogConnectController
 
     /**
      * @Route(
-     *     "/platform/csv",
-     *     name="apiv2_log_connect_platform_list_csv",
-     *     methods={"GET"}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return StreamedResponse
-     */
-    public function logConnectPlatformListCsvAction(User $user, Request $request)
-    {
-        $this->checkAdminToolAccess();
-        $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
-        $query = $request->query->all();
-        $filters = isset($query['filters']) ? $query['filters'] : [];
-        $sortBy = null;
-
-        if (isset($query['sortBy'])) {
-            $direction = '-' === substr($query['sortBy'], 0, 1) ? -1 : 1;
-            $property = 1 === $direction ? $query['sortBy'] : substr($query['sortBy'], 1);
-            $sortBy = ['property' => $property, 'direction' => $direction];
-        }
-        if (!$isAdmin) {
-            $filters['organizations'] = array_map(function (Organization $organization) {
-                return $organization->getUuid();
-            }, $user->getAdministratedOrganizations()->toArray());
-        }
-        $downloadDate = date('Y-m-d_H-i-s');
-
-        return new StreamedResponse(function () use ($filters, $sortBy) {
-            $this->logConnectManager->exportConnectionsToCsv(LogConnectPlatform::class, $filters, $sortBy);
-        }, 200, [
-            'Content-Type' => 'application/force-download',
-            'Content-Disposition' => 'attachment; filename="connection_time_platform_'.$downloadDate.'.csv"',
-        ]);
-    }
-
-    /**
-     * @Route(
      *     "/workspace/{workspace}/list",
      *     name="apiv2_log_connect_workspace_list"
      * )
+     *
      * @EXT\ParamConverter(
      *     "workspace",
      *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
@@ -165,46 +126,10 @@ class LogConnectController
 
     /**
      * @Route(
-     *     "/workspace/{workspace}/csv",
-     *     name="apiv2_log_connect_workspace_list_csv",
-     *     methods={"GET"}
-     * )
-     * @EXT\ParamConverter(
-     *     "workspace",
-     *     class="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     options={"mapping": {"workspace": "uuid"}}
-     * )
-     *
-     * @return StreamedResponse
-     */
-    public function logConnectWorkspaceListCsvAction(Workspace $workspace, Request $request)
-    {
-        $this->checkWorkspaceToolAccess($workspace);
-        $query = $request->query->all();
-        $filters = isset($query['filters']) ? $query['filters'] : [];
-        $sortBy = null;
-
-        if (isset($query['sortBy'])) {
-            $direction = '-' === substr($query['sortBy'], 0, 1) ? -1 : 1;
-            $property = 1 === $direction ? $query['sortBy'] : substr($query['sortBy'], 1);
-            $sortBy = ['property' => $property, 'direction' => $direction];
-        }
-        $filters['workspace'] = $workspace->getUuid();
-        $downloadDate = date('Y-m-d_H-i-s');
-
-        return new StreamedResponse(function () use ($filters, $sortBy) {
-            $this->logConnectManager->exportConnectionsToCsv(LogConnectWorkspace::class, $filters, $sortBy);
-        }, 200, [
-            'Content-Type' => 'application/force-download',
-            'Content-Disposition' => 'attachment; filename="connection_time_workspace_'.$workspace->getUuid().'_'.$downloadDate.'.csv"',
-        ]);
-    }
-
-    /**
-     * @Route(
      *     "/resource/{resource}/list",
      *     name="apiv2_log_connect_resource_list"
      * )
+     *
      * @EXT\ParamConverter(
      *     "resource",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -218,7 +143,7 @@ class LogConnectController
     {
         $hiddenFilters = ['resource' => $resource->getUuid()];
 
-        if (!$this->authorization->isGranted('administrate', $resource->getWorkspace())) {
+        if (!$this->authorization->isGranted('ADMINISTRATE', $resource->getWorkspace())) {
             $hiddenFilters['user'] = $user->getUuid();
         }
 
@@ -228,47 +153,6 @@ class LogConnectController
                 ['hiddenFilters' => $hiddenFilters]
             ))
         );
-    }
-
-    /**
-     * @Route(
-     *     "/resource/{resource}/csv",
-     *     name="apiv2_log_connect_resource_list_csv",
-     *     methods={"GET"}
-     * )
-     * @EXT\ParamConverter(
-     *     "resource",
-     *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     options={"mapping": {"resource": "uuid"}}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return StreamedResponse
-     */
-    public function logConnectResourceListCsvAction(ResourceNode $resource, User $user, Request $request)
-    {
-        $query = $request->query->all();
-        $filters = isset($query['filters']) ? $query['filters'] : [];
-        $sortBy = null;
-
-        if (isset($query['sortBy'])) {
-            $direction = '-' === substr($query['sortBy'], 0, 1) ? -1 : 1;
-            $property = 1 === $direction ? $query['sortBy'] : substr($query['sortBy'], 1);
-            $sortBy = ['property' => $property, 'direction' => $direction];
-        }
-        $filters['resource'] = $resource->getUuid();
-
-        if (!$this->authorization->isGranted('administrate', $resource->getWorkspace())) {
-            $filters['user'] = $user->getUuid();
-        }
-        $downloadDate = date('Y-m-d_H-i-s');
-
-        return new StreamedResponse(function () use ($filters, $sortBy) {
-            $this->logConnectManager->exportConnectionsToCsv(LogConnectResource::class, $filters, $sortBy);
-        }, 200, [
-            'Content-Type' => 'application/force-download',
-            'Content-Disposition' => 'attachment; filename="connection_time_resource_'.$resource->getUuid().'_'.$downloadDate.'.csv"',
-        ]);
     }
 
     /**

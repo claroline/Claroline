@@ -78,13 +78,13 @@ class LogListener
             return null;
         }
 
-        //Add doer details
+        // Add doer details
         $doer = null;
         $doerIp = null;
         $doerSessionId = null;
         $doerType = null;
 
-        //Event can override the doer
+        // Event can override the doer
         if (null === $event->getDoer()) {
             $token = $this->tokenStorage->getToken();
             if (null === $token) {
@@ -116,7 +116,7 @@ class LogListener
 
         $log = new Log();
 
-        //Simple type properties
+        // Simple type properties
         $log
             ->setAction($event->getAction())
             ->setToolName($event->getToolName())
@@ -132,7 +132,7 @@ class LogListener
         $log->setDoerIp($doerIp);
         $log->setDoerSessionId($doerSessionId);
         if (LogUserDeleteEvent::ACTION !== $event->getAction()) {
-            //Prevent user delete case
+            // Prevent user delete case
             $log->setReceiver($event->getReceiver());
         }
         if (LogGroupDeleteEvent::ACTION !== $event->getAction()) {
@@ -140,15 +140,15 @@ class LogListener
             $log->setReceiverGroup($receiverGroup);
         }
         if (LogWorkspaceDeleteEvent::ACTION !== $event->getAction()) {
-            //Prevent delete workspace case
+            // Prevent delete workspace case
             $log->setWorkspace($event->getWorkspace());
         }
         if (LogResourceDeleteEvent::ACTION !== $event->getAction()) {
-            //Prevent delete resource case
+            // Prevent delete resource case
             $log->setResourceNode($event->getResource());
         }
         if (LogWorkspaceRoleDeleteEvent::ACTION !== $event->getAction()) {
-            //Prevent delete role case
+            // Prevent delete role case
             $log->setRole($event->getRole());
         }
 
@@ -214,7 +214,7 @@ class LogListener
     public function isARepeat(LogGenericEvent $event)
     {
         if (null === $this->tokenStorage->getToken()) {
-            //Only if have a user session;
+            // Only if have a user session;
             return false;
         }
 
@@ -252,12 +252,12 @@ class LogListener
                         $oldKey = $oldArray->key;
 
                         if (LogWorkspaceEnterEvent::ACTION === $event->getAction()) {
-                            $notRepeatableLogTimeInSeconds = $notRepeatableLogTimeInSeconds * 3;
+                            $notRepeatableLogTimeInSeconds *= 3;
                         }
-                        if (((is_null($oldWorkspaceId) && is_null($workspaceId)) || $oldWorkspaceId === $workspaceId) &&
-                            $oldKey === $key &&
-                            $diff <= $notRepeatableLogTimeInSeconds &&
-                            !$this->hasBreakingRepeatEvent($session, $event)
+                        if (((is_null($oldWorkspaceId) && is_null($workspaceId)) || $oldWorkspaceId === $workspaceId)
+                            && $oldKey === $key
+                            && $diff <= $notRepeatableLogTimeInSeconds
+                            && !$this->hasBreakingRepeatEvent($session, $event)
                         ) {
                             $is = true;
                             $pushInSession = false;
@@ -265,7 +265,7 @@ class LogListener
                     }
                 }
                 if ($pushInSession) {
-                    //Update last log action for this event category
+                    // Update last log action for this event category
                     $array = [
                         'logSignature' => $event->getAction(),
                         'time' => $now,
@@ -293,7 +293,7 @@ class LogListener
                 }
 
                 if ($pushInSession) {
-                    //Update last logSignature for this event category
+                    // Update last logSignature for this event category
                     $array = ['logSignature' => $event->getLogSignature(), 'time' => $now];
                     $session->set($event->getLogSignature(), json_encode($array));
                 }
@@ -316,12 +316,9 @@ class LogListener
         }
 
         if ($logCreated && $log && (
-            $event instanceof UserLoginEvent ||
-            $event instanceof LogWorkspaceEnterEvent ||
-            $event instanceof LogResourceReadEvent ||
-            $event instanceof LogWorkspaceToolReadEvent ||
-            $event instanceof LogDesktopToolReadEvent ||
-            $event instanceof LogAdminToolReadEvent
+            $event instanceof UserLoginEvent
+            || $event instanceof LogWorkspaceEnterEvent
+            || $event instanceof LogResourceReadEvent
         )) {
             $this->logConnectManager->manageConnection($log);
         }
@@ -393,9 +390,9 @@ class LogListener
                 $oldTime = $oldArray->time;
 
                 foreach ($breakingSignatures as $breakingSignature) {
-                    if ((($event->getIsWorkspaceEnterEvent() && in_array($breakingSignature, $breakingWorkspaceSignatures)) ||
-                        (!$event->getIsWorkspaceEnterEvent() && $oldSignature !== $breakingSignature)) &&
-                        $session->get($breakingSignature)
+                    if ((($event->getIsWorkspaceEnterEvent() && in_array($breakingSignature, $breakingWorkspaceSignatures))
+                        || (!$event->getIsWorkspaceEnterEvent() && $oldSignature !== $breakingSignature))
+                        && $session->get($breakingSignature)
                     ) {
                         $breakingArray = json_decode($session->get($breakingSignature));
 

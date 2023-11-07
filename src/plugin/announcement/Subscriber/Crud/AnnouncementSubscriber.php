@@ -46,7 +46,7 @@ class AnnouncementSubscriber implements EventSubscriberInterface
         $this->fileManager = $fileManager;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Crud::getEventName('create', 'pre', Announcement::class) => 'preCreate',

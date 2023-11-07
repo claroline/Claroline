@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Subscriber\Location;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Location\RoomBooking;
 use Claroline\CoreBundle\Entity\Location\Room;
+use Claroline\CoreBundle\Entity\Location\RoomBooking;
 use Claroline\CoreBundle\Entity\Planning\Planning;
 use Claroline\CoreBundle\Event\Planning\PlanObjectEvent;
 use Claroline\CoreBundle\Event\Planning\UnplanObjectEvent;
@@ -21,7 +21,7 @@ class RoomPlanningSubscriber implements EventSubscriberInterface
         $this->om = $om;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             PlanObjectEvent::class => 'onPlan',

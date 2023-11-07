@@ -35,7 +35,6 @@ class DesktopContext extends AbstractContext
     public function getAccessErrors(?string $contextId, TokenInterface $token): array
     {
         return [
-
         ];
     }
 

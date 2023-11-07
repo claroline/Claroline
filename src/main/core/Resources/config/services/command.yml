@@ -21,13 +21,6 @@ services:
         tags:
             - { name: 'console.command', command: 'claroline:geoip:download' }
 
-    # Logs
-    Claroline\CoreBundle\Command\Logs\LogConnectionComputeCommand:
-        arguments:
-            - '@Claroline\CoreBundle\Manager\LogConnectManager'
-        tags:
-            - { name: 'console.command', command: 'claroline:connection:duration' }
-
     # Resources
     Claroline\CoreBundle\Command\Resource\DeleteInactiveCommand:
         arguments:

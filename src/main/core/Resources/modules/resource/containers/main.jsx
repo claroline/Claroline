@@ -22,9 +22,6 @@ const ResourceMain = withRouter(
       (dispatch) => ({
         open(resourceSlug, embedded, loadApp) {
           dispatch(actions.fetchResource(resourceSlug, embedded, loadApp))
-        },
-        close(resourceSlug, embedded) {
-          dispatch(actions.closeResource(resourceSlug, embedded))
         }
       })
     )(ResourceMainComponent)

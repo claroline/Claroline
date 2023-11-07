@@ -23,8 +23,8 @@ class OpenToolEvent extends AbstractToolEvent
     public function __construct(
         string $toolName,
         string $context,
-        ?Workspace $workspace = null,
-        ?User $user = null
+        Workspace $workspace = null,
+        User $user = null
     ) {
         parent::__construct($toolName, $context, $workspace);
 
@@ -54,7 +54,7 @@ class OpenToolEvent extends AbstractToolEvent
      * Sets data to return in the api.
      * NB. It MUST contain serialized structures.
      *
-     * @deprecated use addResponse(array $responseData).
+     * @deprecated use addResponse(array $responseData)
      */
     public function setData(array $data): void
     {
@@ -62,7 +62,7 @@ class OpenToolEvent extends AbstractToolEvent
     }
 
     /**
-     * @deprecated use getResponse().
+     * @deprecated use getResponse()
      */
     public function getData(): array
     {

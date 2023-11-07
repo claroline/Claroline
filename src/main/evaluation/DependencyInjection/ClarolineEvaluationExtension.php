@@ -18,9 +18,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class ClarolineEvaluationExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $locator = new FileLocator(__DIR__.'/../Resources/config');

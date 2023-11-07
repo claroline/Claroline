@@ -144,6 +144,31 @@ plugin:
         - name: connection_messages
           class: comment-dots
 
+    tools:
+        - name: workspaces
+          class: book
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+          tool_rights:
+              - name: archive
+
+        - name: resources
+          class: folder
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: true
+
+        - name: resource_trash
+          class: trash-alt
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: false
+
+        - name: locations
+          class: map-marker-alt
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+          tool_rights:
+              - name: book
+
     widgets:
         - name: simple
           class: Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget
@@ -193,31 +218,6 @@ plugin:
           type: list
           context: [desktop, workspace]
           tags: [structure]
-
-    tools:
-        - name: workspaces
-          class: book
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true
-          tool_rights:
-              - name: archive
-
-        - name: resources
-          class: folder
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: true
-
-        - name: resource_trash
-          class: trash-alt
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: false
-
-        - name: locations
-          class: map-marker-alt
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true
-          tool_rights:
-              - name: book
 
     templates:
         - name: email_layout

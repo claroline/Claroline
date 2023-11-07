@@ -25,9 +25,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\OrderedToolRepository")
+ *
  * @ORM\Table(
  *     name="claro_ordered_tool",
  *     uniqueConstraints={
+ *
  *         @ORM\UniqueConstraint(
  *             name="ordered_tool_unique_tool_user_type",
  *             columns={"tool_id", "user_id"}
@@ -38,6 +40,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *         )
  *     }
  * )
+ *
  * @DoctrineAssert\UniqueEntity({"tool", "workspace"})
  * @DoctrineAssert\UniqueEntity({"tool", "user"})
  */
@@ -53,8 +56,6 @@ class OrderedTool
 
     /**
      * Display tool icon when the tool is rendered.
-     *
-     * @var bool
      *
      * @ORM\Column(type="boolean", options={"default": 0})
      */
@@ -73,6 +74,7 @@ class OrderedTool
      *     cascade={"persist", "merge"},
      *     inversedBy="orderedTools"
      * )
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Workspace
@@ -83,6 +85,7 @@ class OrderedTool
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool"
      * )
+     *
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var Tool
@@ -94,6 +97,7 @@ class OrderedTool
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"}
      * )
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var User

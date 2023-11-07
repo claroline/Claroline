@@ -4,7 +4,6 @@ import {PropTypes as T} from 'prop-types'
 import {Routes} from '#/main/app/router/components/routes'
 
 import {HomeContent} from '#/main/app/layout/sections/home/components/content'
-import {HomeDisabled} from '#/main/app/layout/sections/home/components/disabled'
 import {HomeLogin} from '#/main/app/layout/sections/home/components/login'
 import {SendPassword} from '#/main/app/layout/sections/home/components/send-password'
 import {NewPassword} from '#/main/app/layout/sections/home/components/new-password'

@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class EvaluationToolSubscriber implements EventSubscriberInterface
 {
-    const NAME = 'evaluation';
+    public const NAME = 'evaluation';
 
     public static function getSubscribedEvents(): array
     {
@@ -19,7 +19,7 @@ class EvaluationToolSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onOpen(OpenToolEvent $event)
+    public function onOpen(OpenToolEvent $event): void
     {
         $event->setData([]);
         $event->stopPropagation();

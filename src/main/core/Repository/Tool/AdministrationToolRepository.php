@@ -28,7 +28,7 @@ class AdministrationToolRepository extends ServiceEntityRepository
         parent::__construct($registry, AdminTool::class);
     }
 
-    public function findAll()
+    public function findAll(): array
     {
         $dql = 'SELECT tool FROM Claroline\CoreBundle\Entity\Tool\AdminTool tool
             LEFT JOIN tool.plugin p

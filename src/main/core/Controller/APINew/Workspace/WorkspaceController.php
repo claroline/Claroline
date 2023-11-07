@@ -23,8 +23,6 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CatalogEvents\WorkspaceEvents;
-use Claroline\CoreBundle\Event\Workspace\CloseWorkspaceEvent;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -448,35 +446,6 @@ class WorkspaceController extends AbstractCrudController
         return new JsonResponse(array_map(function (Role $role) {
             return $this->serializer->serialize($role);
         }, $roles));
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Dispatches all actions that has to be done when closing a workspace.",
-     *     parameters={
-     *         {"name": "id", "type": {"string"}, "description": "The workspace uuid"}
-     *     }
-     * )
-     *
-     * @Route("/{slug}/close", name="apiv2_workspace_close", methods={"PUT"})
-     *
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"slug": "slug"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     */
-    public function closeAction(Workspace $workspace, User $user = null): JsonResponse
-    {
-        $this->dispatcher->dispatch(
-            WorkspaceEvents::CLOSE,
-            CloseWorkspaceEvent::class,
-            [$workspace]
-        );
-
-        if ($user) {
-            // TODO : listen to the close event
-            $this->logConnectManager->computeWorkspaceDuration($user, $workspace);
-        }
-
-        return new JsonResponse(null, 204);
     }
 
     protected function getDefaultHiddenFilters(): array

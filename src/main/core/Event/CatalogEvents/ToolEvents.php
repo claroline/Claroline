@@ -10,11 +10,6 @@ final class ToolEvents
     public const OPEN = 'tool.open';
 
     /**
-     * @Event("Claroline\CoreBundle\Event\Tool\CloseToolEvent")
-     */
-    public const CLOSE = 'tool.close';
-
-    /**
      * @Event("Claroline\CoreBundle\Event\Tool\ConfigureToolEvent")
      */
     public const CONFIGURE = 'tool.configure';

@@ -19,19 +19,19 @@ final class Options
     /**
      * @deprecated use SerializerInterface::SERIALIZE_LIST
      */
-    const SERIALIZE_LIST = SerializerInterface::SERIALIZE_LIST;
+    public const SERIALIZE_LIST = SerializerInterface::SERIALIZE_LIST;
     /**
      * @deprecated use SerializerInterface::SERIALIZE_MINIMAL
      */
-    const SERIALIZE_MINIMAL = SerializerInterface::SERIALIZE_MINIMAL;
+    public const SERIALIZE_MINIMAL = SerializerInterface::SERIALIZE_MINIMAL;
     /**
      * @deprecated use SerializerInterface::ABSOLUTE_URL
      */
-    const ABSOLUTE_URL = SerializerInterface::ABSOLUTE_URL;
+    public const ABSOLUTE_URL = SerializerInterface::ABSOLUTE_URL;
     /**
      * @deprecated use SerializerInterface::REFRESH_UUID
      */
-    const REFRESH_UUID = SerializerInterface::REFRESH_UUID;
+    public const REFRESH_UUID = SerializerInterface::REFRESH_UUID;
 
     /* SPECIFIC SERIALIZER OPTIONS */
 
@@ -39,38 +39,38 @@ final class Options
      * Do we want to recursively serialize ?
      * currently used by: organization
      */
-    const IS_RECURSIVE = 'is_recursive';
+    public const IS_RECURSIVE = 'is_recursive';
 
     /* CRUD OPTIONS */
 
-    const SOFT_DELETE = 'soft_delete';
-    const FORCE_FLUSH = 'force_flush';
-    const PERSIST_TAG = 'persistTag'; // find a way to remove
+    public const SOFT_DELETE = 'soft_delete';
+    public const FORCE_FLUSH = 'force_flush';
+    public const PERSIST_TAG = 'persistTag'; // find a way to remove
 
-    //for user
-    const NO_PERSONAL_WORKSPACE = 'no_personal_workspace';
-    const SERIALIZE_FACET = 'serialize_facet';
-    const NO_EMAIL = 'no_email';
-    const ADD_NOTIFICATIONS = 'add_notifications';
-    const VALIDATE_FACET = 'validate_facet';
-    const REGISTRATION = 'registration';
+    // for user
+    public const NO_PERSONAL_WORKSPACE = 'no_personal_workspace';
+    public const SERIALIZE_FACET = 'serialize_facet';
+    public const NO_EMAIL = 'no_email';
+    public const ADD_NOTIFICATIONS = 'add_notifications';
+    public const VALIDATE_FACET = 'validate_facet';
+    public const REGISTRATION = 'registration';
 
     /**
      * @deprecated
      */
-    const WORKSPACE_VALIDATE_ROLES = 'workspace_validate_roles';
+    public const WORKSPACE_VALIDATE_ROLES = 'workspace_validate_roles';
     // make created workspace a model
-    const AS_MODEL = 'as_model';
+    public const AS_MODEL = 'as_model';
     // avoid copying model (this is used by import)
-    const NO_MODEL = 'no_model';
+    public const NO_MODEL = 'no_model';
 
     /**
      * for resource node.
      *
      * @deprecated
      */
-    const NO_RIGHTS = 'no_rights';
+    public const NO_RIGHTS = 'no_rights';
 
     // for transfer tool
-    const WORKSPACE_IMPORT = 'workspace_import';
+    public const WORKSPACE_IMPORT = 'workspace_import';
 }

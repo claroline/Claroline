@@ -5,7 +5,6 @@ import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
 import {CONTEXT_OPEN} from '#/main/app/context/store/actions'
 import {
   TOOL_OPEN,
-  TOOL_CLOSE,
   TOOL_LOAD,
   TOOL_SET_LOADED,
   TOOL_SET_ACCESS_DENIED,
@@ -16,16 +15,14 @@ import {
 
 const reducer = combineReducers({
   name: makeReducer(null, {
-    [TOOL_OPEN]: (state, action) => action.name,
-    [TOOL_CLOSE]: () => null
+    [TOOL_OPEN]: (state, action) => action.name
   }),
 
   loaded: makeReducer(false, {
     [SECURITY_USER_CHANGE]: () => false,
     [CONTEXT_OPEN]: () => false,
     [TOOL_SET_LOADED]: (state, action) => action.loaded,
-    [TOOL_OPEN]: () => false,
-    [TOOL_CLOSE]: () => false,
+    [TOOL_OPEN]: () => false
   }),
   accessDenied: makeReducer(false, {
     [TOOL_SET_ACCESS_DENIED]: (state, action) => action.accessDenied,

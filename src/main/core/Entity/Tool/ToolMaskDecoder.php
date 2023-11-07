@@ -16,9 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\ToolMaskDecoderRepository")
+ *
  * @ORM\Table(
  *     name="claro_tool_mask_decoder",
  *     uniqueConstraints={
+ *
  *         @ORM\UniqueConstraint(
  *             name="tool_mask_decoder_unique_tool_and_name",
  *             columns={"tool_id", "name"}
@@ -28,8 +30,9 @@ use Doctrine\ORM\Mapping as ORM;
 class ToolMaskDecoder
 {
     use Id;
-    public static $defaultActions = ['open', 'edit', 'administrate'];
-    public static $defaultValues = [
+
+    public const DEFAULT_ACTIONS = ['open', 'edit', 'administrate'];
+    public const DEFAULT_VALUES = [
         'open' => 1,
         'edit' => 2,
         'administrate' => 4,
@@ -51,6 +54,7 @@ class ToolMaskDecoder
      *     inversedBy="maskDecoders",
      *     cascade={"persist"}
      * )
+     *
      * @ORM\JoinColumn(name="tool_id", onDelete="CASCADE", nullable=false)
      */
     protected $tool;

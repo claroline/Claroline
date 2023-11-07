@@ -21,11 +21,6 @@ export const CONTEXT_LOAD = 'CONTEXT_LOAD'
 export const CONTEXT_SET_LOADED = 'CONTEXT_SET_LOADED'
 
 /**
- * Action dispatched when the current context is closed.
- */
-export const CONTEXT_CLOSE = 'CONTEXT_CLOSE'
-
-/**
  * Action dispatched when the requested context can not be found.
  */
 export const CONTEXT_NOT_FOUND = 'CONTEXT_NOT_FOUND'
@@ -77,22 +72,5 @@ actions.open = (contextType, contextId = null) => (dispatch) => dispatch({
           break
       }
     }
-  }
-})
-
-actions.close = (contextType, contextId = null) => (dispatch) => dispatch({
-  [API_REQUEST] : {
-    silent: true,
-    url: contextId ?
-      ['claro_context_close', {context: contextType, contextId: contextId}] :
-      ['claro_context_close', {context: contextType}],
-    request: {
-      method: 'PUT'
-    },
-    success: () => dispatch({
-      type: CONTEXT_CLOSE,
-      contextType: contextType,
-      contextId: contextId
-    })
   }
 })

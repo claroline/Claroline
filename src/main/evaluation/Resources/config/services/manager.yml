@@ -9,6 +9,7 @@ services:
             - '@messenger.default_bus'
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
 
     Claroline\EvaluationBundle\Manager\PdfManager:
         arguments:

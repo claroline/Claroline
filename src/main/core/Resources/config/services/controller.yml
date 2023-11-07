@@ -2,11 +2,6 @@ services:
     _defaults:
         public: true # because controller
 
-    Claroline\CoreBundle\Controller\LegacyController:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Library\RoutingHelper'
-
     Claroline\CoreBundle\Controller\APINew\Log\LogConnectController:
         arguments:
             - '@security.authorization_checker'
@@ -185,15 +180,6 @@ services:
           - '@Claroline\CoreBundle\Library\RoutingHelper'
           - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
           - '@Claroline\AppBundle\Event\StrictDispatcher'
-
-    Claroline\CoreBundle\Controller\DesktopController:
-        arguments:
-            - '@security.authorization_checker'
-            - '@security.token_storage'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
 
     Claroline\CoreBundle\Controller\FileController:
         arguments:

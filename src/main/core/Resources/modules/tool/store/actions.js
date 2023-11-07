@@ -1,5 +1,4 @@
 import get from 'lodash/get'
-import isEqual from 'lodash/isEqual'
 
 import {makeActionCreator, makeInstanceActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
@@ -9,7 +8,6 @@ import {selectors} from '#/main/core/tool/store/selectors'
 
 // actions
 export const TOOL_OPEN              = 'TOOL_OPEN'
-export const TOOL_CLOSE             = 'TOOL_CLOSE'
 export const TOOL_LOAD              = 'TOOL_LOAD'
 export const TOOL_SET_LOADED        = 'TOOL_SET_LOADED'
 export const TOOL_SET_ACCESS_DENIED = 'TOOL_SET_ACCESS_DENIED'
@@ -39,8 +37,6 @@ actions.open = (name) => (dispatch, getState) => {
   }
 }
 
-actions.close = makeActionCreator(TOOL_CLOSE)
-
 /**
  * Fetch a tool.
  *
@@ -51,7 +47,6 @@ actions.close = makeActionCreator(TOOL_CLOSE)
 actions.fetch = (toolName, context, contextId) => (dispatch) => dispatch({
   [API_REQUEST]: {
     silent: true,
-    //url: context.url,
     url: ['claro_tool_open', {context: context, contextId: contextId, name: toolName}],
     success: (response, dispatch) => {
       // load tool base data
@@ -76,16 +71,6 @@ actions.fetch = (toolName, context, contextId) => (dispatch) => dispatch({
           dispatch(actions.setLoaded(true))
           break
       }
-    }
-  }
-})
-
-actions.closeTool = (toolName, context, contextId) => ({
-  [API_REQUEST] : {
-    silent: true,
-    url: ['claro_tool_close', {name: toolName, context: context, contextId: contextId}],
-    request: {
-      method: 'PUT'
     }
   }
 })

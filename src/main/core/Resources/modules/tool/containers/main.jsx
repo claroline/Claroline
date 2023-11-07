@@ -19,11 +19,6 @@ const ToolMain = withReducer(selectors.STORE_NAME, reducer)(
     (dispatch) => ({
       open(toolName, context, contextId) {
         return dispatch(actions.fetch(toolName, context, contextId))
-      },
-      close(toolName, context, contextId) {
-        if (toolName) {
-          dispatch(actions.closeTool(toolName, context, contextId))
-        }
       }
     })
   )(ToolMainComponent)

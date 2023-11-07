@@ -29,37 +29,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class PathSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var TranslatorInterface */
-    private $translator;
-    /* @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ResourceManager */
-    private $resourceManager;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        ObjectManager $om,
-        Crud $crud,
-        SerializerProvider $serializer,
-        ResourceManager $resourceManager,
-        EvaluationManager $evaluationManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly TranslatorInterface $translator,
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly SerializerProvider $serializer,
+        private readonly ResourceManager $resourceManager,
+        private readonly EvaluationManager $evaluationManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->om = $om;
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->resourceManager = $resourceManager;
-        $this->evaluationManager = $evaluationManager;
     }
 
     public static function getSubscribedEvents(): array

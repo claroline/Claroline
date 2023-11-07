@@ -10,5 +10,7 @@ interface EvaluationInterface
 
     public function getScoreMax(): ?float;
 
+    public function getStatus(): ?string;
+
     public function isTerminated(): bool;
 }

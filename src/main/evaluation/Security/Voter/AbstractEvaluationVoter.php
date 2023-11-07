@@ -16,7 +16,7 @@ use Claroline\AppBundle\Security\Voter\AbstractVoter;
 abstract class AbstractEvaluationVoter extends AbstractVoter
 {
     // tool right allowing to show evaluations of other users
-    const SHOW_EVALUATIONS = 'SHOW_EVALUATIONS';
+    public const SHOW_EVALUATIONS = 'SHOW_EVALUATIONS';
 
     public function getSupportedActions(): array
     {

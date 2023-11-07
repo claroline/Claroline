@@ -101,11 +101,7 @@ services:
 
     Claroline\CoreBundle\Manager\LogConnectManager:
         arguments:
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
-            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
-            - '@translator'
 
     Claroline\CoreBundle\Manager\LockManager:
         arguments:

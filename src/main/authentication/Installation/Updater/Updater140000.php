@@ -2,7 +2,6 @@
 
 namespace Claroline\AuthenticationBundle\Installation\Updater;
 
-use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
 use Claroline\AuthenticationBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\InstallationBundle\Updater\Updater;

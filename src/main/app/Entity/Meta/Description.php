@@ -8,17 +8,15 @@ trait Description
 {
     /**
      * @ORM\Column(name="description", type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $description = null;
+    protected ?string $description = null;
 
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(?string $description = null): void
+    public function setDescription(string $description = null): void
     {
         $this->description = $description;
     }

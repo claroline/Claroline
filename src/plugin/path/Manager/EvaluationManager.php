@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
@@ -9,10 +10,9 @@ use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
 use Claroline\EvaluationBundle\Library\Checker\ProgressionChecker;
 use Claroline\EvaluationBundle\Library\Checker\ScoreChecker;
 use Claroline\EvaluationBundle\Library\EvaluationAggregator;
-use Claroline\EvaluationBundle\Library\EvaluationStatusChecker;
 use Claroline\EvaluationBundle\Library\GenericEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\UserProgression;
@@ -20,24 +20,14 @@ use Innova\PathBundle\Repository\PathRepository;
 
 class EvaluationManager
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var ResourceEvaluationManager */
-    private $resourceEvalManager;
-
-    private $progressionRepo;
-    /** @var PathRepository */
-    private $pathRepo;
-    /** @var ResourceEvaluationRepository */
-    private $resourceEvalRepo;
+    private ObjectRepository $progressionRepo;
+    private PathRepository $pathRepo;
+    private ResourceEvaluationRepository $resourceEvalRepo;
 
     public function __construct(
-        ObjectManager $om,
-        ResourceEvaluationManager $resourceEvalManager
+        private readonly ObjectManager $om,
+        private readonly ResourceEvaluationManager $resourceEvalManager
     ) {
-        $this->om = $om;
-        $this->resourceEvalManager = $resourceEvalManager;
-
         $this->progressionRepo = $this->om->getRepository(UserProgression::class);
         $this->pathRepo = $this->om->getRepository(Path::class);
         $this->resourceEvalRepo = $this->om->getRepository(ResourceEvaluation::class);
@@ -67,7 +57,7 @@ class EvaluationManager
     }
 
     /**
-     * Get all steps progression for an user.
+     * Get all steps progression for a user.
      */
     public function getStepsProgressionForUser(Path $path, User $user): array
     {
@@ -123,11 +113,16 @@ class EvaluationManager
         // load the user progression for the path (aka the seen/done/etc. flags on steps)
         $stepsProgression = $this->getStepsProgressionForUser($path, $user);
 
-        // the path evaluation aggregates the progression/score of all its required/evaluated resource
+        // the path evaluation aggregates the progression/score of all its required/evaluated resources
         // and the status of the steps which don't contain any resource.
-        $aggregator = new EvaluationAggregator();
+        $aggregator = new EvaluationAggregator([
+            new ProgressionChecker(),
+            new ScoreChecker($path->getSuccessScore()),
+        ]);
 
         if (!empty($path->getOverviewResource()) && $path->getOverviewResource()->isRequired()) {
+            // the path contains a required resource on its overview, we need to get the evaluation for this resource
+            // in order to compute the step progression
             $resourceEvaluation = $this->resourceEvalManager->getUserEvaluation($path->getOverviewResource(), $user, false);
             if (!$resourceEvaluation) {
                 // no evaluation, adds an empty evaluation for correct progression check
@@ -164,14 +159,8 @@ class EvaluationManager
             }
         }
 
-        // compute the status of the path
-        $checker = new EvaluationStatusChecker([
-            new ProgressionChecker(),
-            new ScoreChecker($path->getSuccessScore()),
-        ]);
-
         $evaluationData = [
-            'status' => $checker->getStatus($aggregator),
+            'status' => $aggregator->getStatus(),
             'score' => $aggregator->getScore(),
             'scoreMax' => $aggregator->getScoreMax(),
             'progression' => $aggregator->getProgression(),
@@ -182,10 +171,6 @@ class EvaluationManager
             return $this->resourceEvalManager->updateAttempt($pathAttempt, $evaluationData);
         }
 
-        return $this->resourceEvalManager->createAttempt(
-            $path->getResourceNode(),
-            $user,
-            $evaluationData
-        );
+        return $this->resourceEvalManager->createAttempt($path->getResourceNode(), $user, $evaluationData);
     }
 }

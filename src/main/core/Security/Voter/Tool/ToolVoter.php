@@ -59,7 +59,7 @@ class ToolVoter extends AbstractVoter
 
     public function getSupportedActions(): ?array
     {
-        //atm, null means "everything is supported... implement this later"
+        // atm, null means "everything is supported... implement this later"
         return null;
     }
 }

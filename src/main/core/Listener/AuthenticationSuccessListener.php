@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;

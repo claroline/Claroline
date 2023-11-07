@@ -23,10 +23,6 @@ const ContextMain = withRouter(
         open(contextType, contextId) {
           return dispatch(actions.open(contextType, contextId))
         },
-        close(contextType, contextId) {
-          return dispatch(actions.close(contextType, contextId))
-        },
-
         openTool(toolName) {
           dispatch(toolActions.open(toolName))
         }

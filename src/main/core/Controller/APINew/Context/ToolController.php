@@ -21,12 +21,10 @@ use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
-use Claroline\CoreBundle\Event\Tool\CloseToolEvent;
 use Claroline\CoreBundle\Event\Tool\ConfigureToolEvent;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,7 +58,7 @@ class ToolController
      *
      * @Route("/open/{name}/{context}/{contextId}", name="claro_tool_open", methods={"GET"})
      */
-    public function openAction(string $name, string $context, ?string $contextId = null): JsonResponse
+    public function openAction(string $name, string $context, string $contextId = null): JsonResponse
     {
         $orderedTool = $this->toolManager->getOrderedTool($name, $context, $contextId);
         if (!$orderedTool) {
@@ -199,34 +197,5 @@ class ToolController
         $this->om->endFlushSuite();
 
         return $this->getRightsAction($name, $context, $contextId);
-    }
-
-    /**
-     * @Route("/close/{name}/{context}/{contextId}", name="claro_tool_close", methods={"PUT"})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     */
-    public function closeAction(string $name, string $context, string $contextId = null, User $user = null): JsonResponse
-    {
-        /** @var OrderedTool|null $orderedTool */
-        $orderedTool = $this->toolManager->getOrderedTool($name, $context, $contextId);
-        if (!$orderedTool) {
-            throw new NotFoundHttpException(sprintf('Tool "%s" not found', $name));
-        }
-
-        if (!$this->authorization->isGranted('OPEN', $orderedTool)) {
-            throw new AccessDeniedException();
-        }
-
-        $this->eventDispatcher->dispatch(
-            new CloseToolEvent($name, $context, $orderedTool->getWorkspace()),
-            ToolEvents::CLOSE
-        );
-
-        if ($user) {
-            // TODO : listen to close event instead
-            $this->logConnectManager->computeToolDuration($user, $name, $context, $contextId);
-        }
-
-        return new JsonResponse(null, 204);
     }
 }

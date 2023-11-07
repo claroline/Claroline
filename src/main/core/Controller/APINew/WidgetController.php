@@ -38,7 +38,7 @@ class WidgetController
      *
      * @Route("/{context}", name="apiv2_widget_available", defaults={"context"=null}, methods={"GET"})
      */
-    public function listAction(?string $context = null): JsonResponse
+    public function listAction(string $context = null): JsonResponse
     {
         return new JsonResponse([
             'widgets' => array_map(function (Widget $widget) {

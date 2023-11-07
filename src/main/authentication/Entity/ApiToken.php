@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro_api_token")
  */
 class ApiToken
@@ -31,6 +32,7 @@ class ApiToken
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private ?User $user;

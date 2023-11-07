@@ -11,11 +11,14 @@
 
 namespace Claroline\CoreBundle\Converter;
 
+/**
+ * @deprecated
+ */
 class InvalidConfigurationException extends \Exception
 {
-    const MISSING_NAME = 1;
-    const MISSING_CLASS = 2;
-    const MISSING_ID = 3;
+    public const MISSING_NAME = 1;
+    public const MISSING_CLASS = 2;
+    public const MISSING_ID = 3;
 
     private static $messages = [
         self::MISSING_NAME => 'the controller parameter name is mandatory',

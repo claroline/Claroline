@@ -38,7 +38,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class CommunitySubscriber implements EventSubscriberInterface
 {
-    const NAME = 'community';
+    public const NAME = 'community';
 
     /** @var TokenStorageInterface */
     private $tokenStorage;

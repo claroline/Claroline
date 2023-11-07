@@ -32,7 +32,7 @@ class ToolMaskDecoderManager
      */
     public function createDefaultToolMaskDecoders(Tool $tool): void
     {
-        foreach (ToolMaskDecoder::$defaultActions as $action) {
+        foreach (ToolMaskDecoder::DEFAULT_ACTIONS as $action) {
             $maskDecoder = $this->maskRepo
                 ->findMaskDecoderByToolAndName($tool, $action);
 
@@ -40,7 +40,7 @@ class ToolMaskDecoderManager
                 $maskDecoder = new ToolMaskDecoder();
                 $maskDecoder->setTool($tool);
                 $maskDecoder->setName($action);
-                $maskDecoder->setValue(ToolMaskDecoder::$defaultValues[$action]);
+                $maskDecoder->setValue(ToolMaskDecoder::DEFAULT_VALUES[$action]);
 
                 $this->om->persist($maskDecoder);
             }
@@ -105,9 +105,6 @@ class ToolMaskDecoderManager
         return $this->maskRepo->findMaskDecodersByTool($tool);
     }
 
-    /**
-     * @return ToolMaskDecoder
-     */
     public function getMaskDecoderByToolAndName(Tool $tool, string $name): ?ToolMaskDecoder
     {
         return $this->maskRepo->findMaskDecoderByToolAndName($tool, $name);

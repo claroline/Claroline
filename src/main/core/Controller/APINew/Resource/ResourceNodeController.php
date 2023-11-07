@@ -6,10 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
-use Claroline\CoreBundle\Event\Resource\CloseResourceEvent;
 use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
@@ -157,34 +154,9 @@ class ResourceNodeController extends AbstractCrudController
                 array_merge($request->query->all(), ['hiddenFilters' => [
                     'workspace' => $workspace->getUuid(),
                     'active' => false,
-                ]]))
+                ]])
+            )
         );
-    }
-
-    /**
-     * @Route("/{slug}/close", name="claro_resource_close", methods={"PUT"})
-     *
-     * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"slug": "slug"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     */
-    public function closeAction(ResourceNode $resourceNode, Request $request, User $user = null): JsonResponse
-    {
-        $this->dispatcher->dispatch(
-            ResourceEvents::CLOSE,
-            CloseResourceEvent::class,
-            [$this->resourceManager->getResourceFromNode($resourceNode)]
-        );
-
-        // todo : listen to close event instead
-        if ($user) {
-            $data = $this->decodeRequest($request);
-
-            if (isset($data['embedded'])) {
-                $this->logConnectManager->computeResourceDuration($user, $resourceNode, $data['embedded']);
-            }
-        }
-
-        return new JsonResponse(null, 204);
     }
 
     public static function getOptions(): array

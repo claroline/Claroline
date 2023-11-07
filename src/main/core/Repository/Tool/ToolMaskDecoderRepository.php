@@ -65,7 +65,7 @@ class ToolMaskDecoderRepository extends EntityRepository
         ';
         $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('tool', $tool);
-        $query->setParameter('defaultActions', ToolMaskDecoder::$defaultActions);
+        $query->setParameter('defaultActions', ToolMaskDecoder::DEFAULT_ACTIONS);
 
         return $query->getResult();
     }

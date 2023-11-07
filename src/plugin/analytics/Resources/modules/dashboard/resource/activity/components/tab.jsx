@@ -15,15 +15,6 @@ const ActivityTab = (props) =>
       title={trans('activity')}
       actions={[
         {
-          name: 'download-connection-times',
-          type: DOWNLOAD_BUTTON,
-          icon: 'fa fa-fw fa-download',
-          label: trans('export-connections', {}, 'actions'),
-          file: {
-            url: url(['apiv2_log_connect_resource_list_csv', {resource: props.resourceId}])
-          },
-          group: trans('export')
-        }, {
           name: 'download',
           type: DOWNLOAD_BUTTON,
           icon: 'fa fa-fw fa-download',

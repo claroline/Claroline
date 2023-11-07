@@ -26,7 +26,7 @@ function getInitialData(container) {
   const initialData = {}
   if (container.dataset) {
     for (let prop in container.dataset) {
-      if (container.dataset.hasOwnProperty(prop) && 0 < container.dataset[prop].length) {
+      if (container.dataset[prop] && 0 < container.dataset[prop].length) {
         initialData[prop] = JSON.parse(container.dataset[prop])
       }
     }
