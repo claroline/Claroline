@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react'
 import classes from 'classnames'
 
+import {trans} from '#/main/app/intl'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 
@@ -12,7 +13,9 @@ class StringInput extends PureComponent {
   }
 
   onChange(e) {
-    this.props.onChange(e.target.value)
+    if (!this.props.maxLength || e.target.value.length <= this.props.maxLength) {
+      this.props.onChange(e.target.value)
+    }
   }
 
   render() {
@@ -28,20 +31,50 @@ class StringInput extends PureComponent {
       autoComplete: this.props.autoComplete
     }
 
+    const charsTyped = this.props.value ? this.props.value.length : 0
+    const minLength = this.props.minLength
+    const maxLength = this.props.maxLength
+
     if (this.props.long) {
       return (
-        <textarea
-          {...commonProps}
-          rows={this.props.minRows}
-        />
+        <div>
+          <textarea
+            {...commonProps}
+            rows={this.props.minRows}
+          />
+        </div>
       )
     }
 
     return (
-      <input
-        {...commonProps}
-        type="text"
-      />
+      <div>
+        <input
+          {...commonProps}
+          type="text"
+        />
+
+        {(minLength || maxLength) && charsTyped !== 0 &&
+          <div className="form-text chars-remaining">
+            {charsTyped} {
+              trans('characters_typed', {}, 'platform')
+            }
+          </div>
+        }
+
+        <div className="form-text mb-2">
+          {this.props.minLength &&
+            <div className="form-text">
+              {minLength} {trans('charsMin_length', {}, 'platform')}
+            </div>
+          }
+
+          {this.props.maxLength &&
+            <div className="form-text">
+              {maxLength} {trans('charsMax_length', {}, 'platform')}
+            </div>
+          }
+        </div>
+      </div>
     )
   }
 }

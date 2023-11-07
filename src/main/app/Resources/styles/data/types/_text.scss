@@ -8,3 +8,8 @@ textarea.form-control {
     min-width: 100%;
     min-height: $line-height-computed + $input-padding-y*2;
 }
+
+.chars-remaining {
+    font-size: $font-size-sm;
+    text-align: end;
+}
