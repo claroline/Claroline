@@ -15,8 +15,7 @@ const Overview = connect(
     empty: selectors.empty(state),
     overview: selectors.showOverview(state),
     resourceNode: resourceSelectors.resourceNode(state),
-    showEndPage: selectors.showEndPage(state),
-    flashcardProgression: selectors.flashcardProgression(state)
+    showEndPage: selectors.showEndPage(state)
   })
 )(OverviewComponent)
 

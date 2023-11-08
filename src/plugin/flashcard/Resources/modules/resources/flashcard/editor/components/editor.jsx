@@ -6,11 +6,10 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
-import {API_REQUEST} from '#/main/app/api'
-import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {FormData}                                                                    from '#/main/app/content/form/containers/data'
+import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
+import { actions as flashcardActions } from '#/plugin/flashcard/resources/flashcard/editor/store'
 
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
@@ -21,7 +20,6 @@ import {selectors as baseSelectors} from '#/plugin/flashcard/resources/flashcard
 import {Card} from '#/plugin/flashcard/resources/flashcard/components/card'
 import {MODAL_CARD} from '#/plugin/flashcard/resources/flashcard/editor/modals/card'
 import {Card as CardTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
 const EditorComponent = props =>
   <FormData
@@ -196,6 +194,8 @@ EditorComponent.propTypes = {
   cards: T.arrayOf(T.shape(
     CardTypes.propTypes
   )),
+  saveForm: T.func.isRequired,
+  flashcardDeckData: T.object,
   flashcardDeck: T.shape({
     id: T.string.isRequired
   }).isRequired,
@@ -214,31 +214,7 @@ const Editor = connect(
       dispatch(formActions.updateProp(selectors.FORM_NAME, prop, value))
     },
     saveForm(id, data) {
-      dispatch({
-        [API_REQUEST]: {
-          url: ['apiv2_flashcard_deck_update_check', {id: id}],
-          request: {
-            method: 'PUT',
-            body: JSON.stringify(data)
-          },
-          silent: true,
-          success: (response) => {
-            if(response.resetAttempts) {
-              dispatch(modalActions.showModal(MODAL_CONFIRM, {
-                icon: 'fa fa-fw fa-exclamation-triangle',
-                title: trans('deck_confirm_edit_title', {}, 'flashcard'),
-                question: trans('deck_confirm_edit_question', {}, 'flashcard'),
-                confirmButtonText: trans('confirm', {}, 'actions'),
-                handleConfirm: () => {
-                  dispatch(formActions.saveForm(selectors.FORM_NAME, ['apiv2_flashcard_deck_update', {id: id}]))
-                }
-              }))
-            } else {
-              dispatch(formActions.saveForm(selectors.FORM_NAME, ['apiv2_flashcard_deck_update', {id: id}]))
-            }
-          }
-        }
-      } )
+      dispatch(flashcardActions.updateFlashcardDeck(id, data))
     }
   })
 )(EditorComponent)

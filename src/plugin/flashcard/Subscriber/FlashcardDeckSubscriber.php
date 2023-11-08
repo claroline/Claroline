@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
@@ -51,18 +52,22 @@ class FlashcardDeckSubscriber implements EventSubscriberInterface
         $flashcardDeck = $event->getResource();
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $evaluation = $this->evaluationManager->getResourceUserEvaluation($flashcardDeck->getResourceNode(), $user);
-        $attempt = $this->resourceEvalRepo->findOneInProgress($flashcardDeck->getResourceNode(), $user);
+        $evaluation = null;
+        $attempt = null;
+        $flashcardProgression = null;
 
-        if (!$attempt) {
-            $attempt = $this->resourceEvalRepo->findLast($flashcardDeck->getResourceNode(), $user);
+        if ($user instanceof User) {
+            $evaluation = $this->evaluationManager->getResourceUserEvaluation($flashcardDeck->getResourceNode(), $user);
+            $attempt = $this->resourceEvalRepo->findOneInProgress($flashcardDeck->getResourceNode(), $user);
+            $attempt = $this->flashcardManager->calculateSession($attempt, $flashcardDeck, $user);
+            $flashcardProgression = $attempt->getData()['cards'] ?? [];
         }
 
         $event->setData([
             'attempt' => $this->serializer->serialize($attempt),
-            'userEvaluation' => $this->serializer->serialize($evaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
+            'userEvaluation' => $evaluation ? $this->serializer->serialize($evaluation, [SerializerInterface::SERIALIZE_MINIMAL]) : null,
             'flashcardDeck' => $this->serializer->serialize($flashcardDeck),
-            'flashcardProgression' => $this->flashcardManager->getAttemptCardsProgression($flashcardDeck, $attempt, $user),
+            'flashcardProgression' => $flashcardProgression,
         ]);
 
         $event->stopPropagation();

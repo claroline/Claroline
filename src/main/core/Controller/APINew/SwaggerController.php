@@ -60,7 +60,7 @@ class SwaggerController
                 'title' => 'Claroline API',
                 'termsOfService' => null,
                 'license' => [
-                    'name' => 'GPL-3.0-or-later',
+                    'name' => 'AGPL-3.0',
                     'url' => 'https://www.gnu.org/licenses/gpl-3.0.fr.html',
                 ],
             ],
@@ -69,7 +69,7 @@ class SwaggerController
 
         $classes = $this->routerFinder->getHandledClasses();
 
-        $data = new \StdClass();
+        $data = new \stdClass();
 
         foreach ($classes as $class) {
             $data = (object) array_merge((array) $data, $this->documentator->documentClass($class));
@@ -79,7 +79,7 @@ class SwaggerController
 
         foreach ($classes as $class) {
             $def = json_decode(json_encode($this->schemaProvider->getSchema($class, [SchemaProvider::IGNORE_COLLECTIONS])), true);
-            //we need to mode, return and submit
+            // we need to mode, return and submit
             $defFull = json_decode(json_encode($this->schemaProvider->getSchema($class)), true);
 
             if (is_array($defFull)) {

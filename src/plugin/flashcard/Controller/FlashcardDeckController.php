@@ -8,8 +8,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
-use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
-use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\FlashcardBundle\Entity\Flashcard;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
 use Claroline\FlashcardBundle\Manager\EvaluationManager;
@@ -28,19 +26,16 @@ class FlashcardDeckController extends AbstractCrudController
     protected $om;
     private FlashcardManager $flashcardManager;
     private EvaluationManager $evaluationManager;
-    private ResourceEvaluationManager $resourceEvalManager;
     private ResourceEvaluationRepository $resourceEvalRepo;
 
     public function __construct(
-        ObjectManager             $om,
-        FlashcardManager          $flashcardManager,
-        EvaluationManager         $evaluationManager,
-        ResourceEvaluationManager $resourceEvalManager
+        ObjectManager $om,
+        FlashcardManager $flashcardManager,
+        EvaluationManager $evaluationManager,
     ) {
         $this->om = $om;
         $this->flashcardManager = $flashcardManager;
         $this->evaluationManager = $evaluationManager;
-        $this->resourceEvalManager = $resourceEvalManager;
         $this->resourceEvalRepo = $this->om->getRepository(ResourceEvaluation::class);
     }
 
@@ -61,7 +56,7 @@ class FlashcardDeckController extends AbstractCrudController
      */
     public function checkAction($id, Request $request): JsonResponse
     {
-        $deck = $this->om->getRepository(FlashcardDeck::class)->findOneBy(['id' => $id]);
+        $deck = $this->om->getRepository(FlashcardDeck::class)->findOneBy(['uuid' => $id]);
         $newDeckData = $this->decodeRequest($request);
 
         return new JsonResponse([
@@ -71,7 +66,7 @@ class FlashcardDeckController extends AbstractCrudController
 
     public function updateAction($id, Request $request, $class): JsonResponse
     {
-        $deck = $this->om->getRepository(FlashcardDeck::class)->findOneBy(['id' => $id]);
+        $deck = $this->om->getRepository(FlashcardDeck::class)->findOneBy(['uuid' => $id]);
 
         if ($this->flashcardManager->shouldResetAttempts($deck, $this->decodeRequest($request))) {
             $attempts = $this->resourceEvalRepo->findInProgress($deck->getResourceNode());
@@ -94,51 +89,35 @@ class FlashcardDeckController extends AbstractCrudController
      */
     public function updateProgressionAction(Flashcard $card, User $user, Request $request): JsonResponse
     {
-        $node = $card->getDeck()->getResourceNode();
-        $cardsDrawnProgression = $this->evaluationManager->updateCardDrawnProgression($card, $user, $request->get('isSuccessful'));
+        $deck = $card->getDeck();
+        $node = $deck->getResourceNode();
         $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($node, $user);
 
-        $progression = [];
-        foreach ($cardsDrawnProgression as $cardProgression) {
-            $progression[] = $this->serializer->serialize($cardProgression);
-        }
+        // Mise à jour de la progression de la carte
+        $this->evaluationManager->updateCardDrawnProgression($card, $user, $request->get('isSuccessful'));
 
         $attempt = $this->resourceEvalRepo->findOneInProgress($node, $user);
-        if (!$attempt) {
-            $attempt = $this->resourceEvalRepo->findLast($node, $user);
-        }
+        $attempt = $this->flashcardManager->calculateSession($attempt, $deck, $user);
 
         return new JsonResponse([
             'attempt' => $this->serializer->serialize($attempt),
-            'flashcardProgression' => $progression,
             'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
         ]);
     }
 
     /**
      * @Route("/{id}/attempt", name="apiv2_flashcard_deck_current_attempt", methods={"GET"})
+     *
      * @EXT\ParamConverter("deck", class="Claroline\FlashcardBundle\Entity\FlashcardDeck", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
-    public function getAttemptAction(FlashcardDeck $deck, ?User $user = null): JsonResponse
+    public function getAttemptAction(FlashcardDeck $deck, User $user = null): JsonResponse
     {
-        $node = $deck->getResourceNode();
-        $attempt = $this->resourceEvalRepo->findOneInProgress($node, $user);
-
-        if (!$attempt) {
-            $attempt = $this->resourceEvalManager->createAttempt($node, $user, [
-                'status' => AbstractEvaluation::STATUS_OPENED,
-                'progression' => 0,
-                'data' => [
-                    'session' => 1,
-                    'nextCardIndex' => 0,
-                ]
-            ]);
-        }
+        $attempt = $this->resourceEvalRepo->findOneInProgress($deck->getResourceNode(), $user);
+        $attempt = $this->flashcardManager->calculateSession($attempt, $deck, $user);
 
         return new JsonResponse([
             'attempt' => $this->serializer->serialize($attempt),
-            'flashcardProgression' => $this->flashcardManager->getAttemptCardsProgression($deck, $attempt, $user),
         ]);
     }
 }

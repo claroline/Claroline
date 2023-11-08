@@ -31,7 +31,12 @@
   "card_parameters": "Card parameters",
   "card_preview": "Card preview",
 
-  "view": "view",
+  "session_indicator": "Session",
+  "session_status": "Status of session",
+  "session_status_current": "Current",
+  "session_status_completed": "Completed",
+  "session_status_next": "Next",
+
   "check": "successful",
   "fail": "failed",
 

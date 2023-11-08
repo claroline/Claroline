@@ -10,17 +10,23 @@ import {FlashcardInfo} from '#/plugin/flashcard/resources/flashcard/components/i
 import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 
 const Overview = (props) => {
+  const attemptData = props.attempt && props.attempt.data
+  const sessionStarted = attemptData ? attemptData.cardsAnsweredIds.length > 0 : false
+  const sessionCompleted = attemptData ? attemptData.cardsSessionIds.length === 0 : false
+  const session = attemptData ? attemptData.session : 1
 
-  let action = null
+  let statusText = trans('session_status_next', {}, 'flashcard')
+  let action = action = {
+    type: LINK_BUTTON,
+    label: trans('start', {}, 'actions'),
+    target: `${props.basePath}/play`,
+    primary: true,
+    disabled: props.empty,
+    disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'flashcard')] : []
+  }
 
-  if (props.attempt?.data?.nextCardIndex > 0) {
-    action = {
-      type: LINK_BUTTON,
-      label: trans('continue', {}, 'actions'),
-      target: `${props.basePath}/play`,
-      primary: true
-    }
-  } else if (props.attempt?.data?.session === 7 && props.attempt?.status === 'completed') {
+  if (sessionCompleted) {
+    statusText = trans('session_status_completed', {}, 'flashcard')
     action = {
       type: LINK_BUTTON,
       label: trans('restart', {}, 'actions'),
@@ -29,14 +35,13 @@ const Overview = (props) => {
       disabled: props.empty,
       disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'flashcard')] : []
     }
-  } else {
+  } else if (sessionStarted) {
+    statusText = trans('session_status_current', {}, 'flashcard')
     action = {
       type: LINK_BUTTON,
-      label: trans('start', {}, 'actions'),
+      label: trans('continue', {}, 'actions'),
       target: `${props.basePath}/play`,
-      primary: true,
-      disabled: props.empty,
-      disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'flashcard')] : []
+      primary: true
     }
   }
 
@@ -47,13 +52,13 @@ const Overview = (props) => {
       attempt={props.attempt}
       resourceNode={props.resourceNode}
       actions={[action]}
+      details={[
+        [trans('session_indicator', {}, 'flashcard'), session + ' / 7'],
+        [trans('session_status', {}, 'flashcard'), statusText]
+      ]}
     >
-      <h5>
-        Session {props.attempt?.data?.nextCardIndex === 0 ? (props.attempt?.data?.session + ((props.attempt?.status === 'completed') ? ' terminée' : ' à venir')) : props.attempt?.data?.session + ' en cours'}
-      </h5>
-
       <FlashcardInfo
-        flashcardProgression={props.flashcardProgression}
+        flashcardProgression={props.attempt.data.cards}
       />
     </ResourceOverview>
   )
@@ -61,6 +66,14 @@ const Overview = (props) => {
 
 Overview.propTypes = {
   basePath: T.string.isRequired,
+  attempt: T.shape({
+    status: T.string,
+    data: T.shape({
+      nextCardIndex: T.number,
+      session: T.number,
+      cards: T.array
+    })
+  }),
   evaluation: T.shape(
     ResourceEvaluationTypes.propTypes
   ),

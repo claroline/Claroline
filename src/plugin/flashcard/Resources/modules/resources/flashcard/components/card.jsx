@@ -19,6 +19,12 @@ const Card = props => {
     modeClasses = `flashcard flashcard-0 ${props.flipped ? 'flashcard-flip' : ''}`
   }
 
+  if(props.card === null) {
+    return (
+      <div></div>
+    )
+  }
+
   return (
     <div className={modeClasses}>
       <div className={classes('flashcard-card', props.className)}>

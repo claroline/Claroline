@@ -46,18 +46,7 @@ const FlashcardDeck = {
   }
 }
 
-const FlashcardProgression = {
-  propTypes: {
-    id: T.number,
-    isSuccessful: T.bool,
-    flashcard: T.shape(
-      Card.propTypes
-    )
-  }
-}
-
 export {
   Card,
-  FlashcardDeck,
-  FlashcardProgression
+  FlashcardDeck
 }

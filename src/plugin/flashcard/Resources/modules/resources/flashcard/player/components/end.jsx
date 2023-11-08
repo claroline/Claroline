@@ -3,47 +3,64 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
+import {trans} from '#/main/app/intl'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ResourceEnd} from '#/main/core/resource/components/end'
 
 import {selectors} from '#/plugin/flashcard/resources/flashcard/store'
-import {
-  FlashcardDeck as FlashcardDeckTypes,
-  FlashcardProgression as FlashcardProgressionTypes
-} from '#/plugin/flashcard/resources/flashcard/prop-types'
+import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 import {FlashcardInfo} from '#/plugin/flashcard/resources/flashcard/components/info'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
-const PlayerEndComponent = (props) =>
-  <ResourceEnd
-    contentText={get(props.flashcardDeck, 'end.message')}
-    feedbacks={{}}
-    attempt={props.attempt}
-  >
-    <FlashcardInfo
-      flashcardDeck={props.flashcardDeck}
-      flashcardProgression={props.flashcardProgression}
-    />
-  </ResourceEnd>
+const PlayerEndComponent = (props) => {
+  const attemptData = props.attempt && props.attempt.data
+  let session = attemptData ? attemptData.session : 1
+  let action = action = {
+    type: LINK_BUTTON,
+    label: trans('start', {}, 'actions'),
+    target: `${props.basePath}`,
+    primary: true,
+    disabled: props.empty,
+    disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'flashcard')] : []
+  }
+
+  if( attemptData.cardsSessionIds.length > 0 ) {
+    session = session - 1
+  }
+
+  return (
+    <ResourceEnd
+      contentText={get(props.flashcardDeck, 'end.message')}
+      feedbacks={{}}
+      attempt={props.attempt}
+      actions={[action]}
+      details={[
+        [trans('session_indicator', {}, 'flashcard'), session + ' / 7'],
+        [trans('session_status', {}, 'flashcard'), trans('session_status_completed', {}, 'flashcard')]
+      ]}
+    >
+      <FlashcardInfo
+        flashcardProgression={attemptData.cards}
+      />
+    </ResourceEnd>
+  )
+}
 
 PlayerEndComponent.propTypes = {
   attempt: T.shape(
     ResourceEvaluationTypes.propTypes
   ),
+  basePath: T.string,
+  empty: T.bool,
   flashcardDeck: T.shape(
     FlashcardDeckTypes.propTypes
-  ).isRequired,
-  flashcardProgression: T.arrayOf(
-    T.shape(
-      FlashcardProgressionTypes.propTypes
-    )
-  )
+  ).isRequired
 }
 
 const PlayerEnd = connect(
   (state) => ({
     attempt: selectors.attempt(state),
-    flashcardDeck: selectors.flashcardDeck(state),
-    flashcardProgression: selectors.flashcardProgression(state)
+    flashcardDeck: selectors.flashcardDeck(state)
   })
 )(PlayerEndComponent)
 

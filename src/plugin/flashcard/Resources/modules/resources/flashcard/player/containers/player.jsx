@@ -8,7 +8,6 @@ const Player = connect(
     flashcardDeck: selectors.flashcardDeck(state),
     draw: selectors.draw(state),
     attempt: selectors.attempt(state),
-    flashcardProgression: selectors.flashcardProgression(state),
     overview: selectors.showOverview(state)
   }),
   (dispatch) => ({

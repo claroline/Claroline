@@ -32,7 +32,7 @@ class CardDrawnProgressionSerializer
             'id' => $cardDrawnProgression->getId(),
             'flashcard' => $this->flashcardDeckSerializer->serializeCard($cardDrawnProgression->getFlashcard()),
             'isSuccessful' => $cardDrawnProgression->isSuccessful(),
-            'successCount' => $cardDrawnProgression->getSuccessCount()
+            'successCount' => $cardDrawnProgression->getSuccessCount(),
         ];
     }
 }

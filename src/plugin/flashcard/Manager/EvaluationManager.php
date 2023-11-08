@@ -12,20 +12,22 @@ use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\FlashcardBundle\Entity\CardDrawnProgression;
 use Claroline\FlashcardBundle\Entity\Flashcard;
-use Claroline\FlashcardBundle\Entity\FlashcardDeck;
 
 class EvaluationManager
 {
     private ObjectManager $om;
     private ResourceEvaluationManager $resourceEvalManager;
+    private FlashcardManager $flashcardManager;
     private ResourceEvaluationRepository $resourceEvalRepo;
 
     public function __construct(
         ObjectManager $om,
-        ResourceEvaluationManager $resourceEvalManager
+        ResourceEvaluationManager $resourceEvalManager,
+        FlashcardManager $flashcardManager
     ) {
         $this->om = $om;
         $this->resourceEvalManager = $resourceEvalManager;
+        $this->flashcardManager = $flashcardManager;
         $this->resourceEvalRepo = $this->om->getRepository(ResourceEvaluation::class);
     }
 
@@ -34,34 +36,37 @@ class EvaluationManager
         return $this->resourceEvalManager->getUserEvaluation($node, $user);
     }
 
-    public function update(ResourceEvaluation $evaluation, FlashcardDeck $deck): ResourceEvaluation
+    public function update(ResourceEvaluation $attempt, $attemptCards): ResourceEvaluation
     {
-        $drawnCardCount = $deck->getDraw() ?? count($deck->getCards());
+        $drawnCardCount = count($attemptCards);
 
-        $attemptCards = $this->om->getRepository(CardDrawnProgression::class)->findBy([
-            'resourceEvaluation' => $evaluation
-        ]);
-
-        $seenCount = array_key_exists('nextCardIndex', $evaluation->getData()) ? $evaluation->getData()['nextCardIndex'] : 0;
-        $seenCount++;
+        $seenCount = array_key_exists('nextCardIndex', $attempt->getData()) ? $attempt->getData()['nextCardIndex'] : 0;
+        ++$seenCount;
 
         $successCount = 0;
         foreach ($attemptCards as $attemptCard) {
             $successCount += $attemptCard->getSuccessCount() > 0;
         }
 
-        $session = $evaluation->getData()['session'] ?? 1;
-        $progression = ($successCount / $drawnCardCount) * 100;
+        $session = $attempt->getData()['session'] ?? 1;
 
-        if ($session === 7 && $seenCount >= $drawnCardCount) {
+        if ($drawnCardCount > 0) {
+            $progression = ($successCount / $drawnCardCount) * 100;
+        } else {
+            $progression = 100;
+        }
+
+        if (7 === $session && $seenCount >= $drawnCardCount && $successCount >= $drawnCardCount) {
             $status = AbstractEvaluation::STATUS_COMPLETED;
+        } elseif (7 === $session && $seenCount >= $drawnCardCount) {
+            $status = AbstractEvaluation::STATUS_FAILED;
         } else {
             $status = AbstractEvaluation::STATUS_INCOMPLETE;
         }
 
-        if ( $seenCount >= $drawnCardCount ) {
-            if( $status != AbstractEvaluation::STATUS_COMPLETED ) {
-                $session++;
+        if ($seenCount >= $drawnCardCount) {
+            if (AbstractEvaluation::STATUS_COMPLETED != $status && AbstractEvaluation::STATUS_FAILED != $status) {
+                ++$session;
             }
             $seenCount = 0;
         }
@@ -70,32 +75,44 @@ class EvaluationManager
             $progression = 100;
         }
 
+        $cardsArray = $attemptCards;
+        foreach ($cardsArray as $cardProgression) {
+            if (!$this->flashcardManager->keepCardInSession($cardProgression, $session)) {
+                unset($cardsArray[array_search($cardProgression, $cardsArray)]);
+            }
+        }
+
+        // Pas de cartes restantes pour cette session, on passe a la session suivante
+        if (0 === count($cardsArray)) {
+            ++$session;
+        }
+
         $evaluationData = [
             'status' => $status,
             'progression' => $progression,
             'data' => [
                 'session' => $session,
-                'nextCardIndex' => $seenCount,
+                'nextCardId' => $seenCount,
             ],
         ];
 
-        return $this->resourceEvalManager->updateAttempt($evaluation, $evaluationData);
+        return $this->resourceEvalManager->updateAttempt($attempt, $evaluationData);
     }
 
-    public function updateCardDrawnProgression(Flashcard $card, User $user, $isSuccessful): array
+    public function updateCardDrawnProgression(Flashcard $card, User $user, $isSuccessful): void
     {
         $node = $card->getDeck()->getResourceNode();
         $attempt = $this->resourceEvalRepo->findOneInProgress($node, $user);
 
         $cardsDrawnProgression = $this->om->getRepository(CardDrawnProgression::class)->findBy([
-            'resourceEvaluation' => $attempt
+            'resourceEvaluation' => $attempt,
         ]);
 
         foreach ($cardsDrawnProgression as $cardProgression) {
             if ($cardProgression->getFlashcard()->getId() === $card->getId()) {
                 $cardDrawnProgression = $cardProgression;
 
-                if(!$cardDrawnProgression->isAnswered()) {
+                if (!$cardDrawnProgression->isAnswered()) {
                     $cardDrawnProgression->setSuccessCount(0);
                 }
 
@@ -107,11 +124,8 @@ class EvaluationManager
 
                 $this->om->persist($cardDrawnProgression);
                 $this->om->flush();
+                $this->flashcardManager->answerSessionCard($attempt, $cardDrawnProgression);
             }
         }
-
-        $this->update($attempt, $card->getDeck());
-
-        return $cardsDrawnProgression;
     }
 }

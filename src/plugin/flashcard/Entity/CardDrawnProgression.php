@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="claro_flashcard_drawn_progression")
  *
- * @ORM\Entity(repositoryClass="Claroline\FlashcardBundle\Repository\CardDrawnProgressionRepository")
+ * @ORM\Entity()
  */
 class CardDrawnProgression
 {
@@ -22,8 +22,6 @@ class CardDrawnProgression
      * @ORM\ManyToOne(targetEntity="Claroline\FlashcardBundle\Entity\Flashcard")
      *
      * @ORM\JoinColumn(name="flashcard_id", referencedColumnName="id", onDelete="CASCADE")
-     *
-     * @var Flashcard
      */
     private Flashcard $flashcard;
 
@@ -31,8 +29,6 @@ class CardDrawnProgression
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceEvaluation")
      *
      * @ORM\JoinColumn(name="resource_evaluation_id", referencedColumnName="id", onDelete="CASCADE")
-     *
-     * @var ResourceEvaluation
      */
     private ResourceEvaluation $resourceEvaluation;
 
@@ -48,8 +44,6 @@ class CardDrawnProgression
 
     /**
      * Get Card.
-     *
-     * @return Flashcard
      */
     public function getFlashcard(): Flashcard
     {
@@ -59,7 +53,6 @@ class CardDrawnProgression
     /**
      * Set Card.
      *
-     * @param Flashcard $card
      * @return CardDrawnProgression
      */
     public function setFlashcard(Flashcard $card): static
@@ -80,7 +73,6 @@ class CardDrawnProgression
     /**
      * Set ResourceEvaluation.
      *
-     * @param ResourceEvaluation $resourceEvaluation
      * @return CardDrawnProgression
      */
     public function setResourceEvaluation(ResourceEvaluation $resourceEvaluation): static
@@ -117,7 +109,6 @@ class CardDrawnProgression
     /**
      * Set SuccessCount.
      *
-     * @param int $successCount
      * @return CardDrawnProgression
      */
     public function setSuccessCount(int $successCount): static
@@ -126,5 +117,4 @@ class CardDrawnProgression
 
         return $this;
     }
-
 }

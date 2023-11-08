@@ -1,5 +1,4 @@
 import cloneDeep from 'lodash/cloneDeep'
-import isEmpty from 'lodash/isEmpty'
 
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
@@ -16,12 +15,11 @@ const reducer = combineReducers(Object.assign({
     [ATTEMPT_LOAD] : (state, action) => {
       const newState = cloneDeep(state)
       newState.attempt = action.data.attempt
-      newState.flashcardProgression = action.data.flashcardProgression
       return newState
     },
     [`${FORM_SUBMIT_SUCCESS}/${editorSelectors.FORM_NAME}`]: (state, action) => ({
-      flashcardDeck: action.updatedData,
-      flashcardProgression: state.flashcardProgression
+      attempt : state.attempt,
+      flashcardDeck: action.updatedData
     })
   })
 }, editorReducer))

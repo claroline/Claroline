@@ -16,12 +16,14 @@ const Player = props => {
   const match = useRouteMatch()
   const [isFlipped, setIsFlipped] = useState(false)
   const [isAnswering, setIsAnswering] = useState(false)
-  const [currentCardIndex, setCurrentCardIndex] = useState(props.attempt?.data?.nextCardIndex ?? 0)
-  const maxCards = props.draw > 0 ? Math.min(props.draw, props.flashcardProgression.length) : props.flashcardProgression.length
-  const currentCard = props.flashcardProgression[currentCardIndex] ? props.flashcardProgression[currentCardIndex].flashcard : props.flashcardProgression[0].flashcard
+  const currentCardIndex = props.attempt.data.cardsAnsweredIds.length
+  const maxCards = props.draw > 0 ? Math.min(props.draw, props.attempt.data.cards.length) : props.attempt.data.cards.length
+  const currentCardId = props.attempt.data.cardsSessionIds[0]
+  const currentCardProgression = props.attempt.data.cards.find(card => card.id === currentCardId)
+  const currentCard = currentCardProgression ? currentCardProgression.flashcard : null
 
   const goToNextCard = useCallback(() => {
-    const isLastCard = currentCardIndex + 1 === maxCards
+    const isLastCard = props.attempt.data.cardsSessionIds.length <= 1
 
     if (isLastCard) {
       if (props.flashcardDeck.end.display) {
@@ -29,22 +31,25 @@ const Player = props => {
       } else {
         history.push(props.overview ? `${match.path}/overview` : props.path)
       }
-    } else {
-      const nextIndex = isLastCard ? 0 : currentCardIndex + 1
-      setCurrentCardIndex(nextIndex)
     }
-  }, [currentCardIndex, maxCards, props.flashcardDeck.end.display, match.path, history])
+  }, [props.attempt.data.cardsSessionIds, maxCards, props.flashcardDeck.end.display, match.path, history])
 
   const handleAnswer = useCallback(
     (isSuccessful) => {
-      setIsAnswering(true)
-      props.updateProgression(currentCard.id, isSuccessful).then(() => {
+      if( currentCard !== null ) {
+        setIsAnswering(true)
+        props.updateProgression(currentCard.id, isSuccessful).then(() => {
+          setIsAnswering(false)
+          setIsFlipped(false)
+          goToNextCard()
+        })
+      } else {
         setIsAnswering(false)
         setIsFlipped(false)
         goToNextCard()
-      })
+      }
     },
-    [props.updateProgression, currentCard.id, setIsFlipped, goToNextCard, setIsAnswering]
+    [props.updateProgression, setIsFlipped, goToNextCard, setIsAnswering]
   )
 
   if (!maxCards) {
@@ -65,10 +70,12 @@ const Player = props => {
       <div className="flashcard-player content-sm">
         {props.flashcardDeck.showProgression &&
           <div className="flashcard-counter mt-3">
-            {/*Test affichage*/}
-            Attempt #{`${props.attempt?.id}`} -
-            Session {`${props.attempt?.data?.session}`} -
-            {`${currentCardIndex + 1} / ${maxCards}`}
+            <div>
+              Session {`${props.attempt.data.session}`}
+            </div>
+            <div>
+              {`${currentCardIndex + 1} / ${maxCards}`}
+            </div>
           </div>
         }
         <div className="flashcard-deck">
@@ -133,7 +140,22 @@ Player.propTypes = {
   draw: T.number,
   path: T.string,
   updateProgression: T.func.isRequired,
-  overview: T.bool
+  overview: T.bool,
+  attempt: T.shape({
+    data: T.shape({
+      cardsAnsweredIds: T.arrayOf(T.number).isRequired,
+      cards: T.arrayOf(
+        T.shape({
+          id: T.number.isRequired,
+          flashcard: T.shape({
+            id: T.string
+          }).isRequired
+        })
+      ).isRequired,
+      cardsSessionIds: T.arrayOf(T.number).isRequired,
+      session: T.number.isRequired
+    }).isRequired
+  }).isRequired
 }
 
 export {
