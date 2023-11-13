@@ -4,5 +4,5 @@ namespace Claroline\AppBundle\Component\Context;
 
 interface ContextSubjectInterface
 {
-    public function getId(): string;
+    public function getContextIdentifier(): string;
 }

@@ -4,13 +4,10 @@ namespace Claroline\CoreBundle\Controller\APINew\Resource;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,38 +21,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class ResourceNodeController extends AbstractCrudController
 {
-    /** @var StrictDispatcher */
-    private $dispatcher;
-
-    /** @var ResourceManager */
-    private $resourceManager;
-
-    /** @var RightsManager */
-    private $rightsManager;
-
-    /** @var ResourceActionManager */
-    private $actionManager;
-
-    /** @var LogConnectManager */
-    private $logConnectManager;
-
-    /** @var TokenStorageInterface */
-    private $token;
-
     public function __construct(
-        StrictDispatcher $dispatcher,
-        ResourceActionManager $actionManager,
-        ResourceManager $resourceManager,
-        RightsManager $rightsManager,
-        LogConnectManager $logConnectManager,
-        TokenStorageInterface $token
+        private readonly ResourceActionManager $actionManager,
+        private readonly RightsManager $rightsManager,
+        private readonly TokenStorageInterface $token
     ) {
-        $this->dispatcher = $dispatcher;
-        $this->resourceManager = $resourceManager;
-        $this->rightsManager = $rightsManager;
-        $this->actionManager = $actionManager;
-        $this->logConnectManager = $logConnectManager;
-        $this->token = $token;
     }
 
     public function getName(): string

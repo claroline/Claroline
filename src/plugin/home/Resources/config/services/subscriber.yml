@@ -6,10 +6,3 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
-
-    Claroline\HomeBundle\Subscriber\Tool\HomeSubscriber:
-        arguments:
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\HomeBundle\Manager\HomeManager'

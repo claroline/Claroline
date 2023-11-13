@@ -1,0 +1,4 @@
+services:
+    Claroline\ExampleBundle\Component\Tool\ExampleTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]

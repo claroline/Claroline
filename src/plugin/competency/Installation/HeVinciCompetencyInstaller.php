@@ -6,4 +6,8 @@ use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
 class HeVinciCompetencyInstaller extends AdditionalInstaller
 {
+    public function hasMigrations(): bool
+    {
+        return true;
+    }
 }

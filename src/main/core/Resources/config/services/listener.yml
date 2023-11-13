@@ -1,12 +1,4 @@
 services:
-    Claroline\CoreBundle\Listener\Administration\IntegrationListener:
-        tags:
-            - { name: kernel.event_listener, event: tool.open.administration.integration, method: onDisplayTool }
-
-    Claroline\CoreBundle\Listener\Administration\TemplateListener:
-        tags:
-            - { name: kernel.event_listener, event: tool.open.administration.templates, method: onAdministrationToolOpen }
-
     Claroline\CoreBundle\Listener\DataSource\Workspace\AllSource:
         arguments:
             - '@security.authorization_checker'
@@ -55,7 +47,6 @@ services:
             - '@service_container'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\CoreBundle\Manager\LogConnectManager'
         tags:
             - { name: kernel.event_listener, event: log, method: onLog }
             - { name: kernel.event_listener, event: create_log_list_item, method: onLogListItem }

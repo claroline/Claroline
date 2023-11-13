@@ -22,11 +22,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class WorkspaceRestrictionsManager
 {
     public function __construct(
-        private EventDispatcherInterface $dispatcher,
-        private RequestStack $requestStack,
-        private TokenStorageInterface $tokenStorage,
-        private WorkspaceManager $workspaceManager,
-        private WorkspaceUserQueueManager $workspaceUserQueueManager
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly RequestStack $requestStack,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly WorkspaceManager $workspaceManager,
+        private readonly WorkspaceUserQueueManager $workspaceUserQueueManager
     ) {
     }
 

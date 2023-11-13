@@ -29,5 +29,4 @@ services:
           - '@Icap\BlogBundle\Serializer\PostSerializer'
           - '@Icap\BlogBundle\Manager\PostManager'
           - '@Icap\BlogBundle\Manager\BlogTrackingManager'
-          - '%non_repeatable_log_time_in_seconds%'
           - '@security.authorization_checker'

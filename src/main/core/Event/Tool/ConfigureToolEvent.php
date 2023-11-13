@@ -11,47 +11,55 @@
 
 namespace Claroline\CoreBundle\Event\Tool;
 
-use Claroline\AppBundle\Event\DataConveyorEventInterface;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 
-class ConfigureToolEvent extends AbstractToolEvent implements DataConveyorEventInterface
+class ConfigureToolEvent extends AbstractToolEvent
 {
-    /** @var array */
-    private $parameters;
-    /** @var array */
-    private $data = [];
-    /** @var bool */
-    private $isPopulated = false;
+    private array $parameters = [];
+    private array $data = [];
 
-    public function __construct(string $toolName, string $context, ?Workspace $workspace = null, ?array $parameters = [])
+    public function __construct(string $toolName, string $context, ContextSubjectInterface $contextSubject = null, ?array $parameters = [])
     {
-        parent::__construct($toolName, $context, $workspace);
+        parent::__construct($toolName, $context, $contextSubject);
 
         $this->parameters = $parameters;
     }
 
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
 
     /**
-     * Sets data to return in the api.
+     * Sets response data to return in the api.
      * NB. It MUST contain serialized structures.
      */
-    public function setData(array $data)
+    public function addResponse(array $responseData): void
     {
-        $this->data = $data;
-        $this->isPopulated = true;
+        $this->data = array_merge($responseData, $this->data);
     }
 
-    public function getData()
+    public function getResponse(): array
     {
         return $this->data;
     }
 
-    public function isPopulated()
+    /**
+     * Sets data to return in the api.
+     * NB. It MUST contain serialized structures.
+     *
+     * @deprecated use addResponse(array $responseData)
+     */
+    public function setData(array $data): void
     {
-        return $this->isPopulated;
+        $this->addResponse($data);
+    }
+
+    /**
+     * @deprecated use getResponse()
+     */
+    public function getData(): array
+    {
+        return $this->getResponse();
     }
 }

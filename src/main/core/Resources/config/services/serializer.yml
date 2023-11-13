@@ -31,9 +31,6 @@ services:
     Claroline\CoreBundle\API\Serializer\DataSourceSerializer:
         tags: [claroline.serializer]
 
-    Claroline\CoreBundle\API\Serializer\Tool\AdminToolSerializer:
-        tags: [claroline.serializer]
-
     Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer:
         tags: [claroline.serializer]
         arguments:
@@ -117,9 +114,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@request_stack'
-
-    Claroline\CoreBundle\API\Serializer\Tool\ToolSerializer:
-        tags: [claroline.serializer]
 
     Claroline\CoreBundle\API\Serializer\Tool\ToolRightsSerializer:
         tags: [ claroline.serializer ]
@@ -213,31 +207,6 @@ services:
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-
-    Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectWorkspaceSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
-
-    Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectToolSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
-
-    Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectResourceSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
-
-    Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectPlatformSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
-
-    Claroline\CoreBundle\API\Serializer\Log\Connection\LogConnectAdminToolSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
 
     Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer:
         tags: [claroline.serializer]

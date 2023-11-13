@@ -47,8 +47,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'
-        calls:
-            - setLogger: [ '@logger' ]
 
     claroline.manager.tool_manager:
         alias: Claroline\CoreBundle\Manager\Tool\ToolManager
@@ -98,10 +96,6 @@ services:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@translator'
             - '@event_dispatcher'
-
-    Claroline\CoreBundle\Manager\LogConnectManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Manager\LockManager:
         arguments:
@@ -187,11 +181,11 @@ services:
     Claroline\CoreBundle\Manager\Workspace\TransferManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Manager\File\ArchiveManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\Component\Tool\ToolProvider'
         calls:
             - setLogger: [ '@logger' ]
 

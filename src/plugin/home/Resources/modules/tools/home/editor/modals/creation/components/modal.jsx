@@ -66,7 +66,7 @@ class TabCreationModal extends Component {
             handleSelect={(selectedTab) => {
               const newTab = this.state.tabs.find(tab => tab.name === selectedTab.name)
 
-              this.props.startCreation(this.props.currentContext, newTab, this.props.administration, this.props.currentUser, this.props.position)
+              this.props.startCreation(newTab, this.props.position)
               this.changeStep('parameters')
             }}
           />
@@ -82,7 +82,6 @@ class TabCreationModal extends Component {
 
             currentTab={this.props.tab}
             currentContext={this.props.currentContext}
-            administration={this.props.administration}
           >
             <Button
               className="modal-btn"
@@ -112,7 +111,7 @@ class TabCreationModal extends Component {
   render() {
     return (
       <Modal
-        {...omit(this.props, 'currentUser', 'currentContext', 'administration', 'position', 'tab', 'saveEnabled', 'update', 'setErrors', 'create', 'startCreation', 'reset')}
+        {...omit(this.props, 'currentUser', 'currentContext', 'position', 'tab', 'saveEnabled', 'update', 'setErrors', 'create', 'startCreation', 'reset')}
         icon="fa fa-fw fa-plus"
         title={trans('new_tab', {}, 'home')}
         subtitle={this.renderStepTitle()}
@@ -131,7 +130,6 @@ TabCreationModal.propTypes = {
     type: T.string.isRequired,
     data: T.object
   }).isRequired,
-  administration: T.bool,
   position: T.number,
   tab: T.shape(
     TabTypes.propTypes

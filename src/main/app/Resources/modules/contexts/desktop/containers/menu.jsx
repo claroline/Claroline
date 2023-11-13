@@ -1,8 +1,6 @@
 import {connect} from 'react-redux'
 
-import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
-import {actions as menuActions, selectors as menuSelectors} from '#/main/app/layout/menu/store'
 import {selectors as contextSelectors} from '#/main/app/context/store'
 
 import {DesktopMenu as DesktopMenuComponent} from '#/main/app/contexts/desktop/components/menu'
@@ -10,14 +8,12 @@ import {DesktopMenu as DesktopMenuComponent} from '#/main/app/contexts/desktop/c
 const DesktopMenu = connect(
   (state) => ({
     currentUser: securitySelectors.currentUser(state),
-    showProgression: configSelectors.param(state, 'desktop.showProgression'),
-    section: menuSelectors.openedSection(state),
-    tools: contextSelectors.tools(state)
-  }),
-  (dispatch) => ({
-    changeSection(section) {
-      dispatch(menuActions.changeSection(section))
-    }
+    impersonated: contextSelectors.impersonated(state),
+    roles: contextSelectors.roles(state),
+
+    basePath: contextSelectors.path(state),
+    tools: contextSelectors.tools(state),
+    shortcuts: contextSelectors.shortcuts(state)
   })
 )(DesktopMenuComponent)
 

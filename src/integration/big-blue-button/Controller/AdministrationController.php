@@ -18,6 +18,7 @@ use Claroline\BigBlueButtonBundle\Entity\BBB;
 use Claroline\BigBlueButtonBundle\Entity\Recording;
 use Claroline\BigBlueButtonBundle\Manager\BBBManager;
 use Claroline\CoreBundle\API\Serializer\Resource\AbstractResourceSerializer;
+use Claroline\CoreBundle\Component\Context\AdministrationContext;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,33 +34,14 @@ class AdministrationController
 {
     use RequestDecoderTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var ToolManager */
-    private $toolManager;
-    /** @var BBBManager */
-    private $bbbManager;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        PlatformConfigurationHandler $config,
-        ObjectManager $om,
-        Crud $crud,
-        ToolManager $toolManager,
-        BBBManager $bbbManager
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly ToolManager $toolManager,
+        private readonly BBBManager $bbbManager
     ) {
-        $this->authorization = $authorization;
-        $this->config = $config;
-        $this->om = $om;
-        $this->crud = $crud;
-        $this->toolManager = $toolManager;
-        $this->bbbManager = $bbbManager;
     }
 
     /**
@@ -153,9 +135,9 @@ class AdministrationController
         return new JsonResponse(null, 204);
     }
 
-    private function checkAccess()
+    private function checkAccess(): void
     {
-        $integrationTool = $this->toolManager->getAdminToolByName('integration');
+        $integrationTool = $this->toolManager->getOrderedTool('integration', AdministrationContext::getName());
         if (is_null($integrationTool) || !$this->authorization->isGranted('OPEN', $integrationTool)) {
             throw new AccessDeniedException();
         }

@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 class SecurityManager
 {
     public function __construct(
-        private TokenStorageInterface $tokenStorage
+        private readonly TokenStorageInterface $tokenStorage
     ) {
     }
 

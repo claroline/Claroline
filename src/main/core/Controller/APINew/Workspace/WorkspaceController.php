@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
@@ -24,9 +23,9 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
-use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Claroline\CoreBundle\Messenger\Message\CopyWorkspace;
 use Claroline\CoreBundle\Messenger\Message\ImportWorkspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -49,32 +48,16 @@ class WorkspaceController extends AbstractCrudController
     use HasRolesTrait;
     use PermissionCheckerTrait;
 
-    private TokenStorageInterface $tokenStorage;
-    private StrictDispatcher $dispatcher;
-    private MessageBusInterface $messageBus;
-    private RoleManager $roleManager;
-    private WorkspaceManager $workspaceManager;
-    private LogConnectManager $logConnectManager;
-    private TempFileManager $tempManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
+        private readonly TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
-        StrictDispatcher $dispatcher,
-        MessageBusInterface $messageBus,
-        RoleManager $roleManager,
-        WorkspaceManager $workspaceManager,
-        LogConnectManager $logConnectManager,
-        TempFileManager $tempManager
+        private readonly MessageBusInterface $messageBus,
+        private readonly TempFileManager $tempManager,
+        private readonly RoleManager $roleManager,
+        private readonly WorkspaceManager $workspaceManager,
+        private readonly WorkspaceRestrictionsManager $restrictionsManager
     ) {
-        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
-        $this->dispatcher = $dispatcher;
-        $this->messageBus = $messageBus;
-        $this->roleManager = $roleManager;
-        $this->workspaceManager = $workspaceManager;
-        $this->logConnectManager = $logConnectManager;
-        $this->tempManager = $tempManager;
     }
 
     public function getName(): string
@@ -363,6 +346,20 @@ class WorkspaceController extends AbstractCrudController
         return new JsonResponse(array_map(function (Workspace $workspace) {
             return $this->serializer->serialize($workspace);
         }, $processed));
+    }
+
+    /**
+     * Submit access code.
+     *
+     * @Route("/unlock/{id}", name="claro_workspace_unlock", methods={"POST"})
+     *
+     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
+     */
+    public function unlockAction(Workspace $workspace, Request $request): JsonResponse
+    {
+        $this->restrictionsManager->unlock($workspace, json_decode($request->getContent(), true)['code']);
+
+        return new JsonResponse(null, 204);
     }
 
     /**

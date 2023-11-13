@@ -10,6 +10,7 @@ import {trans} from '#/main/app/intl'
 import {ContentNotFound} from '#/main/app/content/components/not-found'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentForbidden} from '#/main/app/content/components/forbidden'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 class ContextMain extends Component {
   componentDidMount() {
@@ -91,7 +92,14 @@ class ContextMain extends Component {
           title={trans('access_forbidden')}
           description={trans('access_forbidden_help')}
         />
-    } else {
+    } else if (isEmpty(this.props.tools)) {
+      CurrentComp = (
+        <ContentPlaceholder
+          size="lg"
+          title="Cet espace est vide pour le moment"
+        />
+      )
+    }else {
       CurrentComp = (
         <Routes
           path={this.props.path}

@@ -592,8 +592,6 @@
     "support_email_missing_title": "Support email missing",
     "support_email_missing_content": "The support email is missing.<br>Please set it up by clicking %link%, in general information, support section -> support email.",
     "switch": "Switch",
-    "switch_to_admin_tabs": "Switch to admin tabs",
-    "switch_to_user_tabs": "Switch to personal tabs",
     "tab": "Tab",
     "tab_position": "Tab position",
     "tabs": "Tabs",

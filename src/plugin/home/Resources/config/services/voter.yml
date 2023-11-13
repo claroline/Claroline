@@ -4,5 +4,3 @@ services:
 
     Claroline\HomeBundle\Security\Voter\HomeTabVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'

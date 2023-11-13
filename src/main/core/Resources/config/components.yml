@@ -1,2 +1,3 @@
 imports:
     - { resource: components/context.yml }
+    - { resource: components/tool.yml }

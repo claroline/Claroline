@@ -54,7 +54,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
-            - '@Claroline\CoreBundle\Manager\LogManager'
 
     Claroline\CommunityBundle\Controller\TeamController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

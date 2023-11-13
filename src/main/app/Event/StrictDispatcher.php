@@ -24,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class StrictDispatcher
 {
-    /** @var EventDispatcher */
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
     public function __construct(EventDispatcherInterface $ed)

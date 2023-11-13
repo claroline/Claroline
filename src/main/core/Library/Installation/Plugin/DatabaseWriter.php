@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\Plugin;
@@ -19,18 +18,16 @@ use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Repository\PluginRepository;
 use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 use Claroline\ThemeBundle\Entity\Theme;
 use Claroline\ThemeBundle\Manager\IconSetBuilderManager;
 use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LogLevel;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -41,39 +38,17 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class DatabaseWriter implements LoggerAwareInterface
 {
-    use LoggableTrait;
+    use LoggerAwareTrait;
 
-    /** @var ObjectManager */
-    private $em;
-    /** @var MaskManager */
-    private $mm;
-    /** @var Filesystem */
-    private $fileSystem;
-    /** @var ToolManager */
-    private $toolManager;
-    /** @var ToolMaskDecoderManager */
-    private $toolMaskManager;
-    /** @var IconSetBuilderManager */
-    private $iconSetManager;
-
-    /** @var PluginRepository */
-    private $pluginRepository;
+    private PluginRepository $pluginRepository;
 
     public function __construct(
-        ObjectManager $em,
-        MaskManager $mm,
-        Filesystem $fileSystem,
-        ToolManager $toolManager,
-        ToolMaskDecoderManager $toolMaskManager,
-        IconSetBuilderManager $iconSetManager
+        private readonly ObjectManager $em,
+        private readonly MaskManager $mm,
+        private readonly Filesystem $fileSystem,
+        private readonly ToolMaskDecoderManager $toolMaskManager,
+        private readonly IconSetBuilderManager $iconSetManager
     ) {
-        $this->em = $em;
-        $this->mm = $mm;
-        $this->fileSystem = $fileSystem;
-        $this->toolManager = $toolManager;
-        $this->toolMaskManager = $toolMaskManager;
-        $this->iconSetManager = $iconSetManager;
-
         $this->pluginRepository = $this->em->getRepository(Plugin::class);
     }
 
@@ -106,13 +81,13 @@ class DatabaseWriter implements LoggerAwareInterface
         ]);
 
         if (null === $plugin) {
-            $this->log('Unable to retrieve plugin for updating its configuration.', LogLevel::ERROR);
+            $this->logger->error('Unable to retrieve plugin for updating its configuration.');
 
             return null;
         }
 
         $this->em->persist($plugin);
-        $this->log('Configuration was retrieved: updating...');
+        $this->logger->debug('Configuration was retrieved: updating...');
 
         $this->updateConfiguration($pluginConfiguration, $plugin, $pluginBundle);
 
@@ -171,10 +146,6 @@ class DatabaseWriter implements LoggerAwareInterface
             $this->createTheme($theme, $plugin);
         }
 
-        foreach ($processedConfiguration['admin_tools'] as $adminTool) {
-            $this->createAdminTool($adminTool, $plugin);
-        }
-
         foreach ($processedConfiguration['templates'] as $templateType) {
             $this->createTemplateType($templateType, $plugin);
         }
@@ -226,7 +197,7 @@ class DatabaseWriter implements LoggerAwareInterface
         });
 
         foreach ($widgetsToDelete as $widget) {
-            $this->log('Removing widget '.$widget->getName());
+            $this->logger->debug('Removing widget '.$widget->getName());
             $this->em->remove($widget);
         }
 
@@ -242,30 +213,8 @@ class DatabaseWriter implements LoggerAwareInterface
         });
 
         foreach ($sourcesToDelete as $source) {
-            $this->log('Removing data source '.$source->getName());
+            $this->logger->debug('Removing data source '.$source->getName());
             $this->em->remove($source);
-        }
-
-        // cleans deleted admin tools
-        /** @var AdminTool[] $installedAdminTools */
-        $installedAdminTools = $this->em->getRepository(AdminTool::class)
-          ->findBy(['plugin' => $plugin]);
-        $adminTools = $processedConfiguration['admin_tools'];
-        $adminToolNames = array_map(function ($adminTool) {
-            return $adminTool['name'];
-        }, $adminTools);
-
-        $toRemove = array_filter($installedAdminTools, function (AdminTool $adminTool) use ($adminToolNames) {
-            return !in_array($adminTool->getName(), $adminToolNames);
-        });
-
-        foreach ($toRemove as $tool) {
-            $this->log('Removing tool '.$tool->getName());
-            $this->em->remove($tool);
-        }
-
-        foreach ($adminTools as $adminTool) {
-            $this->updateAdminTool($adminTool, $plugin);
         }
 
         foreach ($processedConfiguration['templates'] as $templateType) {
@@ -281,7 +230,7 @@ class DatabaseWriter implements LoggerAwareInterface
 
     private function updateResourceType(array $resourceConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle): ResourceType
     {
-        $this->log(sprintf('Updating the resource type : "%s".', $resourceConfiguration['name']));
+        $this->logger->debug(sprintf('Updating the resource type : "%s".', $resourceConfiguration['name']));
 
         $resourceType = $this->em->getRepository(ResourceType::class)
             ->findOneBy(['name' => $resourceConfiguration['name']]);
@@ -323,7 +272,7 @@ class DatabaseWriter implements LoggerAwareInterface
 
         foreach ($toRemove as $el) {
             $mask = $this->em->getRepository(MaskDecoder::class)->findOneBy(['resourceType' => $resourceType, 'name' => $el]);
-            $this->log('Remove mask decoder '.$el, LogLevel::ERROR);
+            $this->logger->debug('Remove mask decoder '.$el);
             $this->em->remove($mask);
         }
 
@@ -371,7 +320,7 @@ class DatabaseWriter implements LoggerAwareInterface
                 ->findOneBy(['name' => $action['resource_type']]);
         }
 
-        $this->log(sprintf('Updating resource action : "%s".', $action['name']));
+        $this->logger->debug(sprintf('Updating resource action : "%s".', $action['name']));
 
         // initializes the mask decoder if needed
         $this->mm->createDecoder($action['decoder'], $resourceType);
@@ -405,7 +354,7 @@ class DatabaseWriter implements LoggerAwareInterface
 
     private function persistResourceType(array $resourceConfiguration, Plugin $plugin, PluginBundleInterface $pluginBundle): ResourceType
     {
-        $this->log('Adding resource type '.$resourceConfiguration['name']);
+        $this->logger->debug('Adding resource type '.$resourceConfiguration['name']);
         $resourceType = new ResourceType();
         $resourceType->setName($resourceConfiguration['name']);
         $resourceType->setClass($resourceConfiguration['class']);
@@ -507,21 +456,21 @@ class DatabaseWriter implements LoggerAwareInterface
 
     private function persistTool(array $toolConfiguration, Plugin $plugin, Tool $tool): void
     {
-        $this->log(sprintf('Updating the tool : "%s".', $toolConfiguration['name']));
+        $this->logger->debug(sprintf('Updating the tool : "%s".', $toolConfiguration['name']));
 
         $tool->setName($toolConfiguration['name']);
         $tool->setPlugin($plugin);
-        $tool->setDisplayableInDesktop($toolConfiguration['is_displayable_in_desktop']);
-        $tool->setDisplayableInWorkspace($toolConfiguration['is_displayable_in_workspace']);
 
-        if (isset($toolConfiguration['class'])) {
-            $tool->setClass("{$toolConfiguration['class']}");
+        if (isset($toolConfiguration['icon'])) {
+            $tool->setIcon("{$toolConfiguration['icon']}");
         } else {
-            $tool->setClass('tools');
+            $tool->setIcon('tools');
         }
 
-        $this->toolManager->setLogger($this->logger);
-        $this->toolManager->create($tool);
+        $this->em->persist($tool);
+
+        $this->toolMaskManager->createDefaultToolMaskDecoders($tool->getName());
+
         $this->persistCustomToolRights($toolConfiguration['tool_rights'], $tool);
     }
 
@@ -550,51 +499,17 @@ class DatabaseWriter implements LoggerAwareInterface
         $this->em->persist($theme);
     }
 
-    private function createAdminTool(array $adminToolConfiguration, Plugin $plugin): void
-    {
-        $adminTool = new AdminTool();
-        $this->persistAdminTool($adminToolConfiguration, $plugin, $adminTool);
-    }
-
-    private function persistAdminTool(array $adminToolConfiguration, Plugin $plugin, AdminTool $adminTool): void
-    {
-        $this->log(sprintf('Update the administration tool : "%s".', $adminToolConfiguration['name']));
-
-        $adminTool->setName($adminToolConfiguration['name']);
-        $adminTool->setClass($adminToolConfiguration['class']);
-        $adminTool->setPlugin($plugin);
-
-        $this->em->persist($adminTool);
-    }
-
-    private function updateAdminTool(array $adminToolConfiguration, Plugin $plugin): void
-    {
-        $adminTool = $this->em->getRepository(AdminTool::class)
-            ->findOneBy(['name' => $adminToolConfiguration['name']]);
-
-        if (null === $adminTool) {
-            $adminTool = new AdminTool();
-        }
-
-        $this->persistAdminTool($adminToolConfiguration, $plugin, $adminTool);
-    }
-
     private function persistCustomToolRights(array $rights, Tool $tool): void
     {
-        $decoders = $this->toolMaskManager->getMaskDecodersByTool($tool);
+        $decoders = $this->toolMaskManager->getMaskDecodersByTool($tool->getName());
         $nb = count($decoders);
 
         foreach ($rights as $right) {
-            $maskDecoder = $this->toolMaskManager
-                ->getMaskDecoderByToolAndName($tool, $right['name']);
+            $maskDecoder = $this->toolMaskManager->getMaskDecoderByToolAndName($tool->getName(), $right);
 
             if (is_null($maskDecoder)) {
                 $value = pow(2, $nb);
-                $this->toolMaskManager->createToolMaskDecoder(
-                    $tool,
-                    $right['name'],
-                    $value
-                );
+                $this->toolMaskManager->createToolMaskDecoder($tool->getName(), $right, $value);
                 ++$nb;
             }
         }

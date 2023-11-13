@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Event\Tool;
 
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class OpenToolEvent extends AbstractToolEvent
@@ -23,10 +23,10 @@ class OpenToolEvent extends AbstractToolEvent
     public function __construct(
         string $toolName,
         string $context,
-        Workspace $workspace = null,
+        ContextSubjectInterface $contextSubject = null,
         User $user = null
     ) {
-        parent::__construct($toolName, $context, $workspace);
+        parent::__construct($toolName, $context, $contextSubject);
 
         $this->user = $user;
     }

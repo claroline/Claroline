@@ -7,16 +7,13 @@ fos_js_routing:
 
 # App routes
 claro_app:
-    resource: "@ClarolineAppBundle/Controller/Platform/ClientController.php"
+    resource: "@ClarolineAppBundle/Controller/PlatformController.php"
     type: annotation
     options: { expose: true }
 
-claro_locale:
-    resource: "@ClarolineAppBundle/Controller/Platform/LocaleController.php"
+# Components routes
+claro_component:
+    resource: "@ClarolineAppBundle/Controller/Component/"
     type: annotation
-    options: { expose: true }
-
-claro_terms_of_service:
-    resource: "@ClarolineAppBundle/Controller/Platform/TermsOfServiceController.php"
-    type: annotation
-    options: { expose: true }
+    options:
+        expose: true

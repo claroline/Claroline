@@ -79,13 +79,6 @@ actions.addGroups = (id, groups) => (dispatch) => dispatch({
   }
 })
 
-actions.fetchMetrics = (id, year) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_role_analytics', {id: id, year: year}],
-    silent: true
-  }
-})
-
 actions.fetchWorkspaceRights = (id, contextId = null) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: ['apiv2_role_rights_list', {id: id, contextType: 'workspace', contextId: contextId}],

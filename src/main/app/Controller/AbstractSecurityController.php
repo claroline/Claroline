@@ -42,6 +42,7 @@ abstract class AbstractSecurityController
             throw new \LogicException("Annotation error: cannot found admin tool '{$toolName}'");
         }
 
+        // FIXME
         $granted = $this->authorization->isGranted('OPEN', $tool);
 
         if (!$granted) {

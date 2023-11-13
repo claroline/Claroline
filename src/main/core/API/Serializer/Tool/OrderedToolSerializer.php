@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 
 class OrderedToolSerializer
@@ -30,10 +31,12 @@ class OrderedToolSerializer
 
     public function serialize(OrderedTool $orderedTool, ?array $options = []): array
     {
+        $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $orderedTool->getName()]);
+
         $serialized = [
             'id' => $orderedTool->getUuid(),
-            'name' => $orderedTool->getTool()->getName(),
-            'icon' => $orderedTool->getTool()->getClass(),
+            'name' => $orderedTool->getName(),
+            'icon' => $tool->getIcon(),
             'poster' => $orderedTool->getPoster(),
             'thumbnail' => $orderedTool->getThumbnail(),
             'display' => [
@@ -61,12 +64,13 @@ class OrderedToolSerializer
             $orderedTool->refreshUuid();
         }
 
+        $this->sipe('name', 'setName', $data, $orderedTool);
+        $this->sipe('poster', 'setPoster', $data, $orderedTool);
+        $this->sipe('thumbnail', 'setThumbnail', $data, $orderedTool);
         $this->sipe('display.order', 'setOrder', $data, $orderedTool);
         $this->sipe('display.showIcon', 'setShowIcon', $data, $orderedTool);
         $this->sipe('display.fullscreen', 'setFullscreen', $data, $orderedTool);
         $this->sipe('restrictions.hidden', 'setHidden', $data, $orderedTool);
-        $this->sipe('poster', 'setPoster', $data, $orderedTool);
-        $this->sipe('thumbnail', 'setThumbnail', $data, $orderedTool);
 
         return $orderedTool;
     }

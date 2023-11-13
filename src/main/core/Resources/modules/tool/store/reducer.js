@@ -15,6 +15,7 @@ import {
 
 const reducer = combineReducers({
   name: makeReducer(null, {
+    [CONTEXT_OPEN]: () => null,
     [TOOL_OPEN]: (state, action) => action.name
   }),
 

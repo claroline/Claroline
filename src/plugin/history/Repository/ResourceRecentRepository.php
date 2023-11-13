@@ -18,15 +18,4 @@ class ResourceRecentRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
-
-    public function removeAllEntriesBefore($date)
-    {
-        $qb = $this
-            ->createQueryBuilder('rw')
-            ->delete()
-            ->andWhere('rw.createdAt <= :date')
-            ->setParameter('date', $date);
-
-        return $qb->getQuery()->getResult();
-    }
 }

@@ -25,14 +25,13 @@ class RoleRepositoryTest extends RepositoryTestCase
 
         self::createWorkspace('ws_1');
         self::createWorkspace('ws_2');
-        self::createTool('tool_1');
         self::createRole('ROLE_WS_VISITOR_'.self::get('ws_1')->getUuid(), self::get('ws_1'));
         self::createRole('ROLE_WS_COLLABORATOR_'.self::get('ws_1')->getUuid(), self::get('ws_1'));
         self::createRole('ROLE_WS_MANAGER_'.self::get('ws_1')->getUuid(), self::get('ws_1'));
         self::createRole('ROLE_WS_CUSTOM_1', self::get('ws_1'));
         self::createRole('ROLE_WS_CUSTOM_2', self::get('ws_1'));
         self::createRole('ROLE_PLATFORM_CUSTOM');
-        self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), [self::get('ROLE_WS_CUSTOM_1')], 1);
+        self::createWorkspaceTool('tool_1', self::get('ws_1'), [self::get('ROLE_WS_CUSTOM_1')], 1);
         self::createUser('john', [self::get('ROLE_WS_CUSTOM_1'), self::get('ROLE_PLATFORM_CUSTOM')]);
         self::createGroup('group_1', [], [self::get('ROLE_WS_CUSTOM_2')]);
     }

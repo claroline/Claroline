@@ -22,7 +22,7 @@ class Updater140000 extends Updater
 
     public function postUpdate(): void
     {
-        $this->log('Update AuthenticationParameters ...');
+        $this->logger->info('Update AuthenticationParameters ...');
 
         $authenticationParameters = $this->authenticationManager->getParameters();
 

@@ -17,6 +17,8 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -398,7 +400,7 @@ class WorkspaceEvaluationController
 
         $resources = $this->decodeIdsString($request, ResourceNode::class);
 
-        // we can not do it inside a flush suite because it will trigger the Workspace to recompute its evaluation
+        // we can not do it inside a flush suite because it will trigger the Workspace to recompute its evaluation,
         // and it requires to have all the data recorded inside the db.
         // we can create a messenger message for it later if there are performances issues.
         foreach ($resources as $resource) {
@@ -417,9 +419,9 @@ class WorkspaceEvaluationController
     private function checkToolAccess(string $permission, Workspace $workspace = null, bool $exception = true): bool
     {
         if (!empty($workspace)) {
-            $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndWorkspace('evaluation', $workspace);
+            $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndContext('evaluation', WorkspaceContext::getName(), $workspace->getUuid());
         } else {
-            $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndDesktop('evaluation');
+            $evaluationTool = $this->om->getRepository(OrderedTool::class)->findOneByNameAndContext('evaluation', DesktopContext::getName());
         }
 
         return $this->checkPermission($permission, $evaluationTool, [], $exception);

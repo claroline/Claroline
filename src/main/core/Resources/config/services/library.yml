@@ -16,23 +16,11 @@ services:
 
     Claroline\CoreBundle\Library\Installation\Plugin\Loader: ~
 
-    Claroline\CoreBundle\Library\Installation\Plugin\Installer:
-        arguments:
-            - '@claroline.plugin.validator'
-            - '@Claroline\CoreBundle\Library\Installation\Plugin\Recorder'
-            - '@Claroline\InstallationBundle\Manager\InstallationManager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\PluginManager'
-            - '@Claroline\CoreBundle\Manager\VersionManager'
-        calls:
-            - setLogger: [ '@logger' ]
-
     Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
             - '@filesystem'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
             - '@Claroline\ThemeBundle\Manager\IconSetBuilderManager'
         calls:
@@ -42,17 +30,6 @@ services:
         arguments:
             - '@claroline.symfony_yaml'
             - '@doctrine.orm.entity_manager'
-
-    Claroline\CoreBundle\Library\Installation\PlatformInstaller:
-        arguments:
-            - '@kernel'
-            - '@Claroline\CoreBundle\Manager\PluginManager'
-            - '@Claroline\CoreBundle\Library\Installation\Plugin\Installer'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\InstallationBundle\Manager\InstallationManager'
-            - '@service_container'
-        calls:
-            - setLogger: [ '@logger' ]
 
     Claroline\CoreBundle\Library\Mailing\TransportFactory:
         arguments:

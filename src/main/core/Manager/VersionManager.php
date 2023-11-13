@@ -11,31 +11,23 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Update\Version;
 use Claroline\CoreBundle\Repository\VersionRepository;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
 class VersionManager implements LoggerAwareInterface
 {
-    use LoggableTrait;
+    use LoggerAwareTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var VersionRepository */
-    private $repo;
-    /** @var string */
-    private $projectDir;
+    private VersionRepository $repo;
 
     public function __construct(
-        ObjectManager $om,
-        string $projectDir
+        private readonly ObjectManager $om,
+        private readonly string $projectDir
     ) {
-        $this->om = $om;
-        $this->projectDir = $projectDir;
-
         $this->repo = $this->om->getRepository(Version::class);
     }
 
@@ -47,14 +39,14 @@ class VersionManager implements LoggerAwareInterface
         $version = $this->repo->findOneBy(['version' => $data[0], 'bundle' => get_class($bundle)]);
 
         if (!empty($version)) {
-            $this->log(
+            $this->logger->debug(
                 sprintf('Version "%s" of "%s" already registered !', trim($version->getVersion()), $version->getBundle())
             );
 
             return $version;
         }
 
-        $this->log(sprintf('Registering %s version %s', get_class($bundle), $data[0]));
+        $this->logger->info(sprintf('Registering %s version %s', get_class($bundle), $data[0]));
         $version = new Version($data[0], $data[1], $data[2], get_class($bundle));
         $this->om->persist($version);
         $this->om->flush();
@@ -97,7 +89,7 @@ class VersionManager implements LoggerAwareInterface
         try {
             return $this->repo->getLatestExecuted($bundle);
         } catch (\Exception $e) {
-            //table is not here yet if version < 10
+            // table is not here yet if version < 10
             return null;
         }
     }

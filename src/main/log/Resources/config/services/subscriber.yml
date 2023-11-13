@@ -6,10 +6,6 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    Claroline\LogBundle\Subscriber\Administration\LogsSubscriber:
-        tags:
-            - { name: kernel.event_subscriber }
-
     # move those subscribers in their respective plugin when old log system will be removed
     Claroline\LogBundle\Subscriber\Functional\GroupLogSubscriber:
         arguments:

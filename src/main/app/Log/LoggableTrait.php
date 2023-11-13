@@ -6,7 +6,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 /**
- * @todo : make compliant with Psr\Log\LoggerAwareTrait and Psr\Log\LoggerTrait.
+ * @deprecated use Psr\Log\LoggerAwareTrait
  */
 trait LoggableTrait
 {

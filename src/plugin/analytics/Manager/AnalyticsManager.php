@@ -11,7 +11,6 @@
 
 namespace Claroline\AnalyticsBundle\Manager;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Repository\GroupRepository;
 use Claroline\CommunityBundle\Repository\RoleRepository;
@@ -26,8 +25,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\LogManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -158,51 +155,9 @@ class AnalyticsManager
         ];
     }
 
-    public function getResourceTypesCount(Workspace $workspace = null, $organizations = null)
-    {
-        $resourceTypes = $this->resourceTypeRepo->countResourcesByType($workspace, $organizations);
-        $chartData = [];
-        foreach ($resourceTypes as $type) {
-            $chartData["rt-${type['id']}"] = [
-                'xData' => $type['name'],
-                'yData' => floatval($type['total']),
-            ];
-        }
-
-        return $chartData;
-    }
-
     public function getDailyActions(array $finderParams = [])
     {
         return $this->logManager->getChartData($this->formatQueryParams($finderParams));
-    }
-
-    public function topWorkspaceByAction(array $finderParams)
-    {
-        $query = $this->formatQueryParams($finderParams);
-
-        if (!isset($query['filters']['action'])) {
-            $query['filters']['action'] = LogWorkspaceToolReadEvent::ACTION;
-        }
-        $queryParams = FinderProvider::parseQueryParams($query);
-
-        return $this->logRepo->findTopWorkspaceByAction($queryParams['allFilters'], $queryParams['limit']);
-    }
-
-    public function topResourcesByAction(array $finderParams, $onlyMedia = false)
-    {
-        $query = $this->formatQueryParams($finderParams);
-
-        if (!isset($query['filters']['action'])) {
-            $query['filters']['action'] = LogResourceReadEvent::ACTION;
-        }
-
-        if ($onlyMedia) {
-            $query['filters']['resourceType'] = 'file';
-        }
-        $queryParams = FinderProvider::parseQueryParams($query);
-
-        return $this->logRepo->findTopResourcesByAction($queryParams['allFilters'], $queryParams['limit']);
     }
 
     private function formatQueryParams(array $finderParams = [])

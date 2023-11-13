@@ -1,5 +1,3 @@
 plugin:
-  tools:
-    - name: toolA
-      is_displayable_in_workspace: true
-      is_displayable_in_desktop: true
+    tools:
+        - name: toolA

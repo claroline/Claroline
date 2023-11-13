@@ -11,18 +11,18 @@
 
 namespace Claroline\InstallationBundle\Updater;
 
-use Claroline\AppBundle\Log\LoggableTrait;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
 abstract class Updater implements LoggerAwareInterface
 {
-    use LoggableTrait;
+    use LoggerAwareTrait;
 
-    public function preUpdate()
+    public function preUpdate(): void
     {
     }
 
-    public function postUpdate()
+    public function postUpdate(): void
     {
     }
 }

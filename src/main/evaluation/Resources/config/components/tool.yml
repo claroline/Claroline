@@ -1,0 +1,4 @@
+services:
+    Claroline\EvaluationBundle\Component\Tool\EvaluationTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]

@@ -1,7 +1,5 @@
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
         public: true # required by controllers
 
     Claroline\AppBundle\Controller\AbstractCrudController:
@@ -30,25 +28,32 @@ services:
               arguments:
                   - '@security.authorization_checker'
 
-    Claroline\AppBundle\Controller\Platform\ClientController:
+    Claroline\AppBundle\Controller\PlatformController:
         arguments:
             - '@security.token_storage'
             - '@twig'
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Manager\PlatformManager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\AppBundle\Manager\SecurityManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
 
-    Claroline\AppBundle\Controller\Platform\LocaleController:
+    Claroline\AppBundle\Controller\Component\ContextController:
         arguments:
-            - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@security.token_storage'
-
-    Claroline\AppBundle\Controller\Platform\TermsOfServiceController:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@event_dispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\Manager\TermsOfServiceManager'
+            - '@Claroline\AppBundle\Component\Context\ContextProvider'
+
+    Claroline\AppBundle\Controller\Component\ToolController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Component\Context\ContextProvider'
+            - '@Claroline\AppBundle\Component\Tool\ToolProvider'

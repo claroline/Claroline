@@ -10,9 +10,7 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentForbidden} from '#/main/app/content/components/forbidden'
 import {ContentNotFound} from '#/main/app/content/components/not-found'
 
-import {constants} from '#/main/core/tool/constants'
-import {getTool} from '#/main/core/tools'
-import {getTool as getAdminTool} from '#/main/core/administration'
+import {getTool} from '#/main/core/tool/utils'
 
 const Tool = props => {
   if (props.loaded) {
@@ -116,14 +114,9 @@ class ToolMain extends Component {
     if (!this.pendingApp) {
       this.setState({appLoaded: false})
 
-      let app
-      if (constants.TOOL_ADMINISTRATION === this.props.contextType) {
-        app = getAdminTool(this.props.toolName)
-      } else {
-        app = getTool(this.props.toolName)
-      }
-
-      this.pendingApp = makeCancelable(app)
+      this.pendingApp = makeCancelable(
+        getTool(this.props.toolName, this.props.contextType)
+      )
 
       this.pendingApp.promise
         .then(
@@ -133,7 +126,7 @@ class ToolMain extends Component {
                 appLoaded: true,
                 // I build the store here because if I do it in the render()
                 // it will be called many times and will cause multiple mount/unmount of the app
-                app: withReducer(this.props.toolName, resolved.default.store)(Tool),
+                app: resolved.default.store ? withReducer(this.props.toolName, resolved.default.store)(Tool) : Tool,
                 component: resolved.default.component,
                 styles: resolved.default.styles
               })

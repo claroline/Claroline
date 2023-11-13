@@ -7,58 +7,34 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
-use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AppBundle\Log\LoggableTrait;
+use Claroline\AppBundle\Component\Tool\ToolProvider;
 use Claroline\AppBundle\Manager\File\ArchiveManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
-use Claroline\CoreBundle\Event\Tool\ExportToolEvent;
-use Claroline\CoreBundle\Event\Tool\ImportToolEvent;
 use Claroline\CoreBundle\Manager\FileManager;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\File\File;
 
 class TransferManager implements LoggerAwareInterface
 {
-    use LoggableTrait;
-
-    /** @var ObjectManager */
-    private $om;
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var ArchiveManager */
-    private $archiveManager;
-    /** @var FileManager */
-    private $fileManager;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var Crud */
-    private $crud;
+    use LoggerAwareTrait;
 
     public function __construct(
-        ObjectManager $om,
-        StrictDispatcher $dispatcher,
-        ArchiveManager $archiveManager,
-        FileManager $fileManager,
-        SerializerProvider $serializer,
-        Crud $crud
+        private readonly ObjectManager $om,
+        private readonly ArchiveManager $archiveManager,
+        private readonly FileManager $fileManager,
+        private readonly SerializerProvider $serializer,
+        private readonly Crud $crud,
+        private readonly ToolProvider $toolProvider
     ) {
-        $this->om = $om;
-        $this->dispatcher = $dispatcher;
-        $this->archiveManager = $archiveManager;
-        $this->fileManager = $fileManager;
-        $this->serializer = $serializer;
-        $this->crud = $crud;
     }
 
-    public function import(string $archivePath, ?Workspace $workspace = null): Workspace
+    public function import(string $archivePath, Workspace $workspace = null): Workspace
     {
         $archive = new \ZipArchive();
         $archive->open($archivePath);
@@ -186,11 +162,11 @@ class TransferManager implements LoggerAwareInterface
         }, $workspace->getRoles()->toArray());
     }
 
-    private function importRoles(array $data, Workspace $workspace, ?array $defaultRole = null): array
+    private function importRoles(array $data, Workspace $workspace, array $defaultRole = null): array
     {
         $roles = [];
 
-        $this->log(sprintf('Deserializing the roles : %s', implode(', ', array_map(function ($r) { return $r['translationKey']; }, $data['roles']))));
+        $this->logger->debug(sprintf('Deserializing the roles : %s', implode(', ', array_map(function ($r) { return $r['translationKey']; }, $data['roles']))));
         foreach ($data['roles'] as $roleData) {
             unset($roleData['name']);
             $roleData['workspace']['id'] = $workspace->getUuid();
@@ -217,11 +193,11 @@ class TransferManager implements LoggerAwareInterface
     {
         // we want to load the resources first
         /** @var OrderedTool[] $orderedTools */
-        $orderedTools = $workspace->getOrderedTools()->toArray();
+        $orderedTools = $this->toolProvider->getEnabledTools(WorkspaceContext::getName(), $workspace);
 
         $idx = null;
         foreach ($orderedTools as $key => $tool) {
-            if ('resources' === $tool->getTool()->getName()) {
+            if ('resources' === $tool->getName()) {
                 $idx = $key;
             }
         }
@@ -233,67 +209,22 @@ class TransferManager implements LoggerAwareInterface
             array_unshift($orderedTools, $first);
         }
 
-        return array_map(function (OrderedTool $orderedTool) use ($fileBag) {
-            // get custom tool data
-            /** @var ExportToolEvent $event */
-            $event = $this->dispatcher->dispatch(ToolEvents::getEventName(ToolEvents::EXPORT, AbstractTool::WORKSPACE, $orderedTool->getTool()->getName()), ExportToolEvent::class, [
-                $orderedTool->getTool()->getName(), AbstractTool::WORKSPACE, $orderedTool->getWorkspace(), $fileBag,
-            ]);
-
-            return [
-                'name' => $orderedTool->getTool()->getName(),
-                'orderedTool' => $this->serializer->serialize($orderedTool, [SerializerInterface::SERIALIZE_TRANSFER]),
-                'rights' => array_map(function (ToolRights $rights) {
-                    return $this->serializer->serialize($rights, [SerializerInterface::SERIALIZE_TRANSFER]);
-                }, $orderedTool->getRights()->toArray()),
-                'data' => $event->getData(),
-            ];
+        return array_map(function (OrderedTool $orderedTool) use ($workspace, $fileBag) {
+            return $this->toolProvider->export($orderedTool->getName(), WorkspaceContext::getName(), $workspace, $fileBag);
         }, $orderedTools);
     }
 
     private function importTools(array $data, Workspace $workspace, array $roles, FileBag $fileBag): array
     {
-        $this->log('Deserializing the tools...');
+        $this->logger->debug('Importing the tools...');
 
         $createdObjects = $roles; // keep a map of old ID => new object for all imported objects
         foreach ($data['tools'] as $orderedToolData) {
-            $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $orderedToolData['name']]);
-            if ($tool) {
-                $orderedTool = $this->serializer->deserialize($orderedToolData['orderedTool'], new OrderedTool(), [SerializerInterface::REFRESH_UUID]);
-                $orderedTool->setWorkspace($workspace);
-                $orderedTool->setTool($tool);
-                $this->om->persist($orderedTool);
+            $this->logger->debug(sprintf('Importing the tool %s...', $orderedToolData['name']));
 
-                foreach ($orderedToolData['rights'] as $rightsData) {
-                    if (empty($createdObjects[$rightsData['role']['id']])) {
-                        continue;
-                    }
-
-                    $rights = new ToolRights();
-                    $rights->setOrderedTool($orderedTool);
-                    unset($rightsData['orderedToolId']);
-
-                    $this->serializer->deserialize(array_merge($rightsData, [
-                        'role' => [
-                            'id' => $createdObjects[$rightsData['role']['id']]->getUuid(),
-                        ],
-                    ]), $rights);
-
-                    $this->om->persist($rights);
-                }
-
-                /* @var ImportToolEvent $event */
-                $event = $this->dispatcher->dispatch(
-                    ToolEvents::getEventName(ToolEvents::IMPORT, AbstractTool::WORKSPACE, $orderedTool->getTool()->getName()),
-                    ImportToolEvent::class,
-                    [$orderedTool->getTool()->getName(), AbstractTool::WORKSPACE, $orderedTool->getWorkspace(), $fileBag, $orderedToolData['data'] ?? [], $createdObjects]
-                );
-
-                $createdObjects = array_merge([], $createdObjects, $event->getCreatedEntities());
-            }
+            $toolObjects = $this->toolProvider->import($orderedToolData['name'], WorkspaceContext::getName(), $workspace, $fileBag, $orderedToolData, $createdObjects);
+            $createdObjects = array_merge([], $createdObjects, $toolObjects);
         }
-
-        $this->om->flush();
 
         return $createdObjects;
     }

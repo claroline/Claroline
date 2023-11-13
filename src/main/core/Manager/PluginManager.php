@@ -21,27 +21,16 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class PluginManager
 {
-    /** @var string */
-    private $bundleFile;
-
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var PluginRepository */
-    private $pluginRepo;
-
-    /** @var KernelInterface */
-    private $kernel;
-
-    /** @var BundleFileLoader */
-    private $bundleManager;
+    private string $bundleFile;
+    private PluginRepository $pluginRepo;
+    private KernelInterface $kernel;
+    private BundleFileLoader $bundleManager;
 
     public function __construct(
         string $bundleFile,
         ObjectManager $om,
         KernelInterface $kernel
     ) {
-        $this->om = $om;
         $this->pluginRepo = $om->getRepository(Plugin::class);
         $this->bundleFile = $bundleFile;
         $this->kernel = $kernel;
@@ -65,14 +54,14 @@ class PluginManager
         return $enabledBundles;
     }
 
-    public function getInstalledBundles()
+    public function getInstalledBundles(): array
     {
         return array_filter($this->bundleManager->getActiveBundles(true), function ($bundle) {
             return $bundle instanceof PluginBundleInterface;
         });
     }
 
-    public function enable(Plugin $plugin)
+    public function enable(Plugin $plugin): Plugin
     {
         IniParser::updateKey(
             $plugin->getBundleFQCN(),
@@ -83,7 +72,7 @@ class PluginManager
         return $plugin;
     }
 
-    public function disable(Plugin $plugin)
+    public function disable(Plugin $plugin): Plugin
     {
         IniParser::updateKey(
             $plugin->getBundleFQCN(),
@@ -114,12 +103,7 @@ class PluginManager
         ];
     }
 
-    /**
-     * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
-     *
-     * @return bool
-     */
-    public function isReady(Plugin $plugin)
+    public function isReady(Plugin $plugin): bool
     {
         $errors = $this->getMissingRequirements($plugin);
         $errorCount = count($errors['extensions'])
@@ -129,9 +113,6 @@ class PluginManager
         return 0 === $errorCount;
     }
 
-    /**
-     * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
-     */
     public function isLoaded(string $pluginName): bool
     {
         $bundle = $this->getBundle($pluginName);
@@ -195,8 +176,6 @@ class PluginManager
     /**
      * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
      *
-     * @return mixed
-     *
      * @deprecated
      */
     private function getBundle($plugin)
@@ -212,7 +191,7 @@ class PluginManager
         return null;
     }
 
-    private function checkExtensionRequirements(array $extensions)
+    private function checkExtensionRequirements(array $extensions): array
     {
         $errors = [];
 
@@ -225,12 +204,12 @@ class PluginManager
         return $errors;
     }
 
-    private function checkExtraRequirements(array $extra)
+    private function checkExtraRequirements(array $extra): array
     {
         $errors = [];
 
         foreach ($extra as $requirement) {
-            //anonymous function
+            // anonymous function
             $return = $requirement['test']();
 
             if (!$return) {
@@ -241,7 +220,7 @@ class PluginManager
         return $errors;
     }
 
-    private function checkPluginsRequirements(array $plugins)
+    private function checkPluginsRequirements(array $plugins): array
     {
         $errors = [];
 
@@ -254,7 +233,7 @@ class PluginManager
         return $errors;
     }
 
-    private function getPluginShortName($plugin)
+    private function getPluginShortName($plugin): string
     {
         $name = $plugin instanceof Plugin ?
             $plugin->getSfName() :

@@ -1,4 +1,0 @@
-services:
-    Claroline\HomeBundle\Finder\HomeTabFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]

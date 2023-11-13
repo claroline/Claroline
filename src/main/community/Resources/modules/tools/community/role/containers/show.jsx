@@ -20,9 +20,6 @@ const RoleShow = connect(
     reload(id, contextData) {
       dispatch(actions.open(id, contextData, true))
     },
-    loadMetrics(roleId, year) {
-      return dispatch(actions.fetchMetrics(roleId, year))
-    },
 
     loadWorkspaceRights(roleId, contextId) {
       return dispatch(actions.fetchWorkspaceRights(roleId, contextId))

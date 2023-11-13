@@ -8,50 +8,35 @@ trait Address
 {
     /**
      * @ORM\Column(name="address_street1", nullable=true)
-     *
-     * @var string
      */
-    protected $addressStreet1;
+    protected ?string $addressStreet1;
 
     /**
      * @ORM\Column(name="address_street2", nullable=true)
-     *
-     * @var string
      */
-    protected $addressStreet2;
+    protected ?string $addressStreet2;
 
     /**
      * @ORM\Column(name="address_postal_code", nullable=true)
-     *
-     * @var string
      */
-    protected $addressPostalCode;
+    protected ?string $addressPostalCode;
 
     /**
      * @ORM\Column(name="address_city", nullable=true)
-     *
-     * @var string
      */
-    protected $addressCity;
+    protected ?string $addressCity;
 
     /**
      * @ORM\Column(name="address_state", nullable=true)
-     *
-     * @var string
      */
-    protected $addressState;
+    protected ?string $addressState;
 
     /**
      * @ORM\Column(name="address_country", nullable=true)
-     *
-     * @var string
      */
-    protected $addressCountry;
+    protected ?string $addressCountry;
 
-    /**
-     * @return string
-     */
-    public function getAddress()
+    public function getAddress(): string
     {
         return trim(join(PHP_EOL, [
             $this->addressStreet1 ?? '',
@@ -63,98 +48,62 @@ trait Address
         ]));
     }
 
-    /**
-     * @return string
-     */
-    public function getAddressStreet1()
+    public function getAddressStreet1(): ?string
     {
         return $this->addressStreet1;
     }
 
-    /**
-     * @param string $addressStreet1
-     */
-    public function setAddressStreet1($addressStreet1)
+    public function setAddressStreet1(?string $addressStreet1): void
     {
         $this->addressStreet1 = $addressStreet1;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddressStreet2()
+    public function getAddressStreet2(): ?string
     {
         return $this->addressStreet2;
     }
 
-    /**
-     * @param string $addressStreet2
-     */
-    public function setAddressStreet2($addressStreet2)
+    public function setAddressStreet2(?string $addressStreet2): void
     {
         $this->addressStreet2 = $addressStreet2;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddressPostalCode()
+    public function getAddressPostalCode(): ?string
     {
         return $this->addressPostalCode;
     }
 
-    /**
-     * @param string $addressPostalCode
-     */
-    public function setAddressPostalCode($addressPostalCode)
+    public function setAddressPostalCode(?string $addressPostalCode): void
     {
         $this->addressPostalCode = $addressPostalCode;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddressCity()
+    public function getAddressCity(): ?string
     {
         return $this->addressCity;
     }
 
-    /**
-     * @param string $addressCity
-     */
-    public function setAddressCity($addressCity)
+    public function setAddressCity(?string $addressCity): void
     {
         $this->addressCity = $addressCity;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddressState()
+    public function getAddressState(): ?string
     {
         return $this->addressState;
     }
 
-    /**
-     * @param string $addressState
-     */
-    public function setAddressState($addressState)
+    public function setAddressState(?string $addressState): void
     {
         $this->addressState = $addressState;
     }
 
-    /**
-     * @return string
-     */
-    public function getAddressCountry()
+    public function getAddressCountry(): ?string
     {
         return $this->addressCountry;
     }
 
-    /**
-     * @param string $addressCountry
-     */
-    public function setAddressCountry($addressCountry)
+    public function setAddressCountry(?string $addressCountry): void
     {
         $this->addressCountry = $addressCountry;
     }

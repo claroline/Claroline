@@ -16,7 +16,6 @@ import {GroupList} from '#/main/community/group/components/list'
 import {constants} from '#/main/community/constants'
 import {Role as RoleTypes} from '#/main/community/role/prop-types'
 import {RolePage} from '#/main/community/role/components/page'
-import {RoleMetrics} from '#/main/community/role/components/metrics'
 import {selectors} from '#/main/community/tools/community/role/store/selectors'
 import {RoleShortcuts} from '#/main/community/tools/community/role/containers/shortcuts'
 import {RoleRights} from '#/main/community/tools/community/role/components/rights'
@@ -28,12 +27,6 @@ const RoleShow = (props) =>
     reload={(role) => props.reload(role, props.contextData)}
   >
     <div role="presentation" className="content-lg">
-      {get(props.role, 'id') &&
-        <RoleMetrics
-          load={(year) => props.loadMetrics(props.role.id, year)}
-        />
-      }
-
       <DetailsData
         name={selectors.FORM_NAME}
         definition={[
@@ -219,7 +212,6 @@ RoleShow.propTypes = {
   administrationRights: T.object,
 
   reload: T.func.isRequired,
-  loadMetrics: T.func.isRequired,
   loadWorkspaceRights: T.func.isRequired,
   loadDesktopRights: T.func.isRequired,
   loadAdministrationRights: T.func.isRequired,

@@ -15,4 +15,8 @@ use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
 class ClarolineCommunityInstaller extends AdditionalInstaller
 {
+    public function hasMigrations(): bool
+    {
+        return true;
+    }
 }

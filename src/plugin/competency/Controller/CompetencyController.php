@@ -13,6 +13,7 @@ namespace HeVinci\CompetencyBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -89,6 +90,7 @@ class CompetencyController extends AbstractCrudController
      *     "/competency/{id}/list",
      *     name="apiv2_competency_tree_list"
      * )
+     *
      * @EXT\ParamConverter(
      *     "competency",
      *     class="HeVinci\CompetencyBundle\Entity\Competency",
@@ -118,6 +120,7 @@ class CompetencyController extends AbstractCrudController
      *     "/framework/{id}/export",
      *     name="apiv2_competency_framework_export"
      * )
+     *
      * @EXT\ParamConverter(
      *     "framework",
      *     class="HeVinci\CompetencyBundle\Entity\Competency",
@@ -185,6 +188,7 @@ class CompetencyController extends AbstractCrudController
      *     "/node/{node}/competencies/fetch",
      *     name="apiv2_competency_resource_competencies_list"
      * )
+     *
      * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -210,6 +214,7 @@ class CompetencyController extends AbstractCrudController
      *     name="apiv2_competency_resource_associate",
      *     methods={"POST"}
      * )
+     *
      * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -239,6 +244,7 @@ class CompetencyController extends AbstractCrudController
      *     name="apiv2_competency_resource_dissociate",
      *     methods={"DELETE"}
      * )
+     *
      * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -268,7 +274,7 @@ class CompetencyController extends AbstractCrudController
 
     private function checkToolAccess(string $rights = 'OPEN'): void
     {
-        $competenciesTool = $this->toolManager->getAdminToolByName('competencies');
+        $competenciesTool = $this->toolManager->getOrderedTool('competencies', DesktopContext::getName());
 
         if (is_null($competenciesTool) || !$this->authorization->isGranted($rights, $competenciesTool)) {
             throw new AccessDeniedException();

@@ -4,10 +4,6 @@ namespace Claroline\AppBundle\Component\Context;
 
 use Claroline\AppBundle\Component\AbstractComponentProvider;
 
-// $wsContext = $this->contextManager->getContext(WorkspaceContext::class, $contextId);
-// $desktopContext = $this->contextManager->getContext(DesktopContext::class);
-// $this->>toolManager->getTool(ResourcesTool::class, $wsContext);
-
 /**
  * Aggregates all the contexts defined in the Claroline app.
  *
@@ -37,5 +33,28 @@ class ContextProvider extends AbstractComponentProvider
     protected function getRegisteredComponents(): iterable
     {
         return $this->registeredContexts;
+    }
+
+    public function getAvailableContexts(): array
+    {
+        $available = [];
+        foreach ($this->getRegisteredComponents() as $contextComponent) {
+            if ($contextComponent->isAvailable()) {
+                $available[] = $contextComponent;
+            }
+        }
+
+        return $available;
+    }
+
+    public function getContext(string $contextName, string $contextId = null): ContextInterface
+    {
+        /** @var ContextInterface $contextHandler */
+        $contextHandler = $this->getComponent($contextName);
+        if (!$contextHandler->isAvailable($contextId)) {
+            throw new \RuntimeException(sprintf('Context "%s(%s)" is not available. Check %s::isAvailable() for more info.', $contextName, $contextId || '', get_class($contextHandler)));
+        }
+
+        return $contextHandler;
     }
 }

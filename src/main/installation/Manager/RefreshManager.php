@@ -11,61 +11,36 @@
 
 namespace Claroline\InstallationBundle\Manager;
 
-use Claroline\AppBundle\Manager\CommandManager;
 use Psr\Log\LogLevel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class RefreshManager
 {
-    /** @var Filesystem */
-    private $filesystem;
-    /** @var CommandManager */
-    private $commandManager;
-
-    /** @var string */
-    private $projectDir;
-    /** @var string */
-    private $cacheDir;
-    /** @var string */
-    private $publicDir;
-    /** @var string */
-    private $publicDataDir;
-    /** @var string */
-    private $filesDataDir;
-
-    /** @var OutputInterface */
-    private $output;
+    private OutputInterface $output;
 
     public function __construct(
-        Filesystem $filesystem,
-        CommandManager $commandManager,
-        string $projectDir,
-        string $cacheDir,
-        string $publicDir,
-        string $publicDataDir,
-        string $filesDataDir
+        private readonly KernelInterface $kernel,
+        private readonly Filesystem $filesystem,
+        private readonly string $projectDir,
+        private readonly string $cacheDir,
+        private readonly string $publicDir,
+        private readonly string $publicDataDir,
+        private readonly string $filesDataDir
     ) {
-        $this->filesystem = $filesystem;
-        $this->commandManager = $commandManager;
-
-        $this->projectDir = $projectDir;
-        $this->cacheDir = $cacheDir;
-        $this->publicDir = $publicDir;
-        $this->publicDataDir = $publicDataDir;
-        $this->filesDataDir = $filesDataDir;
-
         $this->output = new NullOutput();
     }
 
-    public function setOutput(OutputInterface $output)
+    public function setOutput(OutputInterface $output): void
     {
         $this->output = $output;
     }
 
-    public function refresh($environment)
+    public function refresh(string $environment): void
     {
         $this->buildSymlinks();
         $this->installAssets();
@@ -73,18 +48,18 @@ class RefreshManager
         $this->clearCache($environment);
     }
 
-    public function installAssets()
+    public function installAssets(): void
     {
-        $this->commandManager->run(new ArrayInput([
+        $this->runCommand(new ArrayInput([
             'command' => 'assets:install',
             'target' => $this->publicDir,
             '--symlink' => true,
         ]), $this->output);
     }
 
-    public function dumpAssets()
+    public function dumpAssets(): void
     {
-        $this->commandManager->run(new ArrayInput([
+        $this->runCommand(new ArrayInput([
             'command' => 'bazinga:js-translation:dump',
             'target' => $this->publicDir.DIRECTORY_SEPARATOR.'js',
             '--format' => ['js'],
@@ -92,29 +67,27 @@ class RefreshManager
         ]), $this->output);
     }
 
-    public function buildThemes()
+    public function buildThemes(): void
     {
-        $this->commandManager->run(new ArrayInput([
+        $this->runCommand(new ArrayInput([
             'command' => 'claroline:theme:build',
         ]), $this->output);
     }
 
-    public function buildSymlinks()
+    public function buildSymlinks(): void
     {
         $this->linkPublicFiles();
         $this->linkPackageFiles();
     }
 
-    public function clearCache(string $environment)
+    public function clearCache(string $environment): void
     {
-        if ($this->output) {
-            $this->output->writeln('Clearing the cache...');
-        }
+        $this->output->writeln('Clearing the cache...');
 
         $this->removeContentFrom($this->cacheDir.DIRECTORY_SEPARATOR.$environment);
     }
 
-    private function removeContentFrom($directory)
+    private function removeContentFrom($directory): void
     {
         if (is_dir($directory)) {
             $cacheIterator = new \DirectoryIterator($directory);
@@ -127,7 +100,7 @@ class RefreshManager
         }
     }
 
-    private function linkPublicFiles()
+    private function linkPublicFiles(): void
     {
         if (!$this->filesystem->exists($this->publicDataDir)) {
             $this->output->writeln('Creating symlink to public directory of files directory in public directory...');
@@ -142,7 +115,7 @@ class RefreshManager
         }
     }
 
-    private function linkPackageFiles()
+    private function linkPackageFiles(): void
     {
         $packageDir = $this->publicDir.DIRECTORY_SEPARATOR.'packages';
 
@@ -150,7 +123,14 @@ class RefreshManager
             $this->output->writeln('Creating symlink to '.$packageDir);
             $this->filesystem->symlink($this->projectDir.DIRECTORY_SEPARATOR.'node_modules', $packageDir);
         } elseif (!is_link($packageDir)) {
-            $this->output->writeln('Couldn\'t create symlink from node_modules to public/packages. You must remove public/packages or create the link manually');
+            $this->output->writeln('Cannot create symlink from node_modules to public/packages. You must remove public/packages or create the link manually');
         }
+    }
+
+    private function runCommand(ArrayInput $input, $output): void
+    {
+        $application = new Application($this->kernel);
+        $application->setAutoExit(false);
+        $application->run($input, $output);
     }
 }

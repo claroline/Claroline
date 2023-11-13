@@ -26,17 +26,20 @@ class OrderedToolFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'context':
+                    $qb->andWhere('obj.contextName = :contextName');
+                    $qb->setParameter('contextName', $filterValue);
+                    break;
+                case 'contextId':
                 case 'workspace':
-                    $qb->leftJoin('obj.workspace', 'ws');
-                    $qb->andWhere($qb->expr()->orX(
-                        $qb->expr()->eq('ws.uuid', ':workspace')
-                    ));
-                    $qb->setParameter('workspace', $filterValue);
+                    $qb->andWhere('obj.contextId = :contextId');
+                    $qb->setParameter('contextId', $filterValue);
                     break;
                 case 'tool':
                     $qb->leftJoin('obj.tool', 'tool');
                     $qb->andWhere('tool.name = :tool');
                     $qb->setParameter('tool', $filterValue);
+                    break;
             }
         }
 

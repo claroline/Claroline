@@ -1,11 +1,9 @@
 plugin:
     tools:
         - name: tags
-          class: tags
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true
+          icon: tags
           tool_rights:
-              - name: create
+              - create
 
     resource_actions:
         - name: tags

@@ -8,8 +8,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Repository\GroupRepository;
 use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Log\Connection\LogConnectPlatform;
-use Claroline\CoreBundle\Entity\Log\Connection\LogConnectWorkspace;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -87,7 +85,7 @@ class ActivityController
     /**
      * @Route("/count/{contextId}", name="apiv2_community_activity")
      */
-    public function openAction(?string $contextId = null): JsonResponse
+    public function openAction(string $contextId = null): JsonResponse
     {
         if (!$this->checkToolAccess('SHOW_ACTIVITY', $contextId)) {
             throw new AccessDeniedException();
@@ -132,7 +130,7 @@ class ActivityController
     /**
      * @Route("/global/{contextId}", name="apiv2_community_activity_global")
      */
-    public function globalAction(Request $request, ?string $contextId = null): JsonResponse
+    public function globalAction(Request $request, string $contextId = null): JsonResponse
     {
         if (!$this->checkToolAccess('SHOW_ACTIVITY', $contextId)) {
             throw new AccessDeniedException();
@@ -154,7 +152,7 @@ class ActivityController
     /**
      * @Route("/logs/{contextId}", name="apiv2_community_activity_logs", methods={"GET"})
      */
-    public function listLogsAction(Request $request, ?string $contextId = null): JsonResponse
+    public function listLogsAction(Request $request, string $contextId = null): JsonResponse
     {
         if (!$this->checkToolAccess('SHOW_ACTIVITY', $contextId)) {
             throw new AccessDeniedException();
@@ -165,7 +163,7 @@ class ActivityController
         );
     }
 
-    private function checkToolAccess(string $rights = 'OPEN', ?string $contextId = null): bool
+    private function checkToolAccess(string $rights = 'OPEN', string $contextId = null): bool
     {
         if ($contextId) {
             $communityTool = $this->toolManager->getOrderedTool('community', Tool::WORKSPACE, $contextId);
@@ -180,7 +178,7 @@ class ActivityController
         return true;
     }
 
-    private function filterQuery(array $query, ?string $contextId = null): array
+    private function filterQuery(array $query, string $contextId = null): array
     {
         if ($contextId) {
             $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $contextId]);

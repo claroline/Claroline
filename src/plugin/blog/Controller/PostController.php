@@ -19,33 +19,19 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("blog/{blogId}/posts", options={"expose"=true})
+ *
  * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
  */
 class PostController
 {
     use PermissionCheckerTrait;
 
-    private $postSerializer;
-    private $postManager;
-    private $trackingManager;
-    private $logThreshold;
-
-    /**
-     * postController constructor.
-     *
-     * @param $logThreshold
-     */
     public function __construct(
-        PostSerializer $postSerializer,
-        PostManager $postManager,
-        BlogTrackingManager $trackingManager,
-        $logThreshold,
-        AuthorizationCheckerInterface $authorization)
-    {
-        $this->postSerializer = $postSerializer;
-        $this->postManager = $postManager;
-        $this->trackingManager = $trackingManager;
-        $this->logThreshold = $logThreshold;
+        private readonly PostSerializer $postSerializer,
+        private readonly PostManager $postManager,
+        private readonly BlogTrackingManager $trackingManager,
+        AuthorizationCheckerInterface $authorization
+    ) {
         $this->authorization = $authorization;
     }
 
@@ -73,7 +59,7 @@ class PostController
             || $this->checkPermission('EDIT', $blog->getResourceNode())) {
             $parameters = $request->query->all();
 
-            //if no edit rights, list only published posts
+            // if no edit rights, list only published posts
             $posts = $this->postManager->getPosts(
                 $blog->getId(),
                 $parameters,
@@ -99,7 +85,7 @@ class PostController
 
         $parameters = $request->query->all();
 
-        //if no edit rights, list only published posts
+        // if no edit rights, list only published posts
         $posts = $this->postManager->getPosts(
             $blog->getId(),
             $parameters,
@@ -117,9 +103,8 @@ class PostController
      * Get blog post.
      *
      * @Route("/{postId}", name="apiv2_blog_post_get", methods={"GET"})
-     * @EXT\ParamConverter("blog", options={"mapping": {"blogId": "uuid"}})
      *
-     * @param Post $post
+     * @EXT\ParamConverter("blog", options={"mapping": {"blogId": "uuid"}})
      *
      * @return array
      */
@@ -134,14 +119,7 @@ class PostController
 
         $this->trackingManager->dispatchPostReadEvent($post);
 
-        $session = $request->getSession();
-        $sessionViewCounterKey = 'blog_post_view_counter_'.$post->getId();
-        $now = time();
-
-        if ($now >= ($session->get($sessionViewCounterKey) + $this->logThreshold)) {
-            $session->set($sessionViewCounterKey, $now);
-            $this->postManager->updatePostViewCount($post);
-        }
+        $this->postManager->updatePostViewCount($post);
 
         return new JsonResponse($this->postSerializer->serialize($post));
     }
@@ -150,6 +128,7 @@ class PostController
      * Create blog post.
      *
      * @Route("/new", name="apiv2_blog_post_new", methods={"POST", "PUT"})
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @return array
@@ -171,6 +150,7 @@ class PostController
      * Update blog post.
      *
      * @Route("/update/{postId}", name="apiv2_blog_post_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -190,6 +170,7 @@ class PostController
      * Delete blog post.
      *
      * @Route("/delete/{postId}", name="apiv2_blog_post_delete", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -207,6 +188,7 @@ class PostController
      * Switch post publication state.
      *
      * @Route("/publish/{postId}", name="apiv2_blog_post_publish", methods={"PUT"})
+     *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -228,6 +210,7 @@ class PostController
      * Pin post.
      *
      * @Route("/pin/{postId}", name="apiv2_blog_post_pin", methods={"PUT"})
+     *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *

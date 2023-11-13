@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\Component\Context;
 
 use Claroline\AppBundle\Component\Context\AbstractContext;
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Manager\SecurityManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -21,38 +22,38 @@ class AdministrationContext extends AbstractContext
     ) {
     }
 
-    public static function getShortName(): string
+    public static function getName(): string
     {
         return 'administration';
     }
 
-    public function getObject(?string $contextId): mixed
+    public function getObject(?string $contextId): ?ContextSubjectInterface
     {
         return null;
     }
 
-    public function isAvailable(?string $contextId, TokenInterface $token): bool
+    public function isAvailable(?string $contextId): bool
     {
-        return !empty($this->securityManager->getCurrentUser())
-            && !empty($this->toolManager->getAdminToolsByRoles($token->getRoleNames()));
+        return !empty($this->securityManager->getCurrentUser());
+        // && !empty($this->toolManager->getAdminToolsByRoles($token->getRoleNames()));
     }
 
-    public function getAccessErrors(?string $contextId, TokenInterface $token): array
+    public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
     {
         return [];
     }
 
-    public function isImpersonated(?string $contextId, TokenInterface $token): bool
+    public function isImpersonated(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
     {
         return $this->securityManager->isImpersonated();
     }
 
-    public function isManager(?string $contextId, TokenInterface $token): bool
+    public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
     {
         return $this->securityManager->isAdmin();
     }
 
-    public function getAdditionalData(?string $contextId): array
+    public function getAdditionalData(?ContextSubjectInterface $contextSubject): array
     {
         // for retro-compatibility, should not be exposed here
         $defaultTool = $this->config->getParameter('admin.default_tool');
@@ -68,7 +69,7 @@ class AdministrationContext extends AbstractContext
         ];
     }
 
-    public function getRoles(?string $contextId, TokenInterface $token): array
+    public function getRoles(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
     {
         $currentUser = $this->securityManager->getCurrentUser();
         if (empty($currentUser)) {
@@ -78,11 +79,5 @@ class AdministrationContext extends AbstractContext
         return array_filter($currentUser->getEntityRoles(), function (Role $role) {
             return Role::PLATFORM_ROLE === $role->getType();
         });
-    }
-
-    public function getShortcuts(?string $contextId): array
-    {
-        // only supported by Workspace context atm
-        return [];
     }
 }

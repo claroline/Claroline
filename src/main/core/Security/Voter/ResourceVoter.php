@@ -201,12 +201,12 @@ class ResourceVoter implements VoterInterface
             }
         }
 
-        //the workspace manager he can do w/e he wants
+        // the workspace manager he can do w/e he wants
         if ($haveSameWorkspace && $ws && $this->workspaceManager->isManager($ws, $token)) {
             return [];
         }
 
-        //the resource creator can do w/e he wants
+        // the resource creator can do w/e he wants
         $timesCreator = 0;
 
         foreach ($nodes as $node) {
@@ -215,12 +215,12 @@ class ResourceVoter implements VoterInterface
             }
         }
 
-        //but it only work if he's not usurping a workspace role to see if everything is good
+        // but it only works if he's not usurping a workspace role to see if everything is good
         if ($timesCreator === count($nodes) && !$this->workspaceManager->isImpersonated($token)) {
             return [];
         }
 
-        //check if the action is possible on the node
+        // check if the action is possible on the node
         $errors = [];
         $action = strtolower($action);
 
@@ -233,11 +233,11 @@ class ResourceVoter implements VoterInterface
                 $adminDecoder = $this->maskManager->getDecoder($type, 'administrate');
                 $canAdministrate = $adminDecoder ? (0 !== ($mask & $adminDecoder->getValue())) : false;
                 // If user can administrate OR resource is open then check action
-                if ($canAdministrate ||
-                    ($this->restrictionsManager->isStarted($node) &&
-                     !$this->restrictionsManager->isEnded($node) &&
-                    $node->isPublished())) {
-                    //gotta check
+                if ($canAdministrate
+                    || ($this->restrictionsManager->isStarted($node)
+                     && !$this->restrictionsManager->isEnded($node)
+                    && $node->isPublished())) {
+                    // gotta check
                     if (!$decoder) {
                         return ['The permission '.$action.' does not exists for the type '.$type->getName()];
                     }
@@ -276,7 +276,7 @@ class ResourceVoter implements VoterInterface
             return $errors;
         }
 
-        //otherwise we need to check
+        // otherwise we need to check
         $rightsCreation = $this->repository->findCreationRights($token->getRoleNames(), $node);
 
         if (!$this->canCreate($rightsCreation, $type)) {
@@ -306,16 +306,16 @@ class ResourceVoter implements VoterInterface
     {
         $errors = [];
 
-        //first I need to know if I can create
+        // first I need to know if I can create
         foreach ($nodes as $node) {
             $type = $node->getResourceType()->getName();
             $errors = array_merge($errors, $this->checkCreation($type, $parent, $token));
         }
 
-        //then I need to know if I can copy
+        // then I need to know if I can copy
         $errors = array_merge($errors, $this->checkCopy($parent, $nodes, $token));
 
-        //and finally I need to know if I can delete
+        // and finally I need to know if I can delete
         $errors = array_merge($errors, $this->checkAction('DELETE', $nodes, $token));
 
         return $errors;
@@ -329,7 +329,7 @@ class ResourceVoter implements VoterInterface
      */
     private function checkCopy(ResourceNode $parent, array $nodes, TokenInterface $token): array
     {
-        //first I need to know if I can create what I want in the parent directory
+        // first I need to know if I can create what I want in the parent directory
         $errors = [];
 
         foreach ($nodes as $node) {
@@ -337,7 +337,7 @@ class ResourceVoter implements VoterInterface
             $errors = array_merge($errors, $this->checkCreation($type, $parent, $token));
         }
 
-        //then we need to know if we can copy
+        // then we need to know if we can copy
         $errors = array_merge($errors, $this->checkAction('COPY', $nodes, $token));
 
         return $errors;

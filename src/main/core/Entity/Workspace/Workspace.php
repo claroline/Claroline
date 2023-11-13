@@ -11,6 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
+use Claroline\AppBundle\Entity\Display\Hidden;
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
@@ -20,18 +24,14 @@ use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Name;
-use Claroline\AppBundle\Entity\Meta\Poster;
-use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
 use Claroline\AppBundle\Entity\Restriction\AccessCode;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\AppBundle\Entity\Restriction\AllowedIps;
-use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CommunityBundle\Model\HasOrganizations;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -45,7 +45,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *     @ORM\Index(name="name_idx", columns={"entity_name"})
  * })
  */
-class Workspace implements IdentifiableInterface
+class Workspace implements IdentifiableInterface, ContextSubjectInterface
 {
     // identifiers
     use Id;
@@ -54,14 +54,15 @@ class Workspace implements IdentifiableInterface
     // meta
     use Archived;
     use Name;
-    use Poster;
-    use Thumbnail;
     use Description;
     use Creator;
     use CreatedAt;
     use UpdatedAt;
-    // restrictions
+    // display
     use Hidden;
+    use Poster;
+    use Thumbnail;
+    // restrictions
     use AccessibleFrom;
     use AccessibleUntil;
     use AccessCode;
@@ -86,21 +87,6 @@ class Workspace implements IdentifiableInterface
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
-     *     mappedBy="workspace",
-     *     cascade={"persist", "merge"}
-     * )
-     *
-     * @ORM\OrderBy({"order" = "ASC"})
-     *
-     * @var OrderedTool[]|ArrayCollection
-     *
-     * @deprecated relation should be unidirectional
-     */
-    private $orderedTools;
-
-    /**
-     * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     mappedBy="workspace",
      *     cascade={"persist", "merge"}
@@ -108,7 +94,7 @@ class Workspace implements IdentifiableInterface
      *
      * @var Role[]|ArrayCollection
      *
-     * @deprecated relation should be unidirectional (not sure it's possible to remove it)
+     * @deprecated relation should be unidirectional
      */
     private $roles;
 
@@ -250,7 +236,6 @@ class Workspace implements IdentifiableInterface
         $this->refreshUuid();
 
         $this->roles = new ArrayCollection();
-        $this->orderedTools = new ArrayCollection();
         $this->organizations = new ArrayCollection();
         $this->options = new WorkspaceOptions();
         $this->shortcuts = new ArrayCollection();
@@ -261,6 +246,11 @@ class Workspace implements IdentifiableInterface
         return $this->name.' ['.$this->code.']';
     }
 
+    public function getContextIdentifier(): string
+    {
+        return $this->uuid;
+    }
+
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -269,34 +259,6 @@ class Workspace implements IdentifiableInterface
     public function setSlug(string $slug)
     {
         $this->slug = $slug;
-    }
-
-    /**
-     * Get ordered tools.
-     *
-     * @return OrderedTool[]|ArrayCollection
-     *
-     * @deprecated
-     */
-    public function getOrderedTools()
-    {
-        return $this->orderedTools;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function addOrderedTool(OrderedTool $tool)
-    {
-        $this->orderedTools->add($tool);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function removeOrderedTool(OrderedTool $tool)
-    {
-        $this->orderedTools->removeElement($tool);
     }
 
     /**

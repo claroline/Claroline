@@ -11,10 +11,10 @@
 
 namespace Claroline\InstallationBundle\Fixtures;
 
-use Claroline\AppBundle\Log\LoggableTrait;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
  */
 class FixtureLoader implements LoggerAwareInterface
 {
-    use LoggableTrait;
+    use LoggerAwareTrait;
 
     private $container;
     private $executor;
@@ -50,7 +50,7 @@ class FixtureLoader implements LoggerAwareInterface
         $toLoad = [];
         foreach ($fixtures as $fixture) {
             if ($fixture instanceof $event) {
-                $this->log(sprintf('Found %s fixture to load', get_class($fixture)));
+                $this->logger->info(sprintf('Found %s fixture to load', get_class($fixture)));
 
                 if (method_exists($fixture, 'setLogger')) {
                     $fixture->setLogger($this->logger);

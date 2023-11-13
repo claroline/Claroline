@@ -41,18 +41,6 @@ services:
             - '@security.authorization_checker'
             - '@security.token_storage'
 
-    Claroline\CoreBundle\API\Finder\Tool\ToolFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-        arguments:
-            - '@Claroline\CoreBundle\Manager\PluginManager'
-
-    Claroline\CoreBundle\API\Finder\Tool\AdminToolFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-        arguments:
-            - '@Claroline\CoreBundle\Manager\PluginManager'
-
     Claroline\CoreBundle\API\Finder\Tool\OrderedToolFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
@@ -69,26 +57,6 @@ services:
             - '@security.token_storage'
 
     Claroline\CoreBundle\API\Finder\Log\LogFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
-    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectWorkspaceFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
-    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectToolFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
-    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectResourceFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
-    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectPlatformFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
-    Claroline\CoreBundle\API\Finder\Log\Connection\LogConnectAdminToolFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
 

@@ -28,9 +28,7 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
-use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,19 +46,14 @@ class LogListener
     private $roleManager;
     private $ch;
     private $enabledLog;
-    private $logConnectManager;
 
-    /**
-     * LogListener constructor.
-     */
     public function __construct(
         ObjectManager $om,
         TokenStorageInterface $tokenStorage,
         RequestStack $requestStack,
         ContainerInterface $container,
         RoleManager $roleManager,
-        PlatformConfigurationHandler $ch,
-        LogConnectManager $logConnectManager
+        PlatformConfigurationHandler $ch
     ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
@@ -69,7 +62,6 @@ class LogListener
         $this->roleManager = $roleManager;
         $this->ch = $ch;
         $this->enabledLog = $this->ch->getParameter('platform_log_enabled');
-        $this->logConnectManager = $logConnectManager;
     }
 
     private function createLog(LogGenericEvent $event)
@@ -307,20 +299,8 @@ class LogListener
 
     public function onLog(LogGenericEvent $event)
     {
-        $log = null;
-        $logCreated = false;
-
         if (!($event instanceof LogNotRepeatableInterface) || !$this->isARepeat($event)) {
-            $log = $this->createLog($event);
-            $logCreated = true;
-        }
-
-        if ($logCreated && $log && (
-            $event instanceof UserLoginEvent
-            || $event instanceof LogWorkspaceEnterEvent
-            || $event instanceof LogResourceReadEvent
-        )) {
-            $this->logConnectManager->manageConnection($log);
+            $this->createLog($event);
         }
     }
 

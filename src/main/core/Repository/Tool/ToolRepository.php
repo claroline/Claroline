@@ -17,6 +17,9 @@ use Claroline\CoreBundle\Manager\PluginManager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @deprecated no longer needed
+ */
 class ToolRepository extends ServiceEntityRepository
 {
     /** @var array */

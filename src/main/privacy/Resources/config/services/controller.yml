@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true # required by controllers
+
     Claroline\PrivacyBundle\Controller\PrivacyController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
@@ -6,3 +9,9 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+
+    Claroline\PrivacyBundle\Controller\TermsOfServiceController:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Manager\TermsOfServiceManager'

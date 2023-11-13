@@ -1,0 +1,4 @@
+services:
+    Icap\NotificationBundle\Component\Tool\NotificationsTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]

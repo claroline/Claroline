@@ -1,0 +1,6 @@
+services:
+    Claroline\PrivacyBundle\Component\Tool\PrivacyTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]
+        arguments:
+            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'

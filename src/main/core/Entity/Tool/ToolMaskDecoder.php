@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  *         @ORM\UniqueConstraint(
  *             name="tool_mask_decoder_unique_tool_and_name",
- *             columns={"tool_id", "name"}
+ *             columns={"tool_name", "name"}
  *         )
  *     })
  */
@@ -41,53 +41,44 @@ class ToolMaskDecoder
     /**
      * @ORM\Column(type="integer")
      */
-    protected $value;
+    private int $value;
 
     /**
      * @ORM\Column()
      */
-    protected $name;
+    protected string $name;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
-     *     inversedBy="maskDecoders",
-     *     cascade={"persist"}
-     * )
-     *
-     * @ORM\JoinColumn(name="tool_id", onDelete="CASCADE", nullable=false)
+     * @ORM\Column(name="tool_name", nullable=false)
      */
-    protected $tool;
+    protected string $tool;
 
-    public function getValue()
+    public function getValue(): int
     {
         return $this->value;
     }
 
-    public function setValue($value)
+    public function setValue($value): void
     {
         $this->value = $value;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return Tool
-     */
-    public function getTool()
+    public function getTool(): string
     {
         return $this->tool;
     }
 
-    public function setTool(Tool $tool)
+    public function setTool(string $tool): void
     {
         $this->tool = $tool;
     }

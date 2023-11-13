@@ -7,5 +7,5 @@ namespace Claroline\AppBundle\Component;
  */
 interface ComponentInterface
 {
-    public static function getShortName(): string;
+    public static function getName(): string;
 }

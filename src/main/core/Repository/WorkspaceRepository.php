@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
@@ -73,9 +74,10 @@ class WorkspaceRepository extends EntityRepository
                     FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
                     JOIN ot.rights otr
                     JOIN otr.role otrr
-                    WHERE ot.workspace = w
-                    AND otrr.name in (:roles)
-                    AND BIT_AND(otr.mask, 1) = 1
+                    WHERE ot.contextName = "workspace"
+                      AND ot.contextId = w.uuid
+                      AND otrr.name in (:roles)
+                      AND BIT_AND(otr.mask, 1) = 1
                 )
 
             ')
@@ -83,32 +85,35 @@ class WorkspaceRepository extends EntityRepository
             ->getResult();
     }
 
-    public function checkAccess(Workspace $workspace, array $roleNames, ?string $toolName = null, ?string $action = 'open')
+    /**
+     * @deprecated
+     */
+    public function checkAccess(Workspace $workspace, array $roleNames, string $toolName = null, ?string $action = 'open'): bool
     {
         $dql = '
             SELECT COUNT(ot)
             FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
-            JOIN ot.workspace w
-            JOIN ot.tool t
-            JOIN ot.rights r
-            JOIN r.role rr
-            WHERE w.id = :workspaceId
+            JOIN ot.rights AS r
+            JOIN r.role AS rr
+            WHERE ot.contextName = :contextName
+            AND ot.contextId = :workspaceId
             AND rr.name IN (:roleNames)
             AND EXISTS (
                 SELECT d
-                FROM Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder d
-                WHERE d.tool = t
+                FROM Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder AS d
+                WHERE d.tool = ot.name
                 AND d.name = :action
                 AND BIT_AND(r.mask, d.value) = d.value
             )
         ';
 
         if ($toolName) {
-            $dql .= ' AND t.name = :toolName';
+            $dql .= ' AND ot.name = :toolName';
         }
 
         $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('workspaceId', $workspace->getId());
+        $query->setParameter('workspaceId', $workspace->getUuid());
+        $query->setParameter('contextName', WorkspaceContext::getName());
         $query->setParameter('roleNames', $roleNames);
         $query->setParameter('action', strtoupper($action));
 

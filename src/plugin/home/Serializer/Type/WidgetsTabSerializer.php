@@ -12,25 +12,18 @@ class WidgetsTabSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var WidgetContainerSerializer */
-    private $widgetContainerSerializer;
-
     public function __construct(
-        ObjectManager $om,
-        WidgetContainerSerializer $widgetContainerSerializer
+        private readonly ObjectManager $om,
+        private readonly WidgetContainerSerializer $widgetContainerSerializer
     ) {
-        $this->om = $om;
-        $this->widgetContainerSerializer = $widgetContainerSerializer;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'home_widgets_tab';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return WidgetsTab::class;
     }

@@ -116,11 +116,9 @@ class AssertionFinder extends AbstractFinder
                     $subQb = $this->om->createQueryBuilder()
                         ->select('ot')
                         ->from('Claroline\CoreBundle\Entity\Tool\OrderedTool', 'ot')
-                        ->leftJoin('ot.workspace', 'otw')
                         ->join('ot.rights', 'r')
                         ->join('r.role', 'rr')
-                        ->where('ot.user IS NULL')
-                        ->andWhere('((w.id IS NULL AND ot.workspace IS NULL) OR otw.id = w.id)')
+                        ->where('(ot.contextId IS NULL OR ot.contextId = w.uuid)')
                         ->andWhere('BIT_AND(r.mask, :grantMask) = :grantMask')
                         ->andWhere('rr.name IN (:userRoles)')
                         ->getDQL()
@@ -149,7 +147,7 @@ class AssertionFinder extends AbstractFinder
 
                     break;
                 default:
-                  $this->setDefaults($qb, $filterName, $filterValue);
+                    $this->setDefaults($qb, $filterName, $filterValue);
             }
         }
 

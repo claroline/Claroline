@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Testing;
 
-use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -19,16 +18,11 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\Revision;
-use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\MessageBundle\Entity\Message;
-use Claroline\MessageBundle\Entity\UserMessage;
 use Gedmo\Timestampable\TimestampableListener;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -61,8 +55,8 @@ abstract class RepositoryTestCase extends WebTestCase
 
     public function tearDown(): void
     {
-        //we don't want to tear down between each tests because we lose the container otherwise
-        //and can't shut down everything properly afterwards
+        // we don't want to tear down between each tests because we lose the container otherwise
+        // and can't shut down everything properly afterwards
     }
 
     public static function tearDownAfterClass(): void
@@ -123,12 +117,12 @@ abstract class RepositoryTestCase extends WebTestCase
      *
      * @param int $seconds
      */
-    protected static function sleep($seconds)
+    protected static function sleep($seconds): void
     {
         self::$time->add(new \DateInterval("PT{$seconds}S"));
     }
 
-    protected static function createUser($name, array $roles = [], Workspace $personalWorkspace = null)
+    protected static function createUser($name, array $roles = [], Workspace $personalWorkspace = null): void
     {
         $user = self::$persister->user($name);
 
@@ -143,7 +137,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $user);
     }
 
-    protected static function createGroup($name, array $users = [], array $roles = [])
+    protected static function createGroup($name, array $users = [], array $roles = []): void
     {
         $group = self::$persister->group($name);
 
@@ -158,7 +152,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $group);
     }
 
-    protected static function createRole($name, Workspace $workspace = null)
+    protected static function createRole($name, Workspace $workspace = null): void
     {
         $role = new Role();
         $role->setName($name);
@@ -178,7 +172,7 @@ abstract class RepositoryTestCase extends WebTestCase
         }
     }
 
-    protected static function createWorkspace($name)
+    protected static function createWorkspace($name): void
     {
         $workspace = new Workspace();
         $workspace->setName($name);
@@ -188,7 +182,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $workspace);
     }
 
-    protected static function createDisplayableWorkspace($name, $selfRegistration)
+    protected static function createDisplayableWorkspace($name, $selfRegistration): void
     {
         $workspace = new Workspace();
         $workspace->setName($name);
@@ -199,7 +193,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $workspace);
     }
 
-    protected static function createResourceType($name, $class, $isExportable = true, Plugin $plugin = null)
+    protected static function createResourceType($name, $class, $isExportable = true, Plugin $plugin = null): void
     {
         $type = new ResourceType();
         $type->setName($name);
@@ -219,7 +213,7 @@ abstract class RepositoryTestCase extends WebTestCase
         User $creator,
         Workspace $workspace,
         Directory $parent = null
-    ) {
+    ): void {
         if ($parent) {
             $parent = $parent->getResourceNode();
         }
@@ -236,7 +230,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $directory);
     }
 
-    protected static function createFile($name, ResourceType $type, User $creator, Directory $parent)
+    protected static function createFile($name, ResourceType $type, User $creator, Directory $parent): void
     {
         $file = self::prepareResource(
             new File(),
@@ -252,37 +246,12 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($name, $file);
     }
 
-    protected static function createText(
-        $name,
-        $revisionNumber,
-        ResourceType $type,
-        User $creator,
-        Directory $parent
-    ) {
-        $text = self::prepareResource(
-            new Text(),
-            $type,
-            $creator,
-            $parent->getResourceNode()->getWorkspace(),
-            $name,
-            'text/mime',
-            $parent->getResourceNode()
-        );
-        self::create($name, $text);
-
-        $revision = new Revision();
-        $revision->setVersion($revisionNumber);
-        $revision->setContent($name.'Content');
-        $revision->setText($text);
-        self::create("revision/{$text->getName()}-{$revisionNumber}", $revision);
-    }
-
     protected static function createResourceRights(
         Role $role,
         AbstractResource $resource,
         $mask,
         array $creatableResourceTypes = []
-    ) {
+    ): void {
         $rights = new ResourceRights();
         $rights->setRole($role);
         $rights->setResourceNode($resource->getResourceNode());
@@ -295,23 +264,16 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create("resource_right/{$role->getName()}-{$resource->getResourceNode()->getName()}", $rights);
     }
 
-    protected static function createTool($name)
-    {
-        $tool = new Tool();
-        $tool->setName($name);
-        $tool->setClass($name.'Class');
-        self::create($name, $tool);
-    }
-
     protected static function createWorkspaceTool(
-        Tool $tool,
+        string $toolName,
         Workspace $workspace,
         array $roles,
         $position
-    ) {
+    ): void {
         $orderedTool = new OrderedTool();
-        $orderedTool->setTool($tool);
-        $orderedTool->setWorkspace($workspace);
+        $orderedTool->setName($toolName);
+        $orderedTool->setContextName('workspace');
+        $orderedTool->setContextId($workspace->getUuid());
         $orderedTool->setOrder($position);
 
         foreach ($roles as $role) {
@@ -322,23 +284,10 @@ abstract class RepositoryTestCase extends WebTestCase
             self::$om->persist($rights);
         }
 
-        self::create("orderedTool/{$workspace->getName()}-{$tool->getName()}", $orderedTool);
+        self::create("orderedTool/{$workspace->getName()}-{$toolName}", $orderedTool);
     }
 
-    protected static function createDesktopTool(
-        Tool $tool,
-        User $user,
-        $position
-    ) {
-        $orderedTool = new OrderedTool();
-        $orderedTool->setTool($tool);
-        $orderedTool->setUser($user);
-        $orderedTool->setOrder($position);
-
-        self::create("orderedTool/{$user->getUsername()}-{$tool->getName()}", $orderedTool);
-    }
-
-    protected static function createPlugin($vendor, $bundle)
+    protected static function createPlugin($vendor, $bundle): void
     {
         $plugin = new Plugin();
         $plugin->setVendorName($vendor);
@@ -346,63 +295,8 @@ abstract class RepositoryTestCase extends WebTestCase
         self::create($vendor.$bundle, $plugin);
     }
 
-    protected static function createLog(User $doer, $action, Workspace $workspace = null)
-    {
-        $log = new Log();
-        $log->setDoer($doer);
-        $log->setAction($action);
-        $log->setDoerType(Log::DOER_USER);
-        $log->setDateLog(self::$time);
-
-        if ($workspace) {
-            $log->setWorkspace($workspace);
-        }
-
-        self::$om->persist($log);
-        self::$om->flush();
-    }
-
-    protected static function createMessage(
-        $alias,
-        User $sender,
-        array $receivers,
-        $object,
-        $content,
-        Message $parent = null,
-        $removed = false
-    ) {
-        $message = new Message();
-        $message->setSender($sender);
-        $message->setObject($object);
-        $message->setContent($content);
-        $message->setDate(self::$time);
-        $message->setTo('x1;x2;x3');
-        if ($parent) {
-            $message->setParent($parent);
-        }
-        self::$om->startFlushSuite();
-        self::create($alias, $message);
-        $userMessage = new UserMessage();
-        $userMessage->setIsSent(true);
-        $userMessage->setUser($sender);
-        $userMessage->setMessage($message);
-        if ($removed) {
-            $userMessage->setRemoved($removed);
-        }
-        self::create($alias.'/'.$sender->getUsername(), $userMessage);
-        foreach ($receivers as $receiver) {
-            $userMessage = new UserMessage();
-            $userMessage->setUser($receiver);
-            $userMessage->setMessage($message);
-            self::create($alias.'/'.$receiver->getUsername(), $userMessage);
-        }
-        self::$om->endFlushSuite();
-    }
-
     /**
      * Sets the common properties of a resource.
-     *
-     * @return AbstractResource
      */
     private static function prepareResource(
         AbstractResource $resource,
@@ -412,7 +306,7 @@ abstract class RepositoryTestCase extends WebTestCase
         $name,
         $mimeType,
         $parent = null
-    ) {
+    ): AbstractResource {
         $node = new ResourceNode();
         $node->setResourceType($type);
         $node->setCreator($creator);
@@ -437,9 +331,9 @@ abstract class RepositoryTestCase extends WebTestCase
 
     /**
      * Disables the timestamp listener so that fixture methods are forced to set
-     * dates explicitely.
+     * dates explicitly.
      */
-    private static function disableTimestampableListener()
+    private static function disableTimestampableListener(): void
     {
         $eventManager = self::$om->getEventManager();
 
@@ -460,7 +354,7 @@ abstract class RepositoryTestCase extends WebTestCase
      *
      * @throws \InvalidArgumentException if the reference is already set
      */
-    private static function set($reference, $entity)
+    private static function set($reference, $entity): void
     {
         if (isset(self::$references[$reference])) {
             throw new \InvalidArgumentException("Fixture reference '{$reference}' is already set");
@@ -475,7 +369,7 @@ abstract class RepositoryTestCase extends WebTestCase
      * @param string $reference
      * @param object $entity
      */
-    private static function create($reference, $entity)
+    private static function create($reference, $entity): void
     {
         self::$om->persist($entity);
         self::$om->flush();

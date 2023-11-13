@@ -12,174 +12,38 @@
 namespace Claroline\CoreBundle\Repository\Tool;
 
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\PluginManager;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
 
-class OrderedToolRepository extends ServiceEntityRepository
+class OrderedToolRepository extends EntityRepository
 {
-    /** @var array */
-    private $bundles;
-
-    public function __construct(ManagerRegistry $registry, PluginManager $pluginManager)
-    {
-        $this->bundles = $pluginManager->getEnabled();
-
-        parent::__construct($registry, OrderedTool::class);
-    }
-
-    public function findByName($name)
+    public function findByContext(string $context, string $contextId = null): array
     {
         return $this->getEntityManager()
             ->createQuery('
                 SELECT ot
-                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
-                JOIN ot.tool t
-                WHERE t.name = :name
+                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool AS ot
+                WHERE ot.contextName = :contextName
+                  AND (ot.contextId IS NULL OR ot.contextId = :contextId)
                 ORDER BY ot.order
             ')
-            ->setParameter('name', $name)
+            ->setParameter('contextName', $context)
+            ->setParameter('contextId', $contextId)
             ->getResult();
     }
 
-    public function findOneByNameAndWorkspace(string $name, ?Workspace $workspace = null): ?OrderedTool
+    public function findOneByNameAndContext(string $name, string $context, string $contextId = null): ?OrderedTool
     {
         return $this->getEntityManager()
             ->createQuery('
                 SELECT ot
                 FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
-                JOIN ot.tool t
-                WHERE ot.workspace = :workspace
-                AND t.name = :name
-                ORDER BY ot.order
+                WHERE ot.contextName = :contextName
+                  AND (ot.contextId IS NULL OR ot.contextId = :contextId)
+                  AND ot.name = :name
             ')
-            ->setParameter('workspace', $workspace)
             ->setParameter('name', $name)
+            ->setParameter('contextName', $context)
+            ->setParameter('contextId', $contextId)
             ->getOneOrNullResult();
-    }
-
-    /**
-     * Returns all the workspace ordered tools.
-     *
-     * @return OrderedTool[]
-     */
-    public function findByWorkspace(Workspace $workspace)
-    {
-        return $this->getEntityManager()
-            ->createQuery('
-                SELECT ot
-                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool AS ot
-                JOIN ot.tool AS t
-                LEFT JOIN t.plugin AS p
-                WHERE ot.workspace = :workspace
-                AND (
-                    CONCAT(p.vendorName, p.bundleName) IN (:bundles)
-                    OR t.plugin is NULL
-                )
-                ORDER BY ot.order ASC
-            ')
-            ->setParameter('workspace', $workspace)
-            ->setParameter('bundles', $this->bundles)
-            ->getResult();
-    }
-
-    /**
-     * Returns the workspace ordered tools accessible to some given roles.
-     *
-     * @return OrderedTool[]
-     */
-    public function findByWorkspaceAndRoles(Workspace $workspace, array $roles)
-    {
-        if (0 === count($roles)) {
-            return [];
-        }
-
-        return $this->getEntityManager()
-            ->createQuery('
-                SELECT ot
-                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool AS ot
-                JOIN ot.tool AS t
-                LEFT JOIN t.plugin AS p
-                JOIN ot.rights AS r
-                JOIN r.role AS rr
-                WHERE ot.workspace = :workspace
-                AND rr.name IN (:roleNames)
-                AND BIT_AND(r.mask, 1) = 1
-                AND (
-                    CONCAT(p.vendorName, p.bundleName) IN (:bundles)
-                    OR t.plugin is NULL
-                )
-                ORDER BY ot.order ASC
-            ')
-            ->setParameter('workspace', $workspace)
-            ->setParameter('roleNames', $roles)
-            ->setParameter('bundles', $this->bundles)
-            ->getResult();
-    }
-
-    public function findOneByNameAndDesktop(string $name): ?OrderedTool
-    {
-        return $this->getEntityManager()
-            ->createQuery('
-                SELECT ot
-                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
-                JOIN ot.tool t
-                WHERE ot.workspace IS NULL
-                AND ot.user IS NULL
-                AND t.name = :name
-                ORDER BY ot.order
-            ')
-            ->setParameter('name', $name)
-            ->getOneOrNullResult();
-    }
-
-    public function findByDesktop()
-    {
-        return $this->getEntityManager()
-            ->createQuery('
-                SELECT ot
-                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool AS ot
-                JOIN ot.tool AS t
-                LEFT JOIN t.plugin AS p
-                WHERE ot.workspace IS NULL
-                AND ot.user IS NULL
-                AND (
-                    CONCAT(p.vendorName, p.bundleName) IN (:bundles)
-                    OR t.plugin is NULL
-                )
-                ORDER BY ot.order
-            ')
-            ->setParameter('bundles', $this->bundles)
-            ->getResult();
-    }
-
-    public function findByDesktopAndRoles(array $roles)
-    {
-        if (0 === count($roles)) {
-            return [];
-        }
-
-        return $this->getEntityManager()
-            ->createQuery('
-                SELECT ot
-                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool AS ot
-                JOIN ot.tool AS t
-                LEFT JOIN t.plugin AS p
-                JOIN ot.rights AS r
-                JOIN r.role AS rr
-                WHERE ot.workspace IS NULL
-                AND ot.user IS NULL
-                AND rr.name IN (:roleNames)
-                AND BIT_AND(r.mask, 1) = 1
-                AND (
-                    CONCAT(p.vendorName, p.bundleName) IN (:bundles)
-                    OR t.plugin is NULL
-                )
-                ORDER BY ot.order
-            ')
-            ->setParameter('roleNames', $roles)
-            ->setParameter('bundles', $this->bundles)
-            ->getResult();
     }
 }

@@ -2,10 +2,7 @@
 
 namespace Claroline\HomeBundle\Manager;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\HomeBundle\Entity\HomeTab;
@@ -15,119 +12,11 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class HomeManager
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var RequestStack */
-    private $requestStack;
-    /** @var FinderProvider */
-    private $finder;
-    /** @var SerializerProvider */
-    private $serializer;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        RequestStack $requestStack,
-        FinderProvider $finder,
-        SerializerProvider $serializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly RequestStack $requestStack,
+        private readonly SerializerProvider $serializer
     ) {
-        $this->authorization = $authorization;
-        $this->requestStack = $requestStack;
-        $this->finder = $finder;
-        $this->serializer = $serializer;
-    }
-
-    /**
-     * Get platform home tabs.
-     */
-    public function getHomeTabs(array $options = []): array
-    {
-        $tabs = $this->finder->searchEntities(HomeTab::class, [
-            'filters' => [
-                'context' => HomeTab::TYPE_HOME,
-            ],
-        ]);
-
-        return $this->formatTabs($tabs['data'], $options);
-    }
-
-    /**
-     * Get user desktop tabs (owns + commons).
-     */
-    public function getDesktopTabs(User $user = null, array $options = []): array
-    {
-        // generate the final list of tabs
-        $tabs = $this->getCommonDesktopTabs($options);
-        if ($user) {
-            $tabs = array_merge(
-                $tabs,
-                $this->getUserDesktopTabs($user, $options)
-            );
-        }
-
-        // we rewrite tab position because an admin and a user tab may have the same position
-        foreach ($tabs as $index => &$tab) {
-            $tab['position'] = $index;
-        }
-
-        return $tabs;
-    }
-
-    /**
-     * Get user desktop own tabs.
-     */
-    public function getUserDesktopTabs(User $user, array $options = []): array
-    {
-        $tabs = $this->finder->searchEntities(HomeTab::class, [
-            'filters' => [
-                'context' => HomeTab::TYPE_DESKTOP,
-                'user' => $user->getUuid(),
-            ],
-        ]);
-
-        return $this->formatTabs($tabs['data'], $options);
-    }
-
-    /**
-     * Get common desktop home tabs.
-     */
-    public function getCommonDesktopTabs(array $options = []): array
-    {
-        $tabs = $this->finder->searchEntities(HomeTab::class, [
-            'filters' => [
-                'context' => HomeTab::TYPE_ADMIN_DESKTOP,
-            ],
-        ]);
-
-        return $this->formatTabs($tabs['data'], $options);
-    }
-
-    /**
-     * Get workspace home tabs.
-     */
-    public function getWorkspaceTabs(Workspace $workspace, array $options = []): array
-    {
-        $tabs = $this->finder->searchEntities(HomeTab::class, [
-            'filters' => [
-                'context' => HomeTab::TYPE_WORKSPACE,
-                'workspace' => $workspace->getUuid(),
-            ],
-        ]);
-
-        return $this->formatTabs($tabs['data'], $options);
-    }
-
-    /**
-     * Get administration tabs.
-     */
-    public function getAdministrationTabs(array $options = []): array
-    {
-        $tabs = $this->finder->searchEntities(HomeTab::class, [
-            'filters' => [
-                'context' => HomeTab::TYPE_ADMIN,
-            ],
-        ]);
-
-        return $this->formatTabs($tabs['data'], $options);
     }
 
     public function getRestrictionsErrors(HomeTab $homeTab): array
@@ -154,7 +43,7 @@ class HomeManager
      * Submits a code to unlock a home tab.
      * NB. The tab will stay unlocked as long as the user session stay alive.
      */
-    public function unlock(HomeTab $tab, Request $request)
+    public function unlock(HomeTab $tab, Request $request): void
     {
         $accessCode = $tab->getAccessCode();
         if ($accessCode) {
@@ -173,16 +62,12 @@ class HomeManager
      * Create a tree from flatten tabs and exclude tabs with no access.
      * It's not done in finder nor serializer because of the complexity of access rules.
      */
-    private function formatTabs(array $tabs, array $options = []): array
+    public function formatTabs(array $tabs, array $options = []): array
     {
         $roots = [];
         $children = [];
 
         foreach ($tabs as $tab) {
-            if (empty($tab)) {
-                continue; // todo : check why this is required
-            }
-
             if (!$this->authorization->isGranted('OPEN', $tab)) {
                 continue;
             }
@@ -244,12 +129,12 @@ class HomeManager
         if ($tab->getAccessCode()) {
             $currentRequest = $this->requestStack->getCurrentRequest();
 
-            // check if the current user already has unlocked the resource
+            // check if the current user already has unlocked the tab
             // maybe store it another way to avoid require it each time the user session expires
             return !empty($currentRequest->getSession()->get($tab->getUuid()));
         }
 
-        // the current resource does not require a code
+        // the current tab not require a code
         return true;
     }
 }

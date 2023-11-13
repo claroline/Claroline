@@ -1,0 +1,7 @@
+services:
+    Claroline\AuthenticationBundle\Component\Tool\AuthenticationTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'

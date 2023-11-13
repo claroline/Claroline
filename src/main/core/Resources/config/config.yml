@@ -128,46 +128,37 @@ plugin:
           tags: [content]
           exportable: true
 
-    admin_tools:
-        - name: main_settings
-          class: cog
-
-        - name: templates
-          class: file-alt
-
-        - name: integration
-          class: plug
-
-        - name: plugins
-          class: puzzle-piece
-
-        - name: connection_messages
-          class: comment-dots
-
     tools:
         - name: workspaces
-          class: book
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true
+          icon: book
           tool_rights:
-              - name: archive
+              - archive
 
         - name: resources
-          class: folder
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: true
+          icon: folder
 
         - name: resource_trash
-          class: trash-alt
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: false
+          icon: trash-alt
 
         - name: locations
-          class: map-marker-alt
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true
+          icon: map-marker-alt
           tool_rights:
-              - name: book
+              - book
+
+        - name: parameters
+          icon: cog
+
+        - name: templates
+          icon: file-alt
+
+        - name: integration
+          icon: plug
+
+        - name: plugins
+          icon: puzzle-piece
+
+        - name: connection_messages
+          icon: comment-dots
 
     widgets:
         - name: simple

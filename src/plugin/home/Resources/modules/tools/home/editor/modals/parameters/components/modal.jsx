@@ -13,7 +13,7 @@ import {TabForm} from '#/plugin/home/tools/home/editor/components/form'
 
 const ParametersModal = props =>
   <Modal
-    {...omit(props, 'saveEnabled', 'update', 'setErrors', 'currentContext', 'administration', 'save', 'tab', 'loadTab', 'formData')}
+    {...omit(props, 'saveEnabled', 'update', 'setErrors', 'currentContext', 'save', 'tab', 'loadTab', 'formData')}
     icon="fa fa-fw fa-cog"
     title={trans('parameters')}
     subtitle={props.tab.longTitle}
@@ -28,7 +28,6 @@ const ParametersModal = props =>
 
       currentTab={props.formData}
       currentContext={props.currentContext}
-      administration={props.administration}
     >
       <Button
         className="modal-btn"
@@ -52,7 +51,6 @@ ParametersModal.propTypes = {
     type: T.string.isRequired,
     data: T.object
   }).isRequired,
-  administration: T.bool.isRequired,
   tab: T.shape(
     TabTypes.propTypes
   ).isRequired,

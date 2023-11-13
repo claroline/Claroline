@@ -15,7 +15,7 @@ class Updater140010 extends Updater
         $this->connection = $connection;
     }
 
-    public function postUpdate()
+    public function postUpdate(): void
     {
         $updateUsers = $this->connection->prepare("
             UPDATE claro_user AS u SET u.mail = CONCAT('email', CONCAT(u.id, '@deleted.com')) WHERE u.is_removed = true

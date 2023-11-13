@@ -7,7 +7,6 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {EditorMenu as EditorMenuComponent} from '#/plugin/home/tools/home/editor/components/menu'
 import {actions, selectors} from '#/plugin/home/tools/home/editor/store'
-import {selectors as homeSelectors} from '#/plugin/home/tools/home/store'
 
 const EditorMenu = withRouter(
   connect(
@@ -15,8 +14,7 @@ const EditorMenu = withRouter(
       path: toolSelectors.path(state),
       currentContext: toolSelectors.context(state),
       currentUser: securitySelectors.currentUser(state),
-      tabs: selectors.editorTabs(state),
-      administration: homeSelectors.administration(state)
+      tabs: selectors.editorTabs(state)
     }),
     (dispatch) => ({
       createTab(parent = null, tab, navigate) {

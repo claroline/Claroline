@@ -2,7 +2,8 @@
 
 namespace Claroline\AppBundle\Component\Tool;
 
-use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\API\Utils\FileBag;
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 
 abstract class AbstractTool implements ToolInterface
 {
@@ -13,22 +14,21 @@ abstract class AbstractTool implements ToolInterface
 
     public function isRequired(string $context, ?string $contextId): bool
     {
+        return false;
     }
 
-    public function open(string $context, mixed $contextObject = null, User $user = null): array
+    public function supportsSubject(ContextSubjectInterface $subject): bool
+    {
+        return true;
+    }
+
+    public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
     {
         return [];
     }
 
-    public function configure()
+    public function import(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null, array $data = [], array $entities = []): ?array
     {
-    }
-
-    public function import(): void
-    {
-    }
-
-    public function export()
-    {
+        return [];
     }
 }

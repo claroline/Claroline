@@ -10,8 +10,6 @@ use Claroline\CommunityBundle\Serializer\RoleSerializer;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Claroline\HomeBundle\Entity\Type\AbstractTab;
@@ -21,41 +19,22 @@ class HomeTabSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var RoleSerializer */
-    private $roleSerializer;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        WorkspaceSerializer $workspaceSerializer,
-        UserSerializer $userSerializer,
-        RoleSerializer $roleSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly WorkspaceSerializer $workspaceSerializer,
+        private readonly UserSerializer $userSerializer,
+        private readonly RoleSerializer $roleSerializer
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->workspaceSerializer = $workspaceSerializer;
-        $this->userSerializer = $userSerializer;
-        $this->roleSerializer = $roleSerializer;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'home_tab';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return HomeTab::class;
     }
@@ -69,9 +48,8 @@ class HomeTabSerializer
             'longTitle' => $homeTab->getLongTitle(),
             'poster' => $homeTab->getPoster(),
             'icon' => $homeTab->getIcon(),
-            'context' => $homeTab->getContext(),
             'type' => $homeTab->getType(),
-            'class' => $homeTab->getClass(),
+            'class' => $homeTab->getClass(), // TODO : should no longer be exposed here
             'position' => $homeTab->getOrder(),
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $homeTab),
@@ -94,8 +72,6 @@ class HomeTabSerializer
                 'centerTitle' => $homeTab->isCenterTitle(),
                 'showTitle' => $homeTab->getShowTitle(),
             ],
-            'workspace' => $homeTab->getWorkspace() ? $this->workspaceSerializer->serialize($homeTab->getWorkspace(), [Options::SERIALIZE_MINIMAL]) : null,
-            'user' => $homeTab->getUser() ? $this->userSerializer->serialize($homeTab->getUser(), [Options::SERIALIZE_MINIMAL]) : null,
 
             // TODO : should no longer be exposed here (still required by update and ws import)
             'children' => array_map(function (HomeTab $child) use ($options) {
@@ -137,7 +113,6 @@ class HomeTabSerializer
         $this->sipe('longTitle', 'setLongTitle', $data, $homeTab);
         $this->sipe('poster', 'setPoster', $data, $homeTab);
         $this->sipe('icon', 'setIcon', $data, $homeTab);
-        $this->sipe('context', 'setContext', $data, $homeTab);
         $this->sipe('type', 'setType', $data, $homeTab);
         $this->sipe('class', 'setClass', $data, $homeTab);
         $this->sipe('display.color', 'setColor', $data, $homeTab);
@@ -177,18 +152,6 @@ class HomeTabSerializer
                     }
                 }
             }
-        }
-
-        if (isset($data['workspace']) && empty($homeTab->getWorkspace())) {
-            /** @var Workspace $workspace */
-            $workspace = $this->om->getObject($data['workspace'], Workspace::class);
-            $homeTab->setWorkspace($workspace);
-        }
-
-        if (isset($data['user'])) {
-            /** @var User $user */
-            $user = $this->om->getObject($data['user'], User::class);
-            $homeTab->setUser($user);
         }
 
         // process custom configuration of the tab if any
@@ -234,7 +197,8 @@ class HomeTabSerializer
                 }
 
                 $child->setOrder($childIndex);
-                $child->setWorkspace($homeTab->getWorkspace());
+                $child->setContextName($homeTab->getContextName());
+                $child->setContextId($homeTab->getContextId());
                 $homeTab->addChild($child);
 
                 $child = $this->deserialize($childData, $child, $options);

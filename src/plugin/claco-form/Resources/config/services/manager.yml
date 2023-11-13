@@ -15,8 +15,6 @@ services:
             - '@translator'
             - '@messenger.default_bus'
             - '@Claroline\ClacoFormBundle\Manager\CategoryManager'
-        calls:
-            - setLogger: [ '@logger' ]
 
     Claroline\ClacoFormBundle\Manager\CategoryManager:
         arguments:

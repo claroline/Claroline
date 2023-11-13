@@ -12,6 +12,7 @@
 namespace Claroline\HomeBundle\Installation\DataFixtures;
 
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\HomeBundle\Entity\HomeTab;
 use Claroline\HomeBundle\Entity\Type\WidgetsTab;
 use Claroline\InstallationBundle\Fixtures\PostInstallInterface;
@@ -27,21 +28,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class LoadDesktopHomeData extends AbstractFixture implements PostInstallInterface, ContainerAwareInterface
 {
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var SerializerProvider */
-    private $serializer;
+    private TranslatorInterface $translator;
+    private SerializerProvider $serializer;
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null): void
     {
         $this->translator = $container->get('translator');
         $this->serializer = $container->get(SerializerProvider::class);
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $existingTabs = $manager->getRepository(HomeTab::class)->findBy([
-            'context' => HomeTab::TYPE_ADMIN_DESKTOP,
+            'contextName' => DesktopContext::getName(),
         ]);
 
         if (empty($existingTabs)) {
@@ -49,7 +48,6 @@ class LoadDesktopHomeData extends AbstractFixture implements PostInstallInterfac
                 'title' => $this->translator->trans('information', [], 'platform'),
                 'longTitle' => $this->translator->trans('information', [], 'platform'),
                 'slug' => 'information',
-                'context' => HomeTab::TYPE_ADMIN_DESKTOP,
                 'type' => WidgetsTab::getType(),
                 'class' => WidgetsTab::class,
                 'position' => 1,
@@ -91,7 +89,10 @@ class LoadDesktopHomeData extends AbstractFixture implements PostInstallInterfac
                 ],
             ];
 
-            $tab = $this->serializer->deserialize($defaultTab, new HomeTab());
+            $tab = new HomeTab();
+            $tab->setContextName(DesktopContext::getName());
+
+            $this->serializer->deserialize($defaultTab, $tab);
 
             $manager->persist($tab);
             $manager->flush();

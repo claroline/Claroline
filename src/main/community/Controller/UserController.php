@@ -16,6 +16,7 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Manager\MailManager;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
@@ -229,7 +230,7 @@ class UserController extends AbstractCrudController
      */
     public function disableInactiveAction(Request $request): JsonResponse
     {
-        $tool = $this->toolManager->getToolByName('community');
+        $tool = $this->toolManager->getOrderedTool('community', DesktopContext::getName());
         $this->checkPermission('ADMINISTRATE', $tool, [], true);
 
         $data = $this->decodeRequest($request);

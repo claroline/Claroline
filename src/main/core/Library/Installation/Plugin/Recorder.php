@@ -24,25 +24,10 @@ use Psr\Log\LoggerInterface;
  */
 class Recorder
 {
-    /** @var DatabaseWriter */
-    private $dbWriter;
-    /** @var Validator */
-    private $validator;
-
     public function __construct(
-        DatabaseWriter $dbWriter,
-        Validator $validator)
-    {
-        $this->dbWriter = $dbWriter;
-        $this->validator = $validator;
-    }
-
-    /**
-     * Sets the database writer.
-     */
-    public function setDatabaseWriter(DatabaseWriter $writer)
-    {
-        $this->dbWriter = $writer;
+        private readonly DatabaseWriter $dbWriter,
+        private readonly Validator $validator
+    ) {
     }
 
     /**

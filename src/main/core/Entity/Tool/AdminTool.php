@@ -17,12 +17,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\AdministrationToolRepository")
+ *
  * @ORM\Table(
  *      name="claro_admin_tools",
  *      uniqueConstraints={@ORM\UniqueConstraint(name="admin_tool_plugin_unique",columns={"name", "plugin_id"})}
  * )
  *
- * @todo merge with Tool entity
+ * @deprecated
  */
 class AdminTool extends AbstractTool
 {
@@ -31,6 +32,7 @@ class AdminTool extends AbstractTool
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="adminTools"
      * )
+     *
      * @ORM\JoinTable(name="claro_admin_tool_role")
      *
      * @var Role[]|ArrayCollection

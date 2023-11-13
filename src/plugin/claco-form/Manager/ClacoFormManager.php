@@ -11,7 +11,6 @@
 
 namespace Claroline\ClacoFormBundle\Manager;
 
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
@@ -43,7 +42,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Messenger\Message\SendMessage;
 use Doctrine\Common\Collections\ArrayCollection;
-use Psr\Log\LoggerAwareInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -55,10 +53,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ClacoFormManager implements LoggerAwareInterface
+class ClacoFormManager
 {
-    use LoggableTrait;
-
     /** @var AuthorizationCheckerInterface */
     private $authorization;
     /** @var EventDispatcherInterface */

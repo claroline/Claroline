@@ -2,6 +2,7 @@
 
 namespace Claroline\LogBundle\Subscriber;
 
+use Claroline\CoreBundle\Event\CatalogEvents\ContextEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
@@ -32,7 +33,8 @@ class FunctionalLogSubscriber implements EventSubscriberInterface
         return [
             EvaluationEvents::RESOURCE_EVALUATION => ['logEvaluation', 10],
             ResourceEvents::RESOURCE_OPEN => ['logEvent', 10],
-            ToolEvents::OPEN => ['logEvent', 10],
+            // ContextEvents::OPEN => ['logEvent', 10],
+            // ToolEvents::OPEN => ['logEvent', 10],
         ];
     }
 

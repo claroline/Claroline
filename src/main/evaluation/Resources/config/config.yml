@@ -1,11 +1,9 @@
 plugin:
     tools:
         - name: evaluation
-          class: award
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: true
+          icon: award
           tool_rights:
-              - name: show_evaluations
+              - show_evaluations
 
     data_sources:
         - name: resource_attempts

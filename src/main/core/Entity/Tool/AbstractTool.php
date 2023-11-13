@@ -25,31 +25,27 @@ abstract class AbstractTool
     use Uuid;
     use FromPlugin;
 
-    const ADMINISTRATION = 'administration';
-    const WORKSPACE = 'workspace';
-    const DESKTOP = 'desktop';
+    /** @deprecated use Claroline\AppBundle\Component\Context\AdministrationContext::getName() */
+    public const ADMINISTRATION = 'administration';
+    /** @deprecated use Claroline\CoreBundle\Component\Context\WorkspaceContext::getName() */
+    public const WORKSPACE = 'workspace';
+    /** @deprecated use Claroline\AppBundle\Component\Context\DesktopContext::getName() */
+    public const DESKTOP = 'desktop';
 
     /**
      * The name of the tool.
      *
      * @ORM\Column()
-     *
-     * @var string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * The icon of the tool (For now, only the name of a FontAwesome icon is allowed).
      *
      * @ORM\Column()
-     *
-     * @var string
      */
-    protected $class;
+    protected ?string $class = null;
 
-    /**
-     * AbstractTool constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -60,27 +56,36 @@ abstract class AbstractTool
         return $this->getName();
     }
 
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setClass($class)
-    {
-        $this->class = $class;
-
-        return $this;
-    }
-
-    public function getClass()
+    public function getIcon(): ?string
     {
         return $this->class;
+    }
+
+    public function setIcon(string $icon = null): void
+    {
+        $this->class = $icon;
+    }
+
+    /**
+     * @deprecated use setIcon()
+     */
+    public function setClass(string $class = null): void
+    {
+        $this->setIcon($class);
+    }
+
+    public function getClass(): ?string
+    {
+        return $this->getIcon();
     }
 }

@@ -13,4 +13,5 @@ services:
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\CoreBundle\Manager\RoleManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'

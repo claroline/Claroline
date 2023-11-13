@@ -13,6 +13,7 @@ const AccountContext = (props) =>
     {...props}
 
     parent="desktop"
+    name="account"
 
     title={trans('my_account')}
 

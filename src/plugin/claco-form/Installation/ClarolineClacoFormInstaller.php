@@ -15,4 +15,8 @@ use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
 class ClarolineClacoFormInstaller extends AdditionalInstaller
 {
+    public function hasMigrations(): bool
+    {
+        return true;
+    }
 }

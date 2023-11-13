@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Component\Context;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\Context\AbstractContext;
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -27,21 +28,60 @@ class WorkspaceContext extends AbstractContext
     ) {
     }
 
-    public static function getShortName(): string
+    public static function getName(): string
     {
         return 'workspace';
     }
 
-    public function getObject(?string $contextId): ?Workspace
+    public function getObject(?string $contextId): Workspace
     {
+        if (empty($contextId)) {
+            throw new \RuntimeException('WorkspaceContext can not be opened without an ID.');
+        }
+
         // we receive the slug on context open,
         // and we receive the uuid when tools are opened
         return $this->om->getObject(['id' => $contextId, 'slug' => $contextId], Workspace::class, ['slug']);
     }
 
-    public function getAdditionalData(?string $contextId): array
+    public function isAvailable(?string $contextId): bool
     {
-        $workspace = $this->getObject($contextId);
+        return !empty($contextId);
+    }
+
+    public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
+    {
+        /** @var Workspace $workspace */
+        $workspace = $contextSubject;
+
+        return $this->manager->isManager($workspace, $token);
+    }
+
+    public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
+    {
+        /** @var Workspace $workspace */
+        $workspace = $contextSubject;
+
+        return $this->restrictionsManager->getErrors($workspace, $token->getUser() instanceof User ? $token->getUser() : null);
+    }
+
+    public function isImpersonated(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
+    {
+        return $this->manager->isImpersonated($token);
+    }
+
+    public function getRoles(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
+    {
+        /** @var Workspace $workspace */
+        $workspace = $contextSubject;
+
+        return $this->manager->getTokenRoles($token, $workspace);
+    }
+
+    public function getAdditionalData(?ContextSubjectInterface $contextSubject): array
+    {
+        /** @var Workspace $workspace */
+        $workspace = $contextSubject;
         $user = $this->tokenStorage->getToken()->getUser();
 
         $userEvaluation = null;
@@ -61,54 +101,10 @@ class WorkspaceContext extends AbstractContext
         ];
     }
 
-    public function isAvailable(?string $contextId, TokenInterface $token): bool
+    public function getShortcuts(?ContextSubjectInterface $contextSubject): array
     {
-        return true;
-    }
-
-    public function isManager(?string $contextId, TokenInterface $token): bool
-    {
-        $workspace = $this->getObject($contextId);
-
-        return $this->manager->isManager($workspace, $token);
-    }
-
-    public function getAccessErrors(?string $contextId, TokenInterface $token): array
-    {
-        $workspace = $this->getObject($contextId);
-
-        return $this->restrictionsManager->getErrors($workspace, $token->getUser() instanceof User ? $token->getUser() : null);
-    }
-
-    public function isImpersonated(?string $contextId, TokenInterface $token): bool
-    {
-        return $this->manager->isImpersonated($token);
-    }
-
-    public function getRoles(?string $contextId, TokenInterface $token): array
-    {
-        if (empty($contextId)) {
-            return [];
-        }
-
-        $workspace = $this->getObject($contextId);
-
-        return $this->manager->getTokenRoles($token, $workspace);
-    }
-
-    public function getTools(?string $contextId): array
-    {
-        // TODO : filter based on workspace model flag.
-        return parent::getTools($contextId);
-    }
-
-    public function getShortcuts(?string $contextId): array
-    {
-        if (empty($contextId)) {
-            return [];
-        }
-
-        $workspace = $this->getObject($contextId);
+        /** @var Workspace $workspace */
+        $workspace = $contextSubject;
 
         // TODO : only export current user shortcuts (we get all roles for the configuration in community/editor)
         // $this->manager->getShortcuts($workspace, $this->tokenStorage->getToken()->getRoleNames()),

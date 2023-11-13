@@ -4,15 +4,11 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {url} from '#/main/app/api'
-import {hasPermission} from '#/main/app/security/permissions'
 import {trans, number} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
-import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
-import {MenuMain} from '#/main/app/layout/menu/containers/main'
-import {ToolMenu} from '#/main/core/tool/containers/menu'
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {User as UserTypes} from '#/main/community/prop-types'
 import {constants as baseConstants} from '#/main/evaluation/constants'
@@ -24,6 +20,7 @@ import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {constants} from '#/main/core/workspace/constants'
 import {WorkspaceEvaluation as WorkspaceEvaluationTypes} from '#/main/evaluation/workspace/prop-types'
 import {constants as evalConstants} from '#/main/evaluation/workspace/constants'
+import {ContextMenu} from '#/main/app/context/containers/menu'
 
 const WorkspaceImpersonation = (props) =>
   <section className="app-menu-status app-menu-impersonation">
@@ -101,16 +98,6 @@ WorkspaceProgression.propTypes = {
   )
 }
 
-const WorkspaceShortcuts = props =>
-  <Toolbar
-    id="app-menu-shortcuts"
-    name="app-menu-shortcuts"
-    buttonName="btn"
-    tooltip="bottom"
-    actions={props.shortcuts}
-    onClick={props.autoClose}
-  />
-
 const WorkspaceMenu = (props) => {
   let workspaceActions
   if (!isEmpty(props.workspace)) {
@@ -125,7 +112,8 @@ const WorkspaceMenu = (props) => {
   }
 
   return (
-    <MenuMain
+    <ContextMenu
+      basePath={props.basePath}
       title={!isEmpty(props.workspace) ? props.workspace.name : trans('workspace')}
       backAction={{
         type: LINK_BUTTON,
@@ -138,16 +126,9 @@ const WorkspaceMenu = (props) => {
       tools={props.tools
         // hide tools that can not be configured in models for now
         .filter(tool => !get(props.workspace, 'meta.model', false) || -1 !== constants.WORKSPACE_MODEL_TOOLS.indexOf(tool.name))
-        .filter(tool => hasPermission('open', tool))
-        .map(tool => ({
-          name: tool.name,
-          icon: tool.icon,
-          path: workspaceRoute(props.workspace, tool.name),
-          order: get(tool, 'display.order'),
-          displayed: !get(tool, 'restrictions.hidden', false)
-        }))
       }
       actions={workspaceActions}
+      shortcuts={props.shortcuts}
     >
       {!props.impersonated && get(props.workspace, 'display.showProgression') &&
         <WorkspaceProgression
@@ -162,38 +143,7 @@ const WorkspaceMenu = (props) => {
           workspace={props.workspace}
         />
       }
-
-      {!isEmpty(props.shortcuts) &&
-        <WorkspaceShortcuts
-          shortcuts={workspaceActions.then(actions => {
-            return props.shortcuts
-              .map(shortcut => {
-                if ('tool' === shortcut.type) {
-                  const tool = props.tools.find(tool => tool.name === shortcut.name)
-                  if (tool) {
-                    return {
-                      name: tool.name,
-                      type: LINK_BUTTON,
-                      icon: `fa fa-fw fa-${tool.icon}`,
-                      label: trans('open-tool', {tool: trans(tool.name, {}, 'tools')}, 'actions'),
-                      target: workspaceRoute(props.workspace, tool.name)
-                    }
-                  }
-
-                } else {
-                  return actions.find(action => action.name === shortcut.name)
-                }
-              })
-              .filter(link => !!link)
-          })}
-        />
-      }
-
-      <ToolMenu
-        opened={'tool' === props.section}
-        toggle={() => props.changeSection('tool')}
-      />
-    </MenuMain>
+    </ContextMenu>
   )
 }
 
@@ -202,7 +152,6 @@ WorkspaceMenu.propTypes = {
     push: T.func.isRequired
   }).isRequired,
   basePath: T.string,
-  section: T.string,
   workspace: T.shape(
     WorkspaceTypes.propTypes
   ),
@@ -225,7 +174,6 @@ WorkspaceMenu.propTypes = {
     name: T.string.isRequired,
     permissions: T.object
   })),
-  changeSection: T.func.isRequired,
   update: T.func.isRequired
 }
 

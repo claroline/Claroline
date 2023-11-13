@@ -610,8 +610,6 @@
     "support_email_missing_title": "Le courriel du support manquant",
     "support_email_missing_content": "Le courriel du support n'a pas été renseigné.<br>Veuillez le configurer en cliquant %link%, dans informations générales, rubrique assistance -> courriel du support.",
     "switch": "Echanger",
-    "switch_to_admin_tabs": "Basculer vers les onglets communs",
-    "switch_to_user_tabs": "Basculer vers les onglets personnels",
     "tab": "Onglet",
     "tab_position": "Position de l'onglet",
     "tabs": "Onglets",

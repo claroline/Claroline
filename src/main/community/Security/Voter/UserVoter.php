@@ -13,21 +13,16 @@ namespace Claroline\CommunityBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class UserVoter extends AbstractRoleSubjectVoter
 {
-    /** @var PlatformConfigurationHandler */
-    private $config;
-
-    public function __construct(PlatformConfigurationHandler $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly PlatformConfigurationHandler $config
+    ) {
     }
 
     /**
@@ -68,17 +63,7 @@ class UserVoter extends AbstractRoleSubjectVoter
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        if ($this->isToolGranted('EDIT', 'community')) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
-        // allow open for all of those who have the open right on community tool
-        // TODO : this should also check user is in the same organization
-        /** @var OrderedToolRepository $orderedToolRepo */
-        $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
-        /** @var OrderedTool $communityTools */
-        $communityTool = $orderedToolRepo->findOneByNameAndDesktop('community');
-        if ($communityTool && $this->isGranted('OPEN', $communityTool)) {
+        if ($this->isToolGranted('OPEN', 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -157,19 +142,6 @@ class UserVoter extends AbstractRoleSubjectVoter
 
         if ($this->isOrganizationManager($token, $user)) {
             return VoterInterface::ACCESS_GRANTED;
-        }
-
-        // allow creation for all of those who have the create right on a community tool
-        /** @var OrderedToolRepository $orderedToolRepo */
-        $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
-        /** @var OrderedTool[] $communityTools */
-        $communityTools = $orderedToolRepo->findByName('community');
-        foreach ($communityTools as $communityTool) {
-            // we do not take into account tool in personal ws, otherwise anyone will be granted
-            // (users are managers of their personal ws)
-            if ((empty($communityTool->getWorkspace()) || !$communityTool->getWorkspace()->isPersonal()) && $this->isGranted('CREATE_USER', $communityTool)) {
-                return VoterInterface::ACCESS_GRANTED;
-            }
         }
 
         // allow creation for self registration

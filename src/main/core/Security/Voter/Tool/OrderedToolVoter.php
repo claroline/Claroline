@@ -11,9 +11,12 @@
 
 namespace Claroline\CoreBundle\Security\Voter\Tool;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Security\ToolPermissions;
+use Claroline\CoreBundle\Entity\Tool\ToolRights;
+use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
+use Claroline\CoreBundle\Repository\Tool\ToolRightsRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -23,24 +26,35 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  */
 class OrderedToolVoter extends AbstractVoter
 {
+    private ToolMaskDecoderManager $maskManager;
+    private ToolRightsRepository $rightsRepository;
+
+    public function __construct(
+        ObjectManager $om,
+        ToolMaskDecoderManager $maskManager
+    ) {
+        $this->maskManager = $maskManager;
+        $this->rightsRepository = $om->getRepository(ToolRights::class);
+    }
+
     /**
      * @param OrderedTool $object
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
-        if (!empty($object->getWorkspace())) {
-            // let the workspace voter decide
-            $isGranted = $this->isGranted(ToolPermissions::getPermission($object->getTool()->getName(), $attributes[0]), $object->getWorkspace());
-        } else {
-            // let the base tool voter decide
-            $isGranted = $this->isGranted($attributes[0], $object->getTool());
+        // FIXME : admin bypass will not work
+        $decoder = $this->maskManager->getMaskDecoderByToolAndName($object->getName(), $attributes[0]);
+        if ($decoder) {
+            $mask = $this->rightsRepository->findMaximumRights($token->getRoleNames(), $object);
+
+            if ($mask & $decoder->getValue()) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+
+            return VoterInterface::ACCESS_DENIED;
         }
 
-        if ($isGranted) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
-        return VoterInterface::ACCESS_DENIED;
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
     public function getClass(): string
@@ -50,7 +64,7 @@ class OrderedToolVoter extends AbstractVoter
 
     public function getSupportedActions(): ?array
     {
-        //atm, null means "everything is supported... implement this later"
+        // atm, null means "everything is supported... implement this later"
         return null;
     }
 }

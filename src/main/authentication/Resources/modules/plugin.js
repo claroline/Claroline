@@ -17,7 +17,11 @@ registry.add('ClarolineAuthenticationBundle', {
    * Provides current user Account sections.
    */
   account: {
-    'tokens': () => { return import(/* webpackChunkName: "authentication-account-tokens" */ '#/main/authentication/account/tokens') }
+    'authentication': () => { return import(/* webpackChunkName: "authentication-account-authentication" */ '#/main/authentication/account/authentication') }
+  },
+
+  administration: {
+    'authentication': () => { return import(/* webpackChunkName: "authentication-administration-authentication" */ '#/main/authentication/administration/authentication') }
   },
 
   integration: {

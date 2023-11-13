@@ -18,16 +18,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RefreshCommand extends Command
 {
-    private $refresher;
-
-    public function __construct(RefreshManager $refresher)
-    {
-        $this->refresher = $refresher;
-
+    public function __construct(
+        private readonly RefreshManager $refresher
+    ) {
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Installs/dumps the assets and empties the cache.');
     }

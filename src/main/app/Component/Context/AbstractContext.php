@@ -2,19 +2,30 @@
 
 namespace Claroline\AppBundle\Component\Context;
 
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
+use Claroline\AppBundle\Component\Tool\ToolProvider;
 
 abstract class AbstractContext implements ContextInterface
 {
-    protected readonly ToolManager $toolManager;
+    protected readonly ToolProvider $toolProvider;
 
-    public function setToolManager(ToolManager $toolManager): void
+    public function setToolProvider(ToolProvider $toolProvider): void
     {
-        $this->toolManager = $toolManager;
+        $this->toolProvider = $toolProvider;
     }
 
-    public function getTools(?string $contextId): array
+    public function getTools(?ContextSubjectInterface $contextSubject): array
     {
-        return $this->toolManager->getOrderedTools(static::getShortName(), $contextId);
+        return $this->toolProvider->getEnabledTools(static::getName(), $contextSubject);
+    }
+
+    public function getShortcuts(?ContextSubjectInterface $contextSubject): array
+    {
+        // only supported by Workspace context atm
+        return [];
+    }
+
+    public function getAdditionalData(?ContextSubjectInterface $contextSubject): array
+    {
+        return [];
     }
 }

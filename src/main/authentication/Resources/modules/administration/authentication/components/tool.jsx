@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {selectors} from '#/main/authentication/administration/authentication/store/selectors'
 
@@ -15,8 +16,8 @@ const displayPasswordValidation = (data) => get(data, 'password._forceComplexity
   || get(data, 'password.requireNumber')
   || get(data, 'password.requireSpecialChar')
 
-const AuthenticationTool = (props) => {
-  return (
+const AuthenticationTool = (props) =>
+  <ToolPage>
     <FormData
       name={selectors.FORM_NAME}
       target={['apiv2_authentication_parameters_update']}
@@ -101,8 +102,7 @@ const AuthenticationTool = (props) => {
         }
       ]}
     />
-  )
-}
+  </ToolPage>
 
 AuthenticationTool.propTypes = {
   path: T.string.isRequired,

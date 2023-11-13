@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Installation\DataFixtures;
 
-use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
@@ -53,7 +53,7 @@ class PlatformRolesData extends AbstractFixture implements PreInstallInterface, 
             $userRole = $this->roleManager->createBaseRole(PlatformRoles::USER, 'user', true, true);
             // initialize some tools rights to let users open their desktop
             foreach (['home', 'resources', 'workspaces'] as $tool) {
-                $orderedTool = $this->toolManager->getOrderedTool($tool, Tool::DESKTOP);
+                $orderedTool = $this->toolManager->getOrderedTool($tool, DesktopContext::getName());
                 if ($orderedTool) {
                     $this->toolManager->setPermissions(['open' => true], $orderedTool, $userRole);
                 }

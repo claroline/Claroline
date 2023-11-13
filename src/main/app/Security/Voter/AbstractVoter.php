@@ -11,10 +11,10 @@
 
 namespace Claroline\AppBundle\Security\Voter;
 
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\AppBundle\Security\Voter\VoterInterface as ClarolineVoterInterface;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -59,25 +59,20 @@ abstract class AbstractVoter implements ClarolineVoterInterface, CacheableVoterI
             }
         }
 
-        //maybe abstain sometimes
+        // maybe abstain sometimes
         return VoterInterface::ACCESS_GRANTED;
     }
 
     /**
-     * @return ObjectManager
-     *
-     * @deprecated
+     * @deprecated should not be injected in all Voters
      */
-    protected function getObjectManager()
+    protected function getObjectManager(): ObjectManager
     {
         return $this->om;
     }
 
     /**
      * /!\ Try not to go infinite looping with this. Careful.
-     *
-     * @param mixed $attributes
-     * @param mixed $object
      *
      * @deprecated do it yourself !
      */
@@ -86,9 +81,6 @@ abstract class AbstractVoter implements ClarolineVoterInterface, CacheableVoterI
         return $this->security->isGranted($attributes, $object);
     }
 
-    /**
-     * @param mixed $object
-     */
     private function supports($object): bool
     {
         return is_a($object, $this->getClass(), true)
@@ -113,27 +105,34 @@ abstract class AbstractVoter implements ClarolineVoterInterface, CacheableVoterI
         return in_array($attribute, $this->getSupportedActions());
     }
 
+    /**
+     * @deprecated use isContextToolGranted()
+     */
     protected function isToolGranted($permission, string $toolName, Workspace $workspace = null): bool
     {
-        $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
-
-        if ($workspace) {
-            $orderedTool = $orderedToolRepo->findOneByNameAndWorkspace($toolName, $workspace);
-        } else {
-            $orderedTool = $orderedToolRepo->findOneByNameAndDesktop($toolName);
-        }
-
-        return $this->isGranted($permission, $orderedTool);
+        return $this->isContextToolGranted($permission, !empty($workspace) ? 'workspace' : 'desktop', $workspace);
     }
 
+    /**
+     * @deprecated use isContextToolGranted()
+     */
     protected function hasAdminToolAccess(TokenInterface $token, string $name): bool
     {
-        /** @var AdminTool $tool */
-        $tool = $this->getObjectManager()
-            ->getRepository(AdminTool::class)
-            ->findOneBy(['name' => $name]);
+        return $this->isContextToolGranted('OPEN', $name, 'administration');
+    }
 
-        return $this->isGranted('OPEN', $tool);
+    protected function isContextToolGranted(string $permission, string $toolName, string $context, ContextSubjectInterface|string $contextSubject = null): bool
+    {
+        $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
+        if ($contextSubject instanceof ContextSubjectInterface) {
+            $contextId = $contextSubject->getContextIdentifier();
+        } else {
+            $contextId = $contextSubject;
+        }
+
+        $orderedTool = $orderedToolRepo->findOneByNameAndContext($toolName, $context, $contextId);
+
+        return $this->isGranted($permission, $orderedTool);
     }
 
     /**
@@ -161,7 +160,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, CacheableVoterI
     {
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
-        //crud actions
+        // crud actions
         switch ($attributes[0]) {
             case self::VIEW:         return $this->checkView($token, $object);
             case self::CREATE:       return $this->checkCreation($token, $object);

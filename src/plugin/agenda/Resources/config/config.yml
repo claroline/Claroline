@@ -1,9 +1,7 @@
 plugin:
     tools:
         - name: agenda
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: true
-          class: calendar
+          icon: calendar
 
     data_sources:
         - name: events
