@@ -43,6 +43,7 @@ class SessionRepository extends EntityRepository
                 FROM Claroline\CursusBundle\Entity\Session AS s
                 WHERE s.course = :course
                   AND (s.endDate IS NULL OR s.endDate >= :endDate)
+                  AND s.hidden = false
             ')
             ->setParameters([
                 'course' => $course,
