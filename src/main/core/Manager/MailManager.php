@@ -56,6 +56,9 @@ class MailManager
         if ($from) {
             $body = str_replace('%sender_first_name%', $from->getFirstName(), $body);
             $body = str_replace('%sender_last_name%', $from->getLastName(), $body);
+            $body = str_replace('%sender_username%', $from->getUsername(), $body);
+            $body = str_replace('%sender_email%', $from->getEmail(), $body);
+            $body = str_replace('%sender_avatar%', $from->getPicture(), $body);
 
             if (filter_var($from->getEmail(), FILTER_VALIDATE_EMAIL)) {
                 $replyToEmail = $from->getEmail();
@@ -63,6 +66,9 @@ class MailManager
         } else {
             $body = str_replace('%sender_first_name%', $this->config->getParameter('display.name'), $body);
             $body = str_replace('%sender_last_name%', '', $body);
+            $body = str_replace('%sender_username%', $this->config->getParameter('mailer.from'), $body);
+            $body = str_replace('%sender_email%', $this->config->getParameter('mailer.from'), $body);
+            $body = str_replace('%sender_avatar%', '', $body);
         }
 
         $to = [];

@@ -25,8 +25,6 @@
     "password_initialization_link_desc": "The link to initialize the password",
     "password_reset_link_desc": "The link to reset the password",
     "placeholders_info": "The following parameters can be used and will be replaced by the corresponding value.",
-    "platform_role_registration": "Registration to a platform role",
-    "platform_role_registration_desc": "Template used for the mail sent when an user is registered to a platform role.",
     "platform_name_desc": "The name of the platform",
     "platform_url_desc": "The URL of the platform",
     "role_name_desc": "The name of the role",
@@ -49,8 +47,6 @@
     "workspace_code_desc": "The code of the workspace",
     "workspace_name_desc": "The name of the workspace",
     "workspace_url_desc": "The URL of the workspace",
-    "workspace_registration": "Registration to a workspace",
-    "workspace_registration_desc": "Template used for the mail sent when an user is registered to a workspace.",
 
     "current_user_id_desc": "The ID of the logged in user.",
     "current_user_username_desc": "The username of the logged in user.",
