@@ -158,6 +158,6 @@ plugin:
               - event_start
               - event_end
               - event_presence_status
-              - user_username
               - user_first_name
               - user_last_name
+              - user_username
