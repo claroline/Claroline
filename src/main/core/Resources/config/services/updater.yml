@@ -10,3 +10,7 @@ services:
   Claroline\CoreBundle\Installation\Updater\Updater140010:
     arguments:
       - '@doctrine.dbal.default_connection'
+
+  Claroline\CoreBundle\Installation\Updater\Updater140014:
+    arguments:
+      - '@doctrine.dbal.default_connection'
