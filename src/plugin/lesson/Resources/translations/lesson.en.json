@@ -3,6 +3,7 @@
     "delete_also_children": "Do you really want to delete its subchapters too? Otherwise they will be placed in the nearest parent chapter.",
     "delete_warning": "Do you really want to delete this chapter?",
     "move_destination": "Move chapter to :",
+    "chapter": "Chapter %chapter%",
     "new_chapter": "New chapter",
     "subchapter": "As sub-chapter",
     "sibling": "At the same level",

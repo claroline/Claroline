@@ -38,8 +38,7 @@ const ChapterFormComponent = props =>
           {
             name: 'title',
             type: 'string',
-            label: trans('title'),
-            required: true
+            label: trans('title')
           }, {
             name: 'move',
             type: 'boolean',
