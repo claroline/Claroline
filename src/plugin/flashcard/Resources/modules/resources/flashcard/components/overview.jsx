@@ -6,7 +6,9 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
-import {FlashcardInfo} from '#/plugin/flashcard/resources/flashcard/components/info'
+
+import {Timeline} from '#/plugin/flashcard/resources/flashcard/components/timeline'
+import {LeitnerRules} from '#/plugin/flashcard/resources/flashcard/components/rules'
 import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 
 const Overview = (props) => {
@@ -57,9 +59,19 @@ const Overview = (props) => {
         [trans('session_status', {}, 'flashcard'), statusText]
       ]}
     >
-      <FlashcardInfo
-        flashcardProgression={props.attempt.data.cards}
+
+      <Timeline
+        session={session}
+        started={sessionStarted}
+        completed={sessionCompleted}
       />
+
+      {props.flashcardDeck.showLeitnerRules &&
+        <LeitnerRules
+          session={session}
+          completed={sessionCompleted}
+        />
+      }
     </ResourceOverview>
   )
 }

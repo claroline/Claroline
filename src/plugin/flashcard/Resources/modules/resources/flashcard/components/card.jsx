@@ -81,7 +81,7 @@ Card.propTypes = {
   actions: T.func,
   card: T.shape(
     CardTypes.propTypes
-  ).isRequired
+  )
 }
 
 export {

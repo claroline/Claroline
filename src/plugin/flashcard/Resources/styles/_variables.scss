@@ -17,3 +17,8 @@ $flashcard-box-shadow:          $box-shadow-sm !default;
 $flashcard-height:              300px !default;
 $flashcard-color:               $card-color !default;
 $flashcard-bg:                  $card-bg !default;
+
+$flashcard-timeline-icon-size:      $font-size-lg*3;
+$flashcard-timeline-lines-width:    8px !default;
+$flashcard-timeline-lines-color:    $gray-lighter !default;
+$flashcard-timeline-endpoint-size:  $font-size-lg*2 !default;

@@ -2,8 +2,8 @@ import {connect} from 'react-redux'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store/selectors'
 
-import {Overview as OverviewComponent} from '#/plugin/flashcard/resources/flashcard/components/overview'
 import {selectors} from '#/plugin/flashcard/resources/flashcard/store'
+import {Overview as OverviewComponent} from '#/plugin/flashcard/resources/flashcard/components/overview'
 
 const Overview = connect(
   (state) => ({

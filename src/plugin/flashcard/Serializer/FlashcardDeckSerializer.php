@@ -43,6 +43,7 @@ class FlashcardDeckSerializer
             'rightButtonLabel' => $flashcardDeck->getRightButtonLabel(),
             'wrongButtonLabel' => $flashcardDeck->getWrongButtonLabel(),
             'draw' => $flashcardDeck->getDraw(),
+            'showLeitnerRules' => $flashcardDeck->getShowLeitnerRules(),
             'overview' => [
                 'display' => $flashcardDeck->getShowOverview(),
                 'message' => $flashcardDeck->getOverviewMessage(),
@@ -89,6 +90,7 @@ class FlashcardDeckSerializer
         $this->sipe('rightButtonLabel', 'setRightButtonLabel', $data, $flashcardDeck);
         $this->sipe('wrongButtonLabel', 'setWrongButtonLabel', $data, $flashcardDeck);
         $this->sipe('draw', 'setDraw', $data, $flashcardDeck);
+        $this->sipe('showLeitnerRules', 'setShowLeitnerRules', $data, $flashcardDeck);
 
         if (!empty($data['overview'])) {
             $this->sipe('overview.display', 'setShowOverview', $data, $flashcardDeck);

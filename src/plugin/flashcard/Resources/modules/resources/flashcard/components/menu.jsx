@@ -11,7 +11,6 @@ const FlashcardMenu = props =>
   />
 
 FlashcardMenu.propTypes = {
-  // from menu
   opened: T.bool.isRequired,
   toggle: T.func.isRequired,
   autoClose: T.func.isRequired

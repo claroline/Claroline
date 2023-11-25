@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 
-import {Player as PlayerComponent} from '#/plugin/flashcard/resources/flashcard/player/components/player'
 import {selectors, actions} from '#/plugin/flashcard/resources/flashcard/store'
+import {Player as PlayerComponent} from '#/plugin/flashcard/resources/flashcard/player/components/player'
 
 const Player = connect(
   (state) => ({

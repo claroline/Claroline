@@ -3,8 +3,8 @@ import cloneDeep from 'lodash/cloneDeep'
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
-import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
+import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {ATTEMPT_LOAD} from '#/plugin/flashcard/resources/flashcard/store/actions'
 
 import {selectors as editorSelectors, reducer as editorReducer} from '#/plugin/flashcard/resources/flashcard/editor/store'

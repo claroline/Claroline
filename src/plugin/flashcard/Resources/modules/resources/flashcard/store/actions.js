@@ -1,5 +1,5 @@
-import {makeActionCreator} from '#/main/app/store/actions'
 import { API_REQUEST } from '#/main/app/api'
+import {makeActionCreator} from '#/main/app/store/actions'
 
 import {actions as resourceActions} from '#/main/core/resource/store'
 
@@ -13,6 +13,7 @@ actions.updateCardProgression = makeActionCreator(FLASHCARD_UPDATE_PROGRESSION, 
 
 actions.updateProgression = (cardId, isSuccessful) => ({
   [API_REQUEST]: {
+    silent: true,
     url: ['apiv2_flashcard_progression_update', {id: cardId, isSuccessful: isSuccessful}],
     request: {
       method: 'PUT'

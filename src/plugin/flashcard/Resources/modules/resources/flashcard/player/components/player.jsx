@@ -2,11 +2,11 @@ import React, { useState, useCallback } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { PropTypes as T } from 'prop-types'
 
-import { trans } from '#/main/app/intl/translation'
 import {Toolbar} from '#/main/app/action'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import { trans } from '#/main/app/intl/translation'
 import {ProgressBar} from '#/main/app/content/components/progress-bar'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Card} from '#/plugin/flashcard/resources/flashcard/components/card'
 import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
@@ -17,7 +17,7 @@ const Player = props => {
   const [isFlipped, setIsFlipped] = useState(false)
   const [isAnswering, setIsAnswering] = useState(false)
   const currentCardIndex = props.attempt.data.cardsAnsweredIds.length
-  const maxCards = props.draw > 0 ? Math.min(props.draw, props.attempt.data.cards.length) : props.attempt.data.cards.length
+  const maxCards = props.attempt.data.cardsSessionIds.length + props.attempt.data.cardsAnsweredIds.length
   const currentCardId = props.attempt.data.cardsSessionIds[0]
   const currentCardProgression = props.attempt.data.cards.find(card => card.id === currentCardId)
   const currentCard = currentCardProgression ? currentCardProgression.flashcard : null

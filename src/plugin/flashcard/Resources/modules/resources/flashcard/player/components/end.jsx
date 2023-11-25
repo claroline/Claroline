@@ -1,20 +1,21 @@
 import React from 'react'
+import get from 'lodash/get'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ResourceEnd} from '#/main/core/resource/components/end'
 
 import {selectors} from '#/plugin/flashcard/resources/flashcard/store'
-import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
-import {FlashcardInfo} from '#/plugin/flashcard/resources/flashcard/components/info'
+import {Timeline} from '#/plugin/flashcard/resources/flashcard/components/timeline'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
+import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
 
 const PlayerEndComponent = (props) => {
   const attemptData = props.attempt && props.attempt.data
   let session = attemptData ? attemptData.session : 1
+
   let action = action = {
     type: LINK_BUTTON,
     label: trans('start', {}, 'actions'),
@@ -39,8 +40,10 @@ const PlayerEndComponent = (props) => {
         [trans('session_status', {}, 'flashcard'), trans('session_status_completed', {}, 'flashcard')]
       ]}
     >
-      <FlashcardInfo
-        flashcardProgression={attemptData.cards}
+      <Timeline
+        session={session + 1}
+        end={true}
+        date={attemptData.date ? attemptData.date.date : null}
       />
     </ResourceEnd>
   )

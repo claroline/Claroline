@@ -1,5 +1,5 @@
-import {createSelector} from 'reselect'
 import get from 'lodash/get'
+import {createSelector} from 'reselect'
 
 const STORE_NAME = 'flashcard'
 

@@ -101,7 +101,6 @@ class FlashcardManager
         $cardsSessionIds = $attempt ? $attempt->getData()['cardsSessionIds'] ?? [] : [];
         $cardsAnsweredIds = $attempt ? $attempt->getData()['cardsAnsweredIds'] ?? [] : [];
 
-        // Récup des entités cartes de la tentative
         $cards = array_map(function ($card) {
             return $this->om->getRepository(CardDrawnProgression::class)->findOneBy([
                 'id' => $card['id'],
@@ -113,7 +112,6 @@ class FlashcardManager
             ]);
         }, $cardsAnsweredIds);
 
-        // Création d'une nouvelle tentative si nécessaire
         if (!$attempt) {
             $attempt = $this->resourceEvalManager->createAttempt($node, $user, [
                 'status' => AbstractEvaluation::STATUS_OPENED,
@@ -127,7 +125,10 @@ class FlashcardManager
             ]);
         }
 
-        // Récupération des cartes de la tentative
+        if (0 === count($deck->getCards())) {
+            return $attempt;
+        }
+
         $attemptCards = self::shuffleCardByAttempt($deck->getCards(), $attempt, $deck->getDraw());
         foreach ($attemptCards as $card) {
             $progression = $this->om->getRepository(CardDrawnProgression::class)->findOneBy([
@@ -149,7 +150,6 @@ class FlashcardManager
             }
         }
 
-        // Filtrage des cartes pour la session
         $cardsSession = [];
         foreach ($cards as $cardProgression) {
             if ($this->keepCardInSession($session, $cardProgression)) {
@@ -157,7 +157,6 @@ class FlashcardManager
             }
         }
 
-        // Ajout des cartes de la session 1
         if (0 === count($cardsSession) && 1 === $session) {
             $attempt = $this->resourceEvalManager->updateAttempt($attempt, [
                 'status' => AbstractEvaluation::STATUS_OPENED,
@@ -177,7 +176,6 @@ class FlashcardManager
             ]);
         }
 
-        // Suppression des cartes répondues de la liste des cartes de la session
         foreach ($cardsAnswered as $cardProgression) {
             foreach ($cardsSession as $key => $cardSession) {
                 if ($cardProgression->getId() === $cardSession->getId()) {
@@ -187,14 +185,10 @@ class FlashcardManager
             }
         }
 
-        // Incrément de la session et réinitialisation des cartes si nécessaire
         while (0 === count($cardsSession) && $session < 7) {
             ++$session;
-
             $cardsSession = [];
             $cardsAnswered = [];
-
-            // Filtrage des cartes pour la nouvelle session
             foreach ($cards as $cardProgression) {
                 if ($this->keepCardInSession($session, $cardProgression)) {
                     $cardsSession[] = $cardProgression;
@@ -202,7 +196,6 @@ class FlashcardManager
             }
         }
 
-        // Calcul de la progression
         $successfulCards = 0;
         $totalCards = count($cardsSession) + count($cardsAnswered);
         foreach ($cardsAnswered as $cardProgression) {
@@ -211,11 +204,9 @@ class FlashcardManager
         if (0 === $totalCards) {
             $progression = 0;
         } else {
-            // Transformation du résultat en integer car round() retourne un float
             $progression = (int) min(round($successfulCards / $totalCards * 100), 100);
         }
 
-        // Vérification du status
         if (7 === $session && 0 === count($cardsSession)) {
             if (100 === $progression) {
                 $status = AbstractEvaluation::STATUS_COMPLETED;
@@ -226,7 +217,6 @@ class FlashcardManager
             $status = AbstractEvaluation::STATUS_INCOMPLETE;
         }
 
-        // Mise à jour de la tentative
         $attempt = $this->resourceEvalManager->updateAttempt($attempt, [
             'status' => $status,
             'progression' => $progression,
@@ -244,9 +234,7 @@ class FlashcardManager
             ],
         ]);
 
-        // Si on n'a pas de page de début ni de fin
         if (!$deck->getShowOverview() && !$deck->getShowEndPage()) {
-            // On recrée une nouvelle tentative directement une fois la précédente terminée pour enchainer
             if (AbstractEvaluation::STATUS_COMPLETED === $status || AbstractEvaluation::STATUS_FAILED === $status) {
                 $attempt = $this->calculateSession(null, $deck, $user);
             }
@@ -261,7 +249,6 @@ class FlashcardManager
         $cardsSessionIds = $attempt->getData()['cardsSessionIds'] ?? [];
         $cardsAnsweredIds = $attempt->getData()['cardsAnsweredIds'] ?? [];
 
-        // Deserialization des cartes de la tentative
         $cards = array_map(function ($card) {
             return $this->om->getRepository(CardDrawnProgression::class)->findOneBy([
                 'id' => $card['id'],
@@ -272,7 +259,6 @@ class FlashcardManager
             $cardsAnsweredIds[] = $cardProgression->getId();
         }
 
-        // Mise à jour de la tentative
         return $this->resourceEvalManager->updateAttempt($attempt, [
             'status' => $attempt->getStatus(),
             'progression' => $attempt->getProgression(),

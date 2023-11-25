@@ -82,7 +82,6 @@ class EvaluationManager
             }
         }
 
-        // Pas de cartes restantes pour cette session, on passe a la session suivante
         if (0 === count($cardsArray)) {
             ++$session;
         }

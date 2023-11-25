@@ -93,7 +93,6 @@ class FlashcardDeckController extends AbstractCrudController
         $node = $deck->getResourceNode();
         $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($node, $user);
 
-        // Mise à jour de la progression de la carte
         $this->evaluationManager->updateCardDrawnProgression($card, $user, $request->get('isSuccessful'));
 
         $attempt = $this->resourceEvalRepo->findOneInProgress($node, $user);

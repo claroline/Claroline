@@ -51,6 +51,11 @@ class FlashcardDeck extends AbstractResource
      */
     private ?string $wrongButtonLabel = null;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $showLeitnerRules = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -141,5 +146,15 @@ class FlashcardDeck extends AbstractResource
     public function setWrongButtonLabel(?string $wrongButtonLabel): void
     {
         $this->wrongButtonLabel = $wrongButtonLabel;
+    }
+
+    public function getShowLeitnerRules(): bool
+    {
+        return $this->showLeitnerRules;
+    }
+
+    public function setShowLeitnerRules(bool $showLeitnerRules): void
+    {
+        $this->showLeitnerRules = $showLeitnerRules;
     }
 }

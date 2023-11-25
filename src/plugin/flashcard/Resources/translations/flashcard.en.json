@@ -6,6 +6,7 @@
   "custom_button_labels": "Custom button labels",
   "right_button_label": "Right button label",
   "wrong_button_label": "Wrong button label",
+  "show_leitner_rules": "Show session rules",
   "flashcard_options": "Cards options",
   "draw_options": "Number of cards to draw",
   "options_desc":"Defines number of cards to draw for each game. Leave empty to play with all the cards.",
@@ -37,8 +38,12 @@
   "session_status_completed": "Completed",
   "session_status_next": "Next",
 
-  "check": "successful",
-  "fail": "failed",
+  "session_cards_start" : "We present",
+  "session_cards_all" : "all cards",
+  "session_cards_1x" : "cards successful once",
+  "session_cards_2x" : "cards successful twice",
+  "session_cards_3x" : "cards successful three times",
+  "session_cards_failed" : "cards failed",
 
   "start_disabled_empty": "Flashcard resource is empty."
 }

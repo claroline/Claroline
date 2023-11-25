@@ -12,7 +12,7 @@
   justify-content: center;
   list-style: none;
   padding: 0;
-  margin: -(map-get($spacers, 1)); // absorb items padding
+  margin: -(map-get($spacers, 1));
 
   > li {
     padding: map-get($spacers, 1);
@@ -21,10 +21,6 @@
   }
 
   .flashcard-hoverable {
-    //width: calc(50% - 30px);
-
-    //padding: 5px;
-    //position: relative;
     transition: all linear 185ms;
 
     &:hover {
@@ -34,22 +30,16 @@
   }
 }
 
-/*.flashcards-info {
-  display: flex;
-}*/
-
 .flashcard-actions {
   position: absolute;
   top: 0;
   right: 0;
-  //margin: 2px;
 }
 
 .flashcard-card {
   display: flex;
   flex-direction: column;
   height: $flashcard-height;
-  //height: 100%;
   width: 100%;
 
   position: relative;
@@ -68,14 +58,6 @@
   align-items: center
 }
 
-.flashcard-player {
-  /*display: flex;
-  align-items: center;
-  justify-content: center;
-
-  position: relative;*/
-}
-
 .flashcard-counter {
   display: flex;
   justify-content: space-between;
@@ -84,28 +66,13 @@
 
 .flashcard-deck {
   position: relative;
-  //max-width: 500px;
-  //width: 80vw;
   height: 300px;
   perspective: 1000px;
-  //background-color: transparent;
-}
-
-.flashcard-buttons {
-  /*display: flex;
-  justify-content: center;
-  margin: auto;*/
-
-  /*& > button {
-    margin-left: 20px;
-  }*/
 }
 
 .flashcard-media {
   max-width: 100%;
   max-height: 100%;
-
-  //@include border-radius($flashcard-inner-border-radius);
 }
 
  .flashcard-video {
@@ -116,44 +83,24 @@
 .flashcard-question {
   color: $flashcard-title-color;
   margin-bottom: $flashcard-title-spacer-y;
-  //font-weight: bold;
   text-align: center;
 }
 
 .flashcard-content {
   overflow-y: hidden;
-  //height: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  /*audio, video {
-    display: block;
-    margin: auto;
-  }*/
 }
 
 .flashcard {
   position: absolute;
-  //max-width: 500px;
-  //width: 80vw;
   width: 100%;
   height: 100%;
-  //margin: 10px;
   transition: transform 500ms;
   transform-style: preserve-3d;
-  /*display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;*/
   overflow: hidden;
-
-  /*.flashcard-video {
-    width: 100%;
-    border-radius: $flashcard-inner-border-radius;
-  }*/
 
   &-preview
   {
@@ -174,5 +121,133 @@
 
   &-flip {
     transform: rotateY(180deg) scaleX(-1);
+  }
+}
+
+.flashcard-timeline {
+  margin: 40px 33px;
+
+  @media (max-width: 768px) {
+    position: relative;
+    height: 350px;
+
+    .progress {
+      position: absolute;
+      left: 50%; right: 50%;
+      transform: rotate(90deg);
+      transform-origin: left;
+      width: 350px;
+      margin: auto;
+    }
+  }
+}
+
+.flashcard-timeline-steps {
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-top: -5px;
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+
+  @media (max-width: 768px) {
+    height: 102%;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+}
+
+.flashcard-timeline-step {
+  position: relative;
+}
+
+.flashcard-timeline-step::before {
+  content: '';
+  width: 50px;
+  height: 50px;
+  background-color: $flashcard-timeline-lines-color;
+  display: block;
+  border-radius: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.flashcard-timeline-step-done {
+  color: white;
+}
+
+.flashcard-timeline-step-done::before {
+  background-color: $learning;
+}
+
+.flashcard-timeline-step-current::before {
+  background-color: $primary;
+}
+
+.flashcard-timeline-heading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.flashcard-timeline-status {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ddd;
+  width: 200px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.flashcard-timeline-status::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background-color: #ddd;
+  display: block;
+  position: absolute;
+  top: -8px;
+  margin-left: -2px;
+  left: 50%;
+  transform: rotate(-45deg) translateX(-50%);
+}
+
+.sessions-rules {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: $component-margin-bottom;
+}
+
+.session-rule {
+  display: flex;
+  background: #e9ecef;
+  padding: 10px $panel-body-padding;
+  border: 1px solid transparent;
+  border-radius: $border-radius-sm;
+
+  + .session-rule {
+    margin-top: 5px;
+  }
+
+  .session-rule-done {
+    color: $learning;
+  }
+
+  div {
+    align-self: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .flashcard-timeline {
   }
 }

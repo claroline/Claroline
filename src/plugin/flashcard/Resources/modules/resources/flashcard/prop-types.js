@@ -23,6 +23,10 @@ const FlashcardDeck = {
     id: T.string,
     name: T.string,
     showProgression: T.bool,
+    showLeitnerRules: T.bool,
+    customButtons: T.bool,
+    rightButtonLabel: T.string,
+    wrongButtonLabel: T.string,
     draw: T.number,
     overview: T.shape({
       display: T.bool,

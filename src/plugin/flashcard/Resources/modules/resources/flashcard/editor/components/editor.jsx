@@ -81,6 +81,10 @@ const EditorComponent = props =>
                 displayed: (flashcardDeck) => get(flashcardDeck, 'customButtons')
               }
             ]
+          }, {
+            name: 'showLeitnerRules',
+            type: 'boolean',
+            label: trans('show_leitner_rules', {}, 'flashcard')
           }
         ]
       },{
