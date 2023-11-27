@@ -12,74 +12,36 @@
 namespace Icap\WikiBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CommunityBundle\Repository\UserRepository;
-use Claroline\CoreBundle\Entity\User;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
-use Icap\WikiBundle\Event\Log\LogWikiConfigureEvent;
+use Icap\WikiBundle\Repository\SectionRepository;
 use Icap\WikiBundle\Serializer\WikiSerializer;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class WikiManager
 {
-    /**
-     * @var \Claroline\AppBundle\Persistence\ObjectManager
-     */
-    private $om;
-
-    /**
-     * @var \Icap\WikiBundle\Repository\SectionRepository
-     */
-    private $sectionRepository;
-
-    /**
-     * @var \Icap\WikiBundle\Repository\ContributionRepository
-     */
-    private $contributionRepository;
-
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /** @var WikiSerializer */
-    private $wikiSerializer;
-
-    /** @var EventDispatcherInterface */
-    protected $eventDispatcher;
+    private SectionRepository $sectionRepository;
 
     public function __construct(
-        ObjectManager $om,
-        WikiSerializer $wikiSerializer,
-        EventDispatcherInterface $eventDispatcher
+        private readonly ObjectManager $om,
+        private readonly WikiSerializer $wikiSerializer
     ) {
-        $this->om = $om;
-        $this->wikiSerializer = $wikiSerializer;
-        $this->eventDispatcher = $eventDispatcher;
         $this->sectionRepository = $this->om->getRepository(Section::class);
-        $this->contributionRepository = $this->om->getRepository(Contribution::class);
-        $this->userRepository = $this->om->getRepository(User::class);
     }
 
-    public function updateWiki(Wiki $wiki, $data)
+    public function updateWiki(Wiki $wiki, $data): void
     {
         $this->wikiSerializer->deserialize($data, $wiki);
         $this->om->persist($wiki);
-        $uow = $this->om->getUnitOfWork();
-        $uow->computeChangeSets();
-        $changeSet = $uow->getEntityChangeSet($wiki);
         $this->om->flush();
-
-        $this->eventDispatcher->dispatch(new LogWikiConfigureEvent($wiki, $changeSet), 'log');
     }
 
-    public function serializeWiki(Wiki $wiki)
+    public function serializeWiki(Wiki $wiki): array
     {
         return $this->wikiSerializer->serialize($wiki);
     }
 
-    public function copyWiki(Wiki $orgWiki, Wiki $newWiki, $loggedUser)
+    public function copyWiki(Wiki $orgWiki, Wiki $newWiki, $loggedUser): Wiki
     {
         $orgRoot = $orgWiki->getRoot();
 

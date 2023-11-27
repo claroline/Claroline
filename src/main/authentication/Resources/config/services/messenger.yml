@@ -1,6 +1,5 @@
 services:
     Claroline\AuthenticationBundle\Messenger\Middleware\AuthenticationMiddleware:
         arguments:
-          - '@security.token_storage'
-          - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
-          - '@Claroline\CommunityBundle\Repository\UserRepository'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

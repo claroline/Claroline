@@ -4,6 +4,8 @@ namespace Claroline\AppBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Component\Context\ContextInterface;
+use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Manager\SecurityManager;
 use Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer;
@@ -35,6 +37,7 @@ class PlatformController
         private readonly PlatformManager $platformManager,
         private readonly LocaleManager $localeManager,
         private readonly SecurityManager $securityManager,
+        private readonly ContextProvider $contextProvider,
         private readonly ToolManager $toolManager,
         private readonly SerializerProvider $serializer,
         private readonly ClientSerializer $clientSerializer
@@ -65,6 +68,7 @@ class PlatformController
                 ],
                 'currentUser' => $currentUser,
                 'impersonated' => $this->securityManager->isImpersonated(),
+                'contexts' => $this->contextProvider->getAvailableContexts(),
                 'administration' => !empty($this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoleNames())),
                 'client' => [
                     'ip' => $request->getClientIp(),

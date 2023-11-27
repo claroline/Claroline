@@ -39,8 +39,8 @@ class ContextProvider extends AbstractComponentProvider
     {
         $available = [];
         foreach ($this->getRegisteredComponents() as $contextComponent) {
-            if ($contextComponent->isAvailable()) {
-                $available[] = $contextComponent;
+            if ($contextComponent->isAvailable() && $contextComponent->isRoot()) {
+                $available[] = $contextComponent::getName();
             }
         }
 
@@ -51,7 +51,7 @@ class ContextProvider extends AbstractComponentProvider
     {
         /** @var ContextInterface $contextHandler */
         $contextHandler = $this->getComponent($contextName);
-        if (!$contextHandler->isAvailable($contextId)) {
+        if (!$contextHandler->isAvailable()) {
             throw new \RuntimeException(sprintf('Context "%s(%s)" is not available. Check %s::isAvailable() for more info.', $contextName, $contextId || '', get_class($contextHandler)));
         }
 

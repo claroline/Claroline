@@ -6,14 +6,12 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
+use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericScore;
 use UJM\ExoBundle\Library\Options\ShowCorrectionAt;
@@ -25,52 +23,18 @@ use UJM\ExoBundle\Serializer\Attempt\PaperSerializer;
 
 class PaperManager
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var PaperRepository */
-    private $repository;
-
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
-    /** @var Crud */
-    private $crud;
-
-    /** @var PaperSerializer */
-    private $serializer;
-
-    /** @var ItemManager */
-    private $itemManager;
-
-    /** @var ScoreManager */
-    private $scoreManager;
-
-    /** @var ResourceEvaluationManager */
-    private $resourceEvalManager;
+    private PaperRepository $repository;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        EventDispatcherInterface $eventDispatcher,
-        Crud $crud,
-        PaperSerializer $serializer,
-        ItemManager $itemManager,
-        ScoreManager $scoreManager,
-        ResourceEvaluationManager $resourceEvalManager
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly PaperSerializer $serializer,
+        private readonly ItemManager $itemManager,
+        private readonly ScoreManager $scoreManager,
+        private readonly ResourceEvaluationManager $resourceEvalManager
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
         $this->repository = $om->getRepository(Paper::class);
-        $this->eventDispatcher = $eventDispatcher;
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->itemManager = $itemManager;
-        $this->scoreManager = $scoreManager;
-        $this->resourceEvalManager = $resourceEvalManager;
     }
 
     /**
@@ -88,24 +52,6 @@ class PaperManager
         }
 
         return $this->serializer->serialize($paper, $options);
-    }
-
-    /**
-     * Check if a Paper is full evaluated and dispatch a Log event if yes.
-     */
-    public function checkPaperEvaluated(Paper $paper): bool
-    {
-        $fullyEvaluated = $this->repository->isFullyEvaluated($paper);
-        if ($fullyEvaluated) {
-            $event = new LogExerciseEvaluatedEvent($paper->getExercise(), [
-                'result' => $paper->getScore(),
-                'resultMax' => $this->calculateTotal($paper),
-            ]);
-
-            $this->eventDispatcher->dispatch($event, 'log');
-        }
-
-        return $fullyEvaluated;
     }
 
     /**
@@ -147,7 +93,7 @@ class PaperManager
                                 } elseif (!is_null($itemAnswer->getScore())) {
                                     // get the answer score without hints
                                     // this is required to check if the item has been correctly answered
-                                    // we don't want the use of an hint with penalty mark the question has incorrect
+                                    // we don't want the use of a hint with penalty mark the question has incorrect
                                     // because this is how it works in item scores
                                     $itemScore = $this->itemManager->calculateScore($item, $itemAnswer, false);
                                     if ($itemTotal === $itemScore) {
@@ -345,15 +291,15 @@ class PaperManager
 
         if ($finished) {
             if (is_null($successScore) || empty($paper->getTotal())) {
-                $status = AbstractEvaluation::STATUS_COMPLETED;
+                $status = EvaluationStatus::COMPLETED;
             } else {
                 $percentScore = ($score / $paper->getTotal()) * 100;
                 $status = $percentScore >= $successScore ?
-                    AbstractEvaluation::STATUS_PASSED :
-                    AbstractEvaluation::STATUS_FAILED;
+                    EvaluationStatus::PASSED :
+                    EvaluationStatus::FAILED;
             }
         } else {
-            $status = AbstractEvaluation::STATUS_INCOMPLETE;
+            $status = EvaluationStatus::INCOMPLETE;
         }
 
         $nbQuestions = 0;

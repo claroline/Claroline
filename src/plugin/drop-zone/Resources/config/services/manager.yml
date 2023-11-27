@@ -1,7 +1,6 @@
 services:
     Claroline\DropZoneBundle\Manager\CorrectionManager:
         arguments:
-            - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\DropZoneBundle\Manager\DropManager'
@@ -11,7 +10,6 @@ services:
         arguments:
             - '%claroline.param.files_directory%'
             - '@filesystem'
-            - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
 
@@ -25,7 +23,6 @@ services:
             - '%claroline.param.files_directory%'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\File\TempFileManager'
-            - '@event_dispatcher'
             - '@translator'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CommunityBundle\Manager\TeamManager'
@@ -34,7 +31,6 @@ services:
 
     Claroline\DropZoneBundle\Manager\EvaluationManager:
         arguments:
-            - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'

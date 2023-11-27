@@ -14,7 +14,7 @@ const DashboardMessage = () =>
     }}
     definition={[
       {
-        name: 'sender',
+        name: 'doer',
         type: 'user',
         label: trans('user'),
         displayed: true

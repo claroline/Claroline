@@ -19,7 +19,7 @@ const displayPasswordValidation = (data) => get(data, 'password._forceComplexity
 const AuthenticationTool = (props) =>
   <ToolPage>
     <FormData
-      name={selectors.FORM_NAME}
+      name={selectors.STORE_NAME}
       target={['apiv2_authentication_parameters_update']}
       buttons={true}
       cancel={{

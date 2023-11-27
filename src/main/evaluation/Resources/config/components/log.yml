@@ -1,0 +1,24 @@
+services:
+    Claroline\EvaluationBundle\Component\Log\Functional\LogResourceAttemptEnd:
+        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
+        tags: [ 'claroline.component.log' ]
+    
+    Claroline\EvaluationBundle\Component\Log\Functional\LogResourceAttemptStart:
+        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\EvaluationBundle\Component\Log\Functional\LogResourceEvaluationEnd:
+        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\EvaluationBundle\Component\Log\Functional\LogResourceEvaluationStart:
+        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\EvaluationBundle\Component\Log\Functional\LogWorkspaceEvaluationEnd:
+        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\EvaluationBundle\Component\Log\Functional\LogWorkspaceEvaluationStart:
+        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
+        tags: [ 'claroline.component.log' ]

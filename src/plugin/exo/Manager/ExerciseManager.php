@@ -5,10 +5,8 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Event\Log\LogExerciseUpdateEvent;
 use UJM\ExoBundle\Library\Item\Definition\AnswerableItemDefinitionInterface;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\ExerciseType;
@@ -23,32 +21,17 @@ use UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator;
 
 class ExerciseManager
 {
-    private ObjectManager $om;
     private ExerciseRepository $repository;
-    private ExerciseValidator $validator;
-    private ExerciseSerializer $serializer;
-    private ItemManager $itemManager;
-    private PaperManager $paperManager;
-    private ItemDefinitionsCollection $definitions;
-    private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
-        ObjectManager $om,
-        ExerciseValidator $validator,
-        ExerciseSerializer $serializer,
-        ItemManager $itemManager,
-        PaperManager $paperManager,
-        ItemDefinitionsCollection $definitions,
-        EventDispatcherInterface $eventDispatcher
+        private readonly ObjectManager $om,
+        private readonly ExerciseValidator $validator,
+        private readonly ExerciseSerializer $serializer,
+        private readonly ItemManager $itemManager,
+        private readonly PaperManager $paperManager,
+        private readonly ItemDefinitionsCollection $definitions
     ) {
-        $this->om = $om;
         $this->repository = $this->om->getRepository(Exercise::class);
-        $this->validator = $validator;
-        $this->serializer = $serializer;
-        $this->itemManager = $itemManager;
-        $this->paperManager = $paperManager;
-        $this->definitions = $definitions;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -79,10 +62,6 @@ class ExerciseManager
 
         // Invalidate unfinished papers
         $this->repository->invalidatePapers($exercise);
-
-        // Log exercise update
-        $event = new LogExerciseUpdateEvent($exercise, $this->serializer->serialize($exercise));
-        $this->eventDispatcher->dispatch($event, 'log');
 
         return $exercise;
     }
@@ -118,7 +97,7 @@ class ExerciseManager
 
         fputcsv($handle, [
             'last_name',
-            'fisrt_name',
+            'first_name',
             'number',
             'start_date',
             'end_date',
@@ -166,9 +145,9 @@ class ExerciseManager
         $titles = [['username'], ['lastname'], ['firstname'], ['start'], ['end'], ['status'], ['score'], ['total_score_on']];
         $items = [];
 
-        //get the list of titles for the csv (the headers)
-        //this is an array of array because some question types will return...
-        //more than 1 title (ie cloze)
+        // get the list of titles for the csv (the headers)
+        // this is an array of array because some question types will return...
+        // more than 1 title (ie cloze)
         foreach ($exercise->getSteps() as $step) {
             foreach ($step->getStepQuestions() as $stepQ) {
                 $item = $stepQ->getQuestion();
@@ -201,7 +180,7 @@ class ExerciseManager
         fputcsv($fp, [$exercise->getResourceNode()->getName()], ';');
         fputcsv($fp, $flattenedTitles, ';');
 
-        //this is the same reason why we use an array of array here
+        // this is the same reason why we use an array of array here
         $limit = 250;
         $iteration = 0;
         $papers = [];
@@ -214,7 +193,7 @@ class ExerciseManager
             /** @var Paper $paper */
             foreach ($papers as $paper) {
                 // maybe use stored score to speed up things
-                // problem is we don't have it for non finished papers
+                // problem is we don't have it for non-finished papers
                 $score = $this->paperManager->calculateScore($paper);
 
                 $answers = $paper->getAnswers();

@@ -110,7 +110,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, CacheableVoterI
      */
     protected function isToolGranted($permission, string $toolName, Workspace $workspace = null): bool
     {
-        return $this->isContextToolGranted($permission, !empty($workspace) ? 'workspace' : 'desktop', $workspace);
+        return $this->isContextToolGranted($permission, $toolName, !empty($workspace) ? 'workspace' : 'desktop', $workspace);
     }
 
     /**

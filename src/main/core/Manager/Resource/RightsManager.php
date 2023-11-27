@@ -11,70 +11,43 @@
 
 namespace Claroline\CoreBundle\Manager\Resource;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleChangeRightEvent;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
 use Doctrine\DBAL\Connection;
-use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class RightsManager implements LoggerAwareInterface
+class RightsManager
 {
-    use LoggableTrait;
-
-    /** @var Connection */
-    private $conn;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var MaskManager */
-    private $maskManager;
-    /** @var ResourceRightsRepository */
-    private $rightsRepo;
-    /** @var ObjectManager */
-    private $om;
-    /** @var WorkspaceManager */
-    private $workspaceManager;
+    private ResourceRightsRepository $rightsRepo;
 
     public function __construct(
-        Connection $conn,
-        TokenStorageInterface $tokenStorage,
-        StrictDispatcher $dispatcher,
-        ObjectManager $om,
-        MaskManager $maskManager,
-        WorkspaceManager $workspaceManager
+        private readonly Connection $conn,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly MaskManager $maskManager,
+        private readonly WorkspaceManager $workspaceManager
     ) {
-        $this->conn = $conn;
-        $this->tokenStorage = $tokenStorage;
-        $this->dispatcher = $dispatcher;
-        $this->om = $om;
-        $this->maskManager = $maskManager;
-        $this->workspaceManager = $workspaceManager;
-
         $this->rightsRepo = $om->getRepository(ResourceRights::class);
     }
 
     /**
      * @param array|int $permissions - either an array of perms or an encoded mask
      */
-    public function create($permissions, Role $role, ResourceNode $node, bool $isRecursive, ?array $creations = [], ?bool $log = true): void
+    public function create($permissions, Role $role, ResourceNode $node, bool $isRecursive, ?array $creations = []): void
     {
-        $this->update($permissions, $role, $node, $isRecursive, $creations, $log);
+        $this->update($permissions, $role, $node, $isRecursive, $creations);
     }
 
     /**
      * @param array|int $permissions - either an array of perms or an encoded mask
      */
-    public function update($permissions, Role $role, ResourceNode $node, ?bool $isRecursive = false, ?array $creations = [], ?bool $log = true): void
+    public function update($permissions, Role $role, ResourceNode $node, ?bool $isRecursive = false, ?array $creations = []): void
     {
         if (!is_int($permissions)) {
             $mask = $this->maskManager->encodeMask($permissions, $node->getResourceType());
@@ -95,21 +68,10 @@ class RightsManager implements LoggerAwareInterface
             $this->om->forceFlush();
         }
 
-        $logUpdate = true;
-
-        $right = $this->rightsRepo->findOneBy(['role' => $role, 'resourceNode' => $node]);
-        if ($right) {
-            $logUpdate = $right->getMask() !== $mask;
-        }
-
         if ($isRecursive) {
             $this->recursiveUpdate($node, $role, $mask, $creations);
         } else {
             $this->singleUpdate($node, $role, $mask, $creations);
-        }
-
-        if ($logUpdate && $log) {
-            $this->logUpdate($node, $role, $mask, $creations);
         }
     }
 
@@ -186,6 +148,8 @@ class RightsManager implements LoggerAwareInterface
      *   - It is the creator of the resource
      *   - It is the manager of the parent workspace
      *   - It is a platform admin
+     *
+     * @deprecated should use AuthorizationChecker::isGranted('ADMINISTRATE', $resourceNode)
      */
     public function isManager(ResourceNode $resourceNode): bool
     {
@@ -307,8 +271,8 @@ class RightsManager implements LoggerAwareInterface
 
     private function recursiveUpdate(ResourceNode $node, Role $role, ?int $mask = 1, ?array $types = []): void
     {
-        //take into account the fact that some node have type with extended permissions
-        //default actions should be set in stone with that way of doing it
+        // take into account the fact that some node have type with extended permissions
+        // default actions should be set in stone with that way of doing it
         $defaults = MaskManager::getDefaultActions();
         $fullDirectoryMask = pow(2, count($defaults)) - 1;
 
@@ -382,18 +346,6 @@ class RightsManager implements LoggerAwareInterface
             $sql,
             [$node->getPath().'%', $typeList],
             [\PDO::PARAM_STR, Connection::PARAM_STR_ARRAY]
-        );
-    }
-
-    private function logUpdate(ResourceNode $node, Role $role, int $mask, array $types): void
-    {
-        $this->dispatcher->dispatch(
-            'log',
-            LogWorkspaceRoleChangeRightEvent::class,
-            [$role, $node, [
-                'mask' => $mask,
-                'types' => $types,
-            ]]
         );
     }
 }

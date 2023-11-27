@@ -122,8 +122,6 @@ class CorrectionManager
             $newScore = $this->paperManager->calculateScore($paper);
             $paper->setScore($newScore);
             $this->om->persist($paper);
-
-            $this->paperManager->checkPaperEvaluated($paper);
         }
 
         $this->om->flush();

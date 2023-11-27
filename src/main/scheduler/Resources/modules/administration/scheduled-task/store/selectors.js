@@ -1,4 +1,4 @@
-const STORE_NAME = 'scheduled_tasks'
+const STORE_NAME = 'scheduler'
 
 const store = (state) => state[STORE_NAME]
 

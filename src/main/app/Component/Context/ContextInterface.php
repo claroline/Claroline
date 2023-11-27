@@ -12,7 +12,9 @@ interface ContextInterface extends ComponentInterface
 {
     public function getObject(?string $contextId): ?ContextSubjectInterface;
 
-    public function isAvailable(?string $contextId): bool;
+    public function isAvailable(): bool;
+
+    public function isRoot(): bool;
 
     public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool;
 
@@ -26,6 +28,12 @@ interface ContextInterface extends ComponentInterface
      * Get additional data required by the context (ex. current user evaluation).
      */
     public function getAdditionalData(?ContextSubjectInterface $contextSubject): array;
+
+    /**
+     * Gets the list of tools available for the context.
+     * It contains all the tools implemented by enabled plugins.
+     */
+    public function getAvailableTools(?ContextSubjectInterface $contextSubject): array;
 
     /**
      * Gets the list of tools enabled for the context.

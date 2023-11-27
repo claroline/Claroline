@@ -19,7 +19,7 @@ abstract class AbstractContextSubscriber implements EventSubscriberInterface
     /**
      * Checks if the subscriber supports the context.
      */
-    abstract public static function supportsContext(string $context, ?string $contextId): bool;
+    abstract protected static function supportsContext(string $context, ?string $contextId): bool;
 
     /**
      * Do something when the context is opened.

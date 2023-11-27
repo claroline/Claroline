@@ -13,6 +13,11 @@ abstract class AbstractContext implements ContextInterface
         $this->toolProvider = $toolProvider;
     }
 
+    public function getAvailableTools(?ContextSubjectInterface $contextSubject): array
+    {
+        return $this->toolProvider->getAvailableTools(static::getName(), $contextSubject);
+    }
+
     public function getTools(?ContextSubjectInterface $contextSubject): array
     {
         return $this->toolProvider->getEnabledTools(static::getName(), $contextSubject);

@@ -56,10 +56,6 @@ services:
             - '@security.authorization_checker'
             - '@security.token_storage'
 
-    Claroline\CoreBundle\API\Finder\Log\LogFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
     Claroline\CoreBundle\API\Finder\Widget\WidgetInstanceFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

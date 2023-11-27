@@ -7,44 +7,18 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\DropZoneBundle\Entity\Correction;
 use Claroline\DropZoneBundle\Entity\Dropzone;
-use Claroline\DropZoneBundle\Event\Log\LogCorrectionDeleteEvent;
-use Claroline\DropZoneBundle\Event\Log\LogCorrectionEndEvent;
-use Claroline\DropZoneBundle\Event\Log\LogCorrectionReportEvent;
-use Claroline\DropZoneBundle\Event\Log\LogCorrectionStartEvent;
-use Claroline\DropZoneBundle\Event\Log\LogCorrectionUpdateEvent;
-use Claroline\DropZoneBundle\Event\Log\LogCorrectionValidationChangeEvent;
 use Claroline\DropZoneBundle\Repository\CorrectionRepository;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CorrectionManager
 {
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var DropManager */
-    private $dropManager;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-
-    /** @var CorrectionRepository */
-    private $correctionRepo;
+    private CorrectionRepository $correctionRepo;
 
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        DropManager $dropManager,
-        EvaluationManager $evaluationManager
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly DropManager $dropManager,
+        private readonly EvaluationManager $evaluationManager
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->dropManager = $dropManager;
-        $this->evaluationManager = $evaluationManager;
-
         $this->correctionRepo = $om->getRepository(Correction::class);
     }
 
@@ -83,7 +57,6 @@ class CorrectionManager
         $isNew = empty($existingCorrection);
         $correction = $this->serializer->get(Correction::class)->deserialize($data);
         $correction->setUser($user);
-        $dropzone = $correction->getDrop()->getDropzone();
 
         if (!$isNew) {
             $correction->setLastEditionDate(new \DateTime());
@@ -92,12 +65,6 @@ class CorrectionManager
         $this->om->persist($correction);
 
         $this->om->endFlushSuite();
-
-        if ($isNew) {
-            $this->eventDispatcher->dispatch(new LogCorrectionStartEvent($dropzone, $correction->getDrop(), $correction), 'log');
-        } else {
-            $this->eventDispatcher->dispatch(new LogCorrectionUpdateEvent($dropzone, $correction->getDrop(), $correction), 'log');
-        }
 
         return $correction;
     }
@@ -130,7 +97,7 @@ class CorrectionManager
                 }
                 break;
         }
-        $this->eventDispatcher->dispatch(new LogCorrectionEndEvent($dropzone, $correction->getDrop(), $correction), 'log');
+
         $this->om->forceFlush();
 
         $this->evaluationManager->checkSuccess($drop);
@@ -152,19 +119,15 @@ class CorrectionManager
 
         $this->om->endFlushSuite();
 
-        $this->eventDispatcher->dispatch(new LogCorrectionValidationChangeEvent($correction->getDrop()->getDropzone(), $correction->getDrop(), $correction), 'log');
-
         return $correction;
     }
 
-    public function denyCorrection(Correction $correction, ?string $comment = null): Correction
+    public function denyCorrection(Correction $correction, string $comment = null): Correction
     {
         $correction->setCorrectionDenied(true);
         $correction->setCorrectionDeniedComment($comment);
         $this->om->persist($correction);
         $this->om->flush();
-
-        $this->eventDispatcher->dispatch(new LogCorrectionReportEvent($correction->getDrop()->getDropzone(), $correction->getDrop(), $correction), 'log');
 
         return $correction;
     }
@@ -183,8 +146,6 @@ class CorrectionManager
         $this->evaluationManager->checkSuccess($drop);
 
         $this->om->endFlushSuite();
-
-        $this->eventDispatcher->dispatch(new LogCorrectionDeleteEvent($correction->getDrop()->getDropzone(), $drop, $correction), 'log');
     }
 
     /**

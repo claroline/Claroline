@@ -28,17 +28,16 @@ class DashboardController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         AnalyticsManager $analyticsManager,
-        EventManager $eventManager,
-        LogManager $logManager
     ) {
         $this->authorization = $authorization;
         $this->analyticsManager = $analyticsManager;
-        $this->eventManager = $eventManager;
-        $this->logManager = $logManager;
+        /*$this->eventManager = $eventManager;
+        $this->logManager = $logManager;*/
     }
 
     /**
      * @Route("/{resource}/activity", name="apiv2_resource_analytics_activity", methods={"GET"})
+     *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"resource": "uuid"}})
      */
     public function activityAction(ResourceNode $resourceNode, Request $request): JsonResponse
@@ -63,6 +62,7 @@ class DashboardController
 
     /**
      * @Route("/{resource}/actions", name="apiv2_resource_analytics_actions", methods={"GET"})
+     *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"resource": "uuid"}})
      */
     public function actionsAction(Request $request, ResourceNode $resourceNode)
@@ -84,6 +84,7 @@ class DashboardController
 
     /**
      * @Route("/{resource}/time", name="apiv2_resource_analytics_time", methods={"GET"})
+     *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"resource": "uuid"}})
      */
     public function connectionTimeAction(ResourceNode $resourceNode): JsonResponse

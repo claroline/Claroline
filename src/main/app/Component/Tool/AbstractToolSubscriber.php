@@ -24,7 +24,7 @@ abstract class AbstractToolSubscriber implements EventSubscriberInterface
     /**
      * Checks if the subscriber supports the tool.
      */
-    abstract public static function supportsTool(string $toolName): bool;
+    abstract protected static function supportsTool(string $toolName): bool;
 
     /**
      * Do something when the tool is opened.

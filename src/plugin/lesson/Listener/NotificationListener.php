@@ -6,7 +6,7 @@ use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEve
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class NotificationListener.
+ * @deprecated
  */
 class NotificationListener
 {

@@ -11,9 +11,7 @@
 
 namespace Claroline\CoreBundle\Installation\DataFixtures;
 
-use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\InstallationBundle\Fixtures\PreInstallInterface;
 use Claroline\InstallationBundle\Fixtures\PreUpdateInterface;
@@ -24,20 +22,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class PlatformRolesData extends AbstractFixture implements PreInstallInterface, PreUpdateInterface, ContainerAwareInterface
 {
-    /** @var RoleManager */
-    private $roleManager;
-    /** @var ToolManager */
-    private $toolManager;
+    private RoleManager $roleManager;
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null): void
     {
         $this->roleManager = $container->get('claroline.manager.role_manager');
-        $this->toolManager = $container->get('claroline.manager.tool_manager');
     }
 
-    public function getOrder()
+    public function getOrder(): int
     {
-        return 1;
+        return 2;
     }
 
     /**
@@ -47,17 +41,10 @@ class PlatformRolesData extends AbstractFixture implements PreInstallInterface, 
      * - workspace creator (fixture ref : role/ws_creator)
      * - administrator     (fixture ref : role/admin).
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         if (!$this->roleManager->getRoleByName(PlatformRoles::USER)) {
-            $userRole = $this->roleManager->createBaseRole(PlatformRoles::USER, 'user', true, true);
-            // initialize some tools rights to let users open their desktop
-            foreach (['home', 'resources', 'workspaces'] as $tool) {
-                $orderedTool = $this->toolManager->getOrderedTool($tool, DesktopContext::getName());
-                if ($orderedTool) {
-                    $this->toolManager->setPermissions(['open' => true], $orderedTool, $userRole);
-                }
-            }
+            $this->roleManager->createBaseRole(PlatformRoles::USER, 'user', true, true);
         }
 
         if (!$this->roleManager->getRoleByName(PlatformRoles::WS_CREATOR)) {

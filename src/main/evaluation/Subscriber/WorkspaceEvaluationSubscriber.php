@@ -15,17 +15,18 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\CatalogEvents\ContextEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\CatalogEvents\WorkspaceEvents;
+use Claroline\CoreBundle\Event\Context\OpenContextEvent;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
-use Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
-use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
+use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -58,7 +59,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            WorkspaceEvents::OPEN => 'onOpen',
+            ContextEvents::OPEN => 'onOpen',
             SecurityEvents::ADD_ROLE => 'onAddRole',
             EvaluationEvents::RESOURCE_EVALUATION => 'onResourceEvaluate',
             Crud::getEventName('update', 'post', ResourceNode::class) => 'onResourcePublicationChange',
@@ -69,16 +70,19 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     /**
      * Updates the workspace evaluation status to "opened".
      */
-    public function onOpen(OpenWorkspaceEvent $event): void
+    public function onOpen(OpenContextEvent $event): void
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        if (WorkspaceContext::getName() !== $event->getContextType()) {
+            return;
+        }
 
         // Update current user evaluation
+        $user = $this->tokenStorage->getToken()->getUser();
         if ($user instanceof User) {
             $this->manager->updateUserEvaluation(
-                $event->getWorkspace(),
+                $event->getContextSubject(),
                 $user,
-                ['status' => AbstractEvaluation::STATUS_OPENED]
+                ['status' => EvaluationStatus::OPENED]
             );
         }
     }

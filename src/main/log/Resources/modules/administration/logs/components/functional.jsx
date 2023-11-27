@@ -14,7 +14,7 @@ const DashboardFunctional = () =>
     }}
     definition={[
       {
-        name: 'user',
+        name: 'doer',
         type: 'user',
         label: trans('user'),
         displayed: true

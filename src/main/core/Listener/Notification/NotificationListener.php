@@ -20,6 +20,9 @@ use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleChangeRightEvent;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
+/**
+ * @deprecated
+ */
 class NotificationListener
 {
     use ContainerAwareTrait;

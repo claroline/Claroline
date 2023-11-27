@@ -10,6 +10,6 @@ registry.add('ClarolineSchedulerBundle', {
    * Provides Administration tools.
    */
   administration: {
-    'scheduled_tasks': () => { return import(/* webpackChunkName: "core-admin-scheduled-task" */ '#/main/scheduler/administration/scheduled-task') }
+    'scheduler': () => { return import(/* webpackChunkName: "core-admin-scheduler" */ '#/main/scheduler/administration/scheduled-task') }
   }
 })

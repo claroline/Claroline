@@ -10,6 +10,7 @@ use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\Tool\AbstractTool;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Context\AccountContext;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
@@ -34,6 +35,7 @@ class BadgesTool extends AbstractTool
     {
         return in_array($context, [
             AccountContext::getName(),
+            DesktopContext::getName(),
             WorkspaceContext::getName(),
         ]);
     }

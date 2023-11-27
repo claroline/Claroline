@@ -12,7 +12,15 @@
 namespace Claroline\LogBundle;
 
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
+use Claroline\LogBundle\DependencyInjection\Compiler\RegisterLogSubscriberPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ClarolineLogBundle extends DistributionPluginBundle
 {
+    public function build(ContainerBuilder $container): void
+    {
+        parent::build($container);
+
+        $container->addCompilerPass(new RegisterLogSubscriberPass());
+    }
 }

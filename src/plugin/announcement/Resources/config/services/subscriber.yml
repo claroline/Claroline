@@ -13,7 +13,6 @@ services:
     Claroline\AnnouncementBundle\Subscriber\Crud\AnnouncementSubscriber:
         arguments:
             - '@security.token_storage'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
             - '@Claroline\CoreBundle\Manager\FileManager'

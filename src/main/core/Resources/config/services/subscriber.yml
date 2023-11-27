@@ -43,7 +43,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-            - '@Claroline\CoreBundle\Manager\ResourceManager'
 
     Claroline\CoreBundle\Subscriber\Crud\WorkspaceSubscriber:
         tags: [ kernel.event_subscriber ]
@@ -53,7 +52,6 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'

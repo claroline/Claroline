@@ -11,21 +11,21 @@
 
 namespace Claroline\CoreBundle\Security;
 
-class PlatformRoles
+final class PlatformRoles
 {
-    const USER = 'ROLE_USER';
-    const WS_CREATOR = 'ROLE_WS_CREATOR';
-    const ADMIN = 'ROLE_ADMIN';
-    const ANONYMOUS = 'ROLE_ANONYMOUS';
+    public const USER = 'ROLE_USER';
+    public const WS_CREATOR = 'ROLE_WS_CREATOR';
+    public const ADMIN = 'ROLE_ADMIN';
+    public const ANONYMOUS = 'ROLE_ANONYMOUS';
 
-    private static $roles = [
+    private static array $roles = [
         self::USER,
         self::WS_CREATOR,
         self::ADMIN,
         self::ANONYMOUS,
     ];
 
-    public static function contains($roleName)
+    public static function contains(string $roleName): bool
     {
         return in_array($roleName, self::$roles);
     }

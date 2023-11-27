@@ -89,11 +89,13 @@ class SlideFormModal extends Component {
       <Modal
         {...omit(this.props, 'formName', 'dataPart')}
         title={this.props.title}
+        size="lg"
       >
         <FormData
           level={5}
           name={this.props.formName}
           dataPart={this.props.dataPart}
+          flush={true}
           sections={[
             {
               title: trans('general'),

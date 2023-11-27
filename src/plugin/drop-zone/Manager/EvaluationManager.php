@@ -9,45 +9,23 @@ use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
-use Claroline\DropZoneBundle\Event\Log\LogDropEvaluateEvent;
-use Claroline\DropZoneBundle\Event\Log\LogDropStartEvent;
 use Claroline\DropZoneBundle\Repository\DropRepository;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * TODO : we shouldn't store the whole serialized Drop inside the ResourceAttempt.
  */
 class EvaluationManager
 {
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ResourceEvaluationManager */
-    private $resourceEvalManager;
-    /** @var DropManager */
-    private $dropManager;
-
-    /** @var DropRepository */
-    private $dropRepo;
+    private DropRepository $dropRepo;
 
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        ResourceEvaluationManager $resourceEvalManager,
-        DropManager $dropManager
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly ResourceEvaluationManager $resourceEvalManager,
+        private readonly DropManager $dropManager
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->resourceEvalManager = $resourceEvalManager;
-        $this->dropManager = $dropManager;
-
         $this->dropRepo = $om->getRepository(Drop::class);
     }
 
@@ -88,7 +66,6 @@ class EvaluationManager
 
                 foreach ($team->getRole()->getUsers() as $teamUser) {
                     $drop->addUser($teamUser);
-                    /* TODO: checks that a valid status is not overwritten */
                     $this->resourceEvalManager->createAttempt(
                         $dropzone->getResourceNode(),
                         $teamUser,
@@ -117,16 +94,16 @@ class EvaluationManager
      *
      * (I don't know why drop is optional)
      */
-    public function checkCompletion(Dropzone $dropzone, array $users, ?Drop $drop = null)
+    public function checkCompletion(Dropzone $dropzone, array $users, Drop $drop = null): void
     {
         $teamId = !empty($drop) ? $drop->getTeamUuid() : null;
 
         $this->om->startFlushSuite();
 
-        /* By default drop is complete if teacher review is enabled or drop is unlocked for user */
+        // By default, drop is complete if teacher review is enabled or drop is unlocked for user
         $isComplete = !empty($drop) ? $drop->isFinished() && (!$dropzone->isPeerReview() || $drop->isUnlockedUser()) : false;
 
-        /* If drop is not complete by default, checks for the number of finished corrections done by user */
+        // If drop is not complete by default, checks for the number of finished corrections done by user
         if (!$isComplete) {
             $expectedCorrectionTotal = $dropzone->getExpectedCorrectionTotal();
             $finishedPeerDrops = $this->dropManager->getFinishedPeerDrops($dropzone, $users[0], $teamId);
@@ -146,7 +123,6 @@ class EvaluationManager
                 } elseif (!empty($drop)) {
                     $this->updateDropProgression($dropzone, $drop, 100);
                 }
-                //TODO user whose score is available must be notified by LogDropGradeAvailableEvent, when he has done his corrections AND his drop has been corrected
             }
         }
 
@@ -156,7 +132,7 @@ class EvaluationManager
     /**
      * Computes Success status for a Drop.
      */
-    public function checkSuccess(Drop $drop)
+    public function checkSuccess(Drop $drop): void
     {
         $this->om->startFlushSuite();
 
@@ -202,10 +178,6 @@ class EvaluationManager
                     ]
                 );
             }
-
-            $this->eventDispatcher->dispatch(new LogDropEvaluateEvent($dropzone, $drop, $drop->getScore()), 'log');
-
-            //TODO user whose score is available must be notified by LogDropGradeAvailableEvent, when he has done his corrections AND his drop has been corrected
         }
 
         $this->om->endFlushSuite();
@@ -214,7 +186,7 @@ class EvaluationManager
     /**
      * Updates progression of ResourceEvaluation for drop.
      */
-    public function updateDropProgression(Dropzone $dropzone, Drop $drop, int $progression)
+    public function updateDropProgression(Dropzone $dropzone, Drop $drop, int $progression): void
     {
         $this->om->startFlushSuite();
 
@@ -282,8 +254,6 @@ class EvaluationManager
         );
 
         $this->om->endFlushSuite();
-
-        $this->eventDispatcher->dispatch(new LogDropStartEvent($dropzone, $drop), 'log');
 
         return $drop;
     }

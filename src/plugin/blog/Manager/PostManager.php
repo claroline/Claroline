@@ -16,7 +16,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PostManager
 {
     private $om;
-    private $trackingManager;
     private $repo;
     private $finder;
     private $translator;
@@ -24,21 +23,19 @@ class PostManager
     private $userRepo;
     private $eventDispatcher;
 
-    const GET_ALL_POSTS = 'GET_ALL_POSTS';
-    const GET_PUBLISHED_POSTS = 'GET_PUBLISHED_POSTS';
-    const GET_UNPUBLISHED_POSTS = 'GET_UNPUBLISHED_POSTS';
+    public const GET_ALL_POSTS = 'GET_ALL_POSTS';
+    public const GET_PUBLISHED_POSTS = 'GET_PUBLISHED_POSTS';
+    public const GET_UNPUBLISHED_POSTS = 'GET_UNPUBLISHED_POSTS';
 
     public function __construct(
         FinderProvider $finder,
         ObjectManager $om,
-        BlogTrackingManager $trackingManager,
         TranslatorInterface $translator,
         UserSerializer $userSerializer,
         EventDispatcherInterface $eventDispatcher)
     {
         $this->finder = $finder;
         $this->om = $om;
-        $this->trackingManager = $trackingManager;
         $this->translator = $translator;
         $this->userSerializer = $userSerializer;
         $this->eventDispatcher = $eventDispatcher;
@@ -86,12 +83,6 @@ class PostManager
             $post->setPublicationDate(new \DateTime());
         }
 
-        //tracking
-        $this->trackingManager->dispatchPostCreateEvent($blog, $post);
-        if ($user instanceof User) {
-            $this->trackingManager->updateResourceTracking($blog->getResourceNode(), $user, new \DateTime());
-        }
-
         $this->om->persist($post);
         $this->om->flush();
 
@@ -116,27 +107,15 @@ class PostManager
 
         $this->om->flush();
 
-        $unitOfWork = $this->om->getUnitOfWork();
-        $unitOfWork->computeChangeSets();
-        $changeSet = $unitOfWork->getEntityChangeSet($existingPost);
-
-        $this->trackingManager->dispatchPostUpdateEvent($existingPost, $changeSet);
-
-        if ($user instanceof User) {
-            $this->trackingManager->updateResourceTracking($blog->getResourceNode(), $user, new \DateTime());
-        }
-
         return $existingPost;
     }
 
     /**
      * Delete a post.
-     *
-     * @return Post
      */
     public function deletePost(Blog $blog, Post $post, User $user)
     {
-        //remove tags beforehand
+        // remove tags beforehand
         $event = new GenericDataEvent([
             'tags' => [],
             'data' => [
@@ -152,16 +131,12 @@ class PostManager
 
         $this->om->remove($post);
         $this->om->flush();
-
-        $this->trackingManager->dispatchPostDeleteEvent($post);
     }
 
     /**
      * Update post view count.
      *
-     * @param Blog $blog
      * @param Post $post
-     * @param User $user
      */
     public function updatePostViewCount($post)
     {
@@ -184,8 +159,6 @@ class PostManager
 
     /**
      * Switch post state.
-     *
-     * @param User $user
      */
     public function switchPublicationState(Post $post)
     {
@@ -197,29 +170,18 @@ class PostManager
 
         $this->om->flush();
 
-        $unitOfWork = $this->om->getUnitOfWork();
-        $unitOfWork->computeChangeSets();
-        $changeSet = $unitOfWork->getEntityChangeSet($post);
-
-        $this->trackingManager->dispatchPostUpdateEvent($post, $changeSet);
-
         return $post;
     }
 
     /**
      * Get posts.
-     *
-     * @param $blogId
-     * @param $filters
-     * @param $publication
-     * @param $abstract
      */
     public function getPosts($blogId, $filters, $publication = self::GET_PUBLISHED_POSTS, $abstract = true)
     {
         if (!isset($filters['hiddenFilters'])) {
             $filters['hiddenFilters'] = [];
         }
-        //filter on current blog
+        // filter on current blog
         $filters['hiddenFilters'] = [
             'blog' => $blogId,
         ];
@@ -289,8 +251,6 @@ class PostManager
 
     /**
      * Get post tags.
-     *
-     * @param $postUuid
      *
      * @return array
      */

@@ -44,9 +44,14 @@ class WorkspaceContext extends AbstractContext
         return $this->om->getObject(['id' => $contextId, 'slug' => $contextId], Workspace::class, ['slug']);
     }
 
-    public function isAvailable(?string $contextId): bool
+    public function isAvailable(): bool
     {
-        return !empty($contextId);
+        return true;
+    }
+
+    public function isRoot(): bool
+    {
+        return false;
     }
 
     public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool

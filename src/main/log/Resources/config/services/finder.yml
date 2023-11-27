@@ -10,3 +10,7 @@ services:
     Claroline\LogBundle\Finder\FunctionalLogFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
+
+    Claroline\LogBundle\Finder\OperationalLogFinder:
+        parent: Claroline\AppBundle\API\Finder\AbstractFinder
+        tags: [ claroline.finder ]

@@ -13,15 +13,10 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class ResourceAttemptEvent extends Event
 {
-    /** @var ResourceEvaluation */
-    private $attempt;
-    /** @var array */
-    private $changes;
-
-    public function __construct(ResourceEvaluation $attempt, array $changes)
-    {
-        $this->attempt = $attempt;
-        $this->changes = $changes;
+    public function __construct(
+        private readonly ResourceEvaluation $attempt,
+        private readonly array $changes
+    ) {
     }
 
     public function getAttempt(): ResourceEvaluation

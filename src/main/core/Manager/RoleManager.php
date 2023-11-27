@@ -20,33 +20,16 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class RoleManager
 {
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var RoleRepository */
-    private $roleRepo;
+    private RoleRepository $roleRepo;
 
     public function __construct(
-        ObjectManager $om
+        private readonly ObjectManager $om
     ) {
-        $this->om = $om;
-
         $this->roleRepo = $om->getRepository(Role::class);
     }
 
-    /**
-     * @param string $name
-     * @param string $translationKey
-     * @param bool   $isReadOnly
-     *
-     * @return Role
-     */
-    public function createWorkspaceRole(
-        $name,
-        $translationKey,
-        Workspace $workspace,
-        $isReadOnly = false
-    ) {
+    public function createWorkspaceRole(string $name, string $translationKey, Workspace $workspace, bool $isReadOnly = false): Role
+    {
         $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($translationKey);
@@ -63,14 +46,9 @@ class RoleManager
     }
 
     /**
-     * @param string $name
-     * @param string $translationKey
-     * @param bool   $isReadOnly
-     * @param bool   $makeGroup
-     *
-     * @return Role
+     * @deprecated use CRUD instead
      */
-    public function createBaseRole($name, $translationKey, $isReadOnly = true, $makeGroup = false)
+    public function createBaseRole(string $name, string $translationKey, bool $isReadOnly = true, bool $makeGroup = false): Role
     {
         $role = new Role();
         $role->setName($name);
@@ -95,9 +73,9 @@ class RoleManager
     }
 
     /**
-     * @return Role
+     * @deprecated use CRUD instead
      */
-    public function createUserRole(User $user)
+    public function createUserRole(User $user): Role
     {
         $username = $user->getUsername();
         $roleName = 'ROLE_USER_'.strtoupper($username);
@@ -120,10 +98,7 @@ class RoleManager
         return $role;
     }
 
-    /**
-     * @param string $username
-     */
-    public function renameUserRole(Role $role, $username)
+    public function renameUserRole(Role $role, string $username): void
     {
         $roleName = 'ROLE_USER_'.strtoupper($username);
         $role->setName($roleName);
@@ -132,57 +107,24 @@ class RoleManager
         $this->om->persist($role);
     }
 
-    /**
-     * @return Role[]
-     */
-    public function getWorkspaceRoles(Workspace $workspace)
+    public function getWorkspaceRoles(Workspace $workspace): ?Role
     {
         return $this->roleRepo->findBy(['workspace' => $workspace]);
     }
 
-    /**
-     * @return Role
-     */
-    public function getCollaboratorRole(Workspace $workspace)
+    public function getCollaboratorRole(Workspace $workspace): ?Role
     {
         return $this->roleRepo->findCollaboratorRole($workspace);
     }
 
-    /**
-     * @return Role
-     */
-    public function getManagerRole(Workspace $workspace)
+    public function getManagerRole(Workspace $workspace): ?Role
     {
         return $this->roleRepo->findManagerRole($workspace);
-    }
-
-    /**
-     * @return Role[]
-     */
-    public function getPlatformRoles(User $user)
-    {
-        return $this->roleRepo->findPlatformRoles($user);
-    }
-
-    /**
-     * @return Role[]
-     */
-    public function getWorkspaceRolesForUser(User $user, Workspace $workspace)
-    {
-        return $this->roleRepo->findWorkspaceRolesForUser($user, $workspace);
     }
 
     public function getRoleByName(string $name): ?Role
     {
         return $this->roleRepo->findOneBy(['name' => $name]);
-    }
-
-    /**
-     * @return Role[]
-     */
-    public function getAllPlatformRoles()
-    {
-        return $this->roleRepo->findAllPlatformRoles();
     }
 
     public function getRoleByTranslationKeyAndWorkspace(string $key, Workspace $workspace): ?Role

@@ -1,4 +1,9 @@
 {
+    "resource_open": "Opening a resource",
+    "resource_open_message": "has opened resource %resourceName%",
+    "workspace_open": "Opening a workspace",
+    "workspace_open_message": "has opened workspace %workspaceName%",
+
     "log_add_user": "Add user",
     "log_change_right": "Change rights",
     "log_change_set": "List of modified properties",

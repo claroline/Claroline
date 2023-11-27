@@ -199,15 +199,6 @@ services:
             - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer'
 
-    Claroline\CoreBundle\API\Serializer\Log\LogSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@translator'
-            - '@event_dispatcher'
-            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
-
     Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer:
         tags: [claroline.serializer]
         arguments:

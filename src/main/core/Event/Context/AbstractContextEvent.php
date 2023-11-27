@@ -11,17 +11,15 @@
 
 namespace Claroline\CoreBundle\Event\Context;
 
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractContextEvent extends Event
 {
-    private string $contextType;
-    private ?string $contextId;
-
-    public function __construct(string $contextType, ?string $contextId)
-    {
-        $this->contextType = $contextType;
-        $this->contextId = $contextId;
+    public function __construct(
+        private readonly string $contextType,
+        private readonly ?ContextSubjectInterface $contextSubject = null
+    ) {
     }
 
     public function getContextType(): string
@@ -29,8 +27,8 @@ abstract class AbstractContextEvent extends Event
         return $this->contextType;
     }
 
-    public function getContextId(): string
+    public function getContextSubject(): ?ContextSubjectInterface
     {
-        return $this->contextId;
+        return $this->contextSubject;
     }
 }

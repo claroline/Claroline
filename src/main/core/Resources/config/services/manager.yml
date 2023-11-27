@@ -5,7 +5,6 @@ services:
 
     Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager:
         arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
 
@@ -90,13 +89,6 @@ services:
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
 
-    Claroline\CoreBundle\Manager\LogManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@translator'
-            - '@event_dispatcher'
-
     Claroline\CoreBundle\Manager\LockManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -123,12 +115,6 @@ services:
               arguments: [ '@logger' ]
               tags:
                   - { name: monolog.logger, channel: file }
-
-    Claroline\CoreBundle\Manager\EventManager:
-        arguments:
-            - '@kernel'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@translator'
 
     Claroline\CoreBundle\Manager\DataSourceManager:
         arguments:
@@ -205,12 +191,9 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '@security.token_storage'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-        calls:
-            - setLogger: [ '@logger' ]
 
     claroline.manager.rights_manager:
         alias: Claroline\CoreBundle\Manager\Resource\RightsManager

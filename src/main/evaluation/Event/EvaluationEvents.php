@@ -13,7 +13,7 @@ final class EvaluationEvents
 
     /**
      * The RESOURCE_ATTEMPT event occurs when a resource attempt has been created or updated.
-     * NB. It's only dispatched if the score, progression of status of the attempt has been changed.
+     * NB. It's only dispatched if the score, progression or status of the attempt has been changed.
      *
      * @Event("Claroline\EvaluationBundle\Event\ResourceAttemptEvent")
      */
@@ -21,7 +21,7 @@ final class EvaluationEvents
 
     /**
      * The RESOURCE_EVALUATION event occurs when a resource evaluation has been created/updated.
-     * NB. It's only dispatched if the score, progression of status of the evaluation has been changed.
+     * NB. It's only dispatched if the score, progression or status of the evaluation has been changed.
      *
      * @Event("Claroline\EvaluationBundle\Event\ResourceEvaluationEvent")
      */

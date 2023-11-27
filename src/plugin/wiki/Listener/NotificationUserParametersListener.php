@@ -14,7 +14,7 @@ namespace Icap\WikiBundle\Listener;
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 
 /**
- * Class NotificationUserParametersListener.
+ * @deprecated
  */
 class NotificationUserParametersListener
 {

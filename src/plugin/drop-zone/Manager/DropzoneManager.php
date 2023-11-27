@@ -22,65 +22,31 @@ use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Entity\Revision;
-use Claroline\DropZoneBundle\Event\Log\LogDropEndEvent;
 use Claroline\DropZoneBundle\Repository\CorrectionRepository;
 use Claroline\DropZoneBundle\Repository\DropRepository;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DropzoneManager
 {
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var string */
-    private $filesDir;
-    /** @var ObjectManager */
-    private $om;
-    /** @var TempFileManager */
-    private $tempManager;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var TeamManager */
-    private $teamManager;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-    /** @var DropManager */
-    private $dropManager;
-
-    /** @var DropRepository */
-    private $dropRepo;
-    /** @var CorrectionRepository */
-    private $correctionRepo;
+    private DropRepository $dropRepo;
+    private CorrectionRepository $correctionRepo;
 
     public function __construct(
-        string $filesDir,
-        ObjectManager $om,
-        TempFileManager $tempManager,
-        EventDispatcherInterface $eventDispatcher,
-        TranslatorInterface $translator,
-        SerializerProvider $serializer,
-        TeamManager $teamManager,
-        EvaluationManager $evaluationManager,
-        DropManager $dropManager
+        private readonly string $filesDir,
+        private readonly ObjectManager $om,
+        private readonly TempFileManager $tempManager,
+        private readonly TranslatorInterface $translator,
+        private readonly SerializerProvider $serializer,
+        private readonly TeamManager $teamManager,
+        private readonly EvaluationManager $evaluationManager,
+        private readonly DropManager $dropManager
     ) {
-        $this->filesDir = $filesDir;
-        $this->om = $om;
-        $this->tempManager = $tempManager;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->translator = $translator;
-        $this->serializer = $serializer;
-        $this->teamManager = $teamManager;
-        $this->evaluationManager = $evaluationManager;
-        $this->dropManager = $dropManager;
-
         $this->dropRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Drop');
         $this->correctionRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Correction');
     }
 
-    public function getDropzoneData(Dropzone $dropzone, ?User $user = null)
+    public function getDropzoneData(Dropzone $dropzone, User $user = null): array
     {
         $resourceNode = $dropzone->getResourceNode();
 
@@ -168,22 +134,9 @@ class DropzoneManager
     }
 
     /**
-     * Sets Dropzone drop type to default.
-     */
-    public function setDefaultDropType(Dropzone $dropzone)
-    {
-        $dropzone->setDropType(Dropzone::DROP_TYPE_USER);
-
-        $this->om->persist($dropzone);
-        $this->om->flush();
-    }
-
-    /**
      * Retrieves teamId of user.
-     *
-     * @return string|null
      */
-    public function getUserTeamId(Dropzone $dropzone, User $user)
+    public function getUserTeamId(Dropzone $dropzone, User $user): ?string
     {
         $teamId = null;
 
@@ -198,7 +151,7 @@ class DropzoneManager
         return $teamId;
     }
 
-    public function unregisterUserFromTeamDrop(Drop $drop, User $user)
+    public function unregisterUserFromTeamDrop(Drop $drop, User $user): void
     {
         $drop->removeUser($user);
         $this->om->persist($drop);
@@ -208,7 +161,7 @@ class DropzoneManager
     /**
      * Terminates a drop.
      */
-    public function submitDrop(Drop $drop, User $user)
+    public function submitDrop(Drop $drop, User $user): void
     {
         $this->om->startFlushSuite();
 
@@ -223,14 +176,12 @@ class DropzoneManager
         $this->evaluationManager->checkCompletion($drop->getDropzone(), $users, $drop);
 
         $this->om->endFlushSuite();
-
-        $this->eventDispatcher->dispatch(new LogDropEndEvent($drop->getDropzone(), $drop), 'log');
     }
 
     /**
      * Creates a revision for drop.
      */
-    public function submitDropForRevision(Drop $drop, User $user)
+    public function submitDropForRevision(Drop $drop, User $user): Revision
     {
         $revision = new Revision();
         $revision->setDrop($drop);
@@ -251,10 +202,8 @@ class DropzoneManager
 
     /**
      * Unlocks Drop.
-     *
-     * @return Drop
      */
-    public function unlockDrop(Drop $drop)
+    public function unlockDrop(Drop $drop): Drop
     {
         $this->om->startFlushSuite();
 
@@ -269,10 +218,8 @@ class DropzoneManager
 
     /**
      * Unlocks Drop user.
-     *
-     * @return Drop
      */
-    public function unlockDropUser(Drop $drop)
+    public function unlockDropUser(Drop $drop): Drop
     {
         $this->om->startFlushSuite();
 
@@ -298,10 +245,8 @@ class DropzoneManager
 
     /**
      * Cancels Drop submission.
-     *
-     * @return Drop
      */
-    public function cancelDropSubmission(Drop $drop)
+    public function cancelDropSubmission(Drop $drop): Drop
     {
         $drop->setFinished(false);
         $drop->setDropDate(null);
@@ -315,7 +260,7 @@ class DropzoneManager
     /**
      * Closes all unfinished drops.
      */
-    public function closeAllUnfinishedDrops(Dropzone $dropzone)
+    public function closeAllUnfinishedDrops(Dropzone $dropzone): void
     {
         $this->om->startFlushSuite();
 
@@ -335,10 +280,7 @@ class DropzoneManager
         $this->om->endFlushSuite();
     }
 
-    /**
-     * @return string
-     */
-    public function generateArchiveForDrops(array $drops)
+    public function generateArchiveForDrops(array $drops): string
     {
         $ds = DIRECTORY_SEPARATOR;
         $archive = new \ZipArchive();
@@ -411,7 +353,7 @@ class DropzoneManager
      * @param float $oldScoreMax
      * @param float $newScoreMax
      */
-    public function updateScoreByScoreMax(Dropzone $dropzone, $oldScoreMax, $newScoreMax)
+    public function updateScoreByScoreMax(Dropzone $dropzone, $oldScoreMax, $newScoreMax): void
     {
         $ratio = !empty($oldScoreMax) && !empty($newScoreMax) ? $newScoreMax / $oldScoreMax : 0;
 

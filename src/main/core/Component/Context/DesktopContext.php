@@ -27,11 +27,16 @@ class DesktopContext extends AbstractContext
         return null;
     }
 
-    public function isAvailable(?string $contextId): bool
+    public function isAvailable(): bool
     {
         return !empty($this->securityManager->getCurrentUser());
         // do user have access to at least one tool ?
         // return !empty($this->toolManager->getOrderedToolsByDesktop($token->getRoleNames()));
+    }
+
+    public function isRoot(): bool
+    {
+        return true;
     }
 
     public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array

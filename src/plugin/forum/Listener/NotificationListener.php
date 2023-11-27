@@ -16,6 +16,9 @@ use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEve
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @deprecated
+ */
 class NotificationListener
 {
     public function __construct(TranslatorInterface $translator, RouterInterface $router)
@@ -28,8 +31,6 @@ class NotificationListener
     {
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
-
-        //TODO: WORKSPACE OPEN URL CHANGE
 
         $event->setPrimaryAction([
           'url' => 'claro_resource_show_short',

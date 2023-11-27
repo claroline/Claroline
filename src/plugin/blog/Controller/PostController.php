@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Post;
-use Icap\BlogBundle\Manager\BlogTrackingManager;
 use Icap\BlogBundle\Manager\PostManager;
 use Icap\BlogBundle\Serializer\PostSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -21,6 +20,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * @Route("blog/{blogId}/posts", options={"expose"=true})
  *
  * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
+ *
+ * @todo use CRUD
  */
 class PostController
 {
@@ -29,7 +30,6 @@ class PostController
     public function __construct(
         private readonly PostSerializer $postSerializer,
         private readonly PostManager $postManager,
-        private readonly BlogTrackingManager $trackingManager,
         AuthorizationCheckerInterface $authorization
     ) {
         $this->authorization = $authorization;
@@ -116,8 +116,6 @@ class PostController
         if (is_null($post)) {
             throw new NotFoundHttpException('Post not found');
         }
-
-        $this->trackingManager->dispatchPostReadEvent($post);
 
         $this->postManager->updatePostViewCount($post);
 

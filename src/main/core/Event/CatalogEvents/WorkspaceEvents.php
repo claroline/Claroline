@@ -5,11 +5,6 @@ namespace Claroline\CoreBundle\Event\CatalogEvents;
 final class WorkspaceEvents
 {
     /**
-     * @Event("Claroline\CoreBundle\Event\Workspace\OpenWorkspaceEvent")
-     */
-    public const OPEN = 'workspace.open';
-
-    /**
      * Event fired when a User try to open a Workspace he can not.
      * This allows plugin to integrate custom processes in order to grant him access if possible.
      *

@@ -9,27 +9,15 @@ use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class UserSubscriber implements EventSubscriberInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-    /** @var ResourceManager */
-    private $resourceManager;
-
     public function __construct(
-        ObjectManager $om,
-        WorkspaceManager $workspaceManager,
-        ResourceManager $resourceManager
+        private readonly ObjectManager $om,
+        private readonly WorkspaceManager $workspaceManager
     ) {
-        $this->om = $om;
-        $this->workspaceManager = $workspaceManager;
-        $this->resourceManager = $resourceManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -41,7 +29,7 @@ class UserSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var User $user */
         $user = $event->getObject();
@@ -62,7 +50,7 @@ class UserSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var User $user */
         $user = $event->getObject();
@@ -73,7 +61,7 @@ class UserSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var User $user */
         $user = $event->getObject();

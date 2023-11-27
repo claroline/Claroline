@@ -56,7 +56,7 @@ class ContextController
         // $this->authorization->isGranted('OPEN', $contextObject)
 
         if (empty($accessErrors) || $isManager) {
-            $openEvent = new OpenContextEvent($context, $contextId);
+            $openEvent = new OpenContextEvent($context, $contextObject);
             $this->eventDispatcher->dispatch($openEvent, ContextEvents::OPEN);
 
             return new JsonResponse(array_merge($openEvent->getResponse() ?? [], [

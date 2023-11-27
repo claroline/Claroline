@@ -5,7 +5,6 @@ namespace Claroline\CommunityBundle\Subscriber\Crud;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -14,19 +13,15 @@ use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RoleSubscriber implements EventSubscriberInterface
 {
-    private Connection $conn;
-    private StrictDispatcher $dispatcher;
-
     public function __construct(
-        Connection $conn,
-        StrictDispatcher $dispatcher
+        private readonly Connection $conn,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
-        $this->conn = $conn;
-        $this->dispatcher = $dispatcher;
     }
 
     public static function getSubscribedEvents(): array
@@ -38,7 +33,7 @@ class RoleSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var Role $role */
         $role = $event->getObject();
@@ -63,7 +58,7 @@ class RoleSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var Role $role */
         $role = $event->getObject();
@@ -84,7 +79,7 @@ class RoleSubscriber implements EventSubscriberInterface
                     INSERT INTO claro_tool_rights (role_id, mask, ordered_tool_id)
                     SELECT {$role->getId()}, 0, ot.id 
                     FROM claro_ordered_tool AS ot
-                    WHERE ot.workspace_id = {$role->getWorkspace()->getId()}
+                    WHERE ot.context_id = {$role->getWorkspace()->getId()}
                 ")
                 ->execute();
         } elseif (Role::PLATFORM_ROLE === $role->getType()) {
@@ -94,13 +89,13 @@ class RoleSubscriber implements EventSubscriberInterface
                     INSERT INTO claro_tool_rights (role_id, mask, ordered_tool_id)
                     SELECT {$role->getId()}, 0, ot.id 
                     FROM claro_ordered_tool AS ot
-                    WHERE ot.workspace_id IS NULL AND user_id IS NULL
+                    WHERE ot.context_id IS NULL AND user_id IS NULL
                 ")
                 ->execute();
         }
     }
 
-    public function postPatch(PatchEvent $event)
+    public function postPatch(PatchEvent $event): void
     {
         if (in_array($event->getProperty(), ['user', 'group'])) {
             $role = $event->getObject();
@@ -118,9 +113,9 @@ class RoleSubscriber implements EventSubscriberInterface
 
             if (!empty($users)) {
                 if ('add' === $event->getAction()) {
-                    $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $role]);
+                    $this->eventDispatcher->dispatch(new AddRoleEvent($users, $role), SecurityEvents::ADD_ROLE);
                 } elseif ('remove' === $event->getAction()) {
-                    $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $role]);
+                    $this->eventDispatcher->dispatch(new RemoveRoleEvent($users, $role), SecurityEvents::REMOVE_ROLE);
                 }
             }
         }

@@ -5,12 +5,10 @@ import classes from 'classnames'
 import {trans} from '#/main/app/intl'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
+import {ContextMenu} from '#/main/app/context/containers/menu'
 
 import {MODAL_MAINTENANCE} from '#/main/app/modals/maintenance'
-import {MODAL_PLATFORM_ABOUT} from '#/main/app/layout/sections/administration/modals/about'
-
-import {MenuMain} from '#/main/app/layout/menu/containers/main'
-import {ToolMenu} from '#/main/core/tool/containers/menu'
+import {MODAL_PLATFORM_ABOUT} from '#/main/app/contexts/administration/modals/about'
 
 const PlatformStatus = (props) =>
   <section className="app-menu-status">
@@ -61,7 +59,8 @@ PlatformStatus.propTypes = {
 }
 
 const AdministrationMenu = props =>
-  <MenuMain
+  <ContextMenu
+    basePath={props.basePath}
     title={trans('administration')}
     backAction={{
       type: LINK_BUTTON,
@@ -71,11 +70,8 @@ const AdministrationMenu = props =>
       exact: true
     }}
 
-    tools={props.tools.map(tool => ({
-      name: tool.name,
-      icon: tool.icon,
-      path: `/admin/${tool.name}`
-    }))}
+    tools={props.tools}
+    shortcuts={props.shortcuts}
     actions={[
       {
         name: 'about',
@@ -114,29 +110,22 @@ const AdministrationMenu = props =>
       disabled={props.disabled}
       maintenance={props.maintenance}
     />
-
-    <ToolMenu
-      opened={'tool' === props.section}
-      toggle={() => props.changeSection('tool')}
-    />
-  </MenuMain>
+  </ContextMenu>
 
 AdministrationMenu.propTypes = {
-  section: T.string,
-  tools: T.arrayOf(T.shape({
-    icon: T.string.isRequired,
+  shortcuts: T.arrayOf(T.shape({
+    type: T.oneOf(['tool', 'action']).isRequired,
     name: T.string.isRequired
   })),
-  changeSection: T.func.isRequired,
-
+  tools: T.arrayOf(T.shape({
+    icon: T.string.isRequired,
+    name: T.string.isRequired,
+    permissions: T.object
+  })),
   disabled: T.bool.isRequired,
   maintenance: T.bool.isRequired,
   enableMaintenance: T.func.isRequired,
   disableMaintenance: T.func.isRequired
-}
-
-AdministrationMenu.defaultProps = {
-  tools: []
 }
 
 export {

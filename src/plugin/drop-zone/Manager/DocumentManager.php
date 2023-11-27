@@ -10,38 +10,18 @@ use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Entity\Revision;
-use Claroline\DropZoneBundle\Event\Log\LogDocumentCreateEvent;
-use Claroline\DropZoneBundle\Event\Log\LogDocumentDeleteEvent;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class DocumentManager
 {
-    /** @var string */
-    private $filesDir;
-    /** @var Filesystem */
-    private $fileSystem;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-
     public function __construct(
-        string $filesDir,
-        Filesystem $fileSystem,
-        EventDispatcherInterface $eventDispatcher,
-        ObjectManager $om,
-        SerializerProvider $serializer
+        private readonly string $filesDir,
+        private readonly Filesystem $fileSystem,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer
     ) {
-        $this->filesDir = $filesDir;
-        $this->fileSystem = $fileSystem;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->om = $om;
-        $this->serializer = $serializer;
     }
 
     /**
@@ -49,7 +29,7 @@ class DocumentManager
      *
      * @deprecated use crud instead
      */
-    public function createDocument(Drop $drop, User $user, string $documentType, $documentData, ?Revision $revision = null, ?bool $isManager = false): Document
+    public function createDocument(Drop $drop, User $user, string $documentType, $documentData, Revision $revision = null, ?bool $isManager = false): Document
     {
         $document = new Document();
         $document->setDrop($drop);
@@ -69,27 +49,19 @@ class DocumentManager
         $this->om->persist($document);
         $this->om->flush();
 
-        $this->eventDispatcher->dispatch(new LogDocumentCreateEvent($drop->getDropzone(), $drop, $document), 'log');
-
         return $document;
     }
 
     /**
      * Creates Files Documents.
-     *
-     * @param Revision $revision
-     * @param bool     $isManager
-     *
-     * @return array
      */
-    public function createFilesDocuments(Drop $drop, User $user, array $files, Revision $revision = null, $isManager = false)
+    public function createFilesDocuments(Drop $drop, User $user, array $files, Revision $revision = null, bool $isManager = false): array
     {
         $documents = [];
-        $documentEntities = [];
         $currentDate = new \DateTime();
         $dropzone = $drop->getDropzone();
-        $this->om->startFlushSuite();
 
+        $this->om->startFlushSuite();
         foreach ($files as $file) {
             $document = new Document();
             $document->setDrop($drop);
@@ -101,15 +73,10 @@ class DocumentManager
             $data = $this->registerUploadedFile($dropzone, $file);
             $document->setFile($data);
             $this->om->persist($document);
-            $documentEntities[] = $document;
+
             $documents[] = $this->serializer->serialize($document);
         }
         $this->om->endFlushSuite();
-
-        //tracking for each document, after flush
-        foreach ($documentEntities as $entity) {
-            $this->eventDispatcher->dispatch(new LogDocumentCreateEvent($drop->getDropzone(), $drop, $entity), 'log');
-        }
 
         return $documents;
     }
@@ -119,7 +86,7 @@ class DocumentManager
      *
      * @deprecated use crud instead
      */
-    public function deleteDocument(Document $document)
+    public function deleteDocument(Document $document): void
     {
         if (Document::DOCUMENT_TYPE_FILE === $document->getType()) {
             $data = $document->getFile();
@@ -130,11 +97,9 @@ class DocumentManager
         }
         $this->om->remove($document);
         $this->om->flush();
-
-        $this->eventDispatcher->dispatch(new LogDocumentDeleteEvent($document->getDrop()->getDropzone(), $document->getDrop(), $document), 'log');
     }
 
-    private function registerUploadedFile(Dropzone $dropzone, UploadedFile $file)
+    private function registerUploadedFile(Dropzone $dropzone, UploadedFile $file): array
     {
         $ds = DIRECTORY_SEPARATOR;
         $hashName = Uuid::uuid4()->toString();

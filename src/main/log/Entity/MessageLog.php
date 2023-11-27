@@ -7,25 +7,17 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro_log_message")
  */
 class MessageLog extends AbstractLog
 {
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
      * @ORM\JoinColumn(name="receiver_id", referencedColumnName="id", onDelete="SET NULL")
-     *
-     * @var User
      */
-    private $receiver;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="sender_id", referencedColumnName="id", onDelete="SET NULL")
-     *
-     * @var User
-     */
-    private $sender;
+    private ?User $receiver = null;
 
     public function getReceiver(): ?User
     {
@@ -35,18 +27,6 @@ class MessageLog extends AbstractLog
     public function setReceiver(?User $receiver): self
     {
         $this->receiver = $receiver;
-
-        return $this;
-    }
-
-    public function getSender(): ?User
-    {
-        return $this->sender;
-    }
-
-    public function setSender(?User $sender): self
-    {
-        $this->sender = $sender;
 
         return $this;
     }

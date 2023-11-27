@@ -26,12 +26,12 @@ class RoutingHelper
         return $this->router->generate('claro_index');
     }
 
-    public function desktopUrl(?string $toolName = null): string
+    public function desktopUrl(string $toolName = null): string
     {
         return $this->indexUrl().'#/desktop/'.$toolName;
     }
 
-    public function desktopPath(?string $toolName = null): string
+    public function desktopPath(string $toolName = null): string
     {
         return $this->indexPath().'#/desktop/'.$toolName;
     }
@@ -46,16 +46,19 @@ class RoutingHelper
         return $this->indexPath().'#'.$this->resourceFragment($resource);
     }
 
-    public function adminUrl(?string $adminToolName = null): string
+    public function adminUrl(string $adminToolName = null): string
     {
         return $this->indexUrl().'#/admin/'.$adminToolName;
     }
 
-    public function adminPath(?string $adminToolName = null): string
+    public function adminPath(string $adminToolName = null): string
     {
         return $this->indexPath().'#/admin/'.$adminToolName;
     }
 
+    /**
+     * @internal should be simplified
+     */
     public function resourceFragment(ResourceNode|array|string $resource): string
     {
         $slug = null;
@@ -85,17 +88,17 @@ class RoutingHelper
         }
     }
 
-    public function workspaceUrl(Workspace|array|string $workspace, ?string $toolName = null): string
+    public function workspaceUrl(Workspace|array|string $workspace, string $toolName = null): string
     {
         return $this->indexUrl().'#'.$this->workspaceFragment($workspace, $toolName);
     }
 
-    public function workspacePath(Workspace|array|string $workspace, ?string $toolName = null): string
+    public function workspacePath(Workspace|array|string $workspace, string $toolName = null): string
     {
         return $this->indexPath().'#'.$this->workspaceFragment($workspace, $toolName);
     }
 
-    public function workspaceFragment(Workspace|array|string $workspace, ?string $toolName = null): string
+    public function workspaceFragment(Workspace|array|string $workspace, string $toolName = null): string
     {
         $slug = null;
         if ($workspace instanceof Workspace) {

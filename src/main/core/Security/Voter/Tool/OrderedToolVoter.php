@@ -11,8 +11,11 @@
 
 namespace Claroline\CoreBundle\Security\Voter\Tool;
 
+use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
+use Claroline\CoreBundle\Component\Context\PublicContext;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
@@ -26,13 +29,16 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  */
 class OrderedToolVoter extends AbstractVoter
 {
+    private ContextProvider $contextProvider;
     private ToolMaskDecoderManager $maskManager;
     private ToolRightsRepository $rightsRepository;
 
     public function __construct(
         ObjectManager $om,
+        ContextProvider $contextProvider,
         ToolMaskDecoderManager $maskManager
     ) {
+        $this->contextProvider = $contextProvider;
         $this->maskManager = $maskManager;
         $this->rightsRepository = $om->getRepository(ToolRights::class);
     }
@@ -42,7 +48,22 @@ class OrderedToolVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
-        // FIXME : admin bypass will not work
+        // No rights management for PublicContext for now
+        if (PublicContext::getName() === $object->getContextName()) {
+            if (self::OPEN === $attributes[0] || $this->isGranted('ROLE_HOME_MANAGER')) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+
+            return VoterInterface::ACCESS_DENIED;
+        }
+
+        if (WorkspaceContext::getName() === $object->getContextName()) {
+            $wsContext = $this->contextProvider->getContext(WorkspaceContext::getName(), $object->getContextId());
+            if ($this->isGranted(self::ADMINISTRATE, $wsContext->getObject($object->getContextId()))) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+        }
+
         $decoder = $this->maskManager->getMaskDecoderByToolAndName($object->getName(), $attributes[0]);
         if ($decoder) {
             $mask = $this->rightsRepository->findMaximumRights($token->getRoleNames(), $object);

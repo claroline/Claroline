@@ -15,23 +15,14 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\CursusBundle\Entity\Registration\SessionGroup;
-use Claroline\CursusBundle\Event\Log\LogSessionGroupRegistrationEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionGroupUnregistrationEvent;
 use Claroline\CursusBundle\Manager\SessionManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SessionGroupSubscriber implements EventSubscriberInterface
 {
-    private EventDispatcherInterface $eventDispatcher;
-    private SessionManager $sessionManager;
-
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        SessionManager $sessionManager
+        private readonly SessionManager $sessionManager
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->sessionManager = $sessionManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -45,10 +36,10 @@ class SessionGroupSubscriber implements EventSubscriberInterface
 
     public function preCreate(CreateEvent $event): void
     {
-        /** @var SessionGroup $sessionUser */
-        $sessionUser = $event->getObject();
+        /** @var SessionGroup $sessionGroup */
+        $sessionGroup = $event->getObject();
 
-        $sessionUser->setDate(new \DateTime());
+        $sessionGroup->setDate(new \DateTime());
     }
 
     public function postCreate(CreateEvent $event): void
@@ -68,8 +59,6 @@ class SessionGroupSubscriber implements EventSubscriberInterface
         }
 
         $this->sessionManager->registerGroup($sessionGroup);
-
-        $this->eventDispatcher->dispatch(new LogSessionGroupRegistrationEvent($event->getObject()), 'log');
     }
 
     public function postDelete(DeleteEvent $event): void
@@ -78,7 +67,5 @@ class SessionGroupSubscriber implements EventSubscriberInterface
         $sessionGroup = $event->getObject();
 
         $this->sessionManager->unregisterGroup($sessionGroup);
-
-        $this->eventDispatcher->dispatch(new LogSessionGroupUnregistrationEvent($sessionGroup), 'log');
     }
 }

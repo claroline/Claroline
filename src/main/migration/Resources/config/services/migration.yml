@@ -1,0 +1,22 @@
+services:
+    claroline.migration.generator:
+        class: Claroline\MigrationBundle\Generator\Generator
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@claroline.migration.doctrine_schema_tool'
+    
+    claroline.migration.writer:
+        class: Claroline\MigrationBundle\Generator\Writer
+        arguments:
+            - '@filesystem'
+            - '@twig'
+    
+    claroline.migration.migrator:
+        class: Claroline\MigrationBundle\Migrator\Migrator
+        arguments:
+            - '@doctrine.dbal.default_connection'
+    
+    claroline.migration.doctrine_schema_tool:
+        class: Doctrine\ORM\Tools\SchemaTool
+        arguments:
+            - '@doctrine.orm.entity_manager'

@@ -11,11 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\ToolRepository")
+ * @ORM\Entity()
  *
  * @ORM\Table(
  *      name="claro_tools",
@@ -24,10 +23,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tool extends AbstractTool
 {
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->maskDecoders = new ArrayCollection();
-    }
 }

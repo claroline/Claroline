@@ -20,10 +20,8 @@ services:
     Claroline\DropZoneBundle\Controller\API\DropzoneController:
         arguments:
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
             - '%claroline.param.files_directory%'
-            - '@event_dispatcher'
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\DropZoneBundle\Manager\DropManager'

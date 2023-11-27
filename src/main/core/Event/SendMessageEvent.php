@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Event;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SendMessageEvent extends Event
 {
@@ -36,7 +35,7 @@ class SendMessageEvent extends Event
         $content,
         $object,
         array $receivers,
-        ?User $sender = null,
+        User $sender = null,
         array $attachments = []
     ) {
         $this->content = $content;
@@ -71,9 +70,6 @@ class SendMessageEvent extends Event
         return $this->receivers;
     }
 
-    /**
-     * @param AbstractRoleSubject[] $receiver
-     */
     public function setReceivers(array $receivers)
     {
         $this->receivers = $receivers;
@@ -97,17 +93,5 @@ class SendMessageEvent extends Event
     public function addAttachment($attachment)
     {
         $this->attachments[] = $attachment;
-    }
-
-    public function getMessage(TranslatorInterface $translator, $sender, User $receiver): string
-    {
-        return $translator->trans(
-            'sendMessage',
-            [
-                'sender' => $sender,
-                'receiver' => $receiver,
-            ],
-            'platform'
-        );
     }
 }

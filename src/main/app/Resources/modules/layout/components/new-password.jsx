@@ -8,7 +8,7 @@ import {ResetPasswordForm} from '#/main/app/security/password/reset/containers/r
 
 const NewPassword = () =>
   <PageSimple
-    className="page authentication-page login-page main"
+    className="page auth-page login-page main"
   >
     <ResetPasswordForm/>
   </PageSimple>

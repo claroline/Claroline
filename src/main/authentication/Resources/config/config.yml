@@ -1,7 +1,7 @@
 plugin:
     tools:
         - name: authentication
-          icon: shield
+          icon: shield-alt
 
     data_sources:
         - name: my_tokens

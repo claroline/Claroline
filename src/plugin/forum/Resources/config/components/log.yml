@@ -1,0 +1,9 @@
+services:
+    # Operational
+    Claroline\ForumBundle\Component\Log\Operational\LogMessage:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\ForumBundle\Component\Log\Operational\LogSubject:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]

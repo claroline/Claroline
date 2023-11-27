@@ -30,51 +30,21 @@ class Crud
     public const NO_PERMISSIONS = 'NO_PERMISSIONS';
     public const NO_VALIDATION = 'NO_VALIDATION';
 
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var StrictDispatcher */
-    private $dispatcher;
-
-    /** @var FinderProvider */
-    private $finder;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
-    /** @var ValidatorProvider */
-    private $validator;
-
-    /** @var SchemaProvider */
-    private $schema;
-
     public function __construct(
-        ObjectManager $om,
-        StrictDispatcher $dispatcher,
-        FinderProvider $finder,
-        SerializerProvider $serializer,
-        ValidatorProvider $validator,
-        SchemaProvider $schema,
+        private readonly ObjectManager $om,
+        private readonly StrictDispatcher $dispatcher,
+        private readonly FinderProvider $finder,
+        private readonly SerializerProvider $serializer,
+        private readonly ValidatorProvider $validator,
+        private readonly SchemaProvider $schema,
         AuthorizationCheckerInterface $authorization
     ) {
-        $this->om = $om;
-        $this->dispatcher = $dispatcher;
-        $this->finder = $finder;
-        $this->serializer = $serializer;
-        $this->validator = $validator;
-        $this->schema = $schema;
         $this->authorization = $authorization;
     }
 
-    /**
-     * @param string|int $id
-     *
-     * @return object|null
-     */
-    public function get(string $class, $id, string $idProp = 'id', ?array $options = [])
+    public function get(string $class, mixed $id, string $idProp = 'id', ?array $options = []): ?object
     {
         $object = null;
-
         if ('id' === $idProp) {
             if (!is_numeric($id) && property_exists($class, 'uuid')) {
                 $object = $this->om->getRepository($class)->findOneBy(['uuid' => $id]);

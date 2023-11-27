@@ -1,0 +1,51 @@
+# Declares all services required for the management of Claroline Log Component.
+services:
+    Claroline\LogBundle\Component\Log\LogProvider:
+        arguments:
+            - !tagged_iterator claroline.component.log
+
+    claroline.log_provider:
+        alias: Claroline\LogBundle\Component\Log\LogProvider
+        public: true
+
+    Claroline\LogBundle\Component\Log\AbstractFunctionalLog:
+        abstract: true
+        calls:
+            - method: setTokenStorage
+              arguments: [ '@security.token_storage' ]
+            - method: setTranslator
+              arguments: [ '@translator' ]
+            - method: setLogManager
+              arguments: [ '@Claroline\LogBundle\Manager\LogManager' ]
+
+    Claroline\LogBundle\Component\Log\AbstractMessageLog:
+        abstract: true
+        calls:
+            - method: setTokenStorage
+              arguments: [ '@security.token_storage' ]
+            - method: setTranslator
+              arguments: [ '@translator' ]
+            - method: setLogManager
+              arguments: [ '@Claroline\LogBundle\Manager\LogManager' ]
+
+    Claroline\LogBundle\Component\Log\AbstractOperationalLog:
+        abstract: true
+        calls:
+            - method: setTokenStorage
+              arguments: [ '@security.token_storage' ]
+            - method: setTranslator
+              arguments: [ '@translator' ]
+            - method: setLogManager
+              arguments: [ '@Claroline\LogBundle\Manager\LogManager' ]
+            - method: setSerializer
+              arguments: [ '@Claroline\AppBundle\API\SerializerProvider' ]
+
+    Claroline\LogBundle\Component\Log\AbstractSecurityLog:
+        abstract: true
+        calls:
+            - method: setTokenStorage
+              arguments: [ '@security.token_storage' ]
+            - method: setTranslator
+              arguments: [ '@translator' ]
+            - method: setLogManager
+              arguments: [ '@Claroline\LogBundle\Manager\LogManager' ]

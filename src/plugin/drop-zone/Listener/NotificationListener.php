@@ -10,6 +10,9 @@ use Claroline\DropZoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
+/**
+ * @deprecated
+ */
 class NotificationListener
 {
     use ContainerAwareTrait;

@@ -1,4 +1,10 @@
 {
+    "resource_open": "Ouverture d'une ressource",
+    "resource_open_message": "a ouvert la ressource %resourceName%",
+    "workspace_open": "Ouverture d'un espace d'activités",
+    "workspace_open_message": "a ouvert l'espace d'activités' %workspaceName%",
+
+
     "log_add_user": "Ajout d'un utilisateur",
     "log_change_right": "Changement de droits",
     "log_change_set": "Liste des propriétés modifiées",

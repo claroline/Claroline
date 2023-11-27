@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
-
     Icap\WikiBundle\Listener\Resource\WikiListener:
         arguments:
             - '@security.token_storage'
@@ -17,28 +12,6 @@ services:
             - { name: kernel.event_listener, event: resource.icap_wiki.copy, method: onCopy }
             - { name: kernel.event_listener, event: resource.icap_wiki.export, method: onExport }
             - { name: kernel.event_listener, event: resource.icap_wiki.import, method: onImport }
-
-    Icap\WikiBundle\Listener\LogListener:
-        arguments:
-            - '@twig'
-        tags:
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_create, method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_move, method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_update, method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_delete, method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_restore, method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-section_remove, method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-contribution_create, method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_wiki-configure, method: onCreateLogListItem }
-
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_create, method: onSectionCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_move, method: onSectionCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_update, method: onSectionCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_delete, method: onSectionCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_restore, method: onSectionCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-section_remove, method: onSectionCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-contribution_create, method: onSectionCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_wiki-configure, method: onSectionCreateLogDetails }
 
     Icap\WikiBundle\Listener\NotificationListener:
         arguments:

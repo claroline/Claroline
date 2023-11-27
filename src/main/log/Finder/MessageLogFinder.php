@@ -26,10 +26,10 @@ class MessageLogFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'sender':
-                    $qb->leftJoin('obj.sender', 's');
-                    $qb->andWhere('s.uuid IN (:sender)');
-                    $qb->setParameter('sender', is_array($filterValue) ? $filterValue : [$filterValue]);
+                case 'doer':
+                    $qb->leftJoin('obj.doer', 'u');
+                    $qb->andWhere('u.uuid = :doer');
+                    $qb->setParameter('doer', $filterValue);
                     break;
 
                 default:

@@ -88,13 +88,12 @@ class AnalyticsManager
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $objectManager,
-        LogManager $logManager,
         UserManager $userManager,
         WorkspaceManager $workspaceManager,
         FileManager $fileManager
     ) {
         $this->tokenStorage = $tokenStorage;
-        $this->logManager = $logManager;
+        // $this->logManager = $logManager;
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
         $this->fileManager = $fileManager;

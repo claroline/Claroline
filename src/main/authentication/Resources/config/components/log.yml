@@ -1,0 +1,30 @@
+services:
+    # Functional Logs
+    Claroline\AuthenticationBundle\Component\Log\Functional\LogUserLogin:
+        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
+        tags: [ 'claroline.component.log' ]
+
+    # Security Logs
+    Claroline\AuthenticationBundle\Component\Log\Security\LogForgotPassword:
+        parent: Claroline\LogBundle\Component\Log\AbstractSecurityLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\AuthenticationBundle\Component\Log\Security\LogNewPassword:
+        parent: Claroline\LogBundle\Component\Log\AbstractSecurityLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\AuthenticationBundle\Component\Log\Security\LogUserLogin:
+        parent: Claroline\LogBundle\Component\Log\AbstractSecurityLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\AuthenticationBundle\Component\Log\Security\LogUserLoginFailed:
+        parent: Claroline\LogBundle\Component\Log\AbstractSecurityLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\AuthenticationBundle\Component\Log\Security\LogUserLogout:
+        parent: Claroline\LogBundle\Component\Log\AbstractSecurityLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\AuthenticationBundle\Component\Log\Security\LogUserSwitch:
+        parent: Claroline\LogBundle\Component\Log\AbstractSecurityLog
+        tags: [ 'claroline.component.log' ]

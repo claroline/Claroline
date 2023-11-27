@@ -7,7 +7,6 @@ use Claroline\CoreBundle\Component\Context\AccountContext;
 use Claroline\CoreBundle\Component\Context\AdministrationContext;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;
@@ -69,7 +68,7 @@ class Updater140100 extends Updater
             foreach ($configuredRoles as $role) {
                 $roleEntity = $this->om->getRepository(Role::class)->find($role['role_id']);
                 if ($roleEntity) {
-                    $this->toolManager->setPermissions(['open' => true, 'edit' => true, 'administrate' => true], $orderedTool, $role);
+                    $this->toolManager->setPermissions(['open' => true, 'edit' => true, 'administrate' => true], $orderedTool, $roleEntity);
                 }
             }
         }

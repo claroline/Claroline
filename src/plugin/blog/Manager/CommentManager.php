@@ -20,16 +20,13 @@ class CommentManager
     private $finder;
     protected $repo;
     protected $memberRepo;
-    private $trackingManager;
 
     public function __construct(
         ObjectManager $om,
-        FinderProvider $finder,
-        BlogTrackingManager $trackingManager)
-    {
+        FinderProvider $finder
+    ) {
         $this->om = $om;
         $this->finder = $finder;
-        $this->trackingManager = $trackingManager;
 
         $this->repo = $this->om->getRepository(Comment::class);
         $this->memberRepo = $this->om->getRepository(Member::class);
@@ -38,9 +35,6 @@ class CommentManager
     /**
      * Get unpublished comments.
      *
-     * @param $blogId
-     * @param $filters
-     *
      * @return array
      */
     public function getUnpublishedComments($blogId, $filters)
@@ -48,7 +42,7 @@ class CommentManager
         if (!isset($filters['hiddenFilters'])) {
             $filters['hiddenFilters'] = [];
         }
-        //filter on current blog and post
+        // filter on current blog and post
         $filters['hiddenFilters'] = array_merge(
             $filters['hiddenFilters'],
             [
@@ -60,22 +54,7 @@ class CommentManager
     }
 
     /**
-     * Get trusted users.
-     *
-     * @param Blog blog
-     *
-     * @return array
-     */
-    public function getTrustedUsers(Blog $blog)
-    {
-        return $this->memberRepo->getTrustedMember($blog);
-    }
-
-    /**
      * Get reported comments.
-     *
-     * @param $blogId
-     * @param $filters
      *
      * @return array
      */
@@ -84,7 +63,7 @@ class CommentManager
         if (!isset($filters['hiddenFilters'])) {
             $filters['hiddenFilters'] = [];
         }
-        //filter on current blog and post
+        // filter on current blog and post
         $filters['hiddenFilters'] = array_merge(
             $filters['hiddenFilters'],
             [
@@ -97,27 +76,21 @@ class CommentManager
 
     /**
      * Get comments.
-     *
-     * @param $blogId
-     * @param $postId
-     * @param $userId
-     * @param $filters
-     * @param $allowedToSeeOnly
      */
     public function getComments($blogId, $postId, $userId, $filters, $allowedToSeeOnly)
     {
         if (!isset($filters['hiddenFilters'])) {
             $filters['hiddenFilters'] = [];
         }
-        //filter on current blog and post
+        // filter on current blog and post
         $filters['hiddenFilters'] = [
             'blog' => $blogId,
             'post' => $postId,
         ];
 
-        //allow to see only published post, or post whose current user is the author
+        // allow to see only published post, or post whose current user is the author
         if ($allowedToSeeOnly) {
-            //anonymous only sees published
+            // anonymous only sees published
             if (null === $userId) {
                 $options = [
                     'publishedOnly' => true,
@@ -165,19 +138,11 @@ class CommentManager
         $this->om->persist($comment);
         $this->om->flush();
 
-        $this->trackingManager->dispatchCommentCreateEvent($post, $comment);
-
-        if (null !== $comment->getAuthor()) {
-            $this->trackingManager->updateResourceTracking($blog->getResourceNode(), $comment->getAuthor(), new \DateTime());
-        }
-
         return $comment;
     }
 
     /**
      * Update a comment.
-     *
-     * @param $message
      *
      * @return Comment
      *
@@ -191,12 +156,6 @@ class CommentManager
             ->setPublicationDate($blog->isAutoPublishComment() ? new \DateTime() : null);
 
         $this->om->flush();
-
-        $unitOfWork = $this->om->getUnitOfWork();
-        $unitOfWork->computeChangeSets();
-        $changeSet = $unitOfWork->getEntityChangeSet($existingComment);
-
-        $this->trackingManager->dispatchCommentUpdateEvent($existingComment->getPost(), $existingComment, $changeSet);
 
         return $existingComment;
     }
@@ -216,8 +175,6 @@ class CommentManager
             }
         }
         $this->om->flush();
-
-        $this->trackingManager->dispatchCommentPublishEvent($existingComment->getPost(), $existingComment);
 
         return $existingComment;
     }
@@ -261,9 +218,6 @@ class CommentManager
     /**
      * Report a comment.
      *
-     * @param Comment $comment
-     * @param User    $user
-     *
      * @return Comment
      */
     public function reportComment(Blog $blog, Comment $existingComment)
@@ -277,17 +231,12 @@ class CommentManager
     /**
      * unpublish a comment.
      *
-     * @param Comment $comment
-     * @param User    $user
-     *
      * @return Comment
      */
     public function unpublishComment(Blog $blog, Comment $existingComment)
     {
         $existingComment->unpublish();
         $this->om->flush();
-
-        $this->trackingManager->dispatchCommentPublishEvent($existingComment->getPost(), $existingComment);
 
         return $existingComment;
     }
@@ -299,7 +248,6 @@ class CommentManager
     {
         $this->om->remove($existingComment);
         $this->om->flush();
-        $this->trackingManager->dispatchCommentDeleteEvent($existingComment->getPost(), $existingComment);
 
         return $existingComment->getId();
     }

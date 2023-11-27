@@ -7,15 +7,12 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
-use Claroline\ForumBundle\Event\LogSubjectEvent;
 use Claroline\ForumBundle\Manager\ForumManager;
 use Claroline\ForumBundle\Messenger\NotifyUsersOnMessageCreated;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -26,35 +23,15 @@ class SubjectSubscriber implements EventSubscriberInterface
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var MessageBusInterface */
-    private $messageBus;
-    private $dispatcher;
-    /** @var ObjectManager */
-    private $om;
-    private $finder;
-    /** @var ForumManager */
-    private $forumManager;
-    /** @var FileManager */
-    private $fileManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        MessageBusInterface $messageBus,
-        StrictDispatcher $dispatcher,
-        ObjectManager $om,
-        FinderProvider $finder,
-        ForumManager $forumManager,
-        FileManager $fileManager
+        private readonly MessageBusInterface $messageBus,
+        private readonly ObjectManager $om,
+        private readonly FinderProvider $finder,
+        private readonly ForumManager $forumManager,
+        private readonly FileManager $fileManager
     ) {
         $this->authorization = $authorization;
-        $this->messageBus = $messageBus;
-        $this->dispatcher = $dispatcher;
-        $this->om = $om;
-        $this->finder = $finder;
-        $this->forumManager = $forumManager;
-        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -122,12 +99,10 @@ class SubjectSubscriber implements EventSubscriberInterface
 
         $message = $subject->getFirstMessage();
         if ($message) {
-            // hacky : when we are in a flushSuite (eg. copy), the messenger will fail because the message does not exist
+            // hacky : when we are in a flushSuite (e.g. copy), the messenger will fail because the message does not exist
             $this->om->forceFlush();
             $this->messageBus->dispatch(new NotifyUsersOnMessageCreated($message->getId()));
         }
-
-        $this->dispatchSubjectEvent($subject, 'forum_subject-create');
     }
 
     public function postUpdate(UpdateEvent $event): void
@@ -142,38 +117,6 @@ class SubjectSubscriber implements EventSubscriberInterface
             !empty($subject->getPoster()) ? $subject->getPoster()->getUrl() : null,
             !empty($oldData['poster']) ? $oldData['poster'] : null
         );
-
-        if ($oldData['meta']['flagged'] !== $subject->isFlagged()) {
-            if ($subject->isFlagged()) {
-                $this->dispatchSubjectEvent($subject, 'forum_subject-flag');
-            } else {
-                $this->dispatchSubjectEvent($subject, 'forum_subject-unflag');
-            }
-        }
-
-        if ($oldData['meta']['closed'] !== $subject->isClosed()) {
-            if ($subject->isClosed()) {
-                $this->dispatchSubjectEvent($subject, 'forum_subject-close');
-            } else {
-                $this->dispatchSubjectEvent($subject, 'forum_subject-open');
-            }
-        }
-
-        if ($oldData['meta']['sticky'] !== $subject->isSticked()) {
-            if ($subject->isSticked()) {
-                $this->dispatchSubjectEvent($subject, 'forum_subject-stick');
-            } else {
-                $this->dispatchSubjectEvent($subject, 'forum_subject-unstick');
-            }
-        }
-
-        if ($oldData['meta']['moderation'] !== $subject->getModerated()) {
-            if (Forum::VALIDATE_NONE === $subject->getModerated()) {
-                $this->dispatchSubjectEvent($subject, 'forum_subject-unmoderated');
-            }
-        }
-
-        $this->dispatchSubjectEvent($subject, 'forum_subject-update');
     }
 
     public function postDelete(DeleteEvent $event): void
@@ -184,18 +127,5 @@ class SubjectSubscriber implements EventSubscriberInterface
         if ($subject->getPoster()) {
             $this->fileManager->unlinkFile(Subject::class, $subject->getUuid(), $subject->getPoster()->getUrl());
         }
-
-        $this->dispatchSubjectEvent($subject, 'forum_subject-delete');
-    }
-
-    /**
-     * @deprecated
-     */
-    private function dispatchSubjectEvent(Subject $subject, $action): void
-    {
-        $forum = $subject->getForum();
-
-        $usersToNotify = $this->finder->get(User::class)->find(['workspace' => $forum->getResourceNode()->getWorkspace()->getUuid()]);
-        $this->dispatcher->dispatch('log', LogSubjectEvent::class, [$action, $subject, $usersToNotify]);
     }
 }

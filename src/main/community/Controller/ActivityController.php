@@ -65,7 +65,6 @@ class ActivityController
         ObjectManager $om,
         FinderProvider $finder,
         ToolManager $toolManager,
-        EventManager $eventManager,
         AnalyticsManager $analyticsManager
     ) {
         $this->authorization = $authorization;
@@ -73,7 +72,7 @@ class ActivityController
         $this->om = $om;
         $this->finder = $finder;
         $this->toolManager = $toolManager;
-        $this->eventManager = $eventManager;
+        // $this->eventManager = $eventManager;
         $this->analyticsManager = $analyticsManager;
 
         $this->userRepo = $om->getRepository(User::class);
@@ -95,11 +94,11 @@ class ActivityController
             $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $contextId]);
 
             return new JsonResponse([
-                'actionTypes' => $this->eventManager->getEventsForApiFilter(LogGenericEvent::DISPLAYED_WORKSPACE),
+                'actionTypes' => [] /* $this->eventManager->getEventsForApiFilter(LogGenericEvent::DISPLAYED_WORKSPACE) */,
                 'count' => [
                     'connections' => [
-                        'count' => $this->logConnectWorkspaceRepo->countConnections($workspace),
-                        'avgTime' => $this->logConnectWorkspaceRepo->findAvgTime($workspace), // in seconds
+                        'count' => 0 /* $this->logConnectWorkspaceRepo->countConnections($workspace) */,
+                        'avgTime' => 0 /* $this->logConnectWorkspaceRepo->findAvgTime($workspace) */, // in seconds
                     ],
                     'users' => count($this->userRepo->findByWorkspaces([$workspace])),
                     'groups' => count($this->groupRepo->findByWorkspace($workspace)),

@@ -25,7 +25,7 @@ services:
     Claroline\CommunityBundle\Subscriber\Crud\RoleSubscriber:
         arguments:
             - '@doctrine.dbal.default_connection'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
 
     Claroline\CommunityBundle\Subscriber\Crud\TeamSubscriber:
         arguments:

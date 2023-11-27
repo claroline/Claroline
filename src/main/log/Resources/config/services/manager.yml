@@ -1,0 +1,2 @@
+services:
+    Claroline\LogBundle\Manager\LogManager: ~

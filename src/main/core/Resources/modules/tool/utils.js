@@ -141,7 +141,7 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
         {
           type: LINK_BUTTON,
           label: trans('administration'),
-          target: '/admin'
+          target: '/administration'
         }
       ]
 

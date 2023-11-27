@@ -17,18 +17,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class FunctionalLogController extends AbstractSecurityController
 {
-    private $finderProvider;
-    private $authorization;
-    private $tokenStorage;
-
     public function __construct(
-        FinderProvider $finderProvider,
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly FinderProvider $finder
     ) {
-        $this->finderProvider = $finderProvider;
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -38,32 +31,29 @@ class FunctionalLogController extends AbstractSecurityController
     {
         $this->canOpenAdminTool('logs');
 
-        return new JsonResponse($this->finderProvider->search(
-            FunctionalLog::class,
-            $request->query->all(),
-            []
-        ));
+        return new JsonResponse(
+            $this->finder->search(FunctionalLog::class, $request->query->all())
+        );
     }
 
     /**
-     * @Route("/list/current", name="apiv2_logs_functional_list_current", methods={"GET"})
+     * @Route("/current", name="apiv2_logs_functional_list_current", methods={"GET"})
      */
-    public function userLogFunctionalAction(Request $request): JsonResponse
+    public function listForCurrentUserAction(Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
         }
+
         $user = $this->tokenStorage->getToken()->getUser();
 
         $query = $request->query->all();
         $query['hiddenFilters'] = [
-            'user' => $user->getUuid(),
+            'doer' => $user->getUuid(),
         ];
 
-        return new JsonResponse($this->finderProvider->search(
-            FunctionalLog::class,
-            $query,
-            []
-        ));
+        return new JsonResponse(
+            $this->finder->search(FunctionalLog::class, $query)
+        );
     }
 }

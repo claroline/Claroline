@@ -1,4 +1,4 @@
 plugin:
     tools:
         - name: privacy
-          icon: shield
+          icon: user-shield

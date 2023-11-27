@@ -18,35 +18,17 @@ use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CursusBundle\Entity\Session;
-use Claroline\CursusBundle\Event\Log\LogSessionCreateEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionDeleteEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionEditEvent;
 use Claroline\CursusBundle\Manager\SessionManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SessionSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var FileManager */
-    private $fileManager;
-    /** @var SessionManager */
-    private $sessionManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $eventDispatcher,
-        FileManager $fileManager,
-        SessionManager $sessionManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly FileManager $fileManager,
+        private readonly SessionManager $sessionManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->fileManager = $fileManager;
-        $this->sessionManager = $sessionManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -56,7 +38,6 @@ class SessionSubscriber implements EventSubscriberInterface
             Crud::getEventName('create', 'post', Session::class) => 'postCreate',
             Crud::getEventName('update', 'pre', Session::class) => 'preUpdate',
             Crud::getEventName('update', 'post', Session::class) => 'postUpdate',
-            Crud::getEventName('delete', 'pre', Session::class) => 'preDelete',
             Crud::getEventName('delete', 'post', Session::class) => 'postDelete',
         ];
     }
@@ -127,8 +108,6 @@ class SessionSubscriber implements EventSubscriberInterface
                 $session->setTutorRole($tutorRole);
             }
         }
-
-        $this->eventDispatcher->dispatch(new LogSessionCreateEvent($session), 'log');
     }
 
     public function preUpdate(UpdateEvent $event): void
@@ -164,13 +143,6 @@ class SessionSubscriber implements EventSubscriberInterface
             $session->getThumbnail(),
             !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : null
         );
-
-        $this->eventDispatcher->dispatch(new LogSessionEditEvent($session), 'log');
-    }
-
-    public function preDelete(DeleteEvent $event): void
-    {
-        $this->eventDispatcher->dispatch(new LogSessionDeleteEvent($event->getObject()), 'log');
     }
 
     public function postDelete(DeleteEvent $event): void

@@ -5,6 +5,10 @@ services:
         arguments:
             - !tagged_iterator claroline.component.context
 
+    claroline.context_provider:
+        alias: Claroline\AppBundle\Component\Context\ContextProvider
+        public: true
+
     Claroline\AppBundle\Component\Context\AbstractContext:
         abstract: true
         calls:

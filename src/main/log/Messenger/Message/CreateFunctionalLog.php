@@ -2,57 +2,22 @@
 
 namespace Claroline\LogBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
-
-class CreateFunctionalLog implements AsyncHighMessageInterface
+/**
+ * Create FunctionalLog message.
+ * This message is not directly handled by the messenger,
+ * it is used as a sub message for SubmitLogs to know which logs needs to be created.
+ */
+class CreateFunctionalLog extends AbstractCreateLog
 {
-    /** @var \DateTimeInterface */
-    private $date;
-    /** @var string */
-    private $action;
-    /** @var string */
-    private $details;
-    /** @var int */
-    private $doerId;
-    /** @var int */
-    private $workspaceId;
-    /** @var int */
-    private $resourceNodeId;
-
     public function __construct(
         \DateTimeInterface $date,
         string $action,
         string $details,
-        int $doerId,
-        ?int $workspaceId = null,
-        ?int $resourceNodeId = null
+        int $doerId = null,
+        private readonly ?int $workspaceId = null,
+        private readonly ?int $resourceNodeId = null
     ) {
-        $this->date = $date;
-        $this->action = $action;
-        $this->details = $details;
-        $this->doerId = $doerId;
-        $this->workspaceId = $workspaceId;
-        $this->resourceNodeId = $resourceNodeId;
-    }
-
-    public function getDate(): \DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function getAction(): string
-    {
-        return $this->action;
-    }
-
-    public function getDetails(): string
-    {
-        return $this->details;
-    }
-
-    public function getDoerId(): int
-    {
-        return $this->doerId;
+        parent::__construct($date, $action, $details, $doerId);
     }
 
     public function getWorkspaceId(): ?int

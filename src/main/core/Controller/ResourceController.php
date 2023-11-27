@@ -17,7 +17,6 @@ use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
@@ -93,12 +92,7 @@ class ResourceController
         $isManager = $this->manager->isManager($resourceNode);
 
         if (empty($accessErrors) || $isManager) {
-            try {
-                $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
-            } catch (ResourceNotFoundException $e) {
-                // Not a 404 because we should not have ResourceNode without a linked AbstractResource
-                return new JsonResponse('Resource not found.', 500);
-            }
+            $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
 
             return new JsonResponse(
                 array_merge($loaded, [

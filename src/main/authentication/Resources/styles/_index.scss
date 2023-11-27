@@ -7,7 +7,7 @@
 @import "components/sso";
 
 // adds a bg on login, reset-password, registration
-.authentication-page {
+.auth-page {
   background-color: $body-bg; // fallback to body color if theme has no image
 
   // styles for bg image

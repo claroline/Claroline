@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/resource/{resourceId}/logs")
+ *
  * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"resourceId": "uuid"}})
  */
 class LogController
@@ -29,12 +30,11 @@ class LogController
 
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker,
-        FinderProvider $finder,
-        LogManager $logManager
+        FinderProvider $finder
     ) {
         $this->authorizationChecker = $authorizationChecker;
         $this->finder = $finder;
-        $this->logManager = $logManager;
+        // $this->logManager = $logManager;
     }
 
     /**

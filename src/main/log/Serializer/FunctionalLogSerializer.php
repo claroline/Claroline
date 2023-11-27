@@ -2,55 +2,46 @@
 
 namespace Claroline\LogBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
-use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\LogBundle\Entity\FunctionalLog;
 
-class FunctionalLogSerializer
+class FunctionalLogSerializer extends AbstractLogSerializer
 {
-    use SerializerTrait;
-
-    private $userSerializer;
-    private $resourceNodeSerializer;
-    private $workspaceSerializer;
-
     public function __construct(
         UserSerializer $userSerializer,
-        ResourceNodeSerializer $resourceNodeSerializer,
-        WorkspaceSerializer $workspaceSerializer
+        private readonly ResourceNodeSerializer $resourceNodeSerializer,
+        private readonly WorkspaceSerializer $workspaceSerializer
     ) {
-        $this->userSerializer = $userSerializer;
-        $this->resourceNodeSerializer = $resourceNodeSerializer;
-        $this->workspaceSerializer = $workspaceSerializer;
+        parent::__construct($userSerializer);
     }
 
-    public function serialize(FunctionalLog $functionalLog): array
+    public function getClass(): string
     {
-        $user = null;
-        if ($functionalLog->getUser()) {
-            $user = $this->userSerializer->serialize($functionalLog->getUser(), [Options::SERIALIZE_MINIMAL]);
+        return FunctionalLog::class;
+    }
+
+    public function serialize(FunctionalLog $functionalLog, array $options = []): array
+    {
+        $serialized = $this->serializeCommon($functionalLog, $options);
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return $serialized;
         }
 
         $resourceNode = null;
         if ($functionalLog->getResource()) {
-            $resourceNode = $this->resourceNodeSerializer->serialize($functionalLog->getResource(), [Options::SERIALIZE_MINIMAL]);
+            $resourceNode = $this->resourceNodeSerializer->serialize($functionalLog->getResource(), [SerializerInterface::SERIALIZE_MINIMAL]);
         }
         $workspace = null;
         if ($functionalLog->getWorkspace()) {
-            $workspace = $this->workspaceSerializer->serialize($functionalLog->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
+            $workspace = $this->workspaceSerializer->serialize($functionalLog->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]);
         }
 
-        return [
-            'user' => $user,
-            'date' => DateNormalizer::normalize($functionalLog->getDate()),
-            'details' => $functionalLog->getDetails(),
+        return array_merge($serialized, [
             'resource' => $resourceNode,
             'workspace' => $workspace,
-            'event' => $functionalLog->getEvent(),
-        ];
+        ]);
     }
 }
