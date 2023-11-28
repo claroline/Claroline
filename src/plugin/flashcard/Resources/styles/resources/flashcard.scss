@@ -196,47 +196,17 @@
   font-weight: bold;
 }
 
-.flashcard-timeline-status {
-  position: absolute;
-  top: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #ddd;
-  width: 200px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  text-align: center;
-}
-
-.flashcard-timeline-status::before {
-  content: '';
-  width: 10px;
-  height: 10px;
-  background-color: #ddd;
-  display: block;
-  position: absolute;
-  top: -8px;
-  margin-left: -2px;
-  left: 50%;
-  transform: rotate(-45deg) translateX(-50%);
-}
-
 .sessions-rules {
   list-style-type: none;
   padding: 0;
-  margin-bottom: $component-margin-bottom;
 }
 
 .session-rule {
   display: flex;
-  background: #e9ecef;
-  padding: 10px $panel-body-padding;
+  background: var(--#{$prefix}tertiary-bg);
+  padding: 10px $spacer;
   border: 1px solid transparent;
-  border-radius: $border-radius-sm;
-
-  + .session-rule {
-    margin-top: 5px;
-  }
+  @include border-radius($border-radius-sm);
 
   .session-rule-done {
     color: $learning;
@@ -244,10 +214,5 @@
 
   div {
     align-self: center;
-  }
-}
-
-@media (max-width: 768px) {
-  .flashcard-timeline {
   }
 }

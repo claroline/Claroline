@@ -15,7 +15,7 @@ const SessionRule= props => {
   }
 
   return (
-    <li className="session-rule">
+    <li className="session-rule mt-1">
       <div className={classes(classList)}>
         {icon}
       </div>
@@ -35,7 +35,7 @@ SessionRule.propTypes = {
 
 const LeitnerRules = (props) => (
   <ul
-    className="sessions-rules">
+    className="sessions-rules mb-3">
     {Array.from({length: 7}, (_, index) => (
       <SessionRule
         key={index}
