@@ -3,6 +3,10 @@
   "resource_attempts_desc": "Allows to list the attempts made by users.",
   "resource_evaluations": "List of resources evaluations",
   "resource_evaluations_desc": "Allows to list the evaluations obtained by users for resources.",
+  "my_resource_evaluations": "List of my resources evaluations",
+  "my_resource_evaluations_desc": "Allows to list the evaluations obtained for resources.",
   "workspace_evaluations": "List of workspaces evaluations",
-  "workspace_evaluations_desc": "Allows to list the evaluations obtained by users for workspaces."
+  "workspace_evaluations_desc": "Allows to list the evaluations obtained by users for workspaces.",
+  "my_workspace_evaluations": "List of my workspaces evaluations",
+  "my_workspace_evaluations_desc": "Allows to list the evaluations obtained for workspaces."
 }
