@@ -1,7 +1,7 @@
 {
   "public": "Home",
-  "workspace": "Espace d'activités",
-  "account": "Mon compte",
+  "workspace": "Workspace",
+  "account": "My account",
   "administration": "Administration",
-  "desktop": ""
+  "desktop": "Desktop"
 }

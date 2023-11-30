@@ -22,6 +22,11 @@ class PublicContext extends AbstractContext
         return 'public';
     }
 
+    public static function getIcon(): string
+    {
+        return 'home';
+    }
+
     public function getObject(?string $contextId): ?ContextSubjectInterface
     {
         return null;

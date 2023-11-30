@@ -39,9 +39,12 @@ const LayoutMain = props => {
 
             // disable registration and redirect user if no self registration or the user is already authenticated
             {from: '/registration', to: '/', disabled: props.selfRegistration || !props.authenticated},
+            {from: '/login', exact: true, to: '/', disabled: !props.authenticated},
 
-            /*{from: '/desktop', to: '/', disabled: !props.unavailable},
-            {from: '/admin',   to: '/', disabled: !props.unavailable},*/
+            {from: '/', exact: true, to: '/login', disabled: -1 !== props.availableContexts.findIndex(c => 'public' === c.name) || props.authenticated},
+            {from: '/', exact: true, to: '/public', disabled: -1 === props.availableContexts.findIndex(c => 'public' === c.name) || props.authenticated},
+            {from: '/', exact: true, to: '/desktop', disabled: -1 === props.availableContexts.findIndex(c => 'public' === c.name) || !props.authenticated},
+
             // for retro-compatibility. DO NOT REMOVE !
             {from: '/home', to: '/public'}
           ]}
@@ -60,6 +63,12 @@ const LayoutMain = props => {
             }
           ].concat(appContexts.map(appContext => ({
             path: appContext.path,
+            onEnter: () => {
+              if (-1 === props.availableContexts.findIndex(availableContext => appContext.name === availableContext.name)) {
+                // context is not enabled
+                props.history.replace('/')
+              }
+            },
             render: (routerProps) => {
               const params = routerProps.match.params
 
@@ -97,6 +106,10 @@ const LayoutMain = props => {
 }
 
 LayoutMain.propTypes = {
+  history: T.shape({
+    replace: T.func.isRequired
+  }).isRequired,
+  availableContexts: T.array,
   unavailable: T.bool.isRequired,
   authenticated: T.bool.isRequired,
   changePassword: T.bool.isRequired,

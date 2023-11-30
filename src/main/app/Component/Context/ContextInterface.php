@@ -12,6 +12,8 @@ interface ContextInterface extends ComponentInterface
 {
     public function getObject(?string $contextId): ?ContextSubjectInterface;
 
+    public static function getIcon(): string;
+
     public function isAvailable(): bool;
 
     public function isRoot(): bool;

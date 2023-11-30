@@ -4,7 +4,6 @@ namespace Claroline\AppBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Component\Context\ContextInterface;
 use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Manager\SecurityManager;
@@ -15,7 +14,6 @@ use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +36,6 @@ class PlatformController
         private readonly LocaleManager $localeManager,
         private readonly SecurityManager $securityManager,
         private readonly ContextProvider $contextProvider,
-        private readonly ToolManager $toolManager,
         private readonly SerializerProvider $serializer,
         private readonly ClientSerializer $clientSerializer
     ) {
@@ -69,7 +66,6 @@ class PlatformController
                 'currentUser' => $currentUser,
                 'impersonated' => $this->securityManager->isImpersonated(),
                 'contexts' => $this->contextProvider->getAvailableContexts(),
-                'administration' => !empty($this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoleNames())),
                 'client' => [
                     'ip' => $request->getClientIp(),
                     'forwarded' => $request->headers->get('X-Forwarded-For'), // I can only get trusted proxies if I use symfony getClientIps()

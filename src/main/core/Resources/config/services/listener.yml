@@ -148,6 +148,6 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\AppBundle\Manager\PlatformManager'
+            - '@Claroline\AppBundle\Component\Context\ContextProvider'
             - '@Claroline\CoreBundle\Manager\UserManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'

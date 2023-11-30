@@ -53,7 +53,7 @@ const HeaderMain = props =>
         currentUser={props.currentUser}
         authenticated={props.authenticated}
         impersonated={props.impersonated}
-        administration={props.administration}
+        availableContexts={props.availableContexts}
         registration={props.registration}
         locale={props.locale}
         help={props.display.help && !!props.helpUrl ? props.helpUrl : undefined}
@@ -92,7 +92,7 @@ HeaderMain.propTypes = {
   }),
   impersonated: T.bool.isRequired,
   authenticated: T.bool.isRequired,
-  administration: T.bool.isRequired,
+  availableContexts: T.array,
   helpUrl: T.string,
   registration: T.bool,
   sendValidationEmail: T.func.isRequired,

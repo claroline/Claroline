@@ -34,10 +34,13 @@ const unavailable = (state) => disabled(state) || (!securitySelectors.isAuthenti
 
 const selfRegistration = (state) => configSelectors.param(state, 'selfRegistration')
 
+const availableContexts = (state) => state.contexts
+
 export const selectors = {
   unavailable,
   disabled,
   maintenance,
   maintenanceMessage,
-  selfRegistration
+  selfRegistration,
+  availableContexts
 }

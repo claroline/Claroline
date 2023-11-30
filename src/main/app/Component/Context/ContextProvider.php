@@ -40,20 +40,23 @@ class ContextProvider extends AbstractComponentProvider
         $available = [];
         foreach ($this->getRegisteredComponents() as $contextComponent) {
             if ($contextComponent->isAvailable() && $contextComponent->isRoot()) {
-                $available[] = $contextComponent::getName();
+                $available[] = [
+                    'icon' => $contextComponent::getIcon(),
+                    'name' => $contextComponent::getName(),
+                ];
             }
         }
 
         return $available;
     }
 
-    public function getContext(string $contextName, string $contextId = null): ContextInterface
+    public function getContext(string $contextName/* , string $contextId = null */): ContextInterface
     {
         /** @var ContextInterface $contextHandler */
         $contextHandler = $this->getComponent($contextName);
-        if (!$contextHandler->isAvailable()) {
+        /*if (!$contextHandler->isAvailable()) {
             throw new \RuntimeException(sprintf('Context "%s(%s)" is not available. Check %s::isAvailable() for more info.', $contextName, $contextId || '', get_class($contextHandler)));
-        }
+        }*/
 
         return $contextHandler;
     }

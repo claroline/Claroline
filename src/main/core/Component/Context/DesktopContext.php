@@ -22,6 +22,11 @@ class DesktopContext extends AbstractContext
         return 'desktop';
     }
 
+    public static function getIcon(): string
+    {
+        return 'atlas';
+    }
+
     public function getObject(?string $contextId): ?ContextSubjectInterface
     {
         return null;

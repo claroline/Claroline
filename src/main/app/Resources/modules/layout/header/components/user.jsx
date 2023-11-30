@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import {useLocation} from 'react-router-dom'
 
 import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
@@ -47,6 +48,38 @@ const UserMenu = (props) => {
           </Alert>
         }
 
+        {!props.authenticated &&
+          <>
+            {props.unavailable &&
+              <p className="text-secondary">
+                {trans('only_admin_login_help', {}, 'administration')}
+              </p>
+            }
+
+            <Toolbar
+              className="d-grid gap-1 mb-3"
+              variant="btn"
+              onClick={props.closeMenu}
+              actions={[
+                {
+                  name: 'login',
+                  type: LINK_BUTTON,
+                  label: trans('login', {}, 'actions'),
+                  target: '/login',
+                  size: 'lg',
+                  primary: true
+                }, {
+                  name: 'create-account',
+                  type: LINK_BUTTON,
+                  label: trans('create-account', {}, 'actions'),
+                  target: '/registration',
+                  displayed: !props.unavailable && props.registration
+                }
+              ]}
+            />
+          </>
+        }
+
         {props.authenticated && props.impersonated &&
           <Alert type="warning" icon="fa fa-fw fa-mask">
             {trans('impersonation_mode_alert')}
@@ -81,67 +114,19 @@ const UserMenu = (props) => {
           </Alert>
         }
 
-        {props.authenticated &&
+        {!isEmpty(props.availableContexts) &&
           <Toolbar
             className="list-group"
             buttonName="list-group-item list-group-item-action"
             onClick={props.closeMenu}
-            actions={[
-              {
-                name: 'desktop',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-atlas',
-                label: trans('desktop'),
-                target: '/desktop',
-                exact: true
-              }, {
-                name: 'account',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-user',
-                label: trans('my_account'),
-                target: '/account'
-              }, {
-                name: 'administration',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-cogs',
-                label: trans('administration'),
-                target: '/administration',
-                displayed: props.administration
-              }
-            ]}
+            actions={props.availableContexts.map(context => ({
+              name: context.name,
+              type: LINK_BUTTON,
+              icon: `fa fa-fw fa-${context.icon}`,
+              label: trans(context.name, {}, 'context'),
+              target: '/' + context.name
+            }))}
           />
-        }
-
-        {!props.authenticated &&
-          <>
-            {props.unavailable &&
-              <p className="text-secondary">
-                {trans('only_admin_login_help', {}, 'administration')}
-              </p>
-            }
-
-            <Toolbar
-              className="d-grid gap-1"
-              variant="btn"
-              onClick={props.closeMenu}
-              actions={[
-                {
-                  name: 'login',
-                  type: LINK_BUTTON,
-                  label: trans('login', {}, 'actions'),
-                  target: '/login',
-                  size: 'lg',
-                  primary: true
-                }, {
-                  name: 'create-account',
-                  type: LINK_BUTTON,
-                  label: trans('create-account', {}, 'actions'),
-                  target: '/registration',
-                  displayed: !props.unavailable && props.registration
-                }
-              ]}
-            />
-          </>
         }
 
         <Toolbar
@@ -194,7 +179,7 @@ UserMenu.propTypes = {
   unavailable: T.bool.isRequired,
   authenticated: T.bool.isRequired,
   impersonated: T.bool.isRequired,
-  administration: T.bool.isRequired,
+  availableContexts: T.array.isRequired,
   registration: T.bool,
   currentUser: T.shape({
     id: T.string,
@@ -264,7 +249,7 @@ class HeaderUser extends Component {
           unavailable={this.props.unavailable}
           authenticated={this.props.authenticated}
           impersonated={this.props.impersonated}
-          administration={this.props.administration}
+          availableContexts={this.props.availableContexts}
           currentUser={this.props.currentUser}
           registration={this.props.registration}
           locale={this.props.locale}
@@ -285,7 +270,7 @@ HeaderUser.propTypes = {
   unavailable: T.bool.isRequired,
   authenticated: T.bool.isRequired,
   impersonated: T.bool.isRequired,
-  administration: T.bool.isRequired,
+  availableContexts: T.array.isRequired,
   currentUser: T.shape({
     id: T.string,
     name: T.string,

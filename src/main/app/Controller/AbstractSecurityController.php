@@ -3,7 +3,8 @@
 namespace Claroline\AppBundle\Controller;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Component\Context\AdministrationContext;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -23,26 +24,20 @@ abstract class AbstractSecurityController
         $this->authorization = $authorization;
     }
 
-    public function setObjectManager(ObjectManager $om)
+    public function setObjectManager(ObjectManager $om): void
     {
         $this->om = $om;
     }
 
-    /**
-     * @param string $toolName
-     *
-     * @throws \Exception
-     */
-    protected function canOpenAdminTool($toolName)
+    protected function canOpenAdminTool(string $toolName): void
     {
-        $tool = $this->om->getRepository(AdminTool::class)
-            ->findOneBy(['name' => $toolName]);
+        $tool = $this->om->getRepository(OrderedTool::class)
+            ->findOneBy(['name' => $toolName, 'contextName' => AdministrationContext::getName()]);
 
         if (!$tool) {
             throw new \LogicException("Annotation error: cannot found admin tool '{$toolName}'");
         }
 
-        // FIXME
         $granted = $this->authorization->isGranted('OPEN', $tool);
 
         if (!$granted) {

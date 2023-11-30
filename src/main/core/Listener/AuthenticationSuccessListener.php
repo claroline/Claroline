@@ -13,13 +13,13 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\ConnectionMessageManager;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,8 +36,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         private readonly SerializerProvider $serializer,
         private readonly RoutingHelper $routingHelper,
         private readonly PlatformManager $platformManager,
+        private readonly ContextProvider $contextProvider,
         private readonly UserManager $userManager,
-        private readonly ToolManager $toolManager,
         private readonly ConnectionMessageManager $messageManager
     ) {
     }
@@ -59,8 +59,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             return new JsonResponse([
                 'user' => $this->serializer->serialize($user, [Options::SERIALIZE_FACET]), // TODO : we should only get the minimal representation of user here,
                 'messages' => $this->messageManager->getConnectionMessagesByUser($user),
-
-                'administration' => !empty($this->toolManager->getAdminToolsByRoles($token->getRoleNames())),
+                'contexts' => $this->contextProvider->getAvailableContexts(),
             ]);
         }
 

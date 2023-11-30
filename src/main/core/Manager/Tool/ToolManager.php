@@ -13,17 +13,14 @@ namespace Claroline\CoreBundle\Manager\Tool;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
-use Claroline\CoreBundle\Repository\Tool\AdministrationToolRepository;
 use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ToolManager
 {
     private OrderedToolRepository $orderedToolRepo;
-    private AdministrationToolRepository $adminToolRepo;
 
     public function __construct(
         private readonly AuthorizationCheckerInterface $authorization,
@@ -32,7 +29,6 @@ class ToolManager
         private readonly ToolRightsManager $toolRightsManager
     ) {
         $this->orderedToolRepo = $om->getRepository(OrderedTool::class);
-        $this->adminToolRepo = $om->getRepository(AdminTool::class);
     }
 
     public function getCurrentPermissions(OrderedTool $orderedTool): array
@@ -80,15 +76,5 @@ class ToolManager
     public function getOrderedTools(string $context, string $contextId = null, ?array $roles = []): array
     {
         return $this->orderedToolRepo->findByContext($context, $contextId, $roles);
-    }
-
-    /**
-     * @return AdminTool[]
-     *
-     * @deprecated
-     */
-    public function getAdminToolsByRoles(array $roles)
-    {
-        return $this->adminToolRepo->findByRoles($roles);
     }
 }

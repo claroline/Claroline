@@ -21,6 +21,11 @@ class AccountContext extends AbstractContext
         return 'account';
     }
 
+    public static function getIcon(): string
+    {
+        return 'user';
+    }
+
     public function getObject(?string $contextId): ?User
     {
         return $this->securityManager->getCurrentUser();

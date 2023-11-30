@@ -70,7 +70,7 @@ class ParametersController extends AbstractSecurityController
      */
     public function updateAction(Request $request): JsonResponse
     {
-        $this->canOpenAdminTool('main_settings');
+        $this->canOpenAdminTool('parameters');
 
         $parametersData = $this->decodeRequest($request);
 

@@ -24,13 +24,13 @@ class ConnectionMessageVoter extends AbstractVoter
             case self::CREATE:
             case self::EDIT:
             case self::PATCH:
-                return $this->hasAdminToolAccess($token, 'main_settings') ?
+                return $this->hasAdminToolAccess($token, 'connection_messages') ?
                     VoterInterface::ACCESS_GRANTED :
                     VoterInterface::ACCESS_DENIED;
             case self::DELETE:
                 return ($object->isLocked() ?
                     VoterInterface::ACCESS_DENIED :
-                    $this->hasAdminToolAccess($token, 'main_settings')) ?
+                    $this->hasAdminToolAccess($token, 'connection_messages')) ?
                         VoterInterface::ACCESS_GRANTED :
                         VoterInterface::ACCESS_DENIED;
         }

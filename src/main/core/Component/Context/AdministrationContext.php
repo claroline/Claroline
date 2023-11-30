@@ -27,6 +27,11 @@ class AdministrationContext extends AbstractContext
         return 'administration';
     }
 
+    public static function getIcon(): string
+    {
+        return 'cogs';
+    }
+
     public function getObject(?string $contextId): ?ContextSubjectInterface
     {
         return null;
@@ -35,7 +40,6 @@ class AdministrationContext extends AbstractContext
     public function isAvailable(): bool
     {
         return !empty($this->securityManager->getCurrentUser());
-        // && !empty($this->toolManager->getAdminToolsByRoles($token->getRoleNames()));
     }
 
     public function isRoot(): bool

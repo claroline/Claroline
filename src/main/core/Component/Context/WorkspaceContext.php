@@ -33,6 +33,11 @@ class WorkspaceContext extends AbstractContext
         return 'workspace';
     }
 
+    public static function getIcon(): string
+    {
+        return 'book';
+    }
+
     public function getObject(?string $contextId): Workspace
     {
         if (empty($contextId)) {

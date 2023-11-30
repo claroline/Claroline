@@ -17,10 +17,10 @@ bootstrap(
     header: initialData.header,
     footer: initialData.footer,
     config: initialData.config,
+    contexts: initialData.contexts,
     security: {
       impersonated: initialData.impersonated,
       currentUser: initialData.currentUser,
-      administration: initialData.administration,
       client: initialData.client
     }
   }),

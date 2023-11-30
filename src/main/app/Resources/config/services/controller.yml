@@ -38,7 +38,6 @@ services:
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\AppBundle\Manager\SecurityManager'
             - '@Claroline\AppBundle\Component\Context\ContextProvider'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
 
