@@ -95,7 +95,7 @@ class ChapterManager
 
     public function serializeChapterTree(Lesson $lesson)
     {
-        $tree = $this->entityManager->getRepository(Chapter::class)->buildChapterTree($lesson->getRoot(), 'chapter.uuid, chapter.level, chapter.title, chapter.slug, chapter.text, chapter.poster');
+        $tree = $this->entityManager->getRepository(Chapter::class)->buildChapterTree($lesson->getRoot(), 'chapter.uuid, chapter.level, chapter.title, chapter.slug, chapter.text, chapter.poster, chapter.customNumbering');
 
         return $this->chapterSerializer->serializeChapterTree($tree[0]);
     }

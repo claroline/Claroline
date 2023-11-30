@@ -5,6 +5,7 @@
     "move_destination": "Move chapter to :",
     "chapter": "Chapter %chapter%",
     "new_chapter": "New chapter",
+    "new_subchapter": "New subchapter",
     "subchapter": "As sub-chapter",
     "sibling": "At the same level",
     "empty_lesson_message": "This lesson is empty. You can start by adding a new chapter.",
@@ -13,5 +14,11 @@
     "internal_note_visibility_help": "Internal notes are only visible to users with the 'View internal notes' right.",
     "chapter_loading": "We are loading your chapter...",
     "start_disabled_empty": "The lesson is empty.",
-    "lesson_search": "Search in the lesson"
+    "lesson_search": "Search in the lesson",
+    "lesson_numbering": "Chapter numbering",
+    "lesson_numbering_none": "None",
+    "lesson_numbering_numeric": "Numeric",
+    "lesson_numbering_literal": "Literal",
+    "lesson_numbering_custom": "Custom",
+    "chapter_numbering": "Numbering"
 }

@@ -41,7 +41,11 @@ const Chapter = props => {
           displayLevel={2}
           title={props.chapter.title}
           backAction={props.backAction}
-        />
+        >
+          {props.chapter.numbering &&
+            <span className="h-numbering">{props.chapter.numbering.replace(/\.$/, '')}</span>
+          }
+        </ContentTitle>
 
         <div className="card mb-3">
           <ContentHtml className="card-body">

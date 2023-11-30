@@ -14,12 +14,21 @@ const LessonMenu = props => {
   function getChapterSummary(chapter) {
     return {
       type: LINK_BUTTON,
-      label: chapter.title,
+      label: (chapter.numbering + ' ' + chapter.title).trim(),
       target: `${props.path}/${chapter.slug}`,
       onClick: props.autoClose,
       active: !!matchPath(props.location.pathname, {path: `${props.path}/${chapter.slug}`}),
       additional: [
         {
+          name: 'add',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-plus',
+          label: trans('new_subchapter', {}, 'lesson'),
+          target: `${props.path}/${chapter.slug}/subchapter`,
+          onClick: props.autoClose,
+          displayed: props.editable,
+          group: trans('management')
+        }, {
           name: 'edit',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pencil',

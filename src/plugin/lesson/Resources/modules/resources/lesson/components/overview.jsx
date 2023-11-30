@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
@@ -11,10 +11,23 @@ import {SearchMinimal} from '#/main/app/content/search/components/minimal'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 
 const LessonOverview = (props) => {
+
   function getChapterSummary(chapter) {
+
+    let chapterTitle = chapter.title.trim()
+    if(chapter.numbering) {
+      chapterTitle = (
+        <Fragment>
+          <span className="h-numbering">{chapter.numbering.replace(/\.$/, '')}</span>
+          {chapter.title}
+        </Fragment>
+      )
+    }
+
     return {
+      id: chapter.id,
       type: LINK_BUTTON,
-      label: chapter.title,
+      label: chapterTitle,
       target: `${props.path}/${chapter.slug}`,
       children: chapter.children ? chapter.children.map(getChapterSummary) : [],
       onClick: () => {

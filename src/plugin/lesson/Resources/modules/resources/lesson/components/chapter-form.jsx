@@ -118,6 +118,10 @@ const ChapterFormComponent = props =>
             name: 'poster',
             type: 'image',
             label: trans('poster')
+          },{
+            name: 'customNumbering',
+            type: 'string',
+            label: trans('chapter_numbering', {}, 'lesson')
           }
         ]
       }, {

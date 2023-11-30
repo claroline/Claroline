@@ -82,6 +82,10 @@ class LessonResource extends Component {
               />
             )
           }, {
+            path: '/:slug/subchapter',
+            component: ChapterForm,
+            onEnter: params => this.props.createChapter(this.props.lesson.id, params.slug)
+          }, {
             path: '/:slug/edit',
             component: ChapterForm,
             onEnter: params => this.props.editChapter(this.props.lesson.id, params.slug)

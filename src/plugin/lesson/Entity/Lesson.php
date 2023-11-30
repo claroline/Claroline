@@ -8,7 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="icap__lesson")
+ *
  * @ORM\HasLifecycleCallbacks()
  */
 class Lesson extends AbstractResource
@@ -31,9 +33,27 @@ class Lesson extends AbstractResource
 
     /**
      * @ORM\OneToOne(targetEntity="Icap\LessonBundle\Entity\Chapter", cascade={"all"})
+     *
      * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $root;
+
+    /**
+     * Numbering of the chapters.
+     *
+     * @ORM\Column
+     */
+    private string $numbering = 'none';
+
+    public function getNumbering(): string
+    {
+        return $this->numbering;
+    }
+
+    public function setNumbering($numbering): void
+    {
+        $this->numbering = $numbering;
+    }
 
     /**
      * @return string
@@ -68,17 +88,11 @@ class Lesson extends AbstractResource
         return $this->showOverview;
     }
 
-    /**
-     * @param mixed $root
-     */
     public function setRoot($root)
     {
         $this->root = $root;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRoot()
     {
         return $this->root;

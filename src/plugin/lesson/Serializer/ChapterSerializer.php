@@ -10,7 +10,7 @@ use Icap\LessonBundle\Repository\ChapterRepository;
 class ChapterSerializer
 {
     use SerializerTrait;
-    const INCLUDE_INTERNAL_NOTES = 'include_internal_notes';
+    public const INCLUDE_INTERNAL_NOTES = 'include_internal_notes';
 
     /** @var ObjectManager */
     private $om;
@@ -64,9 +64,11 @@ class ChapterSerializer
             'title' => $chapter->getTitle(),
             'poster' => $chapter->getPoster(),
             'text' => $chapter->getText(),
+            'customNumbering' => $chapter->getCustomNumbering(),
             'parentSlug' => $chapter->getParent() ? $chapter->getParent()->getSlug() : null,
             'previousSlug' => $previousChapter ? $previousChapter->getSlug() : null,
             'nextSlug' => $nextChapter ? $nextChapter->getSlug() : null,
+            'numbering' => $this->serializeChapterNumbering($chapter),
         ];
 
         if (in_array(static::INCLUDE_INTERNAL_NOTES, $options)) {
@@ -78,8 +80,6 @@ class ChapterSerializer
 
     /**
      * Serializes a chapter tree, returned from Gedmo tree extension.
-     *
-     * @param $tree
      *
      * @return array
      */
@@ -98,6 +98,7 @@ class ChapterSerializer
         $this->sipe('text', 'setText', $data, $chapter);
         $this->sipe('poster', 'setPoster', $data, $chapter);
         $this->sipe('internalNote', 'setInternalNote', $data, $chapter);
+        $this->sipe('customNumbering', 'setCustomNumbering', $data, $chapter);
 
         return $chapter;
     }
@@ -118,7 +119,50 @@ class ChapterSerializer
             'slug' => $node['slug'],
             'text' => $node['text'],
             'poster' => $node['poster'],
+            'customNumbering' => $node['customNumbering'],
+            'numbering' => $this->serializeChapterNumbering($this->chapterRepository->findOneBy(['uuid' => $node['uuid']])),
             'children' => $children,
         ];
+    }
+
+    private function serializeChapterNumbering(Chapter $chapter): string
+    {
+        $lesson = $chapter->getLesson();
+        $parent = $chapter->getParent();
+        $numbering = $lesson->getNumbering();
+
+        if ('none' === $numbering || null === $parent) {
+            return '';
+        } elseif ('custom' === $numbering) {
+            return $chapter->getCustomNumbering().(strlen($chapter->getCustomNumbering()) > 0 ? '.' : '');
+        }
+
+        $chapterNumber = $this->chapterRepository->getChapterNumber($chapter);
+
+        $currentNumbering = '';
+        $inheritedNumbering = $this->serializeChapterNumbering($parent);
+
+        if ('numeric' === $numbering) {
+            $currentNumbering = $chapterNumber;
+        } elseif ('literal' === $numbering) {
+            $currentNumbering = $this->convertToLetter($chapterNumber);
+        }
+
+        $finalNumbering = $inheritedNumbering.$currentNumbering;
+
+        return $finalNumbering.(strlen($finalNumbering) > 0 ? '.' : '');
+    }
+
+    private function convertToLetter($number): string
+    {
+        $letter = '';
+        $number = intval($number);
+        while ($number > 0) {
+            $p = ($number - 1) % 26;
+            $number = intval(($number - $p) / 26);
+            $letter = chr(65 + $p).$letter;
+        }
+
+        return $letter;
     }
 }

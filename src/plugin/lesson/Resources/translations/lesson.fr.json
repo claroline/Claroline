@@ -5,6 +5,7 @@
     "move_destination": "Où placer le chapitre :",
     "chapter": "Chapitre %chapter%",
     "new_chapter": "Nouveau chapitre",
+    "new_subchapter": "Nouveau sous-chapitre",
     "subchapter": "En tant que sous-chapitre",
     "sibling": "Au même niveau",
     "empty_lesson_message": "Ce cours est vide. Commencez par créer un nouveau chapitre.",
@@ -13,5 +14,11 @@
     "internal_note_visibility_help": "Les notes internes sont uniquement visibles par les utilisateurs ayant le droit 'Voir les notes internes'.",
     "chapter_loading": "Nous chargeons votre chapitre...",
     "start_disabled_empty": "Le cours est vide.",
-    "lesson_search": "Rechercher dans le cours"
+    "lesson_search": "Rechercher dans le cours",
+    "lesson_numbering": "Numérotation des chapitres",
+    "lesson_numbering_none": "Aucune",
+    "lesson_numbering_numeric": "Numérique",
+    "lesson_numbering_literal": "Littérale",
+    "lesson_numbering_custom": "Customisée",
+    "chapter_numbering": "Numérotation"
 }

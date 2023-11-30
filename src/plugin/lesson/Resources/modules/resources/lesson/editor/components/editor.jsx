@@ -6,6 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
+import {constants} from '#/plugin/lesson/resources/lesson/constants'
 import {selectors} from '#/plugin/lesson/resources/lesson/editor/store'
 
 const Editor = (props) =>
@@ -43,6 +44,22 @@ const Editor = (props) =>
                 }
               }
             ]
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-desktop',
+        title: trans('display_parameters'),
+        fields: [
+          {
+            name: 'display.numbering',
+            type: 'choice',
+            label: trans('lesson_numbering', {}, 'lesson'),
+            required: true,
+            options: {
+              noEmpty: true,
+              condensed: true,
+              choices: constants.LESSON_NUMBERINGS
+            }
           }
         ]
       }
