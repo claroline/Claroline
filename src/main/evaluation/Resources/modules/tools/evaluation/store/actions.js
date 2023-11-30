@@ -1,5 +1,3 @@
-import get from 'lodash/get'
-
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST, url} from '#/main/app/api'
 import {actions as listActions} from '#/main/app/content/list/store/actions'
@@ -33,20 +31,22 @@ actions.addRequiredResources = (workspaceId, resources) => (dispatch) => dispatc
   }
 })
 
-actions.downloadParticipationCertificate = (evaluation) => ({
+actions.downloadParticipationCertificates = (evaluations) => ({
   [API_REQUEST]: {
-    url: ['apiv2_workspace_download_participation_certificate', {workspace: get(evaluation, 'workspace.id'), user: get(evaluation, 'user.id')}],
+    url: ['apiv2_workspace_download_participation_certificates'],
     request: {
-      method: 'GET'
+      method: 'POST',
+      body: JSON.stringify(evaluations.map(evaluation => evaluation.id))
     }
   }
 })
 
-actions.downloadSuccessCertificate = (evaluation) => ({
+actions.downloadSuccessCertificates = (evaluations) => ({
   [API_REQUEST]: {
-    url: ['apiv2_workspace_download_success_certificate', {workspace: get(evaluation, 'workspace.id'), user: get(evaluation, 'user.id')}],
+    url: ['apiv2_workspace_download_success_certificates'],
     request: {
-      method: 'GET'
+      method: 'POST',
+      body: JSON.stringify(evaluations.map(evaluation => evaluation.id))
     }
   }
 })

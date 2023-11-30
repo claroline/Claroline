@@ -11,11 +11,11 @@ const EvaluationUsers = connect(
     contextId: toolSelectors.contextId(state)
   }),
   (dispatch) => ({
-    downloadParticipationCertificate(evaluation) {
-      dispatch(actions.downloadParticipationCertificate(evaluation))
+    downloadParticipationCertificates(evaluations) {
+      dispatch(actions.downloadParticipationCertificates(evaluations))
     },
-    downloadSuccessCertificate(evaluation) {
-      dispatch(actions.downloadSuccessCertificate(evaluation))
+    downloadSuccessCertificates(evaluations) {
+      dispatch(actions.downloadSuccessCertificates(evaluations))
     }
   })
 )(EvaluationUsersComponent)
