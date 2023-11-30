@@ -38,6 +38,13 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    Claroline\EvaluationBundle\Subscriber\DataSource\MyResourceEvaluationSource:
+      arguments:
+        - '@security.token_storage'
+        - '@Claroline\AppBundle\API\FinderProvider'
+      tags:
+        - { name: kernel.event_subscriber }
+
     Claroline\EvaluationBundle\Subscriber\DataSource\WorkspaceEvaluationSource:
         arguments:
             - '@security.token_storage'
@@ -45,3 +52,10 @@ services:
             - '@Claroline\AppBundle\API\FinderProvider'
         tags:
             - { name: kernel.event_subscriber }
+
+    Claroline\EvaluationBundle\Subscriber\DataSource\MyWorkspaceEvaluationSource:
+            arguments:
+                - '@security.token_storage'
+                - '@Claroline\AppBundle\API\FinderProvider'
+            tags:
+                - { name: kernel.event_subscriber }

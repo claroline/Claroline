@@ -18,10 +18,20 @@ plugin:
           context: [ workspace, desktop ]
           tags: [ activity, content ]
 
+        - name: my_resource_evaluations
+          type: list
+          context: [ workspace, desktop ]
+          tags: [ activity ]
+
         - name: workspace_evaluations
           type: list
-          context: [ activity, workspace, desktop ]
+          context: [ workspace, desktop ]
           tags: [ content ]
+
+        - name: my_workspace_evaluations
+          type: list
+          context: [ desktop ]
+          tags: [ activity ]
 
     templates:
         - name: workspace_participation_certificate
