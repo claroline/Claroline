@@ -29,11 +29,6 @@ export default {
           </span>
         )
       }, {
-        name: 'user',
-        type: 'user',
-        label: trans('user'),
-        displayed: true
-      }, {
         name: 'workspace',
         type: 'workspace',
         label: trans('workspace'),
@@ -76,13 +71,6 @@ export default {
         },
         displayed: true,
         filterable: false
-      }, {
-        name: 'userDisabled',
-        label: trans('user_disabled', {}, 'community'),
-        type: 'boolean',
-        displayable: false,
-        sortable: false,
-        filterable: true
       }
     ],
     card: WorkspaceCard

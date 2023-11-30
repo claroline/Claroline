@@ -29,11 +29,6 @@ export default {
           </span>
         )
       }, {
-        name: 'user',
-        type: 'user',
-        label: trans('user'),
-        displayed: true
-      }, {
         name: 'resourceNode',
         type: 'resource',
         label: trans('resource'),
@@ -76,13 +71,6 @@ export default {
         },
         displayed: true,
         filterable: false
-      }, {
-        name: 'userDisabled',
-        label: trans('user_disabled', {}, 'community'),
-        type: 'boolean',
-        displayable: false,
-        sortable: false,
-        filterable: true
       }
     ],
     card: ResourceCard

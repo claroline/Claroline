@@ -21,17 +21,17 @@ plugin:
         - name: my_resource_evaluations
           type: list
           context: [ workspace, desktop ]
-          tags: [ activity, content ]
+          tags: [ activity ]
 
         - name: workspace_evaluations
           type: list
-          context: [ activity, workspace, desktop ]
+          context: [ workspace, desktop ]
           tags: [ content ]
 
         - name: my_workspace_evaluations
           type: list
-          context: [ activity, workspace, desktop ]
-          tags: [ content ]
+          context: [ desktop ]
+          tags: [ activity ]
 
     templates:
         - name: workspace_participation_certificate
