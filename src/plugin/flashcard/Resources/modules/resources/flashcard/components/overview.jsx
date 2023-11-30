@@ -1,0 +1,105 @@
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
+
+import {trans} from '#/main/app/intl/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {ResourceOverview} from '#/main/core/resource/components/overview'
+import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
+
+import {Timeline} from '#/plugin/flashcard/resources/flashcard/components/timeline'
+import {LeitnerRules} from '#/plugin/flashcard/resources/flashcard/components/rules'
+import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
+
+const Overview = (props) => {
+  const attemptData = props.attempt && props.attempt.data
+  const sessionStarted = attemptData ? attemptData.cardsAnsweredIds.length > 0 : false
+  const sessionCompleted = attemptData ? attemptData.cardsSessionIds.length === 0 : false
+  const session = attemptData ? attemptData.session : 1
+
+  let statusText = trans('session_status_next', {}, 'flashcard')
+  let action = action = {
+    type: LINK_BUTTON,
+    label: trans('start', {}, 'actions'),
+    target: `${props.basePath}/play`,
+    primary: true,
+    disabled: props.empty,
+    disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'flashcard')] : []
+  }
+
+  if (sessionCompleted) {
+    statusText = trans('session_status_completed', {}, 'flashcard')
+    action = {
+      type: LINK_BUTTON,
+      label: trans('restart', {}, 'actions'),
+      target: `${props.basePath}/play`,
+      primary: true,
+      disabled: props.empty,
+      disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'flashcard')] : []
+    }
+  } else if (sessionStarted) {
+    statusText = trans('session_status_current', {}, 'flashcard')
+    action = {
+      type: LINK_BUTTON,
+      label: trans('continue', {}, 'actions'),
+      target: `${props.basePath}/play`,
+      primary: true
+    }
+  }
+
+  return (
+    <ResourceOverview
+      contentText={get(props.flashcardDeck, 'overview.message')}
+      evaluation={props.evaluation}
+      attempt={props.attempt}
+      resourceNode={props.resourceNode}
+      actions={[action]}
+      details={[
+        [trans('session_indicator', {}, 'flashcard'), session + ' / 7'],
+        [trans('session_status', {}, 'flashcard'), statusText]
+      ]}
+    >
+
+      <Timeline
+        session={session}
+        started={sessionStarted}
+        completed={sessionCompleted}
+      />
+
+      {props.flashcardDeck.showLeitnerRules &&
+        <LeitnerRules
+          session={session}
+          completed={sessionCompleted}
+        />
+      }
+    </ResourceOverview>
+  )
+}
+
+Overview.propTypes = {
+  basePath: T.string.isRequired,
+  attempt: T.shape({
+    status: T.string,
+    data: T.shape({
+      nextCardIndex: T.number,
+      session: T.number,
+      cards: T.array
+    })
+  }),
+  evaluation: T.shape(
+    ResourceEvaluationTypes.propTypes
+  ),
+  flashcardDeck: T.shape(
+    FlashcardDeckTypes.propTypes
+  ).isRequired,
+  empty: T.bool.isRequired,
+  resourceNode: T.object
+}
+
+Overview.defaultProps = {
+  empty: true
+}
+
+export {
+  Overview
+}

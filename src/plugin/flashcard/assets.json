@@ -1,0 +1,7 @@
+{
+  "styles": {
+    "entry": {
+      "flashcard": "resources/flashcard.scss"
+    }
+  }
+}

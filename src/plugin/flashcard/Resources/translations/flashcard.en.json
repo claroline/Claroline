@@ -1,0 +1,49 @@
+{
+  "card": "Card",
+  "cards": "Cards",
+
+  "show_progression": "Show progression",
+  "custom_button_labels": "Custom button labels",
+  "right_button_label": "Right button label",
+  "wrong_button_label": "Wrong button label",
+  "show_leitner_rules": "Show session rules",
+  "flashcard_options": "Cards options",
+  "draw_options": "Number of cards to draw",
+  "options_desc":"Defines number of cards to draw for each game. Leave empty to play with all the cards.",
+
+  "no_card": "No card.",
+  "add_card" : "Add card",
+  "new_card": "New card",
+  "card_delete_confirm": "Card's delete",
+  "card_delete_message": "Are you sure you want to delete this card ?",
+
+  "deck_confirm_edit_title" : "Resource edition",
+  "deck_confirm_edit_question" : "Changes requires resetting users attempt progression. Are you sure you want to continue ?",
+
+  "question": "Question",
+  "visible_content_type": "Visible content type",
+  "visible_content": "Visible content",
+  "hidden_content_type": "Hidden content type",
+  "hidden_content": "Hidden content",
+  "flip_card": "Flip the card",
+  "right_answer": "I know",
+  "wrong_answer": "I don't know",
+
+  "card_parameters": "Card parameters",
+  "card_preview": "Card preview",
+
+  "session_indicator": "Session",
+  "session_status": "Status of session",
+  "session_status_current": "Current",
+  "session_status_completed": "Completed",
+  "session_status_next": "Next",
+
+  "session_cards_start" : "We present",
+  "session_cards_all" : "all cards",
+  "session_cards_1x" : "cards successful once",
+  "session_cards_2x" : "cards successful twice",
+  "session_cards_3x" : "cards successful three times",
+  "session_cards_failed" : "cards failed",
+
+  "start_disabled_empty": "Flashcard resource is empty."
+}

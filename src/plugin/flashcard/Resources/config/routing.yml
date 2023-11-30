@@ -1,0 +1,6 @@
+claro_flashcard:
+    resource: "@ClarolineFlashcardBundle/Controller/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

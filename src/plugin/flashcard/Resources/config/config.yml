@@ -1,0 +1,6 @@
+plugin:
+    resources:
+        - name: flashcard
+          class: Claroline\FlashcardBundle\Entity\FlashcardDeck
+          tags: [content]
+          exportable: true

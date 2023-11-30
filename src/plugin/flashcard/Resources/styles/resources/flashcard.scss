@@ -1,0 +1,218 @@
+/**
+ * Flashcard resource styles.
+ */
+
+@import "../mixins";
+@import "../variables";
+
+.flashcards {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: -(map-get($spacers, 1));
+
+  > li {
+    padding: map-get($spacers, 1);
+    max-width: 50%;
+    flex: 0 0 50%;
+  }
+
+  .flashcard-hoverable {
+    transition: all linear 185ms;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 35px rgba(50,50,93,.1),0 8px 15px rgba(0,0,0,.07);
+    }
+  }
+}
+
+.flashcard-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.flashcard-card {
+  display: flex;
+  flex-direction: column;
+  height: $flashcard-height;
+  width: 100%;
+
+  position: relative;
+  color: $flashcard-color;
+  background-color: $flashcard-bg;
+  border: $flashcard-border-width solid $flashcard-border-color;
+  padding: $flashcard-spacer-y $flashcard-spacer-x;
+  @include border-radius($flashcard-border-radius);
+  @include box-shadow($flashcard-box-shadow);
+}
+
+.flashcard-editor {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+  align-items: center
+}
+
+.flashcard-counter {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.flashcard-deck {
+  position: relative;
+  height: 300px;
+  perspective: 1000px;
+}
+
+.flashcard-media {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+ .flashcard-video {
+  width: 100%;
+  max-height: 100%;
+}
+
+.flashcard-question {
+  color: $flashcard-title-color;
+  margin-bottom: $flashcard-title-spacer-y;
+  text-align: center;
+}
+
+.flashcard-content {
+  overflow-y: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flashcard {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transition: transform 500ms;
+  transform-style: preserve-3d;
+  overflow: hidden;
+
+  &-preview
+  {
+    position: static;
+    margin: auto;
+    max-width: 75%;
+    aspect-ratio: 16/9;
+
+  }
+
+  @for $index from 0 through 3 {
+    &-#{$index} {
+      left: $index * map-get($spacers, 2);
+      top: $index * map-get($spacers, 2);
+      z-index: 100 - $index;
+    }
+  }
+
+  &-flip {
+    transform: rotateY(180deg) scaleX(-1);
+  }
+}
+
+.flashcard-timeline {
+  margin: 40px 33px;
+
+  @media (max-width: 768px) {
+    position: relative;
+    height: 350px;
+
+    .progress {
+      position: absolute;
+      left: 50%; right: 50%;
+      transform: rotate(90deg);
+      transform-origin: left;
+      width: 350px;
+      margin: auto;
+    }
+  }
+}
+
+.flashcard-timeline-steps {
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-top: -5px;
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+
+  @media (max-width: 768px) {
+    height: 102%;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+}
+
+.flashcard-timeline-step {
+  position: relative;
+}
+
+.flashcard-timeline-step::before {
+  content: '';
+  width: 50px;
+  height: 50px;
+  background-color: $flashcard-timeline-lines-color;
+  display: block;
+  border-radius: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.flashcard-timeline-step-done {
+  color: white;
+}
+
+.flashcard-timeline-step-done::before {
+  background-color: $learning;
+}
+
+.flashcard-timeline-step-current::before {
+  background-color: $primary;
+}
+
+.flashcard-timeline-heading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.sessions-rules {
+  list-style-type: none;
+  padding: 0;
+}
+
+.session-rule {
+  display: flex;
+  background: var(--#{$prefix}tertiary-bg);
+  padding: 10px $spacer;
+  border: 1px solid transparent;
+  @include border-radius($border-radius-sm);
+
+  .session-rule-done {
+    color: $learning;
+  }
+
+  div {
+    align-self: center;
+  }
+}

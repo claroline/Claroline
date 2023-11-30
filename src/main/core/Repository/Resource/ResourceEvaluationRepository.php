@@ -51,4 +51,21 @@ class ResourceEvaluationRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findInProgress(ResourceNode $node)
+    {
+        return $this->createQueryBuilder('re')
+            ->join('re.resourceUserEvaluation', 'rue')
+            ->where('re.status IN (:status)')
+            ->andWhere('rue.resourceNode = :resourceNode')
+            ->setParameter('status', [
+                AbstractEvaluation::STATUS_NOT_ATTEMPTED,
+                AbstractEvaluation::STATUS_TODO,
+                AbstractEvaluation::STATUS_OPENED,
+                AbstractEvaluation::STATUS_INCOMPLETE,
+            ])
+            ->setParameter('resourceNode', $node)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -1,0 +1,8 @@
+services:
+    Claroline\FlashcardBundle\Controller\FlashcardDeckController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+        arguments:
+           - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@Claroline\FlashcardBundle\Manager\FlashcardManager'
+           - '@Claroline\FlashcardBundle\Manager\EvaluationManager'

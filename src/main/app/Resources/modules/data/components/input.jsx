@@ -69,6 +69,7 @@ class DataInput extends Component {
       .then(
         (result = []) => this.setState({
           loaded: true,
+          error: false,
           group: get(result[0], 'components.group'),
           input: get(result[0], 'components.input')
         })

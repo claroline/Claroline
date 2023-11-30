@@ -5,6 +5,13 @@
     margin-bottom: $component-margin-bottom !important;
 }
 
+// Bootstrap no longer provides utility for justified texts. From the doc :
+// > Note that we don’t provide utility classes for justified text.
+// > While, aesthetically, justified text might look more appealing, it does make word-spacing more random and therefore harder to read.
+.text-justify {
+    text-align: justify;
+}
+
 
 // Content sizing
 

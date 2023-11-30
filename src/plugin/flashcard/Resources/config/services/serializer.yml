@@ -1,0 +1,11 @@
+services:
+    Claroline\FlashcardBundle\Serializer\FlashcardDeckSerializer:
+        tags: ['claroline.serializer']
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.token_storage'
+
+    Claroline\FlashcardBundle\Serializer\CardDrawnProgressionSerializer:
+        tags: [ 'claroline.serializer' ]
+        arguments:
+          [ '@Claroline\FlashcardBundle\Serializer\FlashcardDeckSerializer' ]

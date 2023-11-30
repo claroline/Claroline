@@ -1,0 +1,49 @@
+{
+  "card": "Carte",
+  "cards": "Cartes",
+
+  "show_progression": "Afficher la progression",
+  "custom_button_labels": "Personnaliser le label des boutons de réponse",
+  "right_button_label": "Label du bouton de réponse correct",
+  "wrong_button_label": "Label du bouton de réponse incorrect",
+  "show_leitner_rules": "Afficher les règles des sessions",
+  "flashcard_options": "Options des cartes",
+  "draw_options": "Nombre de cartes à tirer",
+  "options_desc": "Permet de définir le nombre de cartes à tirer pour chaque partie. Laissez vide pour jouer avec toutes les cartes.",
+
+  "no_card": "Aucune carte.",
+  "add_card": "Ajouter une carte",
+  "new_card": "Nouvelle carte",
+  "card_delete_confirm": "Suppression de la carte",
+  "card_delete_message": "Êtes-vous sûr de vouloir supprimer cette carte ?",
+
+  "deck_confirm_edit_title" : "Modification de la ressource",
+  "deck_confirm_edit_question" : "Ces modifications nécessitent la réinitialisation de la progression des tentatives en cours des utilisateurs. Voulez-vous continuer ?",
+
+  "question": "Question",
+  "visible_content_type": "Type de contenu pour la face visible",
+  "visible_content": "Face visible",
+  "hidden_content_type": "Type de contenu pour la face cachée",
+  "hidden_content": "Face cachée",
+  "flip_card": "Retourner la carte",
+  "right_answer": "Je sais",
+  "wrong_answer": "Je ne sais pas",
+
+  "card_parameters": "Paramètres de la carte",
+  "card_preview": "Aperçu de la carte",
+
+  "session_indicator": "Session",
+  "session_status": "Statut de la session",
+  "session_status_current": "En cours",
+  "session_status_completed": "Terminée",
+  "session_status_next": "À venir",
+
+  "session_cards_start": "On présente",
+  "session_cards_all" : "toutes les cartes",
+  "session_cards_1x" : "les cartes réussies 1 fois",
+  "session_cards_2x" : "les cartes réussies 2 fois",
+  "session_cards_3x" : "les cartes réussies 3 fois",
+  "session_cards_failed" : "les cartes échouées",
+
+  "start_disabled_empty": "La resource cartes-mémoire est vide."
+}

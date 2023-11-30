@@ -42,8 +42,6 @@ const VideoPlayer = props => {
   )
 }
 
-
-
 VideoPlayer.propTypes = {
   mimeType: T.string.isRequired,
   file: T.shape(
