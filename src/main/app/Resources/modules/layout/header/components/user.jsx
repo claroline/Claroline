@@ -22,6 +22,8 @@ import {url} from '#/main/app/api'
 const UserMenu = (props) => {
   const location = useLocation()
 
+  const availableContexts = props.availableContexts.filter(c => !!c.root)
+
   return (
     <Offcanvas placement="end" show={props.show} onHide={props.closeMenu}>
       <Offcanvas.Header closeButton={true}>
@@ -114,12 +116,12 @@ const UserMenu = (props) => {
           </Alert>
         }
 
-        {!isEmpty(props.availableContexts) &&
+        {!isEmpty(availableContexts) &&
           <Toolbar
             className="list-group"
             buttonName="list-group-item list-group-item-action"
             onClick={props.closeMenu}
-            actions={props.availableContexts.map(context => ({
+            actions={availableContexts.map(context => ({
               name: context.name,
               type: LINK_BUTTON,
               icon: `fa fa-fw fa-${context.icon}`,

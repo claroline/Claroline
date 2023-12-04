@@ -39,10 +39,11 @@ class ContextProvider extends AbstractComponentProvider
     {
         $available = [];
         foreach ($this->getRegisteredComponents() as $contextComponent) {
-            if ($contextComponent->isAvailable() && $contextComponent->isRoot()) {
+            if ($contextComponent->isAvailable()) {
                 $available[] = [
                     'icon' => $contextComponent::getIcon(),
                     'name' => $contextComponent::getName(),
+                    'root' => $contextComponent->isRoot(),
                 ];
             }
         }
