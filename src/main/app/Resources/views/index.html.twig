@@ -1,83 +1,37 @@
-<!DOCTYPE html>
+{% extends '@ClarolineApp/base.html.twig' %}
 
-<html lang="{{ app.request.locale }}" class="claroline-app {{ config.getParameter('theme') }}" data-bs-theme="light">
-    <head>
-        <title>
-            {% if config.getParameter('name') is not empty %}
-                {{ config.getParameter('name') }}
-            {% else %}
-                Claroline Connect
-            {% endif %}
-        </title>
+{% block title %}
+    {% if config.getParameter('name') is not empty %}
+        {{ config.getParameter('name') }}
+    {% else %}
+        Claroline Connect
+    {% endif %}
+{% endblock %}
 
-        <meta charset="utf-8" />
-        <base href="{{ url('claro_index') }}" />
+{% block meta %}
+    <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png')}}" />
+{% endblock %}
 
-        {# This is required to make css responsive work properly #}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% block content %}
+    {# Anchor for react app to mount in #}
+    <div
+        id="claroline-app"
+        class="app"
+        role="presentation"
 
-        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
-        <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png')}}" />
+        data-maintenance="{{ maintenance | json_encode | raw | escape }}"
+        data-impersonated="{{ impersonated ? 'true' : 'false' }}"
+        data-current-user="{{ currentUser | json_encode | raw | escape }}"
+        data-client="{{ client | json_encode | raw | escape }}"
+        data-contexts="{{ contexts | json_encode | raw | escape }}"
+        data-header="{{ header | json_encode | raw | escape }}"
+        data-footer="{{ footer | json_encode | raw | escape }}"
+        data-config="{{ parameters | json_encode | raw | escape }}"
+    ></div>
+{% endblock %}
 
-        {# Adds stylesheets #}
-        {# Styles from current theme #}
-        <link rel="stylesheet" type="text/css" href="{{ themeAsset('bootstrap.css') }}" />
-
-        {# Styles from loaded plugins #}
-        {{ injectedStylesheets | raw }}
-
-        {# Styles from plateform configuration #}
-        {% for file in stylesheets %}
-            <link rel="stylesheet" type="text/css" href="{{ asset(file) }}" />
-        {% endfor %}
-
-        <script src="{{ asset('bundles/bazingajstranslation/js/translator.min.js') }}"></script>
-        <script src="{{ asset('js/translations/config.js') }}"></script>
-        <script src="{{ asset('js/translations/' ~ app.request.locale ~ '.js') }}"></script>
-        {#<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform', '_format': 'json' }) }}"></script>#}
-
-        {# Adds javascripts #}
-        <script src="{{ hotAsset('runtime') }}"></script>
-        {# Base libraries #}
-        <script src="{{ hotAsset('vendor') }}"></script>
-        {# TinyMCE #}
-        <script src="{{ asset('packages/tinymce/tinymce.min.js') }}"></script>
-        <script src="{{ asset('packages/mathjax/MathJax.js?config=TeX-AMS-MML_SVG') }}"></script>
-        {# Frequently used Claroline JS #}
-        <script src="{{ hotAsset('app') }}"></script>
-        {# Claroline Plugins configuration #}
-        <script src="{{ hotAsset('plugins') }}"></script>
-    </head>
-
-    <body class="app-container">
-        {# Anchor for react app to mount in #}
-        <div
-            id="claroline-app"
-            class="app"
-            role="presentation"
-
-            data-maintenance="{{ maintenance | json_encode | raw | escape }}"
-            data-impersonated="{{ impersonated ? 'true' : 'false' }}"
-            data-current-user="{{ currentUser | json_encode | raw | escape }}"
-            data-client="{{ client | json_encode | raw | escape }}"
-            data-contexts="{{ contexts | json_encode | raw | escape }}"
-            data-header="{{ header | json_encode | raw | escape }}"
-            data-footer="{{ footer | json_encode | raw | escape }}"
-            data-config="{{ parameters | json_encode | raw | escape }}"
-        ></div>
-
-        {# Router #}
-        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-        {# Main Claroline UI app #}
-        <script src="{{ hotAsset('claroline-distribution-main-app-bootstrap') }}"></script>
-
-        {# JS from loaded plugins #}
-        {{ injectedJavascripts | raw }}
-
-        {# JS from plateform configuration #}
-        {% for file in javascripts %}
-            <script src="{{ asset(file) }}"></script>
-        {% endfor %}
-    </body>
-</html>
+{% block foot %}
+    {# Main Claroline UI app #}
+    <script src="{{ hotAsset('claroline-distribution-main-app-bootstrap') }}"></script>
+{% endblock %}
