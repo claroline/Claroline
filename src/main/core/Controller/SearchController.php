@@ -6,6 +6,8 @@ use Claroline\CoreBundle\Event\GlobalSearchEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -13,18 +15,18 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class SearchController
 {
-    /** @var PlatformConfigurationHandler */
-    private $config;
-
-    /** @var EventDispatcherInterface */
-    private $dispatcher;
+    private PlatformConfigurationHandler $config;
+    private EventDispatcherInterface $dispatcher;
+    private AuthorizationCheckerInterface $authorization;
 
     public function __construct(
         PlatformConfigurationHandler $config,
-        EventDispatcherInterface $dispatcher
+        EventDispatcherInterface $dispatcher,
+        AuthorizationCheckerInterface $authorization
     ) {
         $this->config = $config;
         $this->dispatcher = $dispatcher;
+        $this->authorization = $authorization;
     }
 
     /**
@@ -38,6 +40,10 @@ class SearchController
      */
     public function searchAction(string $search): JsonResponse
     {
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedException();
+        }
+
         $searchConfig = $this->config->getParameter('search');
         $searchableItems = array_filter(array_keys($searchConfig['items']), function ($itemName) use ($searchConfig) {
             return isset($searchConfig['items'][$itemName]) && $searchConfig['items'][$itemName];
