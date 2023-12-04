@@ -15,7 +15,6 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\File\ArchiveManager;
@@ -288,50 +287,42 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     public function downloadParticipationCertificatesAction(Request $request): StreamedResponse
     {
         $workspaceEvaluationsIds = $this->decodeRequest($request);
+
         if (empty($workspaceEvaluationsIds)) {
             throw new NotFoundHttpException('No workspace evaluations ids found in request body.');
         }
 
-        foreach ($workspaceEvaluationsIds as $workspaceEvaluationId) {
-            $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
-                'uuid' => $workspaceEvaluationId,
-            ]);
+        $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy([
+            'uuid' => $workspaceEvaluationsIds,
+        ]);
 
-            if (empty($workspaceEvaluation)) {
-                throw new NotFoundHttpException('Workspace evaluation not found.');
-            }
+        if (empty($workspaceEvaluations)) {
+            throw new NotFoundHttpException('No workspace evaluations found for these ids.');
+        }
 
-            $workspace = $workspaceEvaluation->getWorkspace();
-            $user = $workspaceEvaluation->getUser();
-
-            if (1 === count($workspaceEvaluationsIds)) {
-                return $this->downloadParticipationCertificateAction($workspace, $user);
-            }
-
-            if (!isset($archive)) {
-                $archive = $this->archiveManager->create(null, new FileBag());
-                $archivePath = $archive->filename;
-            }
-
+        foreach ($workspaceEvaluations as $workspaceEvaluation) {
             $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
-
-            $certificate = $this->pdfManager->getWorkspaceParticipationCertificate($workspaceEvaluation);
-            if (!empty($certificate)) {
-                $archive->addFromString($workspace->getName().'-'.TextNormalizer::toKey($user->getFullName()).'-participation.pdf', $certificate);
-            }
         }
 
-        if (!isset($archive) || !isset($archivePath) || 0 === $archive->numFiles) {
-            throw new NotFoundHttpException('No participation certificates are available yet.');
+        $certificates = $this->pdfManager->getWorkspaceCertificates($workspaceEvaluations, false);
+
+        if ($certificates instanceof \ZipArchive) {
+            $filename = $certificates->filename;
+            $certificates->close();
+
+            return new StreamedResponse(function () use ($filename) {
+                readfile($filename);
+            }, 200, [
+                'Content-Type' => 'application/zip',
+                'Content-Disposition' => 'attachment; filename=participation_certificates.zip',
+            ]);
         }
 
-        $archive->close();
-
-        return new StreamedResponse(function () use ($archivePath) {
-            readfile($archivePath);
+        return new StreamedResponse(function () use ($certificates) {
+            echo $certificates;
         }, 200, [
-            'Content-Type' => 'application/zip',
-            'Content-Disposition' => 'attachment; filename=participations.zip',
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename=participation_certificate.pdf',
         ]);
     }
 
@@ -341,50 +332,46 @@ class WorkspaceEvaluationController extends AbstractSecurityController
     public function downloadSuccessCertificatesAction(Request $request): StreamedResponse
     {
         $workspaceEvaluationsIds = $this->decodeRequest($request);
+
         if (empty($workspaceEvaluationsIds)) {
             throw new NotFoundHttpException('No workspace evaluations ids found in request body.');
         }
 
-        foreach ($workspaceEvaluationsIds as $workspaceEvaluationId) {
-            $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
-                'uuid' => $workspaceEvaluationId,
-            ]);
+        $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy([
+            'uuid' => $workspaceEvaluationsIds,
+        ]);
 
-            if (empty($workspaceEvaluation)) {
-                throw new NotFoundHttpException('Workspace evaluation not found.');
-            }
+        if (empty($workspaceEvaluations)) {
+            throw new NotFoundHttpException('No workspace evaluations found for these ids.');
+        }
 
-            $workspace = $workspaceEvaluation->getWorkspace();
-            $user = $workspaceEvaluation->getUser();
-
-            if (1 === count($workspaceEvaluationsIds)) {
-                return $this->downloadSuccessCertificateAction($workspace, $user);
-            }
-
-            if (!isset($archive)) {
-                $archive = $this->archiveManager->create(null, new FileBag());
-                $archivePath = $archive->filename;
-            }
-
+        foreach ($workspaceEvaluations as $workspaceEvaluation) {
             $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
+        }
 
-            $certificate = $this->pdfManager->getWorkspaceSuccessCertificate($workspaceEvaluation);
-            if (!empty($certificate)) {
-                $archive->addFromString($workspace->getName().'-'.TextNormalizer::toKey($user->getFullName()).'-success.pdf', $certificate);
+        $certificates = $this->pdfManager->getWorkspaceCertificates($workspaceEvaluations, true);
+
+        if ($certificates instanceof \ZipArchive) {
+            if (0 === $certificates->numFiles) {
+                throw new NotFoundHttpException('No success certificates are available yet.');
             }
+
+            $filename = $certificates->filename;
+            $certificates->close();
+
+            return new StreamedResponse(function () use ($filename) {
+                readfile($filename);
+            }, 200, [
+                'Content-Type' => 'application/zip',
+                'Content-Disposition' => 'attachment; filename=success_certificates.zip',
+            ]);
         }
 
-        if (!isset($archive) || !isset($archivePath) || 0 === $archive->numFiles) {
-            throw new NotFoundHttpException('No success certificates are available yet.');
-        }
-
-        $archive->close();
-
-        return new StreamedResponse(function () use ($archivePath) {
-            readfile($archivePath);
+        return new StreamedResponse(function () use ($certificates) {
+            echo $certificates;
         }, 200, [
-            'Content-Type' => 'application/zip',
-            'Content-Disposition' => 'attachment; filename=participations.zip',
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename=success_certificate.pdf',
         ]);
     }
 
