@@ -214,6 +214,7 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@event_dispatcher'
+            - '@security.authorization_checker'
 
     Claroline\CoreBundle\Controller\WorkspaceController:
         arguments:
