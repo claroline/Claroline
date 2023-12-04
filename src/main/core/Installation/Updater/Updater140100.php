@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Installation\Updater;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Context\AccountContext;
 use Claroline\CoreBundle\Component\Context\AdministrationContext;
+use Claroline\CoreBundle\Component\Context\PublicContext;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -24,7 +25,7 @@ class Updater140100 extends Updater
     {
         $this->createAdminTools();
         $this->createAccountTools();
-        // create home tools
+        $this->createPublicTools();
         // migrate old home config
     }
 
@@ -98,6 +99,16 @@ class Updater140100 extends Updater
             $this->om->persist($orderedTool);
         }
 
+        $this->om->flush();
+    }
+
+    private function createPublicTools(): void
+    {
+        $orderedTool = new OrderedTool();
+        $orderedTool->setContextName(PublicContext::getName());
+        $orderedTool->setName('home');
+
+        $this->om->persist($orderedTool);
         $this->om->flush();
     }
 }
