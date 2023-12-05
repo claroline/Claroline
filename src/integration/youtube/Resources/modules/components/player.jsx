@@ -33,6 +33,12 @@ class YouTubePlayer extends Component {
     })
   }
 
+  componentWillUnmount() {
+    if (this.player && this.props.onPause) {
+      this.props.onPause( this.player.getCurrentTime(), this.player.getDuration() )
+    }
+  }
+
   onTimer() {
     this.props.onTimeUpdate( this.player.getCurrentTime(), this.player.getDuration() )
   }
