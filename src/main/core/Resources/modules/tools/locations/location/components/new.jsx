@@ -15,18 +15,18 @@ const LocationNew = (props) =>
         label: trans('locations'),
         target: props.path + '/locations'
       }, {
-        label: trans('new_location')
+        label: trans('new_location', {}, 'location')
       }
     ]}
     title={trans('locations', {}, 'tools')}
-    subtitle={trans('new_location')}
+    subtitle={trans('new_location', {}, 'location')}
     primaryAction="add"
     actions={[
       {
         name: 'add',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
-        label: trans('add_location'),
+        label: trans('add_location', {}, 'location'),
         target: `${props.path}/locations/new`,
         group: trans('management'),
         primary: true

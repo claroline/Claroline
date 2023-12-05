@@ -2,7 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
+import {route} from '#/main/core/tool/routing'
+
 import {asset} from '#/main/app/config/asset'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {DataCard} from '#/main/app/data/components/card'
 
 import {getAddressString} from '#/main/app/data/types/address/utils'
@@ -17,6 +20,10 @@ const LocationCard = props =>
     title={props.data.name}
     subtitle={getAddressString(props.data.address, true)}
     contentText={get(props.data, 'meta.description')}
+    primaryAction={{
+      type: LINK_BUTTON,
+      target: route('locations') + '/locations/' + props.data.id
+    }}
   />
 
 LocationCard.propTypes = {
