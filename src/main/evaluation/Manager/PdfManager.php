@@ -4,40 +4,25 @@ namespace Claroline\EvaluationBundle\Manager;
 
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Manager\File\ArchiveManager;
+use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Manager\PdfManager as BasePdfManager;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PdfManager
 {
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var PlatformManager */
-    private $platformManager;
-    /** @var BasePdfManager */
-    private $pdfManager;
-    /** @var TemplateManager */
-    private $templateManager;
-    /** @var ArchiveManager */
-    private $archiveManager;
-
     public function __construct(
-        TranslatorInterface $translator,
-        PlatformManager $platformManager,
-        BasePdfManager $pdfManager,
-        TemplateManager $templateManager,
-        ArchiveManager $archiveManager
+        private readonly TranslatorInterface $translator,
+        private readonly PlatformManager $platformManager,
+        private readonly BasePdfManager $pdfManager,
+        private readonly TemplateManager $templateManager,
+        private readonly TempFileManager $tempFileManager,
+        private readonly ArchiveManager $archiveManager
     ) {
-        $this->translator = $translator;
-        $this->platformManager = $platformManager;
-        $this->pdfManager = $pdfManager;
-        $this->templateManager = $templateManager;
-        $this->archiveManager = $archiveManager;
     }
 
     public function getWorkspaceParticipationCertificate(Evaluation $evaluation): ?string
@@ -95,93 +80,52 @@ class PdfManager
         ], $this->templateManager->formatDatePlaceholder('evaluation', $evaluation->getDate()));
     }
 
-    public function getWorkspaceParticipationCertificates(array $evaluations): array
+    public function getWorkspaceParticipationCertificates(array $evaluations): ?array
     {
         $certificates = [];
         foreach ($evaluations as $evaluation) {
-            $certificate = $this->getWorkspaceParticipationCertificate($evaluation);
-            if ($certificate) {
-                $certificates[] = $certificate;
-            }
+            $certificateFilename = TextNormalizer::toKey($evaluation->getWorkspace()->getName().'-'.TextNormalizer::toKey($evaluation->getUser()->getFullName()).'.pdf');
+            $certificates[$certificateFilename] = $this->getWorkspaceParticipationCertificate($evaluation);
         }
 
-        return $certificates;
+        return $this->generateCertificates($certificates);
     }
 
-    public function getWorkspaceSuccessCertificates(array $evaluations): \ZipArchive|string|null
+    public function getWorkspaceSuccessCertificates(array $evaluations): ?array
     {
-        $archive = $this->archiveManager->create(null, new FileBag());
-
-        if (1 === count($evaluations)) {
-            return $this->getWorkspaceSuccessCertificate($evaluations[0]);
+        $certificates = [];
+        foreach ($evaluations as $evaluation) {
+            $certificateFilename = TextNormalizer::toKey($evaluation->getWorkspace()->getName().'-'.TextNormalizer::toKey($evaluation->getUser()->getFullName()).'.pdf');
+            $certificates[$certificateFilename] = $this->getWorkspaceSuccessCertificate($evaluation);
         }
 
-        foreach ($evaluations as $workspaceEvaluation) {
-            $certificate = $this->getWorkspaceSuccessCertificate($workspaceEvaluation);
-            if ($certificate) {
-                $workspace = $workspaceEvaluation->getWorkspace();
-                $user = $workspaceEvaluation->getUser();
-                $archive->addFromString($workspace->getName().'-'.TextNormalizer::toKey($user->getFullName()).'-success.pdf', $certificate);
-            }
+        return $this->generateCertificates($certificates);
+    }
+
+    private function generateCertificates(array $certificates): ?array
+    {
+        if (empty($certificates)) {
+            return null;
+        }
+
+        $tmpFile = $this->tempFileManager->generate();
+
+        if (1 === count($certificates)) {
+            $certificate = array_shift($certificates);
+            file_put_contents($tmpFile, $certificate);
+
+            $certificateNames = array_keys($certificates);
+
+            return [$certificateNames[0], $tmpFile];
+        }
+
+        $archive = $this->archiveManager->create($tmpFile, new FileBag());
+        foreach ($certificates as $certificateName => $certificateData) {
+            $archive->addFromString($certificateName, $certificateData);
         }
 
         $archive->close();
 
-        return $archive;
-    }
-
-    public function getWorkspaceCertificates($evaluations, bool $onlySuccessful): \ZipArchive|string|null
-    {
-        $certificates = [];
-
-        foreach ($evaluations as $workspaceEvaluation) {
-            if ($onlySuccessful) {
-                $certificate = $this->getWorkspaceSuccessCertificate($workspaceEvaluation);
-            } else {
-                $certificate = $this->getWorkspaceParticipationCertificate($workspaceEvaluation);
-            }
-
-            if ($certificate) {
-                $certificates[] = [
-                    'certificate' => $certificate,
-                    'workspace' => $workspaceEvaluation->getWorkspace(),
-                    'user' => $workspaceEvaluation->getUser(),
-                ];
-            }
-        }
-
-        if (0 === count($certificates)) {
-            if ($onlySuccessful) {
-                throw new NotFoundHttpException('No success certificates are available yet.');
-            } else {
-                throw new NotFoundHttpException('No participation certificates are available yet.');
-            }
-        } elseif (1 === count($certificates)) {
-            return $certificates[0]['certificate'];
-        }
-
-        $archive = $this->archiveManager->create(null, new FileBag());
-
-        foreach ($certificates as $certificateData) {
-            $certificate = $certificateData['certificate'];
-            $workspace = $certificateData['workspace'];
-            $user = $certificateData['user'];
-
-            if ($onlySuccessful) {
-                $archive->addFromString($workspace->getName().'-'.TextNormalizer::toKey($user->getFullName()).'-success.pdf', $certificate);
-            } else {
-                $archive->addFromString($workspace->getName().'-'.TextNormalizer::toKey($user->getFullName()).'-participation.pdf', $certificate);
-            }
-        }
-
-        if (0 === $archive->numFiles) {
-            if ($onlySuccessful) {
-                throw new NotFoundHttpException('Cannot add success certificates to archive.');
-            } else {
-                throw new NotFoundHttpException('Cannot add participation certificates to archive.');
-            }
-        }
-
-        return $archive;
+        return [TextNormalizer::toKey('certificates.zip'), $tmpFile];
     }
 }

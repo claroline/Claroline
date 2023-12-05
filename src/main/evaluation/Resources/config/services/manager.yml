@@ -16,4 +16,5 @@ services:
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\AppBundle\Manager\PdfManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@Claroline\AppBundle\Manager\File\ArchiveManager'
