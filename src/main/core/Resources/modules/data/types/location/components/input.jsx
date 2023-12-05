@@ -17,7 +17,7 @@ const LocationsButton = props =>
     className="btn btn-outline-primary w-100 mt-2"
     type={MODAL_BUTTON}
     icon="fa fa-fw fa-plus"
-    label={trans('add_location')}
+    label={trans('add_location', {}, 'location')}
     disabled={props.disabled}
     modal={[MODAL_LOCATIONS, {
       url: ['apiv2_location_list'],

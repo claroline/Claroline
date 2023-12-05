@@ -72,13 +72,6 @@ const LocationForm = props =>
             label: trans('address')
           }
         ]
-      }, {
-        title: trans('geolocation'),
-        icon: 'fa fa-fw fa-map-marker',
-        fields: [
-          {name: 'gps.latitude', type: 'number', label: trans('latitude')}, // todo make a field
-          {name: 'gps.longitude', type: 'number', label: trans('longitude')}
-        ]
       }
     ]}
   />

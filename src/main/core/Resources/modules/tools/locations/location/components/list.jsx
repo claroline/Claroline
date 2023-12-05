@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
@@ -24,7 +24,7 @@ const LocationList = props =>
         name: 'add',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
-        label: trans('add_location'),
+        label: trans('add_location', {}, 'location'),
         target: `${props.path}/locations/new`,
         primary: true
       }
@@ -53,16 +53,6 @@ const LocationList = props =>
           type: 'string',
           label: trans('phone'),
           displayed: true
-        }, {
-          name: 'coordinates',
-          type: 'string',
-          label: trans('coordinates'),
-          filterable: false,
-          render: (location) => {
-            if (location.gps.latitude && location.gps.longitude) {
-              return location.gps.latitude + ' - ' + location.gps.longitude
-            }
-          }
         }
       ]}
       primaryAction={(row) => ({
@@ -82,14 +72,6 @@ const LocationList = props =>
           target: `${props.path}/locations/${rows[0].id}/edit`,
           group: trans('management'),
           scope: ['object']
-        }, {
-          name: 'geolocate',
-          type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-map-marker-alt',
-          label: trans('geolocate', {}, 'actions'),
-          callback: () => props.geolocate(rows[0]),
-          scope: ['object'], // todo should be available in selection mode too
-          group: trans('management')
         }
       ]}
       card={LocationCard}
@@ -97,8 +79,7 @@ const LocationList = props =>
   </ToolPage>
 
 LocationList.propTypes = {
-  path: T.string.isRequired,
-  geolocate: T.func.isRequired
+  path: T.string.isRequired
 }
 
 export {
