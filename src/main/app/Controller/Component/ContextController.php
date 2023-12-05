@@ -64,9 +64,9 @@ class ContextController
 
                 'managed' => $isManager,
                 'impersonated' => $isImpersonated,
-                'roles' => array_map(function (Role $role) {
+                'roles' => array_values(array_map(function (Role $role) {
                     return $this->serializer->serialize($role, [SerializerInterface::SERIALIZE_MINIMAL]);
-                }, $contextRoles),
+                }, $contextRoles)),
                 'accessErrors' => $accessErrors,
 
                 // get all enabled tools for the context, even those inaccessible to the current user

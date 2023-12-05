@@ -14,7 +14,7 @@ trait HasContext
     /**
      * @ORM\Column(name="context_id", nullable=true)
      */
-    private string $contextId;
+    private ?string $contextId = null;
 
     public function getContextName(): string
     {

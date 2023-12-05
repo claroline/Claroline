@@ -107,7 +107,7 @@ class RoleManager
         $this->om->persist($role);
     }
 
-    public function getWorkspaceRoles(Workspace $workspace): ?Role
+    public function getWorkspaceRoles(Workspace $workspace): array
     {
         return $this->roleRepo->findBy(['workspace' => $workspace]);
     }
