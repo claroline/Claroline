@@ -111,10 +111,8 @@ class PdfManager
         $tmpFile = $this->tempFileManager->generate();
 
         if (1 === count($certificates)) {
-            $certificate = array_shift($certificates);
-            file_put_contents($tmpFile, $certificate);
-
             $certificateNames = array_keys($certificates);
+            file_put_contents($tmpFile, $certificates[$certificateNames[0]]);
 
             return [$certificateNames[0], $tmpFile];
         }
