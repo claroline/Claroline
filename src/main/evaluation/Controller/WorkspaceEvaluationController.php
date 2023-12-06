@@ -28,6 +28,7 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\EvaluationBundle\Manager\PdfManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -46,14 +47,14 @@ class WorkspaceEvaluationController
     use PermissionCheckerTrait;
 
     public function __construct(
-        private TokenStorageInterface $tokenStorage,
+        private readonly TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
-        private ObjectManager $om,
-        private Crud $crud,
-        private FinderProvider $finder,
-        private SerializerProvider $serializer,
-        private WorkspaceEvaluationManager $manager,
-        private PdfManager $pdfManager
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly FinderProvider $finder,
+        private readonly SerializerProvider $serializer,
+        private readonly WorkspaceEvaluationManager $manager,
+        private readonly PdfManager $pdfManager
     ) {
         $this->authorization = $authorization;
     }
@@ -261,7 +262,7 @@ class WorkspaceEvaluationController
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function downloadSuccessCertificateAction(Workspace $workspace, User $user, Request $request): StreamedResponse
+    public function downloadSuccessCertificateAction(Workspace $workspace, User $user): StreamedResponse
     {
         $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
             'workspace' => $workspace,
@@ -274,7 +275,7 @@ class WorkspaceEvaluationController
 
         $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
 
-        $certificate = $this->pdfManager->getWorkspaceSuccessCertificate($workspaceEvaluation, $request->getLocale());
+        $certificate = $this->pdfManager->getWorkspaceSuccessCertificate($workspaceEvaluation);
         if (empty($certificate)) {
             throw new NotFoundHttpException('No success certificate is available yet.');
         }
@@ -284,6 +285,64 @@ class WorkspaceEvaluationController
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'-'.TextNormalizer::toKey($user->getFullName()).'-success.pdf',
+        ]);
+    }
+
+    /**
+     * @Route("/certificates/participation", name="apiv2_workspace_download_participation_certificates", methods={"POST"})
+     */
+    public function downloadParticipationCertificatesAction(Request $request): BinaryFileResponse
+    {
+        $workspaceEvaluationsIds = $this->decodeRequest($request);
+
+        $evaluations = [];
+        foreach ($workspaceEvaluationsIds as $workspaceEvaluationId) {
+            $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
+                'uuid' => $workspaceEvaluationId,
+            ]);
+
+            if ($this->checkPermission('OPEN', $workspaceEvaluation)) {
+                $evaluations[] = $workspaceEvaluation;
+            }
+        }
+
+        // either we get the path to an archive or the path to a PDF if ony one certificate
+        $certificateFile = $this->pdfManager->getWorkspaceParticipationCertificates($evaluations);
+        if (empty($certificateFile)) {
+            throw new NotFoundHttpException('No participation certificates found for these ids.');
+        }
+
+        return new BinaryFileResponse($certificateFile[1], 200, [
+            'Content-Disposition' => "attachment; filename={$certificateFile[0]}",
+        ]);
+    }
+
+    /**
+     * @Route("/certificates/success", name="apiv2_workspace_download_success_certificates", methods={"POST"})
+     */
+    public function downloadSuccessCertificatesAction(Request $request): BinaryFileResponse
+    {
+        $workspaceEvaluationsIds = $this->decodeRequest($request);
+
+        $evaluations = [];
+        foreach ($workspaceEvaluationsIds as $workspaceEvaluationId) {
+            $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
+                'uuid' => $workspaceEvaluationId,
+            ]);
+
+            if ($this->checkPermission('OPEN', $workspaceEvaluation)) {
+                $evaluations[] = $workspaceEvaluation;
+            }
+        }
+
+        // either we get the path to an archive or the path to a PDF if ony one certificate
+        $certificateFile = $this->pdfManager->getWorkspaceSuccessCertificates($evaluations);
+        if (empty($certificateFile)) {
+            throw new NotFoundHttpException('No participation certificates found for these ids.');
+        }
+
+        return new BinaryFileResponse($certificateFile[1], 200, [
+            'Content-Disposition' => "attachment; filename={$certificateFile[0]}",
         ]);
     }
 
