@@ -26,11 +26,11 @@ abstract class AbstractOperationalLog implements EventSubscriberInterface, Compo
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'post', static::getEntityClass()) => ['logCreate', 25],
-            Crud::getEventName('update', 'post', static::getEntityClass()) => ['logUpdate', 25],
-            Crud::getEventName('copy', 'post', static::getEntityClass()) => ['logCopy', 25],
-            Crud::getEventName('patch', 'post', static::getEntityClass()) => ['logPatch', 25],
-            Crud::getEventName('delete', 'post', static::getEntityClass()) => ['logDelete', 25],
+            Crud::getEventName('create', 'post', static::getEntityClass()) => ['logCreate', -25],
+            Crud::getEventName('update', 'post', static::getEntityClass()) => ['logUpdate', -25],
+            Crud::getEventName('copy', 'post', static::getEntityClass()) => ['logCopy', -25],
+            Crud::getEventName('patch', 'post', static::getEntityClass()) => ['logPatch', -25],
+            Crud::getEventName('delete', 'post', static::getEntityClass()) => ['logDelete', -25],
         ];
     }
 

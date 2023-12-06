@@ -16,7 +16,7 @@ class LogMessageSend extends AbstractMessageLog
     public static function getSubscribedEvents(): array
     {
         return [
-            MessageEvents::MESSAGE_SENDING => ['logMessage', 10],
+            MessageEvents::MESSAGE_SENDING => ['logMessage', -25],
         ];
     }
 

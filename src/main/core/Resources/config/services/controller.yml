@@ -116,9 +116,10 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AnalyticsBundle\Manager\AnalyticsManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\CoreBundle\Manager\VersionManager'
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 

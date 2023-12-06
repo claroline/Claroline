@@ -68,19 +68,19 @@ class WorkspaceRepository extends EntityRepository
         return $this->getEntityManager()
             ->createQuery('
                 SELECT DISTINCT w 
-                FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace w
+                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
                 WHERE EXISTS (
                     SELECT ot
                     FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
                     JOIN ot.rights otr
                     JOIN otr.role otrr
-                    WHERE ot.contextName = "workspace"
+                    WHERE ot.contextName = :contextName
                       AND ot.contextId = w.uuid
-                      AND otrr.name in (:roles)
+                      AND otrr.name IN (:roles)
                       AND BIT_AND(otr.mask, 1) = 1
                 )
-
             ')
+            ->setParameter('contextName', WorkspaceContext::getName())
             ->setParameter('roles', $roleNames)
             ->getResult();
     }

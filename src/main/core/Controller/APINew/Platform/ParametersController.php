@@ -11,23 +11,29 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Platform;
 
-use Claroline\AnalyticsBundle\Manager\AnalyticsManager;
 use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Event\Platform\EnableEvent;
 use Claroline\AppBundle\Event\Platform\ExtendEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * REST API to manage platform parameters.
@@ -36,33 +42,16 @@ class ParametersController extends AbstractSecurityController
 {
     use RequestDecoderTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var AnalyticsManager */
-    private $analyticsManager;
-    /** @var VersionManager */
-    private $versionManager;
-    /** @var ParametersSerializer */
-    private $serializer;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        StrictDispatcher $dispatcher,
-        PlatformConfigurationHandler $ch,
-        AnalyticsManager $analyticsManager,
-        VersionManager $versionManager,
-        ParametersSerializer $serializer
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly ObjectManager $om,
+        private readonly FileManager $fileManager,
+        private readonly VersionManager $versionManager,
+        private readonly ParametersSerializer $serializer
     ) {
-        $this->authorization = $authorization;
-        $this->dispatcher = $dispatcher;
-        $this->config = $ch;
-        $this->serializer = $serializer;
-        $this->versionManager = $versionManager;
-        $this->analyticsManager = $analyticsManager;
+        $this->setAuthorizationChecker($authorization);
     }
 
     /**
@@ -105,12 +94,20 @@ class ParametersController extends AbstractSecurityController
      */
     public function getAction(): JsonResponse
     {
-        $analytics = $this->analyticsManager->count();
+        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
 
         return new JsonResponse([
             'version' => $this->versionManager->getCurrent(),
             'meta' => $this->config->getParameter('meta'),
-            'analytics' => $analytics, // TODO : add analytics through eventing to avoid hard dependency to a plugin
+            'analytics' => [  // TODO : add analytics through eventing to avoid hard dependencies
+                'resources' => $this->om->getRepository(ResourceNode::class)->countActiveResources(),
+                'storage' => $this->fileManager->getUsedStorage(),
+                'users' => $this->om->getRepository(User::class)->countUsers(),
+                'roles' => count($this->om->getRepository(Role::class)->findAllPlatformRoles()),
+                'groups' => $this->om->getRepository(Group::class)->count([]),
+                'workspaces' => $this->om->getRepository(Workspace::class)->countNonPersonalWorkspaces(),
+                'organizations' => $this->om->getRepository(Organization::class)->count([]),
+            ],
         ]);
     }
 
@@ -121,12 +118,10 @@ class ParametersController extends AbstractSecurityController
      */
     public function enableAction(): JsonResponse
     {
-        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
-            throw new AccessDeniedException();
-        }
+        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
 
-        /** @var EnableEvent $event */
-        $event = $this->dispatcher->dispatch('platform.enable', EnableEvent::class);
+        $event = new EnableEvent();
+        $this->eventDispatcher->dispatch($event, 'platform.enable');
         if ($event->isCanceled()) {
             return new JsonResponse($event->getCancellationMessage(), 422); // not sure it's the correct status
         }
@@ -143,21 +138,17 @@ class ParametersController extends AbstractSecurityController
      */
     public function extendAction(): JsonResponse
     {
-        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
-            throw new AccessDeniedException();
-        }
+        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
 
         $newEnd = null;
 
         $dates = $this->config->getParameter('restrictions.dates');
         if (!empty($dates) && !empty($dates[1])) {
             // only do something if there is an end date
-            /** @var ExtendEvent $event */
-            $event = $this->dispatcher->dispatch('platform.extend', ExtendEvent::class, [
-                // by default extend for 1 week
-                // event listener can override it
-                DateNormalizer::denormalize($dates[1])->add(new \DateInterval('P7D')),
-            ]);
+            // by default extend for 1 week
+            // event listener can override it
+            $event = new ExtendEvent(DateNormalizer::denormalize($dates[1])->add(new \DateInterval('P7D')));
+            $this->eventDispatcher->dispatch($event, 'platform.extend');
 
             if ($event->isCanceled()) {
                 return new JsonResponse($event->getCancellationMessage(), 422); // not sure it's the correct status
@@ -178,9 +169,7 @@ class ParametersController extends AbstractSecurityController
      */
     public function disableAction(): JsonResponse
     {
-        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
-            throw new AccessDeniedException();
-        }
+        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
 
         $this->config->setParameter('restrictions.disabled', true);
 
@@ -192,9 +181,7 @@ class ParametersController extends AbstractSecurityController
      */
     public function enableMaintenanceAction(Request $request): JsonResponse
     {
-        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
-            throw new AccessDeniedException();
-        }
+        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
 
         $this->config->setParameter('maintenance.enable', true);
         if (!empty($request->getContent())) {
@@ -211,9 +198,7 @@ class ParametersController extends AbstractSecurityController
      */
     public function disableMaintenanceAction(): JsonResponse
     {
-        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
-            throw new AccessDeniedException();
-        }
+        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
 
         $this->config->setParameter('maintenance.enable', false);
 

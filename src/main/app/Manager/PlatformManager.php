@@ -2,7 +2,6 @@
 
 namespace Claroline\AppBundle\Manager;
 
-use Claroline\AppBundle\API\Utils\ArrayUtils;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\HttpFoundation\RequestStack;
 

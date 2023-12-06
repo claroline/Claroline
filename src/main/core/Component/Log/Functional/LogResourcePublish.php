@@ -17,7 +17,7 @@ class LogResourcePublish extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('update', 'post', ResourceNode::class) => ['logPublish', 10],
+            Crud::getEventName('update', 'post', ResourceNode::class) => ['logPublish', -25],
         ];
     }
 

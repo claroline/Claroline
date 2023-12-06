@@ -17,7 +17,7 @@ class LogWorkspaceCreate extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'post', Workspace::class) => ['logCreate', 10],
+            Crud::getEventName('create', 'post', Workspace::class) => ['logCreate', -25],
         ];
     }
 

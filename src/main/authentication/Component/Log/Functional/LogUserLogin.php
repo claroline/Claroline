@@ -16,7 +16,7 @@ class LogUserLogin extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            SecurityEvents::USER_LOGIN => ['logUserLogin', 10],
+            SecurityEvents::USER_LOGIN => ['logUserLogin', -25],
         ];
     }
 

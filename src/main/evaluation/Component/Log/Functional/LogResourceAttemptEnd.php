@@ -17,7 +17,7 @@ class LogResourceAttemptEnd extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            EvaluationEvents::RESOURCE_ATTEMPT => ['logEnd', 10],
+            EvaluationEvents::RESOURCE_ATTEMPT => ['logEnd', -25],
         ];
     }
 

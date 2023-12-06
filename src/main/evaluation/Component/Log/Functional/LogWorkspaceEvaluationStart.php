@@ -17,7 +17,7 @@ class LogWorkspaceEvaluationStart extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            EvaluationEvents::WORKSPACE_EVALUATION => ['logStart', 10],
+            EvaluationEvents::WORKSPACE_EVALUATION => ['logStart', -25],
         ];
     }
 

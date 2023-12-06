@@ -16,7 +16,7 @@ class LogBadgeRevoke extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            BadgeEvents::REMOVE_BADGE => ['logRevoke', 10],
+            BadgeEvents::REMOVE_BADGE => ['logRevoke', -25],
         ];
     }
 

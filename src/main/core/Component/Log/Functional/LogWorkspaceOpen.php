@@ -18,7 +18,7 @@ class LogWorkspaceOpen extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            ContextEvents::OPEN => ['logOpen', 10],
+            ContextEvents::OPEN => ['logOpen', -25],
         ];
     }
 

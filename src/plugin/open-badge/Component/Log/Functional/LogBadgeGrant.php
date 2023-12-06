@@ -16,7 +16,7 @@ class LogBadgeGrant extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            BadgeEvents::ADD_BADGE => ['logGrant', 10],
+            BadgeEvents::ADD_BADGE => ['logGrant', -25],
         ];
     }
 

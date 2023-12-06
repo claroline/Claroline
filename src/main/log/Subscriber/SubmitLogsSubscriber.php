@@ -28,7 +28,7 @@ class SubmitLogsSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::TERMINATE => ['submitProcessLogs', 50],
+            KernelEvents::TERMINATE => ['submitProcessLogs', -50],
         ];
     }
 

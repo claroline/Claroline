@@ -17,7 +17,7 @@ class LogResourceEvaluationEnd extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            EvaluationEvents::RESOURCE_EVALUATION => ['logEnd', 10],
+            EvaluationEvents::RESOURCE_EVALUATION => ['logEnd', -25],
         ];
     }
 
