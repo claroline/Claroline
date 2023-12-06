@@ -7,3 +7,8 @@ services:
     Claroline\OpenBadgeBundle\Component\Log\Functional\LogBadgeRevoke:
         parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
         tags: [ 'claroline.component.log' ]
+
+    # Operational
+    Claroline\OpenBadgeBundle\Component\Log\Operational\LogBadge:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]
