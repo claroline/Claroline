@@ -11,14 +11,14 @@ const EvaluationUsers = connect(
     contextId: toolSelectors.contextId(state)
   }),
   (dispatch) => ({
-    downloadParticipationCertificate(evaluation) {
-      dispatch(actions.downloadParticipationCertificate(evaluation))
-    },
-    downloadSuccessCertificate(evaluation) {
-      dispatch(actions.downloadSuccessCertificate(evaluation))
-    },
     deleteEvaluation(workspaceId, userId) {
       dispatch(actions.deleteUserProgression(workspaceId, userId))
+    },
+    downloadParticipationCertificates(evaluations) {
+      dispatch(actions.downloadParticipationCertificates(evaluations))
+    },
+    downloadSuccessCertificates(evaluations) {
+      dispatch(actions.downloadSuccessCertificates(evaluations))
     }
   })
 )(EvaluationUsersComponent)
