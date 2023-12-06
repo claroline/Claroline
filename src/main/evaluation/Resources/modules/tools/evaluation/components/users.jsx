@@ -135,14 +135,10 @@ const EvaluationUsers = (props) =>
             constants.EVALUATION_STATUS_PARTICIPATED
           ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))),
           callback: () => {
-            rows.map(row => {
-              if ([
-                constants.EVALUATION_STATUS_COMPLETED,
-                constants.EVALUATION_STATUS_PARTICIPATED
-              ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))) {
-                props.downloadParticipationCertificate(row)
-              }
-            })
+            props.downloadParticipationCertificates(rows.filter(row => [
+              constants.EVALUATION_STATUS_COMPLETED,
+              constants.EVALUATION_STATUS_PARTICIPATED
+            ].includes(get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN))))
           },
           group: trans('transfer'),
           scope: ['object', 'collection']
@@ -153,11 +149,7 @@ const EvaluationUsers = (props) =>
           label: trans('download_success_certificate', {}, 'actions'),
           displayed: -1 !== rows.findIndex((row) => constants.EVALUATION_STATUS_PASSED === get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN)),
           callback: () => {
-            rows.map(row => {
-              if (constants.EVALUATION_STATUS_PASSED === get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN)) {
-                props.downloadSuccessCertificate(row)
-              }
-            })
+            props.downloadSuccessCertificates(rows.filter((row) => constants.EVALUATION_STATUS_PASSED === get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN)))
           },
           group: trans('transfer'),
           scope: ['object', 'collection']
@@ -170,8 +162,8 @@ const EvaluationUsers = (props) =>
 EvaluationUsers.propTypes = {
   path: T.string.isRequired,
   contextId: T.string.isRequired,
-  downloadParticipationCertificate: T.func.isRequired,
-  downloadSuccessCertificate: T.func.isRequired
+  downloadParticipationCertificates: T.func.isRequired,
+  downloadSuccessCertificates: T.func.isRequired
 }
 
 export {
