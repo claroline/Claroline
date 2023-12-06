@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="hevinci_scale")
  * @BR\UniqueEntity("name")
  */
-class Scale implements \JsonSerializable
+class Scale
 {
     use Uuid;
 
@@ -168,15 +168,5 @@ class Scale implements \JsonSerializable
     public function getAbilityCount()
     {
         return $this->abilityCount;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'frameworkCount' => $this->frameworkCount,
-            'abilityCount' => $this->abilityCount,
-        ];
     }
 }

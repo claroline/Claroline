@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @BR\UniqueEntity("name")
  */
-class Ability implements \JsonSerializable
+class Ability
 {
     use Uuid;
 
@@ -210,17 +210,5 @@ class Ability implements \JsonSerializable
         return array_filter($this->resources->toArray(), function (ResourceNode $node) {
             return $node->isActive();
         });
-    }
-
-    public function jsonSerialize(): array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'resourceCount' => $this->resourceCount,
-            'minResourceCount' => $this->minResourceCount,
-            'levelName' => $this->level ? $this->level->getName() : null,
-            'levelValue' => $this->level ? $this->level->getValue() : null,
-        ];
     }
 }

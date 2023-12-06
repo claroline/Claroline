@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\CompetencyRepository")
  * @ORM\Table(name="hevinci_competency")
  */
-class Competency implements \JsonSerializable
+class Competency
 {
     use Uuid;
 
@@ -309,17 +309,5 @@ class Competency implements \JsonSerializable
     public function setResourceCount($resourceCount)
     {
         $this->resourceCount = $resourceCount;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'scale' => $this->scale ? $this->scale->getName() : null,
-            'level' => $this->lvl,
-            'resourceCount' => $this->resourceCount,
-        ];
     }
 }
