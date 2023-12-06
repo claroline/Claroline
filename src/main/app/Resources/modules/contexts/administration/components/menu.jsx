@@ -113,6 +113,7 @@ const AdministrationMenu = props =>
   </ContextMenu>
 
 AdministrationMenu.propTypes = {
+  basePath: T.string.isRequired,
   shortcuts: T.arrayOf(T.shape({
     type: T.oneOf(['tool', 'action']).isRequired,
     name: T.string.isRequired

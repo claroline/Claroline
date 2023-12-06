@@ -5,7 +5,6 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {constants} from '#/main/app/layout/sections/home/constants'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/main/core/administration/parameters/store'
@@ -76,23 +75,11 @@ const Meta = (props) =>
             options: {
               multiple: false,
               condensed: true,
-              choices: constants.HOME_TYPES
-            },
-            linked: [
-              {
-                name: 'home.data',
-                type: 'url',
-                label: trans('url'),
-                required: true,
-                displayed: (data) => constants.HOME_TYPE_URL === data.home.type
-              }, {
-                name: 'home.data',
-                type: 'html',
-                label: trans('content'),
-                required: true,
-                displayed: (data) => constants.HOME_TYPE_HTML === data.home.type
+              choices: {
+                none: trans('platform_home_none'),
+                tool: trans('platform_home_tool')
               }
-            ]
+            }
           }, {
             name: 'home.menu',
             type: 'choice',

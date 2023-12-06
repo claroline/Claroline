@@ -14,6 +14,7 @@ namespace Claroline\CursusBundle\Controller;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\PdfManager;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Tool\AbstractTool;
 use Claroline\CoreBundle\Entity\User;
@@ -344,7 +345,7 @@ class CourseController extends AbstractCrudController
 
     private function checkToolAccess(string $rights = 'OPEN'): bool
     {
-        $trainingsTool = $this->toolManager->getOrderedTool('trainings', AbstractTool::DESKTOP);
+        $trainingsTool = $this->toolManager->getOrderedTool('trainings', DesktopContext::getName());
 
         if (is_null($trainingsTool) || !$this->authorization->isGranted($rights, $trainingsTool)) {
             return false;

@@ -3,7 +3,6 @@ import React from 'react'
 import {implementPropTypes} from '#/main/app/prop-types'
 import {AppContext as AppContextTypes} from '#/main/app/context/prop-types'
 
-import {trans} from '#/main/app/intl/translation'
 import {ContextMain} from '#/main/app/context/containers/main'
 
 import {AdministrationLoading} from '#/main/app/contexts/administration/components/loading'
@@ -14,9 +13,6 @@ const AdministrationContext = (props) =>
     {...props}
 
     parent="desktop"
-
-    title={trans('administration')}
-
     menu={AdministrationMenu}
     loadingPage={AdministrationLoading}
   />

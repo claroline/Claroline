@@ -27,7 +27,7 @@ class LogRoleRemove extends AbstractSecurityLog
                 $this->getTranslator()->trans('user.remove_role_message', [
                     '%user%' => $user->getFullName(),
                 ], 'log'),
-                $user->getId()
+                $user
             );
         }
     }

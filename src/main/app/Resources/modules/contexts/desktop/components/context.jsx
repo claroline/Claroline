@@ -3,7 +3,6 @@ import React from 'react'
 import {implementPropTypes} from '#/main/app/prop-types'
 import {AppContext as AppContextTypes} from '#/main/app/context/prop-types'
 
-import {trans} from '#/main/app/intl/translation'
 import {ContextMain} from '#/main/app/context/containers/main'
 
 import {DesktopLoading} from '#/main/app/contexts/desktop/components/loading'
@@ -15,8 +14,6 @@ const DesktopContext = (props) =>
     {...props}
 
     parent="public"
-
-    title={trans('desktop')}
 
     menu={DesktopMenu}
     loadingPage={DesktopLoading}

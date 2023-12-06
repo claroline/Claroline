@@ -10,43 +10,39 @@ import {Technical} from '#/main/core/administration/parameters/technical/contain
 
 import {AppearanceTool} from '#/main/theme/administration/appearance/containers/tool'
 
-const ParametersTool = (props) => {
-
-  return (
-    <ToolPage
-      className="main-settings-container"
-      primaryAction="add"
-      subtitle={
-        <Routes
-          path={props.path}
-          routes={[
-            {path: '/', exact: true, render: () => trans('general')},
-            {path: '/technical',     render: () => trans('technical')},
-            {path: '/appearance',    render: () => trans('appearance')}
-          ]}
-        />
-      }
-    >
+const ParametersTool = (props) =>
+  <ToolPage
+    className="main-settings-container"
+    primaryAction="add"
+    subtitle={
       <Routes
         path={props.path}
         routes={[
-          {
-            path: '/',
-            exact: true,
-            component: Meta
-          },
-          {
-            path: '/technical',
-            component: Technical
-          }, {
-            path: '/appearance',
-            component: AppearanceTool
-          }
+          {path: '/', exact: true, render: () => trans('general')},
+          {path: '/technical',     render: () => trans('technical')},
+          {path: '/appearance',    render: () => trans('appearance')}
         ]}
       />
-    </ToolPage>
-  )
-}
+    }
+  >
+    <Routes
+      path={props.path}
+      routes={[
+        {
+          path: '/',
+          exact: true,
+          component: Meta
+        },
+        {
+          path: '/technical',
+          component: Technical
+        }, {
+          path: '/appearance',
+          component: AppearanceTool
+        }
+      ]}
+    />
+  </ToolPage>
 
 ParametersTool.propTypes = {
   path: T.string,

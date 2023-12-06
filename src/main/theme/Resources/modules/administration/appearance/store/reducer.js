@@ -12,10 +12,10 @@ import {
 
 export const reducer = combineReducers({
   availableThemes: makeReducer({}, {
-    [makeInstanceAction(TOOL_LOAD, 'main_settings')]: (state, action) => action.toolData.availableThemes
+    [makeInstanceAction(TOOL_LOAD, 'parameters')]: (state, action) => action.toolData.availableThemes
   }),
   availableIconSets: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, 'main_settings')]: (state, action) => action.toolData.availableIconSets,
+    [makeInstanceAction(TOOL_LOAD, 'parameters')]: (state, action) => action.toolData.availableIconSets,
     [APPEARANCE_ADD_ICON_SET]: (state, action) => {
       const newState = cloneDeep(state)
 
@@ -35,7 +35,7 @@ export const reducer = combineReducers({
     }
   }),
   availableColorCharts: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, 'main_settings')]: (state, action) => action.toolData.availableColorCharts,
+    [makeInstanceAction(TOOL_LOAD, 'parameters')]: (state, action) => action.toolData.availableColorCharts,
     [APPEARANCE_ADD_COLOR_CHART]: (state, action) => {
       const newState = cloneDeep(state)
 

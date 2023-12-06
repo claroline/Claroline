@@ -7,7 +7,7 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 const ScheduledTaskMenu = (props) =>
   <MenuSection
     {...props}
-    title={trans('scheduled_tasks', {}, 'tools')}
+    title={trans('scheduler', {}, 'tools')}
   />
 
 ScheduledTaskMenu.propTypes = {

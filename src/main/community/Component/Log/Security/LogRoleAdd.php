@@ -27,7 +27,7 @@ class LogRoleAdd extends AbstractSecurityLog
                 $this->getTranslator()->trans('user.add_role_message', [
                     '%user%' => $user->getFullName(),
                 ], 'log'),
-                $user->getId()
+                $user
             );
         }
     }

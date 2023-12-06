@@ -10,7 +10,7 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 const ParametersMenu = (props) =>
   <MenuSection
     {...omit(props, 'path')}
-    title={trans('main_settings', {}, 'tools')}
+    title={trans('parameters', {}, 'tools')}
   >
     <Toolbar
       id="parameters-menu"

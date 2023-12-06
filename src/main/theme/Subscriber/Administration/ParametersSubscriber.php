@@ -12,49 +12,32 @@
 namespace Claroline\ThemeBundle\Subscriber\Administration;
 
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Component\Tool\AbstractToolSubscriber;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
 use Claroline\ThemeBundle\Entity\ColorCollection;
 use Claroline\ThemeBundle\Manager\IconSetManager;
 use Claroline\ThemeBundle\Manager\ThemeManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ParametersSubscriber implements EventSubscriberInterface
+class ParametersSubscriber extends AbstractToolSubscriber
 {
-    const NAME = 'main_settings';
-
-    /** @var ThemeManager */
-    private $themeManager;
-    /** @var IconSetManager */
-    private $iconSetManager;
-    private SerializerProvider $serializer;
-    private ObjectManager $objectManager;
-
     public function __construct(
-        ThemeManager $themeManager,
-        IconSetManager $iconSetManager,
-        SerializerProvider $serializer,
-        ObjectManager $objectManager
+        private readonly ThemeManager $themeManager,
+        private readonly IconSetManager $iconSetManager,
+        private readonly SerializerProvider $serializer,
+        private readonly ObjectManager $objectManager
     ) {
-        $this->themeManager = $themeManager;
-        $this->iconSetManager = $iconSetManager;
-        $this->serializer = $serializer;
-        $this->objectManager = $objectManager;
     }
 
-    public static function getSubscribedEvents(): array
+    protected static function supportsTool(string $toolName): bool
     {
-        return [
-            ToolEvents::getEventName(ToolEvents::OPEN, Tool::ADMINISTRATION, static::NAME) => 'onOpen',
-        ];
+        return 'parameters' === $toolName;
     }
 
     /**
      * Displays parameters administration tool.
      */
-    public function onOpen(OpenToolEvent $event): void
+    protected function onOpen(OpenToolEvent $event): void
     {
         $colorCharts = $this->objectManager->getRepository(ColorCollection::class)->findAll();
         $chartsData = [];
@@ -63,7 +46,7 @@ class ParametersSubscriber implements EventSubscriberInterface
             $chartsData[] = $this->serializer->serialize($chart);
         }
 
-        $event->setData([
+        $event->addResponse([
             'availableThemes' => $this->themeManager->getAvailableThemes(),
             'availableIconSets' => $this->iconSetManager->getAvailableSets(),
             'availableColorCharts' => $chartsData,

@@ -82,7 +82,7 @@ class MenuMain extends Component {
             autoClose: this.autoClose
           }))}
 
-          {0 !== this.props.tools.length &&
+          {1 < this.props.tools.length &&
             <MenuSection
               className="tools"
               icon="fa fa-fw fa-tools"

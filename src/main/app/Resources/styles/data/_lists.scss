@@ -280,6 +280,6 @@ button.list-primary-action {
     @include embedded-list-variant(var(--#{$prefix}tertiary-bg), var(--#{$prefix}tertiary-bg), $card-border-color, $card-spacer-y $card-spacer-x);
 
     .data-list {
-        margin: (-$panel-body-padding); // maybe not the best way to handle it
+        margin: (-$accordion-padding-y) (-$accordion-padding-x); // maybe not the best way to handle it
     }
 }

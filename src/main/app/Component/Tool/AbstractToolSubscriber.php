@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AppBundle\Component\Context;
+namespace Claroline\AppBundle\Component\Tool;
 
 use Claroline\CoreBundle\Event\CatalogEvents\ToolEvents;
 use Claroline\CoreBundle\Event\Tool\AbstractToolEvent;
@@ -29,22 +29,30 @@ abstract class AbstractToolSubscriber implements EventSubscriberInterface
     /**
      * Do something when the tool is opened.
      */
-    abstract protected function onOpen(OpenToolEvent $event): void;
+    protected function onOpen(OpenToolEvent $event): void
+    {
+    }
 
     /**
      * Do something when the tool is configured.
      */
-    abstract protected function onConfigure(ConfigureToolEvent $event): void;
+    protected function onConfigure(ConfigureToolEvent $event): void
+    {
+    }
 
     /**
      * Do something when the tool is exported.
      */
-    abstract protected function onExport(ExportToolEvent $event): void;
+    protected function onExport(ExportToolEvent $event): void
+    {
+    }
 
     /**
      * Do something when the tool is imported.
      */
-    abstract protected function onImport(ExportToolEvent $event): void;
+    protected function onImport(ExportToolEvent $event): void
+    {
+    }
 
     final public function __call($method, $arguments): void
     {
@@ -60,6 +68,6 @@ abstract class AbstractToolSubscriber implements EventSubscriberInterface
         }
 
         // forward event to the subscriber instance
-        call_user_func([$this, $handler], [$event]);
+        call_user_func([$this, $handler], $event);
     }
 }

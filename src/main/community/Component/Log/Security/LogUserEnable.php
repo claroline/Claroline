@@ -26,7 +26,7 @@ class LogUserEnable extends AbstractSecurityLog
             $this->getTranslator()->trans('user.enable_message', [
                 '%user%' => $event->getUser()->getFullName(),
             ], 'log'),
-            $event->getUser()->getId()
+            $event->getUser()
         );
     }
 }

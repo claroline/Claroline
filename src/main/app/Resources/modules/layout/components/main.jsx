@@ -43,7 +43,7 @@ const LayoutMain = props => {
 
             {from: '/', exact: true, to: '/login', disabled: -1 !== props.availableContexts.findIndex(c => 'public' === c.name) || props.authenticated},
             {from: '/', exact: true, to: '/public', disabled: -1 === props.availableContexts.findIndex(c => 'public' === c.name) || props.authenticated},
-            {from: '/', exact: true, to: '/desktop', disabled: -1 === props.availableContexts.findIndex(c => 'public' === c.name) || !props.authenticated},
+            {from: '/', exact: true, to: '/desktop', disabled: !props.authenticated},
 
             // for retro-compatibility. DO NOT REMOVE !
             {from: '/home', to: '/public'}
