@@ -15,6 +15,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
             - '@Claroline\EvaluationBundle\Manager\PdfManager'
+            - '@Claroline\AppBundle\Manager\File\ArchiveManager'
 
     Claroline\EvaluationBundle\Controller\ResourceUserEvaluationController:
         arguments:
