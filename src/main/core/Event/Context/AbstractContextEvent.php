@@ -31,4 +31,9 @@ abstract class AbstractContextEvent extends Event
     {
         return $this->contextSubject;
     }
+
+    public function getContextId(): ?string
+    {
+        return $this->contextSubject?->getContextIdentifier();
+    }
 }

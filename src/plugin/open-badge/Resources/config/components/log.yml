@@ -1,0 +1,9 @@
+services:
+    # Functional
+    Claroline\OpenBadgeBundle\Component\Log\Functional\LogBadgeGrant:
+        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\OpenBadgeBundle\Component\Log\Functional\LogBadgeRevoke:
+        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
+        tags: [ 'claroline.component.log' ]

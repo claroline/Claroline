@@ -10,13 +10,9 @@ use Claroline\HistoryBundle\Entity\ResourceRecent;
 use Claroline\HistoryBundle\Entity\WorkspaceRecent;
 use Claroline\HistoryBundle\Repository\ResourceRecentRepository;
 use Claroline\HistoryBundle\Repository\WorkspaceRecentRepository;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
 
-class HistoryManager implements LoggerAwareInterface
+class HistoryManager
 {
-    use LoggerAwareTrait;
-
     /**
      * The number of results to fetch when retrieving user history.
      */

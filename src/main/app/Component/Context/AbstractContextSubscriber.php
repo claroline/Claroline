@@ -24,7 +24,9 @@ abstract class AbstractContextSubscriber implements EventSubscriberInterface
     /**
      * Do something when the context is opened.
      */
-    abstract protected function onOpen(OpenContextEvent $event): void;
+    protected function onOpen(OpenContextEvent $event): void
+    {
+    }
 
     final public function __call($method, $arguments): void
     {
@@ -39,6 +41,6 @@ abstract class AbstractContextSubscriber implements EventSubscriberInterface
         }
 
         // forward event to the subscriber instance
-        call_user_func([$this, $handler], [$event]);
+        call_user_func([$this, $handler], $event);
     }
 }
