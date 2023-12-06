@@ -116,7 +116,7 @@ const UserMenu = (props) => {
           </Alert>
         }
 
-        {!isEmpty(availableContexts) &&
+        {!isEmpty(availableContexts) && 1 < availableContexts.length &&
           <Toolbar
             className="list-group"
             buttonName="list-group-item list-group-item-action"
