@@ -5,5 +5,12 @@
     "forum_url_desc": "URL to the forum",
     "subject_desc": "Subject name",
     "subject_url_desc": "URL to the subject",
-    "message_desc": "Message"
+    "message_desc": "Message",
+
+    "post_datetime_utc_desc": "The date and time the post was made (UTC)",
+    "post_date_utc_desc": "The date the post was made (UTC)",
+    "post_time_utc_desc": "The time the post was made (UTC)",
+    "post_datetime_desc": "The date and time the post was made",
+    "post_date_desc": "The date the post was made",
+    "post_time_desc": "The time the post was made"
 }
