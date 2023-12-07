@@ -4,10 +4,22 @@
 
     "event_name": "The name of the event",
     "event_description_desc": "The description of the event",
-    "event_start_desc": "The start date of the event",
-    "event_end_desc": "The end date of the event",
     "event_poster_desc": "The poster of the event",
     "event_join_url": "URL allowing the user to indicate that he will participate in the event",
     "event_maybe_url": "URL allowing the user to indicate that he may participate in the event",
-    "event_decline_url": "URL allowing the user to indicate that he will not participate in the event"
+    "event_decline_url": "URL allowing the user to indicate that he will not participate in the event",
+
+    "event_start_datetime_utc_desc" :  "The start date and time of the event (UTC)",
+    "event_start_date_utc_desc" : "The start date of the event (UTC)",
+    "event_start_time_utc_desc" :  "The start time of the event (UTC)",
+    "event_start_datetime_desc" : "The start date and time of the event",
+    "event_start_date_desc" :  "The start date of the event",
+    "event_start_time_desc" : "The start time of the event",
+
+    "event_end_datetime_utc_desc" :  "The end date and time of the event (UTC)",
+    "event_end_date_utc_desc" : "The end date of the event (UTC)",
+    "event_end_time_utc_desc" :  "The end time of the event (UTC)",
+    "event_end_datetime_desc" : "The end date and time of the event",
+    "event_end_date_desc" :  "The end date of the event",
+    "event_end_time_desc" : "The end time of the event"
 }
