@@ -110,7 +110,7 @@ class SessionManager
             'session_max_users' => $session->getMaxUsers(),
             'session_start' => $session->getStartDate()->format('d/m/Y'),
             'session_end' => $session->getEndDate()->format('d/m/Y'),
-            'workspace_url' => $this->routingHelper->workspaceUrl($session->getWorkspace()),
+            'workspace_url' => $session->getWorkspace() ? $this->routingHelper->workspaceUrl($session->getWorkspace()) : '',
         ];
 
         return $this->templateManager->getTemplate('training_session', $placeholders, $locale);
