@@ -88,6 +88,7 @@ const ListSource = props => {
 }
 
 ListSource.propTypes = {
+  flush: T.bool,
   // list source definition
   source: T.shape({
     primaryAction: T.func,

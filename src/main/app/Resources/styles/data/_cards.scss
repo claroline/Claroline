@@ -4,8 +4,6 @@
 
 @use "sass:math";
 
-// todo : create mixin for color variants
-
 // mixins
 @mixin data-card-size-variant($icon-size, $title-size, $icon-spacer) {
     .data-card-header {
@@ -123,6 +121,13 @@
 
 .data-grid-item-container:hover {
     .data-grid-item-select {
+        z-index: 3;
+        transform: translateY(-2px);
+    }
+}
+
+.data-tree-item:hover {
+    .data-tree-item-select {
         z-index: 3;
         transform: translateY(-2px);
     }

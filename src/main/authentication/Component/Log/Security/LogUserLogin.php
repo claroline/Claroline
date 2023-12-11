@@ -23,7 +23,7 @@ class LogUserLogin extends AbstractSecurityLog
     public function logUserLogin(UserLoginEvent $loginEvent): void
     {
         $this->log(
-            $this->getTranslator()->trans('user_login_message', [
+            $this->getTranslator()->trans('authentication.user_login_message', [
                 '%username%' => $loginEvent->getUser(),
             ], 'log'),
             $loginEvent->getUser()

@@ -6,12 +6,12 @@ plugin:
     data_sources:
         - name: events
           type: list
-          context: [workspace, desktop, home]
+          context: [workspace, desktop, public]
           tags: [event]
 
         - name: tasks
           type: list
-          context: [workspace, desktop, home]
+          context: [workspace, desktop, public]
           tags: [event]
 
     templates:

@@ -15,7 +15,6 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Restriction\Locked;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -72,20 +71,6 @@ class Role
      * @var ArrayCollection
      */
     private $users;
-
-    /**
-     * should be unidirectional.
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\AdminTool",
-     *     mappedBy="roles"
-     * )
-     *
-     * @var ArrayCollection|AdminTool[]
-     *
-     * @deprecated
-     */
-    private $adminTools;
 
     /**
      * should be unidirectional.
@@ -334,18 +319,6 @@ class Role
     public function setPersonalWorkspaceCreationEnabled($boolean)
     {
         $this->personalWorkspaceCreationEnabled = $boolean;
-    }
-
-    /**
-     * Get the adminTools property.
-     *
-     * @return ArrayCollection
-     *
-     * @deprecated
-     */
-    public function getAdminTools()
-    {
-        return $this->adminTools;
     }
 
     /**

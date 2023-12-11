@@ -33,8 +33,8 @@ const TreeDataItemContent = props =>
         type={CALLBACK_BUTTON}
         className="btn-tree-toggle"
         icon={classes('fa fa-fw', {
-          'fa-plus': !props.expanded,
-          'fa-minus': props.expanded
+          'fa-circle-plus': !props.expanded,
+          'fa-circle-minus': props.expanded
         })}
         label={trans(props.expanded ? 'collapse':'expand', {}, 'actions')}
         tooltip="right"
@@ -43,7 +43,7 @@ const TreeDataItemContent = props =>
     }
 
     {createElement(props.card, {
-      className: classes({selected: props.selected}),
+      className: classes({'data-card-selected': props.selected}),
       size: 'sm',
       orientation: 'row',
       data: props.data,
@@ -166,7 +166,7 @@ const DataGridSort = props =>
 
     <Button
       id="data-tree-sort-menu"
-      className="btn-link"
+      className="btn btn-text-primary fw-bold"
       type={MENU_BUTTON}
       label={props.current.property && getPropDefinition(props.current.property, props.available) ?
         getPropDefinition(props.current.property, props.available).label :
@@ -185,8 +185,10 @@ const DataGridSort = props =>
       }}
     />
 
+    <div className="vr" role="presentation" />
+
     <Button
-      className="btn-link"
+      className="btn btn-text-primary"
       type={CALLBACK_BUTTON}
       icon={classes('fa fa-fw', {
         'fa-sort'     :  0 === props.current.direction || !props.current.direction,
@@ -233,8 +235,8 @@ const DataTree = props => {
             type={CALLBACK_BUTTON}
             className="btn-tree-toggle"
             icon={classes('fa fa-fw', {
-              'fa-plus': !isExpanded,
-              'fa-minus': isExpanded
+              'fa-circle-plus': !isExpanded,
+              'fa-circle-minus': isExpanded
             })}
             label={trans(isExpanded ? 'collapse':'expand', {}, 'actions')}
             tooltip="right"

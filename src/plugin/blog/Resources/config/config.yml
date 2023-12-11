@@ -14,5 +14,5 @@ plugin:
     data_sources:
         - name: blog_posts
           type: list
-          context: [workspace, desktop, home]
+          context: [workspace, desktop, public]
           tags: [content, community]

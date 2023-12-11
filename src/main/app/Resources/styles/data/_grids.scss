@@ -18,16 +18,11 @@
 // ---
 
 .data-grid-header {
-    //border: 1px solid transparent;
     padding: $data-grid-gutter 0 $data-grid-gutter $data-grid-gutter;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
-    > .checkbox {
-        margin: 0;
-    }
 }
 
 .data-grid-sort {
@@ -42,7 +37,7 @@
 
 // customizes bulk actions
 .data-grid .list-selected {
-    border: 1px solid transparent;
+    border: var(--#{$prefix}border-width) solid transparent;
     margin-bottom: $data-grid-gutter;
 
     .list-selected-label,

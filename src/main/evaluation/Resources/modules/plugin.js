@@ -23,9 +23,9 @@ registry.add('ClarolineEvaluationBundle', {
     }
   },
 
-  analytics: {
+  actions: {
     resource: {
-      'evaluation': () => { return import(/* webpackChunkName: "evaluation-analytics-resource-evaluation" */ '#/main/evaluation/analytics/resource/evaluation') }
+      'evaluation': () => { return import(/* webpackChunkName: "evaluation-action-resource-evaluation" */ '#/main/evaluation/actions/resource/evaluation') }
     }
   }
 })

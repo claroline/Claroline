@@ -10,71 +10,39 @@ use Claroline\CommunityBundle\Serializer\RoleSerializer;
 use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Entity\ConnectionMessage\Slide;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Doctrine\Persistence\ObjectRepository;
 
 class ConnectionMessageSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
+    private ObjectRepository $roleRepo;
+    private ObjectRepository $slideRepo;
 
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var PlatformManager */
-    private $platformManager;
-
-    /** @var RoleSerializer */
-    private $roleSerializer;
-
-    private $roleRepo;
-    private $slideRepo;
-    private $toolRepo;
-
-    /**
-     * ConnectionMessageSerializer constructor.
-     */
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        PlatformManager $platformManager,
-        RoleSerializer $roleSerializer
+        private readonly ObjectManager $om,
+        private readonly PlatformManager $platformManager,
+        private readonly RoleSerializer $roleSerializer
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->platformManager = $platformManager;
-        $this->roleSerializer = $roleSerializer;
-
         $this->roleRepo = $om->getRepository(Role::class);
         $this->slideRepo = $om->getRepository(Slide::class);
-        $this->toolRepo = $om->getRepository(Tool::class);
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return ConnectionMessage::class;
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/main/core/connection-message/message.json';
     }
 
     /**
      * Serializes a ConnectionMessage entity for the JSON api.
-     *
-     * @return array
      */
-    public function serialize(ConnectionMessage $message, array $options = [])
+    public function serialize(ConnectionMessage $message, array $options = []): array
     {
         $serialized = [
             'id' => $message->getUuid(),
@@ -105,27 +73,13 @@ class ConnectionMessageSerializer
                         }
                     }
 
-                    $shortcuts = [];
-                    if (!empty($slide->getShortcuts())) {
-                        foreach ($slide->getShortcuts() as $shortcut) {
-                            if ('tool' === $shortcut['type']) {
-                                $tool = $this->toolRepo->findOneBy(['name' => $shortcut['name']]);
-                                if ($tool && $this->authorization->isGranted('OPEN', $tool)) {
-                                    $shortcuts[] = $shortcut;
-                                }
-                            } else {
-                                $shortcuts[] = $shortcut;
-                            }
-                        }
-                    }
-
                     return [
                         'id' => $slide->getUuid(),
                         'title' => $slide->getTitle(),
                         'content' => $slide->getContent(),
                         'poster' => $poster,
                         'order' => $slide->getOrder(),
-                        'shortcuts' => $shortcuts,
+                        'shortcuts' => $slide->getShortcuts(),
                     ];
                 }, $message->getSlides()->toArray())),
             ]);

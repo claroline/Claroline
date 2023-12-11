@@ -48,12 +48,12 @@ class RoutingHelper
 
     public function adminUrl(string $adminToolName = null): string
     {
-        return $this->indexUrl().'#/admin/'.$adminToolName;
+        return $this->indexUrl().'#/administration/'.$adminToolName;
     }
 
     public function adminPath(string $adminToolName = null): string
     {
-        return $this->indexPath().'#/admin/'.$adminToolName;
+        return $this->indexPath().'#/administration/'.$adminToolName;
     }
 
     /**
@@ -88,28 +88,19 @@ class RoutingHelper
         }
     }
 
-    public function workspaceUrl(Workspace|array|string $workspace, string $toolName = null): string
+    public function workspaceUrl(Workspace $workspace, string $toolName = null): string
     {
         return $this->indexUrl().'#'.$this->workspaceFragment($workspace, $toolName);
     }
 
-    public function workspacePath(Workspace|array|string $workspace, string $toolName = null): string
+    public function workspacePath(Workspace $workspace, string $toolName = null): string
     {
         return $this->indexPath().'#'.$this->workspaceFragment($workspace, $toolName);
     }
 
-    public function workspaceFragment(Workspace|array|string $workspace, string $toolName = null): string
+    private function workspaceFragment(Workspace $workspace, string $toolName = null): string
     {
-        $slug = null;
-        if ($workspace instanceof Workspace) {
-            $slug = $workspace->getSlug();
-        } elseif (is_array($workspace) && isset($workspace['slug'])) {
-            $slug = $workspace['slug'];
-        } elseif (is_string($workspace)) {
-            $slug = $workspace;
-        }
-
-        $fragment = '/desktop/workspaces/open/'.$slug;
+        $fragment = '/desktop/workspaces/open/'.$workspace->getSlug();
         if ($toolName) {
             $fragment .= '/'.$toolName;
         }

@@ -10,11 +10,11 @@ import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 import {ResourceCard} from '#/main/evaluation/resource/components/card'
 import resourceEvaluationSource from '#/main/evaluation/data/sources/resource-evaluations'
 import {MODAL_RESOURCE_EVALUATIONS} from '#/main/evaluation/modals/resource-evaluations'
-import {selectors} from '#/main/evaluation/analytics/resource/evaluation/store'
+import {selectors} from '#/main/evaluation/resource/evaluation/store'
 
-const EvaluationDashboard = (props) =>
+const EvaluationMain = (props) =>
   <Fragment>
-    <ContentTitle title={trans('evaluation', {}, 'tools')} />
+    <ContentTitle className="mt-3" title={trans('evaluation', {}, 'tools')} />
 
     <ListData
       name={selectors.STORE_NAME}
@@ -47,10 +47,10 @@ const EvaluationDashboard = (props) =>
     />
   </Fragment>
 
-EvaluationDashboard.propTypes = {
+EvaluationMain.propTypes = {
   nodeId: T.string.isRequired
 }
 
 export {
-  EvaluationDashboard
+  EvaluationMain
 }

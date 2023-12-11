@@ -31,4 +31,36 @@ class LogProvider extends AbstractComponentProvider
     {
         return $this->registeredLogs;
     }
+
+    public function getFunctionalLogs(): array
+    {
+        return $this->getLogsByType(AbstractFunctionalLog::class);
+    }
+
+    public function getMessageLogs(): array
+    {
+        return $this->getLogsByType(AbstractMessageLog::class);
+    }
+
+    public function getOperationalLogs(): array
+    {
+        return $this->getLogsByType(AbstractOperationalLog::class);
+    }
+
+    public function getSecurityLogs(): array
+    {
+        return $this->getLogsByType(AbstractSecurityLog::class);
+    }
+
+    private function getLogsByType(string $typeClassname): array
+    {
+        $typeLogs = [];
+        foreach ($this->registeredLogs as $logHandler) {
+            if ($logHandler instanceof $typeClassname) {
+                $typeLogs[] = $logHandler::getName();
+            }
+        }
+
+        return $typeLogs;
+    }
 }

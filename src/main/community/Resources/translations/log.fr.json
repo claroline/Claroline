@@ -6,5 +6,11 @@
   "organization_add": "Ajout d'organisation",
   "organization_add_desc": "a ajouté %user% à l'organisation %organization%",
   "organization_remove": "Suppression d'organisation",
-  "organization_remove_desc": "a supprimé %user% de l'organisation %organization%"
+  "organization_remove_desc": "a supprimé %user% de l'organisation %organization%",
+
+  "group": "Groupe",
+  "organization": "Organisation",
+  "role": "Rôle",
+  "team": "Equipe",
+  "user": "Utilisateur"
 }

@@ -14,6 +14,7 @@ import {Alert} from '#/main/app/alert/components/alert'
 import resourcesSource from '#/main/core/data/sources/resources'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {getActions, getDefaultAction} from '#/main/core/resource/utils'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 /**
  * Transform resource node actions.
@@ -42,50 +43,52 @@ const PlayerMain = props =>
       <Alert type="warning" className="mt-3">{trans('storage_limit_reached_resources')}</Alert>
     }
 
-    <ListSource
-      className="my-3"
-      name={props.listName}
-      fetch={{
-        url: ['apiv2_resource_list', {parent: get(props.currentNode, 'id', null), all: props.all}],
-        autoload: true
-      }}
-      customActions={[
-        {
-          name: 'back',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-arrow-left',
-          label: get(props.currentNode, 'parent') ?
-            trans('back_to', {target: get(props.currentNode, 'parent.name')}) :
-            trans('back'),
-          disabled: !isEmpty(props.rootNode) && props.currentNode.slug === props.rootNode.slug,
-          target: `${props.path}/${get(props.currentNode, 'parent.slug', '')}`,
-          exact: true
-        }
-      ]}
-      source={merge({}, resourcesSource('workspace', get(props.currentNode, 'workspace'), {
-        update: props.updateNodes,
-        delete: props.deleteNodes
-      }, props.currentUser), {
-        // adds actions to source
-        primaryAction: (resourceNode) => getDefaultAction(resourceNode, {
-          update: props.updateNodes,
-          delete: props.deleteNodes
-        }, props.path, props.currentUser).then((action) => {
-          if (action) {
-            return transformAction(action, [resourceNode], props.embedded)
+    <ContentSizing size="full">
+      <ListSource
+        flush={true}
+        name={props.listName}
+        fetch={{
+          url: ['apiv2_resource_list', {parent: get(props.currentNode, 'id', null), all: props.all}],
+          autoload: true
+        }}
+        customActions={[
+          {
+            name: 'back',
+            type: LINK_BUTTON,
+            icon: 'fa fa-fw fa-arrow-left',
+            label: get(props.currentNode, 'parent') ?
+              trans('back_to', {target: get(props.currentNode, 'parent.name')}) :
+              trans('back'),
+            disabled: !isEmpty(props.rootNode) && props.currentNode.slug === props.rootNode.slug,
+            target: `${props.path}/${get(props.currentNode, 'parent.slug', '')}`,
+            exact: true
           }
-
-          return null
-        }),
-        actions: (resourceNodes) => getActions(resourceNodes, {
+        ]}
+        source={merge({}, resourcesSource('workspace', get(props.currentNode, 'workspace'), {
           update: props.updateNodes,
           delete: props.deleteNodes
-        }, props.path, props.currentUser).then((actions) => actions
-          .filter(action => !props.storageLock || 'copy' !== action.name)
-          .map(action => transformAction(action, resourceNodes, props.embedded)))
-      })}
-      parameters={props.listConfiguration}
-    />
+        }, props.currentUser), {
+          // adds actions to source
+          primaryAction: (resourceNode) => getDefaultAction(resourceNode, {
+            update: props.updateNodes,
+            delete: props.deleteNodes
+          }, props.path, props.currentUser).then((action) => {
+            if (action) {
+              return transformAction(action, [resourceNode], props.embedded)
+            }
+
+            return null
+          }),
+          actions: (resourceNodes) => getActions(resourceNodes, {
+            update: props.updateNodes,
+            delete: props.deleteNodes
+          }, props.path, props.currentUser).then((actions) => actions
+            .filter(action => !props.storageLock || 'copy' !== action.name)
+            .map(action => transformAction(action, resourceNodes, props.embedded)))
+        })}
+        parameters={props.listConfiguration}
+      />
+    </ContentSizing>
   </Fragment>
 
 PlayerMain.propTypes = {

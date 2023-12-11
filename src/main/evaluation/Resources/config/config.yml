@@ -5,6 +5,11 @@ plugin:
           tool_rights:
               - show_evaluations
 
+    resource_actions:
+        - name: evaluation
+          decoder: administrate
+          scope: [ object ]
+
     data_sources:
         - name: resource_attempts
           type: list

@@ -39,7 +39,7 @@ class FunctionalLogFinder extends AbstractFinder
                     break;
 
                 case 'resource':
-                    $qb->leftJoin('obj.resourceNode', 'n');
+                    $qb->leftJoin('obj.resource', 'n');
                     $qb->andWhere('n.uuid = :resource');
                     $qb->setParameter('resource', $filterValue);
                     break;

@@ -48,6 +48,11 @@ services:
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@security.token_storage'
 
+    Claroline\CoreBundle\Controller\APINew\Resource\ActivityController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\FinderProvider'
+
     Claroline\CoreBundle\Controller\APINew\Template\TemplateController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true

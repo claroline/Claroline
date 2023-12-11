@@ -209,7 +209,7 @@ class PlatformListener
             return [];
         }
 
-        $editUrl = $this->routingHelper->adminPath('parameters/privacy');
+        $editUrl = $this->routingHelper->adminPath('privacy');
 
         return [
             [

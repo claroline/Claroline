@@ -20,10 +20,11 @@ import {ResourceRestrictions} from '#/main/core/resource/components/restrictions
 
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 import {UserProgression} from '#/main/core/resource/components/user-progression'
+import {ResourceIcon} from '#/main/core/resource/components/icon'
 
 // FIXME
-import {DashboardMain} from '#/plugin/analytics/resource/dashboard/containers/main'
-import {ResourceIcon} from '#/main/core/resource/components/icon'
+import {EvaluationMain} from '#/main/evaluation/resource/evaluation/containers/main'
+import {LogsMain} from '#/main/log/resource/logs/containers/main'
 
 const ResourcePage = (props) => {
   // remove workspace root from path (it's already known by the breadcrumb)
@@ -37,8 +38,11 @@ const ResourcePage = (props) => {
 
   const routes = [
     {
-      path: '/dashboard',
-      component: DashboardMain
+      path: '/evaluation',
+      component: EvaluationMain
+    }, {
+      path: '/logs',
+      component: LogsMain
     }
   ].concat(props.routes)
 

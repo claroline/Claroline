@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\LevelRepository")
+ *
  * @ORM\Table(name="hevinci_level")
  */
 class Level
@@ -16,7 +17,9 @@ class Level
 
     /**
      * @ORM\Id
+     *
      * @ORM\Column(type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -33,6 +36,7 @@ class Level
 
     /**
      * @ORM\ManyToOne(targetEntity="Scale", inversedBy="levels")
+     *
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $scale;

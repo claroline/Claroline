@@ -13,7 +13,7 @@ plugin:
     data_sources:
         - name: course_sessions
           type: list
-          context: [workspace, desktop, home]
+          context: [workspace, desktop, public]
           tags: [community, event]
 
         - name: my_course_sessions
@@ -23,7 +23,7 @@ plugin:
 
         - name: all_courses
           type: list
-          context: [workspace, desktop, home]
+          context: [workspace, desktop, public]
           tags: [community, event]
 
         - name: training_events

@@ -10,7 +10,7 @@ plugin:
     data_sources:
         - name: announcements
           type: list
-          context: [workspace, desktop, home]
+          context: [workspace, desktop, public]
           tags: [community]
 
     templates:

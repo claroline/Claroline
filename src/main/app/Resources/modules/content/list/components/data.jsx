@@ -159,7 +159,7 @@ class ListData extends Component {
     }
 
     return (
-      <div className={classes('data-list', this.props.className)}>
+      <div className={classes('data-list', this.props.className, {'data-list-flush': this.props.flush})}>
         {this.props.title &&
           <ContentTitle
             level={this.props.level}
@@ -220,6 +220,8 @@ ListData.propTypes = {
   level: T.number,
   displayLevel: T.number,
   className: T.string,
+  flush: T.bool,
+
   /**
    * @deprecated
    */
@@ -332,7 +334,7 @@ ListData.propTypes = {
    * The card representation for the current data.
    * It's required to enable cards based display modes.
    *
-   * It must be a react component.
+   * It must be a React component.
    */
   card: T.func
 }

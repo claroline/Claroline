@@ -6,5 +6,11 @@
   "organization_add": "Add organization",
   "organization_add_desc": "has added %user% to organization %organization%",
   "organization_remove": "Remove organization",
-  "organization_remove_desc": "has removed %user% from organization %organization%"
+  "organization_remove_desc": "has removed %user% from organization %organization%",
+
+  "group": "Group",
+  "organization": "Organization",
+  "role": "Role",
+  "team": "Team",
+  "user": "User"
 }

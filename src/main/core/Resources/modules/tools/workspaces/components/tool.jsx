@@ -6,6 +6,7 @@ import merge from 'lodash/merge'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {ToolPage} from '#/main/core/tool/containers/page'
@@ -15,7 +16,7 @@ import {MODAL_WORKSPACE_IMPORT} from '#/main/core/workspace/modals/import'
 
 const WorkspacesTool = (props) => {
   // we invalidate all the workspaces list when we execute an action on one or many workspaces
-  // because actions can make the ws appear/disappear from multiple mounted lists (eg. archive or unarchive)
+  // because actions can make the ws appear/disappear from multiple mounted lists (e.g. archive or unarchive)
   // and this is not predictable.
   const refresher = {
     add: () => {
@@ -90,11 +91,14 @@ const WorkspacesTool = (props) => {
             disabled: isEmpty(props.currentUser),
             render: () => {
               const Registered = (
-                <WorkspaceList
-                  url={['apiv2_workspace_list_registered']}
-                  name="workspaces.registered"
-                  refresher={refresher}
-                />
+                <ContentSizing size="full">
+                  <WorkspaceList
+                    flush={true}
+                    url={['apiv2_workspace_list_registered']}
+                    name="workspaces.registered"
+                    refresher={refresher}
+                  />
+                </ContentSizing>
               )
 
               return Registered
@@ -103,11 +107,14 @@ const WorkspacesTool = (props) => {
             path: '/public',
             render: () => {
               const PublicList = (
-                <WorkspaceList
-                  url={['apiv2_workspace_list_registerable']}
-                  name="workspaces.public"
-                  refresher={refresher}
-                />
+                <ContentSizing size="full">
+                  <WorkspaceList
+                    flush={true}
+                    url={['apiv2_workspace_list_registerable']}
+                    name="workspaces.public"
+                    refresher={refresher}
+                  />
+                </ContentSizing>
               )
 
               return PublicList
@@ -117,11 +124,14 @@ const WorkspacesTool = (props) => {
             disabled: isEmpty(props.currentUser),
             render: () => {
               const ManagedList = (
-                <WorkspaceList
-                  url={['apiv2_workspace_list_managed']}
-                  name="workspaces.managed"
-                  refresher={refresher}
-                />
+                <ContentSizing size="full">
+                  <WorkspaceList
+                    flush={true}
+                    url={['apiv2_workspace_list_managed']}
+                    name="workspaces.managed"
+                    refresher={refresher}
+                  />
+                </ContentSizing>
               )
 
               return ManagedList
@@ -131,11 +141,14 @@ const WorkspacesTool = (props) => {
             disabled: !props.canCreate,
             render: () => {
               const ModelList = (
-                <WorkspaceList
-                  url={['apiv2_workspace_list_model']}
-                  name="workspaces.models"
-                  refresher={refresher}
-                />
+                <ContentSizing size="full">
+                  <WorkspaceList
+                    url={['apiv2_workspace_list_model']}
+                    name="workspaces.models"
+                    refresher={refresher}
+                    flush={true}
+                  />
+                </ContentSizing>
               )
 
               return ModelList
@@ -145,19 +158,22 @@ const WorkspacesTool = (props) => {
             disabled: !props.canArchive,
             render: () => {
               const ArchiveList = (
-                <WorkspaceList
-                  url={['apiv2_workspace_list_archive']}
-                  name="workspaces.archives"
-                  refresher={refresher}
-                  customDefinition={[
-                    {
-                      name: 'meta.model',
-                      label: trans('model'),
-                      type: 'boolean',
-                      alias: 'model'
-                    }
-                  ]}
-                />
+                <ContentSizing size="full">
+                  <WorkspaceList
+                    flush={true}
+                    url={['apiv2_workspace_list_archive']}
+                    name="workspaces.archives"
+                    refresher={refresher}
+                    customDefinition={[
+                      {
+                        name: 'meta.model',
+                        label: trans('model'),
+                        type: 'boolean',
+                        alias: 'model'
+                      }
+                    ]}
+                  />
+                </ContentSizing>
               )
 
               return ArchiveList

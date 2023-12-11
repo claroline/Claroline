@@ -1,0 +1,9 @@
+{
+  "authentication.user_login": "Connexion d'un utilisateur",
+  "authentication.user_login_desc": "Lorsqu'un utilisateur se connecte à la plateforme avec son compte (interne ou externe).",
+  "authentication.user_login_message": "s'est connecté.",
+
+  "authentication.user_logout": "Déconnexion d'un utilisateur",
+  "authentication.user_logout_desc": "Lorsqu'un utilisateur se déconnecte de la plateforme.",
+  "authentication.user_logout_message": "s'est déconnecté."
+}

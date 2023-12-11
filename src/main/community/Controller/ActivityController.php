@@ -7,10 +7,11 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Repository\GroupRepository;
 use Claroline\CommunityBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
@@ -165,9 +166,9 @@ class ActivityController
     private function checkToolAccess(string $rights = 'OPEN', string $contextId = null): bool
     {
         if ($contextId) {
-            $communityTool = $this->toolManager->getOrderedTool('community', Tool::WORKSPACE, $contextId);
+            $communityTool = $this->toolManager->getOrderedTool('community', WorkspaceContext::getName(), $contextId);
         } else {
-            $communityTool = $this->toolManager->getOrderedTool('community', Tool::DESKTOP);
+            $communityTool = $this->toolManager->getOrderedTool('community', DesktopContext::getName());
         }
 
         if (is_null($communityTool) || !$this->authorization->isGranted($rights, $communityTool)) {

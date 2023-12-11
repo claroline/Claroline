@@ -229,7 +229,6 @@ services:
     Claroline\CoreBundle\API\Serializer\Platform\ConnectionMessageSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CommunityBundle\Serializer\RoleSerializer'

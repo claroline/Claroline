@@ -41,8 +41,8 @@ const TreeDataItemContent = props =>
         type={CALLBACK_BUTTON}
         className="btn-tree-toggle"
         icon={classes('fa fa-fw', {
-          'fa-plus': !props.expanded,
-          'fa-minus': props.expanded
+          'fa-circle-plus': !props.expanded,
+          'fa-circle-minus': props.expanded
         })}
         label={trans(props.expanded ? 'collapse':'expand', {}, 'actions')}
         tooltip="right"
@@ -213,8 +213,8 @@ class TreeData extends Component {
                 type={CALLBACK_BUTTON}
                 className="btn-tree-toggle"
                 icon={classes('fa fa-fw', {
-                  'fa-plus': !this.state.expanded,
-                  'fa-minus': this.state.expanded
+                  'fa-circle-plus': !this.state.expanded,
+                  'fa-circle-minus': this.state.expanded
                 })}
                 label={trans(this.state.expanded ? 'collapse':'expand', {}, 'actions')}
                 tooltip="right"
