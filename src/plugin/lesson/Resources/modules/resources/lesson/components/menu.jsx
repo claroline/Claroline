@@ -1,5 +1,5 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {PropTypes as T}  from 'prop-types'
 import omit from 'lodash/omit'
 
 import {matchPath} from '#/main/app/router'
@@ -9,12 +9,20 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {MenuSection} from '#/main/app/layout/menu/components/section'
 import {SearchMinimal} from '#/main/app/content/search/components/minimal'
 import {ContentSummary} from '#/main/app/content/components/summary'
+import {getNumbering} from '#/plugin/lesson/resources/lesson/utils'
 
 const LessonMenu = props => {
   function getChapterSummary(chapter) {
+
+    let numbering = getNumbering(props.lesson.display.numbering, props.tree.children, chapter)
+    if (numbering.length > 0) {
+      numbering = `${numbering}. `
+    }
+
     return {
+      id: chapter.id,
       type: LINK_BUTTON,
-      label: (chapter.numbering + ' ' + chapter.title).trim(),
+      label: numbering + chapter.title,
       target: `${props.path}/${chapter.slug}`,
       onClick: props.autoClose,
       active: !!matchPath(props.location.pathname, {path: `${props.path}/${chapter.slug}`}),

@@ -5,7 +5,8 @@ const Lesson = {
     id: T.string.isRequired,
     display: T.shape({
       description: T.string,
-      showOverview: T.bool
+      showOverview: T.bool,
+      numbering: T.string
     })
   },
   defaultProps: {}

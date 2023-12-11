@@ -106,8 +106,7 @@ class ChapterManager
         $newChapter->setLesson($lesson);
 
         if (null === $newChapter->getTitle()) {
-            $order = $this->getChapterOrder($parent, $data);
-            $newChapter->setTitle($this->translator->trans('chapter', ['%chapter%' => $order], 'lesson'));
+            $newChapter->setTitle($this->translator->trans('new_chapter', [], 'lesson'));
         }
 
         $this->insertChapterInPlace($newChapter, $parent, $data);
@@ -193,42 +192,5 @@ class ChapterManager
     private function dispatch($event)
     {
         $this->eventDispatcher->dispatch($event, 'log');
-    }
-
-    private function getChapterOrder($parent, $data): int
-    {
-        $position = $data['position'];
-        $sibling = $data['order']['sibling'];
-        $subchapter = $data['order']['subchapter'];
-
-        switch ($position) {
-            case 'subchapter':
-                switch ($subchapter) {
-                    case 'first':
-                        $num = 1;
-                        break;
-                    case 'last':
-                    default:
-                        $chapters = $this->chapterRepository->getChapterChildren($parent);
-                        $num = count($chapters) + 1;
-                        break;
-                }
-                break;
-            case 'sibling':
-            default:
-                $prevChapters = $this->chapterRepository->getPrevSiblings($parent);
-                switch ($sibling) {
-                    case 'before':
-                        $num = count($prevChapters) + 1;
-                        break;
-                    case 'after':
-                    default:
-                        $num = count($prevChapters) + 2;
-                        break;
-                }
-                break;
-        }
-
-        return $num;
     }
 }
