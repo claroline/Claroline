@@ -61,8 +61,18 @@ plugin:
               - session_poster
               - session_public_registration
               - session_max_users
-              - session_start
-              - session_end
+              - session_start_datetime_utc
+              - session_start_date_utc
+              - session_start_time_utc
+              - session_start_datetime
+              - session_start_date
+              - session_start_time
+              - session_end_datetime_utc
+              - session_end_date_utc
+              - session_end_time_utc
+              - session_end_datetime
+              - session_end_date
+              - session_end_time
 
         - name: training_session_invitation
           type: email
@@ -74,8 +84,18 @@ plugin:
               - session_name
               - session_description
               - session_poster
-              - session_start
-              - session_end
+              - session_start_datetime_utc
+              - session_start_date_utc
+              - session_start_time_utc
+              - session_start_datetime
+              - session_start_date
+              - session_start_time
+              - session_end_datetime_utc
+              - session_end_date_utc
+              - session_end_time_utc
+              - session_end_datetime
+              - session_end_date
+              - session_end_time
               - session_trainers
               - workspace_url
 
@@ -89,8 +109,18 @@ plugin:
               - session_name
               - session_description
               - session_poster
-              - session_start
-              - session_end
+              - session_start_datetime_utc
+              - session_start_date_utc
+              - session_start_time_utc
+              - session_start_datetime
+              - session_start_date
+              - session_start_time
+              - session_end_datetime_utc
+              - session_end_date_utc
+              - session_end_time_utc
+              - session_end_datetime
+              - session_end_date
+              - session_end_time
               - session_trainers
               - registration_confirmation_url
               - workspace_url
@@ -104,13 +134,33 @@ plugin:
               - session_name
               - session_description
               - session_code
-              - session_start
-              - session_end
+              - session_start_datetime_utc
+              - session_start_date_utc
+              - session_start_time_utc
+              - session_start_datetime
+              - session_start_date
+              - session_start_time
+              - session_end_datetime_utc
+              - session_end_date_utc
+              - session_end_time_utc
+              - session_end_datetime
+              - session_end_date
+              - session_end_time
               - event_name
               - event_code
               - event_description
-              - event_start
-              - event_end
+              - event_start_datetime_utc
+              - event_start_date_utc
+              - event_start_time_utc
+              - event_start_datetime
+              - event_start_date
+              - event_start_time
+              - event_end_datetime_utc
+              - event_end_date_utc
+              - event_end_time_utc
+              - event_end_datetime
+              - event_end_date
+              - event_end_time
               - event_location_name
               - event_location_address
               - event_trainers
@@ -124,13 +174,33 @@ plugin:
               - session_name
               - session_description
               - session_code
-              - session_start
-              - session_end
+              - session_start_datetime_utc
+              - session_start_date_utc
+              - session_start_time_utc
+              - session_start_datetime
+              - session_start_date
+              - session_start_time
+              - session_end_datetime_utc
+              - session_end_date_utc
+              - session_end_time_utc
+              - session_end_datetime
+              - session_end_date
+              - session_end_time
               - event_name
               - event_code
               - event_description
-              - event_start
-              - event_end
+              - event_start_datetime_utc
+              - event_start_date_utc
+              - event_start_time_utc
+              - event_start_datetime
+              - event_start_date
+              - event_start_time
+              - event_end_datetime_utc
+              - event_end_date_utc
+              - event_end_time_utc
+              - event_end_datetime
+              - event_end_date
+              - event_end_time
               - event_location_name
               - event_location_address
               - event_trainers
@@ -141,8 +211,18 @@ plugin:
               - event_name
               - event_code
               - event_description
-              - event_start
-              - event_end
+              - event_start_datetime_utc
+              - event_start_date_utc
+              - event_start_time_utc
+              - event_start_datetime
+              - event_start_date
+              - event_start_time
+              - event_end_datetime_utc
+              - event_end_date_utc
+              - event_end_time_utc
+              - event_end_datetime
+              - event_end_date
+              - event_end_time
               - event_presences_table
 
         - name: training_event_presence
@@ -151,8 +231,18 @@ plugin:
               - event_name
               - event_code
               - event_description
-              - event_start
-              - event_end
+              - event_start_datetime_utc
+              - event_start_date_utc
+              - event_start_time_utc
+              - event_start_datetime
+              - event_start_date
+              - event_start_time
+              - event_end_datetime_utc
+              - event_end_date_utc
+              - event_end_time_utc
+              - event_end_datetime
+              - event_end_date
+              - event_end_time
               - event_presence_status
               - user_first_name
               - user_last_name
