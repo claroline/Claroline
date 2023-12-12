@@ -155,6 +155,7 @@ class ExportManager
             }
 
             $data['publicationDate'] = empty($entry->getPublicationDate()) ? '' : $entry->getPublicationDate()->format('d/m/Y');
+            $data['creationDate'] = empty($entry->getCreationDate()) ? '' : $entry->getCreationDate()->format('d/m/Y');
             $data['editionDate'] = empty($entry->getEditionDate()) ? '' : $entry->getEditionDate()->format('d/m/Y');
 
             foreach ($fieldValues as $fieldValue) {
@@ -179,13 +180,10 @@ class ExportManager
             $entriesData[] = $data;
         }
 
-        $entryList = $this->templating->render(
-            '@ClarolineClacoForm/claco_form/entries_export.html.twig',
-            [
-                'fields' => $fields,
-                'entries' => $entriesData,
-            ]
-        );
+        $entryList = $this->templating->render('@ClarolineClacoForm/claco_form/entries_export.html.twig', [
+            'fields' => $fields,
+            'entries' => $entriesData,
+        ]);
 
         $exportedFile = $this->tempManager->generate();
         if (empty($files)) {
