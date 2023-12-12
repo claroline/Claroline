@@ -1,13 +1,25 @@
 {
-    "event_invitation": "Invitation à un évènement",
-    "event_invitation_desc": "Template utilisé pour l'envoi des invitations aux évènements.",
+    "event_invitation": "Invitation à un événement",
+    "event_invitation_desc": "Template utilisé pour l'envoi des invitations aux événements.",
 
-    "event_name": "Le nom de l'évènement",
-    "event_description_desc": "La description de l'évènement",
-    "event_start_desc": "La date de début de l'évènement",
-    "event_end_desc": "La date de fin de l'évènement",
-    "event_poster_desc": "Le poster de l'évènement",
-    "event_join_url": "URL permettant à l'utilisateur d'indiquer qu'il participera à l'évènement",
-    "event_maybe_url": "URL permettant à l'utilisateur d'indiquer qu'il participera peut-être à l'évènement",
-    "event_decline_url": "URL permettant à l'utilisateur d'indiquer qu'il ne participera pas à l'évènement"
+    "event_name": "Le nom de l'événement",
+    "event_description_desc": "La description de l'événement",
+    "event_poster_desc": "Le poster de l'événement",
+    "event_join_url": "URL permettant à l'utilisateur d'indiquer qu'il participera à l'événement",
+    "event_maybe_url": "URL permettant à l'utilisateur d'indiquer qu'il participera peut-être à l'événement",
+    "event_decline_url": "URL permettant à l'utilisateur d'indiquer qu'il ne participera pas à l'événement",
+
+    "event_start_datetime_utc_desc" :  "La date et l'heure de début de l'événement (UTC)",
+    "event_start_date_utc_desc" : "La date de début de l'événement (UTC)",
+    "event_start_time_utc_desc" :  "L'heure de début de l'événement (UTC)",
+    "event_start_datetime_desc" : "L'heure et la date de début de l'événement",
+    "event_start_date_desc" :  "La date de début de l'événement",
+    "event_start_time_desc" : "L'heure de début de l'événement",
+
+    "event_end_datetime_utc_desc" :  "La date et l'heure de fin de l'événement (UTC)",
+    "event_end_date_utc_desc" : "La date de fin de l'événement (UTC)",
+    "event_end_time_utc_desc" :  "L'heure de fin de l'événement (UTC)",
+    "event_end_datetime_desc" : "L'heure et la date de fin de l'événement",
+    "event_end_date_desc" :  "La date de fin de l'événement",
+    "event_end_time_desc" : "L'heure de fin de l'événement"
 }

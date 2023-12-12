@@ -65,37 +65,38 @@ class SendEventInvitationHandler implements MessageHandlerInterface
                 }
             }
 
-            $placeholders = [
-                'first_name' => $user->getFirstName(),
-                'last_name' => $user->getLastName(),
-                'username' => $user->getUsername(),
+            $placeholders = array_merge([
+                    'first_name' => $user->getFirstName(),
+                    'last_name' => $user->getLastName(),
+                    'username' => $user->getUsername(),
 
-                // event info
-                'event_name' => $event->getName(),
-                'event_start' => $event->getStartDate()->format('d/m/Y H:i'),
-                'event_end' => $event->getEndDate()->format('d/m/Y H:i'),
-                'event_description' => $event->getDescription(),
-                'event_poster' => $event->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$event->getPoster().'" style="max-width: 100%;"/>' : '',
-                'event_location_name' => $locationName,
-                'event_location_address' => $locationAddress,
+                    // event info
+                    'event_name' => $event->getName(),
+                    'event_description' => $event->getDescription(),
+                    'event_poster' => $event->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$event->getPoster().'" style="max-width: 100%;"/>' : '',
+                    'event_location_name' => $locationName,
+                    'event_location_address' => $locationAddress,
 
-                // set status urls
-                'event_join_url' => $this->router->generate(
-                    'apiv2_event_change_invitation_status',
-                    ['id' => $invitation->getId(), 'status' => EventInvitation::JOIN],
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                ),
-                'event_maybe_url' => $this->router->generate(
-                    'apiv2_event_change_invitation_status',
-                    ['id' => $invitation->getId(), 'status' => EventInvitation::MAYBE],
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                ),
-                'event_decline_url' => $this->router->generate(
-                    'apiv2_event_change_invitation_status',
-                    ['id' => $invitation->getId(), 'status' => EventInvitation::RESIGN],
-                    UrlGeneratorInterface::ABSOLUTE_URL
-                ),
-            ];
+                    // set status urls
+                    'event_join_url' => $this->router->generate(
+                        'apiv2_event_change_invitation_status',
+                        ['id' => $invitation->getId(), 'status' => EventInvitation::JOIN],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
+                    'event_maybe_url' => $this->router->generate(
+                        'apiv2_event_change_invitation_status',
+                        ['id' => $invitation->getId(), 'status' => EventInvitation::MAYBE],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
+                    'event_decline_url' => $this->router->generate(
+                        'apiv2_event_change_invitation_status',
+                        ['id' => $invitation->getId(), 'status' => EventInvitation::RESIGN],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    ),
+                ],
+                $this->templateManager->formatDatePlaceholder('event_start', $event->getStartDate()),
+                $this->templateManager->formatDatePlaceholder('event_end', $event->getEndDate())
+            );
 
             if ($event->getInvitationTemplate()) {
                 // use custom template

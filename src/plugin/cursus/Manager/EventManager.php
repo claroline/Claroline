@@ -373,26 +373,27 @@ class EventManager
             }
         }
 
-        return [
-            // course info
-            'course_name' => $course->getName(),
-            'course_code' => $course->getCode(),
-            'course_description' => $course->getDescription(),
-            // session info
-            'session_name' => $session->getName(),
-            'session_description' => $session->getDescription(),
-            'session_code' => $session->getCode(),
-            'session_start' => $session->getStartDate()->format('d/m/Y'),
-            'session_end' => $session->getEndDate()->format('d/m/Y'),
-            // event info
-            'event_name' => $event->getName(),
-            'event_description' => $event->getDescription(),
-            'event_code' => $event->getCode(),
-            'event_start' => $event->getStartDate()->format('d/m/Y H:i'),
-            'event_end' => $event->getEndDate()->format('d/m/Y H:i'),
-            'event_location_name' => $locationName,
-            'event_location_address' => $locationAddress,
-            'event_trainers' => $trainersList,
-        ];
+        return array_merge([
+                // course info
+                'course_name' => $course->getName(),
+                'course_code' => $course->getCode(),
+                'course_description' => $course->getDescription(),
+                // session info
+                'session_name' => $session->getName(),
+                'session_description' => $session->getDescription(),
+                'session_code' => $session->getCode(),
+                // event info
+                'event_name' => $event->getName(),
+                'event_description' => $event->getDescription(),
+                'event_code' => $event->getCode(),
+                'event_location_name' => $locationName,
+                'event_location_address' => $locationAddress,
+                'event_trainers' => $trainersList,
+            ],
+            $this->templateManager->formatDatePlaceholder('session_start', $session->getStartDate()),
+            $this->templateManager->formatDatePlaceholder('session_end', $session->getEndDate()),
+            $this->templateManager->formatDatePlaceholder('event_start', $event->getStartDate()),
+            $this->templateManager->formatDatePlaceholder('event_end', $event->getEndDate()),
+        );
     }
 }
