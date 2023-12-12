@@ -147,13 +147,31 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, isCategoryM
       // Metadata
       {
         name: 'creationDate',
-        label: trans('date'),
+        label: trans('creation_date'),
         type: 'date',
         filterable: false,
         displayed: canViewMetadata,
         displayable: canViewMetadata,
         sortable: canViewMetadata,
         calculated: (rowData) => canViewEntryMetadata(rowData, clacoForm, canEdit, currentUser) ? rowData.creationDate : null
+      }, {
+        name: 'publicationDate',
+        label: trans('publication_date', {}, 'clacoform'),
+        type: 'date',
+        filterable: false,
+        displayed: false,
+        displayable: canViewMetadata,
+        sortable: canViewMetadata,
+        calculated: (rowData) => canViewEntryMetadata(rowData, clacoForm, canEdit, currentUser) ? rowData.publicationDate : null
+      }, {
+        name: 'editionDate',
+        label: trans('last_modification'),
+        type: 'date',
+        filterable: false,
+        displayed: false,
+        displayable: canViewMetadata,
+        sortable: canViewMetadata,
+        calculated: (rowData) => canViewEntryMetadata(rowData, clacoForm, canEdit, currentUser) ? rowData.editionDate : null
       }, {
         name: 'createdAfter',
         label: trans('created_after'),
