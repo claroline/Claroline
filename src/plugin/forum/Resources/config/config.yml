@@ -23,7 +23,12 @@ plugin:
               - subject
               - subject_url
               - message
-              - date
+              - post_datetime_utc
+              - post_date_utc
+              - post_time_utc
+              - post_datetime
+              - post_date
+              - post_time
               - author
               - workspace
               - workspace_url
