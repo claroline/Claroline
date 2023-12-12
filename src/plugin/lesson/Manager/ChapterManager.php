@@ -105,10 +105,6 @@ class ChapterManager
         $newChapter = $this->chapterSerializer->deserialize($data);
         $newChapter->setLesson($lesson);
 
-        if (null === $newChapter->getTitle()) {
-            $newChapter->setTitle($this->translator->trans('new_chapter', [], 'lesson'));
-        }
-
         $this->insertChapterInPlace($newChapter, $parent, $data);
 
         $this->dispatch(new LogChapterCreateEvent($lesson, $newChapter, []));

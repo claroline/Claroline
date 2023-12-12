@@ -12,6 +12,8 @@ import {ChapterForm} from '#/plugin/lesson/resources/lesson/components/chapter-f
 import {Editor} from '#/plugin/lesson/resources/lesson/editor/containers/editor'
 import {LessonOverview} from '#/plugin/lesson/resources/lesson/containers/overview'
 import {ChapterList} from '#/plugin/lesson/resources/lesson/containers/list'
+import {getNumbering, flattenChapters} from '#/plugin/lesson/resources/lesson/utils'
+import {constants as LESSON_NUMBERINGS} from '#/plugin/lesson/resources/lesson/constants'
 
 class LessonResource extends Component {
   constructor(props) {
@@ -24,6 +26,27 @@ class LessonResource extends Component {
     if (this.props.invalidated && this.props.invalidated !== prevProps.invalidated) {
       this.reload()
     }
+  }
+
+  newChapterNumbering(props, slug = null) {
+    if(slug === null) {
+      const numbering = props.tree.children ? props.tree.children.length + 1 : 1
+      if (props.lesson.display.numbering === LESSON_NUMBERINGS.NUMBERING_LITERAL) {
+        return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[numbering - 1]
+      }
+      return numbering
+    }
+
+    const chapters = flattenChapters(props.tree.children, true)
+    const parentChapter = chapters.find(chapter => chapter.slug === slug)
+    const parentNumbering = parentChapter ? getNumbering(props.lesson.display.numbering, props.tree.children, parentChapter) : 1
+    const numbering = parentChapter && parentChapter.children ? parentChapter.children.length + 1 : 1
+
+    if (props.lesson.display.numbering === LESSON_NUMBERINGS.NUMBERING_LITERAL) {
+      return parentNumbering + '.' + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[numbering - 1]
+    }
+
+    return parentNumbering + '.' + numbering
   }
 
   reload() {
@@ -65,7 +88,11 @@ class LessonResource extends Component {
             component: Editor
           }, {
             path: '/new',
-            component: ChapterForm,
+            render: () => (
+              <ChapterForm
+                numbering={this.newChapterNumbering(this.props)}
+              />
+            ),
             onEnter: () => this.props.createChapter(this.props.lesson.id, this.props.root.slug)
           }, {
             path: '/:slug',
@@ -83,7 +110,11 @@ class LessonResource extends Component {
             )
           }, {
             path: '/:slug/subchapter',
-            component: ChapterForm,
+            render: (props) => (
+              <ChapterForm
+                numbering={this.newChapterNumbering(this.props, props.match.params.slug)}
+              />
+            ),
             onEnter: params => this.props.createChapter(this.props.lesson.id, params.slug)
           }, {
             path: '/:slug/edit',

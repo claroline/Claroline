@@ -1,5 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
-import {constants} from '#/plugin/path/resources/path/constants'
+import {constants as LESSON_NUMBERINGS} from '#/plugin/lesson/resources/lesson/constants'
 
 const buildParentChapterChoices = (tree, chapter) => {
   let chapterSlug = chapter ? chapter.slug : null
@@ -34,13 +34,17 @@ const buildFlattenedChapterChoices = (items, chapterSlug) => {
  * Flattens a tree of chapters into a one-level array.
  *
  * @param {Array}  chapters
+ * @param {Boolean}  keepChapters
  */
-function flattenChapters(chapters) {
+function flattenChapters(chapters, keepChapters = false) {
   function flatten(chapter, parent = null) {
     const children = chapter.children
     const flatchapter = Object.assign({}, chapter)
 
-    delete flatchapter.children
+    if( !keepChapters ) {
+      delete flatchapter.children
+    }
+
     if (parent) {
       flatchapter.parent = {
         id: parent.id,
@@ -90,17 +94,17 @@ function getNumbering(type, chapters, chapter) {
   }
 
   switch (type) {
-    case constants.NUMBERING_NUMERIC:
+    case LESSON_NUMBERINGS.NUMBERING_NUMERIC:
       return '' + buildPath(chapters, chapter)
         .map(i => i + 1)
         .join('.')
-    case constants.NUMBERING_LITERAL:
+    case LESSON_NUMBERINGS.NUMBERING_LITERAL:
       return buildPath(chapters, chapter)
         .map(i => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[i])
         .join('.')
-    case constants.NUMBERING_CUSTOM:
+    case LESSON_NUMBERINGS.NUMBERING_CUSTOM:
       return chapter.customNumbering || ''
-    case constants.NUMBERING_NONE:
+    case LESSON_NUMBERINGS.NUMBERING_NONE:
     default:
       return ''
   }

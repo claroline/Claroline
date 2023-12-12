@@ -43,12 +43,9 @@ const Chapter = props => {
           level={1}
           displayLevel={2}
           title={props.chapter.title}
+          numbering={numbering}
           backAction={props.backAction}
-        >
-          {numbering &&
-            <span className="h-numbering">{numbering}</span>
-          }
-        </ContentTitle>
+        />
 
         <div className="card mb-3">
           <ContentHtml className="card-body">
@@ -79,6 +76,7 @@ Chapter.propTypes = {
   chapter: T.shape(
     ChapterTypes.propTypes
   ),
+  numbering: T.string,
   lesson: T.object,
   treeData: T.object,
   internalNotes: T.bool,
