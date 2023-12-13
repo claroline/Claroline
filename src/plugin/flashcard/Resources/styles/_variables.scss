@@ -5,20 +5,25 @@
 // Claroline & bootstrap variables
 @import "src/main/app/Resources/styles/variables";
 
-$flashcard-spacer-y:            $card-spacer-y !default;
-$flashcard-spacer-x:            $card-spacer-x !default;
-$flashcard-title-spacer-y:      $spacer * .5 !default;
-$flashcard-title-color:         $card-title-color !default;
-$flashcard-border-width:        $card-border-width !default;
-$flashcard-border-color:        $card-border-color !default;
-$flashcard-border-radius:       $card-border-radius !default;
-$flashcard-box-shadow:          $box-shadow-sm !default;
-//$flashcard-inner-border-radius: subtract($flashcard-border-radius, $flashcard-border-width) !default;
-$flashcard-height:              300px !default;
-$flashcard-color:               $card-color !default;
-$flashcard-bg:                  $card-bg !default;
+$flashcard-spacer-y:                $card-spacer-y !default;
+$flashcard-spacer-x:                $card-spacer-x !default;
+$flashcard-title-spacer-y:          $spacer * .5 !default;
+$flashcard-title-color:             $card-title-color !default;
+$flashcard-border-width:            $card-border-width !default;
+$flashcard-border-color:            $card-border-color !default;
+$flashcard-border-radius:           $card-border-radius !default;
+$flashcard-box-shadow:              $box-shadow-sm !default;
+//$flashcard-inner-border-radius:   subtract($flashcard-border-radius, $flashcard-border-width) !default;
+$flashcard-height:                  300px !default;
+$flashcard-color:                   $card-color !default;
+$flashcard-bg:                      $card-bg !default;
 
 $flashcard-timeline-icon-size:      $font-size-lg*3;
 $flashcard-timeline-lines-width:    8px !default;
 $flashcard-timeline-lines-color:    $gray-lighter !default;
 $flashcard-timeline-endpoint-size:  $font-size-lg*2 !default;
+
+$flashcard-progress-font-size:      $font-size-base * .75 !default;
+$flashcard-progress-bg:             var(--#{$prefix}secondary-bg) !default;
+$flashcard-progress-bar-color:      $primary !default;
+$flashcard-progress-bar-bg:         $gray-lighter !default;

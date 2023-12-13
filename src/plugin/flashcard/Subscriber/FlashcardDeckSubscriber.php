@@ -60,7 +60,7 @@ class FlashcardDeckSubscriber implements EventSubscriberInterface
             $evaluation = $this->evaluationManager->getResourceUserEvaluation($flashcardDeck->getResourceNode(), $user);
             $attempt = $this->resourceEvalRepo->findOneInProgress($flashcardDeck->getResourceNode(), $user);
             $attempt = $this->flashcardManager->calculateSession($attempt, $flashcardDeck, $user);
-            $flashcardProgression = $attempt->getData()['cards'] ?? [];
+            $flashcardProgression = $attempt ? $attempt->getData()['cards'] ?? [] : [];
         }
 
         $event->setData([

@@ -131,7 +131,7 @@
     position: relative;
     height: 350px;
 
-    .progress {
+    .flashcard-progress {
       position: absolute;
       left: 50%; right: 50%;
       transform: rotate(90deg);
@@ -214,5 +214,28 @@
 
   div {
     align-self: center;
+  }
+}
+
+.flashcard-progress{
+  display: flex;
+  height: 8px;
+  overflow: hidden;
+  font-size: $flashcard-progress-font-size;
+  background-color: $flashcard-progress-bg;
+
+  &-sm {
+    height: 8px;
+  }
+
+  &-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: $flashcard-progress-bar-color;
+    text-align: center;
+    white-space: nowrap;
+    background-color: $flashcard-progress-bar-bg;
   }
 }

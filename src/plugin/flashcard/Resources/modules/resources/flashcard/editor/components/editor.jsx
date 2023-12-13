@@ -88,8 +88,8 @@ const EditorComponent = props =>
           }
         ]
       },{
-        icon: 'fa fa-fw fa-dice-d20',
-        title: trans('flashcard_options', {}, 'flashcard'),
+        icon: 'fa fa-fw fa-dice',
+        title: trans('attempts_pick', {}, 'flashcard'),
         fields: [
           {
             name: 'draw',

@@ -24,7 +24,8 @@ const FlashcardResource = props =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('start', {}, 'actions'),
-        target: `${props.path}/play`
+        target: `${props.path}/play`,
+        displayed: props.flashcardDeck.cards.length > 0
       }
     ]}
     routes={[
@@ -35,18 +36,23 @@ const FlashcardResource = props =>
       }, {
         path: '/play/end',
         exact: true,
+        disabled: props.flashcardDeck.cards.length === 0,
         component: PlayerEnd
       }, {
         path: '/play',
         exact: true,
         component: Player,
+        disabled: props.flashcardDeck.cards.length === 0,
         onEnter: () => {
           props.getAttempt(props.flashcardDeck.id)
         }
       }, {
         path: '/',
         component: Overview,
-        disabled: !props.overview
+        disabled: !props.overview,
+        onEnter: () => {
+          props.getAttempt(props.flashcardDeck.id)
+        }
       }
     ]}
     redirect={[
@@ -54,7 +60,7 @@ const FlashcardResource = props =>
         from: '/',
         exact: true,
         to: '/play',
-        disabled: props.overview
+        disabled: props.overview || props.flashcardDeck.cards.length === 0
       }
     ]}
   />
@@ -65,7 +71,8 @@ FlashcardResource.propTypes = {
   overview: T.bool.isRequired,
   getAttempt: T.func,
   flashcardDeck: T.shape({
-    id: T.string
+    id: T.string,
+    cards: T.array
   })
 }
 

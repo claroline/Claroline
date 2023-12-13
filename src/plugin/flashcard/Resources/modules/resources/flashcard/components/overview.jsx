@@ -1,9 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
@@ -60,13 +62,22 @@ const Overview = (props) => {
       ]}
     >
 
-      <Timeline
-        session={session}
-        started={sessionStarted}
-        completed={sessionCompleted}
-      />
+      {isEmpty(props.cards) &&
+        <ContentPlaceholder
+          size="lg"
+          title={trans('no_cards', {}, 'flashcard')}
+        />
+      }
 
-      {props.flashcardDeck.showLeitnerRules &&
+      {!isEmpty(props.cards) &&
+        <Timeline
+          session={session}
+          started={sessionStarted}
+          completed={sessionCompleted}
+        />
+      }
+
+      {props.flashcardDeck.showLeitnerRules && !isEmpty(props.cards) &&
         <LeitnerRules
           session={session}
           completed={sessionCompleted}
@@ -93,7 +104,8 @@ Overview.propTypes = {
     FlashcardDeckTypes.propTypes
   ).isRequired,
   empty: T.bool.isRequired,
-  resourceNode: T.object
+  resourceNode: T.object,
+  cards: T.array
 }
 
 Overview.defaultProps = {

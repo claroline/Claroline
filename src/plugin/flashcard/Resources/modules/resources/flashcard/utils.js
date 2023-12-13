@@ -42,10 +42,13 @@ export const getLabel = (index, session, started, completed) => {
 }
 
 export const getProgression = (session, started, completed, end) => {
+  let progression = 0
+
   if (end) {
-    return (session - 2) * (100 / 6)
-  } else if (started || completed) {
-    return (session - 1) * (100 / 6)
+    progression = (session - 2) * (100 / 6)
+  } else {
+    progression = (session - 1) * (100 / 6)
   }
-  return (session - 1.5) * (100 / 6)
+
+  return progression > 0 ? progression : 0
 }

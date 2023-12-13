@@ -2,7 +2,7 @@ import React from 'react'
 import classes from 'classnames'
 import {PropTypes as T} from 'prop-types'
 
-import {ProgressBar} from '#/main/app/content/components/progress-bar'
+import {FlashcardProgressBar} from '#/plugin/flashcard/resources/flashcard/components/progress-bar'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {getRule, getLabel, getClassList, getProgression} from '#/plugin/flashcard/resources/flashcard/utils'
 
@@ -38,7 +38,7 @@ const Timeline = (props) => {
 
   return (
     <div className="flashcard-timeline">
-      <ProgressBar
+      <FlashcardProgressBar
         value={progression}
         size="sm"
         type="learning"
