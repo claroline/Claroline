@@ -13,6 +13,9 @@ namespace Claroline\DropZoneBundle\Listener;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 
+/**
+ * @deprecated
+ */
 class NotificationUserParametersListener
 {
     public function onGetTypesForParameters(NotificationUserParametersEvent $event)

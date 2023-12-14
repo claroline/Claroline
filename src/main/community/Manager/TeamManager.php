@@ -15,51 +15,32 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Entity\Team;
+use Claroline\CommunityBundle\Repository\TeamRepository;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Tool\ToolRightsManager;
 
 class TeamManager
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var ResourceManager */
-    private $resourceManager;
-    /** @var RightsManager */
-    private $rightsManager;
-    /** @var RoleManager */
-    private $roleManager;
-    /** @var ToolRightsManager */
-    private $toolRightsManager;
-    private $resourceNodeRepo;
-    private $teamRepo;
+    private TeamRepository $teamRepo;
 
     public function __construct(
-        ObjectManager $om,
-        Crud $crud,
-        ResourceManager $resourceManager,
-        RightsManager $rightsManager,
-        RoleManager $roleManager,
-        ToolRightsManager $toolRightsManager
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly ResourceManager $resourceManager,
+        private readonly RightsManager $rightsManager,
+        private readonly RoleManager $roleManager,
+        private readonly ToolManager $toolManager,
+        private readonly ToolRightsManager $toolRightsManager
     ) {
-        $this->om = $om;
-        $this->crud = $crud;
-        $this->resourceManager = $resourceManager;
-        $this->rightsManager = $rightsManager;
-        $this->roleManager = $roleManager;
-        $this->toolRightsManager = $toolRightsManager;
-
-        $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
         $this->teamRepo = $om->getRepository(Team::class);
     }
 
@@ -79,11 +60,8 @@ class TeamManager
 
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         $this->rightsManager->update(['open' => true], $role, $root);
-        $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => 'resources']);
-        $orderedTool = $this->om
-            ->getRepository(OrderedTool::class)
-            ->findOneBy(['workspace' => $workspace, 'tool' => $tool]);
 
+        $orderedTool = $this->toolManager->getOrderedTool('resources', WorkspaceContext::getName(), $workspace->getUuid());
         if (!empty($orderedTool)) {
             $this->toolRightsManager->setToolRights($orderedTool, $role, 1);
         }

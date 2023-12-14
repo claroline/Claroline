@@ -21,16 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class PlatformInstallCommand extends Command
 {
-    private $filesDir;
-
-    public function __construct(string $filesDir)
-    {
-        parent::__construct();
-
-        $this->filesDir = $filesDir;
-    }
-
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('Installs the platform.');
     }

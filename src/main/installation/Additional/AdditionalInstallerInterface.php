@@ -11,42 +11,38 @@
 
 namespace Claroline\InstallationBundle\Additional;
 
-use Psr\Log\LoggerAwareInterface;
-
-interface AdditionalInstallerInterface extends LoggerAwareInterface
+interface AdditionalInstallerInterface
 {
-    public function setEnvironment($environment);
-
     public function setShouldReplayUpdaters(bool $shouldReplayUpdaters): void;
 
     public function shouldReplayUpdaters(): bool;
 
-    public function preInstall();
+    public function preInstall(): void;
 
-    public function postInstall();
+    public function postInstall(): void;
 
-    public function preUpdate($currentVersion, $targetVersion);
+    public function preUpdate(string $currentVersion, string $targetVersion): void;
 
-    public function postUpdate($currentVersion, $targetVersion);
+    public function postUpdate(string $currentVersion, string $targetVersion);
 
-    public function preUninstall();
+    public function preUninstall(): void;
 
-    public function postUninstall();
+    public function postUninstall(): void;
 
-    public function end($currentVersion, $targetVersion);
+    public function end(string $currentVersion = null, string $targetVersion = null);
 
     /**
-     * @return string[] An array of Updater service identifiers (i.e. FQCN) indexed by version
+     * @return string[] An array of Updater service identifiers (i.e. Fully Qualified Class Name) indexed by version
      */
     public static function getUpdaters(): array;
 
     /**
-     * Checks if the plugin have DB migrations that should be played in the install/update process ?
+     * Checks if the plugin have DB migrations that should be played in the installation/update process ?
      */
     public function hasMigrations(): bool;
 
     /**
-     * Checks if the bundle has Fixtures that should be loaded in the install/update process.
+     * Checks if the bundle has Fixtures that should be loaded in the installation/update process.
      *
      * You can use PreInstallInterface / PostInstallInterface / PreUpdateInterface / PostUpdateInterface
      * to choose when you fixtures should be loaded.

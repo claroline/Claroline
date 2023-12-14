@@ -119,7 +119,7 @@ class FunctionalLogListExporter extends AbstractListExporter
                 'label' => $this->translator->trans('resource', [], 'platform'),
                 'type' => 'resource',
             ], [
-                'name' => 'user',
+                'name' => 'doer',
                 'label' => $this->translator->trans('user', [], 'platform'),
                 'type' => 'user',
             ],

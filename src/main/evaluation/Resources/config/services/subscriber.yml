@@ -16,11 +16,6 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    # Tools
-    Claroline\EvaluationBundle\Subscriber\Tool\EvaluationToolSubscriber:
-        tags:
-            - { name: kernel.event_subscriber }
-
     # Data sources
     Claroline\EvaluationBundle\Subscriber\DataSource\ResourceAttemptSource:
         arguments:

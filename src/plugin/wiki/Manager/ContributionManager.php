@@ -11,30 +11,21 @@ use Icap\WikiBundle\Serializer\ContributionSerializer;
 
 class ContributionManager
 {
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var ContributionRepository */
-    private $contributionRepository;
-
-    /** @var ContributionSerializer */
-    private $contributionSerializer;
+    private ContributionRepository $contributionRepository;
 
     public function __construct(
         ObjectManager $om,
-        ContributionSerializer $contributionSerializer
+        private readonly ContributionSerializer $contributionSerializer
     ) {
-        $this->om = $om;
         $this->contributionRepository = $om->getRepository(Contribution::class);
-        $this->contributionSerializer = $contributionSerializer;
     }
 
-    public function serializeContribution(Contribution $contribution)
+    public function serializeContribution(Contribution $contribution): array
     {
         return $this->contributionSerializer->serialize($contribution);
     }
 
-    public function serializeContributions($contributions)
+    public function serializeContributions($contributions): array
     {
         $serialized = [];
         foreach ($contributions as $contribution) {
@@ -44,12 +35,7 @@ class ContributionManager
         return $serialized;
     }
 
-    /**
-     * @param array $uuids
-     *
-     * @return array $contributions
-     */
-    public function compareContributions(Section $section, $uuids)
+    public function compareContributions(Section $section, array $uuids): array
     {
         $contributions = $this->contributionRepository->findyBySectionAndUuids($section, $uuids);
         $titleDiff = new HtmlDiff($contributions[0]->getTitle(), $contributions[1]->getTitle(), false);

@@ -7,6 +7,7 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {TeamList as BaseTeamList} from '#/main/community/team/components/list'
 import {selectors} from '#/main/community/tools/community/team/store/selectors'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const TeamList = props =>
   <ToolPage
@@ -29,11 +30,14 @@ const TeamList = props =>
       }
     ]}
   >
-    <BaseTeamList
-      path={props.path}
-      name={selectors.LIST_NAME}
-      url={['apiv2_workspace_team_list', {id: props.contextData.id}]}
-    />
+    <ContentSizing size="full">
+      <BaseTeamList
+        flush={true}
+        path={props.path}
+        name={selectors.LIST_NAME}
+        url={['apiv2_workspace_team_list', {id: props.contextData.id}]}
+      />
+    </ContentSizing>
   </ToolPage>
 
 TeamList.propTypes = {

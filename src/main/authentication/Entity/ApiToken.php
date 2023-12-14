@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro_api_token")
  */
 class ApiToken
@@ -31,14 +32,15 @@ class ApiToken
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $user;
+    private ?User $user;
 
     /**
      * @ORM\Column(type="string", length=36, unique=true)
      */
-    private $token;
+    private ?string $token;
 
     public function __construct()
     {
@@ -51,7 +53,7 @@ class ApiToken
         return $this->user;
     }
 
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -61,7 +63,7 @@ class ApiToken
         return $this->token;
     }
 
-    public function setToken(string $token)
+    public function setToken(string $token): void
     {
         $this->token = $token;
     }

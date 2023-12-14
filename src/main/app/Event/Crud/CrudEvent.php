@@ -18,9 +18,6 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class CrudEvent extends Event
 {
-    /**
-     * @var mixed
-     */
     private $object;
 
     /**
@@ -43,17 +40,17 @@ class CrudEvent extends Event
         $this->options = $options;
     }
 
-    /**
-     * @param mixed $object
-     */
+    public function getClass(): string
+    {
+        // FIXME : this can return a Doctrine Proxy
+        return get_class($this->object);
+    }
+
     public function setObject($object)
     {
         $this->object = $object;
     }
 
-    /**
-     * @return mixed
-     */
     public function getObject()
     {
         return $this->object;

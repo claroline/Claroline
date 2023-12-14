@@ -1,6 +1,4 @@
 plugin:
-  tools:
-    - name: example
-      class: tools
-      is_displayable_in_desktop: true
-      is_displayable_in_workspace: false
+    tools:
+        - name: example
+          icon: tools

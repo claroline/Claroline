@@ -13,4 +13,9 @@ class ClarolineAuthenticationInstaller extends AdditionalInstaller
             '14.0.0' => Updater140000::class,
         ];
     }
+
+    public function hasMigrations(): bool
+    {
+        return true;
+    }
 }

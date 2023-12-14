@@ -1,10 +1,6 @@
 import {createSelector} from 'reselect'
 
-import {constants} from '#/main/core/tool/constants'
-
-import {selectors as desktopSelectors} from '#/main/app/layout/sections/desktop/store/selectors'
-import {selectors as adminSelectors} from '#/main/app/layout/sections/administration/store/selectors'
-import {selectors as workspaceSelectors} from '#/main/core/workspace/store/selectors'
+import {selectors as contextSelectors} from '#/main/app/context/store/selectors'
 
 const STORE_NAME = 'tool'
 
@@ -31,10 +27,10 @@ const name = createSelector(
   (store) => store.name
 )
 
-const basePath = createSelector(
-  [store],
-  (store) => store.basePath
-)
+/**
+ * @deprecated
+ */
+const basePath = contextSelectors.path
 
 const path = createSelector(
   [basePath, name],
@@ -56,19 +52,12 @@ const permissions = createSelector(
   (toolData) => toolData.permissions
 )
 
-const context = createSelector(
-  [store],
-  (store) => store.currentContext
-)
-
-const contextType = createSelector(
-  [context],
-  (context) => context.type
-)
+const contextType = contextSelectors.type
 
 const contextData = createSelector(
-  [context],
-  (context) => context.data
+  [contextSelectors.data],
+  // FIXME : for retro compatibility, tools expect empty data for every context except workspace
+  (contextData) => contextData && contextData.id ? contextData : null
 )
 
 const contextId = createSelector(
@@ -76,21 +65,20 @@ const contextId = createSelector(
   (contextData) => contextData ? contextData.id : undefined
 )
 
+/**
+ * @deprecated use one of contextType, contextData, contextType.
+ */
+const context = createSelector(
+  [contextType, contextData],
+  (contextType, contextData) => ({
+    type: contextType,
+    data: contextData
+  })
+)
+
 // this should be directly embedded in the contextData to simplify retrieve
 // this is not the correct place to do it imo
-const contextTools = (state) => {
-  const currentContext = contextType(state)
-  switch (currentContext) {
-    case constants.TOOL_DESKTOP:
-      return desktopSelectors.tools(state)
-    case constants.TOOL_ADMINISTRATION:
-      return adminSelectors.tools(state)
-    case constants.TOOL_WORKSPACE:
-      return workspaceSelectors.tools(state)
-  }
-
-  return []
-}
+const contextTools = contextSelectors.tools
 
 export const selectors = {
   STORE_NAME,

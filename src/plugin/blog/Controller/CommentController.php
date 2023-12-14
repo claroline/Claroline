@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
-use Icap\BlogBundle\Manager\BlogTrackingManager;
 use Icap\BlogBundle\Manager\CommentManager;
 use Icap\BlogBundle\Serializer\CommentSerializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -20,28 +19,23 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("blog/{blogId}/comments", options={"expose"=true})
+ *
  * @EXT\ParamConverter("blog", class="Icap\BlogBundle\Entity\Blog", options={"mapping": {"blogId": "uuid"}})
+ *
+ * @todo use CRUD
  */
 class CommentController
 {
     use PermissionCheckerTrait;
 
-    private $commentSerializer;
-    private $commentManager;
-    private $trackingManager;
-
     /**
      * postController constructor.
      */
     public function __construct(
-        CommentSerializer $commentSerializer,
-        CommentManager $commentManager,
-        BlogTrackingManager $trackingManager,
-        AuthorizationCheckerInterface $authorization)
-    {
-        $this->commentSerializer = $commentSerializer;
-        $this->commentManager = $commentManager;
-        $this->trackingManager = $trackingManager;
+        private readonly CommentSerializer $commentSerializer,
+        private readonly CommentManager $commentManager,
+        AuthorizationCheckerInterface $authorization
+    ) {
         $this->authorization = $authorization;
     }
 
@@ -49,10 +43,9 @@ class CommentController
      * Get post comments.
      *
      * @Route("/{postId}", name="apiv2_blog_comment_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param User $user
      *
      * @return JsonResponse
      */
@@ -61,7 +54,7 @@ class CommentController
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
 
         $userId = null !== $user ? $user->getId() : null;
-        //if no edit rights, list only published comments and current user ones
+        // if no edit rights, list only published comments and current user ones
         $canEdit = $this->authorization->isGranted('EDIT', $blog)
             || $this->authorization->isGranted('MODERATE', $blog);
 
@@ -123,32 +116,12 @@ class CommentController
     }
 
     /**
-     * Get unpublished comments posts.
-     *
-     * @Route("/moderation/trusted", name="apiv2_blog_comment_trusted", methods={"GET"})
-     *
-     * @return JsonResponse
-     */
-    public function listTrustedUsersAction(Blog $blog)
-    {
-        if ($this->checkPermission('MODERATE', $blog->getResourceNode())
-            || $this->checkPermission('EDIT', $blog->getResourceNode())) {
-            $users = $this->commentManager->getTrustedUsers($blog);
-
-            return new JsonResponse($users);
-        } else {
-            throw new AccessDeniedException();
-        }
-    }
-
-    /**
      * Create a post comment.
      *
      * @Route("/{postId}/new", name="apiv2_blog_comment_new", methods={"POST"})
+     *
      * @EXT\ParamConverter("post", class="Icap\BlogBundle\Entity\Post", options={"mapping": {"postId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param User $user
      *
      * @return JsonResponse
      */
@@ -172,17 +145,16 @@ class CommentController
      * Update post comment.
      *
      * @Route("/{commentId}/update", name="apiv2_blog_comment_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     *
-     * @param User $user
      *
      * @return JsonResponse
      */
     public function updateCommentAction(Request $request, Blog $blog, Comment $comment, User $user = null)
     {
         $this->checkPermission('OPEN', $blog->getResourceNode(), [], true);
-        //original author or admin can edit, anon cant edit
+        // original author or admin can edit, anon cant edit
         if ($blog->isCommentsAuthorized() && $this->isLoggedIn($user)) {
             if ($user !== $comment->getAuthor()) {
                 $this->checkPermission('EDIT', $blog->getResourceNode(), [], true);
@@ -200,6 +172,7 @@ class CommentController
      * Publish post comment.
      *
      * @Route("/{commentId}/publish", name="apiv2_blog_comment_publish", methods={"PUT"})
+     *
      * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -217,6 +190,7 @@ class CommentController
      * Unpublish post comment.
      *
      * @Route("/{commentId}/unpublish", name="apiv2_blog_comment_unpublish", methods={"PUT"})
+     *
      * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -234,6 +208,7 @@ class CommentController
      * Report post comment.
      *
      * @Route("/{commentId}/report", name="apiv2_blog_comment_report", methods={"PUT"})
+     *
      * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -250,6 +225,7 @@ class CommentController
      * Delete post comment.
      *
      * @Route("/{commentId}/delete", name="apiv2_blog_comment_delete", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("comment", class="Icap\BlogBundle\Entity\Comment", options={"mapping": {"commentId": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
@@ -257,7 +233,7 @@ class CommentController
      */
     public function deleteCommentAction(Blog $blog, Comment $comment, User $user)
     {
-        //original author or admin can edit, anon cant edit
+        // original author or admin can edit, anon cant edit
         if ($blog->isCommentsAuthorized() && $this->isLoggedIn($user)) {
             if ($user === $comment->getAuthor()
                 || $this->checkPermission('EDIT', $blog->getResourceNode())

@@ -24,10 +24,16 @@ class SecurityLogFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
+        $doerJoin = false;
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'doer':
-                    $qb->leftJoin('obj.doer', 'd');
+                    if (!$doerJoin) {
+                        $qb->leftJoin('obj.doer', 'u');
+                        $doerJoin = true;
+                    }
+
                     $qb->andWhere('d.uuid = :id');
                     $qb->setParameter('id', $filterValue);
                     break;
@@ -36,6 +42,24 @@ class SecurityLogFinder extends AbstractFinder
                     $qb->leftJoin('obj.target', 't');
                     $qb->andWhere('t.uuid = :id');
                     $qb->setParameter('id', $filterValue);
+                    break;
+
+                case 'organizations':
+                    if (!$doerJoin) {
+                        $qb->leftJoin('obj.doer', 'u');
+                        $doerJoin = true;
+                    }
+
+                    $qb->leftJoin('u.userOrganizationReferences', 'ref');
+                    $qb->leftJoin('ref.organization', 'o');
+
+                    // get organizations from the group
+                    $qb->leftJoin('u.groups', 'g');
+                    $qb->leftJoin('g.organizations', 'go');
+
+                    $qb->andWhere('(o.uuid IN (:organizations) OR go.uuid IN (:organizations))');
+                    $qb->setParameter('organizations', is_array($filterValue) ? $filterValue : [$filterValue]);
+
                     break;
 
                 default:

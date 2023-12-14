@@ -14,21 +14,11 @@ class ApiTokenSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var UserSerializer */
-    private $userSerializer;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        UserSerializer $userSerializer,
-        ObjectManager $om
+        private AuthorizationCheckerInterface $authorization,
+        private UserSerializer $userSerializer,
+        private ObjectManager $om
     ) {
-        $this->authorization = $authorization;
-        $this->userSerializer = $userSerializer;
-        $this->om = $om;
     }
 
     public function getName(): string
@@ -36,7 +26,7 @@ class ApiTokenSerializer
         return 'api_token';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ApiToken::class;
     }

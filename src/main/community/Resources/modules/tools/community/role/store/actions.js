@@ -10,6 +10,7 @@ import {actions as listActions} from '#/main/app/content/list/store'
 import {constants} from '#/main/community/constants'
 import {Role as RoleTypes} from '#/main/community/role/prop-types'
 
+import {actions as contextActions} from '#/main/app/context/store/actions'
 import {selectors} from '#/main/community/tools/community/role/store/selectors'
 
 export const ROLE_WORKSPACE_RIGHTS_LOAD = 'ROLE_WORKSPACE_RIGHTS_LOAD'
@@ -78,13 +79,6 @@ actions.addGroups = (id, groups) => (dispatch) => dispatch({
   }
 })
 
-actions.fetchMetrics = (id, year) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_role_analytics', {id: id, year: year}],
-    silent: true
-  }
-})
-
 actions.fetchWorkspaceRights = (id, contextId = null) => (dispatch) => dispatch({
   [API_REQUEST]: {
     url: ['apiv2_role_rights_list', {id: id, contextType: 'workspace', contextId: contextId}],
@@ -106,5 +100,27 @@ actions.fetchAdministrationRights = (id) => (dispatch) => dispatch({
     url: ['apiv2_role_rights_list', {id: id, contextType: 'administration'}],
     silent: true,
     success: (response) => dispatch(actions.loadAdministrationRights(response))
+  }
+})
+
+actions.addShortcuts = (workspaceId, roleId, shortcuts) => (dispatch) => dispatch({
+  [API_REQUEST] : {
+    url: ['apiv2_workspace_shortcuts_add', {workspace: workspaceId, role: roleId}],
+    request: {
+      method: 'PUT',
+      body: JSON.stringify({shortcuts: shortcuts})
+    },
+    success: (response) => dispatch(contextActions.loadShortcuts(response))
+  }
+})
+
+actions.removeShortcut = (workspaceId, roleId, type, name) => (dispatch) => dispatch({
+  [API_REQUEST] : {
+    url: ['apiv2_workspace_shortcut_remove', {workspace: workspaceId, role: roleId}],
+    request: {
+      method: 'PUT',
+      body: JSON.stringify({type: type, name: name})
+    },
+    success: (response) => dispatch(contextActions.loadShortcuts(response))
   }
 })

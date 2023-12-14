@@ -1,23 +1,19 @@
 plugin:
     tools:
         - name: training_events
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: false
-          class: clock
+          icon: clock
           tool_rights:
-              - name: register
+              - register
 
         - name: trainings
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true
-          class: graduation-cap
+          icon: graduation-cap
           tool_rights:
-              - name: register
+              - register
 
     data_sources:
         - name: course_sessions
           type: list
-          context: [workspace, desktop, home]
+          context: [workspace, desktop, public]
           tags: [community, event]
 
         - name: my_course_sessions
@@ -27,7 +23,7 @@ plugin:
 
         - name: all_courses
           type: list
-          context: [workspace, desktop, home]
+          context: [workspace, desktop, public]
           tags: [community, event]
 
         - name: training_events

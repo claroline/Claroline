@@ -23,7 +23,7 @@ class LoginAccount extends Component {
       <FormData
         name={selectors.FORM_NAME}
         alertExit={false}
-        sections={[
+        definition={[
           {
             title: trans('general'),
             primary: true,

@@ -8,17 +8,20 @@ use Claroline\LogBundle\Entity\MessageLog;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/log/message")
  */
 class MessageLogController extends AbstractSecurityController
 {
-    private $finderProvider;
-
-    public function __construct(FinderProvider $finderProvider)
-    {
-        $this->finderProvider = $finderProvider;
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly FinderProvider $finder
+    ) {
     }
 
     /**
@@ -28,10 +31,29 @@ class MessageLogController extends AbstractSecurityController
     {
         $this->canOpenAdminTool('logs');
 
-        return new JsonResponse($this->finderProvider->search(
-            MessageLog::class,
-            $request->query->all(),
-            []
-        ));
+        return new JsonResponse(
+            $this->finder->search(MessageLog::class, $request->query->all())
+        );
+    }
+
+    /**
+     * @Route("/current", name="apiv2_logs_functional_list_current", methods={"GET"})
+     */
+    public function listForCurrentUserAction(Request $request): JsonResponse
+    {
+        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new AccessDeniedException();
+        }
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $query = $request->query->all();
+        $query['hiddenFilters'] = [
+            'doer' => $user->getUuid(),
+        ];
+
+        return new JsonResponse(
+            $this->finder->search(MessageLog::class, $query)
+        );
     }
 }

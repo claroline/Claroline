@@ -7,12 +7,23 @@ use Claroline\EvaluationBundle\Library\EvaluationInterface;
 
 class ScoreChecker implements CheckerInterface
 {
-    /** @var float */
-    private $successScore;
+    /**
+     * The percentage (0-100) of the score to obtain.
+     */
+    private float $successScore;
 
-    public function __construct(?float $successScore)
+    public function __construct(float $successScore)
     {
+        if ($successScore < 0 || $successScore > 100) {
+            throw new \InvalidArgumentException('successScore should be a percentage (range: 0-100).');
+        }
+
         $this->successScore = $successScore;
+    }
+
+    public function supports(EvaluationInterface $evaluation): bool
+    {
+        return !empty($evaluation->getScoreMax());
     }
 
     public function vote(EvaluationInterface $evaluation): ?string
@@ -24,11 +35,6 @@ class ScoreChecker implements CheckerInterface
 
         if (!$evaluation->isTerminated()) {
             // score is only available when the evaluation is terminated
-            return null;
-        }
-
-        if (empty($evaluation->getScoreMax())) {
-            // can't vote if the evaluation as no score
             return null;
         }
 

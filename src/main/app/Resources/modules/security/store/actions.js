@@ -19,7 +19,7 @@ export const actions = {}
 
 actions.updateUser = makeActionCreator(SECURITY_USER_UPDATE, 'user')
 
-actions.changeUser = (user, impersonated = false, administration = false) => (dispatch, getState) => {
+actions.changeUser = (user, impersonated = false, contexts = []) => (dispatch, getState) => {
   // we will dispatch action only if the user has really changed
   // this will avoid false positive as it is used by other ui components
   // to know when to invalidate/reload data for the new user
@@ -29,7 +29,7 @@ actions.changeUser = (user, impersonated = false, administration = false) => (di
       type: SECURITY_USER_CHANGE,
       user: user,
       impersonated: impersonated,
-      administration: administration
+      contexts: contexts
     })
   }
 }
@@ -52,7 +52,7 @@ actions.login = (username, password, rememberMe) => ({
 })
 
 actions.onLogin = (response) => (dispatch) => {
-  dispatch(actions.changeUser(response.user, false, response.administration))
+  dispatch(actions.changeUser(response.user, false, response.contexts))
 
   if (!isEmpty(response.messages)) {
     dispatch(modalActions.showModal(MODAL_CONNECTION, {
@@ -65,16 +65,6 @@ actions.logout = () => ({
   [apiConst.API_REQUEST]: {
     silent: true,
     url: ['claro_security_logout'],
-    success: (response, dispatch) => dispatch(actions.changeUser(null, false, false))
-  }
-})
-
-actions.linkExternalAccount = (service, username, onSuccess) => ({
-  [apiConst.API_REQUEST]: {
-    url: ['claro_oauth_link_account', {service: service, username: username}],
-    request: {
-      method: 'POST'
-    },
-    success: onSuccess
+    success: (response, dispatch) => dispatch(actions.changeUser(null, false, []))
   }
 })

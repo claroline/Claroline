@@ -2,25 +2,22 @@
 
 namespace Icap\NotificationBundle\Listener;
 
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Icap\NotificationBundle\Manager\NotificationManager as NotificationManager;
+use Icap\NotificationBundle\Manager\NotificationManager;
 
+/**
+ * @deprecated
+ */
 class LogListener
 {
-    private $notificationManager;
-    private $ch;
-
     public function __construct(
-        NotificationManager $notificationManager,
-        PlatformConfigurationHandler $ch
+        private readonly NotificationManager $notificationManager,
+        private readonly PlatformConfigurationHandler $ch
     ) {
-        $this->notificationManager = $notificationManager;
-        $this->ch = $ch;
     }
 
-    public function onLog(LogGenericEvent $event)
+    public function onLog($event): void
     {
         if ($event instanceof NotifiableInterface && $this->ch->getParameter('is_notification_active')) {
             $workspace = $event->getWorkspace();

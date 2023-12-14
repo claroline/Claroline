@@ -76,32 +76,7 @@ class RoleRepository extends EntityRepository
     }
 
     /**
-     * Returns the roles of a user in a workspace.
-     *
-     * @param User      $user      The subject of the role
-     * @param Workspace $workspace The workspace the role should be bound to
-     *
-     * @return Role[]
-     */
-    public function findWorkspaceRolesForUser(User $user, Workspace $workspace)
-    {
-        return $this->getEntityManager()
-            ->createQuery('
-                SELECT r 
-                FROM Claroline\CoreBundle\Entity\Role r
-                JOIN r.users AS u
-                WHERE r.workspace = :workspaceId
-                  AND r.name != :admin_role
-                  AND u.id = :userId
-            ')
-            ->setParameter('workspaceId', $workspace->getId())
-            ->setParameter('admin_role', 'ROLE_ADMIN')
-            ->setParameter('userId', $user->getId())
-            ->getResult();
-    }
-
-    /**
-     * Returns user-type role of an user.
+     * Returns user-type role of a user.
      */
     public function findUserRoleByUsername(string $username): ?Role
     {

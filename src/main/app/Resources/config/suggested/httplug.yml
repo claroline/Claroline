@@ -1,9 +1,0 @@
-httplug:
-    plugins:
-        logger: ~
-    clients:
-        acme:
-            factory: 'httplug.factory.guzzle6'
-            plugins: ['httplug.plugin.logger']
-            config:
-                timeout: 2

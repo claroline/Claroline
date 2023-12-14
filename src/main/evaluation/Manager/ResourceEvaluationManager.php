@@ -12,7 +12,6 @@
 namespace Claroline\EvaluationBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Log\Connection\LogConnectResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
@@ -25,15 +24,10 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ResourceEvaluationManager extends AbstractEvaluationManager
 {
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var ObjectManager */
-    private $om;
-
-    public function __construct(EventDispatcherInterface $eventDispatcher, ObjectManager $om)
-    {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->om = $om;
+    public function __construct(
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ObjectManager $om
+    ) {
     }
 
     public function getUserEvaluation(ResourceNode $node, User $user, ?bool $withCreation = true): ?ResourceUserEvaluation
@@ -124,57 +118,5 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
         }
 
         return $evaluation;
-    }
-
-    /**
-     * Add duration to a resource user evaluation.
-     *
-     * @deprecated should not be declared here
-     */
-    public function addDurationToResourceEvaluation(ResourceNode $node, User $user, int $duration)
-    {
-        $this->om->startFlushSuite();
-
-        $resUserEval = $this->getUserEvaluation($node, $user);
-
-        $evaluationDuration = $resUserEval->getDuration();
-        if (is_null($resUserEval->getDuration())) {
-            $evaluationDuration = $this->computeDuration($resUserEval);
-        }
-
-        $resUserEval->setDuration(round($evaluationDuration + $duration));
-
-        $this->om->persist($resUserEval);
-        $this->om->flush();
-
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * Compute duration for a resource user evaluation.
-     *
-     * @deprecated should not be declared here
-     */
-    public function computeDuration(ResourceUserEvaluation $resUserEval): int
-    {
-        /** @var LogConnectResource[] $resourceLogs */
-        $resourceLogs = $this->om->getRepository(LogConnectResource::class)->findBy([
-            'resource' => $resUserEval->getResourceNode(),
-            'user' => $resUserEval->getUser(),
-        ]);
-
-        $duration = 0;
-        foreach ($resourceLogs as $log) {
-            if ($log->getDuration()) {
-                $duration += $log->getDuration();
-            }
-        }
-
-        $resUserEval->setDuration(round($duration));
-
-        $this->om->persist($resUserEval);
-        $this->om->flush();
-
-        return $duration;
     }
 }

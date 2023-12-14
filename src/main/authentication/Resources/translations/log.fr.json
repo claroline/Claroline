@@ -1,0 +1,25 @@
+{
+  "authentication.forgot_password": "Mot de passe oublié",
+  "authentication.forgot_password_desc": "Lorsqu'un utilisateur demande la réinitialisation de son mot de passe avec la fonctionnalité \"Mot de passe oublié\".",
+  "authentication.forgot_password_message": "a demandé la réinitialisation du mot de passe du compte %user%.",
+
+  "authentication.new_password": "Changement de mot de passe",
+  "authentication.new_password_desc": "Lorsqu'un utilisateur change le mot de passe d'un compte utilisateur.",
+  "authentication.new_password_message": "a changé le mot de passe du compte %user%.",
+
+  "authentication.user_login": "Connexion d'un utilisateur",
+  "authentication.user_login_desc": "Lorsqu'un utilisateur se connecte à la plateforme avec son compte (interne ou externe).",
+  "authentication.user_login_message": "s'est <b>connecté</b>.",
+
+  "authentication.user_login_failed": "Echec d'une tentative de connexion",
+  "authentication.user_login_failed_desc": "Lorsqu'un utilisateur n'arrive pas à se connecter à la plateforme (compte inexistant ou désactivé, mot de passe incorrect, ...).",
+  "authentication.user_login_failed_message": "n'a pas réussi à se connecter. Raison : %error%.",
+
+  "authentication.user_logout": "Déconnexion d'un utilisateur",
+  "authentication.user_logout_desc": "Lorsqu'un utilisateur se déconnecte de la plateforme.",
+  "authentication.user_logout_message": "s'est <b>déconnecté</b>.",
+
+  "authentication.user_switch": "Mode \"Voir en tant que\"",
+  "authentication.user_switch_desc": "Lorsqu'un gestionnaire utilise la fonctionnalité \"Voir en tant que\" pour parcourir la plateforme avec le compte d'un autre utilisateur.",
+  "authentication.user_switch_message": "a <b>usurpé</b> le compte %user%."
+}

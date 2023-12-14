@@ -2,41 +2,30 @@
 
 namespace Claroline\LogBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\CommunityBundle\Serializer\UserSerializer;
-use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\LogBundle\Entity\MessageLog;
 
-class MessageLogSerializer
+class MessageLogSerializer extends AbstractLogSerializer
 {
-    use SerializerTrait;
-
-    private $userSerializer;
-
-    public function __construct(UserSerializer $userSerializer)
+    public function getClass(): string
     {
-        $this->userSerializer = $userSerializer;
+        return MessageLog::class;
     }
 
-    public function serialize(MessageLog $messageLog): array
+    public function serialize(MessageLog $messageLog, array $options): array
     {
-        $sender = null;
-        if ($messageLog->getSender()) {
-            $sender = $this->userSerializer->serialize($messageLog->getSender(), [Options::SERIALIZE_MINIMAL]);
+        $serialized = $this->serializeCommon($messageLog, $options);
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return $serialized;
         }
 
         $receiver = null;
         if ($messageLog->getReceiver()) {
-            $receiver = $this->userSerializer->serialize($messageLog->getReceiver(), [Options::SERIALIZE_MINIMAL]);
+            $receiver = $this->userSerializer->serialize($messageLog->getReceiver(), [SerializerInterface::SERIALIZE_MINIMAL]);
         }
 
-        return [
-            'date' => DateNormalizer::normalize($messageLog->getDate()),
-            'details' => $messageLog->getDetails(),
-            'sender' => $sender,
-            'event' => $messageLog->getEvent(),
+        return array_merge($serialized, [
             'receiver' => $receiver,
-        ];
+        ]);
     }
 }

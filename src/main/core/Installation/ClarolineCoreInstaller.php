@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Installation;
 use Claroline\CoreBundle\Installation\Updater\Updater140000;
 use Claroline\CoreBundle\Installation\Updater\Updater140010;
 use Claroline\CoreBundle\Installation\Updater\Updater140014;
+use Claroline\CoreBundle\Installation\Updater\Updater140100;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller;
@@ -26,7 +27,13 @@ class ClarolineCoreInstaller extends AdditionalInstaller
             '14.0.0' => Updater140000::class,
             '14.0.10' => Updater140010::class,
             '14.0.14' => Updater140014::class,
+            '14.1.0' => Updater140100::class,
         ];
+    }
+
+    public function hasMigrations(): bool
+    {
+        return true;
     }
 
     public function hasFixtures(): bool
@@ -34,7 +41,7 @@ class ClarolineCoreInstaller extends AdditionalInstaller
         return true;
     }
 
-    public function postInstall()
+    public function postInstall(): void
     {
         parent::postInstall();
 
@@ -42,14 +49,14 @@ class ClarolineCoreInstaller extends AdditionalInstaller
         $this->setUpdateDate();
     }
 
-    public function postUpdate($currentVersion, $targetVersion)
+    public function postUpdate(string $currentVersion, string $targetVersion): void
     {
         parent::postUpdate($currentVersion, $targetVersion);
 
         $this->setUpdateDate();
     }
 
-    public function end($currentVersion, $targetVersion)
+    public function end(string $currentVersion = null, string $targetVersion = null): void
     {
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
 
@@ -58,7 +65,7 @@ class ClarolineCoreInstaller extends AdditionalInstaller
         $workspaceManager->getDefaultModel(true);
     }
 
-    private function setInstallationDate()
+    private function setInstallationDate(): void
     {
         /** @var PlatformConfigurationHandler $ch */
         $ch = $this->container->get(PlatformConfigurationHandler::class);
@@ -66,7 +73,7 @@ class ClarolineCoreInstaller extends AdditionalInstaller
         $ch->setParameter('meta.created', DateNormalizer::normalize(new \DateTime()));
     }
 
-    private function setUpdateDate()
+    private function setUpdateDate(): void
     {
         /** @var PlatformConfigurationHandler $ch */
         $ch = $this->container->get(PlatformConfigurationHandler::class);

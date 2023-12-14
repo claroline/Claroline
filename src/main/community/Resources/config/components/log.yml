@@ -1,0 +1,38 @@
+services:
+    # Operational
+    Claroline\CommunityBundle\Component\Log\Operational\LogGroup:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\CommunityBundle\Component\Log\Operational\LogOrganization:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\CommunityBundle\Component\Log\Operational\LogRole:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\CommunityBundle\Component\Log\Operational\LogTeam:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\CommunityBundle\Component\Log\Operational\LogUser:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]
+
+    # Security
+    Claroline\CommunityBundle\Component\Log\Security\LogRoleAdd:
+        parent: Claroline\LogBundle\Component\Log\AbstractSecurityLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\CommunityBundle\Component\Log\Security\LogRoleRemove:
+        parent: Claroline\LogBundle\Component\Log\AbstractSecurityLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\CommunityBundle\Component\Log\Security\LogUserDisable:
+        parent: Claroline\LogBundle\Component\Log\AbstractSecurityLog
+        tags: [ 'claroline.component.log' ]
+    
+    Claroline\CommunityBundle\Component\Log\Security\LogUserEnable:
+        parent: Claroline\LogBundle\Component\Log\AbstractSecurityLog
+        tags: [ 'claroline.component.log' ]

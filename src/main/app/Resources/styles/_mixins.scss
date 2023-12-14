@@ -3,29 +3,17 @@
  */
 
 // gets bootstrap mixins
-//@import "bootstrap/mixins";
 @import "node_modules/bootstrap/scss/mixins";
 
-//@import "mixins/legacy";
 @import "mixins/alerts";
+@import "mixins/border";
 @import "mixins/buttons";
 @import "mixins/calendars";
 @import "mixins/gauges";
-//@import "mixins/pagination";
+@import "mixins/lists";
 @import "mixins/placeholders";
 @import "mixins/summaries";
 
-// -
-// Modifiers
-// ---
-
-@mixin border($border) {
-    @if $enable-border {
-        border: $border;
-    } @else {
-        border: none;
-    }
-}
 
 // -
 // Typography
@@ -34,7 +22,7 @@
 // makes text readable on all bg types/colors
 // uses same styles than movie subtitles : white text with black border
 @mixin text-movie-subtitles() {
-    color: white;
+    color: white !important;
 
     // simulates borders
     text-shadow:

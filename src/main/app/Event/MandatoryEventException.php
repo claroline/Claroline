@@ -11,6 +11,9 @@
 
 namespace Claroline\AppBundle\Event;
 
+/**
+ * @deprecated
+ */
 class MandatoryEventException extends \Exception
 {
 }

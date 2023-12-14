@@ -11,40 +11,29 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Claroline\AppBundle\Entity\Display\Hidden;
+use Claroline\AppBundle\Entity\Display\Order;
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\Display\Thumbnail;
+use Claroline\AppBundle\Entity\HasContext;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Meta\Order;
-use Claroline\AppBundle\Entity\Meta\Poster;
-use Claroline\AppBundle\Entity\Meta\Thumbnail;
-use Claroline\AppBundle\Entity\Restriction\Hidden;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\OrderedToolRepository")
- * @ORM\Table(
- *     name="claro_ordered_tool",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(
- *             name="ordered_tool_unique_tool_user_type",
- *             columns={"tool_id", "user_id"}
- *         ),
- *         @ORM\UniqueConstraint(
- *             name="ordered_tool_unique_tool_ws_type",
- *             columns={"tool_id", "workspace_id"}
- *         )
- *     }
- * )
- * @DoctrineAssert\UniqueEntity({"tool", "workspace"})
- * @DoctrineAssert\UniqueEntity({"tool", "user"})
+ *
+ * @ORM\Table(name="claro_ordered_tool")
+ *
+ * @DoctrineAssert\UniqueEntity({"tool", "contextName", "contextId"})
  */
 class OrderedTool
 {
     use Id;
     use Uuid;
+    use HasContext;
     // meta
     use Thumbnail;
     use Poster;
@@ -52,53 +41,23 @@ class OrderedTool
     use Hidden;
 
     /**
+     * @ORM\Column(name="tool_name", type="string", nullable=false)
+     */
+    private ?string $name;
+
+    /**
      * Display tool icon when the tool is rendered.
-     *
-     * @var bool
      *
      * @ORM\Column(type="boolean", options={"default": 0})
      */
-    private $showIcon = false;
+    private bool $showIcon = false;
 
     /**
      * Display in fullscreen when the tool is opened.
      *
      * @ORM\Column(type="boolean", nullable=false)
      */
-    private $fullscreen = false;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     cascade={"persist", "merge"},
-     *     inversedBy="orderedTools"
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @var Workspace
-     */
-    private $workspace;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool"
-     * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     *
-     * @var Tool
-     */
-    private $tool;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @var User
-     */
-    private $user;
+    private bool $fullscreen = false;
 
     /**
      * @ORM\OneToMany(
@@ -117,28 +76,24 @@ class OrderedTool
         $this->rights = new ArrayCollection();
     }
 
-    public function __toString()
+    public function getName(): string
     {
-        if (!empty($this->workspace)) {
-            return '['.$this->workspace->getName().'] '.$this->tool->getName();
-        }
-
-        return $this->tool->getName();
+        return $this->name;
     }
 
-    public function getShowIcon()
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getShowIcon(): bool
     {
         return $this->showIcon;
     }
 
-    public function setShowIcon($showIcon)
+    public function setShowIcon(bool $showIcon): void
     {
         $this->showIcon = $showIcon;
-    }
-
-    public function setFullscreen(bool $fullscreen)
-    {
-        $this->fullscreen = $fullscreen;
     }
 
     public function getFullscreen(): bool
@@ -146,43 +101,9 @@ class OrderedTool
         return $this->fullscreen;
     }
 
-    public function setWorkspace(Workspace $ws = null)
+    public function setFullscreen(bool $fullscreen): void
     {
-        $this->workspace = $ws;
-    }
-
-    /**
-     * @return Workspace
-     */
-    public function getWorkspace()
-    {
-        return $this->workspace;
-    }
-
-    public function setTool(Tool $tool)
-    {
-        $this->tool = $tool;
-    }
-
-    /**
-     * @return Tool
-     */
-    public function getTool()
-    {
-        return $this->tool;
-    }
-
-    public function setUser(User $user = null)
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @return User
-     */
-    public function getUser()
-    {
-        return $this->user;
+        $this->fullscreen = $fullscreen;
     }
 
     /**
@@ -193,14 +114,15 @@ class OrderedTool
         return $this->rights;
     }
 
-    public function addRight(ToolRights $right)
+    public function addRight(ToolRights $right): void
     {
         if (!$this->rights->contains($right)) {
             $this->rights->add($right);
+            $right->setOrderedTool($this);
         }
     }
 
-    public function removeRight(ToolRights $right)
+    public function removeRight(ToolRights $right): void
     {
         if ($this->rights->contains($right)) {
             $this->rights->removeElement($right);

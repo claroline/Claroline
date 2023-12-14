@@ -18,7 +18,7 @@ const ConnectionMessageDisplay = (props) => !isEmpty(props.data) ?
     primaryAction={{
       type: LINK_BUTTON,
       label: trans('open', {}, 'actions'),
-      target: route('main_settings')+'/messages/form/'+props.data.id
+      target: route('connection_messages')+'/form/'+props.data.id
     }}
   /> :
   <ContentPlaceholder

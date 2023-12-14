@@ -11,7 +11,6 @@
 
 namespace Claroline\CursusBundle\Manager;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
@@ -26,78 +25,38 @@ use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\EventGroup;
 use Claroline\CursusBundle\Entity\Registration\EventUser;
 use Claroline\CursusBundle\Entity\Session;
-use Claroline\CursusBundle\Event\Log\LogSessionEventGroupRegistrationEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionEventGroupUnregistrationEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionEventUserRegistrationEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionEventUserUnregistrationEvent;
 use Claroline\CursusBundle\Repository\Registration\EventGroupRepository;
 use Claroline\CursusBundle\Repository\Registration\EventUserRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class EventManager
 {
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var ObjectManager */
-    private $om;
-    /** @var UrlGeneratorInterface */
-    private $router;
-    /** @var ICSGenerator */
-    private $ics;
-    /** @var TemplateManager */
-    private $templateManager;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var PlanningManager */
-    private $planningManager;
-    /** @var EventPresenceManager */
-    private $presenceManager;
-
-    /** @var EventUserRepository */
-    private $eventUserRepo;
-    /** @var EventGroupRepository */
-    private $eventGroupRepo;
+    private EventUserRepository $eventUserRepo;
+    private EventGroupRepository $eventGroupRepo;
 
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        ObjectManager $om,
-        UrlGeneratorInterface $router,
-        ICSGenerator $ics,
-        TemplateManager $templateManager,
-        TokenStorageInterface $tokenStorage,
-        StrictDispatcher $dispatcher,
-        PlanningManager $planningManager,
-        EventPresenceManager $presenceManager
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ObjectManager $om,
+        private readonly ICSGenerator $ics,
+        private readonly TemplateManager $templateManager,
+        private readonly PlanningManager $planningManager,
+        private readonly EventPresenceManager $presenceManager
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->om = $om;
-        $this->router = $router;
-        $this->ics = $ics;
-        $this->templateManager = $templateManager;
-        $this->tokenStorage = $tokenStorage;
-        $this->dispatcher = $dispatcher;
-        $this->planningManager = $planningManager;
-        $this->presenceManager = $presenceManager;
-
         $this->eventUserRepo = $om->getRepository(EventUser::class);
         $this->eventGroupRepo = $om->getRepository(EventGroup::class);
     }
 
-    public function getBySessionAndUser(Session $session, User $user)
+    public function getBySessionAndUser(Session $session, User $user): ?EventUser
     {
         return $this->eventUserRepo->findBySessionAndUser($session, $user);
     }
 
-    public function getBySessionAndGroup(Session $session, Group $group)
+    public function getBySessionAndGroup(Session $session, Group $group): ?EventGroup
     {
         return $this->eventGroupRepo->findBySessionAndUser($session, $group);
     }
 
-    public function generateFromTemplate(Event $event, string $locale)
+    public function generateFromTemplate(Event $event, string $locale): string
     {
         $placeholders = $this->getTemplatePlaceholders($event);
 
@@ -121,6 +80,8 @@ class EventManager
                 $eventUser = new EventUser();
                 $eventUser->setEvent($event);
                 $eventUser->setUser($user);
+
+                // TODO : use CRUD
                 $eventUser->setType($type);
                 $eventUser->setDate($registrationDate);
                 // no validation for events
@@ -128,8 +89,6 @@ class EventManager
                 $eventUser->setConfirmed(true);
 
                 $this->om->persist($eventUser);
-
-                $this->eventDispatcher->dispatch(new LogSessionEventUserRegistrationEvent($eventUser), 'log');
 
                 $results[] = $eventUser;
 
@@ -152,14 +111,13 @@ class EventManager
     /**
      * @param EventUser[] $eventUsers
      */
-    public function removeUsers(Event $event, array $eventUsers)
+    public function removeUsers(Event $event, array $eventUsers): void
     {
         $this->om->startFlushSuite();
 
+        // TODO : use CRUD
         foreach ($eventUsers as $eventUser) {
             $this->om->remove($eventUser);
-
-            $this->eventDispatcher->dispatch(new LogSessionEventUserUnregistrationEvent($eventUser), 'log');
 
             // remove event from user planning
             $this->planningManager->removeFromPlanning($event, $eventUser->getUser());
@@ -172,9 +130,9 @@ class EventManager
     }
 
     /**
-     * Registers an user to a session event.
+     * Registers a user to a session event.
      */
-    public function registerUserToSessionEvent(Event $event, User $user)
+    public function registerUserToSessionEvent(Event $event, User $user): void
     {
         if ($this->checkSessionEventCapacity($event)) {
             $this->addUsers($event, [$user]);
@@ -201,14 +159,14 @@ class EventManager
 
             if (empty($eventGroup)) {
                 $eventGroup = new EventGroup();
+
+                // TODO : use CRUD
                 $eventGroup->setEvent($event);
                 $eventGroup->setGroup($group);
                 $eventGroup->setType($type);
                 $eventGroup->setDate($registrationDate);
 
                 $this->om->persist($eventGroup);
-
-                $this->eventDispatcher->dispatch(new LogSessionEventGroupRegistrationEvent($eventGroup), 'log');
 
                 $results[] = $eventGroup;
 
@@ -233,10 +191,11 @@ class EventManager
     /**
      * @param EventGroup[] $eventGroups
      */
-    public function removeGroups(Event $event, array $eventGroups)
+    public function removeGroups(Event $event, array $eventGroups): void
     {
         $this->om->startFlushSuite();
 
+        // TODO : use CRUD
         foreach ($eventGroups as $eventGroup) {
             $this->om->remove($eventGroup);
 
@@ -247,8 +206,6 @@ class EventManager
                 // clean presences
                 $this->presenceManager->removePresence($event, $user);
             }
-
-            $this->eventDispatcher->dispatch(new LogSessionEventGroupUnregistrationEvent($eventGroup), 'log');
         }
 
         $this->om->endFlushSuite();
@@ -279,7 +236,7 @@ class EventManager
     /**
      * Sends invitation to all session event users.
      */
-    public function inviteAllSessionEventLearners(Event $event)
+    public function inviteAllSessionEventLearners(Event $event): void
     {
         $users = $this->getRegisteredUsers($event);
 
@@ -289,7 +246,7 @@ class EventManager
     /**
      * Sends invitation to session event to given users.
      */
-    public function sendSessionEventInvitation(Event $event, array $users)
+    public function sendSessionEventInvitation(Event $event, array $users): void
     {
         $basicPlaceholders = $this->getTemplatePlaceholders($event);
 
@@ -307,15 +264,15 @@ class EventManager
             $title = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale, 'title');
             $content = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale);
 
-            $this->dispatcher->dispatch(MessageEvents::MESSAGE_SENDING, SendMessageEvent::class, [
+            $this->eventDispatcher->dispatch(new SendMessageEvent(
                 $content,
                 $title,
                 [$user],
                 $event->getCreator(),
                 [
                     ['name' => 'invitation.ics', 'url' => $icsPath, 'type' => 'text/calendar'],
-                ],
-            ]);
+                ]
+            ), MessageEvents::MESSAGE_SENDING);
         }
     }
 

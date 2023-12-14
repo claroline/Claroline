@@ -17,7 +17,6 @@ services:
 
     Claroline\CursusBundle\Subscriber\Crud\CourseSubscriber:
         arguments:
-            - '@event_dispatcher'
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
@@ -27,7 +26,6 @@ services:
     Claroline\CursusBundle\Subscriber\Crud\EventSubscriber:
         parent: Claroline\CoreBundle\Subscriber\Crud\Planning\AbstractPlannedSubscriber
         arguments:
-            - '@event_dispatcher'
             - '@Claroline\CursusBundle\Manager\EventManager'
         tags:
             - { name: kernel.event_subscriber}
@@ -35,7 +33,6 @@ services:
     Claroline\CursusBundle\Subscriber\Crud\SessionSubscriber:
         arguments:
             - '@security.token_storage'
-            - '@event_dispatcher'
             - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\CursusBundle\Manager\SessionManager'
         tags:
@@ -48,14 +45,12 @@ services:
 
     Claroline\CursusBundle\Subscriber\Crud\Registration\SessionUserSubscriber:
         arguments:
-            - '@event_dispatcher'
             - '@Claroline\CursusBundle\Manager\SessionManager'
         tags:
             - { name: kernel.event_subscriber }
 
     Claroline\CursusBundle\Subscriber\Crud\Registration\SessionGroupSubscriber:
         arguments:
-            - '@event_dispatcher'
             - '@Claroline\CursusBundle\Manager\SessionManager'
         tags:
             - { name: kernel.event_subscriber }

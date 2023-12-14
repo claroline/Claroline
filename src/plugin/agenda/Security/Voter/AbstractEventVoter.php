@@ -12,10 +12,6 @@
 namespace Claroline\AgendaBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
-use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -27,39 +23,15 @@ abstract class AbstractEventVoter extends AbstractVoter
             case self::CREATE:
             case self::EDIT:
             case self::DELETE:
-                return $this->checkEdit($token, $object);
+                $workspace = $object->getWorkspace();
+                if ($this->isToolGranted('EDIT', 'agenda', $workspace)) {
+                    return VoterInterface::ACCESS_GRANTED;
+                }
+
+                return VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
-    }
-
-    public function checkEdit(TokenInterface $token, AbstractPlanned $object): int
-    {
-        $workspace = $object->getWorkspace();
-
-        $currentUser = $token->getUser();
-        $user = $object->getCreator();
-
-        // the user is the creator of the event
-        if ($currentUser instanceof User && (!$user || $currentUser->getUuid() === $user->getUuid())) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
-        // the user has EDIT right on the corresponding tool
-        /** @var OrderedToolRepository $orderedToolRepo */
-        $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
-
-        if (!empty($workspace)) {
-            $agendaTool = $orderedToolRepo->findOneByNameAndWorkspace('agenda', $workspace);
-        } else {
-            $agendaTool = $orderedToolRepo->findOneByNameAndDesktop('agenda');
-        }
-
-        if ($this->isGranted('EDIT', $agendaTool)) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
-        return VoterInterface::ACCESS_DENIED;
     }
 
     public function getSupportedActions(): array

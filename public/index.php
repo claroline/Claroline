@@ -18,7 +18,7 @@ if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? false) {
 }
 
 if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
-    Request::setTrustedHosts([$trustedHosts]);
+    Request::setTrustedHosts(explode(',', $trustedHosts));
 }
 
 if (!MaintenanceHandler::isMaintenanceEnabled()) {

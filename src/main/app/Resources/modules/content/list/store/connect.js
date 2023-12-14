@@ -156,6 +156,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     title:         ownProps.title,
     id:            toKey(ownProps.name),
     name:          ownProps.name,
+    flush:         ownProps.flush,
     fetch:         ownProps.fetch,
     definition:    ownProps.definition,
     card:          ownProps.card,

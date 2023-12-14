@@ -1,0 +1,5 @@
+bazinga_js_translation:
+    default_domain: platform # we should go back for the default "messages"
+    active_locales:
+        - fr
+        - en

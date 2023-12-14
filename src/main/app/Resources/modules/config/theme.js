@@ -47,7 +47,7 @@ function icon(mimeType) {
 }
 
 export {
-  currentTheme,
+  //currentTheme,
   theme,
   icon
 }

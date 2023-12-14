@@ -1,54 +1,6 @@
 services:
-    Claroline\LogBundle\Subscriber\FunctionalLogSubscriber:
+    Claroline\LogBundle\Subscriber\SubmitLogsSubscriber:
+        tags: [ kernel.event_subscriber ]
         arguments:
-            - '@translator'
             - '@messenger.default_bus'
-        tags:
-            - { name: kernel.event_subscriber }
-
-    Claroline\LogBundle\Subscriber\Administration\LogsSubscriber:
-        tags:
-            - { name: kernel.event_subscriber }
-
-    # move those subscribers in their respective plugin when old log system will be removed
-    Claroline\LogBundle\Subscriber\Functional\GroupLogSubscriber:
-        arguments:
-            - '@security.helper'
-            - '@translator'
-            - '@messenger.default_bus'
-        tags:
-            - { name: kernel.event_subscriber }
-
-    Claroline\LogBundle\Subscriber\Functional\OrganizationLogSubscriber:
-        arguments:
-            - '@security.helper'
-            - '@translator'
-            - '@messenger.default_bus'
-        tags:
-            - { name: kernel.event_subscriber }
-
-    Claroline\LogBundle\Subscriber\Security\AuthenticationLogSubscriber:
-        arguments:
-            - '@security.helper'
-            - '@request_stack'
-            - '@translator'
-            - '@messenger.default_bus'
-        tags:
-            - { name: kernel.event_subscriber }
-
-    Claroline\LogBundle\Subscriber\Security\RoleLogSubscriber:
-        arguments:
-            - '@security.helper'
-            - '@request_stack'
-            - '@messenger.default_bus'
-        tags:
-            - { name: kernel.event_subscriber }
-
-    Claroline\LogBundle\Subscriber\Security\UserLogSubscriber:
-        arguments:
-            - '@security.helper'
-            - '@request_stack'
-            - '@translator'
-            - '@messenger.default_bus'
-        tags:
-            - { name: kernel.event_subscriber }
+            - '@Claroline\LogBundle\Manager\LogManager'

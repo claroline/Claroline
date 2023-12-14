@@ -10,26 +10,20 @@ trait Evaluated
      * The evaluation will produce a score.
      *
      * @ORM\Column(type="boolean", options={"default" = 0})
-     *
-     * @var bool
      */
-    protected $evaluated = false;
+    protected bool $evaluated = false;
 
     /**
      * @ORM\Column(type="boolean", options={"default" = 0})
-     *
-     * @var bool
      */
-    protected $required = false;
+    protected bool $required = false;
 
     /**
      * The estimated time required to do the resource (in minutes).
      *
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $estimatedDuration;
+    protected ?int $estimatedDuration = null;
 
     /**
      * Is the entity evaluated ?
@@ -42,7 +36,7 @@ trait Evaluated
     /**
      * Sets the evaluated flag.
      */
-    public function setEvaluated(bool $evaluated)
+    public function setEvaluated(bool $evaluated): void
     {
         $this->evaluated = $evaluated;
     }
@@ -52,7 +46,7 @@ trait Evaluated
         return $this->required;
     }
 
-    public function setRequired(bool $required)
+    public function setRequired(bool $required): void
     {
         $this->required = $required;
     }
@@ -62,7 +56,7 @@ trait Evaluated
         return $this->estimatedDuration;
     }
 
-    public function setEstimatedDuration(?int $estimatedDuration = null)
+    public function setEstimatedDuration(int $estimatedDuration = null): void
     {
         $this->estimatedDuration = $estimatedDuration;
     }

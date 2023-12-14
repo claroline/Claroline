@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Repository\Resource;
 
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
@@ -118,38 +117,6 @@ class ResourceNodeRepository extends MaterializedPathRepository
             ->setParameter('path', $resource->getPath())
             ->getQuery()
             ->getResult();
-    }
-
-    /**
-     * Returns an array of different file types with the number of resources that
-     * belong to this type.
-     *
-     * @param int            $max
-     * @param Organization[] $organizations
-     *
-     * @return array
-     */
-    public function findMimeTypesWithMostResources($max, array $organizations = [])
-    {
-        $qb = $this->createQueryBuilder('resource')
-            ->select('resource.mimeType AS type, COUNT(resource.id) AS total')
-            ->where('resource.mimeType IS NOT NULL')
-            ->groupBy('resource.mimeType')
-            ->orderBy('total', 'DESC');
-
-        if (!empty($organizations)) {
-            $qb
-                ->leftJoin('resource.workspace', 'ws')
-                ->leftJoin('ws.organizations', 'o')
-                ->andWhere('o IN (:organizations)')
-                ->setParameter('organizations', $organizations);
-        }
-
-        if ($max > 1) {
-            $qb->setMaxResults($max);
-        }
-
-        return $qb->getQuery()->getResult();
     }
 
     public function findLastIndex(ResourceNode $node)

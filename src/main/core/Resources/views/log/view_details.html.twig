@@ -1,3 +1,0 @@
-{% block logDetailsContext %}
-    {% include '@ClarolineCore/log/view_details_action_' ~ log.getAction()|replace({'-': '_'}) ~ '.html.twig' ignore missing %}
-{% endblock %}

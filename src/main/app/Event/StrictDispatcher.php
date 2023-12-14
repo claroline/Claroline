@@ -20,11 +20,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * automatically throw an exception if this communication went wrong (i.e. if the
  * plugin didn't respond as expected).
  *
- * @todo : move me inside \EventDispatcher namespace
+ * @deprecated use standard event_dispatcher instead
  */
 class StrictDispatcher
 {
-    /** @var EventDispatcher */
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
     public function __construct(EventDispatcherInterface $ed)
@@ -50,7 +50,7 @@ class StrictDispatcher
      */
     public function dispatch($eventName, $shortEventClassName, array $eventArgs = [])
     {
-        //@todo CoreBundle should be removed from that code
+        // @todo CoreBundle should be removed from that code
         $className = class_exists($shortEventClassName) ?
             $shortEventClassName :
             "Claroline\CoreBundle\Event\\{$shortEventClassName}Event";

@@ -12,15 +12,13 @@
 namespace Claroline\CursusBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
 use Claroline\CursusBundle\Entity\Event;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class EventVoter extends AbstractVoter
 {
-    const REGISTER = 'REGISTER';
+    public const REGISTER = 'REGISTER';
 
     public function getClass(): string
     {
@@ -32,20 +30,15 @@ class EventVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
-        /** @var OrderedToolRepository $orderedToolRepo */
-        $orderedToolRepo = $this->getObjectManager()->getRepository(OrderedTool::class);
-
+        $workspace = null;
         if ($object->getSession() && $object->getSession()->getWorkspace()) {
-            $trainingsTool = $orderedToolRepo->findOneByNameAndWorkspace('training_events', $object->getSession()->getWorkspace());
-        } else {
-            $trainingsTool = $orderedToolRepo->findOneByNameAndDesktop('trainings');
+            $workspace = $object->getSession()->getWorkspace();
         }
-
-        $toolEdit = $this->isGranted('EDIT', $trainingsTool);
 
         switch ($attributes[0]) {
             case self::CREATE: // EDIT right on tool
-                if ($toolEdit) {
+                if ($this->isToolGranted('EDIT', 'training_events', $workspace)
+                    || $this->isToolGranted('EDIT', 'trainings')) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -54,21 +47,24 @@ class EventVoter extends AbstractVoter
             case self::EDIT:
             case self::DELETE:
             case self::PATCH:
-                if ($toolEdit || ($object->getSession() && $this->isGranted('EDIT', $object->getSession()))) {
+                if ($this->isToolGranted('EDIT', 'training_events', $workspace)
+                    || ($object->getSession() && $this->isGranted('EDIT', $object->getSession()))) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
                 return VoterInterface::ACCESS_DENIED;
             case self::OPEN:
             case self::VIEW:
-                if ($this->isGranted('OPEN', $trainingsTool) || ($object->getSession() && $this->isGranted('OPEN', $object->getSession()))) {
+                if ($this->isToolGranted('OPEN', 'training_events', $workspace)
+                    || ($object->getSession() && $this->isGranted('OPEN', $object->getSession()))) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
                 return VoterInterface::ACCESS_DENIED;
 
             case self::REGISTER:
-                if ($this->isGranted('REGISTER', $trainingsTool) || ($object->getSession() && $this->isGranted('REGISTER', $object->getSession()))) {
+                if ($this->isToolGranted('REGISTER', 'training_events', $workspace)
+                    || ($object->getSession() && $this->isGranted('REGISTER', $object->getSession()))) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 

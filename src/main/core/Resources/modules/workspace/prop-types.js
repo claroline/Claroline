@@ -20,8 +20,9 @@ const Workspace = {
         User.propTypes
       ),
       model: T.bool,
-      personal: T.bool
-    }).isRequired,
+      personal: T.bool,
+      archived: T.bool
+    }),
     opening: T.shape({
       type: T.oneOf(['resource', 'tool']),
       target: T.oneOfType([T.string, T.shape(ResourceNode.propTypes)])
@@ -49,7 +50,8 @@ const Workspace = {
   defaultProps: {
     meta: {
       model: false,
-      personal: false
+      personal: false,
+      archived: false
     },
     display: {
       showProgression: true,

@@ -35,14 +35,9 @@ class WorkspaceRepositoryTest extends RepositoryTestCase
         self::createRole('ROLE_4', self::get('ws_4'));
         self::createRole('ROLE_5', self::get('ws_5'));
         self::createRole('ROLE_ANONYMOUS');
-        self::createTool('tool_1');
-        self::createTool('tool_2');
-        self::createWorkspaceTool(self::get('tool_1'), self::get('ws_1'), [self::get('ROLE_ANONYMOUS')], 1);
-        self::createWorkspaceTool(self::get('tool_2'), self::get('ws_2'), [self::get('ROLE_2')], 1);
+        self::createWorkspaceTool('tool_1', self::get('ws_1'), [self::get('ROLE_ANONYMOUS')], 1);
+        self::createWorkspaceTool('tool_2', self::get('ws_2'), [self::get('ROLE_2')], 1);
         self::createUser('john', [self::get('ROLE_1'), self::get('ROLE_2')], self::get('ws_1'));
-        self::createLog(self::get('john'), 'workspace-tool-read', self::get('ws_1'));
-        self::sleep(1); // dates involved
-        self::createLog(self::get('john'), 'workspace-tool-read', self::get('ws_2'));
         self::createResourceType('t_dir', 'Directory');
         self::createDirectory('dir_1', self::get('t_dir'), self::get('john'), self::get('ws_2'));
         self::createDirectory('dir_2', self::get('t_dir'), self::get('john'), self::get('ws_2'));

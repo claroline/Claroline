@@ -4,14 +4,12 @@ namespace Claroline\AnnouncementBundle\Subscriber\Crud;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
-use Claroline\AnnouncementBundle\Event\Log\LogAnnouncementEvent;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -21,32 +19,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class AnnouncementSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var ObjectManager */
-    private $om;
-    /** @var AnnouncementManager */
-    private $manager;
-    /** @var FileManager */
-    private $fileManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        StrictDispatcher $dispatcher,
-        ObjectManager $om,
-        AnnouncementManager $manager,
-        FileManager $fileManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly AnnouncementManager $manager,
+        private readonly FileManager $fileManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->dispatcher = $dispatcher;
-        $this->om = $om;
-        $this->manager = $manager;
-        $this->fileManager = $fileManager;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Crud::getEventName('create', 'pre', Announcement::class) => 'preCreate',
@@ -57,7 +38,7 @@ class AnnouncementSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var Announcement $announcement */
         $announcement = $event->getObject();
@@ -71,7 +52,7 @@ class AnnouncementSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var Announcement $announcement */
         $announcement = $event->getObject();
@@ -79,11 +60,9 @@ class AnnouncementSubscriber implements EventSubscriberInterface
         if ($announcement->getPoster()) {
             $this->fileManager->linkFile(Announcement::class, $announcement->getUuid(), $announcement->getPoster());
         }
-
-        $this->dispatchAnnouncementEvent($announcement, 'announcement-create');
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var Announcement $announcement */
         $announcement = $event->getObject();
@@ -109,11 +88,9 @@ class AnnouncementSubscriber implements EventSubscriberInterface
             $announcement->getPoster(),
             !empty($oldData['poster']) ? $oldData['poster'] : null
         );
-
-        $this->dispatchAnnouncementEvent($announcement, 'announcement-update');
     }
 
-    public function preDelete(DeleteEvent $event)
+    public function preDelete(DeleteEvent $event): void
     {
         /** @var Announcement $announcement */
         $announcement = $event->getObject();
@@ -127,11 +104,9 @@ class AnnouncementSubscriber implements EventSubscriberInterface
 
         // delete scheduled task if any
         $this->manager->unscheduleMessage($announcement);
-
-        $this->dispatchAnnouncementEvent($announcement, 'announcement-delete');
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var Announcement $announcement */
         $announcement = $event->getObject();
@@ -139,13 +114,5 @@ class AnnouncementSubscriber implements EventSubscriberInterface
         if (!in_array(Options::SOFT_DELETE, $event->getOptions()) && $announcement->getPoster()) {
             $this->fileManager->unlinkFile(Announcement::class, $announcement->getUuid(), $announcement->getPoster());
         }
-    }
-
-    /**
-     * @deprecated
-     */
-    private function dispatchAnnouncementEvent(Announcement $announcement, $action)
-    {
-        $this->dispatcher->dispatch('log', LogAnnouncementEvent::class, [$announcement, $action]);
     }
 }

@@ -33,10 +33,8 @@ class GetDataEvent extends Event implements MandatoryEventInterface, DataConveyo
 
     /**
      * The data returned by the source.
-     *
-     * @var mixed
      */
-    private $data = null;
+    private $data;
 
     /**
      * Is the event correctly populated ?
@@ -45,13 +43,7 @@ class GetDataEvent extends Event implements MandatoryEventInterface, DataConveyo
      */
     private $populated = false;
 
-    /**
-     * GetDataEvent constructor.
-     *
-     * @param User      $user
-     * @param Workspace $workspace
-     */
-    public function __construct(string $context, array $options, User $user = null, Workspace $workspace = null)
+    public function __construct(string $context, array $options = [], User $user = null, Workspace $workspace = null)
     {
         $this->context = $context;
         $this->options = $options;
@@ -86,8 +78,6 @@ class GetDataEvent extends Event implements MandatoryEventInterface, DataConveyo
 
     /**
      * Get the data provided by the DataSource.
-     *
-     * @return mixed
      */
     public function getData()
     {
@@ -96,8 +86,6 @@ class GetDataEvent extends Event implements MandatoryEventInterface, DataConveyo
 
     /**
      * Set the event data.
-     *
-     * @param $data
      */
     public function setData($data)
     {

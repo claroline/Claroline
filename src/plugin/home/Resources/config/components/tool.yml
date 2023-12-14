@@ -1,0 +1,8 @@
+services:
+    Claroline\HomeBundle\Component\Tool\HomeTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
+            - '@Claroline\HomeBundle\Manager\HomeManager'

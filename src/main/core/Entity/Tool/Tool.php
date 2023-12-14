@@ -11,77 +11,66 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\AppBundle\Entity\FromPlugin;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Tool\ToolRepository")
+ * @ORM\Entity()
+ *
  * @ORM\Table(
  *      name="claro_tools",
  *      uniqueConstraints={@ORM\UniqueConstraint(name="tool_plugin_unique",columns={"name", "plugin_id"})}
  * )
  */
-class Tool extends AbstractTool
+class Tool
 {
-    /**
-     * @ORM\Column(name="is_displayable_in_workspace", type="boolean")
-     */
-    protected $isDisplayableInWorkspace = true;
+    use Id;
+    use Uuid;
+    use FromPlugin;
 
     /**
-     * @ORM\Column(name="is_displayable_in_desktop", type="boolean")
-     */
-    protected $isDisplayableInDesktop = true;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder",
-     *     mappedBy="tool",
-     *     cascade={"persist", "remove"}
-     * )
+     * The name of the tool.
      *
-     * @var ToolMaskDecoder[]|ArrayCollection
+     * @ORM\Column()
      */
-    protected $maskDecoders;
+    private string $name;
+
+    /**
+     * The icon of the tool (For now, only the name of a FontAwesome icon is allowed).
+     *
+     * @ORM\Column()
+     */
+    private ?string $class = null;
 
     public function __construct()
     {
-        parent::__construct();
-
-        $this->maskDecoders = new ArrayCollection();
+        $this->refreshUuid();
     }
 
-    public function setDisplayableInWorkspace($bool)
+    public function __toString()
     {
-        $this->isDisplayableInWorkspace = $bool;
-
-        return $this;
+        return $this->getName();
     }
 
-    public function isDisplayableInWorkspace()
+    public function setName(string $name): void
     {
-        return $this->isDisplayableInWorkspace;
+        $this->name = $name;
     }
 
-    public function setDisplayableInDesktop($bool)
+    public function getName(): string
     {
-        $this->isDisplayableInDesktop = $bool;
-
-        return $this;
+        return $this->name;
     }
 
-    public function isDisplayableInDesktop()
+    public function getIcon(): ?string
     {
-        return $this->isDisplayableInDesktop;
+        return $this->class;
     }
 
-    public function addMaskDecoder(ToolMaskDecoder $maskDecoder)
+    public function setIcon(string $icon = null): void
     {
-        $this->maskDecoders->add($maskDecoder);
-    }
-
-    public function getMaskDecoders()
-    {
-        return $this->maskDecoders;
+        $this->class = $icon;
     }
 }

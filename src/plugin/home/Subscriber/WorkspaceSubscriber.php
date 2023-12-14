@@ -11,15 +11,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WorkspaceSubscriber implements EventSubscriberInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-
-    public function __construct(ObjectManager $om, Crud $crud)
-    {
-        $this->om = $om;
-        $this->crud = $crud;
+    public function __construct(
+        private readonly ObjectManager $om,
+        private readonly Crud $crud
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -29,11 +24,15 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function preDelete(DeleteEvent $event)
+    public function preDelete(DeleteEvent $event): void
     {
+        /** @var Workspace $workspace */
         $workspace = $event->getObject();
 
-        $tabs = $this->om->getRepository(HomeTab::class)->findBy(['workspace' => $workspace]);
+        $tabs = $this->om->getRepository(HomeTab::class)->findBy([
+            'contextId' => $workspace->getContextIdentifier(),
+        ]);
+
         foreach ($tabs as $tab) {
             $this->crud->delete($tab);
         }

@@ -1,26 +1,18 @@
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
+        public: true # shouldn't
 
     Icap\WikiBundle\Manager\WikiManager:
        arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Icap\WikiBundle\Serializer\WikiSerializer'
-          - '@event_dispatcher'
-       public: true
 
     Icap\WikiBundle\Manager\SectionManager:
        arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Icap\WikiBundle\Serializer\SectionSerializer'
-          - '@event_dispatcher'
-       public: true
 
     Icap\WikiBundle\Manager\ContributionManager:
        arguments:
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@Icap\WikiBundle\Serializer\ContributionSerializer'
-          - '@event_dispatcher'
-       public: true

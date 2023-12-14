@@ -9,9 +9,9 @@ use Twig\Environment;
 class PdfManager
 {
     public function __construct(
-        private Environment $templating,
-        private TempFileManager $tempFileManager,
-        private PlatformManager $platformManager
+        private readonly Environment $templating,
+        private readonly TempFileManager $tempFileManager,
+        private readonly PlatformManager $platformManager
     ) {
     }
 

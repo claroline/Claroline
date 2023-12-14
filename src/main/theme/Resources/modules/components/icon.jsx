@@ -4,6 +4,7 @@ import classes from 'classnames'
 
 import {asset} from '#/main/app/config'
 import {icon} from '#/main/theme/config'
+import {makeCancelable} from '#/main/app/api'
 
 const cacheIcons = {}
 
@@ -17,19 +18,23 @@ const ThemeUrlIcon = (props) => {
 
     // Weird things happen here.
     // I manually load the SVG because I need to directly mount the SVG into the DOM.
-    // I do it because I want to be able to style SVG content through theme and it's only possible with inline SVG or SVG sprites.
+    // I do it because I want to be able to style SVG content through theme, and it's only possible with inline SVG or SVG sprites.
     // Doing it like this should keep the browser cache system working
     // ATTENTION: the wrapping span is required because of the DOM manipulation
     useEffect(() => {
       if (!cacheIcons[url]) {
-        fetch(url, {
+        const iconFetching = makeCancelable(fetch(url, {
           credentials: 'include'
-        })
+        }))
+
+        iconFetching.promise
           .then(response => response.text())
           .then(response => {
             cacheIcons[url] = response
             setSvg(response)
           })
+
+        return () => iconFetching.cancel()
       }
     })
 

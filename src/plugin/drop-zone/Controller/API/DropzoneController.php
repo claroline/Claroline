@@ -12,7 +12,6 @@
 namespace Claroline\DropZoneBundle\Controller\API;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CommunityBundle\Entity\Team;
 use Claroline\CoreBundle\Entity\User;
@@ -21,12 +20,10 @@ use Claroline\DropZoneBundle\Entity\Correction;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
-use Claroline\DropZoneBundle\Event\Log\LogDocumentOpenEvent;
 use Claroline\DropZoneBundle\Manager\CorrectionManager;
 use Claroline\DropZoneBundle\Manager\DropManager;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -43,49 +40,22 @@ class DropzoneController
 {
     use PermissionCheckerTrait;
 
-    /** @var Crud */
-    private $crud;
-    /** @var FinderProvider */
-    private $finder;
-    /** @var DropzoneManager */
-    private $manager;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var string */
-    private $filesDir;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var DropManager */
-    private $dropManager;
-    /** @var CorrectionManager */
-    private $correctionManager;
-
     public function __construct(
-        Crud $crud,
-        FinderProvider $finder,
-        DropzoneManager $manager,
-        string $filesDir,
-        EventDispatcherInterface $eventDispatcher,
+        private readonly Crud $crud,
+        private readonly DropzoneManager $manager,
+        private readonly string $filesDir,
         AuthorizationCheckerInterface $authorization,
-        SerializerProvider $serializer,
-        DropManager $dropManager,
-        CorrectionManager $correctionManager
+        private readonly SerializerProvider $serializer,
+        private readonly DropManager $dropManager,
+        private readonly CorrectionManager $correctionManager
     ) {
-        $this->crud = $crud;
-        $this->finder = $finder;
-        $this->manager = $manager;
-        $this->filesDir = $filesDir;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->authorization = $authorization;
-        $this->serializer = $serializer;
-        $this->dropManager = $dropManager;
-        $this->correctionManager = $correctionManager;
     }
 
     /**
      * Updates a Dropzone resource.
      *
      * @Route("/{id}", name="claro_dropzone_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"mapping": {"id": "uuid"}})
      */
     public function updateAction(Dropzone $dropzone, Request $request): JsonResponse
@@ -107,6 +77,7 @@ class DropzoneController
 
     /**
      * @Route("/{id}/corrections/fetch", name="claro_dropzone_corrections_fetch", methods={"GET"})
+     *
      * @EXT\ParamConverter(
      *     "dropzone",
      *     class="Claroline\DropZoneBundle\Entity\Dropzone",
@@ -124,6 +95,7 @@ class DropzoneController
 
     /**
      * @Route("/drop/{id}/correction/save", name="claro_dropzone_correction_save", methods={"POST"})
+     *
      * @EXT\ParamConverter(
      *     "drop",
      *     class="Claroline\DropZoneBundle\Entity\Drop",
@@ -150,6 +122,7 @@ class DropzoneController
 
     /**
      * @Route("/correction/{id}/submit", name="claro_dropzone_correction_submit", methods={"PUT"})
+     *
      * @EXT\ParamConverter(
      *     "correction",
      *     class="Claroline\DropZoneBundle\Entity\Correction",
@@ -180,6 +153,7 @@ class DropzoneController
      *     name="claro_dropzone_correction_validation_switch",
      *     methods={"PUT"}
      * )
+     *
      * @EXT\ParamConverter(
      *     "correction",
      *     class="Claroline\DropZoneBundle\Entity\Correction",
@@ -207,6 +181,7 @@ class DropzoneController
 
     /**
      * @Route("/correction/{id}/delete", name="claro_dropzone_correction_delete", methods={"DELETE"})
+     *
      * @EXT\ParamConverter(
      *     "correction",
      *     class="Claroline\DropZoneBundle\Entity\Correction",
@@ -233,6 +208,7 @@ class DropzoneController
 
     /**
      * @Route("/correction/{id}/deny", name="claro_dropzone_correction_deny", methods={"PUT"})
+     *
      * @EXT\ParamConverter(
      *     "correction",
      *     class="Claroline\DropZoneBundle\Entity\Correction",
@@ -262,6 +238,7 @@ class DropzoneController
 
     /**
      * @Route("/{id}/peer/drop/fetch", name="claro_dropzone_peer_drop_fetch", methods={"GET"})
+     *
      * @EXT\ParamConverter(
      *     "dropzone",
      *     class="Claroline\DropZoneBundle\Entity\Dropzone",
@@ -280,6 +257,7 @@ class DropzoneController
 
     /**
      * @Route("/{id}/team/{teamId}/peer/drop/fetch", name="claro_dropzone_team_peer_drop_fetch", methods={"GET"})
+     *
      * @EXT\ParamConverter(
      *     "dropzone",
      *     class="Claroline\DropZoneBundle\Entity\Dropzone",
@@ -306,6 +284,7 @@ class DropzoneController
      * Downloads a document.
      *
      * @Route("/{document}/download", name="claro_dropzone_document_download", methods={"GET"})
+     *
      * @EXT\ParamConverter(
      *     "document",
      *     class="Claroline\DropZoneBundle\Entity\Document",
@@ -332,8 +311,6 @@ class DropzoneController
         $response->headers->set('Content-Disposition', 'attachment; filename='.$filename);
         $response->headers->set('Content-Type', $data['mimeType']);
         $response->headers->set('Connection', 'close');
-
-        $this->eventDispatcher->dispatch(new LogDocumentOpenEvent($document->getDrop()->getDropzone(), $document->getDrop(), $document), 'log');
 
         return $response->send();
     }

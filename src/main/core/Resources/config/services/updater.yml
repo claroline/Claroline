@@ -1,16 +1,22 @@
 services:
-  _defaults:
-    tags: [ 'claroline.platform.updater' ]
+    _defaults:
+        tags: [ 'claroline.platform.updater' ]
 
-  Claroline\CoreBundle\Installation\Updater\Updater140000:
-    arguments:
-      - '@kernel'
-      - '@doctrine.dbal.default_connection'
+    Claroline\CoreBundle\Installation\Updater\Updater140000:
+        arguments:
+            - '@kernel'
+            - '@doctrine.dbal.default_connection'
 
-  Claroline\CoreBundle\Installation\Updater\Updater140010:
-    arguments:
-      - '@doctrine.dbal.default_connection'
+    Claroline\CoreBundle\Installation\Updater\Updater140010:
+        arguments:
+            - '@doctrine.dbal.default_connection'
 
-  Claroline\CoreBundle\Installation\Updater\Updater140014:
-    arguments:
-      - '@doctrine.dbal.default_connection'
+    Claroline\CoreBundle\Installation\Updater\Updater140014:
+        arguments:
+            - '@doctrine.dbal.default_connection'
+
+    Claroline\CoreBundle\Installation\Updater\Updater140100:
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'

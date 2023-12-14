@@ -52,7 +52,7 @@ class PlatformListener
      *
      * @var array
      */
-    const PUBLIC_ROUTES = [
+    public const PUBLIC_ROUTES = [
         // to let admin log in
         'claro_security_login',
         // to be able to render client UI
@@ -182,7 +182,7 @@ class PlatformListener
         $user = $this->tokenStorage->getToken()->getUser();
 
         $locale = $this->localeManager->getLocale($user);
-        $content = $this->versionManager->getChangelogs($locale).'<br/>'.'<br/>';
+        $content = $this->versionManager->getChangelogs($locale).'<br/><br/>';
         $content .= '<em>'.$this->translator->trans('platform_changelog_display', [
                 '%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles')),
                 '%end_date%' => $endDate->format('d/m/Y'),
@@ -209,7 +209,7 @@ class PlatformListener
             return [];
         }
 
-        $editUrl = $this->routingHelper->adminPath('main_settings/privacy');
+        $editUrl = $this->routingHelper->adminPath('privacy');
 
         return [
             [
@@ -232,7 +232,7 @@ class PlatformListener
             return [];
         }
 
-        $editUrl = $this->routingHelper->adminPath('main_settings');
+        $editUrl = $this->routingHelper->adminPath('parameters');
 
         return [
             [

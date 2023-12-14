@@ -25,7 +25,7 @@ class CompetencyVoter extends AbstractVoter
             case self::EDIT:
             case self::DELETE:
             case self::PATCH:
-                return $this->hasAdminToolAccess($token, 'competencies') ?
+                return $this->hasAdminToolAccess($token, 'evaluation') ?
                     VoterInterface::ACCESS_GRANTED :
                     VoterInterface::ACCESS_DENIED;
         }

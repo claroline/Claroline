@@ -1,11 +1,5 @@
 import {trans} from '#/main/app/intl/translation'
 
-// todo add parse display value
-
-// todo configurable precision
-// todo configurable M separator
-// todo configurable decimal separator
-
 function precision(num, decimals) {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals)
 }

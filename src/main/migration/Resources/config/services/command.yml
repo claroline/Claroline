@@ -1,0 +1,31 @@
+services:
+    _instanceof:
+        Claroline\MigrationBundle\Command\AbstractCommand:
+            calls:
+                - [setManager, ['@claroline.migration.manager']]
+
+    Claroline\MigrationBundle\Command\DiscardCommand:
+        tags:
+            - { name: 'console.command', command: 'claroline:migration:discard' }
+    
+    Claroline\MigrationBundle\Command\DowngradeCommand:
+        tags:
+            - { name: 'console.command', command: 'claroline:migration:downgrade' }
+    
+    Claroline\MigrationBundle\Command\GenerateCommand:
+        tags:
+            - { name: 'console.command', command: 'claroline:migration:generate' }
+    
+    Claroline\MigrationBundle\Command\ReplaceCommand:
+        tags:
+            - { name: 'console.command', command: 'claroline:migration:replace' }
+    
+    Claroline\MigrationBundle\Command\UpgradeCommand:
+        tags:
+            - { name: 'console.command', command: 'claroline:migration:upgrade' }
+    
+    Claroline\MigrationBundle\Command\VersionCommand:
+        arguments:
+            - '@claroline.migration.migrator'
+        tags:
+            - { name: 'console.command', command: 'claroline:migration:version' }

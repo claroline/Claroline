@@ -27,7 +27,6 @@ use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
@@ -201,7 +200,6 @@ class ResourceManager implements LoggerAwareInterface
 
         $this->om->persist($child);
         $this->om->endFlushSuite();
-        $this->dispatcher->dispatch('log', 'Log\LogResourceMove', [$child, $parent]);
 
         return $child;
     }
@@ -295,8 +293,6 @@ class ResourceManager implements LoggerAwareInterface
                     } else {
                         $archive->addEmptyDir(TextNormalizer::toUtf8($filename));
                     }
-
-                    $this->dispatcher->dispatch('log', 'Log\LogResourceExport', [$node]);
                 }
             }
         }
@@ -383,7 +379,7 @@ class ResourceManager implements LoggerAwareInterface
         $this->om->flush();
     }
 
-    public function load(ResourceNode $resourceNode, $embedded = false)
+    public function load(ResourceNode $resourceNode, $embedded = false): ?array
     {
         $resource = $this->getResourceFromNode($resourceNode);
         if ($resource) {
@@ -397,13 +393,13 @@ class ResourceManager implements LoggerAwareInterface
             return $event->getData();
         }
 
-        throw new ResourceNotFoundException();
+        throw new \RuntimeException(sprintf('Cannot load AbstractResource from ResourceNode (%s).', $resourceNode->getUuid()));
     }
 
     /**
      * Embed a resource inside a rich text.
      */
-    public function embed(ResourceNode $resourceNode)
+    public function embed(ResourceNode $resourceNode): ?string
     {
         $resource = $this->getResourceFromNode($resourceNode);
         if ($resource) {
@@ -417,7 +413,7 @@ class ResourceManager implements LoggerAwareInterface
             return $event->getData();
         }
 
-        throw new ResourceNotFoundException();
+        throw new \RuntimeException(sprintf('Cannot load AbstractResource from ResourceNode (%s).', $resourceNode->getUuid()));
     }
 
     public function isManager(ResourceNode $resourceNode): bool
@@ -426,21 +422,36 @@ class ResourceManager implements LoggerAwareInterface
     }
 
     /**
-     * Generates an unique resource code from given one by iterating it.
+     * Generates a unique resource code from given one by iterating it.
      */
     public function getUniqueCode(string $code): string
     {
         $existingCodes = $this->resourceNodeRepo->findCodesWithPrefix($code);
+
+        $toInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
+        foreach ($toInsert as $entityInsertion) {
+            if ($entityInsertion instanceof ResourceNode && str_starts_with(strtoupper($entityInsertion->getCode()), strtoupper($code))) {
+                $existingCodes[] = strtoupper($entityInsertion->getCode());
+            }
+        }
+
+        $toUpdate = $this->om->getUnitOfWork()->getScheduledEntityUpdates();
+        foreach ($toUpdate as $entityUpdate) {
+            if ($entityUpdate instanceof ResourceNode && str_starts_with(strtoupper($entityUpdate->getCode()), strtoupper($code))) {
+                $existingCodes[] = strtoupper($entityUpdate->getCode());
+            }
+        }
+
         if (empty($existingCodes)) {
             return $code;
         }
 
-        $index = count($existingCodes);
-        do {
+        $index = 0;
+        $currentCode = $code;
+        while (in_array(strtoupper($currentCode), $existingCodes)) {
             ++$index;
             $currentCode = $code.'_'.$index;
-            $upperCurrentCode = strtoupper($currentCode);
-        } while (in_array($upperCurrentCode, $existingCodes));
+        }
 
         return $currentCode;
     }

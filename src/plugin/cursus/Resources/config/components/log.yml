@@ -1,0 +1,13 @@
+services:
+    # Operational
+    Claroline\CursusBundle\Component\Log\Operational\LogCourse:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\CursusBundle\Component\Log\Operational\LogEvent:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]
+
+    Claroline\CursusBundle\Component\Log\Operational\LogSession:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]

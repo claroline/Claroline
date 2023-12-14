@@ -1,10 +1,8 @@
 plugin:
     tools:
         - name: transfer
-          class: exchange
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: true
+          icon: exchange
           tool_rights:
-              - name: import
-              - name: export
-              - name: refresh
+              - import
+              - export
+              - refresh

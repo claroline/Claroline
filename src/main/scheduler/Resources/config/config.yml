@@ -1,4 +1,4 @@
 plugin:
-    admin_tools:
-        - name: scheduled_tasks
-          class: clock
+    tools:
+        - name: scheduler
+          icon: clock

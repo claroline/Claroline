@@ -43,9 +43,6 @@
 - title: API
   home: api/index
   docs:
-      - title: Authentication
-        doc: api/authentication/index
-
       - title: Model
         doc: api/model
 

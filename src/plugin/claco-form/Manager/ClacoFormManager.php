@@ -11,7 +11,6 @@
 
 namespace Claroline\ClacoFormBundle\Manager;
 
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
@@ -22,14 +21,6 @@ use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
-use Claroline\ClacoFormBundle\Event\Log\LogCommentCreateEvent;
-use Claroline\ClacoFormBundle\Event\Log\LogCommentDeleteEvent;
-use Claroline\ClacoFormBundle\Event\Log\LogCommentEditEvent;
-use Claroline\ClacoFormBundle\Event\Log\LogCommentStatusChangeEvent;
-use Claroline\ClacoFormBundle\Event\Log\LogEntryLockSwitchEvent;
-use Claroline\ClacoFormBundle\Event\Log\LogEntryStatusChangeEvent;
-use Claroline\ClacoFormBundle\Event\Log\LogEntryUserChangeEvent;
-use Claroline\ClacoFormBundle\Repository\CategoryRepository;
 use Claroline\ClacoFormBundle\Repository\CommentRepository;
 use Claroline\ClacoFormBundle\Repository\EntryRepository;
 use Claroline\ClacoFormBundle\Repository\EntryUserRepository;
@@ -43,9 +34,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Messenger\Message\SendMessage;
 use Doctrine\Common\Collections\ArrayCollection;
-use Psr\Log\LoggerAwareInterface;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -55,67 +44,26 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ClacoFormManager implements LoggerAwareInterface
+class ClacoFormManager
 {
-    use LoggableTrait;
-
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var string */
-    private $filesDir;
-    /** @var ObjectManager */
-    private $om;
-    /** @var RouterInterface */
-    private $router;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var MessageBusInterface */
-    private $messageBus;
-    /** @var CategoryManager */
-    private $categoryManager;
-
-    /** @var UserRepository */
-    private $userRepo;
-    /** @var CategoryRepository */
-    private $categoryRepo;
-    /** @var CommentRepository */
-    private $commentRepo;
-    /** @var EntryRepository */
-    private $entryRepo;
-    /** @var EntryUserRepository */
-    private $entryUserRepo;
-    /** @var FieldValueRepository */
-    private $fieldValueRepo;
-    /** @var KeywordRepository */
-    private $keywordRepo;
+    private UserRepository $userRepo;
+    private CommentRepository $commentRepo;
+    private EntryRepository $entryRepo;
+    private EntryUserRepository $entryUserRepo;
+    private FieldValueRepository $fieldValueRepo;
+    private KeywordRepository $keywordRepo;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        EventDispatcherInterface $eventDispatcher,
-        string $filesDir,
-        ObjectManager $om,
-        RouterInterface $router,
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        MessageBusInterface $messageBus,
-        CategoryManager $categoryManager
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly string $filesDir,
+        private readonly ObjectManager $om,
+        private readonly RouterInterface $router,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly TranslatorInterface $translator,
+        private readonly MessageBusInterface $messageBus,
+        private readonly CategoryManager $categoryManager
     ) {
-        $this->authorization = $authorization;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->filesDir = $filesDir;
-        $this->om = $om;
-        $this->router = $router;
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->messageBus = $messageBus;
-        $this->categoryManager = $categoryManager;
-
         $this->userRepo = $om->getRepository(User::class);
-        $this->categoryRepo = $om->getRepository(Category::class);
         $this->commentRepo = $om->getRepository(Comment::class);
         $this->entryRepo = $om->getRepository(Entry::class);
         $this->entryUserRepo = $om->getRepository(EntryUser::class);
@@ -123,13 +71,13 @@ class ClacoFormManager implements LoggerAwareInterface
         $this->keywordRepo = $om->getRepository(Keyword::class);
     }
 
-    public function persistEntry(Entry $entry)
+    public function persistEntry(Entry $entry): void
     {
         $this->om->persist($entry);
         $this->om->flush();
     }
 
-    public function getRandomEntryId(ClacoForm $clacoForm)
+    public function getRandomEntryId(ClacoForm $clacoForm): ?string
     {
         $entryId = null;
         $entries = $this->getRandomEntries($clacoForm);
@@ -194,8 +142,6 @@ class ClacoFormManager implements LoggerAwareInterface
                 break;
         }
         $this->persistEntry($entry);
-        $event = new LogEntryStatusChangeEvent($entry);
-        $this->eventDispatcher->dispatch($event, 'log');
 
         $this->categoryManager->notifyEditedEntry($entry, $entry->getCategories());
 
@@ -212,8 +158,6 @@ class ClacoFormManager implements LoggerAwareInterface
             }
             $entry->setStatus($status);
             $this->persistEntry($entry);
-            $event = new LogEntryStatusChangeEvent($entry);
-            $this->eventDispatcher->dispatch($event, 'log');
 
             $this->categoryManager->notifyEditedEntry($entry, $entry->getCategories());
         }
@@ -227,8 +171,6 @@ class ClacoFormManager implements LoggerAwareInterface
         $locked = $entry->isLocked();
         $entry->setLocked(!$locked);
         $this->persistEntry($entry);
-        $event = new LogEntryLockSwitchEvent($entry);
-        $this->eventDispatcher->dispatch($event, 'log');
 
         $this->categoryManager->notifyEditedEntry($entry, $entry->getCategories());
 
@@ -242,8 +184,6 @@ class ClacoFormManager implements LoggerAwareInterface
         foreach ($entries as $entry) {
             $entry->setLocked($locked);
             $this->persistEntry($entry);
-            $event = new LogEntryLockSwitchEvent($entry);
-            $this->eventDispatcher->dispatch($event, 'log');
 
             $this->categoryManager->notifyEditedEntry($entry, $entry->getCategories());
         }
@@ -256,8 +196,6 @@ class ClacoFormManager implements LoggerAwareInterface
     {
         $entry->setUser($user);
         $this->persistEntry($entry);
-        $event = new LogEntryUserChangeEvent($entry);
-        $this->eventDispatcher->dispatch($event, 'log');
 
         return $entry;
     }
@@ -331,8 +269,6 @@ class ClacoFormManager implements LoggerAwareInterface
         }
         $comment->setStatus($status);
         $this->persistComment($comment);
-        $event = new LogCommentCreateEvent($comment);
-        $this->eventDispatcher->dispatch($event, 'log');
 
         if (Comment::VALIDATED === $comment->getStatus()) {
             $this->notifyUsers($entry, 'comment', $content);
@@ -348,8 +284,6 @@ class ClacoFormManager implements LoggerAwareInterface
         $comment->setContent($content);
         $comment->setEditionDate(new \DateTime());
         $this->persistComment($comment);
-        $event = new LogCommentEditEvent($comment);
-        $this->eventDispatcher->dispatch($event, 'log');
 
         if (Comment::VALIDATED === $comment->getStatus()) {
             $this->notifyUsers($comment->getEntry(), 'comment', $content);
@@ -362,8 +296,6 @@ class ClacoFormManager implements LoggerAwareInterface
     {
         $comment->setStatus($status);
         $this->persistComment($comment);
-        $event = new LogCommentStatusChangeEvent($comment);
-        $this->eventDispatcher->dispatch($event, 'log');
 
         if (Comment::VALIDATED === $comment->getStatus()) {
             $this->notifyUsers($comment->getEntry(), 'comment', $comment->getContent());
@@ -372,34 +304,10 @@ class ClacoFormManager implements LoggerAwareInterface
         return $comment;
     }
 
-    public function deleteComment(Comment $comment)
+    public function deleteComment(Comment $comment): void
     {
-        $details = [];
-        $details['id'] = $comment->getId();
-        $details['content'] = $comment->getContent();
-        $details['status'] = $comment->getStatus();
-        $details['creationDate'] = $comment->getCreationDate();
-        $details['editionDate'] = $comment->getEditionDate();
-        $user = $comment->getUser();
-
-        if (!is_null($user)) {
-            $details['userId'] = $user->getId();
-            $details['username'] = $user->getUsername();
-            $details['firstName'] = $user->getFirstName();
-            $details['lastName'] = $user->getLastName();
-        }
-        $entry = $comment->getEntry();
-        $details['entryId'] = $entry->getId();
-        $details['entryTitle'] = $entry->getTitle();
-        $clacoForm = $entry->getClacoForm();
-        $resourceNode = $clacoForm->getResourceNode();
-        $details['resourceId'] = $clacoForm->getId();
-        $details['resourceNodeId'] = $resourceNode->getId();
-        $details['resourceName'] = $resourceNode->getName();
         $this->om->remove($comment);
         $this->om->flush();
-        $event = new LogCommentDeleteEvent($details);
-        $this->eventDispatcher->dispatch($event, 'log');
     }
 
     public function createEntryUser(

@@ -23,6 +23,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  *
  * If anonymous must be allowed add `options={"allowAnonymous" = true}`,
  * in this case the converter will return `null`.
+ *
+ * @deprecated use the TokenStorage instead
  */
 class CurrentUserConverter implements ParamConverterInterface
 {
@@ -34,14 +36,13 @@ class CurrentUserConverter implements ParamConverterInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws InvalidConfigurationException if the parameter name is missing
      * @throws AccessDeniedException         if the current request is anonymous and `allowAnonymous` option is false
      */
     public function apply(Request $request, ParamConverter $configuration)
     {
-        if (null === $parameter = $configuration->getName()) {
+        $parameter = $configuration->getName();
+        if (null === $parameter) {
             throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_NAME);
         }
 
@@ -69,9 +70,6 @@ class CurrentUserConverter implements ParamConverterInterface
         throw new AccessDeniedException();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(ParamConverter $configuration)
     {
         $options = $configuration->getOptions();

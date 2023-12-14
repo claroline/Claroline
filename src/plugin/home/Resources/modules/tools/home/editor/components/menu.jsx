@@ -31,7 +31,6 @@ const EditorMenu = (props) => {
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-plus',
           label: trans('tab_add_child', {}, 'home'),
-          disabled: 'administration' === tab.context && !props.administration,
           displayed: 1 > level, // only allow one sub-level of tabs
           modal: [MODAL_HOME_CREATION, {
             position: props.tabs.length,
@@ -46,7 +45,6 @@ const EditorMenu = (props) => {
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-cog',
           label: trans('configure', {}, 'actions'),
-          disabled: 'administration' === tab.context && !props.administration,
           modal: [MODAL_HOME_PARAMETERS, {
             tab: tab,
             save: (tab) => props.updateTab(props.tabs, tab.id, tab)
@@ -58,7 +56,6 @@ const EditorMenu = (props) => {
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-arrows',
           label: trans('move', {}, 'actions'),
-          disabled: 'administration' === tab.context && !props.administration,
           modal: [MODAL_HOME_POSITION, {
             tab: tab,
             tabs: flattenTabs(props.tabs),
@@ -81,7 +78,7 @@ const EditorMenu = (props) => {
             message: trans('home_tab_delete_confirm_message', {}, 'home'),
             subtitle: tab.title
           },
-          disabled: ('administration' === tab.context && !props.administration) || 1 >= props.tabs.length,
+          disabled: 1 >= props.tabs.length,
           callback: () => props.deleteTab(props.tabs, tab),
           group: trans('management')
         }
@@ -125,7 +122,6 @@ EditorMenu.propTypes = {
     type: T.string.isRequired,
     data: T.object
   }),
-  administration: T.bool,
   currentUser: T.object,
   autoClose: T.func.isRequired,
   createTab: T.func.isRequired,

@@ -10,7 +10,7 @@
             <div class="{{level>2?"subsection-header":"page-header"}}">
                 <h{{level}}>{{chapter.title}}</h{{level}}>
             </div>
-            <div id="wst-{{ chapter.id }}" class="lesson-chapter-text">{{chapter.text|preg_replace("/src=\"\\/\\//","src=\"http://")|preg_replace("/src=\"\\//","src=\""~app.request.getSchemeAndHttpHost()~"/")|raw}}</div>
+            <div id="wst-{{ chapter.id }}" class="lesson-chapter-text">{{chapter.text|raw}}</div>
             {% if chapter.__children is not empty %}
                 <ul class="lesson-chapters">
                     {{ macro.lesson_chapters_pdf(chapter.__children, lessonId) }}

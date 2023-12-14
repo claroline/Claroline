@@ -1,0 +1,5 @@
+services:
+    # Message
+    Claroline\MessageBundle\Component\Log\Message\LogMessageSend:
+        parent: Claroline\LogBundle\Component\Log\AbstractMessageLog
+        tags: [ 'claroline.component.log' ]

@@ -9,22 +9,18 @@ use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\RecomputeWorkspaceEvaluations;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
+/**
+ * Recompute WorkspaceEvaluations for a Workspace and a list of Users.
+ */
 class RecomputeWorkspaceEvaluationsHandler implements MessageHandlerInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var WorkspaceEvaluationManager */
-    private $evaluationManager;
-
     public function __construct(
-        ObjectManager $om,
-        WorkspaceEvaluationManager $evaluationManager
+        private readonly ObjectManager $om,
+        private readonly WorkspaceEvaluationManager $evaluationManager
     ) {
-        $this->om = $om;
-        $this->evaluationManager = $evaluationManager;
     }
 
-    public function __invoke(RecomputeWorkspaceEvaluations $initMessage)
+    public function __invoke(RecomputeWorkspaceEvaluations $initMessage): void
     {
         $workspace = $this->om->getRepository(Workspace::class)->find($initMessage->getWorkspaceId());
         if (empty($workspace)) {
@@ -42,10 +38,7 @@ class RecomputeWorkspaceEvaluationsHandler implements MessageHandlerInterface
         $this->om->startFlushSuite();
 
         foreach ($users as $i => $user) {
-            $evaluation = $this->evaluationManager->computeEvaluation($workspace, $user);
-            if ($evaluation) {
-                $this->evaluationManager->computeDuration($evaluation);
-            }
+            $this->evaluationManager->computeEvaluation($workspace, $user);
 
             if (0 === $i % 200) {
                 $this->om->forceFlush();

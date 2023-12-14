@@ -2,6 +2,9 @@
 
 namespace Icap\NotificationBundle\Entity;
 
+/**
+ * @deprecated
+ */
 class UserPickerContent
 {
     private $originalText = '';

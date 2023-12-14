@@ -13,10 +13,10 @@ namespace Claroline\CoreBundle\Controller\APINew\Location;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Location\Material;
 use Claroline\CoreBundle\Entity\Location\MaterialBooking;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Repository\Tool\OrderedToolRepository;
+use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,11 +31,10 @@ class MaterialController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    public function __construct(AuthorizationCheckerInterface $authorization)
-    {
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        private readonly ToolManager $toolManager
+    ) {
         $this->authorization = $authorization;
     }
 
@@ -51,6 +50,7 @@ class MaterialController extends AbstractCrudController
 
     /**
      * @Route("/{material}/booking", name="apiv2_booking_material_book", methods={"POST"})
+     *
      * @EXT\ParamConverter("material", class="Claroline\CoreBundle\Entity\Location\Material", options={"mapping": {"material": "uuid"}})
      */
     public function bookAction(Material $material, Request $request): JsonResponse
@@ -72,6 +72,7 @@ class MaterialController extends AbstractCrudController
 
     /**
      * @Route("/{material}/booking", name="apiv2_booking_material_list_booking", methods={"GET"})
+     *
      * @EXT\ParamConverter("material", class="Claroline\CoreBundle\Entity\Location\Material", options={"mapping": {"material": "uuid"}})
      */
     public function listBookingAction(Material $material, Request $request): JsonResponse
@@ -90,6 +91,7 @@ class MaterialController extends AbstractCrudController
 
     /**
      * @Route("/{$material}/booking", name="apiv2_booking_material_remove_booking", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("$material", class="Claroline\CoreBundle\Entity\Location\Material", options={"mapping": {"$material": "uuid"}})
      */
     public function deleteBookingAction(Material $material, Request $request): JsonResponse
@@ -103,12 +105,9 @@ class MaterialController extends AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    private function canBook()
+    private function canBook(): void
     {
-        /** @var OrderedToolRepository $orderedToolRepo */
-        $orderedToolRepo = $this->om->getRepository(OrderedTool::class);
-
-        $bookingTool = $orderedToolRepo->findOneByNameAndDesktop('locations');
+        $bookingTool = $this->toolManager->getOrderedTool('locations', DesktopContext::getName());
 
         $this->checkPermission('BOOK', $bookingTool, [], true);
     }

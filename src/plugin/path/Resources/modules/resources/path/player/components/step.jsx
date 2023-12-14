@@ -112,7 +112,11 @@ const Step = props =>
               showHeader={props.showResourceHeader}
               lifecycle={{
                 play: props.disableNavigation,
-                end: props.enableNavigation
+                end: () => {
+                  props.enableNavigation()
+                  // get updated path progression
+                  props.updateProgression(props.id)
+                }
               }}
             />
           }

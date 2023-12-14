@@ -3,129 +3,90 @@
 namespace Icap\LessonBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
-use Icap\LessonBundle\Event\Log\LogChapterCreateEvent;
-use Icap\LessonBundle\Event\Log\LogChapterDeleteEvent;
-use Icap\LessonBundle\Event\Log\LogChapterMoveEvent;
-use Icap\LessonBundle\Event\Log\LogChapterUpdateEvent;
+use Icap\LessonBundle\Repository\ChapterRepository;
 use Icap\LessonBundle\Serializer\ChapterSerializer;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ChapterManager
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $entityManager;
+    private ChapterRepository $chapterRepository;
 
-    /** @var ChapterSerializer */
-    protected $chapterSerializer;
-
-    /** @var ObjectManager */
-    protected $om;
-
-    /** @var EventDispatcherInterface */
-    protected $eventDispatcher;
-
-    /** @var ChapterRepository */
-    protected $chapterRepository;
-
-    /**
-     * Constructor.
-     *
-     * @param $eventDispatcher  $eventDispatcher
-     */
     public function __construct(
-        EntityManager $entityManager,
-        ChapterSerializer $chapterSerializer,
-        ObjectManager $om,
-        EventDispatcherInterface $eventDispatcher
+        private readonly ObjectManager $om,
+        private readonly ChapterSerializer $chapterSerializer
     ) {
-        $this->entityManager = $entityManager;
-        $this->chapterSerializer = $chapterSerializer;
-        $this->om = $om;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->chapterRepository = $entityManager->getRepository(Chapter::class);
+        $this->chapterRepository = $om->getRepository(Chapter::class);
     }
 
     /**
      * Copy full lesson chapters, from original root to copy root.
      */
-    public function copyRoot(Chapter $root_original, Chapter $root_copy)
+    public function copyRoot(Chapter $rootOriginal, Chapter $rootCopy): void
     {
-        $root_copy->setTitle($root_original->getTitle());
-        $root_copy->setText($root_original->getText());
-        $root_copy->setInternalNote($root_original->getInternalNote());
-        $this->copyChildren($root_original, $root_copy, true);
+        $rootCopy->setTitle($rootOriginal->getTitle());
+        $rootCopy->setText($rootOriginal->getText());
+        $rootCopy->setInternalNote($rootOriginal->getInternalNote());
+        $this->copyChildren($rootOriginal, $rootCopy, true);
     }
 
     /**
      * Copy chapter_org subchapters into provided chapter_copy.
-     *
-     * @param bool   $copy_children
-     * @param Lesson $copyName
-     *
-     * @return Chapter $chapter_copy
      */
-    public function copyChapter(Chapter $chapter_org, Chapter $parent, $copy_children, $copyName = null)
+    public function copyChapter(Chapter $chapterOrg, Chapter $parent, $copyChildren, $copyName = null): Chapter
     {
-        $chapter_copy = new Chapter();
+        $chapterCopy = new Chapter();
         if (!$copyName) {
-            $copyName = $chapter_org->getTitle();
+            $copyName = $chapterOrg->getTitle();
         }
-        $chapter_copy->setTitle($copyName);
-        $chapter_copy->setText($chapter_org->getText());
-        $chapter_copy->setInternalNote($chapter_org->getInternalNote());
-        $chapter_copy->setLesson($parent->getLesson());
-        $this->insertChapter($chapter_copy, $parent);
-        if ($copy_children) {
-            $this->copyChildren($chapter_org, $chapter_copy, $copy_children);
+        $chapterCopy->setTitle($copyName);
+        $chapterCopy->setText($chapterOrg->getText());
+        $chapterCopy->setInternalNote($chapterOrg->getInternalNote());
+        $chapterCopy->setLesson($parent->getLesson());
+        $this->insertChapter($chapterCopy, $parent);
+        if ($copyChildren) {
+            $this->copyChildren($chapterOrg, $chapterCopy, $copyChildren);
         }
 
-        return $chapter_copy;
+        return $chapterCopy;
     }
 
-    public function copyChildren(Chapter $chapter_org, Chapter $chapter_copy, $copy_children)
+    public function copyChildren(Chapter $chapterOrg, Chapter $chapterCopy, $copyChildren): void
     {
-        $chapterRepository = $this->entityManager->getRepository(Chapter::class);
-        $chapters = $chapterRepository->children($chapter_org, true);
+        $chapterRepository = $this->om->getRepository(Chapter::class);
+        $chapters = $chapterRepository->children($chapterOrg, true);
         if (null !== $chapters && count($chapters) > 0) {
             foreach ($chapters as $child) {
-                $this->copyChapter($child, $chapter_copy, $copy_children);
+                $this->copyChapter($child, $chapterCopy, $copyChildren);
             }
         }
     }
 
-    public function insertChapter(Chapter $chapter, Chapter $parent)
+    public function insertChapter(Chapter $chapter, Chapter $parent): void
     {
-        $this->entityManager->getRepository(Chapter::class)->persistAsLastChildOf($chapter, $parent);
-        $this->entityManager->flush();
+        $this->om->getRepository(Chapter::class)->persistAsLastChildOf($chapter, $parent);
+        $this->om->flush();
     }
 
-    public function serializeChapterTree(Lesson $lesson)
+    public function serializeChapterTree(Lesson $lesson): array
     {
-        $tree = $this->entityManager->getRepository(Chapter::class)->buildChapterTree($lesson->getRoot(), 'chapter.uuid, chapter.level, chapter.title, chapter.slug, chapter.text, chapter.poster');
+        $tree = $this->om->getRepository(Chapter::class)->buildChapterTree($lesson->getRoot(), 'chapter.uuid, chapter.level, chapter.title, chapter.slug, chapter.text, chapter.poster');
 
         return $this->chapterSerializer->serializeChapterTree($tree[0]);
     }
 
-    public function createChapter(Lesson $lesson, $data, $parent)
+    public function createChapter(Lesson $lesson, array $data = [], Chapter $parent = null): Chapter
     {
         $newChapter = $this->chapterSerializer->deserialize($data);
         $newChapter->setLesson($lesson);
 
         $this->insertChapterInPlace($newChapter, $parent, $data);
 
-        $this->dispatch(new LogChapterCreateEvent($lesson, $newChapter, []));
-
         return $newChapter;
     }
 
-    public function updateChapter(lesson $lesson, Chapter $chapter, $data)
+    public function updateChapter(Lesson $lesson, Chapter $chapter, $data): void
     {
-        $oldParent = $chapter->getParent();
         $newParent = $this->chapterRepository->findOneBySlug($data['parentSlug']);
 
         $this->chapterSerializer->deserialize($data, $chapter);
@@ -133,16 +94,13 @@ class ChapterManager
         // Should the chapter be moved ?
         if (isset($data['move'])) {
             $this->insertChapterInPlace($chapter, $newParent, $data);
-            $this->dispatch(new LogChapterMoveEvent($chapter->getLesson(), $chapter, $oldParent, $chapter->getParent()));
         } else {
             $this->om->persist($chapter);
             $this->om->flush();
         }
-
-        $this->dispatch(new LogChapterUpdateEvent($lesson, $chapter, []));
     }
 
-    public function deleteChapter(Lesson $lesson, Chapter $chapter, $withChildren = false)
+    public function deleteChapter(Lesson $lesson, Chapter $chapter, $withChildren = false): void
     {
         if ($withChildren) {
             $this->om->remove($chapter);
@@ -151,11 +109,9 @@ class ChapterManager
         }
 
         $this->om->flush();
-
-        $this->dispatch(new LogChapterDeleteEvent($lesson, $chapter, []));
     }
 
-    private function insertChapterInPlace($chapter, $parent, $data)
+    private function insertChapterInPlace($chapter, $parent, $data): void
     {
         $position = $data['position'];
         $sibling = $data['order']['sibling'];
@@ -194,10 +150,5 @@ class ChapterManager
 
         $this->om->persist($chapter);
         $this->om->flush();
-    }
-
-    private function dispatch($event)
-    {
-        $this->eventDispatcher->dispatch($event, 'log');
     }
 }

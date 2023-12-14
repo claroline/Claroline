@@ -1,11 +1,6 @@
 {
   "Bad credentials.": "Votre identifiant ou votre mot de passe est incorrect.",
-  "userLogout": "L'utilisateur username vient de se déconnecter.",
-  "userLogin": "L'utilisateur username vient de se connecter.",
-  "userDisable": "L'utilisateur username vient d'être désactivé.",
-  "userEnable": "L'utilisateur username vient d'être activé.",
-  "forgotPassword": "L'utilisateur username vient de faire une demande de mot de passe oublié.",
-  "newPassword": "L'utilisateur username a modifié son mot de passe.",
+
   "password_strength.very_weak": "Très faible",
   "password_strength.weak": "Faible",
   "password_strength.medium": "Moyen",

@@ -22,6 +22,9 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Manages emails sent by the authentication system (eg. password reset).
+ */
 class MailManager
 {
     public function __construct(

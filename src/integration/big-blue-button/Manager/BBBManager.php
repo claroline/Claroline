@@ -93,7 +93,7 @@ class BBBManager
 
             $name = urlencode($name);
             $password = $moderator ? 'manager' : 'collaborator';
-            $queryString = "meetingID=$meetingId&password=$password&userId=${userId}&fullName=$name";
+            $queryString = "meetingID=$meetingId&password=$password&userId=$userId&fullName=$name";
             $checksum = sha1("join$queryString$securitySalt");
 
             $url = "$serverUrl/bigbluebutton/api/join?$queryString&checksum=$checksum";

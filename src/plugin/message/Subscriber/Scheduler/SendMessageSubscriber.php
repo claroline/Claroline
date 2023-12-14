@@ -11,21 +11,17 @@
 
 namespace Claroline\MessageBundle\Subscriber\Scheduler;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\SchedulerBundle\Event\ExecuteScheduledTaskEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SendMessageSubscriber implements EventSubscriberInterface
 {
-    /** @var StrictDispatcher */
-    private $dispatcher;
-
     public function __construct(
-        StrictDispatcher $dispatcher
+        private readonly EventDispatcherInterface $dispatcher
     ) {
-        $this->dispatcher = $dispatcher;
     }
 
     public static function getSubscribedEvents(): array
@@ -35,7 +31,7 @@ class SendMessageSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function executeTask(ExecuteScheduledTaskEvent $event)
+    public function executeTask(ExecuteScheduledTaskEvent $event): void
     {
         $task = $event->getTask();
 
@@ -48,10 +44,7 @@ class SendMessageSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->dispatcher->dispatch(MessageEvents::MESSAGE_SENDING, SendMessageEvent::class, [
-            $content,
-            $object,
-            $users,
-        ]);
+        $sendEvent = new SendMessageEvent($content, $object, $users);
+        $this->dispatcher->dispatch($sendEvent, MessageEvents::MESSAGE_SENDING);
     }
 }

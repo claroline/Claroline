@@ -81,16 +81,6 @@ const mainOrganization = createSelector(
   (currentUser) => currentUser.mainOrganization
 )
 
-/**
- * Checks if the current user has access to administration section.
- *
- * @return {bool}
- */
-const hasAdministration = createSelector(
-  [store],
-  (store) => store.administration
-)
-
 const clientIp = createSelector(
   [store],
   (store) => {
@@ -113,6 +103,5 @@ export const selectors = {
   isAuthenticated,
   isAdmin,
   mainOrganization,
-  hasAdministration,
   clientIp
 }

@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {selectors} from '#/main/authentication/administration/authentication/store/selectors'
 
@@ -15,10 +16,10 @@ const displayPasswordValidation = (data) => get(data, 'password._forceComplexity
   || get(data, 'password.requireNumber')
   || get(data, 'password.requireSpecialChar')
 
-const AuthenticationTool = (props) => {
-  return (
+const AuthenticationTool = (props) =>
+  <ToolPage>
     <FormData
-      name={selectors.FORM_NAME}
+      name={selectors.STORE_NAME}
       target={['apiv2_authentication_parameters_update']}
       buttons={true}
       cancel={{
@@ -44,34 +45,6 @@ const AuthenticationTool = (props) => {
               name: 'login.showClientIp',
               type: 'boolean',
               label: trans('display_client_ip', {}, 'security')
-            }, {
-              name: 'login.redirectAfterLoginOption',
-              type: 'choice',
-              label: trans('redirect_after_login_option'),
-              options: {
-                multiple: false,
-                condensed: false,
-                choices: {
-                  'LAST': trans('last_page', {}, 'platform'),
-                  'DESKTOP': trans('desktop', {}, 'platform'),
-                  'URL': trans('url', {}, 'platform'),
-                  'WORKSPACE_TAG': trans('workspace_tag', {}, 'platform')
-                }
-              }, linked: [
-                {
-                  name: 'login.redirectAfterLoginUrl',
-                  type: 'string',
-                  label: trans('url'),
-                  displayed: (data) => 'URL' === get(data, 'login.redirectAfterLoginOption'),
-                  required: true
-                }, {
-                  name: 'workspace.default_tag',
-                  label: trans('tag', {}, 'tag'),
-                  type: 'string',
-                  displayed: (data) => 'WORKSPACE_TAG' === get(data, 'login.redirectAfterLoginOption'),
-                  required: true
-                }
-              ]
             }
           ]
         }, {
@@ -129,8 +102,7 @@ const AuthenticationTool = (props) => {
         }
       ]}
     />
-  )
-}
+  </ToolPage>
 
 AuthenticationTool.propTypes = {
   path: T.string.isRequired,

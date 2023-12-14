@@ -17,7 +17,7 @@ class AnnouncementAggregateSubscriber implements EventSubscriberInterface
         $this->crud = $crud;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Crud::getEventName('delete', 'pre', AnnouncementAggregate::class) => 'preDelete',

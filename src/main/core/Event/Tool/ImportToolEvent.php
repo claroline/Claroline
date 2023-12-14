@@ -7,28 +7,23 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class ImportToolEvent extends AbstractToolEvent
 {
-    /** @var FileBag */
-    private $fileBag;
+    private FileBag $fileBag;
 
     /**
      * The serialized data to import.
-     *
-     * @var array
      */
-    private $data;
+    private array $data;
 
     /**
      * The list of entities created by the import. Keys are the old UUIDs of the entities.
-     *
-     * @var array
      */
-    private $entities;
+    private array $entities;
 
     public function __construct(
         string $toolName,
         string $context,
-        ?Workspace $workspace = null,
-        ?FileBag $fileBag = null,
+        Workspace $workspace = null,
+        FileBag $fileBag = null,
         ?array $data = [],
         ?array $entities = []
     ) {
@@ -59,7 +54,7 @@ class ImportToolEvent extends AbstractToolEvent
         return $this->entities;
     }
 
-    public function getCreatedEntity(string $oldUuid)
+    public function getCreatedEntity(string $oldUuid): mixed
     {
         if (!empty($this->entities[$oldUuid])) {
             return $this->entities[$oldUuid];
@@ -68,7 +63,7 @@ class ImportToolEvent extends AbstractToolEvent
         return null;
     }
 
-    public function addCreatedEntity(string $oldUuid, $entity)
+    public function addCreatedEntity(string $oldUuid, $entity): void
     {
         $this->entities[$oldUuid] = $entity;
     }

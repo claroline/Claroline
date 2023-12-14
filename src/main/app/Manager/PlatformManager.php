@@ -7,17 +7,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class PlatformManager
 {
-    /** @var RequestStack */
-    private $requestStack;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-
     public function __construct(
-        RequestStack $requestStack,
-        PlatformConfigurationHandler $config
+        private readonly RequestStack $requestStack,
+        private readonly PlatformConfigurationHandler $config
     ) {
-        $this->requestStack = $requestStack;
-        $this->config = $config;
     }
 
     /**
@@ -47,5 +40,15 @@ class PlatformManager
         }
 
         return trim($url, '/');
+    }
+
+    public function hasParameter(string $parameter): bool
+    {
+        return $this->config->hasParameter($parameter);
+    }
+
+    public function getParameter(string $parameter): mixed
+    {
+        return $this->config->getParameter($parameter);
     }
 }

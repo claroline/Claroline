@@ -1,0 +1,6 @@
+services:
+    Claroline\LogBundle\Component\Tool\LogsTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]
+        arguments:
+            - '@Claroline\LogBundle\Component\Log\LogProvider'

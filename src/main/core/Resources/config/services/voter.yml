@@ -8,17 +8,12 @@ services:
     Claroline\CoreBundle\Security\Voter\Template\TemplateVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 
-    Claroline\CoreBundle\Security\Voter\Tool\ToolVoter:
+    Claroline\CoreBundle\Security\Voter\Tool\OrderedToolVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Component\Context\ContextProvider'
             - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
-
-    Claroline\CoreBundle\Security\Voter\Tool\OrderedToolVoter:
-        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
-
-    Claroline\CoreBundle\Security\Voter\Tool\AdministrationToolVoter:
-        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 
     Claroline\CoreBundle\Security\Voter\PublicFileVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter

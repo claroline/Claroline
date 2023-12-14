@@ -10,9 +10,7 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentForbidden} from '#/main/app/content/components/forbidden'
 import {ContentNotFound} from '#/main/app/content/components/not-found'
 
-import {constants} from '#/main/core/tool/constants'
-import {getTool} from '#/main/core/tools'
-import {getTool as getAdminTool} from '#/main/core/administration'
+import {getTool} from '#/main/core/tool/utils'
 
 const Tool = props => {
   if (props.loaded) {
@@ -93,15 +91,6 @@ class ToolMain extends Component {
     appPromise.then(() => {
       if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
         if (!this.pending) {
-          // close previous tool
-          if (this.props.toolName && prevProps.toolName && this.props.toolContext && prevProps.toolContext && (
-            this.props.toolName !== prevProps.toolName ||
-            this.props.toolContext.type !== prevProps.toolContext.type ||
-            (this.props.toolContext.data && prevProps.toolContext.data && this.props.toolContext.data.id !== prevProps.toolContext.data.id)
-          )) {
-            this.props.close(prevProps.toolName, prevProps.toolContext)
-          }
-
           // open current tool
           this.open()
         }
@@ -111,7 +100,7 @@ class ToolMain extends Component {
 
   open() {
     this.pending = makeCancelable(
-      this.props.open(this.props.toolName, this.props.toolContext)
+      this.props.open(this.props.toolName, this.props.contextType, this.props.contextId)
     )
 
     this.pending.promise
@@ -125,14 +114,9 @@ class ToolMain extends Component {
     if (!this.pendingApp) {
       this.setState({appLoaded: false})
 
-      let app
-      if (constants.TOOL_ADMINISTRATION === this.props.toolContext.type) {
-        app = getAdminTool(this.props.toolName)
-      } else {
-        app = getTool(this.props.toolName)
-      }
-
-      this.pendingApp = makeCancelable(app)
+      this.pendingApp = makeCancelable(
+        getTool(this.props.toolName, this.props.contextType)
+      )
 
       this.pendingApp.promise
         .then(
@@ -142,7 +126,7 @@ class ToolMain extends Component {
                 appLoaded: true,
                 // I build the store here because if I do it in the render()
                 // it will be called many times and will cause multiple mount/unmount of the app
-                app: withReducer(this.props.toolName, resolved.default.store)(Tool),
+                app: resolved.default.store ? withReducer(this.props.toolName, resolved.default.store)(Tool) : Tool,
                 component: resolved.default.component,
                 styles: resolved.default.styles
               })
@@ -169,11 +153,6 @@ class ToolMain extends Component {
     if (this.pending) {
       this.pending.cancel()
       this.pending = null
-    }
-
-    // only request close on tools effectively opened
-    if (this.props.toolName && this.props.loaded && !this.props.notFound && !this.props.accessDenied) {
-      this.props.close(this.props.toolName, this.props.toolContext)
     }
   }
 
@@ -224,16 +203,12 @@ class ToolMain extends Component {
 ToolMain.propTypes = {
   path: T.string,
   toolName: T.string.isRequired,
-  toolContext: T.shape({
-    type: T.string.isRequired,
-    url: T.oneOfType([T.array, T.string]),
-    data: T.object
-  }).isRequired,
+  contextType: T.string.isRequired,
+  contextId: T.string,
   loaded: T.bool.isRequired,
   notFound: T.bool.isRequired,
   accessDenied: T.bool.isRequired,
-  open: T.func.isRequired,
-  close: T.func.isRequired
+  open: T.func.isRequired
 }
 
 ToolMain.defaultProps = {

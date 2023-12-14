@@ -8,6 +8,7 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {selectors} from '#/main/community/tools/community/role/store/selectors'
 import {RoleList as BaseRoleList} from '#/main/community/role/components/list'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const RoleList = props =>
   <ToolPage
@@ -30,14 +31,17 @@ const RoleList = props =>
       }
     ]}
   >
-    <BaseRoleList
-      path={props.path}
-      name={selectors.LIST_NAME}
-      url={!isEmpty(props.contextData) ?
-        ['apiv2_workspace_list_roles_configurable', {workspace: props.contextData.id}] :
-        ['apiv2_role_list']
-      }
-    />
+    <ContentSizing size="full">
+      <BaseRoleList
+        flush={true}
+        path={props.path}
+        name={selectors.LIST_NAME}
+        url={!isEmpty(props.contextData) ?
+          ['apiv2_workspace_list_roles_configurable', {workspace: props.contextData.id}] :
+          ['apiv2_role_list']
+        }
+      />
+    </ContentSizing>
   </ToolPage>
 
 RoleList.propTypes = {

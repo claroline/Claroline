@@ -2,44 +2,30 @@
 
 namespace Claroline\LogBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\CommunityBundle\Serializer\UserSerializer;
-use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\LogBundle\Entity\SecurityLog;
 
-class SecurityLogSerializer
+class SecurityLogSerializer extends AbstractLogSerializer
 {
-    use SerializerTrait;
-
-    private $userSerializer;
-
-    public function __construct(UserSerializer $userSerializer)
+    public function getClass(): string
     {
-        $this->userSerializer = $userSerializer;
+        return SecurityLog::class;
     }
 
-    public function serialize(SecurityLog $securityLog): array
+    public function serialize(SecurityLog $securityLog, array $options = []): array
     {
-        $doer = null;
-        if ($securityLog->getDoer()) {
-            $doer = $this->userSerializer->serialize($securityLog->getDoer(), [Options::SERIALIZE_MINIMAL]);
+        $serialized = $this->serializeCommon($securityLog, $options);
+        if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            return $serialized;
         }
 
         $target = null;
         if ($securityLog->getTarget()) {
-            $target = $this->userSerializer->serialize($securityLog->getTarget(), [Options::SERIALIZE_MINIMAL]);
+            $target = $this->userSerializer->serialize($securityLog->getTarget(), [SerializerInterface::SERIALIZE_MINIMAL]);
         }
 
-        return [
-            'city' => $securityLog->getCity(),
-            'country' => $securityLog->getCountry(),
-            'date' => DateNormalizer::normalize($securityLog->getDate()),
-            'details' => $securityLog->getDetails(),
-            'doer' => $doer,
-            'event' => $securityLog->getEvent(),
-            'doer_ip' => $securityLog->getDoerIp(),
+        return array_merge($serialized, [
             'target' => $target,
-        ];
+        ]);
     }
 }

@@ -1,4 +1,8 @@
 plugin:
+    tools:
+      - name: notifications
+        icon: bell
+
     resource_actions:
         # Gets all the notifications for the current user
         - name: notifications

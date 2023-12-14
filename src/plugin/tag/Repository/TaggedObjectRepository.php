@@ -11,7 +11,6 @@
 
 namespace Claroline\TagBundle\Repository;
 
-use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\TagBundle\Entity\Tag;
 use Doctrine\ORM\EntityRepository;
 
@@ -58,46 +57,6 @@ class TaggedObjectRepository extends EntityRepository
         $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('class', $class);
         $query->setParameter('ids', $ids);
-
-        return $query->getResult();
-    }
-
-    public function findTaggedWorkspacesByRoles($tag, array $roles, $orderedBy = 'id', $order = 'ASC', $type = 0)
-    {
-        $dql = "
-            SELECT DISTINCT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.uuid IN (
-                SELECT to.objectId
-                FROM Claroline\TagBundle\Entity\TaggedObject to
-                JOIN to.tag t
-                WHERE to.objectClass = :workspaceClass
-                AND t.name = :tag
-            )
-            AND EXISTS (
-                SELECT ot
-                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
-                JOIN ot.rights r
-                JOIN r.role rr
-                WHERE ot.workspace = w
-                AND rr.type = :type
-                AND rr IN (:roles)
-                AND BIT_AND(r.mask, :open) = :open
-                ORDER BY ot.order
-            )
-            ORDER BY w.{$orderedBy} {$order}
-        ";
-
-        // this a workaround for PHPMD. Direct use of ToolMaskDecoder::$defaultValues['open'] will
-        // trigger the undefined variable rule (https://github.com/phpmd/phpmd/issues/714)
-        $defaultDecoders = ToolMaskDecoder::$defaultValues;
-
-        $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('roles', $roles);
-        $query->setParameter('workspaceClass', 'Claroline\CoreBundle\Entity\Workspace\Workspace');
-        $query->setParameter('tag', $tag);
-        $query->setParameter('open', $defaultDecoders['open']);
-        $query->setParameter('type', $type);
 
         return $query->getResult();
     }

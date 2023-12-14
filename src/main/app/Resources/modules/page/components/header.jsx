@@ -50,17 +50,17 @@ const PageHeader = props =>
       'page-poster': !!props.poster
     })}
   >
-    <PageTitle
-      title={props.title}
-      subtitle={props.subtitle}
-      show={props.showTitle}
-    />
-
     {props.icon &&
       <div className="page-icon">
         {props.icon}
       </div>
     }
+
+    <PageTitle
+      title={props.title}
+      subtitle={props.subtitle}
+      show={props.showTitle}
+    />
 
     {props.children}
 

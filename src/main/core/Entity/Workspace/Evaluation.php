@@ -41,7 +41,7 @@ class Evaluation extends AbstractUserEvaluation
      *
      * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
      */
-    private $workspace;
+    private ?Workspace $workspace = null;
 
     public function __construct()
     {

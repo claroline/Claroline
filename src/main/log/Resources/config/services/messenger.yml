@@ -1,18 +1,6 @@
 services:
-    Claroline\LogBundle\Messenger\CreateFunctionalLogHandler:
+    Claroline\LogBundle\Messenger\SubmitLogsHandler:
         tags: [ messenger.message_handler ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\LogBundle\Messenger\CreateSecurityLogHandler:
-        tags: [ messenger.message_handler ]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@?Claroline\CoreBundle\Library\GeoIp\MaxMindGeoIpInfoProvider'
-
-    Claroline\LogBundle\Messenger\CreateRoleChangeLogsHandler:
-        tags: [ messenger.message_handler ]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@translator'
             - '@?Claroline\CoreBundle\Library\GeoIp\MaxMindGeoIpInfoProvider'

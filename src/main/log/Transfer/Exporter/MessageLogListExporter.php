@@ -88,7 +88,7 @@ class MessageLogListExporter extends AbstractListExporter
     {
         return [
             [
-                'name' => 'sender',
+                'name' => 'doer',
                 'label' => $this->translator->trans('sender', [], 'platform'),
                 'type' => 'user',
             ], [

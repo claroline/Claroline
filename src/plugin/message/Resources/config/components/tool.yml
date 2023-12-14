@@ -1,0 +1,4 @@
+services:
+    Claroline\MessageBundle\Component\Tool\MessagesTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]

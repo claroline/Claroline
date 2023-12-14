@@ -12,33 +12,19 @@
 namespace Claroline\CursusBundle\Subscriber\Crud;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\AppBundle\Event\Crud\DeleteEvent;
-use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Subscriber\Crud\Planning\AbstractPlannedSubscriber;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
-use Claroline\CursusBundle\Event\Log\LogSessionEventCreateEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionEventDeleteEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionEventEditEvent;
 use Claroline\CursusBundle\Manager\EventManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EventSubscriber extends AbstractPlannedSubscriber
 {
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var EventManager */
-    private $manager;
-
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        EventManager $manager
+        private readonly EventManager $manager
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->manager = $manager;
     }
 
     public static function getPlannedClass(): string
@@ -111,19 +97,5 @@ class EventSubscriber extends AbstractPlannedSubscriber
                 }, $sessionGroups));
             }
         }
-
-        $this->eventDispatcher->dispatch(new LogSessionEventCreateEvent($event->getObject()), 'log');
-    }
-
-    public function postUpdate(UpdateEvent $event): void
-    {
-        parent::postUpdate($event);
-
-        $this->eventDispatcher->dispatch(new LogSessionEventEditEvent($event->getObject()), 'log');
-    }
-
-    public function preDelete(DeleteEvent $event): void
-    {
-        $this->eventDispatcher->dispatch(new LogSessionEventDeleteEvent($event->getObject()), 'log');
     }
 }

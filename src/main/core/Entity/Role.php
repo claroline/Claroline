@@ -15,19 +15,19 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Restriction\Locked;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use RuntimeException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\RoleRepository")
+ *
  * @ORM\Table(name="claro_role")
+ *
  * @ORM\HasLifecycleCallbacks
  */
 class Role
@@ -38,12 +38,13 @@ class Role
     use Locked;
 
     // TODO : should be a string for better data readability
-    const PLATFORM_ROLE = 1;
-    const WS_ROLE = 2;
-    const USER_ROLE = 4;
+    public const PLATFORM_ROLE = 1;
+    public const WS_ROLE = 2;
+    public const USER_ROLE = 4;
 
     /**
      * @ORM\Column(unique=true)
+     *
      * @Assert\NotBlank()
      *
      * @var string
@@ -52,6 +53,7 @@ class Role
 
     /**
      * @ORM\Column(name="translation_key")
+     *
      * @Assert\NotBlank()
      *
      * @var string
@@ -69,18 +71,6 @@ class Role
      * @var ArrayCollection
      */
     private $users;
-
-    /**
-     * should be unidirectional.
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\AdminTool",
-     *     mappedBy="roles"
-     * )
-     *
-     * @var ArrayCollection|AdminTool[]
-     */
-    private $adminTools;
 
     /**
      * should be unidirectional.
@@ -106,6 +96,7 @@ class Role
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     inversedBy="roles"
      * )
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Workspace
@@ -149,7 +140,6 @@ class Role
         $this->users = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->toolRights = new ArrayCollection();
-        $this->adminTools = new ArrayCollection();
         $this->shortcuts = new ArrayCollection();
     }
 
@@ -169,14 +159,14 @@ class Role
      *
      * @throws \RuntimeException if the name isn't prefixed by 'ROLE_' or if the role is platform-wide
      */
-    public function setName($name)
+    public function setName($name): void
     {
         if (0 !== strpos($name, 'ROLE_')) {
-            throw new RuntimeException('Role names must start with "ROLE_"');
+            throw new \RuntimeException('Role names must start with "ROLE_"');
         }
 
-        if (PlatformRoles::contains($this->name)) {
-            throw new RuntimeException('Platform roles cannot be modified');
+        if ($this->name && PlatformRoles::contains($this->name)) {
+            throw new \RuntimeException('Platform roles cannot be modified');
         }
 
         if (PlatformRoles::contains($name)) {
@@ -225,7 +215,7 @@ class Role
     public function preRemove()
     {
         if (PlatformRoles::contains($this->name)) {
-            throw new RuntimeException('Platform roles cannot be deleted');
+            throw new \RuntimeException('Platform roles cannot be deleted');
         }
     }
 
@@ -328,16 +318,6 @@ class Role
     public function setPersonalWorkspaceCreationEnabled($boolean)
     {
         $this->personalWorkspaceCreationEnabled = $boolean;
-    }
-
-    /**
-     * Get the adminTools property.
-     *
-     * @return ArrayCollection
-     */
-    public function getAdminTools()
-    {
-        return $this->adminTools;
     }
 
     /**

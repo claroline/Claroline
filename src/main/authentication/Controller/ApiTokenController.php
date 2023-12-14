@@ -13,7 +13,8 @@ namespace Claroline\AuthenticationBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Entity\ApiToken;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Component\Context\AdministrationContext;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,17 +27,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class ApiTokenController extends AbstractCrudController
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function getClass(): string
@@ -60,8 +54,8 @@ class ApiTokenController extends AbstractCrudController
             throw new AccessDeniedException();
         }
 
-        $tool = $this->om->getRepository(AdminTool::class)
-            ->findOneBy(['name' => 'integration']);
+        $tool = $this->om->getRepository(OrderedTool::class)
+            ->findOneBy(['name' => 'integration', 'contextName' => AdministrationContext::getName()]);
 
         if (!$this->authorization->isGranted('OPEN', $tool)) {
             // only list tokens of the current token for non admins

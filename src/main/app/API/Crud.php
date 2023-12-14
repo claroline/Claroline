@@ -18,63 +18,33 @@ class Crud
     use PermissionCheckerTrait;
 
     /** @var string */
-    const COLLECTION_ADD = 'add';
+    public const COLLECTION_ADD = 'add';
     /** @var string */
-    const COLLECTION_REMOVE = 'remove';
+    public const COLLECTION_REMOVE = 'remove';
     /** @var string */
-    const PROPERTY_SET = 'set';
+    public const PROPERTY_SET = 'set';
     // TODO : remove me. only for retro compatibility it should be always the case
     // but I don't know if it will break things if I do it now
-    const THROW_EXCEPTION = 'throw_exception';
+    public const THROW_EXCEPTION = 'throw_exception';
 
-    const NO_PERMISSIONS = 'NO_PERMISSIONS';
-    const NO_VALIDATION = 'NO_VALIDATION';
-
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var StrictDispatcher */
-    private $dispatcher;
-
-    /** @var FinderProvider */
-    private $finder;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
-    /** @var ValidatorProvider */
-    private $validator;
-
-    /** @var SchemaProvider */
-    private $schema;
+    public const NO_PERMISSIONS = 'NO_PERMISSIONS';
+    public const NO_VALIDATION = 'NO_VALIDATION';
 
     public function __construct(
-        ObjectManager $om,
-        StrictDispatcher $dispatcher,
-        FinderProvider $finder,
-        SerializerProvider $serializer,
-        ValidatorProvider $validator,
-        SchemaProvider $schema,
+        private readonly ObjectManager $om,
+        private readonly StrictDispatcher $dispatcher,
+        private readonly FinderProvider $finder,
+        private readonly SerializerProvider $serializer,
+        private readonly ValidatorProvider $validator,
+        private readonly SchemaProvider $schema,
         AuthorizationCheckerInterface $authorization
     ) {
-        $this->om = $om;
-        $this->dispatcher = $dispatcher;
-        $this->finder = $finder;
-        $this->serializer = $serializer;
-        $this->validator = $validator;
-        $this->schema = $schema;
         $this->authorization = $authorization;
     }
 
-    /**
-     * @param string|int $id
-     *
-     * @return object|null
-     */
-    public function get(string $class, $id, string $idProp = 'id', ?array $options = [])
+    public function get(string $class, mixed $id, string $idProp = 'id', ?array $options = []): ?object
     {
         $object = null;
-
         if ('id' === $idProp) {
             if (!is_numeric($id) && property_exists($class, 'uuid')) {
                 $object = $this->om->getRepository($class)->findOneBy(['uuid' => $id]);
@@ -98,12 +68,12 @@ class Crud
         return $object;
     }
 
-    public function find(string $class, $data)
+    public function find(string $class, $data): ?object
     {
         return $this->om->getObject($data, $class, $this->schema->getIdentifiers($class));
     }
 
-    public function list(string $class, array $query = [], array $options = [])
+    public function list(string $class, array $query = [], array $options = []): array
     {
         $results = $this->finder->searchEntities($class, $query);
 
@@ -118,14 +88,14 @@ class Crud
      * Creates a new entry for `class` and populates it with `data`.
      *
      * @param mixed $classOrObject - the class of the entity to create or an instance of the entity
-     * @param mixed $data          - the serialized data of the object to create
+     * @param array $data          - the serialized data of the object to create
      * @param array $options       - additional creation options
      *
      * @return object|array
      *
      * @throws InvalidDataException
      */
-    public function create($classOrObject, $data, array $options = [])
+    public function create(mixed $classOrObject, array $data = [], array $options = []): mixed
     {
         if (is_string($classOrObject)) {
             // class name received
@@ -133,7 +103,7 @@ class Crud
             $object = new $classOrObject();
         } else {
             // object instance received
-            $class = get_class($classOrObject);
+            $class = $this->getRealClass($classOrObject);
             $object = $classOrObject;
         }
 
@@ -183,7 +153,7 @@ class Crud
      *
      * @throws InvalidDataException
      */
-    public function update($classOrObject, $data, array $options = [])
+    public function update(mixed $classOrObject, array $data, array $options = []): mixed
     {
         if (is_string($classOrObject)) {
             // class name received
@@ -192,7 +162,7 @@ class Crud
             $oldObject = $this->om->getObject($data, $class, $this->schema->getIdentifiers($class) ?? []) ?? new $class();
         } else {
             // object instance received
-            $class = get_class($classOrObject);
+            $class = $this->getRealClass($classOrObject);
             $oldObject = $classOrObject;
         }
 
@@ -237,7 +207,7 @@ class Crud
      * @param object $object  - the entity to delete
      * @param array  $options - additional delete options
      */
-    public function delete($object, array $options = [])
+    public function delete(mixed $object, array $options = []): void
     {
         if (!in_array(static::NO_PERMISSIONS, $options)) {
             $this->checkPermission('DELETE', $object, [], true);
@@ -264,12 +234,12 @@ class Crud
      * @param array $data    - the list of entries to delete
      * @param array $options - additional delete options
      */
-    public function deleteBulk(array $data, array $options = [])
+    public function deleteBulk(array $data, array $options = []): void
     {
         $this->om->startFlushSuite();
 
         foreach ($data as $el) {
-            //get the element
+            // get the element
             $this->delete($el, $options);
         }
 
@@ -285,7 +255,7 @@ class Crud
      *
      * @return object
      */
-    public function copy($object, array $options = [], array $extra = [])
+    public function copy(mixed $object, array $options = [], array $extra = []): mixed
     {
         if (!in_array(static::NO_PERMISSIONS, $options)) {
             $this->checkPermission('COPY', $object, [], true);
@@ -308,7 +278,7 @@ class Crud
 
         $this->om->persist($new);
 
-        //first event is the pre one
+        // first event is the pre one
         if ($this->dispatch('copy', 'pre', [$object, $options, $new, $extra])) {
             if (!in_array(Options::FORCE_FLUSH, $options)) {
                 $this->om->flush();
@@ -327,16 +297,14 @@ class Crud
      *
      * @param array $data    - the list of entries to copy
      * @param array $options - additional copy options
-     *
-     * @return array
      */
-    public function copyBulk(array $data, array $options = [])
+    public function copyBulk(array $data, array $options = []): array
     {
         $this->om->startFlushSuite();
         $copies = [];
 
         foreach ($data as $el) {
-            //get the element
+            // get the element
             $copies[] = $this->copy($el, $options);
         }
 
@@ -357,7 +325,7 @@ class Crud
      * @todo only flush once (do not flush for each collection element)
      * @todo only dispatch lifecycle events once with the full collection in param
      */
-    public function patch($object, string $property, string $action, array $elements, array $options = [])
+    public function patch(mixed $object, string $property, string $action, array $elements, array $options = []): mixed
     {
         $methodName = $action.ucfirst(strtolower($property));
 
@@ -408,7 +376,7 @@ class Crud
      *
      * @deprecated should use standard update instead
      */
-    public function replace($object, string $property, $data, array $options = [])
+    public function replace(mixed $object, string $property, mixed $data, array $options = []): mixed
     {
         $methodName = 'set'.ucfirst($property);
 
@@ -417,9 +385,9 @@ class Crud
         }
 
         if (!in_array(static::NO_PERMISSIONS, $options)) {
-            //add the options to pass on here
+            // add the options to pass on here
             $this->checkPermission('PATCH', $object, [], true);
-            //we'll need to pass the $action and $data here aswell later
+            // we'll need to pass the $action and $data here aswell later
         }
 
         if ($this->dispatch('patch', 'pre', [$object, $options, $property, $data, self::PROPERTY_SET])) {
@@ -442,28 +410,24 @@ class Crud
      * Validates `data` with the available validator for `class`.
      *
      * @param string $class   - the class of the entity used for validation
-     * @param mixed  $data    - the serialized data to validate
+     * @param array  $data    - the serialized data to validate
      * @param string $mode    - the validation mode
      * @param array  $options - the validation options
-     *
-     * @return array
      */
-    public function validate($class, $data, $mode, array $options = [])
+    public function validate(mixed $class, array $data, string $mode, array $options = []): array
     {
         return $this->validator->validate($class, $data, $mode, true, $options);
     }
 
     /**
-     * We dispatch 2 events: a generic one and an other with a custom name.
+     * We dispatch 2 events: a generic one and another with a custom name.
      * Listen to what you want. Both have their uses.
      *
      * @param string $action (create, copy, delete, patch, update)
      * @param string $when   (post, pre)
      * @param array  $args   the event arguments
-     *
-     * @return bool
      */
-    public function dispatch($action, $when, array $args)
+    public function dispatch(string $action, string $when, array $args): bool
     {
         $className = $this->getRealClass($args[0]);
 
@@ -500,7 +464,7 @@ class Crud
         return $name;
     }
 
-    private function getRealClass($object)
+    private function getRealClass($object): string
     {
         return $this->om->getMetadataFactory()->getMetadataFor(get_class($object))->getName();
     }

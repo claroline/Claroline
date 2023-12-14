@@ -7,20 +7,6 @@ services:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    # Tools
-    Claroline\CommunityBundle\Subscriber\Tool\CommunitySubscriber:
-        arguments:
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@Claroline\CommunityBundle\Serializer\ProfileSerializer'
-            - '@Claroline\CoreBundle\Manager\UserManager'
-            - '@Claroline\CoreBundle\Manager\RoleManager'
-            - '@Claroline\CommunityBundle\Manager\TeamManager'
-
     # Crud
     Claroline\CommunityBundle\Subscriber\Crud\GroupSubscriber:
         arguments:
@@ -39,7 +25,7 @@ services:
     Claroline\CommunityBundle\Subscriber\Crud\RoleSubscriber:
         arguments:
             - '@doctrine.dbal.default_connection'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
 
     Claroline\CommunityBundle\Subscriber\Crud\TeamSubscriber:
         arguments:

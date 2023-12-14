@@ -13,18 +13,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
 
-    Claroline\OpenBadgeBundle\Subscriber\Tool\BadgesSubscriber:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\CoreBundle\Manager\FileManager'
-
-    Claroline\OpenBadgeBundle\Subscriber\BadgeLogSubscriber:
-        arguments:
-            - '@translator'
-            - '@messenger.default_bus'
-
     # Rules
     Claroline\OpenBadgeBundle\Subscriber\Rules\GroupSubscriber:
         arguments:

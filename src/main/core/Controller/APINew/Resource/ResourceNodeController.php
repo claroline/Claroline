@@ -4,16 +4,10 @@ namespace Claroline\CoreBundle\Controller\APINew\Resource;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
-use Claroline\CoreBundle\Event\Resource\CloseResourceEvent;
-use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,38 +21,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class ResourceNodeController extends AbstractCrudController
 {
-    /** @var StrictDispatcher */
-    private $dispatcher;
-
-    /** @var ResourceManager */
-    private $resourceManager;
-
-    /** @var RightsManager */
-    private $rightsManager;
-
-    /** @var ResourceActionManager */
-    private $actionManager;
-
-    /** @var LogConnectManager */
-    private $logConnectManager;
-
-    /** @var TokenStorageInterface */
-    private $token;
-
     public function __construct(
-        StrictDispatcher $dispatcher,
-        ResourceActionManager $actionManager,
-        ResourceManager $resourceManager,
-        RightsManager $rightsManager,
-        LogConnectManager $logConnectManager,
-        TokenStorageInterface $token
+        private readonly ResourceActionManager $actionManager,
+        private readonly RightsManager $rightsManager,
+        private readonly TokenStorageInterface $token
     ) {
-        $this->dispatcher = $dispatcher;
-        $this->resourceManager = $resourceManager;
-        $this->rightsManager = $rightsManager;
-        $this->actionManager = $actionManager;
-        $this->logConnectManager = $logConnectManager;
-        $this->token = $token;
     }
 
     public function getName(): string
@@ -157,34 +124,9 @@ class ResourceNodeController extends AbstractCrudController
                 array_merge($request->query->all(), ['hiddenFilters' => [
                     'workspace' => $workspace->getUuid(),
                     'active' => false,
-                ]]))
+                ]])
+            )
         );
-    }
-
-    /**
-     * @Route("/{slug}/close", name="claro_resource_close", methods={"PUT"})
-     *
-     * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"slug": "slug"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     */
-    public function closeAction(ResourceNode $resourceNode, Request $request, User $user = null): JsonResponse
-    {
-        $this->dispatcher->dispatch(
-            ResourceEvents::CLOSE,
-            CloseResourceEvent::class,
-            [$this->resourceManager->getResourceFromNode($resourceNode)]
-        );
-
-        // todo : listen to close event instead
-        if ($user) {
-            $data = $this->decodeRequest($request);
-
-            if (isset($data['embedded'])) {
-                $this->logConnectManager->computeResourceDuration($user, $resourceNode, $data['embedded']);
-            }
-        }
-
-        return new JsonResponse(null, 204);
     }
 
     public static function getOptions(): array

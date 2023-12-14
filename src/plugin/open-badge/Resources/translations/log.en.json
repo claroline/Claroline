@@ -1,0 +1,9 @@
+{
+  "badge.grant": "",
+  "badge.grant_desc": "",
+  "badge.grant_message": "has obtained the badge %badge%.",
+
+  "badge.revoke": "",
+  "badge.revoke_desc": "",
+  "badge.revoke_message": "has lost the badge %badge%."
+}

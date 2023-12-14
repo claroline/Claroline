@@ -2,16 +2,6 @@ services:
     _defaults:
         public: true # should not be public
 
-    Claroline\AuthenticationBundle\Manager\OauthManager:
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@Claroline\AppBundle\Manager\CacheManager'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@security.token_storage'
-            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
-        tags:
-            - { name: kernel.event_listener, event: refresh_cache, method: refreshCache } # TODO : create a listener for that
-
     Claroline\AuthenticationBundle\Manager\MailManager:
         arguments:
             - '@translator'

@@ -1,0 +1,13 @@
+services:
+    Claroline\HistoryBundle\Subscriber\WorkspaceSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '@Claroline\AppBundle\Manager\SecurityManager'
+            - '@Claroline\HistoryBundle\Manager\HistoryManager'
+    
+    Claroline\HistoryBundle\Subscriber\ResourceSubscriber:
+        arguments:
+            - '@Claroline\AppBundle\Manager\SecurityManager'
+            - '@Claroline\HistoryBundle\Manager\HistoryManager'
+        tags:
+            - { name: kernel.event_listener, event: resource_load, method: onLoad }

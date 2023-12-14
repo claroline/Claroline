@@ -1,12 +1,4 @@
 services:
-    Claroline\CoreBundle\Listener\Administration\IntegrationListener:
-        tags:
-            - { name: kernel.event_listener, event: tool.open.administration.integration, method: onDisplayTool }
-
-    Claroline\CoreBundle\Listener\Administration\TemplateListener:
-        tags:
-            - { name: kernel.event_listener, event: tool.open.administration.templates, method: onAdministrationToolOpen }
-
     Claroline\CoreBundle\Listener\DataSource\Workspace\AllSource:
         arguments:
             - '@security.authorization_checker'
@@ -45,21 +37,6 @@ services:
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
         tags:
             - { name: kernel.event_listener, event: data_source.tools.load, method: getData }
-
-    Claroline\CoreBundle\Listener\Log\LogListener:
-        public: true
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@security.token_storage'
-            - '@request_stack'
-            - '@service_container'
-            - '@Claroline\CoreBundle\Manager\RoleManager'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\CoreBundle\Manager\LogConnectManager'
-        tags:
-            - { name: kernel.event_listener, event: log, method: onLog }
-            - { name: kernel.event_listener, event: create_log_list_item, method: onLogListItem }
-            - { name: kernel.event_listener, event: create_log_details, method: onLogDetails }
 
     Claroline\CoreBundle\Listener\Notification\NotificationUserParametersListener:
         tags:
@@ -167,16 +144,13 @@ services:
 
     Claroline\CoreBundle\Listener\AuthenticationSuccessListener:
         arguments:
-            - '@security.token_storage'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\AppBundle\Manager\PlatformManager'
+            - '@Claroline\AppBundle\Component\Context\ContextProvider'
             - '@Claroline\CoreBundle\Manager\UserManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
-            - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'
 
     Claroline\CoreBundle\Listener\Entity\UserListener:
         arguments:
@@ -184,45 +158,3 @@ services:
         tags:
             - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'prePersist' }
             - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'preUpdate' }
-
-    Claroline\CoreBundle\Listener\Log\GroupListener:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-        tags:
-            - { name: kernel.event_listener, event: crud.post.create.group, method: onGroupCreate }
-            - { name: kernel.event_listener, event: crud.post.update.group, method: onGroupUpdate }
-            - { name: kernel.event_listener, event: crud.post.delete.group, method: onGroupDelete }
-
-    Claroline\CoreBundle\Listener\Log\ResourceListener:
-        arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-        tags:
-            - { name: kernel.event_listener, event: resource_load, method: onResourceLoad }
-            - { name: kernel.event_listener, event: crud.post.create.resource_node, method: onResourceCreate }
-            - { name: kernel.event_listener, event: crud.pre.delete.resource_node, method: onResourceDelete }
-            - { name: kernel.event_listener, event: crud.post.copy.resource_node, method: onResourceCopy }
-            - { name: kernel.event_listener, event: crud.post.update.resource_node, method: onResourceUpdate }
-
-    Claroline\CoreBundle\Listener\Log\WorkspaceListener:
-        arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-        tags:
-            - { name: kernel.event_listener, event: crud.post.create.workspace, method: onWorkspacePostCreate }
-            - { name: kernel.event_listener, event: crud.pre.delete.workspace, method: onWorkspacePreDelete, priority: 1 }
-
-    Claroline\CoreBundle\Listener\Log\UserListener:
-        arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-        tags:
-            - { name: kernel.event_listener, event: crud.post.create.user, method: onUserCreate }
-            - { name: kernel.event_listener, event: crud.pre.delete.user, method: onUserDelete, priority: 1 }
-
-    Claroline\CoreBundle\Listener\Log\RoleListener:
-        arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-        tags:
-            - { name: kernel.event_listener, event: crud.post.patch.role, method: onRolePatch }

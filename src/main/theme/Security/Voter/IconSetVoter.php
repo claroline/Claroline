@@ -26,7 +26,7 @@ class IconSetVoter extends AbstractVoter
         switch ($attributes[0]) {
             case self::CREATE:
             case self::DELETE:
-                return $this->hasAdminToolAccess($token, 'main_settings') && !$object->isDefault() ?
+                return $this->hasAdminToolAccess($token, 'parameters') && !$object->isDefault() ?
                     VoterInterface::ACCESS_GRANTED :
                     VoterInterface::ACCESS_DENIED;
             case self::OPEN:

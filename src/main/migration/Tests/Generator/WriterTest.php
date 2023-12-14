@@ -14,7 +14,6 @@ namespace Claroline\MigrationBundle\Tests\Generator;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\MigrationBundle\Generator\Generator;
 use Claroline\MigrationBundle\Generator\Writer;
-use Claroline\MigrationBundle\Twig\SqlFormatterExtension;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;
 
@@ -46,13 +45,6 @@ class WriterTest extends MockeryTestCase
                     ],
                 ],
             ]
-        );
-        $this->twigEnvironment->shouldReceive('addExtension')->once()->with(
-            m::on(
-                function ($argument) {
-                    return $argument instanceof SqlFormatterExtension;
-                }
-            )
         );
 
         $bundlePath = vfsStream::url('root').'/bundle/path';

@@ -1,9 +1,0 @@
-services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
-    Claroline\MessageBundle\Listener\Tool\MessagingListener:
-        tags:
-            - { name: kernel.event_listener, event: tool.open.desktop.messaging, method: onDisplayDesktop }

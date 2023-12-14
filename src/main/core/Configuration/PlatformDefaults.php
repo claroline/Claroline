@@ -40,7 +40,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'logs' => [
                 'enabled' => true,
             ],
-            'community' => [
+            'community' => [ // to move in community parameters
                 'username' => true,
             ],
             // database_restoration section is not configurable nor documented
@@ -59,12 +59,8 @@ class PlatformDefaults implements ParameterProviderInterface
             'internet' => [
                 'domain_name' => null,
                 'platform_url' => null,
-                'google_meta_tag' => null,
             ],
-            'workspace' => [
-                'default_tag' => null,
-            ],
-            'registration' => [
+            'registration' => [ // to move in community parameters
                 'self' => false,
                 'default_role' => PlatformRoles::USER,
                 'validation' => self::REGISTRATION_MAIL_VALIDATION_PARTIAL,
@@ -72,7 +68,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 'organization_selection' => 'none',
                 'username_regex' => "/^[a-zA-Z0-9@\-_\.]*$/",
             ],
-            'security' => [
+            'security' => [ // to move in community parameters
                 'account_duration' => null,
             ],
             'session' => [
@@ -109,7 +105,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 'tag' => null,
                 'from' => 'noreply@claroline.com',
             ],
-            'ssl' => [
+            'ssl' => [ // to remove
                 'enabled' => false,
                 'version' => 3,
             ],
@@ -128,7 +124,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 'innova_path' => ['visible'],
                 'icap_lesson' => ['visible'],
             ],
-            'locales' => [
+            'locales' => [ // to move in `intl` block
                 'default' => 'fr',
                 'available' => ['fr', 'en'],
             ],
@@ -163,11 +159,11 @@ class PlatformDefaults implements ParameterProviderInterface
                     'resource' => true,
                 ],
             ],
-            'admin' => [
+            'admin' => [ // to remove
                 'default_tool' => 'home',
                 'menu' => null,
             ],
-            'desktop' => [
+            'desktop' => [ // to remove
                 'default_tool' => 'home',
                 'show_progression' => false,
                 'menu' => null,

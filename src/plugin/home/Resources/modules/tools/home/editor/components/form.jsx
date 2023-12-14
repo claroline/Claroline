@@ -90,7 +90,6 @@ const TabForm = (props) =>
       }, {
         icon: 'fa fa-fw fa-key',
         title: trans('access_restrictions'),
-        displayed: (props.administration || 'desktop' !== props.currentContext.type),
         fields: [
           {
             name: 'restrictions.enableDates',
@@ -171,7 +170,6 @@ TabForm.propTypes = {
   name: T.string.isRequired,
 
   currentTab: T.object,
-  administration: T.bool.isRequired,
   currentContext: T.shape({
     type: T.string.isRequired,
     data: T.object

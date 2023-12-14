@@ -5,19 +5,26 @@ namespace Claroline\EvaluationBundle\Library;
 class EvaluationAggregator implements EvaluationInterface
 {
     /**
-     * The list of evaluation which participate to the progression of the aggregate.
+     * The list of evaluation which participate in the progression of the aggregate.
      *
      * @var EvaluationInterface[]
      */
-    private $progressionEvaluations = [];
+    private array $progressionEvaluations = [];
 
     /**
-     * The list of evaluation which participate to the score of the aggregate.
+     * The list of evaluation which participate in the score of the aggregate.
      * NB. if an evaluation is used in the aggregate score, it's also used in its progression.
      *
      * @var EvaluationInterface[]
      */
-    private $scoreEvaluations = [];
+    private array $scoreEvaluations = [];
+
+    private EvaluationStatusChecker $statusChecker;
+
+    public function __construct(array $statusCheckers = [])
+    {
+        $this->statusChecker = new EvaluationStatusChecker($statusCheckers);
+    }
 
     public function addEvaluation(EvaluationInterface $evaluation, bool $useScore = false): void
     {
@@ -25,6 +32,14 @@ class EvaluationAggregator implements EvaluationInterface
         if ($useScore) {
             $this->scoreEvaluations[] = $evaluation;
         }
+    }
+
+    /**
+     * @return EvaluationInterface[]
+     */
+    public function getEvaluations(): array
+    {
+        return $this->progressionEvaluations;
     }
 
     /**
@@ -44,6 +59,10 @@ class EvaluationAggregator implements EvaluationInterface
         return $totalProgression / count($this->progressionEvaluations);
     }
 
+    /**
+     * Get the sum of all the evaluations score in the aggregate.
+     * NB. Score is only available once all the evaluations of the aggregate are considered terminated.
+     */
     public function getScore(): ?float
     {
         if (!$this->isTerminated()) {
@@ -56,6 +75,10 @@ class EvaluationAggregator implements EvaluationInterface
         }, 0);
     }
 
+    /**
+     * Get the sum of all the evaluations score max in the aggregate.
+     * NB. Score is only available once all the evaluations of the aggregate are considered terminated.
+     */
     public function getScoreMax(): ?float
     {
         if (!$this->isTerminated()) {
@@ -81,5 +104,10 @@ class EvaluationAggregator implements EvaluationInterface
         }
 
         return true;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->statusChecker->getStatus($this);
     }
 }

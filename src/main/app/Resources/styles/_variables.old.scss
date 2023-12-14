@@ -202,12 +202,17 @@ $toolbar-link-disabled-bg:    $top-bar-link-disabled-bg;
 // Page
 // ---
 
-$page-header-bg:          transparent  !default;
-$page-header-padding:     0 !default;
-$page-header-font-size:   $h1-font-size !default;
-$page-header-font-weight: $headings-font-weight !default;
-$page-header-box-shadow:  none  !default;
+$page-header-bg:           transparent  !default;
+$page-header-padding:      0 $grid-gutter-width*.5 $grid-gutter-width*.5 $grid-gutter-width*.5 !default;
+$page-header-box-shadow:   none  !default;
+$page-header-border-width: var(--#{$prefix}border-width) !default;
+$page-header-border-color: var(--#{$prefix}border-color-translucent) !default;
 
+$page-title-color:          null !default;
+$page-title-font-size:      2rem !default;
+$page-title-font-weight:    600 !default;
+$page-subtitle-color:       var(--#{$prefix}secondary-color) !default;
+$page-subtitle-font-weight: 300 !default;
 
 // -
 // Page actions
@@ -329,7 +334,10 @@ $help-block-font-size:      $font-size-sm !default;
 // Lists
 // ---
 
-//$list-controls-bg:             var(--#{$prefix}secondary-bg-subtle) !default;
+$list-controls-bg:           var(--#{$prefix}tertiary-bg) !default;
+$list-controls-border-width: $border-width !default;
+$list-controls-border-color: var(--#{$prefix}border-color-translucent) !default;
+
 //$list-controls-color:          var(--#{$prefix}secondary-color) !default;
 //$list-controls-border:         transparent !default;
 //$list-controls-disabled-bg:    #F4F4F4 !default;
@@ -411,6 +419,15 @@ $data-grid-gutter: $grid-gutter-width*.5;
 
 
 // -
+// Data tree
+// ---
+
+$data-tree-gutter:      $data-grid-gutter;
+$data-tree-indent:      $data-grid-gutter*4;
+$data-tree-lines-color: var(--#{$prefix}secondary-color);
+
+
+// -
 // Data card
 // ---
 
@@ -418,13 +435,13 @@ $data-card-font:              $font-size-base !default;
 $data-card-content-font:      $font-size-sm !default;
 $data-card-padding:           $spacer;
 
-$data-card-color:             $card-color;
-$data-card-bg:                $card-bg;
-$data-card-border-width:       $card-border-width !default;
-$data-card-border-color:       $card-border-color !default;
-$data-card-border-radius:     $card-border-radius;
+$data-card-color:               $card-color;
+$data-card-bg:                  $card-bg;
+$data-card-border-width:        $card-border-width !default;
+$data-card-border-color:        $card-border-color !default;
+$data-card-border-radius:       $card-border-radius;
 $data-card-inner-border-radius: subtract($data-card-border-radius, $data-card-border-width) !default;
-$data-card-box-shadow:        $card-box-shadow;
+$data-card-box-shadow:          $card-box-shadow;
 
 
 $data-card-inner-border-width: $data-card-border-width !default;

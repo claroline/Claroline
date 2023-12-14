@@ -1,51 +1,23 @@
 import React from 'react'
 
-import {ListData} from '#/main/app/content/list/containers/data'
 import {trans} from '#/main/app/intl/translation'
+import {ToolPage} from '#/main/core/tool/containers/page'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 import {selectors} from '#/main/log/administration/logs/store/selectors'
+import {LogMessageList} from '#/main/log/components/message-list'
 
-const DashboardMessage = () =>
-  <ListData
-    name={selectors.MESSAGE_NAME}
-    fetch={{
-      url: ['apiv2_logs_message'],
-      autoload: true
-    }}
-    definition={[
-      {
-        name: 'sender',
-        type: 'user',
-        label: trans('user'),
-        displayed: true
-      }, {
-        name: 'date',
-        label: trans('date'),
-        type: 'date',
-        options: {time: true},
-        displayed: true
-      }, {
-        name: 'details',
-        type: 'string',
-        label: trans('description'),
-        displayed: true
-      }, {
-        name: 'receiver',
-        type: 'user',
-        label: trans('target'),
-        displayed: false
-      }, {
-        name: 'event',
-        type: 'translation',
-        label: trans('event'),
-        displayed: false,
-        options: {
-          domain: 'platform'
-        }
-      }
-    ]}
-  />
+const LogsMessage = () =>
+  <ToolPage subtitle={trans('message', {}, 'log')}>
+    <ContentSizing size="full">
+      <LogMessageList
+        flush={true}
+        name={selectors.MESSAGE_NAME}
+        url={['apiv2_logs_message']}
+      />
+    </ContentSizing>
+  </ToolPage>
 
 export {
-  DashboardMessage
+  LogsMessage
 }

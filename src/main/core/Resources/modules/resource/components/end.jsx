@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useDispatch} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
 
-import {url} from '#/main/app/api'
+import {makeCancelable} from '#/main/app/api'
 import {trans} from '#/main/app/intl'
 import {toKey} from '#/main/core/scaffolding/text'
 import {ContentHtml} from '#/main/app/content/components/html'
@@ -12,6 +13,7 @@ import {Toolbar} from '#/main/app/action'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {constants as evalConstants} from '#/main/evaluation/constants'
+import {actions as evalActions} from '#/main/evaluation//store/actions'
 import {constants} from '#/main/evaluation/resource/constants'
 import {ResourceAttempt as ResourceAttemptTypes} from '#/main/evaluation/resource/prop-types'
 import {EvaluationFeedback} from '#/main/evaluation/components/feedback'
@@ -20,19 +22,24 @@ import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {URL_BUTTON} from '#/main/app/buttons'
 
 const WorkspaceCertificatesToolbar = (props) => {
+  const dispatch = useDispatch()
   const [wsEval, setWsEval] = useState(null)
 
+  const userId = props.currentUser.id
+  const workspaceId = props.workspace.id
   useEffect(() => {
-    fetch(url(['apiv2_workspace_evaluation_get', {workspace: props.workspace.id, user: props.currentUser.id}]), {
-      credentials: 'include'
-    })
-      .then(response => response.json())
-      .then(response => setWsEval(response))
-  }, [props.workspace.id, props.currentUser.id])
+    if (!wsEval) {
+      const evalFetching = makeCancelable(dispatch(evalActions.fetchEvaluation(workspaceId, userId)))
+
+      evalFetching.promise.then(response => setWsEval(response))
+
+      return () => evalFetching.cancel()
+    }
+  }, [workspaceId, userId, wsEval])
 
   return (
     <Toolbar
-      className="mb3"
+      className="mb-3"
       variant="btn"
       buttonName="w-100"
       size="lg"

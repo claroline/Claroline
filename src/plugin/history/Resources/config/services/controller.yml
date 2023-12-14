@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    Claroline\HistoryBundle\Controller\HistoryController:
+        arguments:
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\HistoryBundle\Manager\HistoryManager'

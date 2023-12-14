@@ -11,37 +11,8 @@
 
 namespace Claroline\AuthenticationBundle;
 
-use Claroline\AuthenticationBundle\DependencyInjection\Compiler\OauthConfigPass;
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
-use HWI\Bundle\OAuthBundle\HWIOAuthBundle;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ClarolineAuthenticationBundle extends DistributionPluginBundle
 {
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(new OauthConfigPass());
-    }
-
-    public function getRequiredBundles(string $environment): array
-    {
-        return [
-            new HWIOAuthBundle(),
-        ];
-    }
-
-    public function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
-    {
-        // simple container configuration, same for every environment
-        $simpleConfigs = [
-            'hwi_oauth',
-        ];
-
-        foreach ($simpleConfigs as $configKey) {
-            $loader->load($this->getPath()."/Resources/config/suggested/{$configKey}.yml");
-        }
-    }
 }

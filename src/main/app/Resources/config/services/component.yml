@@ -1,0 +1,29 @@
+# Declares all services required for the management of Claroline Components (eg. tools, resources, widgets).
+services:
+    # Contexts
+    Claroline\AppBundle\Component\Context\ContextProvider:
+        arguments:
+            - !tagged_iterator claroline.component.context
+
+    claroline.context_provider:
+        alias: Claroline\AppBundle\Component\Context\ContextProvider
+        public: true
+
+    Claroline\AppBundle\Component\Context\AbstractContext:
+        abstract: true
+        calls:
+            - method: setToolProvider
+              arguments:
+                  - '@Claroline\AppBundle\Component\Tool\ToolProvider'
+
+    # Tools
+    Claroline\AppBundle\Component\Tool\ToolProvider:
+        arguments:
+            - !tagged_iterator claroline.component.tool
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
+
+    Claroline\AppBundle\Component\Tool\AbstractTool:
+        abstract: true

@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Claroline\AuthenticationBundle\Serializer\ApiTokenSerializer:
         tags: [ claroline.serializer ]
         arguments:
@@ -12,12 +7,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\AuthenticationBundle\Serializer\IpUserSerializer:
-        tags: [ claroline.serializer ]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-
-    Claroline\AuthenticationBundle\Serializer\OauthUserSerializer:
         tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

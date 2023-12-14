@@ -4,7 +4,7 @@ import {makeActionCreator, makeInstanceActionCreator} from '#/main/app/store/act
 import {API_REQUEST} from '#/main/app/api'
 
 import {actions as toolActions} from '#/main/core/tool/store/actions'
-import {actions as workspaceActions} from '#/main/core/workspace/store/actions'
+import {actions as workspaceActions} from '#/main/app/contexts/workspace/store/actions'
 import {selectors} from '#/main/core/resource/store/selectors'
 
 // actions
@@ -94,7 +94,7 @@ actions.triggerLifecycleAction = (action) => (dispatch, getState) => {
 }
 
 actions.updateUserEvaluation = (userEvaluation) => (dispatch) => {
-  dispatch(workspaceActions.fetchEvaluation())
+  dispatch(workspaceActions.fetchCurrentEvaluation())
 
   return dispatch({
     type: RESOURCE_EVALUATION_UPDATE,
@@ -112,17 +112,6 @@ actions.checkAccessCode = (resourceNode, code) => (dispatch) => dispatch({
       body: JSON.stringify({code: code})
     },
     success: () => dispatch(actions.setResourceLoaded(false)) // force reload the resource
-  }
-})
-
-actions.closeResource = (slug, embedded = false) => ({
-  [API_REQUEST] : {
-    silent: true,
-    url: ['claro_resource_close', {slug: slug}],
-    request: {
-      method: 'PUT',
-      body: JSON.stringify({embedded: embedded})
-    }
   }
 })
 

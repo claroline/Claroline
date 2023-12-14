@@ -8,7 +8,7 @@ import {route} from '#/main/core/administration/routing'
 const ConnectionMessageCell = props => {
   if (!isEmpty(props.data)) {
     return (
-      <UrlButton target={'#'+route('main_settings')+'/messages/form/'+props.data.id}>
+      <UrlButton target={'#'+route('connection_messages')+'/form/'+props.data.id}>
         {props.data.title}
       </UrlButton>
     )

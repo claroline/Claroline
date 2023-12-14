@@ -2,13 +2,13 @@
 
 namespace Claroline\AuthenticationBundle\Messenger\Middleware;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
-use Claroline\CommunityBundle\Repository\UserRepository;
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Will read the AuthenticationStamp to know which user as called the messenger in order to refresh its token.
@@ -20,21 +20,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class AuthenticationMiddleware implements MiddlewareInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var Authenticator */
-    private $authenticator;
-    /** @var UserRepository */
-    private $userRepository;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        Authenticator $authenticator,
-        UserRepository $userRepository
+        private readonly Authenticator $authenticator,
+        private readonly ObjectManager $om
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->authenticator = $authenticator;
-        $this->userRepository = $userRepository;
     }
 
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
@@ -42,7 +31,7 @@ class AuthenticationMiddleware implements MiddlewareInterface
         /** @var AuthenticationStamp|null $authenticationStamp */
         $authenticationStamp = $envelope->last(AuthenticationStamp::class);
         if ($authenticationStamp && $authenticationStamp->getUserId()) {
-            $user = $this->userRepository->find($authenticationStamp->getUserId());
+            $user = $this->om->getRepository(User::class)->find($authenticationStamp->getUserId());
             if ($user) {
                 $this->authenticator->createToken($user);
             }

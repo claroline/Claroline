@@ -1,4 +1,4 @@
 plugin:
-    admin_tools:
+    tools:
         - name: privacy
-          class: shield
+          icon: user-shield

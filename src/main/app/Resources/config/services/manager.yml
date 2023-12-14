@@ -13,15 +13,6 @@ services:
         arguments:
             - '@security.token_storage'
 
-    Claroline\AppBundle\Manager\CommandManager:
-        arguments:
-            - '@kernel'
-
-    Claroline\AppBundle\Manager\CacheManager:
-        arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@kernel'
-
     Claroline\AppBundle\Manager\File\ArchiveManager:
         arguments:
             - '@Claroline\AppBundle\Manager\File\TempFileManager'

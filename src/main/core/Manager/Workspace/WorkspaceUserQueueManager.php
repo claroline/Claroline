@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager\Workspace;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -21,21 +20,10 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 
 class WorkspaceUserQueueManager
 {
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-
     public function __construct(
-        StrictDispatcher $dispatcher,
-        ObjectManager $om,
-        Crud $crud
+        private readonly ObjectManager $om,
+        private readonly Crud $crud
     ) {
-        $this->dispatcher = $dispatcher;
-        $this->om = $om;
-        $this->crud = $crud;
     }
 
     /**
@@ -58,12 +46,6 @@ class WorkspaceUserQueueManager
      */
     public function removeRegistration(WorkspaceRegistrationQueue $workspaceRegistration): void
     {
-        $this->dispatcher->dispatch(
-            'log',
-            'Log\LogWorkspaceRegistrationDecline',
-            [$workspaceRegistration]
-        );
-
         $this->om->remove($workspaceRegistration);
         $this->om->flush();
     }
@@ -79,8 +61,6 @@ class WorkspaceUserQueueManager
         $registration->setUser($user);
         $registration->setRole($role);
         $registration->setWorkspace($workspace);
-
-        $this->dispatcher->dispatch('log', 'Log\LogWorkspaceRegistrationQueue', [$registration]);
 
         $this->om->persist($registration);
         $this->om->flush();

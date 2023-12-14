@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Icap\LessonBundle\Listener\Resource\LessonListener:
         arguments:
             - '@security.authorization_checker'
@@ -16,22 +11,6 @@ services:
             - { name: kernel.event_listener, event: resource.icap_lesson.copy, method: onCopy }
             - { name: kernel.event_listener, event: resource.icap_lesson.export, method: onExport }
             - { name: kernel.event_listener, event: resource.icap_lesson.import, method: onImport }
-
-    icap.listener.lesson_log_listener:
-        class: Icap\LessonBundle\Listener\LogListener
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_lesson-chapter_create,    method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_lesson-chapter_read,      method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_lesson-chapter_update,    method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_lesson-chapter_delete,    method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_resource-icap_lesson-chapter_move,      method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_create,      method: onChapterCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_read,        method: onChapterCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_update,      method: onChapterCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_delete,      method: onChapterCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_resource-icap_lesson-chapter_move,        method: onChapterCreateLogDetails }
 
     Icap\LessonBundle\Listener\NotificationUserParametersListener:
         tags:

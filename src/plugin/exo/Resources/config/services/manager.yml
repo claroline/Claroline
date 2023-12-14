@@ -12,7 +12,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@event_dispatcher'
             - '@Claroline\AppBundle\API\Crud'
             - '@ujm_exo.serializer.paper'
             - '@UJM\ExoBundle\Manager\Item\ItemManager'
@@ -44,7 +43,6 @@ services:
             - '@UJM\ExoBundle\Manager\Attempt\AnswerManager'
             - '@UJM\ExoBundle\Manager\Item\ItemManager'
             - '@ujm_exo.serializer.item'
-            - '@event_dispatcher'
 
     UJM\ExoBundle\Manager\CorrectionManager:
         arguments:
@@ -67,4 +65,3 @@ services:
             - '@UJM\ExoBundle\Manager\Item\ItemManager'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
             - '@ujm_exo.collection.item_definitions'
-            - '@event_dispatcher'

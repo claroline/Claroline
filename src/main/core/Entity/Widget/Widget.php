@@ -22,7 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Describes a Widget provided by a plugin.
  *
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Widget\WidgetRepository")
+ *
  * @ORM\Table(name="claro_widget", uniqueConstraints={
+ *
  *     @ORM\UniqueConstraint(name="widget_plugin_unique", columns={"name", "plugin_id"})
  * })
  */
@@ -32,10 +34,14 @@ class Widget
     use Uuid;
     use FromPlugin;
 
-    const CONTEXT_DESKTOP = 'desktop';
-    const CONTEXT_WORKSPACE = 'workspace';
-    const CONTEXT_ADMINISTRATION = 'administration';
-    const CONTEXT_HOME = 'home';
+    /** @deprecated use Claroline\CoreBundle\Component\Context\DesktopContext::getName() */
+    public const CONTEXT_DESKTOP = 'desktop';
+    /** @deprecated use Claroline\CoreBundle\Component\Context\WorkspaceContext::getName() */
+    public const CONTEXT_WORKSPACE = 'workspace';
+    /** @deprecated use Claroline\CoreBundle\Component\Context\AdministrationContext::getName() */
+    public const CONTEXT_ADMINISTRATION = 'administration';
+    /** @deprecated use Claroline\CoreBundle\Component\Context\PublicContext::getName() */
+    public const CONTEXT_HOME = 'public';
 
     /**
      * The name of the widget.
@@ -53,7 +59,7 @@ class Widget
      *
      * @var string
      */
-    private $class = null;
+    private $class;
 
     /**
      * The list of DataSources accepted by the widget.
@@ -114,8 +120,6 @@ class Widget
 
     /**
      * Set name.
-     *
-     * @param $name
      */
     public function setName($name)
     {
@@ -184,8 +188,6 @@ class Widget
 
     /**
      * Set exportable.
-     *
-     * @param $exportable
      */
     public function setExportable($exportable)
     {

@@ -13,9 +13,9 @@ namespace Claroline\CursusBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\PdfManager;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
@@ -131,6 +131,7 @@ class SessionController extends AbstractCrudController
 
     /**
      * @Route("/{id}/pdf", name="apiv2_cursus_session_download_pdf", methods={"GET"})
+     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
     public function downloadPdfAction(Session $session, Request $request): StreamedResponse
@@ -149,6 +150,7 @@ class SessionController extends AbstractCrudController
 
     /**
      * @Route("/{id}/events", name="apiv2_cursus_session_list_events")
+     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
     public function listEventsAction(Session $session, Request $request): JsonResponse
@@ -166,6 +168,7 @@ class SessionController extends AbstractCrudController
 
     /**
      * @Route("/{id}/users/{type}", name="apiv2_cursus_session_add_users", methods={"PATCH"})
+     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
     public function addUsersAction(Session $session, string $type, Request $request): JsonResponse
@@ -190,6 +193,7 @@ class SessionController extends AbstractCrudController
 
     /**
      * @Route("/{id}/groups/{type}", name="apiv2_cursus_session_add_groups", methods={"PATCH"})
+     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
     public function addGroupsAction(Session $session, string $type, Request $request): JsonResponse
@@ -218,6 +222,7 @@ class SessionController extends AbstractCrudController
 
     /**
      * @Route("/{id}/pending", name="apiv2_cursus_session_add_pending", methods={"PATCH"})
+     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
     public function addPendingAction(Session $session, Request $request): JsonResponse
@@ -234,6 +239,7 @@ class SessionController extends AbstractCrudController
 
     /**
      * @Route("/{id}/self/register", name="apiv2_cursus_session_self_register", methods={"PUT"})
+     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
@@ -258,6 +264,7 @@ class SessionController extends AbstractCrudController
      * This is the endpoint used by confirmation email.
      *
      * @Route("/{id}/self/confirm", name="apiv2_cursus_session_self_confirm", methods={"GET"})
+     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
@@ -277,6 +284,7 @@ class SessionController extends AbstractCrudController
 
     /**
      * @Route("/{id}/invite/all", name="apiv2_cursus_session_invite_all", methods={"PUT"})
+     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
     public function inviteAllAction(Session $session): JsonResponse
@@ -290,6 +298,7 @@ class SessionController extends AbstractCrudController
 
     /**
      * @Route("/{id}/stats", name="apiv2_cursus_session_stats", methods={"GET"})
+     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
     public function getStatsAction(Session $session): JsonResponse
@@ -311,7 +320,7 @@ class SessionController extends AbstractCrudController
 
     private function checkToolAccess(?string $rights = 'OPEN'): bool
     {
-        $trainingsTool = $this->toolManager->getOrderedTool('trainings', Tool::DESKTOP);
+        $trainingsTool = $this->toolManager->getOrderedTool('trainings', DesktopContext::getName());
 
         if (is_null($trainingsTool) || !$this->authorization->isGranted($rights, $trainingsTool)) {
             return false;

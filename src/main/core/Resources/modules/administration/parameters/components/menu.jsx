@@ -10,7 +10,7 @@ import {MenuSection} from '#/main/app/layout/menu/components/section'
 const ParametersMenu = (props) =>
   <MenuSection
     {...omit(props, 'path')}
-    title={trans('main_settings', {}, 'tools')}
+    title={trans('parameters', {}, 'tools')}
   >
     <Toolbar
       id="parameters-menu"
@@ -36,12 +36,6 @@ const ParametersMenu = (props) =>
           icon: 'fa fa-fw fa-wrench',
           label: trans('technical'),
           target: props.path+'/technical'
-        }, {
-          name: 'authentication',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-shield-alt',
-          label: trans('authentication'),
-          target: props.path+'/authentication'
         }
       ]}
       onClick={props.autoClose}

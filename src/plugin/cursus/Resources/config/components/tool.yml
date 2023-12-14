@@ -1,0 +1,10 @@
+services:
+    Claroline\CursusBundle\Component\Tool\TrainingEventsTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+
+    Claroline\CursusBundle\Component\Tool\TrainingsTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]

@@ -7,7 +7,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * NotificationListener.
+ * @deprecated
  */
 class NotificationListener
 {
@@ -22,7 +22,6 @@ class NotificationListener
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
 
-        //TODO: RESOURCE OPEN URL CHANGE
         $primaryAction = [
           'url' => 'claro_resource_show_short',
           'parameters' => [

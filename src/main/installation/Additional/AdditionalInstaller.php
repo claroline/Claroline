@@ -11,44 +11,34 @@
 
 namespace Claroline\InstallationBundle\Additional;
 
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Update\UpdaterExecution;
 use Claroline\InstallationBundle\Repository\UpdaterExecutionRepository;
 use Claroline\InstallationBundle\Updater\NonReplayableUpdaterInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwareInterface, AdditionalInstallerInterface
+abstract class AdditionalInstaller implements AdditionalInstallerInterface, ContainerAwareInterface, LoggerAwareInterface
 {
-    use LoggableTrait;
     use ContainerAwareTrait;
+    use LoggerAwareTrait;
 
     /**
-     * @var string
+     * Whether updaters should be executed even if they have been already.
      */
-    protected $environment;
+    private bool $shouldReplayUpdaters = false;
 
     /**
-     * @var bool whether updaters should be executed even if they have been already
+     * A scoped container allowing to load Updater services.
      */
-    private $shouldReplayUpdaters = false;
-
-    /**
-     * @var ContainerInterface|null a scoped container allowing to load Updater services
-     */
-    private $updaterLocator;
+    private ?ContainerInterface $updaterLocator;
 
     public function __construct(ContainerInterface $updaterLocator = null)
     {
         $this->updaterLocator = $updaterLocator;
-    }
-
-    public function setEnvironment($environment)
-    {
-        $this->environment = $environment;
     }
 
     public function setShouldReplayUpdaters(bool $shouldReplayUpdaters): void
@@ -63,7 +53,7 @@ abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwa
 
     public function hasMigrations(): bool
     {
-        return true; // should be false by default
+        return false;
     }
 
     public function hasFixtures(): bool
@@ -71,15 +61,15 @@ abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwa
         return false;
     }
 
-    public function preInstall()
+    public function preInstall(): void
     {
     }
 
-    public function postInstall()
+    public function postInstall(): void
     {
     }
 
-    public function preUpdate($currentVersion, $targetVersion)
+    public function preUpdate(string $currentVersion, string $targetVersion): void
     {
         /** @var UpdaterExecutionRepository $updaterExecutionRepository */
         $updaterExecutionRepository = $this->container->get(ObjectManager::class)->getRepository(UpdaterExecution::class);
@@ -91,17 +81,17 @@ abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwa
 
             $hasBeenExecuted = $updaterExecutionRepository->hasBeenExecuted($updaterClass);
             if ($hasBeenExecuted && (!$this->shouldReplayUpdaters() || \is_subclass_of($updaterClass, NonReplayableUpdaterInterface::class))) {
-                $this->log(sprintf('Skipping "%s" because it has been already executed.', $updaterClass));
+                $this->logger->info(sprintf('Skipping "%s" because it has been already executed.', $updaterClass));
                 continue;
             }
 
-            $this->log(sprintf('Executing "%s" preUpdate.', $updaterClass));
+            $this->logger->info(sprintf('Executing "%s" preUpdate.', $updaterClass));
             $updater = $this->updaterLocator->get($updaterClass);
             $updater->preUpdate();
         }
     }
 
-    public function postUpdate($currentVersion, $targetVersion)
+    public function postUpdate(string $currentVersion, string $targetVersion): void
     {
         /** @var UpdaterExecutionRepository $updaterExecutionRepository */
         $updaterExecutionRepository = $this->container->get(ObjectManager::class)->getRepository(UpdaterExecution::class);
@@ -117,7 +107,7 @@ abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwa
                 return;
             }
 
-            $this->log(sprintf('Executing "%s" postUpdate.', $updaterClass));
+            $this->logger->info(sprintf('Executing "%s" postUpdate.', $updaterClass));
             $updater = $this->updaterLocator->get($updaterClass);
             $updater->postUpdate();
 
@@ -127,15 +117,15 @@ abstract class AdditionalInstaller implements LoggerAwareInterface, ContainerAwa
         }
     }
 
-    public function preUninstall()
+    public function preUninstall(): void
     {
     }
 
-    public function postUninstall()
+    public function postUninstall(): void
     {
     }
 
-    public function end($currentVersion, $targetVersion)
+    public function end(string $currentVersion = null, string $targetVersion = null): void
     {
     }
 

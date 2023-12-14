@@ -1,4 +1,4 @@
-/* global require, window */
+/* global require */
 
 import {
   applyMiddleware,
@@ -29,13 +29,14 @@ if ('production' !== env()) {
 /**
  * Generates a new pre-configured application store.
  *
- * @param {string} name         - the name of the store
- * @param {object} reducers     - an object containing a list of reducers to mount in the store.
- * @param {object} initialState - the data to preload in the store at creation.
+ * @param {string} name              - the name of the store
+ * @param {object} reducers          - an object containing a list of reducers to mount in the store.
+ * @param {object} initialState      - the data to preload in the store at creation.
+ * @param {array}  customMiddlewares - a list of custom middlewares to append to the store (will be added to the default ones)
  *
  * @return {*}
  */
-function createStore(name, reducers, initialState = {}) {
+function createStore(name, reducers, initialState = {}, customMiddlewares = []) {
   // preserve initial state for not-yet-loaded reducers
   const createReducer = (reducers) => {
     const reducerNames = Object.keys(reducers)
@@ -66,7 +67,7 @@ function createStore(name, reducers, initialState = {}) {
     createReducer(reducers),
     initialState,
     composeEnhancers(
-      applyMiddleware(...middleware)
+      applyMiddleware(...[].concat(customMiddlewares, middleware))
     )
   )
 

@@ -12,29 +12,19 @@ use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 
 class ToolRightsSerializer
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var RoleSerializer */
-    private $roleSerializer;
-    /** @var ToolMaskDecoderManager */
-    private $maskManager;
-
     public function __construct(
-        ObjectManager $om,
-        RoleSerializer $roleSerializer,
-        ToolMaskDecoderManager $maskManager
+        private readonly ObjectManager $om,
+        private readonly RoleSerializer $roleSerializer,
+        private readonly ToolMaskDecoderManager $maskManager
     ) {
-        $this->om = $om;
-        $this->roleSerializer = $roleSerializer;
-        $this->maskManager = $maskManager;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ToolRights::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'tool_rights';
     }
@@ -46,9 +36,9 @@ class ToolRightsSerializer
 
         $serialized = [
             'id' => $toolRights->getId(),
-            'orderedToolId' => $orderedTool->getUuid(),
+            'orderedToolId' => $orderedTool->getUuid(), // TODO : to remove
             'role' => $this->roleSerializer->serialize($role, [SerializerInterface::SERIALIZE_MINIMAL]),
-            'permissions' => $this->maskManager->decodeMask($toolRights->getMask(), $orderedTool->getTool()),
+            'permissions' => $this->maskManager->decodeMask($toolRights->getMask(), $orderedTool->getName()),
 
             // TODO : do not flatten role data (UI expects this structure).
             'translationKey' => $role->getTranslationKey(),
@@ -80,16 +70,16 @@ class ToolRightsSerializer
             $toolRights->setRole($role);
         }
 
-        if (!empty($data['orderedToolId'])) {
+        if (!empty($data['orderedTool'])) {
             /** @var OrderedTool $orderedTool */
-            $orderedTool = $this->om->getRepository(OrderedTool::class)->findOneBy(['uuid' => $data['orderedToolId']]);
+            $orderedTool = $this->om->getObject($data['orderedTool'], OrderedTool::class);
             if ($orderedTool) {
                 $toolRights->setOrderedTool($orderedTool);
             }
         }
 
         if ($toolRights->getOrderedTool()) {
-            $toolRights->setMask($this->maskManager->encodeMask($data['permissions'], $toolRights->getOrderedTool()->getTool()));
+            $toolRights->setMask($this->maskManager->encodeMask($data['permissions'], $toolRights->getOrderedTool()->getName()));
         }
 
         return $toolRights;

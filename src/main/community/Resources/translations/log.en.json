@@ -1,0 +1,32 @@
+{
+  "group_add": "Add group",
+  "group_add_desc": "has added %user% to group %group%",
+  "group_remove": "Remove group",
+  "group_remove_desc": "has removed %user% from group %group%",
+  "organization_add": "Add organization",
+  "organization_add_desc": "has added %user% to organization %organization%",
+  "organization_remove": "Remove organization",
+  "organization_remove_desc": "has removed %user% from organization %organization%",
+
+  "group": "Group",
+  "organization": "Organization",
+  "role": "Role",
+  "team": "Team",
+  "user": "User",
+
+  "user.add_role": "Adding a role",
+  "user.add_role_desc": "When a user obtains a new role (registration for a workspace, manual assignment by a manager, registration for a group).",
+  "user.add_role_message": "has <b>given</b> role %role% to user %user%.",
+
+  "user.remove_role": "Removing a role",
+  "user.remove_role_desc": "When a user loses a role (unsubscription from a workspace, manual removal by a manager, unsubscription from a group).",
+  "user.remove_role_message": "has <b>removed</b> role %role% from user %user%.",
+
+  "user.disable": "Disabling a user",
+  "user.disable_desc": "When a user is manually disabled by a manager.",
+  "user.disable_message": "has <b>disabled</b> the user %user%.",
+
+  "user.enable": "Enabling a user",
+  "user.enable_desc": "When a user is manually enabled by a manager.",
+  "user.enable_message": "has <b>enabled</b> the user %user%."
+}

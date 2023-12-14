@@ -10,19 +10,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: crud.pre.create.api_token, method: preCreate }
 
-    Claroline\AuthenticationBundle\Listener\Platform\OauthSsoListener:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AuthenticationBundle\Manager\OauthManager'
-        tags:
-            - { name: kernel.event_listener, event: claroline_populate_client_config, method: onConfig }
-
-    Claroline\AuthenticationBundle\Listener\UserListener:
-        arguments:
-            - '@Claroline\AuthenticationBundle\Manager\OauthManager'
-        tags:
-            - { name: kernel.event_listener, event: log, method: onDelete }
-
     Claroline\AuthenticationBundle\Listener\DataSource\MyTokensSource:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'

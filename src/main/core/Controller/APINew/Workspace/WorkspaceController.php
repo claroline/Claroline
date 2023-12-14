@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
@@ -23,12 +22,10 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\CatalogEvents\WorkspaceEvents;
-use Claroline\CoreBundle\Event\Workspace\CloseWorkspaceEvent;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
-use Claroline\CoreBundle\Manager\LogConnectManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
+use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Claroline\CoreBundle\Messenger\Message\CopyWorkspace;
 use Claroline\CoreBundle\Messenger\Message\ImportWorkspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -51,32 +48,16 @@ class WorkspaceController extends AbstractCrudController
     use HasRolesTrait;
     use PermissionCheckerTrait;
 
-    private TokenStorageInterface $tokenStorage;
-    private StrictDispatcher $dispatcher;
-    private MessageBusInterface $messageBus;
-    private RoleManager $roleManager;
-    private WorkspaceManager $workspaceManager;
-    private LogConnectManager $logConnectManager;
-    private TempFileManager $tempManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
+        private readonly TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
-        StrictDispatcher $dispatcher,
-        MessageBusInterface $messageBus,
-        RoleManager $roleManager,
-        WorkspaceManager $workspaceManager,
-        LogConnectManager $logConnectManager,
-        TempFileManager $tempManager
+        private readonly MessageBusInterface $messageBus,
+        private readonly TempFileManager $tempManager,
+        private readonly RoleManager $roleManager,
+        private readonly WorkspaceManager $workspaceManager,
+        private readonly WorkspaceRestrictionsManager $restrictionsManager
     ) {
-        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
-        $this->dispatcher = $dispatcher;
-        $this->messageBus = $messageBus;
-        $this->roleManager = $roleManager;
-        $this->workspaceManager = $workspaceManager;
-        $this->logConnectManager = $logConnectManager;
-        $this->tempManager = $tempManager;
     }
 
     public function getName(): string
@@ -368,6 +349,20 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
+     * Submit access code.
+     *
+     * @Route("/unlock/{id}", name="claro_workspace_unlock", methods={"POST"})
+     *
+     * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
+     */
+    public function unlockAction(Workspace $workspace, Request $request): JsonResponse
+    {
+        $this->restrictionsManager->unlock($workspace, json_decode($request->getContent(), true)['code']);
+
+        return new JsonResponse(null, 204);
+    }
+
+    /**
      * @Route("/{id}/users", name="apiv2_workspace_list_users", methods={"GET"})
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
@@ -448,35 +443,6 @@ class WorkspaceController extends AbstractCrudController
         return new JsonResponse(array_map(function (Role $role) {
             return $this->serializer->serialize($role);
         }, $roles));
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Dispatches all actions that has to be done when closing a workspace.",
-     *     parameters={
-     *         {"name": "id", "type": {"string"}, "description": "The workspace uuid"}
-     *     }
-     * )
-     *
-     * @Route("/{slug}/close", name="apiv2_workspace_close", methods={"PUT"})
-     *
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"slug": "slug"}})
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     */
-    public function closeAction(Workspace $workspace, User $user = null): JsonResponse
-    {
-        $this->dispatcher->dispatch(
-            WorkspaceEvents::CLOSE,
-            CloseWorkspaceEvent::class,
-            [$workspace]
-        );
-
-        if ($user) {
-            // TODO : listen to the close event
-            $this->logConnectManager->computeWorkspaceDuration($user, $workspace);
-        }
-
-        return new JsonResponse(null, 204);
     }
 
     protected function getDefaultHiddenFilters(): array

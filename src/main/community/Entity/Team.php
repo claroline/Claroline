@@ -11,12 +11,12 @@
 
 namespace Claroline\CommunityBundle\Entity;
 
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Name;
-use Claroline\AppBundle\Entity\Meta\Poster;
-use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -26,6 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="claro_team")
+ *
  * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\TeamRepository")
  */
 class Team
@@ -39,6 +40,7 @@ class Team
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
+     *
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      *
      * @var Workspace
@@ -47,6 +49,7 @@ class Team
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Role", cascade={"remove"})
+     *
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      *
      * @var Role
@@ -55,6 +58,7 @@ class Team
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
      * @ORM\JoinTable(name="claro_team_users")
      *
      * @var ArrayCollection|User[]
@@ -63,6 +67,7 @@ class Team
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Role", cascade={"remove"})
+     *
      * @ORM\JoinColumn(name="manager_role_id", nullable=true, onDelete="SET NULL")
      *
      * @var Role
@@ -92,6 +97,7 @@ class Team
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     *
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      *
      * @var ResourceNode
@@ -171,7 +177,7 @@ class Team
         return $this->managerRole;
     }
 
-    public function setManagerRole(?Role $managerRole = null): void
+    public function setManagerRole(Role $managerRole = null): void
     {
         $this->managerRole = $managerRole;
     }
@@ -181,7 +187,7 @@ class Team
         return $this->maxUsers;
     }
 
-    public function setMaxUsers(?int $maxUsers = null): void
+    public function setMaxUsers(int $maxUsers = null): void
     {
         $this->maxUsers = $maxUsers;
     }
@@ -211,7 +217,7 @@ class Team
         return $this->directory;
     }
 
-    public function setDirectory(?ResourceNode $directory = null)
+    public function setDirectory(ResourceNode $directory = null)
     {
         $this->directory = $directory;
     }

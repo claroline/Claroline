@@ -1,0 +1,72 @@
+
+@mixin embedded-list-variant() {
+    .list-header {
+        background: $list-controls-bg;
+        border-bottom: $list-controls-border-width solid $list-controls-border-color;
+    }
+
+    .list-selected {
+        /*border-left: none;
+        border-right: none;*/
+        //border-top: $list-controls-border-width solid $list-controls-border-color; // force border top for table display
+        //border-bottom-color: $list-controls-border-color;
+    }
+
+    .list-footer {
+        padding: 5px;
+        background: $list-controls-bg;
+        border-top: $list-controls-border-width solid $list-controls-border-color;
+    }
+
+    .content-loader {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    // customize view modes
+    .data-table {
+        margin-bottom: -($list-controls-border-width) !important; // merge last row and footer borders. important is to override .modal-content > .table
+    }
+
+    .data-tree {
+        margin-left: 0;
+        margin-right: $data-tree-gutter;
+    }
+
+    .data-grid {
+        margin-left: $data-grid-gutter;
+        margin-right: $data-grid-gutter;
+        /*.data-grid-header,
+        .list-selected-label {
+            margin-left: $data-grid-gutter;
+        }*/
+
+        + .list-footer {
+            margin-top: $data-grid-gutter;
+        }
+    }
+
+    /*.data-grid-col {
+        .data-grid-content {
+            margin: (-$data-grid-gutter) 0;
+        }
+    }
+
+    .data-grid-row {
+        .data-grid-content {
+            margin: (-$data-grid-gutter*.5) 0;
+        }
+    }*/
+
+    .table {
+        th:first-child,
+        td:first-child {
+            border-left: none;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-right: none;
+        }
+    }
+}

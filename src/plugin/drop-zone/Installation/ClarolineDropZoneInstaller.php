@@ -15,4 +15,8 @@ use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
 class ClarolineDropZoneInstaller extends AdditionalInstaller
 {
+    public function hasMigrations(): bool
+    {
+        return true;
+    }
 }

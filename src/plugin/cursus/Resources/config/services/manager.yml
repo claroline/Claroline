@@ -29,11 +29,8 @@ services:
         arguments:
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@router'
             - '@Claroline\CoreBundle\Library\ICS\ICSGenerator'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\PlanningManager'
             - '@Claroline\CursusBundle\Manager\EventPresenceManager'
 

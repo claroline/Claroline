@@ -12,7 +12,6 @@
 namespace Claroline\TagBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Repository\TaggedObjectRepository;
@@ -20,21 +19,12 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class TagManager
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var TaggedObjectRepository */
-    private $taggedObjectRepo;
+    private TaggedObjectRepository $taggedObjectRepo;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-
         $this->taggedObjectRepo = $om->getRepository(TaggedObject::class);
     }
 
@@ -108,14 +98,7 @@ class TagManager
         return $taggedObjects;
     }
 
-    public function getTaggedWorkspacesByRoles(User $user, $tag, $orderedBy = 'id', $order = 'ASC', $type = 0)
-    {
-        $roles = $user->getEntityRoles();
-
-        return count($roles) > 0 ? $this->taggedObjectRepo->findTaggedWorkspacesByRoles($tag, $roles, $orderedBy, $order, $type) : [];
-    }
-
-    public function removeTaggedObjectsByClassAndIds($class, array $ids)
+    public function removeTaggedObjectsByClassAndIds($class, array $ids): void
     {
         if (!empty($class) && !empty($ids)) {
             $objects = $this->taggedObjectRepo->findTaggedObjectsByClassAndIds($class, $ids);
@@ -131,7 +114,7 @@ class TagManager
         }
     }
 
-    public function removeTagFromObjects(Tag $tag, array $objects = [])
+    public function removeTagFromObjects(Tag $tag, array $objects = []): void
     {
         foreach ($objects as $object) {
             $taggedObject = $this->taggedObjectRepo->findOneTaggedObjectByTagAndObject($tag, $object['id'], $object['class']);
@@ -148,7 +131,7 @@ class TagManager
         return $this->taggedObjectRepo->findTaggedObjectsByClassAndIds($class, $ids);
     }
 
-    private function removeUnusedTags($objectClass, $objectId, array $tags)
+    private function removeUnusedTags($objectClass, $objectId, array $tags): void
     {
         $objects = $this->taggedObjectRepo->findTaggedObjectsByClassAndIds($objectClass, [$objectId]);
 

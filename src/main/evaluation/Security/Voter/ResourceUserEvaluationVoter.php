@@ -38,7 +38,7 @@ class ResourceUserEvaluationVoter extends AbstractEvaluationVoter
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
-                if (($token->getUser() instanceof User && $token->getUser()->getId() === $object->getUser()->getId())) {
+                if ($token->getUser() instanceof User && $token->getUser()->getId() === $object->getUser()->getId()) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 

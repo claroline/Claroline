@@ -13,20 +13,19 @@ namespace Claroline\AppBundle\Event\Platform;
 
 class ExtendEvent extends EnableEvent
 {
-    /** @var \DateTime */
-    private $end;
+    private \DateTimeInterface $end;
 
-    public function __construct(\DateTime $end)
+    public function __construct(\DateTimeInterface $end)
     {
         $this->end = $end;
     }
 
-    public function setEnd(\DateTime $end)
+    public function setEnd(\DateTimeInterface $end): void
     {
         $this->end = $end;
     }
 
-    public function getEnd()
+    public function getEnd(): \DateTimeInterface
     {
         return $this->end;
     }

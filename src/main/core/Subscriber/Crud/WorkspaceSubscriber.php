@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Manager\Workspace\TransferManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -27,39 +26,17 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class WorkspaceSubscriber implements EventSubscriberInterface
 {
-    private $tokenStorage;
-    private $om;
-    private $crud;
-    private $manager;
-    private $fileManager;
-    private $toolManager;
-    private $resourceManager;
-    private $organizationManager;
-    private $serializer;
-    private $transferManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        Crud $crud,
-        WorkspaceManager $manager,
-        FileManager $fileManager,
-        ToolManager $toolManager,
-        ResourceManager $resourceManager,
-        OrganizationManager $organizationManager,
-        WorkspaceSerializer $serializer,
-        TransferManager $transferManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly WorkspaceManager $manager,
+        private readonly FileManager $fileManager,
+        private readonly ResourceManager $resourceManager,
+        private readonly OrganizationManager $organizationManager,
+        private readonly WorkspaceSerializer $serializer,
+        private readonly TransferManager $transferManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->crud = $crud;
-        $this->manager = $manager;
-        $this->fileManager = $fileManager;
-        $this->toolManager = $toolManager;
-        $this->resourceManager = $resourceManager;
-        $this->organizationManager = $organizationManager;
-        $this->serializer = $serializer;
-        $this->transferManager = $transferManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -74,7 +51,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var Workspace $workspace */
         $workspace = $event->getObject();
@@ -98,7 +75,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
             $this->copy($workspace->getWorkspaceModel(), $workspace, in_array(Options::AS_MODEL, $options) || $workspace->isModel());
 
             // we need to override model values with the posted one
-            // this is not really aesthetic because this has already be done by the Crud before
+            // this is not really aesthetic because this has already been done by the Crud before
             // and workspace deserialization is heavy
             $this->serializer->deserialize($data, $workspace, $options);
         }
@@ -106,7 +83,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         $this->handleNewWorkspace($workspace);
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var Workspace $workspace */
         $workspace = $event->getObject();
@@ -122,7 +99,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preCopy(CopyEvent $event)
+    public function preCopy(CopyEvent $event): void
     {
         $options = $event->getOptions();
 
@@ -141,7 +118,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         $this->handleNewWorkspace($copy);
     }
 
-    public function postCopy(CopyEvent $event)
+    public function postCopy(CopyEvent $event): void
     {
         /** @var Workspace $workspace */
         $workspace = $event->getCopy();
@@ -157,7 +134,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preUpdate(UpdateEvent $event)
+    public function preUpdate(UpdateEvent $event): void
     {
         /** @var Workspace $workspace */
         $workspace = $event->getObject();
@@ -189,7 +166,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         );
     }
 
-    public function preDelete(DeleteEvent $event)
+    public function preDelete(DeleteEvent $event): void
     {
         $workspace = $event->getObject();
 
@@ -199,7 +176,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var Workspace $workspace */
         $workspace = $event->getObject();
@@ -216,7 +193,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         rmdir($this->manager->getStorageDirectory($workspace));
     }
 
-    private function handleNewWorkspace(Workspace $workspace)
+    private function handleNewWorkspace(Workspace $workspace): void
     {
         // timestamp workspace
         $workspace->setCreatedAt(new \DateTime());

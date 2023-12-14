@@ -2,62 +2,21 @@
 
 namespace Claroline\LogBundle\Messenger\Message;
 
-use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
-
-class CreateSecurityLog implements AsyncHighMessageInterface
+/**
+ * Create SecurityLog message.
+ * This message is not directly handled by the messenger,
+ * it is used as a sub message for SubmitLogs to know which logs needs to be created.
+ */
+class CreateSecurityLog extends AbstractCreateLog
 {
-    /** @var \DateTimeInterface */
-    private $date;
-    /** @var string */
-    private $action;
-    /** @var string */
-    private $details;
-    /** @var string */
-    private $doerIp;
-    /** @var int */
-    private $doerId;
-    /** @var int */
-    private $targetId;
-
     public function __construct(
         \DateTimeInterface $date,
         string $action,
         string $details,
-        string $doerIp,
-        ?int $doerId = null,
-        ?int $targetId = null
+        int $doerId = null,
+        private readonly ?int $targetId = null
     ) {
-        $this->date = $date;
-        $this->action = $action;
-        $this->details = $details;
-        $this->doerIp = $doerIp;
-        $this->doerId = $doerId;
-        $this->targetId = $targetId;
-    }
-
-    public function getDate(): \DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function getAction(): string
-    {
-        return $this->action;
-    }
-
-    public function getDetails(): string
-    {
-        return $this->details;
-    }
-
-    public function getDoerIp(): string
-    {
-        return $this->doerIp;
-    }
-
-    public function getDoerId(): ?int
-    {
-        return $this->doerId;
+        parent::__construct($date, $action, $details, $doerId);
     }
 
     public function getTargetId(): ?int

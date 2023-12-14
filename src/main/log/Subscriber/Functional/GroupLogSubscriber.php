@@ -12,6 +12,9 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @deprecated
+ */
 class GroupLogSubscriber implements EventSubscriberInterface
 {
     /** @var Security */

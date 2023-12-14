@@ -10,23 +10,29 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\ScaleRepository")
+ *
  * @ORM\Table(name="hevinci_scale")
+ *
  * @BR\UniqueEntity("name")
  */
-class Scale implements \JsonSerializable
+class Scale
 {
     use Uuid;
 
     /**
      * @ORM\Id
+     *
      * @ORM\Column(type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @ORM\Column(unique=true)
+     *
      * @Assert\NotBlank
+     *
      * @Assert\Length(max="255")
      */
     private $name;
@@ -38,6 +44,7 @@ class Scale implements \JsonSerializable
      *     cascade={"persist", "remove"},
      *     orphanRemoval=true
      * )
+     *
      * @ORM\OrderBy({"value" = "ASC"})
      */
     private $levels;
@@ -168,15 +175,5 @@ class Scale implements \JsonSerializable
     public function getAbilityCount()
     {
         return $this->abilityCount;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'frameworkCount' => $this->frameworkCount,
-            'abilityCount' => $this->abilityCount,
-        ];
     }
 }

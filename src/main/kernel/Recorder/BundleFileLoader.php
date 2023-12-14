@@ -11,24 +11,20 @@
 
 namespace Claroline\KernelBundle\Recorder;
 
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
-use Psr\Log\LoggerAwareInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Loads the list of Bundles registered in the Claroline Kernel from an INI file.
  */
-class BundleFileLoader implements LoggerAwareInterface
+class BundleFileLoader
 {
-    use LoggableTrait;
-
-    private $env;
-    private $bundlesFile;
+    private string $env;
+    private string $bundlesFile;
 
     private static $selfInstance;
 
-    public static function initialize(string $env, string $bundlesFile)
+    public static function initialize(string $env, string $bundlesFile): void
     {
         static::$selfInstance = new self($env, $bundlesFile);
     }
@@ -62,8 +58,6 @@ class BundleFileLoader implements LoggerAwareInterface
                             $bundles[\get_class($requiredBundle)] = $requiredBundle;
                         }
                     }
-                } else {
-                    $this->log("Class {$bundleClass} was not loaded");
                 }
             }
         }
@@ -71,7 +65,7 @@ class BundleFileLoader implements LoggerAwareInterface
         return $bundles;
     }
 
-    private function __construct(string $env, $bundlesFile)
+    private function __construct(string $env, string $bundlesFile)
     {
         if (!file_exists($bundlesFile)) {
             throw new \InvalidArgumentException("'{$bundlesFile}' does not exist");

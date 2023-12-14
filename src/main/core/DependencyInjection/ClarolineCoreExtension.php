@@ -21,15 +21,13 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class ClarolineCoreExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $locator = new FileLocator(__DIR__.'/../Resources/config');
         $loader = new YamlFileLoader($container, $locator);
         $loader->load('parameters.yml');
         $loader->load('services.yml');
+        $loader->load('components.yml');
 
         if ('test' === $container->getParameter('kernel.environment')) {
             $loader->load('services_test.yml');

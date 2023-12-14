@@ -8,10 +8,8 @@ trait Published
 {
     /**
      * @ORM\Column(name="published", type="boolean", options={"default": 1})
-     *
-     * @var bool
      */
-    protected $published = true;
+    protected bool $published = true;
 
     /**
      * Returns whether the entity is published.
@@ -24,7 +22,7 @@ trait Published
     /**
      * Sets the entity published state.
      */
-    public function setPublished(bool $published)
+    public function setPublished(bool $published): void
     {
         $this->published = $published;
     }

@@ -23,7 +23,7 @@ class ScheduledTaskVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
-        if ($this->hasAdminToolAccess($token, 'scheduled_tasks')) {
+        if ($this->hasAdminToolAccess($token, 'scheduler')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 

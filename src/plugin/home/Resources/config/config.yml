@@ -1,10 +1,4 @@
 plugin:
-  admin_tools:
-    - name: home
-      class: home
-
-  tools:
-    - name: home
-      class: home
-      is_displayable_in_workspace: true
-      is_displayable_in_desktop: true
+    tools:
+        - name: home
+          icon: home

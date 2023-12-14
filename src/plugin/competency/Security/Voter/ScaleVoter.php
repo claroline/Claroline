@@ -27,7 +27,7 @@ class ScaleVoter extends AbstractVoter
             case self::PATCH:
             case self::OPEN:
             case self::VIEW:
-                return $this->hasAdminToolAccess($token, 'competencies') ?
+                return $this->hasAdminToolAccess($token, 'evaluation') ?
                     VoterInterface::ACCESS_GRANTED :
                     VoterInterface::ACCESS_DENIED;
         }

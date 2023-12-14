@@ -1,19 +1,38 @@
 doctrine:
     dbal:
-        server_version: "%database_version%"
-        driver:         "%database_driver%"
-        host:           "%database_host%"
-        dbname:         "%database_name%"
-        user:           "%database_user%"
-        password:       "%database_password%"
-        port:           "%database_port%"
-        charset:        utf8mb4
-        default_table_options:
-            charset: utf8mb4
-            collation: utf8mb4_unicode_ci
-            engine: InnoDB
-        options:
-            1002: 'SET sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY", ""))'
+        default_connection: default
+        connections:
+            default:
+                server_version: "%database_version%"
+                driver:         "%database_driver%"
+                host:           "%database_host%"
+                dbname:         "%database_name%"
+                user:           "%database_user%"
+                password:       "%database_password%"
+                port:           "%database_port%"
+                charset:        utf8mb4
+                default_table_options:
+                    charset: utf8mb4
+                    collation: utf8mb4_unicode_ci
+                    engine: InnoDB
+                options:
+                    1002: 'SET sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY", ""))'
+
+            messenger:
+                server_version: "%database_version%"
+                driver: "%database_driver%"
+                host: "%database_host%"
+                dbname: "%database_name%"
+                user: "%database_user%"
+                password: "%database_password%"
+                port: "%database_port%"
+                charset: utf8mb4
+                default_table_options:
+                    charset: utf8mb4
+                    collation: utf8mb4_unicode_ci
+                    engine: InnoDB
+                options:
+                    1002: 'SET sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY", ""))'
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"

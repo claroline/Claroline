@@ -8,24 +8,22 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class ExportToolEvent extends AbstractToolEvent
 {
-    /** @var FileBag */
-    private $fileBag;
+    private FileBag $fileBag;
 
-    /** @var array */
-    private $data = [];
+    private array $data = [];
 
     public function __construct(
         string $toolName,
         string $context,
-        ?Workspace $workspace = null,
-        ?FileBag $fileBag = null
+        Workspace $workspace = null,
+        FileBag $fileBag = null
     ) {
         parent::__construct($toolName, $context, $workspace);
 
         $this->fileBag = $fileBag ?? new FileBag();
     }
 
-    public function setData(?array $data = [])
+    public function setData(?array $data = []): void
     {
         $this->data = $data;
     }
@@ -35,7 +33,7 @@ class ExportToolEvent extends AbstractToolEvent
         return $this->data;
     }
 
-    public function addFile($path, $file)
+    public function addFile($path, $file): void
     {
         $this->fileBag->add($path, $file);
     }
@@ -45,7 +43,7 @@ class ExportToolEvent extends AbstractToolEvent
         return $this->fileBag;
     }
 
-    public function overwrite($key, $value)
+    public function overwrite($key, $value): void
     {
         ArrayUtils::set($this->data, $key, $value);
     }

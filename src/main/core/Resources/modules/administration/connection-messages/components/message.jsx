@@ -27,6 +27,7 @@ const SlidesForm = (props) =>
   <div className="slides-form">
     {0 === props.slides.length &&
       <ContentPlaceholder
+        className="mb-3"
         size="lg"
         icon="fa fa-image"
         title={trans('no_content')}
@@ -90,6 +91,7 @@ const SlidesForm = (props) =>
     <CallbackButton
       className="btn btn-primary w-100 mb-3"
       primary={true}
+      size="lg"
       disabled={props.disabled}
       callback={() => {
         const length = props.slides.length

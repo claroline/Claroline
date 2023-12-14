@@ -6,12 +6,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
-use UJM\ExoBundle\Event\Log\LogExerciseEvent;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
 use UJM\ExoBundle\Manager\Attempt\AnswerManager;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
@@ -24,76 +22,25 @@ use UJM\ExoBundle\Serializer\Item\ItemSerializer;
  */
 class AttemptManager
 {
-    /**
-     * @var ObjectManager
-     */
-    private $om;
+    private PaperRepository $paperRepository;
 
-    /**
-     * @var PaperGenerator
-     */
-    private $paperGenerator;
-
-    /**
-     * @var PaperManager
-     */
-    private $paperManager;
-
-    /**
-     * @var PaperRepository
-     */
-    private $paperRepository;
-
-    /**
-     * @var AnswerManager
-     */
-    private $answerManager;
-
-    /**
-     * @var ItemManager
-     */
-    private $itemManager;
-
-    /**
-     * @var ItemSerializer
-     */
-    private $itemSerializer;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * AttemptManager constructor.
-     */
     public function __construct(
-        ObjectManager $om,
-        PaperGenerator $paperGenerator,
-        PaperManager $paperManager,
-        AnswerManager $answerManager,
-        ItemManager $itemManager,
-        ItemSerializer $itemSerializer,
-        EventDispatcherInterface $eventDispatcher
+        private readonly ObjectManager $om,
+        private readonly PaperGenerator $paperGenerator,
+        private readonly PaperManager $paperManager,
+        private readonly AnswerManager $answerManager,
+        private readonly ItemManager $itemManager,
+        private readonly ItemSerializer $itemSerializer
     ) {
-        $this->om = $om;
-        $this->paperGenerator = $paperGenerator;
-        $this->paperManager = $paperManager;
         $this->paperRepository = $this->om->getRepository(Paper::class);
-        $this->answerManager = $answerManager;
-        $this->itemManager = $itemManager;
-        $this->itemSerializer = $itemSerializer;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      * Checks if a user is allowed to pass a quiz or not.
      *
      * Based on the maximum attempt allowed and the number of already done by the user.
-     *
-     * @return bool
      */
-    public function canPass(Exercise $exercise, User $user = null)
+    public function canPass(Exercise $exercise, User $user = null): bool
     {
         $canPass = true;
         if ($user) {
@@ -109,7 +56,7 @@ class AttemptManager
         return $canPass;
     }
 
-    public function getErrors(Exercise $exercise, User $user = null)
+    public function getErrors(Exercise $exercise, User $user = null): array
     {
         $errors = [];
         if ($user) {
@@ -133,10 +80,8 @@ class AttemptManager
      *
      * A user can submit to a paper only if it is its own and the paper is not closed (= no end).
      * ATTENTION : As is, anonymous have access to all the other anonymous Papers !!!
-     *
-     * @return bool
      */
-    public function canUpdate(Paper $paper, User $user = null)
+    public function canUpdate(Paper $paper, User $user = null): bool
     {
         return empty($paper->getEnd())
             && $user === $paper->getUser();
@@ -154,7 +99,7 @@ class AttemptManager
      *
      * @return Paper - a new paper or an unfinished one
      */
-    public function startOrContinue(Exercise $exercise, User $user = null)
+    public function startOrContinue(Exercise $exercise, User $user = null): Paper
     {
         $paper = null; // The paper to use for the new attempt
 
@@ -179,7 +124,7 @@ class AttemptManager
             $paper = $this->paperGenerator->create($exercise, $user, $lastPaper);
 
             // Calculate the total score of the paper
-            // This can be recomputed later but it's a slightly heavy task and require the use of the manager.
+            // This can be recomputed later, but it's a slightly heavy task and require the use of the manager.
             $paper->setTotal(
                 $this->paperManager->calculateTotal($paper)
             );
@@ -189,17 +134,10 @@ class AttemptManager
             $this->om->flush();
         }
 
-        $user = $paper->getUser();
-        $event = new LogExerciseEvent('resource-ujm_exercise-paper-start-or-continue', $paper->getExercise(), [
-          'user' => $user ?
-           ['username' => $user->getUsername(), 'first_name' => $user->getFirstName(), 'last_name' => $user->getLastName()] : 'anon',
-        ]);
-        $this->eventDispatcher->dispatch($event, 'log');
-
         return $paper;
     }
 
-    public function getLastPaper(Exercise $exercise, User $user = null)
+    public function getLastPaper(Exercise $exercise, User $user = null): ?Paper
     {
         if (null !== $user) {
             return $this->paperRepository->findLastPaper($exercise, $user);
@@ -276,17 +214,9 @@ class AttemptManager
         $this->om->persist($paper);
         $this->om->endFlushSuite();
 
-        $this->paperManager->checkPaperEvaluated($paper);
-
         $attempt = null;
         if ($generateEvaluation) {
             $attempt = $this->paperManager->generateResourceEvaluation($paper, $finished);
-
-            $user = $paper->getUser();
-            $event = new LogExerciseEvent('resource-ujm_exercise-paper-end', $paper->getExercise(), [
-                'user' => $user ? ['username' => $user->getUsername(), 'first_name' => $user->getFirstName(), 'last_name' => $user->getLastName()] : 'anon',
-            ]);
-            $this->eventDispatcher->dispatch($event, 'log');
         }
 
         return $attempt;

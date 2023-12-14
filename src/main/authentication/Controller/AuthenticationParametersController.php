@@ -7,7 +7,6 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\AbstractSecurityController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AuthenticationBundle\Manager\AuthenticationManager;
-use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,13 +35,10 @@ class AuthenticationParametersController extends AbstractSecurityController
 
     /**
      * @Route("/authentication", name="apiv2_authentication_parameters_update", methods={"PUT"})
-     *
-     * @throws InvalidDataException
-     * @throws \Exception
      */
     public function updateAction(Request $request): JsonResponse
     {
-        $this->canOpenAdminTool('main_settings');
+        $this->canOpenAdminTool('authentication');
 
         $data = $this->decodeRequest($request);
         $authenticationParameters = $this->authenticationManager->getParameters();

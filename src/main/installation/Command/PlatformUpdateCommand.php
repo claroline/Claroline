@@ -11,10 +11,9 @@
 
 namespace Claroline\InstallationBundle\Command;
 
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Installation\PlatformInstaller;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\VersionManager;
+use Claroline\InstallationBundle\Manager\PlatformManager;
 use Claroline\InstallationBundle\Manager\RefreshManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,29 +26,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class PlatformUpdateCommand extends Command
 {
-    private $refresher;
-    private $installer;
-    private $versionManager;
-    private $config;
-    private $environment;
-
     public function __construct(
-        RefreshManager $refresher,
-        PlatformInstaller $installer,
-        VersionManager $versionManager,
-        PlatformConfigurationHandler $config,
-        string $environment
+        private readonly RefreshManager $refresher,
+        private readonly PlatformManager $installer,
+        private readonly VersionManager $versionManager
     ) {
-        $this->refresher = $refresher;
-        $this->installer = $installer;
-        $this->versionManager = $versionManager;
-        $this->config = $config;
-        $this->environment = $environment;
-
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription(
@@ -60,53 +45,32 @@ class PlatformUpdateCommand extends Command
                 new InputArgument('to_version', InputArgument::OPTIONAL, 'to version'),
             ])
             ->addOption(
-                'no_asset',
-                'a',
+                'no-theme',
+                'nt',
                 InputOption::VALUE_NONE,
-                'assets:install doesn\'t execute'
+                'Themes will not be rebuild.'
             )
             ->addOption(
-                'no_theme',
-                't',
+                'no-refresh',
+                'nr',
                 InputOption::VALUE_NONE,
-                'When set to true, themes won\'t be rebuilt'
-            )
-            ->addOption(
-                'no_symlink',
-                's',
-                InputOption::VALUE_NONE,
-                'When set to true, symlinks won\'t be rebuilt'
-            )
-            ->addOption(
-                'clear_cache',
-                'c',
-                InputOption::VALUE_NONE,
-                'When set to true, the cache is cleared at the end'
+                'Static files will not be refreshed (build symlinks, dump assets and clears cache).'
             )
             ->addOption(
                 'force',
                 'f',
                 InputOption::VALUE_NONE,
-                'When set to true, updaters will be executed regardless if they have been already.'
+                'Updaters will be executed regardless if they have been already.'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->refresher->setOutput($output);
-
         MaintenanceHandler::enableMaintenance();
 
         $output->writeln(
             sprintf('<comment>%s - Updating the platform...</comment>', date('H:i:s'))
         );
-
-        // generate platform_options with default parameters if it does not exist
-        $this->config->saveParameters();
-
-        if (!$input->getOption('no_symlink')) {
-            $this->refresher->buildSymlinks();
-        }
 
         if ($input->getOption('force')) {
             $this->installer->setShouldReplayUpdaters(true);
@@ -133,20 +97,15 @@ class PlatformUpdateCommand extends Command
             $this->installer->installAll();
         }
 
-        // dump static assets
-        if (!$input->getOption('no_asset')) {
-            $this->refresher->installAssets();
-            $this->refresher->dumpAssets();
-        }
-
         // build themes
-        if (!$input->getOption('no_theme')) {
+        if (!$input->getOption('no-theme')) {
             $this->refresher->buildThemes();
         }
 
-        // clear cache
-        if ($input->getOption('clear_cache')) {
-            $this->refresher->clearCache($this->environment);
+        // refresh platform statics and clear cache
+        if (!$input->getOption('no-refresh')) {
+            $this->refresher->setOutput($output);
+            $this->refresher->refresh($input->getOption('env'));
         }
 
         MaintenanceHandler::disableMaintenance();

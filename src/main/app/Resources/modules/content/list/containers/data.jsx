@@ -96,6 +96,7 @@ ListData.propTypes = {
    * (aka where `makeListReducer()` has been called).
    */
   name: T.string.isRequired,
+  flush: T.bool,
 
   /**
    * Provides asynchronous data load.

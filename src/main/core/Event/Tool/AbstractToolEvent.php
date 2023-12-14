@@ -11,23 +11,20 @@
 
 namespace Claroline\CoreBundle\Event\Tool;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractToolEvent extends Event
 {
-    /** @var string */
-    private $toolName;
-    /** @var string */
-    private $context;
-    /** @var Workspace */
-    private $workspace;
+    private string $toolName;
+    private string $context;
+    private ?ContextSubjectInterface $contextSubject = null;
 
-    public function __construct(string $toolName, string $context, ?Workspace $workspace = null)
+    public function __construct(string $toolName, string $context, ContextSubjectInterface $contextSubject = null)
     {
         $this->toolName = $toolName;
         $this->context = $context;
-        $this->workspace = $workspace;
+        $this->contextSubject = $contextSubject;
     }
 
     public function getToolName(): string
@@ -40,8 +37,16 @@ abstract class AbstractToolEvent extends Event
         return $this->context;
     }
 
-    public function getWorkspace(): ?Workspace
+    public function getContextSubject(): ?ContextSubjectInterface
     {
-        return $this->workspace;
+        return $this->contextSubject;
+    }
+
+    /**
+     * @deprecated use getContextSubject() instead
+     */
+    public function getWorkspace(): ?ContextSubjectInterface
+    {
+        return $this->getContextSubject();
     }
 }

@@ -18,14 +18,6 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
-    Claroline\TransferBundle\Subscriber\Tool\TransferToolSubscriber:
-        arguments:
-            - '@Claroline\TransferBundle\Transfer\ImportProvider'
-            - '@Claroline\TransferBundle\Transfer\ExportProvider'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-        tags:
-            - { name: kernel.event_subscriber }
-
     Claroline\TransferBundle\Subscriber\Scheduler\ScheduledTransferSubscriber:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

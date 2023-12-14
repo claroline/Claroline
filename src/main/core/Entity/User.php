@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -42,7 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         @ORM\Index(name="is_removed", columns={"is_removed"})
  * })
  */
-class User extends AbstractRoleSubject implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface, IdentifiableInterface
+class User extends AbstractRoleSubject implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface, IdentifiableInterface, ContextSubjectInterface
 {
     use Id;
     use Uuid;
@@ -351,6 +352,11 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     public function getUserIdentifier(): string
     {
         return $this->username;
+    }
+
+    public function getContextIdentifier(): string
+    {
+        return $this->uuid;
     }
 
     public function getFirstName(): ?string

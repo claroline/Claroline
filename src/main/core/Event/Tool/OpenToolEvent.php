@@ -11,36 +11,24 @@
 
 namespace Claroline\CoreBundle\Event\Tool;
 
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class OpenToolEvent extends Event
+class OpenToolEvent extends AbstractToolEvent
 {
-    private $workspace;
-    private $user;
-    private $context;
-    private $toolName;
-
-    /** @var array */
-    private $data = [];
+    private ?User $user;
+    private array $data = [];
 
     public function __construct(
-        ?Workspace $workspace = null,
-        ?User $user = null,
-        ?string $context = null,
-        ?string $toolName = null
+        string $toolName,
+        string $context,
+        ContextSubjectInterface $contextSubject = null,
+        User $user = null
     ) {
-        $this->workspace = $workspace;
-        $this->user = $user;
-        $this->context = $context;
-        $this->toolName = $toolName;
-    }
+        parent::__construct($toolName, $context, $contextSubject);
 
-    public function getWorkspace(): ?Workspace
-    {
-        return $this->workspace;
+        $this->user = $user;
     }
 
     public function getUser(): ?User
@@ -48,32 +36,44 @@ class OpenToolEvent extends Event
         return $this->user;
     }
 
-    public function getContext(): string
+    /**
+     * Sets response data to return in the api.
+     * NB. It MUST contain serialized structures.
+     */
+    public function addResponse(array $responseData): void
     {
-        return $this->context;
+        $this->data = array_merge($responseData, $this->data);
     }
 
-    public function getToolName(): string
+    public function getResponse(): array
     {
-        return $this->toolName;
+        return $this->data;
     }
 
     /**
      * Sets data to return in the api.
      * NB. It MUST contain serialized structures.
+     *
+     * @deprecated use addResponse(array $responseData)
      */
     public function setData(array $data): void
     {
-        $this->data = array_merge($data, $this->data);
+        $this->addResponse($data);
     }
 
+    /**
+     * @deprecated use getResponse()
+     */
     public function getData(): array
     {
-        return $this->data;
+        return $this->getResponse();
     }
 
+    /**
+     * @deprecated nope
+     */
     public function getMessage(TranslatorInterface $translator): string
     {
-        return $translator->trans('toolOpen', ['userName' => $this->user->getUsername(), 'context' => $this->context, 'toolName' => $this->toolName], 'tools');
+        return $translator->trans('toolOpen', ['userName' => $this->user->getUsername(), 'context' => $this->getContext(), 'toolName' => $this->getToolName()], 'tools');
     }
 }

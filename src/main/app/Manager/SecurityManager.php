@@ -2,26 +2,37 @@
 
 namespace Claroline\AppBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 
+/**
+ * to move elsewhere.
+ */
 class SecurityManager
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->tokenStorage = $tokenStorage;
     }
 
-    public function isImpersonated()
+    public function getCurrentUser(): ?User
+    {
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        if ($currentUser instanceof User) {
+            return $currentUser;
+        }
+
+        return null;
+    }
+
+    public function isImpersonated(): bool
     {
         return $this->tokenStorage->getToken() instanceof SwitchUserToken;
     }
 
-    public function isAnonymous()
+    public function isAnonymous(): bool
     {
         $token = $this->tokenStorage->getToken();
         if ($token) {
@@ -31,5 +42,10 @@ class SecurityManager
         }
 
         return true;
+    }
+
+    public function isAdmin(): bool
+    {
+        return in_array(PlatformRoles::ADMIN, $this->tokenStorage->getToken()->getRoleNames());
     }
 }

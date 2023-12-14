@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Listener\Notification;
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 
 /**
- * Class NotificationUserParametersListener.
+ * @deprecated
  */
 class NotificationUserParametersListener
 {

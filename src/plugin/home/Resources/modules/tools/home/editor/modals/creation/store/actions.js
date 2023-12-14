@@ -11,7 +11,7 @@ import {selectors} from '#/plugin/home/tools/home/editor/modals/creation/store/s
 // action creators
 export const actions = {}
 
-actions.startCreation = (context, type, administration, currentUser, position) => (dispatch) => {
+actions.startCreation = (type, position) => (dispatch) => {
   const newTabId = makeId()
   const newSlug = 'new' + newTabId
 
@@ -23,12 +23,6 @@ actions.startCreation = (context, type, administration, currentUser, position) =
     slug: newSlug,
     class: type.class,
     type: type.name,
-    context: administration ?
-      'desktop' === context.type ? 'administration' : 'admin' :
-      context.type,
-    administration: administration,
-    user: context.type === 'desktop' && !administration ? currentUser : null,
-    workspace: context.type === 'workspace' ? {id: context.data.id} : null,
     _new: true // this is used to avoid requesting an ObjectLock to the server as the tab not already exists
   }), true))
 

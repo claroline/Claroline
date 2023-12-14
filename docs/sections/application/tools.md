@@ -12,9 +12,6 @@ title: Tools
 Desktop, Administration and Workspaces are composed of multiple tools.
 A plugin can define new tools.
 
-Each time the CoreBundle is opening a tool, 
-it'll fire the event `open_tool_workspace|desktop_*my_tool*`.
-
 
 ## Tool definition
 
@@ -26,70 +23,75 @@ plugin:
     tools:
         - name: my_tool
           class: icon # a FontAwesome icon name to display in menus (MUST NOT contain the fa- prefix)
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: true
           tool_rights: # (optional)
               - name: action_name
-
-    # Admin tools declared by your plugin
-    admin_tools:
-        - name: my_admin_tool
-          class: icon # a FontAwesome icon name to display in menus (MUST NOT contain the fa- prefix)
 ```
 
 > When adding a new tool in the `config.yml` of a plugin, you'll need to run a claroline:update
 > to see it appear in the application
 
-## Tool subscriber definition
+## Tool definition
 
 In order to catch the event, your plugin must define a subscriber in your config.
 
-### The subscriber config file
+### The tool config file
 
-*MY_PLUGIN\Resources\config\services\subscriber.yml*
+Tools need to be registered in the symfony service container with a `claroline.component.tool` tag.
+
+*MY_PLUGIN\Resources\config\components\tool.yml*
 
 ```yml
 services:
-    Vendor\PluginNameBundle\Subscriber\MyToolSubscriber:
-        tags: [ kernel.event_subscriber ]
+    Vendor\PluginNameBundle\Component\Tool\MyToolTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]
 ```
 
-### The subscriber class
+### The tool class
 
 ```php
-namespace Vendor\PluginNameBundle\Subscriber;
+namespace Vendor\PluginNameBundle\Component\Tool;
 
-use Claroline\CoreBundle\Entity\Tool\AbstractTool;
-use Claroline\CoreBundle\Event\Tool\OpenToolEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
+use Claroline\AppBundle\Component\Tool\AbstractTool;
+use Claroline\CoreBundle\Component\Context\AccountContext;
+use Claroline\CoreBundle\Component\Context\AdministrationContext;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
+use Claroline\CoreBundle\Component\Context\PublicContext;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 
-class MyToolSubscriber implements EventSubscriberInterface
+class MyToolTool extends AbstractTool
 {
-    const NAME = 'my_tool';
-    
-    public static function getSubscribedEvents(): array
+    public static function getName(): string
     {
-        return [
-            // For desktop tools
-            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::DESKTOP, static::NAME) => 'onOpen',
-            // For workspace tools
-            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::WORKSPACE, static::NAME) => 'onOpen',
-            // For admin tools
-            ToolEvents::getEventName(ToolEvents::OPEN, AbstractTool::ADMINISTRATION, static::NAME) => 'onOpen',
-        ];
+        return 'my_tool';
     }
     
-    public function onOpen(OpenToolEvent $event): void
+    public function supportsContext(string $context): bool
     {
-        $event->setData([
-            // You can put here the serialized data which need be loaded when the tool is opened 
-        ]);
+        return in_array($context, [
+            AccountContext::getName(),
+            AdministrationContext::getName(),
+            DesktopContext::getName(),
+            PublicContext::getName(),
+            WorkspaceContext::getName(),
+        ])
+    }
+
+    public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
+    {
+        return [];
+    }
+
+    public function configure(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
+    {
+        return [];
     }
 }
 ```
 
 As you can see, if a tool is displayed in a workspace, you can know the current context
-using `$event->getWorkspace();`.
+using `$contextSubject`.
 
 ## Translations
 
@@ -110,4 +112,4 @@ Where `my_tool` is the name you defined in your config file.
 
 > You'll need to rebuild the js translation in order to see the changes in your application.
 > 
-> $ rm -rf var/cache/* && php bin/console bazinga:js-translation:dump public/js && rm -rf var/cache/*
+> $ rm -rf var/cache/* && php bin/console bazinga:js-translation:dump public/js --format=js --merge-domains && rm -rf var/cache/*

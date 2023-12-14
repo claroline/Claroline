@@ -8,7 +8,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {getTool} from '#/main/core/tools'
+import {getTool} from '#/main/core/tool/utils'
 import {selectors} from '#/main/core/tool/modals/parameters/store'
 
 class ParametersModal extends Component {
@@ -21,7 +21,7 @@ class ParametersModal extends Component {
   }
 
   componentDidMount() {
-    getTool(this.props.toolName).then((module) => {
+    getTool(this.props.toolName, this.props.currentContext.type).then((module) => {
       let parametersComponent = null
       if (module.default && module.default.parameters) {
         parametersComponent = module.default.parameters

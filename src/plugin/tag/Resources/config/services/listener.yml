@@ -6,6 +6,5 @@ services:
         tags:
             - { name: kernel.event_listener, event: objects.search, method: onSearchObjects }
             - { name: kernel.event_listener, event: claroline_tag_multiple_data, method: onDataTag }
-            - { name: kernel.event_listener, event: claroline_retrieve_user_workspaces_by_tag, method: onRetrieveUserWorkspacesByTag }
             - { name: kernel.event_listener, event: claroline_retrieve_used_tags_by_class_and_ids, method: onRetrieveUsedTagsByClassAndIds }
             - { name: kernel.event_listener, event: claroline_retrieve_used_tags_object_by_class_and_ids, method: onRetrieveUsedTagsObjectByClassAndIds }

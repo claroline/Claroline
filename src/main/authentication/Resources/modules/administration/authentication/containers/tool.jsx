@@ -13,7 +13,7 @@ const AuthenticationTool =
     }),
     (dispatch) => ({
       update(prop, value) {
-        dispatch(formActions.updateProp(selectors.FORM_NAME, prop, value))
+        dispatch(formActions.updateProp(selectors.STORE_NAME, prop, value))
       }
     })
   )(AuthenticationComponent)

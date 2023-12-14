@@ -20,7 +20,7 @@ class Updater140000 extends Updater
         $this->connection = $connection;
     }
 
-    public function preUpdate()
+    public function preUpdate(): void
     {
         // Adds migration FQCN in the versions tables (required by new doctrine migrations version)
         $this->renameMigrations();
@@ -28,7 +28,7 @@ class Updater140000 extends Updater
         // the namespace of the migrations has changed (eg. removed the `pdo_mysql` part)
         // Doctrine will try to re-execute migrations because of the renaming
         // we need to update the version classnames in the DB to avoid breaking updates
-        $this->log('Updating doctrine migration versions...');
+        $this->logger->info('Updating doctrine migration versions...');
         // retrieve all doctrine versions tables
         $stmt = $this->connection->prepare('
             SHOW TABLES LIKE "doctrine_%_versions"
@@ -38,7 +38,7 @@ class Updater140000 extends Updater
         $tables = $results->fetchFirstColumn();
 
         foreach ($tables as $table) {
-            $this->log(sprintf('Updating doctrine migration versions %s...', $table));
+            $this->logger->info(sprintf('Updating doctrine migration versions %s...', $table));
 
             // update last version execution
             $versionsQuery = $this->connection->prepare("

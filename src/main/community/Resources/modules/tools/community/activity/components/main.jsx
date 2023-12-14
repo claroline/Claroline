@@ -1,18 +1,15 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {displayDuration} from '#/main/app/intl'
-import {ContentTitle} from '#/main/app/content/components/title'
 import {ContentCounter} from '#/main/app/content/components/counter'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {ActivityChart} from '#/plugin/analytics/charts/activity/containers/chart'
-import {ActivityLogs} from '#/main/community/tools/community/activity/components/logs'
-import {ActivityConnections} from '#/main/community/tools/community/activity/components/connections'
+import {LogFunctionalList} from '#/main/log/components/functional-list'
+import {selectors} from '#/main/community/tools/community/activity/store'
 
 class ActivityMain extends Component {
   constructor(props) {
@@ -51,55 +48,38 @@ class ActivityMain extends Component {
             color={schemeCategory20c[5]}
             value={!this.state.loaded ? '?' : this.props.count.groups}
           />
-
-          <ContentCounter
-            icon="fa fa-clock"
-            label={trans('connections')}
-            color={schemeCategory20c[9]}
-            value={!this.state.loaded ? '?' : (get(this.props.count, 'connections.count') + (get(this.props.count, 'connections.avgTime') ?
-              ' ('+trans('connection_avg_time', {time: displayDuration(this.props.count.connections.avgTime)}, 'analytics')+')' :
-              ''
-            ))}
-          />
         </div>
-
-        <div className="row">
-          <div className="col-md-12">
-            <ActivityChart url={['apiv2_community_activity_global', {contextId: this.props.contextId}]} />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-md-6">
-            <ContentTitle title={trans('activity')} />
-            <ActivityLogs contextId={this.props.contextId} actionTypes={this.props.actionTypes} />
-          </div>
-
-          <div className="col-md-6">
-            <ContentTitle title={trans('connections')} />
-            <ActivityConnections contextId={this.props.contextId} />
-          </div>
-        </div>
+        <LogFunctionalList
+          className="component-container"
+          name={selectors.STORE_NAME + '.logs'}
+          url={['apiv2_community_functional_logs', {contextId: this.props.contextId}]}
+          customDefinition={[
+            {
+              name: 'workspace',
+              type: 'workspace',
+              label: trans('workspace'),
+              displayable: isEmpty(this.props.contextId),
+              displayed: isEmpty(this.props.contextId)
+            }, {
+              name: 'resource',
+              type: 'resource',
+              label: trans('resource'),
+              displayed: true
+            }
+          ]}
+        />
       </ToolPage>
     )
   }
 }
-  
 
 ActivityMain.propTypes = {
   path: T.string.isRequired,
   contextId: T.string.isRequired,
-  actionTypes: T.array,
   count: T.shape({
     users: T.number,
-    roles: T.number,
-    groups: T.number,
-    connections: T.shape({
-      count: T.number,
-      avgTime: T.number
-    })
+    groups: T.number
   }).isRequired,
-  canEdit: T.bool.isRequired,
   fetch: T.func.isRequired
 }
 

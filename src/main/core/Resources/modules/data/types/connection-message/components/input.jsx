@@ -46,7 +46,7 @@ const ConnectionMessageInput = props => {
           primaryAction={{
             type: LINK_BUTTON,
             label: trans('open', {}, 'actions'),
-            target: route('main_settings')+'/messages/form/'+props.value.id
+            target: route('connection_messages')+'/form/'+props.value.id
           }}
           actions={[
             {

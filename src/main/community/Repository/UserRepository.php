@@ -56,10 +56,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         return $this->loadUserByUsername($identifier);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($username): UserInterface
     {
         $isUserAdminCodeUnique = $this->platformConfigHandler->getParameter('is_user_admin_code_unique');
 
@@ -94,9 +91,6 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         $em->flush();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function refreshUser(UserInterface $user)
     {
         $class = get_class($user);
@@ -119,9 +113,6 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         return $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsClass($class)
     {
         return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
@@ -202,7 +193,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
     /**
      * Counts the users subscribed in a platform role.
      */
-    public function countUsersByRole(Role $role, $organizations = null, ?string $dateCreated = null): int
+    public function countUsersByRole(Role $role, $organizations = null, string $dateCreated = null): int
     {
         $qb = $this->createQueryBuilder('user')
             ->select('COUNT(DISTINCT user.id)')

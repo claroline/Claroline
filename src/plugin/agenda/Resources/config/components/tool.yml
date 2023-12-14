@@ -1,0 +1,7 @@
+services:
+    Claroline\AgendaBundle\Component\Tool\AgendaTool:
+        parent: Claroline\AppBundle\Component\Tool\AbstractTool
+        tags: [ 'claroline.component.tool' ]
+        arguments:
+            - '@security.token_storage'
+            - '@translator'

@@ -13,6 +13,7 @@ import {MODAL_USERS} from '#/main/community/modals/users'
 
 import {MODAL_USER_DISABLE_INACTIVE} from '#/main/community/tools/community/user/modals/disable-inactive'
 import {selectors} from '#/main/community/tools/community/user/store'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const UserList = props =>
   <ToolPage
@@ -65,59 +66,62 @@ const UserList = props =>
       <Alert type="warning" style={{marginTop: 20}}>{trans('users_limit_reached')}</Alert>
     }
 
-    <BaseUserList
-      path={props.path}
-      name={selectors.LIST_NAME}
-      url={!isEmpty(props.contextData) ?
-        ['apiv2_workspace_list_users', {id: props.contextData.id}] :
-        ['apiv2_user_list']
-      }
-      customActions={(rows) => !isEmpty(props.contextData) ? [{
-        name: 'unregister',
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-user-minus',
-        label: trans('unregister', {}, 'actions'),
-        callback: () => props.unregisterUsers(rows, props.contextData),
-        dangerous: true,
-        displayed: props.canRegister,
-        disabled: -1 === rows.findIndex(row => -1 !== row.roles.findIndex(r => r.context !== 'group' && r.workspace && r.workspace.id === props.contextData.id)),
-        confirm: {
-          title: trans('unregister', {}, 'actions'),
-          message: transChoice('unregister_users_confirm_message', rows.length, {count: rows.length})
+    <ContentSizing size="full">
+      <BaseUserList
+        flush={true}
+        path={props.path}
+        name={selectors.LIST_NAME}
+        url={!isEmpty(props.contextData) ?
+          ['apiv2_workspace_list_users', {id: props.contextData.id}] :
+          ['apiv2_user_list']
         }
-      }] : []}
-      customDefinition={[
-        {
-          name: 'groups',
-          label: trans('groups'),
-          type: 'groups',
-          options: {
-            picker: !isEmpty(props.contextData) ? {
-              url: ['apiv2_workspace_list_groups', {id: props.contextData.id}]
-            } : undefined
-          },
-          displayed: false,
-          displayable: false,
-          sortable: false
-        }, {
-          name: 'roles',
-          type: 'roles',
-          label: trans('roles'),
-          calculated: (user) => !isEmpty(props.contextData) ?
-            getWorkspaceRoles(user.roles, props.contextData.id) :
-            getPlatformRoles(user.roles),
-          displayed: true,
-          filterable: true,
-          sortable: false,
-          options: {
-            picker: !isEmpty(props.contextData) ? {
-              url: ['apiv2_workspace_list_roles_configurable', {workspace: props.contextData.id}],
-              filters: []
-            } : undefined
+        customActions={(rows) => !isEmpty(props.contextData) ? [{
+          name: 'unregister',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-user-minus',
+          label: trans('unregister', {}, 'actions'),
+          callback: () => props.unregisterUsers(rows, props.contextData),
+          dangerous: true,
+          displayed: props.canRegister,
+          disabled: -1 === rows.findIndex(row => -1 !== row.roles.findIndex(r => r.context !== 'group' && r.workspace && r.workspace.id === props.contextData.id)),
+          confirm: {
+            title: trans('unregister', {}, 'actions'),
+            message: transChoice('unregister_users_confirm_message', rows.length, {count: rows.length})
           }
-        }
-      ]}
-    />
+        }] : []}
+        customDefinition={[
+          {
+            name: 'groups',
+            label: trans('groups'),
+            type: 'groups',
+            options: {
+              picker: !isEmpty(props.contextData) ? {
+                url: ['apiv2_workspace_list_groups', {id: props.contextData.id}]
+              } : undefined
+            },
+            displayed: false,
+            displayable: false,
+            sortable: false
+          }, {
+            name: 'roles',
+            type: 'roles',
+            label: trans('roles'),
+            calculated: (user) => !isEmpty(props.contextData) ?
+              getWorkspaceRoles(user.roles, props.contextData.id) :
+              getPlatformRoles(user.roles),
+            displayed: true,
+            filterable: true,
+            sortable: false,
+            options: {
+              picker: !isEmpty(props.contextData) ? {
+                url: ['apiv2_workspace_list_roles_configurable', {workspace: props.contextData.id}],
+                filters: []
+              } : undefined
+            }
+          }
+        ]}
+      />
+    </ContentSizing>
   </ToolPage>
 
 UserList.propTypes = {

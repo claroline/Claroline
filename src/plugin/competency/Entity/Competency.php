@@ -11,22 +11,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Gedmo\Tree(type="nested")
+ *
  * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\CompetencyRepository")
+ *
  * @ORM\Table(name="hevinci_competency")
  */
-class Competency implements \JsonSerializable
+class Competency
 {
     use Uuid;
 
     /**
      * @ORM\Id
+     *
      * @ORM\Column(type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
      * @ORM\Column()
+     *
      * @Assert\NotBlank
      */
     private $name;
@@ -56,6 +61,7 @@ class Competency implements \JsonSerializable
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     *
      * @ORM\JoinTable(name="hevinci_competency_resource")
      */
     private $resources;
@@ -70,31 +76,37 @@ class Competency implements \JsonSerializable
 
     /**
      * @Gedmo\TreeLeft
+     *
      * @ORM\Column(name="lft", type="integer")
      */
     private $lft;
 
     /**
      * @Gedmo\TreeLevel
+     *
      * @ORM\Column(name="lvl", type="integer")
      */
     private $lvl;
 
     /**
      * @Gedmo\TreeRight
+     *
      * @ORM\Column(name="rgt", type="integer")
      */
     private $rgt;
 
     /**
      * @Gedmo\TreeRoot
+     *
      * @ORM\Column(name="root", type="integer", nullable=true)
      */
     private $root;
 
     /**
      * @Gedmo\TreeParent
+     *
      * @ORM\ManyToOne(targetEntity="Competency", inversedBy="children")
+     *
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $parent;
@@ -105,6 +117,7 @@ class Competency implements \JsonSerializable
      *     mappedBy="parent",
      *     cascade={"persist"}
      * )
+     *
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     private $children;
@@ -309,17 +322,5 @@ class Competency implements \JsonSerializable
     public function setResourceCount($resourceCount)
     {
         $this->resourceCount = $resourceCount;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'description' => $this->description,
-            'scale' => $this->scale ? $this->scale->getName() : null,
-            'level' => $this->lvl,
-            'resourceCount' => $this->resourceCount,
-        ];
     }
 }

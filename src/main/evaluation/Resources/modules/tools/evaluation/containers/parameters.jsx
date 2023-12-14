@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {selectors as workspaceSelectors} from '#/main/core/workspace/store'
+import {selectors as workspaceSelectors} from '#/main/app/contexts/workspace/store'
 
 import {EvaluationParameters as EvaluationParametersComponent} from '#/main/evaluation/tools/evaluation/components/parameters'
 import {actions} from '#/main/evaluation/tools/evaluation/store'

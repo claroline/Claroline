@@ -17,23 +17,14 @@ use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
-use Claroline\CursusBundle\Event\Log\LogSessionUserRegistrationEvent;
-use Claroline\CursusBundle\Event\Log\LogSessionUserUnregistrationEvent;
 use Claroline\CursusBundle\Manager\SessionManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SessionUserSubscriber implements EventSubscriberInterface
 {
-    private EventDispatcherInterface $eventDispatcher;
-    private SessionManager $sessionManager;
-
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        SessionManager $sessionManager
+        private readonly SessionManager $sessionManager
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->sessionManager = $sessionManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -77,11 +68,9 @@ class SessionUserSubscriber implements EventSubscriberInterface
         }
 
         $this->sessionManager->registerUser($sessionUser);
-
-        $this->eventDispatcher->dispatch(new LogSessionUserRegistrationEvent($event->getObject()), 'log');
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var SessionUser $sessionUser */
         $sessionUser = $event->getObject();
@@ -98,7 +87,5 @@ class SessionUserSubscriber implements EventSubscriberInterface
         $sessionUser = $event->getObject();
 
         $this->sessionManager->unregisterUser($sessionUser);
-
-        $this->eventDispatcher->dispatch(new LogSessionUserUnregistrationEvent($sessionUser), 'log');
     }
 }

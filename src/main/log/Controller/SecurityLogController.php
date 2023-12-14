@@ -17,18 +17,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class SecurityLogController extends AbstractSecurityController
 {
-    private $finderProvider;
-    private $authorization;
-    private $tokenStorage;
-
     public function __construct(
-        FinderProvider $finderProvider,
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly FinderProvider $finder
     ) {
-        $this->finderProvider = $finderProvider;
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -39,14 +32,14 @@ class SecurityLogController extends AbstractSecurityController
         $this->canOpenAdminTool('logs');
 
         return new JsonResponse(
-            $this->finderProvider->search(SecurityLog::class, $request->query->all())
+            $this->finder->search(SecurityLog::class, $request->query->all())
         );
     }
 
     /**
-     * @Route("/list/current", name="apiv2_logs_security_list_current", methods={"GET"})
+     * @Route("/current", name="apiv2_logs_security_list_current", methods={"GET"})
      */
-    public function userLogSecurityAction(Request $request): JsonResponse
+    public function listForCurrentUserAction(Request $request): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
@@ -60,7 +53,7 @@ class SecurityLogController extends AbstractSecurityController
         ];
 
         return new JsonResponse(
-            $this->finderProvider->search(SecurityLog::class, $query)
+            $this->finder->search(SecurityLog::class, $query)
         );
     }
 }

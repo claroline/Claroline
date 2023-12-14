@@ -9,12 +9,12 @@ class ToolShortcutSerializer
 {
     use SerializerTrait;
 
-    public function getName()
+    public function getName(): string
     {
         return 'home_tool_shortcut_tab';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return ToolShortcutTab::class;
     }

@@ -71,16 +71,16 @@ class ResourceEmbedded extends Component {
       },
       [configSelectors.STORE_NAME]: this.props.config,
       // mount the resource tool in the store
+      context: {
+        loaded: true,
+        type: 'desktop'
+      },
       tool: {
         loaded: true,
-        name: 'resources',
-        basePath: '/desktop',
-        currentContext: {
-          type: 'desktop'
-        }
+        name: 'resources'
       },
-      resources: { // TODO : retrieve tool store name from var
-        root: this.props.resourceNode
+      resources: {
+        root: this.props.resourceNode // I don't know why this is required
       },
       // mount the resource in the store
       resource: {

@@ -12,8 +12,8 @@
 namespace Claroline\LogBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\MappedSuperclass
@@ -24,32 +24,49 @@ abstract class AbstractLog
 
     /**
      * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="create")
-     *
-     * @var \DateTimeInterface
      */
-    protected $date;
-
-    /**
-     * @ORM\Column(type="text")
-     */
-    protected $details;
+    protected \DateTimeInterface $date;
 
     /**
      * @ORM\Column(type="string")
      */
-    protected $event;
+    protected string $event;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected ?string $details = null;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
+     * @ORM\JoinColumn(name="doer_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected ?User $doer = null;
+
+    /**
+     * @ORM\Column(name="doer_ip", type="string", nullable=true)
+     */
+    protected ?string $doerIp = null;
+
+    /**
+     * @ORM\Column(name="doer_country", type="string", nullable=true)
+     */
+    protected ?string $doerCountry = null;
+
+    /**
+     * @ORM\Column(name="doer_city", type="string", nullable=true)
+     */
+    protected ?string $doerCity = null;
 
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $dateTime): self
+    public function setDate(\DateTimeInterface $dateTime): void
     {
         $this->date = $dateTime;
-
-        return $this;
     }
 
     public function getDetails(): ?string
@@ -57,11 +74,9 @@ abstract class AbstractLog
         return $this->details;
     }
 
-    public function setDetails(string $details): self
+    public function setDetails(string $details): void
     {
         $this->details = $details;
-
-        return $this;
     }
 
     public function getEvent(): ?string
@@ -69,10 +84,48 @@ abstract class AbstractLog
         return $this->event;
     }
 
-    public function setEvent(string $event): self
+    public function setEvent(string $event): void
     {
         $this->event = $event;
+    }
 
-        return $this;
+    public function getDoer(): ?User
+    {
+        return $this->doer;
+    }
+
+    public function setDoer(?User $doer): void
+    {
+        $this->doer = $doer;
+    }
+
+    public function getDoerIp(): ?string
+    {
+        return $this->doerIp;
+    }
+
+    public function setDoerIp(?string $doerIp): void
+    {
+        $this->doerIp = $doerIp;
+    }
+
+    public function getDoerCountry(): ?string
+    {
+        return $this->doerCountry;
+    }
+
+    public function setDoerCountry(?string $doerCountry): void
+    {
+        $this->doerCountry = $doerCountry;
+    }
+
+    public function getDoerCity(): ?string
+    {
+        return $this->doerCity;
+    }
+
+    public function setDoerCity(?string $doerCity): void
+    {
+        $this->doerCity = $doerCity;
     }
 }

@@ -9,7 +9,6 @@ import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 
 import {
   CURRENT_TAB,
-  ADMINISTRATION_SET,
   TABS_LOAD
 } from '#/plugin/home/tools/home/store/actions'
 import {selectors} from '#/plugin/home/tools/home/store/selectors'
@@ -17,10 +16,6 @@ import {reducer as editorReducer} from '#/plugin/home/tools/home/editor/store/re
 import {reducer as playerReducer} from '#/plugin/home/tools/home/player/store/reducer'
 
 const reducer = combineReducers({
-  administration: makeReducer(false, {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.administration || false,
-    [ADMINISTRATION_SET]: (state, action) => action.administration
-  }),
   currentTabId: makeReducer(null, {
     [CURRENT_TAB]: (state, action) => action.tab
   }),

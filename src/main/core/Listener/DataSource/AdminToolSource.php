@@ -3,28 +3,20 @@
 namespace Claroline\CoreBundle\Listener\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Component\Context\AdministrationContext;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AdminToolSource
 {
-    /** @var FinderProvider */
-    private $finder;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /**
-     * AdminToolSource constructor.
-     */
-    public function __construct(FinderProvider $finder, TokenStorageInterface $tokenStorage)
-    {
-        $this->finder = $finder;
-        $this->tokenStorage = $tokenStorage;
+    public function __construct(
+        private readonly FinderProvider $finder,
+        private readonly TokenStorageInterface $tokenStorage
+    ) {
     }
 
-    public function getData(GetDataEvent $event)
+    public function getData(GetDataEvent $event): void
     {
         $options = $event->getOptions();
 
@@ -32,7 +24,9 @@ class AdminToolSource
             $options['hiddenFilters']['roles'] = $this->tokenStorage->getToken()->getRoleNames();
         }
 
-        $event->setData($this->finder->search(AdminTool::class, $options));
+        $options['hiddenFilters']['context'] = AdministrationContext::getName();
+
+        $event->setData($this->finder->search(OrderedTool::class, $options));
         $event->stopPropagation();
     }
 }

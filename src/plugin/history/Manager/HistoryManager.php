@@ -2,7 +2,6 @@
 
 namespace Claroline\HistoryBundle\Manager;
 
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -11,26 +10,17 @@ use Claroline\HistoryBundle\Entity\ResourceRecent;
 use Claroline\HistoryBundle\Entity\WorkspaceRecent;
 use Claroline\HistoryBundle\Repository\ResourceRecentRepository;
 use Claroline\HistoryBundle\Repository\WorkspaceRecentRepository;
-use Psr\Log\LoggerAwareInterface;
 
-class HistoryManager implements LoggerAwareInterface
+class HistoryManager
 {
-    use LoggableTrait;
-
     /**
      * The number of results to fetch when retrieving user history.
      */
-    const HISTORY_RESULTS = 5;
+    public const HISTORY_RESULTS = 5;
 
-    /** @var ObjectManager */
-    private $om;
-
-    /**
-     * HistoryManager constructor.
-     */
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
+    public function __construct(
+        private readonly ObjectManager $om
+    ) {
     }
 
     /**
@@ -38,7 +28,7 @@ class HistoryManager implements LoggerAwareInterface
      *
      * @return Workspace[]
      */
-    public function getWorkspaces(User $user)
+    public function getWorkspaces(User $user): array
     {
         /** @var WorkspaceRecentRepository $repo */
         $repo = $this->om->getRepository(WorkspaceRecent::class);
@@ -55,7 +45,7 @@ class HistoryManager implements LoggerAwareInterface
      *
      * @return ResourceNode[]
      */
-    public function getResources(User $user)
+    public function getResources(User $user): array
     {
         /** @var ResourceRecentRepository $repo */
         $repo = $this->om->getRepository(ResourceRecent::class);
@@ -70,7 +60,7 @@ class HistoryManager implements LoggerAwareInterface
     /**
      * Add a workspace to the user history.
      */
-    public function addWorkspace(Workspace $workspace, User $user)
+    public function addWorkspace(Workspace $workspace, User $user): void
     {
         // If object already in recent workspaces, update date
         $recentWorkspace = $this->om
@@ -95,7 +85,7 @@ class HistoryManager implements LoggerAwareInterface
     /**
      * Add a resource to the user history.
      */
-    public function addResource(ResourceNode $resource, User $user)
+    public function addResource(ResourceNode $resource, User $user): void
     {
         // If object already in recent workspaces, update date
         $recentResource = $this->om
@@ -115,23 +105,5 @@ class HistoryManager implements LoggerAwareInterface
 
         $this->om->persist($recentResource);
         $this->om->flush();
-    }
-
-    /**
-     * Clean all recent workspaces and resources that are more than 6 months old.
-     */
-    public function cleanRecent()
-    {
-        $this->log('Cleaning recent workspaces entries that are older than six months');
-
-        /** @var WorkspaceRecentRepository $recentWorkspaceRepo */
-        $recentWorkspaceRepo = $this->om->getRepository(WorkspaceRecent::class);
-        $recentWorkspaceRepo->removeAllEntriesBefore(new \DateTime('-6 months'));
-
-        $this->log('Cleaning recent resources entries that are older than six months');
-
-        /** @var ResourceRecentRepository $recentResourceRepo */
-        $recentResourceRepo = $this->om->getRepository(ResourceRecent::class);
-        $recentResourceRepo->removeAllEntriesBefore(new \DateTime('-6 months'));
     }
 }

@@ -39,6 +39,7 @@ registry.add('ClarolineCoreBundle', {
    * Provides actions for base Claroline objects.
    */
   actions: {
+    account: {},
     administration: {},
     desktop: {},
 
@@ -113,7 +114,6 @@ registry.add('ClarolineCoreBundle', {
   tools: {
     'workspaces'     : () => { return import(/* webpackChunkName: "core-tool-workspaces" */ '#/main/core/tools/workspaces') },
     'resources'      : () => { return import(/* webpackChunkName: "core-tool-resources" */  '#/main/core/tools/resources') },
-    'parameters'     : () => { return import(/* webpackChunkName: "core-tool-parameters" */ '#/main/core/tools/parameters') },
     'resource_trash' : () => { return import(/* webpackChunkName: "core-tool-trash" */      '#/main/core/tools/trash') },
     'locations'      : () => { return import(/* webpackChunkName: "core-tool-locations" */  '#/main/core/tools/locations') }
   },
@@ -122,10 +122,10 @@ registry.add('ClarolineCoreBundle', {
    * Provides Administration tools.
    */
   administration: {
-    'main_settings' : () => { return import(/* webpackChunkName: "core-admin-parameters" */  '#/main/core/administration/parameters') },
-    'templates'     : () => { return import(/* webpackChunkName: "core-admin-template" */    '#/main/core/administration/template') },
-    'integration'   : () => { return import(/* webpackChunkName: "core-admin-integration" */ '#/main/core/administration/integration') },
-    'plugins'       : () => { return import(/* webpackChunkName: "core-admin-plugins" */     '#/main/core/administration/plugins') },
+    'parameters'         : () => { return import(/* webpackChunkName: "core-admin-parameters" */  '#/main/core/administration/parameters') },
+    'templates'          : () => { return import(/* webpackChunkName: "core-admin-template" */    '#/main/core/administration/template') },
+    'integration'        : () => { return import(/* webpackChunkName: "core-admin-integration" */ '#/main/core/administration/integration') },
+    'plugins'            : () => { return import(/* webpackChunkName: "core-admin-plugins" */     '#/main/core/administration/plugins') },
     'connection_messages': () => { return import(/* webpackChunkName: "core-admin-connection-messages" */ '#/main/core/administration/connection-messages') },
   },
 

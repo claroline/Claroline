@@ -20,30 +20,16 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CursusBundle\Entity\Course;
-use Claroline\CursusBundle\Event\Log\LogCourseCreateEvent;
-use Claroline\CursusBundle\Event\Log\LogCourseDeleteEvent;
-use Claroline\CursusBundle\Event\Log\LogCourseEditEvent;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class CourseSubscriber implements EventSubscriberInterface
 {
-    private TokenStorageInterface $tokenStorage;
-    private EventDispatcherInterface $eventDispatcher;
-    private ObjectManager $om;
-    private FileManager $fileManager;
-
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        FileManager $fileManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly FileManager $fileManager
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -53,7 +39,6 @@ class CourseSubscriber implements EventSubscriberInterface
             Crud::getEventName('create', 'post', Course::class) => 'postCreate',
             Crud::getEventName('update', 'pre', Course::class) => 'preUpdate',
             Crud::getEventName('update', 'post', Course::class) => 'postUpdate',
-            Crud::getEventName('delete', 'pre', Course::class) => 'preDelete',
             Crud::getEventName('delete', 'post', Course::class) => 'postDelete',
         ];
     }
@@ -102,8 +87,6 @@ class CourseSubscriber implements EventSubscriberInterface
         if ($course->getThumbnail()) {
             $this->fileManager->linkFile(Course::class, $course->getUuid(), $course->getThumbnail());
         }
-
-        $this->eventDispatcher->dispatch(new LogCourseCreateEvent($course), 'log');
     }
 
     public function preUpdate(UpdateEvent $event): void
@@ -133,13 +116,6 @@ class CourseSubscriber implements EventSubscriberInterface
             $course->getThumbnail(),
             !empty($oldData['thumbnail']) ? $oldData['thumbnail'] : null
         );
-
-        $this->eventDispatcher->dispatch(new LogCourseEditEvent($course), 'log');
-    }
-
-    public function preDelete(DeleteEvent $event): void
-    {
-        $this->eventDispatcher->dispatch(new LogCourseDeleteEvent($event->getObject()), 'log');
     }
 
     public function postDelete(DeleteEvent $event): void

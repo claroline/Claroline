@@ -24,17 +24,10 @@ const currentTabTitle = createSelector(
   (context, currentTab) => getTabTitle(context, currentTab)
 )
 
-const readOnly = createSelector(
-  [homeSelectors.context, homeSelectors.administration, currentTab],
-  (context, administration, currentTab) => !currentTab || (currentTab.context === 'administration' &&
-    context.type === 'desktop' && !administration)
-)
-
 export const selectors = {
   FORM_NAME,
 
   editorTabs,
   currentTab,
-  currentTabTitle,
-  readOnly
+  currentTabTitle
 }

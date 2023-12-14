@@ -16,10 +16,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class WorkspaceSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private TokenStorageInterface $tokenStorage,
-        private ObjectManager $om,
-        private SerializerProvider $serializer,
-        private CourseManager $courseManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly CourseManager $courseManager
     ) {
     }
 

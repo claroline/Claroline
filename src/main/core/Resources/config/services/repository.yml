@@ -3,16 +3,6 @@ services:
         Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository:
             tags: [doctrine.repository_service]
 
-    Claroline\CoreBundle\Repository\Tool\AdministrationToolRepository:
-        arguments:
-          - '@Doctrine\Persistence\ManagerRegistry'
-          - '@Claroline\CoreBundle\Manager\PluginManager'
-
-    Claroline\CoreBundle\Repository\Tool\OrderedToolRepository:
-        arguments:
-          - '@Doctrine\Persistence\ManagerRegistry'
-          - '@Claroline\CoreBundle\Manager\PluginManager'
-
     Claroline\CoreBundle\Repository\Resource\ResourceActionRepository:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
@@ -22,13 +12,3 @@ services:
         arguments:
           - '@Doctrine\Persistence\ManagerRegistry'
           - '@Claroline\CoreBundle\Manager\PluginManager'
-
-    Claroline\CoreBundle\Repository\Tool\ToolRepository:
-        arguments:
-          - '@Doctrine\Persistence\ManagerRegistry'
-          - '@Claroline\CoreBundle\Manager\PluginManager'
-
-    Claroline\CoreBundle\Repository\Log\LogRepository:
-        arguments:
-          - '@Doctrine\Persistence\ManagerRegistry'
-          - '@Claroline\CoreBundle\API\Finder\Log\LogFinder'

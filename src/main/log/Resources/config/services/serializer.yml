@@ -1,17 +1,22 @@
 services:
-    Claroline\LogBundle\Serializer\SecurityLogSerializer:
-        tags: [ claroline.serializer ]
-        arguments:
-            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-
-    Claroline\LogBundle\Serializer\MessageLogSerializer:
-        tags: [ claroline.serializer ]
-        arguments:
-            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-
     Claroline\LogBundle\Serializer\FunctionalLogSerializer:
         tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
+
+    Claroline\LogBundle\Serializer\MessageLogSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+
+    Claroline\LogBundle\Serializer\OperationalLogSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+
+    Claroline\LogBundle\Serializer\SecurityLogSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'

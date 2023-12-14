@@ -43,7 +43,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-            - '@Claroline\CoreBundle\Manager\ResourceManager'
 
     Claroline\CoreBundle\Subscriber\Crud\WorkspaceSubscriber:
         tags: [ kernel.event_subscriber ]
@@ -53,7 +52,6 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
@@ -80,37 +78,3 @@ services:
         tags: [kernel.event_subscriber]
         arguments:
             - '@Claroline\CoreBundle\Manager\MailManager'
-
-    # Administration
-    Claroline\CoreBundle\Subscriber\Administration\ParametersSubscriber:
-        tags: [kernel.event_subscriber]
-        arguments:
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
-            - '@Claroline\CoreBundle\Manager\LocaleManager'
-            - '@Claroline\ThemeBundle\Manager\IconSetManager'
-
-    Claroline\CoreBundle\Subscriber\Administration\ConnectionMessagesSubscriber:
-        tags: [ kernel.event_subscriber ]
-
-    # Tools
-    Claroline\CoreBundle\Subscriber\Tool\LocationsSubscriber:
-        tags: [kernel.event_subscriber]
-
-    Claroline\CoreBundle\Subscriber\Tool\ResourcesSubscriber:
-        tags: [kernel.event_subscriber]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\API\Crud'
-
-    Claroline\CoreBundle\Subscriber\Tool\ResourceTrashSubscriber:
-        tags: [kernel.event_subscriber]
-
-    Claroline\CoreBundle\Subscriber\Tool\WorkspacesSubscriber:
-        tags: [kernel.event_subscriber]
-        arguments:
-            - '@security.authorization_checker'
-
-
-

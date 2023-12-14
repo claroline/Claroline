@@ -12,16 +12,10 @@
 namespace Claroline\InstallationBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Update\UpdaterExecution;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityRepository;
 
-class UpdaterExecutionRepository extends ServiceEntityRepository
+class UpdaterExecutionRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, UpdaterExecution::class);
-    }
-
     public function hasBeenExecuted(string $updaterClass): bool
     {
         try {

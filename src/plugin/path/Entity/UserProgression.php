@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Represents the progression of a User in a Step.
  *
  * @ORM\Table(name="innova_path_progression")
+ *
  * @ORM\Entity()
  */
 class UserProgression
@@ -18,145 +19,57 @@ class UserProgression
     use Id;
 
     /**
-     * Default status when creating a new UserProgression.
-     *
-     * @var string
-     */
-    protected static $statusDefault = 'seen';
-
-    /**
-     * List of available status.
-     *
-     * @var array
-     */
-    protected static $statusAvailable = [
-        'unseen',
-        'seen',
-        'to_do',
-        'done',
-        'to_review',
-    ];
-
-    /**
      * Step for which we track the progression.
      *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step")
-     * @ORM\JoinColumn(name="step_id", referencedColumnName="id", onDelete="CASCADE")
      *
-     * @var Step
+     * @ORM\JoinColumn(name="step_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $step;
+    private Step $step;
 
     /**
      * User for which we track the progression.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      *
-     * @var User
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    protected $user;
+    private ?User $user = null;
 
     /**
      * Current state of the Step.
      *
      * @ORM\Column(name="progression_status", type="string")
-     *
-     * @var string
      */
-    protected $status;
+    private string $status = 'seen';
 
-    public function __construct()
-    {
-        // Set the default status
-        $this->status = static::$statusDefault;
-    }
-
-    /**
-     * Get Step.
-     *
-     * @return Step
-     */
-    public function getStep()
+    public function getStep(): ?Step
     {
         return $this->step;
     }
 
-    /**
-     * Set Step.
-     *
-     * @return UserProgression
-     */
-    public function setStep(Step $step)
+    public function setStep(Step $step): void
     {
         $this->step = $step;
-
-        return $this;
     }
 
-    /**
-     * Get User.
-     *
-     * @return User
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * Set User.
-     *
-     * @return UserProgression
-     */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
-
-        return $this;
     }
 
-    /**
-     * Get status.
-     *
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * Set status.
-     *
-     * @param string $status
-     *
-     * @return UserProgression
-     */
-    public function setStatus($status)
+    public function setStatus(string $status): void
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get the default status.
-     *
-     * @return string
-     */
-    public static function getDefaultStatus()
-    {
-        return static::$statusDefault;
-    }
-
-    /**
-     * Get the list of all available status.
-     *
-     * @return array
-     */
-    public static function getAvailableStatus()
-    {
-        return static::$statusAvailable;
     }
 }

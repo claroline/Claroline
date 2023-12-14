@@ -3,7 +3,7 @@ framework:
         failure_transport: failed
         transports:
             high_priority:
-                dsn: 'doctrine://default' # overridden in MessengerConfigPass
+                dsn: 'doctrine://messenger' # overridden in MessengerConfigPass
                 options:
                     # queue_name is specific to the doctrine transport
                     queue_name: high
@@ -17,10 +17,10 @@ framework:
                     multiplier: 2
                     max_delay: 0
 
-            # Create a dedicated transport for the claroline transfer features (eg. workspace copy, transfer plugin)
+            # Create dedicated transport for the claroline transfer features (e.g. workspace copy, transfer plugin)
             # We don't want these heavy tasks to delay the other app messages
             low_priority:
-                dsn: 'doctrine://default' # overridden in MessengerConfigPass
+                dsn: 'doctrine://messenger' # overridden in MessengerConfigPass
                 options:
                     # queue_name is specific to the doctrine transport
                     queue_name: low
@@ -30,7 +30,7 @@ framework:
                     # also there is no chance things will work better if we retry the transfer
                     max_retries: 0
 
-            failed: 'doctrine://default?queue_name=failed'
+            failed: 'doctrine://messenger?queue_name=failed'
 
         buses:
             messenger.bus.default:

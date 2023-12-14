@@ -6,14 +6,14 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
 /**
- * @todo : make compliant with Psr\Log\LoggerAwareTrait and Psr\Log\LoggerTrait.
+ * @deprecated use Psr\Log\LoggerAwareTrait
  */
 trait LoggableTrait
 {
     /** @var LoggerInterface */
     protected $logger;
 
-    public function log($message, $logLevel = null)
+    public function log($message, $logLevel = null): void
     {
         if ($this->logger) {
             $time = date('m-d-y h:i:s').': ';
@@ -26,10 +26,8 @@ trait LoggableTrait
 
     /**
      * Sets a logger.
-     *
-     * @param LoggerInterface $logger
      */
-    public function setLogger(LoggerInterface $logger = null)
+    public function setLogger(LoggerInterface $logger = null): void
     {
         $this->logger = $logger;
     }

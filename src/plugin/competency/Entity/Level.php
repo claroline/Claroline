@@ -8,15 +8,18 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\LevelRepository")
+ *
  * @ORM\Table(name="hevinci_level")
  */
-class Level implements \JsonSerializable
+class Level
 {
     use Uuid;
 
     /**
      * @ORM\Id
+     *
      * @ORM\Column(type="integer")
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -33,6 +36,7 @@ class Level implements \JsonSerializable
 
     /**
      * @ORM\ManyToOne(targetEntity="Scale", inversedBy="levels")
+     *
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $scale;
@@ -100,14 +104,5 @@ class Level implements \JsonSerializable
     public function getScale()
     {
         return $this->scale;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'value' => $this->value,
-        ];
     }
 }

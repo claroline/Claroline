@@ -8,9 +8,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait Code
 {
     /**
-     * An unique code for the entity.
+     * A unique code for the entity.
      *
      * @ORM\Column(unique=true)
+     *
      * @Assert\NotBlank()
      *
      * @var string
@@ -22,7 +23,7 @@ trait Code
         return $this->code;
     }
 
-    public function setCode(string $code)
+    public function setCode(string $code): void
     {
         $this->code = $code;
     }

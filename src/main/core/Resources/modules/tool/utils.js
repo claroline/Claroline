@@ -4,13 +4,33 @@ import identity from 'lodash/identity'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {showBreadcrumb} from '#/main/app/layout/utils'
-import {getApps} from '#/main/app/plugins'
+import {getApp, getApps} from '#/main/app/plugins'
 
 import {constants} from '#/main/core/tool/constants'
 
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {route as adminRoute} from '#/main/core/administration/routing'
+
+function getTools(contextType) {
+  if (constants.TOOL_ADMINISTRATION === contextType) {
+    return getApps('administration')
+  } else if (constants.TOOL_ACCOUNT === contextType) {
+    return getApps('account')
+  }
+
+  return getApps('tools')
+}
+
+function getTool(name, contextType) {
+  if (constants.TOOL_ADMINISTRATION === contextType) {
+    return getApp('administration', name)()
+  } else if (constants.TOOL_ACCOUNT === contextType) {
+    return getApp('account', name)()
+  }
+
+  return getApp('tools', name)()
+}
 
 function getActions(tool, context, toolRefresher, path, currentUser) {
   // adds default refresher actions
@@ -47,6 +67,25 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
   let path = []
 
   switch (contextType) {
+    case constants.TOOL_ACCOUNT:
+      path = [
+        {
+          type: LINK_BUTTON,
+          label: trans('account'),
+          target: '/account'
+        }
+      ]
+
+      if (toolName) {
+        path.push({
+          type: LINK_BUTTON,
+          label: trans(toolName, {}, 'tools'),
+          target: toolRoute(toolName)
+        })
+      }
+
+      break
+
     case constants.TOOL_DESKTOP:
       path = [
         {
@@ -102,7 +141,7 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
         {
           type: LINK_BUTTON,
           label: trans('administration'),
-          target: '/admin'
+          target: '/administration'
         }
       ]
 
@@ -144,6 +183,8 @@ function showToolBreadcrumb(contextType, contextData) {
 }
 
 export {
+  getTools,
+  getTool,
   getActions,
   getToolBreadcrumb,
   showToolBreadcrumb

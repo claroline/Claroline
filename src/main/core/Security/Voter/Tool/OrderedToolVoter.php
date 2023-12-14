@@ -11,9 +11,15 @@
 
 namespace Claroline\CoreBundle\Security\Voter\Tool;
 
+use Claroline\AppBundle\Component\Context\ContextProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
+use Claroline\CoreBundle\Component\Context\PublicContext;
+use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Security\ToolPermissions;
+use Claroline\CoreBundle\Entity\Tool\ToolRights;
+use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
+use Claroline\CoreBundle\Repository\Tool\ToolRightsRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -23,24 +29,53 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  */
 class OrderedToolVoter extends AbstractVoter
 {
+    private ContextProvider $contextProvider;
+    private ToolMaskDecoderManager $maskManager;
+    private ToolRightsRepository $rightsRepository;
+
+    public function __construct(
+        ObjectManager $om,
+        ContextProvider $contextProvider,
+        ToolMaskDecoderManager $maskManager
+    ) {
+        $this->contextProvider = $contextProvider;
+        $this->maskManager = $maskManager;
+        $this->rightsRepository = $om->getRepository(ToolRights::class);
+    }
+
     /**
      * @param OrderedTool $object
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
-        if (!empty($object->getWorkspace())) {
-            // let the workspace voter decide
-            $isGranted = $this->isGranted(ToolPermissions::getPermission($object->getTool()->getName(), $attributes[0]), $object->getWorkspace());
-        } else {
-            // let the base tool voter decide
-            $isGranted = $this->isGranted($attributes[0], $object->getTool());
+        // No rights management for PublicContext for now
+        if (PublicContext::getName() === $object->getContextName()) {
+            if (self::OPEN === $attributes[0] || $this->isGranted('ROLE_HOME_MANAGER')) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+
+            return VoterInterface::ACCESS_DENIED;
         }
 
-        if ($isGranted) {
-            return VoterInterface::ACCESS_GRANTED;
+        if (WorkspaceContext::getName() === $object->getContextName()) {
+            $wsContext = $this->contextProvider->getContext(WorkspaceContext::getName(), $object->getContextId());
+            if ($this->isGranted(self::ADMINISTRATE, $wsContext->getObject($object->getContextId()))) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
         }
 
-        return VoterInterface::ACCESS_DENIED;
+        $decoder = $this->maskManager->getMaskDecoderByToolAndName($object->getName(), $attributes[0]);
+        if ($decoder) {
+            $mask = $this->rightsRepository->findMaximumRights($token->getRoleNames(), $object);
+
+            if ($mask & $decoder->getValue()) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+
+            return VoterInterface::ACCESS_DENIED;
+        }
+
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
     public function getClass(): string
@@ -50,7 +85,7 @@ class OrderedToolVoter extends AbstractVoter
 
     public function getSupportedActions(): ?array
     {
-        //atm, null means "everything is supported... implement this later"
+        // atm, null means "everything is supported... implement this later"
         return null;
     }
 }

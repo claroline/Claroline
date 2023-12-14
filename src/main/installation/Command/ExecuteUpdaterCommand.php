@@ -11,6 +11,8 @@
 
 namespace Claroline\InstallationBundle\Command;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Update\UpdaterExecution;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\InstallationBundle\Repository\UpdaterExecutionRepository;
 use Claroline\InstallationBundle\Updater\NonReplayableUpdaterInterface;
@@ -29,15 +31,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ExecuteUpdaterCommand extends Command
 {
-    private $updaterExecutionRepository;
-    private $updaters;
+    private UpdaterExecutionRepository $updaterExecutionRepository;
+    private ContainerInterface $updaters;
 
     /**
      * @param ContainerInterface|Updater[] $updaters The Updater service registry
      */
-    public function __construct(UpdaterExecutionRepository $updaterExecutionRepository, ContainerInterface $updaters)
+    public function __construct(ObjectManager $om, ContainerInterface $updaters)
     {
-        $this->updaterExecutionRepository = $updaterExecutionRepository;
+        $this->updaterExecutionRepository = $om->getRepository(UpdaterExecution::class);
         $this->updaters = $updaters;
 
         parent::__construct();

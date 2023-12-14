@@ -51,6 +51,7 @@ class ResourceUserEvaluationController
 
     /**
      * @Route("/{nodeId}", name="apiv2_resource_evaluation_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("resourceNode", class="Claroline\CoreBundle\Entity\Resource\ResourceNode", options={"mapping": {"nodeId": "uuid"}})
      */
     public function listAction(ResourceNode $resourceNode, Request $request): JsonResponse
@@ -74,6 +75,7 @@ class ResourceUserEvaluationController
 
     /**
      * @Route("/attempts/{userEvaluationId}", name="apiv2_resource_evaluation_list_attempts", methods={"GET"})
+     *
      * @EXT\ParamConverter("userEvaluation", class="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation", options={"mapping": {"userEvaluationId": "id"}})
      */
     public function listAttemptsAction(ResourceUserEvaluation $userEvaluation, Request $request): JsonResponse

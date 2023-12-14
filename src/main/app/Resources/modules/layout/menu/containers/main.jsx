@@ -6,6 +6,7 @@ import {actions, selectors} from '#/main/app/layout/menu/store'
 const MenuMain =
   connect(
     (state) => ({
+      opened: selectors.opened(state),
       untouched: selectors.untouched(state),
       section: selectors.openedSection(state)
     }),

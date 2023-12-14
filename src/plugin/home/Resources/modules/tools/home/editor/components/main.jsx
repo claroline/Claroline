@@ -30,8 +30,7 @@ const EditorMain = props =>
             return Editor
           }
 
-          // tab does not exist
-          // let's redirection open the first available
+          // tab does not exist, let redirection open the first available
           routeProps.history.replace(props.path+'/edit')
 
           return null
@@ -42,11 +41,8 @@ const EditorMain = props =>
 
 EditorMain.propTypes = {
   path: T.string.isRequired,
-  currentUser: T.object,
   setCurrentTab: T.func.isRequired,
   currentContext: T.object.isRequired,
-  administration: T.bool.isRequired,
-  readOnly: T.bool.isRequired,
   tabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),

@@ -19,15 +19,20 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    private $plugin;
-    private $listNames;
-    private $listTools;
-    private $listWidgets;
-    private $updateMode;
-    private $listResourceActions;
+    private PluginBundleInterface $plugin;
+    private array $listNames = [];
+    private array $listTools = [];
+    private array $listWidgets = [];
+    private array $listResourceActions = [];
+    private bool $updateMode = false;
 
-    public function __construct(PluginBundleInterface $plugin, array $resourceNames, array $listTools, array $listResourceActions, array $listWidgets)
-    {
+    public function __construct(
+        PluginBundleInterface $plugin,
+        array $resourceNames,
+        array $listTools,
+        array $listResourceActions,
+        array $listWidgets
+    ) {
         $this->plugin = $plugin;
         $this->listNames = $resourceNames;
         $this->listTools = $listTools;
@@ -36,26 +41,25 @@ class Configuration implements ConfigurationInterface
         $this->updateMode = false;
     }
 
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('config');
         $rootNode = $treeBuilder->getRootNode();
-        //maybe remove that line and edit plugins later
         $pluginSection = $rootNode->children('plugin');
+
         $this->addWidgetSection($pluginSection);
         $this->addDataSourceSection($pluginSection);
         $this->addResourceSection($pluginSection);
         $this->addResourceActionSection($pluginSection);
         $this->addToolSection($pluginSection);
         $this->addThemeSection($pluginSection);
-        $this->addAdminToolSection($pluginSection);
         $this->addTemplateSection($pluginSection);
         $this->addResourceIconsSection($pluginSection);
 
         return $treeBuilder;
     }
 
-    private function addResourceSection(NodeBuilder $pluginSection)
+    private function addResourceSection(NodeBuilder $pluginSection): void
     {
         $plugin = $this->plugin;
         $pluginFqcn = get_class($plugin);
@@ -145,7 +149,7 @@ class Configuration implements ConfigurationInterface
         ->end()->end();
     }
 
-    public function addResourceActionSection(NodeBuilder $pluginSection)
+    public function addResourceActionSection(NodeBuilder $pluginSection): void
     {
         $plugin = $this->plugin;
         $pluginFqcn = get_class($plugin);
@@ -187,7 +191,7 @@ class Configuration implements ConfigurationInterface
         ->end()->end();
     }
 
-    private function addWidgetSection(NodeBuilder $pluginSection)
+    private function addWidgetSection(NodeBuilder $pluginSection): void
     {
         $widgets = $this->listWidgets;
         $plugin = $this->plugin;
@@ -231,7 +235,7 @@ class Configuration implements ConfigurationInterface
         ->end()->end();
     }
 
-    private function addDataSourceSection(NodeBuilder $pluginSection)
+    private function addDataSourceSection(NodeBuilder $pluginSection): void
     {
         $pluginSection
             ->arrayNode('data_sources')
@@ -252,7 +256,7 @@ class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    private function addToolSection(NodeBuilder $pluginSection)
+    private function addToolSection(NodeBuilder $pluginSection): void
     {
         $tools = $this->listTools;
         $plugin = $this->plugin;
@@ -276,15 +280,9 @@ class Configuration implements ConfigurationInterface
                                 ->thenInvalid($pluginFqcn.' : the tool name already exists')
                             ->end()
                         ->end()
-                        ->booleanNode('is_displayable_in_workspace')->isRequired()->end()
-                        ->booleanNode('is_displayable_in_desktop')->isRequired()->end()
-                        ->scalarNode('class')->end()
+                        ->scalarNode('icon')->end()
                         ->arrayNode('tool_rights')
-                            ->prototype('array')
-                                ->children()
-                                    ->scalarNode('name')->isRequired()->end()
-                                ->end()
-                            ->end()
+                            ->scalarPrototype()->end()
                         ->end()
                     ->end()
                 ->end()
@@ -292,7 +290,7 @@ class Configuration implements ConfigurationInterface
         ->end()->end();
     }
 
-    private function addThemeSection(NodeBuilder $pluginSection)
+    private function addThemeSection(NodeBuilder $pluginSection): void
     {
         $pluginSection
             ->arrayNode('themes')
@@ -305,21 +303,7 @@ class Configuration implements ConfigurationInterface
         ->end()->end();
     }
 
-    private function addAdminToolSection(NodeBuilder $pluginSection)
-    {
-        $pluginSection
-            ->arrayNode('admin_tools')
-                ->prototype('array')
-                    ->children()
-                        ->scalarNode('name')->isRequired()->end()
-                        ->scalarNode('class')->end()
-                    ->end()
-                ->end()
-            ->end()
-        ->end()->end();
-    }
-
-    private function addTemplateSection(NodeBuilder $pluginSection)
+    private function addTemplateSection(NodeBuilder $pluginSection): void
     {
         $pluginSection
             ->arrayNode('templates')
@@ -336,7 +320,7 @@ class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    private function addResourceIconsSection(NodeBuilder $pluginSection)
+    private function addResourceIconsSection(NodeBuilder $pluginSection): void
     {
         $pluginSection
             ->arrayNode('resource_icons')
@@ -352,37 +336,29 @@ class Configuration implements ConfigurationInterface
             ->end();
     }
 
-    public static function isResourceClassLoadable($v)
+    public static function isResourceClassLoadable($v): bool
     {
         return class_exists($v);
     }
 
-    public static function isAbstractResourceExtended($v)
+    public static function isAbstractResourceExtended($v): bool
     {
         return (new $v()) instanceof AbstractResource;
     }
 
-    public static function isNameAlreadyExist($v, $listNames)
+    public static function isNameAlreadyExist($v, $listNames): bool
     {
         return !in_array($v, $listNames);
     }
 
-    /**
-     * @param $updateMode
-     *
-     * @return Configuration
-     */
-    public function setUpdateMode($updateMode)
+    public function setUpdateMode(bool $updateMode): self
     {
         $this->updateMode = $updateMode;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isInUpdateMode()
+    public function isInUpdateMode(): bool
     {
         return $this->updateMode;
     }

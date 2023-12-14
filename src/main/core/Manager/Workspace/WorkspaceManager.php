@@ -196,6 +196,9 @@ class WorkspaceManager implements LoggerAwareInterface
         return $this->workspaceRepo->checkAccess($workspace, $user->getRoles());
     }
 
+    /**
+     * @deprecated use AuthorizationChecker::isGranted('ADMINISTRATE', $workspace)
+     */
     public function isManager(Workspace $workspace, TokenInterface $token): bool
     {
         if (!$token->getUser() instanceof User) {
@@ -314,7 +317,6 @@ class WorkspaceManager implements LoggerAwareInterface
                         ['type' => 'tool', 'name' => 'resources'],
                         ['type' => 'tool', 'name' => 'agenda'],
                         ['type' => 'tool', 'name' => 'community'],
-                        ['type' => 'tool', 'name' => 'dashboard'],
                         ['type' => 'action', 'name' => 'favourite'],
                         ['type' => 'action', 'name' => 'configure'],
                         ['type' => 'action', 'name' => 'impersonation'],

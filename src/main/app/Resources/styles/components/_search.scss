@@ -1,6 +1,6 @@
 .list-search {
     flex: 1;
-    background: var(--#{$prefix}secondary-bg);
+    background: $list-controls-bg;
 
     .search-icon {
         font-size: $font-size-lg;
@@ -76,7 +76,7 @@
 
             padding: 6px 15px;
             margin: 0;
-            border-bottom: 1px solid #F0f0f0;
+            border-bottom: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
 
             &:nth-of-type(odd) {
                 background: #fafafa;
@@ -109,41 +109,42 @@
     }
 
     .search-filter {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
         font-size: $font-size-sm;
         margin: $padding-large-vertical $padding-large-horizontal $padding-large-vertical 0;
         line-height: $line-height-large;
         white-space: nowrap;
-        background: $state-info-bg;
-        color: $state-info-text;
+        background: var(--#{$prefix}primary-bg-subtle);
+        color: var(--#{$prefix}primary-text-emphasis);
 
         @include border-radius($border-radius-sm);
 
         .search-filter-prop {
-            display: inline-block;
-            background: $state-info-text;
-            color: $state-info-bg;
+            color: var(--#{$prefix}primary-bg-subtle);
+            background: var(--#{$prefix}primary-text-emphasis);
             padding: 0.4em 0.6em;
-            font-weight: bold;
+            font-weight: $font-weight-bolder;
 
             @include border-radius($border-radius-sm 0 0 $border-radius-sm);
         }
 
         .search-filter-value {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             padding: 0.4em 0.6em;
 
             .btn {
                 font-size: $font-size-sm;
-                line-height: 1;
+                line-height: $line-height-large;
                 border: none;
-                color: $state-info-text;
+                color: var(--#{$prefix}primary-text);
                 padding: 0;
                 margin-left: 0.6em;
 
                 &:hover,
                 &:focus {
-                    color: darken($state-info-text, 10%)
+                    color: var(--#{$prefix}primary-text-emphasis);
                 }
             }
         }

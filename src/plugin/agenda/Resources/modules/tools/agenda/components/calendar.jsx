@@ -124,7 +124,7 @@ const AgendaCalendar = (props) => {
 AgendaCalendar.propTypes = {
   path: T.string.isRequired,
   contextData: T.shape({
-    id: T.number
+    id: T.string
   }),
   currentUser: T.shape({
     // TODO : propTypes

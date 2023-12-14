@@ -34,7 +34,7 @@ plugin:
           scope: [object, collection]
           api: [PUT]
 
-        # Unpublishes one ore more resources
+        # Unpublishes one or more resources
         - name: unpublish
           decoder: administrate
           group: management
@@ -128,45 +128,63 @@ plugin:
           tags: [content]
           exportable: true
 
-    admin_tools:
-        - name: main_settings
-          class: cog
+    tools:
+        - name: workspaces
+          icon: book
+          tool_rights:
+              - archive
+
+        - name: resources
+          icon: folder
+
+        - name: resource_trash
+          icon: trash-alt
+
+        - name: locations
+          icon: map-marker-alt
+          tool_rights:
+              - book
+
+        - name: parameters
+          icon: cog
 
         - name: templates
-          class: file-alt
+          icon: file-alt
 
         - name: integration
-          class: plug
+          icon: plug
 
         - name: plugins
-          class: puzzle-piece
+          icon: puzzle-piece
 
         - name: connection_messages
-          class: comment-dots
+          icon: comment-dots
 
     widgets:
         - name: simple
           class: Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget
-          context: [workspace, desktop, home, administration]
+          context: [workspace, desktop, public, administration]
           tags: [content]
 
         - name: list
           class: Claroline\CoreBundle\Entity\Widget\Type\ListWidget
+          context: [workspace, desktop, public, administration]
           sources: [list]
 
         - name: resource
           class: Claroline\CoreBundle\Entity\Widget\Type\ResourceWidget
+          context: [workspace, desktop, public, administration]
           sources: [resource]
 
     data_sources:
         - name: resources
           type: list
-          context: [workspace, desktop, home, administration]
+          context: [workspace, desktop, public, administration]
           tags: [content]
 
         - name: resource
           type: resource
-          context: [workspace, desktop, home, administration]
+          context: [workspace, desktop, public, administration]
           tags: [content]
 
         - name: personal_workspace
@@ -176,7 +194,7 @@ plugin:
 
         - name: workspaces
           type: list
-          context: [desktop, workspace, home, administration]
+          context: [desktop, workspace, public, administration]
           tags: [content]
 
         - name: my_workspaces
@@ -193,31 +211,6 @@ plugin:
           type: list
           context: [desktop, workspace]
           tags: [structure]
-
-    tools:
-        - name: workspaces
-          class: book
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true
-          tool_rights:
-              - name: archive
-
-        - name: resources
-          class: folder
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: true
-
-        - name: resource_trash
-          class: trash-alt
-          is_displayable_in_workspace: true
-          is_displayable_in_desktop: false
-
-        - name: locations
-          class: map-marker-alt
-          is_displayable_in_workspace: false
-          is_displayable_in_desktop: true
-          tool_rights:
-              - name: book
 
     templates:
         - name: email_layout

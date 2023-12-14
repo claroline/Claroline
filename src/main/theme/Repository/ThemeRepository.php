@@ -9,8 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ThemeRepository extends ServiceEntityRepository
 {
-    /** @var array */
-    private $bundles;
+    private array $bundles;
 
     public function __construct(ManagerRegistry $registry, PluginManager $pluginManager)
     {
@@ -19,7 +18,7 @@ class ThemeRepository extends ServiceEntityRepository
         parent::__construct($registry, Theme::class);
     }
 
-    public function findAll(bool $onlyEnabled = false)
+    public function findAll(bool $onlyEnabled = false): array
     {
         $dql = '
             SELECT theme 

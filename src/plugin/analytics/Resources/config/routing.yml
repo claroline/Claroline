@@ -1,5 +1,0 @@
-claro_analytics:
-    resource: "@ClarolineAnalyticsBundle/Controller/"
-    type: annotation
-    options:
-        expose: true

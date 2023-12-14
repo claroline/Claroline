@@ -1,5 +1,4 @@
 import get from 'lodash/get'
-import isEqual from 'lodash/isEqual'
 
 import {makeActionCreator, makeInstanceActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
@@ -9,7 +8,6 @@ import {selectors} from '#/main/core/tool/store/selectors'
 
 // actions
 export const TOOL_OPEN              = 'TOOL_OPEN'
-export const TOOL_CLOSE             = 'TOOL_CLOSE'
 export const TOOL_LOAD              = 'TOOL_LOAD'
 export const TOOL_SET_LOADED        = 'TOOL_SET_LOADED'
 export const TOOL_SET_ACCESS_DENIED = 'TOOL_SET_ACCESS_DENIED'
@@ -28,76 +26,51 @@ actions.setNotFound = makeActionCreator(TOOL_SET_NOT_FOUND, 'notFound')
 actions.toggleFullscreen = makeActionCreator(TOOL_TOGGLE_FULLSCREEN)
 actions.setFullscreen = makeActionCreator(TOOL_SET_FULLSCREEN, 'fullscreen')
 
-actions.open = (name, context, basePath) => (dispatch, getState) => {
+actions.open = (name) => (dispatch, getState) => {
   const prevName = selectors.name(getState())
-  const prevContext = selectors.context(getState())
 
-  if (name !== prevName || !isEqual(prevContext, context)) {
+  if (name !== prevName) {
     dispatch({
       type: TOOL_OPEN,
-      name: name,
-      context: context,
-      basePath: basePath
+      name: name
     })
-
-    dispatch(actions.setLoaded(false))
   }
 }
-
-actions.close = makeActionCreator(TOOL_CLOSE)
 
 /**
  * Fetch a tool.
  *
  * @param {string} toolName
- * @param {object} context
+ * @param {string} context
+ * @param {string|null} contextId
  */
-actions.fetch = (toolName, context) => (dispatch) => {
-  if (context.url) {
-    return dispatch({
-      [API_REQUEST]: {
-        silent: true,
-        url: context.url,
-        success: (response, dispatch) => {
-          // load tool base data
-          dispatch(actions.load(response, context))
-
-          // load tool type data
-          dispatch(actions.loadType(toolName, response, context))
-
-          dispatch(actions.setLoaded(true))
-          dispatch(menuActions.changeSection('tool'))
-        },
-        error: (error, status) => {
-          switch (status) {
-            case 401:
-            case 403:
-              dispatch(actions.setLoaded(true))
-              dispatch(actions.setAccessDenied(true))
-              break
-
-            case 404:
-              dispatch(actions.setLoaded(true))
-              dispatch(actions.setNotFound(true))
-              break
-          }
-        }
-      }
-    })
-  } else {
-    dispatch(actions.setLoaded(true))
-    dispatch(menuActions.changeSection('tool'))
-
-    return Promise.resolve({})
-  }
-}
-
-actions.closeTool = (toolName, context) => ({
-  [API_REQUEST] : {
+actions.fetch = (toolName, context, contextId) => (dispatch) => dispatch({
+  [API_REQUEST]: {
     silent: true,
-    url: ['apiv2_tool_close', {name: toolName, context: context.type, contextId: get(context, 'data.id', null)}],
-    request: {
-      method: 'PUT'
+    url: ['claro_tool_open', {context: context, contextId: contextId, name: toolName}],
+    success: (response, dispatch) => {
+      // load tool base data
+      dispatch(actions.load(response, context))
+
+      // load tool type data
+      dispatch(actions.loadType(toolName, response, context))
+
+      dispatch(actions.setLoaded(true))
+      dispatch(menuActions.changeSection('tool'))
+    },
+    error: (error, status) => {
+      switch (status) {
+        case 401:
+        case 403:
+          dispatch(actions.setAccessDenied(true))
+          dispatch(actions.setLoaded(true))
+          break
+
+        case 404:
+          dispatch(actions.setNotFound(true))
+          dispatch(actions.setLoaded(true))
+          break
+      }
     }
   }
 })

@@ -6,6 +6,7 @@
   "userEnable": "User username has just been enabled.",
   "forgotPassword": "User username has just requested a forgotten password.",
   "newPassword": "User username has changed his password.",
+
   "password_strength.very_weak": "Very weak",
   "password_strength.weak": "Weak",
   "password_strength.medium": "Medium",

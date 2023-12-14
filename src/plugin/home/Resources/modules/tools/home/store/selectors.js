@@ -13,7 +13,6 @@ const context = toolSelectors.context
 const defaultTab = createSelector(
   [context],
   (context) => ({
-    context: 'administration' === context.type ? 'admin' : context.type,
     type: 'widgets',
     class: 'Claroline\\HomeBundle\\Entity\\Type\\WidgetsTab',
     title: trans('home'),
@@ -36,17 +35,11 @@ const currentTabId = createSelector(
   (store) => store.currentTabId
 )
 
-const administration = createSelector(
-  [store],
-  (store) => store.administration
-)
-
 export const selectors = {
   STORE_NAME,
 
   store,
   defaultTab,
   currentTabId,
-  administration,
   context
 }

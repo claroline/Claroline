@@ -5,7 +5,7 @@ import {apiFetch} from '#/main/app/api/fetch'
  * Declares a new middleware that will automatically catch actions
  * which returns an API_REQUEST.
  *
- * @see `ApiRequest` from '#/main/app/api/prop-types" to know the expected request format.
+ * @see `ApiRequest` from '#/main/app/api/prop-types' to know the expected request format.
  */
 const apiMiddleware = () => next => action => {
   const requestParameters = action[constants.API_REQUEST]

@@ -11,114 +11,84 @@
 
 namespace Claroline\HomeBundle\Entity;
 
+use Claroline\AppBundle\Entity\Display\Color;
+use Claroline\AppBundle\Entity\Display\Hidden;
+use Claroline\AppBundle\Entity\Display\Icon;
+use Claroline\AppBundle\Entity\Display\Order;
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\HasContext;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Meta\Color;
-use Claroline\AppBundle\Entity\Meta\Icon;
-use Claroline\AppBundle\Entity\Meta\Order;
-use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Restriction\AccessCode;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
-use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro_home_tab")
  */
 class HomeTab
 {
     use Id;
     use Uuid;
+    // display
     use Order;
     use Poster;
     use Color;
     use Icon;
-    // restrictions
     use Hidden;
+    // restrictions
     use AccessibleFrom;
     use AccessibleUntil;
     use AccessCode;
-
-    const TYPE_WORKSPACE = 'workspace';
-    const TYPE_DESKTOP = 'desktop';
-    const TYPE_ADMIN_DESKTOP = 'administration';
-    const TYPE_HOME = 'home';
-    const TYPE_ADMIN = 'admin';
+    use HasContext;
 
     /**
-     * @ORM\Column(nullable=false)
+     * The type of the tab (e.g. Widgets, Url).
      *
-     * @var string
-     */
-    private $context;
-
-    /**
      * @ORM\Column(nullable=false)
-     *
-     * @var string
      */
-    private $type;
+    private string $type;
 
     /**
      * The class that holds the tab custom configuration if any.
      *
      * @ORM\Column(nullable=true)
-     *
-     * @var string
      */
-    private $class = null;
+    private ?string $class = null;
 
     /**
      * @ORM\Column(nullable=true)
      */
-    private $name;
+    private ?string $name = null;
 
     /**
      * @ORM\Column(nullable=false, type="text")
      */
-    private $longTitle = '';
+    private string $longTitle = '';
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $centerTitle = false;
+    private bool $centerTitle = false;
 
     /**
      * @ORM\Column(type="boolean", options={"default"=1})
      */
-    private $showTitle = true;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
-     *
-     * @var User
-     */
-    private $user = null;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="CASCADE")
-     *
-     * @var Workspace
-     */
-    private $workspace = null;
+    private bool $showTitle = true;
 
     /**
      * Parent tab.
      *
-     * @var HomeTab
-     *
      * @ORM\ManyToOne(targetEntity="Claroline\HomeBundle\Entity\HomeTab", inversedBy="children")
+     *
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $parent = null;
+    private ?HomeTab $parent = null;
 
     /**
      * Children tabs.
@@ -126,12 +96,14 @@ class HomeTab
      * @var ArrayCollection|HomeTab[]
      *
      * @ORM\OneToMany(targetEntity="Claroline\HomeBundle\Entity\HomeTab", mappedBy="parent", cascade={"persist", "remove"})
+     *
      * @ORM\OrderBy({"order" = "ASC"})
      */
     private $children;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
+     *
      * @ORM\JoinTable(name="claro_home_tab_roles")
      *
      * @var ArrayCollection|Role[]
@@ -146,22 +118,12 @@ class HomeTab
         $this->roles = new ArrayCollection();
     }
 
-    public function getContext(): string
-    {
-        return $this->context;
-    }
-
-    public function setContext(string $context)
-    {
-        $this->context = $context;
-    }
-
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -171,27 +133,27 @@ class HomeTab
         return $this->class;
     }
 
-    public function setClass(string $class = null)
+    public function setClass(string $class = null): void
     {
         $this->class = $class;
     }
 
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName(string $name = null): void
     {
         $this->name = $name;
     }
 
-    public function getLongTitle()
+    public function getLongTitle(): string
     {
         return $this->longTitle;
     }
 
-    public function setLongTitle($longTitle)
+    public function setLongTitle($longTitle): void
     {
         $this->longTitle = $longTitle;
     }
@@ -201,7 +163,7 @@ class HomeTab
         return $this->centerTitle;
     }
 
-    public function setCenterTitle($centerTitle)
+    public function setCenterTitle($centerTitle): void
     {
         $this->centerTitle = $centerTitle;
     }
@@ -211,35 +173,15 @@ class HomeTab
         return $this->showTitle;
     }
 
-    public function setShowTitle(bool $showTitle)
+    public function setShowTitle(bool $showTitle): void
     {
         $this->showTitle = $showTitle;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-    }
-
-    public function getWorkspace(): ?Workspace
-    {
-        return $this->workspace;
-    }
-
-    public function setWorkspace(Workspace $workspace = null)
-    {
-        $this->workspace = $workspace;
     }
 
     /**
      * Set parent.
      */
-    public function setParent(HomeTab $parent = null)
+    public function setParent(HomeTab $parent = null): void
     {
         if ($parent !== $this->parent) {
             $this->parent = $parent;
@@ -271,7 +213,7 @@ class HomeTab
     /**
      * Add new child to the tab.
      */
-    public function addChild(HomeTab $homeTab)
+    public function addChild(HomeTab $homeTab): void
     {
         if (!$this->children->contains($homeTab)) {
             $this->children->add($homeTab);
@@ -282,7 +224,7 @@ class HomeTab
     /**
      * Remove a tab from children.
      */
-    public function removeChild(HomeTab $homeTab)
+    public function removeChild(HomeTab $homeTab): void
     {
         if ($this->children->contains($homeTab)) {
             $this->children->removeElement($homeTab);
@@ -298,20 +240,15 @@ class HomeTab
         return $this->roles;
     }
 
-    public function addRole(Role $role)
+    public function addRole(Role $role): void
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
         }
     }
 
-    public function removeRole(Role $role)
+    public function removeRole(Role $role): void
     {
         $this->roles->removeElement($role);
-    }
-
-    public function emptyRoles()
-    {
-        $this->roles->clear();
     }
 }

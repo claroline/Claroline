@@ -10,7 +10,6 @@
 
 namespace Claroline\CoreBundle\Repository\Tool;
 
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Doctrine\ORM\EntityRepository;
 
@@ -18,8 +17,10 @@ class ToolMaskDecoderRepository extends EntityRepository
 {
     /**
      * @return ToolMaskDecoder[]
+     *
+     * @deprecated we don't need a custom repo method for this
      */
-    public function findMaskDecodersByTool(Tool $tool)
+    public function findMaskDecodersByTool(string $toolName): array
     {
         $dql = '
             SELECT tmd
@@ -28,17 +29,15 @@ class ToolMaskDecoderRepository extends EntityRepository
             ORDER BY tmd.value ASC
         ';
         $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('tool', $tool);
+        $query->setParameter('tool', $toolName);
 
         return $query->getResult();
     }
 
     /**
-     * @param string $name
-     *
-     * @return ToolMaskDecoder|null
+     * @deprecated we don't need a custom repo method for this
      */
-    public function findMaskDecoderByToolAndName(Tool $tool, $name)
+    public function findMaskDecoderByToolAndName(string $toolName, string $name): ?ToolMaskDecoder
     {
         $dql = '
             SELECT tmd
@@ -48,13 +47,13 @@ class ToolMaskDecoderRepository extends EntityRepository
             ORDER BY tmd.value ASC
         ';
         $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('tool', $tool);
+        $query->setParameter('tool', $toolName);
         $query->setParameter('name', $name);
 
         return $query->getOneOrNullResult();
     }
 
-    public function findCustomMaskDecodersByTool(Tool $tool)
+    public function findCustomMaskDecodersByTool(string $toolName): array
     {
         $dql = '
             SELECT tmd
@@ -64,8 +63,8 @@ class ToolMaskDecoderRepository extends EntityRepository
             ORDER BY tmd.value ASC
         ';
         $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('tool', $tool);
-        $query->setParameter('defaultActions', ToolMaskDecoder::$defaultActions);
+        $query->setParameter('tool', $toolName);
+        $query->setParameter('defaultActions', ToolMaskDecoder::DEFAULT_ACTIONS);
 
         return $query->getResult();
     }

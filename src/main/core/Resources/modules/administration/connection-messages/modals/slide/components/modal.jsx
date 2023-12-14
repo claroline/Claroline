@@ -10,7 +10,8 @@ import {User as UserTypes} from '#/main/community/prop-types'
 import {Select} from '#/main/app/input/components/select'
 
 import {getActions} from '#/main/core/desktop'
-import {getTools} from '#/main/core/tools'
+import {getTools} from '#/main/core/tool/utils'
+
 const ShortcutRow = (props) => {
   let shortcutChoices = {}
   if ('action' === props.value.type) {
@@ -68,7 +69,7 @@ class SlideFormModal extends Component {
 
     this.state = {
       actions: [],
-      tools: Object.keys(getTools(this.props.currentUser)) || []
+      tools: Object.keys(getTools()) || []
     }
   }
 
@@ -88,11 +89,13 @@ class SlideFormModal extends Component {
       <Modal
         {...omit(this.props, 'formName', 'dataPart')}
         title={this.props.title}
+        size="lg"
       >
         <FormData
           level={5}
           name={this.props.formName}
           dataPart={this.props.dataPart}
+          flush={true}
           sections={[
             {
               title: trans('general'),

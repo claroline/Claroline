@@ -1,14 +1,16 @@
 services:
-    Claroline\MessageBundle\Subscriber\MessageSubscriber:
+    Claroline\MessageBundle\Subscriber\Crud\MessageSubscriber:
+        tags: [ 'kernel.event_subscriber' ]
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\MessageBundle\Manager\MessageManager'
+
+    Claroline\MessageBundle\Subscriber\SendMessageSubscriber:
+        tags: [ 'kernel.event_subscriber' ]
         arguments:
             - '@Claroline\MessageBundle\Manager\MessageManager'
-            - '@doctrine.orm.entity_manager'
-            - '@translator'
-        tags:
-            - { name: kernel.event_subscriber }
 
     Claroline\MessageBundle\Subscriber\Scheduler\SendMessageSubscriber:
+        tags: [ 'kernel.event_subscriber' ]
         arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-        tags:
-            - { name: kernel.event_subscriber }
+            - '@event_dispatcher'

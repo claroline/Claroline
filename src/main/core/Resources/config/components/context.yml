@@ -1,0 +1,38 @@
+services:
+    Claroline\CoreBundle\Component\Context\WorkspaceContext:
+        parent: Claroline\AppBundle\Component\Context\AbstractContext
+        tags: [ 'claroline.component.context' ]
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
+            - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager'
+            - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
+
+    Claroline\CoreBundle\Component\Context\PublicContext:
+        parent: Claroline\AppBundle\Component\Context\AbstractContext
+        tags: [ 'claroline.component.context' ]
+        arguments:
+            - '@Claroline\AppBundle\Manager\SecurityManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\CoreBundle\Component\Context\DesktopContext:
+        parent: Claroline\AppBundle\Component\Context\AbstractContext
+        tags: [ 'claroline.component.context' ]
+        arguments:
+            - '@Claroline\AppBundle\Manager\SecurityManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+
+    Claroline\CoreBundle\Component\Context\AccountContext:
+        parent: Claroline\AppBundle\Component\Context\AbstractContext
+        tags: [ 'claroline.component.context' ]
+        arguments:
+            - '@Claroline\AppBundle\Manager\SecurityManager'
+
+    Claroline\CoreBundle\Component\Context\AdministrationContext:
+        parent: Claroline\AppBundle\Component\Context\AbstractContext
+        tags: [ 'claroline.component.context' ]
+        arguments:
+            - '@Claroline\AppBundle\Manager\SecurityManager'
+            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

@@ -14,7 +14,6 @@ import {selectors} from '#/plugin/home/tools/home/editor/modals/position/store/s
 const PositionModal = props => {
   const parentChoices = props.tabs
     .filter(tab => tab.id !== props.tab.id)
-    .filter(tab => props.administration || 'administration' !== tab.context)
     .reduce((tabChoices, current) => Object.assign(tabChoices, {
       [current.id]: current.title
     }), {})
@@ -22,7 +21,6 @@ const PositionModal = props => {
   const stepChoices = props.tabs
     // only display the sub steps of the selected `parent`
     .filter(tab => tab.id !== props.tab.id && get(tab, 'parent.id') === props.positionData.parent)
-    .filter(tab => props.administration || 'administration' !== tab.context)
     .reduce((tabChoices, current) => Object.assign(tabChoices, {
       [current.id]: current.title
     }), {})
@@ -32,7 +30,7 @@ const PositionModal = props => {
 
   return (
     <Modal
-      {...omit(props, 'tab', 'tabs', 'administration', 'positionData', 'selectEnabled', 'selectAction', 'reset', 'update')}
+      {...omit(props, 'tab', 'tabs', 'positionData', 'selectEnabled', 'selectAction', 'reset', 'update')}
       icon="fa fa-fw fa-arrows"
       title={trans('movement')}
       subtitle={props.tab.title}
@@ -169,7 +167,6 @@ PositionModal.propTypes = {
     order: T.oneOf(['first', 'before', 'after', 'last']),
     tab: T.string
   }),
-  administration: T.bool.isRequired,
   selectEnabled: T.bool,
   selectAction: T.func.isRequired, // action generator
   reset: T.func.isRequired,

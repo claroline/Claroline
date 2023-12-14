@@ -10,23 +10,15 @@ services:
             - '@event_dispatcher'
             - '@Icap\BlogBundle\Manager\PostManager'
 
-    Icap\BlogBundle\Manager\BlogTrackingManager:
-        arguments:
-            - '@event_dispatcher'
-            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
-            - '@translator'
-
     Icap\BlogBundle\Manager\CommentManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Icap\BlogBundle\Manager\BlogTrackingManager'
 
     Icap\BlogBundle\Manager\PostManager:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Icap\BlogBundle\Manager\BlogTrackingManager'
             - '@translator'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@event_dispatcher'

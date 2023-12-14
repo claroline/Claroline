@@ -1,0 +1,9 @@
+services:
+    claroline.migration.manager:
+        class: Claroline\MigrationBundle\Manager\Manager
+        arguments:
+            - '@claroline.migration.generator'
+            - '@claroline.migration.writer'
+            - '@claroline.migration.migrator'
+        calls:
+            - [ setLogger, [ '@logger' ] ]

@@ -1,5 +1,3 @@
-# This file contains only services that cannot be defined using annotations.
-
 imports:
     - { resource: services/checker.yml }
     - { resource: services/command.yml }
@@ -46,17 +44,17 @@ services:
         public: false
 
     #notification listeners
-    claroline.listener.core.notification_listener:
-        class: Claroline\CoreBundle\Listener\Notification\NotificationListener
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: kernel.event_listener, event: create_notification_item_workspace-role-change_right, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_workspace-role-subscribe_user, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_workspace-role-subscribe_group, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_role-subscribe_user, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_role-subscribe_group, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-create, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-publish, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_role-subscribe-queue, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-text-update, method: onCreateNotificationItem }
+        #claroline.listener.core.notification_listener:
+        #class: Claroline\CoreBundle\Listener\Notification\NotificationListener
+            #calls:
+        #- [setContainer, ["@service_container"]]
+            #tags:
+            #- { name: kernel.event_listener, event: create_notification_item_workspace-role-change_right, method: onCreateNotificationItem }
+            #- { name: kernel.event_listener, event: create_notification_item_workspace-role-subscribe_user, method: onCreateNotificationItem }
+            #- { name: kernel.event_listener, event: create_notification_item_workspace-role-subscribe_group, method: onCreateNotificationItem }
+            #- { name: kernel.event_listener, event: create_notification_item_role-subscribe_user, method: onCreateNotificationItem }
+            #- { name: kernel.event_listener, event: create_notification_item_role-subscribe_group, method: onCreateNotificationItem }
+            #- { name: kernel.event_listener, event: create_notification_item_resource-create, method: onCreateNotificationItem }
+            #- { name: kernel.event_listener, event: create_notification_item_resource-publish, method: onCreateNotificationItem }
+            #- { name: kernel.event_listener, event: create_notification_item_role-subscribe-queue, method: onCreateNotificationItem }
+        #- { name: kernel.event_listener, event: create_notification_item_resource-text-update, method: onCreateNotificationItem }
