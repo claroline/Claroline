@@ -66,30 +66,48 @@ class RoleSubscriber implements EventSubscriberInterface
         if (Role::WS_ROLE === $role->getType() && $role->getWorkspace()) {
             // give open access to all the workspace resource
             $this->conn
-                ->prepare("
+                ->prepare('
                     INSERT INTO claro_resource_rights (role_id, mask, resourceNode_id)
-                    SELECT {$role->getId()}, 1, resource.id FROM claro_resource_node resource
-                    WHERE resource.workspace_id = {$role->getWorkspace()->getId()}
-                ")
-                ->execute();
+                        SELECT :roleId, 1, resource.id 
+                        FROM claro_resource_node AS resource
+                        WHERE resource.workspace_id = :workspaceId
+                ')
+                ->executeQuery([
+                    'roleId' => $role->getId(),
+                    'workspaceId' => $role->getWorkspace()->getId(),
+                ]);
 
             // init access rights for the workspace tools
             $this->conn
-                ->prepare("
+                ->prepare('
                     INSERT INTO claro_tool_rights (role_id, mask, ordered_tool_id)
-                    SELECT {$role->getId()}, 0, ot.id 
-                    FROM claro_ordered_tool AS ot
-                    WHERE ot.context_id = {$role->getWorkspace()->getId()}
-                ")
-                ->execute();
+                        SELECT :roleId, 0, ot.id 
+                        FROM claro_ordered_tool AS ot
+                        WHERE ot.context_id = :contextId
+                ')
+                ->executeQuery([
+                    'roleId' => $role->getId(),
+                    'contextId' => $role->getWorkspace()->getUuid(),
+                ]);
         } elseif (Role::PLATFORM_ROLE === $role->getType()) {
             // init access rights for the desktop tools
+            $this->conn
+                ->prepare('
+                    INSERT INTO claro_tool_rights (role_id, mask, ordered_tool_id)
+                        SELECT :roleId, 0, ot.id 
+                        FROM claro_ordered_tool AS ot
+                        WHERE ot.context_id IS NULL
+                ')
+                ->executeQuery([
+                    'roleId' => $role->getId(),
+                ]);
+
             $this->conn
                 ->prepare("
                     INSERT INTO claro_tool_rights (role_id, mask, ordered_tool_id)
                     SELECT {$role->getId()}, 0, ot.id 
                     FROM claro_ordered_tool AS ot
-                    WHERE ot.context_id IS NULL AND user_id IS NULL
+                    WHERE ot.context_id IS NULL AND ot.context_name = {DesktopContext::getName()}
                 ")
                 ->execute();
         }

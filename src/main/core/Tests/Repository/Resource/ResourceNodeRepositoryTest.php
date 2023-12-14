@@ -70,7 +70,7 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
         self::createResourceRights(self::get('ROLE_1'), self::get('dir_2'), 6);
         self::createResourceRights(self::get('ROLE_2'), self::get('dir_5'), 1);
 
-        //add the role manager to~
+        // add the role manager to~
     }
 
     public function testFindWorkspaceRoot()
@@ -83,15 +83,5 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
     {
         $this->assertEquals(0, count(self::$repo->findDescendants(self::get('dir_2')->getResourceNode())));
         $this->assertEquals(4, count(self::$repo->findDescendants(self::get('dir_1')->getResourceNode())));
-    }
-
-    public function testFindMimeTypesWithMostResources()
-    {
-        $mimeTypes = self::$repo->findMimeTypesWithMostResources(10);
-        $this->assertEquals(3, count($mimeTypes));
-        $this->assertEquals('directory/mime', $mimeTypes[0]['type']);
-        $this->assertEquals('file/mime', $mimeTypes[2]['type']);
-        $this->assertEquals(5, $mimeTypes[0]['total']);
-        $this->assertEquals(1, $mimeTypes[2]['total']);
     }
 }

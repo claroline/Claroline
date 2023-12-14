@@ -20,13 +20,21 @@ class PaperManagerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
+        $this->om = $this->getMockBuilder('Claroline\AppBundle\Persistence\ObjectManager')
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getRepository'])
+            ->getMock();
+
+        $this->om
+            ->expects(self::once())
+            ->method('getRepository')
+            ->will(self::returnValue($this->mock('UJM\ExoBundle\Repository\PaperRepository')));
+
         $this->serializer = $this->mock('UJM\ExoBundle\Serializer\Attempt\PaperSerializer');
 
         $this->manager = new PaperManager(
             $this->mock('Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface'),
             $this->om,
-            $this->mock('Symfony\Component\EventDispatcher\EventDispatcherInterface'),
             $this->mock('Claroline\AppBundle\API\Crud'),
             $this->serializer,
             $this->mock('UJM\ExoBundle\Manager\Item\ItemManager'),
