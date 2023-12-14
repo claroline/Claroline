@@ -10,7 +10,15 @@
     "badge_image_desc": "L'icône du badge",
     "badge_image_url_desc": "L'URL de l'icône du badge",
     "badge_name_desc": "Le nom du badge",
+
     "issued_on_desc": "La date d'attribution du badge",
+    "issued_on_datetime_utc_desc": "La date et l'heure d'attribution du badge (UTC)",
+    "issued_on_date_utc_desc": "La date d'attribution du badge (UTC)",
+    "issued_on_time_utc_desc": "L'heure d'attribution du badge (UTC)",
+    "issued_on_datetime_desc": "La date et l'heure d'attribution du badge",
+    "issued_on_date_desc": "La date d'attribution du badge",
+    "issued_on_time_desc": "L'heure d'attribution du badge",
+
     "issuer_box_number_desc": "Le numéro de boîte de l'organisme ayant attribué le badge",
     "issuer_country_desc": "Le pays de l'organisme ayant attribué le badge",
     "issuer_email_desc": "L'adresse mail de l'organisme ayant attribué le badge",

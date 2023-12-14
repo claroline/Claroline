@@ -135,23 +135,24 @@ class AssertionManager
         $organization = $badge->getIssuer();
 
         $locale = $user->getLocale();
-        $placeholders = [
-            //recipient
-            'first_name' => $user->getFirstName(),
-            'last_name' => $user->getLastName(),
-            'username' => $user->getUsername(),
-            // badge
-            'badge_name' => $badge->getName(),
-            'badge_description' => $badge->getDescription(),
-            'badge_image' => '<img src="'.$this->platformManager->getUrl().'/'.$badge->getImage().'" style="max-width: 100px; max-height: 50px;"/>',
-            'badge_image_url' => $this->platformManager->getUrl().'/'.$badge->getImage(),
-            'badge_duration' => $badge->getDurationValidation(),
-            // assertion
-            'assertion_url' => $this->routingHelper->desktopUrl('badges')."/badges/{$badge->getUuid()}/assertion/{$assertion->getUuid()}",
-            'issued_on' => $assertion->getIssuedOn()->format('d-m-Y'),
-            // issuer
-            'issuer_name' => $organization->getName(),
-        ];
+        $placeholders = array_merge([
+                // recipient
+                'first_name' => $user->getFirstName(),
+                'last_name' => $user->getLastName(),
+                'username' => $user->getUsername(),
+                // badge
+                'badge_name' => $badge->getName(),
+                'badge_description' => $badge->getDescription(),
+                'badge_image' => '<img src="'.$this->platformManager->getUrl().'/'.$badge->getImage().'" style="max-width: 100px; max-height: 50px;"/>',
+                'badge_image_url' => $this->platformManager->getUrl().'/'.$badge->getImage(),
+                'badge_duration' => $badge->getDurationValidation(),
+                // assertion
+                'assertion_url' => $this->routingHelper->desktopUrl('badges')."/badges/{$badge->getUuid()}/assertion/{$assertion->getUuid()}",
+                // issuer
+                'issuer_name' => $organization->getName(),
+            ],
+            $this->templateManager->formatDatePlaceholder('issued_on', $assertion->getIssuedOn())
+        );
 
         $title = $this->templateManager->getTemplate('badge_granted', $placeholders, $locale, 'title');
         $content = $this->templateManager->getTemplate('badge_granted', $placeholders, $locale);

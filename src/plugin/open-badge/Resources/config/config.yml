@@ -26,7 +26,12 @@ plugin:
               - badge_image_url
               - badge_duration
               - assertion_url
-              - issued_on
+              - issued_on_datetime_utc
+              - issued_on_date_utc
+              - issued_on_time_utc
+              - issued_on_datetime
+              - issued_on_date
+              - issued_on_time
 
         - name: badge_certificate
           type: pdf
@@ -37,7 +42,12 @@ plugin:
               - badge_image_url
               - badge_duration
               - assertion_id
-              - issued_on
+              - issued_on_datetime_utc
+              - issued_on_date_utc
+              - issued_on_time_utc
+              - issued_on_datetime
+              - issued_on_date
+              - issued_on_time
               - issuer_name
               - issuer_email
               - issuer_phone

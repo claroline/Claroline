@@ -10,7 +10,15 @@
     "badge_image_desc": "The image of the badge",
     "badge_image_url_desc": "The url of the image of the badge",
     "badge_name_desc": "The name of the badge",
+
     "issued_on_desc": "The date when the badge has been issued",
+    "issued_on_datetime_utc_desc": "The date and time when the badge has been issued (UTC)",
+    "issued_on_date_utc_desc": "The date when the badge has been issued (UTC)",
+    "issued_on_time_utc_desc": "The time when the badge has been issued (UTC)",
+    "issued_on_datetime_desc": "The date and time when the badge has been issued",
+    "issued_on_date_desc": "The date when the badge has been issued",
+    "issued_on_time_desc": "The time when the badge has been issued",
+
     "issuer_box_number_desc": "The box number of the organization that has issued the badge",
     "issuer_country_desc": "The country of the organization that has issued the badge",
     "issuer_email_desc": "The email of the organization that has issued the badge",
