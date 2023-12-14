@@ -46,11 +46,7 @@ class Crud
     {
         $object = null;
         if ('id' === $idProp) {
-            if (!is_numeric($id) && property_exists($class, 'uuid')) {
-                $object = $this->om->getRepository($class)->findOneBy(['uuid' => $id]);
-            } else {
-                $object = $this->om->getRepository($class)->findOneBy(['id' => $id]);
-            }
+            $object = $this->om->getRepository($class)->findOneBy(['uuid' => $id]);
         } else {
             $identifiers = $this->schema->getIdentifiers($class);
             if (!in_array($idProp, $identifiers)) {

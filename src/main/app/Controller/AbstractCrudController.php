@@ -88,15 +88,12 @@ abstract class AbstractCrudController
      *     description="Finds an object class $class.",
      *     parameters={
      *          {"name": "field", "type": "string", "description": "The name of the identifier we want to use (eg. id, slug)"},
-     *          {"name": "id", "type": {"string", "integer"}, "description": "The object identifier value"}
+     *          {"name": "id", "type": {"string"}, "description": "The object identifier value"}
      *     },
      *     response={"$object"}
      * )
-     *
-     * @param string|int $id
-     * @param string     $class
      */
-    public function getAction(string $field, $id, $class): JsonResponse
+    public function getAction(string $field, string $id, string $class): JsonResponse
     {
         $options = static::getOptions();
 
@@ -121,6 +118,8 @@ abstract class AbstractCrudController
      *
      * @param string $class
      * @param string $field
+     *
+     * @deprecated call OPTIONS get
      */
     public function existAction($class, $field, $value): JsonResponse
     {
@@ -192,13 +191,13 @@ abstract class AbstractCrudController
      *         "schema":"$schema"
      *     },
      *     parameters={
-     *          {"name": "id", "type": {"string", "integer"}, "description": "The object id or uuid"}
+     *          {"name": "id", "type": {"string"}, "description": "The object uuid"}
      *     },
      *     response={"$object"}
      * )
      *
-     * @param string|int $id
-     * @param string     $class
+     * @param string $id
+     * @param string $class
      */
     public function updateAction($id, Request $request, $class): JsonResponse
     {
@@ -226,7 +225,7 @@ abstract class AbstractCrudController
      * @ApiDoc(
      *     description="Remove an array of object of class $class.",
      *     queryString={
-     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
+     *         {"name": "ids[]", "type": {"string"}, "description": "The object uuid."}
      *     }
      * )
      *
