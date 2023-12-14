@@ -11,7 +11,6 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
-use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Manager\MailManager;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
@@ -25,7 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/group")
@@ -61,27 +59,6 @@ class GroupController extends AbstractCrudController
     }
 
     /**
-     * @ApiDoc(
-     *     description="List the objects of class $class.",
-     *     queryString={
-     *         "$finder",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     },
-     *     response={"$list"}
-     * )
-     */
-    public function listAction(Request $request, $class): JsonResponse
-    {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
-
-        return parent::listAction($request, $class);
-    }
-
-    /**
      * @Route("/password/reset", name="apiv2_group_password_reset", methods={"PUT"})
      */
     public function resetPasswordAction(Request $request): JsonResponse
@@ -111,6 +88,8 @@ class GroupController extends AbstractCrudController
 
     protected function getDefaultHiddenFilters(): array
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             $user = $this->tokenStorage->getToken()->getUser();
 

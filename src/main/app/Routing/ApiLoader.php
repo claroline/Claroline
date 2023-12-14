@@ -19,8 +19,7 @@ class ApiLoader extends Loader
         'deleteBulk' => ['', 'DELETE'],
         'list' => ['', 'GET'],
         'update' => ['/{id}', 'PUT'],
-        'get' => ['/{field}/{id}', 'GET', ['field' => 'id']],
-        'exist' => ['/exist/{field}/{value}', 'GET'],
+        'get' => ['/{field}/{id}', ['GET', 'HEAD'], ['field' => 'id']],
     ];
 
     /** @var bool */
@@ -148,7 +147,7 @@ class ApiLoader extends Loader
 
                             $route = new ApiRoute($pattern, $routeDefaults, []);
                             $route->setAction($name);
-                            $route->setMethods([$options[1]]);
+                            $route->setMethods(is_array($options[1]) ? $options[1] : [$options[1]]);
                             if (isset($options[2])) {
                                 $route->addDefaults($options[2]);
                             }

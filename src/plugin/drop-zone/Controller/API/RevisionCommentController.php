@@ -29,9 +29,4 @@ class RevisionCommentController extends AbstractCrudController
     {
         return RevisionComment::class;
     }
-
-    public function getIgnore(): array
-    {
-        return ['exist'];
-    }
 }

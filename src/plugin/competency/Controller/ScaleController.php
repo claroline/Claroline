@@ -29,9 +29,4 @@ class ScaleController extends AbstractCrudController
     {
         return Scale::class;
     }
-
-    public function getIgnore(): array
-    {
-        return ['exist'];
-    }
 }

@@ -33,22 +33,22 @@ abstract class AbstractCrudController
      */
     abstract public function getName(): string;
 
-    public function setFinder(FinderProvider $finder)
+    public function setFinder(FinderProvider $finder): void
     {
         $this->finder = $finder;
     }
 
-    public function setSerializer(SerializerProvider $serializer)
+    public function setSerializer(SerializerProvider $serializer): void
     {
         $this->serializer = $serializer;
     }
 
-    public function setCrud(Crud $crud)
+    public function setCrud(Crud $crud): void
     {
         $this->crud = $crud;
     }
 
-    public function setObjectManager(ObjectManager $om)
+    public function setObjectManager(ObjectManager $om): void
     {
         $this->om = $om;
     }
@@ -63,43 +63,26 @@ abstract class AbstractCrudController
      *     response={"$object"}
      * )
      */
-    public function getAction(string $field, string $id, string $class): JsonResponse
+    public function getAction(Request $request, string $field, string $id): JsonResponse
     {
-        $options = static::getOptions();
+        if (Request::METHOD_HEAD === $request->getMethod()) {
+            if (!$this->crud->exist($this->getClass(), $id, $field)) {
+                throw new NotFoundHttpException(sprintf('No object found for id %s of class %s', $id, $this->getClass()));
+            }
 
-        $object = $this->crud->get($class, $id, $field);
-        if (!$object) {
-            throw new NotFoundHttpException(sprintf('No object found for id %s of class %s', $id.'', $class));
+            return new JsonResponse();
         }
+
+        $object = $this->crud->get($this->getClass(), $id, $field);
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('No object found for id %s of class %s', $id, $this->getClass()));
+        }
+
+        $options = static::getOptions();
 
         return new JsonResponse(
             $this->serializer->serialize($object, $options['get'] ?? [])
         );
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="Check if an object exists (it'll eventually fire a doctrine findBy method)",
-     *     parameters={
-     *         {"name": "field", "type": "string", "description": "The queried field."},
-     *         {"name": "value", "type": "string", "description": "The value of the field"}
-     *     }
-     * )
-     *
-     * @param string $class
-     * @param string $field
-     *
-     * @deprecated call OPTIONS get
-     */
-    public function existAction($class, $field, $value): JsonResponse
-    {
-        $objects = $this->om->getRepository($class)->findBy([$field => $value]);
-
-        if (count($objects) > 0) {
-            return new JsonResponse(true);
-        }
-
-        return new JsonResponse(false, 204);
     }
 
     /**
@@ -225,11 +208,7 @@ abstract class AbstractCrudController
 
     public function getRequirements(): array
     {
-        return [
-            'get' => ['id' => '^(?!.*(exist\/)).*', 'field' => '^(?!.*(exist\/)).*'],
-            'update' => ['id' => '^(?!.*(exist\/)).*'],
-            'exist' => [],
-        ];
+        return [];
     }
 
     protected function getDefaultHiddenFilters(): array
