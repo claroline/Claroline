@@ -6,6 +6,7 @@ import {Routes} from '#/main/app/router'
 import {LogsSecurity} from '#/main/log/administration/logs/components/security'
 import {LogsMessage} from '#/main/log/administration/logs/components/message'
 import {LogsFunctional} from '#/main/log/administration/logs/components/functional'
+import {LogsOperational} from '#/main/log/administration/logs/components/operational'
 import {LogsTypes} from '#/main/log/administration/logs/components/types'
 
 const LogsTool = (props) =>
@@ -25,7 +26,10 @@ const LogsTool = (props) =>
         path: '/functional',
         component: LogsFunctional
       }, {
-        path: '/types',
+        path: '/operational',
+        component: LogsOperational
+      }, {
+        path: '/parameters',
         component: LogsTypes
       }
     ]}

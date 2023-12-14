@@ -140,7 +140,6 @@ class Role
         $this->users = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->toolRights = new ArrayCollection();
-        $this->adminTools = new ArrayCollection();
         $this->shortcuts = new ArrayCollection();
     }
 

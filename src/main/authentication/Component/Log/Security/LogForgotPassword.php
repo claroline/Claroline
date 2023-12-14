@@ -23,8 +23,8 @@ class LogForgotPassword extends AbstractSecurityLog
     public function logForgotPassword(ForgotPasswordEvent $event): void
     {
         $this->log(
-            $this->getTranslator()->trans('forgot_pasword_message', [
-                '%username%' => $event->getUser(),
+            $this->getTranslator()->trans('authentication.forgot_password_message', [
+                '%user%' => $event->getUser(),
             ], 'log'),
             $event->getUser()
         );

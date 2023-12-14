@@ -1,0 +1,5 @@
+{
+  "message.send": "Envoi d'un message",
+  "message.send_desc": "Lorsqu'un utilisateur envoie un message depuis la plateforme.",
+  "message.send_message": "a envoyé un message à %receiver%."
+}

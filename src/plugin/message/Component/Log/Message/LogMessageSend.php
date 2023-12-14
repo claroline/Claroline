@@ -24,8 +24,8 @@ class LogMessageSend extends AbstractMessageLog
     {
         foreach ($event->getReceivers() as $receiver) {
             $this->log(
-                $this->getTranslator()->trans('message.send', [
-                    '%receiver%' => $receiver->getFullName(),
+                $this->getTranslator()->trans('message.send_message', [
+                    '%receiver%' => $receiver,
                 ], 'log'),
                 $receiver,
                 $event->getSender()

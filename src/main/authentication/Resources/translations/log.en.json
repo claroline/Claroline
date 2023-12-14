@@ -1,9 +1,25 @@
 {
+  "authentication.forgot_password": "Forgotten password",
+  "authentication.forgot_password_desc": "When a user asks for their password to be reset using the \"Forgotten password\" feature.",
+  "authentication.forgot_password_message": "has asked for the account password to be reset %user%.",
+
+  "authentication.new_password": "Password change",
+  "authentication.new_password_desc": "When a user changes the password for a user account.",
+  "authentication.new_password_message": "has changed the password for account %user%.",
+
   "authentication.user_login": "User login",
   "authentication.user_login_desc": "When a user logs on to the platform with their account (internal or external).",
-  "authentication.user_login_message": "has logged on.",
+  "authentication.user_login_message": "has <b>logged on</b>.",
+
+  "authentication.user_login_failed": "Failed login attempt",
+  "authentication.user_login_failed_desc": "When a user is unable to connect to the platform (non-existent or deactivated account, incorrect password, etc.).",
+  "authentication.user_login_failed_message": "was unable to connect. Reason: %error%.",
 
   "authentication.user_logout": "User logout",
   "authentication.user_logout_desc": "When a user disconnects from the platform.",
-  "authentication.user_logout_message": "has logged out."
+  "authentication.user_logout_message": "has logged <b>out</b>.",
+
+  "authentication.user_switch": "\"View as\" mode",
+  "authentication.user_switch_desc": "When a manager uses the \"View as\" functionality to browse the platform using another user's account.",
+  "authentication.user_switch_message": "has <b>usurped</b> the %user% account."
 }

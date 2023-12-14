@@ -51,6 +51,7 @@ services:
     Claroline\CoreBundle\Controller\APINew\Resource\ActivityController:
         arguments:
             - '@security.authorization_checker'
+            - '@security.token_storage'
             - '@Claroline\AppBundle\API\FinderProvider'
 
     Claroline\CoreBundle\Controller\APINew\Template\TemplateController:

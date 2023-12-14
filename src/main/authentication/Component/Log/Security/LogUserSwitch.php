@@ -23,8 +23,8 @@ class LogUserSwitch extends AbstractSecurityLog
     public function logSwitchUser(SwitchUserEvent $event): void
     {
         $this->log(
-            $this->getTranslator()->trans('user_switch_message', [
-                '%username%' => $event->getTargetUser(),
+            $this->getTranslator()->trans('authentication.user_switch_message', [
+                '%user%' => $event->getTargetUser(),
             ], 'log'),
             $event->getTargetUser()
         );

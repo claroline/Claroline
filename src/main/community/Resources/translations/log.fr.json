@@ -12,5 +12,21 @@
   "organization": "Organisation",
   "role": "Rôle",
   "team": "Equipe",
-  "user": "Utilisateur"
+  "user": "Utilisateur",
+
+  "user.add_role": "Ajout d'un rôle",
+  "user.add_role_desc": "Lorsqu'un utilisateur obtient un nouveau rôle (inscription à un espace d'activités, attribution manuelle par un gestionnaire, inscription à un groupe).",
+  "user.add_role_message": "a <b>donné</b> le rôle %role% à l'utilisateur %user%.",
+
+  "user.remove_role": "Retrait d'un rôle",
+  "user.remove_role_desc": "Lorsqu'un utilisateur perd un rôle (désinscription d'un espace d'activités, retrait manuelle par un gestionnaire, désinscription d'un groupe).",
+  "user.remove_role_message": "a <b>retiré</b> le rôle %role% de l'utilisateur %user%.",
+
+  "user.disable": "Désactivation d'un utilisateur",
+  "user.disable_desc": "Lorsqu'un utilisateur est désactivé manuellement par un gestionnaire.",
+  "user.disable_message": "a <b>désactivé</b> l'utilisateur %user%.",
+
+  "user.enable": "Activation d'un utilisateur",
+  "user.enable_desc": "Lorsqu'un utilisateur est activé manuellement par un gestionnaire.",
+  "user.enable_message": "a <b>activé</b> l'utilisateur %user%."
 }

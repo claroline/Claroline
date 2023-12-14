@@ -6,6 +6,7 @@ use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\LogBundle\Component\Log\AbstractFunctionalLog;
+use Claroline\LogBundle\Helper\ColorHelper;
 
 class LogResourceEvaluationEnd extends AbstractFunctionalLog
 {
@@ -28,27 +29,22 @@ class LogResourceEvaluationEnd extends AbstractFunctionalLog
             $resourceNode = $event->getResourceNode();
 
             switch ($evaluation->getStatus()) {
-                case EvaluationStatus::PASSED:
-                    $message = $this->getTranslator()->trans('resource_passed_message', [
-                        '%resource%' => $resourceNode->getName(),
-                    ], 'log');
-                    break;
                 case EvaluationStatus::FAILED:
-                    $message = $this->getTranslator()->trans('resource_failed_message', [
-                        '%resource%' => $resourceNode->getName(),
-                    ], 'log');
-                    break;
-                case EvaluationStatus::PARTICIPATED:
-                    $message = $this->getTranslator()->trans('resource_participated_message', [
-                        '%resource%' => $resourceNode->getName(),
-                    ], 'log');
+                    $status = ColorHelper::danger(
+                        strtolower($this->getTranslator()->trans('evaluation_failed_short', [], 'evaluation'))
+                    );
                     break;
                 default:
-                    $message = $this->getTranslator()->trans('resource_end_message', [
-                        '%resource%' => $resourceNode->getName(),
-                    ], 'log');
+                    $status = ColorHelper::success(
+                        strtolower($this->getTranslator()->trans('evaluation_'.$evaluation->getStatus().'_short', [], 'evaluation'))
+                    );
                     break;
             }
+
+            $message = $this->getTranslator()->trans('evaluation.resource_end_message', [
+                '%status%' => $status,
+                '%resource%' => $resourceNode->getName(),
+            ], 'log');
 
             $this->log($message, $resourceNode->getWorkspace(), $resourceNode, $event->getUser());
         }

@@ -23,8 +23,8 @@ class LogUserLogout extends AbstractSecurityLog
     public function logUserLogout(UserLogoutEvent $loginEvent): void
     {
         $this->log(
-            $this->getTranslator()->trans('user_logout_message', [
-                '%username%' => $loginEvent->getUser(),
+            $this->getTranslator()->trans('authentication.user_logout_message', [
+                '%user%' => $loginEvent->getUser(),
             ], 'log'),
             $loginEvent->getUser()
         );

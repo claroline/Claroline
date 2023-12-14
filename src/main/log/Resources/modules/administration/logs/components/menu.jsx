@@ -35,11 +35,17 @@ const LogsMenu = (props) =>
           label: trans('functional', {}, 'log'),
           target: props.path + '/functional'
         }, {
+          name: 'operational',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-pencil',
+          label: trans('operational', {}, 'log'),
+          target: props.path + '/operational'
+        }, {
           name: 'types',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-cog',
-          label: trans('types', {}, 'log'),
-          target: props.path + '/types'
+          label: trans('parameters'),
+          target: props.path + '/parameters'
         }
       ]}
       onClick={props.autoClose}

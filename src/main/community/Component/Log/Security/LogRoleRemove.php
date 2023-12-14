@@ -22,9 +22,17 @@ class LogRoleRemove extends AbstractSecurityLog
 
     public function logRoleRemove(RemoveRoleEvent $event): void
     {
+        $role = $event->getRole();
+
+        $roleName = $this->getTranslator()->trans($role->getTranslationKey(), [], 'platform');
+        if ($role->getWorkspace()) {
+            $roleName .= ' ('.$role->getWorkspace()->getName().')';
+        }
+
         foreach ($event->getUsers() as $user) {
             $this->log(
                 $this->getTranslator()->trans('user.remove_role_message', [
+                    '%role%' => $roleName,
                     '%user%' => $user->getFullName(),
                 ], 'log'),
                 $user

@@ -23,8 +23,8 @@ class LogNewPassword extends AbstractSecurityLog
     public function logNewPassword(NewPasswordEvent $event): void
     {
         $this->log(
-            $this->getTranslator()->trans('new_password_message', [
-                '%username%' => $event->getUser(),
+            $this->getTranslator()->trans('authentication.new_password_message', [
+                '%user%' => $event->getUser(),
             ], 'log'),
             $event->getUser()
         );

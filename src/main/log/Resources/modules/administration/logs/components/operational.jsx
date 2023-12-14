@@ -4,26 +4,26 @@ import {trans} from '#/main/app/intl/translation'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 
-import {LogFunctionalList} from '#/main/log/components/functional-list'
 import {selectors} from '#/main/log/administration/logs/store/selectors'
+import {LogOperationalList} from '#/main/log/components/operational-list'
 
-const LogsFunctional = () =>
-  <ToolPage subtitle={trans('functional', {}, 'log')}>
+const LogsOperational = () =>
+  <ToolPage subtitle={trans('operational', {}, 'log')}>
     <ContentSizing size="full">
-      <LogFunctionalList
+      <LogOperationalList
         flush={true}
-        name={selectors.FUNCTIONAL_NAME}
-        url={['apiv2_logs_functional']}
+        name={selectors.OPERATIONAL_NAME}
+        url={['apiv2_logs_operational']}
         customDefinition={[
           {
-            name: 'workspace',
-            type: 'workspace',
-            label: trans('workspace'),
+            name: 'objectClass',
+            type: 'string',
+            label: trans('object'),
             displayed: true
           }, {
-            name: 'resource',
-            type: 'resource',
-            label: trans('resource'),
+            name: 'objectId',
+            type: 'string',
+            label: trans('id'),
             displayed: true
           }
         ]}
@@ -32,5 +32,5 @@ const LogsFunctional = () =>
   </ToolPage>
 
 export {
-  LogsFunctional
+  LogsOperational
 }

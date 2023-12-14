@@ -12,14 +12,8 @@ const count = createSelector(
   (store) => store.count
 )
 
-const actionTypes = createSelector(
-  [store],
-  (store) => store.actionTypes
-)
-
 export const selectors = {
   STORE_NAME,
   
-  count,
-  actionTypes
+  count
 }

@@ -9,11 +9,14 @@ use Claroline\CoreBundle\Component\Context\PublicContext;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
+use Claroline\InstallationBundle\Updater\Helper\RemovePluginTrait;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;
 
 class Updater140100 extends Updater
 {
+    use RemovePluginTrait;
+
     public function __construct(
         private readonly Connection $connection,
         private readonly ObjectManager $om,
@@ -26,7 +29,8 @@ class Updater140100 extends Updater
         $this->createAdminTools();
         $this->createAccountTools();
         $this->createPublicTools();
-        // migrate old home config
+
+        $this->removePlugin('Claroline', 'AnalyticsBundle');
     }
 
     private function createAdminTools(): void

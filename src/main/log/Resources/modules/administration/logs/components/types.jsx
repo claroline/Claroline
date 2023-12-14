@@ -12,21 +12,50 @@ const LogsTypes = () => {
   const types = useSelector(selectors.types)
 
   return (
-    <ToolPage subtitle={trans('types', {}, 'log')}>
+    <ToolPage subtitle={trans('parameters')}>
       <ContentSizing className="mt-3" size="md">
-        {Object.keys(types).map(type =>
-          <>
-            <ContentTitle title={trans(type, {}, 'log')} />
-            <ul className="list-group list-group-striped mb-3">
-              {types[type].map(log =>
-                <li key={log} className="list-group-item">
-                  <b>{trans(log, {}, 'log')}</b>
-                  <p className="mb-0">{trans(log+'_desc', {}, 'log')}</p>
-                </li>
-              )}
-            </ul>
-          </>
-        )}
+        <ContentTitle title={trans('functional', {}, 'log')} />
+        <ul className="list-group list-group-striped mb-3">
+          {types.functional.map(log =>
+            <li key={log} className="list-group-item">
+              <b>{trans(log, {}, 'log')}</b>
+              <p className="mb-0">{trans(log+'_desc', {}, 'log')}</p>
+              <span className="badge bg-secondary">{log}</span>
+            </li>
+          )}
+        </ul>
+
+        <ContentTitle title={trans('operational', {}, 'log')} />
+        <ul className="list-group list-group-striped mb-3">
+          {types.operational.map(log =>
+            <li key={log} className="list-group-item">
+              <b className="d-block">{trans(log, {}, 'log')}</b>
+              <span className="badge bg-secondary">{log}</span>
+            </li>
+          )}
+        </ul>
+
+        <ContentTitle title={trans('security', {}, 'log')} />
+        <ul className="list-group list-group-striped mb-3">
+          {types.security.map(log =>
+            <li key={log} className="list-group-item">
+              <b>{trans(log, {}, 'log')}</b>
+              <p className="mb-0">{trans(log+'_desc', {}, 'log')}</p>
+              <span className="badge bg-secondary">{log}</span>
+            </li>
+          )}
+        </ul>
+
+        <ContentTitle title={trans('message', {}, 'log')} />
+        <ul className="list-group list-group-striped mb-3">
+          {types.message.map(log =>
+            <li key={log} className="list-group-item">
+              <b>{trans(log, {}, 'log')}</b>
+              <p className="mb-0">{trans(log+'_desc', {}, 'log')}</p>
+              <span className="badge bg-secondary">{log}</span>
+            </li>
+          )}
+        </ul>
       </ContentSizing>
     </ToolPage>
   )

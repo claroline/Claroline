@@ -22,9 +22,17 @@ class LogRoleAdd extends AbstractSecurityLog
 
     public function logRoleAdd(AddRoleEvent $event): void
     {
+        $role = $event->getRole();
+
+        $roleName = $this->getTranslator()->trans($role->getTranslationKey(), [], 'platform');
+        if ($role->getWorkspace()) {
+            $roleName .= ' ('.$role->getWorkspace()->getName().')';
+        }
+
         foreach ($event->getUsers() as $user) {
             $this->log(
                 $this->getTranslator()->trans('user.add_role_message', [
+                    '%role%' => $roleName,
                     '%user%' => $user->getFullName(),
                 ], 'log'),
                 $user

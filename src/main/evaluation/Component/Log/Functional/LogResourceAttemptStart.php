@@ -28,7 +28,7 @@ class LogResourceAttemptStart extends AbstractFunctionalLog
             $resourceNode = $event->getResourceNode();
 
             $this->log(
-                $this->getTranslator()->trans('attempt_start_message', [
+                $this->getTranslator()->trans('evaluation.attempt_start_message', [
                     '%resource%' => $resourceNode->getName(),
                 ], 'log'),
                 $resourceNode->getWorkspace(),

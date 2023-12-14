@@ -6,6 +6,7 @@ use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\WorkspaceEvaluationEvent;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\LogBundle\Component\Log\AbstractFunctionalLog;
+use Claroline\LogBundle\Helper\ColorHelper;
 
 class LogWorkspaceEvaluationEnd extends AbstractFunctionalLog
 {
@@ -28,27 +29,22 @@ class LogWorkspaceEvaluationEnd extends AbstractFunctionalLog
             $workspace = $event->getWorkspace();
 
             switch ($evaluation->getStatus()) {
-                case EvaluationStatus::PASSED:
-                    $message = $this->getTranslator()->trans('workspace_passed_message', [
-                        '%workspace%' => $workspace->getName(),
-                    ], 'log');
-                    break;
                 case EvaluationStatus::FAILED:
-                    $message = $this->getTranslator()->trans('workspace_failed_message', [
-                        '%workspace%' => $workspace->getName(),
-                    ], 'log');
-                    break;
-                case EvaluationStatus::PARTICIPATED:
-                    $message = $this->getTranslator()->trans('workspace_participated_message', [
-                        '%workspace%' => $workspace->getName(),
-                    ], 'log');
+                    $status = ColorHelper::danger(
+                        strtolower($this->getTranslator()->trans('evaluation_failed_short', [], 'evaluation'))
+                    );
                     break;
                 default:
-                    $message = $this->getTranslator()->trans('workspace_end_message', [
-                        '%workspace%' => $workspace->getName(),
-                    ], 'log');
+                    $status = ColorHelper::success(
+                        strtolower($this->getTranslator()->trans('evaluation_'.$evaluation->getStatus().'_short', [], 'evaluation'))
+                    );
                     break;
             }
+
+            $message = $this->getTranslator()->trans('evaluation.workspace_end_message', [
+                '%status%' => $status,
+                '%workspace%' => $workspace->getName(),
+            ], 'log');
 
             $this->log($message, $workspace, null, $event->getUser());
         }

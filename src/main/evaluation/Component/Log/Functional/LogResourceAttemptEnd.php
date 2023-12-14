@@ -6,6 +6,7 @@ use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\ResourceAttemptEvent;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\LogBundle\Component\Log\AbstractFunctionalLog;
+use Claroline\LogBundle\Helper\ColorHelper;
 
 class LogResourceAttemptEnd extends AbstractFunctionalLog
 {
@@ -28,22 +29,22 @@ class LogResourceAttemptEnd extends AbstractFunctionalLog
             $resourceNode = $event->getResourceNode();
 
             switch ($attempt->getStatus()) {
-                case EvaluationStatus::PASSED:
-                    $message = $this->getTranslator()->trans('attempt_passed_message', [
-                        '%resource%' => $resourceNode->getName(),
-                    ], 'log');
-                    break;
                 case EvaluationStatus::FAILED:
-                    $message = $this->getTranslator()->trans('attempt_failed_message', [
-                        '%resource%' => $resourceNode->getName(),
-                    ], 'log');
+                    $status = ColorHelper::danger(
+                        strtolower($this->getTranslator()->trans('evaluation_failed_short', [], 'evaluation'))
+                    );
                     break;
                 default:
-                    $message = $this->getTranslator()->trans('attempt_end_message', [
-                        '%resource%' => $resourceNode->getName(),
-                    ], 'log');
+                    $status = ColorHelper::success(
+                        strtolower($this->getTranslator()->trans('evaluation_'.$attempt->getStatus().'_short', [], 'evaluation'))
+                    );
                     break;
             }
+
+            $message = $this->getTranslator()->trans('evaluation.attempt_end_message', [
+                '%status%' => $status,
+                '%resource%' => $resourceNode->getName(),
+            ], 'log');
 
             $this->log($message, $resourceNode->getWorkspace(), $resourceNode, $event->getUser());
         }

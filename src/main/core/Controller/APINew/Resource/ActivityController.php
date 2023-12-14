@@ -3,13 +3,16 @@
 namespace Claroline\CoreBundle\Controller\APINew\Resource;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Claroline\LogBundle\Entity\FunctionalLog;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -23,6 +26,7 @@ class ActivityController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly FinderProvider $finder
     ) {
         $this->authorization = $authorization;
@@ -35,9 +39,22 @@ class ActivityController
     {
         $this->checkPermission($resourceNode, 'ADMINISTRATE', [], true);
 
+        $hiddenFilters = [
+            'resource' => $resourceNode->getUuid(),
+        ];
+
+        if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
+            $user = $this->tokenStorage->getToken()->getUser();
+
+            $organizations = array_map(function (Organization $organization) {
+                return $organization->getUuid();
+            }, $user->getOrganizations()->toArray());
+            $hiddenFilters['organizations'] = $organizations;
+        }
+
         return new JsonResponse(
             $this->finder->search(FunctionalLog::class, array_merge($request->query->all(), [
-                'hiddenFilters' => ['resource' => $resourceNode->getUuid()],
+                'hiddenFilters' => $hiddenFilters,
             ]))
         );
     }

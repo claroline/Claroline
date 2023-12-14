@@ -19,10 +19,12 @@ const Player = connect(
   }),
   dispatch => ({
     initializeScormAPI(sco, scorm, tracking, currentUser) {
-      window.API = new APIClass(sco, scorm, tracking[sco.id] || {}, dispatch, currentUser)
-      window.api = new APIClass(sco, scorm, tracking[sco.id] || {}, dispatch, currentUser)
-      window.API_1484_11 = new APIClass(sco, scorm, tracking[sco.id] || {}, dispatch, currentUser)
-      window.api_1484_11 = new APIClass(sco, scorm, tracking[sco.id] || {}, dispatch, currentUser)
+      const scormApi = new APIClass(sco, scorm, tracking[sco.id] || {}, dispatch, currentUser)
+
+      window.API = scormApi
+      window.api = scormApi
+      window.API_1484_11 = scormApi
+      window.api_1484_11 = scormApi
     }
   })
 )(PlayerComponent)

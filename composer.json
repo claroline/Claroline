@@ -88,7 +88,6 @@
         "psr-4": {
             "Claroline\\PrivacyBundle\\": "src/main/privacy",
             "Claroline\\AgendaBundle\\": "src/plugin/agenda",
-            "Claroline\\AnalyticsBundle\\": "src/plugin/analytics",
             "Claroline\\AnnouncementBundle\\": "src/plugin/announcement",
             "Claroline\\AppBundle\\": "src/main/app",
             "Claroline\\AudioPlayerBundle\\": "src/plugin/audio-player",

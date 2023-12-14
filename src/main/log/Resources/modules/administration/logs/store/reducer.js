@@ -16,6 +16,9 @@ const reducer = combineReducers({
   functional: makeListReducer(selectors.FUNCTIONAL_NAME, {
     sortBy: {property: 'date', direction: -1}
   }),
+  operational: makeListReducer(selectors.OPERATIONAL_NAME, {
+    sortBy: {property: 'date', direction: -1}
+  }),
   types: makeReducer([], {
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.types
   })

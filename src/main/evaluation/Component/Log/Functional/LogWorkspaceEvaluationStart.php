@@ -28,7 +28,7 @@ class LogWorkspaceEvaluationStart extends AbstractFunctionalLog
             $workspace = $event->getWorkspace();
 
             $this->log(
-                $this->getTranslator()->trans('workspace_start_message', [
+                $this->getTranslator()->trans('evaluation.workspace_start_message', [
                     '%workspace%' => $workspace->getName(),
                 ], 'log'),
                 $workspace,

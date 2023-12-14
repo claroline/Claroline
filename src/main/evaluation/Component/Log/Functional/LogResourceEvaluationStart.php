@@ -28,7 +28,7 @@ class LogResourceEvaluationStart extends AbstractFunctionalLog
             $resourceNode = $event->getResourceNode();
 
             $this->log(
-                $this->getTranslator()->trans('resource_start_message', [
+                $this->getTranslator()->trans('evaluation.resource_start_message', [
                     '%resource%' => $resourceNode->getName(),
                 ], 'log'),
                 $resourceNode->getWorkspace(),

@@ -11,8 +11,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class OperationalLog extends AbstractLog
 {
+    /**
+     * @ORM\Column(type="string", nullable=false)
+     */
     private ?string $objectClass = null;
+
+    /**
+     * @ORM\Column(type="string", nullable=false)
+     */
     private ?string $objectId = null;
+
+    /**
+     * @ORM\Column(type="json")
+     */
     private ?array $changeset = [];
 
     public function getObjectClass(): ?string
