@@ -122,9 +122,9 @@ class PostFinder extends AbstractFinder
             }
         }
 
-        //pinned always first
+        // pinned always first
         $qb->addOrderBy('obj.pinned', 'DESC');
-        //and then custom sort
+        // and then custom sort
         if (!empty($sortBy)) {
             $qb->addOrderBy('obj.'.$sortBy['property'], 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
         }

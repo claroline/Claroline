@@ -98,6 +98,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{workspace}", name="apiv2_cursus_event_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listAction(Request $request, $class = Event::class, Workspace $workspace = null): JsonResponse
@@ -111,12 +112,13 @@ class EventController extends AbstractCrudController
         }
 
         return new JsonResponse(
-            $this->finder->search($this->getClass(), $query, $options['list'] ?? [])
+            $this->crud->list($this->getClass(), $query, $options['list'] ?? [])
         );
     }
 
     /**
      * @Route("/public/{workspace}", name="apiv2_cursus_event_public", methods={"GET"})
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listPublicAction(Request $request, Workspace $workspace = null): JsonResponse
@@ -132,12 +134,13 @@ class EventController extends AbstractCrudController
         }
 
         return new JsonResponse(
-            $this->finder->search(Event::class, $query, $options['list'] ?? [])
+            $this->crud->list(Event::class, $query, $options['list'] ?? [])
         );
     }
 
     /**
      * @Route("/{id}/open", name="apiv2_cursus_event_open", methods={"GET"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function openAction(Event $sessionEvent): JsonResponse
@@ -148,11 +151,11 @@ class EventController extends AbstractCrudController
         $registration = [];
         if ($user instanceof User) {
             $registration = [
-                'users' => $this->finder->search(EventUser::class, ['filters' => [
+                'users' => $this->crud->list(EventUser::class, ['filters' => [
                     'user' => $user->getUuid(),
                     'event' => $sessionEvent->getUuid(),
                 ]])['data'],
-                'groups' => $this->finder->search(EventGroup::class, ['filters' => [
+                'groups' => $this->crud->list(EventGroup::class, ['filters' => [
                     'user' => $user->getUuid(),
                     'event' => $sessionEvent->getUuid(),
                 ]])['data'],
@@ -167,6 +170,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/pdf", name="apiv2_cursus_event_download_pdf", methods={"GET"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function downloadPdfAction(Event $sessionEvent, Request $request): StreamedResponse
@@ -185,6 +189,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/ics", name="apiv2_cursus_event_download_ics", methods={"GET"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function downloadICSAction(Event $sessionEvent): StreamedResponse
@@ -201,6 +206,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/self/register", name="apiv2_cursus_session_event_self_register", methods={"PUT"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
@@ -215,7 +221,7 @@ class EventController extends AbstractCrudController
 
         $eventsRegistration = [];
         $eventUsers = !is_null($user) ?
-            $this->finder->fetch(
+            $this->crud->list(
                 EventUser::class,
                 ['session' => $sessionEvent->getSession()->getUuid(), 'user' => $user->getUuid()]
             ) :
@@ -241,6 +247,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/invite/all", name="apiv2_cursus_event_invite_all", methods={"PUT"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function inviteAllAction(Event $sessionEvent): JsonResponse
@@ -254,6 +261,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/users/{type}", name="apiv2_cursus_event_list_users", methods={"GET"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function listUsersAction(Event $sessionEvent, string $type, Request $request): JsonResponse
@@ -286,12 +294,13 @@ class EventController extends AbstractCrudController
         }
 
         return new JsonResponse(
-            $this->finder->search(EventUser::class, $params)
+            $this->crud->list(EventUser::class, $params)
         );
     }
 
     /**
      * @Route("/{id}/users/{type}", name="apiv2_cursus_event_add_users", methods={"PATCH"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function addUsersAction(Event $sessionEvent, string $type, Request $request): JsonResponse
@@ -316,6 +325,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/users/{type}", name="apiv2_cursus_event_remove_users", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function removeUsersAction(Event $sessionEvent, Request $request): JsonResponse
@@ -330,6 +340,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/invite/users", name="apiv2_cursus_event_invite_users", methods={"PUT"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function inviteUsersAction(Event $sessionEvent, Request $request): JsonResponse
@@ -346,6 +357,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/groups/{type}", name="apiv2_cursus_event_list_groups", methods={"GET"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function listGroupsAction(Event $sessionEvent, string $type, Request $request): JsonResponse
@@ -360,12 +372,13 @@ class EventController extends AbstractCrudController
         $params['hiddenFilters']['type'] = $type;
 
         return new JsonResponse(
-            $this->finder->search(EventGroup::class, $params)
+            $this->crud->list(EventGroup::class, $params)
         );
     }
 
     /**
      * @Route("/{id}/groups/{type}", name="apiv2_cursus_event_add_groups", methods={"PATCH"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function addGroupsAction(Event $sessionEvent, string $type, Request $request): JsonResponse
@@ -394,6 +407,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/groups/{type}", name="apiv2_cursus_event_remove_groups", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
     public function removeGroupsAction(Event $sessionEvent, Request $request): JsonResponse
@@ -408,6 +422,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/invite/groups", name="apiv2_cursus_event_invite_groups", methods={"PUT"})
+     *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
     public function inviteGroupsAction(Event $sessionEvent, Request $request): JsonResponse

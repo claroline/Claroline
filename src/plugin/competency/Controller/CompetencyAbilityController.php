@@ -40,6 +40,7 @@ class CompetencyAbilityController extends AbstractCrudController
      *     "/competency/{competency}/list",
      *     name="apiv2_competency_ability_competency_list"
      * )
+     *
      * @EXT\ParamConverter(
      *     "competency",
      *     class="HeVinci\CompetencyBundle\Entity\Competency",
@@ -56,7 +57,7 @@ class CompetencyAbilityController extends AbstractCrudController
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['competencies'] = [$competency->getUuid()];
-        $data = $this->finder->search(CompetencyAbility::class, $params, [Options::SERIALIZE_MINIMAL]);
+        $data = $this->crud->list(CompetencyAbility::class, $params, [Options::SERIALIZE_MINIMAL]);
 
         return new JsonResponse($data, 200);
     }

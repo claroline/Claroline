@@ -80,7 +80,7 @@ class EventFinder extends AbstractFinder
                     $qb->setParameter('userId', $filterValue);
                     break;
 
-                // map search on PlannedObject (There may be a better way to handle this).
+                    // map search on PlannedObject (There may be a better way to handle this).
                 case 'status':
                     switch ($filterValue) {
                         case 'not_started':

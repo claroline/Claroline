@@ -39,7 +39,7 @@ class FieldFacetValueFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
     {
-        //use oauthChecker & tokenStorage to fetch exactly what's needed according to the permissions
+        // use oauthChecker & tokenStorage to fetch exactly what's needed according to the permissions
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {

@@ -97,6 +97,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/{id}/ics", name="apiv2_event_download_ics", methods={"GET"})
+     *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
     public function downloadICSAction(Event $event): StreamedResponse
@@ -115,6 +116,7 @@ class EventController extends AbstractCrudController
      * Lists the participants of an event.
      *
      * @Route("/{id}/participants", name="apiv2_event_list_participants", methods={"GET"})
+     *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
     public function listParticipantsAction(Event $event, Request $request): JsonResponse
@@ -122,7 +124,7 @@ class EventController extends AbstractCrudController
         $this->checkPermission('OPEN', $event, [], true);
 
         return new JsonResponse(
-            $this->finder->search(EventInvitation::class, array_merge($request->query->all(), [
+            $this->crud->list(EventInvitation::class, array_merge($request->query->all(), [
                 'hiddenFilters' => ['event' => $event->getUuid()],
             ]))
         );
@@ -132,6 +134,7 @@ class EventController extends AbstractCrudController
      * Adds the selected users as event participants.
      *
      * @Route("/{id}/participants", name="apiv2_event_add_participants", methods={"POST"})
+     *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
     public function addParticipantsAction(Event $event, Request $request): JsonResponse
@@ -158,6 +161,7 @@ class EventController extends AbstractCrudController
      * Removes selected users from the event participants.
      *
      * @Route("/{id}/participants", name="apiv2_event_remove_participants", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
     public function removeParticipantsAction(Event $event, Request $request): JsonResponse
@@ -181,6 +185,7 @@ class EventController extends AbstractCrudController
      * Sends invitations to the selected participants.
      *
      * @Route("/{id}/invitations/send", name="apiv2_event_send_invitations", methods={"POST"})
+     *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
     public function sendInvitationsAction(Event $event, Request $request): JsonResponse
@@ -197,6 +202,7 @@ class EventController extends AbstractCrudController
 
     /**
      * @Route("/invitations/{id}/status/{status}", name="apiv2_event_change_invitation_status", methods={"GET"})
+     *
      * @EXT\ParamConverter("invitation", options={"mapping": {"id": "id"}})
      */
     public function changeInvitationStatusAction(EventInvitation $invitation, string $status, Request $request): Response

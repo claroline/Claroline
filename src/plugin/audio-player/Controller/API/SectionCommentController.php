@@ -44,6 +44,7 @@ class SectionCommentController extends AbstractCrudController
      *     "/{resourceNode}/list/{type}",
      *     name="apiv2_audioresourcesectioncomment_list_comments"
      * )
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function sectionsCommentsListAction(ResourceNode $resourceNode, string $type, Request $request): JsonResponse
@@ -57,7 +58,7 @@ class SectionCommentController extends AbstractCrudController
         $params['hiddenFilters']['type'] = $type;
 
         return new JsonResponse(
-            $this->finder->search(SectionComment::class, $params)
+            $this->crud->list(SectionComment::class, $params)
         );
     }
 }

@@ -106,7 +106,7 @@ abstract class AbstractEventFinder extends AbstractFinder
                     $qb->andWhere('BIT_AND(otr.mask, 1) = 1');
                     break;
 
-                // map search on PlannedObject (There may be a better way to handle this).
+                    // map search on PlannedObject (There may be a better way to handle this).
                 case 'name':
                 case 'description':
                 case 'startDate':
@@ -123,7 +123,7 @@ abstract class AbstractEventFinder extends AbstractFinder
 
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
-           }
+            }
         }
 
         $qb->andWhere($qb->expr()->gte('p.endDate', 'p.startDate'));

@@ -5,7 +5,6 @@
 namespace Claroline\AppBundle\Routing;
 
 use Doctrine\Common\Annotations\Reader;
-use ReflectionMethod;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,7 +13,7 @@ use Symfony\Component\Routing\RouteCollection;
 class ApiLoader extends Loader
 {
     // Route format : [path, method, defaults]
-    const DEFAULT_MAP = [
+    public const DEFAULT_MAP = [
         'create' => ['', 'POST'],
         'deleteBulk' => ['', 'DELETE'],
         'list' => ['', 'GET'],
@@ -44,7 +43,7 @@ class ApiLoader extends Loader
         }
 
         $path = $this->locator->locate($resource);
-        //this is the default
+        // this is the default
         $imported = $this->import($resource, 'annotation');
 
         $routes = new RouteCollection();
@@ -77,10 +76,10 @@ class ApiLoader extends Loader
             if ($fileInfo->isDir()) {
                 $this->loadFromPath($file, $routes);
             } else {
-                //find prefix from annotations
+                // find prefix from annotations
                 $controller = $this->findClass($file);
 
-                //ok so this is a controller
+                // ok so this is a controller
                 if ($controller) {
                     $refClass = new \ReflectionClass($controller);
                     $class = null;
@@ -90,7 +89,7 @@ class ApiLoader extends Loader
                     $ignore = [];
 
                     foreach ($this->reader->getClassAnnotations($refClass) as $annotation) {
-                        //The route prefix is defined with the sf2 annotations
+                        // The route prefix is defined with the sf2 annotations
                         if ($annotation instanceof Route) {
                             $prefix = $annotation->getPath();
 
@@ -105,7 +104,7 @@ class ApiLoader extends Loader
                         }
                     }
 
-                    //Find via getClass method of AbstractCrudController
+                    // Find via getClass method of AbstractCrudController
 
                     if (!$found && $refClass->isSubClassOf('Claroline\AppBundle\Controller\AbstractCrudController')) {
                         $instance = $refClass->newInstanceWithoutConstructor();
@@ -115,7 +114,7 @@ class ApiLoader extends Loader
                             $ignore = $instance->getIgnore();
 
                             foreach ($this->reader->getClassAnnotations($refClass) as $annotation) {
-                                //The route prefix is defined with the sf2 annotations
+                                // The route prefix is defined with the sf2 annotations
                                 if ($annotation instanceof Route) {
                                     $prefix = $annotation->getPath();
 
@@ -128,7 +127,7 @@ class ApiLoader extends Loader
                     }
 
                     if ($found) {
-                        //makeRouteMap is an array of generic routes we want to use
+                        // makeRouteMap is an array of generic routes we want to use
                         foreach ($this->makeRouteMap($controller, $routes, $prefix, $ignore) as $name => $options) {
                             $pattern = '';
 
@@ -151,11 +150,6 @@ class ApiLoader extends Loader
                             if (isset($options[2])) {
                                 $route->addDefaults($options[2]);
                             }
-                            $requirements = $refClass->newInstanceWithoutConstructor()->getRequirements();
-
-                            if (isset($requirements[$name])) {
-                                $route->setRequirements($requirements[$name]);
-                            }
 
                             // add the new route to the route collection:
                             $routeName = 'apiv2_'.$routeNamePrefix.'_'.$this->toUnderscore($name);
@@ -174,7 +168,7 @@ class ApiLoader extends Loader
 
         foreach ($traits as $trait) {
             $refClass = new \ReflectionClass($trait);
-            $methods = $refClass->getMethods(ReflectionMethod::IS_PUBLIC);
+            $methods = $refClass->getMethods(\ReflectionMethod::IS_PUBLIC);
 
             foreach ($methods as $method) {
                 $actionName = preg_replace('/Action/', '', $method->getName());
@@ -198,15 +192,12 @@ class ApiLoader extends Loader
         return $mapping;
     }
 
-    //@see http://stackoverflow.com/questions/1589468/convert-camelcase-to-under-score-case-in-php-autoload
+    // @see http://stackoverflow.com/questions/1589468/convert-camelcase-to-under-score-case-in-php-autoload
     public function toUnderscore($string)
     {
         return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $string));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports($resource, $type = null)
     {
         return is_string($resource) && 'api' === $type;

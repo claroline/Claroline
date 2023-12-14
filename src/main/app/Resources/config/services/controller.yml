@@ -5,9 +5,6 @@ services:
     Claroline\AppBundle\Controller\AbstractCrudController:
         abstract: true
         calls:
-            - method: setFinder
-              arguments:
-                  - '@Claroline\AppBundle\API\FinderProvider'
             - method: setSerializer
               arguments:
                   - '@Claroline\AppBundle\API\SerializerProvider'

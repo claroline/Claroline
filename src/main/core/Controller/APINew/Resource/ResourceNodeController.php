@@ -48,9 +48,8 @@ class ResourceNodeController extends AbstractCrudController
      *
      * @param string $parent
      * @param string $all
-     * @param string $class
      */
-    public function listAction(Request $request, $parent, $all = null, $class = ResourceNode::class): JsonResponse
+    public function listChildrenAction(Request $request, $parent, $all = null): JsonResponse
     {
         $options = $request->query->all();
 
@@ -85,7 +84,7 @@ class ResourceNodeController extends AbstractCrudController
         }
 
         return new JsonResponse(
-            $this->finder->search(ResourceNode::class, $options, $this->getOptions()['list'])
+            $this->crud->list(ResourceNode::class, $options, $this->getOptions()['list'])
         );
     }
 
@@ -120,7 +119,7 @@ class ResourceNodeController extends AbstractCrudController
     public function listRemovedAction(Workspace $workspace, Request $request): JsonResponse
     {
         return new JsonResponse(
-            $this->finder->search(ResourceNode::class,
+            $this->crud->list(ResourceNode::class,
                 array_merge($request->query->all(), ['hiddenFilters' => [
                     'workspace' => $workspace->getUuid(),
                     'active' => false,

@@ -2,7 +2,6 @@
 
 namespace Icap\BlogBundle\Controller;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -30,43 +29,17 @@ class BlogController
 {
     use PermissionCheckerTrait;
 
-    /** @var FinderProvider */
-    private $finder;
-    /** @var UrlGeneratorInterface */
-    private $router;
-    /** @var Environment */
-    private $templating;
-    /** @var BlogManager */
-    private $blogManager;
-    /** @var PostManager */
-    private $postManager;
-    /** @var BlogSerializer */
-    private $blogSerializer;
-    /** @var PdfManager */
-    private $pdfManager;
-    /** @var BlogOptionsSerializer */
-    private $blogOptionsSerializer;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        UrlGeneratorInterface $router,
-        Environment $templating,
-        FinderProvider $finder,
-        BlogManager $blogManager,
-        PostManager $postManager,
-        BlogSerializer $blogSerializer,
-        PdfManager $pdfManager,
-        BlogOptionsSerializer $blogOptionsSerializer
+        private readonly UrlGeneratorInterface $router,
+        private readonly Environment $templating,
+        private readonly BlogManager $blogManager,
+        private readonly PostManager $postManager,
+        private readonly BlogSerializer $blogSerializer,
+        private readonly PdfManager $pdfManager,
+        private readonly BlogOptionsSerializer $blogOptionsSerializer
     ) {
         $this->authorization = $authorization;
-        $this->router = $router;
-        $this->templating = $templating;
-        $this->finder = $finder;
-        $this->blogManager = $blogManager;
-        $this->postManager = $postManager;
-        $this->blogSerializer = $blogSerializer;
-        $this->pdfManager = $pdfManager;
-        $this->blogOptionsSerializer = $blogOptionsSerializer;
     }
 
     /**

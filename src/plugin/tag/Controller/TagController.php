@@ -56,12 +56,13 @@ class TagController extends AbstractCrudController
      * List all objects linked to a Tag.
      *
      * @Route("/{id}/object", name="apiv2_tag_list_objects", methods={"GET"})
+     *
      * @EXT\ParamConverter("tag", class="Claroline\TagBundle\Entity\Tag", options={"mapping": {"id": "uuid"}})
      */
     public function listObjectsAction(Tag $tag, Request $request): JsonResponse
     {
         return new JsonResponse(
-            $this->finder->search(TaggedObject::class, array_merge(
+            $this->crud->list(TaggedObject::class, array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => [$this->getName() => $tag->getUuid()]]
             ))
@@ -73,6 +74,7 @@ class TagController extends AbstractCrudController
      * NB. If the tag does not exist, it will be created if the user has the correct rights.
      *
      * @Route("/{tag}/object", name="apiv2_tag_add_objects", methods={"POST"})
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function addObjectsAction(string $tag, Request $request): JsonResponse
@@ -88,6 +90,7 @@ class TagController extends AbstractCrudController
 
     /**
      * @Route("/{id}/object", name="apiv2_tag_remove_objects", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("tag", class="Claroline\TagBundle\Entity\Tag", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */

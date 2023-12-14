@@ -63,6 +63,7 @@ class ImportController extends AbstractCrudController
 
     /**
      * @Route("/workspace/{workspaceId}", name="apiv2_workspace_transfer_import_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspaceId": "uuid"}})
      */
     public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
@@ -70,7 +71,7 @@ class ImportController extends AbstractCrudController
         $this->checkPermission(ToolPermissions::getPermission('transfer', 'OPEN'), $workspace, [], true);
 
         return new JsonResponse(
-            $this->finder->search(self::getClass(), array_merge($request->query->all(), ['hiddenFilters' => [
+            $this->crud->list(self::getClass(), array_merge($request->query->all(), ['hiddenFilters' => [
                 'workspace' => $workspace->getUuid(),
             ]]), $this->getOptions()['list'] ?? [])
         );
@@ -78,6 +79,7 @@ class ImportController extends AbstractCrudController
 
     /**
      * @Route("/{id}/execute", name="apiv2_transfer_import_execute", methods={"POST"})
+     *
      * @EXT\ParamConverter("importFile", options={"mapping": {"id": "uuid"}})
      */
     public function executeAction(ImportFile $importFile): JsonResponse
@@ -94,6 +96,7 @@ class ImportController extends AbstractCrudController
 
     /**
      * @Route("/{id}/log", name="apiv2_transfer_import_log", methods={"get"})
+     *
      * @EXT\ParamConverter("importFile", options={"mapping": {"id": "uuid"}})
      */
     public function logAction(ImportFile $importFile): Response

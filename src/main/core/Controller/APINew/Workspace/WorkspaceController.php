@@ -85,7 +85,7 @@ class WorkspaceController extends AbstractCrudController
      */
     public function listRegisterableAction(Request $request): JsonResponse
     {
-        return new JsonResponse($this->finder->search(
+        return new JsonResponse($this->crud->list(
             Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'displayable' => true,
@@ -113,7 +113,7 @@ class WorkspaceController extends AbstractCrudController
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        return new JsonResponse($this->finder->search(
+        return new JsonResponse($this->crud->list(
             Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => [
                 'model' => false,
@@ -140,7 +140,7 @@ class WorkspaceController extends AbstractCrudController
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        return new JsonResponse($this->finder->search(
+        return new JsonResponse($this->crud->list(
             Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'administrated' => true,
@@ -167,7 +167,7 @@ class WorkspaceController extends AbstractCrudController
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        return new JsonResponse($this->finder->search(
+        return new JsonResponse($this->crud->list(
             Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'model' => true,
@@ -193,7 +193,7 @@ class WorkspaceController extends AbstractCrudController
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        return new JsonResponse($this->finder->search(
+        return new JsonResponse($this->crud->list(
             Workspace::class,
             array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
                 'administrated' => true,

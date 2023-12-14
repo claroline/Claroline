@@ -12,10 +12,10 @@
 namespace Claroline\CoreBundle\Controller\APINew;
 
 use Claroline\AppBundle\API\SchemaProvider;
-use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Routing\Documentator;
 use Claroline\AppBundle\Routing\Finder;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -29,8 +29,6 @@ class SwaggerController
     private $documentator;
     /** @var SchemaProvider */
     private $schemaProvider;
-    /** @var PlatformManager */
-    private $platformManager;
     /** @var string */
     private $rootDir;
 
@@ -38,33 +36,22 @@ class SwaggerController
         Finder $routerFinder,
         Documentator $documentator,
         SchemaProvider $schemaProvider,
-        PlatformManager $platformManager,
         string $rootDir
     ) {
         $this->routerFinder = $routerFinder;
         $this->documentator = $documentator;
         $this->schemaProvider = $schemaProvider;
-        $this->platformManager = $platformManager;
         $this->rootDir = $rootDir;
     }
 
     /**
      * @Route("", name="apiv2_swagger_get", methods={"GET"})
      */
-    public function getApiAction()
+    public function getApiAction(Request $request): JsonResponse
     {
         $swagger = [
             'swagger' => '2.0',
-            'info' => [
-                'version' => '2.0',
-                'title' => 'Claroline API',
-                'termsOfService' => null,
-                'license' => [
-                    'name' => 'AGPL-3.0',
-                    'url' => 'https://www.gnu.org/licenses/gpl-3.0.fr.html',
-                ],
-            ],
-            'basePath' => $this->platformManager->getUrl(),
+            'basePath' => $request->getBaseUrl(),
         ];
 
         $classes = $this->routerFinder->getHandledClasses();

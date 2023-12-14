@@ -7,7 +7,6 @@ use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
 use Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer;
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -36,38 +35,17 @@ class AnnouncementController
     use RequestDecoderTrait;
     use PermissionCheckerTrait;
 
-    /** @var AnnouncementManager */
-    private $manager;
-
-    /** @var AnnouncementSerializer */
-    private $serializer;
-
-    /** @var Crud */
-    private $crud;
-
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var FinderProvider */
-    private $finder;
-
     public function __construct(
-        AnnouncementManager $manager,
-        AnnouncementSerializer $serializer,
-        Crud $crud,
-        ObjectManager $om,
-        FinderProvider $finder,
+        private readonly AnnouncementManager $manager,
+        private readonly AnnouncementSerializer $serializer,
+        private readonly Crud $crud,
+        private readonly ObjectManager $om,
         AuthorizationCheckerInterface $authorization
     ) {
-        $this->manager = $manager;
-        $this->serializer = $serializer;
-        $this->crud = $crud;
-        $this->om = $om;
-        $this->finder = $finder;
         $this->authorization = $authorization;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Announcement::class;
     }
@@ -167,6 +145,6 @@ class AnnouncementController
             return $role->getUuid();
         }, $roles)]]);
 
-        return new JsonResponse($this->finder->search(User::class, $parameters, [Options::SERIALIZE_MINIMAL]));
+        return new JsonResponse($this->crud->list(User::class, $parameters, [Options::SERIALIZE_MINIMAL]));
     }
 }

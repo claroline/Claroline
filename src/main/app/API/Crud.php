@@ -23,8 +23,10 @@ class Crud
     public const COLLECTION_REMOVE = 'remove';
     /** @var string */
     public const PROPERTY_SET = 'set';
-    // TODO : remove me. only for retro compatibility it should be always the case
-    // but I don't know if it will break things if I do it now
+
+    /**
+     * @deprecated it's always the case now
+     */
     public const THROW_EXCEPTION = 'throw_exception';
 
     public const NO_PERMISSIONS = 'NO_PERMISSIONS';
@@ -44,7 +46,6 @@ class Crud
 
     public function get(string $class, mixed $id, string $idProp = 'id', ?array $options = []): ?object
     {
-        $object = null;
         if ('id' === $idProp) {
             $object = $this->om->getRepository($class)->findOneBy(['uuid' => $id]);
         } else {
@@ -66,7 +67,6 @@ class Crud
 
     public function exist(string $class, mixed $id, string $idProp = 'id'): bool
     {
-        $object = null;
         if ('id' === $idProp) {
             $object = $this->om->getRepository($class)->count(['uuid' => $id]);
         } else {
@@ -84,6 +84,11 @@ class Crud
     public function find(string $class, $data): ?object
     {
         return $this->om->getObject($data, $class, $this->schema->getIdentifiers($class));
+    }
+
+    public function count(string $class, array $query = []): int
+    {
+        return $this->finder->count($class, $query);
     }
 
     public function list(string $class, array $query = [], array $options = []): array
@@ -122,15 +127,7 @@ class Crud
 
         // validates submitted data.
         if (!in_array(self::NO_VALIDATION, $options)) {
-            $errors = $this->validate($class, $data, ValidatorProvider::CREATE, $options);
-            if (count($errors) > 0) {
-                // TODO : it should always throw exception
-                if (in_array(self::THROW_EXCEPTION, $options)) {
-                    throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
-                } else {
-                    return $errors;
-                }
-            }
+            $this->validator->validate($class, $data, ValidatorProvider::CREATE, true, $options);
         }
 
         // gets entity from raw data.
@@ -181,15 +178,7 @@ class Crud
 
         // validates submitted data.
         if (!in_array(self::NO_VALIDATION, $options)) {
-            $errors = $this->validate($class, $data, ValidatorProvider::UPDATE, $options);
-            if (count($errors) > 0) {
-                // TODO : it should always throw exception
-                if (in_array(self::THROW_EXCEPTION, $options)) {
-                    throw new InvalidDataException(sprintf('%s is not valid', $class), $errors);
-                } else {
-                    return $errors;
-                }
-            }
+            $this->validator->validate($class, $data, ValidatorProvider::UPDATE, true, $options);
         }
 
         if (!in_array(static::NO_PERMISSIONS, $options)) {
@@ -396,19 +385,6 @@ class Crud
         }
 
         return $object;
-    }
-
-    /**
-     * Validates `data` with the available validator for `class`.
-     *
-     * @param string $class   - the class of the entity used for validation
-     * @param array  $data    - the serialized data to validate
-     * @param string $mode    - the validation mode
-     * @param array  $options - the validation options
-     */
-    public function validate(mixed $class, array $data, string $mode, array $options = []): array
-    {
-        return $this->validator->validate($class, $data, $mode, true, $options);
     }
 
     /**

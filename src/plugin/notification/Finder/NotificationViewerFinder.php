@@ -32,23 +32,23 @@ class NotificationViewerFinder extends AbstractFinder
                     $qb->andWhere('obj.status = :filter');
                     $qb->setParameter('filter', $filterValue);
                     break;
-              case 'user':
-                $qb->andWhere('obj.viewerId = :viewerId');
-                $qb->setParameter('viewerId', $filterValue);
-                break;
-              case 'types':
-                foreach ($filterValue as $name) {
-                    $qb->andWhere(
-                      $qb->expr()
-                        ->notLike(
-                          'notification.actionKey',
-                          $qb->expr()->literal('%'.$name.'%')
-                      )
-                    );
+                case 'user':
+                    $qb->andWhere('obj.viewerId = :viewerId');
+                    $qb->setParameter('viewerId', $filterValue);
                     break;
-                }
-                break;
-          }
+                case 'types':
+                    foreach ($filterValue as $name) {
+                        $qb->andWhere(
+                            $qb->expr()
+                              ->notLike(
+                                  'notification.actionKey',
+                                  $qb->expr()->literal('%'.$name.'%')
+                              )
+                        );
+                        break;
+                    }
+                    break;
+            }
         }
 
         if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {

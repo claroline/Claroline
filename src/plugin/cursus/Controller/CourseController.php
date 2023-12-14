@@ -206,7 +206,7 @@ class CourseController extends AbstractCrudController
         }
 
         return new JsonResponse(
-            $this->finder->search(Session::class, $params)
+            $this->crud->list(Session::class, $params)
         );
     }
 

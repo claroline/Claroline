@@ -37,17 +37,11 @@ class OrganizationController extends AbstractCrudController
     use HasWorkspacesTrait;
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage
+        private readonly TokenStorageInterface $tokenStorage
     ) {
         $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function getName(): string
@@ -72,12 +66,13 @@ class OrganizationController extends AbstractCrudController
         $query['hiddenFilters']['parent'] = null;
 
         return new JsonResponse(
-            $this->finder->search(Organization::class, $query, [Options::IS_RECURSIVE])
+            $this->crud->list(Organization::class, $query, [Options::IS_RECURSIVE])
         );
     }
 
     /**
      * @Route("/{id}/managers", name="apiv2_organization_list_managers", methods={"GET"})
+     *
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      */
     public function listManagersAction(Organization $organization): JsonResponse
@@ -85,7 +80,7 @@ class OrganizationController extends AbstractCrudController
         $this->checkPermission('OPEN', $organization, [], true);
 
         return new JsonResponse(
-            $this->finder->search(User::class, [
+            $this->crud->list(User::class, [
                 'hiddenFilters' => ['organizationManager' => $organization->getUuid()],
             ])
         );
@@ -95,6 +90,7 @@ class OrganizationController extends AbstractCrudController
      * Adds managers to the collection.
      *
      * @Route("/{id}/manager", name="apiv2_organization_add_managers", methods={"PATCH"})
+     *
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      */
     public function addManagersAction(Organization $organization, Request $request): JsonResponse
@@ -109,6 +105,7 @@ class OrganizationController extends AbstractCrudController
      * Removes managers from the collection.
      *
      * @Route("/{id}/manager", name="apiv2_organization_remove_managers", methods={"DELETE"})
+     *
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      */
     public function removeManagersAction(Organization $organization, Request $request): JsonResponse

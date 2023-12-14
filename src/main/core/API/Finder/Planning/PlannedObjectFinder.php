@@ -77,7 +77,7 @@ class PlannedObjectFinder extends AbstractFinder
 
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
-           }
+            }
         }
 
         $qb->andWhere($qb->expr()->gte('obj.endDate', 'obj.startDate'));

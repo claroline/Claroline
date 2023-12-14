@@ -31,21 +31,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class MessageController extends AbstractCrudController
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var MessageManager */
-    private $messageManager;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        MessageManager $messageManager
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly MessageManager $messageManager
     ) {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->messageManager = $messageManager;
     }
 
     public function getName(): string
@@ -55,21 +45,23 @@ class MessageController extends AbstractCrudController
 
     /**
      * @Route("/count/unread", name="apiv2_message_count_unread", methods={"GET"})
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function countUnreadAction(): JsonResponse
     {
         return new JsonResponse(
-            $this->finder->fetch(Message::class, [
+            $this->crud->count(Message::class, [
                 'read' => false,
                 'removed' => false,
                 'sent' => false,
-            ], null, 0, -1, true)
+            ])
         );
     }
 
     /**
      * @Route("/received", name="apiv2_message_received", methods={"GET"})
+     *
      * @ApiDoc(
      *     description="Returns the list of received message for the current connected user",
      *     queryString={
@@ -83,15 +75,16 @@ class MessageController extends AbstractCrudController
     public function getReceivedAction(Request $request): JsonResponse
     {
         return new JsonResponse(
-          $this->finder->search($this->getClass(), array_merge(
-              $request->query->all(),
-              ['hiddenFilters' => ['removed' => false, 'sent' => false]]
-          ))
+            $this->crud->list($this->getClass(), array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => ['removed' => false, 'sent' => false]]
+            ))
         );
     }
 
     /**
      * @Route("/removed", name="apiv2_message_removed", methods={"GET"})
+     *
      * @ApiDoc(
      *     description="Returns the list of removed message for the current connected user",
      *     queryString={
@@ -105,10 +98,10 @@ class MessageController extends AbstractCrudController
     public function getRemovedAction(Request $request): JsonResponse
     {
         return new JsonResponse(
-          $this->finder->search($this->getClass(), array_merge(
-              $request->query->all(),
-              ['hiddenFilters' => ['removed' => true]]
-          ))
+            $this->crud->list($this->getClass(), array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => ['removed' => true]]
+            ))
         );
     }
 
@@ -128,15 +121,16 @@ class MessageController extends AbstractCrudController
     public function getSentAction(Request $request): JsonResponse
     {
         return new JsonResponse(
-          $this->finder->search($this->getClass(), array_merge(
-              $request->query->all(),
-              ['hiddenFilters' => ['sent' => true, 'removed' => false]]
-          ))
+            $this->crud->list($this->getClass(), array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => ['sent' => true, 'removed' => false]]
+            ))
         );
     }
 
     /**
      * @Route("/softdelete", name="apiv2_message_soft_delete", methods={"PUT"})
+     *
      * @ApiDoc(
      *     description="Soft delete an array of messages.",
      *     queryString={
@@ -161,6 +155,7 @@ class MessageController extends AbstractCrudController
 
     /**
      * @Route("/remove", name="apiv2_message_hard_delete", methods={"DELETE"})
+     *
      * @ApiDoc(
      *     description="Hard delete an array of messages.",
      *     queryString={
@@ -183,6 +178,7 @@ class MessageController extends AbstractCrudController
 
     /**
      * @Route("/restore", name="apiv2_message_restore", methods={"PUT"})
+     *
      * @ApiDoc(
      *     description="Restore a list of messages for the current user.",
      *     queryString={
@@ -207,6 +203,7 @@ class MessageController extends AbstractCrudController
 
     /**
      * @Route("/read", name="apiv2_message_read", methods={"PUT"})
+     *
      * @ApiDoc(
      *     description="Read an array of message for the current user.",
      *     queryString={
@@ -233,6 +230,7 @@ class MessageController extends AbstractCrudController
 
     /**
      * @Route("/unread", name="apiv2_message_unread", methods={"PUT"})
+     *
      * @ApiDoc(
      *     description="Unread an array of message for the current user.",
      *     queryString={
@@ -259,6 +257,7 @@ class MessageController extends AbstractCrudController
 
     /**
      * @Route("/root/{id}", name="apiv2_message_root", methods={"GET"})
+     *
      * @ApiDoc(
      *     description="Get the fist message.",
      *     parameters={

@@ -78,7 +78,7 @@ class ApiTokenController extends AbstractCrudController
             'user' => $this->tokenStorage->getToken()->getUser()->getUuid(),
         ];
 
-        return new JsonResponse($this->finder->search(
+        return new JsonResponse($this->crud->list(
             $this->getClass(),
             $query,
             $options['get'] ?? []

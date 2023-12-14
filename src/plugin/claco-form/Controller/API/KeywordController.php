@@ -43,22 +43,21 @@ class KeywordController extends AbstractCrudController
      *     "/clacoform/{clacoForm}/keywords/list",
      *     name="apiv2_clacoformkeyword_list"
      * )
+     *
      * @EXT\ParamConverter(
      *     "clacoForm",
      *     class="Claroline\ClacoFormBundle\Entity\ClacoForm",
      *     options={"mapping": {"clacoForm": "uuid"}}
      * )
-     *
-     * @return JsonResponse
      */
-    public function categoriesListAction(ClacoForm $clacoForm, Request $request)
+    public function categoriesListAction(ClacoForm $clacoForm, Request $request): JsonResponse
     {
         $params = $request->query->all();
         if (!isset($params['hiddenFilters'])) {
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['clacoForm'] = $clacoForm->getId();
-        $data = $this->finder->search('Claroline\ClacoFormBundle\Entity\Keyword', $params);
+        $data = $this->crud->list('Claroline\ClacoFormBundle\Entity\Keyword', $params);
 
         return new JsonResponse($data, 200);
     }

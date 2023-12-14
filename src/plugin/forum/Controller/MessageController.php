@@ -43,6 +43,7 @@ class MessageController extends AbstractCrudController
 
     /**
      * @Route("/{id}/comment", methods={"POST"})
+     *
      * @ParamConverter("message", options={"mapping": {"id": "uuid"}})
      *
      * @ApiDoc(
@@ -70,6 +71,7 @@ class MessageController extends AbstractCrudController
 
     /**
      * @Route("forum/{forum}/messages/list/flagged", name="apiv2_forum_message_flagged_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
     public function getFlaggedMessagesAction(Request $request, Forum $forum): JsonResponse
@@ -77,15 +79,16 @@ class MessageController extends AbstractCrudController
         $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
 
         return new JsonResponse(
-            $this->finder->search($this->getClass(), array_merge(
+            $this->crud->list(self::getClass(), array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['flagged' => true, 'forum' => $forum->getUuid()]]
             ))
-      );
+        );
     }
 
     /**
      * @Route("forum/{forum}/messages/list/blocked", name="apiv2_forum_message_blocked_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
     public function getBlockedMessagesAction(Request $request, Forum $forum): JsonResponse
@@ -93,10 +96,10 @@ class MessageController extends AbstractCrudController
         $this->checkPermission('EDIT', $forum->getResourceNode(), [], true);
 
         return new JsonResponse(
-            $this->finder->search($this->getClass(), array_merge(
+            $this->crud->list(self::getClass(), array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['moderation' => true, 'forum' => $forum->getUuid()]]
             ))
-      );
+        );
     }
 }

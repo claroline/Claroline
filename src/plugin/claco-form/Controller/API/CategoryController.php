@@ -59,6 +59,7 @@ class CategoryController extends AbstractCrudController
 
     /**
      * @Route("/list/{clacoForm}", name="apiv2_clacoformcategory_list")
+     *
      * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
     public function listByClacoFormAction(ClacoForm $clacoForm, Request $request): JsonResponse
@@ -68,13 +69,14 @@ class CategoryController extends AbstractCrudController
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['clacoForm'] = $clacoForm->getId();
-        $data = $this->finder->search(Category::class, $params);
+        $data = $this->crud->list(Category::class, $params);
 
         return new JsonResponse($data, 200);
     }
 
     /**
      * @Route("/{id}/assign", name="apiv2_clacoform_category_assign", methods={"PUT"})
+     *
      * @EXT\ParamConverter("category", class="Claroline\ClacoFormBundle\Entity\Category", options={"mapping": {"id": "uuid"}})
      */
     public function assignAction(Category $category): JsonResponse

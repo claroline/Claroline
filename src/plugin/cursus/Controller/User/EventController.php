@@ -20,27 +20,18 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class EventController
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var FinderProvider */
-    private $finder;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        FinderProvider $finder)
-    {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->finder = $finder;
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly FinderProvider $finder
+    ) {
     }
 
     /**
      * List the active (in progress and forthcoming) session events of the current user.
      *
      * @Route("/active/{workspace}", name="apiv2_cursus_my_events_active", methods={"GET"})
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listActiveAction(Request $request, Workspace $workspace = null): JsonResponse
@@ -66,6 +57,7 @@ class EventController
      * List the ended session events of the current user.
      *
      * @Route("/ended/{workspace}", name="apiv2_cursus_my_events_ended", methods={"GET"})
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function listEndedAction(Request $request, Workspace $workspace = null): JsonResponse
