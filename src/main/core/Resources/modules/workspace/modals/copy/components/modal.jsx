@@ -48,12 +48,12 @@ const CopyModal = props => {
         type: ASYNC_BUTTON,
         label: trans('copy', {}, 'actions'),
         request: {
-          url: url(['apiv2_workspace_copy_bulk'], {
+          url: url(['apiv2_workspace_copy'], {
             ids: props.workspaces.map(workspace => workspace.id),
             model: hasModel
           }),
           request: {
-            method: 'GET'
+            method: 'PUT'
           },
           success: (response) => {
             if (props.onCopy) {

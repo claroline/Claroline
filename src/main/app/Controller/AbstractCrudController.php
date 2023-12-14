@@ -213,31 +213,6 @@ abstract class AbstractCrudController
         return new JsonResponse(null, 204);
     }
 
-    /**
-     * @ApiDoc(
-     *     description="Copy an array of object of class $class.",
-     *     queryString={
-     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
-     *     },
-     *     response={"$array"}
-     * )
-     *
-     * @param string $class
-     */
-    public function copyBulkAction(Request $request, $class): JsonResponse
-    {
-        $options = static::getOptions();
-
-        $copies = $this->crud->copyBulk(
-            $this->decodeIdsString($request, $class),
-            $options['copyBulk'] ?? []
-        );
-
-        return new JsonResponse(array_map(function ($copy) {
-            return $this->serializer->serialize($copy, $options['get'] ?? []);
-        }, $copies), 200);
-    }
-
     public static function getOptions(): array
     {
         return [
@@ -245,15 +220,14 @@ abstract class AbstractCrudController
             'list' => [Options::SERIALIZE_LIST],
             'create' => [Crud::THROW_EXCEPTION],
             'update' => [Crud::THROW_EXCEPTION],
-            'copyBulk' => [],
         ];
     }
 
     public function getRequirements(): array
     {
         return [
-            'get' => ['id' => '^(?!.*(copy|find|exist\/)).*', 'field' => '^(?!.*(copy|find|exist\/)).*'],
-            'update' => ['id' => '^(?!.*(find|exist\/)).*'],
+            'get' => ['id' => '^(?!.*(exist\/)).*', 'field' => '^(?!.*(exist\/)).*'],
+            'update' => ['id' => '^(?!.*(exist\/)).*'],
             'exist' => [],
         ];
     }

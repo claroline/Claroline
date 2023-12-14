@@ -73,7 +73,7 @@ class EventController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['list', 'copyBulk'];
+        return ['list'];
     }
 
     protected function getDefaultHiddenFilters(): array

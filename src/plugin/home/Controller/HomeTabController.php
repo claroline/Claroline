@@ -44,7 +44,7 @@ class HomeTabController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['create', 'update', 'list', 'copyBulk'];
+        return ['create', 'update', 'list'];
     }
 
     /**

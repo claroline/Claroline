@@ -32,6 +32,6 @@ class ScaleController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['exist', 'copyBulk'];
+        return ['exist'];
     }
 }

@@ -26,7 +26,7 @@ class EntryUserController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['exist', 'copyBulk', 'list', 'create', 'deleteBulk', 'get'];
+        return ['exist', 'list', 'create', 'deleteBulk', 'get'];
     }
 
     public function getName(): string

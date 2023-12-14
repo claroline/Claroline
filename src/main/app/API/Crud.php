@@ -289,27 +289,6 @@ class Crud
     }
 
     /**
-     * Copy a list of entries of `class`.
-     *
-     * @param array $data    - the list of entries to copy
-     * @param array $options - additional copy options
-     */
-    public function copyBulk(array $data, array $options = []): array
-    {
-        $this->om->startFlushSuite();
-        $copies = [];
-
-        foreach ($data as $el) {
-            // get the element
-            $copies[] = $this->copy($el, $options);
-        }
-
-        $this->om->endFlushSuite();
-
-        return $copies;
-    }
-
-    /**
      * Patches a collection in `object`. It will also work for collection with the add/delete method.
      *
      * @param object $object   - the entity to update
