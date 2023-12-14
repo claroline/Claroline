@@ -31,8 +31,6 @@ trait RequestDecoderTrait
             return [];
         }
 
-        $property = is_numeric($ids[0]) ? 'id' : 'uuid';
-
-        return $this->om->findList($class, $property, $ids);
+        return $this->om->findList($class, 'uuid', $ids);
     }
 }
