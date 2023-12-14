@@ -75,11 +75,6 @@ class CourseController extends AbstractCrudController
         return Course::class;
     }
 
-    public function getIgnore(): array
-    {
-        return ['copyBulk', 'schema'];
-    }
-
     public static function getOptions(): array
     {
         return array_merge(parent::getOptions(), [

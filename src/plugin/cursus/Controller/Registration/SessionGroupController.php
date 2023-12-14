@@ -152,6 +152,6 @@ class SessionGroupController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['exist', 'copyBulk', 'list'];
+        return ['exist', 'list'];
     }
 }

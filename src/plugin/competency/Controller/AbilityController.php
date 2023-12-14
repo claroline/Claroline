@@ -51,7 +51,7 @@ class AbilityController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['create', 'update', 'deleteBulk', 'get', 'exist', 'copyBulk'];
+        return ['create', 'update', 'deleteBulk', 'get', 'exist'];
     }
 
     /**

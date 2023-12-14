@@ -33,6 +33,6 @@ class ShortcutController extends AbstractCrudController
     public function getIgnore(): array
     {
         // only keep update action
-        return ['list', 'get', 'create', 'deleteBulk', 'copyBulk', 'exist'];
+        return ['list', 'get', 'create', 'deleteBulk', 'exist'];
     }
 }

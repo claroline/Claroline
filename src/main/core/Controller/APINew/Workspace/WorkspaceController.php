@@ -204,21 +204,18 @@ class WorkspaceController extends AbstractCrudController
     }
 
     /**
-     * @ApiDoc(
-     *     description="Copy an array of object of class $class.",
-     *     queryString={
-     *         {"name": "ids[]", "type": {"string", "integer"}, "description": "The object id or uuid."}
-     *     }
-     * )
+     * Copies a list of workspaces.
+     *
+     * @Route("/copy", name="apiv2_workspace_copy", methods={"PUT"})
      */
-    public function copyBulkAction(Request $request, $class): JsonResponse
+    public function copyAction(Request $request): JsonResponse
     {
-        $options = $this->getOptions()['copyBulk'];
+        $options = [];
         if (1 === (int) $request->query->get('model') || 'true' === $request->query->get('model')) {
             $options[] = Options::AS_MODEL;
         }
 
-        $toCopy = $this->decodeIdsString($request, $class);
+        $toCopy = $this->decodeIdsString($request, Workspace::class);
 
         foreach ($toCopy as $workspace) {
             if ($this->checkPermission('COPY', $workspace)) {

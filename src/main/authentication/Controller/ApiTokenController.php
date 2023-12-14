@@ -45,7 +45,7 @@ class ApiTokenController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['exist', 'copyBulk'];
+        return ['exist'];
     }
 
     protected function getDefaultHiddenFilters(): array

@@ -82,7 +82,7 @@ class ItemController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['get', 'create', 'update', 'copyBulk', 'exist'];
+        return ['get', 'create', 'update', 'exist'];
     }
 
     public static function getOptions(): array

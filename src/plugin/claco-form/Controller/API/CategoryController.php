@@ -49,7 +49,7 @@ class CategoryController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['exist', 'copyBulk', 'schema', 'list'];
+        return ['exist', 'list'];
     }
 
     public function getName(): string
