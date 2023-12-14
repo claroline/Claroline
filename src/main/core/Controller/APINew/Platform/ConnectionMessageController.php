@@ -44,7 +44,7 @@ class ConnectionMessageController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['exist', 'copyBulk', 'csv', 'find'];
+        return ['exist', 'copyBulk'];
     }
 
     /**

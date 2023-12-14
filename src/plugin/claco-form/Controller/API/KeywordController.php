@@ -30,7 +30,7 @@ class KeywordController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['exist', 'copyBulk', 'schema', 'find', 'list'];
+        return ['exist', 'copyBulk', 'schema', 'list'];
     }
 
     public function getName(): string

@@ -17,7 +17,7 @@ class BookReferenceConfigurationController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['find', 'deleteBulk', 'doc', 'list', 'get', 'exist', 'create', 'copyBulk'];
+        return ['deleteBulk', 'list', 'get', 'exist', 'create', 'copyBulk'];
     }
 
     /**

@@ -285,7 +285,6 @@ class UserController extends AbstractCrudController
                 Options::SERIALIZE_FACET,
             ],
             'get' => [Options::SERIALIZE_FACET],
-            'find' => [Options::SERIALIZE_FACET],
             'update' => [Options::SERIALIZE_FACET],
         ]);
     }

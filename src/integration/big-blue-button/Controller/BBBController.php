@@ -65,7 +65,7 @@ class BBBController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['exist', 'copyBulk', 'schema', 'find', 'list', 'get', 'create', 'deleteBulk'];
+        return ['exist', 'copyBulk', 'list', 'get', 'create', 'deleteBulk'];
     }
 
     /**

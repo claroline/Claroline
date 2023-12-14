@@ -281,7 +281,7 @@ class MessageController extends AbstractCrudController
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        $object = $this->crud->get($class, $id);
+        $object = $this->crud->get($this->getClass(), $id);
         $um = $this->om->getRepository(UserMessage::class)->findOneBy(['message' => $object, 'user' => $currentUser]);
         $this->crud->replace($um, 'isRead', true);
 
@@ -293,7 +293,7 @@ class MessageController extends AbstractCrudController
             );
         }
 
-        return new JsonResponse("No object found for id {$id} of class {$class}", 404);
+        return new JsonResponse("No object found for id {$id} of class {$this->getClass()}", 404);
     }
 
     public static function getOptions(): array
