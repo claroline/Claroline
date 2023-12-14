@@ -63,7 +63,7 @@ class CompetencyController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['exist', 'copyBulk', 'schema', 'find'];
+        return ['exist', 'copyBulk'];
     }
 
     /**

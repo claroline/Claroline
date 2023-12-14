@@ -27,7 +27,7 @@ class DirectoryController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'find', 'get', 'csv'];
+        return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'get'];
     }
 
     public function getName(): string

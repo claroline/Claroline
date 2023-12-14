@@ -55,36 +55,6 @@ abstract class AbstractCrudController
 
     /**
      * @ApiDoc(
-     *     description="Find a single object of class $class.",
-     *     queryString={"$finder"},
-     *     response={"$object"}
-     * )
-     *
-     * @param string $class
-     *
-     * @deprecated. use the get or list endpoints
-     */
-    public function findAction(Request $request, $class): JsonResponse
-    {
-        $query = $request->query->all();
-        $data = $this->finder->fetch($class, $query['filters'], [], 0, 2);
-
-        $options = static::getOptions();
-
-        switch (count($data)) {
-            case 0:
-                return new JsonResponse('No object found', 404);
-            case 1:
-                return new JsonResponse(
-                    $this->serializer->serialize($data[0], $options['get'] ?? [])
-                );
-            default:
-                return new JsonResponse('Multiple results, use "list" instead', 400);
-        }
-    }
-
-    /**
-     * @ApiDoc(
      *     description="Finds an object class $class.",
      *     parameters={
      *          {"name": "field", "type": "string", "description": "The name of the identifier we want to use (eg. id, slug)"},

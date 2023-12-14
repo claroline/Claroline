@@ -86,6 +86,6 @@ class CourseUserController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['get', 'exist', 'copyBulk', 'schema', 'find', 'list'];
+        return ['get', 'exist', 'copyBulk', 'list'];
     }
 }

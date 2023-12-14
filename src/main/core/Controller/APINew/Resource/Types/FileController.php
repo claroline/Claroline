@@ -46,7 +46,7 @@ class FileController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'find', 'get'];
+        return ['create', 'exist', 'list', 'copyBulk', 'deleteBulk', 'get'];
     }
 
     public function getName(): string

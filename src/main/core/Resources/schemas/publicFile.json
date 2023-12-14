@@ -3,9 +3,16 @@
   "type": "object",
   "properties": {
     "id": {
-      "type": "integer",
-      "format": "integer",
-      "description": "The public file id"
+      "type": "string",
+      "description": "The public file uuid"
+    },
+    "url": {
+      "type": "string",
+      "description": "The public file url"
     }
+  },
+  "required": ["url"],
+  "claroline": {
+    "ids":  ["id", "url"]
   }
 }
