@@ -42,11 +42,6 @@ class ConnectionMessageController extends AbstractCrudController
         return ConnectionMessage::class;
     }
 
-    public function getIgnore(): array
-    {
-        return ['exist'];
-    }
-
     /**
      * Discards a message for the next login.
      *

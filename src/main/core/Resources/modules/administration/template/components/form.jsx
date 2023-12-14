@@ -38,7 +38,7 @@ const TemplateForm = (props) =>
             disabled: (template) => template.system,
             options: {
               unique: {
-                check: ['apiv2_template_exist', {field: 'name'}]
+                check: ['apiv2_template_get', {field: 'name'}]
               }
             }
           }, {

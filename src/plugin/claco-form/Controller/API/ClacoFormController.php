@@ -27,7 +27,7 @@ class ClacoFormController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['create', 'deleteBulk', 'exist', 'list', 'get'];
+        return ['create', 'deleteBulk', 'list', 'get'];
     }
 
     public function getName(): string

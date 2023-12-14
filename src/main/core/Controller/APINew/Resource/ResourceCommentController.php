@@ -29,9 +29,4 @@ class ResourceCommentController extends AbstractCrudController
     {
         return ResourceComment::class;
     }
-
-    public function getIgnore(): array
-    {
-        return ['exist'];
-    }
 }

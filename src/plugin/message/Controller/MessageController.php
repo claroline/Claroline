@@ -277,7 +277,7 @@ class MessageController extends AbstractCrudController
         return new JsonResponse($this->serializer->serialize($root, [Options::IS_RECURSIVE]));
     }
 
-    public function getAction(string $field, $id, $class): JsonResponse
+    public function getAction(Request $request, string $field, string $id): JsonResponse
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
 

@@ -190,6 +190,6 @@ class SessionUserController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['exist', 'list'];
+        return ['list'];
     }
 }

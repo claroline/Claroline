@@ -57,7 +57,7 @@ class RevisionController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['exist', 'create', 'update', 'list', 'deleteBulk'];
+        return ['create', 'update', 'list', 'deleteBulk'];
     }
 
     /**

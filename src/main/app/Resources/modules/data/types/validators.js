@@ -264,7 +264,7 @@ function notExist(value, options = {}) {
   if (options.unique && value) {
     let existUrl
     if (Array.isArray(options.unique.check)) {
-      existUrl = [options.unique.check[0], merge({}, options.unique.check[1] || {}, {value: value})]
+      existUrl = [options.unique.check[0], merge({}, options.unique.check[1] || {}, {id: value})]
     } else {
       existUrl = options.unique.check
     }
@@ -277,10 +277,11 @@ function notExist(value, options = {}) {
         // there is no spec about possible values, but this is the one expected by symfony
         // @see Symfony\Component\HttpFoundation\Request::isXmlHttpRequest
         'X-Requested-With': 'XMLHttpRequest'
-      })
+      }),
+      method: "HEAD"
     })
       .then(response => {
-        if (204 !== response.status) {
+        if (404 !== response.status) {
           return response.json()
         }
 

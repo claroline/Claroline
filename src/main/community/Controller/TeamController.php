@@ -58,32 +58,6 @@ class TeamController extends AbstractCrudController
         return 'team';
     }
 
-    public function getIgnore(): array
-    {
-        return ['exist'];
-    }
-
-    /**
-     * @ApiDoc(
-     *     description="List the objects of class $class.",
-     *     queryString={
-     *         "$finder",
-     *         {"name": "page", "type": "integer", "description": "The queried page."},
-     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
-     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
-     *     },
-     *     response={"$list"}
-     * )
-     *
-     * @param string $class
-     */
-    public function listAction(Request $request, $class): JsonResponse
-    {
-        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
-
-        return parent::listAction($request, $class);
-    }
-
     /**
      * @Route("/workspace/{id}/teams", name="apiv2_workspace_team_list", methods={"GET"})
      *
@@ -273,6 +247,13 @@ class TeamController extends AbstractCrudController
         $this->om->endFlushSuite();
 
         return new JsonResponse(null, 204);
+    }
+
+    protected function getDefaultHiddenFilters(): array
+    {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
+        return [];
     }
 
     private function checkToolAccess(Workspace $workspace, string $permission): void

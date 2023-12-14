@@ -111,7 +111,7 @@ class EventController extends AbstractCrudController
         }
 
         return new JsonResponse(
-            $this->finder->search($class, $query, $options['list'] ?? [])
+            $this->finder->search($this->getClass(), $query, $options['list'] ?? [])
         );
     }
 

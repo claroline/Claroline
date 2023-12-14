@@ -29,9 +29,4 @@ class SectionController extends AbstractCrudController
     {
         return Section::class;
     }
-
-    public function getIgnore(): array
-    {
-        return ['exist'];
-    }
 }

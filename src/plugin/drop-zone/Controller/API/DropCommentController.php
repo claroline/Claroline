@@ -29,9 +29,4 @@ class DropCommentController extends AbstractCrudController
     {
         return DropComment::class;
     }
-
-    public function getIgnore(): array
-    {
-        return ['exist'];
-    }
 }

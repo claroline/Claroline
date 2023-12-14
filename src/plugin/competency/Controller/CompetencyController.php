@@ -61,11 +61,6 @@ class CompetencyController extends AbstractCrudController
         return Competency::class;
     }
 
-    public function getIgnore(): array
-    {
-        return ['exist'];
-    }
-
     /**
      * @Route(
      *     "/root/list",

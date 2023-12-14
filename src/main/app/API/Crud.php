@@ -64,6 +64,23 @@ class Crud
         return $object;
     }
 
+    public function exist(string $class, mixed $id, string $idProp = 'id'): bool
+    {
+        $object = null;
+        if ('id' === $idProp) {
+            $object = $this->om->getRepository($class)->count(['uuid' => $id]);
+        } else {
+            $identifiers = $this->schema->getIdentifiers($class);
+            if (!in_array($idProp, $identifiers)) {
+                throw new \LogicException(sprintf('You can only get entities with an identifier property (identifiers: %s).', implode(', ', $identifiers)));
+            }
+
+            $object = $this->om->getRepository($class)->findOneBy([$idProp => $id]);
+        }
+
+        return !empty($object);
+    }
+
     public function find(string $class, $data): ?object
     {
         return $this->om->getObject($data, $class, $this->schema->getIdentifiers($class));

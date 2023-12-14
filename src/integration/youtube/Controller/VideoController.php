@@ -45,7 +45,7 @@ class VideoController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['list', 'get', 'create', 'deleteBulk', 'exist'];
+        return ['list', 'get', 'create', 'deleteBulk'];
     }
 
     /**

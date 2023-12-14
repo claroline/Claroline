@@ -47,7 +47,7 @@ const GroupFormComponent = props => {
               label: trans('code'),
               options: {
                 unique: {
-                  check: ['apiv2_group_exist', {field: 'code'}]
+                  check: ['apiv2_group_get', {field: 'code'}]
                 }
               }
             }

@@ -36,7 +36,7 @@ const Required = () =>
             required: true,
             options: {
               unique: {
-                check: ['apiv2_user_exist', {field: 'email'}]
+                check: ['apiv2_user_get', {field: 'email'}]
               }
             }
           }, {
@@ -47,7 +47,7 @@ const Required = () =>
             displayed: param('community.username'),
             options: {
               unique: {
-                check: ['apiv2_user_exist', {field: 'username'}]
+                check: ['apiv2_user_get', {field: 'username'}]
               }
             }
           }, {
