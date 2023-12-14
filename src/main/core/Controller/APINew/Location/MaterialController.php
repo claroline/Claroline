@@ -85,7 +85,7 @@ class MaterialController extends AbstractCrudController
         ];
 
         return new JsonResponse(
-            $this->finder->search(MaterialBooking::class, $query)
+            $this->crud->list(MaterialBooking::class, $query)
         );
     }
 

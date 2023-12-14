@@ -69,7 +69,7 @@ class AssertionController extends AbstractCrudController
     /**
      * @Route("/current-user/{workspace}", name="apiv2_assertion_current_user_list", methods={"GET"})
      */
-    public function listMyAssertionsAction(Request $request, ?string $workspace = null): JsonResponse
+    public function listMyAssertionsAction(Request $request, string $workspace = null): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
@@ -84,7 +84,7 @@ class AssertionController extends AbstractCrudController
             $filters['workspace'] = $workspace;
         }
 
-        $assertions = $this->finder->search(Assertion::class, array_merge(
+        $assertions = $this->crud->list(Assertion::class, array_merge(
             $request->query->all(),
             ['hiddenFilters' => $filters]
         ));
@@ -94,6 +94,7 @@ class AssertionController extends AbstractCrudController
 
     /**
      * @Route("/{assertion}/evidences", name="apiv2_assertion_evidences", methods={"GET"})
+     *
      * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
     public function listEvidencesAction(Request $request, Assertion $assertion): JsonResponse
@@ -101,7 +102,7 @@ class AssertionController extends AbstractCrudController
         $this->checkPermission('OPEN', $assertion, [], true);
 
         return new JsonResponse(
-            $this->finder->search(Evidence::class, array_merge(
+            $this->crud->list(Evidence::class, array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['assertion' => $assertion->getUuid()]]
             ))
@@ -112,6 +113,7 @@ class AssertionController extends AbstractCrudController
      * Downloads pdf version of assertion.
      *
      * @Route("/{assertion}/pdf/download", name="apiv2_assertion_pdf_download", methods={"GET"})
+     *
      * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
     public function downloadPdfAction(Assertion $assertion): StreamedResponse

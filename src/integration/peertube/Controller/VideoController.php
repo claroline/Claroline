@@ -51,6 +51,7 @@ class VideoController extends AbstractCrudController
 
     /**
      * @Route("/{id}/progression/{currentTime}/{totalTime}", name="apiv2_peertube_video_progression_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\ParamConverter("video", class="Claroline\PeerTubeBundle\Entity\Video", options={"mapping": {"id": "uuid"}})
      */

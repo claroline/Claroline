@@ -125,7 +125,7 @@ class SessionController extends AbstractCrudController
         }
 
         return new JsonResponse(
-            $this->finder->search(Session::class, $params, $options['list'] ?? [])
+            $this->crud->list(Session::class, $params, $options['list'] ?? [])
         );
     }
 
@@ -162,7 +162,7 @@ class SessionController extends AbstractCrudController
         $params['hiddenFilters']['session'] = $session->getUuid();
 
         return new JsonResponse(
-            $this->finder->search(Event::class, $params)
+            $this->crud->list(Event::class, $params)
         );
     }
 

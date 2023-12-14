@@ -58,6 +58,7 @@ class ExportController extends AbstractCrudController
 
     /**
      * @Route("/workspace/{workspaceId}", name="apiv2_workspace_transfer_export_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspaceId": "uuid"}})
      */
     public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
@@ -65,7 +66,7 @@ class ExportController extends AbstractCrudController
         $this->checkPermission(ToolPermissions::getPermission('transfer', 'OPEN'), $workspace, [], true);
 
         return new JsonResponse(
-            $this->finder->search(self::getClass(), array_merge($request->query->all(), ['hiddenFilters' => [
+            $this->crud->list(self::getClass(), array_merge($request->query->all(), ['hiddenFilters' => [
                 'workspace' => $workspace->getUuid(),
             ]]), $this->getOptions()['list'] ?? [])
         );
@@ -73,6 +74,7 @@ class ExportController extends AbstractCrudController
 
     /**
      * @Route("/{id}/execute", name="apiv2_transfer_export_execute", methods={"POST"})
+     *
      * @EXT\ParamConverter("exportFile", options={"mapping": {"id": "uuid"}})
      */
     public function executeAction(ExportFile $exportFile): JsonResponse
@@ -89,6 +91,7 @@ class ExportController extends AbstractCrudController
 
     /**
      * @Route("/{id}/download", name="apiv2_transfer_export_download", methods={"GET"})
+     *
      * @EXT\ParamConverter("exportFile", options={"mapping": {"id": "uuid"}})
      */
     public function downloadAction(ExportFile $exportFile): BinaryFileResponse

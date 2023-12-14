@@ -8,7 +8,6 @@ services:
         - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'
         - '@Claroline\AppBundle\API\Crud'
         - '@Claroline\AppBundle\Persistence\ObjectManager'
-        - '@Claroline\AppBundle\API\FinderProvider'
         - '@security.authorization_checker'
 
     Claroline\AnnouncementBundle\Controller\AnnouncementAggregateController:

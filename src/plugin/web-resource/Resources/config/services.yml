@@ -6,10 +6,8 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\WebResourceBundle\Controller\API\WebResourceController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
-            - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\WebResourceBundle\Manager\WebResourceManager'
 
     Claroline\WebResourceBundle\Listener\WebResourceListener:

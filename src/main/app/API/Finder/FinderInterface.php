@@ -16,7 +16,7 @@ interface FinderInterface
     /**
      * @return array|int
      */
-    public function find(?array $filters = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false);
+    public function find(?array $filters = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false);
 
     public static function getClass(): string;
 }

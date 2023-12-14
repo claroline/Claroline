@@ -1,7 +1,6 @@
 # JSON API
 claroline_web_resource_api:
     resource: "@ClarolineWebResourceBundle/Controller/API/"
-    prefix: apiv2
-    type: api
+    type: annotation
     options:
         expose: true

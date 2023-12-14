@@ -48,6 +48,7 @@ class RoomController extends AbstractCrudController
 
     /**
      * @Route("/{room}/events", name="apiv2_location_room_list_event", methods={"GET"})
+     *
      * @EXT\ParamConverter("room", class="Claroline\CoreBundle\Entity\Location\Room", options={"mapping": {"room": "uuid"}})
      */
     public function listEventsAction(Room $room, Request $request): JsonResponse
@@ -60,7 +61,7 @@ class RoomController extends AbstractCrudController
         ];
 
         return new JsonResponse(
-            $this->finder->search(PlannedObject::class, $query)
+            $this->crud->list(PlannedObject::class, $query)
         );
     }
 }

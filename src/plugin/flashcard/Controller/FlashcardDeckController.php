@@ -22,8 +22,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class FlashcardDeckController extends AbstractCrudController
 {
-    /** @var ObjectManager */
-    protected $om;
     private FlashcardManager $flashcardManager;
     private EvaluationManager $evaluationManager;
     private ResourceEvaluationRepository $resourceEvalRepo;
@@ -33,10 +31,9 @@ class FlashcardDeckController extends AbstractCrudController
         FlashcardManager $flashcardManager,
         EvaluationManager $evaluationManager,
     ) {
-        $this->om = $om;
         $this->flashcardManager = $flashcardManager;
         $this->evaluationManager = $evaluationManager;
-        $this->resourceEvalRepo = $this->om->getRepository(ResourceEvaluation::class);
+        $this->resourceEvalRepo = $om->getRepository(ResourceEvaluation::class);
     }
 
     public function getName(): string
@@ -64,8 +61,9 @@ class FlashcardDeckController extends AbstractCrudController
         ]);
     }
 
-    public function updateAction($id, Request $request, $class): JsonResponse
+    public function updateAction($id, Request $request): JsonResponse
     {
+        // TODO : should add an EventSubscriber to the Crud update action instead
         $deck = $this->om->getRepository(FlashcardDeck::class)->findOneBy(['uuid' => $id]);
 
         if ($this->flashcardManager->shouldResetAttempts($deck, $this->decodeRequest($request))) {
@@ -76,7 +74,7 @@ class FlashcardDeckController extends AbstractCrudController
             $this->om->flush();
         }
 
-        return parent::updateAction($id, $request, $class);
+        return parent::updateAction($id, $request);
     }
 
     /**

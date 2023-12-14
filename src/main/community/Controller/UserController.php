@@ -77,7 +77,7 @@ class UserController extends AbstractCrudController
         return User::class;
     }
 
-    public function updateAction($id, Request $request, $class): JsonResponse
+    public function updateAction($id, Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
         if (!isset($data['id'])) {
@@ -93,7 +93,7 @@ class UserController extends AbstractCrudController
             unset($data['roles']);
         }
 
-        $object = $this->crud->update($class, $data, [Options::SERIALIZE_FACET, Crud::THROW_EXCEPTION]);
+        $object = $this->crud->update(self::getClass(), $data, [Options::SERIALIZE_FACET, Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(
             $this->serializer->serialize($object, [Options::SERIALIZE_FACET])
@@ -279,7 +279,7 @@ class UserController extends AbstractCrudController
         return array_merge(parent::getOptions(), [
             'deleteBulk' => [Options::SOFT_DELETE],
             'create' => [
-                // maybe move these options in an other class
+                // maybe move these options in another class
                 Options::ADD_NOTIFICATIONS,
                 Options::WORKSPACE_VALIDATE_ROLES,
                 Options::SERIALIZE_FACET,

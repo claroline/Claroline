@@ -45,7 +45,7 @@ class ItemController extends AbstractCrudController
         return 'quiz_questions';
     }
 
-    public function getClass(): ?string
+    public function getClass(): string
     {
         return Item::class;
     }

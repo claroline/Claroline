@@ -46,6 +46,7 @@ class ConnectionMessageController extends AbstractCrudController
      * Discards a message for the next login.
      *
      * @Route("/{id}/discard", name="apiv2_connection_message_discard", methods="PUT")
+     *
      * @EXT\ParamConverter(
      *     "message",
      *     class="Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage",

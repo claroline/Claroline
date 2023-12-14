@@ -67,6 +67,19 @@ class FinderProvider
         ]);
     }
 
+    public function count(string $class, array $finderParams = []): int
+    {
+        $queryParams = self::parseQueryParams($finderParams);
+
+        $page = $queryParams['page'];
+        $limit = $queryParams['limit'];
+        $allFilters = $queryParams['allFilters'];
+        $sortBy = $queryParams['sortBy'];
+
+        // count the total results (without pagination)
+        return $this->fetch($class, $allFilters, $sortBy, $page, $limit, true);
+    }
+
     public function searchEntities(string $class, array $finderParams = []): array
     {
         $queryParams = self::parseQueryParams($finderParams);
@@ -99,14 +112,8 @@ class FinderProvider
 
     /**
      * Builds and fires the query for a given class. There will be no serialization here.
-     *
-     * @param int  $page
-     * @param int  $limit
-     * @param bool $count
-     *
-     * @return mixed
      */
-    public function fetch(string $class, ?array $filters = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false)
+    public function fetch(string $class, ?array $filters = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false)
     {
         try {
             return $this->get($class)->find($filters, $sortBy, $page, $limit, $count);

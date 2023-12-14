@@ -64,6 +64,7 @@ class RevisionController extends AbstractCrudController
      * Submits Drop for revision.
      *
      * @Route("/drop/{id}/submit/revision", name="claro_dropzone_drop_submit_for_revision", methods={"PUT"})
+     *
      * @EXT\ParamConverter(
      *     "drop",
      *     class="Claroline\DropZoneBundle\Entity\Drop",
@@ -93,6 +94,7 @@ class RevisionController extends AbstractCrudController
 
     /**
      * @Route("/{id}/revisions/list", name="claro_dropzone_revisions_list", methods={"GET"})
+     *
      * @EXT\ParamConverter(
      *     "dropzone",
      *     class="Claroline\DropZoneBundle\Entity\Dropzone",
@@ -106,7 +108,7 @@ class RevisionController extends AbstractCrudController
     {
         $this->checkPermission('EDIT', $dropzone->getResourceNode());
 
-        $data = $this->finder->search(Revision::class, array_merge(
+        $data = $this->crud->list(Revision::class, array_merge(
             $request->query->all(),
             ['hiddenFilters' => ['dropzone' => $dropzone->getUuid()]]
         ));
@@ -116,6 +118,7 @@ class RevisionController extends AbstractCrudController
 
     /**
      * @Route("/drop/{drop}/revisions/list", name="claro_dropzone_drop_revisions_list", methods={"GET"})
+     *
      * @EXT\ParamConverter(
      *     "drop",
      *     class="Claroline\DropZoneBundle\Entity\Drop",
@@ -134,7 +137,7 @@ class RevisionController extends AbstractCrudController
             throw new AccessDeniedException();
         }
 
-        $data = $this->finder->search(Revision::class, array_merge(
+        $data = $this->crud->list(Revision::class, array_merge(
             $request->query->all(),
             ['hiddenFilters' => ['drop' => $drop->getUuid()]]
         ));
@@ -144,6 +147,7 @@ class RevisionController extends AbstractCrudController
 
     /**
      * @Route("/{id}/revision/drop", name="claro_dropzone_drop_from_revision_get", methods={"GET"})
+     *
      * @EXT\ParamConverter(
      *     "revision",
      *     class="Claroline\DropZoneBundle\Entity\Revision",
@@ -171,6 +175,7 @@ class RevisionController extends AbstractCrudController
      *     "/revision/{id}/next",
      *     name="claro_dropzone_revision_next"
      * )
+     *
      * @EXT\ParamConverter(
      *     "revision",
      *     class="Claroline\DropZoneBundle\Entity\Revision",
@@ -190,7 +195,7 @@ class RevisionController extends AbstractCrudController
         $filters['dropzone'] = $dropzone->getUuid();
         $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
 
-        //array map is not even needed; objects are fine here
+        // array map is not even needed; objects are fine here
         /** @var Revision[] $data */
         $data = $this->finder->get(Revision::class)->find($filters, $sortBy, 0, -1, false);
         $next = null;
@@ -211,6 +216,7 @@ class RevisionController extends AbstractCrudController
      *     "/revision/{id}/previous",
      *     name="claro_dropzone_revision_previous"
      * )
+     *
      * @EXT\ParamConverter(
      *     "revision",
      *     class="Claroline\DropZoneBundle\Entity\Revision",
@@ -230,7 +236,7 @@ class RevisionController extends AbstractCrudController
         $filters['dropzone'] = $dropzone->getUuid();
         $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
 
-        //array map is not even needed; objects are fine here
+        // array map is not even needed; objects are fine here
         /** @var Revision[] $data */
         $data = $this->finder->get(Revision::class)->find($filters, $sortBy, 0, -1, false);
         $previous = null;

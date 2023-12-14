@@ -43,7 +43,7 @@ class SessionGroupController extends AbstractCrudController
         return 'training_session_group';
     }
 
-    public function getClass(): ?string
+    public function getClass(): string
     {
         return SessionGroup::class;
     }
@@ -53,9 +53,10 @@ class SessionGroupController extends AbstractCrudController
      *
      * @Route("/{id}", name="apiv2_training_session_group_list", methods={"GET"})
      * @Route("/{id}/{sessionId}", name="apiv2_training_session_group_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
-    public function listByCourseAction(Request $request, Course $course, ?string $sessionId = null): JsonResponse
+    public function listByCourseAction(Request $request, Course $course, string $sessionId = null): JsonResponse
     {
         $this->checkPermission('REGISTER', $course, [], true);
 
@@ -69,7 +70,7 @@ class SessionGroupController extends AbstractCrudController
         }
 
         return new JsonResponse(
-            $this->finder->search(SessionGroup::class, $params)
+            $this->crud->list(SessionGroup::class, $params)
         );
     }
 
@@ -77,6 +78,7 @@ class SessionGroupController extends AbstractCrudController
      * Move user's registration from a session to another.
      *
      * @Route("/move/{type}/{targetId}", name="apiv2_training_session_group_move", methods={"PUT"})
+     *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"targetId": "uuid"}})
      */
     public function moveAction(Session $session, string $type, Request $request): JsonResponse

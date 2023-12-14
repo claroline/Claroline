@@ -75,7 +75,7 @@ class CompetencyController extends AbstractCrudController
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['parent'] = null;
-        $data = $this->finder->search(Competency::class, $params, [Options::SERIALIZE_MINIMAL]);
+        $data = $this->crud->list(Competency::class, $params, [Options::SERIALIZE_MINIMAL]);
 
         return new JsonResponse($data, 200);
     }
@@ -105,7 +105,7 @@ class CompetencyController extends AbstractCrudController
             $params['hiddenFilters'] = [];
         }
         $params['hiddenFilters']['uuid'] = $root->getUuid();
-        $data = $this->finder->search(Competency::class, $params, [Options::SERIALIZE_MINIMAL, Options::IS_RECURSIVE]);
+        $data = $this->crud->list(Competency::class, $params, [Options::SERIALIZE_MINIMAL, Options::IS_RECURSIVE]);
 
         return new JsonResponse($data, 200);
     }

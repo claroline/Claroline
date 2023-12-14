@@ -58,7 +58,7 @@ class ResourceNodeFinder extends AbstractFinder
                     $qb->andWhere('dir.uploadDestination = true');
                     break;
 
-                case 'meta.type': //should be the same as resourceType but something is wrong somewhere. It's an alias
+                case 'meta.type': // should be the same as resourceType but something is wrong somewhere. It's an alias
                 case 'resourceType':
                     if (is_array($filterValue)) {
                         $qb->andWhere('ort.name IN (:resourceType)');

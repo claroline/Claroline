@@ -59,25 +59,21 @@ class AbilityController extends AbstractCrudController
      *     "/node/{node}/abilities/fetch",
      *     name="apiv2_competency_resource_abilities_list"
      * )
+     *
      * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     options={"mapping": {"node": "uuid"}}
      * )
-     *
-     * @return JsonResponse
      */
-    public function resourceAbilitiesFetchAction(ResourceNode $node)
+    public function resourceAbilitiesFetchAction(ResourceNode $node): JsonResponse
     {
-        $abilities = $this->finder->fetch(
+        $abilities = $this->crud->list(
             Ability::class,
             ['resources' => [$node->getUuid()]]
         );
-        $serialized = array_map(function (Ability $ability) {
-            return $this->serializer->serialize($ability);
-        }, $abilities);
 
-        return new JsonResponse($serialized);
+        return new JsonResponse($abilities);
     }
 
     /**
@@ -86,6 +82,7 @@ class AbilityController extends AbstractCrudController
      *     name="apiv2_competency_resource_ability_associate",
      *     methods={"POST"}
      * )
+     *
      * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -117,6 +114,7 @@ class AbilityController extends AbstractCrudController
      *     name="apiv2_competency_resource_ability_dissociate",
      *     methods={"DELETE"}
      * )
+     *
      * @EXT\ParamConverter(
      *     "node",
      *     class="Claroline\CoreBundle\Entity\Resource\ResourceNode",

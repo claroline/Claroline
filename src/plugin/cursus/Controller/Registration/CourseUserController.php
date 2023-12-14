@@ -37,7 +37,7 @@ class CourseUserController extends AbstractCrudController
         return 'training_course_user';
     }
 
-    public function getClass(): ?string
+    public function getClass(): string
     {
         return CourseUser::class;
     }
@@ -46,6 +46,7 @@ class CourseUserController extends AbstractCrudController
      * List pending users of a course.
      *
      * @Route("/{id}/pending", name="apiv2_training_course_pending_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
     public function listByCourseAction(Request $request, Course $course): JsonResponse
@@ -57,7 +58,7 @@ class CourseUserController extends AbstractCrudController
         $params['hiddenFilters']['course'] = $course->getUuid();
 
         return new JsonResponse(
-            $this->finder->search(CourseUser::class, $params)
+            $this->crud->list(CourseUser::class, $params)
         );
     }
 

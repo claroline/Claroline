@@ -1,7 +1,5 @@
 services:
     _defaults:
-        autowire: false #change to true
-        autoconfigure: false
         public: true #because controller
 
     Icap\BlogBundle\Controller\BlogController:
@@ -9,7 +7,6 @@ services:
           - '@security.authorization_checker'
           - '@router'
           - '@twig'
-          - '@Claroline\AppBundle\API\FinderProvider'
           - '@Icap\BlogBundle\Manager\BlogManager'
           - '@Icap\BlogBundle\Manager\PostManager'
           - '@Icap\BlogBundle\Serializer\BlogSerializer'

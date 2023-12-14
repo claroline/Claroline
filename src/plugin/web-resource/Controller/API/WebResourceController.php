@@ -11,26 +11,18 @@
 
 namespace Claroline\WebResourceBundle\Controller\API;
 
-use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\WebResourceBundle\Manager\WebResourceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class WebResourceController extends AbstractCrudController
+class WebResourceController
 {
-    private $resourceManager;
-    private $webResourceManager;
-
     public function __construct(
-        ResourceManager $resourceManager,
-        WebResourceManager $webResourceManager
+        private readonly WebResourceManager $webResourceManager
     ) {
-        $this->resourceManager = $resourceManager;
-        $this->webResourceManager = $webResourceManager;
     }
 
     public function getName(): string
@@ -53,7 +45,6 @@ class WebResourceController extends AbstractCrudController
     public function uploadFile(Workspace $workspace, Request $request): JsonResponse
     {
         $files = $request->files->all();
-        $error = null;
 
         foreach ($files as $file) {
             $isZip = $this->webResourceManager->isZip($file, $workspace);
@@ -67,5 +58,7 @@ class WebResourceController extends AbstractCrudController
                 return new JsonResponse($data, 200);
             }
         }
+
+        return new JsonResponse();
     }
 }

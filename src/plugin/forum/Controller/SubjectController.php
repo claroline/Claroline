@@ -44,9 +44,10 @@ class SubjectController extends AbstractCrudController
     /**
      * @Route("/{id}/messages", methods={"GET"})
      * @Route("/forum/{forumId}/subjects/{id}/messages", name="apiv2_forum_subject_get_message", methods={"GET"})
+     *
      * @EXT\ParamConverter("subject", class = "Claroline\ForumBundle\Entity\Subject",  options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forumId": "uuid"}})
-
+     *
      * @ApiDoc(
      *     description="Get the messages of a subject",
      *     queryString={
@@ -60,7 +61,7 @@ class SubjectController extends AbstractCrudController
      *     }
      * )
      */
-    public function listMessagesAction(Request $request, Subject $subject, ?Forum $forum = null): JsonResponse
+    public function listMessagesAction(Request $request, Subject $subject, Forum $forum = null): JsonResponse
     {
         if ($forum && ($forum->getId() !== $subject->getForum()->getId())) {
             throw new \Exception('This subject was not created in the forum.');
@@ -69,15 +70,16 @@ class SubjectController extends AbstractCrudController
         $this->checkPermission('OPEN', $subject, [], true);
 
         return new JsonResponse(
-          $this->finder->search(Message::class, array_merge(
-              $request->query->all(),
-              ['hiddenFilters' => ['subject' => $subject->getUuid(), 'parent' => null, 'first' => false]]
+            $this->crud->list(Message::class, array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => ['subject' => $subject->getUuid(), 'parent' => null, 'first' => false]]
             ))
         );
     }
 
     /**
      * @Route("/{id}/message", methods={"POST", "PUT"})
+     *
      * @EXT\ParamConverter("subject", class = "Claroline\ForumBundle\Entity\Subject",  options={"mapping": {"id": "uuid"}})
      *
      * @ApiDoc(
@@ -106,6 +108,7 @@ class SubjectController extends AbstractCrudController
 
     /**
      * @Route("/{subject}/message/{message}", name="apiv2_forum_subject_message_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter("message", class = "Claroline\ForumBundle\Entity\Message",  options={"mapping": {"message": "uuid"}})
      * @EXT\ParamConverter("subject", class = "Claroline\ForumBundle\Entity\Subject",  options={"mapping": {"subject": "uuid"}})
      *
@@ -125,6 +128,7 @@ class SubjectController extends AbstractCrudController
 
     /**
      * @Route("/forum/{forum}/subjects/list/flagged", name="apiv2_forum_subject_flagged_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
     public function getFlaggedSubjectsAction(Forum $forum, Request $request): JsonResponse
@@ -132,7 +136,7 @@ class SubjectController extends AbstractCrudController
         $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
 
         return new JsonResponse(
-            $this->finder->search($this->getClass(), array_merge(
+            $this->crud->list(self::getClass(), array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['flagged' => true, 'forum' => $forum->getUuid()]]
             ))
@@ -141,6 +145,7 @@ class SubjectController extends AbstractCrudController
 
     /**
      * @Route("/forum/{forum}/subjects/list/blocked", name="apiv2_forum_subject_blocked_list", methods={"GET"})
+     *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
     public function getBlockedSubjectsAction(Forum $forum, Request $request): JsonResponse
@@ -148,7 +153,7 @@ class SubjectController extends AbstractCrudController
         $this->checkPermission('OPEN', $forum->getResourceNode(), [], true);
 
         return new JsonResponse(
-            $this->finder->search($this->getClass(), array_merge(
+            $this->crud->list(self::getClass(), array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['moderation' => true, 'forum' => $forum->getUuid()]]
             ))

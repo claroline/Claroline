@@ -11,7 +11,6 @@
 
 namespace Claroline\CommunityBundle\Controller;
 
-use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CommunityBundle\Entity\Team;
@@ -35,17 +34,11 @@ class TeamController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TeamManager */
-    private $teamManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TeamManager $teamManager
+        private readonly TeamManager $teamManager
     ) {
         $this->authorization = $authorization;
-        $this->teamManager = $teamManager;
     }
 
     public function getClass(): string
@@ -74,7 +67,7 @@ class TeamController extends AbstractCrudController
         $params['hiddenFilters']['workspace'] = $workspace->getUuid();
 
         return new JsonResponse(
-            $this->finder->search(Team::class, $params, [Options::SERIALIZE_LIST])
+            $this->crud->list(Team::class, $params, [Options::SERIALIZE_LIST])
         );
     }
 

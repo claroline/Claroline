@@ -4,7 +4,6 @@ namespace Claroline\AppBundle\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -16,27 +15,19 @@ abstract class AbstractCrudController
 {
     use RequestDecoderTrait;
 
-    /** @var FinderProvider */
-    protected $finder;
-
-    /** @var SerializerProvider */
-    protected $serializer;
-
-    /** @var Crud */
-    protected $crud;
-
-    /** @var ObjectManager */
-    protected $om;
+    protected ObjectManager $om;
+    protected SerializerProvider $serializer;
+    protected Crud $crud;
 
     /**
      * Get the name of the managed entity.
      */
     abstract public function getName(): string;
 
-    public function setFinder(FinderProvider $finder): void
-    {
-        $this->finder = $finder;
-    }
+    /**
+     * Get the name of the managed entity.
+     */
+    abstract public function getClass(): string;
 
     public function setSerializer(SerializerProvider $serializer): void
     {
@@ -66,16 +57,16 @@ abstract class AbstractCrudController
     public function getAction(Request $request, string $field, string $id): JsonResponse
     {
         if (Request::METHOD_HEAD === $request->getMethod()) {
-            if (!$this->crud->exist($this->getClass(), $id, $field)) {
-                throw new NotFoundHttpException(sprintf('No object found for id %s of class %s', $id, $this->getClass()));
+            if (!$this->crud->exist(static::getClass(), $id, $field)) {
+                throw new NotFoundHttpException(sprintf('No object found for id %s of class %s', $id, static::getClass()));
             }
 
             return new JsonResponse();
         }
 
-        $object = $this->crud->get($this->getClass(), $id, $field);
+        $object = $this->crud->get(static::getClass(), $id, $field);
         if (!$object) {
-            throw new NotFoundHttpException(sprintf('No object found for id %s of class %s', $id, $this->getClass()));
+            throw new NotFoundHttpException(sprintf('No object found for id %s of class %s', $id, static::getClass()));
         }
 
         $options = static::getOptions();
@@ -96,18 +87,15 @@ abstract class AbstractCrudController
      *     },
      *     response={"$list"}
      * )
-     *
-     * @param string $class
      */
-    public function listAction(Request $request, $class): JsonResponse
+    public function listAction(Request $request): JsonResponse
     {
         $options = static::getOptions();
 
-        $query = $request->query->all();
-        $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
-
         return new JsonResponse(
-            $this->crud->list($class, $query, $options['list'] ?? [])
+            $this->crud->list(static::getClass(), array_merge([], $request->query->all(), [
+                'hiddenFilters' => $this->getDefaultHiddenFilters(),
+            ]), $options['list'] ?? [])
         );
     }
 
@@ -119,17 +107,12 @@ abstract class AbstractCrudController
      *     },
      *     response={"$object"}
      * )
-     *
-     * @param string $class
      */
-    public function createAction(Request $request, $class): JsonResponse
+    public function createAction(Request $request): JsonResponse
     {
         $options = static::getOptions();
 
-        $object = $this->crud->create($class, $this->decodeRequest($request), $options['create'] ?? []);
-        if (is_array($object)) {
-            return new JsonResponse($object, 422);
-        }
+        $object = $this->crud->create(static::getClass(), $this->decodeRequest($request), $options['create'] ?? []);
 
         return new JsonResponse(
             $this->serializer->serialize($object, $options['get'] ?? []),
@@ -148,11 +131,8 @@ abstract class AbstractCrudController
      *     },
      *     response={"$object"}
      * )
-     *
-     * @param string $id
-     * @param string $class
      */
-    public function updateAction($id, Request $request, $class): JsonResponse
+    public function updateAction(string $id, Request $request): JsonResponse
     {
         $data = $this->decodeRequest($request);
         if (!isset($data['id'])) {
@@ -161,10 +141,7 @@ abstract class AbstractCrudController
 
         $options = static::getOptions();
 
-        $object = $this->crud->update($class, $data, $options['update'] ?? []);
-        if (is_array($object)) {
-            return new JsonResponse($object, 422);
-        }
+        $object = $this->crud->update(static::getClass(), $data, $options['update'] ?? []);
 
         // just in case so we really returns the proper object
         $this->om->refresh($object);
@@ -181,15 +158,13 @@ abstract class AbstractCrudController
      *         {"name": "ids[]", "type": {"string"}, "description": "The object uuid."}
      *     }
      * )
-     *
-     * @param string $class
      */
-    public function deleteBulkAction(Request $request, $class): JsonResponse
+    public function deleteBulkAction(Request $request): JsonResponse
     {
         $options = static::getOptions();
 
         $this->crud->deleteBulk(
-            $this->decodeIdsString($request, $class),
+            $this->decodeIdsString($request, static::getClass()),
             $options['deleteBulk'] ?? []
         );
 
@@ -201,24 +176,14 @@ abstract class AbstractCrudController
         return [
             'get' => [],
             'list' => [Options::SERIALIZE_LIST],
-            'create' => [Crud::THROW_EXCEPTION],
-            'update' => [Crud::THROW_EXCEPTION],
+            'create' => [],
+            'update' => [],
         ];
-    }
-
-    public function getRequirements(): array
-    {
-        return [];
     }
 
     protected function getDefaultHiddenFilters(): array
     {
         return [];
-    }
-
-    public function getClass(): ?string
-    {
-        return null;
     }
 
     public function getIgnore(): array

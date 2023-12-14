@@ -52,9 +52,9 @@ abstract class AbstractFinder implements FinderInterface
         return $qb;
     }
 
-    public function find(?array $filters = [], ?array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false)
+    public function find(?array $filters = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false)
     {
-        //sorting is not required when we count stuff
+        // sorting is not required when we count stuff
         $sortBy = $count ? null : $sortBy;
 
         $qb = $this->om->createQueryBuilder();

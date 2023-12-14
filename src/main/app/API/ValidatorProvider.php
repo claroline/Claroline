@@ -10,9 +10,9 @@ use Psr\Container\ContainerInterface;
 class ValidatorProvider
 {
     /** @var string */
-    const CREATE = 'create';
+    public const CREATE = 'create';
     /** @var string */
-    const UPDATE = 'update';
+    public const UPDATE = 'update';
 
     /** @var ObjectManager */
     private $om;
@@ -62,7 +62,7 @@ class ValidatorProvider
      *
      * @throws InvalidDataException
      */
-    public function validate($class, $data, $mode, $throwException = false, array $options = [])
+    public function validate(string $class, $data, string $mode, bool $throwException = false, array $options = []): array
     {
         // validates JSON Schema
         $schema = $this->schema->getSchema($class);
@@ -82,7 +82,7 @@ class ValidatorProvider
         try {
             $validator = $this->get($class);
         } catch (\Exception $e) {
-            //no custom validator
+            // no custom validator
             $uniqueFields = [];
             $identifiers = $this->schema->getIdentifiers($class);
 
@@ -110,7 +110,7 @@ class ValidatorProvider
         $uniqueFields = $validator->getUniqueFields();
         $errors = $this->validateUnique($uniqueFields, $data, $mode, $class);
 
-        //custom validation
+        // custom validation
         $errors = array_merge($errors, $validator->validate($data, $mode, $options));
 
         if (!empty($errors) && $throwException) {
@@ -125,7 +125,7 @@ class ValidatorProvider
         $data = json_decode(json_encode($data));
 
         if ([] === $data) {
-            $data = new \StdClass();
+            $data = new \stdClass();
         }
 
         return $data;
