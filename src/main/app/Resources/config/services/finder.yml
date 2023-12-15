@@ -7,7 +7,7 @@ services:
                   - '@Claroline\AppBundle\Persistence\ObjectManager'
             - method: setEventDispatcher
               arguments:
-                  - '@Claroline\AppBundle\Event\StrictDispatcher'
+                  - '@event_dispatcher'
             - method: setFilters
               arguments:
                   - !tagged_iterator { tag: 'claroline.finder.filter'}

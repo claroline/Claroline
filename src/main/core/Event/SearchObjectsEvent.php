@@ -19,123 +19,53 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class SearchObjectsEvent extends Event
 {
-    /**
-     * The pre-configured QueryBuilder for the search.
-     *
-     * @var QueryBuilder
-     */
-    private $queryBuilder;
-
-    /**
-     * The class of the objects currently searched.
-     *
-     * @var string
-     */
-    private $objectClass;
-
-    /**
-     * @var array
-     */
-    private $filters = [];
-
-    /**
-     * @var array
-     */
-    private $sortBy = null;
-
-    /**
-     * @var int
-     */
-    private $page = 0;
-
-    /**
-     * @var int
-     */
-    private $limit = -1;
-
-    /**
-     * SearchObjectEvent constructor.
-     *
-     * @param array $sortBy
-     */
     public function __construct(
-        QueryBuilder $queryBuilder,
-        string $objectClass,
-        array $filters = [],
-        array $sortBy = null,
-        int $page = 0,
-        int $limit = -1
+        private readonly QueryBuilder $queryBuilder,
+        private readonly string $objectClass,
+        private readonly string $objectAlias = 'obj',
+        private array $filters = [],
+        private readonly ?array $sortBy = null,
+        private readonly int $page = 0,
+        private readonly int $limit = -1
     ) {
-        $this->queryBuilder = $queryBuilder;
-        $this->objectClass = $objectClass;
-        $this->filters = $filters;
-        $this->sortBy = $sortBy;
-        $this->page = $page;
-        $this->limit = $limit;
     }
 
-    /**
-     * @return string
-     */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return $this->objectClass;
     }
 
-    /**
-     * Gets the query builder instance.
-     *
-     * @return QueryBuilder
-     */
-    public function getQueryBuilder()
+    public function getObjectAlias(): string
+    {
+        return $this->objectAlias;
+    }
+
+    public function getQueryBuilder(): QueryBuilder
     {
         return $this->queryBuilder;
     }
 
-    /**
-     * Get filters.
-     *
-     * @return array
-     */
-    public function getFilters()
+    public function getFilters(): array
     {
         return $this->filters;
     }
 
-    /**
-     * Set filters.
-     */
-    public function setFilters(array $filters)
+    public function setFilters(array $filters): void
     {
         $this->filters = $filters;
     }
 
-    /**
-     * Get sort by.
-     *
-     * @return array
-     */
-    public function getSortBy()
+    public function getSortBy(): ?array
     {
         return $this->sortBy;
     }
 
-    /**
-     * Get page.
-     *
-     * @return int
-     */
-    public function getPage()
+    public function getPage(): int
     {
         return $this->page;
     }
 
-    /**
-     * Get limit.
-     *
-     * @return int
-     */
-    public function getLimit()
+    public function getLimit(): int
     {
         return $this->limit;
     }

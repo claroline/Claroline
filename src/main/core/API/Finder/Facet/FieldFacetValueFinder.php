@@ -37,7 +37,7 @@ class FieldFacetValueFinder extends AbstractFinder
         return 'Claroline\CoreBundle\Entity\Facet\FieldFacetValue';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         // use oauthChecker & tokenStorage to fetch exactly what's needed according to the permissions
 

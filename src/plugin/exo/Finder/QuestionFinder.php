@@ -37,7 +37,7 @@ class QuestionFinder extends AbstractFinder
         return 'UJM\ExoBundle\Entity\Item\Item';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         // only search in questions (not content items)
         // in any case exclude every mimeType that does not begin with [application] from results

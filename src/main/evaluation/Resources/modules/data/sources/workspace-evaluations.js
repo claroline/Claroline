@@ -83,6 +83,15 @@ export default {
         displayable: false,
         sortable: false,
         filterable: true
+      }, {
+        name: 'workspaceTags',
+        type: 'tag',
+        label: trans('tags'),
+        displayable: true,
+        sortable: false,
+        options: {
+          objectClass: 'Claroline\\CoreBundle\\Entity\\Workspace\\Workspace'
+        }
       }
     ],
     card: WorkspaceCard

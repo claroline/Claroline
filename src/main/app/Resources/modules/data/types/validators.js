@@ -278,7 +278,7 @@ function notExist(value, options = {}) {
         // @see Symfony\Component\HttpFoundation\Request::isXmlHttpRequest
         'X-Requested-With': 'XMLHttpRequest'
       }),
-      method: "HEAD"
+      method: 'HEAD'
     })
       .then(response => {
         if (404 !== response.status) {

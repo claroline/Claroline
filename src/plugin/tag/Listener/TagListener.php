@@ -51,7 +51,7 @@ class TagListener
                 ->from(TaggedObject::class, 'to')
                 ->innerJoin('to.tag', 't')
                 ->where('to.objectClass = :objectClass')
-                ->andWhere('to.objectId = obj.uuid') // this makes the UUID required on tagged objects
+                ->andWhere("to.objectId = {$event->getObjectAlias()}.uuid") // this makes the UUID required on tagged objects
                 ->andWhere('(t.uuid IN (:tagIds) OR t.name IN (:tagNames))')
                 ->groupBy('to.objectId')
                 ->having('COUNT(to.id) = :expectedCount'); // this permits to make a AND between tags

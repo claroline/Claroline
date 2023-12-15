@@ -60,6 +60,6 @@ class Evaluation extends AbstractUserEvaluation
 
     public function getEstimatedDuration(): ?int
     {
-        return $this->workspace->getEstimatedDuration();
+        return $this->workspace?->getEstimatedDuration();
     }
 }

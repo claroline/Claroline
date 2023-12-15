@@ -14,6 +14,8 @@ namespace Claroline\EvaluationBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\SearchObjectsEvent;
 use Doctrine\ORM\QueryBuilder;
 
 class WorkspaceEvaluationFinder extends AbstractFinder
@@ -23,7 +25,7 @@ class WorkspaceEvaluationFinder extends AbstractFinder
         return Evaluation::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         $userJoin = false;
         if (!array_key_exists('user', $searches)) {
@@ -47,20 +49,6 @@ class WorkspaceEvaluationFinder extends AbstractFinder
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'workspace':
-                    $qb->join('obj.workspace', 'w');
-                    $workspaceJoin = true;
-
-                    $qb->andWhere("w.uuid = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
-                case 'workspaces':
-                    $qb->join('obj.workspace', 'w');
-                    $workspaceJoin = true;
-
-                    $qb->andWhere("w.uuid IN (:{$filterName})");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
                 case 'user':
                     $qb->join('obj.user', 'u');
                     $userJoin = true;
@@ -68,6 +56,36 @@ class WorkspaceEvaluationFinder extends AbstractFinder
                     $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+
+                case 'workspace':
+                case 'workspaces':
+                    if (!$workspaceJoin) {
+                        $qb->join('obj.workspace', 'w');
+                        $workspaceJoin = true;
+                    }
+
+                    if (is_array($filterValue)) {
+                        $qb->andWhere("w.uuid IN (:{$filterName})");
+                        $qb->setParameter($filterName, $filterValue);
+                    } else {
+                        $qb->andWhere("w.uuid = :{$filterName}");
+                        $qb->setParameter($filterName, $filterValue);
+                    }
+                    break;
+
+                case 'workspaceTags':
+                    if (!$workspaceJoin) {
+                        $qb->join('obj.workspace', 'w');
+                        $workspaceJoin = true;
+                    }
+
+                    // small cheat to be able to filter by tags
+                    // if we let the default event handle it, it will search tags on the evaluations (which is not the case)
+                    $event = new SearchObjectsEvent($qb, Workspace::class, 'w', ['tags' => $searches['workspaceTags']], $sortBy, $page, $limit);
+                    $this->eventDispatcher->dispatch($event, 'objects.search');
+
+                    break;
+
                 default:
                     $this->setDefaults($qb, $filterName, $filterValue);
             }
