@@ -22,7 +22,7 @@ class RecordingFinder extends AbstractFinder
         return Recording::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {

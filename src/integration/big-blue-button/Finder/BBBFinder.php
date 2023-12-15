@@ -22,7 +22,7 @@ class BBBFinder extends AbstractFinder
         return BBB::class;
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         $qb->leftJoin('obj.resourceNode', 'n');
         $qb->andWhere('n.active = true'); // only rooms of non deleted nodes

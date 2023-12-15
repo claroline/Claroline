@@ -11,31 +11,37 @@
 
 namespace Claroline\AppBundle\API\Finder;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\SearchObjectsEvent;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 abstract class AbstractFinder implements FinderInterface
 {
-    /** @var ObjectManager */
-    protected $om;
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
-    /** @var iterable */
-    private $filters;
+    protected ObjectManager $om;
+    protected EventDispatcherInterface $eventDispatcher;
+    private iterable $filters;
 
+    /**
+     * @internal used by DI
+     */
     public function setObjectManager(ObjectManager $om): void
     {
         $this->om = $om;
     }
 
-    public function setEventDispatcher(StrictDispatcher $eventDispatcher): void
+    /**
+     * @internal used by DI
+     */
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher): void
     {
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function setFilters(iterable $filters)
+    /**
+     * @internal used by DI
+     */
+    public function setFilters(iterable $filters): void
     {
         $this->filters = $filters;
     }
@@ -43,7 +49,7 @@ abstract class AbstractFinder implements FinderInterface
     /**
      * The queried object is already named "obj".
      */
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         foreach ($searches as $filterName => $filterValue) {
             $this->setDefaults($qb, $filterName, $filterValue);
@@ -60,22 +66,14 @@ abstract class AbstractFinder implements FinderInterface
         $qb = $this->om->createQueryBuilder();
         $qb->select($count ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj')->from(static::getClass(), 'obj');
 
-        // Let's the whole app knows we are doing a search with an event
+        // Lets the whole app knows we are doing a search with an event
         // ATTENTION : This needs to be done first because if a listener manage a filter (like Tags),
         // it needs to be removed from list of filters to avoid the finder implementation to process it
+        $event = new SearchObjectsEvent($qb, static::getClass(), 'obj', $filters, $sortBy, $page, $limit);
+        $this->eventDispatcher->dispatch($event, 'objects.search');
 
-        /** @var SearchObjectsEvent $event */
-        $event = $this->eventDispatcher->dispatch('objects.search', SearchObjectsEvent::class, [
-            'queryBuilder' => $qb,
-            'objectClass' => static::getClass(),
-            'filters' => $filters,
-            'sortBy' => $sortBy,
-            'page' => $page,
-            'limit' => $limit,
-        ]);
-
-        // filter query - let's the finder implementation process the filters to configure query
-        $qb = $this->configureQueryBuilder($qb, $event->getFilters(), $sortBy);
+        // filter query - lets the finder implementation process the filters to configure query
+        $qb = $this->configureQueryBuilder($qb, $event->getFilters(), $sortBy, $page = 0, $limit);
 
         // order query if implementation has not done it
         $this->sortResults($qb, $sortBy);

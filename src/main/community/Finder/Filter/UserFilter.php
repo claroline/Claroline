@@ -9,12 +9,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class UserFilter implements FinderFilterInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
-        $this->tokenStorage = $tokenStorage;
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage
+    ) {
     }
 
     public function addFilter(QueryBuilder $qb, string $alias, ?array $searches = []): QueryBuilder

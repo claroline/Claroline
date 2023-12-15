@@ -22,7 +22,7 @@ class ScoTrackingFinder extends AbstractFinder
         return 'Claroline\ScormBundle\Entity\ScoTracking';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null): QueryBuilder
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         $qb->join('obj.sco', 'sco');
 
