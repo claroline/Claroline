@@ -27,11 +27,11 @@
       "description": "The slug of the chapter's parent chapter"
     },
     "previousSlug": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "The slug of the chapter's previous sibling"
     },
     "nextSlug": {
-      "type": "string",
+      "type": ["string", "null"],
       "description": "The slug of the chapter's next sibling"
     }
   },

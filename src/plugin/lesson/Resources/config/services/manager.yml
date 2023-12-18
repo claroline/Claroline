@@ -9,5 +9,5 @@ services:
            - '@doctrine.orm.entity_manager'
            - '@Icap\LessonBundle\Serializer\ChapterSerializer'
            - '@Claroline\AppBundle\Persistence\ObjectManager'
+           - '@Claroline\AppBundle\API\Crud'
            - '@event_dispatcher'
-           - '@translator'
