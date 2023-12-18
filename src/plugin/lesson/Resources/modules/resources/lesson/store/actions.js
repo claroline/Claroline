@@ -76,10 +76,11 @@ actions.copyChapter = (formName, lessonId, chapterSlug) => dispatch => {
   dispatch(actions.chapterEdit())
   dispatch({[API_REQUEST]: {
     url: ['apiv2_lesson_chapter_get', {lessonId: lessonId, slug: chapterSlug}],
-    success: (response, dispatch) => {
-      dispatch(formActions.resetForm(formName, response, true))
+      success: (response, dispatch) => {
       const data = cloneDeep(response)
       data.parentSlug = ''
+      data.id = undefined
+      dispatch(formActions.resetForm(formName, data, true))
       dispatch(actions.chapterLoad(data))
     }
   }})
