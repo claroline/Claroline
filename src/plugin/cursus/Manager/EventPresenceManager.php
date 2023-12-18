@@ -123,14 +123,15 @@ class EventPresenceManager
         }
         $table .= '</table>';
 
-        $placeholders = [
-            'event_name' => $event->getName(),
-            'event_code' => $event->getCode(),
-            'event_description' => $event->getDescription(),
-            'event_start' => $event->getStartDate()->format('d/m/Y H:i'),
-            'event_end' => $event->getEndDate()->format('d/m/Y H:i'),
-            'event_presences_table' => $table,
-        ];
+        $placeholders = array_merge([
+                'event_name' => $event->getName(),
+                'event_code' => $event->getCode(),
+                'event_description' => $event->getDescription(),
+                'event_presences_table' => $table,
+            ],
+            $this->templateManager->formatDatePlaceholder('event_start', $event->getStartDate()),
+            $this->templateManager->formatDatePlaceholder('event_end', $event->getEndDate()),
+        );
 
         return $this->templateManager->getTemplate('training_event_presences', $placeholders, $locale);
     }
@@ -146,17 +147,18 @@ class EventPresenceManager
             $status = $presence->getStatus();
         }
 
-        $placeholders = [
-            'event_name' => $event->getName(),
-            'event_code' => $event->getCode(),
-            'event_description' => $event->getDescription(),
-            'event_start' => $event->getStartDate()->format('d/m/Y H:i'),
-            'event_end' => $event->getEndDate()->format('d/m/Y H:i'),
-            'event_presence_status' => $this->translator->trans('presence_'.$status, [], 'cursus'),
-            'user_username' => $user->getUsername(),
-            'user_first_name' => $user->getFirstName(),
-            'user_last_name' => $user->getLastName(),
-        ];
+        $placeholders = array_merge([
+                'event_name' => $event->getName(),
+                'event_code' => $event->getCode(),
+                'event_description' => $event->getDescription(),
+                'event_presence_status' => $this->translator->trans('presence_'.$status, [], 'cursus'),
+                'user_username' => $user->getUsername(),
+                'user_first_name' => $user->getFirstName(),
+                'user_last_name' => $user->getLastName(),
+            ],
+            $this->templateManager->formatDatePlaceholder('event_start', $event->getStartDate()),
+            $this->templateManager->formatDatePlaceholder('event_end', $event->getEndDate()),
+        );
 
         if ($event->getPresenceTemplate()) {
             return $this->templateManager->getTemplateContent($event->getPresenceTemplate(), $placeholders, $locale);
