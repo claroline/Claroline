@@ -7,29 +7,21 @@ use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
+use Claroline\EvaluationBundle\Repository\ResourceAttemptRepository;
 
 class EvaluationManager
 {
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var ResourceEvaluationManager */
-    private $resourceEvalManager;
-
-    /** @var ResourceEvaluationRepository */
-    private $resourceEvalRepo;
+    private ResourceEvaluationManager $resourceEvalManager;
+    private ResourceAttemptRepository $resourceEvalRepo;
 
     public function __construct(
         ObjectManager $om,
         ResourceEvaluationManager $resourceEvalManager
     ) {
-        $this->om = $om;
         $this->resourceEvalManager = $resourceEvalManager;
-
-        $this->resourceEvalRepo = $this->om->getRepository(ResourceEvaluation::class);
+        $this->resourceEvalRepo = $om->getRepository(ResourceEvaluation::class);
     }
 
     /**
@@ -40,7 +32,7 @@ class EvaluationManager
         return $this->resourceEvalManager->getUserEvaluation($node, $user);
     }
 
-    public function update(ResourceNode $node, User $user, float $currentTime = 0, float $totalTime = 0)
+    public function update(ResourceNode $node, User $user, float $currentTime = 0, float $totalTime = 0): ResourceEvaluation
     {
         $evaluation = $this->resourceEvalRepo->findOneInProgress($node, $user);
 

@@ -18,7 +18,8 @@ use Doctrine\ORM\Mapping as ORM;
  * Represents an attempt of a User to a ResourceNode.
  * There may be several for a user and a resource.
  *
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository")
+ * @ORM\Entity(repositoryClass="Claroline\EvaluationBundle\Repository\ResourceAttemptRepository")
+ *
  * @ORM\Table(name="claro_resource_evaluation")
  */
 class ResourceEvaluation extends AbstractEvaluation
@@ -27,25 +28,20 @@ class ResourceEvaluation extends AbstractEvaluation
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation"
      * )
-     * @ORM\JoinColumn(name="resource_user_evaluation", onDelete="CASCADE")
      *
-     * @var ResourceUserEvaluation
+     * @ORM\JoinColumn(name="resource_user_evaluation", onDelete="CASCADE")
      */
-    private $resourceUserEvaluation;
+    private ?ResourceUserEvaluation $resourceUserEvaluation;
 
     /**
      * @ORM\Column(type="text", name="evaluation_comment", nullable=true)
-     *
-     * @var string
      */
-    private $comment;
+    private ?string $comment = null;
 
     /**
      * @ORM\Column(name="more_data", type="json", nullable=true)
-     *
-     * @var array
      */
-    private $data;
+    private ?array $data = [];
 
     public function getResourceUserEvaluation(): ?ResourceUserEvaluation
     {
@@ -62,7 +58,7 @@ class ResourceEvaluation extends AbstractEvaluation
         return $this->comment;
     }
 
-    public function setComment(?string $comment = null): void
+    public function setComment(string $comment = null): void
     {
         $this->comment = $comment;
     }

@@ -9,15 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Repository\Resource;
+namespace Claroline\EvaluationBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
+use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Doctrine\ORM\EntityRepository;
 
-class ResourceEvaluationRepository extends EntityRepository
+class ResourceAttemptRepository extends EntityRepository
 {
     public function findOneInProgress(ResourceNode $node, User $user): ?ResourceEvaluation
     {
@@ -27,10 +28,10 @@ class ResourceEvaluationRepository extends EntityRepository
             ->andWhere('rue.user = :user')
             ->andWhere('rue.resourceNode = :resourceNode')
             ->setParameter('status', [
-                AbstractEvaluation::STATUS_NOT_ATTEMPTED,
-                AbstractEvaluation::STATUS_TODO,
-                AbstractEvaluation::STATUS_OPENED,
-                AbstractEvaluation::STATUS_INCOMPLETE,
+                EvaluationStatus::NOT_ATTEMPTED,
+                EvaluationStatus::TODO,
+                EvaluationStatus::OPENED,
+                EvaluationStatus::INCOMPLETE,
             ])
             ->setParameter('user', $user)
             ->setParameter('resourceNode', $node)
@@ -59,13 +60,37 @@ class ResourceEvaluationRepository extends EntityRepository
             ->where('re.status IN (:status)')
             ->andWhere('rue.resourceNode = :resourceNode')
             ->setParameter('status', [
-                AbstractEvaluation::STATUS_NOT_ATTEMPTED,
-                AbstractEvaluation::STATUS_TODO,
-                AbstractEvaluation::STATUS_OPENED,
-                AbstractEvaluation::STATUS_INCOMPLETE,
+                EvaluationStatus::NOT_ATTEMPTED,
+                EvaluationStatus::TODO,
+                EvaluationStatus::OPENED,
+                EvaluationStatus::INCOMPLETE,
             ])
             ->setParameter('resourceNode', $node)
             ->getQuery()
             ->getResult();
+    }
+
+    public function countTerminated(ResourceNode $resourceNode, User $user): int
+    {
+        return (int) $this->getEntityManager()
+            ->createQuery('
+                SELECT COUNT(a)
+                FROM Claroline\CoreBundle\Entity\Resource\ResourceEvaluation AS a
+                JOIN a.resourceUserEvaluation AS e
+                WHERE e.user = :user
+                  AND e.resourceNode = :resourceNode
+                  AND a.status IN (:status)
+            ')
+            ->setParameters([
+                'resourceNode' => $resourceNode,
+                'user' => $user,
+                'status' => [
+                    EvaluationStatus::COMPLETED,
+                    EvaluationStatus::PASSED,
+                    EvaluationStatus::PARTICIPATED,
+                    EvaluationStatus::FAILED,
+                ],
+            ])
+            ->getSingleScalarResult();
     }
 }

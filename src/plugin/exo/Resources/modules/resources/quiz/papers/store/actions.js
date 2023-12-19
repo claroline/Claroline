@@ -44,3 +44,16 @@ actions.deletePapers = (quizId, papers) => ({
     success: (data, dispatch) => dispatch(listActions.invalidateData(selectors.LIST_NAME))
   }
 })
+
+actions.giveAttempt = (quizId, paperId) => ({
+  [API_REQUEST]: {
+    url: ['exercise_attempt_give', {
+      exerciseId: quizId,
+      id: paperId
+    }],
+    request: {
+      method: 'PUT'
+    },
+    success: (data, dispatch) => dispatch(listActions.invalidateData(selectors.LIST_NAME))
+  }
+})

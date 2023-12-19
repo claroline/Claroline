@@ -131,6 +131,13 @@ const Papers = props =>
             message: transChoice('papers_delete_message', rows.length, {count: rows.length})
           },
           callback: () => props.delete(props.quizId, rows)
+        }, {
+          name: 'give-attempt',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-repeat',
+          label: trans('give_attempt', {}, 'actions'),
+          displayed: props.admin && !!rows[0].endDate,
+          callback: () => props.giveAttempt(props.quizId, rows[0].id)
         }
       ]}
 
@@ -143,7 +150,8 @@ Papers.propTypes = {
   quizId: T.string.isRequired,
   admin: T.bool.isRequired,
   hasScore: T.bool.isRequired,
-  delete: T.func.isRequired
+  delete: T.func.isRequired,
+  giveAttempt: T.func.isRequired
 }
 
 const ConnectedPapers = connect(
@@ -156,6 +164,9 @@ const ConnectedPapers = connect(
   (dispatch) => ({
     delete(quizId, papers) {
       dispatch(papersActions.deletePapers(quizId, papers))
+    },
+    giveAttempt(quizId, paperId) {
+      dispatch(papersActions.giveAttempt(quizId, paperId))
     }
   })
 )(Papers)

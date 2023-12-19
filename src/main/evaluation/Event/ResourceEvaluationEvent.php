@@ -38,16 +38,21 @@ class ResourceEvaluationEvent extends Event
 
     public function hasStatusChanged(): bool
     {
-        return $this->changes['status'];
+        return array_key_exists('status', $this->changes) && $this->changes['status'];
     }
 
     public function hasProgressionChanged(): bool
     {
-        return $this->changes['progression'];
+        return array_key_exists('progression', $this->changes) && $this->changes['progression'];
     }
 
     public function hasScoreChanged(): bool
     {
-        return $this->changes['score'];
+        return array_key_exists('score', $this->changes) && $this->changes['score'];
+    }
+
+    public function hasNbAttemptsChanged(): bool
+    {
+        return array_key_exists('nbAttempts', $this->changes) && $this->changes['nbAttempts'];
     }
 }

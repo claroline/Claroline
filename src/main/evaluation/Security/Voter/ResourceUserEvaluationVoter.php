@@ -29,7 +29,8 @@ class ResourceUserEvaluationVoter extends AbstractEvaluationVoter
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         $isAdmin = $this->isToolGranted(self::EDIT, 'evaluation')
-            || $this->isToolGranted(self::EDIT, 'evaluation', $object->getResourceNode()->getWorkspace());
+            || $this->isToolGranted(self::EDIT, 'evaluation', $object->getResourceNode()->getWorkspace())
+            || $this->isGranted(self::ADMINISTRATE, $object->getResourceNode());
 
         switch ($attributes[0]) {
             case self::OPEN:
@@ -50,6 +51,7 @@ class ResourceUserEvaluationVoter extends AbstractEvaluationVoter
 
                 return VoterInterface::ACCESS_DENIED;
 
+            case self::ADMINISTRATE:
             case self::EDIT:
             case self::DELETE:
                 if ($isAdmin) {

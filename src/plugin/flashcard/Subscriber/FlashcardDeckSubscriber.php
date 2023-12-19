@@ -8,7 +8,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
+use Claroline\EvaluationBundle\Repository\ResourceAttemptRepository;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
 use Claroline\FlashcardBundle\Manager\EvaluationManager;
 use Claroline\FlashcardBundle\Manager\FlashcardManager;
@@ -22,7 +22,7 @@ class FlashcardDeckSubscriber implements EventSubscriberInterface
     private ObjectManager $om;
     private EvaluationManager $evaluationManager;
     private FlashcardManager $flashcardManager;
-    private ResourceEvaluationRepository $resourceEvalRepo;
+    private ResourceAttemptRepository $resourceEvalRepo;
 
     public function __construct(
         SerializerProvider $serializer,

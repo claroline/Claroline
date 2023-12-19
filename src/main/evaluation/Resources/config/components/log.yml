@@ -2,7 +2,11 @@ services:
     Claroline\EvaluationBundle\Component\Log\Functional\LogResourceAttemptEnd:
         parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
         tags: [ 'claroline.component.log' ]
-    
+
+    Claroline\EvaluationBundle\Component\Log\Functional\LogResourceAttemptGive:
+        parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
+        tags: [ 'claroline.component.log' ]
+
     Claroline\EvaluationBundle\Component\Log\Functional\LogResourceAttemptStart:
         parent: Claroline\LogBundle\Component\Log\AbstractFunctionalLog
         tags: [ 'claroline.component.log' ]

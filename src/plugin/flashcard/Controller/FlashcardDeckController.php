@@ -7,7 +7,7 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
+use Claroline\EvaluationBundle\Repository\ResourceAttemptRepository;
 use Claroline\FlashcardBundle\Entity\Flashcard;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
 use Claroline\FlashcardBundle\Manager\EvaluationManager;
@@ -24,7 +24,7 @@ class FlashcardDeckController extends AbstractCrudController
 {
     private FlashcardManager $flashcardManager;
     private EvaluationManager $evaluationManager;
-    private ResourceEvaluationRepository $resourceEvalRepo;
+    private ResourceAttemptRepository $resourceEvalRepo;
 
     public function __construct(
         ObjectManager $om,
