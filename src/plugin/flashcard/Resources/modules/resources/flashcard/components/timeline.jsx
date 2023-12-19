@@ -2,9 +2,8 @@ import React from 'react'
 import classes from 'classnames'
 import {PropTypes as T} from 'prop-types'
 
-import {FlashcardProgressBar} from '#/plugin/flashcard/resources/flashcard/components/progress-bar'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
-import {getRule, getLabel, getClassList, getProgression} from '#/plugin/flashcard/resources/flashcard/utils'
+import {getRule, getLabel, getClassList} from '#/plugin/flashcard/resources/flashcard/utils'
 
 const SessionStep = props => {
   const rule = getRule(props.index)
@@ -18,7 +17,7 @@ const SessionStep = props => {
         position={'bottom'}
         tip={`Session ${props.index} : ${rule}.`}
       >
-        <div className="flashcard-timeline-heading">
+        <div className="flashcard-timeline-number">
           {label}
         </div>
       </TooltipOverlay>
@@ -33,30 +32,18 @@ SessionStep.propTypes = {
   completed: T.bool
 }
 
-const Timeline = (props) => {
-  const progression = getProgression(props.session, props.started, props.completed, props.end)
-
-  return (
-    <div className="flashcard-timeline">
-      <FlashcardProgressBar
-        value={progression}
-        size="sm"
-        type="learning"
+const Timeline = (props) =>
+  <ul className="flashcard-timeline-steps">
+    {Array.from({ length: 7 }, (_, index) => (
+      <SessionStep
+        key={index}
+        index={index + 1}
+        session={props.session}
+        started={props.started}
+        completed={props.completed}
       />
-      <ul className="flashcard-timeline-steps">
-        {Array.from({ length: 7 }, (_, index) => (
-          <SessionStep
-            key={index}
-            index={index + 1}
-            session={props.session}
-            started={props.started}
-            completed={props.completed}
-          />
-        ))}
-      </ul>
-    </div>
-  )
-}
+    ))}
+  </ul>
 
 Timeline.propTypes = {
   session: T.number,

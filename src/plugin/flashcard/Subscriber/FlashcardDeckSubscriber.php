@@ -3,10 +3,10 @@
 namespace Claroline\FlashcardBundle\Subscriber;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
