@@ -11,8 +11,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Gedmo\Tree(type="nested")
+ *
  * @ORM\Table(name="icap__lesson_chapter")
+ *
  * @ORM\Entity(repositoryClass="Icap\LessonBundle\Repository\ChapterRepository")
+ *
  * @ORM\HasLifecycleCallbacks()
  */
 class Chapter
@@ -23,6 +26,7 @@ class Chapter
 
     /**
      * @ORM\Column(type="string", nullable=false)
+     *
      * @Assert\NotBlank()
      */
     private $title;
@@ -39,43 +43,51 @@ class Chapter
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\LessonBundle\Entity\Lesson")
+     *
      * @ORM\JoinColumn(name="lesson_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $lesson;
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=true, updatable=false)
+     *
      * @ORM\Column(length=128, unique=true, nullable=false)
      */
     protected $slug;
 
     /**
      * @Gedmo\TreeLeft
+     *
      * @ORM\Column(name="lft", type="integer")
      */
     private $left;
 
     /**
      * @Gedmo\TreeLevel
+     *
      * @ORM\Column(name="lvl", type="integer")
      */
     private $level;
 
     /**
      * @Gedmo\TreeRight
+     *
      * @ORM\Column(name="rgt", type="integer")
      */
     private $right;
 
     /**
      * @Gedmo\TreeRoot
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
     private $root;
 
     /**
      * @Gedmo\TreeParent
+     *
      * @ORM\ManyToOne(targetEntity="Icap\LessonBundle\Entity\Chapter")
+     *
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $parent;

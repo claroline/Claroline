@@ -20,8 +20,8 @@ const LessonOverview = (props) => {
       label: (
         <Fragment>
           {(props.lesson.display.numbering && props.lesson.display.numbering !== LESSON_NUMBERINGS.NUMBERING_NONE && getNumbering(props.lesson.display.numbering, props.tree.children, chapter) ?
-              <span className="h-numbering">{getNumbering(props.lesson.display.numbering, props.tree.children, chapter)}</span>
-              : ''
+            <span className="h-numbering">{getNumbering(props.lesson.display.numbering, props.tree.children, chapter)}</span>
+            : ''
           )}
           {chapter.title}
         </Fragment>

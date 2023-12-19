@@ -156,33 +156,4 @@ class ChapterRepository extends NestedTreeRepository
             return;
         }
     }
-
-    public function getChapterNumber(Chapter $chapter)
-    {
-        try {
-            $qb = $this->getEntityManager()->createQueryBuilder();
-
-            $chapters = $this->getEntityManager()->createQueryBuilder()->add('select', 'c')
-                ->add('from', 'Icap\LessonBundle\Entity\Chapter c')
-                ->innerJoin('c.lesson', ' l')
-                ->where($qb->expr()->andx(
-                    $qb->expr()->lt('c.left', '?1'),
-                    $qb->expr()->eq('l.id', '?2'),
-                    $qb->expr()->not($qb->expr()->eq('c.id', '?3')),
-                    $qb->expr()->eq('c.level', '?4'),
-                ))
-                ->orderBy('c.left', 'DESC')
-                ->setParameter(1, $chapter->getLeft())
-                ->setParameter(2, $chapter->getLesson()->getId())
-                ->setParameter(3, $chapter->getLesson()->getRoot()->getId())
-                ->setParameter(4, $chapter->getLevel())
-                ->setFirstResult(0)
-                ->getQuery()
-                ->getResult();
-
-            return count($chapters) + 1;
-        } catch (NoResultException $e) {
-            return 1;
-        }
-    }
 }

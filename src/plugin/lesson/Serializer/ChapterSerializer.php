@@ -10,7 +10,7 @@ use Icap\LessonBundle\Repository\ChapterRepository;
 class ChapterSerializer
 {
     use SerializerTrait;
-    const INCLUDE_INTERNAL_NOTES = 'include_internal_notes';
+    public const INCLUDE_INTERNAL_NOTES = 'include_internal_notes';
 
     /** @var ObjectManager */
     private $om;
@@ -79,8 +79,6 @@ class ChapterSerializer
 
     /**
      * Serializes a chapter tree, returned from Gedmo tree extension.
-     *
-     * @param $tree
      *
      * @return array
      */

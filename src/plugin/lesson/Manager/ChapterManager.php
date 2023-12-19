@@ -2,8 +2,8 @@
 
 namespace Icap\LessonBundle\Manager;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
