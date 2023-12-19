@@ -3,6 +3,8 @@
 namespace Icap\LessonBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\API\Crud;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use Icap\LessonBundle\Repository\ChapterRepository;
@@ -10,12 +12,15 @@ use Icap\LessonBundle\Serializer\ChapterSerializer;
 
 class ChapterManager
 {
+    private Crud $crud;
     private ChapterRepository $chapterRepository;
 
     public function __construct(
         private readonly ObjectManager $om,
+        Crud $crud,
         private readonly ChapterSerializer $chapterSerializer
     ) {
+        $this->crud = $crud;
         $this->chapterRepository = $om->getRepository(Chapter::class);
     }
 
@@ -70,14 +75,17 @@ class ChapterManager
 
     public function serializeChapterTree(Lesson $lesson): array
     {
-        $tree = $this->om->getRepository(Chapter::class)->buildChapterTree($lesson->getRoot(), 'chapter.uuid, chapter.level, chapter.title, chapter.slug, chapter.text, chapter.poster');
+        $tree = $this->om->getRepository(Chapter::class)->buildChapterTree($lesson->getRoot(), 'chapter.uuid, chapter.level, chapter.title, chapter.slug, chapter.text, chapter.poster, chapter.customNumbering');
 
         return $this->chapterSerializer->serializeChapterTree($tree[0]);
     }
 
+    /**
+     * @throws InvalidDataException
+     */
     public function createChapter(Lesson $lesson, array $data = [], Chapter $parent = null): Chapter
     {
-        $newChapter = $this->chapterSerializer->deserialize($data);
+        $newChapter = $this->crud->create(Chapter::class, $data);
         $newChapter->setLesson($lesson);
 
         $this->insertChapterInPlace($newChapter, $parent, $data);
@@ -85,11 +93,14 @@ class ChapterManager
         return $newChapter;
     }
 
+    /**
+     * @throws InvalidDataException
+     */
     public function updateChapter(Lesson $lesson, Chapter $chapter, $data): void
     {
         $newParent = $this->chapterRepository->findOneBySlug($data['parentSlug']);
 
-        $this->chapterSerializer->deserialize($data, $chapter);
+        $this->crud->update($chapter, $data);
 
         // Should the chapter be moved ?
         if (isset($data['move'])) {
@@ -103,7 +114,7 @@ class ChapterManager
     public function deleteChapter(Lesson $lesson, Chapter $chapter, $withChildren = false): void
     {
         if ($withChildren) {
-            $this->om->remove($chapter);
+            $this->crud->delete($chapter);
         } else {
             $this->chapterRepository->removeFromTree($chapter);
         }
