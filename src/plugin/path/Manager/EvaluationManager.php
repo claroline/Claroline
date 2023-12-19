@@ -6,12 +6,12 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
 use Claroline\EvaluationBundle\Library\Checker\ProgressionChecker;
 use Claroline\EvaluationBundle\Library\Checker\ScoreChecker;
 use Claroline\EvaluationBundle\Library\EvaluationAggregator;
 use Claroline\EvaluationBundle\Library\GenericEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
+use Claroline\EvaluationBundle\Repository\ResourceAttemptRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
@@ -22,7 +22,7 @@ class EvaluationManager
 {
     private ObjectRepository $progressionRepo;
     private PathRepository $pathRepo;
-    private ResourceEvaluationRepository $resourceEvalRepo;
+    private ResourceAttemptRepository $resourceEvalRepo;
 
     public function __construct(
         private readonly ObjectManager $om,

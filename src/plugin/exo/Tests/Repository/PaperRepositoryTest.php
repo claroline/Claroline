@@ -149,12 +149,6 @@ class PaperRepositoryTest extends TransactionalTestCase
         $this->assertEquals(5, $papersCount);
     }
 
-    public function testCountUserFinishedPapers()
-    {
-        $finishedCount = $this->repo->countUserFinishedPapers($this->exercise, $this->user);
-        $this->assertEquals(1, $finishedCount);
-    }
-
     public function testIsFullyEvaluated()
     {
         // Add a corrected answer to the paper (aka answer with score) to check the query conditions

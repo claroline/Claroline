@@ -194,28 +194,6 @@ class PaperRepository extends EntityRepository
     }
 
     /**
-     * Counts the number of finished paper for a user and an exercise.
-     *
-     * @return int the number of finished papers
-     */
-    public function countUserFinishedPapers(Exercise $exercise, User $user)
-    {
-        return (int) $this->getEntityManager()
-            ->createQuery('
-                SELECT COUNT(p)
-                FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
-                WHERE p.user = :user
-                  AND p.exercise = :exercise
-                  AND p.end IS NOT NULL
-            ')
-            ->setParameters([
-                'user' => $user,
-                'exercise' => $exercise,
-            ])
-            ->getSingleScalarResult();
-    }
-
-    /**
      * Returns whether a hint is related to a paper.
      *
      * @return bool

@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -29,31 +30,17 @@ use UJM\ExoBundle\Manager\AttemptManager;
  */
 class AttemptController
 {
+    use PermissionCheckerTrait;
     use RequestDecoderTrait;
-
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var AttemptManager */
-    private $attemptManager;
-    /** @var PaperManager */
-    private $paperManager;
-    /** @var ResourceEvaluationManager */
-    private $resourceEvalManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        SerializerProvider $serializer,
-        AttemptManager $attemptManager,
-        PaperManager $paperManager,
-        ResourceEvaluationManager $resourceEvalManager
+        private readonly SerializerProvider $serializer,
+        private readonly AttemptManager $attemptManager,
+        private readonly PaperManager $paperManager,
+        private readonly ResourceEvaluationManager $resourceEvalManager
     ) {
         $this->authorization = $authorization;
-        $this->serializer = $serializer;
-        $this->attemptManager = $attemptManager;
-        $this->paperManager = $paperManager;
-        $this->resourceEvalManager = $resourceEvalManager;
     }
 
     /**
@@ -170,6 +157,24 @@ class AttemptController
         }
 
         return new JsonResponse($hint);
+    }
+
+    /**
+     * @Route("/{id}/attemtps", name="exercise_attempt_give", methods={"PUT"})
+     *
+     * @EXT\ParamConverter("paper", class="UJM\ExoBundle\Entity\Attempt\Paper", options={"mapping": {"id": "uuid"}})
+     */
+    public function giveAttemptAction(Paper $paper): JsonResponse
+    {
+        $attempt = $this->attemptManager->getAttempt($paper);
+
+        if ($attempt) {
+            $this->checkPermission('ADMINISTRATE', $attempt->getResourceUserEvaluation());
+
+            $this->resourceEvalManager->giveAnotherAttempt($attempt->getResourceUserEvaluation());
+        }
+
+        return new JsonResponse($this->paperManager->serialize($paper));
     }
 
     /**

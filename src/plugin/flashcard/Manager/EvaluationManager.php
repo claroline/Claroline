@@ -7,9 +7,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
+use Claroline\EvaluationBundle\Repository\ResourceAttemptRepository;
 use Claroline\FlashcardBundle\Entity\CardDrawnProgression;
 use Claroline\FlashcardBundle\Entity\Flashcard;
 
@@ -18,7 +18,7 @@ class EvaluationManager
     private ObjectManager $om;
     private ResourceEvaluationManager $resourceEvalManager;
     private FlashcardManager $flashcardManager;
-    private ResourceEvaluationRepository $resourceEvalRepo;
+    private ResourceAttemptRepository $resourceEvalRepo;
 
     public function __construct(
         ObjectManager $om,

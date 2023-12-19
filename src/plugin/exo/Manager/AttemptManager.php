@@ -18,7 +18,7 @@ use UJM\ExoBundle\Repository\PaperRepository;
 use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 
 /**
- * AttemptManager provides methods to manage user attempts to exercises.
+ * AttemptManager provides methods to manage user attempts to quiz.
  */
 class AttemptManager
 {
@@ -271,5 +271,10 @@ class AttemptManager
         $this->om->flush();
 
         return $hint;
+    }
+
+    public function getAttempt(Paper $paper): ?ResourceEvaluation
+    {
+        return $this->paperRepository->getPaperAttempt($paper);
     }
 }

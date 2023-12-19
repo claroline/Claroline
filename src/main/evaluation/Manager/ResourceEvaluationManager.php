@@ -119,4 +119,21 @@ class ResourceEvaluationManager extends AbstractEvaluationManager
 
         return $evaluation;
     }
+
+    /**
+     * Gives another attempt to a user.
+     * This allows the user to redo an attempt event if a has reached the max attempts allowed by the resource.
+     * NB. This is only implemented in the quiz plugin for now.
+     */
+    public function giveAnotherAttempt(ResourceUserEvaluation $evaluation): void
+    {
+        if (0 !== $evaluation->getNbAttempts()) {
+            $evaluation->setNbAttempts($evaluation->getNbAttempts() - 1);
+
+            $this->om->persist($evaluation);
+            $this->om->flush();
+
+            $this->eventDispatcher->dispatch(new ResourceEvaluationEvent($evaluation, ['nbAttempts' => true]), EvaluationEvents::RESOURCE_EVALUATION);
+        }
+    }
 }

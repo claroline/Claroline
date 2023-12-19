@@ -6,14 +6,14 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Repository\Resource\ResourceEvaluationRepository;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
+use Claroline\EvaluationBundle\Repository\ResourceAttemptRepository;
 
 class EvaluationManager
 {
     private ResourceEvaluationManager $resourceEvalManager;
-    private ResourceEvaluationRepository $attemptRepository;
+    private ResourceAttemptRepository $attemptRepository;
 
     public function __construct(
         ObjectManager $om,
@@ -37,7 +37,7 @@ class EvaluationManager
         ];
 
         if ($evaluation) {
-            return $this->resourceEvalManager->updateAttempt($evaluation, );
+            return $this->resourceEvalManager->updateAttempt($evaluation);
         }
 
         return $this->resourceEvalManager->createAttempt(

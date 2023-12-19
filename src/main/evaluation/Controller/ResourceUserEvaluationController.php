@@ -12,11 +12,13 @@
 namespace Claroline\EvaluationBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,21 +34,14 @@ class ResourceUserEvaluationController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var FinderProvider */
-    private $finder;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        FinderProvider $finder
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly SerializerProvider $serializer,
+        private readonly FinderProvider $finder,
+        private readonly ResourceEvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->finder = $finder;
     }
 
     /**
@@ -86,6 +81,22 @@ class ResourceUserEvaluationController
             $this->finder->search(ResourceEvaluation::class, array_merge($request->query->all(), ['hiddenFilters' => [
                 'resourceUserEvaluation' => $userEvaluation,
             ]]))
+        );
+    }
+
+    /**
+     * @Route("/attempts/{userEvaluationId}", name="apiv2_resource_evaluation_give_attempt", methods={"PUT"})
+     *
+     * @EXT\ParamConverter("userEvaluation", class="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation", options={"mapping": {"userEvaluationId": "id"}})
+     */
+    public function giveAnotherAttemptAction(ResourceUserEvaluation $userEvaluation): JsonResponse
+    {
+        $this->checkPermission('ADMINISTRATE', $userEvaluation, [], true);
+
+        $this->evaluationManager->giveAnotherAttempt($userEvaluation);
+
+        return new JsonResponse(
+            $this->serializer->serialize($userEvaluation)
         );
     }
 }

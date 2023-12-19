@@ -1,19 +1,23 @@
 {
   "evaluation.attempt_end": "Fin d'une tentative à une ressource",
   "evaluation.attempt_end_desc": "Lorsqu'un utilisateur termine une tentative à une ressource.",
-  "evaluation.attempt_end_message": "a <b>%status%</b> une tentative à la ressource %ressource%.",
+  "evaluation.attempt_end_message": "a <b>%status%</b> une tentative à la ressource %resource%.",
+
+  "evaluation.attempt_give": "Tentative supplémentaire à une ressource accordée",
+  "evaluation.attempt_give_desc": "Lorsqu'un gestionnaire donne une tentative supplémentaire à un utilisateur.",
+  "evaluation.attempt_give_message": "a <b>obtenu</b> une tentative supplémentaire à la ressource %resource%.",
 
   "evaluation.attempt_start": "Début d'une tentative à une ressource",
-  "evaluation.attempt_start_desc": "Lorsqu'un utilisateur commence une nouvelle une tentative à une ressource.",
-  "evaluation.attempt_start_message": "a <b>commencé</b> une tentative à la ressource %ressource%.",
+  "evaluation.attempt_start_desc": "Lorsqu'un utilisateur commence une nouvelle une tentative à une resource.",
+  "evaluation.attempt_start_message": "a <b>commencé</b> une tentative à la ressource %resource%.",
 
   "evaluation.resource_end": "Fin de l'évaluation d'une ressource",
   "evaluation.resource_end_desc": "Lorsqu'un utilisateur termine l'évaluation d'une ressource.",
-  "evaluation.resource_end_message": "a <b>%status%</b> l'évaluation de la ressource %ressource%.",
+  "evaluation.resource_end_message": "a <b>%status%</b> l'évaluation de la ressource %resource%.",
 
   "evaluation.resource_start": "Début de l'évaluation d'une ressource",
   "evaluation.resource_start_desc": "Lorsqu'un utilisateur commence l'évaluation d'une ressource.",
-  "evaluation.resource_start_message": "a <b>commencé</b> l'évaluation de la ressource %ressource%.",
+  "evaluation.resource_start_message": "a <b>commencé</b> l'évaluation de la ressource %resource%.",
 
   "evaluation.workspace_end": "Fin de l'évaluation d'un espace d'activités",
   "evaluation.workspace_end_desc": "Lorsqu'un utilisateur termine l'évaluation d'un espace d'activités.",
