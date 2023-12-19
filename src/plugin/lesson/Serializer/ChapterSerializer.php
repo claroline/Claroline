@@ -64,6 +64,7 @@ class ChapterSerializer
             'title' => $chapter->getTitle(),
             'poster' => $chapter->getPoster(),
             'text' => $chapter->getText(),
+            'customNumbering' => $chapter->getCustomNumbering(),
             'parentSlug' => $chapter->getParent() ? $chapter->getParent()->getSlug() : null,
             'previousSlug' => $previousChapter ? $previousChapter->getSlug() : null,
             'nextSlug' => $nextChapter ? $nextChapter->getSlug() : null,
@@ -96,6 +97,7 @@ class ChapterSerializer
 
         $this->sipe('title', 'setTitle', $data, $chapter);
         $this->sipe('text', 'setText', $data, $chapter);
+        $this->sipe('customNumbering', 'setCustomNumbering', $data, $chapter);
         $this->sipe('poster', 'setPoster', $data, $chapter);
         $this->sipe('internalNote', 'setInternalNote', $data, $chapter);
 

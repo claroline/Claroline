@@ -9,6 +9,7 @@ import {selectors} from '#/plugin/lesson/resources/lesson/store'
 const Chapter = connect(
   (state) => ({
     path: resourceSelectors.path(state),
+    lesson: selectors.lesson(state),
     chapter: selectors.chapter(state),
     internalNotes: hasPermission('view_internal_notes', resourceSelectors.resourceNode(state)),
     treeData: selectors.treeData(state)

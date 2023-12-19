@@ -80,6 +80,13 @@ class Chapter
      */
     private $parent;
 
+    /**
+     * Custom numbering of the chapters.
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $customNumbering = '';
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -188,5 +195,15 @@ class Chapter
     public function getTitle()
     {
         return $this->title;
+    }
+
+    public function getCustomNumbering(): string
+    {
+        return $this->customNumbering ?? '';
+    }
+
+    public function setCustomNumbering(?string $customNumbering): void
+    {
+        $this->customNumbering = $customNumbering;
     }
 }

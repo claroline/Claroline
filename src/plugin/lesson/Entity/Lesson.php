@@ -36,6 +36,13 @@ class Lesson extends AbstractResource
     private $root;
 
     /**
+     * Numbering of the chapters.
+     *
+     * @ORM\Column
+     */
+    private string $numbering = 'none';
+
+    /**
      * @return string
      */
     public function getDescription()
@@ -82,6 +89,16 @@ class Lesson extends AbstractResource
     public function getRoot()
     {
         return $this->root;
+    }
+
+    public function getNumbering(): string
+    {
+        return $this->numbering;
+    }
+
+    public function setNumbering($numbering): void
+    {
+        $this->numbering = $numbering;
     }
 
     /**

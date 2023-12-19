@@ -1,9 +1,10 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
+import {ContentTitle} from '#/main/app/content/components/title'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
@@ -12,134 +13,157 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {buildParentChapterChoices} from '#/plugin/lesson/resources/lesson/utils'
 import {actions as lessonActions, selectors} from '#/plugin/lesson/resources/lesson/store'
+import {constants as LESSON_NUMBERINGS} from '#/plugin/lesson/resources/lesson/constants'
 
 const ChapterFormComponent = props =>
-  <FormData
-    name={selectors.CHAPTER_EDIT_FORM_NAME}
-    buttons={true}
-    save={{
-      type: CALLBACK_BUTTON,
-      callback: () => props.save(selectors.CHAPTER_EDIT_FORM_NAME, !props.isNew ?
-        ['apiv2_lesson_chapter_update', {lessonId: props.lesson.id, slug: props.slug}] :
-        ['apiv2_lesson_chapter_create', {lessonId: props.lesson.id, slug: props.parentSlug}]
-      ).then((response) => props.history.push(props.path+'/'+response.slug))
-    }}
-    cancel={{
-      type: LINK_BUTTON,
-      target: props.path,
-      exact: true
-    }}
-    sections={[
-      {
-        id: 'chapter',
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            name: 'title',
-            type: 'string',
-            label: trans('title'),
-            required: true
-          }, {
-            name: 'move',
-            type: 'boolean',
-            label: trans('move_chapter', {}, 'lesson'),
-            displayed: !props.isNew
-          }, {
-            name: 'parentSlug',
-            type: 'choice',
-            label: trans('move_destination', {}, 'lesson'),
-            required: true,
-            displayed: props.isNew || props.chapterWillBeMoved,
-            options: {
-              multiple: false,
-              condensed: true,
-              choices: buildParentChapterChoices(props.tree, props.chapter)
-            },
-            onChange: value => props.positionChange(value)
-          }, {
-            name: 'position',
-            type: 'choice',
-            label: trans('move_relation', {}, 'lesson'),
-            required: false,
-            displayed: props.hasParentSlug && (props.isNew || props.chapterWillBeMoved) && !props.isRootSelected,
-            disabled: false,
-            options: {
-              condensed: false,
-              multiple: false,
-              choices: {
-                subchapter: trans('subchapter', {}, 'lesson'),
-                sibling: trans('sibling', {}, 'lesson')
+  <Fragment>
+
+    <ContentTitle
+      className="mt-3"
+      level={3}
+      displayLevel={2}
+      title={props.title || trans('new_chapter', {}, 'lesson')}
+    />
+
+    <FormData
+      id={`chapter-${props.id}`}
+      level={3}
+      displayLevel={2}
+      name={selectors.CHAPTER_EDIT_FORM_NAME}
+      buttons={true}
+      save={{
+        type: CALLBACK_BUTTON,
+        callback: () => props.save(selectors.CHAPTER_EDIT_FORM_NAME, !props.isNew ? ['apiv2_lesson_chapter_update', {
+          lessonId: props.lesson.id,
+          slug: props.slug
+        }] : ['apiv2_lesson_chapter_create', {
+          lessonId: props.lesson.id,
+          slug: props.parentSlug
+        }]).then((response) => props.history.push(props.path + '/' + response.slug))
+      }}
+      cancel={{
+        type: LINK_BUTTON,
+        target: props.path,
+        exact: true
+      }}
+      definition={[
+        {
+          id: 'chapter',
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              name: 'title',
+              type: 'string',
+              required: true,
+              label: trans('title'),
+              placeholder: trans('new_chapter', {}, 'lesson')
+            }, {
+              name: 'move',
+              type: 'boolean',
+              label: trans('move_chapter', {}, 'lesson'),
+              displayed: !props.isNew
+            }, {
+              name: 'parentSlug',
+              type: 'choice',
+              label: trans('move_destination', {}, 'lesson'),
+              required: true,
+              displayed: props.isNew || props.chapterWillBeMoved,
+              options: {
+                multiple: false,
+                condensed: true,
+                choices: buildParentChapterChoices(props.tree, props.chapter)
+              },
+              onChange: value => props.positionChange(value)
+            }, {
+              name: 'position',
+              type: 'choice',
+              label: trans('move_relation', {}, 'lesson'),
+              required: false,
+              displayed: props.hasParentSlug && (props.isNew || props.chapterWillBeMoved) && !props.isRootSelected,
+              disabled: false,
+              options: {
+                condensed: false,
+                multiple: false,
+                choices: {
+                  subchapter: trans('subchapter', {}, 'lesson'),
+                  sibling: trans('sibling', {}, 'lesson')
+                }
+              }
+            }, {
+              name: 'order.subchapter',
+              type: 'choice',
+              label: trans('options'),
+              required: false,
+              displayed: props.hasParentSlug && (props.isNew || props.chapterWillBeMoved) && props.isSubchapterSelected,
+              options: {
+                condensed: false,
+                multiple: false,
+                choices: {
+                  first: trans('first'),
+                  last: trans('last')
+                }
+              }
+            }, {
+              name: 'order.sibling',
+              type: 'choice',
+              label: trans('options'),
+              required: false,
+              displayed: props.hasParentSlug && (props.isNew || props.chapterWillBeMoved) && props.isSiblingSelected,
+              options: {
+                condensed: false,
+                multiple: false,
+                choices: {
+                  before: trans('before'),
+                  after: trans('after')
+                }
+              }
+            }, {
+              name: 'text',
+              type: 'html',
+              label: trans('text'),
+              required: true,
+              options: {
+                workspace: props.workspace,
+                minRows: 10
               }
             }
-          }, {
-            name: 'order.subchapter',
-            type: 'choice',
-            label: trans('options'),
-            required: false,
-            displayed: props.hasParentSlug && (props.isNew ||props.chapterWillBeMoved) && props.isSubchapterSelected,
-            options: {
-              condensed: false,
-              multiple: false,
-              choices: {
-                first: trans('first'),
-                last: trans('last')
+          ]
+        }, {
+          icon: 'fa fa-fw fa-desktop',
+          title: trans('display_parameters'),
+          fields: [
+            {
+              name: 'poster',
+              type: 'image',
+              label: trans('poster')
+            }, {
+              name: 'customNumbering',
+              type: 'string',
+              label: trans('chapter_numbering', {}, 'lesson'),
+              displayed: props.lesson.display.numbering === LESSON_NUMBERINGS.NUMBERING_CUSTOM
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-sticky-note',
+          title: trans('internal_note'),
+          help: trans('internal_note_visibility_help', {}, 'lesson'),
+          displayed: props.internalNotes,
+          fields: [
+            {
+              name: 'internalNote',
+              type: 'html',
+              label: trans('text'),
+              options: {
+                workspace: props.workspace,
+                minRows: 10
               }
             }
-          }, {
-            name: 'order.sibling',
-            type: 'choice',
-            label: trans('options'),
-            required: false,
-            displayed: props.hasParentSlug && (props.isNew || props.chapterWillBeMoved) && props.isSiblingSelected,
-            options: {
-              condensed: false,
-              multiple: false,
-              choices: {
-                before: trans('before'),
-                after: trans('after')
-              }
-            }
-          }, {
-            name: 'text',
-            type: 'html',
-            label: trans('text'),
-            required: true,
-            options: {
-              workspace: props.workspace,
-              minRows: 10
-            }
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-desktop',
-        title: trans('display_parameters'),
-        fields: [
-          {
-            name: 'poster',
-            type: 'image',
-            label: trans('poster')
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-sticky-note',
-        title: trans('internal_note'),
-        help: trans('internal_note_visibility_help', {}, 'lesson'),
-        displayed: props.internalNotes,
-        fields: [
-          {
-            name: 'internalNote',
-            type: 'html',
-            label: trans('text'),
-            options: {
-              workspace: props.workspace,
-              minRows: 10
-            }
-          }
-        ]
-      }
-    ]}
-  />
+          ]
+        }
+      ]}
+    />
+  </Fragment>
 
 const ChapterForm = withRouter(connect(
   state => ({
@@ -158,7 +182,7 @@ const ChapterForm = withRouter(connect(
     isSiblingSelected: formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).position === 'sibling',
     chapterWillBeMoved: !!formSelectors.data(formSelectors.form(state, selectors.CHAPTER_EDIT_FORM_NAME)).move
   }),
-  dispatch => ({
+  (dispatch) => ({
     save(formName, target) {
       return dispatch(formActions.save(formName, target))
     },

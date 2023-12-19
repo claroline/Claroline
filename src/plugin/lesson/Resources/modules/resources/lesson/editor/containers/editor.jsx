@@ -6,6 +6,7 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {Editor as EditorComponent} from '#/plugin/lesson/resources/lesson/editor/components/editor'
 import {selectors} from '#/plugin/lesson/resources/lesson/editor/store'
+import {actions} from '#/plugin/lesson/resources/lesson/store'
 
 const Editor = connect(
   (state) => ({
@@ -15,7 +16,9 @@ const Editor = connect(
   }),
   (dispatch) => ({
     saveForm(id) {
-      dispatch(formActions.saveForm(selectors.STORE_NAME, ['icap_lesson_update', {id: id}]))
+      dispatch(formActions.saveForm(selectors.STORE_NAME, ['icap_lesson_update', {id: id}])).then(() => {
+        dispatch(actions.fetchChapterTree(id))
+      })
     }
   })
 )(EditorComponent)

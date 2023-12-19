@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
@@ -9,12 +9,23 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentSummary} from '#/main/app/content/components/summary'
 import {SearchMinimal} from '#/main/app/content/search/components/minimal'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
+import {constants as LESSON_NUMBERINGS} from '#/plugin/lesson/resources/lesson/constants'
+import {getNumbering} from '#/plugin/lesson/resources/lesson/utils'
 
 const LessonOverview = (props) => {
   function getChapterSummary(chapter) {
     return {
+      id: chapter.id,
       type: LINK_BUTTON,
-      label: chapter.title,
+      label: (
+        <Fragment>
+          {(props.lesson.display.numbering && props.lesson.display.numbering !== LESSON_NUMBERINGS.NUMBERING_NONE && getNumbering(props.lesson.display.numbering, props.tree.children, chapter) ?
+              <span className="h-numbering">{getNumbering(props.lesson.display.numbering, props.tree.children, chapter)}</span>
+              : ''
+          )}
+          {chapter.title}
+        </Fragment>
+      ),
       target: `${props.path}/${chapter.slug}`,
       children: chapter.children ? chapter.children.map(getChapterSummary) : [],
       onClick: () => {
