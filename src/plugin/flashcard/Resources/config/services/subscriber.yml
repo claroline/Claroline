@@ -4,8 +4,8 @@ services:
 
     Claroline\FlashcardBundle\Subscriber\FlashcardDeckSubscriber:
         arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@security.token_storage'
-            - '@Claroline\FlashcardBundle\Manager\EvaluationManager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\FlashcardBundle\Manager\FlashcardManager'
+            - '@Claroline\FlashcardBundle\Manager\EvaluationManager'

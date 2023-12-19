@@ -54,27 +54,12 @@ class FlashcardDeckController extends AbstractCrudController
     public function checkAction($id, Request $request): JsonResponse
     {
         $deck = $this->om->getRepository(FlashcardDeck::class)->findOneBy(['uuid' => $id]);
+        $oldDeckData = $this->serializer->serialize($deck);
         $newDeckData = $this->decodeRequest($request);
 
         return new JsonResponse([
-            'resetAttempts' => $this->flashcardManager->shouldResetAttempts($deck, $newDeckData),
+            'resetAttempts' => $this->flashcardManager->shouldResetAttempts($oldDeckData, $newDeckData),
         ]);
-    }
-
-    public function updateAction($id, Request $request): JsonResponse
-    {
-        // TODO : should add an EventSubscriber to the Crud update action instead
-        $deck = $this->om->getRepository(FlashcardDeck::class)->findOneBy(['uuid' => $id]);
-
-        if ($this->flashcardManager->shouldResetAttempts($deck, $this->decodeRequest($request))) {
-            $attempts = $this->resourceEvalRepo->findInProgress($deck->getResourceNode());
-            foreach ($attempts as $attempt) {
-                $this->om->remove($attempt);
-            }
-            $this->om->flush();
-        }
-
-        return parent::updateAction($id, $request);
     }
 
     /**

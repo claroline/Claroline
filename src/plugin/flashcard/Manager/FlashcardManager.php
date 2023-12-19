@@ -65,25 +65,23 @@ class FlashcardManager
         return true;
     }
 
-    public function shouldResetAttempts(FlashcardDeck $oldFlashcardDeck, array $newFlashcardDeck): bool
+    public function shouldResetAttempts(array $oldFlashcardDeck, array $newFlashcardDeck): bool
     {
         $resetAttempts = false;
 
-        if ($oldFlashcardDeck->getDraw() !== $newFlashcardDeck['draw']) {
+        if ($oldFlashcardDeck['draw'] !== $newFlashcardDeck['draw']) {
             $resetAttempts = true;
-        } elseif (count($oldFlashcardDeck->getCards()) !== count($newFlashcardDeck['cards'])) {
+        } elseif (count($oldFlashcardDeck['cards']) !== count($newFlashcardDeck['cards'])) {
             $resetAttempts = true;
-        }
+        } else {
+            $cardsIds = [];
+            foreach ($newFlashcardDeck['cards'] as $card) {
+                $cardsIds[] = $card['id'];
+            }
 
-        $cardsIds = [];
-        foreach ($newFlashcardDeck['cards'] as $card) {
-            $cardsIds[] = $card['id'];
-        }
-
-        if (!$resetAttempts) {
-            $cards = $oldFlashcardDeck->getCards();
+            $cards = $oldFlashcardDeck['cards'];
             foreach ($cards as $card) {
-                if (!in_array($card->getUuid(), $cardsIds)) {
+                if (!in_array($card['id'], $cardsIds)) {
                     $resetAttempts = true;
                     break;
                 }
