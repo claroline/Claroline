@@ -84,7 +84,7 @@ class PdfManager
     {
         $certificates = [];
         foreach ($evaluations as $evaluation) {
-            $certificateFilename = TextNormalizer::toKey($evaluation->getWorkspace()->getName().'-'.TextNormalizer::toKey($evaluation->getUser()->getFullName()).'.pdf');
+            $certificateFilename = TextNormalizer::toKey($evaluation->getWorkspace()->getName().'-'.$evaluation->getUser()->getFullName()).'.pdf';
             $certificates[$certificateFilename] = $this->getWorkspaceParticipationCertificate($evaluation);
         }
 
@@ -95,7 +95,7 @@ class PdfManager
     {
         $certificates = [];
         foreach ($evaluations as $evaluation) {
-            $certificateFilename = TextNormalizer::toKey($evaluation->getWorkspace()->getName().'-'.TextNormalizer::toKey($evaluation->getUser()->getFullName()).'.pdf');
+            $certificateFilename = TextNormalizer::toKey($evaluation->getWorkspace()->getName().'-'.$evaluation->getUser()->getFullName()).'.pdf';
             $certificates[$certificateFilename] = $this->getWorkspaceSuccessCertificate($evaluation);
         }
 
