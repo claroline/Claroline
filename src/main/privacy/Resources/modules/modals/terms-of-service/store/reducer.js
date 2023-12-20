@@ -1,6 +1,6 @@
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
-import {TERMS_OF_SERVICE_LOAD} from '#/main/app/modals/terms-of-service/store/actions'
+import {TERMS_OF_SERVICE_LOAD} from '#/main/privacy/modals/terms-of-service/store/actions'
 
 export const reducer = combineReducers({
   loaded: makeReducer(false, {

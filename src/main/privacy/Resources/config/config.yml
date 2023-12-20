@@ -2,3 +2,7 @@ plugin:
     tools:
         - name: privacy
           icon: user-shield
+
+    templates:
+      - name: terms_of_service
+        type: other

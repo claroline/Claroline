@@ -37,7 +37,7 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'mailer_auth_mode' => 'mailer.auth_mode',
             'mailer_api_key' => 'mailer.api_key',
             'mailer_tag' => 'mailer.tag',
-            'terms_of_service' => 'tos.enabled',
+            'terms_of_service' => 'privacy.tos.enabled',
             'account_duration' => 'security.account_duration',
             'username_regex' => 'registration.username_regex',
             'header_locale' => 'footer.show_locale',

@@ -8,7 +8,7 @@ import {LINK_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON, ASYNC_BUTTON} from '#/main/a
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {DetailsData} from '#/main/app/content/details/components/data'
-import {MODAL_TERMS_OF_SERVICE} from '#/main/app/modals/terms-of-service'
+import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/modals/terms-of-service'
 import {AccountPage} from '#/main/app/account/containers/page'
 import {route} from '#/main/app/account/routing'
 import {User as UserTypes} from '#/main/community/prop-types'

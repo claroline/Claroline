@@ -9,7 +9,7 @@ import {ContentHtml} from '#/main/app/content/components/html'
 
 import {LocaleFlag} from '#/main/app/intl/locale/components/flag'
 import {MODAL_LOCALE} from '#/main/app/modals/locale'
-import {MODAL_TERMS_OF_SERVICE} from '#/main/app/modals/terms-of-service'
+import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/modals/terms-of-service'
 
 const FooterMain = (props) => {
   if (props.content || props.display.show) {

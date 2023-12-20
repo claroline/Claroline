@@ -10,8 +10,8 @@ import {ContentHtml} from '#/main/app/content/components/html'
 const TermsOfServiceModal = props =>
   <Modal
     {...omit(props, 'fetch')}
-    icon="fa fa-fw fa-shield"
-    title={trans('terms_of_service')}
+    icon="fa fa-fw fa-file-shield"
+    title={trans('terms_of_service',{},'privacy')}
     size="lg"
     onEntering={() => {
       if (!props.loaded) {
