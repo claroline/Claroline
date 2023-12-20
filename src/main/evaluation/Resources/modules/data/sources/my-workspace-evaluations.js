@@ -1,19 +1,24 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
+import {route as toolRoute} from '#/main/core/tool/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
 import {constants} from '#/main/evaluation/constants'
-import {route} from '#/main/core/workspace/routing'
 import {WorkspaceCard} from '#/main/evaluation/workspace/components/card'
+import {getActions, getDefaultAction} from '#/main/evaluation//workspace/utils'
 
-export default {
-  name: 'my_workspace_evaluations',
-  parameters: {
-    primaryAction: (evaluation) => ({
-      type: URL_BUTTON,
-      target: `#${route(evaluation.workspace)}`
-    }),
+export default (contextType, contextData, refresher, currentUser) => {
+  let basePath
+  if ('workspace' === contextType) {
+    basePath = workspaceRoute(contextData, 'evaluation')
+  } else {
+    basePath = toolRoute('evaluation')
+  }
+
+  return {
+    primaryAction: (user) => getDefaultAction(user, refresher, basePath, currentUser),
+    actions: (users) => getActions(users, refresher, basePath, currentUser),
     definition: [
       {
         name: 'status',

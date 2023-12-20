@@ -26,6 +26,15 @@ registry.add('ClarolineEvaluationBundle', {
   actions: {
     resource: {
       'evaluation': () => { return import(/* webpackChunkName: "evaluation-action-resource-evaluation" */ '#/main/evaluation/actions/resource/evaluation') }
+    },
+
+    workspace_evaluation: {
+      'open': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-open" */ '#/main/evaluation/actions/workspace_evaluation/open') },
+      'open-workspace': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-open-ws" */ '#/main/evaluation/actions/workspace_evaluation/open-workspace') },
+      'send-message': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-send-message" */ '#/main/evaluation/actions/workspace_evaluation/send-message') },
+      'show-profile': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-show-profile" */ '#/main/evaluation/actions/workspace_evaluation/show-profile') },
+      'download-participation-certificate': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-p-certificate" */ '#/main/evaluation/actions/workspace_evaluation/download-participation-certificate') },
+      'download-success-certificate': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-s-certificate" */ '#/main/evaluation/actions/workspace_evaluation/download-success-certificate') }
     }
   }
 })
