@@ -41,23 +41,3 @@ actions.addRequiredResources = (workspaceId, resources) => (dispatch) => dispatc
     success: () => dispatch(listActions.invalidateData(selectors.STORE_NAME+'.requiredResources'))
   }
 })
-
-actions.downloadParticipationCertificates = (evaluations) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_workspace_download_participation_certificates'],
-    request: {
-      method: 'POST',
-      body: JSON.stringify(evaluations.map(evaluation => evaluation.id))
-    }
-  }
-})
-
-actions.downloadSuccessCertificates = (evaluations) => ({
-  [API_REQUEST]: {
-    url: ['apiv2_workspace_download_success_certificates'],
-    request: {
-      method: 'POST',
-      body: JSON.stringify(evaluations.map(evaluation => evaluation.id))
-    }
-  }
-})
