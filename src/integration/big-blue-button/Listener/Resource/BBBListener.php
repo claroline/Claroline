@@ -44,7 +44,7 @@ class BBBListener
         $this->evaluationManager = $evaluationManager;
     }
 
-    public function onLoad(LoadResourceEvent $event)
+    public function onLoad(LoadResourceEvent $event): void
     {
         /** @var BBB $bbb */
         $bbb = $event->getResource();
@@ -85,7 +85,7 @@ class BBBListener
         $event->stopPropagation();
     }
 
-    public function onDelete(DeleteResourceEvent $event)
+    public function onDelete(DeleteResourceEvent $event): void
     {
         /** @var BBB $bbb */
         $bbb = $event->getResource();
