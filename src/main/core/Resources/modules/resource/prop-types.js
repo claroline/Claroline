@@ -31,7 +31,7 @@ const ResourceComment = {
 const ResourceNode = {
   propTypes: {
     id: T.string.isRequired,
-    name: T.string.isRequired,
+    name: T.string,
     autoId: T.number,
     slug: T.string,
     thumbnail: T.string,

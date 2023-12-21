@@ -155,7 +155,6 @@ class ImageInputComponent extends PureComponent {
 implementPropTypes(ImageInputComponent, DataInputTypes, {
   value: T.string, // the url of the image
   size: T.arrayOf(T.number),
-  deleteFile: T.func.isRequired,
   uploadUrl: T.array.isRequired,
   uploadFile: T.func.isRequired
 }, {

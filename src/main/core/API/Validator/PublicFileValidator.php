@@ -9,10 +9,9 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class PublicFileValidator implements ValidatorInterface
 {
-    /** @var FileManager */
-    private $fileManager;
+    private FileManager $fileManager;
 
-    private static $DISALLOWED_EXTENSIONS = [
+    private static array $disallowedExtensions = [
         'php',
         'sh',
     ];
@@ -46,7 +45,7 @@ class PublicFileValidator implements ValidatorInterface
         }
 
         if ($this->fileManager->isStorageFull()) {
-            // platform has limited storage and it's full, we cannot upload anything else
+            // platform has limited storage, and it's full, we cannot upload anything else
             return [
                 'path' => '/',
                 'message' => 'Platform max storage reached.',
@@ -54,7 +53,7 @@ class PublicFileValidator implements ValidatorInterface
         }
 
         $extension = $tmpFile->guessExtension();
-        if (in_array($extension, static::$DISALLOWED_EXTENSIONS)) {
+        if (in_array($extension, static::$disallowedExtensions)) {
             return [
                 'path' => '/',
                 'message' => 'The file type is not allowed.',
