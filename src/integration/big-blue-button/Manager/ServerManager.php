@@ -92,7 +92,7 @@ class ServerManager
 
             try {
                 $dom = new \DOMDocument();
-                if ($dom->loadXML($response)) {
+                if (!empty($response) && $dom->loadXML($response)) {
                     $meetingsEl = $dom->getElementsByTagName('meeting');
 
                     for ($i = 0; $i < $meetingsEl->length; ++$i) {
