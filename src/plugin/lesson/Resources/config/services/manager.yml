@@ -2,4 +2,5 @@ services:
     Icap\LessonBundle\Manager\ChapterManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\Crud'
             - '@Icap\LessonBundle\Serializer\ChapterSerializer'

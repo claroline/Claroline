@@ -136,7 +136,7 @@ class ChapterRepository extends NestedTreeRepository
         }
     }
 
-    public function getChapterBySLug($chapterSlug, $lessonId)
+    public function getChapterBySlug($chapterSlug, $lessonId)
     {
         try {
             $qb = $this->getEntityManager()->createQueryBuilder();

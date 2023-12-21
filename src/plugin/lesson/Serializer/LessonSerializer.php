@@ -30,13 +30,14 @@ class LessonSerializer
         return '#/plugin/lesson/lesson.json';
     }
 
-    public function serialize(Lesson $lesson, array $options = []): array
+    public function serialize(Lesson $lesson): array
     {
         return [
             'id' => $lesson->getUuid(),
             'display' => [
                 'description' => $lesson->getDescription(),
                 'showOverview' => $lesson->getShowOverview(),
+                'numbering' => $lesson->getNumbering(),
             ],
         ];
     }
@@ -49,6 +50,7 @@ class LessonSerializer
 
         $this->sipe('display.description', 'setDescription', $data, $lesson);
         $this->sipe('display.showOverview', 'setShowOverview', $data, $lesson);
+        $this->sipe('display.numbering', 'setNumbering', $data, $lesson);
 
         return $lesson;
     }

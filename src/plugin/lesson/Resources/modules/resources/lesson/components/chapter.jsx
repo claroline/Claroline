@@ -11,6 +11,7 @@ import {ContentHtml} from '#/main/app/content/components/html'
 import {Chapter as ChapterTypes} from '#/plugin/lesson/resources/lesson/prop-types'
 import {flattenChapters} from '#/plugin/lesson/resources/lesson/utils'
 import {LessonCurrent} from '#/plugin/lesson/resources/lesson/components/current'
+import {getNumbering} from '#/plugin/lesson/resources/lesson/utils'
 
 const Chapter = props => {
   if (isEmpty(props.chapter)) {
@@ -22,6 +23,8 @@ const Chapter = props => {
       />
     )
   }
+
+  let numbering = getNumbering(props.lesson.display.numbering, props.treeData.children, props.chapter)
 
   return (
     <LessonCurrent
@@ -40,6 +43,7 @@ const Chapter = props => {
           level={1}
           displayLevel={2}
           title={props.chapter.title}
+          numbering={numbering}
           backAction={props.backAction}
         />
 
@@ -72,6 +76,8 @@ Chapter.propTypes = {
   chapter: T.shape(
     ChapterTypes.propTypes
   ),
+  numbering: T.string,
+  lesson: T.object,
   treeData: T.object,
   internalNotes: T.bool,
   backAction: T.object,
