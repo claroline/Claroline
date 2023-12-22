@@ -11,7 +11,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as formSelectors} from '#/main/app/content/form/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {BadgeLayout}  from '#/plugin/open-badge/tools/badges/badge/components/layout'
+import {BadgeLayout}  from '#/plugin/open-badge/badge/components/layout'
 import {Assertion as AssertionTypes} from '#/plugin/open-badge/prop-types'
 import {MODAL_BADGE_EVIDENCE} from '#/plugin/open-badge/tools/badges/assertion/modals/evidence'
 import {actions, selectors}  from '#/plugin/open-badge/tools/badges/store'
@@ -49,7 +49,7 @@ const AssertionDetailsComponent = (props) =>
             <Fragment>
               <ListData
                 className="component-container"
-                name={selectors.STORE_NAME + '.badges.assertion.evidences'}
+                name={selectors.STORE_NAME + '.assertion.evidences'}
                 fetch={{
                   url: ['apiv2_assertion_evidences', {assertion: props.assertion.id}],
                   autoload: props.assertion.id && !props.new
@@ -118,7 +118,7 @@ const AssertionDetails = connect(
   (state) => ({
     path: toolSelectors.path(state),
     currentUser: securitySelectors.currentUser(state),
-    assertion: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME + '.badges.assertion'))
+    assertion: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME + '.assertion'))
   }),
   (dispatch) => ({
     download(assertion) {

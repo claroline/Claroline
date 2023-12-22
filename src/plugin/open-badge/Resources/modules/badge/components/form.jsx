@@ -10,15 +10,15 @@ import {FormData} from '#/main/app/content/form/containers/data'
 import {actions as formActions, selectors as formSelect} from '#/main/app/content/form/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
+import {route} from '#/plugin/open-badge/badge/routing'
 import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
-import {selectors}  from '#/plugin/open-badge/tools/badges/store/selectors'
 
 const isAutoIssuing = (badge) => badge._autoIssuing || !isEmpty(badge.rules)
 
 const BadgeFormComponent = (props) =>
   <FormData
     {...props}
-    name={selectors.STORE_NAME +'.badges.current'}
+    name={props.name}
     buttons={true}
     target={(badge, isNew) => isNew ?
       ['apiv2_badge-class_create'] :
@@ -27,7 +27,7 @@ const BadgeFormComponent = (props) =>
     cancel={{
       type: LINK_BUTTON,
       exact: true,
-      target: `${props.path}/badges/${!props.new ? props.badge.id : ''}`
+      target: props.new ? props.path : route(props.badge)
     }}
     sections={[
       {
@@ -61,7 +61,7 @@ const BadgeFormComponent = (props) =>
           }, {
             name: 'issuer',
             type: 'organization',
-            label: trans('issuer', {}, 'badge'),
+            label: trans('organization', {}, 'community'),
             displayed: 'workspace' !== props.currentContext.type
           }, {
             name: 'workspace',
@@ -101,7 +101,7 @@ const BadgeFormComponent = (props) =>
             type: 'boolean',
             label: trans('disable'),
             calculated: (badge) => !get(badge, 'meta.enabled', false),
-            onChange: (disabled) => props.updateProp('meta.enabled', !disabled)
+            onChange: (disabled) => props.updateProp(props.name, 'meta.enabled', !disabled)
           }, {
             name: '_restrictDuration',
             type: 'boolean',
@@ -109,7 +109,7 @@ const BadgeFormComponent = (props) =>
             calculated: (badge) => badge._restrictDuration || !!badge.duration,
             onChange: (enabled) => {
               if (!enabled) {
-                props.updateProp('duration', null)
+                props.updateProp(props.name, 'duration', null)
               }
             },
             linked: [
@@ -157,7 +157,7 @@ const BadgeFormComponent = (props) =>
             calculated: isAutoIssuing,
             onChange: (enabled) => {
               if (!enabled) {
-                props.updateProp('rules', [])
+                props.updateProp(props.name, 'rules', [])
               }
             },
             linked: [
@@ -182,6 +182,7 @@ const BadgeFormComponent = (props) =>
 
 BadgeFormComponent.propTypes = {
   path: T.string.isRequired,
+  name: T.string.isRequired,
   currentContext: T.object.isRequired,
   new: T.bool.isRequired,
   badge: T.shape(
@@ -191,15 +192,15 @@ BadgeFormComponent.propTypes = {
 }
 
 const BadgeForm = connect(
-  (state) => ({
+  (state, ownProps) => ({
     path: toolSelectors.path(state),
     currentContext: toolSelectors.context(state),
-    new: formSelect.isNew(formSelect.form(state, selectors.STORE_NAME + '.badges.current')),
-    badge: formSelect.data(formSelect.form(state, selectors.STORE_NAME + '.badges.current'))
+    new: formSelect.isNew(formSelect.form(state, ownProps.name)),
+    badge: formSelect.data(formSelect.form(state, ownProps.name))
   }),
   (dispatch) =>({
-    updateProp(propName, propValue) {
-      dispatch(formActions.updateProp(selectors.STORE_NAME +'.badges.current', propName, propValue))
+    updateProp(formName, propName, propValue) {
+      dispatch(formActions.updateProp(formName, propName, propValue))
     }
   })
 )(BadgeFormComponent)

@@ -12,7 +12,7 @@ import {getActions, getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/too
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 const ToolPage = props => {
-  let toolbar = 'edit'
+  let toolbar = ''/*'edit'*/
   if (props.primaryAction) {
     toolbar = props.primaryAction + ' | ' + toolbar
   }

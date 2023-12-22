@@ -8,36 +8,34 @@ import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {selectors} from '#/plugin/open-badge/tools/badges/store/selectors'
 
 const reducer = combineReducers({
-  badges: combineReducers({
-    list: makeListReducer(selectors.STORE_NAME + '.badges.list', {
-      sortBy: {property: 'name', direction: 1}
-    }, {
-      invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true,
-        [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME + '.badges.current']: () => true
-      })
-    }),
-    mine: makeListReducer(selectors.STORE_NAME + '.badges.mine', {
+  list: makeListReducer(selectors.STORE_NAME + '.list', {
+    sortBy: {property: 'name', direction: 1}
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true,
+      [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME + '.current']: () => true
+    })
+  }),
+  mine: makeListReducer(selectors.STORE_NAME + '.mine', {
+    sortBy: {property: 'issuedOn', direction: -1}
+  }, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+    })
+  }),
+  current: makeFormReducer(selectors.STORE_NAME + '.current', {}, {
+    assertions: makeListReducer(selectors.STORE_NAME + '.current.assertions', {
       sortBy: {property: 'issuedOn', direction: -1}
     }, {
       invalidated: makeReducer(false, {
         [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
       })
-    }),
-    current: makeFormReducer(selectors.STORE_NAME + '.badges.current', {}, {
-      assertions: makeListReducer(selectors.STORE_NAME + '.badges.current.assertions', {
-        sortBy: {property: 'issuedOn', direction: -1}
-      }, {
-        invalidated: makeReducer(false, {
-          [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
-        })
-      })
-    }),
-    assertion: makeFormReducer(selectors.STORE_NAME + '.badges.assertion', {}, {
-      evidences: makeListReducer(selectors.STORE_NAME + '.badges.assertion.evidences', {}, {
-        invalidated: makeReducer(false, {
-          [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
-        })
+    })
+  }),
+  assertion: makeFormReducer(selectors.STORE_NAME + '.assertion', {}, {
+    evidences: makeListReducer(selectors.STORE_NAME + '.assertion.evidences', {}, {
+      invalidated: makeReducer(false, {
+        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
       })
     })
   })

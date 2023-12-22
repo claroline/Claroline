@@ -21,7 +21,6 @@
   "no_badge": "Aucun badge",
   "select_a_badge": "Sélectionner un badge",
   "badge_selector": "Sélecteur de badge",
-  "add_badge": "Ajouter un badge",
   "new_badge": "Nouveau badge",
   "assertions": "Badges assignés",
   "evidence": "Preuve",
@@ -58,5 +57,11 @@
   "notify_grant": "Notifier les utilisateurs lors de l'attribution du badge",
   "transfer_from": "Transférer depuis",
   "transfer_to": "Transférer vers",
-  "transferred": "Badge transféré"
+  "transferred": "Badge transféré",
+  "badge_name": "Badge : %name%",
+  "badge_loading": "Nous chargeons le badge...",
+  "badge_delete_confirm_title": "{1} Suppression d'un badge | [2,Inf[ Suppression de plusieurs badges",
+  "badge_delete_confirm_message": "{1} Êtes-vous sûr de vouloir supprimer ce badge ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% badges ?",
+  "badge_disable_confirm_title": "{1} Désactivation d'un badge | [2,Inf[ Désactivation de plusieurs badges",
+  "badge_disable_confirm_message": "{1} Êtes-vous sûr de vouloir désactiver ce badge ? | [2,Inf[ Êtes-vous sûr de vouloir désactiver ces %count% badges ?"
 }

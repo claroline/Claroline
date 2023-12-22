@@ -21,7 +21,7 @@ actions.openBadge = (formName, id = null, workspace = null) => {
         },
         success: (response, dispatch) => {
           dispatch(formActions.resetForm(formName, response, false))
-          dispatch(listActions.invalidateData(selectors.STORE_NAME + '.badges.current.assertions'))
+          dispatch(listActions.invalidateData(selectors.STORE_NAME + '.current.assertions'))
         }
       }
     }

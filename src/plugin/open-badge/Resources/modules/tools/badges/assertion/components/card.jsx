@@ -10,7 +10,7 @@ import {DataCard} from '#/main/app/data/components/card'
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {displayUsername} from '#/main/community/utils'
 
-import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
+import {BadgeCard} from '#/plugin/open-badge/badge/components/card'
 
 import {Assertion as AssertionTypes} from '#/plugin/open-badge/prop-types'
 

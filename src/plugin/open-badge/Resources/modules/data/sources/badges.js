@@ -1,21 +1,22 @@
 import {trans} from '#/main/app/intl/translation'
-import {URL_BUTTON} from '#/main/app/buttons'
 
-import {route as desktopRoute} from '#/main/core/tool/routing'
+import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
-import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
+import {BadgeCard} from '#/plugin/open-badge/badge/components/card'
+import {getActions, getDefaultAction} from '#/main/community/group/utils'
 
-export default {
-  name: 'badges',
-  icon: 'fa fa-fw fa-trophy',
-  parameters: {
-    primaryAction: (badge) => ({
-      type: URL_BUTTON,
-      target: badge.workspace ?
-        `#${workspaceRoute(badge.workspace, 'badges')}/badges/${badge.id}` :
-        `#${desktopRoute('badges')}/badges/${badge.id}`
-    }),
+export default (contextType, contextData, refresher, currentUser) => {
+  let basePath
+  if ('workspace' === contextType) {
+    basePath = workspaceRoute(contextData, 'community')
+  } else {
+    basePath = toolRoute('community')
+  }
+
+  return {
+    primaryAction: (badge) => getDefaultAction(badge, refresher, basePath, currentUser),
+    actions: (badges) => getActions(badges, refresher, basePath, currentUser),
     definition: [
       {
         name: 'name',

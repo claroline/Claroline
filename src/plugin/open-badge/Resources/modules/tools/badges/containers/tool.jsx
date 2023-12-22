@@ -9,16 +9,14 @@ import {actions, selectors} from '#/plugin/open-badge/tools/badges/store'
 const BadgeTool = connect(
   (state) => ({
     canEdit: hasPermission('edit', toolSelectors.toolData(state)),
-    canGrant: hasPermission('grant', toolSelectors.toolData(state)),
-    canAdministrate: hasPermission('administrate', toolSelectors.toolData(state)),
-    currentContext: toolSelectors.context(state)
+    contextData: toolSelectors.contextData(state)
   }),
   dispatch => ({
     openBadge(id = null, workspace = null) {
-      dispatch(actions.openBadge(selectors.STORE_NAME +'.badges.current', id, workspace))
+      dispatch(actions.openBadge(selectors.FORM_NAME, id, workspace))
     },
     openAssertion(id) {
-      dispatch(actions.openAssertion(selectors.STORE_NAME +'.badges.assertion', id))
+      dispatch(actions.openAssertion(selectors.STORE_NAME +'.assertion', id))
     }
   })
 )(BadgeToolComponent)

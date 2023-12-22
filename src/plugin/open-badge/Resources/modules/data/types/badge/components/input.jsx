@@ -8,7 +8,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {Badge as BadgeType} from '#/plugin/open-badge/prop-types'
-import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
+import {BadgeCard} from '#/plugin/open-badge/badge/components/card'
 
 //todo: implement badge picker
 const BadgeButton = () =>

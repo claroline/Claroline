@@ -27,7 +27,7 @@ const BadgeMenu = (props) =>
         }, {
           name: 'all-badges',
           label: trans('all_badges', {}, 'badge'),
-          target: props.path+'/badges',
+          target: props.path,
           type: LINK_BUTTON
         }
       ]}

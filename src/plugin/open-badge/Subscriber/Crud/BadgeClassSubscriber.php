@@ -15,21 +15,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class BadgeClassSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var OrganizationManager */
-    private $organizationManager;
-    /** @var FileManager */
-    private $fileManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        OrganizationManager $organizationManager,
-        FileManager $fileManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly OrganizationManager $organizationManager,
+        private readonly FileManager $fileManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->organizationManager = $organizationManager;
-        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -43,7 +33,7 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
@@ -51,7 +41,7 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         $this->checkOrganization($badge);
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
@@ -61,7 +51,7 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preUpdate(UpdateEvent $event)
+    public function preUpdate(UpdateEvent $event): void
     {
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
@@ -69,7 +59,7 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         $this->checkOrganization($badge);
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
@@ -83,7 +73,7 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         );
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
@@ -96,12 +86,12 @@ class BadgeClassSubscriber implements EventSubscriberInterface
     /**
      * Auto link badge to the correct Organization if the user has not selected one.
      */
-    private function checkOrganization(BadgeClass $badge)
+    private function checkOrganization(BadgeClass $badge): void
     {
         if (empty($badge->getIssuer())) {
             $organization = null;
             if ($badge->getWorkspace()) {
-                if (count($badge->getWorkspace()->getOrganizations()) > 1) {
+                if (count($badge->getWorkspace()->getOrganizations()) > 0) {
                     $organization = $badge->getWorkspace()->getOrganizations()[0];
                 }
             } elseif ($this->tokenStorage->getToken()->getUser() instanceof User) {

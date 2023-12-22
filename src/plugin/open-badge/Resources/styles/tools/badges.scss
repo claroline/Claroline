@@ -10,6 +10,19 @@
 // Plugin vars
 @import "../variables";
 
+.badge-page {
+  // make image looks bigger than standard page icons
+  .page-icon {
+    width: 200px;
+    height: 200px;
+    margin-top: $grid-gutter-width*.5;
+    margin-bottom: map-get($spacers, 5) * -1;
+  }
+
+  .page-header {
+    margin-bottom: map-get($spacers, 5);
+  }
+}
 
 .badge-card {
   .data-card-header {
@@ -26,86 +39,26 @@
   }
 }
 
-// TODO : to remove
-.badge-meta {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  padding-top: $component-margin-bottom;
-  background: #3d3d3d;
-  margin-bottom: $component-margin-bottom;
-
-  @include box-shadow(inset 0 0 60px 15px rgba(0, 0, 0, 0.25));
-
-  .nav-tabs {
-    width: 100%;
-    display: flex;
-    padding-left: ($grid-gutter-width * .5);
-    padding-right: ($grid-gutter-width * .5);
-
-    > li > a,
-    > li > button,
-    > li > .dropdown > button {
-      color: #fdfdfd;
-
-      &:hover,
-      &:focus {
-        color: $body-color !important;
-      }
-    }
-
-    > li.active > a,
-    > li.active > a:focus,
-    > li.active > a:hover,
-    > li.active > button,
-    > li.active > button:focus,
-    > li.active > button:hover,
-    .open > button {
-      color: $body-color !important;
-      background: $body-bg;
-    }
-
-    .nav-actions {
-      margin-left: auto;
-
-      .dropdown > a,
-      .dropdown > button {
-        margin-right: 0;
-      }
-    }
-  }
-
-  + .data-list {
-    margin-top: 0;
-  }
-}
-
 .badge-image {
-  flex-shrink: 0;
-  margin: 0 ($grid-gutter-width * .5);
-  margin-bottom: $component-margin-bottom;
-  width: 200px;
-  height: 200px;
+  max-width: 200px;
+  max-height: 200px;
   border-radius: 50%;
   overflow: hidden;
 
-  > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    height: 100%;
-    width: 100%;
-
-    border-radius: 50%;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   img {
+    overflow: hidden;
+    border-radius: 50%;
     max-height: 100%;
     max-width: 100%;
   }
 
   .fa {
+    overflow: hidden;
+    //border-radius: 50%;
     font-size: 72px;
   }
 }
@@ -203,6 +156,7 @@
 }
 
 // TODO : to remove
+/*
 .badge-info {
   flex: 1;
   color: white;
@@ -217,3 +171,4 @@
     font-style: italic;
   }
 }
+*/

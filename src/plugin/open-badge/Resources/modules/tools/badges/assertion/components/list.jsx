@@ -8,19 +8,20 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConstants} from '#/main/app/content/list/constants'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
+import {route} from '#/plugin/open-badge/badge/routing'
 import {AssertionBadgeCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
 import {actions, selectors} from '#/plugin/open-badge/tools/badges/store'
 
 const AssertionsList = (props) =>
   <ListData
-    name={selectors.STORE_NAME + '.badges.mine'}
+    name={selectors.STORE_NAME + '.mine'}
     fetch={{
       url: ['apiv2_assertion_current_user_list', {workspace: props.contextData ? props.contextData.id : null}],
       autoload: true
     }}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: props.path + `/badges/${row.badge.id}/assertion/${row.id}`,
+      target: route(props.path, row.badge) + `/assertion/${row.id}`,
       label: trans('open', {}, 'actions')
     })}
     definition={[

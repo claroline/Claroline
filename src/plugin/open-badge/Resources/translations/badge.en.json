@@ -21,7 +21,6 @@
   "no_badge": "No badge",
   "select_a_badge": "Select a badge",
   "badge_selector": "Badge selector",
-  "add_badge": "Add badge",
   "new_badge": "New badge",
   "assertions": "Assigned badge",
   "evidence": "Evidence",
@@ -58,5 +57,11 @@
   "notify_grant": "Notify users when the badge is granted",
   "transfer_from": "Transfer from",
   "transfer_to": "Transfer to",
-  "transferred": "Transferred badge"
+  "transferred": "Transferred badge",
+  "badge_name": "Badge: %name%",
+  "badge_loading": "We are loading the badge...",
+  "badge_delete_confirm_title": "{1} Badge deletion | [2,Inf[ Badges deletion",
+  "badge_delete_confirm_message": "{1} Are you sure you want to delete this badge? | [2,Inf[ Are you sure you want to delete these %count% badges?",
+  "badge_disable_confirm_title": "{1} Badge deactivation | [2,Inf[ Badges deactivation",
+  "badge_disable_confirm_message": "{1} Are you sure you want to disable this badge? | [2,Inf[ Are you sure you want to disable these %count% badges?"
 }
