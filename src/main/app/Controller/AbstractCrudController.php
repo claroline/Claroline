@@ -57,16 +57,16 @@ abstract class AbstractCrudController
     public function getAction(Request $request, string $field, string $id): JsonResponse
     {
         if (Request::METHOD_HEAD === $request->getMethod()) {
-            if (!$this->crud->exist(static::getClass(), $id, $field)) {
-                throw new NotFoundHttpException(sprintf('No object found for id %s of class %s', $id, static::getClass()));
+            if (!$this->crud->exist(static::getClass(), rawurldecode($id), $field)) {
+                throw new NotFoundHttpException(sprintf('No object found for identifier (%s) %s of class %s', $field, $id, static::getClass()));
             }
 
             return new JsonResponse();
         }
 
-        $object = $this->crud->get(static::getClass(), $id, $field);
+        $object = $this->crud->get(static::getClass(), rawurldecode($id), $field);
         if (!$object) {
-            throw new NotFoundHttpException(sprintf('No object found for id %s of class %s', $id, static::getClass()));
+            throw new NotFoundHttpException(sprintf('No object found for identifier (%s) %s of class %s', $field, $id, static::getClass()));
         }
 
         $options = static::getOptions();

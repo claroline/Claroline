@@ -105,7 +105,7 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\DataSourceManager'
 
-    Claroline\CoreBundle\Controller\APINew\FileController:
+    Claroline\CoreBundle\Controller\APINew\PublicFileController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
