@@ -25,14 +25,11 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/public_file")
  */
-class FileController extends AbstractCrudController
+class PublicFileController extends AbstractCrudController
 {
-    /** @var PlatformConfigurationHandler */
-    private $config;
-
-    public function __construct(PlatformConfigurationHandler $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly PlatformConfigurationHandler $config
+    ) {
     }
 
     public function getClass(): string
@@ -42,7 +39,7 @@ class FileController extends AbstractCrudController
 
     public function getIgnore(): array
     {
-        return ['get', 'create', 'update', 'list'];
+        return ['create', 'update', 'list'];
     }
 
     public function getName(): string

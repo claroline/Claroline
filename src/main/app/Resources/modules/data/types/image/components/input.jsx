@@ -44,7 +44,7 @@ class ImageInputComponent extends PureComponent {
       return
     }
 
-    fetch(url(['apiv2_public_file_get', {field: 'url', id: this.props.value}]), {
+    fetch(url(['apiv2_public_file_get', {field: 'url', id: encodeURIComponent(this.props.value)}]), {
       method: 'GET' ,
       headers: new Headers({
         'Content-Type': 'application/json; charset=utf-8',
