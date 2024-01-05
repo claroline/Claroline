@@ -229,7 +229,14 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
      *
      * @var int
      */
-    protected $estimatedDuration;
+    private $estimatedDuration;
+
+    /**
+     * @ORM\Column(name="score_total", type="float", options={"default" = 100})
+     *
+     * @var float
+     */
+    private $scoreTotal = 100;
 
     public function __construct()
     {
@@ -517,5 +524,15 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     public function setEstimatedDuration(int $estimatedDuration = null)
     {
         $this->estimatedDuration = $estimatedDuration;
+    }
+
+    public function getScoreTotal(): ?float
+    {
+        return $this->scoreTotal;
+    }
+
+    public function setScoreTotal(float $scoreTotal = null): void
+    {
+        $this->scoreTotal = $scoreTotal;
     }
 }

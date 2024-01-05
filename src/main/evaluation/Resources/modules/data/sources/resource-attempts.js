@@ -61,7 +61,8 @@ export default {
           if (row.scoreMax) {
             return {
               current: row.score,
-              total: row.scoreMax
+              total: row.scoreMax,
+              display: 100
             }
           }
 

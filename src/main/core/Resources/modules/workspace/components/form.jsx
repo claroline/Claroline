@@ -350,7 +350,11 @@ const WorkspaceFormComponent = (props) =>
             options: {
               unit: trans('minutes')
             }
-          },{
+          }, {
+            name: 'evaluation.scoreTotal',
+            label: trans('score_total'),
+            type: 'number'
+          }, {
             name: 'evaluation._enableSuccess',
             type: 'boolean',
             label: trans('enable_success_condition', {}, 'workspace'),

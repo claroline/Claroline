@@ -6,11 +6,11 @@ import {asset} from '#/main/app/config'
 import {toKey} from '#/main/core/scaffolding/text'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {displayDuration, number, trans} from '#/main/app/intl'
+import {displayScore} from '#/main/app/data/types/score/utils'
 import {DataCard} from '#/main/app/data/components/card'
 
 import {constants} from '#/main/evaluation/constants'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
-import {displayScore} from '#/main/evaluation/utils'
 
 const ResourceCard = (props) =>
   <DataCard
@@ -58,7 +58,7 @@ const ResourceCard = (props) =>
             icon: 'fa fa-fw fa-award',
             label: trans('score'),
             displayed: !!props.data.scoreMax,
-            value: !!props.data.scoreMax && displayScore(props.data.scoreMax, props.data.score, 100) + ' / 100'
+            value: displayScore(props.data.scoreMax, props.data.score, 100)
           }
         ]
           .filter(item => undefined === item.displayed || item.displayed)

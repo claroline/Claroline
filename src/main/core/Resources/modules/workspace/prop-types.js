@@ -45,6 +45,10 @@ const Workspace = {
     }),
     notifications: T.shape({
       enabled: T.bool
+    }),
+    evaluation: T.shape({
+      estimatedDuration: T.number,
+      scoreTotal: T.number
     })
   },
   defaultProps: {
@@ -72,6 +76,9 @@ const Workspace = {
     },
     notifications: {
       enabled: false
+    },
+    evaluation: {
+      scoreTotal: 100
     }
   }
 }

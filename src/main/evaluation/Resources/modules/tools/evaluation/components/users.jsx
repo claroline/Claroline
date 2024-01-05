@@ -99,8 +99,8 @@ const EvaluationUsers = (props) => {
               calculated: (row) => {
                 if (row.scoreMax) {
                   return {
-                    current: (row.score / row.scoreMax) * 100,
-                    total: 100
+                    current: row.score,
+                    total: row.scoreMax
                   }
                 }
 

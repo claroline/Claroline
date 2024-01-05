@@ -129,6 +129,7 @@ class WorkspaceSerializer
             'evaluation' => [
                 'successCondition' => $workspace->getSuccessCondition(),
                 'estimatedDuration' => $workspace->getEstimatedDuration(),
+                'scoreTotal' => $workspace->getScoreTotal(),
             ],
         ];
 
@@ -386,6 +387,7 @@ class WorkspaceSerializer
         if (isset($data['evaluation'])) {
             $this->sipe('evaluation.successCondition', 'setSuccessCondition', $data, $workspace);
             $this->sipe('evaluation.estimatedDuration', 'setEstimatedDuration', $data, $workspace);
+            $this->sipe('evaluation.scoreTotal', 'setScoreTotal', $data, $workspace);
         }
 
         if (array_key_exists('organizations', $data)) {

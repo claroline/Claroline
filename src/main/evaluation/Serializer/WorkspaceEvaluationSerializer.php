@@ -42,12 +42,21 @@ class WorkspaceEvaluationSerializer
             'date' => DateNormalizer::normalize($evaluation->getDate()),
             'status' => $evaluation->getStatus(),
             'duration' => $evaluation->getDuration(),
+            'progression' => $evaluation->getProgression(),
+            'estimatedDuration' => $evaluation->getEstimatedDuration(),
+
             'score' => $evaluation->getScore(),
             'scoreMin' => $evaluation->getScoreMin(),
             'scoreMax' => $evaluation->getScoreMax(),
-            'progression' => $evaluation->getProgression(),
-            'estimatedDuration' => $evaluation->getEstimatedDuration(),
         ];
+
+        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+            // get defined total score
+            if ($evaluation->getScoreMax() && $evaluation->getWorkspace() && $evaluation->getWorkspace()->getScoreTotal()) {
+                $serialized['score'] = ($evaluation->getScore() / $evaluation->getScoreMax()) * $evaluation->getWorkspace()->getScoreTotal();
+                $serialized['scoreMax'] = $evaluation->getWorkspace()->getScoreTotal();
+            }
+        }
 
         if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             $serialized['permissions'] = [

@@ -2,12 +2,13 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import {number} from '#/main/app/intl'
 import {transChoice} from '#/main/app/intl/translation'
 
 const ScoreBox = props => {
   let userScore = props.score
-  if (null !== userScore) {
-    userScore = Math.round(userScore * 100) / 100
+  if (null !== userScore && props.display) {
+    userScore = (userScore / props.scoreMax) * props.display
   }
 
   return (
@@ -16,9 +17,15 @@ const ScoreBox = props => {
       props.className,
       props.size ? 'score-box-'+props.size : null
     )} style={props.style}>
-      <span className="user-score">{userScore || 0 === userScore ? userScore : '-'}</span>
+      <span className="user-score">{userScore || 0 === userScore ? number(userScore) : '-'}</span>
       <span className="sr-only">/</span>
-      <span className="max-score">{props.scoreMax || 0 === props.scoreMax ? transChoice('points', props.scoreMax, {count: props.scoreMax}) : '-'}</span>
+
+      {props.display ?
+        <span className="max-score">{transChoice('points', props.display, {count: number(props.display)})}</span>
+        :
+        <span className="max-score">{props.scoreMax || 0 === props.scoreMax ? transChoice('points', props.scoreMax, {count: number(props.scoreMax)}) : '-'}</span>
+      }
+
     </div>
   )
 }
@@ -27,6 +34,7 @@ ScoreBox.propTypes = {
   style: T.object,
   score: T.number,
   scoreMax: T.number.isRequired,
+  display: T.number,
   size: T.oneOf(['sm', 'lg']),
   className: T.string
 }
