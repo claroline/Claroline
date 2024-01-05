@@ -3,6 +3,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {chain, number, inRange} from '#/main/app/data/types/validators'
 
+import {displayScore} from '#/main/app/data/types/score/utils'
 import {ScoreCell} from '#/main/app/data/types/score/components/cell'
 import {ScoreDisplay} from '#/main/app/data/types/score/components/display'
 
@@ -31,7 +32,7 @@ const dataType = {
    */
   render: (raw) => {
     if (!isEmpty(raw)) {
-      return (raw.current || 0 === raw.current ? raw.current : '-') + ' / ' + raw.total
+      return displayScore(raw.total, raw.current, raw.display)
     }
 
     return ''

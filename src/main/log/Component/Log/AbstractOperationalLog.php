@@ -125,7 +125,7 @@ abstract class AbstractOperationalLog implements EventSubscriberInterface, Compo
         $this->logManager->logOperational(static::getName().'.'.$action, $message, $doer, static::getEntityClass(), $objectId, $changeset);
     }
 
-    private function getUpdateDiff(array $old, array $new): array
+    private function getUpdateDiff(array $old, mixed $new): array
     {
         $result = [];
         foreach ($old as $key => $val) {

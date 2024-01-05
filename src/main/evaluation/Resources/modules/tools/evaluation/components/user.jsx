@@ -89,7 +89,7 @@ class EvaluationUser extends Component {
                 [trans('duration'), get(this.props.workspaceEvaluation, 'duration') ? displayDuration(get(this.props.workspaceEvaluation, 'duration')) : '-'],
                 get(this.props.workspaceEvaluation, 'scoreMax') && [
                   trans('score'),
-                  (get(this.props.workspaceEvaluation, 'score') ? number((get(this.props.workspaceEvaluation, 'score') / get(this.props.workspaceEvaluation, 'scoreMax')) * 100) : '?') + ' / 100'
+                  (get(this.props.workspaceEvaluation, 'score') ? number(get(this.props.workspaceEvaluation, 'score')) : '?') + ' / ' + number(get(this.props.workspaceEvaluation, 'scoreMax'))
                 ]
               ].filter(value => !!value)}
               estimatedDuration={get(this.props, 'workspace.estimatedDuration')}
