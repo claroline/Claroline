@@ -35,9 +35,9 @@ const Group = (props) =>
     toolbar="edit | send-message | fullscreen more"
     poster={get(props.group, 'poster')}
     actions={!isEmpty(props.group) ? getActions([props.group], {
-      add: props.reload,
-      update: props.reload,
-      delete: props.reload
+      add: () => props.reload(props.group.id),
+      update: () => props.reload(props.group.id),
+      delete: () => props.reload(props.group.id)
     }, props.path, props.currentUser) : []}
   >
     {props.children}

@@ -35,9 +35,9 @@ const Organization = (props) =>
     toolbar="edit | send-message | fullscreen more"
     poster={get(props.organization, 'poster')}
     actions={!isEmpty(props.organization) ? getActions([props.organization], {
-      add: props.reload,
-      update: props.reload,
-      delete: props.reload
+      add: () => props.reload(props.organization.id),
+      update: () => props.reload(props.organization.id),
+      delete: () => props.reload(props.organization.id)
     }, props.path, props.currentUser) : []}
   >
     {props.children}
