@@ -22,11 +22,6 @@ services:
             - '%claroline.tmp_dir%'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
-    Claroline\AppBundle\Manager\TermsOfServiceManager:
-        arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\CoreBundle\Manager\ContentManager'
-
     Claroline\AppBundle\Manager\PdfManager:
         arguments:
             - '@twig'

@@ -4,5 +4,16 @@ plugin:
           icon: user-shield
 
     templates:
-      - name: terms_of_service
-        type: other
+        - name: terms_of_service
+          type: other
+          placeholders:
+            - country_storage
+            - dpo_name
+            - dpo_email
+            - dpo_phone
+            - dpo_address_street1
+            - dpo_address_street2
+            - dpo_address_postal_code
+            - dpo_address_city
+            - dpo_address_state
+            - dpo_address_country

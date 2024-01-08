@@ -35,8 +35,8 @@ class PlatformDefaults implements ParameterProviderInterface
                 ],
                 'tos' => [
                     'enabled' => true,
-                    'template' => null
-                ]
+                    'template' => null,
+                ],
             ],
         ];
     }

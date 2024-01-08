@@ -62,7 +62,7 @@ const PrivacyMain = (props) =>
 
     <DetailsData
       data={props.privacy}
-      sections={[
+      definition={[
         {
           title: trans('dpo'),
           fields: [

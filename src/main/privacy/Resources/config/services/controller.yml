@@ -6,12 +6,14 @@ services:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
         arguments:
+            - '@Claroline\AppBundle\API\Crud'
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@Claroline\PrivacyBundle\Serializer\PrivacyParametersSerializer'
+            - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
 
     Claroline\PrivacyBundle\Controller\TermsOfServiceController:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\Manager\TermsOfServiceManager'
+            - '@Claroline\PrivacyBundle\Manager\PrivacyManager'

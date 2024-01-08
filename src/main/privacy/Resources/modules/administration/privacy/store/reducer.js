@@ -7,15 +7,12 @@ import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {selectors} from '#/main/privacy/administration/privacy/store/selectors'
 
 const reducer = combineReducers({
-  lockedParameters: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.lockedParameters
-  }),
   parameters: makeFormReducer(selectors.FORM_NAME, {}, {
     originalData: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
+      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.privacy
     }),
     data: makeReducer({}, {
-      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.parameters
+      [makeInstanceAction(TOOL_LOAD, 'privacy')]: (state, action) => action.toolData.privacy
     })
   })
 })
@@ -23,4 +20,3 @@ const reducer = combineReducers({
 export {
   reducer
 }
-

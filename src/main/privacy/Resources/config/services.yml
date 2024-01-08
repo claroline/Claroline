@@ -1,3 +1,5 @@
 imports:
     - { resource: services/controller.yml }
+    - { resource: services/manager.yml }
     - { resource: services/serializer.yml }
+    - { resource: services/subscriber.yml }

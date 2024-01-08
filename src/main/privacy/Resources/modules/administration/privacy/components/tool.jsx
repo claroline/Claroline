@@ -21,14 +21,13 @@ const PrivacyTool = (props) =>
         target: props.path,
         exact: true
       }}
-      locked={props.lockedParameters}
       sections={[
         {
           title: trans('general'),
           primary: true,
           fields: [
             {
-              name: 'privacy.countryStorage',
+              name: 'countryStorage',
               label: trans('country_storage', {}, 'privacy'),
               type: 'country'
             }
@@ -38,19 +37,19 @@ const PrivacyTool = (props) =>
           title: trans('dpo'),
           fields: [
             {
-              name: 'privacy.dpo.name',
+              name: 'dpo.name',
               label: trans('name'),
               type: 'string'
             }, {
-              name: 'privacy.dpo.email',
+              name: 'dpo.email',
               label: trans('email'),
               type: 'email'
             }, {
-              name: 'privacy.dpo.phone',
+              name: 'dpo.phone',
               label: trans('phone'),
               type: 'string'
             }, {
-              name: 'privacy.dpo.address',
+              name: 'dpo.address',
               label: trans('address'),
               type: 'address'
             }
@@ -60,16 +59,16 @@ const PrivacyTool = (props) =>
           title: trans('terms_of_service', {}, 'privacy'),
           fields: [
             {
-              name: 'privacy.tos.enabled',
+              name: 'tos.enabled',
               type: 'boolean',
               label: trans('terms_of_service_activation_message', {}, 'privacy'),
               help: trans('terms_of_service_activation_help', {}, 'privacy'),
               linked: [
                 {
-                  name: 'privacy.tos.template',
+                  name: 'tos.template',
                   label: trans('terms_of_service', {}, 'template'),
                   type: 'template',
-                  displayed: get(props, 'privacy.tos.enabled'),
+                  displayed: get(props, 'tos.enabled'),
                   options: {
                     picker: {
                       filters: [{
@@ -90,7 +89,6 @@ const PrivacyTool = (props) =>
 
 PrivacyTool.propTypes = {
   path: T.string.isRequired,
-  lockedParameters: T.arrayOf(T.string),
   parameters: T.shape({
     tos: T.shape({
       enabled: T.bool

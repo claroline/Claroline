@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\PrivacyBundle\Manager\PrivacyManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +36,7 @@ class PlatformController
         private readonly PlatformManager $platformManager,
         private readonly LocaleManager $localeManager,
         private readonly SecurityManager $securityManager,
+        private readonly PrivacyManager $privacyManager,
         private readonly ContextProvider $contextProvider,
         private readonly SerializerProvider $serializer,
         private readonly ClientSerializer $clientSerializer
@@ -84,7 +86,7 @@ class PlatformController
                         'show' => $this->configHandler->getParameter('footer.show'),
                         'locale' => $this->configHandler->getParameter('footer.show_locale'),
                         'help' => $this->configHandler->getParameter('footer.show_help'),
-                        'termsOfService' => $this->configHandler->getParameter('footer.show_terms_of_service'),
+                        'termsOfService' => $this->privacyManager->getTosEnabled(),
                     ],
                 ],
 

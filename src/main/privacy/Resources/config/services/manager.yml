@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true # should not be public
+
+    Claroline\PrivacyBundle\Manager\PrivacyManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'

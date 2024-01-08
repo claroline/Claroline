@@ -13,9 +13,9 @@ const PrivacyMenu = (props) =>
 
 PrivacyMenu.propTypes = {
   // from menu
-  opened: T.bool.isRequired,
-  toggle: T.func.isRequired,
-  autoClose: T.func.isRequired
+  opened: T.bool,
+  toggle: T.func,
+  autoClose: T.func
 }
 export {
   PrivacyMenu

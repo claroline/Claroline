@@ -43,7 +43,7 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CommunityBundle\Serializer\ProfileSerializer'
-            - '@Claroline\AppBundle\Manager\TermsOfServiceManager'
+            - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
 
     Claroline\CommunityBundle\Controller\RoleController:
