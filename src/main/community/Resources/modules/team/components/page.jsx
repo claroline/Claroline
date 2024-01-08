@@ -35,9 +35,9 @@ const Team = (props) =>
     toolbar="edit | fullscreen more"
     poster={get(props.team, 'poster')}
     actions={!isEmpty(props.team) ? getActions([props.team], {
-      add: props.reload,
-      update: props.reload,
-      delete: props.reload
+      add: () => props.reload(props.team.id),
+      update: () => props.reload(props.team.id),
+      delete: () => props.reload(props.team.id)
     }, props.path, props.currentUser) : []}
   >
     {props.children}

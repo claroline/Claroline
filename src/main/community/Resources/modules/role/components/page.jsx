@@ -34,9 +34,9 @@ const Role = (props) =>
     subtitle={trans('role_name', {name: trans(get(props.role, 'translationKey', 'loading'))}, 'community')}
     toolbar="edit | fullscreen more"
     actions={!isEmpty(props.role) ? getActions([props.role], {
-      add: props.reload,
-      update: props.reload,
-      delete: props.reload
+      add: () => props.reload(props.role.id),
+      update: () => props.reload(props.role.id),
+      delete: () => props.reload(props.role.id)
     }, props.path, props.currentUser) : []}
   >
     {props.children}

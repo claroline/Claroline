@@ -40,9 +40,9 @@ const User = (props) =>
     poster={get(props.user, 'poster')}
     toolbar="edit | send-message add-contact | fullscreen more"
     actions={!isEmpty(props.user) ? getActions([props.user], {
-      add: props.reload,
-      update: props.reload,
-      delete: props.reload
+      add: () => props.reload(props.user.id),
+      update: () => props.reload(props.user.id),
+      delete: () => props.reload(props.user.id)
     }, props.path, props.currentUser) : []}
   >
     {props.children}
