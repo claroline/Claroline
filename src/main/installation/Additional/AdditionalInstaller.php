@@ -87,6 +87,7 @@ abstract class AdditionalInstaller implements AdditionalInstallerInterface, Cont
 
             $this->logger->info(sprintf('Executing "%s" preUpdate.', $updaterClass));
             $updater = $this->updaterLocator->get($updaterClass);
+            $updater->setLogger($this->logger);
             $updater->preUpdate();
         }
     }
@@ -109,6 +110,7 @@ abstract class AdditionalInstaller implements AdditionalInstallerInterface, Cont
 
             $this->logger->info(sprintf('Executing "%s" postUpdate.', $updaterClass));
             $updater = $this->updaterLocator->get($updaterClass);
+            $updater->setLogger($this->logger);
             $updater->postUpdate();
 
             if (!$alreadyExecuted) {
