@@ -65,25 +65,23 @@ class FlashcardManager
         return true;
     }
 
-    public function shouldResetAttempts(FlashcardDeck $oldFlashcardDeck, array $newFlashcardDeck): bool
+    public function shouldResetAttempts(array $oldFlashcardDeck, array $newFlashcardDeck): bool
     {
         $resetAttempts = false;
 
-        if ($oldFlashcardDeck->getDraw() !== $newFlashcardDeck['draw']) {
+        if ($oldFlashcardDeck['draw'] !== $newFlashcardDeck['draw']) {
             $resetAttempts = true;
-        } elseif (count($oldFlashcardDeck->getCards()) !== count($newFlashcardDeck['cards'])) {
+        } elseif (count($oldFlashcardDeck['cards']) !== count($newFlashcardDeck['cards'])) {
             $resetAttempts = true;
-        }
+        } else {
+            $cardsIds = [];
+            foreach ($newFlashcardDeck['cards'] as $card) {
+                $cardsIds[] = $card['id'];
+            }
 
-        $cardsIds = [];
-        foreach ($newFlashcardDeck['cards'] as $card) {
-            $cardsIds[] = $card['id'];
-        }
-
-        if (!$resetAttempts) {
-            $cards = $oldFlashcardDeck->getCards();
+            $cards = $oldFlashcardDeck['cards'];
             foreach ($cards as $card) {
-                if (!in_array($card->getUuid(), $cardsIds)) {
+                if (!in_array($card['id'], $cardsIds)) {
                     $resetAttempts = true;
                     break;
                 }
@@ -93,7 +91,7 @@ class FlashcardManager
         return $resetAttempts;
     }
 
-    public function calculateSession(?ResourceEvaluation $attempt, FlashcardDeck $deck, User $user): ResourceEvaluation
+    public function calculateSession(?ResourceEvaluation $attempt, FlashcardDeck $deck, User $user): ?ResourceEvaluation
     {
         $node = $deck->getResourceNode();
         $session = $attempt ? $attempt->getData()['session'] ?? 1 : 1;
@@ -111,6 +109,10 @@ class FlashcardManager
                 'id' => $id,
             ]);
         }, $cardsAnsweredIds);
+
+        if (0 === count($deck->getCards())) {
+            return null;
+        }
 
         if (!$attempt) {
             $attempt = $this->resourceEvalManager->createAttempt($node, $user, [
@@ -249,6 +251,8 @@ class FlashcardManager
         $cardsSessionIds = $attempt->getData()['cardsSessionIds'] ?? [];
         $cardsAnsweredIds = $attempt->getData()['cardsAnsweredIds'] ?? [];
 
+        $totalCards = count($cardsSessionIds) + count($cardsAnsweredIds);
+
         $cards = array_map(function ($card) {
             return $this->om->getRepository(CardDrawnProgression::class)->findOneBy([
                 'id' => $card['id'],
@@ -259,9 +263,26 @@ class FlashcardManager
             $cardsAnsweredIds[] = $cardProgression->getId();
         }
 
+        $cardsAnswered = array_map(function ($id) {
+            return $this->om->getRepository(CardDrawnProgression::class)->findOneBy([
+                'id' => $id,
+            ]);
+        }, $cardsAnsweredIds);
+
+        $successfulCards = 0;
+        foreach ($cardsAnswered as $cardProgression) {
+            $successfulCards += $cardProgression->isSuccessful() ? 1 : 0;
+        }
+
+        if (0 === $totalCards) {
+            $progression = 0;
+        } else {
+            $progression = (int) min(round($successfulCards / $totalCards * 100), 100);
+        }
+
         return $this->resourceEvalManager->updateAttempt($attempt, [
             'status' => $attempt->getStatus(),
-            'progression' => $attempt->getProgression(),
+            'progression' => $progression,
             'data' => [
                 'session' => $attempt->getData()['session'],
                 'cards' => array_map(function ($card) {

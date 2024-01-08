@@ -6,12 +6,13 @@
   "custom_button_labels": "Personnaliser le label des boutons de réponse",
   "right_button_label": "Label du bouton de réponse correct",
   "wrong_button_label": "Label du bouton de réponse incorrect",
-  "show_leitner_rules": "Afficher les règles des sessions",
-  "flashcard_options": "Options des cartes",
+  "show_leitner_rules": "Afficher les règles de tirage",
+  "attempts_pick": "Génération des tentatives",
   "draw_options": "Nombre de cartes à tirer",
-  "options_desc": "Permet de définir le nombre de cartes à tirer pour chaque partie. Laissez vide pour jouer avec toutes les cartes.",
+  "options_desc": "Permet de définir un nombre de cartes aléatoires à tirer pour chaque tentative. Laissez vide pour utiliser toutes les cartes.",
 
   "no_card": "Aucune carte.",
+  "no_cards": "Aucune carte n'a été créée pour le moment.",
   "add_card": "Ajouter une carte",
   "new_card": "Nouvelle carte",
   "card_delete_confirm": "Suppression de la carte",
@@ -38,12 +39,12 @@
   "session_status_completed": "Terminée",
   "session_status_next": "À venir",
 
-  "session_cards_start": "On présente",
-  "session_cards_all" : "toutes les cartes",
-  "session_cards_1x" : "les cartes réussies 1 fois",
-  "session_cards_2x" : "les cartes réussies 2 fois",
-  "session_cards_3x" : "les cartes réussies 3 fois",
-  "session_cards_failed" : "les cartes échouées",
+  "session_cards_start": "Présentation",
+  "session_cards_all" : "de toutes les cartes",
+  "session_cards_1x" : "des cartes réussies 1 fois",
+  "session_cards_2x" : "des cartes réussies 2 fois",
+  "session_cards_3x" : "des cartes réussies 3 fois",
+  "session_cards_failed" : "des cartes échouées",
 
   "start_disabled_empty": "La resource cartes-mémoire est vide."
 }

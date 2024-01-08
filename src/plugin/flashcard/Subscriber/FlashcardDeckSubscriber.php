@@ -2,8 +2,10 @@
 
 namespace Claroline\FlashcardBundle\Subscriber;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
@@ -17,19 +19,19 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class FlashcardDeckSubscriber implements EventSubscriberInterface
 {
+    private ObjectManager $om;
     private SerializerProvider $serializer;
     private TokenStorageInterface $tokenStorage;
-    private ObjectManager $om;
-    private EvaluationManager $evaluationManager;
     private FlashcardManager $flashcardManager;
+    private EvaluationManager $evaluationManager;
     private ResourceAttemptRepository $resourceEvalRepo;
 
     public function __construct(
+        ObjectManager $om,
         SerializerProvider $serializer,
         TokenStorageInterface $tokenStorage,
-        EvaluationManager $evaluationManager,
-        ObjectManager $om,
-        FlashcardManager $flashcardManager
+        FlashcardManager $flashcardManager,
+        EvaluationManager $evaluationManager
     ) {
         $this->om = $om;
         $this->serializer = $serializer;
@@ -43,6 +45,7 @@ class FlashcardDeckSubscriber implements EventSubscriberInterface
     {
         return [
             'resource.flashcard.load' => 'onLoad',
+            Crud::getEventName('update', 'post', FlashcardDeck::class) => 'postUpdate',
         ];
     }
 
@@ -60,7 +63,7 @@ class FlashcardDeckSubscriber implements EventSubscriberInterface
             $evaluation = $this->evaluationManager->getResourceUserEvaluation($flashcardDeck->getResourceNode(), $user);
             $attempt = $this->resourceEvalRepo->findOneInProgress($flashcardDeck->getResourceNode(), $user);
             $attempt = $this->flashcardManager->calculateSession($attempt, $flashcardDeck, $user);
-            $flashcardProgression = $attempt->getData()['cards'] ?? [];
+            $flashcardProgression = $attempt ? $attempt->getData()['cards'] ?? [] : [];
         }
 
         $event->setData([
@@ -71,5 +74,18 @@ class FlashcardDeckSubscriber implements EventSubscriberInterface
         ]);
 
         $event->stopPropagation();
+    }
+
+    public function postUpdate(UpdateEvent $event): void
+    {
+        $flashcardDeck = $event->getObject();
+
+        if ($this->flashcardManager->shouldResetAttempts($event->getOldData(), $event->getData())) {
+            $attempts = $this->resourceEvalRepo->findInProgress($flashcardDeck->getResourceNode());
+            foreach ($attempts as $attempt) {
+                $this->om->remove($attempt);
+            }
+            $this->om->flush();
+        }
     }
 }

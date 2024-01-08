@@ -54,6 +54,7 @@ actions.updateFlashcardDeck = (id, data) => (dispatch) => dispatch({
         }))
       } else {
         dispatch(formActions.saveForm(selectors.FORM_NAME, ['apiv2_flashcard_deck_update', {id: id}]))
+        dispatch(actions.getAttemptAction(data))
       }
     }
   }
