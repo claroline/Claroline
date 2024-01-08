@@ -7,7 +7,7 @@ import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {ListData} from '#/main/app/content/list/containers/data'
 
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
+import {EvaluationScore} from '#/main/evaluation/components/score'
 
 import {Scorm as ScormType, Sco as ScoType} from '#/plugin/scorm/resources/scorm/prop-types'
 import {constants} from '#/plugin/scorm/resources/scorm/constants'
@@ -77,7 +77,7 @@ const ResultsComponent = props =>
           render: (rowData) => {
             let Score
             if ((rowData.scoreRaw || 0 === rowData.scoreRaw) && (rowData.scoreMax || 0 === rowData.scoreMax)) {
-              Score = <ScoreBox size="sm" score={rowData.scoreRaw} scoreMax={rowData.scoreMax} />
+              Score = <EvaluationScore size="sm" score={rowData.scoreRaw} scoreMax={rowData.scoreMax} />
             } else {
               Score = rowData.scoreRaw
             }

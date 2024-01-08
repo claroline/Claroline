@@ -6,7 +6,7 @@ import get from 'lodash/get'
 
 import {ContentSummary} from '#/main/app/content/components/summary'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
+import {EvaluationScore} from '#/main/evaluation/components/score'
 
 import {constants} from '#/main/evaluation/constants'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
@@ -46,7 +46,7 @@ const PathSummary = (props) => {
             {resourceEvaluation &&
               <Fragment>
                 {get(props.path, 'display.showScore') && resourceEvaluation.scoreMax &&
-                  <ScoreBox
+                  <EvaluationScore
                     score={get(props.path, 'score.total') ? (resourceEvaluation.score / resourceEvaluation.scoreMax) * get(props.path, 'score.total') : resourceEvaluation.score}
                     scoreMax={get(props.path, 'score.total') ? get(props.path, 'score.total') : resourceEvaluation.scoreMax}
                     size="sm"

@@ -3,6 +3,7 @@ import React from 'react'
 import {trans} from '#/main/app/intl/translation'
 
 import {constants} from '#/main/evaluation/constants'
+import {EvaluationStatus} from '#/main/evaluation/components/status'
 
 export default {
   name: 'resource_attempts',
@@ -16,11 +17,7 @@ export default {
           choices: constants.EVALUATION_STATUSES_SHORT
         },
         displayed: true,
-        render: (row) => (
-          <span className={`badge text-bg-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
-            {constants.EVALUATION_STATUSES_SHORT[row.status]}
-          </span>
-        )
+        render: (row) => <EvaluationStatus status={row.status} />
       }, {
         name: 'user',
         type: 'user',

@@ -1,0 +1,102 @@
+
+@mixin evaluation-gauge-color-variant($color, $light-color) {
+  .meter {
+    stroke: $color;
+  }
+  .bg {
+    stroke: fade-out($color, .75);
+  }
+}
+
+.evaluation-gauge {
+  display: inline-flex;
+  flex-direction: column;
+  width: 200px;
+
+  .bg,
+  .meter {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1rem;
+    fill: none;
+  }
+
+  &.success {
+    @include evaluation-gauge-color-variant($success, $success-bg-subtle);
+  }
+  &.danger {
+    @include evaluation-gauge-color-variant($danger, $danger-bg-subtle);
+  }
+  &.warning {
+    @include evaluation-gauge-color-variant($warning, $warning-bg-subtle);
+  }
+  &.info {
+    @include evaluation-gauge-color-variant($info, $info-bg-subtle);
+  }
+  &.secondary {
+    @include evaluation-gauge-color-variant($secondary, $secondary-bg-subtle);
+  }
+
+  @include evaluation-gauge-color-variant($learning, $learning-bg-subtle);
+
+  .evaluation-status {
+    margin-top: -40px;
+    margin-bottom: 0;
+    font-size: $lead-font-size;
+    text-transform: uppercase;
+    font-weight: 700;
+    white-space: normal;
+  }
+}
+
+.evaluation-jumbotron {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.info-block {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+
+  .info-block-icon {
+    font-size: 2rem;
+    opacity: .25;
+  }
+
+  .info-block-label {
+    text-transform: uppercase;
+  }
+
+  .info-block-content {
+    font-size: $lead-font-size;
+    margin: 0;
+  }
+}
+
+.rule-card {
+  display: flex;
+  flex-direction: row;
+
+  .fa-circle {
+    color: var(--#{$prefix}border-color);
+  }
+
+  .fa {
+    font-size: 1.5rem;
+    padding: $card-spacer-y $card-spacer-x;
+    padding-right: 0;
+
+    border-left: map-get($border-widths, 5) solid;
+
+    @include border-start-radius($card-inner-border-radius);
+  }
+
+  .rule-count {
+    text-align: right;
+    font-weight: bold;
+    font-size: $font-size-sm;
+  }
+}

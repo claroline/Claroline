@@ -28,7 +28,7 @@ const Badge = (props) =>
         label: get(props.badge, 'name', trans('loading')),
         target: !isEmpty(props.badge) ? route(props.badge, props.path) : ''
       }
-    ].concat(props.group ? props.breadcrumb : [])}
+    ].concat(props.badge ? props.breadcrumb : [])}
     icon={
       <BadgeImage badge={props.badge} className="img-thumbnail" />
     }
@@ -36,9 +36,9 @@ const Badge = (props) =>
     primaryAction="grant"
     poster={get(props.badge, 'poster')}
     actions={!isEmpty(props.badge) ? getActions([props.badge], {
-      add: props.reload,
-      update: props.reload,
-      delete: props.reload
+      add: () => props.reload(props.badge.id),
+      update: () => props.reload(props.badge.id),
+      delete: () => props.reload(props.badge.id)
     }, props.path, props.currentUser) : []}
   >
     {isEmpty(props.badge) &&

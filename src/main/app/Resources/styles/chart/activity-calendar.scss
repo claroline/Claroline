@@ -1,0 +1,50 @@
+.activity-calendar-container {
+
+}
+
+.activity-calendar {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 3px;
+
+  th, td {
+    line-height: 1;
+    padding: 0;
+  }
+
+  th {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--#{$prefix}tertiary-color);
+  }
+}
+
+.activity-calendar-day-label {
+  //width: 30px;
+}
+
+.activity-calendar-day {
+  border-radius: 2px;
+  width: 12px;
+  height: 12px;
+}
+
+.activity-calendar-day-0 {
+  background-color: $gray-200;
+}
+.activity-calendar-day-1 {
+  background-color: $pink-100;
+}
+.activity-calendar-day-2 {
+  background-color: $pink-200;
+}
+.activity-calendar-day-3 {
+  background-color: $pink-300;
+}
+.activity-calendar-day-4 {
+  background-color: $pink-500;
+}
+
+.activity-calendar-legend {
+
+}

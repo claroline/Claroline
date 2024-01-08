@@ -15,6 +15,9 @@ import {getTabs} from '#/main/evaluation/evaluation'
 import {EvaluationUser} from '#/main/evaluation/tools/evaluation/containers/user'
 import {EvaluationUsers} from '#/main/evaluation/tools/evaluation/containers/users'
 import {EvaluationParameters} from '#/main/evaluation/tools/evaluation/containers/parameters'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
+import {route} from '#/plugin/open-badge/badge/routing'
 
 const EvaluationTool = (props) =>
   <Await
@@ -38,7 +41,16 @@ const EvaluationTool = (props) =>
               exact: true,
               disabled: !props.currentUserId || !props.contextId,
               render: () => (
-                <ToolPage subtitle={trans('my_progression')}>
+                <ToolPage
+                  path={[
+                    {
+                      type: LINK_BUTTON,
+                      label: trans('my_progression'),
+                      target: ''
+                    }
+                  ]}
+                  subtitle={trans('my_progression')}
+                >
                   <EvaluationUser
                     userId={props.currentUserId}
                     workspaceId={props.contextId}

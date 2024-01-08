@@ -1,9 +1,9 @@
 {
   "badge.grant": "Obtention d'un badge",
   "badge.grant_desc": "Lorsqu'un utilisateur obtient un nouveau badge suite à son activité sur la plateforme ou à une attribution manuelle.",
-  "badge.grant_message": "a obtenu le badge %badge%.",
+  "badge.grant_message": "a <b>obtenu</b> le badge %badge%.",
 
   "badge.revoke": "Révocation d'un badge",
   "badge.revoke_desc": "Lorsqu'un gestionnaire retire manuellement le badge d'un utilisateur.",
-  "badge.revoke_message": "a perdu le badge %badge%."
+  "badge.revoke_message": "a <b>perdu</b> le badge %badge%."
 }

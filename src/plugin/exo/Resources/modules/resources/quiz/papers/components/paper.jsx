@@ -12,7 +12,7 @@ import {ContentTitle} from '#/main/app/content/components/title'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {UserMicro} from '#/main/core/user/components/micro'
 import {displayUsername} from '#/main/community/utils'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
+import {EvaluationScore} from '#/main/evaluation/components/score'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {ContentHtml} from '#/main/app/content/components/html'
@@ -68,7 +68,7 @@ const PaperStep = props => {
           <div key={item.id} className="card mb-3 quiz-item item-paper">
             <div className="card-body">
               {props.showScore && item.hasExpectedAnswers && ScoreNone.name !== get(item, 'score.type') && getAnswerScore(item.id, props.answers) !== undefined && getAnswerScore(item.id, props.answers) !== null &&
-                <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.answers)} scoreMax={calculateTotal(item)}/>
+                <EvaluationScore className="pull-right" score={getAnswerScore(item.id, props.answers)} scoreMax={calculateTotal(item)}/>
               }
 
               <ItemMetadata

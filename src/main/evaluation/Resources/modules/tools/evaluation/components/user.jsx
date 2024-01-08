@@ -1,5 +1,6 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
@@ -23,6 +24,61 @@ import {route as resourceRoute} from '#/main/core/resource/routing'
 import {MODAL_RESOURCE_EVALUATIONS} from '#/main/evaluation/modals/resource-evaluations'
 import {EvaluationDetails} from '#/main/evaluation/components/details'
 import {route} from '#/main/community/user/routing'
+import {ContentSizing} from '#/main/app/content/components/sizing'
+
+import {EvaluationJumbotron} from '#/main/evaluation/components/jumbotron'
+import {ProgressBar} from '#/main/app/content/components/progress-bar'
+import {ActivityCalendar} from '#/main/app/chart/activity-calendar/components/main'
+
+const RuleCard = (props) =>
+  <div className={classes('rule-card card', props.className)}>
+    <span className={classes('fa fa-regular', {
+      'fa-circle': 'unknown' === props.status,
+      'text-success fa-circle-check': 'success' === props.status,
+      'text-danger fa-circle-xmark': 'failed' === props.status
+    })} />
+
+    <div className="card-body">
+      <h5 className="card-title">{props.title}</h5>
+      <p className="card-text">{props.description}</p>
+
+      {props.children}
+
+      {props.progressionMax &&
+        <ProgressBar
+          size="xs"
+          type={classes({
+            'learning': 'unknown' === props.status,
+            'success': 'success' === props.status,
+            'danger': 'failed' === props.status
+          })}
+          value={(props.progression / props.progressionMax) * 100}
+        />
+      }
+
+      {props.progressionMax &&
+        <div className={classes('rule-count', {
+          'text-secondary': 'unknown' === props.status,
+          'text-success': 'success' === props.status,
+          'text-danger': 'failed' === props.status
+        })}>{props.progression || 0} / {props.progressionMax}</div>
+      }
+    </div>
+  </div>
+
+RuleCard.propTypes = {
+  className: T.string,
+  title: T.string.isRequired,
+  description: T.string,
+  status: T.oneOf(['unknown', 'success', 'failed']),
+  progression: T.number,
+  progressionMax: T.number
+}
+
+RuleCard.defaultProps = {
+  status: 'unknown',
+  progression: 0
+}
 
 class EvaluationUser extends Component {
   constructor(props) {
@@ -72,13 +128,58 @@ class EvaluationUser extends Component {
           />
         }
 
-        <div
-          className="row"
-          style={{
-            marginTop: this.props.backAction ? 0 : '20px', // FIXME
-            marginBottom: '10px'
-          }}
-        >
+        <EvaluationJumbotron className="" evaluation={this.props.workspaceEvaluation} />
+
+        <div className="row py-4">
+          <ContentSizing size="md">
+            <ContentTitle title="Mon activité récente" displayLevel={3} />
+
+            <ActivityCalendar />
+          </ContentSizing>
+        </div>
+
+        <div className="row py-4 bg-body-tertiary">
+          <ContentSizing size="md">
+            <ContentTitle title="Mes objectifs d'apprentissage" displayLevel={3} />
+
+            <RuleCard
+              className="mb-3"
+              title="Terminer les ressources à faire"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              progression={3}
+              progressionMax={5}
+            />
+
+            <RuleCard
+              className="mb-3"
+              title="Réussir au moins 3 ressources"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              status="success"
+              progression={3}
+              progressionMax={3}
+            />
+
+            <RuleCard
+              className="mb-3"
+              title="Ne pas échouer à plus de 2 ressources"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              status="failed"
+              progression={3}
+              progressionMax={2}
+            />
+
+            <RuleCard
+              title="Obtenir un score minimum de 10"
+              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              status="unknown"
+              progression={80}
+            >
+              <p className="card-text text-secondary fw-bold">Le score est calculé une fois que toutes les ressource requises ont été terminées au moins une fois.</p>
+            </RuleCard>
+          </ContentSizing>
+        </div>
+
+        <div className="row">
           <div className="col-md-4 user-progression">
             <EvaluationDetails
               evaluation={this.props.workspaceEvaluation}

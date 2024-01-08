@@ -14,7 +14,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store/selector
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {ResourceEnd} from '#/main/core/resource/components/end'
 
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
+import {EvaluationScore} from '#/main/evaluation/components/score'
 import {calculateScore, calculateTotal} from '#/plugin/exo/items/score'
 import {isQuestionType} from '#/plugin/exo/items/item-types'
 
@@ -83,7 +83,7 @@ const IntermediateScores = (props) => {
             {intermediateScore.title}
 
             <span className="value">
-              <ScoreBox className="pull-right" score={intermediateScore.score} scoreMax={intermediateScore.total}/>
+              <EvaluationScore className="pull-right" score={intermediateScore.score} scoreMax={intermediateScore.total}/>
             </span>
           </li>
         ))}

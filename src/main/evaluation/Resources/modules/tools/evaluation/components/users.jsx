@@ -10,6 +10,8 @@ import {constants} from '#/main/evaluation/constants'
 import {selectors} from '#/main/evaluation/tools/evaluation/store'
 import {WorkspaceCard} from '#/main/evaluation/workspace/components/card'
 import {getActions, getDefaultAction} from '#/main/evaluation/workspace/utils'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {EvaluationStatus} from '#/main/evaluation/components/status'
 
 const EvaluationUsers = (props) => {
   const evaluationsRefresher = {
@@ -20,6 +22,13 @@ const EvaluationUsers = (props) => {
 
   return (
     <ToolPage
+      path={[
+        {
+          type: LINK_BUTTON,
+          label: trans('users_progression', {}, 'evaluation'),
+          target: ''
+        }
+      ]}
       subtitle={trans('users_progression', {}, 'evaluation')}
     >
       <ContentSizing size="full">
@@ -43,11 +52,7 @@ const EvaluationUsers = (props) => {
                 choices: constants.EVALUATION_STATUSES_SHORT
               },
               displayed: true,
-              render: (row) => (
-                <span className={`badge text-bg-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
-                  {constants.EVALUATION_STATUSES_SHORT[row.status]}
-                </span>
-              )
+              render: (row) => <EvaluationStatus status={row.status} />
             }, {
               name: 'workspace',
               type: 'workspace',

@@ -7,7 +7,7 @@ import moment from 'moment'
 import {trans} from '#/main/app/intl/translation'
 import {DataInput} from '#/main/app/data/components/input'
 import {ContentHtml} from '#/main/app/content/components/html'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
+import {EvaluationScore} from '#/main/evaluation/components/score'
 
 import {DropzoneType, CorrectionType, GradeType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {computeScoreFromGrades} from '#/plugin/drop-zone/resources/dropzone/utils'
@@ -15,7 +15,7 @@ import {validate, isValid} from '#/plugin/drop-zone/resources/dropzone/correctio
 
 const CriteriaForm = props =>
   <div id="criteria-form">
-    <ScoreBox
+    <EvaluationScore
       score={computeScoreFromGrades(props.grades, props.dropzone.parameters.criteriaTotal, props.dropzone.parameters.scoreMax)}
       scoreMax={props.dropzone.parameters.scoreMax}
     />

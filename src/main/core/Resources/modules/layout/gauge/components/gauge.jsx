@@ -19,6 +19,7 @@ const GaugeContainer = props =>
     width={props.width}
     height={props.height}
     className={classes('gauge', `gauge-${props.type}`, props.className)}
+    viewBox={`0 0 ${props.width} ${props.height}`}
   >
     <g transform={`translate(${props.width/2 - props.radius}, ${props.height/2 - props.radius})`}>
       {props.children}

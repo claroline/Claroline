@@ -9,7 +9,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {ContentSummary} from '#/main/app/content/components/summary'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
+import {EvaluationScore} from '#/main/evaluation/components/score'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
@@ -30,7 +30,7 @@ const UserProgressionModal = props => {
           {step.title}
 
           {get(props.path, 'display.showScore') && resourceEvaluation && resourceEvaluation.scoreMax &&
-            <ScoreBox
+            <EvaluationScore
               score={get(props.path, 'score.total') ? (resourceEvaluation.score / resourceEvaluation.scoreMax) * get(props.path, 'score.total') : resourceEvaluation.score}
               scoreMax={get(props.path, 'score.total') ? get(props.path, 'score.total') : resourceEvaluation.scoreMax}
               size="sm"
