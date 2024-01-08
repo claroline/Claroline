@@ -36,7 +36,7 @@ class OrderedToolSerializer
         $serialized = [
             'id' => $orderedTool->getUuid(),
             'name' => $orderedTool->getName(),
-            'icon' => $tool->getIcon(),
+            'icon' => $tool ? $tool->getIcon() : null,
             'poster' => $orderedTool->getPoster(),
             'thumbnail' => $orderedTool->getThumbnail(),
             'display' => [
