@@ -19,20 +19,13 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class ExecuteExportHandler implements MessageHandlerInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var TransferManager */
-    private $transferManager;
-
     public function __construct(
-        ObjectManager $om,
-        TransferManager $transferManager
+        private readonly ObjectManager $om,
+        private readonly TransferManager $transferManager
     ) {
-        $this->om = $om;
-        $this->transferManager = $transferManager;
     }
 
-    public function __invoke(ExecuteExport $exportMessage)
+    public function __invoke(ExecuteExport $exportMessage): void
     {
         $exportFile = $this->om->getRepository(ExportFile::class)->find($exportMessage->getExportId());
         if (empty($exportFile)) {

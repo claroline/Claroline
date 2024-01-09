@@ -21,6 +21,22 @@ class WorkspaceEvaluationListExporter extends AbstractEvaluationListExporter
         $schema = parent::getSchema($options, $extra);
         $schema['properties'] = array_merge($schema['properties'], [
             [
+                'name' => 'rawScore.current',
+                'type' => 'number',
+                'description' => $this->translator->trans('The evaluation raw user score', [], 'schema'),
+            ], [
+                'name' => 'rawScore.total',
+                'type' => 'number',
+                'description' => $this->translator->trans('The evaluation raw total score ', [], 'schema'),
+            ], [
+                'name' => 'displayScore.current',
+                'type' => 'number',
+                'description' => $this->translator->trans('The evaluation display user score', [], 'schema'),
+            ], [
+                'name' => 'displayScore.total',
+                'type' => 'number',
+                'description' => $this->translator->trans('The evaluation display total score ', [], 'schema'),
+            ], [
                 'name' => 'workspace.id',
                 'type' => 'string',
                 'description' => $this->translator->trans('The workspace id or uuid', [], 'schema'),

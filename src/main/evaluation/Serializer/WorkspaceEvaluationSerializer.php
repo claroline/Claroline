@@ -44,17 +44,25 @@ class WorkspaceEvaluationSerializer
             'duration' => $evaluation->getDuration(),
             'progression' => $evaluation->getProgression(),
             'estimatedDuration' => $evaluation->getEstimatedDuration(),
-
-            'score' => $evaluation->getScore(),
-            'scoreMin' => $evaluation->getScoreMin(),
-            'scoreMax' => $evaluation->getScoreMax(),
         ];
 
-        if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
-            // get defined total score
-            if ($evaluation->getScoreMax() && $evaluation->getWorkspace() && $evaluation->getWorkspace()->getScoreTotal()) {
-                $serialized['score'] = ($evaluation->getScore() / $evaluation->getScoreMax()) * $evaluation->getWorkspace()->getScoreTotal();
-                $serialized['scoreMax'] = $evaluation->getWorkspace()->getScoreTotal();
+        // evaluation has a score, expose it
+        if ($evaluation->getScoreMax()) {
+            $serialized['rawScore'] = [
+                'current' => $evaluation->getScore(),
+                'total' => $evaluation->getScoreMax(),
+            ];
+
+            if ($evaluation->getWorkspace() && $evaluation->getWorkspace()->getScoreTotal()) {
+                $serialized['displayScore'] = [
+                    'current' => ($evaluation->getScore() / $evaluation->getScoreMax()) * $evaluation->getWorkspace()->getScoreTotal(),
+                    'total' => $evaluation->getWorkspace()->getScoreTotal(),
+                ];
+            } else {
+                $serialized['displayScore'] = [
+                    'current' => $evaluation->getScore(),
+                    'total' => $evaluation->getScoreMax(),
+                ];
             }
         }
 
