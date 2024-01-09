@@ -9,26 +9,23 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractListExporter extends AbstractExporter
 {
-    /** @var TranslatorInterface */
-    protected $translator;
-    /** @var FinderProvider */
-    protected $finder;
-    /** @var SerializerProvider */
-    protected $serializer;
+    protected TranslatorInterface $translator;
+    protected FinderProvider $finder;
+    protected SerializerProvider $serializer;
 
     abstract protected static function getClass(): string;
 
-    public function setTranslator(TranslatorInterface $translator)
+    public function setTranslator(TranslatorInterface $translator): void
     {
         $this->translator = $translator;
     }
 
-    public function setFinder(FinderProvider $finder)
+    public function setFinder(FinderProvider $finder): void
     {
         $this->finder = $finder;
     }
 
-    public function setSerializer(SerializerProvider $serializer)
+    public function setSerializer(SerializerProvider $serializer): void
     {
         $this->serializer = $serializer;
     }

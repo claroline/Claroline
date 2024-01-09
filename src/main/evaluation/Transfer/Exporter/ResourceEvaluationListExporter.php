@@ -11,11 +11,6 @@ class ResourceEvaluationListExporter extends AbstractEvaluationListExporter
         return ['evaluation', 'resource_evaluation_list'];
     }
 
-    public function supports(string $format, ?array $options = [], ?array $extra = []): bool
-    {
-        return in_array($format, ['json', 'csv']);
-    }
-
     protected static function getClass(): string
     {
         return ResourceUserEvaluation::class;
@@ -26,6 +21,18 @@ class ResourceEvaluationListExporter extends AbstractEvaluationListExporter
         $schema = parent::getSchema($options, $extra);
         $schema['properties'] = array_merge($schema['properties'], [
             [
+                'name' => 'score',
+                'type' => 'number',
+                'description' => $this->translator->trans('The evaluation score', [], 'schema'),
+            ], [
+                'name' => 'scoreMin',
+                'type' => 'number',
+                'description' => $this->translator->trans('The evaluation score min', [], 'schema'),
+            ], [
+                'name' => 'scoreMax',
+                'type' => 'number',
+                'description' => $this->translator->trans('The evaluation score max', [], 'schema'),
+            ], [
                 'name' => 'nbAttempts',
                 'type' => 'number',
                 'description' => $this->translator->trans('The number of attempts for the evaluation', [], 'schema'),

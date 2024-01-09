@@ -8,6 +8,11 @@ use Claroline\TransferBundle\Transfer\Exporter\AbstractListExporter;
 
 abstract class AbstractEvaluationListExporter extends AbstractListExporter
 {
+    public function supports(string $format, ?array $options = [], ?array $extra = []): bool
+    {
+        return in_array($format, ['json', 'csv']);
+    }
+
     public function getExtraDefinition(?array $options = [], ?array $extra = []): array
     {
         $extraDef = parent::getExtraDefinition($options, $extra);
@@ -43,18 +48,6 @@ abstract class AbstractEvaluationListExporter extends AbstractListExporter
                     'name' => 'duration',
                     'type' => 'number',
                     'description' => $this->translator->trans('The evaluation duration', [], 'schema'),
-                ], [
-                    'name' => 'score',
-                    'type' => 'number',
-                    'description' => $this->translator->trans('The evaluation score', [], 'schema'),
-                ], [
-                    'name' => 'scoreMin',
-                    'type' => 'number',
-                    'description' => $this->translator->trans('The evaluation score min', [], 'schema'),
-                ], [
-                    'name' => 'scoreMax',
-                    'type' => 'number',
-                    'description' => $this->translator->trans('The evaluation score max', [], 'schema'),
                 ], [
                     'name' => 'progression',
                     'type' => 'number',

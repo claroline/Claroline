@@ -61,19 +61,9 @@ export default (contextType, contextData, refresher, currentUser) => {
           type: 'learning'
         }
       }, {
-        name: 'score',
+        name: 'displayScore',
         type: 'score',
         label: trans('score'),
-        calculated: (row) => {
-          if (row.scoreMax) {
-            return {
-              current: row.score,
-              total: row.scoreMax
-            }
-          }
-
-          return null
-        },
         displayed: true,
         filterable: false
       }, {
