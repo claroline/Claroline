@@ -11,6 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Controller\API;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
@@ -29,16 +30,12 @@ class EntryController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    private $authorization;
-    /* @var ClacoFormManager */
-    private $manager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        ClacoFormManager $manager
+        private readonly FinderProvider $finder,
+        private readonly ClacoFormManager $manager
     ) {
         $this->authorization = $authorization;
-        $this->manager = $manager;
     }
 
     public function getClass(): string
@@ -93,7 +90,7 @@ class EntryController extends AbstractCrudController
             }
             $params['filters'] = $filters;
         }
-        $data = $this->finder->search('Claroline\ClacoFormBundle\Entity\Entry', $params);
+        $data = $this->finder->search(Entry::class, $params);
 
         return new JsonResponse($data, 200);
     }

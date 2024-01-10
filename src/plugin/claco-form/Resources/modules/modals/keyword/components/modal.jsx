@@ -21,6 +21,7 @@ const KeywordModal = (props) =>
   >
     <FormData
       name={selectors.STORE_NAME}
+      flush={true}
       sections={[
         {
           id: 'general',

@@ -18,6 +18,7 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
 
     Claroline\ClacoFormBundle\Controller\API\EntryUserController:

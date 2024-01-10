@@ -5,11 +5,9 @@ import isEmpty from 'lodash/isEmpty'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
-import {ListColumns} from '#/main/app/content/list/components/columns'
 import {ListDisplay} from '#/main/app/content/list/components/display'
 import {Search} from '#/main/app/content/search/components/search'
-import {constants} from '#/main/app/content/list/constants'
-import {DataListProperty} from '#/main/app/content/list/prop-types'
+import {DataListProperty, DataListDisplay} from '#/main/app/content/list/prop-types'
 
 /**
  * Data list header.
@@ -37,43 +35,20 @@ const ListHeader = props =>
       />
     }
 
-    {(props.columns || props.display) &&
-      <div className="list-options">
-        {props.columns &&
-          <ListColumns
-            {...props.columns}
-            disabled={props.disabled}
-          />
-        }
-
-        {props.display &&
-          <ListDisplay
-            {...props.display}
-            disabled={props.disabled}
-          />
-        }
-      </div>
+    {props.display &&
+      <ListDisplay
+        {...props.display}
+        disabled={props.disabled}
+      />
     }
   </div>
 
 ListHeader.propTypes = {
   id: T.string.isRequired,
   disabled: T.bool,
-  display: T.shape({
-    current: T.oneOf(Object.keys(constants.DISPLAY_MODES)).isRequired,
-    available: T.arrayOf(
-      T.oneOf(Object.keys(constants.DISPLAY_MODES))
-    ).isRequired,
-    change: T.func.isRequired
-  }),
-
-  columns: T.shape({
-    current: T.arrayOf(T.string).isRequired,
-    available: T.arrayOf(
-      T.shape(DataListProperty.propTypes)
-    ).isRequired,
-    change: T.func.isRequired
-  }),
+  display: T.shape(
+    DataListDisplay.propTypes
+  ),
 
   filters: T.shape({
     mode: T.string.isRequired,

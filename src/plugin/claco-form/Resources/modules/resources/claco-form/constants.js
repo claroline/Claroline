@@ -1,5 +1,3 @@
-import {constants as listConstants} from '#/main/app/content/list/constants'
-
 import {trans} from '#/main/app/intl/translation'
 
 const FILE_TYPES = {
@@ -54,9 +52,6 @@ const MODERATE_COMMENTS_CHOICES = {
   [CHOICE_ANONYMOUS]: trans('choice_anonymous_comments_only', {}, 'clacoform')
 }
 
-const DISPLAY_MODES_CHOICES = {}
-Object.keys(listConstants.DISPLAY_MODES).forEach(key => DISPLAY_MODES_CHOICES[key] = listConstants.DISPLAY_MODES[key].label)
-
 export const constants = {
   FILE_TYPES,
   ENTRY_STATUS_PENDING,
@@ -65,6 +60,5 @@ export const constants = {
   DEFAULT_HOME_CHOICES,
   MENU_POSITION_CHOICES,
   DISPLAY_METADATA_CHOICES,
-  MODERATE_COMMENTS_CHOICES,
-  DISPLAY_MODES_CHOICES
+  MODERATE_COMMENTS_CHOICES
 }

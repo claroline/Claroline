@@ -223,7 +223,7 @@ DataGridSort.propTypes = {
   updateSort: T.func.isRequired
 }
 
-const DataTree = props => {
+const TreeData = props => {
   const [isExpanded, setExpanded] = useState(false)
   const flatTree = flattenTree(props.data)
 
@@ -262,7 +262,7 @@ const DataTree = props => {
           {1 < props.count && props.sorting &&
             <DataGridSort
               {...props.sorting}
-              available={getSortableProps(props.columns)}
+              available={getSortableProps(props.definition)}
             />
           }
         </div>
@@ -300,12 +300,12 @@ const DataTree = props => {
   )
 }
 
-implementPropTypes(DataTree, DataListView, {
+implementPropTypes(TreeData, DataListView, {
   size: T.oneOf(['sm', 'lg']).isRequired,
   orientation: T.oneOf(['col', 'row']).isRequired,
-  card: T.func.isRequired // It must be a react component.
+  card: T.func.isRequired // It must be a React component.
 })
 
 export {
-  DataTree
+  TreeData
 }

@@ -17,7 +17,7 @@ const ContactsComponent = props =>
     name={`${selectors.STORE_NAME}.contacts`}
     display={{
       current: listConst.DISPLAY_TILES_SM,
-      available: Object.keys(listConst.DISPLAY_MODES)
+      available: listConst.DISPLAY_MODES
     }}
     fetch={{
       url: ['apiv2_contact_list'],

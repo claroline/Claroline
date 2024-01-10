@@ -1,27 +1,26 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 
 const ListEmpty = props =>
   <div className="list-empty">
-    <div className="list-empty-info">
-      <span className="list-empty-icon fa fa-refresh" />
+    <span className={classes('list-empty-icon fa fa-fw mb-3', {
+      'fa-ban': !props.hasFilters,
+      'fa-search': props.hasFilters
+    })} />
 
-      <div className="list-empty-content">
-        {trans(props.hasFilters ? 'list_search_no_results' : 'list_no_results')}
+    <span className="list-empty-title">
+      {trans('list_no_results')}
+    </span>
 
-        {props.contentDesc &&
-          <p className="list-content-desc">
-            {props.contentDesc}
-          </p>
-        }
-      </div>
-    </div>
+    {props.hasFilters &&
+      <p className="list-empty-help m-0">{trans('list_search_no_results')}</p>
+    }
   </div>
 
 ListEmpty.propTypes = {
-  contentDesc: T.string,
   hasFilters: T.bool
 }
 

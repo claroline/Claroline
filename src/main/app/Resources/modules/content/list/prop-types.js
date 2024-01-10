@@ -4,6 +4,7 @@ import merge from 'lodash/merge'
 import {DataProperty} from '#/main/app/data/types/prop-types'
 
 import {constants as searchConst} from '#/main/app/content/search/constants'
+import {constants as listConst} from '#/main/app/content/list/constants'
 
 /**
  * Definition of a data object property.
@@ -17,7 +18,7 @@ const DataListProperty = {
      * If defined, filters and sortBy will use it to retrieve the property.
      *
      * This permits to simplify queryStrings and server communication when prop
-     * is in a sub-object (eg. `meta.published` can be referenced using `published`).
+     * is in a sub-object (e.g. `meta.published` can be referenced using `published`).
      *
      * @type {string}
      */
@@ -69,6 +70,21 @@ const DataListProperty = {
 }
 
 /**
+ * Definition of the sorting feature.
+ *
+ * @type {object}
+ */
+const DataListSorting = {
+  propTypes: {
+    current: T.shape({
+      property: T.string,
+      direction: T.number
+    }).isRequired,
+    updateSort: T.func.isRequired
+  }
+}
+
+/**
  * Definition of the selection feature.
  *
  * @type {object}
@@ -82,34 +98,28 @@ const DataListSelection = {
 }
 
 /**
- * Definition of a list view (eg. table, grid)
+ * Definition of the display feature.
  *
  * @type {object}
  */
-const DataListView = {
+const DataListDisplay = {
   propTypes: {
-    data: T.arrayOf(T.object).isRequired,
-    count: T.number.isRequired,
-    columns: T.arrayOf(
-      T.shape(DataListProperty.propTypes)
-    ).isRequired,
-    sorting: T.shape({
-      current: T.shape({
-        property: T.string,
-        direction: T.number
-      }).isRequired,
-      updateSort: T.func.isRequired
-    }),
-    selection: T.shape(
-      DataListSelection.propTypes
+    /**
+     * Available formats.
+     */
+    available: T.arrayOf(
+      T.oneOf(listConst.DISPLAY_MODES)
     ),
 
     /**
-     * Data primary action (aka open/edit action for rows in most cases).
+     * Current format.
      */
-    primaryAction: T.func,
+    current: T.oneOf(listConst.DISPLAY_MODES),
 
-    actions: T.func
+    /**
+     * A callback fired when the display mode is changed by the user.
+     */
+    changeDisplay: T.func
   }
 }
 
@@ -118,7 +128,7 @@ const DataListView = {
  *
  * @type {object}
  */
-const DataListSearch = { // todo : reuse the one from search module
+const DataListSearch = {
   propTypes: {
     mode: T.oneOf(Object.keys(searchConst.SEARCH_TYPES)).isRequired,
     current: T.arrayOf(T.shape({
@@ -137,18 +147,55 @@ const DataListSearch = { // todo : reuse the one from search module
  *
  * @type {object}
  */
-const DataListPagination = { // todo : reuse the one from pagination module
+const DataListPagination = {
   propTypes: {
+    /**
+     * The current page displayed by the list
+     */
     current: T.number,
+    /**
+     * The number of items to display on each page.
+     */
     pageSize: T.number.isRequired,
+
     changePage: T.func.isRequired,
     updatePageSize: T.func.isRequired
+  }
+}
+
+/**
+ * Definition of a list view (e.g. table, grid)
+ *
+ * @type {object}
+ */
+const DataListView = {
+  propTypes: {
+    data: T.arrayOf(T.object).isRequired,
+    count: T.number.isRequired,
+    definition: T.arrayOf(
+      T.shape(DataListProperty.propTypes)
+    ).isRequired,
+    sorting: T.shape(
+      DataListSorting.propTypes
+    ),
+    selection: T.shape(
+      DataListSelection.propTypes
+    ),
+
+    /**
+     * Data primary action (aka open/edit action for rows in most cases).
+     */
+    primaryAction: T.func,
+
+    actions: T.func
   }
 }
 
 export {
   DataListProperty,
   DataListView,
+  DataListDisplay,
+  DataListSorting,
   DataListSelection,
   DataListSearch,
   DataListPagination

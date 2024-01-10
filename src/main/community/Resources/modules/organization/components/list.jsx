@@ -9,7 +9,6 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {constants as listConst} from '#/main/app/content/list/constants'
-import {constants as treeConst} from '#/main/app/content/tree/constants'
 
 import {getActions, getDefaultAction} from '#/main/community/organization/utils'
 import {OrganizationCard} from '#/main/community/organization/components/card'
@@ -21,13 +20,13 @@ const OrganizationListComponent = props => {
     delete: () => props.invalidate(props.name)
   }, props.refresher || {})
 
-  const [displayMode, setDisplayMode] = useState(props.tree ? treeConst.DISPLAY_TREE : listConst.DEFAULT_DISPLAY_MODE)
+  const [displayMode, setDisplayMode] = useState(props.tree ? listConst.DISPLAY_TREE : listConst.DEFAULT_DISPLAY_MODE)
 
   const display = {
     current: displayMode,
-    available: merge([], listConst.DEFAULT_DISPLAY_MODES, [treeConst.DISPLAY_TREE]),
+    available: merge([], listConst.DEFAULT_DISPLAY_MODES, [listConst.DISPLAY_TREE]),
     changeDisplay: (newDisplay) => {
-      if (displayMode !== newDisplay && (treeConst.DISPLAY_TREE === newDisplay || treeConst.DISPLAY_TREE === displayMode)) {
+      if (displayMode !== newDisplay && (listConst.DISPLAY_TREE === newDisplay || listConst.DISPLAY_TREE === displayMode)) {
         props.invalidate(props.name)
       }
 
@@ -79,7 +78,7 @@ const OrganizationListComponent = props => {
   }, omit(props, 'path', 'url', 'autoload', 'customDefinition', 'customActions', 'refresher', 'invalidate'), {
     name: props.name,
     fetch: {
-      url: treeConst.DISPLAY_TREE === displayMode ? ['apiv2_organization_list_recursive'] : props.url,
+      url: listConst.DISPLAY_TREE === displayMode ? ['apiv2_organization_list_recursive'] : props.url,
       autoload: props.autoload
     },
     card: OrganizationCard

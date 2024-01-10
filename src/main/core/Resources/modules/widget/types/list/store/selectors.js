@@ -1,6 +1,7 @@
 import {createSelector} from 'reselect'
 
 import {selectors as contentSelectors} from '#/main/core/widget/content/store'
+import {parseSortBy} from '#/main/app/content/list/utils'
 
 const STORE_NAME = 'list' // where the DataList will be mounted
 
@@ -11,21 +12,7 @@ const filters = createSelector(
 
 const sorting = createSelector(
   [contentSelectors.parameters],
-  (parameters) => {
-    if (parameters.sorting) {
-      const reverse = 0 === parameters.sorting.indexOf('-')
-
-      return {
-        property: reverse ? parameters.sorting.replace('-', '') : parameters.sorting,
-        direction: reverse ? -1 : 1
-      }
-    }
-
-    return {
-      property: null,
-      direction: 0
-    }
-  }
+  (parameters) => parseSortBy(parameters.sorting)
 )
 
 const pageSize = createSelector(

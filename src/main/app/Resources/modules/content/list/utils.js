@@ -12,11 +12,12 @@ import {DataListProperty} from '#/main/app/content/list/prop-types'
  * @return {Array} - the defaulted definition
  */
 function createListDefinition(definition) {
-  return definition
+  return orderProps(definition
     // add default
     .map(dataDef => merge({}, DataListProperty.defaultProps, dataDef))
     // remove disabled types
     .filter(dataDef => isTypeEnabled(dataDef.type))
+  )
 }
 
 /**
@@ -72,7 +73,7 @@ function getActions(items, actionsGenerator) {
  * @return {Array} - the list of displayable data properties
  */
 function getDisplayableProps(dataProps) {
-  return orderProps(dataProps.filter(prop => prop.displayable))
+  return dataProps.filter(prop => prop.displayable)
 }
 
 /**
@@ -83,7 +84,7 @@ function getDisplayableProps(dataProps) {
  * @return {Array} - the list of default displayed data properties
  */
 function getDisplayedProps(dataProps) {
-  return orderProps(dataProps.filter(prop => prop.displayed))
+  return dataProps.filter(prop => prop.displayed)
 }
 
 /**
@@ -94,7 +95,7 @@ function getDisplayedProps(dataProps) {
  * @return {Array} - the list of filterable data properties
  */
 function getFilterableProps(dataProps) {
-  return orderProps(dataProps.filter(prop => prop.filterable))
+  return dataProps.filter(prop => prop.filterable)
 }
 
 /**
@@ -105,7 +106,7 @@ function getFilterableProps(dataProps) {
  * @return {Array} - the list of sortable data properties
  */
 function getSortableProps(dataProps) {
-  return orderProps(dataProps.filter(prop => prop.sortable))
+  return dataProps.filter(prop => prop.sortable)
 }
 
 /**
@@ -132,6 +133,19 @@ function orderProps(dataProps) {
   })
 }
 
+function parseSortBy(sortByStr) {
+  if (!sortByStr) {
+    return null
+  }
+
+  let reverse = sortByStr.startsWith('-')
+
+  return {
+    property: reverse ? sortByStr.substr(1) : sortByStr,
+    direction: reverse ? -1 : 1
+  }
+}
+
 export {
   createListDefinition,
   getPropDefinition,
@@ -142,5 +156,5 @@ export {
   getFilterableProps,
   getSortableProps,
   isRowSelected,
-  orderProps
+  parseSortBy
 }

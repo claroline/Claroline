@@ -11,7 +11,7 @@ const Workspace = () =>
     url={['apiv2_workspace_list_registerable']}
     display={{
       current: listConst.DISPLAY_TILES_SM,
-      available: Object.keys(listConst.DISPLAY_MODES)
+      available: listConst.DISPLAY_MODES
     }}
   />
 

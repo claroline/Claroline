@@ -16,8 +16,9 @@
     //
     // Drawbacks :
     //  - all columns get the same width. So for some data it's too large (cf. boolean) or too small (long text / links).
-    /*.table td,*/ // it breaks dropdowns if uncommented
-    .table th {
+    //
+    // It breaks dropdowns if applied to actions cells
+    .table th:not(.actions-cell) {
         max-width: 1px;
         overflow: hidden;
         white-space: nowrap;
@@ -32,26 +33,26 @@
 .list-header {
     display: flex;
     align-items: stretch;
+    justify-content: flex-end;
 
     .list-header-btn {
         font-size: $font-size-lg; // same as search icon
         line-height: $line-height-large;
         height: $input-height-lg;
         padding: $padding-large-vertical $padding-large-horizontal;
+        background: $list-controls-bg;
+
+        @include border-radius(0);
     }
 }
 
 .list-options {
     background: $list-controls-bg;
-    display: flex;
-    align-items: flex-end;
     margin-left: auto; // force right alignment if no search
 }
 
 .list-toolbar {
     background: $list-controls-bg;
-    display: flex;
-    align-items: flex-end;
 }
 
 .list-selected {
@@ -105,37 +106,29 @@ button.list-primary-action {
 }
 
 .list-empty {
-    margin: auto;
-    min-width: 50%;
+    flex: 1;
+    padding: map-get($spacers, 3);
+    color: var(--#{$prefix}tertiary-color);
 
-    .list-empty-info {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding: 15px;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     .list-empty-icon {
-        font-size: 120px;
-        color: var(--#{$prefix}secondary-color);
-        margin: 15px;
+        font-size: 5rem;
+        height: 5rem;
+        line-height: 1;
+        color: $gray-200;
     }
 
-    .list-empty-content {
-        flex: 2;
-        margin: 15px;
+    .list-empty-title {
+        font-weight: $font-weight-bolder;
         font-size: $font-size-lg;
     }
 }
 
 @media (max-width: map-get($grid-breakpoints, 'sm')) {
-    .list-empty {
-        .list-empty-info {
-            text-align: center;
-            flex-direction: column;
-        }
-    }
-
     .list-footer {
         flex-direction: column;
         align-items: stretch;
