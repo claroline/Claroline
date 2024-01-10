@@ -27,8 +27,8 @@ class EntryFinder extends AbstractFinder
     private array $usedJoin = [];
 
     public function __construct(
-        private TokenStorageInterface $tokenStorage,
-        private ClacoFormManager $manager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ClacoFormManager $manager
     ) {
     }
 
@@ -187,28 +187,23 @@ class EntryFinder extends AbstractFinder
                     $qb->setParameter($filterName, new \DateTime(date('Y-m-d', $filterValue)));
                     break;
                 case 'categories':
-                    if (!isset($this->usedJoin['categories'])) {
-                        $qb->join('obj.categories', 'c');
-                        $this->usedJoin['categories'] = true;
-                    }
-                    $qb->andWhere('UPPER(c.name) LIKE :categoryName');
-                    $qb->setParameter('categoryName', '%'.strtoupper($filterValue).'%');
-                    break;
                 case 'category':
                     if (!isset($this->usedJoin['categories'])) {
-                        $qb->join('obj.categories', 'c');
+                        $qb->leftJoin('obj.categories', 'c');
                         $this->usedJoin['categories'] = true;
                     }
-                    $qb->andWhere('c.uuid = :categoryUuid');
-                    $qb->setParameter('categoryUuid', $filterValue);
+
+                    $qb->andWhere('c.uuid IN (:categoryUuid)');
+                    $qb->setParameter('categoryUuid', !is_array($filterValue) ? [$filterValue] : $filterValue);
+
                     break;
                 case 'keywords':
-                    if (!$this->usedJoin['keywords']) {
-                        $qb->join('obj.keywords', 'k');
+                    if (!isset($this->usedJoin['keywords'])) {
+                        $qb->leftJoin('obj.keywords', 'k');
                         $this->usedJoin['keywords'] = true;
                     }
-                    $qb->andWhere('UPPER(k.name) LIKE :keywordName');
-                    $qb->setParameter('keywordName', '%'.strtoupper($filterValue).'%');
+                    $qb->andWhere('k.uuid IN (:keywordUuid)');
+                    $qb->setParameter('keywordUuid', !is_array($filterValue) ? [$filterValue] : $filterValue);
                     break;
                 default:
                     $filterName = str_replace('values.', '', $filterName);

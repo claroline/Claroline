@@ -5,7 +5,7 @@ import {schemeCategory20c} from '#/main/theme/color/utils'
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {LineChart} from '#/main/core/layout/chart/line/components/line-chart'
-import {DataTable} from '#/main/app/content/list/components/view/data-table'
+import {TableData} from '#/main/app/content/list/table/components/data'
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 import {isQuestionType, getDefinition} from '#/plugin/exo/items/item-types'
 
@@ -127,7 +127,7 @@ class AttemptsChart extends Component {
             />
           </div>
 
-          <DataTable
+          <TableData
             count={chartData.length}
             data={chartData}
             columns={[
@@ -149,7 +149,7 @@ class AttemptsChart extends Component {
                   return (
                     <Fragment>
                       {numbering &&
-                      <span className="h-numbering">{numbering}</span>
+                        <span className="h-numbering">{numbering}</span>
                       }
 
                       {item.label}

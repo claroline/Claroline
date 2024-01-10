@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl'
 import {MODAL_BUTTON} from '#/main/app/buttons'
-import {DataTable} from '#/main/app/content/list/components/view/data-table'
+import {TableData} from '#/main/app/content/list/table/components/data'
 
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {MODAL_CORRECTION} from '#/plugin/drop-zone/resources/dropzone/correction/components/modal/correction-modal'
@@ -21,7 +21,7 @@ const getTitle = (dropzone, correction, index = 0) => {
 }
 
 const Corrections = (props) =>
-  <DataTable
+  <TableData
     data={props.corrections}
     columns={[
       {

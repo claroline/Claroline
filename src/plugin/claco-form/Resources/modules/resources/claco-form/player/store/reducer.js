@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
+import {parseSortBy} from '#/main/app/content/list/utils'
 import {constants as paginationConst} from '#/main/app/content/pagination/constants'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
@@ -37,6 +38,9 @@ const reducer = combineReducers({
     }),
     filters: makeReducer([], {
       [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => get(action.resourceData, 'clacoForm.list.filters', [])
+    }),
+    sortBy: makeReducer(null, {
+      [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => parseSortBy(get(action.resourceData, 'clacoForm.list.sorting', null))
     }),
     pagination: makeReducer({page: 0, pageSize: paginationConst.DEFAULT_PAGE_SIZE}, {
       [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => ({

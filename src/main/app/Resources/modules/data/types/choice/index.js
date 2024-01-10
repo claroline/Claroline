@@ -1,6 +1,6 @@
 import differenceBy from 'lodash/differenceBy'
 
-import {trans, tval} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 
 import {ChoiceInput} from '#/main/app/data/types/choice/components/input'
 import {ChoiceSearch} from '#/main/app/data/types/choice/components/search'
@@ -63,10 +63,10 @@ const dataType = {
       if (options.multiple) {
         const unknown = differenceBy(value, Object.keys(choices), (selected) => selected+'')
         if (0 !== unknown.length) {
-          return tval('This value is invalid.')
+          return trans('This value is invalid.', {}, 'validators')
         }
       } else if (-1 === Object.keys(choices).indexOf(value+'')) {
-        return tval('This value is invalid.')
+        return trans('This value is invalid.', {}, 'validators')
       }
     }
   },

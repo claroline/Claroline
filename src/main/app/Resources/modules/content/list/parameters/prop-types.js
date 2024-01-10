@@ -51,14 +51,7 @@ const ListParameters = {
   defaultProps: {
     // display feature
     display: listConstants.DEFAULT_DISPLAY_MODE,
-    availableDisplays: [
-      listConstants.DISPLAY_TABLE,
-      listConstants.DISPLAY_TABLE_SM,
-      listConstants.DISPLAY_TILES,
-      listConstants.DISPLAY_TILES_SM,
-      listConstants.DISPLAY_LIST_SM,
-      listConstants.DISPLAY_LIST
-    ],
+    availableDisplays: listConstants.DEFAULT_DISPLAY_MODES,
 
     // sort feature
     availableSort: [],

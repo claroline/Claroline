@@ -7,7 +7,10 @@ import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 // TODO : add Content prefix to components
 
 const TableCell = props =>
-  <td className={classes(`text-${props.align}`, props.className)}>
+  <td className={classes(props.className, {
+    'text-center': 'center' === props.align,
+    'text-end': 'right' === props.align
+  })}>
     {props.children}
   </td>
 
@@ -47,14 +50,17 @@ TableTooltipCell.defaultProps = {
 }
 
 const TableHeaderCell = props =>
-  <th scope="col" className={classes(props.className, `text-${props.align}`)}>
+  <th scope="col" className={classes(props.className, {
+    'text-center': 'center' === props.align,
+    'text-end': 'right' === props.align
+  })}>
     {props.children}
   </th>
 
 TableHeaderCell.propTypes = {
+  className: T.string,
   align: T.oneOf(['left', 'center', 'right']),
-  children: T.node,
-  className: T.string
+  children: T.node
 }
 
 TableHeaderCell.defaultProps = {
@@ -65,7 +71,10 @@ TableHeaderCell.defaultProps = {
 const TableSortingCell = props =>
   <th
     scope="col"
-    className={`sorting-cell text-${props.align}`}
+    className={classes(props.className, 'sorting-cell', {
+      'text-center': 'center' === props.align,
+      'text-end': 'right' === props.align
+    })}
     onClick={e => {
       e.stopPropagation()
       props.onSort()
@@ -77,6 +86,7 @@ const TableSortingCell = props =>
   </th>
 
 TableSortingCell.propTypes = {
+  className: T.string,
   align: T.oneOf(['left', 'center', 'right']),
   direction: T.oneOf([0, -1, 1]),
   onSort: T.func.isRequired,

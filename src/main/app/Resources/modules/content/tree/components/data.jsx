@@ -164,6 +164,9 @@ TreeDataItem.defaultProps = {
   selected: []
 }
 
+/**
+ * @deprecated
+ */
 class TreeData extends Component {
   constructor(props) {
     super(props)

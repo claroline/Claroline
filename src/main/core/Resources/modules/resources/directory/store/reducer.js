@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
+import {parseSortBy} from '#/main/app/content/list/utils'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
@@ -108,22 +109,7 @@ const reducer = combineReducers({
       })
     }),
     sortBy: makeReducer([], {
-      [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => {
-        const sorting = get(action.resourceData.directory, 'list.sorting')
-
-        let sortBy = {property: null, direction: 0}
-        if (sorting) {
-          if (0 === sorting.indexOf('-')) {
-            sortBy.property = sorting.replace('-', '') // replace first -
-            sortBy.direction = -1
-          } else {
-            sortBy.property = sorting
-            sortBy.direction = 1
-          }
-        }
-
-        return sortBy
-      }
+      [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => parseSortBy(get(action.resourceData.directory, 'list.sorting', null))
     })
   }),
   storageLock: makeReducer(false, {

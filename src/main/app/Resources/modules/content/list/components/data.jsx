@@ -11,18 +11,17 @@ import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {
   DataListProperty,
+  DataListDisplay,
   DataListSelection,
   DataListSearch,
   DataListPagination
 } from '#/main/app/content/list/prop-types'
 import {
   createListDefinition,
-  getDisplayableProps,
-  getDisplayedProps,
-  getFilterableProps,
-  orderProps
+  getFilterableProps
 } from '#/main/app/content/list/utils'
 
+import DISPLAY_MODES from '#/main/app/content/list/modes'
 import {ListEmpty} from '#/main/app/content/list/components/empty'
 import {ListHeader} from '#/main/app/content/list/components/header'
 import {ListFooter} from '#/main/app/content/list/components/footer'
@@ -44,7 +43,6 @@ class ListData extends Component {
     })
 
     this.toggleDisplay = this.toggleDisplay.bind(this)
-    this.changeColumns = this.changeColumns.bind(this)
   }
 
   componentDidUpdate(prevProps) {
@@ -75,7 +73,7 @@ class ListData extends Component {
 
     if (!hasCard) {
       // disables grid based displays if no card provided
-      availableDisplays = availableDisplays.filter(displayName => !listConst.DISPLAY_MODES[displayName].options.useCard)
+      availableDisplays = availableDisplays.filter(displayName => !DISPLAY_MODES[displayName].options.useCard)
 
       // throws error if there is no available displays after filtering
       invariant(
@@ -83,30 +81,20 @@ class ListData extends Component {
         'Data list has no available displays. Either enable table displays or pass a DataCard component to the list.'
       )
 
-      if (listConst.DISPLAY_MODES[currentDisplay].options.useCard) {
+      if (DISPLAY_MODES[currentDisplay].options.useCard) {
         // current display is a grid, change it
-        currentDisplay = listConst.DISPLAY_MODES[listConst.DEFAULT_DISPLAY_MODE].options.useCard ?
+        currentDisplay = DISPLAY_MODES[listConst.DEFAULT_DISPLAY_MODE].options.useCard ?
           listConst.DEFAULT_DISPLAY_MODE : // gets the default mode if it's not card based
           // get the first non card based available display
           availableDisplays[0]
       }
     }
 
-    let currentColumns
-    if (listConst.DISPLAY_MODES[currentDisplay].options.filterColumns) {
-      // gets only the displayed columns
-      currentColumns = getDisplayedProps(definition)
-    } else {
-      // gets all displayable columns
-      currentColumns = getDisplayableProps(definition)
-    }
-
     return {
       display: {
         current: currentDisplay,
         available: availableDisplays
-      },
-      currentColumns: currentColumns.map(prop => prop.name)
+      }
     }
   }
 
@@ -125,30 +113,13 @@ class ListData extends Component {
     )
   }
 
-  changeColumns(newColumns) {
-    this.setState({currentColumns: newColumns})
-  }
-
   render() {
     // enables and configures list tools
     let displayTool
     if (1 < this.state.display.available.length) {
       displayTool = Object.assign({}, this.state.display, {
-        change: this.toggleDisplay
+        changeDisplay: this.toggleDisplay
       })
-    }
-
-    let columnsTool
-    if (listConst.DISPLAY_MODES[this.state.display.current].options.filterColumns) {
-      // Tools is enabled and the current display supports columns filtering
-      const displayableColumns = getDisplayableProps(this.state.definition)
-      if (1 < displayableColumns.length) {
-        columnsTool = {
-          current: this.state.currentColumns,
-          available: getDisplayableProps(this.state.definition),
-          change: this.changeColumns
-        }
-      }
     }
 
     let filtersTool
@@ -168,12 +139,11 @@ class ListData extends Component {
           />
         }
 
-        {(displayTool || columnsTool || filtersTool || this.props.customActions) &&
+        {(displayTool || filtersTool || this.props.customActions) &&
           <ListHeader
             id={this.props.id}
             disabled={0 === this.props.totalResults}
             display={displayTool}
-            columns={columnsTool}
             filters={filtersTool}
             customActions={this.props.customActions}
           />
@@ -188,12 +158,12 @@ class ListData extends Component {
         }
 
         {(!this.props.loading && 0 !== this.props.totalResults) &&
-          createElement(listConst.DISPLAY_MODES[this.state.display.current].component, Object.assign({},
-            listConst.DISPLAY_MODES[this.state.display.current].options,
+          createElement(DISPLAY_MODES[this.state.display.current].component, Object.assign({},
+            DISPLAY_MODES[this.state.display.current].options,
             {
               data:          this.props.data,
               count:         this.props.totalResults,
-              columns:       orderProps(this.state.definition.filter(prop => -1 !== this.state.currentColumns.indexOf(prop.name))),
+              definition:    this.state.definition,
               sorting:       this.props.sorting,
               selection:     this.props.selection,
               primaryAction: this.props.primaryAction,
@@ -261,6 +231,8 @@ ListData.propTypes = {
 
   /**
    * A list of actions to add to the list header.
+   *
+   * @deprecated
    */
   customActions: T.arrayOf(T.shape(
     ActionTypes.propTypes
@@ -270,24 +242,9 @@ ListData.propTypes = {
    * Display formats of the list.
    * Providing this object automatically display the display formats component.
    */
-  display: T.shape({
-    /**
-     * Available formats.
-     */
-    available: T.arrayOf(
-      T.oneOf(Object.keys(listConst.DISPLAY_MODES))
-    ),
-
-    /**
-     * Current format.
-     */
-    current: T.oneOf(Object.keys(listConst.DISPLAY_MODES)),
-
-    /**
-     * A callback fired when the display mode is changed by the user.
-     */
-    changeDisplay: T.func
-  }),
+  display: T.shape(
+    DataListDisplay.propTypes
+  ),
 
   /**
    * Search filters configuration.

@@ -39,16 +39,14 @@ ColumnsMenu.propTypes = {
   toggle: T.func.isRequired
 }
 
-// TODO : display fixed columns
-const ListColumns = props =>
+const TableColumns = props =>
   <Button
     id="list-columns"
-    className="list-header-btn btn btn-text-secondary"
+    className="btn btn-text-secondary p-0"
     type={MENU_BUTTON}
     icon="fa fa-fw fa-columns"
     label={trans('list_columns_title')}
     tooltip="bottom"
-    disabled={props.disabled}
     menu={
       <Menu
         as={ColumnsMenu}
@@ -74,8 +72,7 @@ const ListColumns = props =>
     }
   />
 
-ListColumns.propTypes = {
-  disabled: T.bool,
+TableColumns.propTypes = {
   available: T.arrayOf(
     T.shape(DataListProperty.propTypes)
   ).isRequired,
@@ -84,5 +81,5 @@ ListColumns.propTypes = {
 }
 
 export {
-  ListColumns
+  TableColumns
 }

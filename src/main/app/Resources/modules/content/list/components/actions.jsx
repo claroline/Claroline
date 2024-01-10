@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
@@ -93,7 +94,7 @@ ListPrimaryAction.propTypes = {
 const ListActions = props =>
   <Toolbar
     id={`${props.id}-btn`}
-    className="data-actions"
+    className={classes('data-actions', props.className)}
     buttonName="btn btn-text-body"
     tooltip="left"
     toolbar="more"
@@ -103,6 +104,7 @@ const ListActions = props =>
 
 ListActions.propTypes = {
   id: T.string.isRequired,
+  className: T.string,
   actions: T.oneOfType([
     // a regular array of actions
     T.arrayOf(T.shape(

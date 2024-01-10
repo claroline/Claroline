@@ -16,6 +16,7 @@ import {
   getSortableProps
 } from '#/main/app/content/list/utils'
 import {constants} from '#/main/app/content/list/constants'
+import DISPLAY_MODES from '#/main/app/content/list/modes'
 
 import {DataListProperty as DataListPropertyTypes} from '#/main/app/content/list/prop-types'
 import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
@@ -28,9 +29,9 @@ const isColumnsFilterable = (parameters) => parameters.columnsFilterable || !isE
 const hasLargeCard = (parameters) => {
   const availableDisplays = get(parameters, 'availableDisplays') || []
 
-  return (parameters.display && constants.DISPLAY_MODES[parameters.display].options.useCard && 'lg' === constants.DISPLAY_MODES[parameters.display].options.size)
+  return (parameters.display && DISPLAY_MODES[parameters.display].options.useCard && 'lg' === DISPLAY_MODES[parameters.display].options.size)
     || !!availableDisplays
-      .find(displayMode => constants.DISPLAY_MODES[displayMode].options.useCard && 'lg' === constants.DISPLAY_MODES[displayMode].options.size)
+      .find(displayMode => DISPLAY_MODES[displayMode].options.useCard && 'lg' === DISPLAY_MODES[displayMode].options.size)
 }
 
 const ListForm = props => {
@@ -42,16 +43,16 @@ const ListForm = props => {
     displayModes = get(props.list, 'display.available')
   } else {
     // grab all implemented display modes
-    displayModes = Object.keys(constants.DISPLAY_MODES)
+    displayModes = constants.DISPLAY_MODES
   }
 
   if (!get(props.list, 'card')) {
     // the list implementation does not define cards, we need to disable cards based displays
-    displayModes = displayModes.filter(displayName => !constants.DISPLAY_MODES[displayName].options.useCard)
+    displayModes = displayModes.filter(displayName => !DISPLAY_MODES[displayName].options.useCard)
   }
 
   const displayModesList = displayModes
-    .reduce((acc, current) => Object.assign(acc, {[current]: constants.DISPLAY_MODES[current].label}), {})
+    .reduce((acc, current) => Object.assign(acc, {[current]: DISPLAY_MODES[current].label}), {})
 
   const pageSizesList = constants.AVAILABLE_PAGE_SIZES
     .reduce((pageChoices, current) => Object.assign(pageChoices, {[current]: -1 !== current ? current+'' : trans('all')}), {})
@@ -100,7 +101,7 @@ const ListForm = props => {
                   }
 
                   // Sets default columns list (all) for table
-                  if (constants.DISPLAY_MODES[value].options.filterColumns
+                  if (DISPLAY_MODES[value].options.filterColumns
                     && (!props.parameters.columns || 0 === props.parameters.columns.length)) {
                     props.updateProp('columns', Object.keys(columnsList))
                   }
@@ -141,7 +142,7 @@ const ListForm = props => {
                     }
 
                     // Sets default columns list (all) for tables
-                    if (selected.find(displayMode => constants.DISPLAY_MODES[displayMode].options.filterColumns)) {
+                    if (selected.find(displayMode => DISPLAY_MODES[displayMode].options.filterColumns)) {
                       props.updateProp('columns', Object.keys(columnsList))
                     }
                   }
@@ -395,8 +396,8 @@ const ListForm = props => {
           displayed: (parameters) => {
             const availableDisplays = get(parameters, 'availableDisplays') || []
 
-            return (parameters.display && constants.DISPLAY_MODES[parameters.display].options.filterColumns)
-              || !!availableDisplays.find(displayMode => constants.DISPLAY_MODES[displayMode].options.filterColumns)
+            return (parameters.display && DISPLAY_MODES[parameters.display].options.filterColumns)
+              || !!availableDisplays.find(displayMode => DISPLAY_MODES[displayMode].options.filterColumns)
           },
           fields: [
             {
@@ -446,8 +447,8 @@ const ListForm = props => {
           displayed: (parameters) => {
             const availableDisplays = get(parameters, 'availableDisplays') || []
 
-            return (parameters.display && constants.DISPLAY_MODES[parameters.display].options.useCard)
-              || !!availableDisplays.find(displayMode => constants.DISPLAY_MODES[displayMode].options.useCard)
+            return (parameters.display && DISPLAY_MODES[parameters.display].options.useCard)
+              || !!availableDisplays.find(displayMode => DISPLAY_MODES[displayMode].options.useCard)
           },
           fields: [
             {

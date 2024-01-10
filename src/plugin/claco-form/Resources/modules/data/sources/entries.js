@@ -184,36 +184,35 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, isCategoryM
       {
         name: 'categories',
         label: trans('categories'),
-        type: 'string',
+        type: 'choice',
         displayed: hasCategories,
         displayable: hasCategories,
-        filterable: false,
-        sortable: false,
-        calculated: (rowData) => rowData.categories ? rowData.categories.map(c => c.name).join(', ') : ''
-      }, {
-        name: 'category',
-        label: trans('category'),
-        type: 'choice',
-        sortable: false,
-        displayed: false,
-        displayable: false,
+        sortable: hasCategories,
         filterable: hasCategories,
         options: {
+          multiple: true,
           choices: clacoForm.categories ? clacoForm.categories.reduce((acc, category) => Object.assign(acc, {
             [category.id]: category.name
           }), {}) : {}
-        }
+        },
+        calculated: (rowData) => rowData.categories ? rowData.categories.map(c => c.id) : []
       },
       // Keywords
       {
         name: 'keywords',
         label: trans('keywords', {}, 'clacoform'),
-        type: 'string',
+        type: 'choice',
         displayed: hasKeywords,
         displayable: hasKeywords,
         filterable: hasKeywords,
-        sortable: false,
-        calculated: (rowData) => rowData.keywords ? rowData.keywords.map(k => k.name).join(', ') : ''
+        sortable: hasKeywords,
+        options: {
+          multiple: true,
+          choices: clacoForm.keywords ? clacoForm.keywords.reduce((acc, keyword) => Object.assign(acc, {
+            [keyword.id]: keyword.name
+          }), {}) : {}
+        },
+        calculated: (rowData) => rowData.keywords ? rowData.keywords.map(c => c.id) : []
       }
     ].concat(
       // Fields defined in ClacoForm
