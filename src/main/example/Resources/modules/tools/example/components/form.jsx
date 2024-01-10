@@ -208,6 +208,15 @@ const ExampleForm = (props) =>
               type: 'color'
             }
           ]
+        }, {
+          title: 'Others',
+          fields: [
+            {
+              name: 'country',
+              label: 'Country',
+              type: 'country'
+            }
+          ]
         }
       ]}
     />

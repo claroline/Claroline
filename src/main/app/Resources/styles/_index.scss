@@ -17,6 +17,9 @@
 @import "node_modules/@fortawesome/fontawesome-free/scss/solid";
 @import "node_modules/@fortawesome/fontawesome-free/scss/brands";
 
+// Import FlagIcons
+@import "node_modules/flag-icons/sass/flag-icons";
+
 @import "scaffolding";
 @import "utilities";
 @import "type";
