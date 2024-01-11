@@ -49,7 +49,7 @@ abstract class AbstractEventFinder extends AbstractFinder
 
                 case 'afterToday':
                     if ($filterValue) {
-                        $qb->andWhere("p.startDate >= :{$filterName}");
+                        $qb->andWhere("p.startDate >= :$filterName");
                         $qb->setParameter($filterName, new \DateTime());
                     }
                     break;
@@ -111,13 +111,13 @@ abstract class AbstractEventFinder extends AbstractFinder
                 case 'description':
                 case 'startDate':
                 case 'endDate':
-                    $qb->andWhere("UPPER(p.{$filterName}) LIKE :{$filterName}");
+                    $qb->andWhere("UPPER(p.$filterName) LIKE :$filterName");
                     $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                     break;
 
                 case 'location':
                     $qb->join('po.location', 'l');
-                    $qb->andWhere("l.uuid = :{$filterName}");
+                    $qb->andWhere("l.uuid = :$filterName");
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
@@ -142,7 +142,7 @@ abstract class AbstractEventFinder extends AbstractFinder
                 case 'description':
                 case 'startDate':
                 case 'endDate':
-                    $qb->orderBy("p.{$sortByProperty}", $sortByDirection);
+                    $qb->orderBy("p.$sortByProperty", $sortByDirection);
                     break;
             }
         }
