@@ -33,14 +33,13 @@ class UserVoter extends AbstractRoleSubjectVoter
         $collection = isset($options['collection']) ? $options['collection'] : null;
 
         switch ($attributes[0]) {
+            case self::VIEW:
             case self::OPEN:
                 return $this->checkOpen($token, $object);
             case self::CREATE:
                 return $this->checkCreate($token, $object);
-            case self::VIEW:
-                return $this->checkView($token, $object);
             case self::ADMINISTRATE:
-                return $this->checkAdministrate($token, $object);
+                return $this->checkAdministrate();
             case self::EDIT:
                 return $this->checkEdit($token, $object);
             case self::DELETE:
@@ -54,12 +53,12 @@ class UserVoter extends AbstractRoleSubjectVoter
 
     private function checkOpen(TokenInterface $token, User $user): int
     {
-        if ($this->isOrganizationManager($token, $user)) {
+        // the user can open himself.
+        if ($token->getUser() === $user) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        // the user can open himself too.
-        if ($token->getUser() === $user) {
+        if ($this->isToolGranted('ADMINISTRATE', 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -72,12 +71,12 @@ class UserVoter extends AbstractRoleSubjectVoter
 
     private function checkEdit(TokenInterface $token, User $user): int
     {
-        if ($this->isOrganizationManager($token, $user)) {
+        // the user can edit himself too.
+        if ($token->getUser() === $user) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        // the user can edit himself too.
-        if ($token->getUser() === $user) {
+        if ($this->isToolGranted('ADMINISTRATE', 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -94,24 +93,18 @@ class UserVoter extends AbstractRoleSubjectVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkAdministrate(TokenInterface $token, User $user): int
+    private function checkAdministrate(): int
     {
-        if ($this->isOrganizationManager($token, $user) || $this->isToolGranted('ADMINISTRATE', 'community')) {
+        if ($this->isToolGranted('ADMINISTRATE', 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
         return VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkView(TokenInterface $token, User $user): int
-    {
-        return $this->isOrganizationManager($token, $user) ?
-            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
-    }
-
     private function checkDelete(TokenInterface $token, User $user): int
     {
-        if ($this->isOrganizationManager($token, $user)) {
+        if ($this->isToolGranted('ADMINISTRATE', 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -136,14 +129,14 @@ class UserVoter extends AbstractRoleSubjectVoter
         return $this->checkEdit($token, $user);
     }
 
-    private function checkCreate(TokenInterface $token, User $user)
+    private function checkCreate(TokenInterface $token, User $user): int
     {
         // allow creation to administrators
         if ($this->isToolGranted('CREATE_USER', 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        if ($this->isOrganizationManager($token, $user)) {
+        if ($this->isToolGranted('ADMINISTRATE', 'community')) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
