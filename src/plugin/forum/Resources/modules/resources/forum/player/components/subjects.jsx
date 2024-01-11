@@ -17,7 +17,7 @@ import {actions} from '#/plugin/forum/resources/forum/player/store'
 import {SubjectCard} from '#/plugin/forum/resources/forum/data/components/subject-card'
 
 const SubjectsList = props =>
-  <div>
+  <>
     <h2>{trans('subjects', {}, 'forum')}</h2>
     <ListData
       name={`${selectors.STORE_NAME}.subjects.list`}
@@ -177,7 +177,7 @@ const SubjectsList = props =>
       ]}
       card={SubjectCard}
     />
-  </div>
+  </>
 
 SubjectsList.propTypes = {
   path: T.string.isRequired,

@@ -87,8 +87,9 @@
     order: 2;
     flex: 1;
     color: $page-title-color;
-    font-size: $page-title-font-size;
     font-weight: $page-title-font-weight;
+
+    @include font-size($page-title-font-size);
 
     margin: $grid-gutter-width * .5;
 
