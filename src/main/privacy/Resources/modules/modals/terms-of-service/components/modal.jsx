@@ -35,8 +35,8 @@ TermsOfServiceModal.propTypes = {
   fetch: T.func.isRequired,
   loaded: T.bool.isRequired,
   content: T.string,
-
-  fadeModal: T.func.isRequired
+  fadeModal: T.func.isRequired,
+  formData: T.object.isRequired
 }
 
 export {

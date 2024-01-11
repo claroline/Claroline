@@ -1,20 +1,29 @@
 {
-  "accept_terms": "You have accepted the terms of use of the platform.",
-  "no_accept_terms": "You have not yet accepted the terms of use of the platform.",
-  "title_my_data": "My personal data",
+  "country_storage": "Data storage country",
+  "country_storage_alert_enabled": "You have specified the country where the data is stored",
+  "country_storage_alert_disabled": "You have not specified the country where the data is stored",
+
+  "dpo": "Data protection officer",
+  "dpo_alert_enabled": "You have specified the contact details of the data protection officer",
+  "dpo_alert_disabled": "You have not specified the contact details of the data protection officer",
+
+  "personal_data": "My personal data",
   "export_data": "Export data",
-  "country_storage": "data storage country",
   "request_deletion" : "Request deletion of my account",
-  "title_dialog_delete_account" : "Request to delete my account",
-  "message_dialog_delete_account" : "Are you sure you want to request the deletion of your account?",
+  "delete_account" : "Request to delete my account",
+  "delete_account_message" : "Are you sure you want to request the deletion of your account?",
   "account_deletion": {
     "subject": "Account deletion request",
     "body": "User %name% <br/> ID: %id% <br/> wishes to delete their account. Please take the appropriate measures.<br/><hr/>"
   },
 
   "terms_of_service": "Terms of service",
-  "terms_of_service_activation_message": "Activate the terms of service",
-  "terms_of_service_activation_help": "New users will need to accept the terms to be able to use the platform.",
-  "terms_enabled_but_empty": "Terms of service can only be enabled if a text is provided in at least one language.",
-  "terms_of_service_acceptance": "I accept the terms of service"
+  "terms_of_service_accept": "Accept terms of service",
+  "terms_of_service_accepted": "You have accepted the terms of service of the platform",
+  "terms_of_service_not_accepted": "You have not yet accepted the terms of service of the platform",
+  "terms_of_service_activation": "Activate the terms of service",
+  "terms_of_service_activation_help": "New users will need to accept the terms to be able to use the platform",
+  "terms_of_service_alert_enabled": "You have enabled the terms of use of the platform",
+  "terms_of_service_alert_disabled": "You have not enabled the terms of use of the platform",
+  "terms_of_service_show": "Show terms of service"
 }
