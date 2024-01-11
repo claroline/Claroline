@@ -48,7 +48,7 @@ class AccountContext extends AbstractContext
 
     public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
     {
-        return $this->securityManager->isAdmin();
+        return !empty($this->securityManager->getCurrentUser());
     }
 
     public function isImpersonated(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool

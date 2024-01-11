@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Security\Voter\Tool;
 use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\Voter\AbstractVoter;
+use Claroline\CoreBundle\Component\Context\AccountContext;
 use Claroline\CoreBundle\Component\Context\PublicContext;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -57,8 +58,17 @@ class OrderedToolVoter extends AbstractVoter
             return VoterInterface::ACCESS_DENIED;
         }
 
+        // No rights management for AccountContext for now
+        if (AccountContext::getName() === $object->getContextName()) {
+            if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+
+            return VoterInterface::ACCESS_DENIED;
+        }
+
         if (WorkspaceContext::getName() === $object->getContextName()) {
-            $wsContext = $this->contextProvider->getContext(WorkspaceContext::getName(), $object->getContextId());
+            $wsContext = $this->contextProvider->getContext(WorkspaceContext::getName());
             if ($this->isGranted(self::ADMINISTRATE, $wsContext->getObject($object->getContextId()))) {
                 return VoterInterface::ACCESS_GRANTED;
             }
