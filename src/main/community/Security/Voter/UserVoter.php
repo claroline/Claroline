@@ -96,8 +96,11 @@ class UserVoter extends AbstractRoleSubjectVoter
 
     private function checkAdministrate(TokenInterface $token, User $user): int
     {
-        return $this->isOrganizationManager($token, $user) ?
-            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+        if ($this->isOrganizationManager($token, $user) || $this->isToolGranted('ADMINISTRATE', 'community')) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     private function checkView(TokenInterface $token, User $user): int
