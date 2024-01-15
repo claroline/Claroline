@@ -120,7 +120,7 @@ export class AnswerArea extends Component {
           >
             <Button
               id="area-edit"
-              className="btn"
+              className="btn btn-light"
               type={CALLBACK_BUTTON}
               icon="fa fa-fw fa-pencil"
               label={trans('graphic_area_edit', {}, 'quiz')}
@@ -139,8 +139,8 @@ export class AnswerArea extends Component {
             />
 
             <Button
-              id="area-edit"
-              className="btn"
+              id="area-delete"
+              className="btn btn-danger"
               type={CALLBACK_BUTTON}
               icon="fa fa-fw fa-trash"
               label={trans('delete', {}, 'actions')}

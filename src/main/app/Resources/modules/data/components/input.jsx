@@ -153,6 +153,7 @@ class DataInput extends Component {
         help: this.props.help,
         error: this.props.error,
         optional: !this.props.required,
+        validating: this.props.validating,
         warnOnly: !this.props.validating
       },
       this.renderInput()

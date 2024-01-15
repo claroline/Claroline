@@ -21,30 +21,28 @@ const Date = props => {
 
   return (
     <div className={classes('input-group', {[`input-group-${props.size}`]: !!props.size})}>
-      <span className="input-group-btn">
-        <Button
-          className="btn"
-          type={MENU_BUTTON}
-          icon={props.calendarIcon}
-          label={trans('show-calendar', {}, 'actions')}
-          tooltip="right"
-          size={props.size}
-          disabled={props.disabled}
-          menu={
-            <div className="dropdown-menu">
-              <Calendar
-                selected={props.value}
-                onChange={props.onChange}
-                minDate={props.minDate}
-                maxDate={props.maxDate}
-                time={props.time}
-                minTime={props.minTime}
-                maxTime={props.maxTime}
-              />
-            </div>
-          }
-        />
-      </span>
+      <Button
+        className="btn"
+        type={MENU_BUTTON}
+        icon={props.calendarIcon}
+        label={trans('show-calendar', {}, 'actions')}
+        tooltip="right"
+        size={props.size}
+        disabled={props.disabled}
+        menu={
+          <div className="dropdown-menu">
+            <Calendar
+              selected={props.value}
+              onChange={props.onChange}
+              minDate={props.minDate}
+              maxDate={props.maxDate}
+              time={props.time}
+              minTime={props.minTime}
+              maxTime={props.maxTime}
+            />
+          </div>
+        }
+      />
 
       <input
         id={props.id}

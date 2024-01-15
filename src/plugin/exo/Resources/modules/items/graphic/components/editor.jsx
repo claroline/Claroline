@@ -3,7 +3,6 @@ import get from 'lodash/get'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 
 import {FormData} from '#/main/app/content/form/containers/data'
-import {FormGroup} from '#/main/app/content/form/components/group'
 import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 
 import {resizeArea} from '#/plugin/exo/items/graphic/resize'
@@ -28,6 +27,7 @@ import {
   SHAPE_CIRCLE,
   AREA_DEFAULT_SIZE
 } from '#/plugin/exo/items/graphic/constants'
+import {Overlay} from '#/main/app/overlays/components/overlay'
 
 let AnswerDropZone = props => props.connectDropTarget(props.children)
 
@@ -333,10 +333,7 @@ class GraphicElement extends Component {
 
   render() {
     return(
-      <FormGroup
-        id="graphic-img"
-        label={trans('image')}
-      >
+      <>
         <div className="top-controls">
           <ImageInput onSelect={file => this.onSelectImage(file)}/>
 
@@ -347,72 +344,76 @@ class GraphicElement extends Component {
         </div>
 
         {get(this.props.item, '_popover.open') &&
-          <AreaPopover
-            left={this.props.item._popover.left}
-            top={this.props.item._popover.top}
-            hasScore={this.props.hasScore}
-            hasExpectedAnswers={this.props.item.hasExpectedAnswers}
-            score={this.getCurrentArea().score}
-            feedback={this.getCurrentArea().feedback}
-            color={this.getCurrentArea().area.color}
-            onPickColor={color => {
-              const newItem = Object.assign({}, this.props.item, {
-                solutions: this.props.item.solutions.map(solution => {
-                  if (solution.area.id === this.props.item._popover.areaId) {
-                    return Object.assign({}, solution, {
-                      area: Object.assign({}, solution.area, {
-                        color
+          <Overlay
+            show={get(this.props.item, '_popover.open')}
+            target={() => document.getElementById('area-edit')}
+            placement="bottom"
+          >
+            <AreaPopover
+              hasScore={this.props.hasScore}
+              hasExpectedAnswers={this.props.item.hasExpectedAnswers}
+              score={this.getCurrentArea().score}
+              feedback={this.getCurrentArea().feedback}
+              color={this.getCurrentArea().area.color}
+              onPickColor={color => {
+                const newItem = Object.assign({}, this.props.item, {
+                  solutions: this.props.item.solutions.map(solution => {
+                    if (solution.area.id === this.props.item._popover.areaId) {
+                      return Object.assign({}, solution, {
+                        area: Object.assign({}, solution.area, {
+                          color
+                        })
                       })
-                    })
-                  }
-                  return solution
-                }),
-                _currentColor: color
-              })
-
-              this.props.update('solutions', newItem.solutions)
-              this.props.update('_currentColor', newItem._currentColor)
-            }}
-
-            onChangeScore={score => {
-              const newItem = Object.assign({}, this.props.item, {
-                solutions: this.props.item.solutions.map(solution => {
-                  if (solution.area.id === this.props.item._popover.areaId) {
-                    return Object.assign({}, solution, {score})
-                  }
-                  return solution
+                    }
+                    return solution
+                  }),
+                  _currentColor: color
                 })
-              })
 
-              this.props.update('solutions', newItem.solutions)
-            }}
+                this.props.update('solutions', newItem.solutions)
+                this.props.update('_currentColor', newItem._currentColor)
+              }}
 
-            onChangeFeedback={feedback => {
-              const newItem = Object.assign({}, this.props.item, {
-                solutions: this.props.item.solutions.map(solution => {
-                  if (solution.area.id === this.props.item._popover.areaId) {
-                    return Object.assign({}, solution, {feedback})
-                  }
-                  return solution
+              onChangeScore={score => {
+                const newItem = Object.assign({}, this.props.item, {
+                  solutions: this.props.item.solutions.map(solution => {
+                    if (solution.area.id === this.props.item._popover.areaId) {
+                      return Object.assign({}, solution, {score})
+                    }
+                    return solution
+                  })
                 })
-              })
 
-              this.props.update('solutions', newItem.solutions)
-            }}
-            onClose={() => {
-              this.props.update('_popover', {
-                areaId: this.props.item._popover.areaId,
-                open: false,
-                left: 0,
-                top: 0
-              })
-            }}
-            onDelete={() => {
-              const newItem = deleteArea(this.props.item, this.props.item._popover.areaId)
-              this.props.update('solutions', newItem.solutions)
-              this.props.update('_popover', newItem._popover)
-            }}
-          />
+                this.props.update('solutions', newItem.solutions)
+              }}
+
+              onChangeFeedback={feedback => {
+                const newItem = Object.assign({}, this.props.item, {
+                  solutions: this.props.item.solutions.map(solution => {
+                    if (solution.area.id === this.props.item._popover.areaId) {
+                      return Object.assign({}, solution, {feedback})
+                    }
+                    return solution
+                  })
+                })
+
+                this.props.update('solutions', newItem.solutions)
+              }}
+              onClose={() => {
+                this.props.update('_popover', {
+                  areaId: this.props.item._popover.areaId,
+                  open: false,
+                  left: 0,
+                  top: 0
+                })
+              }}
+              onDelete={() => {
+                const newItem = deleteArea(this.props.item, this.props.item._popover.areaId)
+                this.props.update('solutions', newItem.solutions)
+                this.props.update('_popover', newItem._popover)
+              }}
+            />
+          </Overlay>
         }
 
         <div className="img-dropzone">
@@ -547,7 +548,7 @@ class GraphicElement extends Component {
             </div>
           </AnswerDropZone>
         </div>
-      </FormGroup>
+      </>
     )
   }
 }
@@ -575,7 +576,6 @@ const GraphicEditor = (props) => {
             {
               name: 'data',
               label: trans('image'),
-              hideLabel: true,
               required: true,
               component: GraphicComponent
             }

@@ -4,7 +4,6 @@ import mapValues from 'lodash/mapValues'
 import choice from '#/plugin/exo/items/choice'
 import match from '#/plugin/exo/items/match'
 import cloze from '#/plugin/exo/items/cloze'
-import selection from '#/plugin/exo/items/selection'
 import graphic from '#/plugin/exo/items/graphic'
 import open from '#/plugin/exo/items/open'
 import pair from '#/plugin/exo/items/pair'
@@ -36,7 +35,7 @@ export function registerItemType(definition) {
 
 export function registerDefaultItemTypes() {
   if (!defaultRegistered) {
-    [choice, match, cloze, graphic, open, pair, words, set, grid, ordering, selection, waveform].forEach(registerItemType)
+    [choice, match, cloze, graphic, open, pair, words, set, grid, ordering, waveform].forEach(registerItemType)
     defaultRegistered = true
   }
 }

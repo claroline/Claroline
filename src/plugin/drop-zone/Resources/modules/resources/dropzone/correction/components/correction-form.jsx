@@ -5,9 +5,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import moment from 'moment'
 
 import {trans} from '#/main/app/intl/translation'
-import {NumberGroup}  from '#/main/core/layout/form/components/group/number-group'
-import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group'
-import {ChoiceGroup}  from '#/main/core/layout/form/components/group/choice-group'
+import {DataInput} from '#/main/app/data/components/input'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 
@@ -32,9 +30,10 @@ const CriteriaForm = props =>
                 </ContentHtml>
               </td>
               <td className="criterion-scale-form-row">
-                <ChoiceGroup
+                <DataInput
                   id={`criterion-form-${c.id}-radio`}
-                  label="criterion_form_radio"
+                  type="choice"
+                  label={trans('criterion_form_radio')}
                   choices={[...Array(props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
                     acc[current] = `${current}`
 
@@ -123,8 +122,9 @@ export class CorrectionForm extends Component {
               grades={this.state.correction.grades}
               handleUpdate={this.updateCorrectionCriterion}
             /> :
-            <NumberGroup
+            <DataInput
               id="score"
+              type="number"
               label={trans('score', {}, 'platform')}
               value={this.state.correction.score !== null ? this.state.correction.score : undefined}
               onChange={value => this.updateCorrection('score', parseInt(value))}
@@ -132,8 +132,9 @@ export class CorrectionForm extends Component {
             />
           }
           {this.props.dropzone.parameters.commentInCorrectionEnabled &&
-            <HtmlGroup
+            <DataInput
               id="comment"
+              type="html"
               label={trans('comment', {}, 'platform')}
               value={this.state.correction.comment || ''}
               onChange={value => this.updateCorrection('comment', value)}
@@ -143,7 +144,7 @@ export class CorrectionForm extends Component {
           }
           <div className="btn-group btn-group-right">
             <button
-              className="btn btn-default"
+              className="btn btn-outline-secondary"
               type="button"
               onClick={() => this.props.cancelCorrection(this.props.navigate)}
             >
@@ -151,7 +152,7 @@ export class CorrectionForm extends Component {
             </button>
             {this.props.showSubmitButton && this.props.correction.startDate !== this.props.correction.lastEditionDate &&
               <button
-                className="btn btn-default"
+                className="btn btn-outline-secondary"
                 type="button"
                 disabled={this.state.pendingChanges ||
                 (this.props.dropzone.parameters.commentInCorrectionEnabled &&

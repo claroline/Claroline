@@ -250,7 +250,7 @@
 }
 
 .app-menu-search {
-    margin: ($grid-gutter-width * .5);
+    padding: ($grid-gutter-width * .5);
 
     .form-control {
         color: $toolbar-link-hover-color;
@@ -258,27 +258,8 @@
         border-color: transparent;
         box-shadow: none;
 
-        //@include placeholder($toolbar-link-color);
         &::placeholder {
             color: $toolbar-link-color;
-        }
-    }
-
-    .input-group-btn > .btn { // specific selector required to override default styles
-        color: $toolbar-link-color;
-        background: $toolbar-link-hover-bg;
-        border-color: transparent;
-
-        &.disabled, &.disabled:hover {
-            color: $toolbar-link-disabled-color;
-            background: $toolbar-link-disabled-bg;
-            border-color: lighten($toolbar-bg, 8%);
-        }
-
-        &:hover {
-            color: $toolbar-link-active-color;
-            background: $toolbar-link-active-bg;
-            border-color: transparent;
         }
     }
 }

@@ -17,6 +17,7 @@ import {ItemEditor as ItemEditorTypes} from '#/plugin/exo/items/prop-types'
 import {emptyAnswer} from '#/plugin/exo/items/utils'
 import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
 import {utils} from '#/plugin/exo/items/match/utils'
+import {Toolbar} from '#/main/app/action'
 
 const getRightItemDeletable = (item) =>
   (item.secondSet.length > 1 && item.firstSet.length > 1) || (item.secondSet.length > 2 && item.firstSet.length === 1)
@@ -67,87 +68,89 @@ class MatchLinkPopover extends Component {
           'expected-answer' : 0 < this.props.solution.score
         })}
         placement="bottom"
-        title={
-          <div>
-            {trans('match_edit_connection', {}, 'quiz')}
-
-            <div className="popover-actions">
-              <Button
-                id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-delete`}
-                className="btn-link"
-                type={CALLBACK_BUTTON}
-                icon="fa fa-fw fa-trash"
-                label={trans('delete', {}, 'actions')}
-                disabled={!this.props.deletable}
-                callback={() => this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)}
-                tooltip="top"
-                dangerous={true}
-              />
-
-              <Button
-                id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-close`}
-                className="btn-link"
-                type={CALLBACK_BUTTON}
-                icon="fa fa-fw fa-times"
-                label={trans('close', {}, 'actions')}
-                callback={() => this.props.handlePopoverClose()}
-                tooltip="top"
-              />
-            </div>
-          </div>
-        }
       >
-        <div className="association">
-          {this.props.hasExpectedAnswers && this.props.hasScore &&
-            <input
-              className="form-control association-score"
-              type="number"
-              value={this.props.solution.score}
-              onChange={(e) => {
-                const newSolution = cloneDeep(this.props.solution)
-                newSolution.score = parseFloat(e.target.value)
-                this.props.update(this.props.path, newSolution)
-              }}
-            />
-          }
-          {this.props.hasExpectedAnswers && !this.props.hasScore &&
-            <input
-              type="checkbox"
-              className="form-check-input"
-              checked={0 < this.props.solution.score}
-              onChange={(e) => {
-                const newSolution = cloneDeep(this.props.solution)
-                newSolution.score = e.target.checked ? 1 : 0
-                this.props.update(this.props.path, newSolution)
-              }}
-            />
-          }
+        <Popover.Header className="d-flex align-items-center">
+          {trans('match_edit_connection', {}, 'quiz')}
 
-          <Button
-            id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
-            className="btn-link"
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments"
-            label={trans('feedback_association_created', {}, 'quiz')}
-            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
-            tooltip="top"
-          />
-        </div>
-
-        {this.state.showFeedback &&
-          <HtmlInput
-            id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback`}
-            className="feedback-control"
-            value={this.props.solution.feedback}
-            onChange={
-              feedback => {
-                const newSolution = cloneDeep(this.props.solution)
-                newSolution.feedback = feedback
-                this.props.update(this.props.path, newSolution)
+          <Toolbar
+            id={`popover-${this.props.solution.firstId}-${this.props.solution.secondId}-actions`}
+            className="popover-actions ms-auto"
+            tooltip="bottom"
+            size="sm"
+            actions={[
+              {
+                name: 'delete',
+                type: CALLBACK_BUTTON,
+                className: 'btn btn-text-danger',
+                icon: 'fa fa-fw fa-trash',
+                label: trans('delete', {}, 'actions'),
+                callback: () => this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId),
+                displayed: !this.props.deletable
+              }, {
+                name: 'close',
+                className: 'btn btn-text-secondary',
+                type: CALLBACK_BUTTON,
+                icon: 'fa fa-fw fa-times',
+                label: trans('close', {}, 'actions'),
+                callback: () => this.props.handlePopoverClose()
               }
-            }
+            ]}
           />
-        }
+        </Popover.Header>
+
+        <Popover.Body>
+          <div className="association">
+            {this.props.hasExpectedAnswers && this.props.hasScore &&
+              <input
+                className="form-control association-score"
+                type="number"
+                value={this.props.solution.score}
+                onChange={(e) => {
+                  const newSolution = cloneDeep(this.props.solution)
+                  newSolution.score = parseFloat(e.target.value)
+                  this.props.update(this.props.path, newSolution)
+                }}
+              />
+            }
+            {this.props.hasExpectedAnswers && !this.props.hasScore &&
+              <input
+                type="checkbox"
+                className="form-check-input"
+                checked={0 < this.props.solution.score}
+                onChange={(e) => {
+                  const newSolution = cloneDeep(this.props.solution)
+                  newSolution.score = e.target.checked ? 1 : 0
+                  this.props.update(this.props.path, newSolution)
+                }}
+              />
+            }
+
+            <Button
+              id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
+              className="btn-link"
+              type={CALLBACK_BUTTON}
+              icon="fa fa-fw fa-comments"
+              label={trans('feedback_association_created', {}, 'quiz')}
+              callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+              tooltip="top"
+            />
+          </div>
+
+          {this.state.showFeedback &&
+            <HtmlInput
+              id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback`}
+              className="feedback-control"
+              value={this.props.solution.feedback}
+              onChange={
+                feedback => {
+                  const newSolution = cloneDeep(this.props.solution)
+                  newSolution.feedback = feedback
+                  this.props.update(this.props.path, newSolution)
+                }
+              }
+            />
+          }
+        </Popover.Body>
       </Popover>
     )
   }

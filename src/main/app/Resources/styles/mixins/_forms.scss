@@ -1,0 +1,41 @@
+@mixin custom-form-validation-state(
+  $state,
+  $color,
+  $icon,
+  $tooltip-color: color-contrast($color),
+  $tooltip-bg-color: rgba($color, $form-feedback-tooltip-opacity),
+  $focus-box-shadow: 0 0 $input-btn-focus-blur $input-focus-width rgba($color, $input-btn-focus-color-opacity),
+  $border-color: $color
+) {
+  .accordion-item {
+    @include form-validation-state-selector($state) {
+      --#{$prefix}accordion-btn-color: #{$tooltip-color};
+      --#{$prefix}accordion-btn-bg: #{$tooltip-bg-color};
+
+      --#{$prefix}accordion-btn-focus-border-color: #{$border-color};
+      --#{$prefix}accordion-btn-focus-box-shadow: #{$focus-box-shadow};
+      --#{$prefix}accordion-active-color: #{$tooltip-color};
+      --#{$prefix}accordion-active-bg: #{$tooltip-bg-color};
+
+      @if $enable-validation-icons {
+        --#{$prefix}accordion-btn-icon: #{escape-svg($icon)};
+        --#{$prefix}accordion-btn-active-icon: #{escape-svg($icon)};
+        --#{$prefix}accordion-btn-icon-transform: none;
+      }
+    }
+  }
+
+  .empty-placeholder {
+    @include form-validation-state-selector($state) {
+      border-color: $border-color;
+
+      @if $enable-validation-icons {
+        padding-right: $input-height-inner;
+        background-image: escape-svg($icon);
+        background-repeat: no-repeat;
+        background-position: right $input-height-inner-quarter center;
+        background-size: $input-height-inner-half $input-height-inner-half;
+      }
+    }
+  }
+}

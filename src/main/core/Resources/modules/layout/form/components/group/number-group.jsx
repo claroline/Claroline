@@ -5,6 +5,9 @@ import {DataGroup as DataGroupTypes, DataInput as DataInputTypes} from '#/main/a
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {Numeric} from '#/main/core/layout/form/components/field/numeric'
 
+/**
+ * @deprecated
+ */
 const NumberGroup = props =>
   <FormGroup {...props}>
     <Numeric {...props} />

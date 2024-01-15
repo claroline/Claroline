@@ -13,7 +13,6 @@ import {ContentTitle} from '#/main/app/content/components/title'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {displayUsername} from '#/main/community/utils'
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
-import {ContentHelp} from '#/main/app/content/components/help'
 
 import {constants as baseConstants} from '#/main/evaluation/constants'
 import {constants} from '#/main/evaluation/workspace/constants'
@@ -144,9 +143,9 @@ class EvaluationUser extends Component {
                 ]}
               />
 
-              <ContentHelp
-                help={trans('workspace_certificates_availability_help', {}, 'workspace')}
-              />
+              <div className="text-secondary mt-1">
+                {trans('workspace_certificates_availability_help', {}, 'workspace')}
+              </div>
             </div>
           </div>
 

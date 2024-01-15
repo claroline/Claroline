@@ -13,14 +13,14 @@ import {monthNum} from '#/main/core/layout/calendar/utils'
 
 const Month = props =>
   <CallbackButton
-    className={classes('btn btn-link month', {
+    className={classes('btn month', {
       now:      props.current.isSame(props.now, 'month'),
       selected: props.selected && props.current.isSame(props.selected, 'month')
     })}
     disabled={props.current.isBefore(props.calendarRange[0], 'month') || props.current.isAfter(props.calendarRange[1], 'month')}
     callback={props.onClick}
   >
-    {props.current.format('MMM')}
+    {props.current.format('MMMM')}
   </CallbackButton>
 
 Month.propTypes = {
@@ -54,9 +54,9 @@ const Months = props =>
       moment(props.currentRange[1]).add(1, 'year')
     ]}
   >
-    {times(3, (quarterNum) =>
+    {times(4, (quarterNum) =>
       <div key={`quarter-${quarterNum}`} className="calendar-row quarter">
-        {times(4, (quarterMonthNum) =>
+        {times(3, (quarterMonthNum) =>
           <Month
             key={`month-${quarterNum}-${quarterMonthNum}`}
             calendarRange={props.calendarRange}

@@ -3,20 +3,10 @@
  */
 
 $datepicker-color:         $body-color;
-
 $datepicker-alt-color:     #fff;
 $datepicker-alt-bg:        $primary;
-
-$datepicker-padding:       map-get($spacers, 3);
-$datepicker-grid-border:   $dropdown-divider-bg; // #eee
-
-// text height + padding height + border height
-$day-names-row-computed-height: calc($line-height-sm*$font-size-sm + 2px + 1px); // 18
-$day-btn-computed-height: calc(($line-height-sm*$font-size-sm) + 2 * (1px + 3px)); // 26
-// btn height + padding height + border height
-$week-row-computed-height: calc($day-btn-computed-height + 2px + 1px); // 29
-// table head height + nbRows * row height + padding top
-$days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-computed-height + 10px); // 203
+$datepicker-padding:       $spacer;
+$datepicker-btn-border-radius: $btn-border-radius;
 
 .calendar-container {
     position: relative;
@@ -39,16 +29,9 @@ $days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-co
 
         .current-date {
             margin-top: 0;
+            margin-bottom: $spacer;
             padding: 0;
-            font-size: $h3-font-size;
-            font-weight: 900;
-
-            small {
-                display: block;
-                margin-bottom: 5px;
-                font-weight: normal;
-                color: rgba($datepicker-alt-color, 0.25);
-            }
+            white-space: nowrap;
         }
 
         .current-time {
@@ -59,20 +42,6 @@ $days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-co
             font-size: $font-size-lg;
             font-weight: bold;
             margin-top: auto;
-        }
-
-        .btn-now {
-            color: rgba($datepicker-alt-color, .25);
-            border: 1px solid rgba($datepicker-alt-color, .25);
-            background: transparent;
-
-            &:active,
-            &:hover,
-            &:focus {
-                color: $datepicker-alt-color;
-                border: 1px solid $datepicker-alt-color;
-                background: transparent;
-            }
         }
     }
 
@@ -87,34 +56,6 @@ $days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-co
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-
-        .btn {
-            padding: 0 $padding-base-horizontal;
-
-            .fa {
-                margin: 0;
-            }
-        }
-    }
-
-    .calendar-current {
-        color: $datepicker-color;
-        font-family: $headings-font-family;
-        font-size: $font-size-lg;
-    }
-
-    .calendar-previous,
-    .calendar-next {
-        color: rgba($datepicker-color, .5);
-
-        &.disabled {
-            opacity: 0;
-        }
-
-        &:hover,
-        &:focus {
-            color: $datepicker-color;
-        }
     }
 
     .time-input {
@@ -129,11 +70,12 @@ $days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-co
         }
 
         .btn {
-            color: rgba($datepicker-alt-color, .25);
+            opacity: .75;
+            //color: rgba($datepicker-alt-color, .25);
 
             &:not(.disabled):hover,
             &:not(.disabled):focus {
-                color: $datepicker-alt-color;
+                opacity: 1;
             }
         }
 
@@ -159,14 +101,17 @@ $days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-co
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: $days-grid-computed-height;
 
     .btn {
-        padding: 3px 7px;
-        font-size: $font-size-sm;
-        line-height: $line-height-sm;
+        //padding: $btn-padding-y-sm $btn-padding-x-sm;
+        box-shadow: none;
 
-        @include border-radius($border-radius-sm);
+        // precise selector to override .input-group .btn
+        &.day,
+        &.month,
+        &.year {
+            @include border-radius($datepicker-btn-border-radius);
+        }
 
         &.now {
             color: $datepicker-alt-bg !important;
@@ -180,7 +125,7 @@ $days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-co
         }
 
         &.fill {
-            color: #BBBBBB; // TODO : use a var
+            color: var(--#{$prefix}tertiary-color);
         }
 
         &:not(.disabled):hover,
@@ -197,93 +142,36 @@ $days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-co
 // ---
 
 .calendar-days {
-    padding-top: 10px;
     .btn {
         // fill cell
         display: block;
         width: 100%;
-    }
-
-    .day-name,
-    .week-num {
-        font-size: $font-size-sm;
-        font-weight: normal;
+        padding: $btn-padding-y-sm $btn-padding-x-sm;
     }
 
     .day-name {
-        color: $datepicker-alt-bg;
+        font-size: .75rem;
+        font-weight: $font-weight-base;
+        color: var(--#{$prefix}tertiary-color);
         text-transform: uppercase; // todo : use a var
-    }
-
-    .week-num {
-        color: var(--#{$prefix}secondary-color);
-        min-width: 15px;
     }
 
     table {
         margin: 0 auto;
+    }
 
-        th,
-        td {
-            padding: 1px;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        th {
-            border: 1px solid transparent;
-            line-height: $line-height-sm;
-        }
-
-        td {
-            border: 1px solid $datepicker-grid-border;
-        }
-
-        // removes outside border
-        tbody {
-            tr {
-                th + td {
-                    border-left: transparent !important;
-                }
-
-                td:last-child {
-                    border-right: transparent !important;
-                }
-
-                &:first-child td {
-                    border-top: transparent !important;
-                }
-
-                &:last-child td {
-                    border-bottom: transparent !important;
-                }
-            }
-        }
+    th,
+    td {
+        padding: 2px;
+        text-align: center;
+        vertical-align: middle;
     }
 }
 
 .calendar-years,
 .calendar-months {
     .btn {
-        position: relative;
         flex: 1;
-        min-width: 60px; // todo temp fix to avoid too huge resize on view changes
-        margin: 1px 1px 1px 2px;
-
-        &:first-child {
-            margin-left: 0;
-        }
-
-        &:not(:last-child):after {
-            position: absolute;
-            display: block;
-            content: " ";
-            width: 1px;
-            right: -3px;
-            top: -2px;
-            bottom: -2px;
-            background: $datepicker-grid-border;
-        }
     }
 
     .calendar-row {
@@ -293,11 +181,9 @@ $days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-co
         align-items: center;
         justify-content: center;
         width: 100%;
-        border-bottom: 1px solid $datepicker-grid-border;
+        gap: map-get($spacers, 1);
 
-        &:last-child {
-            border-bottom: none;
-        }
+        margin: map-get($spacers, 1) 0;
     }
 }
 
@@ -306,28 +192,17 @@ $days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-co
 // Calendar variants
 // ---
 
-.calendar-container.dark {
-    color: $datepicker-color;
-
-    .calendar-current {
-        color: $datepicker-color;
-    }
-}
-
 .calendar-container.light {
     color: $toolbar-color;
 
-    .calendar-current {
-        color: $toolbar-link-color;
-    }
-
+    .calendar-current,
     .calendar-previous,
     .calendar-next {
-        color: rgba($toolbar-color, .5);
+        color: $toolbar-link-color;
 
         &:hover,
         &:focus {
-            color: $toolbar-color;
+            color: $toolbar-link-hover-color;
         }
     }
 
@@ -345,12 +220,10 @@ $days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-co
                 background-color: $toolbar-link-hover-bg;
             }
         }
+    }
 
-        table {
-            td {
-                border: 1px solid $toolbar-link-hover-bg;
-            }
-        }
+    .day-name {
+        color: $toolbar-link-disabled-color;
     }
 }
 
@@ -366,6 +239,8 @@ $days-grid-computed-height: calc($day-names-row-computed-height + 6*$week-row-co
 .dropdown-menu {
     .calendar-container {
         margin: (-$dropdown-padding-y) (-$dropdown-padding-x);
+        border-radius: $dropdown-inner-border-radius;
+        overflow: hidden;
     }
 }
 

@@ -22,7 +22,7 @@ function getNextView(currentView) {
 }
 
 function monthNum(quarter, month) {
-  return (quarter*4) + month
+  return (quarter*3) + month
 }
 
 function yearNum(row, year) {

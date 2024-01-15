@@ -1,18 +1,19 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import classes from 'classnames'
-import Popover from 'react-bootstrap/Popover'
 
+import {Popover} from '#/main/app/overlays/popover/components/popover'
 import {trans} from '#/main/app/intl/translation'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
-import {CheckGroup} from '#/main/core/layout/form/components/group/check-group'
 import {DataError} from '#/main/app/data/components/error'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {DateInput} from '#/main/app/data/types/date/components/input'
+import {DataInput} from '#/main/app/data/components/input'
+import {Toolbar} from '#/main/app/action'
 
 /**
  * Edits a Keyword.
@@ -304,69 +305,73 @@ const KeywordsPopover = props =>
     positionLeft={props.positionLeft}
     positionTop={props.positionTop}
     style={props.style}
-    title={
-      <Fragment>
-        {props.title}
+  >
+    <Popover.Header className="d-flex align-items-center">
+      {props.title}
 
-        <div className="popover-actions">
-          {props.remove &&
-            <Button
-              id={`keywords-popover-${props.id}-remove`}
-              className="btn-link"
-              type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-trash"
-              label={trans('delete', {}, 'actions')}
-              callback={props.remove}
-              tooltip="top"
-            />
+      <Toolbar
+        id={`keywords-popover-${props.id}-actions`}
+        className="popover-actions ms-auto"
+        tooltip="bottom"
+        size="sm"
+        actions={[
+          {
+            name: 'delete',
+            type: CALLBACK_BUTTON,
+            className: 'btn btn-text-danger',
+            icon: 'fa fa-fw fa-trash',
+            label: trans('delete', {}, 'actions'),
+            callback: props.remove,
+            displayed: !!props.remove
+          }, {
+            name: 'close',
+            className: 'btn btn-text-secondary',
+            type: CALLBACK_BUTTON,
+            icon: 'fa fa-fw fa-times',
+            label: trans('close', {}, 'actions'),
+            callback: props.close,
+            disabled: !isEmpty(props._errors)
           }
+        ]}
+      />
+    </Popover.Header>
 
-          <Button
-            id={`keywords-popover-${props.id}-close`}
-            className="btn-link"
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-times"
-            label={trans('close', {}, 'actions')}
-            disabled={!isEmpty(props._errors)}
-            callback={props.close}
-            tooltip="top"
+    <Popover.Body>
+      {props.children}
+
+      <DataInput
+        id={`keywords-show-${props.id}-list`}
+        type="boolean"
+        label={trans('submit_a_list', {}, 'quiz')}
+        value={props._multiple}
+        onChange={checked => props.onChange('_multiple', checked)}
+      />
+
+      {props._multiple &&
+        <div className="sub-fields">
+          <DataInput
+            id={`keywords-${props.id}-shuffle`}
+            type="boolean"
+            label={trans('shuffle_answers', {}, 'quiz')}
+            value={props.random}
+            onChange={checked => props.onChange('random', checked)}
           />
         </div>
-      </Fragment>
-    }
-  >
-    {props.children}
+      }
 
-    <CheckGroup
-      id={`keywords-show-${props.id}-list`}
-      label={trans('submit_a_list', {}, 'quiz')}
-      value={props._multiple}
-      onChange={checked => props.onChange('_multiple', checked)}
-    />
-
-    {props._multiple &&
-      <div className="sub-fields">
-        <CheckGroup
-          id={`keywords-${props.id}-shuffle`}
-          label={trans('shuffle_answers', {}, 'quiz')}
-          value={props.random}
-          onChange={checked => props.onChange('random', checked)}
-        />
-      </div>
-    }
-
-    <KeywordItems
-      keywords={props.keywords}
-      validating={props.validating}
-      _errors={get(props, '_errors.keywords')}
-      showCaseSensitive={props.showCaseSensitive}
-      contentType={props.contentType}
-      showScore={props.showScore}
-      hasExpectedAnswers={props.hasExpectedAnswers}
-      addKeyword={props.addKeyword}
-      updateKeyword={props.updateKeyword}
-      removeKeyword={props.removeKeyword}
-    />
+      <KeywordItems
+        keywords={props.keywords}
+        validating={props.validating}
+        _errors={get(props, '_errors.keywords')}
+        showCaseSensitive={props.showCaseSensitive}
+        contentType={props.contentType}
+        showScore={props.showScore}
+        hasExpectedAnswers={props.hasExpectedAnswers}
+        addKeyword={props.addKeyword}
+        updateKeyword={props.updateKeyword}
+        removeKeyword={props.removeKeyword}
+      />
+    </Popover.Body>
   </Popover>
 
 KeywordsPopover.propTypes = {

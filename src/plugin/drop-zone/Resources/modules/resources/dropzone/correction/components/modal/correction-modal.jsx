@@ -4,13 +4,12 @@ import {PropTypes as T} from 'prop-types'
 import {registry} from '#/main/app/modals/registry'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {trans} from '#/main/app/intl/translation'
-import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group'
-import {ChoiceGroup}  from '#/main/core/layout/form/components/group/choice-group'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {validateNotBlank} from '#/plugin/drop-zone/resources/dropzone/correction/validator'
+import {DataInput} from '#/main/app/data/components/input'
 
 const MODAL_CORRECTION = 'MODAL_CORRECTION'
 
@@ -70,8 +69,9 @@ class DenialBox extends Component {
         }
         {!this.state.correction.correctionDenied && this.state.showForm &&
           <div>
-            <HtmlGroup
+            <DataInput
               id="correction-denied-comment"
+              type="html"
               label={trans('denial_reason', {}, 'dropzone')}
               value={this.state.correction.correctionDeniedComment || ''}
               onChange={value => this.updateCorrectionDeniedComment(value)}
@@ -138,9 +138,10 @@ class CorrectionModal extends Component {
                       </ContentHtml>
                     </td>
                     <td className="criterion-scale-form-row">
-                      <ChoiceGroup
+                      <DataInput
                         id={`criterion-form-${c.id}-radio`}
                         label="correction_criterion_radio"
+                        type="choice"
                         choices={[...Array(this.props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
                           acc[current] = `${current}`
 

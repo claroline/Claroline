@@ -29,21 +29,19 @@ class SearchMinimal extends Component {
           onChange={(e) => this.setState({currentSearch: e.target.value || ''})}
         />
 
-        <span className="input-group-btn">
-          <Button
-            className="btn"
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-search"
-            label={trans('search', {}, 'actions')}
-            tooltip="left"
-            htmlType="submit"
-            callback={() => {
-              this.props.search(this.state.currentSearch)
-              this.setState({currentSearch: ''})
-            }}
-            disabled={!this.state.currentSearch}
-          />
-        </span>
+        <Button
+          className="btn btn-outline-secondary"
+          type={CALLBACK_BUTTON}
+          icon="fa fa-fw fa-search"
+          label={trans('search', {}, 'actions')}
+          tooltip="left"
+          htmlType="submit"
+          callback={() => {
+            this.props.search(this.state.currentSearch)
+            this.setState({currentSearch: ''})
+          }}
+          disabled={!this.state.currentSearch}
+        />
       </form>
     )
   }

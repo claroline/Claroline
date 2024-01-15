@@ -38,10 +38,44 @@
 // Errors & messages
 // ---
 
-// @deprecated
-.help-block-list {
-    margin: 0;
-    padding: 0;
+@each $state, $data in $form-validation-states {
+    @include custom-form-validation-state($state, $data...);
+}
+
+// forward validation styles from the .form-group to the contained components
+// in pure Bootstrap 5 you need to manually add the validation class to each component
+.form-group {
+    @each $state, $data in $form-validation-states {
+        @include form-validation-state-selector($state) {
+            .form-control{
+                @extend .is-#{$state};
+            }
+            .form-select {
+                @extend .is-#{$state};
+            }
+            .form-control-color {
+                @extend .is-#{$state};
+            }
+            .form-check-input {
+                @extend .is-#{$state};
+            }
+
+            // custom components
+            .empty-placeholder {
+                @extend .is-#{$state};
+            }
+        }
+    }
+}
+
+.valid-feedback,
+.invalid-feedback,
+.incomplete-feedback {
+    // because bootstrap only display it if it's placed just after a .form-control.is-invalid
+    // which is not always possible with our advanced form types
+    display: block;
+    // this cannot be customized in pure bootstrap and it may blend the messages with .form-text.
+    font-weight: $form-feedback-font-weight;
 }
 
 // @deprecated
@@ -60,43 +94,6 @@
         text-align: center;
         margin-right: $icon-text-spacer;
     }
-}
-
-.error-block {
-    padding: map-get($spacers, 1) map-get($spacers, 2);
-    border: 1px solid transparent;
-    border-radius: $border-radius-sm;
-
-    @include border-radius($border-radius-sm);
-}
-
-.error-block-warning,
-.has-warning .error-block {
-    color: $state-warning-text;
-    background: $state-warning-bg;
-    border-color: $state-warning-border;
-}
-
-.error-block-danger,
-.has-error .error-block {
-    color: $state-danger-text;
-    background: $state-danger-bg;
-    border-color: $state-danger-border;
-}
-
-.validation-status {
-    cursor: help;
-    margin: 0 $padding-base-horizontal;
-}
-
-.has-warning .empty-placeholder {
-    color: $state-warning-text;
-    border-color: $state-warning-text;
-}
-
-.has-error .empty-placeholder {
-    color: $state-danger-text;
-    border-color: $state-danger-text;
 }
 
 
@@ -136,6 +133,16 @@
 
 
 // -
+// Inputs
+// ---
+
+// force buttons to have the same rounding than form-control
+.input-group .btn {
+    @include border-radius($input-border-radius);
+}
+
+
+// -
 // Buttons
 // ---
 
@@ -152,20 +159,23 @@
         font-size: $h2-font-size;
 
         @include box-shadow($box-shadow);
-
-
-        &:first-child {
-            margin-left: auto;
-        }
     }
 }
 
 .form-btn-cancel {
-    // outline btns have transparent background
+    // outline buttons have transparent background
     // this will avoid seeing trough the button when it overlaps the content
     background-color: $body-bg;
 }
 
+.validation-status {
+    background-color: $body-bg;
+    border-radius: 50rem;
+    @include box-shadow($box-shadow-sm);
+    cursor: help;
+    /*cursor: help;
+    margin: 0 $padding-base-horizontal;*/
+}
 
 // -
 // Utilities

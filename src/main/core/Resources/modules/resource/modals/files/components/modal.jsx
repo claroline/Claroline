@@ -6,25 +6,25 @@ import omit from 'lodash/omit'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {CallbackButton} from '#/main/app/buttons/callback/components/button'
+import {DataInput} from '#/main/app/data/components/input'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {FileGroup} from '#/main/core/layout/form/components/group/file-group'
 
 const Files = props =>
   <ul>
     {Object.keys(props.files).map(key =>
       <li key={key}>
         {props.files[key].name}
-        <CallbackButton
-          className="btn btn-link btn-sm"
+        <Button
+          className="btn btn-text-danger btn-sm"
           dangerous={true}
+          icon="fa fa-fw fa-trash"
+          label={trans('delete', {}, 'actions')}
           callback={() => props.onRemove(key)}
-        >
-          <span className="fa fa-trash" />
-        </CallbackButton>
+          tooltip="left"
+        />
       </li>
     )}
   </ul>
@@ -65,7 +65,9 @@ class ResourceFilesCreationModal extends Component {
             />
           }
 
-          <FileGroup
+          <DataInput
+            id="add-resource-files"
+            type="file"
             label={trans('file')}
             multiple={true}
             autoUpload={false}

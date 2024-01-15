@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
@@ -24,7 +23,7 @@ const EditorMenu = props =>
         subscript: !isEmpty(omit(props.errors, 'steps')) ? {
           type: 'text',
           status: props.validating ? 'danger' : 'warning',
-          value: <span className={classes('fa fa-fw', {'fa-warning': props.validating, 'fa-clock': !props.validating})} />
+          value: <span className="fa fa-fw fa-exclamation-circle" />
         } : undefined,
         onClick: (e) => {
           props.autoClose(e)
@@ -39,7 +38,7 @@ const EditorMenu = props =>
       subscript: !isEmpty(get(props.errors, `steps[${index}]`)) ? {
         type: 'text',
         status: props.validating ? 'danger' : 'warning',
-        value: <span className={classes('fa fa-fw', {'fa-warning': props.validating, 'fa-clock': !props.validating})} />
+        value: <span className="fa fa-fw fa-exclamation-circle" />
       } : undefined,
       onClick: (e) => {
         props.autoClose(e)
