@@ -1,4 +1,4 @@
-// todo : move in data module
+import isEmpty from 'lodash/isEmpty'
 
 import {chain, notEmpty, validateIf} from '#/main/app/data/types/validators'
 import {getType} from '#/main/app/data/types'
@@ -36,6 +36,19 @@ function validateProp(propDef, propValue) {
   ]))
 }
 
+function getValidationClassName(error = null, validating = false) {
+  if (isEmpty(error)) {
+    return ''
+  }
+
+  if (validating) {
+    return 'is-invalid'
+  }
+
+  return 'is-incomplete'
+}
+
 export {
-  validateProp
+  validateProp,
+  getValidationClassName
 }

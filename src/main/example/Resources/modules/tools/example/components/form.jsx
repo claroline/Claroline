@@ -50,28 +50,39 @@ const ExampleForm = (props) =>
               label: 'Long text',
               type: 'string',
               placeholder: 'My placeholder',
+              required: true,
               options: {long: true}
             }, {
               name: 'htmlText',
               label: 'HTML text',
               type: 'html',
-              placeholder: 'My placeholder'
+              placeholder: 'My placeholder',
+              required: true
             }, {
               name: 'date',
               label: 'Date',
-              type: 'date'
+              type: 'date',
+              required: true
+            }, {
+              name: 'datetime',
+              label: 'Date & time',
+              type: 'date',
+              options: {time: true}
             }, {
               name: 'dateRange',
               label: 'Date range',
-              type: 'date-range'
+              type: 'date-range',
+              required: true
             }, {
               name: 'file',
               label: 'File upload',
-              type: 'file'
+              type: 'file',
+              required: true
             }, {
               name: 'boolean',
               label: 'This checkbox will display additional fields once checked.',
               type: 'boolean',
+              required: true,
               linked: [
                 {
                   name: 'anotherText',
@@ -83,7 +94,8 @@ const ExampleForm = (props) =>
             }, {
               name: 'url',
               label: 'URL',
-              type: 'url'
+              type: 'url',
+              required: true
             }, {
               name: 'tags',
               label: 'Tags',
@@ -102,6 +114,7 @@ const ExampleForm = (props) =>
               name: 'choiceSimple',
               label: 'Simple choice',
               type: 'choice',
+              required: true,
               options: {
                 choices: {
                   choice1: 'Choice 1',
@@ -113,6 +126,7 @@ const ExampleForm = (props) =>
               name: 'choiceInlineSimple',
               label: 'Inline simple choice',
               type: 'choice',
+              required: true,
               options: {
                 inline: true,
                 choices: {
@@ -126,6 +140,7 @@ const ExampleForm = (props) =>
               label: 'Condensed simple choice',
               help: 'Condensed choices are not really mobile friendly. You should prefer the flat version when displaying short choices list.',
               type: 'choice',
+              required: true,
               options: {
                 condensed: true,
                 choices: {
@@ -138,6 +153,7 @@ const ExampleForm = (props) =>
               name: 'choiceMultiple',
               label: 'Multiple choices',
               type: 'choice',
+              required: true,
               options: {
                 multiple: true,
                 choices: {
@@ -150,6 +166,7 @@ const ExampleForm = (props) =>
               name: 'choiceInlineMultiple',
               label: 'Inline multiple choices',
               type: 'choice',
+              required: true,
               options: {
                 inline: true,
                 multiple: true,
@@ -163,6 +180,7 @@ const ExampleForm = (props) =>
               name: 'choiceCondensedMultiple',
               label: 'Condensed multiple choices',
               type: 'choice',
+              required: true,
               help: 'Condensed choices are not really mobile friendly. You should prefer the flat version when displaying short choices list.',
               options: {
                 multiple: true,
@@ -182,11 +200,13 @@ const ExampleForm = (props) =>
             {
               name: 'username',
               label: 'Username',
-              type: 'username'
+              type: 'username',
+              required: true
             }, {
               name: 'password',
               label: 'Password',
-              type: 'password'
+              type: 'password',
+              required: true
             }
           ]
         }, {
@@ -201,11 +221,13 @@ const ExampleForm = (props) =>
               name: 'icon',
               label: 'FontAwesome icon',
               help: trans('resource_showIcon_help', {}, 'resource'),
-              type: 'icon'
+              type: 'icon',
+              required: true
             }, {
               name: 'color',
               label: 'Color',
-              type: 'color'
+              type: 'color',
+              required: true
             }
           ]
         }, {

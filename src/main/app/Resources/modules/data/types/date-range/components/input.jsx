@@ -3,9 +3,10 @@ import classes from 'classnames'
 import get from 'lodash/get'
 import isArray from 'lodash/isArray'
 
+import {trans} from '#/main/app/intl'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
+import {FormGroup} from '#/main/app/content/form/components/group'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
-import {DataError} from '#/main/app/data/components/error'
 
 import {DateInput} from '#/main/app/data/types/date/components/input'
 
@@ -28,10 +29,14 @@ class DateRangeInput extends Component {
   render() {
     return (
       <div className={classes('row', this.props.className)}>
-        <div className={classes('form-group mb-3 col-md-6 col-xs-12', {
-          'has-error'  : isArray(this.props.error) && get(this.props, 'error[0]') && this.props.validating,
-          'has-warning': isArray(this.props.error) && get(this.props, 'error[0]') && !this.props.validating
-        })}>
+        <FormGroup
+          id={`${this.props.id}-start`}
+          className="col-md-6 col-xs-12"
+          hideLabel={true}
+          label={trans('range_start')}
+          validating={this.props.validating}
+          error={isArray(this.props.error) && get(this.props, 'error[0]') ? get(this.props, 'error[0]') : null}
+        >
           <DateInput
             id={`${this.props.id}-start`}
             calendarIcon="fa fa-fw fa-calendar-check"
@@ -44,16 +49,16 @@ class DateRangeInput extends Component {
             minTime={this.props.minTime}
             maxTime={this.props.maxTime}
           />
+        </FormGroup>
 
-          {isArray(this.props.error) && get(this.props, 'error[0]') &&
-            <DataError error={get(this.props, 'error[0]')} warnOnly={!this.props.validating} />
-          }
-        </div>
-
-        <div className={classes('form-group mb-3 col-md-6 col-xs-12', {
-          'has-error'  : isArray(this.props.error) && get(this.props, 'error[1]') && this.props.validating,
-          'has-warning': isArray(this.props.error) && get(this.props, 'error[1]') && !this.props.validating
-        })}>
+        <FormGroup
+          id={`${this.props.id}-end`}
+          className="col-md-6 col-xs-12"
+          hideLabel={true}
+          label={trans('range_end')}
+          validating={this.props.validating}
+          error={isArray(this.props.error) && get(this.props, 'error[1]') ? get(this.props, 'error[1]') : null}
+        >
           <DateInput
             id={`${this.props.id}-end`}
             calendarIcon="fa fa-fw fa-calendar-xmark"
@@ -66,11 +71,7 @@ class DateRangeInput extends Component {
             minTime={this.props.minTime}
             maxTime={this.props.maxTime}
           />
-
-          {isArray(this.props.error) && get(this.props, 'error[1]') &&
-            <DataError error={get(this.props, 'error[1]')} warnOnly={!this.props.validating} />
-          }
-        </div>
+        </FormGroup>
       </div>
     )
   }

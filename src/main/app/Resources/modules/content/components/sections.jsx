@@ -14,7 +14,7 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
  */
 const Section = (props) =>
   <Accordion.Item
-    {...omit(props, ['level', 'title', 'subtitle', 'icon', 'actions', 'children', 'fill'])}
+    {...omit(props, ['level', 'title', 'subtitle', 'icon', 'actions', 'children', 'fill', 'status'])}
     className={props.className}
   >
     <Accordion.Header as={`h${props.level}`}>
@@ -34,20 +34,15 @@ const Section = (props) =>
         }
       </span>
 
-      {(props.status || 0 !== props.actions.length) &&
-        <div className="panel-actions d-flex align-items-center my-n3">
-          {props.status}
-
-          {0 !== props.actions.length &&
-            <Toolbar
-              id={`${props.id || toKey(props.title)}-actions`}
-              buttonName="btn btn-text-body text-reset me-3"
-              tooltip="top"
-              toolbar="more"
-              actions={props.actions}
-            />
-          }
-        </div>
+      {0 !== props.actions.length &&
+        <Toolbar
+          id={`${props.id || toKey(props.title)}-actions`}
+          className="panel-actions my-n3"
+          buttonName="btn btn-text-body text-reset"
+          tooltip="top"
+          toolbar="more"
+          actions={props.actions}
+        />
       }
     </Accordion.Header>
     <Accordion.Body bsPrefix={props.fill ? 'accordion-body-flush' : undefined}>
@@ -63,7 +58,6 @@ Section.propTypes = {
   title: T.string.isRequired,
   subtitle: T.string,
   fill: T.bool,
-  status: T.element, // only used by FormSection to show validation. Maybe find better
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),

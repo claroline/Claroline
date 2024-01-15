@@ -4,25 +4,31 @@ import classes from 'classnames'
 
 import {toKey} from '#/main/core/scaffolding/text'
 
-const DataError = (props) => Array.isArray(props.error) ?
-  <ul className="help-block-list">
-    {props.error.map(error =>
-      <li key={toKey(error)} className={classes('help-block error-block', {
-        'error-block-warning': props.warnOnly,
-        'error-block-danger': !props.warnOnly
-      })}>
-        <span className={classes('fa fa-fw icon-with-text-right', props.warnOnly ? 'fa-clock' : 'fa-warning')} />
-        {error}
-      </li>
-    )}
-  </ul> :
-  <div className={classes('help-block error-block', {
-    'error-block-warning': props.warnOnly,
-    'error-block-danger': !props.warnOnly
-  })}>
-    <span className={classes('fa fa-fw icon-with-text-right', props.warnOnly ? 'fa-clock' : 'fa-warning')} />
-    {props.error}
-  </div>
+const DataError = (props) => {
+  if (Array.isArray(props.error)) {
+    return (
+      <>
+        {props.error.map(error =>
+          <div key={toKey(error)} className={classes({
+            'incomplete-feedback': props.warnOnly,
+            'invalid-feedback': !props.warnOnly
+          })}>
+            {error}
+          </div>
+        )}
+      </>
+    )
+  }
+
+  return (
+    <div className={classes({
+      'incomplete-feedback': props.warnOnly,
+      'invalid-feedback': !props.warnOnly
+    })}>
+      {props.error}
+    </div>
+  )
+}
 
 DataError.propTypes = {
   error: T.oneOfType([

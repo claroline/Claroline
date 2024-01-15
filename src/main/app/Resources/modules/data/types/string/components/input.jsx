@@ -3,6 +3,7 @@ import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {getValidationClassName} from '#/main/app/content/form/validator'
 
 class StringInput extends PureComponent {
   constructor(props) {
@@ -18,14 +19,15 @@ class StringInput extends PureComponent {
   render() {
     const commonProps = {
       id: this.props.id,
-      className: classes('form-control', this.props.className, {
+      className: classes('form-control', this.props.className, getValidationClassName(this.props.error, this.props.validating), {
         [`form-control-${this.props.size}`]: !!this.props.size
       }),
       value: this.props.value || '',
       disabled: this.props.disabled,
       onChange: this.onChange,
       placeholder: this.props.placeholder,
-      autoComplete: this.props.autoComplete
+      autoComplete: this.props.autoComplete,
+      autoFocus: this.props.autoFocus
     }
 
     if (this.props.long) {

@@ -42,21 +42,12 @@ $padding-base-horizontal:   12px !default;
 $padding-large-vertical:    10px !default;
 $padding-large-horizontal:  15px !default;
 
-$padding-small-vertical:    5px !default;
-$padding-small-horizontal:  10px !default;
-
 $line-height-large:         1.3333333 !default; // extra decimals for Win 8.1 Chrome
-$line-height-small:         1.5 !default;
 
 //== Forms
 //
 //##
 
-//** Default `.form-control` height
-$input-height-base:              calc($line-height-computed + ($padding-base-vertical * 2) + 2) !default;
-
-//** `.form-group` margin
-$form-group-margin-bottom:       map-get($spacers, 3) !default;
 
 //== Form states and alerts
 //

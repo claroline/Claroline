@@ -1,9 +1,11 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 import classes from 'classnames'
-import Popover from 'react-bootstrap/Popover'
 
+import {Popover} from '#/main/app/overlays/popover/components/popover'
 import {trans} from '#/main/app/intl/translation'
+import {Toolbar} from '#/main/app/action'
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -22,103 +24,114 @@ export class AreaPopover extends Component {
   render() {
     return (
       <Popover
+        {...omit(this.props,
+          'className',
+          'color',
+          'hasScore',
+          'hasExpectedAnswers',
+          'score',
+          'feedback',
+          'onChangeScore',
+          'onChangeFeedback',
+          'onPickColor',
+          'onClose',
+          'onDelete'
+        )}
         id="area-popover"
-        className="area-popover"
-        placement="bottom"
-        positionLeft={this.props.left}
-        positionTop={this.props.top}
-        title={
-          <Fragment>
-            {trans('graphic_area_edit', {}, 'quiz')}
+        className={classes('area-popover', this.props.className)}
+      >
+        <Popover.Header className="d-flex align-items-center">
+          {trans('graphic_area_edit', {}, 'quiz')}
 
-            <div className="popover-actions">
-              <Button
-                id="area-popover-delete"
-                className="btn-link"
-                type={CALLBACK_BUTTON}
-                icon="fa fa-fw fa-trash"
-                label={trans('delete', {}, 'actions')}
-                callback={this.props.onDelete}
-                tooltip="top"
-                dangerous={true}
-              />
+          <Toolbar
+            id="area-popover-actions"
+            className="popover-actions ms-auto"
+            tooltip="bottom"
+            size="sm"
+            actions={[
+              {
+                name: 'delete',
+                type: CALLBACK_BUTTON,
+                className: 'btn btn-text-danger',
+                icon: 'fa fa-fw fa-trash',
+                label: trans('delete', {}, 'actions'),
+                callback: this.props.onDelete,
+                displayed: !!this.props.onDelete
+              }, {
+                name: 'close',
+                className: 'btn btn-text-secondary',
+                type: CALLBACK_BUTTON,
+                icon: 'fa fa-fw fa-times',
+                label: trans('close', {}, 'actions'),
+                callback: this.props.onClose
+              }
+            ]}
+          />
+        </Popover.Header>
+        <Popover.Body>
+          <div className={classes('form-group', 'base-controls', {'form-last': !this.state.showFeedback})}>
+            <ColorInput
+              id="area-color"
+              className="color"
+              hideInput={true}
+              value={this.props.color}
+              onChange={this.props.onPickColor}
+            />
+
+            <div className="right-controls">
+              {this.props.hasExpectedAnswers && !this.props.hasScore &&
+                <input
+                  id="expected-answer"
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={0 < this.props.score}
+                  onChange={(e) => this.props.onChangeScore(e.target.checked ? 1 : 0)}
+                />
+              }
+
+              {this.props.hasExpectedAnswers && this.props.hasScore &&
+                <input
+                  type="number"
+                  id="area-score"
+                  className="form-control score"
+                  value={this.props.score}
+                  onChange={e => this.props.onChangeScore(parseFloat(e.target.value))}
+                />
+              }
 
               <Button
-                id="area-popover-close"
-                className="btn-link"
+                className="btn btn-text-secondary"
                 type={CALLBACK_BUTTON}
-                icon="fa fa-fw fa-times"
-                label={trans('close', {}, 'actions')}
-                callback={this.props.onClose}
-                tooltip="top"
+                icon="fa fa-fw fa-comments"
+                label={trans('graphic_feedback_info', {}, 'quiz')}
+                callback={() => this.setState({showFeedback: !this.state.showFeedback})}
+                tooltip="left"
               />
             </div>
-          </Fragment>
-        }
-      >
-        <div className={classes('form-group', 'base-controls', {'form-last': !this.state.showFeedback})}>
-          <ColorInput
-            id="area-color"
-            className="color"
-            hideInput={true}
-            value={this.props.color}
-            onChange={this.props.onPickColor}
-          />
-
-          <div className="right-controls">
-            {this.props.hasExpectedAnswers && !this.props.hasScore &&
-              <input
-                id="expected-answer"
-                type="checkbox"
-                className="form-check-input"
-                checked={0 < this.props.score}
-                onChange={(e) => this.props.onChangeScore(e.target.checked ? 1 : 0)}
-              />
-            }
-
-            {this.props.hasExpectedAnswers && this.props.hasScore &&
-              <input
-                type="number"
-                id="area-score"
-                className="form-control score"
-                value={this.props.score}
-                onChange={e => this.props.onChangeScore(parseFloat(e.target.value))}
-              />
-            }
-
-            <Button
-              className="btn-link"
-              type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-comments"
-              label={trans('graphic_feedback_info', {}, 'quiz')}
-              callback={() => this.setState({showFeedback: !this.state.showFeedback})}
-              tooltip="left"
-            />
           </div>
-        </div>
 
-        {this.state.showFeedback &&
-          <FormGroup
-            id="area-feedback"
-            label={trans('feedback', {}, 'quiz')}
-            hideLabel={true}
-            className="feedback-container form-last"
-          >
-            <HtmlInput
+          {this.state.showFeedback &&
+            <FormGroup
               id="area-feedback"
-              value={this.props.feedback}
-              onChange={this.props.onChangeFeedback}
-            />
-          </FormGroup>
-        }
+              label={trans('feedback', {}, 'quiz')}
+              hideLabel={true}
+              className="mt-3 form-last"
+            >
+              <HtmlInput
+                id="area-feedback"
+                value={this.props.feedback}
+                onChange={this.props.onChangeFeedback}
+              />
+            </FormGroup>
+          }
+        </Popover.Body>
       </Popover>
     )
   }
 }
 
 AreaPopover.propTypes = {
-  left: T.number.isRequired,
-  top: T.number.isRequired,
+  className: T.string,
   color: T.string.isRequired,
   hasScore: T.bool.isRequired,
   hasExpectedAnswers: T.bool.isRequired,

@@ -41,17 +41,15 @@ class UrlInput extends PureComponent {
           onChange={this.onChange}
         />
 
-        <span className="input-group-btn">
-          <Button
-            id={`clipboard-${this.props.id}`}
-            type={CALLBACK_BUTTON}
-            tooltip="left"
-            label={trans('clipboard_copy')}
-            className="btn btn-outline-secondary"
-            icon="fa fa-fw fa-clipboard"
-            callback={this.copyToClipboard}
-          />
-        </span>
+        <Button
+          id={`clipboard-${this.props.id}`}
+          type={CALLBACK_BUTTON}
+          tooltip="left"
+          label={trans('clipboard_copy')}
+          className="btn btn-outline-secondary"
+          icon="fa fa-fw fa-clipboard"
+          callback={this.copyToClipboard}
+        />
       </div>
     )
   }

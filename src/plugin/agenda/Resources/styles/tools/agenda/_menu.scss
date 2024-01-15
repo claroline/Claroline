@@ -4,14 +4,8 @@
 .agenda-menu {
     text-align: center;
 
-    .calendar-container {
-        margin-top: $component-margin-bottom;
-        margin-bottom: 10px; // $component-margin-bottom - h5 margin
-    }
-
     .calendar {
-        padding-top: 0;
-        padding-bottom: 0;
+        padding: 0;
     }
 
     .list-group-item {
@@ -27,7 +21,7 @@
 
     .agenda-menu-title {
         margin-left: ($grid-gutter-width * .5);
-        font-size: 16px;
+        font-size: $font-size-base;
     }
 
     .planning-loader {

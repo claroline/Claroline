@@ -13,7 +13,7 @@ import {constants} from '#/main/core/layout/calendar/constants'
 const Day = props =>
   <CallbackButton
     type="callback"
-    className={classes('btn btn-link day', {
+    className={classes('btn day', {
       now:      props.current.isSame(props.now, 'day'),
       selected: props.selected && props.current.isSame(props.selected, 'day'),
       fill:     props.month !== props.current.get('month')
@@ -76,10 +76,6 @@ const Days = props =>
     <table cellSpacing="0" cellPadding="0">
       <thead>
         <tr>
-          <th scope="col">
-            <span className="sr-only">week number</span>
-          </th>
-
           {times(7, (dayNum) =>
             <th key={`day-${dayNum}`} scope="col" className="day-name">
               {moment().weekday(dayNum).format('ddd')}
@@ -91,11 +87,6 @@ const Days = props =>
       <tbody>
         {times(6, (weekNum) =>
           <tr key={`week-${weekNum}`} className="calendar-row week">
-            <th scope="row" className="week-num">
-              {moment(props.currentRange[0])
-                .week(props.currentRange[0].week()+weekNum).week()}
-            </th>
-
             {times(7, (dayNum) =>
               <td key={`day-${weekNum}-${dayNum}`}>
                 <Day

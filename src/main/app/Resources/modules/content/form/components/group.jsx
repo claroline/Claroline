@@ -9,7 +9,7 @@ import {toKey} from '#/main/core/scaffolding/text'
 import {DataError} from '#/main/app/data/components/error'
 import {DataGroup as DataGroupTypes} from '#/main/app/data/types/prop-types'
 
-// TODO : move in Data module and rename (this is not only used in form)
+import {getValidationClassName} from '#/main/app/content/form/validator'
 
 /**
  * Renders an agnostic form group.
@@ -19,10 +19,7 @@ import {DataGroup as DataGroupTypes} from '#/main/app/data/types/prop-types'
  * @constructor
  */
 const FormGroup = props =>
-  <div className={classes('form-group mb-3', props.className, {
-    'has-error': props.error && !props.warnOnly,
-    'has-warning': props.error && props.warnOnly
-  })}>
+  <div className={classes('form-group mb-3', props.className, getValidationClassName(props.error, props.validating))}>
     {props.label &&
       <label
         className={classes('form-label', {
@@ -41,7 +38,7 @@ const FormGroup = props =>
     {props.children}
 
     {!isEmpty(props.error) &&
-      <DataError error={props.error} warnOnly={props.warnOnly} />
+      <DataError error={props.error} warnOnly={!props.validating} />
     }
 
     {!isEmpty(props.help) &&

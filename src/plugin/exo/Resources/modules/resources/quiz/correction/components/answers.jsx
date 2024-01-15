@@ -53,7 +53,7 @@ class AnswerRow extends Component {
               <input
                 type="number"
                 className={classes('form-control', {
-                  'has-error': this.props.score && (isNaN(this.props.score) || this.props.score > this.props.scoreMax)
+                  'is-invalid': this.props.score && (isNaN(this.props.score) || this.props.score > this.props.scoreMax)
                 })}
                 value={this.props.score !== undefined && this.props.score !== null ? this.props.score : ''}
                 onChange={(e) => this.props.updateScore(this.props.id, e.target.value)}

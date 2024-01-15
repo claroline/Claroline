@@ -16,14 +16,23 @@ const ButtonComponent = forwardRef((props, ref) => {
 
   invariant(undefined !== button, `You have requested a non existent button "${props.type}".`)
 
+  let subscript
+  if (props.subscript) {
+    if ('text' === props.subscript.type) {
+      subscript = <span key="button-subscript" className={classes('action-subscript', `text-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
+
+    } else {
+      subscript = <span key="button-subscript" className={classes('action-subscript badge', `text-bg-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
+    }
+  }
+
   return createElement(button, merge(omit(props, 'type', 'icon', 'label', 'hideLabel', 'subscript'), {ref: ref}), [
     (props.icon && typeof props.icon === 'string') &&
       <span key="button-icon" className={classes('action-icon', props.icon, !props.hideLabel && 'icon-with-text-right')} aria-hidden={true} />,
     (props.icon && typeof props.icon !== 'string') && cloneElement(props.icon, {key: 'button-icon'}),
     props.hideLabel ? <span key="button-label" className="action-label sr-only">{props.label}</span> : props.label,
     props.children,
-    props.subscript &&
-      <span key="button-subscript" className={classes('action-subscript badge', `text-bg-${props.subscript.status || 'primary'}`)}>{props.subscript.value}</span>
+    subscript
   ])
 })
 

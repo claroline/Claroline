@@ -82,9 +82,13 @@ const FormData = (props) => {
 
   const primarySections = 1 === sections.length ? [sections[0]] : sections.filter(section => section.primary)
   const otherSections = 1 !== sections.length ? sections.filter(section => !section.primary) : []
-  const openedSection = otherSections.find(section => section.defaultOpened)
+  let openedSection = otherSections.find(section => section.defaultOpened)
 
   const disabled = typeof props.disabled === 'function' ? props.disabled(props.data) : props.disabled
+
+  if (props.autoFocus && !isEmpty(primarySections) && !isEmpty(primarySections[0].fields)) {
+    primarySections[0].fields[0].autoFocus = true
+  }
 
   return (
     <Form
@@ -219,6 +223,7 @@ FormData.propTypes = {
   level: T.number,
   displayLevel: T.number,
   flush: T.bool,
+  autoFocus: T.bool,
   title: T.string,
   className: T.string,
   mode: T.string.isRequired,
@@ -262,7 +267,7 @@ FormData.propTypes = {
   }),
 
   /**
-   * The cancel action of the form (if provided.
+   * The cancel action of the form if provided.
    */
   cancel: T.shape({
     type: T.string.isRequired,
@@ -279,6 +284,7 @@ FormData.defaultProps = {
   level: 2,
   disabled: false,
   flush: false,
+  autoFocus: true,
   mode: constants.FORM_MODE_DEFAULT,
   data: {}
 }

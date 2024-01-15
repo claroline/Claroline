@@ -20,11 +20,11 @@ import {Years} from '#/main/core/layout/calendar/components/view/years.jsx'
 const TimeInput = props =>
   <div className="time-input">
     <CallbackButton
-      className="btn btn-link btn-sm"
+      className="btn btn-text-light"
       disabled={props.max === props.value}
       callback={() => props.onChange(calculateTime((((props.value / props.step) | 0) + 1) * props.step, props.max))}
     >
-      <span className="fa fa-fw fa-caret-up" />
+      <span className="fa fa-fw fa-chevron-up" />
     </CallbackButton>
 
     <input
@@ -39,11 +39,11 @@ const TimeInput = props =>
     />
 
     <CallbackButton
-      className="btn btn-link btn-sm"
+      className="btn btn-text-light"
       disabled={0 === props.value}
       callback={() => props.onChange(calculateTime((((props.value / props.step) | 0) - 1) * props.step, props.max))}
     >
-      <span className="fa fa-fw fa-caret-down" />
+      <span className="fa fa-fw fa-chevron-down" />
     </CallbackButton>
   </div>
 
@@ -82,8 +82,8 @@ CurrentTime.propTypes = {
 const CurrentDate = props =>
   <div className="current-container">
     <h4 className="current-date">
-      <small>{props.selected.format('dddd')}</small>
-      {props.selected.format('ll')}
+      <small>{props.selected.format('YYYY')}</small>
+      {props.selected.format('llll').replace(props.selected.format('YYYY') + ' ' + props.selected.format('LT'), '')}
     </h4>
 
     {props.time &&
@@ -95,9 +95,8 @@ const CurrentDate = props =>
     }
 
     <CallbackButton
-      className="btn-link btn-now w-100"
+      className="btn btn-outline-light btn-now w-100"
       callback={props.today}
-      size="sm"
     >
       {trans(props.time ? 'now': 'today')}
     </CallbackButton>
@@ -245,7 +244,7 @@ class Calendar extends Component {
 
   render() {
     return (
-      <div className={classes('calendar-container', {
+      <div className={classes(this.props.className, 'calendar-container', {
         light: this.props.light,
         dark: !this.props.light,
         vertical: this.props.vertical
@@ -273,7 +272,9 @@ class Calendar extends Component {
   }
 }
 
-implementPropTypes(Calendar, CalendarTypes)
+implementPropTypes(Calendar, CalendarTypes, {
+  className: T.string
+})
 
 export {
   Calendar

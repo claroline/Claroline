@@ -10,6 +10,7 @@ import {WorkspaceForm} from '#/main/core/workspace/components/form'
 const WorkspaceCreation = (props) =>
   <WorkspaceForm
     level={3}
+    className="mt-3"
     name="workspaces.creation"
     meta={false}
     buttons={true}

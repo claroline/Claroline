@@ -94,6 +94,7 @@ class AgendaMenu extends Component {
         title={trans('agenda', {}, 'tools')}
       >
         <Calendar
+          className="my-2"
           light={true}
           selected={this.props.selected}
           onChange={(selected) => {

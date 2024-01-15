@@ -6,7 +6,7 @@
   .top-controls {
     display: flex;
     justify-content: space-between;
-    margin-bottom: $form-group-margin-bottom;
+    margin-bottom: $spacer;
   }
 
   .img-dropzone {
@@ -14,8 +14,6 @@
     align-items: center;
     justify-content: center;
     min-height: 200px;
-    margin-bottom: $form-group-margin-bottom;
-    padding: $panel-body-padding;
     color: $placeholder-color;
     border: $placeholder-border-width dashed $placeholder-border-color;
     border-radius: $placeholder-border-radius;
@@ -29,7 +27,7 @@
   .img-container {
     img {
       max-width: 100%;
-      border: 1px solid #555;
+      border: 1px solid var(--#{$prefix}border-color-translucent);
     }
 
     img.point-mode {
@@ -68,12 +66,12 @@
     cursor: move;
 
     .area-frame {
-      border-color: #fff;
+      border-color: $white;
     }
 
     .resizer {
-      border-color: black;
-      background-color: white;
+      border-color: $black;
+      background-color: $white;
       box-shadow: 0 0 3px rgba(0, 0, 0, .75);
     }
 
@@ -98,33 +96,31 @@
   .area-handle.selected.undraggable .resizer {
     cursor: default;
   }
+}
 
-  .area-popover {
-    transform: translateX(-50%); // center popover and toggle button
+.area-popover {
+  .base-controls {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
 
-    .popover-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .btn-link,
-      .btn {
-        padding: 0 4px; // horizontal : same as feedback and delete item btns
-      }
+    .color {
+      margin-right: ($grid-gutter-width * .5);
     }
 
-    .base-controls {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .score {
+      margin-right: ($grid-gutter-width * .5);
+    }
+  }
 
-      .color {
-        margin-right: ($grid-gutter-width * .5);
-      }
+  .right-controls {
+    display: flex;
+    align-items: flex-start;
 
-      .score {
-        margin-right: ($grid-gutter-width * .5);
-      }
+    .btn-link,
+    .btn {
+      padding-left: 4px;
+      padding-right: 4px;
     }
   }
 }
@@ -136,7 +132,7 @@
 
   img {
     max-width: 100%;
-    border: solid 1px #ddd;
+    border: 1px solid var(--#{$prefix}border-color-translucent);
   }
 }
 
@@ -188,28 +184,28 @@
   }
 
   &.placed .segment {
-    border-color: #0693e3;
+    border-color: $selected-answer-color;
   }
 
   &.correct {
     .segment {
-      border-color: green;
-      box-shadow: 0 0 12px green;
+      border-color: $correct-answer-color;
+      box-shadow: 0 0 12px $correct-answer-color;
     }
 
     .pointer-status-icon {
-      color: green;
+      color: $correct-answer-color;
     }
   }
 
   &.wrong {
     .segment {
-      border-color: red;
-      box-shadow: 0 0 12px red;
+      border-color: $incorrect-answer-color;
+      box-shadow: 0 0 12px $incorrect-answer-color;
     }
 
     .pointer-status-icon {
-      color: red;
+      color: $incorrect-answer-color;
 
       &:before {
         margin-left: 1px;

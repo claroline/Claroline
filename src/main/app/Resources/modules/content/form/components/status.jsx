@@ -9,22 +9,23 @@ const FormStatus = props =>
   <TooltipOverlay
     id={props.id}
     tip={trans(props.validating ? 'form_validating_desc' : 'form_not_validating_desc')}
-    position={props.position}
+    position={props.tooltip}
   >
-    <span className={classes('validation-status fa fa-fw', {
-      'fa-warning text-danger': props.validating,
-      'fa-clock text-warning': !props.validating
+    <span className={classes(props.className, 'validation-status fa fa-exclamation-circle', {
+      'text-danger': props.validating,
+      'text-warning': !props.validating
     })} />
   </TooltipOverlay>
 
 FormStatus.propTypes = {
+  className: T.string,
   id: T.string.isRequired,
-  position: T.oneOf(['left', 'top', 'right', 'bottom']),
+  tooltip: T.oneOf(['left', 'top', 'right', 'bottom']),
   validating: T.bool.isRequired
 }
 
 FormStatus.defaultProps = {
-  position: 'bottom'
+  tooltip: 'bottom'
 }
 
 export {

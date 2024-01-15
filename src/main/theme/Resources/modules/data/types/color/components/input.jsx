@@ -94,9 +94,7 @@ class ColorInput extends Component {
       <div className={classes('input-group', this.props.className, {
         [`input-group-${this.props.size}`]: !!this.props.size
       })}>
-        <span className="input-group-btn">
-          {this.renderPickerButton()}
-        </span>
+        {this.renderPickerButton()}
 
         <input
           id={this.props.id}

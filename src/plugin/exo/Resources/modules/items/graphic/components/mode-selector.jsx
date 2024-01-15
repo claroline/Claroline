@@ -10,7 +10,7 @@ import {MODE_RECT, MODE_CIRCLE, MODE_SELECT} from '#/plugin/exo/items/graphic/co
 const ModeSelector = props =>
   <Toolbar
     className="btn-group"
-    buttonName="btn"
+    buttonName="btn btn-outline-primary"
     tooltip="bottom"
     actions={[
       {

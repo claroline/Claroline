@@ -1,7 +1,8 @@
 import {Alert} from '#/main/app/components/alert'
 
 /** @deprecated use #/main/app/components/alert */
+const AlertBlock = Alert
 
 export {
-  Alert as AlertBlock
+  AlertBlock
 }

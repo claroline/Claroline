@@ -34,7 +34,7 @@ const WorkspaceFormComponent = (props) =>
   <FormData
     meta={true}
     {...props}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,

@@ -26,7 +26,6 @@ registry.add('UJMExoBundle', {
     'open'     : () => { return import(/* webpackChunkName: "quiz-item-open" */      '#/plugin/exo/items/open') },
     'ordering' : () => { return import(/* webpackChunkName: "quiz-item-ordering" */  '#/plugin/exo/items/ordering') },
     'pair'     : () => { return import(/* webpackChunkName: "quiz-item-pair" */      '#/plugin/exo/items/pair') },
-    'selection': () => { return import(/* webpackChunkName: "quiz-item-selection" */ '#/plugin/exo/items/selection') },
     'set'      : () => { return import(/* webpackChunkName: "quiz-item-set" */       '#/plugin/exo/items/set') },
     'words'    : () => { return import(/* webpackChunkName: "quiz-item-boolean" */   '#/plugin/exo/items/words') },
 

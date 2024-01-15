@@ -262,22 +262,20 @@ class TagInput extends Component {
             />
           </div>
 
-          <div className="input-group-btn">
-            <Button
-              className="btn btn-outline-secondary"
-              type={MODAL_BUTTON}
-              icon="fa fa-fw fa-tags"
-              label={trans('add-tags', {}, 'actions')}
-              tooltip="left"
-              disabled={this.props.disabled}
-              modal={[MODAL_TAGS, {
-                selectAction: (selectedTags) => ({
-                  type: CALLBACK_BUTTON,
-                  callback: () => this.select(selectedTags)
-                })
-              }]}
-            />
-          </div>
+          <Button
+            className="btn btn-outline-secondary"
+            type={MODAL_BUTTON}
+            icon="fa fa-fw fa-tags"
+            label={trans('add-tags', {}, 'actions')}
+            tooltip="left"
+            disabled={this.props.disabled}
+            modal={[MODAL_TAGS, {
+              selectAction: (selectedTags) => ({
+                type: CALLBACK_BUTTON,
+                callback: () => this.select(selectedTags)
+              })
+            }]}
+          />
         </div>
 
         <MenuOverlay

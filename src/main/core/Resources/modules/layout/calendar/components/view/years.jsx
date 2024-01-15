@@ -13,7 +13,7 @@ import {yearNum} from '#/main/core/layout/calendar/utils'
 
 const Year = props =>
   <CallbackButton
-    className={classes('btn btn-link', {
+    className={classes('btn year', {
       now:      props.current.isSame(props.now, 'year'),
       selected: props.selected && props.current.isSame(props.selected, 'year'),
       fill:     props.fill
@@ -44,12 +44,10 @@ Year.propTypes = {
  */
 const Years = props => {
   // get the closer decade start (aka. 1980, 2010, 2020)
-  const decadeStart = (Math.trunc(props.currentRange[0].get('year') / 10) * 10)
-  const decadeEnd = decadeStart + 9
+  const decadeStart = (Math.trunc(props.currentRange[0].get('year') / 20) * 20)
+  const decadeEnd = decadeStart + 19
 
-  // we will start one year earlier and end one year later than the decade
-  // because our grid is 12 cells (not 10)
-  const firstYear = decadeStart - 1
+  const firstYear = decadeStart
 
   return (
     <CalendarLayout
@@ -58,15 +56,15 @@ const Years = props => {
       changeView={props.changeView}
       calendarRange={props.calendarRange}
       previousRange={[
-        moment(props.currentRange[0]).set('year', decadeStart).subtract(10, 'year'),
-        moment(props.currentRange[1]).set('year', decadeEnd).subtract(10, 'year')
+        moment(props.currentRange[0]).set('year', decadeStart).subtract(20, 'year'),
+        moment(props.currentRange[1]).set('year', decadeEnd).subtract(20, 'year')
       ]}
       nextRange={[
-        moment(props.currentRange[0]).set('year', decadeStart).add(10, 'year'),
-        moment(props.currentRange[1]).set('year', decadeEnd).add(10, 'year')
+        moment(props.currentRange[0]).set('year', decadeStart).add(20, 'year'),
+        moment(props.currentRange[1]).set('year', decadeEnd).add(20, 'year')
       ]}
     >
-      {times(3, (rowNum) =>
+      {times(5, (rowNum) =>
         <div key={`row-${rowNum}`} className="calendar-row">
           {times(4, (rowYearNum) =>
             <Year

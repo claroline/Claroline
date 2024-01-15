@@ -90,30 +90,29 @@ class SelectInput extends Component {
               }}
             />
           }
-          <span className="input-group-btn">
-            <button
-              type="button"
-              className="btn btn-primary"
-              dangerouslySetInnerHTML={{__html: this.props.primaryLabel}}
-              disabled={this.props.disablePrimary}
-              onClick={() => {
-                this.setState({results: []})
-                this.props.onPrimary()
-              }}
-            >
-            </button>
-            <button
-              type="button"
-              className="btn btn-default"
-              dangerouslySetInnerHTML={{__html: this.props.secondaryLabel}}
-              disabled={this.props.disableSecondary}
-              onClick={() => {
-                this.setState({results: []})
-                this.props.onSecondary()
-              }}
-            >
-            </button>
-          </span>
+
+          <button
+            type="button"
+            className="btn btn-primary"
+            dangerouslySetInnerHTML={{__html: this.props.primaryLabel}}
+            disabled={this.props.disablePrimary}
+            onClick={() => {
+              this.setState({results: []})
+              this.props.onPrimary()
+            }}
+          >
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline-primary"
+            dangerouslySetInnerHTML={{__html: this.props.secondaryLabel}}
+            disabled={this.props.disableSecondary}
+            onClick={() => {
+              this.setState({results: []})
+              this.props.onSecondary()
+            }}
+          >
+          </button>
         </div>
         {!this.props.selectMode && this.props.typeAhead && this.state.results.length > 0 &&
           <ChoicesTypeAhead

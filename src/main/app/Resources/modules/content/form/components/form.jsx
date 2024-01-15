@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {ContentTitle} from '#/main/app/content/components/title'
@@ -35,7 +34,6 @@ class Form extends Component {
     super(props)
 
     this.warnPendingChanges = this.warnPendingChanges.bind(this)
-
   }
 
   warnPendingChanges(e) {
@@ -61,7 +59,6 @@ class Form extends Component {
   }
 
   componentWillUnmount() {
-    // todo warn also here
     // if client route has changed, it will not trigger before unload
     window.removeEventListener('beforeunload', this.warnPendingChanges)
   }
@@ -88,9 +85,11 @@ class Form extends Component {
 
         {(this.props.save || this.props.cancel) &&
           <FormActions
-            save={this.props.save ? merge({}, this.props.save, {
-              disabled: this.props.disabled || this.props.save.disabled || !(this.props.pendingChanges && (!this.props.validating || this.props.errors))
-            }) : undefined}
+            validating={this.props.validating}
+            errors={this.props.errors}
+            disabled={this.props.disabled}
+            pendingChanges={this.props.pendingChanges}
+            save={this.props.save}
             cancel={this.props.cancel}
           />
         }

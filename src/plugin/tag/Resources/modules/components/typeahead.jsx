@@ -105,18 +105,17 @@ class TagTypeahead extends Component {
               value={this.state.currentTag}
               onChange={e => this.updateCurrentTag(e.target.value)}
             />
-            <span className="input-group-btn">
-              <Button
-                type={CALLBACK_BUTTON}
-                className="btn btn-default"
-                label={trans('add', {}, 'actions')}
-                disabled={!this.state.currentTag.trim()}
-                callback={() => {
-                  this.props.select(this.state.currentTag.trim())
-                  this.reset()
-                }}
-              />
-            </span>
+
+            <Button
+              type={CALLBACK_BUTTON}
+              className="btn btn-default"
+              label={trans('add', {}, 'actions')}
+              disabled={!this.state.currentTag.trim()}
+              callback={() => {
+                this.props.select(this.state.currentTag.trim())
+                this.reset()
+              }}
+            />
           </div>
           :
           <input

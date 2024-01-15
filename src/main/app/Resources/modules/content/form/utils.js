@@ -14,7 +14,7 @@ function isInMode(element, mode) {
   return elementLevel <= currentLevel
 }
 
-function isDisplayed(element, data) {
+function isFieldDisplayed(element, data) {
   return typeof element.displayed === 'function' ? element.displayed(data) : element.displayed
 }
 
@@ -37,7 +37,7 @@ function createFieldsetDefinition(mode, fields, locked = [], data) {
     // adds default to fields
     .map(field => createFieldDefinition(mode, field, locked, data))
     // filters hidden fields
-    .filter(field => isInMode(field, mode) && isDisplayed(field, data))
+    .filter(field => isInMode(field, mode) && isFieldDisplayed(field, data))
 }
 
 /**
@@ -56,7 +56,7 @@ function createFormDefinition(mode, sections, locked = [], data) {
     .map(section => {
       // adds defaults to the section configuration
       const defaultedSection = merge({}, DataFormSection.defaultProps, section)
-      if (isInMode(defaultedSection, mode) && isDisplayed(defaultedSection, data)) {
+      if (isInMode(defaultedSection, mode) && isFieldDisplayed(defaultedSection, data)) {
         // section has fields and is displayed keep it
         defaultedSection.fields = createFieldsetDefinition(mode, defaultedSection.fields, locked, data)
 

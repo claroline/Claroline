@@ -57,6 +57,7 @@ const PositionModal = props => {
     >
       <FormData
         name={selectors.STORE_NAME}
+        flush={true}
         definition={[
           {
             title: trans('parent'),

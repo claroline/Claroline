@@ -1,11 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 
 import {Section, Sections} from '#/main/app/content/components/sections'
-import {FormStatus} from '#/main/app/content/form/components/status'
+import {getValidationClassName} from '#/main/app/content/form/validator'
 
 /**
  * Renders a form section.
@@ -13,12 +12,7 @@ import {FormStatus} from '#/main/app/content/form/components/status'
 const FormSection = (props) =>
   <Section
     {...omit(props, 'validating', 'errors')}
-    className={classes('form-section', props.className)}
-    //bsStyle={!isEmpty(props.errors) ? (props.validating ? 'danger': 'warning') : 'default'}
-    status={!isEmpty(props.errors) ?
-      <FormStatus id={props.id} validating={props.validating} position="left" /> :
-      undefined
-    }
+    className={classes('form-section', props.className, getValidationClassName(props.errors, props.validating))}
   >
     {props.children}
   </Section>
