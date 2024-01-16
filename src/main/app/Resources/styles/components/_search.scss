@@ -52,7 +52,7 @@
     }
 
     .search-icon {
-        color: $gray-500; // same than btn default
+        color: $gray-500;
     }
 
     .search-control {
@@ -67,37 +67,22 @@
     }
 
     .search-form {
-        padding: 0;
+        padding: 0 $grid-gutter-width*.5;
 
         .form-group {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
+            padding: map-get($spacers, 2) map-get($spacers, 3);
 
-            padding: 6px 15px;
-            margin: 0;
-            border-bottom: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
+            + .form-group {
+                border-top: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
+            }
 
             &:nth-of-type(odd) {
-                background: #fafafa;
+                background: $table-striped-bg;
             }
 
             &:first-child {
                 @include border-top-radius($dropdown-border-radius);
             }
-        }
-
-        .control-label {
-            font-size: $font-size-sm;
-
-            text-align: right;
-            margin-bottom: 0;
-            margin-right: 15px;
-            width: 140px;
-        }
-
-        .data-filter {
-            flex: 1;
         }
     }
 

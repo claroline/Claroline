@@ -36,7 +36,7 @@ ChoicesTypeAhead.propTypes = {
 }
 
 /**
- * @deprecated
+ * @deprecated only used in ClacoForm for categories and keywords
  */
 class SelectInput extends Component {
   constructor(props) {

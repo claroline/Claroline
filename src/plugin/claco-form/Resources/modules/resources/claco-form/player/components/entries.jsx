@@ -23,6 +23,7 @@ import {
 
 const EntriesComponent = props =>
   <ListSource
+    className="mt-3"
     title={trans('entries_list', {}, 'clacoform')}
     name={selectors.STORE_NAME+'.entries.list'}
     fetch={{

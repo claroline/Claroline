@@ -10,6 +10,6 @@ export default (evaluations, refresher, path) => ({
   icon: 'fa fa-fw fa-eye',
   label: trans('open_evaluation', {}, 'actions'),
   target: route(evaluations[0], path),
-  displayed: hasPermission('administrate', evaluations[0]),
+  displayed: hasPermission('open', evaluations[0]),
   scope: ['object']
 })

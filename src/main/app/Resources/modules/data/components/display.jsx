@@ -19,7 +19,7 @@ class DataDisplay extends Component {
     this.state = {
       error: false,
       loaded: false,
-      input: null,
+      display: null,
       group: null,
       render: null
     }

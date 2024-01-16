@@ -163,11 +163,10 @@ class EntryFormComponent extends Component {
   renderCategories() {
     if (this.props.canAdministrate || this.props.isKeywordsEnabled) {
       return (
-        <FormSections level={3}>
+        <FormSections level={3} className="mb-3">
           {this.props.canAdministrate &&
             <FormSection
               id="entry-categories"
-              className="embedded-list-section"
               icon="fa fa-fw fa-table"
               title={trans('categories')}
             >
@@ -183,7 +182,6 @@ class EntryFormComponent extends Component {
           {this.props.isKeywordsEnabled &&
             <FormSection
               id="entry-keywords"
-              className="embedded-list-section"
               icon="fa fa-fw fa-font"
               title={trans('keywords', {}, 'clacoform')}
             >
@@ -275,6 +273,7 @@ class EntryFormComponent extends Component {
 
         {this.props.entry && (!this.props.useTemplate || !this.props.template) &&
           <FormData
+            className="mt-3"
             level={3}
             buttons={true}
             name={selectors.STORE_NAME+'.entries.current'}

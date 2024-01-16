@@ -11,7 +11,17 @@
         list-style-type: none;
     }
 
-    .cascade-enum-item.item-root {
+    li {
+        width: 100%;
+    }
+
+    .enum-children-list {
+        padding-left: map-get($spacers, 4);
+    }
+}
+
+.cascade-enum-item {
+    &.item-root {
         background: var(--#{$prefix}secondary-bg);
         border: var(--#{$prefix}border-width) solid transparent;
         padding: map-get($spacers, 2);
@@ -19,32 +29,20 @@
         @include border-radius($border-radius);
     }
 
-    .enum-children-list {
+    .item-container {
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-    }
+        align-items: flex-start;
 
-    .cascade-enum-item.item-child {
-        width: calc(100% - 40px);
-    }
+        .enum-item-content {
+            flex: 1;
+            margin-right: map-get($spacers, 2);
+            margin-bottom: 0 !important;
+        }
 
-    .cascade-enum-item {
-        .item-container {
-            display: flex;
-            align-items: flex-start;
-
-            .enum-item-content {
-                flex: 1;
-                margin-right: ($grid-gutter-width * .5);
-                margin-bottom: 0 !important;
-            }
-
-            .right-controls {
-                .btn {
-                    padding-left: 4px;
-                    padding-right: 4px;
-                }
+        .right-controls {
+            .btn {
+                padding-left: 4px;
+                padding-right: 4px;
             }
         }
     }

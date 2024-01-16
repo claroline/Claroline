@@ -10,9 +10,9 @@ import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {ClacoForm as ClacoFormTypes} from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {constants} from '#/plugin/claco-form/resources/claco-form/constants'
 
-
 const EditorComments = props =>
   <FormData
+    className="mt-3"
     level={2}
     title={trans('comments', {}, 'clacoform')}
     name={selectors.STORE_NAME+'.clacoFormForm'}

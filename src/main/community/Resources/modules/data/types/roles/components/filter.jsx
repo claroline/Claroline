@@ -27,7 +27,7 @@ const RolesFilter = (props) =>
         selectAction: (selected) => ({
           type: CALLBACK_BUTTON,
           label: trans('select', {}, 'actions'),
-          callback: () => props.updateSearch([selected[0].id])
+          callback: () => props.updateSearch([selected[0].id], true)
         })
       }]}
       disabled={props.disabled}
@@ -39,7 +39,7 @@ implementPropTypes(RolesFilter, DataSearchTypes, {
    id: T.string.isRequired,
    name: T.string.isRequired
    }),*/
-  search: T.string,
+  search: T.array,
   picker: T.shape({
     url: T.oneOfType([T.string, T.array]),
     title: T.string,

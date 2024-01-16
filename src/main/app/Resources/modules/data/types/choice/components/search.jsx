@@ -2,32 +2,33 @@ import React from 'react'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataSearch as DataSearchTypes} from '#/main/app/data/types/prop-types'
+import {ChoiceInput} from '#/main/app/data/types/choice/components/input'
 
 const ChoiceSearch = (props) =>
-  <select
-    value={props.search || undefined}
-    className="data-filter choice-filter form-control form-control-sm"
-    onClick={e => {
-      e.preventDefault()
-      e.stopPropagation()
-    }}
-    onChange={e => {
-      props.updateSearch(e.target.value)
-      e.preventDefault()
-      e.stopPropagation()
-    }}
+  <ChoiceInput
+    id={props.id}
+    className="data-filter"
+    choices={props.choices}
+    value={props.search}
+    onChange={props.updateSearch}
+    size={props.size}
 
-    disabled={props.disabled}
-  >
-    <option>{props.placeholder}</option>
-
-    {Object.keys(props.choices).map(value =>
-      <option key={value} value={value}>{props.choices[value]}</option>
-    )}
-  </select>
+    inline={props.inline}
+    multiple={false}
+    condensed={props.condensed}
+  />
 
 implementPropTypes(ChoiceSearch, DataSearchTypes, {
-  choices: T.object.isRequired
+  choices: T.object.isRequired,
+  disabledChoices: T.arrayOf(T.string),
+  multiple: T.bool, // Attention : Finder must be able to handle it
+  inline: T.bool,
+  condensed: T.bool
+}, {
+  choices: {},
+  inline: true,
+  multiple: false,
+  condensed: false
 })
 
 export {

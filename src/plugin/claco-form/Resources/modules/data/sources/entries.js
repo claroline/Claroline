@@ -172,16 +172,14 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, isCategoryM
         options: {time: true}
       }, {
         name: 'user',
-        label: trans('user'),
+        label: trans('creator'),
         type: 'user',
         sortable: false,
         filterable: canViewMetadata,
         displayed: canViewMetadata,
         displayable: canViewMetadata,
         calculated: (rowData) => canViewEntryMetadata(rowData, clacoForm, canEdit, currentUser) && rowData.user ? rowData.user : null
-      },
-      // Categories
-      {
+      }, {
         name: 'categories',
         label: trans('categories'),
         type: 'choice',
@@ -191,14 +189,13 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, isCategoryM
         filterable: hasCategories,
         options: {
           multiple: true,
+          condensed: true, // for search
           choices: clacoForm.categories ? clacoForm.categories.reduce((acc, category) => Object.assign(acc, {
             [category.id]: category.name
           }), {}) : {}
         },
         calculated: (rowData) => rowData.categories ? rowData.categories.map(c => c.id) : []
-      },
-      // Keywords
-      {
+      }, {
         name: 'keywords',
         label: trans('keywords', {}, 'clacoform'),
         type: 'choice',
@@ -208,6 +205,7 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, isCategoryM
         sortable: hasKeywords,
         options: {
           multiple: true,
+          condensed: true, // for search
           choices: clacoForm.keywords ? clacoForm.keywords.reduce((acc, keyword) => Object.assign(acc, {
             [keyword.id]: keyword.name
           }), {}) : {}

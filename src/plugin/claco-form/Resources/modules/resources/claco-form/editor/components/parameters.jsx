@@ -14,6 +14,7 @@ import {selectors} from '#/plugin/claco-form/resources/claco-form/editor/store'
 
 const EditorParameters = props =>
   <FormData
+    className="mt-3"
     level={2}
     title={trans('parameters')}
     name={selectors.STORE_NAME}

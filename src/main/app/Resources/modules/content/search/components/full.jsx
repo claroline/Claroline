@@ -1,11 +1,13 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
+import {toKey} from '#/main/core/scaffolding/text'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-import {SearchProp} from '#/main/app/content/search/components/prop'
+import {DataFilter} from '#/main/app/data/components/filter'
 
 class SearchFull extends Component {
   constructor(props) {
@@ -21,7 +23,7 @@ class SearchFull extends Component {
     let newFilters = [].concat(this.state.filters)
     const filterPos = newFilters.findIndex(filter => filter.property === property)
 
-    if (undefined !== value && null !== value && (!value.hasOwnProperty('length') || 0 !== value.length)) {
+    if (!isEmpty(value)) {
       if (-1 !== filterPos) {
         newFilters[filterPos] = {
           property: property,
@@ -71,19 +73,20 @@ class SearchFull extends Component {
     return (
       <div className="list-search search-full">
         {this.props.available.map(availableFilter =>
-          <SearchProp
+          <DataFilter
+            id={this.props.id+'-'+toKey(availableFilter.name)}
             key={availableFilter.name}
             type={availableFilter.type}
             placeholder={availableFilter.label}
             options={availableFilter.options}
             disabled={this.props.disabled || this.isFilterLocked(availableFilter.alias || availableFilter.name)}
-            currentSearch={this.getFilterValue(availableFilter.alias || availableFilter.name)}
+            value={this.getFilterValue(availableFilter.alias || availableFilter.name)}
             updateSearch={(search) => this.updateFilter(availableFilter.alias ? availableFilter.alias : availableFilter.name, search)}
           />
         )}
 
         <Button
-          className="btn btn-search"
+          className="btn btn-primary btn-search"
           type={CALLBACK_BUTTON}
           icon="fa fa-search"
           label={trans('filter', {}, 'actions')}
@@ -102,6 +105,7 @@ class SearchFull extends Component {
 }
 
 SearchFull.propTypes = {
+  id: T.string.isRequired,
   disabled: T.bool,
   available: T.arrayOf(T.shape({ // TODO : use DataProp prop-types
     alias: T.string,

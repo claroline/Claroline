@@ -14,7 +14,7 @@ import {getType} from '#/main/app/data/types'
 import {Menu, MenuOverlay} from '#/main/app/overlays/menu'
 
 import {getPropDefinition} from '#/main/app/content/list/utils'
-import {SearchProp} from '#/main/app/content/search/components/prop'
+import {DataFilter} from '#/main/app/data/components/filter'
 
 const CurrentFilter = props =>
   <Await
@@ -69,7 +69,7 @@ class SearchForm extends Component {
     }
   }
 
-  updateFilter(property, value) {
+  updateFilter(property, value, autoSubmit) {
     let newFilters = [].concat(this.state.filters)
     const filterPos = newFilters.findIndex(filter => filter.property === property)
 
@@ -95,10 +95,18 @@ class SearchForm extends Component {
       }
     }
 
-    this.setState({
-      updated: updated,
-      filters: newFilters
-    })
+    if (autoSubmit) {
+      this.setState({
+        updated: false
+      })
+      this.props.updateSearch(newFilters)
+    } else {
+      this.setState({
+        updated: updated,
+        filters: newFilters
+      })
+      this.props.updateFilters(newFilters)
+    }
   }
 
   getFilterDefinition(property) {
@@ -127,43 +135,49 @@ class SearchForm extends Component {
     return (
       <>
         {this.props.available.map(filter =>
-          <div key={filter.name} className="form-group">
-            <label className="control-label" htmlFor={toKey(filter.name)}>
+          <div key={filter.name} className="form-group row">
+            <label className="col-sm-2 col-form-label col-form-label-sm text-end" htmlFor={this.props.id+'-'+toKey(filter.name)}>
               {filter.label}
             </label>
 
-            <SearchProp
-              id={toKey(filter.name)}
+            <div className="col-sm-10">
+              <DataFilter
+                id={this.props.id+'-'+toKey(filter.name)}
 
-              {...omit(filter)}
+                {...omit(filter)}
 
-              disabled={this.isFilterLocked(filter.alias || filter.name)}
-              currentSearch={this.getFilterValue(filter.alias || filter.name)}
-              updateSearch={(search) => this.updateFilter(filter.alias ? filter.alias : filter.name, search)}
-            />
+                size="sm"
+                disabled={this.isFilterLocked(filter.alias || filter.name)}
+                value={this.getFilterValue(filter.alias || filter.name)}
+                updateSearch={(search, autoSubmit) => this.updateFilter(filter.alias ? filter.alias : filter.name, search, autoSubmit)}
+              />
+            </div>
           </div>
         )}
 
-        <Button
-          className="search-submit w-100"
-          type={CALLBACK_BUTTON}
-          variant="btn"
-          htmlType="submit"
-          size="lg"
-          label={trans('search', {}, 'actions')}
-          disabled={!this.state.updated && !this.props.updated}
-          callback={() => {
-            this.props.updateSearch(this.state.filters)
-            this.setState({updated: false})
-          }}
-          primary={true}
-        />
+        <div className="row">
+          <Button
+            className="search-submit w-100"
+            type={CALLBACK_BUTTON}
+            variant="btn"
+            htmlType="submit"
+            size="lg"
+            label={trans('search', {}, 'actions')}
+            disabled={!this.state.updated && !this.props.updated}
+            callback={() => {
+              this.props.updateSearch(this.state.filters)
+              this.setState({updated: false})
+            }}
+            primary={true}
+          />
+        </div>
       </>
     )
   }
 }
 
 SearchForm.propTypes = {
+  id: T.string.isRequired,
   updated: T.bool,
   available: T.arrayOf(T.shape({
     name: T.string.isRequired,
@@ -174,7 +188,8 @@ SearchForm.propTypes = {
     value: T.any,
     locked: T.bool
   })).isRequired,
-  updateSearch: T.func.isRequired
+  updateSearch: T.func.isRequired,
+  updateFilters: T.func.isRequired
 }
 
 const SearchMenu = forwardRef((props, ref) =>
@@ -287,6 +302,7 @@ class SearchUnified extends Component {
             updated={this.state.updated}
             current={this.getFormFilters()}
             available={this.props.available}
+            updateFilters={() => this.setState({opened: true})}
             updateSearch={(filters) => {
               this.props.resetFilters(filters)
               this.setState({currentSearch: '', updated: false, opened: false})

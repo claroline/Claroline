@@ -11,7 +11,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Select} from '#/main/app/input/components/select'
 
 import {getPropDefinition} from '#/main/app/content/list/utils'
-import {SearchProp} from '#/main/app/content/search/components/prop'
+import {DataFilter} from '#/main/app/data/components/filter'
 
 const FilterInput = props => {
   const filter = props.value || {}
@@ -37,9 +37,10 @@ const FilterInput = props => {
 
       <div className="filter-value">
         {filter.property &&
-          <SearchProp
+          <DataFilter
+            id={props.id+'-value'}
             {...searchProp}
-            currentSearch={filter.value}
+            value={filter.value}
             updateSearch={(value) => props.onChange(Object.assign({}, filter, {value: value}))}
           />
         }
