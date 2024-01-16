@@ -12,6 +12,7 @@ import {Button} from '#/main/app/action'
 
 const EditorCategories = props =>
   <FormData
+    className="mt-3"
     level={2}
     title={trans('categories', {}, 'clacoform')}
     name={selectors.STORE_NAME+'.clacoFormForm'}

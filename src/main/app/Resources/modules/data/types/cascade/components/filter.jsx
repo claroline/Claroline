@@ -49,7 +49,7 @@ const updateValue =  (props, level, value) => {
   return newValue
 }
 
-const CascadeInput = props =>
+const CascadeFilter = props =>
   <fieldset className={classes('cascade-control', props.className)}>
     {props.choices && props.choices.length > 0 &&
       <Select
@@ -71,7 +71,7 @@ const CascadeInput = props =>
     }
 
     {props.value.map((v, index) => hasChildren(props, index) ?
-      <div className="sub-fields mt-2">
+      <div className="sub-fields">
         <Select
           id={`${props.id}-select-lvl-${index + 1}`}
           key={`select-level-${index + 1}`}
@@ -88,7 +88,7 @@ const CascadeInput = props =>
     )}
   </fieldset>
 
-implementPropTypes(CascadeInput, DataInputTypes, {
+implementPropTypes(CascadeFilter, DataInputTypes, {
   choices: T.array.isRequired,
   value: T.array
 }, {
@@ -96,5 +96,5 @@ implementPropTypes(CascadeInput, DataInputTypes, {
 })
 
 export {
-  CascadeInput
+  CascadeFilter
 }

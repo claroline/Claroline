@@ -12,6 +12,7 @@ import {EditorList} from '#/plugin/claco-form/resources/claco-form/editor/compon
 
 const EditorMain = (props) =>
   <Routes
+    className="mt-3"
     path={props.path+'/edit'}
     redirect={[
       {from: '/', exact: true, to: '/parameters'}

@@ -100,7 +100,6 @@ class UpdateRichTextCommand extends Command
     private function getParsableEntities(): array
     {
         return array_filter([
-            'Claroline\CoreBundle\Entity\Content' => ['content'],
             'Claroline\CoreBundle\Entity\Resource\Revision' => ['content'],
             'Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget' => ['content'],
             'Claroline\CoreBundle\Entity\Template\TemplateContent' => ['content'],

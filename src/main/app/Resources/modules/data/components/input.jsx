@@ -11,9 +11,6 @@ import {getType} from '#/main/app/data/types'
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {validateProp} from '#/main/app/content/form/validator'
 
-// todo : add loading placeholder
-// todo : better error handling on undefined types
-
 class DataInput extends Component {
   constructor(props) {
     super(props)

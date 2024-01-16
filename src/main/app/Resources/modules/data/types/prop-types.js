@@ -67,9 +67,7 @@ const DataType = {
      *   - details
      */
     components: T.shape({
-      // todo : find correct types
       details: T.any, // todo : rename into `display`
-      form: T.any, // todo : rename into `input` + `group`
       search: T.any, // todo : rename into `filter`
       table: T.any, // todo : rename into `cell`
 
@@ -191,8 +189,17 @@ const DataDetails = {
 const DataSearch = {
   propTypes: {
     placeholder: T.string,
+    /**
+     * @deprecated use `value`
+     */
     search: T.any,
+    value: T.any,
+    errors: T.oneOfType([T.object, T.array, T.string]),
+    /**
+     * @deprecated use `errors`
+     */
     isValid: T.bool.isRequired,
+    size: T.oneOf(['sm', 'lg']),
     updateSearch: T.func.isRequired
   },
   defaultProps: {}

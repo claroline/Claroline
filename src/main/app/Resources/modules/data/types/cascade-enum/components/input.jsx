@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {makeId} from '#/main/core/scaffolding/id'
@@ -84,7 +85,7 @@ const EnumItem = (props) => {
               }),
               label: trans(collapsed ? 'expand':'collapse', {}, 'actions'),
               callback: () => setCollapsed(!collapsed),
-              displayed: props.item.children && props.item.children.length > 0
+              displayed: !isEmpty(props.item.children)
             }, {
               name: 'add',
               type: CALLBACK_BUTTON,
@@ -200,7 +201,7 @@ const CascadeEnumInput = (props) =>
     }
 
     {props.value.length === 0 &&
-      <ContentPlaceholder className="mb2" title={props.placeholder} size={props.size} />
+      <ContentPlaceholder className="mb-2" title={props.placeholder} size={props.size} />
     }
 
     <Button

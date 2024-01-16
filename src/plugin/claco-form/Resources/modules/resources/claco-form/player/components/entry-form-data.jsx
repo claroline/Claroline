@@ -112,6 +112,7 @@ EntryFormData.propTypes = {
     name: T.string.isRequired
   })),
   allowNew: T.bool.isRequired,
+
   onAdd: T.func.isRequired,
   onRemove: T.func.isRequired
 }

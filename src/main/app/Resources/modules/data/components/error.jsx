@@ -4,6 +4,9 @@ import classes from 'classnames'
 
 import {toKey} from '#/main/core/scaffolding/text'
 
+/**
+ * todo : to move in form module
+ */
 const DataError = (props) => {
   if (Array.isArray(props.error)) {
     return (

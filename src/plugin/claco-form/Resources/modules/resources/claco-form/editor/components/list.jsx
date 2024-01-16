@@ -29,6 +29,7 @@ const generateDisplayList = (fields = []) => {
 
 const EditorList = props =>
   <FormData
+    className="mt-3"
     level={2}
     title={trans('entries_list_search', {}, 'clacoform')}
     name={selectors.STORE_NAME+'.clacoFormForm'}

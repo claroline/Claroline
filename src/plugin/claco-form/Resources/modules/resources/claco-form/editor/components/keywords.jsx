@@ -15,6 +15,7 @@ import {MODAL_KEYWORD_FORM} from '#/plugin/claco-form/modals/keyword'
 
 const EditorKeywords = props =>
   <FormData
+    className="mt-3"
     level={2}
     title={trans('keywords', {}, 'clacoform')}
     name={selectors.STORE_NAME+'.clacoFormForm'}

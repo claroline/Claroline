@@ -1,5 +1,5 @@
 import React from 'react'
-
+import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
@@ -11,8 +11,8 @@ import {CalendarMenu} from '#/main/app/data/types/date/components/menu'
 
 const DateSearch = (props) =>
   <span className="data-filter date-filter">
-    {props.isValid &&
-      <span className="available-filter-value">{props.search}</span>
+    {!isEmpty(props.search) && props.isValid &&
+      <span className="available-filter-value">{displayDate(props.search, false, props.time)}</span>
     }
 
     <Button
@@ -21,16 +21,12 @@ const DateSearch = (props) =>
       icon={props.calendarIcon}
       label={trans('show-calendar', {}, 'actions')}
       tooltip="left"
-      size="sm"
+      size={props.size}
       disabled={props.disabled}
       menu={
         <CalendarMenu
           value={props.isValid ? props.search : ''}
-          onChange={(value) => {
-            // this is a little weird but the updateSearch will automatically parse() the value sent to it
-            // so in the case of dates it expects a render value
-            props.updateSearch(displayDate(value, false, props.time), true)
-          }}
+          onChange={props.updateSearch}
           minDate={props.minDate}
           maxDate={props.maxDate}
           time={props.time}

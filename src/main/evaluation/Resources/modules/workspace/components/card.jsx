@@ -1,14 +1,17 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {schemeCategory20c} from '#/main/theme/color/utils'
+import isEmpty from 'lodash/isEmpty'
 
 import {asset} from '#/main/app/config'
 import {toKey} from '#/main/core/scaffolding/text'
+import {URL_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {displayDuration, number, trans} from '#/main/app/intl'
 import {displayScore} from '#/main/app/data/types/score/utils'
 import {DataCard} from '#/main/app/data/components/card'
 
+import {route} from '#/main/core/workspace/routing'
 import {constants} from '#/main/evaluation/constants'
 import {WorkspaceEvaluation as WorkspaceEvaluationTypes} from '#/main/evaluation/workspace/prop-types'
 
@@ -16,6 +19,10 @@ const WorkspaceCard = (props) =>
   <DataCard
     {...props}
     id={props.data.id}
+    primaryAction={!isEmpty(props.primaryAction) ? props.primaryAction : {
+      type: URL_BUTTON,
+      target: '#'+route(props.data.workspace)
+    }}
     className="workspace-evaluation-card"
     poster={props.data.workspace.thumbnail ? asset(props.data.workspace.thumbnail) : null}
     icon={
@@ -73,7 +80,10 @@ WorkspaceCard.propTypes = {
   display: T.array, // from widget list
   data: T.shape(
     WorkspaceEvaluationTypes.propTypes
-  )
+  ),
+  primaryAction: T.shape({
+    // action types
+  })
 }
 
 export {
