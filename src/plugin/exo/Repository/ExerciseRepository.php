@@ -6,20 +6,8 @@ use Doctrine\ORM\EntityRepository;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
 
-/**
- * ExerciseRepository.
- */
 class ExerciseRepository extends EntityRepository
 {
-    /**
-     * Lists scores obtained to an exercise.
-     *
-     * @return array
-     */
-    public function findScores(Exercise $exercise)
-    {
-    }
-
     /**
      * Retrieves exercises using a question.
      *

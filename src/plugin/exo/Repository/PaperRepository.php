@@ -55,26 +55,6 @@ class PaperRepository extends EntityRepository
     }
 
     /**
-     * Finds the score of a paper by summing the score of each answer.
-     *
-     * @return float
-     */
-    public function findScore(Paper $paper)
-    {
-        return (float) $this->getEntityManager()
-            ->createQuery('
-                SELECT SUM(a.score)
-                FROM UJM\ExoBundle\Entity\Attempt\Answer AS a
-                WHERE a.paper = :paper
-                  AND a.score IS NOT NULL
-            ')
-            ->setParameters([
-                'paper' => $paper,
-            ])
-            ->getSingleScalarResult();
-    }
-
-    /**
      * Checks that all the answers of a Paper have been marked.
      *
      * @return bool

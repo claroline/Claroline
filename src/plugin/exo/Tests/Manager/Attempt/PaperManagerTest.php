@@ -26,11 +26,10 @@ class PaperManagerTest extends TestCase
             ->getMock();
 
         $this->om
-            ->expects(self::exactly(2))
+            ->expects(self::once())
             ->method('getRepository')
             ->willReturn(
-                $this->mock('UJM\ExoBundle\Repository\PaperRepository'),
-                $this->mock('Claroline\EvaluationBundle\Repository\ResourceAttemptRepository')
+                $this->mock('UJM\ExoBundle\Repository\PaperRepository')
             );
 
         $this->serializer = $this->mock('UJM\ExoBundle\Serializer\Attempt\PaperSerializer');
