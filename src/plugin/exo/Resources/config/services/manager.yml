@@ -38,6 +38,7 @@ services:
     UJM\ExoBundle\Manager\AttemptManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
             - '@ujm_exo.generator.paper'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
             - '@UJM\ExoBundle\Manager\Attempt\AnswerManager'

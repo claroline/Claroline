@@ -6,6 +6,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
@@ -26,6 +27,7 @@ class AttemptManager
 
     public function __construct(
         private readonly ObjectManager $om,
+        private readonly ResourceEvaluationManager $resourceEvalManager,
         private readonly PaperGenerator $paperGenerator,
         private readonly PaperManager $paperManager,
         private readonly AnswerManager $answerManager,
@@ -46,8 +48,8 @@ class AttemptManager
         if ($user) {
             $max = $exercise->getMaxAttempts();
             if ($max > 0) {
-                $nbFinishedPapers = $this->paperManager->countUserFinishedPapers($exercise, $user);
-                if ($nbFinishedPapers >= $max) {
+                $evaluation = $this->resourceEvalManager->getUserEvaluation($exercise->getResourceNode(), $user);
+                if ($evaluation->getNbAttempts() >= $max) {
                     $canPass = false;
                 }
             }
@@ -63,10 +65,10 @@ class AttemptManager
             $max = $exercise->getMaxAttempts();
             if ($max > 0) {
                 // quiz has limited attempts
-                $nbFinishedPapers = $this->paperManager->countUserFinishedPapers($exercise, $user);
+                $evaluation = $this->resourceEvalManager->getUserEvaluation($exercise->getResourceNode(), $user);
 
                 $errors['maxAttemptsReached'] = false;
-                if ($nbFinishedPapers >= $max) {
+                if ($evaluation->getNbAttempts() >= $max) {
                     $errors['maxAttemptsReached'] = true;
                 }
             }
@@ -223,7 +225,7 @@ class AttemptManager
     }
 
     /**
-     * Flags an hint has used in the user paper and returns the hint content.
+     * Flags a hint has used in the user paper and returns the hint content.
      */
     public function useHint(Paper $paper, string $questionId, string $hintId, string $clientIp): ?array
     {

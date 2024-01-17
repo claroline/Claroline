@@ -8,7 +8,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
-use Claroline\EvaluationBundle\Repository\ResourceAttemptRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
@@ -25,7 +24,6 @@ use UJM\ExoBundle\Serializer\Attempt\PaperSerializer;
 class PaperManager
 {
     private PaperRepository $repository;
-    private ResourceAttemptRepository $attemptRepository;
 
     public function __construct(
         private readonly AuthorizationCheckerInterface $authorization,
@@ -37,7 +35,6 @@ class PaperManager
         private readonly ResourceEvaluationManager $resourceEvalManager
     ) {
         $this->repository = $om->getRepository(Paper::class);
-        $this->attemptRepository = $om->getRepository(ResourceEvaluation::class);
     }
 
     /**
@@ -193,14 +190,6 @@ class PaperManager
         }
 
         $this->om->flush();
-    }
-
-    /**
-     * Returns the number of finished papers already done by the user for a given exercise.
-     */
-    public function countUserFinishedPapers(Exercise $exercise, User $user): int
-    {
-        return $this->attemptRepository->countTerminated($exercise->getResourceNode(), $user);
     }
 
     /**
