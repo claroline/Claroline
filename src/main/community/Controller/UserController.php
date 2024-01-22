@@ -88,10 +88,11 @@ class UserController extends AbstractCrudController
         if (!$this->checkPermission('ADMINISTRATE', $object)) {
             // removes main organization from the serialized structure because it will cause access issues.
             unset($data['mainOrganization']);
-            // removes roles from the serialized structure because it will cause access issues.
-            // those roles should not be here anyway.
-            unset($data['roles']);
         }
+
+        // removes roles from the serialized structure because it will cause access issues.
+        // those roles should not be here anyway.
+        unset($data['roles']);
 
         $object = $this->crud->update(self::getClass(), $data, [Options::SERIALIZE_FACET, Crud::THROW_EXCEPTION]);
 
