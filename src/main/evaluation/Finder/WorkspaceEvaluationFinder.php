@@ -74,6 +74,7 @@ class WorkspaceEvaluationFinder extends AbstractFinder
                     break;
 
                 case 'workspaceTags':
+                case 'workspace.tags':
                     if (!$workspaceJoin) {
                         $qb->join('obj.workspace', 'w');
                         $workspaceJoin = true;
@@ -84,6 +85,15 @@ class WorkspaceEvaluationFinder extends AbstractFinder
                     $event = new SearchObjectsEvent($qb, Workspace::class, 'w', ['tags' => $searches['workspaceTags']], $sortBy, $page, $limit);
                     $this->eventDispatcher->dispatch($event, 'objects.search');
 
+                    break;
+
+                case 'workspace.hidden':
+                    if (!$workspaceJoin) {
+                        $qb->join('obj.workspace', 'w');
+                        $workspaceJoin = true;
+                    }
+                    $qb->andWhere('w.hidden = :wsHidden');
+                    $qb->setParameter('wsHidden', $filterValue);
                     break;
 
                 default:
@@ -114,6 +124,12 @@ class WorkspaceEvaluationFinder extends AbstractFinder
                         $qb->join('obj.workspace', 'w');
                     }
                     $qb->orderBy('w.name', $sortByDirection);
+                    break;
+                case 'workspace.code':
+                    if (!$workspaceJoin) {
+                        $qb->join('obj.workspace', 'w');
+                    }
+                    $qb->orderBy('w.code', $sortByDirection);
                     break;
             }
         }

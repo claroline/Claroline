@@ -87,6 +87,20 @@ export default (contextType, contextData, refresher, currentUser) => {
         options: {
           objectClass: 'Claroline\\CoreBundle\\Entity\\Workspace\\Workspace'
         }
+      }, {
+        name: 'workspace.hidden',
+        type: 'boolean',
+        label: trans('hidden'),
+        displayable: false,
+        sortable: false,
+        filterable: true
+      }, {
+        name: 'workspace.code',
+        type: 'string',
+        label: trans('code'),
+        displayable: false,
+        sortable: true,
+        filterable: false
       }
     ],
     card: WorkspaceCard

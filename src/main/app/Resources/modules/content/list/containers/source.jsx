@@ -57,10 +57,10 @@ const ListSource = props => {
       primaryAction={get(props.source, 'primaryAction') ? (row) => {
         const definedAction = get(props.source, 'primaryAction')(row)
         if (definedAction instanceof Promise) {
-          return definedAction.then(action => props.absolute ? makeAbsolute(action) : action)
+          return definedAction.then(action => !isEmpty(action) && props.absolute ? makeAbsolute(action) : action)
         }
 
-        return props.absolute ? makeAbsolute(definedAction) : definedAction
+        return !isEmpty(definedAction) && props.absolute ? makeAbsolute(definedAction) : definedAction
       } : undefined}
       actions={get(props.parameters, 'actions') && get(props.source, 'actions') ? (rows) => {
         const definedActions = get(props.source, 'actions')(rows)

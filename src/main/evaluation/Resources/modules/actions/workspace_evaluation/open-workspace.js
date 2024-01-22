@@ -9,6 +9,5 @@ export default (evaluations) => ({
   icon: 'fa fa-fw fa-book',
   label: trans('open-workspace', {}, 'actions'),
   target: route(evaluations[0].workspace),
-  scope: ['object'],
-  default: true
+  scope: ['object']
 })

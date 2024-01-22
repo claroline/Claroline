@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 import classes from 'classnames'
 
@@ -19,7 +20,7 @@ const FormActions = props => {
 
   return (
     <div className={classes('sticky-bottom ms-auto mt-auto mb-3 btn-toolbar form-toolbar gap-1', props.className)}>
-      {props.errors &&
+      {!isEmpty(props.errors) &&
         <span className="badge position-absolute top-0 start-0 translate-middle p-0">
           <FormStatus className="fs-4" validating={props.validating} id="form-errors-tip" tooltip="left" />
         </span>
