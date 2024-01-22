@@ -50,6 +50,7 @@ class WorkspaceEvaluationVoter extends AbstractEvaluationVoter
 
                 return VoterInterface::ACCESS_DENIED;
 
+            case self::ADMINISTRATE:
             case self::EDIT:
             case self::DELETE:
                 if ($isAdmin) {
