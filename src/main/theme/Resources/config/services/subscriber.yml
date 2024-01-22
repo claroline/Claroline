@@ -6,6 +6,8 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\ThemeBundle\Manager\IconSetManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
 
     # Administration
     Claroline\ThemeBundle\Subscriber\Administration\ParametersSubscriber:

@@ -1,22 +1,14 @@
 import {connect} from 'react-redux'
 
-import {withReducer} from '#/main/app/store/reducer'
+import {selectors as configSelectors} from '#/main/app/config/store'
 
 import {ColorChart as ColorChartComponent} from '#/main/theme/color/components/color-chart'
-import {actions, reducer, selectors} from '#/main/theme/color/store'
 
-const ColorChart = withReducer(selectors.STORE_NAME, reducer)(
-  connect(
-    (state) => ({
-      colorChart: selectors.colorChart(state)
-    }),
-    (dispatch) => ({
-      async load() {
-        await dispatch(actions.fetchColorChart())
-      }
-    })
-  )(ColorChartComponent)
-)
+const ColorChart = connect(
+  (state) => ({
+    colorChart: configSelectors.param(state, 'colorChart')
+  })
+)(ColorChartComponent)
 
 export {
   ColorChart

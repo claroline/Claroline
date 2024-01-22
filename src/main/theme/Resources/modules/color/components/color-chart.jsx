@@ -25,11 +25,9 @@ class ColorChart extends Component {
 
   componentDidMount() {
     if (!this.props.noLibrary) {
-      this.props.load().then(() => {
-        const hasColorChart = this.props.colorChart && this.props.colorChart.data && this.props.colorChart.data.length > 0
-        this.setState({
-          view: this.props.view ? this.props.view : hasColorChart ? 'library' : 'selector'
-        })
+      const hasColorChart = this.props.colorChart && this.props.colorChart && this.props.colorChart.length > 0
+      this.setState({
+        view: this.props.view ? this.props.view : hasColorChart ? 'library' : 'selector'
       })
     }
   }
@@ -66,7 +64,7 @@ class ColorChart extends Component {
       case 'library':
         return (
           <ColorChartLibrary
-            colorCharts={this.props.colorChart.data}
+            colorCharts={this.props.colorChart}
             selected={this.props.selected}
             onChange={this.props.onChange}
           />
@@ -87,7 +85,7 @@ class ColorChart extends Component {
       color = tinycolor(this.props.selected)
     }
 
-    const noLibrary = this.props.noLibrary || (this.props.colorChart.data && this.props.colorChart.data.length === 0)
+    const noLibrary = this.props.noLibrary || (this.props.colorChart && this.props.colorChart.length === 0)
 
     return (
       <div className="color-chart-container">
