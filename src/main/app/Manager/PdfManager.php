@@ -31,6 +31,7 @@ class PdfManager
             'baseUrl' => $this->platformManager->getUrl(),
             'title' => $title,
             'content' => $htmlContent,
+            'includeTheme' => false, // DOM PDF only supports CSS 2.1 features, it will break if we load the whole theme here
         ]));
 
         // Render the HTML as PDF

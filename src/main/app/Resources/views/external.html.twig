@@ -16,8 +16,10 @@
         <base href="{{ url('claro_index') }}" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+        {% if includeTheme %}
         {# We will need to load a specific stylesheets later #}
-        <link rel="stylesheet" type="text/css" href="{{ absolute_url(themeAsset('bootstrap.css')) }}" media="all" />
+        <link rel="stylesheet" type="text/css" href="{{ themeAsset('bootstrap.css') }}" media="all" />
+        {% endif %}
     </head>
 
     <body>

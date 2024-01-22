@@ -98,6 +98,7 @@ class MailManager
             'baseUrl' => $this->platformManager->getUrl(),
             'title' => $subject,
             'content' => $body,
+            'includeTheme' => true,
         ]));
 
         if (count($to) > 1) {
