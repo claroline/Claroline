@@ -3,6 +3,7 @@
 namespace Claroline\PrivacyBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller;
+use Claroline\PrivacyBundle\Installation\Updater\Updater141000;
 
 class ClarolinePrivacyInstaller extends AdditionalInstaller
 {
@@ -14,5 +15,12 @@ class ClarolinePrivacyInstaller extends AdditionalInstaller
     public function hasMigrations(): bool
     {
         return true;
+    }
+
+    public static function getUpdaters(): array
+    {
+        return [
+            '14.1.0' => Updater141000::class,
+        ];
     }
 }
