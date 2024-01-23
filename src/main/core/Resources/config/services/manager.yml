@@ -129,12 +129,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    Claroline\CoreBundle\Manager\ContentManager:
-        arguments:
-            - '@doctrine'
-            - '@request_stack'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-
     Claroline\CoreBundle\Manager\ConnectionMessageManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

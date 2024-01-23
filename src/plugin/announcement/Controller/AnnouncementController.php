@@ -125,7 +125,7 @@ class AnnouncementController
         $ids = isset($request->query->all()['filters']) ? $request->query->all()['filters']['roles'] : [];
 
         /** @var Role[] $roles */
-        $roles = $this->om->findList(Role::class, 'uuid', $ids);
+        $roles = $this->om->getRepository(Role::class)->findBy(['uuid' => $ids]);
         $node = $announcement->getAggregate()->getResourceNode();
 
         $rights = $node->getRights();

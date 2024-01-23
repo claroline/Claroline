@@ -108,13 +108,6 @@ services:
     Claroline\CoreBundle\API\Serializer\Location\RoomBookingSerializer:
         tags: [ claroline.serializer ]
 
-    Claroline\CoreBundle\API\Serializer\Translatable\TranslatableSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Manager\LocaleManager'
-            - '@request_stack'
-
     Claroline\CoreBundle\API\Serializer\Tool\ToolRightsSerializer:
         tags: [ claroline.serializer ]
         arguments:

@@ -15,7 +15,6 @@ use Claroline\AppBundle\Persistence\NoFlushSuiteStartedException;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Persistence\UnsupportedMethodException;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Doctrine\ORM\Query;
 
 class ObjectManagerTest extends MockeryTestCase
 {
@@ -109,33 +108,6 @@ class ObjectManagerTest extends MockeryTestCase
         $om->endFlushSuite();
     }
 
-    public function testFindByIds()
-    {
-        $oom = $this->mock('Doctrine\ORM\EntityManager');
-        $query = $this->getQuery();
-        $oom->shouldReceive('createQuery')
-            ->once()
-            ->with('SELECT object FROM Foo\Bar object WHERE object.id IN (:list)')
-            ->andReturn($query);
-        $query->shouldReceive('setParameter')->with('list', [1, 2])->once();
-        $query->shouldReceive('getResult')->once()->andReturn(['object 1', 'object 2']);
-        $om = new ObjectManager($oom);
-        $this->assertEquals(['object 1', 'object 2'], $om->findByIds('Foo\Bar', [1, 2]));
-    }
-
-    public function testCount()
-    {
-        $oom = $this->mock('Doctrine\ORM\EntityManager');
-        $query = $this->getQuery();
-        $oom->shouldReceive('createQuery')
-            ->once()
-            ->with('SELECT COUNT(object) FROM Foo\Bar object')
-            ->andReturn($query);
-        $query->shouldReceive('getSingleScalarResult')->once()->andReturn(5);
-        $om = new ObjectManager($oom);
-        $this->assertEquals(5, $om->count('Foo\Bar'));
-    }
-
     public function hasSupportMethodProvider()
     {
         return [
@@ -164,17 +136,5 @@ class ObjectManagerTest extends MockeryTestCase
             ['commit'],
             ['rollBack'],
         ];
-    }
-
-    private function getQuery()
-    {
-        $oom = $this->mock('Doctrine\ORM\EntityManager');
-        $config = $this->mock('Doctrine\ORM\Configuration');
-        $config->shouldReceive('getDefaultQueryHints')->andReturn('[]');
-        $config->shouldReceive('isSecondLevelCacheEnabled')->andReturn(false);
-        $oom->shouldReceive('getConfiguration')->andReturn($config);
-        $query = $this->mock(new Query($oom));
-
-        return $query;
     }
 }

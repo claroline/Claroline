@@ -61,7 +61,7 @@ class ShareManager
         $questions = $questionRepo->findByUuids($shareRequest['questions']);
 
         // Loaded users (we load it to be sure it exist)
-        $users = $this->om->findByIds(User::class, $shareRequest['users']);
+        $users = $this->om->getRepository(User::class)->findBy(['uuid' => $shareRequest['users']]);
 
         // Share each question with each user
         foreach ($questions as $question) {
