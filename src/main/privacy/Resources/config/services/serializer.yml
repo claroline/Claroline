@@ -3,3 +3,9 @@ services:
         autowire: false
         autoconfigure: false
         public: true
+
+    Claroline\PrivacyBundle\Serializer\PrivacyParametersSerializer:
+        tags: [ claroline.serializer ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer'

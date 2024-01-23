@@ -1,0 +1,14 @@
+{
+  "terms_of_service": "Terms of Service",
+  "terms_of_service_desc": "Template used for terms of service",
+  "country_storage_desc": "Country where data is stored",
+  "dpo_name_desc": "Name of the Data Protection Officer",
+  "dpo_email_desc": "Email of the Data Protection Officer",
+  "dpo_phone_desc": "Phone number of the Data Protection Officer",
+  "dpo_address_street1_desc": "Street 1 of the Data Protection Officer",
+  "dpo_address_street2_desc": "Street 2 of the Data Protection Officer",
+  "dpo_address_postal_code_desc": "Adresse du DPO - Code postal",
+  "dpo_address_city_desc": "City of the Data Protection Officer",
+  "dpo_address_state_desc": "State of the Data Protection Officer",
+  "dpo_address_country_desc": "Country of the Data Protection Officer"
+}

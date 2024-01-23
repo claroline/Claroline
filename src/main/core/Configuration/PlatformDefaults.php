@@ -53,9 +53,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'support_email' => null,
                 'show' => true,
             ],
-            'tos' => [
-                'enabled' => true,
-            ],
             'internet' => [
                 'domain_name' => null,
                 'platform_url' => null,
@@ -175,21 +172,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'users' => null,
                 'storage' => null,
                 'used_storage' => null,
-            ],
-            'privacy' => [
-                'countryStorage' => null,
-                'dpo' => [
-                    'name' => null,
-                    'email' => null,
-                    'address' => [
-                        'street1' => null,
-                        'street2' => null,
-                        'postalCode' => null,
-                        'city' => null,
-                        'state' => null,
-                        'country' => null,
-                    ],
-                ],
             ],
             'pricing' => [
                 'enabled' => false,

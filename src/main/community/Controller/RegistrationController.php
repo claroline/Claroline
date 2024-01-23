@@ -15,7 +15,6 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\AppBundle\Manager\TermsOfServiceManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CommunityBundle\Serializer\ProfileSerializer;
@@ -23,6 +22,7 @@ use Claroline\CoreBundle\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\PrivacyBundle\Manager\PrivacyManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,8 +53,8 @@ class RegistrationController
     private $serializer;
     /** @var ProfileSerializer */
     private $profileSerializer;
-    /** @var TermsOfServiceManager */
-    private $termsOfServiceManager;
+    /** @var PrivacyManager */
+    private $privacyManager;
     /** @var Authenticator */
     private $authenticator;
 
@@ -65,7 +65,7 @@ class RegistrationController
         Crud $crud,
         SerializerProvider $serializer,
         ProfileSerializer $profileSerializer,
-        TermsOfServiceManager $termsOfServiceManager,
+        PrivacyManager $privacyManager,
         Authenticator $authenticator
     ) {
         $this->authorization = $authorization;
@@ -75,7 +75,7 @@ class RegistrationController
         $this->serializer = $serializer;
         $this->profileSerializer = $profileSerializer;
         $this->authenticator = $authenticator;
-        $this->termsOfServiceManager = $termsOfServiceManager;
+        $this->privacyManager = $privacyManager;
     }
 
     /**
@@ -142,10 +142,9 @@ class RegistrationController
     public function initializeAction(Request $request): JsonResponse
     {
         $this->checkAccess();
-
         $terms = null;
-        if ($this->termsOfServiceManager->isActive()) {
-            $terms = $this->termsOfServiceManager->getLocalizedTermsOfService($request->getLocale());
+        if ($this->privacyManager->getTosEnabled()) {
+            $terms = $this->privacyManager->getTosTemplate($request->getLocale());
         }
 
         return new JsonResponse([

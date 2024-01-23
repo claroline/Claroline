@@ -78,7 +78,6 @@ class ClientSerializer
                 'defaultTool' => $this->config->getParameter('admin.default_tool'),
                 'menu' => $this->config->getParameter('admin.menu'),
             ],
-            'privacy' => $this->config->getParameter('privacy'),
             'pricing' => $this->config->getParameter('pricing'),
             'plugins' => $this->pluginManager->getEnabled(),
         ];

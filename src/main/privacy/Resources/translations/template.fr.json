@@ -1,0 +1,14 @@
+{
+  "terms_of_service": "Conditions d'utilisation",
+  "terms_of_service_desc": "Template utilisé pour les conditions d'utilisation",
+  "country_storage_desc": "Pays de stockage des données",
+  "dpo_name_desc": "Nom du Délégué à la protection des données",
+  "dpo_email_desc": "Email du Délégué à la protection des données",
+  "dpo_phone_desc": "Téléphone du Délégué à la protection des données",
+  "dpo_address_street1_desc": "Rue 1 du Délégué à la protection des données",
+  "dpo_address_street2_desc": "Rue 2 du Délégué à la protection des données",
+  "dpo_address_postal_code_desc": "Adresse du DPO - Code postal",
+  "dpo_address_city_desc": "Ville du Délégué à la protection des données",
+  "dpo_address_state_desc": "État du Délégué à la protection des données",
+  "dpo_address_country_desc": "Pays du Délégué à la protection des données"
+}

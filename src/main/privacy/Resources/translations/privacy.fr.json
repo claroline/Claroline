@@ -1,20 +1,29 @@
 {
-  "accept_terms": "Vous avez accepté les conditions d'utilisation de la plateforme.",
-  "no_accept_terms": "Vous n'avez pas encore accepté les conditions d'utilisation de la plateforme.",
-  "title_my_data": "Mes données personnelles",
-  "export_data": "Exporter mes données",
   "country_storage": "Pays de stockage des données",
+  "country_storage_alert_enabled": "Vous avez renseigné le pays de stockage des données",
+  "country_storage_alert_disabled": "Vous n'avez pas renseigné le pays de stockage des données",
+
+  "dpo": "Délégué à la protection des données",
+  "dpo_alert_enabled": "Vous avez renseigné les coordonnées du délégué à la protection des données",
+  "dpo_alert_disabled": "Vous n'avez pas renseigné les coordonnées du délégué à la protection des données",
+
+  "personal_data": "Mes données personnelles",
+  "export_data": "Exporter mes données",
   "request_deletion" : "Demander la suppression de mon compte",
-  "title_dialog_delete_account" : "Demande de suppression de mon compte",
-  "message_dialog_delete_account" : "Êtes-vous sûr de vouloir demander la suppression de votre compte ?",
+  "delete_account" : "Demande de suppression de mon compte",
+  "delete_account_message" : "Êtes-vous sûr de vouloir demander la suppression de votre compte ?",
   "account_deletion": {
     "subject": "Demande de suppression de compte",
     "body": "L'utilisateur %name% <br/> ID : %id% <br/> souhaite supprimer son compte. Veuillez prendre les mesures appropriées.<br/><hr/>"
   },
-  
+
   "terms_of_service": "Conditions d'utilisation",
-  "terms_of_service_activation_message": "Activer les conditions d'utilisation",
-  "terms_of_service_activation_help": "Les nouveaux utilisateurs devront accepter les conditions avant de pouvoir utiliser la plateforme.",
-  "terms_enabled_but_empty": "Les conditions d'utilisation ne peuvent être activées que si le texte est fourni dans au moins une langue.",
-  "terms_of_service_acceptance": "J'accepte les conditions d'utilisation"
+  "terms_of_service_accept": "Accepter les conditions d'utilisation",
+  "terms_of_service_accepted": "Vous avez accepté les conditions d'utilisation de la plateforme",
+  "terms_of_service_not_accepted": "Vous n'avez pas encore accepté les conditions d'utilisation de la plateforme",
+  "terms_of_service_activation": "Activer les conditions d'utilisation",
+  "terms_of_service_activation_help": "Les nouveaux utilisateurs devront accepter les conditions avant de pouvoir utiliser la plateforme",
+  "terms_of_service_alert_enabled": "Vous avez activé les conditions d'utilisation de la plateforme",
+  "terms_of_service_alert_disabled": "Vous n'avez pas activé les conditions d'utilisation de la plateforme",
+  "terms_of_service_show": "Voir les conditions d'utilisation"
 }
