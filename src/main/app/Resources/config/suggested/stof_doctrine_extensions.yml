@@ -5,8 +5,5 @@ stof_doctrine_extensions:
             blameable: false
             timestampable: true
             sluggable: true
-            translatable: true
+            translatable: false
             softdeleteable: false
-
-    class:
-        translatable: Claroline\CoreBundle\Listener\Doctrine\TranslatableListener

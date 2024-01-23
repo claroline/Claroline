@@ -47,7 +47,7 @@ class CompetencyManager
      */
     public function hasScales()
     {
-        return $this->om->count(Scale::class) > 0;
+        return $this->om->getRepository(Scale::class)->count([]) > 0;
     }
 
     /**
@@ -154,10 +154,6 @@ class CompetencyManager
      * Unlike array_walk_recursive :
      * - the result is a *copy* of the original collection
      * - all the nodes are visited, not only the leafs
-     *
-     * @param mixed $collection
-     *
-     * @return mixed
      */
     public function walkCollection($collection, \Closure $callback)
     {

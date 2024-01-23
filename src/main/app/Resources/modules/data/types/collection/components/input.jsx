@@ -133,7 +133,7 @@ implementPropTypes(CollectionInput, DataInputTypes, {
 }, {
   value: [],
   placeholder: trans('no_item'),
-  button: trans('add'),
+  button: trans('add', {}, 'actions'),
   defaultItem: undefined
 })
 

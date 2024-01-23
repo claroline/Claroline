@@ -130,7 +130,7 @@ class RegistrationController
     public function validateRegistrationAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
-        $users = $this->om->findList(User::class, 'uuid', $query['ids']);
+        $users = $this->om->getRepository(User::class)->findBy(['uuid' => $query['ids']]);
 
         foreach ($users as $user) {
             /** @var WorkspaceRegistrationQueue $pending */
@@ -169,7 +169,7 @@ class RegistrationController
     public function removeRegistrationAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
-        $users = $this->om->findList(User::class, 'uuid', $query['ids']);
+        $users = $this->om->getRepository(User::class)->findBy(['uuid' => $query['ids']]);
 
         foreach ($users as $user) {
             /** @var WorkspaceRegistrationQueue $pending */
@@ -206,7 +206,7 @@ class RegistrationController
     public function unregisterUsersAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
-        $users = $this->om->findList(User::class, 'uuid', $query['ids']);
+        $users = $this->om->getRepository(User::class)->findBy(['uuid' => $query['ids']]);
 
         $this->om->startFlushSuite();
 
@@ -241,7 +241,7 @@ class RegistrationController
     public function unregisterGroupsAction(Request $request, Workspace $workspace): JsonResponse
     {
         $query = $request->query->all();
-        $groups = $this->om->findList(Group::class, 'uuid', $query['ids']);
+        $groups = $this->om->getRepository(Group::class)->findBy(['uuid' => $query['ids']]);
 
         $this->om->startFlushSuite();
 
@@ -275,9 +275,9 @@ class RegistrationController
     {
         $data = $this->decodeRequest($request);
 
-        $workspaces = isset($data['workspaces']) ? $this->om->findList(Workspace::class, 'uuid', $data['workspaces']) : [];
-        $users = isset($data['users']) ? $this->om->findList(User::class, 'uuid', $data['users']) : [];
-        $groups = isset($data['groups']) ? $this->om->findList(Group::class, 'uuid', $data['groups']) : [];
+        $workspaces = isset($data['workspaces']) ? $this->om->getRepository(Workspace::class)->findBy(['uuid' => $data['workspaces']]) : [];
+        $users = isset($data['users']) ? $this->om->getRepository(User::class)->findBy(['uuid' => $data['users']]) : [];
+        $groups = isset($data['groups']) ? $this->om->getRepository(Group::class)->findBy(['uuid' => $data['groups']]) : [];
 
         foreach ($workspaces as $workspace) {
             if ('' === $role) {

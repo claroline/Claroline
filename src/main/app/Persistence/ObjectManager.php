@@ -216,51 +216,6 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
         return $this->wrapped->getUnitOfWork();
     }
 
-    /**
-     * Finds a set of objects by their ids.
-     *
-     * @return array
-     */
-    public function findByIds(string $class, array $ids)
-    {
-        return $this->findList($class, 'id', $ids);
-    }
-
-    /**
-     * Finds a set of objects.
-     *
-     * @return array
-     */
-    public function findList(string $class, string $property, ?array $list = [])
-    {
-        if (0 === count($list)) {
-            return [];
-        }
-
-        $dql = "SELECT object FROM {$class} object WHERE object.{$property} IN (:list)";
-        $query = $this->wrapped->createQuery($dql);
-        $query->setParameter('list', $list);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Counts objects of a given class.
-     *
-     * @param string $class
-     *
-     * @return int
-     *
-     * @deprecated
-     */
-    public function count($class)
-    {
-        $dql = "SELECT COUNT(object) FROM {$class} object";
-        $query = $this->wrapped->createQuery($dql);
-
-        return (int) $query->getSingleScalarResult();
-    }
-
     private function assertIsSupported($isSupportedFlag, $method)
     {
         if (!$isSupportedFlag) {

@@ -31,6 +31,6 @@ trait RequestDecoderTrait
             return [];
         }
 
-        return $this->om->findList($class, 'uuid', $ids);
+        return $this->om->getRepository($class)->findBy(['uuid' => $ids]);
     }
 }

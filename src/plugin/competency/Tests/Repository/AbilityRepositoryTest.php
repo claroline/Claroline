@@ -107,9 +107,9 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->persistAbility('Foo'); // not linked
         $this->om->flush();
 
-        $this->assertEquals(4, $this->om->count(Ability::class));
+        $this->assertEquals(4, $this->om->getRepository(Ability::class)->count([]));
         $this->repo->deleteOrphans();
-        $this->assertEquals(3, $this->om->count(Ability::class));
+        $this->assertEquals(3, $this->om->getRepository(Ability::class)->count([]));
     }
 
     public function testFindFirstByName()

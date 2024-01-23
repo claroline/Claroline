@@ -8,7 +8,7 @@ import {constants} from '#/main/app/action/constants'
 const Action = {
   propTypes: {
     /**
-     * An unique identifier for the action
+     * A unique identifier for the action
      *
      * Most of the time we can generate it from label (that's why it's optional)
      * but it's not sufficient, for actions on data collection (same action names for each items)
@@ -112,7 +112,7 @@ const Toolbar = {
     /**
      * The toolbar display configuration as a string.
      *
-     * It uses the same format than tinyMCE.
+     * It uses the same format as tinyMCE.
      * Example : 'edit publish | like'.
      *
      * @type {string}

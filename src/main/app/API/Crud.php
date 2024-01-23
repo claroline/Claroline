@@ -75,7 +75,7 @@ class Crud
                 throw new \LogicException(sprintf('You can only get entities with an identifier property (identifiers: %s).', implode(', ', $identifiers)));
             }
 
-            $object = $this->om->getRepository($class)->findOneBy([$idProp => $id]);
+            $object = $this->om->getRepository($class)->count([$idProp => $id]);
         }
 
         return !empty($object);
