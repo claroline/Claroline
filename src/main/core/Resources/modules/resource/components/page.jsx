@@ -65,17 +65,13 @@ const ResourcePage = (props) => {
         target: `${props.basePath}/${ancestorNode.slug}`
       })), props.path)}
       poster={props.resourceNode.poster}
-      icon={get(props.resourceNode, 'display.showIcon') && (props.userEvaluation ?
-        <UserProgression
-          userEvaluation={props.userEvaluation}
-          width={70}
-          height={70}
-        /> :
+      icon={get(props.resourceNode, 'display.showIcon') ?
         <ResourceIcon
           mimeType={props.resourceNode.meta.mimeType}
-        />
-      )}
-      primaryAction={getToolbar(props.primaryAction, true)}
+        /> : undefined
+      }
+      nav={props.nav}
+      /*primaryAction={getToolbar(props.primaryAction, true)}*/
       actions={getActions([props.resourceNode], {
         add: () => {
           props.reload()

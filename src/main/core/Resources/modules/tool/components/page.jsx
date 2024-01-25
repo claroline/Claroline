@@ -1,44 +1,25 @@
-import React from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
+import {Await} from '#/main/app/components/await'
 import {PageFull} from '#/main/app/page/components/full'
 
+import {getTool, getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
 import {ToolIcon} from '#/main/core/tool/components/icon'
-import {getActions, getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ToolMenu} from '#/main/core/tool/containers/menu'
 
 const ToolPage = props => {
-  let toolbar = 'edit'
-  if (props.primaryAction) {
-    toolbar = props.primaryAction + ' | ' + toolbar
-  }
-  toolbar += ' | fullscreen more'
-
-  // ToolPage component can be used multiple times inside a tool,
-  // we need to manage the fullscreen flag by ourselves otherwise it will be reset
-  // by each new render of a ToolPage because it's stored in the internal state of PageFull
-  const fullscreenAction = {
-    name: 'fullscreen',
-    type: CALLBACK_BUTTON,
-    icon: classes('fa fa-fw', {
-      'fa-expand': !props.fullscreen,
-      'fa-times': props.fullscreen
-    }),
-    label: trans(props.fullscreen ? 'fullscreen_off' : 'fullscreen_on'),
-    callback: props.toggleFullscreen
-  }
-
   return (
     <PageFull
-      className={classes(`${props.name}-page`, props.className)}
+      className={classes('tool-page', `${props.name}-page`, props.className)}
       title={trans(props.name, {}, 'tools')}
       showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
       path={[].concat(getToolBreadcrumb(props.name, props.currentContext.type, props.currentContext.data), props.path)}
-      poster={get(props.toolData, 'poster')}
+      poster={props.poster || get(props.toolData, 'poster') || get(props.currentContext, 'data.poster')}
       icon={get(props.toolData, 'display.showIcon') ?
         <ToolIcon type={get(props.toolData, 'icon')} />
         :
@@ -46,22 +27,28 @@ const ToolPage = props => {
       }
       fullscreen={props.fullscreen}
       meta={{
-        title: `${trans(props.name, {}, 'tools')} - ${'workspace' === props.currentContext.type ? props.currentContext.data.code : trans(props.currentContext.type)}`,
+        title: `${trans(props.name, {}, 'tools')} - ${'workspace' === props.currentContext.type ? props.currentContext.data.name : trans(props.currentContext.type)}`,
         description: get(props.currentContext.data, 'meta.description')
       }}
 
-      toolbar={toolbar}
-      {...omit(props, 'name', 'currentContext', 'path', 'basePath', 'toolData', 'reload')}
+      menu={
+        <Await
+          for={getTool(props.name, props.currentContext.type)}
+          then={(module) => {
+            if (module.default.menu) {
+              return createElement(module.default.menu)
+            }
 
-      actions={getActions(props.toolData, props.currentContext, {
-        update: () => props.reload()
-      }, props.basePath).then(baseActions => {
-        if (props.actions instanceof Promise) {
-          return props.actions.then(promisedActions => promisedActions.concat(baseActions, [fullscreenAction]))
-        }
+            return createElement(ToolMenu)
+          }}
+        />
+      }
 
-        return (props.actions || []).concat(baseActions, [fullscreenAction])
-      })}
+      primaryAction={props.primaryAction}
+      toolbar="more"
+      {...omit(props, 'name', 'currentContext', 'path', 'basePath', 'toolData', 'reload', 'poster')}
+
+      actions={props.actions}
     >
       {props.children}
     </PageFull>
@@ -88,7 +75,7 @@ ToolPage.propTypes = {
   }).isRequired,
   // the name of the primary action of the tool (if we want to override the default one).
   // it can contain more than one action name
-  primaryAction: T.string,
+  //primaryAction: T.string,
 
   // from store
   basePath: T.string,

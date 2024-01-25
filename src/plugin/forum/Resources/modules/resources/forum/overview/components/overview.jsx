@@ -20,7 +20,7 @@ import {ForumInfo} from '#/plugin/forum/resources/forum/overview/components/foru
 
 const OverviewComponent = props =>
   <section className="resource-section resource-overview content-lg mt-3">
-    <h2 className="sr-only">{trans('resource_overview')}</h2>
+    <h2 className="sr-only">{trans('resource_overview', {}, 'resource')}</h2>
     <div className="row">
       <div className="user-column col-md-4">
         <section className="user-progression">

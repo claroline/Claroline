@@ -39,11 +39,8 @@
     padding: 0;
     margin: 0;
 
-    // position
-    // like this, the gape for top bar still appear in fullscreen mode
-    // TODO : find a way to remove it
-    top: calc($grid-gutter-width + $top-bar-height);
-    right: $grid-gutter-width;
+    top: map-get($spacers, 4);
+    right: map-get($spacers, 4);
 }
 
 .flying-alert {

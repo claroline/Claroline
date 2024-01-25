@@ -18,7 +18,7 @@
 
 // Theme colors
 // ATTENTION : every theme color SHOULD be unique
-//$primary:   #148AC7; // #046d8a
+$primary:   #4f46e5; // #046d8a
 //$success:   #4f7302;
 //$secondary: #C51162;
 //$info:      #335768;
@@ -39,12 +39,14 @@
 //
 // Settings for theme customizing content texts.
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
 // fonts
-//$font-family-sans-serif: "Roboto", Arial, sans-serif;
+$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 //$headings-font-family:   "Nunito", Arial, sans-serif;
 
 // sizing (may need adaptation based on the selected theme fonts)
-$font-size-root: 18px;
+$font-size-root: 16px;
 $font-weight-base: 300;
 //$headings-font-weight: 500 !default;
 
@@ -75,10 +77,10 @@ $enable-rounded: true;
 //$border-radius-lg: null;
 
 // make some components fully rounded (buttons and badges)
-$border-radius-pill: 50rem;
+/*$border-radius-pill: 50rem;
 
 $btn-border-radius:    $border-radius-pill;
 $btn-border-radius-sm: $border-radius-pill;
 $btn-border-radius-lg: $border-radius-pill;
 
-$badge-border-radius:  $border-radius-pill;
+$badge-border-radius:  $border-radius-pill;*/

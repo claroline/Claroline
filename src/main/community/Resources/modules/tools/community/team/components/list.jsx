@@ -17,8 +17,8 @@ const TeamList = props =>
       target: `${props.path}/teams`
     }]}
     subtitle={trans('teams', {}, 'community')}
-    primaryAction="add"
-    actions={[
+    /*primaryAction="add"*/
+    primaryAction={
       {
         name: 'add',
         type: LINK_BUTTON,
@@ -28,7 +28,7 @@ const TeamList = props =>
         displayed: props.canCreate,
         primary: true
       }
-    ]}
+    }
   >
     <ContentSizing size="full">
       <BaseTeamList

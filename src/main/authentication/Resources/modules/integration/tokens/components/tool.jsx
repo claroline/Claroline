@@ -19,8 +19,8 @@ const ApiToken = props =>
       target: `${props.path}/tokens`
     }]}
     subtitle={trans('tokens', {}, 'integration')}
-    primaryAction="add-token"
-    actions={[
+    /*primaryAction="add-token"*/
+    primaryAction={
       {
         name: 'add-token',
         type: MODAL_BUTTON,
@@ -31,7 +31,7 @@ const ApiToken = props =>
           onSave: () => props.invalidateList()
         }]
       }
-    ]}
+    }
   >
     <TokenList
       name={selectors.STORE_NAME}

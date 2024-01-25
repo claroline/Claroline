@@ -11,7 +11,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
-import {ToolMenu} from '#/main/core/tool/containers/menu'
+//import {ToolMenu} from '#/main/core/tool/containers/menu'
 
 const ContextShortcuts = props =>
   <Toolbar
@@ -76,10 +76,10 @@ const ContextMenu = (props) => {
         />
       }
 
-      <ToolMenu
+      {/*<ToolMenu
         opened={'tool' === props.section}
         toggle={() => props.changeSection('tool')}
-      />
+      />*/}
     </MenuMain>
   )
 }

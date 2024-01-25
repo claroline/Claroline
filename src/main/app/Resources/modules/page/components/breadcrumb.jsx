@@ -24,7 +24,7 @@ const PageBreadcrumb = props => {
                 />
               </li>
               :
-              <li key={item.id || toKey(item.label)} className="breadcrumb-item active"  aria-current="page">{item.label}</li>
+              <li key={item.id || toKey(item.label)} className="breadcrumb-item active visually-hidden"  aria-current="page">{item.label}</li>
             )
           }
         </ol>

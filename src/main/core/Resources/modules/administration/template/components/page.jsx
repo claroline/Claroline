@@ -39,8 +39,8 @@ const TemplatePage = (props) => {
         description: trans(get(props.templateType, 'name')+'_desc', {}, 'template')
       }}
 
-      primaryAction="add"
-      actions={[
+      /*primaryAction="add"*/
+      primaryAction={
         {
           name: 'add',
           type: LINK_BUTTON,
@@ -50,7 +50,7 @@ const TemplatePage = (props) => {
           primary: true,
           exact: true
         }
-      ]}
+      }
     >
       {props.children}
     </ToolPage>

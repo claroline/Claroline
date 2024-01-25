@@ -6,9 +6,10 @@
 
 .table {
     // header
-    > thead th {
+    > thead th:not(.checkbox-cell) {
         font-size: $font-size-sm;
         text-transform: uppercase;
+        color: $table-th-color;
     }
 
     // Fixes vertical align in tables
@@ -21,7 +22,7 @@
             padding: $table-cell-padding-x 0;
             .fa {
                 width: 50px; // same as .checkbox-cell. TODO : use a var
-                margin-right: $table-cell-padding-x;
+                margin-right: 0;
             }
         }
 
@@ -45,6 +46,7 @@
         line-height: /*1.42857 */$line-height-base; // todo find the correct computed line-height
         position: absolute;
         right: 8px; // same as horizontal padding of the cell
+        color: var(--#{$prefix}secondary-color);
     }
 }
 
@@ -67,6 +69,10 @@
     .dropdown-menu {
         margin-top: 0;
     }
+}
+
+.primary-cell {
+    font-weight: $font-weight-medium !important;
 }
 
 .table-sm {
