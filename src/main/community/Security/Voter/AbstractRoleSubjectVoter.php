@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
-use Claroline\CoreBundle\Security\ToolPermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -40,14 +39,23 @@ class AbstractRoleSubjectVoter extends AbstractVoter
         $action = $collection->getOption('action');
 
         $nonAuthorized = array_filter($collection->toArray(), function (Role $role) use ($token, $object, $action) {
+            if ($this->isOrganizationManager($token, $object)) {
+                return false;
+            }
+
+            if ($this->isToolGranted('ADMINISTRATE', 'community')) {
+                return false;
+            }
+
             $workspace = $role->getWorkspace();
             if ($workspace) {
-                if ($this->isGranted(ToolPermissions::getPermission('community', 'CREATE_USER'), $workspace)) {
-                    // If user is workspace manager then grant access
-                    if ($this->workspaceManager->isManager($workspace, $token)) {
-                        return false;
-                    }
+                // If user is workspace manager then grant access
+                if ($this->workspaceManager->isManager($workspace, $token)) {
+                    return false;
+                }
 
+                if ($this->isToolGranted('CREATE_USER', 'community', $workspace)
+                    || $this->isToolGranted('ADMINISTRATE', 'community', $workspace)) {
                     // If the user try to give the default role let him pass
                     if ($workspace->getDefaultRole() && $workspace->getDefaultRole()->getId() === $role->getId()) {
                         return false;
@@ -75,11 +83,6 @@ class AbstractRoleSubjectVoter extends AbstractVoter
 
                 // user has no community right on the workspace he cannot add anything
                 return true;
-            }
-
-            // we can only add platform roles to users if we have that platform role or are organization manager
-            if ($this->isOrganizationManager($token, $object)) {
-                return false;
             }
 
             if (Role::PLATFORM_ROLE === $role->getType() && in_array($role->getName(), $token->getRoleNames())) {
