@@ -48,6 +48,11 @@ class AbstractRoleSubjectVoter extends AbstractVoter
                         return false;
                     }
 
+                    // If the user try to give the default role let him pass
+                    if ($workspace->getDefaultRole() && $workspace->getDefaultRole()->getId() === $role->getId()) {
+                        return false;
+                    }
+
                     // Otherwise only allow modification of roles the current user owns
                     if (in_array($role->getName(), $token->getRoleNames())) {
                         return false;
