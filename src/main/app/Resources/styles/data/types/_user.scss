@@ -1,31 +1,38 @@
 .table {
-    .users-cell,
+    /*.users-cell,
     .user-cell {
         padding: 0 $table-cell-padding-x !important;
 
-        .user-avatar {
-            // for picture
-            max-height: 40px;
-            max-width: 40px;
 
-            // for .fa when no picture
-            font-size: 40px;
-        }
+    }*/
+
+    .user-avatar {
+        // for picture
+        /*max-height: 40px;
+        max-width: 40px;
+        font-size: 40px;*/
+        max-height: 2rem;
+        max-width: 2rem;
+
+        // for .fa when no picture
+        font-size: 2rem;
     }
 }
 
 .table-sm {
-    .users-cell,
+    /*.users-cell,
     .user-cell {
         padding: 0 $table-cell-padding-x-sm !important;
 
-        .user-avatar {
-            // for picture
-            max-height: 30px;
-            max-width: 30px;
 
-            // for .fa when no picture
-            font-size: 30px;
-        }
+    }*/
+
+    .user-avatar {
+        // for picture
+        max-height: 30px;
+        max-width: 30px;
+
+        // for .fa when no picture
+        font-size: 30px;
     }
 }

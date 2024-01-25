@@ -25,8 +25,8 @@ const Tab = ({tab, prefix}) =>
   </LinkButton>
 
 const HomeTabs = props =>
-  <nav className="home-nav mt-3">
-    <ul className="nav gap-1">
+  <nav className="page-nav home-nav">
+    <ul className="nav nav-underline">
       {props.tabs
         .filter(tab => props.showHidden || !get(tab, 'restrictions.hidden', false))
         .map((tab) => {

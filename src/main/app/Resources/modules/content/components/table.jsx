@@ -121,7 +121,7 @@ TableRow.propTypes = {
 
 const Table = props =>
   <table
-    className={classes('table table-striped table-hover', {
+    className={classes('table table-hover', /*'table-striped table-borderless',*/ {
       'table-sm': props.condensed
     }, props.className)}
   >

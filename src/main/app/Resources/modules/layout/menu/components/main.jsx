@@ -9,9 +9,11 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, LinkButton} from '#/main/app/buttons'
 
 import {MenuSection} from '#/main/app/layout/menu/components/section'
+import classes from 'classnames'
+import {asset} from '#/main/app/config'
 
 class MenuMain extends Component {
   constructor(props) {
@@ -61,8 +63,31 @@ class MenuMain extends Component {
     return (
       <Fragment>
         <aside className="app-menu">
-          <header className="app-menu-header">
-            {this.props.backAction &&
+          <LinkButton
+            className={classes('app-header-brand my-4 mx-3 justify-content-center')}
+            target="/"
+          >
+            {this.props.logo &&
+              <img
+                className="app-header-logo"
+                src={asset(this.props.logo)}
+                alt={trans('logo')}
+              />
+            }
+
+            {this.props.showTitle && this.props.title &&
+              <h1 className="app-header-title d-none d-md-block">
+                {this.props.title}
+
+                {this.props.subtitle &&
+                  <small>{this.props.subtitle}</small>
+                }
+              </h1>
+            }
+          </LinkButton>
+
+          {/*<header className="app-menu-header">
+            {this.props.backAction && false &&
               <Button
                 {...this.props.backAction}
                 id="app-menu-back"
@@ -76,7 +101,7 @@ class MenuMain extends Component {
             {this.props.title &&
               <h1 className="app-menu-title h6">{this.props.title}</h1>
             }
-          </header>
+          </header>*/}
 
           {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
             autoClose: this.autoClose

@@ -100,6 +100,10 @@ const PageFull = {
      */
     poster: T.string,
 
+    nav: T.arrayOf(T.shape({
+
+    })),
+
     /**
      * A custom component to add in the page header.
      */
@@ -111,6 +115,8 @@ const PageFull = {
      * @type {string}
      */
     toolbar: T.string,
+
+    primaryAction: T.shape(Action.propTypes),
 
     /**
      * The list of actions available for the current page.

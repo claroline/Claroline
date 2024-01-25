@@ -35,6 +35,25 @@ function getHome(type) {
 const ClacoFormResource = props =>
   <ResourcePage
     primaryAction="add-entry"
+    nav={[
+      {
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-home',
+        label: trans('resource_overview', {}, 'resource'),
+        target: `${props.path}/menu`,
+        //exact: true
+      }, {
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-sitemap',
+        label: trans('Liste des fiches'),
+        target: `${props.path}/entries`
+      }, {
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-sitemap',
+        label: trans('Fiche aléatoire'),
+        target: `${props.path}/random`
+      }
+    ]}
     customActions={[
       {
         type: LINK_BUTTON,

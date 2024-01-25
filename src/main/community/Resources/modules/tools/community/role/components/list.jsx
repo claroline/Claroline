@@ -18,8 +18,8 @@ const RoleList = props =>
       target: `${props.path}/roles`
     }]}
     subtitle={trans('roles', {}, 'community')}
-    primaryAction="add"
-    actions={[
+    /*primaryAction="add"*/
+    primaryAction={
       {
         name: 'add',
         type: LINK_BUTTON,
@@ -29,7 +29,7 @@ const RoleList = props =>
         primary: true,
         displayed: props.canCreate
       }
-    ]}
+    }
   >
     <ContentSizing size="full">
       <BaseRoleList

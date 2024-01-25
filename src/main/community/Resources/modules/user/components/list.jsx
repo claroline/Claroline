@@ -26,7 +26,7 @@ const Users = (props) => {
       primaryAction={(row) => getDefaultAction(row, usersRefresher, props.path, props.currentUser)}
       actions={(rows) => getActions(rows, usersRefresher, props.path, props.currentUser).then((actions) => [].concat(actions, props.customActions(rows)))}
       definition={[
-        {
+        /*{
           name: 'picture',
           type: 'user', // required to get correct styles (no padding + small picture size)
           label: trans('avatar'),
@@ -36,7 +36,7 @@ const Users = (props) => {
           render: (user) => (
             <UserAvatar picture={user.picture} alt={false} />
           )
-        }, {
+        }, */{
           name: 'username',
           type: 'username',
           label: trans('username'),
@@ -44,7 +44,13 @@ const Users = (props) => {
           displayed: param('community.username'),
           sortable: param('community.username'),
           filterable: param('community.username'),
-          primary: param('community.username')
+          primary: param('community.username'),
+          render: (user) => (
+            <div className="d-flex flex-direction-row gap-3 align-items-center">
+              <UserAvatar picture={user.picture} alt={false} />
+              {user.username}
+            </div>
+          )
         }, {
           name: 'lastName',
           type: 'string',

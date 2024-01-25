@@ -1,6 +1,7 @@
 @use "sass:math";
 
 .page {
+    position: relative; // restrain app-loader
     flex: 1 0 auto;
     display: flex;
     flex-direction: column;
@@ -40,15 +41,17 @@
 }
 
 .page-header {
-    position: relative;
+    //position: relative;
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
+    //align-items: flex-end;
+    //justify-content: space-between;
     flex-shrink: 0;
-    flex-wrap: wrap;
+    //flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
     background-color: $page-header-bg;
 
-    padding: $page-header-padding;
+    //padding: $page-header-padding;
     margin: 0;
     border-bottom: $page-header-border-width solid $page-header-border-color;
 
@@ -59,23 +62,64 @@
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    min-height: 320px;
+    min-height: 420px;
 
     // use movie subtitles styles to make title always readable
     // maybe one day add a background checker
+    .breadcrumb, // FIXME
+    .breadcrumb-item::before, // FIXME
+    .breadcrumb a, // FIXME
+    .nav a.nav-link, // FIXME
+    .nav button.nav-link, // FIXME
+    .app-header-title, // FIXME
+    .app-menu-toggle, // FIXME
     .page-title,
     .page-title > small,
-    .page-actions .page-actions-btn {
+    .page-actions-btn:not(.btn-primary) {
         @include text-movie-subtitles();
+    }
+
+    a.nav-link.active {
+        border-color: currentColor !important;
     }
 }
 
+// FIXME
+.nav-underline a.nav-link.active {
+    font-weight: 600;
+}
+
+.app-menu-toggle {
+    font-size: 1.25rem;
+}
+
+.app-header-avatar {
+    background-color: var(--#{$prefix}body-bg);
+    border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
+    //border-radius: var(--#{$prefix}border-radius);
+    box-shadow: var(--#{$prefix}box-shadow-sm);
+    padding: .05rem;
+}
+
+.app-header-status {
+    //border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color-translucent);
+    padding: .375rem;
+    @include box-shadow(0 0 .125rem  rgba(0,0,0,.75));
+}
+
+.page-header-content {
+    //order: 2;
+    display: flex;
+    //margin: $grid-gutter-width * .5;
+    align-items: center;
+}
+
 .page-icon {
-    order: 1;
+    //order: 1;
     flex-shrink: 0;
     width: 70px;
     height: 70px;
-    margin: 0 ($grid-gutter-width * .5);
+    //margin: 0 ($grid-gutter-width * .5);
 
     > * {
         max-width: 100%;
@@ -84,14 +128,14 @@
 }
 
 .page-title {
-    order: 2;
+    //order: 2;
     flex: 1;
     color: $page-title-color;
     font-weight: $page-title-font-weight;
 
     @include font-size($page-title-font-size);
 
-    margin: $grid-gutter-width * .5;
+    margin: 0;
 
     small {
         color: $page-subtitle-color;
@@ -100,27 +144,44 @@
 }
 
 .page-actions {
-    order: 3;
-    margin: $grid-gutter-width * .5;
+    //order: 3;
+    //margin: $grid-gutter-width * .5;
     margin-left: auto;
     white-space: nowrap;
+    display: flex;
+
+    .btn-primary {
+        /*font-size: $font-size-base;
+        padding: map-get($spacers, 3) map-get($spacers, 4);*/
+    }
+
+    .btn-toolbar {
+        white-space: nowrap;
+    }
 }
 
-.page-actions-separator {
+/*.page-actions-separator {
     display: inline-block;
     margin: 0 5px;
-}
+}*/
 
 // Current styles permit to have 7 buttons in one line on 360px screens (without btn groups)
 .page-actions-btn {
     position: relative; // for buttons with labels
-    text-align: center;
-    border-radius: (.65em * 2) + 1.25em;
-    padding: .65em;
-    font-size: 1.25em;
-    line-height: 1.25em;
+    display: flex;
+    align-items: center;
+    
+    &:not(.btn-primary) {
+        font-size: $font-size-lg;
+    }
 
-    border: 1px solid transparent !important; // not perfect, it's required to override default btn border
+    //text-align: center;
+    /*border-radius: $border-radius-pill;
+    padding: map-get($spacers, 3);
+    font-size: $font-size-lg;
+    line-height: $font-size-lg;
+
+    border: 1px solid transparent !important;*/ // not perfect, it's required to override default btn border
 
     /*&.default {
         @include button-variant($page-action-default-color, $page-action-default-bg, $page-action-default-border);
@@ -136,7 +197,7 @@
 
     // displays icon as a square
     .action-icon {
-        width: 1.25em;
+        //width: 1.25em;
     }
 
     // puts labels in the bottom right corner
@@ -151,7 +212,7 @@
 }
 
 .page-content {
-    position: relative;
+    //position: relative;
     display: flex;
     flex-direction: column;
     flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent

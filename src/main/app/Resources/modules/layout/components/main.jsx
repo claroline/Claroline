@@ -27,10 +27,14 @@ const LayoutMain = props => {
 
   return (
     <>
-      <HeaderMain
-        unavailable={props.unavailable}
-        toggleMenu={props.toggleMenu}
-      />
+      {/*<div className="app-loader" />*/}
+
+      {false &&
+        <HeaderMain
+          unavailable={props.unavailable}
+          toggleMenu={props.toggleMenu}
+        />
+      }
 
       {!isEmpty(appContexts) &&
         <Routes

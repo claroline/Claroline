@@ -12,6 +12,8 @@ import {MODAL_LOCALE} from '#/main/app/modals/locale'
 import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/modals/terms-of-service'
 
 const FooterMain = (props) => {
+  return null
+  
   if (props.content || props.display.show) {
     return (
       <footer className="app-footer-container">

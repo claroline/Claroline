@@ -1,5 +1,6 @@
 import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import get from 'lodash/get'
 import merge from 'lodash/merge'
 import isEmpty from 'lodash/isEmpty'
@@ -39,7 +40,7 @@ const DataCellContent = props => {
   }
 
   return (
-    <TableCell className={`${props.column.type}-cell`}>
+    <TableCell className={classes(props.className, `${props.column.type}-cell`, props.column.primary && 'primary-cell')}>
       {props.action &&
         <ListPrimaryAction
           className="list-primary-action"
@@ -57,6 +58,7 @@ const DataCellContent = props => {
 }
 
 DataCellContent.propTypes = {
+  className: T.string,
   definition: T.shape({
     render: T.func,
     components: T.shape({
@@ -77,11 +79,12 @@ const DataCell = props =>
       <DataCellContent {...props} definition={definition} />
     )}
     placeholder={
-      <td></td>
+      <td className={props.className}></td>
     }
   />
 
 DataCell.propTypes = {
+  className: T.string,
   rowData: T.object.isRequired,
   action: T.object,
   column: T.shape(
@@ -110,9 +113,10 @@ const TableItem = props => {
         </TableCell>
       }
 
-      {props.columns.map((column) =>
+      {props.columns.map((column, index) =>
         <DataCell
           key={column.name}
+          className={props.onSelect && 0 === index ? 'ps-0' : undefined}
           column={column}
           rowData={props.row}
           action={props.primaryAction && columnAction === column ? props.primaryAction : undefined}

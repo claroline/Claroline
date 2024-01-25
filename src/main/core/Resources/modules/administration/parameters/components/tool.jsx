@@ -13,7 +13,6 @@ import {AppearanceTool} from '#/main/theme/administration/appearance/containers/
 const ParametersTool = (props) =>
   <ToolPage
     className="main-settings-container"
-    primaryAction="add"
     subtitle={
       <Routes
         path={props.path}

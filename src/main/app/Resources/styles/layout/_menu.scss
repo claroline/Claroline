@@ -4,17 +4,22 @@
 // todo : write a mixin to generate menu btns variant (for shortcuts, search btn, menu items)
 
 .app-menu {
-    position: sticky;
+    //z-index: 2;
+    //position: sticky;
     overflow-y: auto; // gets its own scrollbar
     max-width: $toolbar-size;
     width: 100%;
-    top: $top-bar-height;
-    //top: 0;
+    //top: $top-bar-height;
+    top: 0;
     bottom: 0;
     display: flex;
     flex-direction: column;
     background-color: $toolbar-bg;
     color: $toolbar-color;
+
+    //transition: width 300ms ease-in-out;
+    /*@include box-shadow(0 0 .375rem rgba(0,0,0,.75));
+    border-right: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color-translucent);*/
 
     .app-menu-header {
         display: flex;

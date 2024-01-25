@@ -95,7 +95,7 @@ const FormInputStats = (props) =>
         }
         fill={true}
       >
-        <table className="table table-striped table-hover mb-0">
+        <table className="table table-striped table-borderless table-hover mb-0">
           <tbody>
             {isEmpty(props.values) &&
               <tr>

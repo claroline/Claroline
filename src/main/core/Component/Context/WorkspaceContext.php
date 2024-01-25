@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -38,7 +39,7 @@ class WorkspaceContext extends AbstractContext
         return 'book';
     }
 
-    public function getObject(?string $contextId): Workspace
+    public function getObject(?string $contextId): ?Workspace
     {
         if (empty($contextId)) {
             throw new \RuntimeException('WorkspaceContext can not be opened without an ID.');
@@ -46,7 +47,11 @@ class WorkspaceContext extends AbstractContext
 
         // we receive the slug on context open,
         // and we receive the uuid when tools are opened
-        return $this->om->getObject(['uuid' => $contextId, 'slug' => $contextId], Workspace::class, ['slug']);
+        $workspace = $this->om->getObject(['uuid' => $contextId, 'slug' => $contextId], Workspace::class, ['slug']);
+        if (empty($workspace)) {
+            throw new NotFoundHttpException('Workspace not found');
+        }
+        return $workspace;
     }
 
     public function isAvailable(): bool

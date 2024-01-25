@@ -44,17 +44,18 @@ const WorkspacesTool = (props) => {
 
   return (
     <ToolPage
-      primaryAction="add"
+      /*primaryAction="add"*/
+      primaryAction={{
+        name: 'add',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-plus',
+        label: trans('create_workspace', {}, 'workspace'),
+        target: `${props.path}/new`,
+        primary: true,
+        displayed: props.canCreate
+      }}
       actions={[
         {
-          name: 'add',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-plus',
-          label: trans('create_workspace', {}, 'workspace'),
-          target: `${props.path}/new`,
-          primary: true,
-          displayed: props.canCreate
-        }, {
           name: 'import',
           type: MODAL_BUTTON,
           icon: 'fa fa-fw fa-upload',

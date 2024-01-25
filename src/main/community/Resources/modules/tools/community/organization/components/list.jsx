@@ -18,8 +18,8 @@ const OrganizationList = (props) =>
       target: `${props.path}/organizations`
     }]}
     subtitle={trans('organizations', {}, 'community')}
-    primaryAction="add"
-    actions={[
+    /*primaryAction="add"*/
+    primaryAction={
       {
         name: 'add',
         type: LINK_BUTTON,
@@ -29,7 +29,7 @@ const OrganizationList = (props) =>
         primary: true,
         displayed: props.canCreate
       }
-    ]}
+    }
   >
     <ContentSizing size="full">
       <BaseOrganizationList

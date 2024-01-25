@@ -65,8 +65,8 @@ const Plugin = (props) => {
         }
       ]}
       subtitle={trans(props.plugin.name, {}, 'plugin')}
-      primaryAction="toggle"
-      actions={[
+      /*primaryAction="toggle"*/
+      primaryAction={
         {
           name: 'toggle',
           type: TOGGLE_BUTTON,
@@ -83,7 +83,7 @@ const Plugin = (props) => {
             }
           }
         }
-      ]}
+      }
     >
       <div className="row" style={{marginTop: 20}}>
         <div className="col-md-3">

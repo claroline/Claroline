@@ -1,45 +1,46 @@
-import React, {createElement} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {Await} from '#/main/app/components/await'
+import {Toolbar} from '#/main/app/action'
+import {PageMenu} from '#/main/app/page/components/menu'
 
-import {getTool} from '#/main/core/tool/utils'
+import {getActions} from '#/main/core/tool/utils'
 
-const ToolMenu = props => {
-  if (props.name && props.loaded && !props.notFound) {
-    return (
-      <Await
-        for={getTool(props.name, props.contextType)}
-        then={(module) => {
-          if (module.default.menu) {
-            return createElement(module.default.menu, {
-              path: props.path,
-              opened: props.opened,
-              toggle: props.toggle,
-              autoClose: props.autoClose
-            })
-          }
-
-          return null
-        }}
-      />
-    )
-  }
-
-  return null
-}
+const ToolMenu = (props) =>
+  <PageMenu actions={props.actions}>
+    <Toolbar
+      className="nav nav-underline"
+      buttonName="nav-link"
+      toolbar="configure more"
+      tooltip="bottom"
+      actions={getActions(props.toolData, props.currentContext, {
+        update: () => props.reload()
+      }, props.path)}
+    />
+  </PageMenu>
 
 ToolMenu.propTypes = {
-  path: T.string,
-  name: T.string,
-  contextType: T.string,
-  loaded: T.bool.isRequired,
-  notFound: T.bool.isRequired,
+  path: T.string.isRequired,
+  /*name: T.string.isRequired,*/
 
-  // from menu
-  opened: T.bool.isRequired,
-  toggle: T.func.isRequired,
-  autoClose: T.func.isRequired
+  /*loaded: T.bool.isRequired,
+  notFound: T.bool.isRequired,*/
+
+  currentContext: T.shape({
+    type: T.oneOf(['administration', 'desktop', 'workspace', 'account', 'home']),
+    data: T.object
+  }).isRequired,
+  toolData: T.shape({
+    icon: T.string,
+    display: T.shape({
+      showIcon: T.bool,
+      fullscreen: T.bool
+    }),
+    poster: T.string,
+    permissions: T.object.isRequired
+  }),
+
+  reload: T.func.isRequired
 }
 
 export {

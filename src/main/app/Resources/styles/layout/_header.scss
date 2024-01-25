@@ -41,21 +41,26 @@
 }
 
 .app-header-brand {
-    height: 100%;
-    padding: 0 ($grid-gutter-width * .5);
+    //height: 100%;
+    //padding: 0 ($grid-gutter-width * .5);
     //text-align: center;
-    margin-right: auto; // will stack button bar to the rights (TODO : it will not work if brand is not displayed)
+    //margin-right: auto; // will stack button bar to the rights (TODO : it will not work if brand is not displayed)
     //text-decoration: none; // remove <a> styles
-
+    //flex: 1;
     // permit to center the img
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    //justify-content: center;
+
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 .app-header-logo {
-    max-height: 40px;
+    //max-height: 40px;
+    height: $top-bar-brand-logo-size;
 
     // fallback for IE 11 and logos that don't define color schema
     fill: $top-bar-brand-color;
@@ -74,13 +79,13 @@
     margin: 0;
     font-size: $top-bar-brand-font-size;
     font-weight: $top-bar-brand-font-weight;
-    color: $top-bar-brand-color;
+    color: $toolbar-color;
     white-space: nowrap;
 
     > small {
         display: block;
         font-weight: $font-weight-lighter;
-        color: $top-bar-brand-secondary-color;
+        //color: $body-color;
     }
 }
 

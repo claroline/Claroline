@@ -24,15 +24,15 @@ const UserList = props =>
       target: `${props.path}/users`
     }]}
     subtitle={trans('users')}
-    primaryAction="add"
-    actions={[
+    /*primaryAction="add"*/
+    primaryAction={'workspace' === props.contextType ?
       {
         name: 'add',
         type: MODAL_BUTTON,
         label: trans('register_users'),
         icon: 'fa fa-fw fa-plus',
         primary: true,
-        displayed: 'workspace' === props.contextType && props.canRegister,
+        displayed: props.canRegister,
 
         // select users to register
         modal: [MODAL_REGISTER, {
@@ -42,15 +42,18 @@ const UserList = props =>
           onRegister: props.registerUsers,
           mode: 'users'
         }]
-      }, {
+      } : {
         name: 'add',
         type: LINK_BUTTON,
         label: trans('create_user', {}, 'actions'),
         icon: 'fa fa-fw fa-plus',
         target: `${props.path}/users/new`,
-        displayed: 'desktop' === props.contextType && props.canRegister && !props.limitReached,
+        displayed: props.canRegister && !props.limitReached,
         primary: true
-      }, {
+      }
+    }
+    actions={[
+      {
         name: 'disable-inactive',
         type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-user-clock',
