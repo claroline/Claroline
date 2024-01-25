@@ -9,6 +9,7 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 import {getTabTitle} from '#/plugin/home/tools/home/utils'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 import {HomeTabs} from '#/plugin/home/tools/home/components/tabs'
+import classes from 'classnames'
 
 const HomePage = props =>
   <ToolPage
@@ -20,7 +21,7 @@ const HomePage = props =>
       target: props.basePath+props.path+'/'+props.currentTab.slug
     }] : [], props.breadcrumb || [])}
 
-    header={1 < props.tabs.length  ?
+    /*header={1 < props.tabs.length  ?
       <HomeTabs
         prefix={props.basePath+props.path}
         tabs={props.tabs}
@@ -28,6 +29,17 @@ const HomePage = props =>
         showSubMenu={props.showSubMenu}
         showHidden={props.showHidden}
       /> : undefined
+    }*/
+    nav={props.tabs
+      .filter(tab => props.showHidden || !get(tab, 'restrictions.hidden', false))
+      .map((tab) => ({
+        key: tab.id,
+        name: tab.id,
+        type: LINK_BUTTON,
+        target: `${props.basePath+props.path}/${tab.slug}`,
+        icon: tab.icon ? `fa fa-fw fa-${tab.icon}` : undefined,
+        label: tab.title,
+      }))
     }
     icon={props.currentTab && props.currentTab.icon ?
       <span className={`tool-icon fa fa-${props.currentTab.icon}`} /> : undefined
@@ -36,7 +48,7 @@ const HomePage = props =>
     subtitle={props.subtitle}
     showTitle={get(props.currentTab, 'display.showTitle')}
     poster={props.poster || get(props.currentTab, 'poster')}
-    primaryAction="add"
+    /*primaryAction="add"*/
     actions={props.currentTab ? [
       {
         name: 'edit',

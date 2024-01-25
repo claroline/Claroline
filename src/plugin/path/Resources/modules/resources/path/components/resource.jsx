@@ -11,6 +11,21 @@ import {PlayerMain} from '#/plugin/path/resources/path/player/containers/main'
 
 const PathResource = props =>
   <ResourcePage
+    nav={[
+      {
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-home',
+        label: trans('resource_overview', {}, 'resource'),
+        displayed: props.overview,
+        target: props.path,
+        exact: true
+      }, {
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-sitemap',
+        label: trans('summary'),
+        target: `${props.path}/summary`
+      }
+    ]}
     customActions={[
       {
         type: LINK_BUTTON,

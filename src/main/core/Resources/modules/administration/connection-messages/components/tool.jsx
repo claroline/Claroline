@@ -24,8 +24,8 @@ const ConnectionMessagesTool = (props) => {
 
   return (
     <ToolPage
-      primaryAction="add"
-      actions={addActions}
+      /*primaryAction="add"*/
+      primaryAction={addActions}
       subtitle={trans('connection_messages', {}, 'tools')}
     >
       <Routes

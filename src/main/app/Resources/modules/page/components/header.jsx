@@ -5,9 +5,13 @@ import isEmpty from 'lodash/isEmpty'
 
 import {asset} from '#/main/app/config/asset'
 import {toKey} from '#/main/core/scaffolding/text'
+import {Button} from '#/main/app/action'
+import {Toolbar} from '#/main/app/action/components/toolbar'
 
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
-import {Toolbar} from '#/main/app/action/components/toolbar'
+
+import {PageBreadcrumb} from '#/main/app/page/components/breadcrumb'
+import {PageNav} from '#/main/app/page/components/nav'
 
 /**
  * Title of the current page.
@@ -50,43 +54,86 @@ const PageHeader = props =>
       'page-poster': !!props.poster
     })}
   >
-    {props.icon &&
-      <div className="page-icon ratio ratio-1x1">
-        {props.icon}
+    <PageNav>
+      {props.menu}
+    </PageNav>
+
+    <div className="page-header-content m-4 gap-4">
+      {props.icon &&
+        <div className="page-icon ratio ratio-1x1">
+          {props.icon}
+        </div>
+      }
+
+      <div className="">
+        {!props.embedded &&
+          <PageBreadcrumb
+            path={props.path}
+            className={classes({
+              'sr-only': !props.showBreadcrumb
+            })}
+          />
+        }
+
+        <PageTitle
+          title={props.subtitle || props.title}
+          /*subtitle={props.subtitle}*/
+          show={props.showTitle}
+        />
       </div>
-    }
 
-    <PageTitle
-      title={props.title}
-      subtitle={props.subtitle}
-      show={props.showTitle}
-    />
+      {(!isEmpty(props.primaryAction) || !isEmpty(props.actions) || props.actions instanceof Promise) &&
+        <div className="page-actions gap-3 ms-auto">
+          {props.primaryAction &&
+            <Button
+              {...props.primaryAction}
+              className="btn btn-primary page-actions-btn"
+              icon={undefined}
+              tooltip={undefined}
+            />
+          }
 
-    {props.children}
-
-    {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
-      <Toolbar
-        id={props.id || toKey(props.title)}
-        className="btn-toolbar gap-1"
-        name="page-actions"
-        tooltip="bottom"
-        toolbar={props.toolbar}
-        actions={props.actions}
-        disabled={props.disabled}
-        scope="object"
-      />
-    }
+          {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
+            <Toolbar
+              id={props.id || toKey(props.title)}
+              className="btn-toolbar gap-1"
+              buttonName="btn page-actions-btn"
+              tooltip="bottom"
+              toolbar={props.toolbar}
+              actions={props.actions}
+              disabled={props.disabled}
+              scope="object"
+            />
+          }
+        </div>
+      }
+    </div>
   </header>
 
 PageHeader.propTypes = {
   id: T.string,
   showTitle: T.bool,
+  showBreadcrumb: T.bool,
   title: T.string.isRequired,
   subtitle: T.node,
   icon: T.oneOfType([T.string, T.node]),
+  embedded: T.bool,
   poster: T.string,
   disabled: T.bool,
+  /**
+   * The path of the page inside the application (used to build the breadcrumb).
+   */
+  path: T.arrayOf(T.shape({
+    label: T.string.isRequired,
+    displayed: T.bool,
+    target: T.oneOfType([T.string, T.array])
+  })),
+
   toolbar: T.string,
+
+  primaryAction: T.shape(
+    ActionTypes.propTypes
+  ),
   actions: T.oneOfType([
     // a regular array of actions
     T.arrayOf(T.shape(

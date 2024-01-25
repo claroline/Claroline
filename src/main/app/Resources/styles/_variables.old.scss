@@ -144,8 +144,9 @@ $top-bar-height:              60px + $top-bar-border-bottom-size !default;
 
 $top-bar-brand-color:           $top-bar-color !default;
 $top-bar-brand-secondary-color: color-contrast($menu, $primary, $top-bar-brand-color) !default;
+$top-bar-brand-logo-size:       40px;
 $top-bar-brand-font-size:       $font-size-lg !default;
-$top-bar-brand-font-weight:     $font-weight-medium !default;
+$top-bar-brand-font-weight:     $font-weight-semibold !default;
 
 $top-bar-link-color:          lighten($top-bar-bg, 60%) !default;
 $top-bar-link-bg:             transparent !default;
@@ -172,7 +173,7 @@ $loader-bg:        transparent !default;
 // By default it reuses some of the styles from the app header.
 // ---
 
-$toolbar-size:           360px;
+$toolbar-size:           400px;
 //$toolbar-font-size:      22px; // size for icons
 $toolbar-bg:             $menu;
 $toolbar-color:          $white;
@@ -194,10 +195,10 @@ $toolbar-link-disabled-bg:    $top-bar-link-disabled-bg;
 // ---
 
 $page-header-bg:           transparent  !default;
-$page-header-padding:      0 $grid-gutter-width*.5 $grid-gutter-width*.5 $grid-gutter-width*.5 !default;
+$page-header-padding:      $grid-gutter-width*.5 $grid-gutter-width*.5 !default;
 $page-header-box-shadow:   none  !default;
-$page-header-border-width: var(--#{$prefix}border-width) !default;
-$page-header-border-color: var(--#{$prefix}border-color-translucent) !default;
+$page-header-border-width: 0 /*var(--#{$prefix}border-width)*/ !default;
+$page-header-border-color: transparent /*var(--#{$prefix}border-color-translucent)*/ !default;
 
 $page-title-color:          null !default;
 $page-title-font-size:      2rem !default;

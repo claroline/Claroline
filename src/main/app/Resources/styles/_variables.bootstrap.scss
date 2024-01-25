@@ -733,21 +733,22 @@ $mark-bg:                     $yellow-100 !default;
 // Customizes the `.table` component with basic values, each used across all table variations.
 
 // scss-docs-start table-variables
-$table-cell-padding-y:        .5rem !default;
-$table-cell-padding-x:        .5rem !default;
+$table-cell-padding-y:        .75rem !default; // default : .5rem
+$table-cell-padding-x:        1rem !default; // default : .5rem
 $table-cell-padding-y-sm:     .25rem !default;
 $table-cell-padding-x-sm:     .25rem !default;
 
 $table-cell-vertical-align:   middle !default;
 
-$table-color:                 var(--#{$prefix}body-color) !default;
+$table-color:                 var(--#{$prefix}secondary-color) !default;
 $table-bg:                    transparent !default;
 $table-accent-bg:             transparent !default;
 
-$table-th-font-weight:        normal !default;
+$table-th-color:              var(--#{$prefix}body-color) !default; // custom claroline
+$table-th-font-weight:        $font-weight-semibold !default;
 
 $table-striped-color:         $table-color !default;
-$table-striped-bg-factor:     .05 !default;
+$table-striped-bg-factor:     .0375 !default; // default : .05
 $table-striped-bg:            rgba($black, $table-striped-bg-factor) !default;
 
 $table-active-color:          $table-color !default;
@@ -1652,15 +1653,15 @@ $figure-caption-color:              var(--#{$prefix}secondary-color) !default;
 // Breadcrumbs
 
 // scss-docs-start breadcrumb-variables
-$breadcrumb-font-size:              $font-size-sm !default;
-$breadcrumb-padding-y:              map-get($spacers, 2) !default;
-$breadcrumb-padding-x:              $spacer !default;
-$breadcrumb-item-padding-x:         .5rem !default;
+$breadcrumb-font-size:              $font-size-base !default;
+$breadcrumb-padding-y:              0 !default;
+$breadcrumb-padding-x:              0 !default;
+$breadcrumb-item-padding-x:         .375rem !default;
 $breadcrumb-margin-bottom:          0 !default;
 $breadcrumb-bg:                     null !default;
 $breadcrumb-divider-color:          var(--#{$prefix}secondary-color) !default;
 $breadcrumb-active-color:           var(--#{$prefix}secondary-color) !default;
-$breadcrumb-divider:                quote(">") !default;
+$breadcrumb-divider:                quote("/") !default;
 $breadcrumb-divider-flipped:        $breadcrumb-divider !default;
 $breadcrumb-border-radius:          null !default;
 // scss-docs-end breadcrumb-variables

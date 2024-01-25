@@ -22,23 +22,23 @@ const GroupList = props =>
       target: `${props.path}/groups`
     }]}
     subtitle={trans('groups', {}, 'community')}
-    primaryAction="add"
-    actions={[
+    /*primaryAction="add"*/
+    primaryAction={'desktop' === props.contextType ?
       {
         name: 'add',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
         label: trans('add_group', {}, 'actions'),
         target: `${props.path}/groups/new`,
-        displayed: 'desktop' === props.contextType && props.canEdit,
+        displayed: props.canEdit,
         primary: true
-      }, {
+      } : {
         name: 'add',
         type: MODAL_BUTTON,
         label: trans('register_groups'),
         icon: 'fa fa-fw fa-plus',
         primary: true,
-        displayed: 'workspace' === props.contextType && props.canRegister,
+        displayed: props.canRegister,
 
         // select groups to register
         modal: [MODAL_REGISTER, {
@@ -49,7 +49,7 @@ const GroupList = props =>
           mode: 'groups'
         }]
       }
-    ]}
+    }
   >
     <ContentSizing size="full">
       <BaseGroupList

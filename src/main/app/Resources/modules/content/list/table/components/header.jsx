@@ -39,9 +39,10 @@ const TableHeader = props => {
 
         {props.availableColumns
           .filter(column => -1 !== props.displayedColumns.indexOf(column.name))
-          .map(column => 1 < props.count && props.sorting && column.sortable ?
+          .map((column, index) => 1 < props.count && props.sorting && column.sortable ?
             <TableSortingCell
               key={column.name}
+              className={props.selection && 0 === index ? 'ps-0' : undefined}
               direction={(column.alias && column.alias === props.sorting.current.property) || column.name === props.sorting.current.property ? props.sorting.current.direction : 0}
               onSort={() => {
                 let direction = 1
@@ -59,7 +60,7 @@ const TableHeader = props => {
               {column.label}
             </TableSortingCell>
             :
-            <TableHeaderCell key={column.name}>
+            <TableHeaderCell key={column.name} className={props.selection && 0 === index ? 'ps-0' : undefined}>
               {column.label}
             </TableHeaderCell>
           )

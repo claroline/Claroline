@@ -18,8 +18,8 @@ const IpsTool = props =>
       target: `${props.path}/ips`
     }]}
     subtitle={trans('ips', {}, 'integration')}
-    primaryAction="add-ip"
-    actions={[
+    /*primaryAction="add-ip"*/
+    primaryAction={
       {
         name: 'add-ip',
         type: MODAL_BUTTON,
@@ -30,7 +30,7 @@ const IpsTool = props =>
           onSave: () => props.invalidateList()
         }]
       }
-    ]}
+    }
   >
     <Alert type="info" style={{marginTop: 20}}>
       {trans('ips_help', {}, 'security')}
