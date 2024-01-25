@@ -2,7 +2,7 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
-import {MODAL_REGISTER} from '#/main/community/actions/workspace/modals/register'
+import {MODAL_REGISTER} from '#/main/community/modals/register'
 
 /**
  * Registers selected users groups to some workspaces.

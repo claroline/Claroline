@@ -6,13 +6,13 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {MODAL_GROUPS} from '#/main/community/modals/groups'
 import {getPlatformRoles, getWorkspaceRoles} from '#/main/community/utils'
 
 import {GroupList as BaseGroupList} from '#/main/community/group/components/list'
 import {selectors} from '#/main/community/tools/community/group/store/selectors'
 import {GroupCard} from '#/main/community/group/components/card'
 import {ContentSizing} from '#/main/app/content/components/sizing'
+import {MODAL_REGISTER} from '#/main/community/modals/register'
 
 const GroupList = props =>
   <ToolPage
@@ -41,14 +41,12 @@ const GroupList = props =>
         displayed: 'workspace' === props.contextType && props.canRegister,
 
         // select groups to register
-        modal: [MODAL_GROUPS, {
+        modal: [MODAL_REGISTER, {
           title: trans('register_groups'),
           subtitle: trans('workspace_register_select_groups'),
-          selectAction: (selectedGroups) => ({
-            type: CALLBACK_BUTTON,
-            label: trans('register', {}, 'actions'),
-            callback: () => props.registerGroups(selectedGroups, props.contextData)
-          })
+          workspaces: [props.contextData],
+          onRegister: props.registerGroups,
+          mode: 'groups'
         }]
       }
     ]}
