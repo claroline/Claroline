@@ -45,23 +45,6 @@ actions.open = (username, reload = false) => (dispatch, getState) => {
   })
 }
 
-actions.registerUsers = (users, workspace)  => (dispatch) => dispatch({
-  [API_REQUEST]: {
-    url: ['apiv2_workspace_register'],
-    request: {
-      method: 'PATCH',
-      body: JSON.stringify({
-        workspaces: [workspace.id],
-        users: users.map(user => user.id)
-      })
-    },
-    success: () => {
-      dispatch(listActions.invalidateData(selectors.LIST_NAME))
-      dispatch(listActions.invalidateData(selectors.FORM_NAME + '.users'))
-    }
-  }
-})
-
 actions.unregisterUsers = (users, workspace) => ({
   [API_REQUEST]: {
     url: url(['apiv2_workspace_unregister_users', {id: workspace.id}]) + '?'+ users.map(user => 'ids[]='+user.id).join('&'),

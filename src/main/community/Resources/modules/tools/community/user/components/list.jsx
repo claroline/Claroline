@@ -5,15 +5,16 @@ import isEmpty from 'lodash/isEmpty'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
-import {Alert} from '#/main/app/alert/components/alert'
+import {Alert} from '#/main/app/components/alert'
 
 import {getPlatformRoles, getWorkspaceRoles} from '#/main/community/utils'
 import {UserList as BaseUserList} from '#/main/community/user/components/list'
-import {MODAL_USERS} from '#/main/community/modals/users'
 
 import {MODAL_USER_DISABLE_INACTIVE} from '#/main/community/tools/community/user/modals/disable-inactive'
 import {selectors} from '#/main/community/tools/community/user/store'
 import {ContentSizing} from '#/main/app/content/components/sizing'
+
+import {MODAL_REGISTER} from '#/main/community/modals/register'
 
 const UserList = props =>
   <ToolPage
@@ -34,14 +35,12 @@ const UserList = props =>
         displayed: 'workspace' === props.contextType && props.canRegister,
 
         // select users to register
-        modal: [MODAL_USERS, {
+        modal: [MODAL_REGISTER, {
           title: trans('register_users'),
           subtitle: trans('workspace_register_select_users'),
-          selectAction: (selectedUsers) => ({
-            type: CALLBACK_BUTTON,
-            label: trans('register', {}, 'actions'),
-            callback: () => props.registerUsers(selectedUsers, props.contextData)
-          })
+          workspaces: [props.contextData],
+          onRegister: props.registerUsers,
+          mode: 'users'
         }]
       }, {
         name: 'add',
@@ -63,7 +62,7 @@ const UserList = props =>
     ]}
   >
     {props.limitReached && props.canRegister &&
-      <Alert type="warning" style={{marginTop: 20}}>{trans('users_limit_reached')}</Alert>
+      <Alert type="warning" className="mt-3">{trans('users_limit_reached')}</Alert>
     }
 
     <ContentSizing size="full">

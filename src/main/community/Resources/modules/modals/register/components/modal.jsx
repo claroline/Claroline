@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {PropTypes as T}  from 'prop-types'
 import omit from 'lodash/omit'
+import isEmpty from 'lodash/isEmpty'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 
@@ -11,7 +12,7 @@ import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {Checkbox} from '#/main/app/input/components/checkbox'
 
-import {selectors} from '#/main/community/actions/workspace/modals/register/store'
+import {selectors} from '#/main/community/modals/register/store'
 import {UserList}  from '#/main/community/user/components/list'
 import {GroupList} from '#/main/community/group/components/list'
 import {MODAL_ROLES} from '#/main/community/modals/roles'
@@ -38,7 +39,7 @@ const RegisterModal = props => {
             users: props.selectedUsers.map(user => user.id)
           })
         },
-        success: () => props.onRegister(props.workspaces)
+        success: () => props.onRegister(props.workspaces, props.selectedUsers, props.selectedGroups)
       }
     })
   }
@@ -57,7 +58,7 @@ const RegisterModal = props => {
   return (
     <Modal
       icon="fa fa-fw fa-user-plus"
-      {...omit(props, 'selected', 'selectAction','selectedGroups', 'selectedUsers','resetGroups', 'resetUsers')}
+      {...omit(props, 'selected', 'selectAction', 'selectedGroups', 'selectedUsers','resetGroups', 'resetUsers', 'onRegister')}
       className="data-picker-modal"
       size="xl"
       onExited={() => {
@@ -65,25 +66,45 @@ const RegisterModal = props => {
         props.resetUsers()
       }}
     >
-      <Tabs defaultActiveKey="users">
-        <Tab eventKey="users" title={trans('users')}>
-          <UserList
-            name={selectors.STORE_NAME+'.users'}
-            url={['apiv2_user_list']}
-            primaryAction={undefined}
-            actions={undefined}
-          />
-        </Tab>
+      {isEmpty(props.mode) &&
+        <Tabs defaultActiveKey="users">
+          <Tab eventKey="users" title={trans('users')}>
+            <UserList
+              name={selectors.STORE_NAME+'.users'}
+              url={['apiv2_user_list']}
+              primaryAction={undefined}
+              actions={undefined}
+            />
+          </Tab>
 
-        <Tab eventKey="groups" title={trans('groups')}>
-          <GroupList
-            name={selectors.STORE_NAME+'.groups'}
-            url={['apiv2_group_list']}
-            primaryAction={undefined}
-            actions={undefined}
-          />
-        </Tab>
-      </Tabs>
+          <Tab eventKey="groups" title={trans('groups')}>
+            <GroupList
+              name={selectors.STORE_NAME+'.groups'}
+              url={['apiv2_group_list']}
+              primaryAction={undefined}
+              actions={undefined}
+            />
+          </Tab>
+        </Tabs>
+      }
+
+      {'users' === props.mode &&
+        <UserList
+          name={selectors.STORE_NAME+'.users'}
+          url={['apiv2_user_list']}
+          primaryAction={undefined}
+          actions={undefined}
+        />
+      }
+
+      {'groups' === props.mode &&
+        <GroupList
+          name={selectors.STORE_NAME+'.groups'}
+          url={['apiv2_group_list']}
+          primaryAction={undefined}
+          actions={undefined}
+        />
+      }
 
       <div className="modal-footer">
         <Checkbox
@@ -109,18 +130,16 @@ const RegisterModal = props => {
 }
 
 RegisterModal.propTypes = {
-  title: T.string,
+  title: T.string.isRequired,
+  subtitle: T.string,
   workspaces: T.array.isRequired,
   selectedUsers: T.array.isRequired,
   selectedGroups: T.array.isRequired,
   resetGroups: T.func.isRequired,
   resetUsers: T.func.isRequired,
   fadeModal: T.func.isRequired,
-  onRegister: T.func.isRequired
-}
-
-RegisterModal.defaultProps = {
-  title: trans('user-groups')
+  onRegister: T.func.isRequired,
+  mode: T.oneOf(['users', 'groups'])
 }
 
 export {

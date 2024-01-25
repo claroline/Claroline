@@ -6,6 +6,7 @@ import {selectors as communitySelectors} from '#/main/community/tools/community/
 
 import {UserList as UserListComponent} from '#/main/community/tools/community/user/components/list'
 import {actions, selectors} from '#/main/community/tools/community/user/store'
+import {actions as listActions} from '#/main/app/content/list/store'
 
 const UserList = connect(
   state => ({
@@ -20,8 +21,8 @@ const UserList = connect(
     unregisterUsers(users, workspace) {
       dispatch(actions.unregisterUsers(users, workspace))
     },
-    registerUsers(users, workspace) {
-      dispatch(actions.registerUsers(users, workspace))
+    registerUsers() {
+      dispatch(listActions.invalidateData(selectors.LIST_NAME))
     }
   })
 )(UserListComponent)

@@ -3,8 +3,8 @@ import {connect} from 'react-redux'
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {actions as listActions, select as listSelect} from '#/main/app/content/list/store'
 
-import {reducer, selectors} from '#/main/community/actions/workspace/modals/register/store'
-import {RegisterModal as RegisterModalComponent} from '#/main/community/actions/workspace/modals/register/components/modal'
+import {reducer, selectors} from '#/main/community/modals/register/store'
+import {RegisterModal as RegisterModalComponent} from '#/main/community/modals/register/components/modal'
 
 const RegisterModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
