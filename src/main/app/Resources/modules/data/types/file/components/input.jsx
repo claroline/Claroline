@@ -3,6 +3,8 @@ import {connect} from 'react-redux'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
+import {trans} from '#/main/app/intl'
+import {param} from '#/main/app/config'
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {actions} from '#/main/app/api/store'
@@ -57,6 +59,10 @@ class FileComponent extends Component {
           onChange={this.onFileSelect}
           disabled={this.props.disabled}
         />
+
+        {param('uploadMaxFilesize') &&
+          <div className="form-text">{trans('max_filesize', {size: param('uploadMaxFilesize')})}</div>
+        }
 
         {this.props.value &&
           <div className="file-thumbnails">
