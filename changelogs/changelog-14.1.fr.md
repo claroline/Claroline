@@ -12,7 +12,7 @@
 - Refonte de l'API : normalisation des url
     - Suppression du support des ID auto-increment :
     Les ids exposés par l'API dans la propriété `autoId` ne peuvent plus être utilisé pour appeler l'API. Il faut utiliser l'UUID (propriété id) ou les autres identifiants de l'objet (par exemple, le code d'un espace d'activités, l'email d'un utilisateur).
-    - Suppression du endpoint /exist pour tous les objets :
+    - Suppression du endpoint `/exist` pour tous les objets :
 14.0
 ```
 GET /apiv2/{entityName}/exist/{field}/{value}
