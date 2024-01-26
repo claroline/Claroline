@@ -74,11 +74,6 @@ const ExampleForm = (props) =>
               type: 'date-range',
               required: true
             }, {
-              name: 'file',
-              label: 'File upload',
-              type: 'file',
-              required: true
-            }, {
               name: 'boolean',
               label: 'This checkbox will display additional fields once checked.',
               type: 'boolean',
@@ -227,6 +222,28 @@ const ExampleForm = (props) =>
               name: 'color',
               label: 'Color',
               type: 'color',
+              required: true
+            }
+          ]
+        }, {
+          title: 'Files',
+          icon: 'fa fa-fw fa-file',
+          fields: [
+            {
+              name: 'file',
+              label: 'Simple file upload',
+              type: 'file',
+              required: true
+            }, {
+              name: 'files',
+              label: 'Multiple files upload',
+              type: 'file',
+              required: true,
+              options: {multiple: true}
+            }, {
+              name: 'image',
+              label: 'Image',
+              type: 'image',
               required: true
             }
           ]

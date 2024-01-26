@@ -80,6 +80,7 @@ class ClientSerializer
             ],
             'pricing' => $this->config->getParameter('pricing'),
             'plugins' => $this->pluginManager->getEnabled(),
+            'uploadMaxFilesize' => ini_get('upload_max_filesize'),
         ];
 
         $event = new GenericDataEvent();

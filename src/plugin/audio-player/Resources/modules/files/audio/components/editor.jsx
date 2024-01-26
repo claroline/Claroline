@@ -16,7 +16,7 @@ import {makeId} from '#/main/core/scaffolding/id'
 import {selectors as fileSelect} from '#/main/core/resources/file/store'
 import {selectors as editorSelect} from '#/main/core/resources/file/editor/store/selectors'
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
+import {Checkbox} from '#/main/app/input/components/checkbox'
 import {TextGroup}  from '#/main/core/layout/form/components/group/text-group'
 
 import {constants} from '#/plugin/audio-player/files/audio/constants'
