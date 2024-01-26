@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\EventRepository")
+ *
  * @ORM\Table(name="claro_cursusbundle_session_event")
  */
 class Event extends AbstractPlanned
@@ -29,6 +30,7 @@ class Event extends AbstractPlanned
      *     targetEntity="Claroline\CursusBundle\Entity\Session",
      *     inversedBy="events"
      * )
+     *
      * @ORM\JoinColumn(name="session_id", nullable=false, onDelete="CASCADE")
      *
      * @var Session
@@ -60,11 +62,19 @@ class Event extends AbstractPlanned
      * Template used to print the presence of a User.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
+     *
      * @ORM\JoinColumn(name="presence_template_id", nullable=true, onDelete="SET NULL")
      *
      * @var Template
      */
     private $presenceTemplate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
+     *
+     * @ORM\JoinColumn(name="invitation_template_id", nullable=true, onDelete="SET NULL")
+     */
+    private ?Template $invitationTemplate = null;
 
     public static function getType(): string
     {
@@ -116,8 +126,18 @@ class Event extends AbstractPlanned
         return $this->presenceTemplate;
     }
 
-    public function setPresenceTemplate(?Template $template = null)
+    public function setPresenceTemplate(Template $template = null)
     {
         $this->presenceTemplate = $template;
+    }
+
+    public function getInvitationTemplate(): ?Template
+    {
+        return $this->invitationTemplate;
+    }
+
+    public function setInvitationTemplate(Template $template = null)
+    {
+        $this->invitationTemplate = $template;
     }
 }

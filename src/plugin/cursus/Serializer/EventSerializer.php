@@ -111,6 +111,9 @@ class EventSerializer
                 'presenceTemplate' => $event->getPresenceTemplate() ?
                     $this->templateSerializer->serialize($event->getPresenceTemplate(), [Options::SERIALIZE_MINIMAL]) :
                     null,
+                'invitationTemplate' => $event->getInvitationTemplate() ?
+                    $this->templateSerializer->serialize($event->getInvitationTemplate(), [Options::SERIALIZE_MINIMAL]) :
+                    null,
             ]);
         }
 
@@ -137,14 +140,17 @@ class EventSerializer
             }
         }
 
-        if (isset($data['presenceTemplate'])) {
-            $template = null;
-            if (!empty($data['presenceTemplate']) && $data['presenceTemplate']['id']) {
-                $template = $this->templateRepo->findOneBy(['uuid' => $data['presenceTemplate']['id']]);
-            }
-
-            $event->setPresenceTemplate($template);
+        $template = null;
+        if (!empty($data['presenceTemplate']) && $data['presenceTemplate']['id']) {
+            $template = $this->templateRepo->findOneBy(['uuid' => $data['presenceTemplate']['id']]);
         }
+        $event->setPresenceTemplate($template);
+
+        $template = null;
+        if (!empty($data['invitationTemplate']) && $data['invitationTemplate']['id']) {
+            $template = $this->templateRepo->findOneBy(['uuid' => $data['invitationTemplate']['id']]);
+        }
+        $event->setInvitationTemplate($template);
 
         return $event;
     }

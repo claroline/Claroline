@@ -46,12 +46,12 @@ class EventManager
         $this->eventGroupRepo = $om->getRepository(EventGroup::class);
     }
 
-    public function getBySessionAndUser(Session $session, User $user): ?EventUser
+    public function getBySessionAndUser(Session $session, User $user): ?array
     {
         return $this->eventUserRepo->findBySessionAndUser($session, $user);
     }
 
-    public function getBySessionAndGroup(Session $session, Group $group): ?EventGroup
+    public function getBySessionAndGroup(Session $session, Group $group): ?array
     {
         return $this->eventGroupRepo->findBySessionAndUser($session, $group);
     }
@@ -261,8 +261,13 @@ class EventManager
                 'username' => $user->getUsername(),
             ]);
 
-            $title = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale, 'title');
-            $content = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale);
+            if ($event->getInvitationTemplate()) {
+                $title = $this->templateManager->getTemplateContent($event->getInvitationTemplate(), $placeholders, $locale, 'title');
+                $content = $this->templateManager->getTemplateContent($event->getInvitationTemplate(), $placeholders, $locale);
+            } else {
+                $title = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale, 'title');
+                $content = $this->templateManager->getTemplate('training_event_invitation', $placeholders, $locale);
+            }
 
             $this->eventDispatcher->dispatch(new SendMessageEvent(
                 $content,
