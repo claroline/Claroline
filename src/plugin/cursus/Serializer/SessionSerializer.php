@@ -2,6 +2,7 @@
 
 namespace Claroline\CursusBundle\Serializer;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -9,10 +10,12 @@ use Claroline\CommunityBundle\Serializer\RoleSerializer;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\API\Serializer\Location\LocationSerializer;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
+use Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Template\Template;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
@@ -22,6 +25,7 @@ use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Repository\CourseRepository;
 use Claroline\CursusBundle\Repository\SessionRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SessionSerializer
@@ -36,9 +40,11 @@ class SessionSerializer
     private WorkspaceSerializer $workspaceSerializer;
     private ResourceNodeSerializer $resourceSerializer;
     private CourseSerializer $courseSerializer;
+    private TemplateSerializer $templateSerializer;
 
     private CourseRepository $courseRepo;
     private SessionRepository $sessionRepo;
+    private ObjectRepository $templateRepo;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -48,7 +54,8 @@ class SessionSerializer
         LocationSerializer $locationSerializer,
         WorkspaceSerializer $workspaceSerializer,
         ResourceNodeSerializer $resourceSerializer,
-        CourseSerializer $courseSerializer
+        CourseSerializer $courseSerializer,
+        TemplateSerializer $templateSerializer
     ) {
         $this->authorization = $authorization;
         $this->om = $om;
@@ -58,9 +65,11 @@ class SessionSerializer
         $this->workspaceSerializer = $workspaceSerializer;
         $this->resourceSerializer = $resourceSerializer;
         $this->courseSerializer = $courseSerializer;
+        $this->templateSerializer = $templateSerializer;
 
         $this->courseRepo = $om->getRepository(Course::class);
         $this->sessionRepo = $om->getRepository(Session::class);
+        $this->templateRepo = $om->getRepository(Template::class);
     }
 
     public function getClass(): string
@@ -160,6 +169,9 @@ class SessionSerializer
             'resources' => array_map(function (ResourceNode $resource) {
                 return $this->resourceSerializer->serialize($resource, [SerializerInterface::SERIALIZE_MINIMAL]);
             }, $session->getResources()->toArray()),
+            'invitationTemplate' => $session->getInvitationTemplate() ?
+                $this->templateSerializer->serialize($session->getInvitationTemplate(), [Options::SERIALIZE_MINIMAL]) :
+                null,
         ];
     }
 
@@ -264,6 +276,12 @@ class SessionSerializer
 
             $session->setResources($resources);
         }
+
+        $template = null;
+        if (!empty($data['invitationTemplate']) && $data['invitationTemplate']['id']) {
+            $template = $this->templateRepo->findOneBy(['uuid' => $data['invitationTemplate']['id']]);
+        }
+        $session->setInvitationTemplate($template);
 
         return $session;
     }

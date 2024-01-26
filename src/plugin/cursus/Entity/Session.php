@@ -14,22 +14,25 @@ namespace Claroline\CursusBundle\Entity;
 use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Template\Template;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\SessionRepository")
+ *
  * @ORM\Table(name="claro_cursusbundle_course_session")
  */
 class Session extends AbstractTraining implements IdentifiableInterface
 {
-    const REGISTRATION_AUTO = 0;
-    const REGISTRATION_MANUAL = 1;
-    const REGISTRATION_PUBLIC = 2;
+    public const REGISTRATION_AUTO = 0;
+    public const REGISTRATION_MANUAL = 1;
+    public const REGISTRATION_PUBLIC = 2;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Course", inversedBy="sessions")
+     *
      * @ORM\JoinColumn(name="course_id", nullable=false, onDelete="CASCADE")
      */
     private ?Course $course = null;
@@ -51,6 +54,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode", orphanRemoval=true)
+     *
      * @ORM\JoinTable(name="claro_cursusbundle_course_session_resources",
      *      joinColumns={@ORM\JoinColumn(name="resource_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="session_id", referencedColumnName="id", unique=true)}
@@ -62,6 +66,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location\Location")
+     *
      * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
      */
     private ?Location $location = null;
@@ -77,6 +82,13 @@ class Session extends AbstractTraining implements IdentifiableInterface
      * @ORM\Column(name="event_registration_type", type="integer", nullable=false, options={"default" = 0})
      */
     private int $eventRegistrationType = self::REGISTRATION_AUTO;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
+     *
+     * @ORM\JoinColumn(name="invitation_template_id", nullable=true, onDelete="SET NULL")
+     */
+    private ?Template $invitationTemplate = null;
 
     public function __construct()
     {
@@ -116,7 +128,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
         return $this->startDate;
     }
 
-    public function setStartDate(?\DateTimeInterface $startDate = null): void
+    public function setStartDate(\DateTimeInterface $startDate = null): void
     {
         $this->startDate = $startDate;
     }
@@ -126,7 +138,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
         return $this->endDate;
     }
 
-    public function setEndDate(?\DateTimeInterface $endDate = null): void
+    public function setEndDate(\DateTimeInterface $endDate = null): void
     {
         $this->endDate = $endDate;
     }
@@ -167,7 +179,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
         return $this->location;
     }
 
-    public function setLocation(?Location $location = null): void
+    public function setLocation(Location $location = null): void
     {
         $this->location = $location;
     }
@@ -188,5 +200,15 @@ class Session extends AbstractTraining implements IdentifiableInterface
     public function setEventRegistrationType(int $eventRegistrationType): void
     {
         $this->eventRegistrationType = $eventRegistrationType;
+    }
+
+    public function getInvitationTemplate(): ?Template
+    {
+        return $this->invitationTemplate;
+    }
+
+    public function setInvitationTemplate(Template $template = null)
+    {
+        $this->invitationTemplate = $template;
     }
 }

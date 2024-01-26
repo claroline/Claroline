@@ -155,7 +155,24 @@ const EventForm = (props) =>
           }, {
             name: 'registration.mail',
             type: 'boolean',
-            label: trans('registration_send_mail', {}, 'cursus')
+            label: trans('registration_send_mail', {}, 'cursus'),
+            linked: [
+              {
+                name: 'invitationTemplate',
+                type: 'template',
+                label: trans('training_event_invitation', {}, 'template'),
+                displayed: (event) => event.registration ? event.registration.mail : false,
+                options: {
+                  picker: {
+                    filters: [{
+                      property: 'typeName',
+                      value: 'training_event_invitation',
+                      locked: true
+                    }]
+                  }
+                }
+              }
+            ]
           }
         ]
       }, {

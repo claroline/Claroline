@@ -182,6 +182,20 @@ const SessionForm = (props) =>
                 label: trans('registration_user_validation', {}, 'cursus'),
                 help: trans('registration_user_validation_help', {}, 'cursus'),
                 displayed: (session) => get(session, 'registration.mail')
+              }, {
+                name: 'invitationTemplate',
+                type: 'template',
+                label: trans('training_session_invitation', {}, 'template'),
+                displayed: (event) => event.registration ? event.registration.mail : false,
+                options: {
+                  picker: {
+                    filters: [{
+                      property: 'typeName',
+                      value: 'training_session_invitation',
+                      locked: true
+                    }]
+                  }
+                }
               }
             ]
           }, {

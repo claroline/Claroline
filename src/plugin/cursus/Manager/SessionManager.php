@@ -434,8 +434,13 @@ class SessionManager
                 'username' => $user->getUsername(),
             ]);
 
-            $title = $this->templateManager->getTemplate($templateName, $placeholders, $locale, 'title');
-            $content = $this->templateManager->getTemplate($templateName, $placeholders, $locale);
+            if ($session->getInvitationTemplate()) {
+                $title = $this->templateManager->getTemplateContent($session->getInvitationTemplate(), $placeholders, $locale, 'title');
+                $content = $this->templateManager->getTemplateContent($session->getInvitationTemplate(), $placeholders, $locale);
+            } else {
+                $title = $this->templateManager->getTemplate($templateName, $placeholders, $locale, 'title');
+                $content = $this->templateManager->getTemplate($templateName, $placeholders, $locale);
+            }
 
             $this->eventDispatcher->dispatch(new SendMessageEvent(
                 $content,
