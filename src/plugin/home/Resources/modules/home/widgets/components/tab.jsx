@@ -28,17 +28,13 @@ const WidgetsTab = props => {
         />
       }
 
-      {0 !== visibleWidgets.length &&
-        <div className="widgets-grid" style={{marginTop: 20}}>
-          {visibleWidgets.map((widget, index) =>
-            <Widget
-              key={index}
-              widget={widget}
-              currentContext={props.currentContext}
-            />
-          )}
-        </div>
-      }
+      {0 !== visibleWidgets.length && visibleWidgets.map((widget, index) =>
+        <Widget
+          key={index}
+          widget={widget}
+          currentContext={props.currentContext}
+        />
+      )}
     </HomePage>
   )
 }

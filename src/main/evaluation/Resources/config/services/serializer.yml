@@ -1,19 +1,19 @@
 services:
-    Claroline\EvaluationBundle\Serializer\WorkspaceEvaluationSerializer:
+    _defaults:
         tags: [ claroline.serializer ]
+
+    Claroline\EvaluationBundle\Serializer\WorkspaceEvaluationSerializer:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
     Claroline\EvaluationBundle\Serializer\ResourceUserEvaluationSerializer:
-        tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Claroline\EvaluationBundle\Serializer\ResourceEvaluationSerializer:
-        tags: [ claroline.serializer ]
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'

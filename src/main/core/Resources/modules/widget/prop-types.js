@@ -54,18 +54,24 @@ const WidgetContainer = {
   propTypes: {
     id: T.string.isRequired,
     name: T.string,
+    description: T.string,
     visible : T.bool.isRequired,
     display: T.shape({
       layout: T.arrayOf(
         T.number // the ratio for each col
       ).isRequired,
       alignName:T.oneOf(['left', 'center', 'right']),
-      color: T.string,
+      titleColor: T.string,
       backgroundType: T.oneOf(['none', 'color', 'image']),
       background: T.oneOfType([
         T.string,
         T.object
-      ]) // either the color or the image (object)
+      ]), // either the color or the image (object)
+      boxShadow: T.string,
+      textColor: T.string,
+      maxContentWidth: T.string,
+      titleLevel: T.oneOf([1, 2, 3, 4, 5, 6]),
+      borderRadius: T.string
     }),
     contents: T.arrayOf(T.shape(
       WidgetInstance.propTypes
@@ -77,7 +83,8 @@ const WidgetContainer = {
       layout: [1],
       color: null,
       backgroundType: 'none',
-      background: null
+      background: null,
+      titleLevel: 2
     },
     contents: []
   }

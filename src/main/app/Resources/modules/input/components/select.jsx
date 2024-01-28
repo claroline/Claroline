@@ -19,6 +19,7 @@ const getSelectedValues = (e) => {
 const Select = props =>
   <select
     id={props.id}
+    style={props.style}
     autoComplete={props.autoComplete}
     className={classes('form-select', props.className, {
       [`form-select-${props.size}`]: !!props.size})
@@ -51,12 +52,14 @@ const Select = props =>
     )}
   </select>
 
+// this shouldn't implement DataInputTYpes
 implementPropTypes(Select, DataInputTypes, {
   choices: T.object.isRequired,
   disabledChoices: T.arrayOf(T.string),
   value: T.oneOfType([T.string, T.number, T.array]),
   multiple: T.bool,
-  noEmpty: T.bool
+  noEmpty: T.bool,
+  style: T.object
 }, {
   //value: '',
   disabledChoices: [],

@@ -5,7 +5,6 @@ namespace Claroline\CoreBundle\API\Serializer\Widget;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\API\Finder\Widget\WidgetInstanceFinder;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainerConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
@@ -14,31 +13,18 @@ class WidgetContainerSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var WidgetInstanceFinder */
-    private $widgetInstanceFinder;
-
-    /** @var WidgetInstanceSerializer */
-    private $widgetInstanceSerializer;
-
     public function __construct(
-        ObjectManager $om,
-        WidgetInstanceFinder $widgetInstanceFinder,
-        WidgetInstanceSerializer $widgetInstanceSerializer
+        private readonly ObjectManager $om,
+        private readonly WidgetInstanceSerializer $widgetInstanceSerializer
     ) {
-        $this->om = $om;
-        $this->widgetInstanceFinder = $widgetInstanceFinder;
-        $this->widgetInstanceSerializer = $widgetInstanceSerializer;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'widget_container';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return WidgetContainer::class;
     }
@@ -65,21 +51,28 @@ class WidgetContainerSerializer
         return [
             'id' => $widgetContainer->getUuid(),
             'name' => $widgetContainerConfig->getName(),
+            'title' => $widgetContainerConfig->getName(),
+            'description' => $widgetContainerConfig->getDescription(),
             'visible' => $widgetContainerConfig->isVisible(),
             'display' => $this->serializeDisplay($widgetContainerConfig),
             'contents' => $contents,
         ];
     }
 
-    public function serializeDisplay(WidgetContainerConfig $widgetContainerConfig)
+    public function serializeDisplay(WidgetContainerConfig $widgetContainerConfig): array
     {
         return [
             'layout' => $widgetContainerConfig->getLayout(),
             'alignName' => $widgetContainerConfig->getAlignName(),
-            'color' => $widgetContainerConfig->getColor(),
+            'titleColor' => $widgetContainerConfig->getTitleColor(),
             'borderColor' => $widgetContainerConfig->getBorderColor(),
-            'backgroundType' => $widgetContainerConfig->getBackgroundType(),
-            'background' => $widgetContainerConfig->getBackground(),
+            'backgroundUrl' => $widgetContainerConfig->getBackgroundUrl(),
+            'backgroundColor' => $widgetContainerConfig->getBackgroundColor(),
+            'boxShadow' => $widgetContainerConfig->getBoxShadow(),
+            'textColor' => $widgetContainerConfig->getTextColor(),
+            'maxContentWidth' => $widgetContainerConfig->getMaxContentWidth(),
+            'minHeight' => $widgetContainerConfig->getMinHeight(),
+            'titleLevel' => $widgetContainerConfig->getTitleLevel(),
         ];
     }
 
@@ -99,14 +92,21 @@ class WidgetContainerSerializer
             $widgetContainerConfig->setWidgetContainer($widgetContainer);
         }
 
-        $this->sipe('name', 'setName', $data, $widgetContainerConfig);
+        //$this->sipe('name', 'setName', $data, $widgetContainerConfig);
+        $this->sipe('title', 'setName', $data, $widgetContainerConfig);
+        $this->sipe('description', 'setDescription', $data, $widgetContainerConfig);
         $this->sipe('visible', 'setVisible', $data, $widgetContainerConfig);
         $this->sipe('display.layout', 'setLayout', $data, $widgetContainerConfig);
         $this->sipe('display.alignName', 'setAlignName', $data, $widgetContainerConfig);
-        $this->sipe('display.color', 'setColor', $data, $widgetContainerConfig);
+        $this->sipe('display.titleColor', 'setTitleColor', $data, $widgetContainerConfig);
         $this->sipe('display.borderColor', 'setBorderColor', $data, $widgetContainerConfig);
-        $this->sipe('display.backgroundType', 'setBackgroundType', $data, $widgetContainerConfig);
-        $this->sipe('display.background', 'setBackground', $data, $widgetContainerConfig);
+        $this->sipe('display.backgroundColor', 'setBackgroundColor', $data, $widgetContainerConfig);
+        $this->sipe('display.backgroundUrl', 'setBackgroundUrl', $data, $widgetContainerConfig);
+        $this->sipe('display.boxShadow', 'setBoxShadow', $data, $widgetContainerConfig);
+        $this->sipe('display.textColor', 'setTextColor', $data, $widgetContainerConfig);
+        $this->sipe('display.maxContentWidth', 'setMaxContentWidth', $data, $widgetContainerConfig);
+        $this->sipe('display.minHeight', 'setMinHeight', $data, $widgetContainerConfig);
+        $this->sipe('display.titleLevel', 'setTitleLevel', $data, $widgetContainerConfig);
 
         if (isset($data['contents'])) {
             /** @var WidgetInstance[] $currentInstances */

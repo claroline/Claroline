@@ -39,10 +39,6 @@ input[type=reset] {
     @include button-text-variant($body-color);
 }
 
-.btn-text-menu {
-
-}
-
 .btn-text-subtitles {
     @include button-text-variant($white, $white, $white);
     @include text-movie-subtitles();

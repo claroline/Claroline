@@ -592,10 +592,8 @@
     "tags": "Tags",
     "technical": "Technical",
     "text": "Text",
-    "text_left_align": "Align left",
     "text_length": "Length of the text",
     "text_long": "Long text",
-    "text_right_align": "Align right",
     "textarea_rows": "Number of rows",
     "theme": "Theme",
     "third_party_authentication": "Third party authentication (CAS, LDAP, Office 365, Facebook etc.)",
@@ -1076,5 +1074,8 @@
     "after_today": "After today",
     "confirmed": "Confirmed",
     "validated": "Validated",
-    "other": "Other"
+    "other": "Other",
+    "align_center": "Center",
+    "align_left": "Align left",
+    "align_right": "Align right"
 }

@@ -32,7 +32,6 @@ class ColorChart extends Component {
     }
   }
 
-
   onInputChange(e) {
     this.props.onChange(e.target.value)
   }

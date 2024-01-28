@@ -1,0 +1,62 @@
+
+.quick-editor {
+  .offcanvas-body {
+    padding: 0 !important;
+  }
+
+  // reduce the standard size in forms to save some space
+  .form-label {
+    font-size: $font-size-sm;
+  }
+
+  .form-group {
+    margin-bottom: map-get($spacers, 2) !important;
+  }
+}
+
+.quick-editor-nav {
+  padding: $offcanvas-padding-y*.5 $offcanvas-padding-x;
+  border-top: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color-translucent);
+}
+
+.quick-editor-nav-item {
+  //font-size: 40px;
+  padding: map-get($spacers, 2);
+  @include border-radius($border-radius-sm);
+  background: var(--#{$prefix}tertiary-bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  .action-icon {
+    width: 30px;
+    height: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &.fa {
+      font-size: 1.25rem;
+    }
+  }
+
+  &.active {
+    color: var(--#{$prefix}primary-text-emphasis);
+    background: var(--#{$prefix}primary-bg-subtle);
+  }
+}
+
+.quick-editor-section {
+  padding: $offcanvas-padding-y $offcanvas-padding-x;
+  width: 100%;
+
+  border-top: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color-translucent);
+}
+
+.quick-editor-title {
+  color: var(--#{$prefix}secondary-color);
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+  font-weight: $font-weight-semibold;
+}

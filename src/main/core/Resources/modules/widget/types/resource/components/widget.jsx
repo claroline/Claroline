@@ -11,7 +11,7 @@ const ResourceWidget = props => {
   if (props.resourceNode) {
     return (
       <ResourceEmbedded
-        className="widget-resource"
+        className="widget-resource row"
         resourceNode={props.resourceNode}
         showHeader={props.showResourceHeader}
       />

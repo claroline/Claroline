@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Entity\Widget;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Description;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,11 +12,14 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity()
  * @ORM\Table(name="claro_widget_container_config")
+ *
+ * @todo merge with WidgetContainer entity.
  */
 class WidgetContainerConfig
 {
     use Id;
     use Uuid;
+    use Description;
 
     /**
      * The name of the widget.
@@ -38,7 +42,7 @@ class WidgetContainerConfig
     /**
      * @ORM\Column(type="boolean", name="is_visible")
      */
-    protected $visible = true;
+    private $visible = true;
 
     /**
      * The display layout of the container.
@@ -56,13 +60,13 @@ class WidgetContainerConfig
     private $layout = [];
 
     /**
-     * The color of the text inside the widget.
+     * The color of the text inside the widget (this should be consumed by the widget content in some cases).
      *
      * @ORM\Column(nullable=true)
      *
      * @var string
      */
-    private $color = null;
+    private $titleColor = null;
 
     /**
      * The color of the border of the widget.
@@ -74,22 +78,57 @@ class WidgetContainerConfig
     private $borderColor = null;
 
     /**
-     * The type of the background (none, color, image).
-     *
-     * @ORM\Column()
+     * @ORM\Column(nullable=true)
      *
      * @var string
      */
-    private $backgroundType = 'none';
+    private $backgroundColor = null;
 
     /**
-     * The background data (either the color or the image url).
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $backgroundUrl = null;
+
+    /**
+     * The box shadow (expects a CSS value).
      *
      * @ORM\Column(nullable=true)
      *
      * @var string
      */
-    private $background = null;
+    private $boxShadow = null;
+
+    /**
+     * The content text color (this should be consumed by the widget content in some cases).
+     *
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $textColor = null;
+
+    /**
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $maxContentWidth = null;
+
+    /**
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $minHeight = null;
+
+    /**
+     * @ORM\Column(type="smallint")
+     *
+     * @var int
+     */
+    private $titleLevel = 2;
 
     /**
      * The position of the instance inside its container.
@@ -110,11 +149,8 @@ class WidgetContainerConfig
      *
      * @var WidgetContainer
      */
-    protected $widgetContainer;
+    private $widgetContainer;
 
-    /**
-     * WidgetContainer constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -175,84 +211,94 @@ class WidgetContainerConfig
         $this->layout = $layout;
     }
 
-    /**
-     * Get color.
-     *
-     * @return string
-     */
-    public function getColor()
+    public function getTitleColor(): ?string
     {
-        return $this->color;
+        return $this->titleColor;
     }
 
-    /**
-     * Set color.
-     *
-     * @param string $color
-     */
-    public function setColor($color)
+    public function setTitleColor(?string $titleColor)
     {
-        $this->color = $color;
+        $this->titleColor = $titleColor;
     }
 
-    /**
-     * Get border color.
-     *
-     * @return string
-     */
-    public function getBorderColor()
+    public function getBorderColor(): ?string
     {
         return $this->borderColor;
     }
 
-    /**
-     * Set border color.
-     *
-     * @param string $borderColor
-     */
-    public function setBorderColor($borderColor)
+    public function setBorderColor(?string $borderColor)
     {
         $this->borderColor = $borderColor;
     }
 
-    /**
-     * Get background type.
-     *
-     * @return string
-     */
-    public function getBackgroundType()
+    public function getBackgroundColor(): ?string
     {
-        return $this->backgroundType;
+        return $this->backgroundColor;
     }
 
-    /**
-     * Set background type.
-     *
-     * @param string $backgroundType
-     */
-    public function setBackgroundType($backgroundType)
+    public function setBackgroundColor(?string $backgroundColor)
     {
-        $this->backgroundType = $backgroundType;
+        $this->backgroundColor = $backgroundColor;
     }
 
-    /**
-     * Get background.
-     *
-     * @return string
-     */
-    public function getBackground()
+    public function getBackgroundUrl(): ?string
     {
-        return $this->background;
+        return $this->backgroundUrl;
     }
 
-    /**
-     * Set background.
-     *
-     * @param string $background
-     */
-    public function setBackground($background)
+    public function setBackgroundUrl(?string $backgroundUrl)
     {
-        $this->background = $background;
+        $this->backgroundUrl = $backgroundUrl;
+    }
+
+    public function getBoxShadow(): ?string
+    {
+        return $this->boxShadow;
+    }
+
+    public function setBoxShadow(?string $bowShadow): void
+    {
+        $this->boxShadow = $bowShadow;
+    }
+
+    public function getTextColor(): ?string
+    {
+        return $this->textColor;
+    }
+
+    public function setTextColor(?string $textColor): void
+    {
+        $this->textColor = $textColor;
+    }
+
+    public function getMaxContentWidth(): ?string
+    {
+        return $this->maxContentWidth;
+    }
+
+    public function setMaxContentWidth(?string $maxContentWidth): void
+    {
+        $this->maxContentWidth = $maxContentWidth;
+    }
+
+    public function getMinHeight(): ?string
+    {
+        return $this->minHeight;
+    }
+
+    public function setMinHeight(?string $minHeight): void
+    {
+        $this->minHeight = $minHeight;
+    }
+
+    public function getTitleLevel(): ?int
+    {
+        return $this->titleLevel;
+    }
+
+    public function setTitleLevel(int $titleLevel): void
+    {
+        $this->titleLevel = $titleLevel;
     }
 
     /**

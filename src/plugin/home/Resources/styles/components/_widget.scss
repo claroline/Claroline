@@ -2,30 +2,83 @@
  * Widgets barrel.
  */
 
-.widget-icon {
+/*.widget-icon {
     fill: inherit !important;
     stroke: inherit !important;
+}*/
+
+.widget-container {
+    //text-align: right;
 }
 
 .widget-container {
-    text-align: right;
+    background-size: cover !important;
 }
 
+.widget-title {
+    padding: $card-title-spacer-y $card-spacer-x;
+    margin: 0 auto; // used to center the title when a max width is set for the content
+}
+
+.widget-body {
+    z-index: 1;
+    padding: $card-spacer-y $card-spacer-x;
+    margin: 0 auto; // used to center the title when a max width is set for the content
+}
+
+.data-form .widget-container {
+    position: relative;
+    .widget-toolbar {
+        display: none;
+        margin: 4px;
+
+        .btn {
+            &:first-child {
+                border-top-left-radius: 0 !important;
+                border-bottom-left-radius: $border-radius !important;
+            }
+            &:last-child {
+                border-top-right-radius: 0 !important;
+                border-bottom-right-radius: 0 !important;
+            }
+        }
+    }
+
+    cursor: hand;
+
+    &.selected,
+    &:hover {
+        .widget-toolbar {
+            display: block;
+        }
+
+        &:before {
+            z-index: 0;
+            content: " ";
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            border: 4px solid transparent;
+        }
+    }
+
+    &:hover:before {
+        border-color: $focus-ring-color;
+    }
+    &.selected:before {
+        border-color: $primary;
+    }
+}
+
+/*
 .widget {
-    text-align: left;
-    margin-bottom: 20px;
+    //text-align: left;
+    //margin-bottom: 20px;
     background-size: cover !important;
-    border: 1px solid transparent;
-    border-radius: $card-border-radius;
-
-    .widget-title {
-        padding: $card-title-spacer-y $card-spacer-x;
-        margin: 0;
-    }
-
-    .widget-body {
-        padding: $card-spacer-y $card-spacer-x;
-    }
+    //border: 1px solid transparent;
+    //border-radius: $card-border-radius;
 }
 
 .widget-col-configure {
@@ -38,6 +91,34 @@ button.widget-insert-content {
     border-radius: 6px;
     border-style: dashed;
     background-color: #f0f0f0 !important;
+}*/
+
+.widget-toolbar {
+    /*padding: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    background: $body-bg;
+    border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color-translucent);
+
+    > .fa {
+        font-size: $font-size-lg;
+        margin-right: $grid-gutter-width*.5;
+        margin-left: $grid-gutter-width*.5;
+    }
+
+    .widget-menu-actions {
+        margin-left: auto;
+        //margin-left: 5px;
+    }
+
+    .btn {
+        border-radius: 0;
+        // to remove widget-toolbar border
+        margin-top: -1px;
+        margin-bottom: -1px;
+    }*/
 }
 
 .widget-layout-preview {

@@ -1,15 +1,13 @@
 /**
  * Widget Creation modal.
  *
- * The creation is split into two modals :
- *   - A first one, where the user select the layout of the widget (aka number of columns)
- *   - A second one, where the user can configure the widget
+ * The user can select the layout of the widget (aka number of columns)
  */
 
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {WidgetCreationModal} from '#/main/core/widget/editor/modals/creation/containers/modal'
+import {WidgetCreationModal} from '#/main/core/widget/editor/modals/creation/components/modal'
 
 const MODAL_WIDGET_CREATION = 'MODAL_WIDGET_CREATION'
 

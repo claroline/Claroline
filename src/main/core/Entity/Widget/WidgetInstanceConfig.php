@@ -69,6 +69,8 @@ class WidgetInstanceConfig
 
     /**
      * @ORM\Column(type="boolean", name="is_locked")
+     *
+     * @deprecated
      */
     private $locked = false;
 
@@ -145,11 +147,17 @@ class WidgetInstanceConfig
         $this->visible = $visible;
     }
 
+    /**
+     * @deprecated
+     */
     public function isLocked()
     {
         return $this->locked;
     }
 
+    /**
+     * @deprecated
+     */
     public function setLocked($locked)
     {
         $this->locked = $locked;

@@ -47,7 +47,7 @@ class WidgetContent extends Component {
         const WidgetApp = new module.App()
 
         const WidgetAppComponent = () =>
-          <div className="widget-content">
+          <article className="widget-content">
             {WidgetApp.styles && 0 !== WidgetApp.styles.length &&
               <Helmet>
                 {WidgetApp.styles.map(styleName =>
@@ -55,8 +55,10 @@ class WidgetContent extends Component {
                 )}
               </Helmet>
             }
-            {createElement(WidgetApp.component)}
-          </div>
+            {createElement(WidgetApp.component, {
+              display: this.props.display
+            })}
+          </article>
 
         WidgetAppComponent.displayName = `WidgetApp(${this.props.instance.type})`
 
@@ -85,6 +87,7 @@ WidgetContent.propTypes = {
   instance: T.shape(
     WidgetInstanceTypes.propTypes
   ).isRequired,
+  display: T.object,
 
   // from store (to build the embedded store)
   currentUser: T.object,

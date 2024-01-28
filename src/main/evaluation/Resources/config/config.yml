@@ -10,6 +10,12 @@ plugin:
           decoder: administrate
           scope: [ object ]
 
+    widgets:
+        - name: progression
+          class: Claroline\EvaluationBundle\Entity\Widget\Type\ProgressionWidget
+          context: [ workspace ]
+          tags: [ evaluation ]
+
     data_sources:
         - name: resource_attempts
           type: list
