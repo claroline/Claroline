@@ -17,7 +17,7 @@ const HeadingWrapper = props  =>
         'h-title',
         props.className,
         props.displayLevel && `h${props.displayLevel}`,
-        !props.displayed && 'sr-only',
+        !props.displayed && 'visually-hidden',
         props.align && `text-${props.align}`
       )
     }
