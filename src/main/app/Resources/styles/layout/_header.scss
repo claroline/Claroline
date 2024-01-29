@@ -75,6 +75,7 @@
     font-size: $top-bar-brand-font-size;
     font-weight: $top-bar-brand-font-weight;
     color: $top-bar-brand-color;
+    white-space: nowrap;
 
     > small {
         display: block;

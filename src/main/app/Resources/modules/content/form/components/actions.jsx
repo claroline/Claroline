@@ -20,7 +20,7 @@ const FormActions = props => {
 
   return (
     <div className={classes('sticky-bottom ms-auto mt-auto mb-3 btn-toolbar form-toolbar gap-1', props.className)}>
-      {!isEmpty(props.errors) &&
+      {props.errors &&
         <span className="badge position-absolute top-0 start-0 translate-middle p-0">
           <FormStatus className="fs-4" validating={props.validating} id="form-errors-tip" tooltip="left" />
         </span>
@@ -57,12 +57,14 @@ FormActions.propTypes = {
   errors: T.bool,
   validating: T.bool,
   pendingChanges: T.bool,
-  save: T.shape(
-    ActionTypes.propTypes
-  ).isRequired,
-  cancel: T.shape(
-    ActionTypes.propTypes
-  )
+  save: T.shape({
+    ...ActionTypes.propTypes,
+    label: T.string
+  }).isRequired,
+  cancel: T.shape({
+    ...ActionTypes.propTypes,
+    label: T.string
+  })
 }
 
 FormActions.defaultProps = {

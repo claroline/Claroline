@@ -4,7 +4,6 @@ import invariant from 'invariant'
 import get from 'lodash/get'
 import isEqualWith from 'lodash/isEqualWith'
 import isNil from 'lodash/isNil'
-import set from 'lodash/set'
 
 import {url} from '#/main/app/api'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -20,114 +19,21 @@ const FormData = connect(
     invariant(undefined !== formState, `Try to connect form on undefined store '${ownProps.name}'.`)
 
     let data = selectors.data(formState)
-    let errors = selectors.errors(formState)
     if (ownProps.dataPart) {
       // just select what is related to the managed data part
       data = get(data, ownProps.dataPart)
-      errors = get(errors, ownProps.dataPart)
     }
 
     return {
-      id: ownProps.id || toKey(ownProps.name),
-      new: selectors.isNew(formState),
       mode: selectors.mode(formState),
-      data: data,
-      errors: errors,
-      pendingChanges: selectors.pendingChanges(formState),
-      validating: selectors.validating(formState)
+      data: data
     }
   },
   (dispatch, ownProps) => ({
     setMode(mode) {
       dispatch(actions.setMode(ownProps.name, mode))
-    },
-
-    setErrors(errors) {
-      if (ownProps.dataPart) {
-        errors = set({}, ownProps.dataPart, errors)
-      }
-
-      dispatch(actions.setErrors(ownProps.name, errors))
-    },
-
-    updateProp(propName, propValue) {
-      if (ownProps.dataPart) {
-        propName = ownProps.dataPart+'.'+propName
-      }
-
-      dispatch(actions.updateProp(ownProps.name, propName, propValue))
-    },
-
-    saveForm(targetUrl) {
-      dispatch(actions.saveForm(ownProps.name, targetUrl))
-    },
-    cancelForm() {
-      dispatch(actions.cancelChanges(ownProps.name))
-    },
-    getLock(className, id) {
-      dispatch(actions.getItemLock(className, id))
-    },
-    unlock(className, id) {
-      dispatch(actions.unlockItem(className, id))
     }
-  }),
-  (stateProps, dispatchProps, ownProps) => {
-    let finalProps = Object.assign({}, ownProps, stateProps, dispatchProps)
-
-    if (ownProps.buttons) {
-      // we need to build the form buttons
-      finalProps = Object.assign(finalProps, {
-        save: ownProps.save ? Object.assign({}, ownProps.save, {
-          // append the api call to the defined action if the target is provided
-          onClick: () => {
-            if (ownProps.target) {
-              dispatchProps.saveForm(url(
-                typeof ownProps.target === 'function' ? ownProps.target(stateProps.data, stateProps.new) : ownProps.target
-              ))
-            }
-          }
-        }) : {
-          type: CALLBACK_BUTTON,
-          callback: () => {
-            if (ownProps.target) {
-              dispatchProps.saveForm(url(
-                typeof ownProps.target === 'function' ? ownProps.target(stateProps.data, stateProps.new) : ownProps.target
-              ))
-              if (ownProps.lock && ownProps.lock.autoUnlock) {
-                dispatchProps.unlock(ownProps.lock.className, ownProps.lock.id)
-              }
-            }
-          }
-        },
-        cancel: ownProps.cancel ? Object.assign({}, ownProps.cancel, {
-          // append the reset form callback to the defined action
-          onClick: () => dispatchProps.cancelForm()
-        }) : {
-          type: CALLBACK_BUTTON,
-          disabled: !stateProps.pendingChanges,
-          callback: () => dispatchProps.cancelForm()
-        }
-      })
-    } else {
-      // make sure save & cancel actions are not passed to the component
-      finalProps = Object.assign(finalProps, {
-        save: undefined,
-        cancel: undefined
-      })
-    }
-
-    return finalProps
-  }, {
-    // the default behavior is to use shallow comparison
-    // but as I create new objects in `mergeProps`, the comparison always returns false
-    // and cause recomputing
-    areMergedPropsEqual: (next, prev) => isEqualWith(next, prev, (value, othValue) => {
-      if ((isNil(value) || typeof value === 'function')
-        && (isNil(othValue) || typeof othValue === 'function')) {
-        return true
-      }
-    })
-  }
+  })
 )(FormDataComponent)
 
 FormData.propTypes = {

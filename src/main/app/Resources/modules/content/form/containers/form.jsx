@@ -26,7 +26,7 @@ const Form = connect(
 
     return {
       new: selectors.isNew(formState),
-      errors: isEmpty(errors),
+      errors: !isEmpty(errors),
       pendingChanges: selectors.pendingChanges(formState),
       validating: selectors.validating(formState)
     }
