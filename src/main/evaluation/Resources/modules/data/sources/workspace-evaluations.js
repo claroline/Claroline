@@ -101,6 +101,13 @@ export default (contextType, contextData, refresher, currentUser) => {
         displayable: false,
         sortable: true,
         filterable: false
+      }, {
+        name: 'user.registered',
+        label: trans('user_registered', {}, 'community'),
+        type: 'boolean',
+        displayable: false,
+        sortable: false,
+        filterable: true
       }
     ],
     card: WorkspaceCard

@@ -50,8 +50,10 @@ class WorkspaceEvaluationFinder extends AbstractFinder
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'user':
-                    $qb->join('obj.user', 'u');
-                    $userJoin = true;
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
 
                     $qb->andWhere("u.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
@@ -94,6 +96,29 @@ class WorkspaceEvaluationFinder extends AbstractFinder
                     }
                     $qb->andWhere('w.hidden = :wsHidden');
                     $qb->setParameter('wsHidden', $filterValue);
+                    break;
+
+                case 'user.registered':
+                    if (!$workspaceJoin) {
+                        $qb->join('obj.workspace', 'w');
+                        $workspaceJoin = true;
+                    }
+
+                    if (!$userJoin) {
+                        $qb->join('obj.user', 'u');
+                        $userJoin = true;
+                    }
+
+                    $qb->leftJoin('u.roles', 'r');
+                    $qb->leftJoin('u.groups', 'g');
+                    $qb->leftJoin('g.roles', 'gr');
+                    $qb->andWhere('EXISTS (
+                        SELECT r2.id 
+                        FROM Claroline\CoreBundle\Entity\Role AS r2
+                        WHERE r2.workspace = w
+                          AND (r2.id = gr.id OR r2.id = r.id) 
+                    )');
+
                     break;
 
                 default:
