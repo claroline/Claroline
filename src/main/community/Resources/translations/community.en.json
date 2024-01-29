@@ -68,5 +68,6 @@
   "username_enabled_help": "If enabled, users will have a unique identifier that can be used to log in to the platform.",
   "username_disabled_help": "If disabled, the user's email address will be used.",
   "managers": "Managers",
-  "user_loading": "We are loading the user..."
+  "user_loading": "We are loading the user...",
+  "user_registered": "Registered"
 }
