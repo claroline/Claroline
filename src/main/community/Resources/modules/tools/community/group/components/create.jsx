@@ -21,18 +21,13 @@ const GroupCreate = (props) =>
         target: '' // current page, no need to add a link
       }
     ]}
-    primaryAction="add"
     subtitle={trans('new_group', {}, 'community')}
-    actions={[{
-      name: 'add',
-      type: LINK_BUTTON,
-      icon: 'fa fa-fw fa-plus',
-      label: trans('add_group', {}, 'actions'),
-      target: `${props.path}/groups/new`,
-      primary: true
-    }]}
   >
-    <GroupForm path={`${props.path}/groups`} name={selectors.FORM_NAME} />
+    <GroupForm
+      className="mt-3"
+      path={`${props.path}/groups`}
+      name={selectors.FORM_NAME}
+    />
   </ToolPage>
 
 GroupCreate.propTypes = {

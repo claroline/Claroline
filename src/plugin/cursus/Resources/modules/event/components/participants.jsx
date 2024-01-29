@@ -1,8 +1,7 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
-import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
@@ -22,7 +21,7 @@ import {selectors} from '#/plugin/cursus/event/store'
 import {MODAL_EVENT_PRESENCE} from '#/plugin/cursus/event/modals/presence'
 import {RegistrationGroups} from '#/plugin/cursus/registration/components/groups'
 import {RegistrationUsers} from '#/plugin/cursus/registration/components/users'
-import {ContentCounter} from '#/main/app/content/components/counter'
+import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 
 const EventUsers = (props) =>
   <RegistrationUsers
@@ -180,32 +179,28 @@ EventPresences.propTypes = {
 }
 
 const EventParticipants = (props) =>
-  <Fragment>
-    <div className="d-flex flex-direction-row">
-      <ContentCounter
-        icon="fa fa-chalkboard-teacher"
-        label={trans('tutors', {}, 'cursus')}
-        color={schemeCategory20c[1]}
-        value={get(props.event, 'participants.tutors', 0)}
-      />
-
-      <ContentCounter
-        icon="fa fa-user"
-        label={trans('users')}
-        color={schemeCategory20c[5]}
-        value={get(props.event, 'participants.learners', 0)}
-      />
-
-      <ContentCounter
-        icon="fa fa-user-plus"
-        label={trans('available_seats', {}, 'cursus')}
-        color={schemeCategory20c[9]}
-        value={get(props.event, 'restrictions.users') ?
-          (get(props.event, 'restrictions.users') - get(props.event, 'participants.learners', 0)) + ' / ' + get(props.event, 'restrictions.users')
-          : <span className="fa fa-fw fa-infinity" />
+  <>
+    <ContentInfoBlocks
+      className="my-4"
+      size="lg"
+      items={[
+        {
+          icon: 'fa fa-chalkboard-teacher',
+          label: trans('tutors', {}, 'cursus'),
+          value: get(props.event, 'participants.tutors', 0)
+        }, {
+          icon: 'fa fa-user',
+          label: trans('users'),
+          value: get(props.event, 'participants.learners', 0)
+        }, {
+          icon: 'fa fa-user-plus',
+          label: trans('available_seats', {}, 'cursus'),
+          value: get(props.event, 'restrictions.users') ?
+            (get(props.event, 'restrictions.users') - get(props.event, 'participants.learners', 0)) + ' / ' + get(props.event, 'restrictions.users')
+            : <span className="fa fa-fw fa-infinity" />
         }
-      />
-    </div>
+      ]}
+    />
 
     <div className="row">
       <div className="col-md-3">
@@ -253,7 +248,7 @@ const EventParticipants = (props) =>
             }, {
               path: '/users',
               render: () => (
-                <Fragment>
+                <>
                   {isFull(props.event) &&
                     <AlertBlock type="warning" title={trans('event_full', {}, 'cursus')}>
                       {trans('event_full_help', {}, 'cursus')}
@@ -267,7 +262,7 @@ const EventParticipants = (props) =>
                     addUsers={props.addUsers}
                     inviteUsers={props.inviteUsers}
                   />
-                </Fragment>
+                </>
               )
             }, {
               path: '/groups',
@@ -293,7 +288,7 @@ const EventParticipants = (props) =>
         />
       </div>
     </div>
-  </Fragment>
+  </>
 
 EventParticipants.propTypes = {
   path: T.string.isRequired,

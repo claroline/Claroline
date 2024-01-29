@@ -68,6 +68,7 @@
   "username_enabled_help": "Si activé, les utilisateurs auront un identifiant unique utilisable pour se connecter à la plateforme.",
   "username_disabled_help": "Si désactivé, l'adresse email de l'utilisateur sera utilisée.",
   "managers": "Gestionnaires",
+  "members": "Membres",
   "user_loading": "Nous chargeons l'utilisateur'...",
   "user_registered": "Utilisateur inscrit"
 }

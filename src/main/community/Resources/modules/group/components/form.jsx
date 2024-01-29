@@ -15,6 +15,7 @@ const GroupFormComponent = props => {
 
   return (
     <FormData
+      className={props.className}
       level={3}
       name={props.name}
       buttons={true}
@@ -92,6 +93,7 @@ const GroupFormComponent = props => {
 }
 
 GroupFormComponent.propTypes = {
+  className: T.string,
   path: T.string.isRequired,
   name: T.string.isRequired,
   isNew: T.bool.isRequired,

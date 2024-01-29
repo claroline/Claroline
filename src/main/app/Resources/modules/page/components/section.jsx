@@ -5,9 +5,11 @@ import classes from 'classnames'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const PageSection = (props) =>
-  <ContentSizing size={props.size} className={classes('page-section', props.className)}>
-    {props.children}
-  </ContentSizing>
+  <section className={classes('page-section', props.className)}>
+    <ContentSizing size={props.size} className="container-fluid">
+      {props.children}
+    </ContentSizing>
+  </section>
 
 PageSection.propTypes = {
   className: T.string,

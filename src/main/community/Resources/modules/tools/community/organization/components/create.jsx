@@ -21,18 +21,13 @@ const OrganizationCreate = (props) =>
         target: '' // current page, no need to add a link
       }
     ]}
-    primaryAction="add"
     subtitle={trans('new_organization', {}, 'community')}
-    actions={[{
-      name: 'add',
-      type: LINK_BUTTON,
-      icon: 'fa fa-fw fa-plus',
-      label: trans('add_organization', {}, 'actions'),
-      target: `${props.path}/organizations/new`,
-      primary: true
-    }]}
   >
-    <OrganizationForm path={`${props.path}/organizations`} name={selectors.FORM_NAME} />
+    <OrganizationForm
+      className="mt-3"
+      path={`${props.path}/organizations`}
+      name={selectors.FORM_NAME}
+    />
   </ToolPage>
 
 OrganizationCreate.propTypes = {

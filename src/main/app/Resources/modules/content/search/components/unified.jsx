@@ -57,6 +57,7 @@ class SearchForm extends Component {
   constructor(props) {
     super(props)
 
+    console.log('mount')
     this.state = {
       updated: false,
       filters: props.current || []
@@ -64,7 +65,8 @@ class SearchForm extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if ((!isEmpty(prevProps.current || !isEmpty(this.props.current))) && prevProps.current !== this.props.current) {
+    if (!this.state.updated && (!isEmpty(prevProps.current || !isEmpty(this.props.current))) && prevProps.current !== this.props.current) {
+      console.log('fuck')
       this.setState({filters: this.props.current})
     }
   }
@@ -96,16 +98,17 @@ class SearchForm extends Component {
     }
 
     if (autoSubmit) {
+      this.props.updateSearch(newFilters)
+
       this.setState({
         updated: false
-      })
-      this.props.updateSearch(newFilters)
+      }, () => this.props.updateSearch(newFilters))
     } else {
+      console.log(newFilters)
       this.setState({
         updated: updated,
         filters: newFilters
-      })
-      this.props.updateFilters(newFilters)
+      }, () => this.props.updateFilters(newFilters))
     }
   }
 
@@ -132,20 +135,20 @@ class SearchForm extends Component {
   }
 
   render() {
+    console.log(this.state.filters)
     return (
       <>
         {this.props.available.map(filter =>
           <div key={filter.name} className="form-group row">
-            <label className="col-sm-2 col-form-label col-form-label-sm text-end" htmlFor={this.props.id+'-'+toKey(filter.name)}>
+            <label className="col-sm-3 col-form-label col-form-label-sm text-end" htmlFor={this.props.id+'-'+toKey(filter.name)}>
               {filter.label}
             </label>
 
-            <div className="col-sm-10">
+            <div className="col-sm-9">
               <DataFilter
-                id={this.props.id+'-'+toKey(filter.name)}
-
                 {...omit(filter)}
 
+                id={this.props.id+'-'+toKey(filter.name)}
                 size="sm"
                 disabled={this.isFilterLocked(filter.alias || filter.name)}
                 value={this.getFilterValue(filter.alias || filter.name)}
@@ -163,10 +166,10 @@ class SearchForm extends Component {
             htmlType="submit"
             size="lg"
             label={trans('search', {}, 'actions')}
-            disabled={!this.state.updated && !this.props.updated}
+            disabled={!this.props.updated}
             callback={() => {
               this.props.updateSearch(this.state.filters)
-              this.setState({updated: false})
+              //this.setState({updated: false})
             }}
             primary={true}
           />
@@ -194,7 +197,7 @@ SearchForm.propTypes = {
 
 const SearchMenu = forwardRef((props, ref) =>
   <div
-    {...omit(props, 'updated', 'available', 'current', 'updateSearch', 'show', 'close')}
+    {...omit(props, 'updated', 'available', 'current', 'updateSearch', 'updateFilters', 'show', 'close')}
     className={classes('search-form dropdown-menu-full', props.className)}
     ref={ref}
   >
@@ -299,10 +302,11 @@ class SearchUnified extends Component {
             align="end"
             as={SearchMenu}
 
+            id={this.props.id}
             updated={this.state.updated}
             current={this.getFormFilters()}
             available={this.props.available}
-            updateFilters={() => this.setState({opened: true})}
+            updateFilters={() => this.setState({opened: true, updated: true})}
             updateSearch={(filters) => {
               this.props.resetFilters(filters)
               this.setState({currentSearch: '', updated: false, opened: false})

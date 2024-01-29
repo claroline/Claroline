@@ -26,9 +26,6 @@ const LogsMain = () =>
       <div className="col-md-3">
         <Vertical
           basePath={route('logs')}
-          style={{
-            marginTop: 60 // TODO : manage spacing correctly
-          }}
           tabs={[
             {
               title: trans('functional', {}, 'log'),

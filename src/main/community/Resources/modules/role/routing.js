@@ -1,11 +1,11 @@
 import {route as toolRoute} from '#/main/core/tool/routing'
 
-function route(group, basePath = null) {
+function route(role, basePath = null) {
   if (basePath) {
-    return basePath + '/roles/' + group.id
+    return basePath + '/roles/' + role.id
   }
 
-  return toolRoute('community') + '/roles/' + group.id
+  return toolRoute('community') + '/roles/' + role.id
 }
 
 export {

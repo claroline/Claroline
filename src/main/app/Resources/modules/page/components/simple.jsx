@@ -1,13 +1,23 @@
-import React from 'react'
+import React, {createElement} from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import {Helmet} from 'react-helmet'
 
-import {implementPropTypes} from '#/main/app/prop-types'
 import {asset} from '#/main/app/config/asset'
 
 import {PageSimple as PageSimpleTypes} from '#/main/app/page/prop-types'
-import {PageBreadcrumb} from '#/main/app/page/components/breadcrumb'
-import {PageWrapper} from '#/main/app/page/components/wrapper'
+
+const PageWrapper = props => createElement(!props.embedded ? 'main':'article', {
+  id: props.id,
+  className: classes('page', props.className)
+}, props.children)
+
+PageWrapper.propTypes = {
+  id: T.string,
+  className: T.string,
+  embedded: T.bool.isRequired,
+  children: T.node
+}
 
 /**
  * Root of the current page.
@@ -44,19 +54,11 @@ const PageSimple = props =>
       </Helmet>
     }
 
-    {!props.embedded &&
-      <PageBreadcrumb
-        path={props.path}
-        className={classes({
-          'sr-only': !props.showBreadcrumb || props.fullscreen
-        })}
-      />
-    }
-
     {props.children}
   </PageWrapper>
 
-implementPropTypes(PageSimple, PageSimpleTypes)
+PageSimple.propTypes = PageSimpleTypes.propTypes
+PageSimple.defaultProps = PageSimpleTypes.defaultProps
 
 export {
   PageSimple

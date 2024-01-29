@@ -157,6 +157,11 @@
     flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
 }
 
+.page-section {
+    margin-left: -$grid-gutter-width*.5; // to escape the page-content container-fluid
+    margin-right: -$grid-gutter-width*.5; // to escape the page-content container-fluid
+}
+
 .page-icon {
     .tool-icon,
     .resource-icon {

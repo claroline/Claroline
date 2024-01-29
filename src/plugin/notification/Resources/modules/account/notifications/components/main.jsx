@@ -10,6 +10,7 @@ import {route} from '#/main/app/account/routing'
 
 import {NotificationCard} from '#/plugin/notification/components/card'
 import {selectors} from '#/plugin/notification/account/notifications/store/selectors'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const NotificationMain = (props) =>
   <AccountPage
@@ -22,10 +23,9 @@ const NotificationMain = (props) =>
     ]}
     title={trans('notifications')}
   >
-    <div style={{
-      marginTop: 60 // TODO : manage spacing correctly
-    }}>
+    <ContentSizing size="full">
       <ListData
+        flush={true}
         name={selectors.LIST_NAME}
         fetch={{
           url: ['apiv2_user_notifications_list'],
@@ -90,7 +90,7 @@ const NotificationMain = (props) =>
           }
         ]}
       />
-    </div>
+    </ContentSizing>
   </AccountPage>
 
 NotificationMain.propTypes = {

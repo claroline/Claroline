@@ -88,21 +88,11 @@
     .page-icon {
         width: 200px;
         height: 200px;
-        margin-bottom: -40px;
-
-        .user-avatar {
-            background: white;
-        }
+        margin-top: $grid-gutter-width*.5;
+        margin-bottom: map-get($spacers, 5) * -1;
     }
-}
 
-.user-profile-aside {
-    // because of the profile picture
-    margin-top: floor(($h2-font-size * $headings-line-height) + math.div($line-height-computed, 2)) + $component-margin-bottom;
-}
-
-.user-profile {
-    .btn-add-facet {
-        text-align: left;
+    .page-header {
+        margin-bottom: map-get($spacers, 5);
     }
 }

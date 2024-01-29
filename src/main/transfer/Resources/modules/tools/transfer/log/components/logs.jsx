@@ -4,11 +4,9 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {schemeCategory20c} from '#/main/theme/color/utils'
-
 import {trans} from '#/main/app/intl/translation'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
-import {ContentCounter} from '#/main/app/content/components/counter'
+import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 import {FormSections, FormSection} from '#/main/app/content/form/components/sections'
 
 import {selectors} from '#/main/transfer/tools/transfer/log/store'
@@ -42,35 +40,29 @@ Success.propTypes = {
 
 const LogsComponent = props =>
   <Fragment>
-    <div className="d-flex flex-direction-row">
-      <ContentCounter
-        icon="fa fa-list"
-        label={trans('total')}
-        color={schemeCategory20c[1]}
-        value={!isEmpty(props.data) ? get(props.data, 'total') || '0' : '?'}
-      />
-
-      <ContentCounter
-        icon="fa fa-sync"
-        label={trans('processed')}
-        color={schemeCategory20c[5]}
-        value={!isEmpty(props.data) ? get(props.data, 'processed') || '0' : '?'}
-      />
-
-      <ContentCounter
-        icon="fa fa-check"
-        label={trans('success')}
-        color={schemeCategory20c[9]}
-        value={!isEmpty(props.data) ? get(props.data, 'success') || '0' : '?'}
-      />
-
-      <ContentCounter
-        icon="fa fa-exclamation-triangle"
-        label={trans('error')}
-        color={schemeCategory20c[13]}
-        value={!isEmpty(props.data) ? get(props.data, 'error') || '0' : '?'}
-      />
-    </div>
+    <ContentInfoBlocks
+      className="my-4"
+      size="lg"
+      items={[
+        {
+          icon: 'fa fa-list',
+          label: trans('total'),
+          value: !isEmpty(props.data) ? get(props.data, 'total') || '0' : '?'
+        }, {
+          icon: 'fa fa-sync',
+          label: trans('processed'),
+          value: !isEmpty(props.data) ? get(props.data, 'processed') || '0' : '?'
+        }, {
+          icon: 'fa fa-check',
+          label: trans('success'),
+          value: !isEmpty(props.data) ? get(props.data, 'success') || '0' : '?'
+        }, {
+          icon: 'fa fa-exclamation-triangle',
+          label: trans('error'),
+          value: !isEmpty(props.data) ? get(props.data, 'error') || '0' : '?'
+        }
+      ]}
+    />
 
     {isEmpty(props.data) &&
       <ContentPlaceholder

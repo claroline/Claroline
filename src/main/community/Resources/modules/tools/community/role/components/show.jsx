@@ -70,7 +70,7 @@ const RoleShow = (props) =>
         ]}
       />
 
-      <ContentSections level={3} defaultOpened="role-users">
+      <ContentSections level={3} defaultOpened="role-users" className="mb-3">
         {'ROLE_ANONYMOUS' !== props.role.name &&
           <ContentSection
             id="role-users"

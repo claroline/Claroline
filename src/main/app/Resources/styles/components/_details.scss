@@ -14,37 +14,11 @@
         padding: $accordion-body-padding-y $accordion-body-padding-x;
 
         + .details-primary-section  {
-            border-top: 1px solid $accordion-border-width solid $accordion-border-color;;
+            border-top: 1px solid $accordion-border-width solid $accordion-border-color;
         }
 
         + .sections {
-            border-top: 1px solid $accordion-border-width solid $accordion-border-color;;
+            border-top: 1px solid $accordion-border-width solid $accordion-border-color;
         }
     }
 }
-
-/*.embedded-details-section {
-    .primary-section {
-        // removes panel styles
-        box-shadow: none;
-        border: none;
-        border-radius: 0;
-        margin-bottom: 0;
-    }
-
-    .sections {
-        margin: 0;
-
-        .panel {
-            box-shadow: none; // this may be applied to all panels in modals
-            border-radius: 0;
-            border-left: 0;
-            border-right: 0;
-
-            + .panel {
-                border-top: none;
-                margin: 0;
-            }
-        }
-    }
-}*/

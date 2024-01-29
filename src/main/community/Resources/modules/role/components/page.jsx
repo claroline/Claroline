@@ -12,6 +12,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {route} from '#/main/community/role/routing'
 import {getActions} from '#/main/community/role/utils'
 import {Role as RoleTypes} from '#/main/community/role/prop-types'
+import {ContentLoader} from '#/main/app/content/components/loader'
 
 const Role = (props) =>
   <ToolPage
@@ -39,7 +40,14 @@ const Role = (props) =>
       delete: () => props.reload(props.role.id)
     }, props.path, props.currentUser) : []}
   >
-    {props.children}
+    {isEmpty(props.role) &&
+      <ContentLoader
+        size="lg"
+        description={trans('role_loading', {}, 'community')}
+      />
+    }
+
+    {!isEmpty(props.role) && props.children}
   </ToolPage>
 
 Role.propTypes = {

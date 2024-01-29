@@ -2,12 +2,6 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import invariant from 'invariant'
 import get from 'lodash/get'
-import isEqualWith from 'lodash/isEqualWith'
-import isNil from 'lodash/isNil'
-
-import {url} from '#/main/app/api'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {toKey} from '#/main/core/scaffolding/text'
 
 import {FormData as FormDataComponent} from '#/main/app/content/form/components/data'
 import {actions, selectors} from '#/main/app/content/form/store'

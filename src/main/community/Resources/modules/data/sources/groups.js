@@ -6,7 +6,7 @@ import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {GroupCard} from '#/main/community/group/components/card'
 import {getActions, getDefaultAction} from '#/main/community/group/utils'
 
-export default  (contextType, contextData, refresher, currentUser) => {
+export default (contextType, contextData, refresher, currentUser) => {
   let basePath
   if ('workspace' === contextType) {
     basePath = workspaceRoute(contextData, 'community')

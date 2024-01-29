@@ -13,6 +13,7 @@ import {getActions} from '#/main/community/user/utils'
 import {route} from '#/main/community/user/routing'
 import {User as UserTypes} from '#/main/community/user/prop-types'
 import {UserAvatar} from '#/main/core/user/components/avatar'
+import {ContentLoader} from '#/main/app/content/components/loader'
 
 const User = (props) =>
   <ToolPage
@@ -33,7 +34,7 @@ const User = (props) =>
       }
     ].concat(props.user ? props.breadcrumb : [])}
     icon={
-      <UserAvatar className="user-avatar-lg img-thumbnail" picture={get(props.user, 'picture')} />
+      <UserAvatar className="img-thumbnail" picture={get(props.user, 'picture')} size="lg" />
     }
     title={get(props.user, 'name', trans('loading'))}
     subtitle={get(props.user, 'username')}
@@ -45,7 +46,14 @@ const User = (props) =>
       delete: () => props.reload(props.user.id)
     }, props.path, props.currentUser) : []}
   >
-    {props.children}
+    {isEmpty(props.user) &&
+      <ContentLoader
+        size="lg"
+        description={trans('user_loading', {}, 'community')}
+      />
+    }
+
+    {!isEmpty(props.user) && props.children}
   </ToolPage>
 
 User.propTypes = {

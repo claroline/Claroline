@@ -8,7 +8,7 @@ import {Button} from '#/main/app/action/components/button'
 import {MENU_BUTTON} from '#/main/app/buttons'
 
 const ContentTabs = (props) =>
-  <ul className={classes('nav nav-underline nav-justified', props.className)}>
+  <ul className={classes('nav nav-underline border-bottom', props.className)}>
     {!isEmpty(props.backAction) &&
       <li className="nav-item">
         <Button

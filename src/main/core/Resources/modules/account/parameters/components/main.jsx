@@ -26,7 +26,6 @@ const ParametersMain = (props) =>
   >
     <ContentTitle
       title={trans('parameters')}
-      style={{marginTop: 60}}
     />
 
     <FormData

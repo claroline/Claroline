@@ -1,9 +1,7 @@
 import React from 'react'
 
-import {schemeCategory20c} from '#/main/theme/color/utils'
-
 import {trans} from '#/main/app/intl/translation'
-import {ContentCounter} from '#/main/app/content/components/counter'
+import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 import {ContentHtml} from '#/main/app/content/components/html'
 
 const ForumInfo = (props) =>
@@ -16,28 +14,25 @@ const ForumInfo = (props) =>
       </div>
     }
 
-    <div className="d-flex flex-direction-row">
-      <ContentCounter
-        icon="fa fa-user"
-        label={trans('participants')}
-        color={schemeCategory20c[1]}
-        value={props.forum.meta.users}
-      />
-
-      <ContentCounter
-        icon="fa fa-comments"
-        label={trans('subjects', {}, 'forum')}
-        color={schemeCategory20c[5]}
-        value={props.forum.meta.subjects}
-      />
-
-      <ContentCounter
-        icon="fa fa-comment"
-        label={trans('messages', {}, 'forum')}
-        color={schemeCategory20c[9]}
-        value={props.forum.meta.messages}
-      />
-    </div>
+    <ContentInfoBlocks
+      className="my-4"
+      size="lg"
+      items={[
+        {
+          icon: 'fa fa-user',
+          label: trans('participants'),
+          value: props.forum.meta.users
+        }, {
+          icon: 'fa fa-comments',
+          label: trans('subjects', {}, 'forum'),
+          value: props.forum.meta.subjects
+        }, {
+          icon: 'fa fa-comment',
+          label: trans('messages', {}, 'forum'),
+          value: props.forum.meta.messages
+        }
+      ]}
+    />
   </section>
 
 export {

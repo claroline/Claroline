@@ -1,14 +1,15 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 import {UserPage} from '#/main/community/user/components/page'
 import {User as UserTypes} from '#/main/community/user/prop-types'
 import {selectors} from '#/main/community/tools/community/user/store'
 import {UserForm} from '#/main/community/user/components/form'
-import isEmpty from 'lodash/isEmpty'
 
 const UserEdit = (props) =>
   <UserPage
@@ -24,11 +25,13 @@ const UserEdit = (props) =>
     reload={props.reload}
   >
     {!isEmpty(props.user) &&
-      <UserForm
-        name={selectors.FORM_NAME}
-        path={`${props.path}/users/${props.username}/edit`}
-        back={`${props.path}/users/${props.username}`}
-      />
+      <ContentSizing size="lg">
+        <UserForm
+          name={selectors.FORM_NAME}
+          path={`${props.path}/users/${props.username}/edit`}
+          back={`${props.path}/users/${props.username}`}
+        />
+      </ContentSizing>
     }
   </UserPage>
 

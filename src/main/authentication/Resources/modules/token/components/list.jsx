@@ -8,6 +8,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 
 const TokenList = (props) =>
   <ListData
+    flush={props.flush}
     name={props.name}
     fetch={{
       url: props.url,
@@ -44,6 +45,7 @@ const TokenList = (props) =>
   />
 
 TokenList.propTypes = {
+  flush: T.bool,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]),
   definition: T.array,

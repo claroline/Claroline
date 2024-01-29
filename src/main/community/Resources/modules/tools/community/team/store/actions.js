@@ -18,8 +18,14 @@ actions.removeFromMyTeams = makeActionCreator(MY_TEAMS_REMOVE, 'team')
 
 actions.new = (defaultProps) => formActions.resetForm(selectors.FORM_NAME, merge({}, TeamTypes.defaultProps, defaultProps), true)
 
-actions.open = (id, reload = false) => (dispatch) => {
+actions.open = (id, reload = false) => (dispatch, getState) => {
   if (!reload) {
+    const currentId = selectors.currentId(getState())
+    if (currentId === id) {
+      // nothing to do
+      return
+    }
+
     // remove previous team if any to avoid displaying it while loading
     dispatch(formActions.resetForm(selectors.FORM_NAME, {}, false))
   }

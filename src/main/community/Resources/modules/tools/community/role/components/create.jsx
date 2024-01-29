@@ -21,16 +21,7 @@ const RoleCreate = (props) =>
         target: '' // current page, no need to add a link
       }
     ]}
-    primaryAction="add"
     subtitle={trans('new_role', {}, 'community')}
-    actions={[{
-      name: 'add',
-      type: LINK_BUTTON,
-      icon: 'fa fa-fw fa-plus',
-      label: trans('add_role'),
-      target: `${props.path}/roles/new`,
-      primary: true
-    }]}
   >
     <RoleForm path={`${props.path}/roles`} name={selectors.FORM_NAME} />
   </ToolPage>

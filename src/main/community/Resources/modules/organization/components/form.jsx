@@ -17,6 +17,7 @@ const OrganizationFormComponent = props => {
 
   return (
     <FormData
+      className={props.className}
       level={3}
       name={props.name}
       buttons={true}
@@ -138,6 +139,7 @@ const OrganizationFormComponent = props => {
 }
 
 OrganizationFormComponent.propTypes = {
+  className: T.string,
   path: T.string.isRequired,
   name: T.string.isRequired,
   isNew: T.bool.isRequired,

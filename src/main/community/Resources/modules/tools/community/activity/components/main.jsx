@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
-import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ContentCounter} from '#/main/app/content/components/counter'
+import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {LogFunctionalList} from '#/main/log/components/functional-list'
@@ -34,21 +33,22 @@ class ActivityMain extends Component {
         }]}
         subtitle={trans('activity')}
       >
-        <div className="d-flex flex-direction-row">
-          <ContentCounter
-            icon="fa fa-user"
-            label={trans('users')}
-            color={schemeCategory20c[1]}
-            value={!this.state.loaded ? '?' : this.props.count.users}
-          />
+        <ContentInfoBlocks
+          className="my-4"
+          size="lg"
+          items={[
+            {
+              icon: 'fa fa-user',
+              label: trans('users', {}, 'community'),
+              value: !this.state.loaded ? '?' : this.props.count.users
+            }, {
+              icon: 'fa fa-users',
+              label: trans('groups', {}, 'community'),
+              value: !this.state.loaded ? '?' : this.props.count.groups
+            }
+          ]}
+        />
 
-          <ContentCounter
-            icon="fa fa-users"
-            label={trans('groups')}
-            color={schemeCategory20c[5]}
-            value={!this.state.loaded ? '?' : this.props.count.groups}
-          />
-        </div>
         <LogFunctionalList
           className="component-container"
           name={selectors.STORE_NAME + '.logs'}
