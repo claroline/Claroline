@@ -19,8 +19,14 @@ actions.new = () => (dispatch, getState) => {
   }, GroupTypes.defaultProps), true))
 }
 
-actions.open = (id, reload = false) => (dispatch) => {
+actions.open = (id, reload = false) => (dispatch, getState) => {
   if (!reload) {
+    const currentId = selectors.currentId(getState())
+    if (currentId === id) {
+      // nothing to do
+      return
+    }
+
     // remove previous group if any to avoid displaying it while loading
     dispatch(formActions.reset(selectors.FORM_NAME, {}, false))
   }

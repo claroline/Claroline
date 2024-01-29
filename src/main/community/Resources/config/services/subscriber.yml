@@ -43,7 +43,6 @@ services:
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CommunityBundle\Manager\MailManager'
             - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
-            - '@Icap\NotificationBundle\Manager\NotificationUserParametersManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\FileManager'
 

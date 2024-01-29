@@ -27,9 +27,9 @@ PageTitle.propTypes = {
   title: T.string.isRequired,
 
   /**
-   * An optional sub title.
+   * An optional subtitle.
    *
-   * Mostly used when the current page has sub-sections
+   * Mostly used when the current page has subsections
    * example : in quizzes, we have edit/play/papers/etc. sections
    */
   subtitle: T.node,
@@ -51,7 +51,7 @@ const PageHeader = props =>
     })}
   >
     {props.icon &&
-      <div className="page-icon">
+      <div className="page-icon ratio ratio-1x1">
         {props.icon}
       </div>
     }
@@ -83,7 +83,7 @@ PageHeader.propTypes = {
   showTitle: T.bool,
   title: T.string.isRequired,
   subtitle: T.node,
-  icon: T.oneOfType([T.string, T.element]),
+  icon: T.oneOfType([T.string, T.node]),
   poster: T.string,
   disabled: T.bool,
   toolbar: T.string,

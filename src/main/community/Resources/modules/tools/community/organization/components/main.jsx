@@ -28,13 +28,12 @@ const OrganizationMain = props =>
           props.new(parent)
         }
       }, {
-        path: '/:id',
-        component: OrganizationShow,
-        onEnter: (params) => props.open(params.id),
-        exact: true
-      }, {
         path: '/:id/edit',
         component: OrganizationEdit,
+        onEnter: (params) => props.open(params.id)
+      }, {
+        path: '/:id',
+        component: OrganizationShow,
         onEnter: (params) => props.open(params.id)
       }
     ]}

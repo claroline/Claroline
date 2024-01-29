@@ -13,6 +13,7 @@ import {ProfileEdit} from '#/main/community/profile/containers/edit'
 
 import changePasswordAction from '#/main/community/actions/user/password-change'
 import {selectors} from '#/main/community/account/profile/store'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const ProfileMain = (props) => {
   return (
@@ -38,34 +39,36 @@ const ProfileMain = (props) => {
         changePasswordAction([props.currentUser])
       ]}
     >
-      <Routes
-        path="/account/profile"
-        routes={[
-          {
-            path: '/edit',
-            disabled: !hasPermission('edit', props.currentUser),
-            onEnter: () => props.reset(props.currentUser),
-            render: () => (
-              <ProfileEdit
-                name={selectors.STORE_NAME}
-                path="/account/profile/edit"
-                user={props.currentUser}
-                back="/account/profile"
-              />
-            )
-          }, {
-            path: '/',
-            onEnter: () => props.reset(props.currentUser),
-            render: () => (
-              <ProfileShow
-                path="/account/profile"
-                name={selectors.STORE_NAME}
-                user={props.currentUser}
-              />
-            )
-          }
-        ]}
-      />
+      <ContentSizing size="lg">
+        <Routes
+          path="/account/profile"
+          routes={[
+            {
+              path: '/edit',
+              disabled: !hasPermission('edit', props.currentUser),
+              onEnter: () => props.reset(props.currentUser),
+              render: () => (
+                <ProfileEdit
+                  name={selectors.STORE_NAME}
+                  path="/account/profile/edit"
+                  user={props.currentUser}
+                  back="/account/profile"
+                />
+              )
+            }, {
+              path: '/',
+              onEnter: () => props.reset(props.currentUser),
+              render: () => (
+                <ProfileShow
+                  path="/account/profile"
+                  name={selectors.STORE_NAME}
+                  user={props.currentUser}
+                />
+              )
+            }
+          ]}
+        />
+      </ContentSizing>
     </AccountPage>
   )
 }

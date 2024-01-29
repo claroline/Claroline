@@ -11,6 +11,7 @@ import {Vertical} from '#/main/app/content/tabs/components/vertical'
 
 import {ProfileFacet} from '#/main/community/tools/community/profile/containers/facet'
 import {getMainFacet} from '#/main/community/profile/utils'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 // TODO : redirect on facet delete
 
@@ -23,54 +24,56 @@ const ProfileMain = props =>
     }]}
     subtitle={trans('user_profile')}
   >
-    <div className="row user-profile" style={{marginTop: 20}}>
-      <div className="user-profile-aside col-md-3">
-        <Vertical
-          basePath={`${props.path}/parameters/profile`}
-          tabs={props.facets.map(facet => ({
-            icon: get(facet, 'display.icon'),
-            title: facet.title,
-            path: get(facet, 'meta.main') ? '' : `/${facet.id}`,
-            exact: true,
-            actions: [
+    <ContentSizing size="lg" className="mt-3">
+      <div className="row">
+        <div className="col-md-4">
+          <Vertical
+            basePath={`${props.path}/parameters/profile`}
+            tabs={props.facets.map(facet => ({
+              icon: get(facet, 'display.icon'),
+              title: facet.title,
+              path: get(facet, 'meta.main') ? '' : `/${facet.id}`,
+              exact: true,
+              actions: [
+                {
+                  name: 'delete',
+                  type: CALLBACK_BUTTON,
+                  icon: 'fa fa-fw fa-trash',
+                  label: trans('delete', {}, 'actions'),
+                  displayed: !get(facet, 'meta.main'),
+                  callback: () => props.removeFacet(facet),
+                  confirm: {
+                    title: trans('profile_remove_facet'),
+                    message: trans('profile_remove_facet_question')
+                  },
+                  dangerous: true
+                }
+              ]
+            }))}
+          />
+
+          <Button
+            type={CALLBACK_BUTTON}
+            className="btn btn-outline-primary w-100 btn-add-facet"
+            icon="fa fa-fw fa-plus"
+            label={trans('profile_facet_add')}
+            callback={props.addFacet}
+          />
+        </div>
+
+        <div className="user-profile-content col-md-8">
+          <Routes
+            routes={[
               {
-                name: 'delete',
-                type: CALLBACK_BUTTON,
-                icon: 'fa fa-fw fa-trash',
-                label: trans('delete', {}, 'actions'),
-                displayed: !get(facet, 'meta.main'),
-                callback: () => props.removeFacet(facet),
-                confirm: {
-                  title: trans('profile_remove_facet'),
-                  message: trans('profile_remove_facet_question')
-                },
-                dangerous: true
+                path: `${props.path}/parameters/profile/:id?`,
+                onEnter: (params) => props.openFacet(params.id || getMainFacet(props.facets).id),
+                component: ProfileFacet
               }
-            ]
-          }))}
-        />
-
-        <Button
-          type={CALLBACK_BUTTON}
-          className="btn btn-outline-primary w-100 btn-add-facet"
-          icon="fa fa-fw fa-plus"
-          label={trans('profile_facet_add')}
-          callback={props.addFacet}
-        />
+            ]}
+          />
+        </div>
       </div>
-
-      <div className="user-profile-content col-md-9">
-        <Routes
-          routes={[
-            {
-              path: `${props.path}/parameters/profile/:id?`,
-              onEnter: (params) => props.openFacet(params.id || getMainFacet(props.facets).id),
-              component: ProfileFacet
-            }
-          ]}
-        />
-      </div>
-    </div>
+    </ContentSizing>
   </ToolPage>
 
 ProfileMain.propTypes = {

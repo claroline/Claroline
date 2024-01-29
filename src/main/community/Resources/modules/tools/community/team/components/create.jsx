@@ -21,18 +21,13 @@ const TeamCreate = (props) =>
         target: '' // current page, no need to add a link
       }
     ]}
-    primaryAction="add"
     subtitle={trans('new_team', {}, 'community')}
-    actions={[{
-      name: 'add',
-      type: LINK_BUTTON,
-      icon: 'fa fa-fw fa-plus',
-      label: trans('add_team', {}, 'actions'),
-      target: `${props.path}/teams/new`,
-      primary: true
-    }]}
   >
-    <TeamForm path={`${props.path}/teams`} name={selectors.FORM_NAME} />
+    <TeamForm
+      className="mt-3"
+      path={`${props.path}/teams`}
+      name={selectors.FORM_NAME}
+    />
   </ToolPage>
 
 TeamCreate.propTypes = {

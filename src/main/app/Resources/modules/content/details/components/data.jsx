@@ -129,6 +129,9 @@ DetailsData.propTypes = {
   definition: T.arrayOf(T.shape(
     DataDetailsSectionTypes.propTypes
   )).isRequired,
+  /**
+   * @deprecated only used by Profile facets
+   */
   affix: T.node,
   children: T.node
 }

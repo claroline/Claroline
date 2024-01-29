@@ -2,24 +2,11 @@ import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
 import {Action, PromisedAction} from '#/main/app/action/prop-types'
-import {Route} from '#/main/app/router/prop-types'
-
-const PageSection = {
-  propTypes: merge({}, Route.propTypes, {
-    icon: T.string,
-    title: T.string,
-    actions: T.arrayOf(T.shape(
-      Action.propTypes
-    )),
-    content: T.any // todo find better typing
-  })
-}
 
 const PageSimple = {
   propTypes: {
     id: T.string,
     className: T.string,
-    size: T.oneOf(['sm', 'lg']),
 
     /**
      * Is the current page embedded into another one ?
@@ -35,22 +22,6 @@ const PageSimple = {
      */
     fullscreen: T.bool,
 
-    showBreadcrumb: T.bool,
-
-    /**
-     * The path of the page inside the application (used to build the breadcrumb).
-     */
-    path: T.arrayOf(T.shape({
-      label: T.string.isRequired,
-      displayed: T.bool,
-      target: T.oneOfType([T.string, T.array])
-    })),
-
-    /**
-     * A custom component to add in the page header.
-     */
-    header: T.node,
-
     children: T.node.isRequired,
 
     /**
@@ -65,8 +36,7 @@ const PageSimple = {
   },
   defaultProps: {
     embedded: false,
-    fullscreen: false,
-    showBreadcrumb: true
+    fullscreen: false
   }
 }
 
@@ -77,10 +47,29 @@ const PageSimple = {
  */
 const PageFull = {
   propTypes: merge({}, PageSimple.propTypes, {
+    showBreadcrumb: T.bool,
     showHeader: T.bool,
     showTitle: T.bool,
 
     disabled: T.bool,
+
+    /**
+     * The path of the page inside the application (used to build the breadcrumb).
+     */
+    breadcrumb: T.arrayOf(T.shape({
+      label: T.string.isRequired,
+      displayed: T.bool,
+      target: T.oneOfType([T.string, T.array])
+    })),
+
+    /**
+     * @deprecated use breadcrumb
+     */
+    path: T.arrayOf(T.shape({
+      label: T.string.isRequired,
+      displayed: T.bool,
+      target: T.oneOfType([T.string, T.array])
+    })),
 
     /**
      * The title of the page.
@@ -112,6 +101,11 @@ const PageFull = {
     poster: T.string,
 
     /**
+     * A custom component to add in the page header.
+     */
+    header: T.node,
+
+    /**
      * The configuration for actions rendering.
      *
      * @type {string}
@@ -135,6 +129,7 @@ const PageFull = {
     ])
   }),
   defaultProps: merge({}, PageSimple.defaultProps, {
+    showBreadcrumb: true,
     showHeader: true,
     showTitle: true,
     disabled: false,
@@ -144,6 +139,5 @@ const PageFull = {
 
 export {
   PageFull,
-  PageSimple,
-  PageSection
+  PageSimple
 }

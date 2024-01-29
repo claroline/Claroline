@@ -11,7 +11,7 @@ import {Button} from '#/main/app/action/components/button'
 import {PageFull as PageFullTypes} from '#/main/app/page/prop-types'
 import {PageSimple} from '#/main/app/page/components/simple'
 import {PageHeader} from '#/main/app/page/components/header'
-import {PageContent} from '#/main/app/page/components/content'
+import {PageBreadcrumb} from '#/main/app/page/components/breadcrumb'
 
 /**
  * Root of the current page.
@@ -96,6 +96,15 @@ class PageFull extends Component {
           />
         }
 
+        {!this.props.embedded &&
+          <PageBreadcrumb
+            path={this.props.path}
+            className={classes({
+              'visually-hidden': !this.props.showBreadcrumb || this.state.fullscreen
+            })}
+          />
+        }
+
         {!this.state.fullscreen && this.props.showHeader &&
           <PageHeader
             id={this.props.id}
@@ -112,9 +121,9 @@ class PageFull extends Component {
           </PageHeader>
         }
 
-        <PageContent className={classes({'main-page-content': !this.props.embedded})}>
+        <div role="presentation" className={classes('page-content container-fluid', {'main-page-content': !this.props.embedded})}>
           {this.props.children}
-        </PageContent>
+        </div>
       </PageSimple>
     )
   }

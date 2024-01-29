@@ -13,6 +13,7 @@ import {route} from '#/main/app/account/routing'
 import {MODAL_TOKEN_PARAMETERS} from '#/main/authentication/token/modals/parameters'
 import {TokenList} from '#/main/authentication/token/components/list'
 import {selectors} from '#/main/authentication/account/authentication/store'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const AuthenticationTool = props =>
   <AccountPage
@@ -41,10 +42,9 @@ const AuthenticationTool = props =>
       }
     ]}
   >
-    <div style={{
-      marginTop: 60 // TODO : manage spacing correctly
-    }}>
+    <ContentSizing size="full">
       <TokenList
+        flush={true}
         name={selectors.STORE_NAME}
         url={['apiv2_apitoken_list_current']}
         actions={(rows) => [
@@ -64,7 +64,7 @@ const AuthenticationTool = props =>
           }
         ]}
       />
-    </div>
+    </ContentSizing>
   </AccountPage>
 
 AuthenticationTool.propTypes = {

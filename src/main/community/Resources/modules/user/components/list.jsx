@@ -60,7 +60,7 @@ const Users = (props) => {
           name: 'email',
           type: 'email',
           label: trans('email'),
-          displayed: true
+          displayable: true
         }, {
           name: 'administrativeCode',
           type: 'string',

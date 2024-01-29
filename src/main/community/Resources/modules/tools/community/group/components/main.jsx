@@ -22,13 +22,12 @@ const GroupMain = props =>
         onEnter: props.new,
         disabled: 'desktop' !== props.contextType || !props.canEdit
       }, {
-        path: '/:id',
-        component: GroupShow,
-        onEnter: (params) => props.open(params.id),
-        exact: true
-      }, {
         path: '/:id/edit',
         component: GroupEdit,
+        onEnter: (params) => props.open(params.id)
+      }, {
+        path: '/:id',
+        component: GroupShow,
         onEnter: (params) => props.open(params.id)
       }
     ]}

@@ -335,6 +335,7 @@ $warning-text-emphasis:   shade-color($warning, 60%) !default;
 $danger-text-emphasis:    shade-color($danger, 60%) !default;
 $light-text-emphasis:     $gray-700 !default;
 $dark-text-emphasis:      $gray-700 !default;
+$learning-text-emphasis:  shade-color($learning, 60%) !default; // custom claroline
 // scss-docs-end theme-text-variables
 
 // scss-docs-start theme-bg-subtle-variables
@@ -346,6 +347,7 @@ $warning-bg-subtle:       tint-color($warning, 80%) !default;
 $danger-bg-subtle:        tint-color($danger, 80%) !default;
 $light-bg-subtle:         mix($gray-100, $white) !default;
 $dark-bg-subtle:          $gray-400 !default;
+$learning-bg-subtle:      tint-color($learning, 80%) !default; // custom claroline
 // scss-docs-end theme-bg-subtle-variables
 
 // scss-docs-start theme-border-subtle-variables
@@ -357,6 +359,7 @@ $warning-border-subtle:   tint-color($warning, 60%) !default;
 $danger-border-subtle:    tint-color($danger, 60%) !default;
 $light-border-subtle:     $gray-200 !default;
 $dark-border-subtle:      $gray-500 !default;
+$learning-border-subtle:  tint-color($learning, 60%) !default; // custom claroline
 // scss-docs-end theme-border-subtle-variables
 
 // Characters which are escaped by the escape-svg function
@@ -1173,11 +1176,11 @@ $zindex-levels: (
 $nav-link-padding-y:                .5rem !default;
 $nav-link-padding-x:                1rem !default;
 $nav-link-font-size:                null !default;
-$nav-link-font-weight:              null !default;
-$nav-link-color:                    var(--#{$prefix}link-color) !default;
-$nav-link-hover-color:              var(--#{$prefix}link-hover-color) !default;
+$nav-link-font-weight:              $font-weight-medium !default;
+$nav-link-color:                    var(--#{$prefix}tertiary-color) !default;
+$nav-link-hover-color:              var(--#{$prefix}emphasis-color) !default;
 $nav-link-transition:               color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out !default;
-$nav-link-disabled-color:           var(--#{$prefix}secondary-color) !default;
+$nav-link-disabled-color:           var(--#{$prefix}tertiary-color) !default;
 $nav-link-focus-box-shadow:         $focus-ring-box-shadow !default;
 
 $nav-tabs-border-color:             var(--#{$prefix}border-color) !default;
@@ -1192,9 +1195,11 @@ $nav-pills-border-radius:           var(--#{$prefix}border-radius) !default;
 $nav-pills-link-active-color:       $component-active-color !default;
 $nav-pills-link-active-bg:          $component-active-bg !default;
 
-$nav-underline-gap:                 1rem !default;
-$nav-underline-border-width:        .125rem !default;
-$nav-underline-link-active-color:   var(--#{$prefix}emphasis-color) !default;
+$nav-underline-gap:                     map-get($spacers, 3) !default;
+$nav-underline-border-width:            .125rem !default;
+$nav-underline-link-active-font-weight: $nav-link-font-weight !default; // custom claroline
+$nav-underline-link-active-color:       var(--#{$prefix}emphasis-color) !default;
+$nav-underline-border-active-color:     var(--#{$prefix}primary) !default; // custom claroline
 // scss-docs-end nav-variables
 
 

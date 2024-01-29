@@ -11,8 +11,14 @@ export const actions = {}
 
 actions.new = (defaultProps) => formActions.resetForm(selectors.FORM_NAME, merge({}, OrganizationTypes.defaultProps, defaultProps), true)
 
-actions.open = (id, reload = false) => (dispatch) => {
+actions.open = (id, reload = false) => (dispatch, getState) => {
   if (!reload) {
+    const currentId = selectors.currentId(getState())
+    if (currentId === id) {
+      // nothing to do
+      return
+    }
+
     // remove previous group if any to avoid displaying it while loading
     dispatch(formActions.resetForm(selectors.FORM_NAME, {}, false))
   }
@@ -26,6 +32,7 @@ actions.open = (id, reload = false) => (dispatch) => {
   return dispatch({
     [API_REQUEST]: {
       url: ['apiv2_organization_get', {id: id}],
+      silent: true,
       success: (response) => dispatch(formActions.resetForm(selectors.FORM_NAME, response, false))
     }
   })

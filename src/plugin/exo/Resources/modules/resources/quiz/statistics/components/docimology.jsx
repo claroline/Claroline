@@ -1,11 +1,10 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
-import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ContentCounter} from '#/main/app/content/components/counter'
+import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 import {BarChart} from '#/main/core/layout/chart/bar/components/bar-chart'
 import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart'
 import {CircularGauge} from '#/main/core/layout/chart/gauge/components/circlular-gauge'
@@ -15,13 +14,33 @@ const COLOR_WARNING = '#F0AD4E'
 const COLOR_DANGER  = '#BF0404'
 
 const GeneralStats = props =>
-  <div className="d-flex flex-direction-row">
-    <ContentCounter label={trans('steps', {}, 'quiz')} icon="fa fa-table-list" value={props.statistics.nbSteps} color={schemeCategory20c[1]} />
-    <ContentCounter label={trans('questions', {}, 'quiz')} icon="fa fa-question" value={props.statistics.nbQuestions} color={schemeCategory20c[5]} />
-    <ContentCounter label={trans('users')} icon="fa fa-user" value={props.statistics.nbRegisteredUsers} color={schemeCategory20c[9]} />
-    <ContentCounter label={trans('anonymous')} icon="fa fa-user-secret" value={props.statistics.nbAnonymousUsers} color={schemeCategory20c[13]}/>
-    <ContentCounter label={trans('papers', {}, 'quiz')} icon="fa fa-file" value={props.statistics.nbPapers} color={schemeCategory20c[17]}/>
-  </div>
+  <ContentInfoBlocks
+    className="my-4"
+    size="lg"
+    items={[
+      {
+        icon: 'fa fa-table-list',
+        label: trans('steps', {}, 'quiz'),
+        value: props.statistics.nbSteps
+      }, {
+        icon: 'fa fa-question',
+        label: trans('questions', {}, 'quiz'),
+        value: props.statistics.nbQuestions
+      }, {
+        icon: 'fa fa-user',
+        label: trans('users'),
+        value: props.statistics.nbRegisteredUsers
+      }, {
+        icon: 'fa fa-user-secret',
+        label: trans('anonymous'),
+        value: props.statistics.nbAnonymousUsers
+      }, {
+        icon: 'fa fa-file',
+        label: trans('papers', {}, 'quiz'),
+        value: props.statistics.nbPapers
+      }
+    ]}
+  />
 
 GeneralStats.propTypes = {
   statistics: T.shape({

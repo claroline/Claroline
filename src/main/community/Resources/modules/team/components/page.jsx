@@ -12,6 +12,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {getActions} from '#/main/community/team/utils'
 import {route} from '#/main/community/team/routing'
 import {Team as TeamTypes} from '#/main/community/team/prop-types'
+import {ContentLoader} from '#/main/app/content/components/loader'
 
 const Team = (props) =>
   <ToolPage
@@ -40,7 +41,14 @@ const Team = (props) =>
       delete: () => props.reload(props.team.id)
     }, props.path, props.currentUser) : []}
   >
-    {props.children}
+    {isEmpty(props.team) &&
+      <ContentLoader
+        size="lg"
+        description={trans('team_loading', {}, 'community')}
+      />
+    }
+
+    {!isEmpty(props.team) && props.children}
   </ToolPage>
 
 Team.propTypes = {

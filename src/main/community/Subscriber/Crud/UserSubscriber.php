@@ -25,55 +25,22 @@ use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
-use Icap\NotificationBundle\Manager\NotificationUserParametersManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var Crud */
-    private $crud;
-    /** @var RoleManager */
-    private $roleManager;
-    /** @var MailManager */
-    private $mailManager;
-    /** @var OrganizationManager */
-    private $organizationManager;
-    /** @var NotificationUserParametersManager */
-    private $notificationManager;
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var FileManager */
-    private $fileManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        PlatformConfigurationHandler $config,
-        Crud $crud,
-        RoleManager $roleManager,
-        MailManager $mailManager,
-        OrganizationManager $organizationManager,
-        NotificationUserParametersManager $notificationManager,
-        StrictDispatcher $dispatcher,
-        FileManager $fileManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly Crud $crud,
+        private readonly RoleManager $roleManager,
+        private readonly MailManager $mailManager,
+        private readonly OrganizationManager $organizationManager,
+        private readonly StrictDispatcher $dispatcher,
+        private readonly FileManager $fileManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->config = $config;
-        $this->crud = $crud;
-        $this->roleManager = $roleManager;
-        $this->mailManager = $mailManager;
-        $this->organizationManager = $organizationManager;
-        $this->notificationManager = $notificationManager;
-        $this->dispatcher = $dispatcher;
-        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -89,7 +56,7 @@ class UserSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var User $user */
         $user = $event->getObject();
@@ -145,12 +112,6 @@ class UserSubscriber implements EventSubscriberInterface
 
         $this->om->persist($user);
 
-        if (in_array(Options::ADD_NOTIFICATIONS, $options)) {
-            // TODO : this shouldn't be done in the core. Create a CrudListener in notification plugin
-            $notifications = $this->config->getParameter('auto_enable_notifications');
-            $this->notificationManager->processUpdate($notifications, $user);
-        }
-
         if (empty($user->getMainOrganization())) {
             $token = $this->tokenStorage->getToken();
             // we want a main organization
@@ -182,7 +143,7 @@ class UserSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preUpdate(UpdateEvent $event)
+    public function preUpdate(UpdateEvent $event): void
     {
         $oldData = $event->getOldData();
         $user = $event->getObject();
@@ -195,7 +156,7 @@ class UserSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var User $user */
         $user = $event->getObject();
@@ -227,7 +188,7 @@ class UserSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postPatch(PatchEvent $event)
+    public function postPatch(PatchEvent $event): void
     {
         $user = $event->getObject();
 
@@ -255,7 +216,7 @@ class UserSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preDelete(DeleteEvent $event)
+    public function preDelete(DeleteEvent $event): void
     {
         /** @var User $user */
         $user = $event->getObject();
@@ -279,7 +240,7 @@ class UserSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var User $user */
         $user = $event->getObject();

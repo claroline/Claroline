@@ -1,7 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
@@ -98,6 +97,36 @@ const FormData = (props) => {
 
 FormData.propTypes = {
   id: T.string,
+
+  /**
+   * The name of the data in the form.
+   *
+   * It should be the key in the store where the list has been mounted
+   * (aka where `makeFormReducer()` has been called).
+   */
+  name: T.string.isRequired,
+
+  /**
+   * Permits to connect the form on a sub-part of the data.
+   * This is useful when the form is broken in multiple steps/pages
+   *
+   * It MUST be a valid lodash/get selector.
+   */
+  dataPart: T.string,
+
+  /**
+   * Do we need to show the form buttons ?
+   */
+  buttons: T.bool,
+
+  /**
+   * The API target of the Form (only used if props.buttons === true).
+   *
+   * NB. It can be a route definition or a function to calculate the final route.
+   * If a function is provided it's called with the current data & new flag as param.
+   */
+  target: T.oneOfType([T.string, T.array, T.func]),
+
   /**
    * Is the form embed into another ?
    *

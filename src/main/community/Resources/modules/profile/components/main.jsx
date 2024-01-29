@@ -61,8 +61,8 @@ class Profile extends Component {
 
   render() {
     return (
-      <div className={classes('row user-profile', this.props.className)}>
-        <div className="user-profile-aside col-md-3">
+      <div className={classes('row', this.props.className)}>
+        <div className="col-md-4">
           {this.props.user.id &&
             <UserDetails
               user={this.props.user}
@@ -82,7 +82,7 @@ class Profile extends Component {
           }
         </div>
 
-        <div className="user-profile-content col-md-9">
+        <div className="col-md-8">
           <Routes
             path={this.props.path}
             routes={[

@@ -24,6 +24,7 @@ const TeamEdit = (props) =>
     reload={props.reload}
   >
     <TeamForm
+      className="mt-3"
       path={`${props.path}/teams/${props.team ? props.team.id : ''}`}
       name={selectors.FORM_NAME}
     />

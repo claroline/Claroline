@@ -247,7 +247,7 @@ class BBBManager
 
             try {
                 $dom = new \DOMDocument();
-                if ($dom->loadXML($response)) {
+                if (!empty($response) && $dom->loadXML($response)) {
                     $info = array_merge($this->serverManager->extractMeetingInfo($dom), [
                         'server' => $serverUrl,
                     ]);

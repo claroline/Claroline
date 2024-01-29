@@ -22,13 +22,12 @@ const TeamMain = props =>
         onEnter: () => props.new(props.contextData),
         disabled: !props.canCreate
       }, {
-        path: '/:id',
-        component: TeamShow,
-        onEnter: (params) => props.open(params.id),
-        exact: true
-      }, {
         path: '/:id/edit',
         component: TeamEdit,
+        onEnter: (params) => props.open(params.id)
+      }, {
+        path: '/:id',
+        component: TeamShow,
         onEnter: (params) => props.open(params.id)
       }
     ]}

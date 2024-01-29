@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 import classes from 'classnames'
 
@@ -59,7 +58,8 @@ FormActions.propTypes = {
   pendingChanges: T.bool,
   save: T.shape({
     ...ActionTypes.propTypes,
-    label: T.string
+    label: T.string,
+    disabled: T.oneOfType([T.bool, T.func])
   }).isRequired,
   cancel: T.shape({
     ...ActionTypes.propTypes,

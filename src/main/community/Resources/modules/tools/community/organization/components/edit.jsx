@@ -24,6 +24,7 @@ const OrganizationEdit = (props) =>
     reload={props.reload}
   >
     <OrganizationForm
+      className="mt-3"
       path={`${props.path}/organizations/${props.organization ? props.organization.id : ''}`}
       name={selectors.FORM_NAME}
     />

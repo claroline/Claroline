@@ -5,6 +5,7 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
+import {ContentLoader} from '#/main/app/content/components/loader'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -40,7 +41,14 @@ const Group = (props) =>
       delete: () => props.reload(props.group.id)
     }, props.path, props.currentUser) : []}
   >
-    {props.children}
+    {isEmpty(props.group) &&
+      <ContentLoader
+        size="lg"
+        description={trans('group_loading', {}, 'community')}
+      />
+    }
+
+    {!isEmpty(props.group) && props.children}
   </ToolPage>
 
 Group.propTypes = {

@@ -1,13 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
-import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router/components/routes'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
-import {ContentCounter} from '#/main/app/content/components/counter'
+import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 import {MODAL_USERS} from '#/main/community/modals/users'
 import {MODAL_GROUPS} from '#/main/community/modals/groups'
 
@@ -22,41 +21,34 @@ import {Button} from '#/main/app/action'
 import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
 
 const CourseParticipants = (props) =>
-  <div className="mt-3" role="presentation">
-    <div className="d-flex flex-direction-row">
-      <ContentCounter
-        icon="fa fa-chalkboard-teacher"
-        label={trans('tutors', {}, 'cursus')}
-        color={schemeCategory20c[1]}
-        value={get(props.course, 'participants.tutors', 0)}
-      />
-
-      <ContentCounter
-        icon="fa fa-user"
-        label={trans('users')}
-        color={schemeCategory20c[5]}
-        value={get(props.course, 'participants.learners', 0)}
-      />
-
-      <ContentCounter
-        icon="fa fa-hourglass-half"
-        label={trans('En attente')}
-        color={schemeCategory20c[9]}
-        value={get(props.course, 'participants.pending', 0)}
-      />
-
-      <ContentCounter
-        icon="fa fa-user-plus"
-        label={trans('available_seats_per_session', {}, 'cursus')}
-        color={schemeCategory20c[13]}
-        value={get(props.course, 'restrictions.users') ?
-          get(props.course, 'restrictions.users')
-          : <span className="fa fa-fw fa-infinity" />
+  <>
+    <ContentInfoBlocks
+      className="my-4"
+      size="lg"
+      items={[
+        {
+          icon: 'fa fa-chalkboard-teacher',
+          label: trans('tutors', {}, 'cursus'),
+          value: get(props.course, 'participants.tutors', 0)
+        }, {
+          icon: 'fa fa-user',
+          label: trans('users'),
+          value: get(props.course, 'participants.learners', 0)
+        }, {
+          icon: 'fa fa-hourglass-half',
+          label: trans('pending'),
+          value: get(props.course, 'participants.pending', 0)
+        }, {
+          icon: 'fa fa-user-plus',
+          label: trans('available_seats_per_session', {}, 'cursus'),
+          value: get(props.course, 'restrictions.users') ?
+            get(props.course, 'restrictions.users')
+            : <span className="fa fa-fw fa-infinity" />
         }
-      />
-    </div>
+      ]}
+    />
 
-    <div className="row mt-3">
+    <div className="row">
       <div className="col-md-3">
         <Vertical
           className="mb-3"
@@ -77,7 +69,7 @@ const CourseParticipants = (props) =>
               path: '/groups'
             }, {
               icon: 'fa fa-fw fa-hourglass-half',
-              title: trans('En attente'),
+              title: trans('pending'),
               path: '/pending'
             }, {
               icon: 'fa fa-fw fa-pie-chart',
@@ -315,7 +307,7 @@ const CourseParticipants = (props) =>
         />
       </div>
     </div>
-  </div>
+  </>
 
 CourseParticipants.propTypes = {
   path: T.string.isRequired,

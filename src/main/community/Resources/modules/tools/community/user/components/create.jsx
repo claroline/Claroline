@@ -7,9 +7,12 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {UserForm} from '#/main/community/user/components/form'
 import {selectors} from '#/main/community/tools/community/user/store'
+import {UserAvatar} from '#/main/core/user/components/avatar'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const UserCreate = (props) =>
   <ToolPage
+    className="user-page"
     path={[
       {
         type: LINK_BUTTON,
@@ -21,22 +24,18 @@ const UserCreate = (props) =>
         target: '' // current page, no need to add a link
       }
     ]}
-    primaryAction="add"
+    icon={
+      <UserAvatar className="img-thumbnail" size="lg" />
+    }
     subtitle={trans('new_user', {}, 'community')}
-    actions={[{
-      name: 'add',
-      type: LINK_BUTTON,
-      icon: 'fa fa-fw fa-plus',
-      label: trans('add_user'),
-      target: `${props.path}/users/new`,
-      primary: true
-    }]}
   >
-    <UserForm
-      path={`${props.path}/users/new`}
-      back={`${props.path}/users`}
-      name={selectors.FORM_NAME}
-    />
+    <ContentSizing size="lg">
+      <UserForm
+        path={`${props.path}/users/new`}
+        back={`${props.path}/users`}
+        name={selectors.FORM_NAME}
+      />
+    </ContentSizing>
   </ToolPage>
 
 UserCreate.propTypes = {

@@ -37,6 +37,8 @@
 }
 
 .content-full {
+    /*max-width: 100%;
+    width: 100%;*/
     margin-left: -$grid-gutter-width*.5; // to escape the page-content container-fluid
     margin-right: -$grid-gutter-width*.5; // to escape the page-content container-fluid
     flex: 1 0 auto;

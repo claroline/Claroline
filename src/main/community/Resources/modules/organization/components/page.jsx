@@ -12,6 +12,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {route} from '#/main/community/organization/routing'
 import {getActions} from '#/main/community/organization/utils'
 import {Organization as OrganizationTypes} from '#/main/community/organization/prop-types'
+import {ContentLoader} from '#/main/app/content/components/loader'
 
 const Organization = (props) =>
   <ToolPage
@@ -40,7 +41,14 @@ const Organization = (props) =>
       delete: () => props.reload(props.organization.id)
     }, props.path, props.currentUser) : []}
   >
-    {props.children}
+    {isEmpty(props.organization) &&
+      <ContentLoader
+        size="lg"
+        description={trans('organization_loading', {}, 'community')}
+      />
+    }
+
+    {!isEmpty(props.organization) && props.children}
   </ToolPage>
 
 Organization.propTypes = {

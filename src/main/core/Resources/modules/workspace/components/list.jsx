@@ -70,16 +70,6 @@ const Workspaces = (props) => {
           type: 'boolean',
           alias: 'hidden'
         }, {
-          name: 'createdAfter',
-          label: trans('created_after'),
-          type: 'date',
-          displayable: false
-        }, {
-          name: 'createdBefore',
-          label: trans('created_before'),
-          type: 'date',
-          displayable: false
-        }, {
           name: 'registration.waitingForRegistration',
           label: trans('pending'),
           type: 'boolean',
@@ -90,11 +80,6 @@ const Workspaces = (props) => {
           label: trans('public_registration'),
           type: 'boolean',
           alias: 'selfRegistration'
-        }, {
-          name: 'registration.selfUnregistration',
-          label: trans('public_unregistration'),
-          type: 'boolean',
-          alias: 'selfUnregistration'
         }, {
           name: 'tags',
           type: 'tag',

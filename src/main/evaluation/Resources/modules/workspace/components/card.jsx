@@ -1,10 +1,8 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {schemeCategory20c} from '#/main/theme/color/utils'
 import isEmpty from 'lodash/isEmpty'
 
 import {asset} from '#/main/app/config'
-import {toKey} from '#/main/core/scaffolding/text'
 import {URL_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {displayDuration, number, trans} from '#/main/app/intl'
@@ -14,6 +12,7 @@ import {DataCard} from '#/main/app/data/components/card'
 import {route} from '#/main/core/workspace/routing'
 import {constants} from '#/main/evaluation/constants'
 import {WorkspaceEvaluation as WorkspaceEvaluationTypes} from '#/main/evaluation/workspace/prop-types'
+import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 
 const WorkspaceCard = (props) =>
   <DataCard
@@ -47,8 +46,8 @@ const WorkspaceCard = (props) =>
     subtitle={props.data.workspace.code}
   >
     {-1 === ['xs', 'sm'].indexOf(props.size) && (!props.display || -1 !== props.display.indexOf('footer')) &&
-      <div className="workspace-evaluation-details">
-        {[
+      <ContentInfoBlocks
+        items={[
           {
             icon: 'fa fa-fw fa-hourglass-half',
             label: trans('time_spent'),
@@ -59,19 +58,8 @@ const WorkspaceCard = (props) =>
             displayed: !!props.data.scoreMax,
             value: displayScore(props.data.scoreMax, props.data.score)
           }
-        ]
-          .filter(item => undefined === item.displayed || item.displayed)
-          .map((item, index) => (
-            <article key={toKey(item.label)}>
-              <span className={item.icon} style={{backgroundColor: schemeCategory20c[(index * 4) + 1]}}/>
-              <h5>
-                <small>{item.label}</small>
-                {item.value}
-              </h5>
-            </article>
-          ))
-        }
-      </div>
+        ]}
+      />
     }
   </DataCard>
 

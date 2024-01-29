@@ -39,7 +39,7 @@ function getSectionErrors(sectionFields = [], errors = {}) {
 }
 
 const FormContent = (props) => {
-  const sections = createFormDefinition(props.mode, props.definition || props.sections, props.locked, props.data)
+  const sections = createFormDefinition(props.mode, props.definition, props.locked, props.data)
 
   const primarySections = 1 === sections.length ? [sections[0]] : sections.filter(section => section.primary)
   const otherSections = 1 !== sections.length ? sections.filter(section => !section.primary) : []

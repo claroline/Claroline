@@ -1,9 +1,7 @@
 import React, {Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {schemeCategory20c} from '#/main/theme/color/utils'
 
 import {asset} from '#/main/app/config'
-import {toKey} from '#/main/core/scaffolding/text'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {displayDuration, number, trans} from '#/main/app/intl'
 import {displayScore} from '#/main/app/data/types/score/utils'
@@ -11,6 +9,7 @@ import {DataCard} from '#/main/app/data/components/card'
 
 import {constants} from '#/main/evaluation/constants'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
+import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 
 const ResourceCard = (props) =>
   <DataCard
@@ -40,8 +39,10 @@ const ResourceCard = (props) =>
     subtitle={trans(props.data.resourceNode.meta.type, {}, 'resource')}
   >
     {-1 === ['xs', 'sm'].indexOf(props.size) && (!props.display || -1 !== props.display.indexOf('footer')) &&
-      <div className="resource-evaluation-details">
-        {[
+      <ContentInfoBlocks
+        className="p-3 pt-0"
+        size="sm"
+        items={[
           {
             icon: 'fa fa-fw fa-eye',
             label: trans('views'),
@@ -60,19 +61,8 @@ const ResourceCard = (props) =>
             displayed: !!props.data.scoreMax,
             value: displayScore(props.data.scoreMax, props.data.score, 100)
           }
-        ]
-          .filter(item => undefined === item.displayed || item.displayed)
-          .map((item, index) => (
-            <article key={toKey(item.label)}>
-              <span className={item.icon} style={{backgroundColor: schemeCategory20c[(index * 4) + 1]}}/>
-              <h5>
-                <small>{item.label}</small>
-                {item.value}
-              </h5>
-            </article>
-          ))
-        }
-      </div>
+        ]}
+      />
     }
   </DataCard>
 
