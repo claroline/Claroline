@@ -147,15 +147,15 @@ class ResourcesTool extends AbstractTool
             $this->crud->create($resourceNode, $nodeData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::NO_RIGHTS/* , Options::REFRESH_UUID */]);
 
             $entities[$nodeData['id']] = $resourceNode;
-            // $event->addCreatedEntity($nodeData['id'], $resourceNode);
 
             // create rights
             if (!empty($resourceData['rights'])) {
                 foreach ($resourceData['rights'] as $rightsData) {
-                    $role = $entities[$rightsData['role']['id']];
-                    if (empty($role)) {
+                    if (empty($entities[$rightsData['role']['id']])) {
                         continue;
                     }
+
+                    $role = $entities[$rightsData['role']['id']];
 
                     $rights = new ResourceRights();
                     $rights->setResourceNode($resourceNode);
@@ -177,8 +177,10 @@ class ResourcesTool extends AbstractTool
             $resSerializeOptions = method_exists($resSerializer, 'getCopyOptions') ? $resSerializer->getCopyOptions() : [];
 
             /** @var AbstractResource $resource */
-            $resource = $this->crud->create($resourceClass, $resourceData['resource'], array_merge([Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID], $resSerializeOptions));
+            $resource = new $resourceClass();
             $resource->setResourceNode($resourceNode);
+
+            $this->crud->create($resource, $resourceData['resource'], array_merge([Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID], $resSerializeOptions));
 
             $importEvent = new ImportResourceEvent($resource, $fileBag, $resourceData);
             $this->dispatcher->dispatch($importEvent, 'resource.'.$resourceNode->getType().'.import');
@@ -196,7 +198,7 @@ class ResourcesTool extends AbstractTool
             $this->om->forceFlush();
         }
 
-        return [];
+        return $entities;
     }
 
     private function recursiveExport(ResourceNode $resourceNode, FileBag $fileBag): array
