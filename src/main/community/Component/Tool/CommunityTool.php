@@ -165,7 +165,7 @@ class CommunityTool extends AbstractTool
 
         $this->om->endFlushSuite();
 
-        return [];
+        return $entities;
     }
 
     private function getWorkspaceParameters(Workspace $workspace): array

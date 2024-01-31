@@ -104,6 +104,6 @@ class BadgesTool extends AbstractTool
         }
         $this->om->endFlushSuite();
 
-        return [];
+        return $entities;
     }
 }

@@ -161,7 +161,7 @@ class ToolProvider extends AbstractComponentProvider
         }
 
         // call handler to let it manage custom tool data if any
-        $toolEntities = $toolHandler->import($context, $contextSubject, $fileBag, $data, $entities);
+        $toolEntities = $toolHandler->import($context, $contextSubject, $fileBag, $data['data'] ?? [], $entities);
 
         $importEvent = new ImportToolEvent($toolName, $context, $contextSubject, $fileBag, $data['data'] ?? [], $entities);
         $this->eventDispatcher->dispatch($importEvent, ToolEvents::IMPORT);
