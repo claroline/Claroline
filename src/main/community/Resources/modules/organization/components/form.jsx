@@ -29,7 +29,7 @@ const OrganizationFormComponent = props => {
       }}
       cancel={{
         type: LINK_BUTTON,
-        target: props.isNew ? props.path : route(props.organization),
+        target: props.isNew ? props.path + '/organizations' : route(props.organization, props.path),
         exact: true
       }}
       definition={[

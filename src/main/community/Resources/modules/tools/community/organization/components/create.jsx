@@ -25,7 +25,7 @@ const OrganizationCreate = (props) =>
   >
     <OrganizationForm
       className="mt-3"
-      path={`${props.path}/organizations`}
+      path={props.path}
       name={selectors.FORM_NAME}
     />
   </ToolPage>

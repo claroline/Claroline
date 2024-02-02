@@ -24,7 +24,7 @@ const RoleEdit = (props) =>
     reload={props.reload}
   >
     <RoleForm
-      path={`${props.path}/roles/${props.role ? props.role.id : ''}`}
+      path={props.path}
       name={selectors.FORM_NAME}
     />
   </RolePage>

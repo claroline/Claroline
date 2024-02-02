@@ -25,7 +25,7 @@ const GroupEdit = (props) =>
   >
     <GroupForm
       className="mt-3"
-      path={`${props.path}/groups/${props.group ? props.group.id : ''}`}
+      path={props.path}
       name={selectors.FORM_NAME}
     />
   </GroupPage>

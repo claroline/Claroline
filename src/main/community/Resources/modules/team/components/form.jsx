@@ -28,7 +28,7 @@ const TeamFormComponent = props => {
       }}
       cancel={{
         type: LINK_BUTTON,
-        target: props.path,
+        target: props.isNew ? props.path + '/teams' : route(props.team, props.path),
         exact: true
       }}
       definition={[

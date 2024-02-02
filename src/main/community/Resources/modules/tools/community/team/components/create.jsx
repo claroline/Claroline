@@ -25,7 +25,7 @@ const TeamCreate = (props) =>
   >
     <TeamForm
       className="mt-3"
-      path={`${props.path}/teams`}
+      path={props.path}
       name={selectors.FORM_NAME}
     />
   </ToolPage>

@@ -25,7 +25,7 @@ const OrganizationEdit = (props) =>
   >
     <OrganizationForm
       className="mt-3"
-      path={`${props.path}/organizations/${props.organization ? props.organization.id : ''}`}
+      path={props.path}
       name={selectors.FORM_NAME}
     />
   </OrganizationPage>

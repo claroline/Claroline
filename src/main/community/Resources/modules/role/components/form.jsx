@@ -17,6 +17,7 @@ const RoleFormComponent = props => {
 
   return (
     <FormData
+      className={props.className}
       level={3}
       name={props.name}
       buttons={true}
@@ -28,7 +29,7 @@ const RoleFormComponent = props => {
       }}
       cancel={{
         type: LINK_BUTTON,
-        target: props.isNew ? props.path : route(props.role),
+        target: props.isNew ? props.path + '/roles' : route(props.role, props.path),
         exact: true
       }}
       definition={[
@@ -108,6 +109,7 @@ const RoleFormComponent = props => {
 }
 
 RoleFormComponent.propTypes = {
+  className: T.string,
   path: T.string.isRequired,
   name: T.string.isRequired,
   isNew: T.bool.isRequired,
