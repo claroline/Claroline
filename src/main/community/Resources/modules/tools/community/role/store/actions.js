@@ -25,8 +25,14 @@ actions.loadAdministrationRights = makeActionCreator(ROLE_ADMINISTRATION_RIGHTS_
 
 actions.new = (defaultProps) => formActions.resetForm(selectors.FORM_NAME, merge({}, RoleTypes.defaultProps, defaultProps), true)
 
-actions.open = (id, contextData = null, reload = false) => (dispatch) => {
+actions.open = (id, contextData = null, reload = false) => (dispatch, getState) => {
   if (!reload) {
+    const currentId = selectors.currentId(getState())
+    if (currentId === id) {
+      // nothing to do
+      return
+    }
+
     // remove previous role if any to avoid displaying it while loading
     dispatch(formActions.resetForm(selectors.FORM_NAME, {}, false))
   }

@@ -25,7 +25,7 @@ const TeamEdit = (props) =>
   >
     <TeamForm
       className="mt-3"
-      path={`${props.path}/teams/${props.team ? props.team.id : ''}`}
+      path={props.path}
       name={selectors.FORM_NAME}
     />
   </TeamPage>

@@ -22,8 +22,6 @@ import {selectors} from '#/main/community/tools/community/organization/store'
 import {PageSection} from '#/main/app/page/components/section'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {route} from '#/main/community/organization/routing'
-import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
-import {displayDate, now} from '#/main/app/intl'
 
 const OrganizationShow = props =>
   <OrganizationPage
@@ -34,26 +32,6 @@ const OrganizationShow = props =>
     {get(props.organization, 'meta.description') &&
       <PageSection size="md">
         <ContentHtml className="lead my-5">{get(props.organization, 'meta.description')}</ContentHtml>
-
-        <ContentInfoBlocks
-          className="mb-5"
-          size="lg"
-          items={[
-            {
-              icon: 'fa fa-book',
-              label: trans('workspaces'),
-              value: '100 espaces'
-            }, {
-              icon: 'fa fa-user',
-              label: trans('members', {}, 'community'),
-              value: '10 utilisateurs'
-            }, {
-              icon: 'fa fa-history',
-              label: trans('last_activity'),
-              value: displayDate(now(), false, true)
-            }
-          ]}
-        />
       </PageSection>
     }
 
@@ -174,7 +152,7 @@ const OrganizationShow = props =>
                   {...{
                     name: 'add',
                     type: MODAL_BUTTON,
-                    label: trans('add_group'),
+                    label: trans('add_groups'),
                     modal: [MODAL_GROUPS, {
                       selectAction: (groups) => ({
                         type: CALLBACK_BUTTON,

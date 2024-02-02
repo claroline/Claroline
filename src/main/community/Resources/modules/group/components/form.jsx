@@ -27,7 +27,7 @@ const GroupFormComponent = props => {
       }}
       cancel={{
         type: LINK_BUTTON,
-        target: props.isNew ? props.path : route(props.group),
+        target: props.isNew ? props.path + '/groups' : route(props.group, props.path),
         exact: true
       }}
       definition={[

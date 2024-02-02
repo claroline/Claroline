@@ -23,7 +23,11 @@ const RoleCreate = (props) =>
     ]}
     subtitle={trans('new_role', {}, 'community')}
   >
-    <RoleForm path={`${props.path}/roles`} name={selectors.FORM_NAME} />
+    <RoleForm
+      className="mt-3"
+      path={props.path}
+      name={selectors.FORM_NAME}
+    />
   </ToolPage>
 
 RoleCreate.propTypes = {

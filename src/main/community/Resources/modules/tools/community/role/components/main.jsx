@@ -22,13 +22,12 @@ const RoleMain = props =>
         onEnter: () => props.new(props.contextData),
         disabled: !props.canCreate
       }, {
-        path: '/:id',
-        component: RoleShow,
-        onEnter: (params) => props.open(params.id, props.contextData),
-        exact: true
-      }, {
         path: '/:id/edit',
         component: RoleEdit,
+        onEnter: (params) => props.open(params.id, props.contextData)
+      }, {
+        path: '/:id',
+        component: RoleShow,
         onEnter: (params) => props.open(params.id, props.contextData)
       }
     ]}
