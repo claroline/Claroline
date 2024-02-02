@@ -59,7 +59,7 @@ const SessionMain = (props) =>
                   type: LINK_BUTTON,
                   icon: 'fa fa-fw fa-book',
                   label: trans('open-workspace', {}, 'actions'),
-                  target: workspaceRoute(rows[0].workspace),
+                  target: rows[0].workspace ? workspaceRoute(rows[0].workspace) : '',
                   displayed: !!rows[0].workspace,
                   scope: ['object']
                 }
@@ -80,7 +80,7 @@ const SessionMain = (props) =>
                   type: LINK_BUTTON,
                   icon: 'fa fa-fw fa-book',
                   label: trans('open-workspace', {}, 'actions'),
-                  target: workspaceRoute(rows[0].workspace),
+                  target: rows[0].workspace ? workspaceRoute(rows[0].workspace) : '',
                   displayed: !!rows[0].workspace,
                   scope: ['object']
                 }
