@@ -126,7 +126,6 @@ services:
             - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
-            - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: setLocale, priority: 17 }
             - { name: kernel.event_listener, event: kernel.request, method: checkAvailability }
@@ -154,8 +153,8 @@ services:
             - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
 
     Claroline\CoreBundle\Listener\Entity\UserListener:
-        arguments:
-            - '@security.encoder_factory'
-        tags:
-            - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'prePersist' }
-            - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'preUpdate' }
+      arguments:
+        - '@security.encoder_factory'
+      tags:
+        - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'prePersist' }
+        - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'preUpdate' }

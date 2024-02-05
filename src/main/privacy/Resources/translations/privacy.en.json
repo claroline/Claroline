@@ -7,6 +7,9 @@
   "dpo_alert_enabled": "You have specified the contact details of the data protection officer",
   "dpo_alert_disabled": "You have not specified the contact details of the data protection officer",
 
+  "dpo_email_missing_title": "Data Protection Officer (DPO) email address is missing",
+  "dpo_email_missing_content": "Data Protection Officer (DPO) email is not set.<br>Please set it up by clicking %link%, in Privacy -> Data Protection Officer.",
+
   "personal_data": "My personal data",
   "export_data": "Export data",
   "request_deletion" : "Request deletion of my account",

@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
-use Claroline\PrivacyBundle\Manager\PrivacyManager;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -45,8 +44,6 @@ class PlatformListener
     private LocaleManager $localeManager;
 
     private RoutingHelper $routingHelper;
-
-    private PrivacyManager $privacyManager;
 
     /**
      * The list of public routes of the application.
@@ -77,8 +74,7 @@ class PlatformListener
         VersionManager $versionManager,
         TempFileManager $tempManager,
         LocaleManager $localeManager,
-        RoutingHelper $routingHelper,
-        PrivacyManager $privacyManager
+        RoutingHelper $routingHelper
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
@@ -88,7 +84,6 @@ class PlatformListener
         $this->tempManager = $tempManager;
         $this->localeManager = $localeManager;
         $this->routingHelper = $routingHelper;
-        $this->privacyManager = $privacyManager;
     }
 
     /**
@@ -155,7 +150,6 @@ class PlatformListener
     {
         $event->setResponse(array_merge(
             $this->getChangelogs(),
-            $this->getDPOMessages(),
             $this->getSupportMessages(),
         ));
     }
@@ -202,29 +196,6 @@ class PlatformListener
                     'title' => $this->translator->trans('platform_version', ['%version%' => $this->versionManager->getCurrentMinor()], 'platform'),
                     'content' => $content,
                     'order' => 0,
-                ]],
-            ],
-        ];
-    }
-
-    private function getDPOMessages(): array
-    {
-        if (!$this->isAdmin() || $this->privacyManager->getParameters()->getDpoEmail()) {
-            return [];
-        }
-
-        $editUrl = $this->routingHelper->adminPath('privacy');
-
-        return [
-            [
-                'id' => 'dpo-email-missing',
-                'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
-                'type' => ConnectionMessage::TYPE_ALWAYS,
-                'slides' => [[
-                    'id' => 'dpo-email-missing-message',
-                    'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
-                    'content' => $this->translator->trans('dpo_email_missing_content', ['%link%' => '<a href="'.$editUrl.'" target="_blank"><strong>'.$this->translator->trans('here', [], 'platform').'</strong></a>'], 'platform'),
-                    'order' => 1,
                 ]],
             ],
         ];

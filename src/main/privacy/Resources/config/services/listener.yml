@@ -1,0 +1,9 @@
+services:
+    Claroline\PrivacyBundle\Listener\PrivacyListener:
+        arguments:
+            - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
+            - '@translator'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
+            - '@Claroline\AppBundle\Manager\SecurityManager'
+        tags:
+            - { name: kernel.event_listener, event: platform.connection_messages.populate, method: getDPOMessages }

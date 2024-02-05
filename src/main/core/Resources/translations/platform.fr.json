@@ -169,8 +169,6 @@
     "domain_name": "Nom de domaine",
     "down": "Descendre",
     "download": "Télécharger",
-    "dpo_email_missing_title": "Adresse e-mail du DPO manquante",
-    "dpo_email_missing_content": "L'adresse e-mail du DPO n'est pas renseignée.<br>Veuillez la configurer en cliquant %link%, rubrique Vie privée -> Délégué à la protection des données.",
     "drag_file_here": "Déplacez le fichier ici",
     "drop_file": "Déposez le fichier",
     "duration": "Durée",
