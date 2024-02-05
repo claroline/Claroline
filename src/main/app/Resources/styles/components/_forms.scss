@@ -42,32 +42,6 @@
     @include custom-form-validation-state($state, $data...);
 }
 
-// forward validation styles from the .form-group to the contained components
-// in pure Bootstrap 5 you need to manually add the validation class to each component
-.form-group {
-    @each $state, $data in $form-validation-states {
-        @include form-validation-state-selector($state) {
-            .form-control{
-                @extend .is-#{$state};
-            }
-            .form-select {
-                @extend .is-#{$state};
-            }
-            .form-control-color {
-                @extend .is-#{$state};
-            }
-            .form-check-input {
-                @extend .is-#{$state};
-            }
-
-            // custom components
-            .empty-placeholder {
-                @extend .is-#{$state};
-            }
-        }
-    }
-}
-
 .valid-feedback,
 .invalid-feedback,
 .incomplete-feedback {
