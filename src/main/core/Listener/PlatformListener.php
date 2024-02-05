@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
+use Claroline\PrivacyBundle\Manager\PrivacyManager;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -43,8 +44,9 @@ class PlatformListener
 
     private LocaleManager $localeManager;
 
-    /** @var RoutingHelper */
-    private $routingHelper;
+    private RoutingHelper $routingHelper;
+
+    private PrivacyManager $privacyManager;
 
     /**
      * The list of public routes of the application.
@@ -76,6 +78,7 @@ class PlatformListener
         TempFileManager $tempManager,
         LocaleManager $localeManager,
         RoutingHelper $routingHelper,
+        PrivacyManager $privacyManager
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
@@ -85,6 +88,7 @@ class PlatformListener
         $this->tempManager = $tempManager;
         $this->localeManager = $localeManager;
         $this->routingHelper = $routingHelper;
+        $this->privacyManager = $privacyManager;
     }
 
     /**
@@ -205,7 +209,7 @@ class PlatformListener
 
     private function getDPOMessages(): array
     {
-        if (!$this->isAdmin() || $this->config->getParameter('privacy.dpo.email')) {
+        if (!$this->isAdmin() || $this->privacyManager->getParameters()->getDpoEmail()) {
             return [];
         }
 
