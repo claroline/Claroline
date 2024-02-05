@@ -1,16 +1,15 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {now} from '#/main/app/intl/date'
 import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {constants} from '#/plugin/cursus/constants'
+import {EventStatus} from '#/plugin/cursus/components/event-status'
 import {EventCard} from '#/plugin/cursus/event/components/card'
 import {MODAL_TRAINING_EVENT_ABOUT} from '#/plugin/cursus/event/modals/about'
 import {MODAL_TRAINING_EVENT_PARAMETERS} from '#/plugin/cursus/event/modals/parameters'
@@ -108,28 +107,7 @@ const EventList = (props) =>
             not_ended: trans('session_not_ended', {}, 'cursus')
           }
         },
-        render: (row) => {
-          let status
-          if (get(row, 'start') > now(false)) {
-            status = 'not_started'
-          } else if (get(row, 'start') <= now(false) && get(row, 'end') >= now(false)) {
-            status = 'in_progress'
-          } else if (get(row, 'end') < now(false)) {
-            status = 'ended'
-          }
-
-          const EventStatus = (
-            <span className={classes('badge', {
-              'text-bg-success': 'not_started' === status,
-              'text-bg-info': 'in_progress' === status,
-              'text-bg-danger': 'ended' === status
-            })}>
-              {trans('session_'+status, {}, 'cursus')}
-            </span>
-          )
-
-          return EventStatus
-        }
+        render: (row) => <EventStatus startDate={get(row, 'start')} endDate={get(row, 'end')} />
       }, {
         name: 'name',
         type: 'string',

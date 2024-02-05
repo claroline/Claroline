@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
@@ -35,13 +35,13 @@ const WorkspaceCard = (props) =>
       />
     }
     title={
-      <Fragment>
+      <>
         <span className={`badge text-bg-${constants.EVALUATION_STATUS_COLOR[props.data.status]} icon-with-text-right`}>
           {constants.EVALUATION_STATUSES_SHORT[props.data.status]}
         </span>
 
         {props.data.workspace.name}
-      </Fragment>
+      </>
     }
     subtitle={props.data.workspace.code}
   >

@@ -18,16 +18,14 @@ const PresenceModal = props =>
       {Object.keys(constants.PRESENCE_STATUSES).map(status =>
         <CallbackButton
           key={status}
-          className="list-group-item"
+          className="list-group-item text-start"
           callback={() => {
             props.changeStatus(status)
             props.fadeModal()
           }}
         >
-          <h1 className="h2" style={{margin: 0}}>
-            <span className={`badge text-bg-${constants.PRESENCE_STATUS_COLORS[status]}`} style={{display: 'inline-block'}}>{trans(constants.PRESENCE_STATUSES[status], {}, 'cursus')}</span>
-            <small style={{display: 'block', marginTop: '5px'}}>{trans('presence_'+status+'_help', {}, 'cursus')}</small>
-          </h1>
+          <span className={`badge text-bg-${constants.PRESENCE_STATUS_COLORS[status]}`} style={{display: 'inline-block'}}>{trans(constants.PRESENCE_STATUSES[status], {}, 'cursus')}</span>
+          <p className="mb-0">{trans('presence_'+status+'_help', {}, 'cursus')}</p>
         </CallbackButton>
       )}
     </div>

@@ -150,7 +150,8 @@ const CourseRegistration = (props) => {
           name={props.name}
           dataPart="registration.form"
           sections={get(props.course, 'registration.form', [])}
-        />}
+        />
+      }
     </FormData>
   )
 }

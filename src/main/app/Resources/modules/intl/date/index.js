@@ -25,7 +25,7 @@ function getApiFormat() {
 
 /**
  * Gets the display format of the current user.
- * For now it uses the format of the current locale.
+ * It uses the format of the current locale.
  *
  * @param {boolean} long     - gets the full text date, otherwise gets the short digit format.
  * @param {boolean} withTime - appends time format.
@@ -70,19 +70,6 @@ function apiDate(displayDate, long = false, withTime = false) {
   }
 
   return date.format(getApiFormat())
-}
-
-/**
- * Gets formatted date from Date object.
- *
- * @param {Date} date
- * @param {boolean} long     - does the display date use the full text format ?
- * @param {boolean} withTime - has it time ?
- *
- * @return {string} formatted date
- */
-function dateToDisplayFormat(date, long = false, withTime = false) {
-  return moment(date).format(getDisplayFormat(long, withTime))
 }
 
 /**
@@ -156,6 +143,8 @@ function displayDuration(seconds, long = false) {
  * @param {String} apiDate
  *
  * @return {Date|false} - Returns a date object or false if apiDate is not valid
+ *
+ * @deprecated
  */
 function apiToDateObject(apiDate) {
   return isValidDate(apiDate, getApiFormat()) && moment(apiDate, getApiFormat()).toDate()
@@ -190,7 +179,6 @@ export {
   displayDate,
   now,
   apiToDateObject,
-  dateToDisplayFormat,
   computeElapsedTime,
   getTimeDiff,
   displayDuration,
