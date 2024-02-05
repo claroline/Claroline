@@ -14,11 +14,16 @@ class ApiLoader extends Loader
 {
     // Route format : [path, method, defaults]
     public const DEFAULT_MAP = [
-        'create' => ['', 'POST'],
-        'deleteBulk' => ['', 'DELETE'],
+        'get' => [
+            '/{field}/{id}',
+            ['GET', 'HEAD'],
+            ['field' => 'id'],
+            ['id' => '.+'],
+        ],
         'list' => ['', 'GET'],
         'update' => ['/{id}', 'PUT'],
-        'get' => ['/{field}/{id}', ['GET', 'HEAD'], ['field' => 'id']],
+        'create' => ['', 'POST'],
+        'deleteBulk' => ['', 'DELETE'],
     ];
 
     /** @var bool */
@@ -149,6 +154,10 @@ class ApiLoader extends Loader
                             $route->setMethods(is_array($options[1]) ? $options[1] : [$options[1]]);
                             if (isset($options[2])) {
                                 $route->addDefaults($options[2]);
+                            }
+
+                            if (isset($options[3])) {
+                                $route->setRequirements($options[3]);
                             }
 
                             // add the new route to the route collection:
