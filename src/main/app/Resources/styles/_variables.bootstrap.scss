@@ -384,10 +384,10 @@ $enable-reduced-motion:       true !default;
 $enable-smooth-scroll:        true !default;
 $enable-grid-classes:         true;
 $enable-container-classes:    true;
-$enable-cssgrid:              false !default;
+$enable-cssgrid:              false;
 $enable-button-pointers:      true !default;
 $enable-rfs:                  true !default;
-$enable-validation-icons:     true !default;
+$enable-validation-icons:     true;
 $enable-negative-margins:     true;
 $enable-deprecation-messages: true;
 $enable-important-utilities:  true;
@@ -600,7 +600,9 @@ $aspect-ratios: (
         "1x1": 100%,
         "4x3": calc(3 / 4 * 100%),
         "16x9": calc(9 / 16 * 100%),
-        "21x9": calc(9 / 21 * 100%)
+        "21x9": calc(9 / 21 * 100%),
+        "thumbnail": calc(1 / 5 * 100%),
+        "poster": calc(1 / 5 * 100%)
 ) !default;
 // scss-docs-end aspect-ratios
 // stylelint-enable function-disallowed-list

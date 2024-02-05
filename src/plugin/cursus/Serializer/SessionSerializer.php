@@ -90,6 +90,7 @@ class SessionSerializer
                 'code' => $session->getCode(),
                 'name' => $session->getName(),
                 'thumbnail' => $session->getThumbnail(),
+                'course' => $this->courseSerializer->serialize($session->getCourse(), [SerializerInterface::SERIALIZE_MINIMAL]), // it is required to generate the link to the session
                 'restrictions' => [
                     'dates' => DateRangeNormalizer::normalize($session->getStartDate(), $session->getEndDate()),
                 ],
@@ -112,13 +113,13 @@ class SessionSerializer
             'poster' => $session->getPoster(),
             'description' => $session->getDescription(),
             'plainDescription' => $session->getPlainDescription(),
+            'course' => $this->courseSerializer->serialize($session->getCourse(), [SerializerInterface::SERIALIZE_MINIMAL]), // it is required to generate the link to the session
             'permissions' => [
                 'open' => $this->authorization->isGranted('OPEN', $session),
                 'edit' => $this->authorization->isGranted('EDIT', $session),
                 'delete' => $this->authorization->isGranted('DELETE', $session),
                 'register' => $this->authorization->isGranted('REGISTER', $session),
             ],
-            'course' => $this->courseSerializer->serialize($session->getCourse(), [SerializerInterface::SERIALIZE_MINIMAL]),
             'restrictions' => [
                 'hidden' => $session->isHidden(),
                 'users' => $session->getMaxUsers(),

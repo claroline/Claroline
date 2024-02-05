@@ -1,13 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
-import classes from 'classnames'
 
 import {asset} from '#/main/app/config/asset'
 import {trans, displayDateRange} from '#/main/app/intl'
 import {DataCard} from '#/main/app/data/components/card'
 import {UserMicroList} from '#/main/core/user/components/micro-list'
 
+import {EventStatus} from '#/plugin/cursus/components/event-status'
 import {Event as EventTypes} from '#/plugin/cursus/prop-types'
 
 const EventCard = props =>
@@ -16,13 +16,15 @@ const EventCard = props =>
     id={props.data.id}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon={!props.data.thumbnail ? 'fa fa-clock' : null}
-    title={props.data.name}
+    title={
+      <>
+        <EventStatus className="me-2" startDate={props.data.start} endDate={props.data.end} />
+
+        {props.data.name}
+      </>
+    }
     subtitle={displayDateRange(props.data.start, props.data.end)}
     contentText={props.data.description}
-    className={classes({
-      'is-event-online': !get(props.data, 'location.name'),
-      'has-event-url': !get(props.data, 'location.name') && get(props.data, 'locationUrl')
-    })}
     footer={
       <span
         style={{

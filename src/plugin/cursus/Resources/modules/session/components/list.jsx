@@ -1,9 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import get from 'lodash/get'
 
-import {trans, now} from '#/main/app/intl'
+import {trans} from '#/main/app/intl'
 import {param} from '#/main/app/config'
 import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
@@ -12,6 +11,7 @@ import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {route} from '#/plugin/cursus/routing'
 import {SessionCard} from '#/plugin/cursus/session/components/card'
+import {EventStatus} from '#/plugin/cursus/components/event-status'
 
 const SessionList = (props) =>
   <ListData
@@ -43,28 +43,7 @@ const SessionList = (props) =>
             not_ended: trans('session_not_ended', {}, 'cursus')
           }
         },
-        render: (row) => {
-          let status
-          if (get(row, 'restrictions.dates[0]') > now(false)) {
-            status = 'not_started'
-          } else if (get(row, 'restrictions.dates[0]') <= now(false) && get(row, 'restrictions.dates[1]') >= now(false)) {
-            status = 'in_progress'
-          } else if (get(row, 'restrictions.dates[1]') < now(false)) {
-            status = 'ended'
-          }
-
-          const SessionStatus = (
-            <span className={classes('badge', {
-              'text-bg-success': 'not_started' === status,
-              'text-bg-info': 'in_progress' === status,
-              'text-bg-danger': 'ended' === status
-            })}>
-              {trans('session_'+status, {}, 'cursus')}
-            </span>
-          )
-
-          return SessionStatus
-        }
+        render: (row) => <EventStatus startDate={get(row, 'restrictions.dates[0]')} endDate={get(row, 'restrictions.dates[1]')} />
       }, {
         name: 'name',
         type: 'string',

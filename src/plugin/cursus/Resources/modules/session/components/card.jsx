@@ -4,11 +4,12 @@ import classes from 'classnames'
 import get from 'lodash/get'
 
 import {asset} from '#/main/app/config/asset'
-import {trans, displayDate} from '#/main/app/intl'
+import {trans, displayDateRange} from '#/main/app/intl'
 import {DataCard} from '#/main/app/data/components/card'
 import {UserMicroList} from '#/main/core/user/components/micro-list'
 
 import {Session as SessionTypes} from '#/plugin/cursus/prop-types'
+import {EventStatus} from '#/plugin/cursus/components/event-status'
 
 const SessionCard = props =>
   <DataCard
@@ -19,11 +20,13 @@ const SessionCard = props =>
     })}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon={!props.data.thumbnail ? 'fa fa-calendar-week' : null}
-    title={props.data.name}
-    subtitle={trans('date_range', {
-      start: displayDate(props.data.restrictions.dates[0]),
-      end: displayDate(props.data.restrictions.dates[1])
-    })}
+    title={
+      <>
+        <EventStatus className="me-2" startDate={props.data.restrictions.dates[0]} endDate={props.data.restrictions.dates[1]} />
+        {props.data.name}
+      </>
+    }
+    subtitle={displayDateRange(props.data.restrictions.dates[0], props.data.restrictions.dates[1])}
     contentText={props.data.plainDescription || props.data.description}
     toolbar="self-register | more"
     footer={

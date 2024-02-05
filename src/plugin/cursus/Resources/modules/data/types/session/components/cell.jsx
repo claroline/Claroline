@@ -10,7 +10,7 @@ import {route} from '#/plugin/cursus/routing'
 const SessionCell = props => {
   if (!isEmpty(props.data)) {
     return (
-      <UrlButton target={'#'+route(props.course, props.data)}>
+      <UrlButton target={'#'+route(props.data.course, props.data)}>
         {props.data.name}
       </UrlButton>
     )
@@ -20,12 +20,11 @@ const SessionCell = props => {
 }
 
 implementPropTypes(SessionCell, DataCellTypes, {
-  course: T.object.isRequired
+  data: T.shape({
+    name: T.string,
+    course: T.object
+  })
 })
-
-SessionCell.defaultProps = {
-  data: {}
-}
 
 export {
   SessionCell
