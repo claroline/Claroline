@@ -7,6 +7,9 @@
   "dpo_alert_enabled": "Vous avez renseigné les coordonnées du délégué à la protection des données",
   "dpo_alert_disabled": "Vous n'avez pas renseigné les coordonnées du délégué à la protection des données",
 
+  "dpo_email_missing_title": "Adresse e-mail du DPO manquante",
+  "dpo_email_missing_content": "L'adresse e-mail du DPO n'est pas renseignée.<br>Veuillez la configurer en cliquant %link%, rubrique Vie privée -> Délégué à la protection des données.",
+
   "personal_data": "Mes données personnelles",
   "export_data": "Exporter mes données",
   "request_deletion" : "Demander la suppression de mon compte",

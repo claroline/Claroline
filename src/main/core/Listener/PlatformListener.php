@@ -43,8 +43,7 @@ class PlatformListener
 
     private LocaleManager $localeManager;
 
-    /** @var RoutingHelper */
-    private $routingHelper;
+    private RoutingHelper $routingHelper;
 
     /**
      * The list of public routes of the application.
@@ -75,7 +74,7 @@ class PlatformListener
         VersionManager $versionManager,
         TempFileManager $tempManager,
         LocaleManager $localeManager,
-        RoutingHelper $routingHelper,
+        RoutingHelper $routingHelper
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
@@ -151,7 +150,6 @@ class PlatformListener
     {
         $event->setResponse(array_merge(
             $this->getChangelogs(),
-            $this->getDPOMessages(),
             $this->getSupportMessages(),
         ));
     }
@@ -198,29 +196,6 @@ class PlatformListener
                     'title' => $this->translator->trans('platform_version', ['%version%' => $this->versionManager->getCurrentMinor()], 'platform'),
                     'content' => $content,
                     'order' => 0,
-                ]],
-            ],
-        ];
-    }
-
-    private function getDPOMessages(): array
-    {
-        if (!$this->isAdmin() || $this->config->getParameter('privacy.dpo.email')) {
-            return [];
-        }
-
-        $editUrl = $this->routingHelper->adminPath('privacy');
-
-        return [
-            [
-                'id' => 'dpo-email-missing',
-                'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
-                'type' => ConnectionMessage::TYPE_ALWAYS,
-                'slides' => [[
-                    'id' => 'dpo-email-missing-message',
-                    'title' => $this->translator->trans('dpo_email_missing_title', [], 'platform'),
-                    'content' => $this->translator->trans('dpo_email_missing_content', ['%link%' => '<a href="'.$editUrl.'" target="_blank"><strong>'.$this->translator->trans('here', [], 'platform').'</strong></a>'], 'platform'),
-                    'order' => 1,
                 ]],
             ],
         ];

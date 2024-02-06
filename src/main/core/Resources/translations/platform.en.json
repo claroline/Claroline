@@ -163,8 +163,6 @@
     "domain_name": "Domain name",
     "down": "Down",
     "download": "Download",
-  "dpo_email_missing_title": "Data Protection Officer (DPO) email address is missing",
-  "dpo_email_missing_content": "Data Protection Officer (DPO) email is not set.<br>Please set it up by clicking %link%, in Privacy -> Data Protection Officer.",
     "drag_file_here": "Drag the file here",
     "drop_file": "Drop the file",
     "duration": "Duration",
