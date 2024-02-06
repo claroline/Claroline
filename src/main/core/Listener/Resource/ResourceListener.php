@@ -17,36 +17,17 @@ use Twig\Environment;
 
 class ResourceListener
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var Environment */
-    private $templating;
-    /** @var Crud */
-    private $crud;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ResourceManager */
-    private $manager;
-    /** @var ResourceLifecycleManager */
-    private $lifecycleManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        Environment $templating,
-        Crud $crud,
-        SerializerProvider $serializer,
-        ResourceManager $manager,
-        ResourceLifecycleManager $lifecycleManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly Environment $templating,
+        private readonly Crud $crud,
+        private readonly SerializerProvider $serializer,
+        private readonly ResourceManager $manager,
+        private readonly ResourceLifecycleManager $lifecycleManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->templating = $templating;
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->manager = $manager;
-        $this->lifecycleManager = $lifecycleManager;
     }
 
-    public function load(LoadResourceEvent $event)
+    public function load(LoadResourceEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
         $user = $event->getUser();
@@ -62,7 +43,11 @@ class ResourceListener
         $event->setData(array_merge($event->getData(), $subEvent->getData()));
     }
 
-    public function embed(EmbedResourceEvent $event)
+    /**
+     * Embed the resource in texts.
+     * It will generate a link for most of the resources. Some files (images, videos/audios) are directly rendered.
+     */
+    public function embed(EmbedResourceEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
 
@@ -84,13 +69,13 @@ class ResourceListener
         }
     }
 
-    public function create(ResourceActionEvent $event)
+    public function create(ResourceActionEvent $event): void
     {
         // forward to the resource type
         $this->lifecycleManager->create($event->getResourceNode());
     }
 
-    public function about(ResourceActionEvent $event)
+    public function about(ResourceActionEvent $event): void
     {
         $event->setResponse(
             new JsonResponse($this->serializer->serialize($event->getResourceNode(), [Options::NO_RIGHTS]))
@@ -98,7 +83,7 @@ class ResourceListener
         $event->stopPropagation();
     }
 
-    public function configure(ResourceActionEvent $event)
+    public function configure(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
         $data = $event->getData();
@@ -111,7 +96,7 @@ class ResourceListener
         $event->stopPropagation();
     }
 
-    public function rights(ResourceActionEvent $event)
+    public function rights(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
 
@@ -131,12 +116,12 @@ class ResourceListener
         ));
     }
 
-    public function edit(ResourceActionEvent $event)
+    public function edit(ResourceActionEvent $event): void
     {
         $this->lifecycleManager->edit($event->getResourceNode());
     }
 
-    public function publish(ResourceActionEvent $event)
+    public function publish(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
 
@@ -150,7 +135,7 @@ class ResourceListener
         );
     }
 
-    public function unpublish(ResourceActionEvent $event)
+    public function unpublish(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
 
@@ -164,12 +149,12 @@ class ResourceListener
         );
     }
 
-    public function export(ResourceActionEvent $event)
+    public function export(ResourceActionEvent $event): void
     {
         $this->lifecycleManager->export($event->getResourceNode());
     }
 
-    public function delete(ResourceActionEvent $event)
+    public function delete(ResourceActionEvent $event): void
     {
         $options = $event->getOptions();
         if (isset($options['hard']) && 'false' === $options['hard']) {
@@ -184,7 +169,7 @@ class ResourceListener
         );
     }
 
-    public function restore(ResourceActionEvent $event)
+    public function restore(ResourceActionEvent $event): void
     {
         $this->manager->restore($event->getResourceNode());
 
@@ -193,7 +178,7 @@ class ResourceListener
         );
     }
 
-    public function copy(ResourceActionEvent $event)
+    public function copy(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
         $data = $event->getData();
@@ -216,7 +201,7 @@ class ResourceListener
         }
     }
 
-    public function move(ResourceActionEvent $event)
+    public function move(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
         $data = $event->getData();

@@ -162,7 +162,7 @@ class ResourceVoter implements VoterInterface
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    private function supportsClass($class)
+    private function supportsClass($class): array
     {
         return [
             AbstractResource::class,
@@ -245,13 +245,13 @@ class ResourceVoter implements VoterInterface
                     $grant = $decoder ? $mask & $decoder->getValue() : 0;
 
                     if ($decoder && 0 === $grant) {
-                        $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
+                        $errors[] = $this->getRoleActionDeniedMessage($action, $node);
                     }
                 } else {
-                    $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
+                    $errors[] = $this->getRoleActionDeniedMessage($action, $node);
                 }
             } else {
-                $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
+                $errors[] = $this->getRoleActionDeniedMessage($action, $node);
             }
         }
 
@@ -280,19 +280,10 @@ class ResourceVoter implements VoterInterface
         $rightsCreation = $this->repository->findCreationRights($token->getRoleNames(), $node);
 
         if (!$this->canCreate($rightsCreation, $type)) {
-            $errors[] = $this->translator
-                ->trans(
-                    'resource_creation_wrong_type',
-                    [
-                        '%path%' => $node->getPathForDisplay(),
-                        '%type%' => $this->translator->trans(
-                            strtolower($type),
-                            [],
-                            'resource'
-                        ),
-                    ],
-                    'platform'
-                );
+            $errors[] = $this->translator->trans('resource_creation_wrong_type', [
+                '%path%' => $node->getName(),
+                '%type%' => $this->translator->trans(strtolower($type), [], 'resource'),
+            ], 'platform');
         }
 
         return $errors;
@@ -343,17 +334,15 @@ class ResourceVoter implements VoterInterface
         return $errors;
     }
 
-    private function getRoleActionDeniedMessage($action, $path): string
+    /**
+     * @deprecated this is no longer used. We just check if there are errors or not.
+     */
+    private function getRoleActionDeniedMessage($action, ResourceNode $node): string
     {
-        return $this->translator
-            ->trans(
-                'resource_action_denied_message',
-                [
-                    '%path%' => $path,
-                    '%action%' => $action,
-                ],
-                'platform'
-            );
+        return $this->translator->trans('resource_action_denied_message', [
+            '%path%' => $node->getName(),
+            '%action%' => $action,
+        ], 'platform');
     }
 
     private function validateAccesses($object): bool

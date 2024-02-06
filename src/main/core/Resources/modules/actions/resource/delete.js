@@ -1,6 +1,5 @@
 import {createElement} from 'react'
 import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
 
 import {url} from '#/main/app/api'
 import {trans, transChoice} from '#/main/app/intl/translation'
@@ -15,7 +14,7 @@ import {ResourceCard} from '#/main/core/resource/components/card'
  * @param {object} nodesRefresher - an object containing methods to update context in response to action (eg. add, update, delete).
  */
 export default (resourceNodes, nodesRefresher) => {
-  const processable = resourceNodes.filter(node => !isEmpty(node.parent))
+  const processable = resourceNodes.filter(node => !node.root)
 
   return {
     name: 'delete',

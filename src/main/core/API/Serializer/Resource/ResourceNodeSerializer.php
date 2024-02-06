@@ -24,26 +24,14 @@ class ResourceNodeSerializer
 {
     use SerializerTrait;
 
-    public const NO_PARENT = 'no_parent';
-
-    private ObjectManager $om;
-    private EventDispatcherInterface $eventDispatcher;
-    private UserSerializer $userSerializer;
-    private RightsManager $rightsManager;
-    private SerializerProvider $serializer;
-
     public function __construct(
-        ObjectManager $om,
-        EventDispatcherInterface $eventDispatcher,
-        UserSerializer $userSerializer,
-        RightsManager $rightsManager,
-        SerializerProvider $serializer
+        private readonly ObjectManager $om,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly RightsManager $rightsManager,
+        private readonly SerializerProvider $workspaceSerializer, // we can not inject the WorkspaceSerializer due to a circular ref
+        private readonly UserSerializer $userSerializer,
+        private readonly ResourceCommentSerializer $commentSerializer
     ) {
-        $this->om = $om;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->userSerializer = $userSerializer;
-        $this->rightsManager = $rightsManager;
-        $this->serializer = $serializer;
     }
 
     public function getClass(): string
@@ -68,7 +56,7 @@ class ResourceNodeSerializer
     {
         $serializedWorkspace = null;
         if ($resourceNode->getWorkspace()) {
-            $serializedWorkspace = $this->serializer->serialize($resourceNode->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
+            $serializedWorkspace = $this->workspaceSerializer->serialize($resourceNode->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]);
         }
 
         if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
@@ -95,7 +83,6 @@ class ResourceNodeSerializer
             'slug' => $resourceNode->getSlug(),
             'name' => $resourceNode->getName(),
             'code' => $resourceNode->getCode(),
-            'path' => $resourceNode->getAncestors(),
             'meta' => [
                 'type' => $resourceNode->getType(), // try to remove. use mimeType instead
                 'className' => $resourceNode->getClass(), // try to remove. use mimeType instead
@@ -108,7 +95,7 @@ class ResourceNodeSerializer
                 'updated' => DateNormalizer::normalize($resourceNode->getModificationDate()),
                 'published' => $resourceNode->isPublished(),
                 'active' => $resourceNode->isActive(),
-                'views' => $resourceNode->getViewsCount(),
+                'views' => $resourceNode->getViews(),
                 'authors' => $resourceNode->getAuthor(),
                 'license' => $resourceNode->getLicense(),
                 'commentsActivated' => $resourceNode->isCommentsActivated(),
@@ -134,11 +121,15 @@ class ResourceNodeSerializer
             $serializedNode['permissions'] = $this->rightsManager->getCurrentPermissionArray($resourceNode);
         }
 
-        if (!empty($resourceNode->getParent())) {
-            $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [Options::SERIALIZE_MINIMAL]);
-        }
-
         if (!in_array(Options::SERIALIZE_LIST, $options)) {
+            if (!empty($resourceNode->getParent())) {
+                $serializedNode['parent'] = array_merge($this->serialize($resourceNode->getParent(), [Options::SERIALIZE_MINIMAL]), [
+                    'root' => empty($resourceNode->getParent()->getParent()),
+                ]);
+            } else {
+                $serializedNode['root'] = true; // this is not used (you can check if parent is not here), it's just to preserve the exposed data model
+            }
+
             $serializedNode = array_merge($serializedNode, [
                 'display' => [
                     'fullscreen' => $resourceNode->isFullscreen(),
@@ -146,7 +137,7 @@ class ResourceNodeSerializer
                     'showTitle' => $resourceNode->getShowTitle(),
                 ],
                 'comments' => array_map(function (ResourceComment $comment) { // TODO : should not be exposed here
-                    return $this->serializer->serialize($comment);
+                    return $this->commentSerializer->serialize($comment);
                 }, $resourceNode->getComments()->toArray()),
             ]);
         }
