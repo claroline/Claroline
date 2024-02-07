@@ -14,20 +14,6 @@ function isTypeAllowed(type, allowedTypes = []) {
   return isAllowed
 }
 
-function getType(mimeType) {
-  const typeParts = mimeType.split('/')
-  let type = 'file'
-
-  if (typeParts[0] && ['image', 'audio', 'video'].indexOf(typeParts[0]) > -1) {
-    type = typeParts[0]
-  } else if (typeParts[1]) {
-    type = typeParts[1]
-  }
-
-  return type
-}
-
 export {
-  isTypeAllowed,
-  getType
+  isTypeAllowed
 }

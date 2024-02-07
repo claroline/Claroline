@@ -4,7 +4,7 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_RESOURCE_ABOUT} from '#/main/core/resource/modals/about'
 
 /**
- * Displays a general information about a resource node.
+ * Displays general information about a resource node.
  *
  * @param {Array}  resourceNodes  - the list of resource nodes on which we want to execute the action.
  */

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import classes from 'classnames'
+import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
@@ -10,7 +11,6 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {actions} from '#/main/app/api/store'
 
 import {FileDropContext} from '#/main/app/overlays/dnd/file-drop-context'
-import {getType} from '#/main/app/data/types/file/utils'
 import {FileThumbnail} from '#/main/app/data/types/file/components/thumbnail'
 
 class FileComponent extends Component {
@@ -22,7 +22,12 @@ class FileComponent extends Component {
 
   onFileSelect() {
     if (!isEmpty(this.input.files)) {
-      this.onChange(this.input.files)
+      const uploaded = []
+      for (let file of this.input.files) {
+        uploaded.push(file)
+      }
+
+      this.onChange(uploaded)
     }
   }
 
@@ -30,14 +35,16 @@ class FileComponent extends Component {
     if (!this.props.multiple) {
       const file = files[0]
       if (this.props.autoUpload) {
-        this.props.uploadFile(file, this.props.uploadUrl, this.props.onChange)
+        this.props.uploadFile(file, this.props.uploadUrl).then(this.props.onChange)
       } else {
         this.props.onChange(file)
       }
     } else {
       // Only manages multiple files if autoUpload is false
       if (this.props.autoUpload) {
-        this.props.uploadFile(files[0], this.props.uploadUrl, this.props.onChange)
+        Promise.all(
+          files.map(file => this.props.uploadFile(file, this.props.uploadUrl))
+        ).then(this.props.onChange)
       } else {
         this.props.onChange(files)
       }
@@ -45,6 +52,11 @@ class FileComponent extends Component {
   }
 
   render() {
+    let value
+    if (!isEmpty(this.props.value)) {
+      value = Array.isArray(this.props.value) ? this.props.value : [this.props.value]
+    }
+
     return (
       <div className={classes('file-control', this.props.className)}>
         <input
@@ -64,24 +76,30 @@ class FileComponent extends Component {
           <div className="form-text">{trans('max_filesize', {size: param('uploadMaxFilesize')})}</div>
         }
 
-        {this.props.value &&
-          <div className="file-thumbnails">
-            <FileThumbnail
-              type={getType(this.props.value.mimeType || this.props.value.type)}
-              data={this.props.value}
-              canEdit={false}
-              canExpand={false}
-              canDownload={false}
-              canDelete={!this.props.disabled}
-              handleDelete={() => {
-                if (this.props.value.id) {
-                  this.props.deleteFile(this.props.value.id, this.props.onChange)
-                } else {
-                  this.props.onChange(null)
-                }
-              }}
-            />
-          </div>
+        {!isEmpty(value) &&
+          <>
+            {value.map((file, index) =>
+              <FileThumbnail
+                key={file.name}
+                className="mt-1"
+                file={file}
+                disabled={this.props.disabled}
+                delete={() => {
+                  let newValue = null
+                  if (this.props.multiple) {
+                    newValue = cloneDeep(this.props.value)
+                    newValue.splice(index, 1)
+                  }
+
+                  if (file.id) {
+                    this.props.deleteFile(file.id).then(() => this.props.onChange(newValue))
+                  } else {
+                    this.props.onChange(newValue)
+                  }
+                }}
+              />
+            )}
+          </>
         }
       </div>
     )
@@ -97,6 +115,7 @@ implementPropTypes(FileComponent, DataInputTypes, {
     T.array,
     T.shape({
       id: T.number,
+      name: T.String,
       mimeType: T.string.isRequired,
       url: T.string.isRequired
     })
@@ -122,17 +141,14 @@ implementPropTypes(FileComponent, DataInputTypes, {
   uploadUrl: ['apiv2_file_upload']
 })
 
-//this is not pretty
 const FileInput = connect(
   null,
   dispatch => ({
-    uploadFile(file, url, onSuccess) {
-      dispatch(actions.uploadFile(file, url)).then((response) => {
-        onSuccess(Array.isArray(response) ? response[0] : response)
-      })
+    uploadFile(file, url) {
+      return dispatch(actions.uploadFile(file, url)).then((response) => Array.isArray(response) ? response[0] : response)
     },
     deleteFile(file, callback) {
-      dispatch(actions.deleteFile(file, callback))
+      return dispatch(actions.deleteFile(file, callback))
     }
   })
 )(FileComponent)
