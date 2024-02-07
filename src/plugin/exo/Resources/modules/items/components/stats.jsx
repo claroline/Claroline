@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 const AnswerStats = props =>
-  <span className="answer-stats">
+  <span className="answer-stats badge">
     {props.stats.value && props.stats.total ? Math.round((props.stats.value /  props.stats.total) * 100) : 0} %
     &nbsp;
     ({props.stats.value} / {props.stats.total})

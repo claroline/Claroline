@@ -143,7 +143,7 @@
     "grid_at_least_one_solution": "At least one valid solution must be set.",
     "grid_solutions_requires_positive_answer": "At least one valid answer (expected or positive score)",
     "grid_expected_keyword": "Expected keyword",
-    "hint": "Hint",
+    "hint": "Hint %number%",
     "hint_penalty": "[0,1] -%count% point|]1,Inf[ -%count% points",
     "hint_show": "Show hint",
     "hints": "Hints",

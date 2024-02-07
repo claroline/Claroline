@@ -4,15 +4,15 @@ import {PropTypes as T} from 'prop-types'
 import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
 
 const ContentItemPlayer = props =>
-  <div className="item-player">
-    {props.showTitle && props.item.title &&
-      <h3 className="item-title">{props.item.title}</h3>
-    }
-
-    <ItemMetadata item={props.item} isContentItem={true} />
+  <div className="quiz-item item-player">
+    <ItemMetadata
+      showTitle={props.showTitle}
+      item={props.item}
+      isContentItem={true}
+    />
 
     {(props.item.title || props.item.description) &&
-      <hr/>
+      <hr className="item-content-separator" />
     }
 
     {props.children}

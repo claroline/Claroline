@@ -143,7 +143,7 @@
     "grid_at_least_one_solution": "Au moins une solution valide doit exister.",
     "grid_solutions_requires_positive_answer": "Au moins une réponse valide (attendue ou score positif)",
     "grid_expected_keyword": "Mot clé attendu",
-    "hint": "Indice",
+    "hint": "Indice  %number%",
     "hint_penalty": "[0,1] -%count% point|]1,Inf[ -%count% points",
     "hint_show": "Voir l'indice",
     "hints": "Indices",

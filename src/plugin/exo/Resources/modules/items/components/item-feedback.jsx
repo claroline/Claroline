@@ -7,11 +7,11 @@ import {Metadata as ItemMetadata} from '#/plugin/exo/items/components/metadata'
 
 const ItemFeedback = props =>
   <div className="quiz-item quiz-item-feedback">
-    {props.showTitle && props.item.title &&
-      <h3 className="item-title">{props.item.title}</h3>
-    }
-
-    <ItemMetadata item={props.item} numbering={props.numbering}/>
+    <ItemMetadata
+      showTitle={props.showTitle}
+      item={props.item}
+      numbering={props.numbering}
+    />
 
     <hr className="item-content-separator" />
 

@@ -29,12 +29,8 @@ const AnswersStats = props =>
 
             {step.items.map((item, idxItem) => {
               return isQuestionType(item.type) && props.stats && props.stats[item.id] &&
-                <div className="card mb-3" key={item.id}>
+                <div className="quiz-item card mb-3" key={item.id}>
                   <div className="card-body">
-                    {item.title &&
-                      <h4 className="item-title">{item.title}</h4>
-                    }
-
                     <ItemMetadata
                       item={item}
                       numbering={props.numbering !== constants.NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}

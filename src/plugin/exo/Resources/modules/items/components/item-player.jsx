@@ -8,16 +8,16 @@ import {ContentHtml} from '#/main/app/content/components/html'
 import {trans, transChoice} from '#/main/app/intl/translation'
 
 const UsedHint = props =>
-  <div className="well well-sm used-hint">
+  <div className="used-hint">
     <span className="fa fa-fw fa-lightbulb" />
     <ContentHtml className="hint-text">
       {props.value}
     </ContentHtml>
 
     {props.penalty > 0 &&
-      <small className="text-danger hint-penalty-info">
-        &nbsp;({transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')})
-      </small>
+      <span className="badge hint-penalty-info">
+        {transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')}
+      </span>
     }
   </div>
 
@@ -29,16 +29,16 @@ UsedHint.propTypes = {
 const Hint = props =>
   <button
     type="button"
-    className="btn btn-outline-secondary w-100 hint-btn"
+    className="btn btn-outline-secondary w-100 hint-btn text-start"
     onClick={props.showHint}
   >
     <span className="fa fa-fw fa-lightbulb"/>
-    &nbsp;{trans('hint', {}, 'quiz')}&nbsp;{props.number}
+    {trans('hint', {number: props.number}, 'quiz')}
 
     {props.penalty > 0 &&
-      <small className="text-danger hint-penalty-info">
-        &nbsp;({transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')})
-      </small>
+      <span className="text-danger hint-penalty-info">
+        {transChoice('hint_penalty', props.penalty, {count: props.penalty}, 'quiz')}
+      </span>
     }
   </button>
 
@@ -93,13 +93,11 @@ Hints.propTypes = {
 
 const ItemPlayer = props =>
   <div className="quiz-item item-player">
-    <div>
-      {props.showTitle && props.item.title &&
-        <h3 className="item-title">{props.item.title}</h3>
-      }
-
-      <ItemMetadata item={props.item} numbering={props.numbering}/>
-    </div>
+    <ItemMetadata
+      showTitle={props.showTitle}
+      item={props.item}
+      numbering={props.numbering}
+    />
 
     <hr className="item-content-separator" />
 

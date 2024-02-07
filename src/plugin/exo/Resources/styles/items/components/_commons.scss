@@ -5,7 +5,6 @@
         position: absolute;
         top: 0;
         right: 0;
-        //bottom: auto;
         border-radius: 0 $card-inner-border-radius 0 $card-inner-border-radius;
 
         .user-score {
@@ -13,30 +12,16 @@
         }
     }
 
-    // todo : do not do it like this
     .nav-tabs {
         padding-left: $card-spacer-x;
         margin: 0 (-$card-spacer-x) $card-spacer-y (-$card-spacer-x);
     }
 }
 
-.item-title {
-    font-weight: bold;
-    font-size: 16px;
-    margin-top: 0;
-    padding: 0;
-    margin-bottom: $component-margin-bottom; // normalize margin as item title can be a h
-}
 
-.item-metadata {
-    .item-content,
+.quiz-item {
     .item-description {
-        text-align: justify; // justify HTML contents by default (can be overridden through HTMLs WYSIWYG)
-        margin-bottom: $component-margin-bottom;
-    }
-
-    .item-description {
-        text-align: justify; // justify HTML contents by default (can be overridden through HTMLs WYSIWYG)
+        color: var(--#{$prefix}secondary-color);
         font-style: italic;
     }
 }
@@ -47,37 +32,26 @@
 
 .item-feedback {
     display: flex;
-    text-align: justify; // justify HTML contents by default (can be overridden through HTMLs WYSIWYG)
     background: var(--#{$prefix}tertiary-bg);
     border-top: 1px solid $card-border-color;
-    margin: 20px -15px -15px; // todo : add var
-    padding: 15px; // todo : add var
+    margin: $card-spacer-y (-$card-spacer-x) (-$card-spacer-y) (-$card-spacer-x);
+    padding: $card-spacer-y $card-spacer-x;
+
+    @include border-bottom-radius($card-inner-border-radius);
 
     .fa {
-        font-size: 26px;
-        margin-right: 15px;
+        font-size: map-get($font-sizes, 5);
+        margin-right: $card-spacer-x;
         opacity: 0.25;
-    }
-
-    > div {
-        margin-top: 5px;
     }
 }
 
 .solution-score,
 .answer-stats {
-    white-space: nowrap;
-    border-radius: $border-radius-sm;
     font-size: $font-size-sm;
     background: $gray-light;
     color: #eee;
-    padding: 4px 6px;
-    margin-left: 5px;
-    line-height: 1;
-}
-
-.answer-stats {
-  padding-left: 5px;
+    margin-left: map-get($spacers, 2);
 }
 
 .no-answer {
@@ -86,7 +60,7 @@
 }
 
 .answer-item {
-    text-align: justify; // justify HTML contents by default (can be overridden through HTMLs WYSIWYG)
+    //text-align: justify; // justify HTML contents by default (can be overridden through HTMLs WYSIWYG)
     background-color: $answer-item-bg;
     border: 1px solid $answer-item-border;
     border-radius: $answer-item-border-radius;
@@ -99,14 +73,9 @@
     font-weight: normal;
 }
 
-/*.draggable-answer-item {
-    cursor: move;
-
-    &:hover:not(.selected-answer) {
-        background: $answer-item-hover-bg;
-        border-color: $answer-item-hover-border-color;
-    }
-}*/
+// -
+// Editor answers styles
+// ---
 
 .expected-answer {
     color: $expected-answer-color;
@@ -119,6 +88,10 @@
     border-color: $unexpected-answer-border;
     background: $unexpected-answer-bg;
 }
+
+// -
+// Player/Feedback/Stats answers styles
+// ---
 
 .correct-answer {
     color: $correct-answer-color;
@@ -166,15 +139,6 @@
     }
 }
 
-.stats-answer {
-    border-color: $answer-item-border;
-    background: $answer-item-bg;
-
-    .answer-stats {
-        background: #777;
-    }
-}
-
 .unanswered-item {
     color: $unanswered-answer-color;
     border-color: $unanswered-answer-border;
@@ -184,6 +148,11 @@
         background: $unanswered-answer-color;
         color: $unanswered-answer-bg;
     }
+}
+
+.stats-answer {
+    border-color: $answer-item-border;
+    background: $answer-item-bg;
 }
 
 .btn-feedback {
