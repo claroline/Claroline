@@ -1,5 +1,14 @@
 
 .item-player {
+    .answer-item {
+        cursor: pointer;
+        &:hover:not(.selected-answer) {
+            color: $answer-item-hover-color;
+            background: $answer-item-hover-bg;
+            border-color: $answer-item-hover-border-color;
+        }
+    }
+
     .hint-btn {
         position: relative;
 
@@ -13,10 +22,15 @@
     .used-hint {
         display: flex;
         align-items: baseline;
-        margin-top: 20px;
+        //margin-top: map-get($spacers, 3);
+        padding: $answer-item-padding;
+        color: var(--#{$prefix}warning-text-emphasis);
+        background: var(--#{$prefix}warning-bg-subtle);
+        border: $answer-item-border-width solid var(--#{$prefix}warning-border-subtle);
+        @include border-radius($answer-item-border-radius);
 
         .fa {
-            margin-right: 12px;
+            margin-right: $answer-item-padding;
         }
 
         .hint-text {
@@ -24,9 +38,13 @@
         }
 
         .hint-penalty-info {
-            min-width: 64px;
-            margin-left: 12px;
-            text-align: right;
+            margin-left: map-get($spacers, 3);
+            background: var(--#{$prefix}warning-text-emphasis);
+            color: var(--#{$prefix}warning-bg-subtle);
+        }
+
+        + .used-hint {
+            margin-top: map-get($spacers, 2);
         }
     }
 }

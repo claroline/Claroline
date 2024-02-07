@@ -4,26 +4,30 @@ import {PropTypes as T} from 'prop-types'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ObjectsPlayer} from '#/plugin/exo/items/components/item-objects'
 
-export const Metadata = props =>
-  <div className="item-metadata">
-    <div>
-      {props.numbering &&
-        <span className="numbering">{props.numbering}. {'\u0020'}</span>
-      }
+const Metadata = props =>
+  <>
+    {((props.showTitle && props.item.title) || props.numbering) &&
+      <h4 className="h5 item-title">
+        {props.numbering &&
+          <span className="h-numbering">{props.numbering}</span>
+        }
 
-      {props.item.content && !props.isContentItem &&
-        <ContentHtml className="item-content">{props.item.content}</ContentHtml>
-      }
-    </div>
+        {props.showTitle && props.item.title}
+      </h4>
+    }
+
+    {props.item.content && !props.isContentItem &&
+      <ContentHtml className="item-content lead mb-3">{props.item.content}</ContentHtml>
+    }
 
     {props.item.description &&
-      <ContentHtml className="item-description">{props.item.description}</ContentHtml>
+      <ContentHtml className="item-description mb-3">{props.item.description}</ContentHtml>
     }
 
     {props.item.objects && 0 !== props.item.objects.length &&
       <ObjectsPlayer item={props.item} />
     }
-  </div>
+  </>
 
 Metadata.propTypes = {
   item: T.shape({
@@ -38,5 +42,14 @@ Metadata.propTypes = {
     }))
   }).isRequired,
   isContentItem: T.bool,
-  numbering: T.string
+  numbering: T.string,
+  showTitle: T.bool
+}
+
+Metadata.defaultProps = {
+  showTitle: true
+}
+
+export {
+  Metadata
 }

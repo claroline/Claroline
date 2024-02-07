@@ -6,9 +6,9 @@ import Popover from 'react-bootstrap/Popover'
 import Overlay from 'react-bootstrap/Overlay'
 
 import {ContentHtml} from '#/main/app/content/components/html'
-import {transChoice} from '#/main/app/intl/translation'
 
 import {SHAPE_RECT} from '#/plugin/exo/items/graphic/constants'
+import {SolutionScore} from '#/plugin/exo/components/score'
 
 class HoverFeedback extends Component {
   constructor(props) {
@@ -83,9 +83,7 @@ const AnswerTable = props =>
             />
           }
           {props.showScore &&
-            <span className="solution-score">
-              {transChoice('solution_score', area.score, {score: area.score}, 'quiz')}
-            </span>
+            <SolutionScore score={area.score} />
           }
         </span>
       </div>

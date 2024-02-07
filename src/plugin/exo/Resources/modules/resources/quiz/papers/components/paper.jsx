@@ -71,11 +71,11 @@ const PaperStep = props => {
                 <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.answers)} scoreMax={calculateTotal(item)}/>
               }
 
-              {props.showQuestionTitles && item.title &&
-                <h4 className="item-title">{item.title}</h4>
-              }
-
-              <ItemMetadata item={item} numbering={getNumbering(props.questionNumberingType, props.index, idxItem)} />
+              <ItemMetadata
+                item={item}
+                showTitle={props.showQuestionTitles}
+                numbering={getNumbering(props.questionNumberingType, props.index, idxItem)}
+              />
 
               {React.createElement(getDefinition(item.type).paper, {
                 item: item,
