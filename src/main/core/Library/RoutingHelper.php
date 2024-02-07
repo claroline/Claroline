@@ -9,11 +9,9 @@ use Symfony\Component\Routing\RouterInterface;
 
 class RoutingHelper
 {
-    private RouterInterface $router;
-
-    public function __construct(RouterInterface $router)
-    {
-        $this->router = $router;
+    public function __construct(
+        private readonly RouterInterface $router
+    ) {
     }
 
     public function indexUrl(): string
@@ -36,12 +34,12 @@ class RoutingHelper
         return $this->indexPath().'#/desktop/'.$toolName;
     }
 
-    public function resourceUrl(ResourceNode|array|string $resource): string
+    public function resourceUrl(ResourceNode $resource): string
     {
         return $this->indexUrl().'#'.$this->resourceFragment($resource);
     }
 
-    public function resourcePath(ResourceNode|array|string $resource): string
+    public function resourcePath(ResourceNode $resource): string
     {
         return $this->indexPath().'#'.$this->resourceFragment($resource);
     }
@@ -59,33 +57,9 @@ class RoutingHelper
     /**
      * @internal should be simplified
      */
-    public function resourceFragment(ResourceNode|array|string $resource): string
+    public function resourceFragment(ResourceNode $resource): string
     {
-        $slug = null;
-        $wsSlug = null;
-
-        if ($resource instanceof ResourceNode) {
-            $slug = $resource->getSlug();
-            $wsSlug = $resource->getWorkspace()->getSlug();
-        } elseif (is_array($resource)) {
-            if (isset($resource['slug'])) {
-                $slug = $resource['slug'];
-            } else {
-                $slug = $resource['guid'];
-            }
-
-            if (isset($resource['workspace']) && isset($resource['workspace']['slug'])) {
-                $wsSlug = $resource['workspace']['slug'];
-            }
-        } elseif (is_string($resource)) {
-            $slug = $resource;
-        }
-
-        if ($wsSlug) {
-            return $this->workspaceFragment($wsSlug, 'resources').'/'.$slug;
-        } else {
-            return '/desktop/resources/'.$slug;
-        }
+        return $this->workspaceFragment($resource->getWorkspace(), 'resources').'/'.$resource->getSlug();
     }
 
     public function workspaceUrl(Workspace $workspace, string $toolName = null): string
