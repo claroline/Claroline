@@ -24,7 +24,7 @@ function humanize(num = 0, base) {
     }
   }
 
-  return precision(num / rounder, 1) + unit
+  return precision(num / rounder, 1) + ' ' + unit
 }
 
 function number(num, short = false) {
@@ -37,7 +37,7 @@ function number(num, short = false) {
 
 function fileSize(num, short = true) {
   if (short) {
-    return humanize(num, 1000)
+    return humanize(num, 1000)+'o'
   }
 
   return precision(num, 1)
