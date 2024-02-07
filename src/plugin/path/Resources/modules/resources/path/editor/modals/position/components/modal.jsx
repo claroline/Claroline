@@ -62,6 +62,7 @@ const PositionModal = props => {
       }}
     >
       <FormData
+        flush={true}
         name={selectors.STORE_NAME}
         sections={[
           {
