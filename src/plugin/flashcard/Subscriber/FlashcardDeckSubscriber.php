@@ -2,10 +2,8 @@
 
 namespace Claroline\FlashcardBundle\Subscriber;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
@@ -45,7 +43,6 @@ class FlashcardDeckSubscriber implements EventSubscriberInterface
     {
         return [
             'resource.flashcard.load' => 'onLoad',
-            Crud::getEventName('update', 'post', FlashcardDeck::class) => 'postUpdate',
         ];
     }
 
@@ -74,18 +71,5 @@ class FlashcardDeckSubscriber implements EventSubscriberInterface
         ]);
 
         $event->stopPropagation();
-    }
-
-    public function postUpdate(UpdateEvent $event): void
-    {
-        $flashcardDeck = $event->getObject();
-
-        if ($this->flashcardManager->shouldResetAttempts($event->getOldData(), $event->getData())) {
-            $attempts = $this->resourceEvalRepo->findInProgress($flashcardDeck->getResourceNode());
-            foreach ($attempts as $attempt) {
-                $this->om->remove($attempt);
-            }
-            $this->om->flush();
-        }
     }
 }

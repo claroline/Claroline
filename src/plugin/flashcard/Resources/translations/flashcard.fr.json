@@ -19,7 +19,7 @@
   "card_delete_message": "Êtes-vous sûr de vouloir supprimer cette carte ?",
 
   "deck_confirm_edit_title" : "Modification de la ressource",
-  "deck_confirm_edit_question" : "Ces modifications nécessitent la réinitialisation de la progression des tentatives en cours des utilisateurs. Voulez-vous continuer ?",
+  "deck_confirm_edit_question" : "Ces modifications affecteront la progression des tentatives en cours des utilisateurs. Voulez-vous continuer ?",
 
   "question": "Question",
   "visible_content_type": "Type de contenu pour la face visible",
