@@ -23,9 +23,4 @@ final class ToolEvents
      * @Event("Claroline\CoreBundle\Event\Tool\ImportToolEvent")
      */
     public const IMPORT = 'tool.import';
-
-    public static function getEventName(string $event, string $context, string $toolName): string
-    {
-        return $event.'.'.$context.'.'.$toolName;
-    }
 }

@@ -16,49 +16,30 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Event dispatched by the resource controller when a resource is loaded from the api.
+ * Event dispatched when a resource is updated.
  */
-class LoadResourceEvent extends Event
+class UpdateResourceEvent extends Event
 {
-    private array $data = [];
-
     public function __construct(
         private readonly AbstractResource $resource,
-        private readonly ?bool $embedded = false
+        private readonly ?array $data = []
     ) {
     }
 
     /**
-     * Gets the loaded resource Entity.
-     */
-    public function getResource(): AbstractResource
-    {
-        return $this->resource;
-    }
-
-    /**
-     * Gets the loaded resource ResourceNode entity.
+     * Gets the resource ResourceNode entity.
      */
     public function getResourceNode(): ResourceNode
     {
         return $this->resource->getResourceNode();
     }
 
-    public function isEmbedded(): bool
+    public function getResource(): AbstractResource
     {
-        return $this->embedded;
+        return $this->resource;
     }
 
-    /**
-     * Sets data to return in the api.
-     * NB. It MUST contain serialized structures.
-     */
-    public function setData(array $data): void
-    {
-        $this->data = $data;
-    }
-
-    public function getData(): ?array
+    public function getData(): array
     {
         return $this->data;
     }

@@ -206,9 +206,9 @@ services:
 
     Claroline\CoreBundle\Manager\Resource\ResourceActionManager:
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
 
     Claroline\CoreBundle\Manager\Resource\MaskManager:

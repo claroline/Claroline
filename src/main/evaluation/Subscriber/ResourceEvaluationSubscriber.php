@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Manager\SecurityManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
@@ -21,18 +22,14 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class ResourceEvaluationSubscriber implements EventSubscriberInterface
 {
-    private MessageBusInterface $messageBus;
-    private ResourceEvaluationManager $manager;
     private UserRepository $userRepo;
 
     public function __construct(
-        MessageBusInterface $messageBus,
+        private readonly MessageBusInterface $messageBus,
         ObjectManager $om,
-        ResourceEvaluationManager $manager
+        private readonly SecurityManager $securityManager,
+        private readonly ResourceEvaluationManager $manager
     ) {
-        $this->messageBus = $messageBus;
-        $this->manager = $manager;
-
         $this->userRepo = $om->getRepository(User::class);
     }
 
@@ -41,7 +38,7 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
         return [
             Crud::getEventName('create', 'post', ResourceNode::class) => 'createEvaluations',
             Crud::getEventName('update', 'post', ResourceNode::class) => 'updateEvaluations',
-            ResourceEvents::RESOURCE_OPEN => ['open', 10],
+            ResourceEvents::OPEN => ['open', 10],
             Crud::getEventName('delete', 'pre', ResourceEvaluation::class) => 'updateNbAttempts',
         ];
     }
@@ -94,10 +91,10 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
     public function open(LoadResourceEvent $event): void
     {
         // Update current user evaluation
-        if ($event->getUser() instanceof User) {
+        if ($this->securityManager->getCurrentUser()) {
             $this->manager->updateUserEvaluation(
                 $event->getResourceNode(),
-                $event->getUser(),
+                $this->securityManager->getCurrentUser(),
                 ['status' => AbstractEvaluation::STATUS_OPENED]
             );
         }

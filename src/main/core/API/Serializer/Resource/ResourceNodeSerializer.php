@@ -14,7 +14,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
@@ -89,10 +88,10 @@ class ResourceNodeSerializer
                 'mimeType' => $resourceNode->getMimeType(),
                 'description' => $resourceNode->getDescription(),
                 'creator' => $resourceNode->getCreator() ?
-                    $this->userSerializer->serialize($resourceNode->getCreator(), [Options::SERIALIZE_MINIMAL]) :
+                    $this->userSerializer->serialize($resourceNode->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
-                'created' => DateNormalizer::normalize($resourceNode->getCreationDate()),
-                'updated' => DateNormalizer::normalize($resourceNode->getModificationDate()),
+                'created' => DateNormalizer::normalize($resourceNode->getCreatedAt()),
+                'updated' => DateNormalizer::normalize($resourceNode->getUpdatedAt()),
                 'published' => $resourceNode->isPublished(),
                 'active' => $resourceNode->isActive(),
                 'views' => $resourceNode->getViews(),
@@ -121,9 +120,9 @@ class ResourceNodeSerializer
             $serializedNode['permissions'] = $this->rightsManager->getCurrentPermissionArray($resourceNode);
         }
 
-        if (!in_array(Options::SERIALIZE_LIST, $options)) {
+        if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
             if (!empty($resourceNode->getParent())) {
-                $serializedNode['parent'] = array_merge($this->serialize($resourceNode->getParent(), [Options::SERIALIZE_MINIMAL]), [
+                $serializedNode['parent'] = array_merge($this->serialize($resourceNode->getParent(), [SerializerInterface::SERIALIZE_MINIMAL]), [
                     'root' => empty($resourceNode->getParent()->getParent()),
                 ]);
             } else {
@@ -147,7 +146,7 @@ class ResourceNodeSerializer
             $serializedNode['rights'] = array_values($this->rightsManager->getRights($resourceNode));
         }
 
-        return $this->decorate($resourceNode, $serializedNode, $options);
+        return $serializedNode;
     }
 
     /**
@@ -230,21 +229,6 @@ class ResourceNodeSerializer
         }
 
         return $resourceNode;
-    }
-
-    /**
-     * Dispatches an event to let plugins add some custom data to the serialized node.
-     * For example, Notification adds a flag to know if the current user follows the resource.
-     */
-    private function decorate(ResourceNode $resourceNode, array $serializedNode, array $options = []): array
-    {
-        // avoid plugins override the standard node properties
-        $unauthorizedKeys = array_keys($serializedNode);
-
-        $event = new DecorateResourceNodeEvent($resourceNode, $unauthorizedKeys, $options);
-        $this->eventDispatcher->dispatch($event, 'serialize_resource_node');
-
-        return array_merge($serializedNode, $event->getInjectedData());
     }
 
     private function serializeTags(ResourceNode $resourceNode): array

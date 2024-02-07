@@ -20,34 +20,27 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class CreateResourceEvent extends Event
 {
-    /** @var AbstractResource */
-    private $resource;
-
-    /**
-     * CreateResourceEvent constructor.
-     */
-    public function __construct(AbstractResource $resource)
-    {
-        $this->resource = $resource;
+    public function __construct(
+        private readonly AbstractResource $resource,
+        private readonly ?array $data = []
+    ) {
     }
 
     /**
      * Gets the resource ResourceNode entity.
-     *
-     * @return ResourceNode
      */
-    public function getResourceNode()
+    public function getResourceNode(): ResourceNode
     {
         return $this->resource->getResourceNode();
     }
 
-    public function getResource()
+    public function getResource(): AbstractResource
     {
         return $this->resource;
     }
 
-    public function setResource(AbstractResource $resource)
+    public function getData(): array
     {
-        $this->resource = $resource;
+        return $this->data;
     }
 }

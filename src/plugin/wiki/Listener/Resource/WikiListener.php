@@ -83,9 +83,8 @@ class WikiListener
         /** @var Wiki $copy */
         $copy = $event->getCopy();
 
-        $newWiki = $this->wikiManager->copyWiki($wiki, $copy, $this->tokenStorage->getToken()->getUser());
+        $this->wikiManager->copyWiki($wiki, $copy, $this->tokenStorage->getToken()->getUser());
 
-        $event->setCopy($newWiki);
         $event->stopPropagation();
     }
 

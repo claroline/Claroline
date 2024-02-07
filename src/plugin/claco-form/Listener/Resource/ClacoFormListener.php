@@ -126,9 +126,8 @@ class ClacoFormListener
         $clacoForm = $event->getResource();
         /** @var ClacoForm $copy */
         $copy = $event->getCopy();
-        $copy = $this->clacoFormManager->copyClacoForm($clacoForm, $copy);
+        $this->clacoFormManager->copyClacoForm($clacoForm, $copy);
 
-        $event->setCopy($copy);
         $event->stopPropagation();
     }
 

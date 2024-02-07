@@ -127,7 +127,6 @@ class PathSubscriber implements EventSubscriberInterface
 
         // End the transaction
         $this->om->endFlushSuite();
-        $event->setCopy($path);
 
         $event->stopPropagation();
     }

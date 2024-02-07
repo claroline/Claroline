@@ -43,30 +43,15 @@ class ResourceController
 {
     use RequestDecoderTrait;
 
-    private TokenStorageInterface $tokenStorage;
-    private AuthorizationCheckerInterface $authorization;
-    private SerializerProvider $serializer;
-    private ResourceManager $manager;
-    private ResourceActionManager $actionManager;
-    private ResourceRestrictionsManager $restrictionsManager;
-    private ObjectManager $om;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        SerializerProvider $serializer,
-        ResourceManager $manager,
-        ResourceActionManager $actionManager,
-        ResourceRestrictionsManager $restrictionsManager,
-        ObjectManager $om,
-        AuthorizationCheckerInterface $authorization
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly SerializerProvider $serializer,
+        private readonly ResourceManager $manager,
+        private readonly ResourceActionManager $actionManager,
+        private readonly ResourceRestrictionsManager $restrictionsManager,
+        private readonly ObjectManager $om,
+        private readonly AuthorizationCheckerInterface $authorization
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->serializer = $serializer;
-        $this->manager = $manager;
-        $this->actionManager = $actionManager;
-        $this->restrictionsManager = $restrictionsManager;
-        $this->om = $om;
-        $this->authorization = $authorization;
     }
 
     /**
@@ -105,14 +90,6 @@ class ResourceController
             );
         }
 
-        // UX quality of life : if the user is anonymous and has no rights on the resource
-        // we want to directly display the login modal (by throwing a 401, the app will do it for us)
-        /*$statusCode = 403;
-        if (!$embedded && !$this->authorization->isGranted('IS_AUTHENTICATED_FULLY') && !$this->restrictionsManager->hasRights($resourceNode, $this->tokenStorage->getToken()->getRoleNames())) {
-            // we check if the resource is embedded to avoid multiple modals in homes and paths
-            $statusCode = 401;
-        }*/
-
         return new JsonResponse([
             'managed' => false,
             'resourceNode' => $this->serializer->serialize($resourceNode, [Options::NO_RIGHTS]),
@@ -123,8 +100,7 @@ class ResourceController
     /**
      * Embeds a resource inside a rich text content.
      *
-     * @Route("/embed/{id}", name="claro_resource_embed_short")
-     * @Route("/embed/{type}/{id}", name="claro_resource_embed")
+     * @Route("/embed/{id}", name="claro_resource_embed")
      */
     public function embedAction(ResourceNode $resourceNode): Response
     {
@@ -250,7 +226,7 @@ class ResourceController
     /**
      * Checks the current user can execute the action on the requested nodes.
      */
-    private function checkAccess(MenuAction $action, array $resourceNodes, array $attributes = [])
+    private function checkAccess(MenuAction $action, array $resourceNodes, array $attributes = []): void
     {
         $collection = new ResourceCollection($resourceNodes);
         $collection->setAttributes($attributes);

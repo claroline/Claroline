@@ -30,7 +30,7 @@ class ResourceListener
     public function load(LoadResourceEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
-        $user = $event->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         // Increment view count if viewer is not creator of the resource
         if (!($user instanceof User) || $user !== $resourceNode->getCreator()) {
@@ -73,14 +73,6 @@ class ResourceListener
     {
         // forward to the resource type
         $this->lifecycleManager->create($event->getResourceNode());
-    }
-
-    public function about(ResourceActionEvent $event): void
-    {
-        $event->setResponse(
-            new JsonResponse($this->serializer->serialize($event->getResourceNode(), [Options::NO_RIGHTS]))
-        );
-        $event->stopPropagation();
     }
 
     public function configure(ResourceActionEvent $event): void

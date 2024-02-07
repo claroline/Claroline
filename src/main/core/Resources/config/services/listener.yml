@@ -90,7 +90,6 @@ services:
             - { name: kernel.event_listener, event: resource_load, method: load }
             - { name: kernel.event_listener, event: resource.embed, method: embed }
             - { name: kernel.event_listener, event: resource.create, method: create }
-            - { name: kernel.event_listener, event: resource.about, method: about }
             - { name: kernel.event_listener, event: resource.configure, method: configure }
             - { name: kernel.event_listener, event: resource.rights, method: rights }
             - { name: kernel.event_listener, event: resource.edit, method: edit }

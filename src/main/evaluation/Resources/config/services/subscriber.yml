@@ -3,6 +3,7 @@ services:
         arguments:
             - '@messenger.default_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Manager\SecurityManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
         tags:
             - { name: kernel.event_subscriber }

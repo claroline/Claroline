@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Repository\RoleRepository;
@@ -32,43 +31,28 @@ use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Security;
 
 class ResourceManager implements LoggerAwareInterface
 {
-    use LoggableTrait;
-
-    private AuthorizationCheckerInterface $authorization;
-    private StrictDispatcher $dispatcher;
-    private ObjectManager $om;
-    private Crud $crud;
-    private RightsManager $rightsManager;
-    private TempFileManager $tempManager;
-    private Security $security;
+    use LoggerAwareTrait;
 
     private ResourceTypeRepository $resourceTypeRepo;
     private ResourceNodeRepository $resourceNodeRepo;
     private RoleRepository $roleRepo;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        RightsManager $rightsManager,
-        StrictDispatcher $dispatcher,
-        ObjectManager $om,
-        Crud $crud,
-        TempFileManager $tempManager,
-        Security $security
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly RightsManager $rightsManager,
+        private readonly StrictDispatcher $dispatcher,
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly TempFileManager $tempManager,
+        private readonly Security $security
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->rightsManager = $rightsManager;
-        $this->dispatcher = $dispatcher;
-        $this->crud = $crud;
-        $this->tempManager = $tempManager;
-        $this->security = $security;
-
         $this->resourceTypeRepo = $om->getRepository(ResourceType::class);
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
         $this->roleRepo = $om->getRepository(Role::class);
@@ -145,7 +129,7 @@ class ResourceManager implements LoggerAwareInterface
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
      * 'create' => array('directory', ...), 'role' => $entity))
      */
-    public function createRights(ResourceNode $node, array $rights = [], bool $withDefault = true, bool $log = true)
+    public function createRights(ResourceNode $node, array $rights = [], bool $withDefault = true): void
     {
         foreach ($rights as $data) {
             $resourceTypes = [];
@@ -153,7 +137,7 @@ class ResourceManager implements LoggerAwareInterface
                 $resourceTypes = $this->checkResourceTypes($data['create']);
             }
 
-            $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes, $log);
+            $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes);
         }
 
         if ($withDefault) {
@@ -161,14 +145,14 @@ class ResourceManager implements LoggerAwareInterface
                 /** @var Role $anonymous */
                 $anonymous = $this->roleRepo->findOneBy(['name' => 'ROLE_ANONYMOUS']);
 
-                $this->rightsManager->create(0, $anonymous, $node, false, [], $log);
+                $this->rightsManager->create(0, $anonymous, $node, false, []);
             }
 
             if (!array_key_exists('ROLE_USER', $rights)) {
                 /** @var Role $user */
                 $user = $this->roleRepo->findOneBy(['name' => 'ROLE_USER']);
 
-                $this->rightsManager->create(0, $user, $node, false, [], $log);
+                $this->rightsManager->create(0, $user, $node, false, []);
             }
         }
     }
@@ -342,7 +326,7 @@ class ResourceManager implements LoggerAwareInterface
 
             return $resource;
         } catch (\Exception $e) {
-            $this->log('class '.$node->getClass().' does not exists', 'error');
+            $this->logger->error('class '.$node->getClass().' does not exists');
         }
 
         return null;
@@ -361,7 +345,7 @@ class ResourceManager implements LoggerAwareInterface
     /**
      * Restores a soft deleted resource node.
      */
-    public function restore(ResourceNode $resourceNode)
+    public function restore(ResourceNode $resourceNode): void
     {
         $this->setActive($resourceNode);
         $workspace = $resourceNode->getWorkspace();
@@ -381,9 +365,9 @@ class ResourceManager implements LoggerAwareInterface
         if ($resource) {
             /** @var LoadResourceEvent $event */
             $event = $this->dispatcher->dispatch(
-                ResourceEvents::RESOURCE_OPEN,
+                ResourceEvents::OPEN,
                 LoadResourceEvent::class,
-                [$resource, $this->security->getUser(), $embedded]
+                [$resource, $embedded]
             );
 
             return $event->getData();

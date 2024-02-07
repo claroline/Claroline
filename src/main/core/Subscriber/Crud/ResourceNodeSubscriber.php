@@ -22,41 +22,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ResourceNodeSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var FileManager */
-    private $fileManager;
-    /** @var ResourceLifecycleManager */
-    private $lifeCycleManager;
-    /** @var ResourceManager */
-    private $resourceManager;
-    /** @var RightsManager */
-    private $rightsManager;
-    /** @var ResourceNodeSerializer */
-    private $serializer;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        Crud $crud,
-        FileManager $fileManager,
-        ResourceLifecycleManager $lifeCycleManager,
-        ResourceManager $resourceManager,
-        RightsManager $rightsManager,
-        ResourceNodeSerializer $serializer
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly FileManager $fileManager,
+        private readonly ResourceLifecycleManager $lifecycleManager,
+        private readonly ResourceManager $resourceManager,
+        private readonly RightsManager $rightsManager,
+        private readonly ResourceNodeSerializer $serializer
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->crud = $crud;
-        $this->fileManager = $fileManager;
-        $this->lifeCycleManager = $lifeCycleManager;
-        $this->resourceManager = $resourceManager;
-        $this->rightsManager = $rightsManager;
-        $this->serializer = $serializer;
     }
 
     public static function getSubscribedEvents(): array
@@ -75,6 +50,9 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
+
+        $resourceNode->setCreatedAt(new \DateTime());
+        $resourceNode->setUpdatedAt(new \DateTime());
 
         // make sure the resource code is unique
         // use name as code if not defined
@@ -106,6 +84,8 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         /** @var ResourceNode $resourceNode */
         $resourceNode = $event->getObject();
         $oldData = $event->getOldData();
+
+        $resourceNode->setUpdatedAt(new \DateTime());
 
         $this->fileManager->updateFile(
             ResourceNode::class,
@@ -141,7 +121,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
 
         // forward delete event to the resources implementations
         // TODO : listen to crud event instead
-        $event = $this->lifeCycleManager->delete($node, in_array(Options::SOFT_DELETE, $options));
+        $event = $this->lifecycleManager->delete($node, in_array(Options::SOFT_DELETE, $options));
 
         $this->crud->delete($resource, array_merge([], $options, $event->isSoftDelete() ? [Options::SOFT_DELETE] : []));
 
@@ -179,13 +159,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $newNode->setCode($this->resourceManager->getUniqueCode($newNode->getCode() ?? $newNode->getName()));
-
-        // set the creator of the copy
-        $user = $this->tokenStorage->getToken()->getUser();
-        if ($user instanceof User) {
-            $newNode->setCreator($user);
-        }
+        $this->handleNewResource($newNode);
 
         // link new node to its parent
         /** @var ResourceNode $newParent */
@@ -209,7 +183,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         $this->serializer->deserializeRights(array_values($this->rightsManager->getRights($newParent)), $newNode);
 
         // TODO : listen to crud copy event instead
-        $this->lifeCycleManager->copy($resource, $copy);
+        $this->lifecycleManager->copy($resource, $copy);
     }
 
     public function postCopy(CopyEvent $event): void
@@ -238,6 +212,22 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
                     $this->crud->copy($child, [Options::NO_RIGHTS, Crud::NO_PERMISSIONS], ['parent' => $newNode]);
                 }
             }
+        }
+    }
+
+    private function handleNewResource(ResourceNode $resourceNode): void
+    {
+        $resourceNode->setCreatedAt(new \DateTime());
+        $resourceNode->setUpdatedAt(new \DateTime());
+
+        // make sure the resource code is unique
+        // use name as code if not defined
+        $resourceNode->setCode($this->resourceManager->getUniqueCode(!empty($resourceNode->getCode()) ? $resourceNode->getCode() : $resourceNode->getName()));
+
+        // set the creator of the resource
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User) {
+            $resourceNode->setCreator($user);
         }
     }
 }

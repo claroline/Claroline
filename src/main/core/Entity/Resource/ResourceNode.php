@@ -17,9 +17,11 @@ use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Published;
+use Claroline\AppBundle\Entity\Meta\UpdatedAt;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\CoreBundle\Model\HasWorkspace;
@@ -44,6 +46,8 @@ class ResourceNode
 
     // meta
     use Description;
+    use CreatedAt;
+    use UpdatedAt;
     use Creator;
     use Published;
     use HasWorkspace;
@@ -66,22 +70,6 @@ class ResourceNode
      * @ORM\Column(nullable=true)
      */
     private $license;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="creation_date", type="datetime")
-     * @Gedmo\Timestampable(on="create")
-     */
-    private $creationDate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="modification_date", type="datetime")
-     * @Gedmo\Timestampable(on="update")
-     */
-    private $modificationDate;
 
     /**
      * @var ResourceType
@@ -285,46 +273,6 @@ class ResourceNode
     public function setLicense($license)
     {
         $this->license = $license;
-    }
-
-    /**
-     * Returns the resource creation date.
-     *
-     * @return \DateTime
-     */
-    public function getCreationDate()
-    {
-        return $this->creationDate;
-    }
-
-    /**
-     * Sets the resource creation date.
-     *
-     * NOTE : creation date is already handled by the timestamp listener; this
-     *        setter exists mainly for testing purposes.
-     */
-    public function setCreationDate(\DateTime $date)
-    {
-        $this->creationDate = $date;
-        $this->modificationDate = $date;
-    }
-
-    /**
-     * Returns the resource modification date.
-     *
-     * @return \DateTime
-     */
-    public function getModificationDate()
-    {
-        return $this->modificationDate;
-    }
-
-    /**
-     * Sets the resource modification date.
-     */
-    public function setModificationDate(\DateTime $date)
-    {
-        $this->modificationDate = $date;
     }
 
     /**
