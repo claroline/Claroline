@@ -46,7 +46,7 @@ class WorkspaceContext extends AbstractContext
 
         // we receive the slug on context open,
         // and we receive the uuid when tools are opened
-        return $this->om->getObject(['id' => $contextId, 'slug' => $contextId], Workspace::class, ['slug']);
+        return $this->om->getObject(['uuid' => $contextId, 'slug' => $contextId], Workspace::class, ['slug']);
     }
 
     public function isAvailable(): bool
