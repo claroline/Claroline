@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {schemeCategory20c} from '#/main/theme/color/utils'
+import isEmpty from 'lodash/isEmpty'
 
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
@@ -20,7 +21,7 @@ class AttemptsChart extends Component {
 
     this.state = {
       display: [],
-      data: []
+      data: {}
     }
 
     this.toggleDisplay = this.toggleDisplay.bind(this)
@@ -64,7 +65,7 @@ class AttemptsChart extends Component {
       .then(response => response.json())
       .then((data) => this.setState({
         display: Object.keys(data),
-        data: data
+        data: !isEmpty(data) ? data : {}
       }))
   }
 
@@ -89,9 +90,9 @@ class AttemptsChart extends Component {
       <Fragment>
         <div className="card mb-3 panel-analytics">
           <div className="card-header">
-            <h2 className="card-title">
+            <h5 className="card-title mb-0">
               {trans(this.props.userId ? 'attempts_chart_user' : 'attempts_chart_all', {}, 'quiz')}
-            </h2>
+            </h5>
           </div>
 
           <div className="card-body">
@@ -130,15 +131,19 @@ class AttemptsChart extends Component {
           <TableData
             count={chartData.length}
             data={chartData}
-            columns={[
+            definition={[
               {
                 name: 'color',
                 label: trans('color'),
-                type: 'color'
+                type: 'color',
+                displayed: true,
+                displayable: true
               }, {
                 name: 'label',
                 label: trans('question', {}, 'quiz'),
                 type: 'string',
+                displayed: true,
+                displayable: true,
                 render: (item) => {
                   if ('total' === item.id) {
                     return item.label
