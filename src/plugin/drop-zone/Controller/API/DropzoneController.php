@@ -49,6 +49,7 @@ class DropzoneController
         private readonly DropManager $dropManager,
         private readonly CorrectionManager $correctionManager
     ) {
+        $this->authorization = $authorization;
     }
 
     /**
