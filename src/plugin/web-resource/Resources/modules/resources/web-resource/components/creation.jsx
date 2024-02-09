@@ -10,8 +10,9 @@ const WebResourceForm = props =>
   <FormData
     level={5}
     name={selectors.STORE_NAME}
+    embedded={true}
     dataPart={selectors.FORM_RESOURCE_PART}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,
@@ -22,7 +23,7 @@ const WebResourceForm = props =>
             type: 'file',
             help: trans('has_to_be_a_zip', {}, 'resource'),
             required: true,
-            onChange: (data) => props.update(data),
+            onChange: (data) => props.update(props.newNode, data),
             options: {
               uploadUrl: ['apiv2_webresource_file_upload', {workspace: props.workspaceId}]
             }
@@ -32,21 +33,35 @@ const WebResourceForm = props =>
     ]}
   />
 
-
 WebResourceForm.propTypes = {
   update: T.func.isRequired,
+  newNode: T.object,
   workspaceId: T.string.isRequired
 }
 
 const WebResourceCreation = connect(
   state => ({
+    newNode: selectors.newNode(state),
     workspaceId: selectors.newNode(state).workspace.id
   }),
   (dispatch) => ({
-    update(data) {
+    update(newNode, data) {
       // update resource props
       dispatch(actions.updateResource('size', data.size))
-      dispatch(actions.updateResource('hashName', data.hashName))
+      dispatch(actions.updateResource('hashName', data.url))
+
+      // update node props
+      let cleanedName = data.name.replace('_', ' ').substring(0, data.name.lastIndexOf('.'))
+      cleanedName = cleanedName.charAt(0).toUpperCase() + cleanedName.slice(1)
+      if (!newNode.name) {
+        // only set name if none provided
+        dispatch(actions.updateNode('name', cleanedName))
+      }
+
+      if (!newNode.code) {
+        // only set code if none provided
+        dispatch(actions.updateNode('code', cleanedName))
+      }
 
     }
   })

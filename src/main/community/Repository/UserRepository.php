@@ -190,40 +190,6 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         return $result;
     }
 
-    /**
-     * Counts the users subscribed in a platform role.
-     */
-    public function countUsersByRole(Role $role, $organizations = null, string $dateCreated = null): int
-    {
-        $qb = $this->createQueryBuilder('user')
-            ->select('COUNT(DISTINCT user.id)')
-            ->leftJoin('user.roles', 'role')
-            ->leftJoin('user.groups', 'group')
-            ->leftJoin('group.roles', 'groupRole')
-            ->andWhere('(role.id = :roleId OR groupRole.id = :roleId)')
-            ->andWhere('user.isEnabled = true')
-            ->andWhere('user.isRemoved = false')
-            ->andWhere('user.technical = false')
-            ->setParameter('roleId', $role->getId());
-
-        if ($dateCreated) {
-            $qb
-                ->andWhere('user.created <= :date')
-                ->setParameter('date', $dateCreated);
-        }
-
-        if (!empty($organizations)) {
-            $qb
-                ->leftJoin('group.organizations', 'groupOrganization')
-                ->leftJoin('user.userOrganizationReferences', 'orgaRef')
-                ->andWhere('(orgaRef.organization IN (:organizations) OR groupOrganization IN (:organizations))')
-                ->setParameter('organizations', $organizations);
-        }
-        $query = $qb->getQuery();
-
-        return (int) $query->getSingleScalarResult();
-    }
-
     public function countUsers(array $organizations = [])
     {
         $qb = $this->createQueryBuilder('user')
@@ -248,8 +214,6 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
     {
         $rsm = new ResultSetMappingBuilder($this->getEntityManager());
         $rsm->addRootEntityFromClassMetadata(User::class, 'u');
-
-        // TODO : rewrite without union
 
         return $this->getEntityManager()
             ->createNativeQuery('

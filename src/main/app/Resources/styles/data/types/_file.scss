@@ -32,6 +32,105 @@
 
     .file-preview-delete {
         margin-left: auto;
-        align-self: flex-start;
+        align-self: stretch;
+    }
+}
+
+.file-dropzone {
+    position: relative; // constrain drop target
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
+
+}
+
+.file-dropzone-highlight {
+    .file-dropzone-target {
+        opacity: 1;
+        z-index: $zindex-dropdown - 2; // be sure to appear over everyone, but not dropdowns and form buttons
+    }
+}
+
+.file-dropzone-target {
+    opacity: 0;
+    border-radius: inherit;
+    z-index: map-get($zindex-levels, n1);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: $font-weight-semibold;
+    color: color-contrast($primary);
+
+    background: fade-out($primary, .65);
+    border: map-get($border-widths, 2) $border-style $primary;
+
+    transition: $transition-fade, z-index .15s;
+
+}
+
+.file-dropzone-help {
+    bottom: map-get($spacers, 3);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .file-dropzone-help-icon {
+        color: $primary;
+        font-size: 0;
+        margin: map-get($spacers, 3);
+        position: relative;
+
+        .fa {
+            font-size: 2rem;
+        }
+
+        .fa-file-arrow-up {
+            position: relative;
+            z-index: 1;
+        }
+
+        .fa-file {
+            position: absolute;
+            color: $body-bg;
+            z-index: 0;
+            left: 0;
+            top: 0;
+        }
+    }
+
+    .file-dropzone-help-message {
+        text-align: center;
+        font-weight: $font-weight-semibold;
+        padding: .75rem 1.25rem;
+        background: $primary;
+        color: color-contrast($primary);
+
+        @include border-radius($btn-border-radius);
+    }
+}
+
+.file-dropzone-lg {
+    .file-dropzone-help-icon {
+        .fa {
+            font-size: 3.5rem;
+        }
+    }
+
+    .file-dropzone-help {
+        flex-direction: column;
+    }
+
+    .file-dropzone-target {
+        align-items: flex-end;
+        border-width: map-get($border-widths, 4);
     }
 }

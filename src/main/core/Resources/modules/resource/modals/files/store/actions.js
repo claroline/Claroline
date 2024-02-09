@@ -18,7 +18,11 @@ actions.createFiles = (parent, files, onSuccess) => {
           'X-Requested-With': 'XMLHttpRequest'
         })
       },
-      success: (response) => onSuccess(response)
+      success: (response) => {
+        if (onSuccess) {
+          onSuccess(response)
+        }
+      }
     }
   })
 }

@@ -15,9 +15,16 @@ const FileCreation = connect(
 
       // update node props
       dispatch(actions.updateNode('meta.mimeType', file.mimeType))
+      let cleanedName = file.name.replace('_', ' ').substring(0, file.name.lastIndexOf('.'))
+      cleanedName = cleanedName.charAt(0).toUpperCase() + cleanedName.slice(1)
       if (!newNode.name) {
         // only set name if none provided
-        dispatch(actions.updateNode('name', file.filename))
+        dispatch(actions.updateNode('name', cleanedName))
+      }
+
+      if (!newNode.code) {
+        // only set code if none provided
+        dispatch(actions.updateNode('code', cleanedName))
       }
     }
   })

@@ -187,7 +187,7 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '%claroline.param.files_directory%'
-            - '@router'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
 
     ujm_exo.serializer.resource_content:

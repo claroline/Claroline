@@ -21,11 +21,13 @@ class InvalidDataException extends \Exception
             );
         }, $errors);
 
-        $message = sprintf(
-            "%s\n{\n%s\n}",
-            $message,
-            implode(",\n", $errorMessages)
-        );
+        if ($errorMessages) {
+            $message = sprintf(
+                "%s\n{\n%s\n}",
+                $message,
+                implode(",\n", $errorMessages)
+            );
+        }
 
         parent::__construct($message);
     }

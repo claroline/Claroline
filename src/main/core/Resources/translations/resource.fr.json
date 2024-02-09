@@ -101,5 +101,6 @@
     "require_resource_help": "Les utilisateurs devront terminer cette ressource pour faire avancer leur progression dans l'espace d'activités.",
     "evaluate_resource": "La ressource participe au score de l'espace d'activités",
     "evaluate_resource_help": "Le score obtenu par les utilisateurs à cette ressource est utilisé pour calculer le score de l'espace d'activités.",
-    "count_resources": "Nombre de ressources"
+    "count_resources": "Nombre de ressources",
+    "file_drop_help": "Déposez vos fichiers pour les importer dans le dossier"
 }
