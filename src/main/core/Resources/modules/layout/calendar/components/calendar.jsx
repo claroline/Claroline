@@ -97,6 +97,7 @@ const CurrentDate = props =>
     <CallbackButton
       className="btn btn-outline-light btn-now w-100"
       callback={props.today}
+      size="sm"
     >
       {trans(props.time ? 'now': 'today')}
     </CallbackButton>

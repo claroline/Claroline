@@ -144,7 +144,7 @@ class ToolProvider extends AbstractComponentProvider
         }
 
         // set tool config
-        $this->crud->create($orderedTool, $data['orderedTool'], [SerializerInterface::REFRESH_UUID, Crud::NO_PERMISSIONS, Crud::THROW_EXCEPTION]);
+        $this->crud->create($orderedTool, $data['orderedTool'], [SerializerInterface::REFRESH_UUID, Crud::NO_PERMISSIONS]);
 
         // set tool rights
         foreach ($data['rights'] as $rightsData) {
@@ -157,7 +157,7 @@ class ToolProvider extends AbstractComponentProvider
 
             $this->crud->create($rights, array_merge($rightsData, [
                 'role' => ['id' => $entities[$rightsData['role']['id']]->getUuid()],
-            ]), [SerializerInterface::REFRESH_UUID, Crud::NO_PERMISSIONS, Crud::THROW_EXCEPTION]);
+            ]), [SerializerInterface::REFRESH_UUID, Crud::NO_PERMISSIONS]);
         }
 
         // call handler to let it manage custom tool data if any

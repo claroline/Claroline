@@ -3,9 +3,8 @@ services:
         arguments:
             - '%claroline.param.files_directory%'
             - '%claroline.param.uploads_directory%'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    Claroline\WebResourceBundle\Controller\API\WebResourceController:
+    Claroline\WebResourceBundle\Controller\WebResourceController:
         public: true
         arguments:
             - '@Claroline\WebResourceBundle\Manager\WebResourceManager'

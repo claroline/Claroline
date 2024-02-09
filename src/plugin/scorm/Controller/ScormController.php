@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\ScormBundle\Entity\Sco;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Entity\ScoTracking;
@@ -36,64 +37,43 @@ class ScormController
     use RequestDecoderTrait;
     use PermissionCheckerTrait;
 
-    /** @var TranslatorInterface */
-    private $translator;
-    /* @var FinderProvider */
-    private $finder;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ScormManager */
-    private $scormManager;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TranslatorInterface $translator,
-        FinderProvider $finder,
-        SerializerProvider $serializer,
-        ScormManager $scormManager,
-        EvaluationManager $evaluationManager
+        private readonly TranslatorInterface $translator,
+        private readonly FinderProvider $finder,
+        private readonly SerializerProvider $serializer,
+        private readonly ScormManager $scormManager,
+        private readonly EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
-        $this->translator = $translator;
-        $this->finder = $finder;
-        $this->serializer = $serializer;
-        $this->scormManager = $scormManager;
-        $this->evaluationManager = $evaluationManager;
     }
 
     /**
      * @Route("/workspace/{workspace}/scorm/archive/upload", name="apiv2_scorm_archive_upload")
+     *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
     public function uploadAction(Workspace $workspace, Request $request): JsonResponse
     {
         $files = $request->files->all();
-        $data = null;
-        $error = null;
+
+        if (empty($files)) {
+            throw new InvalidDataException('No archive to import.');
+        }
 
         try {
-            if (1 === count($files)) {
-                foreach ($files as $file) {
-                    $data = $this->scormManager->uploadScormArchive($workspace, $file);
-                }
-            } else {
-                return new JsonResponse('No uploaded file', 500);
-            }
+            $file = array_pop($files); // we can only accept one file
+            $data = $this->scormManager->uploadScormArchive($workspace, $file);
         } catch (InvalidScormArchiveException $e) {
-            $error = $this->translator->trans($e->getMessage(), [], 'resource');
+            throw new InvalidDataException($this->translator->trans($e->getMessage(), [], 'resource'));
         }
 
-        if (empty($error)) {
-            return new JsonResponse($data, 200);
-        }
-
-        return new JsonResponse($error, 500);
+        return new JsonResponse($data, 200);
     }
 
     /**
      * @Route("/scorm/{scorm}", name="apiv2_scorm_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
      */
     public function updateAction(Scorm $scorm, Request $request): JsonResponse
@@ -107,6 +87,7 @@ class ScormController
 
     /**
      * @Route("/sco/{sco}/commit", name="apiv2_scormscotracking_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter("sco", class="Claroline\ScormBundle\Entity\Sco", options={"mapping": {"sco": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
@@ -125,6 +106,7 @@ class ScormController
 
     /**
      * @Route("/scorm/{scorm}/trackings/list", name="apiv2_scormscotracking_list")
+     *
      * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
      */
     public function listTrackingsAction(Scorm $scorm, Request $request): JsonResponse
@@ -145,6 +127,7 @@ class ScormController
 
     /**
      * @Route("/scorm/{scorm}/trackings/export", name="apiv2_scormscotracking_export")
+     *
      * @EXT\ParamConverter("scorm", class="Claroline\ScormBundle\Entity\Scorm", options={"mapping": {"scorm": "uuid"}})
      */
     public function exportTrackingsAction(Scorm $scorm): StreamedResponse

@@ -7,8 +7,8 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\Text;
+use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Serializer for resource content.
@@ -17,52 +17,20 @@ class ResourceContentSerializer
 {
     use SerializerTrait;
 
-    /**
-     * @var ObjectManager
-     */
-    private $om;
-
-    /**
-     * @var string
-     */
-    private $fileDir;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var ResourceManager
-     */
-    private $resourceManager;
-
-    /**
-     * ResourceContentSerializer constructor.
-     *
-     * @param string $fileDir
-     */
     public function __construct(
-        ObjectManager $om,
-        $fileDir,
-        RouterInterface $router,
-        ResourceManager $resourceManager
+        private readonly ObjectManager $om,
+        private readonly string $fileDir,
+        private readonly RoutingHelper $routingHelper,
+        private readonly ResourceManager $resourceManager
     ) {
-        $this->om = $om;
-        $this->fileDir = $fileDir;
-        $this->router = $router;
-        $this->resourceManager = $resourceManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'exo_resource_content';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(ResourceNode $node, array $options = [])
+    public function serialize(ResourceNode $node, array $options = []): array
     {
         // Load Resource from Node
         $resource = $this->resourceManager->getResourceFromNode($node);
@@ -85,8 +53,7 @@ class ResourceContentSerializer
                 $serialized['url'] = $this->fileDir.DIRECTORY_SEPARATOR.$resource->getHashName();
             } else {
                 // return the url to access the resource
-                $serialized['url'] = $this->router->generate('claro_index').
-                    '#/desktop/workspaces/open/'.$node->getWorkspace()->getSlug().'/resources/'.$node->getSlug();
+                $serialized['url'] = $this->routingHelper->resourceUrl($node);
             }
         }
 
@@ -99,10 +66,7 @@ class ResourceContentSerializer
      * The only purpose of this serializer is to expose a common data representation of a resource,
      * it's not made to create/update them so the deserialization only returns an existing ResourceNode
      *
-     * @param array        $data
-     * @param ResourceNode $resourceNode
-     *
-     * @return mixed
+     * @param array $data
      */
     public function deserialize($data, ResourceNode $resourceNode = null, array $options = [])
     {

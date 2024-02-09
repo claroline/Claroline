@@ -37,7 +37,7 @@ function number(num, short = false) {
 
 function fileSize(num, short = true) {
   if (short) {
-    return humanize(num, 1000)+'o'
+    return humanize(num, 1000)+trans('bytes_short')
   }
 
   return precision(num, 1)

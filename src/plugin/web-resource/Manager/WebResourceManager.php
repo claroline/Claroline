@@ -11,7 +11,6 @@
 
 namespace Claroline\WebResourceBundle\Manager;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Ramsey\Uuid\Uuid;
@@ -20,14 +19,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class WebResourceManager
 {
-    /** @var string */
-    private $filesDir;
-    /** @var string */
-    private $uploadDir;
-    /** @var ObjectManager */
-    private $om;
-
-    private $defaultIndexFiles = [
+    private array $defaultIndexFiles = [
         'web/SCO_0001/default.html',
         'web/SCO_0001/default.htm',
         'web/index.html',
@@ -43,13 +35,9 @@ class WebResourceManager
     ];
 
     public function __construct(
-        string $filesDir,
-        string $uploadDir,
-        ObjectManager $om
+        private readonly string $filesDir,
+        private readonly string $uploadDir
     ) {
-        $this->filesDir = $filesDir;
-        $this->uploadDir = $uploadDir;
-        $this->om = $om;
     }
 
     public function create(UploadedFile $tmpFile, Workspace $workspace): array
@@ -59,6 +47,8 @@ class WebResourceManager
         $fileName = $tmpFile->getClientOriginalName();
         $hash = $this->getHash(pathinfo($fileName, PATHINFO_EXTENSION));
         $size = filesize($tmpFile);
+        $mimeType = $tmpFile->getMimeType();
+
         $file->setSize($size);
         $file->setName($fileName);
         $file->setHashName($hash);
@@ -67,8 +57,12 @@ class WebResourceManager
         $this->unzip($hash, $workspace);
 
         return [
-            'hashName' => $hash,
+            'hashName' => $hash, // for retro-compatibility
+
+            'name' => $fileName,
+            'type' => $mimeType,
             'size' => $size,
+            'url' => $hash,
         ];
     }
 

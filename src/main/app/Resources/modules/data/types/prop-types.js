@@ -226,6 +226,7 @@ const DataInput = {
     disabled: T.bool,
     size: T.oneOf(['sm', 'lg']),
     onChange: T.func.isRequired,
+    onError: T.func,
     /**
      * @deprecated use validating
      */

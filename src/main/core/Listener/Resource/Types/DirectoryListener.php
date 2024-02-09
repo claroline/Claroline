@@ -111,8 +111,14 @@ class DirectoryListener
         $resourceType = $this->resourceManager->getResourceTypeByName('file');
         $resources = [];
         foreach ($publicFiles as $publicFile) {
+            $extension = pathinfo($publicFile->getFilename(), PATHINFO_EXTENSION);
+            // clean up filename to generate the resource name
+            $resourceName = str_replace('.'.$extension, '', $publicFile->getFilename());
+            $resourceName = str_replace('_', ' ', $resourceName);
+            $resourceName = ucfirst($resourceName);
+
             $created = $this->createResource($parent, [
-                'name' => $publicFile->getFilename(),
+                'name' => $resourceName,
                 'meta' => [
                     'type' => $resourceType->getName(),
                     'mimeType' => $publicFile->getMimeType(),
