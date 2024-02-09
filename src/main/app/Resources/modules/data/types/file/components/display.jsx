@@ -1,17 +1,19 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {FileThumbnail} from '#/main/app/data/types/file/components/thumbnail'
 
 const FileDisplay = props => {
   if (props.data) {
-    let file = props.data
-    if (Array.isArray(props.data)) {
-      file = file[0]
-    }
 
+    const files = Array.isArray(props.data) ? props.data : [props.data]
     return (
-      <a href={file.url} className="d-block">
-        {file.name || file.url}
-      </a>
+      <>
+        {files.map(file =>
+          <a key={file.url} href={file.url} className="mb-1 text-reset text-decoration-none">
+            <FileThumbnail file={file} />
+          </a>
+        )}
+      </>
     )
   }
 

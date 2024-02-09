@@ -1,23 +1,18 @@
-import React, {Component} from 'react'
+import React, {Component, createRef} from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
-import {FileDropContext} from '#/main/app/overlays/dnd/file-drop-context'
+import {trans} from '#/main/app/intl'
 
-function hasEventFiles(ev) {
-  /*console.log(e.dataTransfer.files)
-  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-    return true
-  }
-
-  return false*/
-
+function getEventFiles(ev) {
   let files = []
   if (ev.dataTransfer.items) {
     // Use DataTransferItemList interface to access the file(s)
     [...ev.dataTransfer.items].forEach((item) => {
       // If dropped items aren't files, reject them
       if ('file' === item.kind) {
-        files.push(files)
+        files.push(item.getAsFile())
       }
     })
   } else {
@@ -25,7 +20,7 @@ function hasEventFiles(ev) {
     files = [...ev.dataTransfer.files]
   }
 
-  return 0 !== files.length
+  return files
 }
 
 class FileDrop extends Component {
@@ -33,58 +28,113 @@ class FileDrop extends Component {
     super(props)
 
     this.state = {
-      enabled: false
+      count: 0
     }
+
+    this.dropTarget = createRef()
 
     this.onDragStart = this.onDragStart.bind(this)
     this.onDragEnd = this.onDragEnd.bind(this)
+    this.onDragOver = this.onDragOver.bind(this)
+    this.onDrop = this.onDrop.bind(this)
   }
 
   componentDidMount() {
-    console.log('mount')
     document.addEventListener('dragenter', this.onDragStart)
     document.addEventListener('dragleave', this.onDragEnd)
-    document.addEventListener('drop', this.onDragEnd)
+    document.addEventListener('dragover', this.onDragOver)
+    document.addEventListener('drop', this.onDrop)
   }
 
   componentWillUnmount() {
     document.removeEventListener('dragenter', this.onDragStart)
     document.removeEventListener('dragleave', this.onDragEnd)
-    document.removeEventListener('drop', this.onDragEnd)
+    document.removeEventListener('dragover', this.onDragOver)
+    document.removeEventListener('drop', this.onDrop)
   }
 
   onDragStart(e) {
-    console.log(e)
-    if (hasEventFiles(e)) {
+    if (!this.props.disabled && !isEmpty(getEventFiles(e))) {
+      e.stopPropagation()
       e.preventDefault()
 
-      this.setState({enabled: true})
-      console.log('coucou start')
+      this.setState({count: this.state.count + 1})
+    }
+  }
+
+
+  onDragOver(e) {
+    if (!this.props.disabled && !isEmpty(getEventFiles(e))) {
+      e.stopPropagation()
+      e.preventDefault()
     }
   }
 
   onDragEnd(e) {
-    console.log(e)
-    if (hasEventFiles(e)) {
+    if (!this.props.disabled && !isEmpty(getEventFiles(e))) {
+      e.stopPropagation()
       e.preventDefault()
 
-      this.setState({enabled: false})
+      this.setState({count: this.state.count - 1})
+    }
+  }
 
-      console.log('coucou end')
+  onDrop(e) {
+    const files = getEventFiles(e)
+    if (!this.props.disabled && !isEmpty(files)) {
+      e.stopPropagation()
+      e.preventDefault()
+
+      if (this.dropTarget.current === e.target || this.dropTarget.current.contains(e.target)) {
+        this.props.onDrop(files)
+      }
+
+      this.setState({
+        count: this.state.count - 1
+      })
     }
   }
 
   render() {
     return (
-      <FileDropContext.Provider value={this.state.enabled}>
+      <div
+        className={classes(this.props.className, 'file-dropzone', {
+          'file-dropzone-highlight': 0 < this.state.count && !this.props.disabled
+        }, this.props.size && `file-dropzone-${this.props.size}`)}
+      >
+        {!this.props.disabled &&
+          <div className={classes('file-dropzone-target')} ref={this.dropTarget}>
+            <div className="file-dropzone-help sticky-bottom">
+              <span className="file-dropzone-help-icon">
+                <span className="fa fa-file-arrow-up" />
+                <span className="fa fa-file" />
+              </span>
+              <span className="file-dropzone-help-message">
+                {this.props.help}
+              </span>
+            </div>
+          </div>
+        }
+
         {this.props.children}
-      </FileDropContext.Provider>
+      </div>
     )
   }
 }
 
 FileDrop.propTypes = {
-  children: T.node.isRequired
+  className: T.string,
+  disabled: T.bool,
+  // The list of accepted file mimeTypes as defined for <input type="file" />
+  accept: T.arrayOf(T.string),
+  onDrop: T.func.isRequired,
+  children: T.node.isRequired,
+  help: T.string,
+  size: T.oneOf(['sm', 'lg'])
+}
+
+FileDrop.defaultProps = {
+  help: trans('file_drop_help')
 }
 
 export {

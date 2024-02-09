@@ -7,7 +7,7 @@
   align-items: center;
   margin-bottom: map-get($spacers, 3);
 
-  background: var(--#{$prefix}secondary-bg);
+  background: var(--#{$prefix}tertiary-bg);
   padding: map-get($spacers, 3);
   color: var(--#{$prefix}secondary-color);
 }

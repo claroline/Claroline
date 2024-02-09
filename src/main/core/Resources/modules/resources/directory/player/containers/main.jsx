@@ -8,6 +8,7 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {PlayerMain as PlayerMainComponent} from '#/main/core/resources/directory/player/components/main'
 import {selectors} from '#/main/core/resources/directory/player/store'
 import {selectors as directorySelectors} from '#/main/core/resources/directory/store'
+import {actions} from '#/main/core/resource/modals/files/store'
 
 const PlayerMain = connect(
   (state) => ({
@@ -21,6 +22,9 @@ const PlayerMain = connect(
     storageLock: directorySelectors.storageLock(state)
   }),
   (dispatch) => ({
+    createFiles(parent, files) {
+      return dispatch(actions.createFiles(parent, files))
+    },
     updateNodes() {
       dispatch(listActions.invalidateData(selectors.LIST_NAME))
     },

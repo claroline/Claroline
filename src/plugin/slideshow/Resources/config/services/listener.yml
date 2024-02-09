@@ -12,4 +12,4 @@ services:
             - { name: kernel.event_listener, event: resource.claro_slideshow.load, method: onLoad }
             - { name: kernel.event_listener, event: resource.claro_slideshow.delete, method: onDelete }
             - { name: kernel.event_listener, event: resource.claro_slideshow.export, method: onExport }
-            - { name: kernel.event_listener, event: resource.claro_slideshow.import.after, method: onImport }
+            - { name: kernel.event_listener, event: resource.claro_slideshow.import, method: onImport }
