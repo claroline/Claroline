@@ -21,7 +21,7 @@ const AddDocumentModal = (props) =>
     <FormData
       flush={true}
       name={selectors.STORE_NAME}
-      sections={[
+      definition={[
         {
           id: 'general',
           title: trans('general'),
@@ -73,7 +73,8 @@ AddDocumentModal.propTypes = {
   data: T.object,
   type: T.string.isRequired,
   save: T.func.isRequired,
-  resetForm: T.func.isRequired
+  resetForm: T.func.isRequired,
+  fadeModal: T.func.isRequired
 }
 
 export {
