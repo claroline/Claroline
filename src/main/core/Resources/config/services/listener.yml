@@ -38,10 +38,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: data_source.tools.load, method: getData }
 
-    Claroline\CoreBundle\Listener\Notification\NotificationUserParametersListener:
-        tags:
-            - { name: kernel.event_listener, event: icap_notification_user_parameters_event, method: onGetTypesForParameters }
-
     Claroline\CoreBundle\Listener\Resource\Types\DirectoryListener:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

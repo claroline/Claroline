@@ -69,7 +69,7 @@ class IconInput extends Component {
       <div className={classes('input-group', this.props.className, {
         [`input-group-${this.props.size}`]: !!this.props.size
       })}>
-        {this.renderPickerButton()}
+        {this.renderPickerButton('rounded-end-0')}
 
         <input
           id={this.props.id+'-input'}

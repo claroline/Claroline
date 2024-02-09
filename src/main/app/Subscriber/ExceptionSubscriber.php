@@ -47,7 +47,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
             $event->setResponse($response);
         } elseif ($exception instanceof InvalidDataException) {
             // return correct status code for invalid data sent by the user
-            $response = new JsonResponse($exception->getErrors(), 422);
+            $response = new JsonResponse(!empty($exception->getErrors()) ? $exception->getErrors() : $exception->getMessage(), 422);
 
             $event->setResponse($response);
         } elseif ($exception instanceof NotFoundHttpException) {

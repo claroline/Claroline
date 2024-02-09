@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -80,7 +81,7 @@ class ClientSerializer
             ],
             'pricing' => $this->config->getParameter('pricing'),
             'plugins' => $this->pluginManager->getEnabled(),
-            'uploadMaxFilesize' => ini_get('upload_max_filesize'),
+            'uploadMaxFilesize' => UploadedFile::getMaxFilesize(),
         ];
 
         $event = new GenericDataEvent();

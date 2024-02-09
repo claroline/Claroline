@@ -26,24 +26,6 @@ services:
             - { name: kernel.event_listener, event: resource.icap_blog.import, method: onImport }
             - { name: kernel.event_listener, event: resource.icap_blog.copy, method: onCopy }
 
-    Icap\BlogBundle\Listener\NotificationListener:
-        arguments:
-            - '@translator'
-            - '@router'
-        tags:
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_blog-post_create, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_blog-post_update, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_blog-post_publish, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_blog-comment_create, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_blog-comment_update, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_blog-comment_publish, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_blog-post-user_tagged, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_blog-comment-user_tagged, method: onCreateNotificationItem }
-
-    Icap\BlogBundle\Listener\NotificationUserParametersListener:
-        tags:
-            - { name: kernel.event_listener, event: icap_notification_user_parameters_event, method: onGetTypesForParameters }
-
     Icap\BlogBundle\Listener\CommentListener:
         arguments:
             - '@Icap\NotificationBundle\Manager\NotificationManager'

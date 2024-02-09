@@ -21,6 +21,7 @@ use Claroline\ScormBundle\Library\ScormLib;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ScormManager
 {
@@ -98,9 +99,10 @@ class ScormManager
         $zip->close();
     }
 
-    private function generateScorm(Workspace $workspace, File $file)
+    private function generateScorm(Workspace $workspace, UploadedFile $file)
     {
         $ds = DIRECTORY_SEPARATOR;
+        $fileName = $file->getClientOriginalName();
         $hashName = Uuid::uuid4()->toString().'.zip';
         $scormData = $this->parseScormArchive($file);
         $this->unzipScormArchive($workspace, $file, $hashName);
@@ -108,9 +110,12 @@ class ScormManager
         $finalFile = $file->move($this->filesDir.$ds.'scorm'.$ds.$workspace->getUuid(), $hashName);
 
         return [
-            'name' => $hashName, // to follow standard file data format
-            'hashName' => $hashName,
+            'name' => $fileName, // to follow standard file data format
             'type' => $finalFile->getMimeType(),
+            'size' => filesize($finalFile),
+            'url' => $hashName,
+
+            'hashName' => $hashName,
             'version' => $scormData['version'],
             'scos' => $scormData['scos'],
         ];

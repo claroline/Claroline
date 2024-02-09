@@ -21,7 +21,7 @@ const PlayerOverview = (props) =>
       <span className="fa fa-fw fa-file icon-with-text-right" />
       {props.file.name}
       <b className="pull-right">
-        {fileSize(props.file.size)+trans('bytes_short')}
+        {fileSize(props.file.size)}
       </b>
     </div>
 

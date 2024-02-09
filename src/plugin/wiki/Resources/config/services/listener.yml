@@ -13,19 +13,6 @@ services:
             - { name: kernel.event_listener, event: resource.icap_wiki.export, method: onExport }
             - { name: kernel.event_listener, event: resource.icap_wiki.import, method: onImport }
 
-    Icap\WikiBundle\Listener\NotificationListener:
-        arguments:
-            - '@translator'
-            - '@router'
-        tags:
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_wiki-section_create, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_wiki-contribution_create, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-icap_wiki-user_tagged, method: onCreateNotificationItem }
-
-    Icap\WikiBundle\Listener\NotificationUserParametersListener:
-        tags:
-            - { name: kernel.event_listener, event: icap_notification_user_parameters_event, method: onGetTypesForParameters }
-
     Icap\WikiBundle\Listener\Entity\ContributionListener:
         public: true
         arguments:

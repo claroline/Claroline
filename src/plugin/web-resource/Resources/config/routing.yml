@@ -1,6 +1,6 @@
 # JSON API
 claroline_web_resource_api:
-    resource: "@ClarolineWebResourceBundle/Controller/API/"
+    resource: "@ClarolineWebResourceBundle/Controller/"
     type: annotation
     options:
         expose: true

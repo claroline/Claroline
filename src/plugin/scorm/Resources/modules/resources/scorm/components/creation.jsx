@@ -14,7 +14,7 @@ const ScormForm = props =>
     level={5}
     name={selectors.STORE_NAME}
     dataPart={selectors.FORM_RESOURCE_PART}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,
@@ -24,7 +24,7 @@ const ScormForm = props =>
             label: trans('file'),
             type: 'file',
             required: true,
-            onChange: (data) => props.update(data),
+            onChange: (data) => props.update(props.newNode, data),
             options: {
               uploadUrl: ['apiv2_scorm_archive_upload', {workspace: props.workspaceId}]
             }
@@ -36,18 +36,33 @@ const ScormForm = props =>
 
 ScormForm.propTypes = {
   workspaceId: T.string.isRequired,
+  newNode: T.object,
   update: T.func.isRequired
 }
 
 const ScormCreation = connect(
   state => ({
+    newNode: selectors.newNode(state),
     workspaceId: selectors.newNode(state).workspace.id
   }),
   (dispatch) => ({
-    update(data) {
-      dispatch(actions.updateResource('hashName', data.name))
+    update(newNode, data) {
+      dispatch(actions.updateResource('hashName', data.url))
       dispatch(actions.updateResource('version', data.version))
       dispatch(actions.updateResource('scos', data.scos))
+
+      // update node props
+      let cleanedName = data.name.replace('_', ' ').substring(0, data.name.lastIndexOf('.'))
+      cleanedName = cleanedName.charAt(0).toUpperCase() + cleanedName.slice(1)
+      if (!newNode.name) {
+        // only set name if none provided
+        dispatch(actions.updateNode('name', cleanedName))
+      }
+
+      if (!newNode.code) {
+        // only set code if none provided
+        dispatch(actions.updateNode('code', cleanedName))
+      }
     }
   })
 )(ScormForm)

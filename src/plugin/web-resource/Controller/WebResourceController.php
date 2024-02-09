@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\WebResourceBundle\Controller\API;
+namespace Claroline\WebResourceBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\WebResourceBundle\Manager\WebResourceManager;
@@ -23,11 +23,6 @@ class WebResourceController
     public function __construct(
         private readonly WebResourceManager $webResourceManager
     ) {
-    }
-
-    public function getName(): string
-    {
-        return 'web-resource';
     }
 
     /**

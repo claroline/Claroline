@@ -28,7 +28,7 @@ BooleanDisplay.propTypes = {
 }
 
 BooleanDisplay.defaultProps = {
-    value: false
+  value: false
 }
 
 export {
