@@ -1,6 +1,6 @@
 import {registry} from '#/main/app/modals/registry'
 
-import {AddDocumentModal} from '#/plugin/drop-zone/resources/dropzone/player/modals/document/components/modal'
+import {AddDocumentModal} from '#/plugin/drop-zone/resources/dropzone/player/modals/document/containers/modal'
 
 const MODAL_ADD_DOCUMENT = 'MODAL_ADD_DOCUMENT'
 
