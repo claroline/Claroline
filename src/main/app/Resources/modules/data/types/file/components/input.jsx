@@ -29,6 +29,8 @@ class FileComponent extends Component {
       }
 
       this.onChange(uploaded)
+
+      this.input.files = null
     }
   }
 
