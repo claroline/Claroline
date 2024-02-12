@@ -6,4 +6,8 @@ use Claroline\InstallationBundle\Additional\AdditionalInstaller;
 
 class ClarolineFlashcardInstaller extends AdditionalInstaller
 {
+    public function hasMigrations(): bool
+    {
+        return true;
+    }
 }
