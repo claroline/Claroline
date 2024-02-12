@@ -57,7 +57,6 @@ class SearchForm extends Component {
   constructor(props) {
     super(props)
 
-    console.log('mount')
     this.state = {
       updated: false,
       filters: props.current || []
@@ -66,7 +65,6 @@ class SearchForm extends Component {
 
   componentDidUpdate(prevProps) {
     if (!this.state.updated && (!isEmpty(prevProps.current || !isEmpty(this.props.current))) && prevProps.current !== this.props.current) {
-      console.log('fuck')
       this.setState({filters: this.props.current})
     }
   }
