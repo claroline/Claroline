@@ -16,4 +16,12 @@ class LogMessage extends AbstractOperationalLog
     {
         return Message::class;
     }
+
+    /**
+     * @param Message $object
+     */
+    protected function getObjectName(mixed $object): string
+    {
+        return substr(strip_tags($object->getContent() ?? ''), 0, 50);
+    }
 }
