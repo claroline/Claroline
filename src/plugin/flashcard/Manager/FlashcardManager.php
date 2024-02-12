@@ -44,8 +44,12 @@ class FlashcardManager
         return $cards;
     }
 
-    public function keepCardInSession(int $session, CardDrawnProgression $cardDrawnProgression): bool
+    public function keepCardInSession(int $session, ?CardDrawnProgression $cardDrawnProgression): bool
     {
+        if (null === $cardDrawnProgression) {
+            return false;
+        }
+
         if (4 === $session) {
             return $cardDrawnProgression->getSuccessCount() <= 1;
         }
@@ -109,6 +113,13 @@ class FlashcardManager
                 'id' => $id,
             ]);
         }, $cardsAnsweredIds);
+
+        $cards = array_values(array_filter($cards, function ($card) {
+            return null !== $card;
+        }));
+        $cardsAnswered = array_values(array_filter($cardsAnswered, function ($card) {
+            return null !== $card;
+        }));
 
         if (0 === count($deck->getCards())) {
             return null;
