@@ -1,3 +1,5 @@
+import get from 'lodash/get'
+
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {MODAL_BUTTON} from '#/main/app/buttons'
@@ -12,7 +14,7 @@ export default (workspaces, refresher) => ({
   type: MODAL_BUTTON,
   icon: 'fa fa-fw fa-users',
   label: trans('register_users_groups', {}, 'platform'),
-  displayed: -1 !== workspaces.findIndex(workspace => !workspace.meta.model && !workspace.meta.archived && hasPermission('administrate', workspace)),
+  displayed: -1 !== workspaces.findIndex(workspace => !get(workspace, 'meta.model') && !get(workspace, 'meta.archived') && hasPermission('administrate', workspace)),
   modal: [MODAL_REGISTER, {
     title: trans('register_users_groups'),
     workspaces: workspaces,

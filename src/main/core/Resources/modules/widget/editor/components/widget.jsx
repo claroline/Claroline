@@ -141,8 +141,7 @@ const WidgetEditor = props =>
       tooltip="bottom"
       size="sm"
       disabled={props.disabled}
-      actions={props.actions.map(action => ({
-        ...action,
+      actions={props.actions.map(action => Object.assign({}, action, {
         name: `${toKey(action.label)}-${props.widget.id}`,
         className: action.dangerous ? 'btn btn-outline-danger' : 'btn btn-outline-secondary'
       }))}

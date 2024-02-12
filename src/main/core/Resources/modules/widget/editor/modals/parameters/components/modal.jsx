@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 

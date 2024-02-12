@@ -51,7 +51,7 @@ class WidgetsTabParameters extends Component {
 
           return (
             <WidgetEditor
-              key={index}
+              key={widgetContainer.id || index}
               widget={widgetContainer}
               currentContext={this.props.currentContext}
               isMoving={this.state.movingContentId}
@@ -65,7 +65,7 @@ class WidgetsTabParameters extends Component {
                 let oldParentId = null
                 let oldParent = null
 
-                //this is not pretty but we need to be aware of all the tabs because widget can move from one to an other
+                //this is not pretty but we need to be aware of all the tabs because widget can move from one to another
                 this.props.tabs.forEach((tab) => {
                   get(tab, 'parameters.widgets', []).forEach(widget => {
                     if (widget.contents.findIndex(content => content && content.id === movingContentId) > -1) {
@@ -106,7 +106,7 @@ class WidgetsTabParameters extends Component {
               }}
               update={(widget) => {
                 // copy array
-                const newWidgets = widgets.slice(0)
+                const newWidgets = cloneDeep(widgets)
                 // replace modified widget
                 newWidgets[index] = widget
                 // propagate change
@@ -114,13 +114,14 @@ class WidgetsTabParameters extends Component {
               }}
               actions={[
                 {
+                  name: 'insert-before',
                   type: MODAL_BUTTON,
                   icon: 'fa fa-fw fa-plus',
                   label: trans('add_section_before'),
                   modal: [MODAL_WIDGET_CREATION, {
                     create: (widget) => {
                       // copy array
-                      const newWidgets = widgets.slice(0)
+                      const newWidgets = cloneDeep(widgets)
                       // insert element
                       newWidgets.splice(index, 0, widget) // insert element
 
@@ -129,13 +130,14 @@ class WidgetsTabParameters extends Component {
                     }
                   }]
                 }, {
+                  name: 'move-top',
                   type: CALLBACK_BUTTON,
                   icon: 'fa fa-fw fa-arrow-up',
                   label: trans('move_top', {}, 'actions'),
                   disabled: 0 === index,
                   callback: () => {
                     // copy array
-                    const newWidgets = widgets.slice(0)
+                    const newWidgets = cloneDeep(widgets)
 
                     // permute widget with the previous one
                     const movedWidget = newWidgets[index]
@@ -145,13 +147,14 @@ class WidgetsTabParameters extends Component {
                     this.props.update('widgets', newWidgets)
                   }
                 }, {
+                  name: 'move-bottom',
                   type: CALLBACK_BUTTON,
                   icon: 'fa fa-fw fa-arrow-down',
                   label: trans('move_bottom', {}, 'actions'),
                   disabled: widgets.length - 1 === index,
                   callback: () => {
                     // copy array
-                    const newWidgets = widgets.slice(0)
+                    const newWidgets = cloneDeep(widgets)
 
                     // permute widget with the next one
                     const movedWidget = newWidgets[index]
@@ -162,21 +165,23 @@ class WidgetsTabParameters extends Component {
                     this.props.update('widgets', newWidgets)
                   }
                 }, {
+                  name: 'edit',
                   type: MODAL_BUTTON,
                   icon: 'fa fa-fw fa-cog',
                   label: trans('configure', {}, 'actions'),
                   modal: [MODAL_WIDGET_PARAMETERS, {
                     widget: widgetContainer,
-                    save: (widget) => {
+                    save: (updatedWidget) => {
                       // copy array
-                      const newWidgets = widgets.slice(0)
+                      const newWidgets = cloneDeep(widgets)
                       // replace modified widget
-                      newWidgets[index] = widget
+                      newWidgets[index] = updatedWidget
                       // propagate change
                       this.props.update('widgets', newWidgets)
                     }
                   }]
                 }, {
+                  name: 'delete',
                   type: CALLBACK_BUTTON,
                   icon: 'fa fa-fw fa-trash',
                   label: trans('delete', {}, 'actions'),
@@ -187,7 +192,7 @@ class WidgetsTabParameters extends Component {
                     subtitle: widgets[index].name
                   },
                   callback: () => {
-                    const newWidgets = widgets.slice(0) // copy array
+                    const newWidgets = cloneDeep(widgets) // copy array
                     newWidgets.splice(index, 1) // remove element
                     this.props.update('widgets', newWidgets)
                   }
