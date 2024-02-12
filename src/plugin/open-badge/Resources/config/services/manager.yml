@@ -17,6 +17,7 @@ services:
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@translator'
 
     Claroline\OpenBadgeBundle\Manager\RuleManager:
         arguments:

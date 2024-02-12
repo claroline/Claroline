@@ -10,6 +10,7 @@ const BadgeTool = connect(
   (state) => ({
     canEdit: hasPermission('edit', toolSelectors.toolData(state)),
     canGrant: hasPermission('grant', toolSelectors.toolData(state)),
+    canAdministrate: hasPermission('administrate', toolSelectors.toolData(state)),
     currentContext: toolSelectors.context(state)
   }),
   dispatch => ({

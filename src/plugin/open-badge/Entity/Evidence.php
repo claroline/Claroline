@@ -21,6 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro__open_badge_evidence")
  */
 class Evidence
@@ -65,6 +66,7 @@ class Evidence
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Assertion", inversedBy="evidences")
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Assertion
@@ -87,6 +89,7 @@ class Evidence
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Rules\Rule")
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Rule
@@ -95,6 +98,7 @@ class Evidence
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var User
@@ -253,26 +257,26 @@ class Evidence
         return $this;
     }
 
-    public function setResourceEvidence(ResourceUserEvaluation $resourceEvidence)
+    public function setResourceEvidence(?ResourceUserEvaluation $resourceEvidence)
     {
         $this->resourceEvidence = $resourceEvidence;
     }
 
     /**
-     * @return ResourceUserEvaluation
+     * @return ResourceUserEvaluation|null
      */
     public function getResourceEvidence()
     {
         return $this->resourceEvidence;
     }
 
-    public function setWorkspaceEvidence(Evaluation $workspaceEvidence)
+    public function setWorkspaceEvidence(?Evaluation $workspaceEvidence)
     {
         $this->workspaceEvidence = $workspaceEvidence;
     }
 
     /**
-     * @return Evaluation
+     * @return Evaluation|null
      */
     public function getWorkspaceEvidence()
     {

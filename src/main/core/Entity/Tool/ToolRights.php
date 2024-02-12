@@ -57,7 +57,7 @@ class ToolRights
      *
      * @ORM\JoinColumn(name="ordered_tool_id", nullable=false, onDelete="CASCADE")
      */
-    private OrderedTool $orderedTool;
+    private ?OrderedTool $orderedTool = null;
 
     public function getMask(): int
     {
@@ -79,7 +79,7 @@ class ToolRights
         $this->role = $role;
     }
 
-    public function getOrderedTool(): OrderedTool
+    public function getOrderedTool(): ?OrderedTool
     {
         return $this->orderedTool;
     }

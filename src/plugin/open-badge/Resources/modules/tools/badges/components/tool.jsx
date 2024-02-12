@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {Assertions} from '#/plugin/open-badge/tools/badges/assertion/components/list'
@@ -11,6 +11,7 @@ import {Badges}  from '#/plugin/open-badge/tools/badges/badge/components/list'
 import {BadgeDetails} from '#/plugin/open-badge/tools/badges/badge/components/details'
 import {BadgeForm} from '#/plugin/open-badge/tools/badges/badge/components/form'
 import {AssertionDetails} from '#/plugin/open-badge/tools/badges/assertion/components/details'
+import {MODAL_TRANSFER} from '#/plugin/open-badge/modals/transfer'
 
 const BadgeTool = props =>
   <ToolPage
@@ -24,6 +25,14 @@ const BadgeTool = props =>
         target: `${props.path}/new`,
         primary: true,
         displayed: props.canEdit
+      },{
+        name: 'transfer-badges',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-right-left',
+        label: trans('transfer_badges', {}, 'actions'),
+        modal: [MODAL_TRANSFER],
+        displayed: props.canAdministrate,
+        primary: false
       }
     ]}
     subtitle={
@@ -77,6 +86,7 @@ BadgeTool.propTypes = {
   path: T.string.isRequired,
   canEdit: T.bool.isRequired,
   canGrant: T.bool.isRequired,
+  canAdministrate: T.bool.isRequired,
   currentContext: T.object.isRequired,
   openBadge: T.func.isRequired,
   openAssertion: T.func.isRequired
