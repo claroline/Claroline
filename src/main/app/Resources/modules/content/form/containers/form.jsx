@@ -3,6 +3,8 @@ import {connect} from 'react-redux'
 import invariant from 'invariant'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
+import isEqualWith from 'lodash/isEqualWith'
+import isNil from 'lodash/isNil'
 
 import {url} from '#/main/app/api'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
@@ -24,7 +26,6 @@ const Form = connect(
 
     return {
       new: selectors.isNew(formState),
-      data: selectors.data(formState),
       errors: !isEmpty(errors),
       pendingChanges: selectors.pendingChanges(formState),
       validating: selectors.validating(formState)
@@ -90,6 +91,16 @@ const Form = connect(
     }
 
     return finalProps
+  }, {
+    // the default behavior is to use shallow comparison
+    // but as I create new objects in `mergeProps`, the comparison always returns false
+    // and cause recomputing
+    areMergedPropsEqual: (next, prev) => isEqualWith(next, prev, (value, othValue) => {
+      if ((isNil(value) || typeof value === 'function')
+        && (isNil(othValue) || typeof othValue === 'function')) {
+        return true
+      }
+    })
   }
 )(FormComponent)
 

@@ -16,12 +16,4 @@ class LogSubject extends AbstractOperationalLog
     {
         return Subject::class;
     }
-
-    /**
-     * @param Subject $object
-     */
-    protected function getObjectName(mixed $object): string
-    {
-        return $object->getTitle();
-    }
 }

@@ -75,10 +75,11 @@ const WidgetContainer = {
     visible: true,
     display: {
       layout: [1],
-      color: null,
-      backgroundType: 'none',
-      background: null
+      color: '#333333',
+      backgroundType: 'color',
+      background: '#FFFFFF'
     },
+    parameters: {},
     contents: []
   }
 }

@@ -5,17 +5,17 @@ import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {ParametersModal as ParametersModalComponent} from '#/main/core/widget/editor/modals/parameters/components/modal'
 import {reducer, selectors} from '#/main/core/widget/editor/modals/parameters/store'
-import {selectors as formSelectors} from '#/main/app/content/form/store'
+
 
 const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
-      saveEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
+      formData: selectors.data(state),
+      saveEnabled: selectors.saveEnabled(state)
     }),
     (dispatch) => ({
       loadWidget(widget) {
-        dispatch(formActions.resetForm(selectors.STORE_NAME, widget, false))
+        dispatch(formActions.resetForm(selectors.STORE_NAME, widget))
       }
     })
   )(ParametersModalComponent)

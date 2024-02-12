@@ -1,5 +1,4 @@
 import React, {Component, forwardRef} from 'react'
-import InputGroup from 'react-bootstrap/InputGroup'
 import classes from 'classnames'
 import tinycolor from 'tinycolor2'
 import omit from 'lodash/omit'
@@ -61,7 +60,6 @@ class ColorInput extends Component {
 
     return (
       <Button
-        id={`${this.props.id}-picker`}
         className={classes('btn btn-outline-secondary', className, {
           'text-light': color && color.isDark(),
           'text-dark': color && color.isLight()
@@ -93,7 +91,9 @@ class ColorInput extends Component {
     }
 
     return (
-      <InputGroup className={this.props.className} size={this.props.size}>
+      <div className={classes('input-group', this.props.className, {
+        [`input-group-${this.props.size}`]: !!this.props.size
+      })}>
         {this.renderPickerButton()}
 
         <input
@@ -107,7 +107,7 @@ class ColorInput extends Component {
           onChange={this.onInputChange}
           onBlur={this.onInputBlur}
         />
-      </InputGroup>
+      </div>
     )
   }
 }
