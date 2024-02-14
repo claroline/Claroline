@@ -5,6 +5,8 @@ namespace Claroline\CoreBundle\Component\Resource;
 use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
@@ -17,11 +19,16 @@ abstract class AbstractResource implements ResourceInterface, EventSubscriberInt
     public static function getSubscribedEvents(): array
     {
         return [
-            ResourceEvents::getEventName(ResourceEvents::OPEN, static::getName()) => 'onRead',
+            // Read
+            ResourceEvents::getEventName(ResourceEvents::READ, static::getName()) => 'onRead',
             ResourceEvents::getEventName(ResourceEvents::EMBED, static::getName()) => 'onEmbed',
+            ResourceEvents::getEventName(ResourceEvents::DOWNLOAD, static::getName()) => 'onDownload',
+            // Update
             ResourceEvents::getEventName(ResourceEvents::CREATE, static::getName()) => 'onCreate',
             ResourceEvents::getEventName(ResourceEvents::UPDATE, static::getName()) => 'onUpdate',
             ResourceEvents::getEventName(ResourceEvents::COPY, static::getName()) => 'onCopy',
+            ResourceEvents::getEventName(ResourceEvents::DELETE, static::getName()) => 'onDelete',
+            // Transfer
             ResourceEvents::getEventName(ResourceEvents::EXPORT, static::getName()) => 'onExport',
             ResourceEvents::getEventName(ResourceEvents::IMPORT, static::getName()) => 'onImport',
         ];
@@ -38,6 +45,13 @@ abstract class AbstractResource implements ResourceInterface, EventSubscriberInt
     {
         $event->setData(
             $this->embed($event->getResource())
+        );
+    }
+
+    public function onDownload(DownloadResourceEvent $event): void
+    {
+        $event->setItem(
+            $this->download($event->getResource())
         );
     }
 
@@ -66,5 +80,13 @@ abstract class AbstractResource implements ResourceInterface, EventSubscriberInt
     public function onImport(ImportResourceEvent $event): void
     {
         $this->import($event->getResource(), $event->getFileBag(), $event->getData());
+    }
+
+    public function onDelete(DeleteResourceEvent $event): void
+    {
+        $delete = $this->delete($event->getResource(), $event->isSoftDelete());
+        if (!$delete) {
+            $event->enableSoftDelete();
+        }
     }
 }

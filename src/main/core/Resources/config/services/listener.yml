@@ -55,11 +55,9 @@ services:
 
     Claroline\CoreBundle\Listener\Resource\Types\FileListener:
         arguments:
-            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
         tags:
             - { name: kernel.event_listener, event: resource.file.load, method: onLoad }

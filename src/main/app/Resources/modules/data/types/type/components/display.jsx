@@ -17,7 +17,7 @@ const TypeDisplay = props => {
 
         <div role="presentation">
           <h1>{value.name}</h1>
-          <p>{value.description}</p>
+          <small className="d-block">{value.description}</small>
         </div>
       </article>
     )

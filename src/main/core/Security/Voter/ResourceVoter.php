@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
@@ -32,44 +31,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ResourceVoter implements VoterInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var MaskManager */
-    private $maskManager;
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-    /** @var ResourceManager */
-    private $resourceManager;
-    /** @var RightsManager */
-    private $rightsManager;
-    /** @var ResourceRestrictionsManager */
-    private $restrictionsManager;
+    private array $specialActions = ['move', 'create', 'copy'];
 
-    /** @var string[] */
-    private $specialActions = ['move', 'create', 'copy'];
-
-    /** @var ResourceRightsRepository */
-    private $repository;
+    private ResourceRightsRepository $repository;
 
     public function __construct(
-        ObjectManager $om,
-        TranslatorInterface $translator,
-        MaskManager $maskManager,
-        WorkspaceManager $workspaceManager,
-        ResourceManager $resourceManager,
-        RightsManager $rightsManager,
-        ResourceRestrictionsManager $restrictionsManager
+        private readonly ObjectManager $om,
+        private readonly TranslatorInterface $translator,
+        private readonly MaskManager $maskManager,
+        private readonly WorkspaceManager $workspaceManager,
+        private readonly RightsManager $rightsManager,
+        private readonly ResourceRestrictionsManager $restrictionsManager
     ) {
-        $this->om = $om;
-        $this->translator = $translator;
-        $this->maskManager = $maskManager;
-        $this->workspaceManager = $workspaceManager;
-        $this->resourceManager = $resourceManager;
-        $this->rightsManager = $rightsManager;
-        $this->restrictionsManager = $restrictionsManager;
-
         $this->repository = $om->getRepository(ResourceRights::class);
     }
 

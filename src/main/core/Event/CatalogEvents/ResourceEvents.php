@@ -6,13 +6,25 @@ final class ResourceEvents
 {
     /**
      * @Event("Claroline\CoreBundle\Event\Resource\LoadResourceEvent")
+     *
+     * @deprecated use ResourceEvents::READ
      */
     public const OPEN = 'resource_load';
+
+    /**
+     * @Event("Claroline\CoreBundle\Event\Resource\LoadResourceEvent")
+     */
+    public const READ = 'resource_load';
 
     /**
      * @Event("Claroline\CoreBundle\Event\Resource\EmbedResourceEvent")
      */
     public const EMBED = 'resource.embed';
+
+    /**
+     * @Event("Claroline\CoreBundle\Event\Resource\DownloadResourceEvent")
+     */
+    public const DOWNLOAD = 'resource.download';
 
     /**
      * @Event("Claroline\CoreBundle\Event\Resource\CreateResourceEvent")
@@ -23,6 +35,11 @@ final class ResourceEvents
      * @Event("Claroline\CoreBundle\Event\Resource\UpdateResourceEvent")
      */
     public const UPDATE = 'resource.update';
+
+    /**
+     * @Event("Claroline\CoreBundle\Event\Resource\DeleteResourceEvent")
+     */
+    public const DELETE = 'resource.delete';
 
     /**
      * @Event("Claroline\CoreBundle\Event\Resource\CopyResourceEvent")

@@ -25,11 +25,9 @@ use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\FileManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Integrates the File resource into Claroline.
@@ -40,41 +38,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class FileListener
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
-
-    /** @var ResourceManager */
-    private $resourceManager;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
-    /** @var FileManager */
-    private $fileManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        StrictDispatcher $eventDispatcher,
-        SerializerProvider $serializer,
-        ResourceManager $resourceManager,
-        FileManager $fileManager
+        private readonly ObjectManager $om,
+        private readonly StrictDispatcher $eventDispatcher,
+        private readonly SerializerProvider $serializer,
+        private readonly FileManager $fileManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->serializer = $serializer;
-        $this->resourceManager = $resourceManager;
-        $this->fileManager = $fileManager;
     }
 
-    public function onLoad(LoadResourceEvent $event)
+    public function onLoad(LoadResourceEvent $event): void
     {
         /** @var File $resource */
         $resource = $event->getResource();
@@ -114,7 +86,7 @@ class FileListener
     /**
      * Changes actual file associated to File resource.
      */
-    public function onFileChange(ResourceActionEvent $event)
+    public function onFileChange(ResourceActionEvent $event): void
     {
         /** @var File $file */
         $file = $event->getResource();
@@ -139,7 +111,7 @@ class FileListener
         );
     }
 
-    public function onDelete(DeleteResourceEvent $event)
+    public function onDelete(DeleteResourceEvent $event): void
     {
         /** @var File $file */
         $file = $event->getResource();
@@ -163,7 +135,7 @@ class FileListener
         }
     }
 
-    public function onImport(ImportResourceEvent $event)
+    public function onImport(ImportResourceEvent $event): void
     {
         /** @var File $file */
         $file = $event->getResource();
@@ -193,7 +165,7 @@ class FileListener
         $this->om->flush();
     }
 
-    public function onCopy(CopyEvent $event)
+    public function onCopy(CopyEvent $event): void
     {
         /** @var File $resource */
         $resource = $event->getObject();
@@ -224,7 +196,7 @@ class FileListener
         $newFile->setSize($resource->getSize());
     }
 
-    public function onDownload(DownloadResourceEvent $event)
+    public function onDownload(DownloadResourceEvent $event): void
     {
         /** @var File $file */
         $file = $event->getResource();
@@ -236,7 +208,7 @@ class FileListener
         $event->stopPropagation();
     }
 
-    private function generateEventName(ResourceNode $node, $event, $useBaseType = false)
+    private function generateEventName(ResourceNode $node, string $event, bool $useBaseType = false): string
     {
         $mimeType = $node->getMimeType();
 

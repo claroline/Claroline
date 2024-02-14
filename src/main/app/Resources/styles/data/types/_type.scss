@@ -9,13 +9,15 @@
         font-size: floor($icon-size * 0.7);
     }
 
+    font-size: $label-font-size;
+
     h1 {
         font-size: $label-font-size;
     }
 
-    p {
+    /*p {
         font-size: $desc-font-size;
-    }
+    }*/
 }
 
 .type-control {
@@ -35,22 +37,25 @@
     }
 
     h1 {
-        padding: 0;
-        margin: 0;
-        font-weight: bold;
+        //padding: 0;
+        //margin: 0;
+        //font-weight: bold;
+        margin-bottom: map-get($spacers, 1);
     }
 
+    small,
     p {
-        margin-top: 5px;
+        //margin-top: 5px;
         margin-bottom: 0;
-        font-style: italic;
+        //font-style: italic;
         color: var(--#{$prefix}secondary-color);
+        text-align: justify;
     }
 
     @include type-control-sizing(40px, $font-size-base, $font-size-sm);
 
     &.lg {
-        @include type-control-sizing(64px, $font-size-lg, $font-size-base);
+        @include type-control-sizing(60px, $font-size-lg, $font-size-base);
     }
 }
 
@@ -67,6 +72,6 @@
     padding: $input-padding-y $input-btn-padding-x;
 
     .type-icon {
-        margin-right: $icon-text-spacer;
+        margin-right: $input-btn-padding-x;
     }
 }

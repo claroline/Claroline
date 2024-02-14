@@ -15,16 +15,20 @@ interface ResourceInterface extends ComponentInterface
      */
     public function embed(AbstractResource $resource): string;
 
+    public function download(AbstractResource $resource): string;
+
     public function create(AbstractResource $resource, array $data): void;
 
     public function update(AbstractResource $resource, array $data): void;
 
+    public function delete(AbstractResource $resource, bool $softDelete = true): bool;
+
     public function copy(AbstractResource $original, AbstractResource $copy): void;
 
-    public function export(AbstractResource $resource, FileBag $fileBag = null): ?array;
+    public function export(AbstractResource $resource, FileBag $fileBag): ?array;
 
     /**
      * Import a resource inside the platform. Only possible through Workspace import.
      */
-    public function import(AbstractResource $resource, FileBag $fileBag = null, array $data = []): void;
+    public function import(AbstractResource $resource, FileBag $fileBag, array $data = []): void;
 }

@@ -89,7 +89,7 @@ class GridSelection extends Component {
                   <div key="item-label">
                     <h1>{type.label}</h1>
 
-                    <p>{type.description}</p>
+                    <small className="d-block">{type.description}</small>
                   </div>
                 }
                 {...selectAction}

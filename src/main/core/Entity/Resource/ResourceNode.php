@@ -34,7 +34,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * Base entity for all resources.
  *
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository")
+ *
  * @ORM\Table(name="claro_resource_node")
+ *
  * @Gedmo\Tree(type="materializedPath")
  */
 class ResourceNode
@@ -75,6 +77,7 @@ class ResourceNode
      * @var ResourceType
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType")
+     *
      * @ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE", nullable=false)
      */
     private $resourceType;
@@ -99,6 +102,7 @@ class ResourceNode
      * @var string
      *
      * @Gedmo\TreePathSource
+     *
      * @ORM\Column()
      */
     private $name;
@@ -107,16 +111,19 @@ class ResourceNode
      * @var ResourceNode
      *
      * @Gedmo\TreeParent
+     *
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     inversedBy="children"
      * )
+     *
      * @ORM\JoinColumns({@ORM\JoinColumn(onDelete="CASCADE")})
      */
     protected $parent;
 
     /**
      * @Gedmo\TreeLevel
+     *
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $lvl;
@@ -128,12 +135,14 @@ class ResourceNode
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     mappedBy="parent"
      * )
+     *
      * @ORM\OrderBy({"index" = "ASC"})
      */
     protected $children;
 
     /**
      * @Gedmo\TreePath(separator="`")
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     protected ?string $path;
@@ -210,6 +219,7 @@ class ResourceNode
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceComment",
      *     mappedBy="resourceNode"
      * )
+     *
      * @ORM\OrderBy({"creationDate" = "DESC"})
      *
      * @todo : remove me. this relation should not be bi-directional
@@ -220,6 +230,7 @@ class ResourceNode
 
     /**
      * @Gedmo\Slug(fields={"name"})
+     *
      * @ORM\Column(length=128, unique=true)
      *
      * @var string
@@ -505,8 +516,6 @@ class ResourceNode
 
     /**
      * Sets the resource active state.
-     *
-     * @param $active
      */
     public function setActive($active)
     {
