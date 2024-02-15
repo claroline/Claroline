@@ -74,7 +74,7 @@ const ThemeIcon = props => {
 
 ThemeIcon.propTypes = {
   className: T.string,
-  mimeType: T.string.isRequired,
+  mimeType: T.string,
   set: T.oneOf(['resources', 'widgets', 'data'])
 }
 

@@ -248,7 +248,7 @@ class ClacoFormManager
         $this->om->flush();
     }
 
-    public function createComment(Entry $entry, $content, User $user = null)
+    public function createComment(Entry $entry, $content, ?User $user = null)
     {
         $clacoForm = $entry->getClacoForm();
         $comment = new Comment();
@@ -881,7 +881,7 @@ class ClacoFormManager
         }
     }
 
-    public function canViewComments(ClacoForm $clacoForm)
+    public function canViewComments(ClacoForm $clacoForm): bool
     {
         $canViewComments = false;
 
@@ -898,18 +898,22 @@ class ClacoFormManager
         return $canViewComments;
     }
 
-    public function registerFile(ClacoForm $clacoForm, UploadedFile $file)
+    public function registerFile(ClacoForm $clacoForm, UploadedFile $file): array
     {
         $ds = DIRECTORY_SEPARATOR;
         $hashName = Uuid::uuid4()->toString();
         $dir = $this->filesDir.$ds.'clacoform'.$ds.$clacoForm->getUuid();
         $fileName = $hashName.'.'.$file->getClientOriginalExtension();
 
+        $fileSize = $file->getSize(); // I can't get the filesize after move
+
         $file->move($dir, $fileName);
 
         return [
             'name' => $file->getClientOriginalName(),
+            'type' => $file->getClientMimeType(),
             'mimeType' => $file->getClientMimeType(),
+            'size' => $fileSize,
             'url' => '../files/clacoform'.$ds.$clacoForm->getUuid().$ds.$fileName,
         ];
     }

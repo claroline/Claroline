@@ -12,18 +12,18 @@ const FileThumbnail = props =>
   <div className={classes('file-preview gap-3', props.className)}>
     <ThemeIcon
       className="file-preview-icon"
-      mimeType={props.file.type}
+      mimeType={props.file.type || props.file.mimeType}
       set="resources"
     />
 
     <div className="file-preview-title">
-      {props.file.name}
-      <small className="text-body-secondary">{fileSize(props.file.size)}</small>
+      {props.file.name || props.file.url}
+      {props.file.size && <small className="text-body-secondary">{fileSize(props.file.size)}</small>}
     </div>
 
     {props.delete &&
       <Button
-        className="file-preview-delete"
+        className="file-preview-delete btn btn-text-secondary"
         type={CALLBACK_BUTTON}
         icon="fa fa-fw fa-times"
         label={trans('delete', {}, 'actions')}
@@ -39,6 +39,7 @@ FileThumbnail.propTypes = {
   disabled: T.bool.isRequired,
   file: T.shape({
     type: T.string,
+    mimeType: T.string, // for retro compatibility
     name: T.string,
     size: T.number,
     url: T.string
