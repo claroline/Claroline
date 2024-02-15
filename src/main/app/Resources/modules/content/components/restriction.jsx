@@ -25,7 +25,9 @@ const ContentRestriction = props => {
       icon={props.icon}
       title={title}
     >
-      <ContentHtml>{help}</ContentHtml>
+      {help &&
+        <ContentHtml>{help}</ContentHtml>
+      }
 
       {props.failed && props.children}
     </Alert>

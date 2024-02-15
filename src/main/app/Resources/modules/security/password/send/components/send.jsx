@@ -32,7 +32,7 @@ const SendPasswordForm = (props) =>
         ]}
       >
         <Button
-          className="w-100"
+          className="w-100 mt-4"
           variant="btn"
           size="lg"
           htmlType="submit"

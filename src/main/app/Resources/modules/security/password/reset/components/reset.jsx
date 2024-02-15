@@ -39,7 +39,7 @@ const ResetPasswordForm = (props) =>
         ]}
       >
         <Button
-          className="w-100"
+          className="w-100 mt-4"
           variant="btn"
           size="lg"
           type={CALLBACK_BUTTON}
