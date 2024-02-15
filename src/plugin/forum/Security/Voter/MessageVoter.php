@@ -22,15 +22,34 @@ class MessageVoter extends AbstractVoter
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
         switch ($attributes[0]) {
-            case self::CREATE: return $this->checkCreate($token);
+            case self::CREATE:
+                return $this->checkCreate($token, $object);
+            case self::EDIT:
+            case self::DELETE:
+                return $this->checkEdit($token, $object);
         }
 
         return self::ACCESS_ABSTAIN;
     }
 
-    public function checkCreate($token): int
+    public function checkCreate(TokenInterface $token, Message $message): int
     {
-        return $token->getUser() instanceof User ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+        $forum = $message->getForum();
+
+        if ($forum && $this->isGranted(self::OPEN, $forum->getResourceNode())) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
+    }
+
+    public function checkEdit(TokenInterface $token, Message $message): int
+    {
+        if ($token->getUser() instanceof User && $token->getUser() === $message->getCreator()) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     public function getClass(): string
@@ -40,6 +59,6 @@ class MessageVoter extends AbstractVoter
 
     public function getSupportedActions(): array
     {
-        return [self::CREATE, self::EDIT, self::DELETE, self::PATCH];
+        return [self::CREATE, self::EDIT, self::DELETE];
     }
 }

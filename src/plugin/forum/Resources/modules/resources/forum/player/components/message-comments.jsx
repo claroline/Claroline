@@ -159,7 +159,7 @@ MessageCommentsComponent.propTypes = {
   currentUser: T.object,
   subject: T.shape(SubjectType.propTypes).isRequired,
   message: T.shape({
-    id: T.string.Required,
+    id: T.string.isRequired,
     children: T.array.isRequired
   }).isRequired,
   forum: T.shape({

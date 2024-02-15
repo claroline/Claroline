@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {withRouter} from '#/main/app/router'
 import {withModal} from '#/main/app/overlays/modal/withModal'
@@ -20,12 +21,12 @@ import {selectors} from '#/plugin/forum/resources/forum/store'
 
 const SubjectFormWrapper = (props) =>
   <div className='user-message-container user-message-form-container user-message-left'>
-    <UserAvatar picture={props.user.picture} />
+    <UserAvatar picture={get(props.user, 'picture')} alt={false} />
 
     <div className="user-message">
       <div className="user-message-meta">
         <div className="user-message-info">
-          {props.user.name}
+          {get(props.user, 'name', trans('guest'))}
         </div>
 
         {(props.editingSubject && props.cancel) &&
@@ -84,7 +85,7 @@ SubjectFormWrapper.propTypes = {
 const SubjectFormComponent = (props) => {
   const saveSubjectForm = (forumId, editingSubject, subjectId) => {
     if (editingSubject) {
-      props.editSubject(forumId, subjectId)
+      props.editSubject(forumId, subjectId, props.path)
     } else if (!props.moderator &&
       (props.forum.moderation === 'PRIOR_ALL' || (props.forum.moderation === 'PRIOR_ONCE' && !props.isValidatedUser))) {
       props.showModal(MODAL_ALERT, {
@@ -92,7 +93,7 @@ const SubjectFormComponent = (props) => {
         message: trans('moderated_posts_explanation', {}, 'forum'),
         type: 'info'
       })
-      props.createModeratedSubject(forumId, subjectId, props.forum.moderation)
+      props.createModeratedSubject(forumId, props.path)
     } else {
       props.createSubject(forumId, subjectId, props.path)
     }
@@ -114,7 +115,8 @@ const SubjectFormComponent = (props) => {
             level={3}
             displayLevel={2}
             name={`${selectors.STORE_NAME}.subjects.form`}
-            sections={[
+            flush={true}
+            definition={[
               {
                 title: trans('general'),
                 primary: true,
@@ -124,8 +126,7 @@ const SubjectFormComponent = (props) => {
                     type: 'string',
                     label: trans('title'),
                     required: true
-                  },
-                  {
+                  }, {
                     name: 'content',
                     type: 'html',
                     label: trans('post', {}, 'forum'),
@@ -133,8 +134,7 @@ const SubjectFormComponent = (props) => {
                     options: {
                       workspace: props.workspace
                     }
-                  },
-                  {
+                  }, {
                     name: 'tags',
                     type: 'tag',
                     label: trans('tags')
@@ -178,14 +178,14 @@ const SubjectForm = withRouter(withModal(connect(
     isValidatedUser: selectors.isValidatedUser(state)
   }),
   (dispatch, ownProps) => ({
-    editSubject(forumId, subjectId) {
+    editSubject(forumId, subjectId, path) {
       dispatch(formActions.saveForm(`${selectors.STORE_NAME}.subjects.form`, ['apiv2_forum_subject_update', {id: subjectId}])).then(() => {
-        ownProps.history.push(`${ownProps.path}/subjects/show/${subjectId}`)
+        ownProps.history.push(`${path}/subjects/show/${subjectId}`)
       })
     },
-    createModeratedSubject(forumId) {
+    createModeratedSubject(forumId, path) {
       dispatch(formActions.saveForm(`${selectors.STORE_NAME}.subjects.form`, ['claroline_forum_forum_createsubject', {id: forumId}])).then(() => {
-        ownProps.history.push(`${ownProps.path}/subjects`)
+        ownProps.history.push(`${path}/subjects`)
       })
     },
     createSubject(forumId, subjectId, path) {
