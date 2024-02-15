@@ -30,18 +30,21 @@ function theme(assetName = 'bootstrap') {
  */
 function icon(mimeType, set) {
   const icons = param('theme.icons')[set]
+  let typeIcon
 
   // try to find an icon for the exact mime type
-  let typeIcon = icons.find(current => -1 !== current.mimeTypes.indexOf(mimeType))
+  if (mimeType) {
+    typeIcon = icons.find(current => -1 !== current.mimeTypes.indexOf(mimeType))
+  }
 
-  if (!typeIcon) {
+  if (mimeType && !typeIcon) {
     // fallback to an icon for the first mimeType part
     const type = mimeType.split('/')[0]
     typeIcon = icons.find(current => -1 !== current.mimeTypes.indexOf(type))
+  }
 
-    if (!typeIcon)  {
-      typeIcon = icons.find(current => -1 !== current.mimeTypes.indexOf('custom/default'))
-    }
+  if (!typeIcon)  {
+    typeIcon = icons.find(current => -1 !== current.mimeTypes.indexOf('custom/default'))
   }
 
   return typeIcon

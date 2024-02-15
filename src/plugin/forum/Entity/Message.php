@@ -112,7 +112,7 @@ class Message extends AbstractMessage
         return $this->moderation ?: Forum::VALIDATE_NONE;
     }
 
-    public function setParent(self $parent = null): void
+    public function setParent(?self $parent = null): void
     {
         $this->parent = $parent;
     }
