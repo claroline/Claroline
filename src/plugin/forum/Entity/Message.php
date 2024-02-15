@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro_forum_message")
  */
 class Message extends AbstractMessage
@@ -27,22 +28,20 @@ class Message extends AbstractMessage
      *     inversedBy="messages",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      *
-     * @var Subject
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
-    protected $subject;
+    protected ?Subject $subject = null;
 
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\ForumBundle\Entity\Message",
      *     inversedBy="children",
      * )
-     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      *
-     * @var Message
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
      */
-    protected $parent;
+    protected ?Message $parent = null;
 
     /**
      * @ORM\OneToMany(
@@ -57,17 +56,17 @@ class Message extends AbstractMessage
     /**
      * @ORM\Column(type="string")
      */
-    protected $moderation = Forum::VALIDATE_NONE;
+    protected string $moderation = Forum::VALIDATE_NONE;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $flagged = false;
+    protected bool $flagged = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $first = false;
+    protected bool $first = false;
 
     /**
      * Message constructor.
@@ -79,16 +78,13 @@ class Message extends AbstractMessage
         $this->children = new ArrayCollection();
     }
 
-    public function setSubject(Subject $subject)
+    public function setSubject(Subject $subject): void
     {
         $this->subject = $subject;
         $subject->addMessage($this);
     }
 
-    /**
-     * @return Subject
-     */
-    public function getSubject()
+    public function getSubject(): ?Subject
     {
         if ($this->getParent()) {
             return $this->getParent()->getSubject();
@@ -97,7 +93,7 @@ class Message extends AbstractMessage
         return $this->subject;
     }
 
-    public function getForum()
+    public function getForum(): ?Forum
     {
         if ($this->getSubject()) {
             return $this->getSubject()->getForum();
@@ -106,25 +102,22 @@ class Message extends AbstractMessage
         return null;
     }
 
-    public function setModerated($moderated)
+    public function setModerated($moderated): void
     {
         $this->moderation = $moderated;
     }
 
-    public function getModerated()
+    public function getModerated(): string
     {
-        return $this->moderation ? $this->moderation : Forum::VALIDATE_NONE;
+        return $this->moderation ?: Forum::VALIDATE_NONE;
     }
 
-    public function setParent(self $parent = null)
+    public function setParent(self $parent = null): void
     {
         $this->parent = $parent;
     }
 
-    /**
-     * @return Message
-     */
-    public function getParent()
+    public function getParent(): ?Message
     {
         return $this->parent;
     }
@@ -134,22 +127,22 @@ class Message extends AbstractMessage
         return $this->children;
     }
 
-    public function setFlagged($bool)
+    public function setFlagged(bool $bool): void
     {
         $this->flagged = $bool;
     }
 
-    public function isFlagged()
+    public function isFlagged(): bool
     {
         return $this->flagged;
     }
 
-    public function isFirst()
+    public function isFirst(): bool
     {
         return $this->first;
     }
 
-    public function setFirst($isFirst)
+    public function setFirst(bool $isFirst): void
     {
         $this->first = $isFirst;
     }

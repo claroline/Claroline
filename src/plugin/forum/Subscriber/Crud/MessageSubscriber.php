@@ -48,23 +48,27 @@ class MessageSubscriber implements EventSubscriberInterface
         $forum = $message->getSubject()->getForum();
 
         // create user if not here
-        $user = $this->om->getRepository(UserValidation::class)->findOneBy([
-            'user' => $message->getCreator(),
-            'forum' => $forum,
-        ]);
+        $user = null;
+        if ($message->getCreator()) {
+            $user = $this->om->getRepository(UserValidation::class)->findOneBy([
+                'user' => $message->getCreator(),
+                'forum' => $forum,
+            ]);
 
-        if (!$user) {
-            $user = new UserValidation();
-            $user->setForum($forum);
-            $user->setUser($message->getCreator());
+            if (!$user) {
+                $user = new UserValidation();
+                $user->setForum($forum);
+                $user->setUser($message->getCreator());
+            }
         }
+
         if (!$this->checkPermission('EDIT', $forum->getResourceNode())) {
             if (Forum::VALIDATE_PRIOR_ALL === $forum->getValidationMode()) {
                 $message->setModerated(Forum::VALIDATE_PRIOR_ALL);
             }
 
             if (Forum::VALIDATE_PRIOR_ONCE === $forum->getValidationMode()) {
-                $message->setModerated($user->getAccess() ? Forum::VALIDATE_NONE : Forum::VALIDATE_PRIOR_ONCE);
+                $message->setModerated($user && $user->getAccess() ? Forum::VALIDATE_NONE : Forum::VALIDATE_PRIOR_ONCE);
             }
         } else {
             $message->setModerated(Forum::VALIDATE_NONE);
