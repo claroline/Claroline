@@ -235,7 +235,7 @@
     "follow": "Suivre",
     "for_period": "sur la période du :",
     "force_mail_validation": "Forcer la validation du courriel (utilisateur bloqué tant que la réception du courriel n'a pas été confirmée)",
-    "forgot_password": "Vous avez oublié votre mot de passe ?",
+    "forgot_password": "Mot de passe oublié ?",
     "functional": "Fonctionnel",
     "send_password": "Envoyer le mot de passe",
     "form_not_blank_error": "Cette valeur ne doit pas être vide.",

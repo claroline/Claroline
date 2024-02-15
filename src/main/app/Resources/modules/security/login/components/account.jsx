@@ -52,8 +52,17 @@ class LoginAccount extends Component {
           }
         ]}
       >
+        {this.props.resetPassword &&
+          <Button
+            className="mt-2 ms-auto text-wrap text-start"
+            type={LINK_BUTTON}
+            label={trans('forgot_password')}
+            target="/reset_password"
+          />
+        }
+
         <Button
-          className="w-100"
+          className="w-100 mt-4"
           variant="btn"
           size="lg"
           type={CALLBACK_BUTTON}
@@ -66,15 +75,6 @@ class LoginAccount extends Component {
           }}
           primary={true}
         />
-
-        {this.props.resetPassword &&
-          <Button
-            className="btn btn-link w-100 text-wrap"
-            type={LINK_BUTTON}
-            label={trans('forgot_password')}
-            target="/reset_password"
-          />
-        }
       </FormData>
     )
   }

@@ -69,6 +69,18 @@ class LoginMain extends Component {
                 onLogin={this.props.onLogin}
               />
 
+              {this.props.registration &&
+                <Button
+                  className={classes('mt-1 w-100 btn-registration', {
+                    'login-with-sso': internalAccount && 0 !== otherSso.length
+                  })}
+                  variant="btn"
+                  type={LINK_BUTTON}
+                  label={trans('create-account', {}, 'actions')}
+                  target="/registration"
+                />
+              }
+
               {0 !== otherSso.length &&
                 <div className="authentication-or">
                   {trans('login_auth_or')}
@@ -105,19 +117,6 @@ class LoginMain extends Component {
           <div className={classes('authentication-client-ip  mb-3 mx-auto', {
             'login-with-sso': internalAccount && otherSso.length
           })}>{trans('location')} : {this.props.clientIp}</div>
-        }
-
-        {this.props.registration &&
-          <Button
-            className={classes('mb-3 w-100 btn-registration', {
-              'login-with-sso': internalAccount && 0 !== otherSso.length
-            })}
-            variant="btn"
-            size="lg"
-            type={LINK_BUTTON}
-            label={trans('create-account', {}, 'actions')}
-            target="/registration"
-          />
         }
       </Fragment>
     )

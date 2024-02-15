@@ -37,24 +37,6 @@ $auth-or-font-size: 20px;
   // vertically center the login form in the page
   // if there is lots of space
   justify-content: center;
-
-  /*.login-logo {
-    align-self: center; // avoid image to be stretched
-    margin-bottom: map-get($spacers, 3);
-    max-width: 100%;
-  }*/
-
-  /*.login-title {
-    margin-top: 0;
-    margin-bottom: $component-margin-bottom;
-  }*/
-
-  /*.login-info {
-    text-align: justify;
-    max-width: $login-max-width;
-    align-self: center;
-    //margin-bottom: $component-margin-bottom;
-  }*/
 }
 
 // In screen > SM, Claroline login form and SSO btns
@@ -62,12 +44,7 @@ $auth-or-font-size: 20px;
 .login-container {
   display: flex;
   flex-direction: row;
-  //border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
-  //background-color: $card-bg;
   width: 100%;
-  //margin: 0 auto $component-margin-bottom;
-
-  //@include box-shadow($box-shadow);
 
   // for cases when the auth block is not displayed in the login page
   max-width: floor(math.div($login-max-width, 2));
@@ -75,13 +52,9 @@ $auth-or-font-size: 20px;
     max-width: $login-max-width;
   }
 
+  .form-group:last-child,
   .form-primary-section {
-    /*border: none;
-    box-shadow: none;*/
-
-    /*.panel-body {
-      padding: 0;
-    }*/
+    margin-bottom: 0 !important;
   }
 
   .authentication-help {
