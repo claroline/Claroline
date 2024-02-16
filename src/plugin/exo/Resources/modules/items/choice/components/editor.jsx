@@ -22,6 +22,7 @@ import {utils} from '#/plugin/exo/items/choice/utils'
 
 import ScoreRules from '#/plugin/exo/scores/rules'
 import ScoreSum from '#/plugin/exo/scores/sum'
+import {FeedbackEditorButton} from '#/plugin/exo/buttons/feedback/components/button'
 
 class Choice extends Component {
   constructor(props) {
@@ -79,19 +80,16 @@ class Choice extends Component {
             />
           }
 
-          <Button
-            id={`choice-${this.props.id}-feedback-toggle`}
-            className="btn btn-text-secondary"
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments"
+          <FeedbackEditorButton
+            id={this.props.id}
             label={trans('choice_feedback_info', {}, 'quiz')}
-            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
-            tooltip="top"
+            feedback={this.props.feedback}
+            toggle={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
 
           <Button
             id={`choice-${this.props.id}-delete`}
-            className="btn btn-text-danger"
+            className="btn btn-text-secondary"
             type={CALLBACK_BUTTON}
             disabled={!this.props.deletable}
             icon="fa fa-fw fa-trash"

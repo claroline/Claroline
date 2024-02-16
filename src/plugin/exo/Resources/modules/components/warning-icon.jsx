@@ -4,7 +4,7 @@ import classes from 'classnames'
 
 const WarningIcon = props =>
   <span
-    className={classes('fa answer-warning-span', {
+    className={classes('fa answer-warning-span', props.className, {
       'fa-check': props.valid,
       'fa-times': !props.valid
     })}
@@ -12,6 +12,7 @@ const WarningIcon = props =>
   />
 
 WarningIcon.propTypes = {
+  className: T.string,
   valid: T.bool.isRequired
 }
 

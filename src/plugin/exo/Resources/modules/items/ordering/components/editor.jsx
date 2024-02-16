@@ -1,17 +1,14 @@
-import React, {Component, Fragment, forwardRef} from 'react'
+import React, {Component, forwardRef} from 'react'
 import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
-
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import Tooltip from 'react-bootstrap/Tooltip'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {FormGroup} from '#/main/app/content/form/components/group'
 import {makeId} from '#/main/core/scaffolding/id'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from '#/plugin/exo/utils/sortable'
@@ -20,6 +17,7 @@ import {constants} from '#/plugin/exo/items/ordering/constants'
 import {ItemEditor as ItemEditorType} from '#/plugin/exo/items/prop-types'
 import {OrderingItem as OrderingItemType} from '#/plugin/exo/items/ordering/prop-types'
 import {OrderingItemDragPreview} from '#/plugin/exo/items/ordering/components/ordering-item-drag-preview'
+import {FeedbackEditorButton} from '#/plugin/exo/buttons/feedback/components/button'
 
 const addItem = (items, solutions, isOdd, saveCallback) => {
   const newItems = cloneDeep(items)
@@ -120,7 +118,7 @@ class Item extends Component {
 
   render() {
     return (
-      <Fragment>
+      <>
         <div className="text-fields">
           <HtmlInput
             id={`item-${this.props.id}-data`}
@@ -152,19 +150,16 @@ class Item extends Component {
             />
           }
 
-          <Button
-            id={`item-${this.props.id}-feedback-toggle`}
-            className="btn-link"
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments"
+          <FeedbackEditorButton
+            id={this.props.id}
             label={trans('choice_feedback_info', {}, 'quiz')}
-            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
-            tooltip="top"
+            feedback={this.props.feedback}
+            toggle={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
 
           <Button
             id={`item-${this.props.id}-delete`}
-            className="btn-link"
+            className="btn btn-text-secondary"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
@@ -174,26 +169,25 @@ class Item extends Component {
             dangerous={true}
           />
 
-          {!this.props.isOdd && this.props.connectDragSource(
-            <div>
-              <OverlayTrigger
-                placement="top"
-                overlay={
-                  <Tooltip id={`ordering-item-${this.props.id}-drag`}>{trans('move', {}, 'actions')}</Tooltip>
-                }
-              >
+          {!this.props.isOdd &&
+            <TooltipOverlay
+              id={`ordering-item-${this.props.id}-drag`}
+              tip={trans('move', {}, 'actions')}
+              disabled={this.props.isDragging}
+            >
+              {this.props.connectDragSource(
                 <span
                   title={trans('move', {}, 'actions')}
                   draggable="true"
-                  className="btn-link default drag-handle"
+                  className="btn btn-text-secondary drag-handle"
                 >
                   <span className="fa fa-fw fa-arrows" />
                 </span>
-              </OverlayTrigger>
-            </div>
-          )}
+              )}
+            </TooltipOverlay>
+          }
         </div>
-      </Fragment>
+      </>
     )
   }
 }
@@ -209,15 +203,16 @@ Item.propTypes = {
   deletable: T.bool.isRequired,
   onChange: T.func.isRequired,
   isOdd: T.bool.isRequired,
+  isDragging: T.bool,
   connectDragSource: T.func,
   hasScore: T.bool.isRequired
 }
 
 let OrderingItem = forwardRef((props, ref) =>
   props.connectDropTarget(
-    <div className="ordering-answer-item answer-item" ref={ref}>
-      <Item {...props} />
-    </div>
+    <li className="ordering-answer-item answer-item" ref={ref}>
+      <Item {...props} isOdd={false} />
+    </li>
   )
 )
 
@@ -243,9 +238,9 @@ OrderingItem.propTypes = {
 OrderingItem = makeSortable(OrderingItem, 'ORDERING_ITEM', OrderingItemDragPreview)
 
 const OrderingOdd = props =>
-  <div className={classes('ordering-answer-item answer-item', {'unexpected-answer': props.item.hasExpectedAnswers})}>
-    <Item {...props} />
-  </div>
+  <li className={classes('ordering-answer-item answer-item', {'unexpected-answer': props.item.hasExpectedAnswers})}>
+    <Item {...props} isOdd={true} />
+  </li>
 
 OrderingOdd.propTypes = {
   item: T.shape(OrderingItemType.propTypes).isRequired,
@@ -258,117 +253,121 @@ OrderingOdd.propTypes = {
   hasScore: T.bool.isRequired
 }
 
-const ItemList = (props) =>
-  <ul className={classes('ordering-answer-items', props.isOdd || constants.DIRECTION_VERTICAL === props.item.direction ? constants.DIRECTION_VERTICAL : constants.DIRECTION_HORIZONTAL)}>
-    {props.item.items
-      .map(item => {
-        const solution = props.item.solutions.find(s => s.itemId === item.id)
-
-        return ({
-          id: item.id,
-          data: item.data,
-          _score: solution.score,
-          _position: solution.position || undefined,
-          _feedback: solution.feedback || '',
-          _deletable: props.item.solutions.filter(solution => undefined !== solution.position).length > 2
-        })
-      })
-      .filter(i => props.isOdd ? undefined === i._position : undefined !== i._position)
-      .map((el, index) =>
-        <li key={el.id}>
-          {props.isOdd ?
-            <OrderingOdd
-              id={el.id}
-              data={el.data}
-              score={el._score}
-              feedback={el._feedback}
-              deletable={true}
-              fixedScore={SCORE_FIXED === props.item.score.type}
-              hasScore={props.hasScore}
-              {...props}
-            /> :
-            <OrderingItem
-              sortDirection={constants.DIRECTION_VERTICAL === props.item.direction ? SORT_VERTICAL : SORT_HORIZONTAL}
-              onSort={(a, b) => moveItem(a, b, props.item.items, props.item.solutions, props.onChange)}
-              id={el.id}
-              data={el.data}
-              score={el._score}
-              feedback={el._feedback}
-              position={index}
-              index={index}
-              fixedScore={props.item.score.type === SCORE_FIXED}
-              deletable={el._deletable}
-              hasScore={props.hasScore}
-              {...props}
-            />
-          }
-        </li>
-      )
-    }
-  </ul>
-
-ItemList.propTypes = {
-  item: T.shape(OrderingItemType.propTypes).isRequired,
-  hasScore: T.bool.isRequired,
-  isOdd: T.bool.isRequired,
-  onChange: T.func.isRequired
-}
-
 const OrderingItems = (props) =>
-  <Fragment>
-    <div className="form-group">
-      <ItemList
-        {...props}
-        isOdd={false}
-      />
-
-      <Button
-        type={CALLBACK_BUTTON}
-        className="btn btn-outline-primary w-100"
-        icon="fa fa-fw fa-plus"
-        label={trans('ordering_add_item', {}, 'quiz')}
-        callback={() => addItem(props.item.items, props.item.solutions, false, props.onChange)}
-      />
-    </div>
-
-    {props.item.mode === constants.MODE_BESIDE &&
-      <FormGroup
-        id="item-odds"
-        label={trans('odds', {}, 'quiz')}
-        optional={true}
-      >
-        {-1 < props.item.solutions.findIndex(item => undefined === item.position) ?
-          <ItemList
-            {...props}
-            isOdd={true}
-          />
-          :
-          <div className="empty-placeholder empty-placeholder-md">{trans('no_odd_info', {}, 'quiz')}</div>
-        }
-
-        <Button
-          type={CALLBACK_BUTTON}
-          className="btn btn-outline-primary w-100"
-          icon="fa fa-fw fa-plus"
-          label={trans('ordering_add_odd', {}, 'quiz')}
-          callback={() => addItem(props.item.items, props.item.solutions, true, props.onChange)}
-        />
-      </FormGroup>
+  <>
+    {0 === props.items.length &&
+      <div className="empty-placeholder empty-placeholder-md">{trans('no_item_info', {}, 'quiz')}</div>
     }
-  </Fragment>
+
+    {0 !== props.items.length &&
+      <ul className={classes('ordering-answer-items', props.item.direction)}>
+        {props.items.map((el, index) =>
+          <OrderingItem
+            key={el.id}
+            sortDirection={constants.DIRECTION_VERTICAL === props.item.direction ? SORT_VERTICAL : SORT_HORIZONTAL}
+            onSort={(a, b) => moveItem(a, b, props.item.items, props.item.solutions, props.onChange)}
+            id={el.id}
+            data={el.data}
+            score={el._score}
+            feedback={el._feedback}
+            position={index}
+            index={index}
+            fixedScore={SCORE_FIXED === props.item.score.type}
+            deletable={el._deletable}
+            hasScore={props.hasScore}
+            {...props}
+          />
+        )}
+      </ul>
+    }
+
+    <Button
+      type={CALLBACK_BUTTON}
+      className="btn btn-outline-primary w-100"
+      icon="fa fa-fw fa-plus"
+      label={trans('ordering_add_item', {}, 'quiz')}
+      callback={() => addItem(props.item.items, props.item.solutions, false, props.onChange)}
+    />
+  </>
 
 OrderingItems.propTypes = {
   item: T.shape(
     OrderingItemType.propTypes
   ).isRequired,
+  items: T.array,
+  hasScore: T.bool.isRequired,
+  onChange: T.func.isRequired
+}
+
+const OrderingOdds = (props) =>
+  <>
+    {0 === props.items.length &&
+      <div className="empty-placeholder empty-placeholder-md">{trans('no_odd_info', {}, 'quiz')}</div>
+    }
+
+    {0 !== props.items.length &&
+      <ul className={classes('ordering-answer-items', constants.DIRECTION_VERTICAL)}>
+        {props.items.map(el =>
+          <OrderingOdd
+            key={el.id}
+            id={el.id}
+            data={el.data}
+            score={el._score}
+            feedback={el._feedback}
+            deletable={true}
+            fixedScore={SCORE_FIXED === props.item.score.type}
+            hasScore={props.hasScore}
+            {...props}
+          />
+        )}
+      </ul>
+    }
+
+    <Button
+      type={CALLBACK_BUTTON}
+      className="btn btn-outline-primary w-100"
+      icon="fa fa-fw fa-plus"
+      label={trans('ordering_add_odd', {}, 'quiz')}
+      callback={() => addItem(props.item.items, props.item.solutions, true, props.onChange)}
+    />
+  </>
+
+OrderingOdds.propTypes = {
+  item: T.shape(
+    OrderingItemType.propTypes
+  ).isRequired,
+  items: T.array,
   hasScore: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
 const OrderingEditor = props => {
+  const orderingItems = props.item.items
+    .map(item => {
+      const solution = props.item.solutions.find(s => s.itemId === item.id)
+
+      return ({
+        ...item,
+        _score: solution.score,
+        _position: solution.position || undefined,
+        _feedback: solution.feedback || '',
+        _deletable: props.item.solutions.filter(solution => undefined !== solution.position).length > 2
+      })
+    })
+
   const Items = (
     <OrderingItems
       item={props.item}
+      items={orderingItems.filter(i => undefined !== i._position)}
+      onChange={props.update}
+      hasScore={props.hasAnswerScores}
+    />
+  )
+
+  const Odds = (
+    <OrderingOdds
+      item={props.item}
+      items={orderingItems.filter(i => undefined === i._position)}
       onChange={props.update}
       hasScore={props.hasAnswerScores}
     />
@@ -376,7 +375,7 @@ const OrderingEditor = props => {
 
   return (
     <FormData
-      className="ordering-item ordering-editor"
+      className="ordering-item ordering-editor mb-0 user-select-none"
       embedded={true}
       name={props.formName}
       dataPart={props.path}
@@ -407,7 +406,7 @@ const OrderingEditor = props => {
               },
               onChange: (value) => {
                 if (constants.MODE_INSIDE === value) {
-                  props.update('items', props.item.items.filter(i => undefined !== i._position))
+                  props.update('items', orderingItems.filter(i => undefined !== i._position))
                   props.update('solutions', props.item.solutions.filter(s => undefined !== s.position))
                 }
               }
@@ -416,6 +415,11 @@ const OrderingEditor = props => {
               label: trans('answer', {}, 'quiz'),
               required: true,
               component: Items
+            }, {
+              name: 'odds',
+              label: trans('odds', {}, 'quiz'),
+              displayed: props.item.mode === constants.MODE_BESIDE,
+              component: Odds
             }
           ]
         }

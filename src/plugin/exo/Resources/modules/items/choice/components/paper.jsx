@@ -46,12 +46,10 @@ const ChoicePaper = props =>
                 {utils.getChoiceById(props.item.choices, solution.id).data}
               </ContentHtml>
 
-              <div className="choice-item-feedback">
-                <Feedback
-                  id={`${solution.id}-feedback`}
-                  feedback={solution.feedback}
-                />
-              </div>
+              <Feedback
+                id={`${solution.id}-feedback`}
+                feedback={solution.feedback}
+              />
 
               {props.showScore && -1 === [SCORE_FIXED, SCORE_RULES].indexOf(props.item.score.type) &&
                 <SolutionScore score={solution.score} />
@@ -85,12 +83,10 @@ const ChoicePaper = props =>
                 {utils.getChoiceById(props.item.choices, solution.id).data}
               </ContentHtml>
 
-              <div className="choice-item-feedback">
-                <Feedback
-                  id={`${solution.id}-feedback-expected`}
-                  feedback={solution.feedback}
-                />
-              </div>
+              <Feedback
+                id={`${solution.id}-feedback-expected`}
+                feedback={solution.feedback}
+              />
 
               {props.showScore && -1 === [SCORE_FIXED, SCORE_RULES].indexOf(props.item.score.type) &&
                 <SolutionScore score={solution.score} />

@@ -1,4 +1,4 @@
-import React, {Component, cloneElement, createElement, forwardRef} from 'react'
+import React, {Component, createElement, forwardRef} from 'react'
 import classes from 'classnames'
 import invariant from 'invariant'
 import merge from 'lodash/merge'
@@ -26,14 +26,22 @@ const ButtonComponent = forwardRef((props, ref) => {
     }
   }
 
-  return createElement(button, merge(omit(props, 'type', 'icon', 'label', 'hideLabel', 'subscript'), {ref: ref}), [
-    (props.icon && typeof props.icon === 'string') &&
-      <span key="button-icon" className={classes('action-icon', props.icon, !props.hideLabel && 'icon-with-text-right')} aria-hidden={true} />,
-    (props.icon && typeof props.icon !== 'string') && cloneElement(props.icon, {key: 'button-icon'}),
-    props.hideLabel ? <span key="button-label" className="action-label sr-only">{props.label}</span> : props.label,
-    props.children,
-    subscript
-  ])
+  return createElement(button, merge(omit(props, 'type', 'icon', 'label', 'hideLabel', 'subscript'), {ref: ref}), (
+    <>
+      {(props.icon && typeof props.icon === 'string') ?
+        <span className={classes('action-icon', props.icon, !props.hideLabel && 'icon-with-text-right')} aria-hidden={true} /> :
+        props.icon
+      }
+      {props.hideLabel ?
+        <span key="button-label" className="action-label sr-only">{props.label}</span> :
+        props.label
+      }
+
+      {props.children}
+
+      {subscript}
+    </>
+  ))
 })
 
 implementPropTypes(ButtonComponent, ActionTypes, {

@@ -78,15 +78,29 @@
 // ---
 
 .expected-answer {
-    color: $expected-answer-color;
+    color: inherit; // do not change text color in editor for readability;
     border-color: $expected-answer-border;
     background: $expected-answer-bg;
+
+    .right-controls,
+    .left-controls {
+        .btn {
+            color: $expected-answer-color;
+        }
+    }
 }
 
 .unexpected-answer {
-    color: $unexpected-answer-color;
+    color: inherit; // do not change text color in editor for readability;
     border-color: $unexpected-answer-border;
     background: $unexpected-answer-bg;
+
+    .right-controls,
+    .left-controls {
+        .btn {
+            color: $unexpected-answer-color;
+        }
+    }
 }
 
 // -

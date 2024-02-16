@@ -350,6 +350,7 @@ class GraphicElement extends Component {
             placement="bottom"
           >
             <AreaPopover
+              id={this.getCurrentArea().id}
               hasScore={this.props.hasScore}
               hasExpectedAnswers={this.props.item.hasExpectedAnswers}
               score={this.getCurrentArea().score}

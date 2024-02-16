@@ -14,7 +14,7 @@ import {OrderingItemDragPreview} from '#/plugin/exo/items/ordering/components/or
 import {ContentHtml} from '#/main/app/content/components/html'
 
 let DropBox = props => props.connectDropTarget(
-  <div className={classes('drop-container', {
+  <div className={classes('ordering-drop-container', {
     'on-hover': props.isOver
   })}>
     {trans('set_drop_item', {}, 'quiz')}
@@ -32,13 +32,13 @@ DropBox = makeDroppable(DropBox, 'ITEM')
 
 let SortableItem = forwardRef((props, ref) => {
   const element =
-    <div className="item answer-item" ref={ref}>
-      <ContentHtml className="item-data">{props.data}</ContentHtml>
+    <div className="ordering-answer-item answer-item" ref={ref}>
+      <ContentHtml className="ordering-item-content">{props.data}</ContentHtml>
       <div className="item-actions">
         {props.canDelete &&
           <Button
             id={`answer-${props.index}-delete`}
-            className="btn-link"
+            className="btn btn-text-secondary"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
@@ -49,7 +49,7 @@ let SortableItem = forwardRef((props, ref) => {
         }
 
         {props.sortable &&
-          <span className="fa fa-arrows" />
+          <span className="ordering-item-drag fa fa-arrows text-secondary" />
         }
       </div>
     </div>
@@ -78,11 +78,15 @@ SortableItem = makeSortable(
 
 let DraggableItem = props => {
   const element =
-    <div className="item answer-item">
-      <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.data}} />
+    <div className="ordering-answer-item answer-item">
+      <ContentHtml className="ordering-item-content">
+        {props.item.data}
+      </ContentHtml>
 
       {props.draggable &&
-      <span className="fa fa-arrows" />
+        <div className="item-actions">
+          <span className="ordering-item-drag fa fa-arrows text-secondary" />
+        </div>
       }
     </div>
 
@@ -164,80 +168,52 @@ class OrderingPlayer extends Component {
   render() {
 
     return (
-      <div className="ordering-player user-select-none">
-        <div className="row">
-          <div className={classes(
-            {'horizontal': this.props.item.direction === constants.DIRECTION_HORIZONTAL},
-            {'col-md-12': this.props.item.mode === constants.MODE_INSIDE},
-            {'col-md-6': this.props.item.direction === constants.DIRECTION_VERTICAL && this.props.item.mode === constants.MODE_BESIDE}
-          )}>
-            {this.props.item.mode === constants.MODE_INSIDE ?
-              this.props.answer.map((a, index) =>
-                <SortableItem
-                  id={a.itemId}
-                  key={a.itemId}
-                  data={a._data}
-                  sortable={!this.props.disabled}
-                  canDelete={false}
-                  index={index}
-                  sortDirection={this.props.item.direction === constants.DIRECTION_VERTICAL ? SORT_VERTICAL : SORT_HORIZONTAL}
-                  onSort={(id, swapId) => this.props.onChange(
-                    this.onSort(id, swapId)
-                  )}/>
-              )
-              :
-              this.state.items.filter(item => undefined === this.props.answer.find(answer => answer.itemId === item.id)).map((item) =>
-                <DraggableItem
-                  item={item}
-                  key={item.id}
-                  draggable={!this.props.disabled}
-                />
-              )
-            }
-          </div>
-          {this.props.item.direction === constants.DIRECTION_VERTICAL && this.props.item.mode === constants.MODE_BESIDE &&
-            <div className="col-md-6 answer-zone">
-              {this.props.answer.map((a, index) =>
-                <SortableItem
-                  id={a.itemId}
-                  key={a.itemId}
-                  data={a._data}
-                  sortable={!this.props.disabled}
-                  canDelete={!this.props.disabled}
-                  onDelete={() => this.onDelete(a.itemId)}
-                  sortDirection={SORT_VERTICAL}
-                  index={index}
-                  onSort={(id, swapId) => this.props.onChange(
-                    this.onSort(id, swapId)
-                  )}/>
-              )}
-              {!this.props.disabled &&
-                <DropBox onDrop={(source) => this.onItemDrop(source)}/>
-              }
-            </div>
+      <div className={classes('ordering-player user-select-none', this.props.item.direction)}>
+        <div className={classes('ordering-answer-items', this.props.item.direction)}>
+          {this.props.item.mode === constants.MODE_INSIDE ?
+            this.props.answer.map((a, index) =>
+              <SortableItem
+                id={a.itemId}
+                key={a.itemId}
+                data={a._data}
+                sortable={!this.props.disabled}
+                canDelete={false}
+                index={index}
+                sortDirection={this.props.item.direction === constants.DIRECTION_VERTICAL ? SORT_VERTICAL : SORT_HORIZONTAL}
+                onSort={(id, swapId) => this.props.onChange(
+                  this.onSort(id, swapId)
+                )}/>
+            )
+            :
+            this.state.items.filter(item => undefined === this.props.answer.find(answer => answer.itemId === item.id)).map((item) =>
+              <DraggableItem
+                item={item}
+                key={item.id}
+                draggable={!this.props.disabled}
+              />
+            )
           }
         </div>
-        {this.props.item.direction === constants.DIRECTION_HORIZONTAL && this.props.item.mode === constants.MODE_BESIDE &&
-          <div className="row">
-            <div className="col-md-12 answer-zone horizontal">
-              {this.props.answer.map((a, index) =>
-                <SortableItem
-                  id={a.itemId}
-                  key={a.itemId}
-                  data={a._data}
-                  sortable={!this.props.disabled}
-                  canDelete={!this.props.disabled}
-                  onDelete={() => this.onDelete(a.itemId)}
-                  sortDirection={SORT_HORIZONTAL}
-                  index={index}
-                  onSort={(id, swapId) => this.props.onChange(
-                    this.onSort(id, swapId)
-                  )}/>
-              )}
-              {!this.props.disabled &&
-                <DropBox onDrop={(source) => this.onItemDrop(source)}/>
-              }
-            </div>
+
+        {this.props.item.mode === constants.MODE_BESIDE &&
+          <div className={classes('answer-zone ordering-answer-items', this.props.item.direction)}>
+            {this.props.answer.map((a, index) =>
+              <SortableItem
+                id={a.itemId}
+                key={a.itemId}
+                data={a._data}
+                sortable={!this.props.disabled}
+                canDelete={!this.props.disabled}
+                onDelete={() => this.onDelete(a.itemId)}
+                sortDirection={SORT_VERTICAL}
+                index={index}
+                onSort={(id, swapId) => this.props.onChange(
+                  this.onSort(id, swapId)
+                )}/>
+            )}
+            {!this.props.disabled &&
+              <DropBox onDrop={(source) => this.onItemDrop(source)}/>
+            }
           </div>
         }
       </div>

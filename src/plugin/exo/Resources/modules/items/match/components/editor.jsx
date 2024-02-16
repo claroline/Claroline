@@ -18,6 +18,7 @@ import {emptyAnswer} from '#/plugin/exo/items/utils'
 import {MatchItem as MatchItemTypes} from '#/plugin/exo/items/match/prop-types'
 import {utils} from '#/plugin/exo/items/match/utils'
 import {Toolbar} from '#/main/app/action'
+import {FeedbackEditorButton} from '#/plugin/exo/buttons/feedback/components/button'
 
 const getRightItemDeletable = (item) =>
   (item.secondSet.length > 1 && item.firstSet.length > 1) || (item.secondSet.length > 2 && item.firstSet.length === 1)
@@ -125,14 +126,11 @@ class MatchLinkPopover extends Component {
               />
             }
 
-            <Button
-              id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
-              className="btn-link"
-              type={CALLBACK_BUTTON}
-              icon="fa fa-fw fa-comments"
+            <FeedbackEditorButton
+              id={`${this.props.solution.firstId}-${this.props.solution.secondId}`}
               label={trans('feedback_association_created', {}, 'quiz')}
-              callback={() => this.setState({showFeedback: !this.state.showFeedback})}
-              tooltip="top"
+              feedback={this.props.solution.feedback}
+              toggle={() => this.setState({showFeedback: !this.state.showFeedback})}
             />
           </div>
 

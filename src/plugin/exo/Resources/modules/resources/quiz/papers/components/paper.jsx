@@ -122,7 +122,7 @@ PaperStep.propTypes = {
 }
 
 const PaperComponent = props =>
-  <div className="paper">
+  <div className="paper mt-3">
     <ContentTitle
       level={3}
       displayLevel={2}

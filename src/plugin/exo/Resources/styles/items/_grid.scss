@@ -8,7 +8,7 @@
 
     .grid-score {
       display: inline-block; // display input on same line than delete btn
-      width: 60px;
+      width: $score-input-size;
       margin-right: ($grid-gutter-width * .5);
     }
 

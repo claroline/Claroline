@@ -16,7 +16,7 @@ import {PaperCard} from '#/plugin/exo/resources/quiz/papers/components/card'
 
 const Papers = props =>
   <Fragment>
-    <h3 className="h2">
+    <h3 className="h2 mt-3">
       {trans('results', {}, 'quiz')}
       <small style={{display: 'block', marginTop: '5px'}}>{trans('all_attempts', {}, 'quiz')}</small>
     </h3>
