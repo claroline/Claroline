@@ -19,7 +19,7 @@ import {ResourceAttempt as ResourceAttemptTypes} from '#/main/evaluation/resourc
 import {EvaluationFeedback} from '#/main/evaluation/components/feedback'
 import {EvaluationDetails} from '#/main/evaluation/components/details'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
-import {URL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 const WorkspaceCertificatesToolbar = (props) => {
   const dispatch = useDispatch()
@@ -46,24 +46,18 @@ const WorkspaceCertificatesToolbar = (props) => {
       actions={[
         {
           name: 'download-participation-certificate',
-          type: URL_BUTTON,
+          type: CALLBACK_BUTTON,
           label: trans('download_participation_certificate', {}, 'actions'),
-          target: ['apiv2_workspace_download_participation_certificate', {
-            workspace: get(wsEval, 'workspace.id'),
-            user: get(wsEval, 'user.id')
-          }],
+          callback: () => dispatch(evalActions.downloadParticipationCertificate(workspaceId, userId)),
           displayed: [
             evalConstants.EVALUATION_STATUS_COMPLETED,
             evalConstants.EVALUATION_STATUS_PARTICIPATED
           ].includes(get(wsEval, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))
         }, {
           name: 'download-success-certificate',
-          type: URL_BUTTON,
+          type: CALLBACK_BUTTON,
           label: trans('download_success_certificate', {}, 'actions'),
-          target: ['apiv2_workspace_download_success_certificate', {
-            workspace: get(wsEval, 'workspace.id'),
-            user: get(wsEval, 'user.id')
-          }],
+          callback: () => dispatch(evalActions.downloadSuccessCertificate(workspaceId, userId)),
           displayed: evalConstants.EVALUATION_STATUS_PASSED === get(wsEval, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN)
         }
       ]}
