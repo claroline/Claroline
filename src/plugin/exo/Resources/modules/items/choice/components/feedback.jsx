@@ -34,12 +34,10 @@ const ChoiceFeedback = props =>
           </ContentHtml>
 
           {utils.isSolutionChecked(solution, props.answer) &&
-            <div className="choice-item-feedback">
-              <Feedback
-                id={`${solution.id}-feedback`}
-                feedback={solution.feedback}
-              />
-            </div>
+            <Feedback
+              id={`${solution.id}-feedback`}
+              feedback={solution.feedback}
+            />
           }
         </label>
       )}

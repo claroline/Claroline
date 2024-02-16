@@ -14,6 +14,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {DateInput} from '#/main/app/data/types/date/components/input'
 import {DataInput} from '#/main/app/data/components/input'
 import {Toolbar} from '#/main/app/action'
+import {FeedbackEditorButton} from '#/plugin/exo/buttons/feedback/components/button'
 
 /**
  * Edits a Keyword.
@@ -114,19 +115,16 @@ class KeywordItem extends Component {
             />
           }
 
-          <Button
-            id={`keyword-${this.props.keyword._id}-feedback-toggle`}
-            className="btn-link"
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments"
+          <FeedbackEditorButton
+            id={this.props.keyword._id}
             label={trans('words_feedback_info', {}, 'quiz')}
-            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
-            tooltip="top"
+            feedback={this.props.keyword.feedback}
+            toggle={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
 
           <Button
             id={`keyword-${this.props.keyword._id}-delete`}
-            className="btn-link"
+            className="btn btn-text-danger"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}

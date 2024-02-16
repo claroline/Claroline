@@ -10,10 +10,10 @@
 // Base & utilities
 // ---
 
-//$quiz-container-width:         $content-md !default;
 // only applied in paper, not in list
 // permits to stick box to the border (absorb panel padding)
-$score-margin:                 (-$panel-body-padding) (-$panel-body-padding) $panel-body-padding $panel-body-padding !default;
+$score-margin:     (-$panel-body-padding) (-$panel-body-padding) $panel-body-padding $panel-body-padding !default;
+$score-input-size: 70px !default;
 
 
 // -
@@ -34,12 +34,12 @@ $answer-item-hover-bg:           var(--#{$prefix}primary-bg-subtle) !default;
 $answer-item-hover-border-color: var(--#{$prefix}primary-border-subtle) !default;
 
 // highlight expected answers in editor
-$expected-answer-color:     inherit; // do not change text color in editor for readability
+$expected-answer-color:     var(--#{$prefix}success-text-emphasis) !default;
 $expected-answer-bg:        var(--#{$prefix}success-bg-subtle) !default;
 $expected-answer-border:    var(--#{$prefix}success-border-subtle) !default;
 
 // highlight unexpected answers in editor
-$unexpected-answer-color:   inherit; // do not change text color in editor for readability
+$unexpected-answer-color:   var(--#{$prefix}danger-text-emphasis) !default; // do not change text color in editor for readability
 $unexpected-answer-bg:      var(--#{$prefix}danger-bg-subtle) !default;
 $unexpected-answer-border:  var(--#{$prefix}danger-border-subtle) !default;
 

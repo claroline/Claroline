@@ -2,141 +2,143 @@
 
 .ordering-answer-items {
   display: flex;
-  margin: floor(math.div(-$answer-item-margin-bottom, 2));
+  flex: 1;
+  gap: $answer-item-margin-bottom;
 
   // remove <ul> styles
+  margin: 0;
   padding: 0;
   list-style-type: none;
-
-  &.horizontal {
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    .ordering-answer-item {
-      flex-direction: column;
-      align-items: stretch;
-
-      .text-fields {
-        order: 2;
-        margin-top: ($grid-gutter-width * .5);
-      }
-
-      .right-controls {
-        order: 1;
-        margin-left: auto;
-      }
-    }
-  }
-
-  &.vertical {
-    flex-direction: column;
-
-    .ordering-answer-item {
-      flex-direction: row;
-
-      .text-fields {
-        margin-right: ($grid-gutter-width * .5);
-      }
-    }
-  }
 
   > li {
     flex: 1;
   }
+}
 
+.empty-placeholder,
+.ordering-answer-items {
   + .btn {
-    margin-top: $answer-item-margin-bottom;
+    margin-top: $answer-item-margin-bottom * 2;
+  }
+}
+
+.ordering-answer-items.horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .ordering-answer-item {
+    min-width: 200px;
+    flex-direction: column;
+    align-items: stretch;
+
+    .text-fields {
+      order: 2;
+      margin-top: ($grid-gutter-width * .5);
+    }
+
+    .ordering-item-content {
+      order: 2;
+      margin-top: ($answer-item-padding * .5);
+    }
+
+    .item-actions,
+    .right-controls {
+      order: 1;
+      margin-left: auto;
+    }
+  }
+}
+
+.ordering-answer-items.vertical {
+  flex-direction: column;
+
+  .ordering-answer-item {
+    flex-direction: row;
+
+    .ordering-item-content,
+    .text-fields {
+      margin-right: ($grid-gutter-width * .5);
+    }
   }
 }
 
 .ordering-answer-item {
-  margin: floor(math.div($answer-item-margin-bottom, 2));
+  margin: 0;
   display: flex;
   align-items: flex-start;
+
+  .ordering-item-tick {
+    flex-shrink: 0;
+    align-self: flex-start; // make sure tick is always in the top left corner
+    margin-top: .25em; // same as checkboxes/radios
+    width: 1em; // same as checkboxes/radios
+    height: 1em; // same as checkboxes/radios
+    text-align: center;
+    margin-right: ($grid-gutter-width * .5);
+  }
+
+  .ordering-item-content {
+    flex: 1;
+  }
 
   .score {
     margin-right: ($grid-gutter-width * .5);
   }
+
+  .btn-feedback {
+    margin-left: ($grid-gutter-width * .5);
+  }
+
+  .ordering-item-drag {
+    line-height: $btn-line-height;
+  }
+
+  .item-actions {
+    display: flex;
+    align-self: flex-start;
+    gap: $answer-item-padding;
+
+    .btn {
+      border: 0;
+      padding: 0;
+    }
+  }
+}
+
+.ordering-drop-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--#{$prefix}secondary-color);
+  border-radius: $answer-item-border-radius;
+  height: auto;
+  text-align: center;
+  padding: $answer-item-padding;
+}
+
+.ordering-player,
+.ordering-feedback,
+.ordering-paper {
+  display: flex;
+  gap: $grid-gutter-width;
+
+  &.vertical {
+    flex-direction: row;
+  }
+
+  &.horizontal {
+    flex-direction: column;
+  }
 }
 
 .ordering-player {
-  .horizontal {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .item {
-    display: flex;
-    margin: 5px;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-
-    .btn-link {
-      padding: 0;
-      border: none;
-    }
-  }
-
-  .horizontal .item {
-    width: 100%;
-  }
-
-  .drop-container {
-    background-color: #ffffff;
-    border: 1px dashed #bbb;
-    border-radius: 5px;
-    height: auto;
-    text-align: center;
-    padding: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
-    &.on-hover {
-      background-color: #eee;
-    }
+  .ordering-answer-item {
+    cursor: move;
   }
 }
 
-
 .ordering-paper {
-  .horizontal {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .item {
-    display: flex;
-    margin: 5px;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .horizontal .item {
-    width: 100%;
-    max-width: 250px;
-  }
-
-  .positive-score {
-    background-color: #d4ffb0;
-    border: 1px solid #d6e9c6;
-  }
-
-  .negative-score {
-    background-color: #f9e2e2;
-    border: 1px solid #ebccd1;
-  }
-
-  .no-score {
-    background-color: #f5f5f5;
-    border: 1px solid #e5e5e5;
-  }
-
-  .unanswered-item {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px;
-  }
-
   .stats-item {
     justify-content: flex-end;
   }

@@ -20,7 +20,7 @@ const Action = {
     type: T.string.isRequired,
     icon: T.oneOfType([T.string, T.node]),
     subscript: T.shape({
-      type: T.oneOf(['text', 'label']),
+      type: T.oneOf(['text', 'label', 'bullet']),
       status: T.oneOf(['default', 'primary', 'danger', 'warning']),
       value: T.node.isRequired
     }),

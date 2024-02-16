@@ -7,11 +7,11 @@ import {Popover} from '#/main/app/overlays/popover/components/popover'
 import {trans} from '#/main/app/intl/translation'
 import {Toolbar} from '#/main/app/action'
 import {FormGroup} from '#/main/app/content/form/components/group'
-import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {HtmlInput} from '#/main/app/data/types/html/components/input'
 import {ColorInput} from '#/main/theme/data/types/color/components/input'
+import {FeedbackEditorButton} from '#/plugin/exo/buttons/feedback/components/button'
 
 export class AreaPopover extends Component {
   constructor(props) {
@@ -99,13 +99,11 @@ export class AreaPopover extends Component {
                 />
               }
 
-              <Button
-                className="btn btn-text-secondary"
-                type={CALLBACK_BUTTON}
-                icon="fa fa-fw fa-comments"
+              <FeedbackEditorButton
+                id={this.props.id}
                 label={trans('graphic_feedback_info', {}, 'quiz')}
-                callback={() => this.setState({showFeedback: !this.state.showFeedback})}
-                tooltip="left"
+                feedback={this.props.feedback}
+                toggle={() => this.setState({showFeedback: !this.state.showFeedback})}
               />
             </div>
           </div>
@@ -131,6 +129,7 @@ export class AreaPopover extends Component {
 }
 
 AreaPopover.propTypes = {
+  id: T.string.isRequired,
   className: T.string,
   color: T.string.isRequired,
   hasScore: T.bool.isRequired,

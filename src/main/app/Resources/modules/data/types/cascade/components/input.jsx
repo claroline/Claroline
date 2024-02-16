@@ -71,7 +71,7 @@ const CascadeInput = props =>
     }
 
     {props.value.map((v, index) => hasChildren(props, index) ?
-      <div className="sub-fields mt-2">
+      <div className="sub-fields mt-2" key={index}>
         <Select
           id={`${props.id}-select-lvl-${index + 1}`}
           key={`select-level-${index + 1}`}

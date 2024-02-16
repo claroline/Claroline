@@ -8,13 +8,37 @@ import {isHtmlEmpty} from '#/main/app/data/types/html/validators'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
 import {POPOVER_BUTTON} from '#/main/app/buttons/popover'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
+
+/**
+ * Feedback button.
+ * Renders a component that will open the feedback editor.
+ */
+const FeedbackEditorButton = (props) =>
+  <Button
+    {...omit(props, 'feedback')}
+    id={`feedback-${props.id}`}
+    className={classes('btn btn-text-secondary', props.className)}
+    type={CALLBACK_BUTTON}
+    icon={classes('fa fa-fw fa-comments', {
+      'fa-regular': isHtmlEmpty(props.feedback)
+    })}
+    label={props.label}
+    callback={props.toggle}
+    tooltip="top"
+  />
+
+FeedbackEditorButton.propTypes = {
+  id: T.oneOfType([T.string, T.number]).isRequired,
+  label: T.string.isRequired,
+  className: T.string,
+  feedback: T.string,
+  toggle: T.func.isRequired
+}
 
 /**
  * Feedback button.
  * Renders a component that will open an answer feedback.
- *
- * @param props
- * @constructor
  */
 const FeedbackButton = props => {
   if (!props.feedback || isHtmlEmpty(props.feedback)) {
@@ -31,7 +55,7 @@ const FeedbackButton = props => {
       type={POPOVER_BUTTON}
       icon="fa fa-fw fa-comments"
       label={trans('show-feedback', {}, 'actions')}
-      tooltip="left"
+      tooltip="top"
       popover={{
         className: 'feedback-popover',
         position: 'bottom',
@@ -48,5 +72,6 @@ FeedbackButton.propTypes = {
 }
 
 export {
-  FeedbackButton
+  FeedbackButton,
+  FeedbackEditorButton
 }

@@ -21,6 +21,7 @@ import {ItemEditor as ItemEditorType} from '#/plugin/exo/items/prop-types'
 import {SetItem as SetItemType} from '#/plugin/exo/items/set/prop-types'
 import {utils} from '#/plugin/exo/items/set/utils'
 import {SetItemDragPreview} from '#/plugin/exo/items/set/components/set-item-drag-preview'
+import {FeedbackEditorButton} from '#/plugin/exo/buttons/feedback/components/button'
 
 const addItem = (items, saveCallback) => {
   const newItems = cloneDeep(items)
@@ -262,19 +263,16 @@ class Association extends Component {
             />
           }
 
-          <Button
-            id={`ass-${this.props.association.itemId}-${this.props.association.setId}-feedback-toggle`}
-            className="btn-link"
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments"
+          <FeedbackEditorButton
+            id={`${this.props.association.itemId}-${this.props.association.setId}`}
             label={trans('feedback_association_created', {}, 'quiz')}
-            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
-            tooltip="top"
+            feedback={this.props.association.feedback}
+            toggle={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
 
           <Button
             id={`ass-${this.props.association.itemId}-${this.props.association.setId}-delete`}
-            className="btn-link"
+            className="btn btn-text-secondary"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}
@@ -538,19 +536,16 @@ class Odd extends Component {
             />
           }
 
-          <Button
-            id={`odd-${this.props.odd.id}-feedback-toggle`}
-            className="btn-link"
-            type={CALLBACK_BUTTON}
-            icon="fa fa-fw fa-comments"
+          <FeedbackEditorButton
+            id={this.props.odd.id}
             label={trans('feedback', {}, 'quiz')}
-            callback={() => this.setState({showFeedback: !this.state.showFeedback})}
-            tooltip="top"
+            feedback={this.props.solution.feedback}
+            toggle={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
 
           <Button
             id={`odd-${this.props.odd.id}-delete`}
-            className="btn-link"
+            className="btn btn-text-secondary"
             type={CALLBACK_BUTTON}
             icon="fa fa-fw fa-trash"
             label={trans('delete', {}, 'actions')}

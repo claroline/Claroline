@@ -17,12 +17,12 @@ export const utils = {
   getAnswerClass(answer, answers, solutions, scoreType) {
     const allAnswersValid = utils.checkAllAnswers(solutions, answers)
     if (scoreType === SCORE_SUM) {
-      return utils.answerIsValid(answer, solutions) ? 'text-success positive-score' : 'text-danger negative-score'
+      return utils.answerIsValid(answer, solutions) ? 'correct-answer' : 'incorrect-answer'
     } else if (allAnswersValid) {
-      return 'text-success positive-score'
+      return 'correct-answer'
     } else {
       // text belonging to right answers is in succes style but backgrounf is in error style
-      return utils.answerIsValid(answer, solutions) ? 'text-success negative-score' : 'text-danger negative-score'
+      return utils.answerIsValid(answer, solutions) ? 'correct-answer' : 'incorrect-answer'
     }
   },
   isInOddsSolutions(itemId, solutions) {

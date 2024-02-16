@@ -89,7 +89,7 @@
         }
 
         .association-score {
-          width: 60px;
+          width: $score-input-size;
           margin-right: ($grid-gutter-width * .5);
         }
       }
