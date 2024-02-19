@@ -354,10 +354,10 @@ class ResourceManager implements LoggerAwareInterface
 
     public function addView(ResourceNode $node)
     {
-        $node->addView();
+        $this->resourceNodeRepo->addView($node);
 
-        $this->om->persist($node);
-        $this->om->flush();
+        // we do a direct DB call to update nbViews, so we need to refresh the entity
+        $this->om->refresh($node);
 
         return $node;
     }
