@@ -173,4 +173,19 @@ class ResourceNodeRepository extends MaterializedPathRepository
             return $resource['code'];
         }, $results);
     }
+
+    /**
+     * DO NOT USE IT !
+     * It's only here to avoid updating the updatedAt prop each time a user open a resource.
+     */
+    public function addView(ResourceNode $resourceNode): void
+    {
+        $this->getEntityManager()->createQuery('
+            UPDATE Claroline\CoreBundle\Entity\Resource\ResourceNode AS n
+            SET n.viewsCount = n.viewsCount + 1
+            WHERE UPPER(n.id) = :nodeId
+        ')
+        ->setParameter('nodeId', $resourceNode->getId())
+        ->getResult();
+    }
 }
