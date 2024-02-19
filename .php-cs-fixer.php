@@ -10,6 +10,6 @@ return $config
         '@Symfony' => true,
         'ordered_imports' => ['imports_order' => ['class', 'function', 'const'], 'sort_algorithm' => 'alpha'],
         'array_syntax' => ['syntax' => 'short'],
-        'nullable_type_declaration' => false, // to enable later
+        'nullable_type_declaration_for_default_null_value' => false
     ])
     ->setFinder($finder);

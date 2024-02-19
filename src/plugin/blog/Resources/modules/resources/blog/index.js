@@ -1,5 +1,5 @@
-import merge from 'lodash/merge'
 import get from 'lodash/get'
+import merge from 'lodash/merge'
 
 import {reducer} from '#/plugin/blog/resources/blog/store'
 import {BlogResource} from '#/plugin/blog/resources/blog/containers/resource'
@@ -19,7 +19,7 @@ export default {
     // edit this resource. We do it here to allow the user to reset it directly into the
     // rights section of the creation form
     const newNode = merge({}, resourceData.resourceNode)
-    newNode.rights = get(resourceData, 'resourceNode.rights').map(roleRights => {
+    newNode.rights = get(resourceData, 'resourceNode.rights', []).map(roleRights => {
       let customPerms = {}
       if (roleRights.permissions.edit) {
         customPerms['blog_post'] = true
