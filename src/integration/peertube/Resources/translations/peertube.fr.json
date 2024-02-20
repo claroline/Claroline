@@ -1,0 +1,9 @@
+{
+  "autoplay": "Lecture automatique",
+  "controls": "Affichage des contrôles",
+  "timecode_start": "Timecode de début",
+  "timecode_end": "Timecode de fin",
+  "loop": "Lecture en boucle",
+  "peertubeLink": "Affichage du lien Peertube",
+  "timecode_help":"Attention : l'utilisation de ce paramétrage peut fausser le calcul de la progression."
+}

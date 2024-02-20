@@ -9,7 +9,7 @@ const VideoPlayer = props => {
 
   return (
     <PeerTubePlayer
-      url={props.video.embeddedUrl}
+      video={props.video}
       onPlay={(currentTime, duration) => {
         if (props.currentUser) {
           props.updateProgression(props.video.id, currentTime, duration)

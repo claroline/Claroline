@@ -39,6 +39,36 @@ class Video extends AbstractResource
      */
     private $shortUuid;
 
+    /**
+     * @ORM\Column(name="timecode_start", type="integer", nullable=true)
+     */
+    private ?int $timecodeStart = null;
+
+    /**
+     * @ORM\Column(name="timecode_end", type="integer", nullable=true)
+     */
+    private ?int $timecodeEnd = null;
+
+    /**
+     * @ORM\Column(name="autoplay", type="boolean", nullable=false)
+     */
+    private bool $autoplay = false;
+
+    /**
+     * @ORM\Column(name="looping", type="boolean", nullable=false)
+     */
+    private bool $looping = false;
+
+    /**
+     * @ORM\Column(name="controls", type="boolean", nullable=false)
+     */
+    private bool $controls = true;
+
+    /**
+     * @ORM\Column(name="peertubeLink", type="boolean", nullable=false)
+     */
+    private bool $peertubeLink = false;
+
     public function getServer(): ?string
     {
         return $this->server;
@@ -77,5 +107,65 @@ class Video extends AbstractResource
     public function getEmbeddedUrl(): ?string
     {
         return $this->server.'/videos/embed/'.$this->originalUuid;
+    }
+
+    public function getTimecodeStart(): ?int
+    {
+        return $this->timecodeStart;
+    }
+
+    public function setTimecodeStart(?int $timecodeStart): void
+    {
+        $this->timecodeStart = $timecodeStart;
+    }
+
+    public function getTimecodeEnd(): ?int
+    {
+        return $this->timecodeEnd;
+    }
+
+    public function setTimecodeEnd(?int $timecodeEnd): void
+    {
+        $this->timecodeEnd = $timecodeEnd;
+    }
+
+    public function getAutoplay(): bool
+    {
+        return $this->autoplay;
+    }
+
+    public function setAutoplay(bool $autoplay): void
+    {
+        $this->autoplay = $autoplay;
+    }
+
+    public function getLooping(): bool
+    {
+        return $this->looping;
+    }
+
+    public function setLooping(bool $looping): void
+    {
+        $this->looping = $looping;
+    }
+
+    public function getControls(): bool
+    {
+        return $this->controls;
+    }
+
+    public function setControls(bool $controls): void
+    {
+        $this->controls = $controls;
+    }
+
+    public function getPeertubeLink(): bool
+    {
+        return $this->peertubeLink;
+    }
+
+    public function setPeertubeLink(bool $peertubeLink): void
+    {
+        $this->peertubeLink = $peertubeLink;
     }
 }

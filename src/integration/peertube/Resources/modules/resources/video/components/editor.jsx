@@ -29,6 +29,32 @@ const VideoEditor = (props) =>
             label: trans('url'),
             type: 'url',
             required: true
+          }, {
+            name: 'timecodeStart',
+            label: trans('timecode_start', {}, 'peertube'),
+            type: 'time',
+            help: trans('timecode_help',{}, 'peertube')
+          }, {
+            name: 'timecodeEnd',
+            label: trans('timecode_end', {}, 'peertube'),
+            type: 'time',
+            help: trans('timecode_help',{}, 'peertube')
+          }, {
+            name: 'autoplay',
+            label: trans('autoplay', {}, 'peertube'),
+            type: 'boolean'
+          }, {
+            name: 'looping',
+            label: trans('loop', {}, 'peertube'),
+            type: 'boolean'
+          }, {
+            name: 'controls',
+            label: trans('controls', {}, 'peertube'),
+            type: 'boolean'
+          }, {
+            name: 'peertubeLink',
+            label: trans('peertubeLink', {}, 'peertube'),
+            type: 'boolean'
           }
         ]
       }

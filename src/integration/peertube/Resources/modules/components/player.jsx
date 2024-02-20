@@ -2,9 +2,33 @@ import React, {useRef, useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
+import {Video as VideoTypes} from '#/integration/peertube/prop-types'
+
 const PeerTubePlayer = (props) => {
   const embedIframe = useRef(null)
   const videoInfo = useRef()
+  const url = () => {
+    const params = {
+      api: 1,
+      p2p: 0,
+      title: 0,
+      peertubeLink: props.video.peertubeLink ? 1 : 0,
+      autoplay: props.video.autoplay ? 1 : 0,
+      muted: props.video.autoplay ? 1 : 0,
+      loop: props.video.looping ? 1 : 0,
+      controlBar: props.video.controls ? 1 : 0
+    }
+
+    if(props.video.timecodeStart && props.video.timecodeStart > 0) {
+      params.start = props.video.timecodeStart
+    }
+
+    if(props.video.timecodeEnd && props.video.timecodeEnd > props.video.timecodeStart) {
+      params.stop = props.video.timecodeEnd
+    }
+
+    return props.video.embeddedUrl + '?' + Object.keys(params).map(key => `${key}=${params[key]}`).join('&')
+  }
 
   useEffect(() => {
     return () => {
@@ -19,7 +43,7 @@ const PeerTubePlayer = (props) => {
       style={{minHeight: '540px'}}
       height="100%"
       ref={embedIframe}
-      src={`${props.url}?api=1&p2p=0&title=0&peertubeLink=0`}
+      src={url()}
       allowFullScreen={true}
       frameBorder="0"
       onLoad={() => {
@@ -67,7 +91,7 @@ const PeerTubePlayer = (props) => {
 }
 
 PeerTubePlayer.propTypes = {
-  url: T.string.isRequired,
+  video: T.shape( VideoTypes.propTypes ).isRequired,
   onPlay: T.func, // get the currentTime and totalDuration as parameters
   onPause: T.func, // get the currentTime and totalDuration as parameters
   onTimeUpdate: T.func // get the currentTime and totalDuration as parameters
