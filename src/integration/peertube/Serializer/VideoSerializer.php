@@ -40,6 +40,7 @@ class VideoSerializer
             'looping' => $video->getLooping(),
             'controls' => $video->getControls(),
             'peertubeLink' => $video->getPeertubeLink(),
+            'resume' => $video->getResume(),
         ];
     }
 
@@ -53,6 +54,7 @@ class VideoSerializer
             $this->sipe('looping', 'setLooping', $data, $video);
             $this->sipe('controls', 'setControls', $data, $video);
             $this->sipe('peertubeLink', 'setPeertubeLink', $data, $video);
+            $this->sipe('resume', 'setResume', $data, $video);
         } else {
             $video->refreshUuid();
         }

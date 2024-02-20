@@ -21,7 +21,8 @@ final class Version20240219134516 extends AbstractMigration
             ADD autoplay TINYINT(1) NOT NULL, 
             ADD looping TINYINT(1) NOT NULL, 
             ADD controls TINYINT(1) NOT NULL, 
-            ADD peertubeLink TINYINT(1) NOT NULL
+            ADD peertubeLink TINYINT(1) NOT NULL,
+            ADD resume TINYINT(1) NOT NULL
         ');
     }
 
@@ -34,7 +35,8 @@ final class Version20240219134516 extends AbstractMigration
             DROP autoplay, 
             DROP looping, 
             DROP controls, 
-            DROP peertubeLink
+            DROP peertubeLink,
+            DROP resume
         ');
     }
 }

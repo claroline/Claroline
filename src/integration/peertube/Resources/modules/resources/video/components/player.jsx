@@ -10,6 +10,7 @@ const VideoPlayer = props => {
   return (
     <PeerTubePlayer
       video={props.video}
+      progression={props.progression}
       onPlay={(currentTime, duration) => {
         if (props.currentUser) {
           props.updateProgression(props.video.id, currentTime, duration)
@@ -38,6 +39,7 @@ VideoPlayer.propTypes = {
   video: T.shape(
     VideoTypes.propTypes
   ).isRequired,
+  progression: T.number.isRequired,
   updateProgression: T.func.isRequired,
   currentUser: T.object
 }

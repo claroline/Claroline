@@ -46,7 +46,6 @@ class VideoSubscriber implements EventSubscriberInterface
             'resource.peertube_video.embed' => 'onEmbed',
             Crud::getEventName('create', 'post', Video::class) => 'onCreate',
             Crud::getEventName('update', 'post', Video::class) => 'postUpdate',
-
         ];
     }
 

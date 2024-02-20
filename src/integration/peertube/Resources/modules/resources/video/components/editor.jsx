@@ -29,16 +29,21 @@ const VideoEditor = (props) =>
             label: trans('url'),
             type: 'url',
             required: true
-          }, {
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-play',
+        title: trans('playback_param', {}, 'peertube'),
+        help: trans('timecode_help',{}, 'peertube'),
+        fields: [
+          {
             name: 'timecodeStart',
             label: trans('timecode_start', {}, 'peertube'),
-            type: 'time',
-            help: trans('timecode_help',{}, 'peertube')
+            type: 'time'
           }, {
             name: 'timecodeEnd',
             label: trans('timecode_end', {}, 'peertube'),
-            type: 'time',
-            help: trans('timecode_help',{}, 'peertube')
+            type: 'time'
           }, {
             name: 'autoplay',
             label: trans('autoplay', {}, 'peertube'),
@@ -54,6 +59,10 @@ const VideoEditor = (props) =>
           }, {
             name: 'peertubeLink',
             label: trans('peertubeLink', {}, 'peertube'),
+            type: 'boolean'
+          }, {
+            name: 'resume',
+            label: trans('resume', {}, 'peertube'),
             type: 'boolean'
           }
         ]

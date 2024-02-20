@@ -20,7 +20,9 @@ const PeerTubePlayer = (props) => {
     }
 
     if(props.video.timecodeStart && props.video.timecodeStart > 0) {
-      params.start = props.video.timecodeStart
+      if(!props.video.resume || props.progression >= 100) {
+        params.start = props.video.timecodeStart
+      }
     }
 
     if(props.video.timecodeEnd && props.video.timecodeEnd > props.video.timecodeStart) {
@@ -30,13 +32,15 @@ const PeerTubePlayer = (props) => {
     return props.video.embeddedUrl + '?' + Object.keys(params).map(key => `${key}=${params[key]}`).join('&')
   }
 
+  let resumed = false
+
   useEffect(() => {
     return () => {
       if (!isEmpty(videoInfo.current) && props.onPause) {
         props.onPause(videoInfo.current.position, videoInfo.current.duration)
       }
     }
-  }, [props.url])
+  }, [])
 
   return (
     <iframe
@@ -66,6 +70,10 @@ const PeerTubePlayer = (props) => {
             if ('playing' === playbackInfo.playbackState) {
               if (props.onPlay) {
                 props.onPlay(playbackInfo.position, playbackInfo.duration)
+                if(!resumed && props.video.resume) {
+                  player.seek(playbackInfo.duration * (props.progression / 100) - 5)
+                  resumed = true
+                }
               }
             } else if (['paused', 'ended'].includes(playbackInfo.playbackState)) {
               // standard video player do not dispatch an "ended" status (it reuses paused)
@@ -92,6 +100,7 @@ const PeerTubePlayer = (props) => {
 
 PeerTubePlayer.propTypes = {
   video: T.shape( VideoTypes.propTypes ).isRequired,
+  progression: T.number.isRequired,
   onPlay: T.func, // get the currentTime and totalDuration as parameters
   onPause: T.func, // get the currentTime and totalDuration as parameters
   onTimeUpdate: T.func // get the currentTime and totalDuration as parameters

@@ -69,6 +69,11 @@ class Video extends AbstractResource
      */
     private bool $peertubeLink = false;
 
+    /**
+     * @ORM\Column(name="resume", type="boolean", nullable=false)
+     */
+    private bool $resume = false;
+
     public function getServer(): ?string
     {
         return $this->server;
@@ -167,5 +172,15 @@ class Video extends AbstractResource
     public function setPeertubeLink(bool $peertubeLink): void
     {
         $this->peertubeLink = $peertubeLink;
+    }
+
+    public function getResume(): bool
+    {
+        return $this->resume;
+    }
+
+    public function setResume(bool $resume): void
+    {
+        $this->resume = $resume;
     }
 }

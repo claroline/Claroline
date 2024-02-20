@@ -19,6 +19,9 @@ const reducer = combineReducers({
     [makeInstanceAction(RESOURCE_LOAD, 'peertube_video')]: (state, action) => action.resourceData.video,
     // replaces file data after success updates
     [FORM_SUBMIT_SUCCESS+'/'+selectors.FORM_NAME]: (state, action) => action.updatedData
+  }),
+  progression: makeReducer({}, {
+    [makeInstanceAction(RESOURCE_LOAD, 'peertube_video')]: (state, action) => action.resourceData.userEvaluation.progression
   })
 })
 
