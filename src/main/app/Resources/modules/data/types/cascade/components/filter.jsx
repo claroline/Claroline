@@ -1,13 +1,13 @@
 import React from 'react'
 
 import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
+import {DataSearch as DataSearchTypes} from '#/main/app/data/types/prop-types'
 import {Select} from '#/main/app/input/components/select'
 import classes from 'classnames'
 
 const hasChildren = (props, lvl) => {
   const choices = props.choices.slice()
-  let child = choices.find(c => c.value === props.value[0])
+  let child = choices.find(c => props.value && c.value === props.value[0])
 
   for (let i = 1; i <= lvl; ++i) {
     child = child.children.find(c => c.value === props.value[i])
@@ -17,8 +17,9 @@ const hasChildren = (props, lvl) => {
 }
 
 const generateChoices = (props, lvl) => {
+  console.log(props.errors)
   const choices = props.choices.slice()
-  let child = choices.find(c => c.value === props.value[0])
+  let child = choices.find(c => props.value && c.value === props.value[0])
 
   for (let i = 1; i <= lvl; ++i) {
     child = child.children.find(c => c.value === props.value[i])
@@ -34,7 +35,7 @@ const generateChoices = (props, lvl) => {
 }
 
 const updateValue =  (props, level, value) => {
-  const newValue = props.value.slice()
+  const newValue = props.value ? props.value.slice() : []
 
   if (value) {
     newValue[level] = value
@@ -50,7 +51,7 @@ const updateValue =  (props, level, value) => {
 }
 
 const CascadeFilter = props =>
-  <fieldset className={classes('cascade-control', props.className)}>
+  <fieldset className={classes('cascade-control d-flex gap-2 flex-direction-row', props.className)}>
     {props.choices && props.choices.length > 0 &&
       <Select
         id={`${props.id}-select-lvl-0`}
@@ -61,34 +62,34 @@ const CascadeFilter = props =>
             return acc
           }, {})
         }
-        value={props.value[0] || ''}
+        value={props.value ? props.value[0] : ''}
         disabled={props.disabled}
         onChange={(value) => {
           const newValue = updateValue(props, 0, value)
           props.onChange(newValue)
         }}
+        size={props.size}
       />
     }
 
-    {props.value.map((v, index) => hasChildren(props, index) ?
-      <div className="sub-fields">
-        <Select
-          id={`${props.id}-select-lvl-${index + 1}`}
-          key={`select-level-${index + 1}`}
-          choices={generateChoices(props, index)}
-          value={props.value[index + 1] || ''}
-          disabled={props.disabled}
-          onChange={(value) => {
-            const newValue = updateValue(props, index + 1, value)
-            props.onChange(newValue)
-          }}
-        />
-      </div> :
+    {props.value && props.value.map((v, index) => hasChildren(props, index) ?
+      <Select
+        key={`select-level-${index + 1}`}
+        id={`${props.id}-select-lvl-${index + 1}`}
+        choices={generateChoices(props, index)}
+        value={props.value[index + 1] || ''}
+        disabled={props.disabled}
+        onChange={(value) => {
+          const newValue = updateValue(props, index + 1, value)
+          props.onChange(newValue)
+        }}
+        size={props.size}
+      /> :
       ''
     )}
   </fieldset>
 
-implementPropTypes(CascadeFilter, DataInputTypes, {
+implementPropTypes(CascadeFilter, DataSearchTypes, {
   choices: T.array.isRequired,
   value: T.array
 }, {

@@ -106,6 +106,25 @@ abstract class AbstractFinder implements FinderInterface
         return $qb;
     }
 
+    protected function addSort(string $handlerClass, QueryBuilder $qb, string $alias, string $sortBy, string $direction): QueryBuilder
+    {
+        $handler = null;
+        foreach ($this->filters as $filterDef) {
+            if ($filterDef instanceof $handlerClass) {
+                $handler = $filterDef;
+                break;
+            }
+        }
+
+        if (!$handler) {
+            throw new \Exception(sprintf('Request an unknown sort handler %s.', $handlerClass));
+        }
+
+        $handler->addSort($qb, $alias, $sortBy, $direction);
+
+        return $qb;
+    }
+
     protected function setDefaults(QueryBuilder $qb, string $filterName, $filterValue): void
     {
         $property = $filterName;

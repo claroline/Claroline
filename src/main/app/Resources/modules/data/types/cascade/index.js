@@ -1,6 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 
 import {CascadeInput} from '#/main/app/data/types/cascade/components/input'
+import {CascadeFilter} from '#/main/app/data/types/cascade/components/filter'
 
 const dataType = {
   name: 'cascade',
@@ -37,7 +38,8 @@ const dataType = {
   },
   validate: (value, options) => !!options.choices[value],
   components: {
-    input: CascadeInput
+    input: CascadeInput,
+    search: CascadeFilter
   }
 }
 

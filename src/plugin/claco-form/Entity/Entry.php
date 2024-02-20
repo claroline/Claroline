@@ -36,24 +36,18 @@ class Entry
      * @ORM\Column
      *
      * @Assert\NotBlank()
-     *
-     * @var string
      */
-    protected $title;
+    private ?string $title = null;
 
     /**
      * @ORM\Column(name="entry_status", type="integer")
-     *
-     * @var int
      */
-    protected $status;
+    private int $status = self::PENDING;
 
     /**
      * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
-     *
-     * @var bool
      */
-    protected $locked = false;
+    private bool $locked = false;
 
     /**
      * @ORM\ManyToOne(
@@ -62,40 +56,30 @@ class Entry
      * )
      *
      * @ORM\JoinColumn(name="claco_form_id", nullable=false, onDelete="CASCADE")
-     *
-     * @var ClacoForm
      */
-    protected $clacoForm;
+    private ?ClacoForm $clacoForm = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      *
      * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
-     *
-     * @var User
      */
-    protected $user;
+    private ?User $user = null;
 
     /**
      * @ORM\Column(name="creation_date", type="datetime", nullable=false)
-     *
-     * @var \DateTime
      */
-    protected $creationDate;
+    private ?\DateTimeInterface $creationDate = null;
 
     /**
      * @ORM\Column(name="edition_date", type="datetime", nullable=true)
-     *
-     * @var \DateTime
      */
-    protected $editionDate;
+    private ?\DateTimeInterface $editionDate = null;
 
     /**
      * @ORM\Column(name="publication_date", type="datetime", nullable=true)
-     *
-     * @var \DateTime
      */
-    protected $publicationDate;
+    private ?\DateTimeInterface $publicationDate;
 
     /**
      * @ORM\OneToMany(
@@ -108,7 +92,7 @@ class Entry
      *
      * @var FieldValue[]
      */
-    protected $fieldValues;
+    private $fieldValues;
 
     /**
      * @ORM\OneToMany(
@@ -120,7 +104,7 @@ class Entry
      *
      * @var Comment[]
      */
-    protected $comments;
+    private $comments;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\ClacoFormBundle\Entity\Category")
@@ -129,7 +113,7 @@ class Entry
      *
      * @var Category[]
      */
-    protected $categories;
+    private $categories;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\ClacoFormBundle\Entity\Keyword", cascade={"persist"})
@@ -138,7 +122,7 @@ class Entry
      *
      * @var Keyword[]
      */
-    protected $keywords;
+    private $keywords;
 
     /**
      * @ORM\OneToMany(
@@ -148,11 +132,8 @@ class Entry
      *
      * @var EntryUser[]
      */
-    protected $entryUsers;
+    private $entryUsers;
 
-    /**
-     * Entry constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
@@ -184,132 +165,72 @@ class Entry
         $this->title = $title;
     }
 
-    /**
-     * Get status.
-     *
-     * @return int
-     */
-    public function getStatus()
+    public function getStatus(): int
     {
         return $this->status;
     }
 
-    /**
-     * Set status.
-     *
-     * @param int $status
-     */
-    public function setStatus($status)
+    public function setStatus(int $status): void
     {
         $this->status = $status;
     }
 
-    /**
-     * Is locked ?
-     *
-     * @return bool
-     */
-    public function isLocked()
+    public function isLocked(): bool
     {
         return $this->locked;
     }
 
-    /**
-     * Set locked.
-     *
-     * @param bool $locked
-     */
-    public function setLocked($locked)
+    public function setLocked(bool $locked): void
     {
         $this->locked = $locked;
     }
 
-    /**
-     * Get claco form.
-     *
-     * @return ClacoForm
-     */
-    public function getClacoForm()
+    public function getClacoForm(): ?ClacoForm
     {
         return $this->clacoForm;
     }
 
-    /**
-     * Set claco form.
-     */
-    public function setClacoForm(ClacoForm $clacoForm)
+    public function setClacoForm(ClacoForm $clacoForm): void
     {
         $this->clacoForm = $clacoForm;
     }
 
-    /**
-     * Get creation date.
-     *
-     * @return \DateTime
-     */
-    public function getCreationDate()
+    public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->creationDate;
     }
 
-    /**
-     * Set creation date.
-     */
-    public function setCreationDate(\DateTime $creationDate)
+    public function setCreationDate(?\DateTimeInterface $creationDate = null): void
     {
         $this->creationDate = $creationDate;
     }
 
-    /**
-     * Get edition date.
-     *
-     * @return \DateTime
-     */
-    public function getEditionDate()
+    public function getEditionDate(): ?\DateTimeInterface
     {
         return $this->editionDate;
     }
 
-    /**
-     * Set edition date.
-     */
-    public function setEditionDate(\DateTime $editionDate = null)
+    public function setEditionDate(?\DateTimeInterface $editionDate = null): void
     {
         $this->editionDate = $editionDate;
     }
 
-    /**
-     * Get publication date.
-     *
-     * @return \DateTime
-     */
-    public function getPublicationDate()
+    public function getPublicationDate(): ?\DateTimeInterface
     {
         return $this->publicationDate;
     }
 
-    /**
-     * Set publication date.
-     */
-    public function setPublicationDate(\DateTime $publicationDate = null)
+    public function setPublicationDate(?\DateTimeInterface $publicationDate = null): void
     {
         $this->publicationDate = $publicationDate;
     }
 
-    /**
-     * Get user.
-     *
-     * @return User
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * Set user.
-     */
-    public function setUser(User $user = null)
+    public function setUser(User $user = null): void
     {
         $this->user = $user;
     }
@@ -359,14 +280,6 @@ class Entry
     }
 
     /**
-     * Removes all field values.
-     */
-    public function emptyValues()
-    {
-        $this->fieldValues->clear();
-    }
-
-    /**
      * Get comments.
      *
      * @return Comment[]
@@ -394,14 +307,6 @@ class Entry
         if ($this->comments->contains($comment)) {
             $this->comments->removeElement($comment);
         }
-    }
-
-    /**
-     * Remove all comments.
-     */
-    public function emptyComments()
-    {
-        $this->comments->clear();
     }
 
     /**

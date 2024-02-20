@@ -23,7 +23,7 @@ const Select = props =>
     className={classes('form-select', props.className, {
       [`form-select-${props.size}`]: !!props.size})
     }
-    value={props.value}
+    value={props.value || ''}
     disabled={props.disabled}
     onChange={e => {
       if ('' === e.target.value) {

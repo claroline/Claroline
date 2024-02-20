@@ -14,7 +14,6 @@ namespace Claroline\ClacoFormBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Entry;
-use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
@@ -42,7 +41,6 @@ class EntryFinder extends AbstractFinder
         $this->usedJoin = [];
 
         $clacoFormRepo = $this->om->getRepository(ClacoForm::class);
-        $fieldRepo = $this->om->getRepository(Field::class);
 
         // TODO : rights should not be checked here
         $currentUser = $this->tokenStorage->getToken()->getUser();
@@ -206,9 +204,18 @@ class EntryFinder extends AbstractFinder
                     $qb->setParameter('keywordUuid', !is_array($filterValue) ? [$filterValue] : $filterValue);
                     break;
                 default:
-                    $filterName = str_replace('values.', '', $filterName);
-                    $field = $fieldRepo->findByFieldFacetUuid($filterName);
-                    $this->filterField($qb, $filterName, $filterValue, $field);
+                    if (str_contains($filterName, 'values.')) {
+                        $filterName = str_replace('values.', '', $filterName);
+
+                        $this->filterField($qb, $filterName, $filterValue);
+                    // to replace when model is merged with other FieldFacets
+                    /*$this->addFilter(FieldFacetFilter::class, $qb, 'obj', [
+                        'field' => $filterName,
+                        'value' => $filterValue
+                    ]);*/
+                    } else {
+                        $this->setDefaults($qb, $filterName, $filterValue);
+                    }
             }
         }
 
@@ -236,68 +243,88 @@ class EntryFinder extends AbstractFinder
                     $qb->orderBy('k.name', $sortByDirection);
                     break;
                 default:
-                    $sortByUuid = str_replace('values.', '', $sortByProperty);
-                    $field = $fieldRepo->findByFieldFacetUuid($sortByUuid);
-                    $this->sortField($qb, $sortByUuid, $sortByDirection, $field);
+                    if (str_contains($sortByProperty, 'values.')) {
+                        $sortByUuid = str_replace('values.', '', $sortByProperty);
+
+                        $this->sortField($qb, $sortByUuid, $sortByDirection);
+                        // to replace when model is merged with other FieldFacets
+                        // $this->addSort(FieldFacetFilter::class, $qb, 'obj', $sortByUuid, $sortByDirection);
+                    }
             }
         }
 
         return $qb;
     }
 
-    private function filterField(QueryBuilder $qb, $filterName, $filterValue, $field): void
+    private function filterField(QueryBuilder $qb, string $filterName, mixed $filterValue): void
     {
+        $field = $this->om->getRepository(FieldFacet::class)->findOneBy(['uuid' => $filterName]);
+        if (empty($field)) {
+            return;
+        }
+
         $parsedFilterName = str_replace('-', '', $filterName);
 
-        if ($field) {
-            $qb->leftJoin('obj.fieldValues', "fv{$parsedFilterName}");
-            $qb->leftJoin("fv{$parsedFilterName}.field", "fvf{$parsedFilterName}");
-            $qb->leftJoin("fvf{$parsedFilterName}.fieldFacet", "ff{$parsedFilterName}");
-            $qb->leftJoin("fv{$parsedFilterName}.fieldFacetValue", "fvffv{$parsedFilterName}");
-            $qb->andWhere("ff{$parsedFilterName}.uuid = :field{$parsedFilterName}");
-            $qb->setParameter("field{$parsedFilterName}", $filterName);
-            $this->usedJoin[$filterName] = true;
+        $qb->leftJoin('obj.fieldValues', "fv{$parsedFilterName}");
+        $qb->leftJoin("fv{$parsedFilterName}.field", "fvf{$parsedFilterName}");
+        $qb->leftJoin("fvf{$parsedFilterName}.fieldFacet", "ff{$parsedFilterName}");
+        $qb->leftJoin("fv{$parsedFilterName}.fieldFacetValue", "fvffv{$parsedFilterName}");
+        $qb->andWhere("ff{$parsedFilterName}.uuid = :field{$parsedFilterName}");
+        $qb->setParameter("field{$parsedFilterName}", $filterName);
+        $this->usedJoin[$filterName] = true;
 
-            switch ($field->getFieldFacet()->getType()) {
-                case FieldFacet::DATE_TYPE:
-                case FieldFacet::BOOLEAN_TYPE:
-                case FieldFacet::NUMBER_TYPE:
-                    $qb->andWhere("fvffv{$parsedFilterName}.value = :value{$parsedFilterName}");
-                    $qb->setParameter("value{$parsedFilterName}", $filterValue);
-                    break;
+        switch ($field->getType()) {
+            case FieldFacet::DATE_TYPE:
+            case FieldFacet::BOOLEAN_TYPE:
+            case FieldFacet::NUMBER_TYPE:
+                $qb->andWhere("fvffv{$parsedFilterName}.value = :value{$parsedFilterName}");
+                $qb->setParameter("value{$parsedFilterName}", $filterValue);
+                break;
 
-                case FieldFacet::FILE_TYPE:
-                    break;
+            case FieldFacet::FILE_TYPE:
+                break;
 
-                case FieldFacet::CHOICE_TYPE:
-                case FieldFacet::CASCADE_TYPE:
-                default:
-                    $qb->andWhere("UPPER(fvffv{$parsedFilterName}.value) LIKE :value{$parsedFilterName}");
+            case FieldFacet::CASCADE_TYPE:
+                $qb->andWhere("UPPER(fvffv{$parsedFilterName}.value) LIKE :value{$parsedFilterName}");
 
-                    // a little of black magic because Doctrine Json type stores unicode seq for special chars
-                    $value = json_encode($filterValue);
-                    $value = trim($value, '"'); // removes string delimiters added by json encode
+                $value = is_array($filterValue) ? end($filterValue) : $filterValue;
+                // a little of black magic because Doctrine Json type stores unicode seq for special chars
+                $value = json_encode($value);
+                $value = trim($value, '"'); // removes string delimiters added by json encode
 
-                    $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
-                    break;
-            }
+                $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
+                break;
+
+            case FieldFacet::CHOICE_TYPE:
+            default:
+                $qb->andWhere("UPPER(fvffv{$parsedFilterName}.value) LIKE :value{$parsedFilterName}");
+
+                // a little of black magic because Doctrine Json type stores unicode seq for special chars
+                $value = json_encode($filterValue);
+                $value = trim($value, '"'); // removes string delimiters added by json encode
+
+                $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
+                break;
         }
     }
 
-    private function sortField(QueryBuilder $qb, $sortBy, $direction, $field): void
+    private function sortField(QueryBuilder $qb, string $sortBy, string $direction): void
     {
+        $field = $this->om->getRepository(FieldFacet::class)->findOneBy(['uuid' => $sortBy]);
+        if (empty($field)) {
+            return;
+        }
+
         $parsedSortBy = str_replace('-', '', $sortBy);
 
-        if ($field) {
-            if (!isset($this->usedJoin[$sortBy])) {
-                $qb->leftJoin('obj.fieldValues', "fv{$parsedSortBy}");
-                $qb->leftJoin("fv{$parsedSortBy}.field", "fvf{$parsedSortBy}");
-                $qb->leftJoin("fvf{$parsedSortBy}.fieldFacet", "ff{$parsedSortBy}", Join::WITH, "ff{$parsedSortBy}.uuid = :field{$parsedSortBy}");
-                $qb->leftJoin("fv{$parsedSortBy}.fieldFacetValue", "fvffv{$parsedSortBy}");
-                $qb->setParameter("field{$parsedSortBy}", $sortBy);
-            }
-
-            $qb->orderBy("fvffv{$parsedSortBy}.value", $direction);
+        if (!isset($this->usedJoin[$sortBy])) {
+            $qb->leftJoin('obj.fieldValues', "fv{$parsedSortBy}");
+            $qb->leftJoin("fv{$parsedSortBy}.field", "fvf{$parsedSortBy}");
+            $qb->leftJoin("fvf{$parsedSortBy}.fieldFacet", "ff{$parsedSortBy}", Join::WITH, "ff{$parsedSortBy}.uuid = :field{$parsedSortBy}");
+            $qb->leftJoin("fv{$parsedSortBy}.fieldFacetValue", "fvffv{$parsedSortBy}");
+            $qb->setParameter("field{$parsedSortBy}", $sortBy);
         }
+
+        $qb->orderBy("fvffv{$parsedSortBy}.value", $direction);
     }
 }

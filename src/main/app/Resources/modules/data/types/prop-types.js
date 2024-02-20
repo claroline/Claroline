@@ -200,7 +200,11 @@ const DataSearch = {
      */
     isValid: T.bool.isRequired,
     size: T.oneOf(['sm', 'lg']),
-    updateSearch: T.func.isRequired
+    /**
+     * @deprecated use `onChange`
+     */
+    updateSearch: T.func.isRequired,
+    onChange: T.func.isRequired
   },
   defaultProps: {}
 }

@@ -13,7 +13,7 @@ namespace Claroline\CursusBundle\Finder\Registration;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CommunityBundle\Finder\Filter\UserFilter;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\API\Finder\Filter\FieldFacetFilter;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Doctrine\ORM\QueryBuilder;
 
@@ -98,52 +98,30 @@ class SessionUserFinder extends AbstractFinder
                     break;
 
                 default:
-                    if (false !== strpos($filterName, 'data.')) {
+                    if (str_contains($filterName, 'data.')) {
                         $filterName = str_replace('data.', '', $filterName);
-                        $field = $this->om->getRepository(FieldFacet::class)->findOneBy(['uuid' => $filterName]);
-                        if ($field) {
-                            $this->filterField($qb, $filterName, $filterValue, $field);
-                        }
+
+                        $this->addFilter(FieldFacetFilter::class, $qb, 'obj', [
+                            'field' => $filterName,
+                            'value' => $filterValue,
+                        ]);
                     } else {
                         $this->setDefaults($qb, $filterName, $filterValue);
                     }
             }
         }
 
-        return $qb;
-    }
+        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
+            $sortByProperty = $sortBy['property'];
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
 
-    private function filterField(QueryBuilder $qb, $filterName, $filterValue, FieldFacet $field)
-    {
-        $parsedFilterName = str_replace('-', '', $filterName);
+            if (str_contains($sortByProperty, 'data.')) {
+                $sortByUuid = str_replace('data.', '', $sortByProperty);
 
-        $qb->leftJoin('obj.facetValues', "fv{$parsedFilterName}");
-        $qb->leftJoin("fv{$parsedFilterName}.fieldFacet", "ff{$parsedFilterName}");
-        $qb->andWhere("ff{$parsedFilterName}.uuid = :field{$parsedFilterName}");
-        $qb->setParameter("field{$parsedFilterName}", $filterName);
-
-        switch ($field->getType()) {
-            case FieldFacet::DATE_TYPE:
-            case FieldFacet::BOOLEAN_TYPE:
-            case FieldFacet::NUMBER_TYPE:
-                $qb->andWhere("fv{$parsedFilterName}.value = :value{$parsedFilterName}");
-                $qb->setParameter("value{$parsedFilterName}", $filterValue);
-                break;
-
-            case FieldFacet::FILE_TYPE:
-                break;
-
-            case FieldFacet::CHOICE_TYPE:
-            case FieldFacet::CASCADE_TYPE:
-            default:
-                $qb->andWhere("UPPER(fv{$parsedFilterName}.value) LIKE :value{$parsedFilterName}");
-
-                // a little of black magic because Doctrine Json type stores unicode seq for special chars
-                $value = json_encode($filterValue);
-                $value = trim($value, '"'); // removes string delimiters added by json encode
-
-                $qb->setParameter("value{$parsedFilterName}", '%'.addslashes(strtoupper($value)).'%');
-                break;
+                $this->addSort(FieldFacetFilter::class, $qb, 'obj', $sortByUuid, $sortByDirection);
+            }
         }
+
+        return $qb;
     }
 }

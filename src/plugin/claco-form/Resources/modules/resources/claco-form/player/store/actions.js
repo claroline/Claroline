@@ -223,6 +223,7 @@ actions.editAndSaveEntryUser = (property, value) => (dispatch, getState) => {
 
 actions.loadAllUsedCountries = (clacoFormId) => ({
   [API_REQUEST]: {
+    silent: true,
     url: ['claro_claco_form_used_countries_load', {clacoForm: clacoFormId}],
     request: {
       method: 'GET'

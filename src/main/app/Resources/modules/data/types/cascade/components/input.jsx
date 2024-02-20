@@ -67,14 +67,14 @@ const CascadeInput = props =>
           const newValue = updateValue(props, 0, value)
           props.onChange(newValue)
         }}
+        size={props.size}
       />
     }
 
     {props.value.map((v, index) => hasChildren(props, index) ?
-      <div className="sub-fields mt-2" key={index}>
+      <div className="sub-fields mt-2" key={`select-level-${index + 1}`}>
         <Select
           id={`${props.id}-select-lvl-${index + 1}`}
-          key={`select-level-${index + 1}`}
           choices={generateChoices(props, index)}
           value={props.value[index + 1] || ''}
           disabled={props.disabled}
@@ -82,6 +82,7 @@ const CascadeInput = props =>
             const newValue = updateValue(props, index + 1, value)
             props.onChange(newValue)
           }}
+          size={props.size}
         />
       </div> :
       ''

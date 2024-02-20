@@ -34,13 +34,6 @@ services:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Facet\FieldFacetValueFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-        arguments:
-            - '@security.authorization_checker'
-            - '@security.token_storage'
-
     Claroline\CoreBundle\API\Finder\Tool\OrderedToolFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
@@ -71,3 +64,9 @@ services:
     Claroline\CoreBundle\API\Finder\Platform\PluginFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
+
+    # Filters
+    Claroline\CoreBundle\API\Finder\Filter\FieldFacetFilter:
+        tags: [ claroline.finder.filter ]
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
