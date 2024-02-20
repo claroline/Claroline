@@ -55,5 +55,8 @@
   "score_above_help": "Cette valeur représente le pourcentage du score total à obtenir.",
   "addBadge": "Le badge badgeName a été ajouté à l'utilisateur userName",
   "removeBadge": "Le badge badgeName a été retiré de l'utilisateur userName",
-  "notify_grant": "Notifier les utilisateurs lors de l'attribution du badge"
+  "notify_grant": "Notifier les utilisateurs lors de l'attribution du badge",
+  "transfer_from": "Transférer depuis",
+  "transfer_to": "Transférer vers",
+  "transferred": "Badge transféré"
 }

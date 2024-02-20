@@ -13,11 +13,14 @@ namespace Claroline\OpenBadgeBundle\Controller\API;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\PdfManager;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
+use Claroline\OpenBadgeBundle\Manager\AssertionManager;
 use Claroline\OpenBadgeBundle\Manager\BadgeManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,17 +46,21 @@ class AssertionController extends AbstractCrudController
     private $tokenStorage;
     /** @var PdfManager */
     private $pdfManager;
+    /** @var AssertionManager */
+    private $assertionManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         BadgeManager $manager,
         TokenStorageInterface $tokenStorage,
-        PdfManager $pdfManager
+        PdfManager $pdfManager,
+        AssertionManager $assertionManager
     ) {
         $this->authorization = $authorization;
         $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
         $this->pdfManager = $pdfManager;
+        $this->assertionManager = $assertionManager;
     }
 
     public function getClass(): string
@@ -69,7 +76,7 @@ class AssertionController extends AbstractCrudController
     /**
      * @Route("/current-user/{workspace}", name="apiv2_assertion_current_user_list", methods={"GET"})
      */
-    public function listMyAssertionsAction(Request $request, string $workspace = null): JsonResponse
+    public function listMyAssertionsAction(Request $request, ?string $workspace = null): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
@@ -149,5 +156,38 @@ class AssertionController extends AbstractCrudController
         }
 
         return [];
+    }
+
+    /**
+     * Transfer badges from one user to another.
+     *
+     * @Route("/transfer/{userFrom}/{userTo}/", name="apiv2_badge_transfer", methods={"POST"})
+     *
+     * @EXT\ParamConverter("userFrom", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userFrom": "uuid"}})
+     * @EXT\ParamConverter("userTo", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userTo": "uuid"}})
+     */
+    public function transferBadges(User $userFrom, User $userTo): JsonResponse
+    {
+        $this->canAdministrate();
+
+        $this->assertionManager->transferBadgesAction($userFrom, $userTo);
+
+        return new JsonResponse();
+    }
+
+    protected function canAdministrate(): void
+    {
+        $tool = $this->om->getRepository(OrderedTool::class)
+            ->findOneBy(['name' => 'badges', 'contextName' => DesktopContext::getName()]);
+
+        if (!$tool) {
+            throw new \LogicException("Annotation error: cannot found tool 'badges'");
+        }
+
+        $granted = $this->authorization->isGranted('ADMINISTRATE', $tool);
+
+        if (!$granted) {
+            throw new AccessDeniedException('badges cannot be opened');
+        }
     }
 }

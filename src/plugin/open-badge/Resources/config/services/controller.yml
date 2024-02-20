@@ -17,6 +17,7 @@ services:
             - '@Claroline\OpenBadgeBundle\Manager\BadgeManager'
             - '@security.token_storage'
             - '@Claroline\AppBundle\Manager\PdfManager'
+            - '@Claroline\OpenBadgeBundle\Manager\AssertionManager'
 
     Claroline\OpenBadgeBundle\Controller\API\BadgeClassController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

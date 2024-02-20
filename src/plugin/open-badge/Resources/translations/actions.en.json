@@ -1,3 +1,5 @@
 {
-  "grant": "Assign badges"
+  "grant": "Assign badges",
+  "transfer_badges": "Transfer badges",
+  "transfer": "Transfer"
 }

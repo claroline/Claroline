@@ -16,6 +16,7 @@ use Claroline\OpenBadgeBundle\Event\AddBadgeEvent;
 use Claroline\OpenBadgeBundle\Event\BadgeEvents;
 use Claroline\OpenBadgeBundle\Event\RemoveBadgeEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AssertionManager
 {
@@ -29,19 +30,23 @@ class AssertionManager
     private $routingHelper;
     /** @var TemplateManager */
     private $templateManager;
+    /** @var TranslatorInterface */
+    private $translator;
 
     public function __construct(
         ObjectManager $om,
         EventDispatcherInterface $dispatcher,
         PlatformManager $platformManager,
         RoutingHelper $routingHelper,
-        TemplateManager $templateManager
+        TemplateManager $templateManager,
+        TranslatorInterface $translator
     ) {
         $this->om = $om;
         $this->dispatcher = $dispatcher;
         $this->platformManager = $platformManager;
         $this->routingHelper = $routingHelper;
         $this->templateManager = $templateManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -162,5 +167,36 @@ class AssertionManager
             $title,
             [$user]
         ), MessageEvents::MESSAGE_SENDING);
+    }
+
+    public function transferBadgesAction(User $userFrom, User $userTo)
+    {
+        $assertions = $this->om->getRepository(Assertion::class)->findBy(['recipient' => $userFrom]);
+
+        foreach ($assertions as $assert) {
+            $assertions = $this->om->getRepository(Assertion::class)->findBy(['recipient' => $userTo, 'badge' => $assert->getBadge()]);
+
+            if (count($assertions) > 0) {
+                $this->om->remove($assert);
+                continue;
+            }
+
+            foreach ($assert->getEvidences() as $evidence) {
+                if (null === $evidence) {
+                    continue;
+                }
+
+                $evidence->setWorkspaceEvidence(null);
+                $evidence->setResourceEvidence(null);
+                $evidence->setUser($userTo);
+                $this->om->persist($evidence);
+            }
+
+            $assert->setNarrative($this->translator->trans('transferred', [], 'badge'));
+            $assert->setRecipient($userTo);
+            $this->om->persist($assert);
+        }
+
+        $this->om->flush();
     }
 }
