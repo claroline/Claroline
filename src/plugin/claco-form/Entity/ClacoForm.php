@@ -17,7 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\ClacoFormRepository")
  *
  * @ORM\Table(name="claro_clacoformbundle_claco_form")
  */
@@ -28,10 +28,8 @@ class ClacoForm extends AbstractResource
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $template;
+    private ?string $template = null;
 
     /**
      * @ORM\OneToMany(
@@ -41,7 +39,7 @@ class ClacoForm extends AbstractResource
      *
      * @var Field[]
      */
-    protected $fields;
+    private $fields;
 
     /**
      * @ORM\OneToMany(
@@ -51,7 +49,7 @@ class ClacoForm extends AbstractResource
      *
      * @var Category[]
      */
-    protected $categories;
+    private $categories;
 
     /**
      * @ORM\OneToMany(
@@ -61,41 +59,35 @@ class ClacoForm extends AbstractResource
      *
      * @var Keyword[]
      */
-    protected $keywords;
+    private $keywords;
 
     /**
      * @ORM\Column(type="json", nullable=true)
-     *
-     * @var array
      */
-    protected $details;
+    private array $details = [];
 
     /**
      * Ask for confirmation when a user submit a new entry.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    private $showConfirm = false;
+    private bool $showConfirm = false;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    private $confirmMessage;
+    private ?string $confirmMessage = null;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    private $helpMessage;
+    private ?string $helpMessage = null;
 
     /**
-     * ClacoForm constructor.
+     * @ORM\Column(type="boolean")
      */
+    private bool $statistics = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -105,12 +97,12 @@ class ClacoForm extends AbstractResource
         $this->keywords = new ArrayCollection();
     }
 
-    public function getTemplate()
+    public function getTemplate(): ?string
     {
         return $this->template;
     }
 
-    public function setTemplate($template)
+    public function setTemplate(string $template = null): void
     {
         $this->template = $template;
     }
@@ -169,7 +161,7 @@ class ClacoForm extends AbstractResource
         return $this->showConfirm;
     }
 
-    public function setShowConfirm(bool $showConfirm)
+    public function setShowConfirm(bool $showConfirm): void
     {
         $this->showConfirm = $showConfirm;
     }
@@ -179,7 +171,7 @@ class ClacoForm extends AbstractResource
         return $this->confirmMessage;
     }
 
-    public function setConfirmMessage(string $message = null)
+    public function setConfirmMessage(string $message = null): void
     {
         $this->confirmMessage = $message;
     }
@@ -189,7 +181,7 @@ class ClacoForm extends AbstractResource
         return $this->helpMessage;
     }
 
-    public function setHelpMessage(string $message = null)
+    public function setHelpMessage(string $message = null): void
     {
         $this->helpMessage = $message;
     }
@@ -199,7 +191,7 @@ class ClacoForm extends AbstractResource
         return $this->details;
     }
 
-    public function setDetails($details)
+    public function setDetails($details): void
     {
         $this->details = $details;
     }
@@ -209,7 +201,7 @@ class ClacoForm extends AbstractResource
         return !is_null($this->details) && isset($this->details['max_entries']) ? $this->details['max_entries'] : 0;
     }
 
-    public function setMaxEntries($maxEntries)
+    public function setMaxEntries($maxEntries): void
     {
         if (is_null($this->details)) {
             $this->details = [];
@@ -222,7 +214,7 @@ class ClacoForm extends AbstractResource
         return !is_null($this->details) && isset($this->details['creation_enabled']) ? $this->details['creation_enabled'] : true;
     }
 
-    public function setCreationEnabled($creationEnabled)
+    public function setCreationEnabled($creationEnabled): void
     {
         if (is_null($this->details)) {
             $this->details = [];
@@ -235,7 +227,7 @@ class ClacoForm extends AbstractResource
         return !is_null($this->details) && isset($this->details['edition_enabled']) ? $this->details['edition_enabled'] : true;
     }
 
-    public function setEditionEnabled($editionEnabled)
+    public function setEditionEnabled($editionEnabled): void
     {
         if (is_null($this->details)) {
             $this->details = [];
@@ -261,7 +253,7 @@ class ClacoForm extends AbstractResource
         return !is_null($this->details) && isset($this->details['default_home']) ? $this->details['default_home'] : 'menu';
     }
 
-    public function setDefaultHome($defaultHome)
+    public function setDefaultHome($defaultHome): void
     {
         if (is_null($this->details)) {
             $this->details = [];
@@ -665,7 +657,7 @@ class ClacoForm extends AbstractResource
             ['title'];
     }
 
-    public function setSearchRestrictedColumns(array $searchRestrictedColumns)
+    public function setSearchRestrictedColumns(array $searchRestrictedColumns): void
     {
         if (is_null($this->details)) {
             $this->details = [];
@@ -678,11 +670,21 @@ class ClacoForm extends AbstractResource
         return !is_null($this->details) && isset($this->details['showEntryNav']) ? $this->details['showEntryNav'] : false;
     }
 
-    public function setShowEntryNav($showEntryNav)
+    public function setShowEntryNav($showEntryNav): void
     {
         if (is_null($this->details)) {
             $this->details = [];
         }
         $this->details['showEntryNav'] = $showEntryNav;
+    }
+
+    public function hasStatistics(): bool
+    {
+        return $this->statistics;
+    }
+
+    public function setStatistics(bool $statistics): void
+    {
+        $this->statistics = $statistics;
     }
 }

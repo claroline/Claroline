@@ -10,7 +10,7 @@ const ContentInfoBlock = (props) =>
 
     <h3 className={classes('content-info-block-content', props.variant && `text-${props.variant}-emphasis`)}>
       <small className={classes('content-info-block-label mb-1', props.variant ? `text-${props.variant}` : 'text-secondary')}>{props.label}</small>
-      {props.value || '-'}
+      {props.value || 0 === props.value ? props.value : '-'}
     </h3>
   </span>
 

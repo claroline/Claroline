@@ -12,5 +12,6 @@
   "book": "Book",
   "show-results": "Show results",
   "plan-sending": "Plan sending",
-  "ws-register": "Register to workspaces"
+  "ws-register": "Register to workspaces",
+  "show-statistics": "Show statistics"
 }

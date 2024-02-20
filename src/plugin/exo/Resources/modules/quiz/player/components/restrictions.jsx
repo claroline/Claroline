@@ -61,7 +61,7 @@ const PlayerRestrictions = props => {
                 name: 'statistics',
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-bar-chart',
-                label: trans('statistics', {}, 'quiz'),
+                label: trans('show-statistics', {}, 'actions'),
                 target: `${props.path}/statistics`,
                 displayed: props.showStatistics
               }, {

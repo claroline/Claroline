@@ -11,63 +11,11 @@
 
 namespace Claroline\ClacoFormBundle\Repository;
 
-use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class CategoryRepository extends EntityRepository
 {
-    /**
-     * @return Category[]
-     */
-    public function findCategoriesByManager(ClacoForm $clacoForm, User $manager)
-    {
-        $dql = '
-            SELECT c
-            FROM Claroline\ClacoFormBundle\Entity\Category c
-            JOIN c.clacoForm cf
-            JOIN c.managers m
-            WHERE cf = :clacoForm
-            AND m = :manager
-        ';
-        $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('clacoForm', $clacoForm);
-        $query->setParameter('manager', $manager);
-
-        return $query->getResult();
-    }
-
-    /**
-     * @return Category[]
-     */
-    public function findAllCategoriesByManager(User $manager)
-    {
-        $dql = '
-            SELECT c
-            FROM Claroline\ClacoFormBundle\Entity\Category c
-            JOIN c.managers m
-            WHERE m = :manager
-        ';
-        $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('manager', $manager);
-
-        return $query->getResult();
-    }
-
-    public function findCategoriesByIds(array $ids)
-    {
-        $dql = '
-            SELECT c
-            FROM Claroline\ClacoFormBundle\Entity\Category c
-            WHERE c.id IN (:ids)
-        ';
-        $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('ids', $ids);
-
-        return $query->getResult();
-    }
-
     public function findAutoCategories(ClacoForm $clacoForm)
     {
         return $this->getEntityManager()

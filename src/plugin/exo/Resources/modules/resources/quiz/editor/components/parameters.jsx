@@ -564,7 +564,7 @@ const EditorParameters = props => {
                 type: 'boolean'
               }, {
                 name: 'parameters.showStatistics',
-                label: trans('statistics', {}, 'quiz'),
+                label: trans('enable_statistics', {}, 'quiz'),
                 type: 'boolean',
                 linked: [
                   {

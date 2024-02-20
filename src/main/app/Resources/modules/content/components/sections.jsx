@@ -55,7 +55,7 @@ Section.propTypes = {
   className: T.string,
   level: T.number,
   icon: T.oneOfType([T.string, T.node]),
-  title: T.string.isRequired,
+  title: T.oneOfType([T.string, T.node]).isRequired,
   subtitle: T.string,
   fill: T.bool,
   actions: T.arrayOf(T.shape(
@@ -75,8 +75,10 @@ const Sections = props =>
   <Accordion
     className={classes('sections', props.className)}
     alwaysOpen={!props.accordion}
+    activeKey={props.opened}
     defaultActiveKey={props.defaultOpened}
     flush={props.flush}
+    onSelect={props.onSelect}
   >
     {React.Children.map(props.children, (child) => child &&
       React.cloneElement(child, {
@@ -92,7 +94,9 @@ Sections.propTypes = {
   flush: T.bool,
   accordion: T.bool,
   level: T.number, // level for panel headings
-  defaultOpened: T.string,
+  opened: T.oneOfType([T.string, T.arrayOf(T.string)]),
+  defaultOpened: T.oneOfType([T.string, T.arrayOf(T.string)]),
+  onSelect: T.func,
   children: T.node.isRequired
 }
 

@@ -23,6 +23,7 @@ import {
 } from '#/plugin/claco-form/resources/claco-form/editor/store/actions'
 import {reducer as editorReducer} from '#/plugin/claco-form/resources/claco-form/editor/store'
 import {reducer as entriesReducer} from '#/plugin/claco-form/resources/claco-form/player/store'
+import {reducer as statsReducer} from '#/plugin/claco-form/resources/claco-form/stats/store'
 
 const messageReducer = makeReducer({}, {
   [MESSAGE_RESET]: () => {
@@ -118,6 +119,7 @@ const reducer = combineReducers({
   clacoFormForm: editorReducer,
   entries: entriesReducer,
   message: messageReducer,
+  stats: statsReducer,
   canGeneratePdf: makeReducer(false, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.canGeneratePdf || state
   }),

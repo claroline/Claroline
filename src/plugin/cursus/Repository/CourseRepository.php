@@ -106,28 +106,32 @@ class CourseRepository extends EntityRepository
             FieldFacet::COUNTRY_TYPE,
             FieldFacet::BOOLEAN_TYPE,
             FieldFacet::CHOICE_TYPE,
+            FieldFacet::CASCADE_TYPE,
         ];
 
-        $stats = [
-            'total' => $total,
-            'fields' => [],
-        ];
-
+        $fields = [];
         foreach ($course->getPanelFacets() as $panelFacet) {
             /** @var FieldFacet $field */
             foreach ($panelFacet->getFieldsFacet() as $field) {
-                if (!in_array($field->getType(), $supportedTypes)) {
-                    continue;
+                if (in_array($field->getType(), $supportedTypes)) {
+                    $fields[] = $field;
                 }
-
-                $stats['fields'][] = array_merge([
-                    'field' => $field,
-                    'values' => $this->getRegistrationFieldStats($field, $course, $session),
-                ]);
             }
         }
 
-        return $stats;
+        usort($fields, function (FieldFacet $fieldA, FieldFacet $fieldB) {
+            return $fieldA <=> $fieldB;
+        });
+
+        return [
+            'total' => $total,
+            'fields' => array_map(function (FieldFacet $field) use ($course, $session) {
+                return [
+                    'field' => $field,
+                    'values' => $this->getRegistrationFieldStats($field, $course, $session),
+                ];
+            }, $fields),
+        ];
     }
 
     private function getRegistrationFieldStats(FieldFacet $field, Course $course, Session $session = null): array

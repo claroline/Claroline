@@ -9,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\CommentRepository")
+ * @ORM\Entity()
+ *
  * @ORM\Table(name="claro_clacoformbundle_comment")
  */
 class Comment
@@ -17,12 +18,13 @@ class Comment
     use Id;
     use Uuid;
 
-    const PENDING = 0;
-    const VALIDATED = 1;
-    const BLOCKED = 2;
+    public const PENDING = 0;
+    public const VALIDATED = 1;
+    public const BLOCKED = 2;
 
     /**
      * @ORM\Column(type="text")
+     *
      * @Assert\NotBlank()
      *
      * @var string
@@ -31,6 +33,7 @@ class Comment
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
      * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)
      *
      * @var User
@@ -42,6 +45,7 @@ class Comment
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Entry",
      *     inversedBy="comments"
      * )
+     *
      * @ORM\JoinColumn(name="entry_id", onDelete="CASCADE")
      *
      * @var Entry

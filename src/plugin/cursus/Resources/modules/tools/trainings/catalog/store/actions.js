@@ -265,6 +265,7 @@ actions.register = (course, sessionId = null, registrationData = null) => ({
 
 actions.fetchStats = (courseId, sessionId = null) => (dispatch) => dispatch({
   [API_REQUEST]: {
+    silent: true,
     url: sessionId ?
       ['apiv2_cursus_session_stats', {id: sessionId}] :
       ['apiv2_cursus_course_stats', {id: courseId}],

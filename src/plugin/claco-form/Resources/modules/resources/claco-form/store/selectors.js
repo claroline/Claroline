@@ -17,6 +17,11 @@ const clacoForm = createSelector(
   (resource) => resource.clacoForm
 )
 
+const hasStatistics = createSelector(
+  [clacoForm],
+  clacoForm => get(clacoForm, 'display.statistics')
+)
+
 const params = createSelector(
   [clacoForm],
   (clacoForm) => clacoForm.details || {}
@@ -314,5 +319,6 @@ export const selectors = {
   canGeneratePdf,
   message,
   listConfiguration,
-  showEntryNav
+  showEntryNav,
+  hasStatistics
 }

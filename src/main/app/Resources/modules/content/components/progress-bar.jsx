@@ -3,39 +3,30 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import omit from 'lodash/omit'
 
+import {ProgressBar as BaseProgressBar} from 'react-bootstrap'
+import {precision} from '#/main/app/intl/number'
+
 const ProgressBar = props =>
-  <div
+  <BaseProgressBar
     {...omit(props, 'value', 'size', 'type')}
-    role="progressbar"
-    aria-valuenow={props.value}
-    aria-valuemin={0}
-    aria-valuemax={100}
-    className={classes('progress',
-      props.className,
-      props.size && `progress-${props.size}`
-    )}
-  >
-    <div
-      className={classes('progress-bar',
-        props.type && `bg-${'user' === props.type ? 'secondary' : props.type}`
-      )}
-      style={{
-        width: props.value+'%'
-      }}
-    >
-      <span className="sr-only">{props.value}</span>
-    </div>
-  </div>
+    now={props.value}
+    variant={props.type}
+    className={classes(props.className, props.size && `progress-${props.size}`)}
+    label={`${precision(props.value, 1)}%`}
+    visuallyHidden={!props.showLabel}
+  />
 
 ProgressBar.propTypes = {
   className: T.string,
   value: T.number,
   size: T.oneOf(['xs']),
-  type: T.oneOf(['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'learning'])
+  type: T.oneOf(['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'learning']),
+  showLabel: T.bool
 }
 
 ProgressBar.defaultProps = {
-  value: 0
+  value: 0,
+  showLabel: false
 }
 
 export {

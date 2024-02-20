@@ -78,6 +78,7 @@ class ClacoFormSerializer
             ],
 
             'display' => [
+                'statistics' => $clacoForm->hasStatistics(),
                 'showEntryNav' => $clacoForm->getShowEntryNav(),
                 'showConfirm' => $clacoForm->getShowConfirm(),
                 'confirmMessage' => $clacoForm->getConfirmMessage(),
@@ -165,6 +166,7 @@ class ClacoFormSerializer
         $this->sipe('display.showEntryNav', 'setShowEntryNav', $data, $clacoForm);
         $this->sipe('display.showConfirm', 'setShowConfirm', $data, $clacoForm);
         $this->sipe('display.confirmMessage', 'setConfirmMessage', $data, $clacoForm);
+        $this->sipe('display.statistics', 'setStatistics', $data, $clacoForm);
 
         // random feature
         $this->sipe('random.enabled', 'setRandomEnabled', $data, $clacoForm);

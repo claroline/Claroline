@@ -92,7 +92,7 @@ const RoleInput = props => {
 }
 
 implementPropTypes(RoleInput, DataInputTypes, {
-  value: T.arrayOf(T.shape(RoleType.propTypes)),
+  value: T.shape(RoleType.propTypes),
   picker: T.shape({
     url: T.oneOfType([T.string, T.array]),
     title: T.string,
