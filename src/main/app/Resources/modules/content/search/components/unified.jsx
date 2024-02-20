@@ -102,7 +102,6 @@ class SearchForm extends Component {
         updated: false
       }, () => this.props.updateSearch(newFilters))
     } else {
-      console.log(newFilters)
       this.setState({
         updated: updated,
         filters: newFilters
@@ -133,7 +132,6 @@ class SearchForm extends Component {
   }
 
   render() {
-    console.log(this.state.filters)
     return (
       <>
         {this.props.available.map(filter =>

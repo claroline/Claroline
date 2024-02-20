@@ -21,11 +21,9 @@ use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
-use Claroline\ClacoFormBundle\Repository\CommentRepository;
 use Claroline\ClacoFormBundle\Repository\EntryRepository;
 use Claroline\ClacoFormBundle\Repository\EntryUserRepository;
 use Claroline\ClacoFormBundle\Repository\FieldValueRepository;
-use Claroline\ClacoFormBundle\Repository\KeywordRepository;
 use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
@@ -47,11 +45,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ClacoFormManager
 {
     private UserRepository $userRepo;
-    private CommentRepository $commentRepo;
     private EntryRepository $entryRepo;
     private EntryUserRepository $entryUserRepo;
     private FieldValueRepository $fieldValueRepo;
-    private KeywordRepository $keywordRepo;
 
     public function __construct(
         private readonly AuthorizationCheckerInterface $authorization,
@@ -64,11 +60,9 @@ class ClacoFormManager
         private readonly CategoryManager $categoryManager
     ) {
         $this->userRepo = $om->getRepository(User::class);
-        $this->commentRepo = $om->getRepository(Comment::class);
         $this->entryRepo = $om->getRepository(Entry::class);
         $this->entryUserRepo = $om->getRepository(EntryUser::class);
         $this->fieldValueRepo = $om->getRepository(FieldValue::class);
-        $this->keywordRepo = $om->getRepository(Keyword::class);
     }
 
     public function persistEntry(Entry $entry): void
@@ -108,7 +102,7 @@ class ClacoFormManager
             $this->getPublishedEntriesByDates($clacoForm, $startDate, $endDate);
     }
 
-    public function getAllUsedCountriesCodes(ClacoForm $clacoForm)
+    public function getAllUsedCountriesCodes(ClacoForm $clacoForm): array
     {
         $values = [];
         $fieldValues = $this->getFieldValuesByType($clacoForm, FieldFacet::COUNTRY_TYPE);
@@ -126,7 +120,7 @@ class ClacoFormManager
         return sort($values) ? $values : [];
     }
 
-    public function changeEntryStatus(Entry $entry)
+    public function changeEntryStatus(Entry $entry): Entry
     {
         $status = $entry->getStatus();
 
@@ -166,7 +160,7 @@ class ClacoFormManager
         return $entries;
     }
 
-    public function switchEntryLock(Entry $entry)
+    public function switchEntryLock(Entry $entry): Entry
     {
         $locked = $entry->isLocked();
         $entry->setLocked(!$locked);
@@ -192,7 +186,7 @@ class ClacoFormManager
         return $entries;
     }
 
-    public function changeEntryOwner(Entry $entry, User $user)
+    public function changeEntryOwner(Entry $entry, User $user): Entry
     {
         $entry->setUser($user);
         $this->persistEntry($entry);
@@ -200,7 +194,7 @@ class ClacoFormManager
         return $entry;
     }
 
-    public function notifyPendingComment(Entry $entry, Comment $comment)
+    public function notifyPendingComment(Entry $entry, Comment $comment): void
     {
         $clacoForm = $entry->getClacoForm();
         $node = $clacoForm->getResourceNode();
@@ -242,13 +236,13 @@ class ClacoFormManager
         }
     }
 
-    public function persistComment(Comment $comment)
+    public function persistComment(Comment $comment): void
     {
         $this->om->persist($comment);
         $this->om->flush();
     }
 
-    public function createComment(Entry $entry, $content, ?User $user = null)
+    public function createComment(Entry $entry, $content, ?User $user = null): Comment
     {
         $clacoForm = $entry->getClacoForm();
         $comment = new Comment();
@@ -279,7 +273,7 @@ class ClacoFormManager
         return $comment;
     }
 
-    public function editComment(Comment $comment, $content)
+    public function editComment(Comment $comment, $content): Comment
     {
         $comment->setContent($content);
         $comment->setEditionDate(new \DateTime());
@@ -292,7 +286,7 @@ class ClacoFormManager
         return $comment;
     }
 
-    public function changeCommentStatus(Comment $comment, $status)
+    public function changeCommentStatus(Comment $comment, $status): Comment
     {
         $comment->setStatus($status);
         $this->persistComment($comment);
@@ -317,7 +311,7 @@ class ClacoFormManager
         $notifyEdition = false,
         $notifyComment = false,
         $notifyVote = false
-    ) {
+    ): EntryUser {
         $entryUser = new EntryUser();
         $entryUser->setEntry($entry);
         $entryUser->setUser($user);
@@ -331,7 +325,7 @@ class ClacoFormManager
         return $entryUser;
     }
 
-    public function getEntryUser(Entry $entry, User $user)
+    public function getEntryUser(Entry $entry, User $user): EntryUser
     {
         $entryUser = $this->entryUserRepo->findOneBy(['entry' => $entry, 'user' => $user]);
 
@@ -342,7 +336,7 @@ class ClacoFormManager
         return $entryUser;
     }
 
-    public function notifyUsers(Entry $entry, $type, $data = null)
+    public function notifyUsers(Entry $entry, $type, $data = null): void
     {
         $sendMessage = false;
         $receiverIds = [];
@@ -432,7 +426,7 @@ class ClacoFormManager
         }
     }
 
-    public function switchEntryUserShared(Entry $entry, User $user, $shared)
+    public function switchEntryUserShared(Entry $entry, User $user, $shared): void
     {
         $this->om->startFlushSuite();
         $entryUser = $this->getEntryUser($entry, $user);
@@ -441,7 +435,7 @@ class ClacoFormManager
         $this->om->endFlushSuite();
     }
 
-    public function shareEntryWithUsers(Entry $entry, array $usersIds)
+    public function shareEntryWithUsers(Entry $entry, array $usersIds): void
     {
         $this->om->startFlushSuite();
 
@@ -456,7 +450,7 @@ class ClacoFormManager
         $this->om->endFlushSuite();
     }
 
-    public function getUserEntries(ClacoForm $clacoForm, User $user)
+    public function getUserEntries(ClacoForm $clacoForm, User $user): array
     {
         $entries = [];
         $userEntries = $this->entryRepo->findBy(['clacoForm' => $clacoForm, 'user' => $user]);
@@ -474,7 +468,7 @@ class ClacoFormManager
     }
 
     // TODO : use serializers
-    public function copyClacoForm(ClacoForm $clacoForm, ClacoForm $newClacoForm)
+    public function copyClacoForm(ClacoForm $clacoForm, ClacoForm $newClacoForm): ClacoForm
     {
         $categoryLinks = [];
         $keywordLinks = [];
@@ -518,7 +512,7 @@ class ClacoFormManager
         return $newClacoForm;
     }
 
-    private function copyCategory(ClacoForm $newClacoForm, Category $category)
+    private function copyCategory(ClacoForm $newClacoForm, Category $category): Category
     {
         $newCategory = new Category();
         $newCategory->setClacoForm($newClacoForm);
@@ -534,7 +528,7 @@ class ClacoFormManager
         return $newCategory;
     }
 
-    private function copyKeyword(ClacoForm $newClacoForm, Keyword $keyword)
+    private function copyKeyword(ClacoForm $newClacoForm, Keyword $keyword): Keyword
     {
         $newKeyword = new Keyword();
         $newKeyword->setClacoForm($newClacoForm);
@@ -544,7 +538,7 @@ class ClacoFormManager
         return $newKeyword;
     }
 
-    private function copyField(ClacoForm $newClacoForm, ResourceNode $newNode, Field $field, array $categoryLinks)
+    private function copyField(ClacoForm $newClacoForm, ResourceNode $newNode, Field $field, array $categoryLinks): array
     {
         $links = [
             'fields' => [],
@@ -615,7 +609,7 @@ class ClacoFormManager
         array $keywordLinks,
         array $fieldLinks,
         array $fieldFacetLinks
-    ) {
+    ): void {
         $categories = $entry->getCategories();
         $keywords = $entry->getKeywords();
         $comments = $entry->getComments();
@@ -649,7 +643,7 @@ class ClacoFormManager
         }
     }
 
-    private function copyComment(Entry $newEntry, Comment $comment)
+    private function copyComment(Entry $newEntry, Comment $comment): void
     {
         $newComment = new Comment();
         $newComment->setEntry($newEntry);
@@ -661,7 +655,7 @@ class ClacoFormManager
         $this->om->persist($newComment);
     }
 
-    private function copyFieldValue(Entry $newEntry, FieldValue $fieldValue, array $fieldLinks, array $fieldFacetLinks)
+    private function copyFieldValue(Entry $newEntry, FieldValue $fieldValue, array $fieldLinks, array $fieldFacetLinks): void
     {
         $fieldId = $fieldValue->getField()->getUuid();
         $fieldFacetValue = $fieldValue->getFieldFacetValue();
@@ -692,11 +686,6 @@ class ClacoFormManager
         return $this->fieldValueRepo->findFieldValuesByType($clacoForm, $type);
     }
 
-    public function getKeywordByNameExcludingUuid(ClacoForm $clacoForm, $name, $uuid)
-    {
-        return $this->keywordRepo->findKeywordByNameExcludingUuid($clacoForm, $name, $uuid);
-    }
-
     /**
      * @return Entry[]|ArrayCollection
      */
@@ -713,21 +702,6 @@ class ClacoFormManager
     public function getPublishedEntriesByCategoriesAndDates(ClacoForm $clacoForm, $categoriesIds = [], $startDate = null, $endDate = null)
     {
         return $this->entryRepo->findPublishedEntriesByCategoriesAndDates($clacoForm, $categoriesIds, $startDate, $endDate);
-    }
-
-    public function getCommentsByEntry(Entry $entry)
-    {
-        return $this->commentRepo->findBy(['entry' => $entry], ['creationDate' => 'DESC']);
-    }
-
-    public function getCommentsByEntryAndStatus(Entry $entry, $status)
-    {
-        return $this->commentRepo->findBy(['entry' => $entry, 'status' => $status], ['creationDate' => 'DESC']);
-    }
-
-    public function getAvailableCommentsForUser(Entry $entry, User $user)
-    {
-        return $this->commentRepo->findAvailableCommentsForUser($entry, $user);
     }
 
     public function hasRight(ClacoForm $clacoForm, $right): bool
@@ -773,7 +747,7 @@ class ClacoFormManager
     }
 
     // TODO : move to Voter
-    public function hasEntryAccessRight(Entry $entry)
+    public function hasEntryAccessRight(Entry $entry): bool
     {
         $clacoForm = $entry->getClacoForm();
         /** @var User|string $user */
@@ -793,7 +767,7 @@ class ClacoFormManager
     }
 
     // TODO : move to Voter
-    public function hasEntryModerationRight(Entry $entry)
+    public function hasEntryModerationRight(Entry $entry): bool
     {
         /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
@@ -804,21 +778,21 @@ class ClacoFormManager
         return $canEdit || ($canOpen && $user instanceof User && $this->isEntryManager($entry, $user));
     }
 
-    public function checkEntryAccess(Entry $entry)
+    public function checkEntryAccess(Entry $entry): void
     {
         if (!$this->hasEntryAccessRight($entry)) {
             throw new AccessDeniedException();
         }
     }
 
-    public function checkEntryModeration(Entry $entry)
+    public function checkEntryModeration(Entry $entry): void
     {
         if (!$this->hasEntryModerationRight($entry)) {
             throw new AccessDeniedException();
         }
     }
 
-    public function checkCommentCreationRight(Entry $entry)
+    public function checkCommentCreationRight(Entry $entry): void
     {
         $clacoForm = $entry->getClacoForm();
 
@@ -834,7 +808,7 @@ class ClacoFormManager
         }
     }
 
-    public function checkCommentEditionRight(Comment $comment)
+    public function checkCommentEditionRight(Comment $comment): void
     {
         $user = $this->tokenStorage->getToken()->getUser();
         $entry = $comment->getEntry();
@@ -856,14 +830,14 @@ class ClacoFormManager
         }
     }
 
-    public function isEntryShared(Entry $entry, User $user)
+    public function isEntryShared(Entry $entry, User $user): bool
     {
         $entryUser = $this->entryUserRepo->findOneBy(['entry' => $entry, 'user' => $user, 'shared' => true]);
 
         return !empty($entryUser);
     }
 
-    private function hasEntryOwnership(Entry $entry)
+    private function hasEntryOwnership(Entry $entry): bool
     {
         /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
@@ -874,7 +848,7 @@ class ClacoFormManager
         return $isOwner || $isShared;
     }
 
-    public function checkEntryShareRight(Entry $entry)
+    public function checkEntryShareRight(Entry $entry): void
     {
         if (!$this->hasRight($entry->getClacoForm(), 'EDIT') && !$this->hasEntryOwnership($entry)) {
             throw new AccessDeniedException();

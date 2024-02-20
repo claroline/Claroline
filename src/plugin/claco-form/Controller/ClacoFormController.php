@@ -31,6 +31,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -77,69 +78,6 @@ class ClacoFormController
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
         $this->exportManager = $exportManager;
-    }
-
-    /**
-     * Returns the keyword.
-     *
-     * @Route("/{clacoForm}/keyword/get/by/name/{value}/excluding/uuid/{uuid}", name="claro_claco_form_get_keyword_by_name_excluding_uuid", defaults={"uuid"=null})
-     *
-     * @EXT\ParamConverter( "clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
-     */
-    public function getKeywordByNameExcludingUuidAction(ClacoForm $clacoForm, $value, string $uuid = null): JsonResponse
-    {
-        $this->checkPermission('EDIT', $clacoForm->getResourceNode(), [], true);
-
-        $keyword = $this->clacoFormManager->getKeywordByNameExcludingUuid($clacoForm, $value, $uuid);
-
-        if (!empty($keyword)) {
-            return new JsonResponse(true);
-        }
-
-        return new JsonResponse(false, 204);
-    }
-
-    /**
-     * Returns id of a random entry.
-     *
-     * @Route("/{clacoForm}/entry/random", name="claro_claco_form_entry_random")
-     *
-     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
-     */
-    public function entryRandomAction(ClacoForm $clacoForm): JsonResponse
-    {
-        $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
-
-        $entryId = $this->clacoFormManager->getRandomEntryId($clacoForm);
-
-        return new JsonResponse($entryId, 200);
-    }
-
-    /**
-     * Retrieves comments of an entry.
-     *
-     * @Route("/entry/{entry}/comments/retrieve", name="claro_claco_form_entry_comments_retrieve")
-     *
-     * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
-     */
-    public function entryCommentsRetrieveAction(Entry $entry): JsonResponse
-    {
-        $this->clacoFormManager->checkEntryAccess($entry);
-        /** @var User|string $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if (!$user instanceof User) {
-            $comments = $this->clacoFormManager->getCommentsByEntryAndStatus($entry, Comment::VALIDATED);
-        } elseif ($this->clacoFormManager->hasEntryModerationRight($entry)) {
-            $comments = $this->clacoFormManager->getCommentsByEntry($entry);
-        } else {
-            $comments = $this->clacoFormManager->getAvailableCommentsForUser($entry, $user);
-        }
-        $serializedComments = array_map(function (Comment $comment) {
-            return $this->serializer->serialize($comment);
-        }, $comments);
-
-        return new JsonResponse($serializedComments, 200);
     }
 
     /**
@@ -245,41 +183,6 @@ class ClacoFormController
         $serializedEntryUser = $this->serializer->serialize($entryUser);
 
         return new JsonResponse($serializedEntryUser, 200);
-    }
-
-    /**
-     * Saves entry options for current user.
-     *
-     * @Route("/entry/{entry}/user/save", name="claro_claco_form_entry_user_save")
-     *
-     * @EXT\ParamConverter("user", converter="current_user")
-     */
-    public function entryUserSaveAction(User $user, Entry $entry, Request $request): JsonResponse
-    {
-        $this->clacoFormManager->checkEntryAccess($entry);
-        $entryUser = $this->clacoFormManager->getEntryUser($entry, $user);
-        $entryUserData = $request->request->get('entryUserData', false);
-
-        if (!is_array($entryUserData)) {
-            $entryUserData = json_decode($entryUserData, true);
-        }
-
-        if (isset($entryUserData['shared'])) {
-            $entryUser->setShared($entryUserData['shared']);
-        }
-        if (isset($entryUserData['notifyEdition'])) {
-            $entryUser->setNotifyEdition($entryUserData['notifyEdition']);
-        }
-        if (isset($entryUserData['notifyComment'])) {
-            $entryUser->setNotifyComment($entryUserData['notifyComment']);
-        }
-        if (isset($entryUserData['notifyVote'])) {
-            $entryUser->setNotifyVote($entryUserData['notifyVote']);
-        }
-        $this->om->persist($entryUser);
-        $this->om->flush();
-
-        return new JsonResponse(null, 204);
     }
 
     /**
@@ -464,7 +367,7 @@ class ClacoFormController
      *
      * @return StreamedResponse|JsonResponse
      */
-    public function downloadAction(Entry $entry, string $field)
+    public function downloadAction(Entry $entry, string $field): Response
     {
         $formField = $this->om->getRepository(Field::class)->findByFieldFacetUuid($field);
         if (empty($formField) || FieldFacet::FILE_TYPE !== $formField->getType()) {

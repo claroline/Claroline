@@ -115,6 +115,22 @@ class EntryController extends AbstractCrudController
     }
 
     /**
+     * Returns id of a random entry.
+     *
+     * @Route("/{clacoForm}/random", name="claro_claco_form_entry_random")
+     *
+     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
+     */
+    public function entryRandomAction(ClacoForm $clacoForm): JsonResponse
+    {
+        $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
+
+        $entryId = $this->manager->getRandomEntryId($clacoForm);
+
+        return new JsonResponse($entryId, 200);
+    }
+
+    /**
      * @Route("/clacoform/{clacoForm}/{entry}/next", name="apiv2_clacoformentry_next")
      *
      * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})

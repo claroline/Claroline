@@ -28,6 +28,8 @@ services:
     Claroline\ClacoFormBundle\Controller\API\KeywordController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
+        arguments:
+            - '@security.authorization_checker'
 
     Claroline\ClacoFormBundle\Controller\ClacoFormController:
         arguments:

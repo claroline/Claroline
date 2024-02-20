@@ -31,4 +31,9 @@ class UserFilter implements FinderFilterInterface
 
         return $qb;
     }
+
+    public function addSort(QueryBuilder $qb, string $alias, string $sortBy, string $direction): QueryBuilder
+    {
+        return $qb;
+    }
 }

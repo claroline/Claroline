@@ -111,7 +111,8 @@ class DataFilter extends Component {
         errors: errors,
         disabled: this.props.disabled,
         size: this.props.size,
-        updateSearch: this.props.updateSearch
+        updateSearch: this.props.updateSearch, // deprecated use onChange instead
+        onChange: this.props.updateSearch
       }))
     }
 
@@ -125,7 +126,7 @@ class DataFilter extends Component {
         value={this.props.value || ''}
         placeholder={this.props.placeholder}
         disabled={this.props.disabled}
-        onChange={(e) => this.props.updateSearch(this.state.parse(e.target.value, this.props.options))}
+        onChange={(e) => this.props.updateSearch(e.target.value)}
       />
     )
   }
