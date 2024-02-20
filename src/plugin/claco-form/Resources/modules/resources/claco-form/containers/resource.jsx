@@ -10,6 +10,7 @@ import {makeId} from '#/main/core/scaffolding/id'
 
 import {reducer, selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import {actions as entryActions} from '#/plugin/claco-form/resources/claco-form/player/store'
+import {actions as statsActions} from '#/plugin/claco-form/resources/claco-form/stats/store'
 import {ClacoFormResource as ClacoFormResourceComponent} from '#/plugin/claco-form/resources/claco-form/components/resource'
 
 const ClacoFormResource = withRouter(
@@ -18,10 +19,12 @@ const ClacoFormResource = withRouter(
       (state) => ({
         currentUser: securitySelectors.currentUser(state),
         clacoForm: selectors.clacoForm(state),
-        canEdit: selectors.canAdministrate(state),
+        canEdit: selectors.canEdit(state),
+        canAdministrate: selectors.canAdministrate(state),
         canAddEntry: selectors.canAddEntry(state),
         canSearchEntry: selectors.canSearchEntry(state),
-        defaultHome: selectors.params(state) ? selectors.params(state).default_home : null
+        defaultHome: selectors.params(state) ? selectors.params(state).default_home : null,
+        hasStatistics: selectors.hasStatistics(state)
       }),
       (dispatch) => ({
         resetForm(formData) {
@@ -53,6 +56,9 @@ const ClacoFormResource = withRouter(
         },
         loadAllUsedCountries(clacoFormId) {
           dispatch(entryActions.loadAllUsedCountries(clacoFormId))
+        },
+        loadStats(clacoFormId) {
+          dispatch(statsActions.fetchStats(clacoFormId))
         }
       })
     )(ClacoFormResourceComponent)

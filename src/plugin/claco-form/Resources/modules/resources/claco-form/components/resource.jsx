@@ -13,6 +13,7 @@ import {EditorMain} from '#/plugin/claco-form/resources/claco-form/editor/contai
 import {Entries} from '#/plugin/claco-form/resources/claco-form/player/components/entries'
 import {EntryForm} from '#/plugin/claco-form/resources/claco-form/player/components/entry-form'
 import {Entry} from '#/plugin/claco-form/resources/claco-form/player/components/entry'
+import {StatsMain} from '#/plugin/claco-form/resources/claco-form/stats/containers/main'
 
 function getHome(type) {
   switch (type) {
@@ -42,6 +43,12 @@ const ClacoFormResource = props =>
         target: `${props.path}/menu`
       }, {
         type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-pie-chart',
+        label: trans('show-statistics', {}, 'actions'),
+        target: `${props.path}/stats`,
+        displayed: props.canEdit && props.hasStatistics
+      }, {
+        type: LINK_BUTTON,
         icon: 'fa fa-fw fa-search',
         label: trans('entries_list', {}, 'clacoform'),
         displayed: props.canSearchEntry,
@@ -51,7 +58,7 @@ const ClacoFormResource = props =>
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-download',
         label: trans('export_all_entries', {}, 'clacoform'),
-        displayed: props.canEdit,
+        displayed: props.canAdministrate,
         target: ['claro_claco_form_entries_export', {clacoForm: props.clacoForm.id}],
         group: trans('transfer')
       }
@@ -116,6 +123,11 @@ const ClacoFormResource = props =>
             props.loadEntryUser(params.id, props.currentUser)
           }
         }
+      }, {
+        path: '/stats',
+        disabled: !props.canEdit,
+        onEnter: () => props.loadStats(props.clacoForm.id),
+        component: StatsMain
       }
     ]}
   />
@@ -123,15 +135,20 @@ const ClacoFormResource = props =>
 ClacoFormResource.propTypes = {
   path: T.string.isRequired,
   currentUser: T.object,
-  clacoForm: T.shape(ClacoFormType.propTypes).isRequired,
+  clacoForm: T.shape(
+    ClacoFormType.propTypes
+  ).isRequired,
+  hasStatistics: T.bool,
   canEdit: T.bool.isRequired,
+  canAdministrate: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,
   canSearchEntry: T.bool.isRequired,
   defaultHome: T.string,
   resetForm: T.func.isRequired,
   openEntryForm: T.func.isRequired,
   loadEntryUser: T.func.isRequired,
-  loadAllUsedCountries: T.func.isRequired
+  loadAllUsedCountries: T.func.isRequired,
+  loadStats: T.func.isRequired
 }
 
 export {

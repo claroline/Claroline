@@ -22,7 +22,7 @@ const GroupFormComponent = props => {
       save={{
         type: CALLBACK_BUTTON,
         callback: () => props.save(props.group, props.isNew, props.name).then(group => {
-          history.push(route(group))
+          history.push(route(group, props.path))
         })
       }}
       cancel={{

@@ -133,6 +133,10 @@ const EditorParameters = props =>
             name: 'display.showEntryNav',
             type: 'boolean',
             label: trans('show_entry_nav', {}, 'clacoform')
+          }, {
+            name: 'display.statistics',
+            type: 'boolean',
+            label: trans('enable_statistics')
           }
         ]
       }, {

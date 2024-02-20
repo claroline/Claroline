@@ -24,7 +24,7 @@ const OrganizationFormComponent = props => {
       save={{
         type: CALLBACK_BUTTON,
         callback: () => props.save(props.organization, props.isNew, props.name).then(organization => {
-          history.push(route(organization))
+          history.push(route(organization, props.path))
         })
       }}
       cancel={{

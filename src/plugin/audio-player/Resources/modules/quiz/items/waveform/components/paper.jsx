@@ -92,7 +92,7 @@ const WaveformPaper = props =>
           }))}
         />
         <AnswerStatsTable
-          title={trans('stats', {}, 'quiz')}
+          title={trans('statistics')}
           sections={props.item.solutions.map(s => Object.assign({}, s.section, {
             start: s.section.start,
             end: s.section.end,

@@ -163,7 +163,7 @@ const AttemptEndComponent = props =>
       }, {
         name: 'statistics',
         type: LINK_BUTTON,
-        label: trans('statistics', {}, 'quiz'),
+        label: trans('show-statistics', {}, 'actions'),
         target: `${props.path}/statistics`,
         displayed: props.showStatistics
       }

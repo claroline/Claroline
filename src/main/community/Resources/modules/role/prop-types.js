@@ -6,7 +6,7 @@ const Role = {
   propTypes: {
     id: T.string,
     name: T.string,
-    translationKey: T.string.isRequired,
+    translationKey: T.string,
     type: T.number.isRequired,
     meta: T.shape({
       readOnly: T.bool,

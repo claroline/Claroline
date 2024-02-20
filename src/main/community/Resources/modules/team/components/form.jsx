@@ -23,7 +23,7 @@ const TeamFormComponent = props => {
       save={{
         type: CALLBACK_BUTTON,
         callback: () => props.save(props.team, props.isNew, props.name).then(team => {
-          history.push(route(team))
+          history.push(route(team, props.path))
         })
       }}
       cancel={{

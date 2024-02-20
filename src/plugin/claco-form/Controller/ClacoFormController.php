@@ -45,39 +45,17 @@ class ClacoFormController
     use PermissionCheckerTrait;
     use RequestDecoderTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var FinderProvider */
-    private $finder;
-    /** @var ClacoFormManager */
-    private $clacoFormManager;
-    /** @var string */
-    private $filesDir;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ExportManager */
-    private $exportManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        FinderProvider $finder,
-        ClacoFormManager $clacoFormManager,
-        string $filesDir,
-        SerializerProvider $serializer,
-        TokenStorageInterface $tokenStorage,
-        ExportManager $exportManager
+        private readonly ObjectManager $om,
+        private readonly FinderProvider $finder,
+        private readonly ClacoFormManager $clacoFormManager,
+        private readonly string $filesDir,
+        private readonly SerializerProvider $serializer,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ExportManager $exportManager
     ) {
         $this->authorization = $authorization;
-        $this->om = $om;
-        $this->finder = $finder;
-        $this->clacoFormManager = $clacoFormManager;
-        $this->filesDir = $filesDir;
-        $this->serializer = $serializer;
-        $this->tokenStorage = $tokenStorage;
-        $this->exportManager = $exportManager;
     }
 
     /**

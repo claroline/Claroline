@@ -24,7 +24,7 @@ const RoleFormComponent = props => {
       save={{
         type: CALLBACK_BUTTON,
         callback: () => props.save(props.role, props.isNew, props.name).then(role => {
-          history.push(route(role))
+          history.push(route(role, props.path))
         })
       }}
       cancel={{

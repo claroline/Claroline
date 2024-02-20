@@ -36,6 +36,7 @@ class FieldFacet
     public const COUNTRY_TYPE = 'country';
     /** @var string */
     public const EMAIL_TYPE = 'email';
+    public const TEXT_TYPE = 'string';
     /** @var string */
     public const HTML_TYPE = 'html';
     /** @var string */

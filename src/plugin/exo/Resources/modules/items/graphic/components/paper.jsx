@@ -85,7 +85,7 @@ export const GraphicPaper = props => {
             />
           </div>
           <AnswerStatsTable
-            title={trans('stats', {}, 'quiz')}
+            title={trans('statistics')}
             areas={expectedAreas}
             stats={props.stats}
             hasExpectedAnswers={props.item.hasExpectedAnswers}

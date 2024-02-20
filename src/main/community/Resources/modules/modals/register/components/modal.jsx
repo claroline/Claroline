@@ -5,7 +5,6 @@ import isEmpty from 'lodash/isEmpty'
 import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 
-import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {ASYNC_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -30,7 +29,7 @@ const RegisterModal = props => {
       type: ASYNC_BUTTON,
       label: trans('register', {}, 'actions'),
       request: {
-        url: url(['apiv2_workspace_register', {role: selectedRole || ''}]),
+        url: ['apiv2_workspace_register', {role: selectedRole || ''}],
         request: {
           method: 'PATCH',
           body: JSON.stringify({
