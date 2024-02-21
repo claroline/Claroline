@@ -124,7 +124,7 @@ class EntryController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
 
-        $params = $request->query->all();
+        $params = FinderProvider::parseQueryParams($request->query->all());
         $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
         $filters['clacoForm'] = $clacoForm->getId();
         $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
@@ -155,7 +155,7 @@ class EntryController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
 
-        $params = $request->query->all();
+        $params = FinderProvider::parseQueryParams($request->query->all());
         $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
         $filters['clacoForm'] = $clacoForm->getId();
         $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
