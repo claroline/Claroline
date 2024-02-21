@@ -262,12 +262,7 @@ class RegistrationController
      *     }
      * )
      *
-     * @Route(
-     *    "/register/{role}",
-     *    name="apiv2_workspace_register",
-     *    methods={"PATCH"},
-     *    defaults={"role":""}
-     * )
+     * @Route("/register/{role}", name="apiv2_workspace_register", methods={"PATCH"}, defaults={"role":""}, requirements={"role": ".+"})
      *
      * @throws InvalidDataException
      */
