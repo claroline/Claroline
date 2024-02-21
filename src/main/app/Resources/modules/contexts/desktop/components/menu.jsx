@@ -49,7 +49,9 @@ const DesktopMenu = props => {
       shortcuts={props.shortcuts}
       actions={desktopActions}
     >
-      <CurrentUser currentUser={props.currentUser} roles={props.roles} />
+      {props.currentUser &&
+        <CurrentUser currentUser={props.currentUser} roles={props.roles} />
+      }
     </ContextMenu>
   )
 }
