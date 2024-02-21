@@ -54,7 +54,7 @@ class FinderProvider
     }
 
     /**
-     * Builds and fires the query for a given class. The result will be serialized afterwards.
+     * Builds and fires the query for a given class. The result will be serialized afterward.
      */
     public function search(string $class, array $finderParams = [], array $serializerOptions = []): array
     {
@@ -128,7 +128,6 @@ class FinderProvider
 
     /**
      * Parses query params to their appropriate filter values.
-     * Should not be public. Only used by old logs queries.
      */
     public static function parseQueryParams(array $finderParams = []): array
     {
