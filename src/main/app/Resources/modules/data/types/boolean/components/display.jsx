@@ -1,31 +1,34 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 
 const BooleanDisplay = (props) =>
-  <div className={classes('boolean-display', {
-    true: props.data,
-    false: !props.data
-  })}>
-    {props.icon &&
-      <span className={classes('icon-with-text-right', props.icon)} />
-    }
+  <>
+    <input
+      id={props.id}
+      className="form-check-input"
+      type="checkbox"
+      checked={props.value}
+      readOnly={true}
+      role="switch"
+    />
 
-    {!props.icon &&
-      <span className={classes('fa fa-fw icon-with-text-right', {
-        'fa-check': props.data,
-        'fa-times': !props.data
-      })} />
-    }
-
-    {props.data && props.labelChecked ? props.labelChecked : props.label}
-  </div>
+    <label
+      className="form-check-label"
+      htmlFor={props.id}
+    >
+      {(props.value && props.labelChecked) ? props.labelChecked : props.label}
+    </label>
+  </>
 
 BooleanDisplay.propTypes = {
-  data: T.bool.isRequired,
-  icon: T.string,
+  id: T.string.isRequired,
+  value: T.bool,
   label: T.string.isRequired,
   labelChecked: T.string
+}
+
+BooleanDisplay.defaultProps = {
+    value: false
 }
 
 export {
