@@ -86,7 +86,7 @@ class PlatformController
                         'show' => $this->configHandler->getParameter('footer.show'),
                         'locale' => $this->configHandler->getParameter('footer.show_locale'),
                         'help' => $this->configHandler->getParameter('footer.show_help'),
-                        'termsOfService' => $this->privacyManager->getTosEnabled(),
+                        'termsOfService' => $this->privacyManager->getTosEnabled($request->getLocale()),
                     ],
                 ],
 

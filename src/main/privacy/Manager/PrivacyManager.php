@@ -34,9 +34,9 @@ class PrivacyManager
         $this->om->flush();
     }
 
-    public function getTosEnabled(): bool
+    public function getTosEnabled(string $locale): bool
     {
-        return $this->getParameters()->getTosEnabled();
+        return $this->getParameters()->getTosEnabled() && strlen(trim($this->getTosTemplate($locale))) > 0;
     }
 
     public function getTosTemplate(string $locale): string

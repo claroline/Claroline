@@ -142,7 +142,7 @@ class RegistrationController
     {
         $this->checkAccess();
         $terms = null;
-        if ($this->privacyManager->getTosEnabled()) {
+        if ($this->privacyManager->getTosEnabled($request->getLocale())) {
             $terms = $this->privacyManager->getTosTemplate($request->getLocale());
         }
 
