@@ -180,7 +180,7 @@ const FormStats = (props) => {
         <Button
           className="btn btn-text-primary ms-auto"
           type={CALLBACK_BUTTON}
-          label={trans(!isEmpty(openedInputs) ? 'show_all' : 'hide_all')}
+          label={trans(!isEmpty(openedInputs) ? 'hide_all' : 'show_all')}
           callback={() => setOpenedInputs(!isEmpty(openedInputs) ? [] : allInputs)}
         />
       </div>
