@@ -89,7 +89,7 @@ class TemplateManager
         if ($content) {
             switch ($mode) {
                 case 'content':
-                    return $this->placeholderManager->replacePlaceholders($content->getContent(), $placeholders);
+                    return $this->placeholderManager->replacePlaceholders($content->getContent() ?? '', $placeholders);
                 case 'title':
                     return $this->placeholderManager->replacePlaceholders($content->getTitle() ?? '', $placeholders);
             }
