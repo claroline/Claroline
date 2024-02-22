@@ -111,7 +111,8 @@
 // ---
 
 // force buttons to have the same rounding than form-control
-.input-group .btn {
+.input-group > .btn,
+.input-group .dropdown > .btn {
     @include border-radius($input-border-radius);
 }
 

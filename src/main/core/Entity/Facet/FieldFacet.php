@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Claroline\AppBundle\Entity\Display\Order;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Meta\Order;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -66,17 +66,13 @@ class FieldFacet
 
     /**
      * @ORM\Column(name="name")
-     *
-     * @var string
      */
-    private $label;
+    private ?string $label = null;
 
     /**
      * @ORM\Column()
-     *
-     * @var string
      */
-    private $type;
+    private ?string $type = null;
 
     /**
      * @ORM\ManyToOne(
@@ -85,10 +81,8 @@ class FieldFacet
      * )
      *
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
-     *
-     * @var PanelFacet
      */
-    private $panelFacet;
+    private ?PanelFacet $panelFacet = null;
 
     /**
      * @ORM\OneToMany(
@@ -102,17 +96,13 @@ class FieldFacet
 
     /**
      * @ORM\Column(name="isRequired", type="boolean")
-     *
-     * @var bool
      */
-    private $required = false;
+    private bool $required = false;
 
     /**
      * @ORM\Column(type="json")
-     *
-     * @var array
      */
-    private $options = [];
+    private array $options = [];
 
     /**
      * @ORM\Column(type="string")
@@ -122,36 +112,30 @@ class FieldFacet
     /**
      * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
      */
-    private $locked = false;
+    private bool $locked = false;
 
     /**
      * @ORM\Column(name="locked_edition", type="boolean", options={"default" = 0})
      */
-    private $lockedEditionOnly = false;
+    private bool $lockedEditionOnly = false;
 
     /**
      * @ORM\Column(name="help", nullable=true)
      */
-    private $help;
+    private ?string $help = null;
 
     /**
      * @ORM\Column(name="condition_field", type="string", nullable=true)
-     *
-     * @var string
      */
-    private $conditionField;
+    private ?string $conditionField = null;
 
     /**
      * @ORM\Column(name="condition_comparator", type="string", nullable=true)
-     *
-     * @var string
      */
-    private $conditionComparator;
+    private ?string $conditionComparator = null;
 
     /**
      * @ORM\Column(name="condition_value", type="json", nullable=true)
-     *
-     * @var array
      */
     private $conditionValue = [];
 
@@ -232,7 +216,7 @@ class FieldFacet
      *
      * @return FieldFacetChoice[]
      */
-    public function getRootFieldFacetChoices()
+    public function getRootFieldFacetChoices(): array
     {
         $roots = [];
 
@@ -245,11 +229,6 @@ class FieldFacet
         }
 
         return $roots;
-    }
-
-    public function emptyFieldFacetChoices()
-    {
-        $this->fieldFacetChoices->clear();
     }
 
     public function isRequired(): bool
