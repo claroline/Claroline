@@ -29,7 +29,7 @@ class TermsOfServiceController
     public function getCurrentAction(Request $request): JsonResponse
     {
         $tos = null;
-        if ($this->privacyManager->getParameters()->getTosEnabled()) {
+        if ($this->privacyManager->getTosEnabled($request->getLocale())) {
             $tos = $this->privacyManager->getTosTemplate($request->getLocale());
         }
 
