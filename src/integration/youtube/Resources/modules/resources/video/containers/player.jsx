@@ -8,7 +8,8 @@ import {actions, selectors} from '#/integration/youtube/resources/video/store'
 const VideoPlayer = connect(
   (state) => ({
     currentUser: securitySelectors.currentUser(state),
-    video: selectors.video(state)
+    video: selectors.video(state),
+    progression: selectors.progression(state)
   }),
   (dispatch) => ({
     updateProgression(id, currentTime, totalTime) {

@@ -63,19 +63,18 @@ class YouTubeManager
     public function handleThumbnailForVideo(Video $video): void
     {
         $resourceNode = $video->getResourceNode();
-        if (!$resourceNode->getThumbnail()) {
-            $uploadedFile = $this->getTemporaryThumbnailFile($video->getUrl());
 
-            if ($uploadedFile) {
-                $publicFile = $this->crud->create(PublicFile::class, [], ['file' => $uploadedFile]);
+        $uploadedFile = $this->getTemporaryThumbnailFile($video->getUrl());
 
-                $resourceNode->setThumbnail($publicFile->getUrl());
-                $this->om->persist($resourceNode);
+        if ($uploadedFile) {
+            $publicFile = $this->crud->create(PublicFile::class, [], ['file' => $uploadedFile]);
 
-                $this->fileManager->linkFile(ResourceNode::class, $resourceNode->getUuid(), $publicFile->getUrl());
+            $resourceNode->setThumbnail($publicFile->getUrl());
+            $this->om->persist($resourceNode);
 
-                $this->om->flush();
-            }
+            $this->fileManager->linkFile(ResourceNode::class, $resourceNode->getUuid(), $publicFile->getUrl());
+
+            $this->om->flush();
         }
     }
 

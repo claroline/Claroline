@@ -9,7 +9,8 @@ const VideoPlayer = props => {
 
   return (
     <YouTubePlayer
-      videoId={props.video.videoId}
+      video={props.video}
+      progression={props.progression}
       onPlay={(currentTime, duration) => {
         if (props.currentUser) {
           props.updateProgression(props.video.id, currentTime, duration)
@@ -36,6 +37,7 @@ const VideoPlayer = props => {
 
 VideoPlayer.propTypes = {
   video: T.shape( VideoTypes.propTypes ).isRequired,
+  progression: T.number.isRequired,
   updateProgression: T.func.isRequired,
   currentUser: T.object
 }

@@ -31,6 +31,37 @@ const VideoEditor = (props) =>
             required: true
           }
         ]
+      }, {
+        icon: 'fa fa-fw fa-play',
+        title: trans('playback_param', {}, 'youtube'),
+        help: trans('timecode_help',{}, 'youtube'),
+        fields: [
+          {
+            name: 'timecodeStart',
+            label: trans('timecode_start', {}, 'youtube'),
+            type: 'time'
+          }, {
+            name: 'timecodeEnd',
+            label: trans('timecode_end', {}, 'youtube'),
+            type: 'time'
+          }, {
+            name: 'autoplay',
+            label: trans('autoplay', {}, 'youtube'),
+            type: 'boolean'
+          }, {
+            name: 'looping',
+            label: trans('loop', {}, 'youtube'),
+            type: 'boolean'
+          }, {
+            name: 'controls',
+            label: trans('controls', {}, 'youtube'),
+            type: 'boolean'
+          }, {
+            name: 'resume',
+            label: trans('resume', {}, 'youtube'),
+            type: 'boolean'
+          }
+        ]
       }
     ]}
   />
@@ -45,8 +76,3 @@ VideoEditor.propTypes = {
 export {
   VideoEditor
 }
-
-
-
-
-

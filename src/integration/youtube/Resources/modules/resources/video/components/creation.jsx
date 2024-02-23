@@ -9,7 +9,7 @@ const VideoCreation = () =>
     level={5}
     name={selectors.STORE_NAME}
     dataPart={selectors.FORM_RESOURCE_PART}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,
