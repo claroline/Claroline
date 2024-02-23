@@ -1,0 +1,10 @@
+{
+  "autoplay": "Lecture automatique",
+  "controls": "Affichage des contrôles",
+  "loop": "Lecture en boucle",
+  "playback_param": "Paramètres de lecture",
+  "resume": "Reprise de la lecture",
+  "timecode_help":"Attention : l'utilisation des timecodes peut fausser le calcul de la progression.",
+  "timecode_start": "Timecode de début",
+  "timecode_end": "Timecode de fin"
+}

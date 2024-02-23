@@ -1,5 +1,6 @@
 import React, {Component}  from 'react'
 import {PropTypes as T} from 'prop-types'
+import {Video as VideoTypes} from '#/integration/youtube/prop-types'
 
 class YouTubePlayer extends Component {
   constructor(props) {
@@ -7,6 +8,7 @@ class YouTubePlayer extends Component {
 
     this.player = null
     this.timer = null
+    this.resumed = false
 
     this.onTimer = this.onTimer.bind(this)
   }
@@ -15,11 +17,23 @@ class YouTubePlayer extends Component {
     this.player = new window.YT.Player('youtube-player', {
       width: '560',
       height: '315',
-      videoId: this.props.videoId,
+      videoId: this.props.video.videoId,
+      playerVars: {
+        playlist: this.props.video.videoId,
+        autoplay: this.props.video.autoplay ? 1 : 0,
+        loop: this.props.video.looping ? 1 : 0,
+        controls: this.props.video.controls ? 2 : 0,
+        start: this.props.video.timecodeStart,
+        end: this.props.video.timecodeEnd
+      },
       events : {
         onStateChange: (event) => {
           switch (event.data) {
             case window.YT.PlayerState.PLAYING:
+              if(!this.resumed && this.props.video.resume) {
+                this.player.seekTo(event.target.getDuration() * (this.props.progression / 100) - 5, true)
+                this.resumed = true
+              }
               this.props.onPlay(event.target.getCurrentTime(), event.target.getDuration())
               this.timer = setInterval( this.onTimer, 1000)
               break
@@ -53,7 +67,8 @@ class YouTubePlayer extends Component {
 }
 
 YouTubePlayer.propTypes = {
-  videoId: T.string.isRequired,
+  video: T.shape( VideoTypes.propTypes ).isRequired,
+  progression: T.number.isRequired,
   onPlay: T.func,
   onPause: T.func,
   onTimeUpdate: T.func
