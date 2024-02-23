@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\YouTubeBundle\Entity\Video;
@@ -38,6 +39,7 @@ class VideoSubscriber implements EventSubscriberInterface
         return [
             'resource.youtube_video.load' => 'onLoad',
             Crud::getEventName('create', 'post', Video::class) => 'onCreate',
+            Crud::getEventName('update', 'post', Video::class) => 'postUpdate',
         ];
     }
 
@@ -59,6 +61,12 @@ class VideoSubscriber implements EventSubscriberInterface
     }
 
     public function onCreate(CreateEvent $event): void
+    {
+        $video = $event->getObject();
+        $this->youtubeManager->handleThumbnailForVideo($video);
+    }
+
+    public function postUpdate(UpdateEvent $event): void
     {
         $video = $event->getObject();
         $this->youtubeManager->handleThumbnailForVideo($video);

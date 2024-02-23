@@ -18,6 +18,9 @@ const reducer = combineReducers({
   video: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, 'youtube_video')]: (state, action) => action.resourceData.video,
     [FORM_SUBMIT_SUCCESS+'/'+selectors.FORM_NAME]: (state, action) => action.updatedData
+  }),
+  progression: makeReducer({}, {
+    [makeInstanceAction(RESOURCE_LOAD, 'youtube_video')]: (state, action) => action.resourceData.userEvaluation.progression
   })
 })
 
