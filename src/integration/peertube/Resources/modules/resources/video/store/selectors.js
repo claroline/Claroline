@@ -10,6 +10,11 @@ const video = createSelector(
   (resource) => resource.video
 )
 
+const progression = createSelector(
+  [resource],
+  (resource) => resource.progression
+)
+
 const url = createSelector(
   [video],
   (video) => video.url
@@ -21,5 +26,6 @@ export const selectors = {
 
   resource,
   video,
+  progression,
   url
 }
