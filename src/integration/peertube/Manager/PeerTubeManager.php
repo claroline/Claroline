@@ -100,19 +100,17 @@ class PeerTubeManager
     public function handleThumbnailForVideo(Video $video): void
     {
         $resourceNode = $video->getResourceNode();
-        if (!$resourceNode->getThumbnail()) {
-            $uploadedFile = $this->getTemporaryThumbnailFile($video->getUrl());
+        $uploadedFile = $this->getTemporaryThumbnailFile($video->getUrl());
 
-            if ($uploadedFile) {
-                $publicFile = $this->crud->create(PublicFile::class, [], ['file' => $uploadedFile]);
+        if ($uploadedFile) {
+            $publicFile = $this->crud->create(PublicFile::class, [], ['file' => $uploadedFile]);
 
-                $resourceNode->setThumbnail($publicFile->getUrl());
-                $this->om->persist($resourceNode);
+            $resourceNode->setThumbnail($publicFile->getUrl());
+            $this->om->persist($resourceNode);
 
-                $this->fileManager->linkFile(ResourceNode::class, $resourceNode->getUuid(), $publicFile->getUrl());
+            $this->fileManager->linkFile(ResourceNode::class, $resourceNode->getUuid(), $publicFile->getUrl());
 
-                $this->om->flush();
-            }
+            $this->om->flush();
         }
     }
 

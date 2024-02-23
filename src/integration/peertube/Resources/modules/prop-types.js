@@ -4,7 +4,14 @@ const Video = {
   propTypes: {
     id: T.string,
     url: T.string,
-    embeddedUrl: T.string
+    embeddedUrl: T.string,
+    timecodeStart: T.number,
+    timecodeEnd: T.number,
+    autoplay: T.bool,
+    looping: T.bool,
+    controls: T.bool,
+    peertubeLink: T.bool,
+    resume: T.bool
   },
   defaultProps: {
 

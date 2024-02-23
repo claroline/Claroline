@@ -1,0 +1,11 @@
+{
+  "autoplay": "Autoplay",
+  "controls": "Display controls",
+  "loop": "Loop",
+  "peertubeLink": "Display Peertube link",
+  "playback_param": "Playback parameters",
+  "resume": "Resume playback",
+  "timecode_help":"Caution: the use of timecodes can distort the calculation of progression.",
+  "timecode_start": "Start timecode",
+  "timecode_end": "End timecode"
+}

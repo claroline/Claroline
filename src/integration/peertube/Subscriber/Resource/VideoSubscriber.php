@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
@@ -44,6 +45,7 @@ class VideoSubscriber implements EventSubscriberInterface
             'resource.peertube_video.load' => 'onLoad',
             'resource.peertube_video.embed' => 'onEmbed',
             Crud::getEventName('create', 'post', Video::class) => 'onCreate',
+            Crud::getEventName('update', 'post', Video::class) => 'postUpdate',
         ];
     }
 
@@ -73,6 +75,12 @@ class VideoSubscriber implements EventSubscriberInterface
     }
 
     public function onCreate(CreateEvent $event): void
+    {
+        $video = $event->getObject();
+        $this->peerTubeManager->handleThumbnailForVideo($video);
+    }
+
+    public function postUpdate(UpdateEvent $event): void
     {
         $video = $event->getObject();
         $this->peerTubeManager->handleThumbnailForVideo($video);
