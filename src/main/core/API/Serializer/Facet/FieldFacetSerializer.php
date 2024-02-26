@@ -52,6 +52,7 @@ class FieldFacetSerializer
             'help' => $fieldFacet->getHelp(),
             'display' => [
                 'order' => $fieldFacet->getOrder(),
+                'hideLabel' => $fieldFacet->getHideLabel(),
                 'condition' => [
                     'field' => $fieldFacet->getConditionField(),
                     'comparator' => $fieldFacet->getConditionComparator(),
@@ -92,6 +93,7 @@ class FieldFacetSerializer
         $this->sipe('help', 'setHelp', $data, $field);
 
         $this->sipe('display.order', 'setOrder', $data, $field);
+        $this->sipe('display.hideLabel', 'setHideLabel', $data, $field);
         $this->sipe('display.condition.field', 'setConditionField', $data, $field);
         $this->sipe('display.condition.comparator', 'setConditionComparator', $data, $field);
         $this->sipe('display.condition.value', 'setConditionValue', $data, $field);

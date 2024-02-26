@@ -137,7 +137,12 @@ class FieldFacet
     /**
      * @ORM\Column(name="condition_value", type="json", nullable=true)
      */
-    private $conditionValue = [];
+    private mixed $conditionValue = null;
+
+    /**
+     * @ORM\Column(name="hide_label", type="boolean")
+     */
+    private bool $hideLabel = false;
 
     public function __construct()
     {
@@ -243,7 +248,7 @@ class FieldFacet
 
     public function getOptions(): ?array
     {
-        return $this->options;
+        return $this->options ?? [];
     }
 
     public function setOptions(array $options): void
@@ -319,7 +324,7 @@ class FieldFacet
         $this->conditionComparator = $conditionComparator;
     }
 
-    public function getConditionValue()
+    public function getConditionValue(): mixed
     {
         return $this->conditionValue;
     }
@@ -327,5 +332,15 @@ class FieldFacet
     public function setConditionValue($conditionValue): void
     {
         $this->conditionValue = $conditionValue;
+    }
+
+    public function getHideLabel(): bool
+    {
+        return $this->hideLabel;
+    }
+
+    public function setHideLabel(bool $hideLabel): void
+    {
+        $this->hideLabel = $hideLabel;
     }
 }
