@@ -45,7 +45,6 @@ const PlayerMain = props => {
                 attempt={props.attempt}
                 resourceEvaluations={props.resourceEvaluations}
                 stepsProgression={props.stepsProgression}
-                getAttempt={props.getAttempt}
               />
             )
           }, {
