@@ -69,48 +69,37 @@ class PathController extends AbstractCrudController
 
         $this->checkPermission('OPEN', $node, [], true);
 
-        $progression = $this->evaluationManager->update($step, $user, $this->decodeRequest($request)['status']);
+        $stepProgression = $this->evaluationManager->update($step, $user, $this->decodeRequest($request)['status']);
 
-        // get updated version of the current path evaluation
-        $resourceUserEvaluation = $this->evaluationManager->getResourceUserEvaluation($step->getPath(), $user);
-
-        // get updated version of the embedded resources evaluations
-        $resourceEvaluations = $this->evaluationManager->getRequiredEvaluations($step->getPath(), $user);
-
-        return new JsonResponse([
-            'userEvaluation' => $this->serializer->serialize($resourceUserEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
-            'resourceEvaluations' => array_map(function (ResourceUserEvaluation $resourceEvaluation) {
-                return $this->serializer->serialize($resourceEvaluation);
-            }, $resourceEvaluations),
+        return new JsonResponse(array_merge($this->getUserProgression($step->getPath(), $user), [
             'userProgression' => [
                 'stepId' => $step->getUuid(),
-                'status' => $progression->getStatus(),
+                'status' => $stepProgression->getStatus(),
             ],
-        ]);
+        ]));
     }
 
     /**
-     * @Route("/{id}/attempt", name="innova_path_current_attempt", methods={"GET"})
+     * Gets current user progression in the Path.
+     * It includes, the Path evaluation, current attempt and evaluations for the embedded resources.
+     *
+     * @Route("/{id}/attempt", name="innova_path_user_progression", methods={"GET"})
      *
      * @EXT\ParamConverter("path", class="Innova\PathBundle\Entity\Path\Path", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
      */
-    public function getAttemptAction(Path $path, User $user = null): JsonResponse
+    public function getUserProgressionAction(Path $path, User $user = null): JsonResponse
     {
         $this->checkPermission('OPEN', $path->getResourceNode(), [], true);
 
-        $attempt = null;
-        $resourceEvaluations = [];
         if ($user) {
-            $attempt = $this->serializer->serialize($this->evaluationManager->getCurrentAttempt($path, $user));
-            $resourceEvaluations = array_map(function (ResourceUserEvaluation $resourceEvaluation) {
-                return $this->serializer->serialize($resourceEvaluation);
-            }, $this->evaluationManager->getRequiredEvaluations($path, $user));
+            return new JsonResponse($this->getUserProgression($path, $user));
         }
 
         return new JsonResponse([
-            'attempt' => $attempt,
-            'resourceEvaluations' => $resourceEvaluations,
+            'attempt' => null,
+            'userEvaluation' => null,
+            'resourceEvaluations' => [],
         ]);
     }
 
@@ -135,5 +124,20 @@ class PathController extends AbstractCrudController
                 return $this->serializer->serialize($resourceEvaluation);
             }, $this->evaluationManager->getRequiredEvaluations($path, $user)),
         ]);
+    }
+
+    private function getUserProgression(Path $path, User $user): array
+    {
+        $attempt = $this->evaluationManager->getCurrentAttempt($path, $user);
+        // get embedded resources evaluations
+        $resourceEvaluations = $this->evaluationManager->getRequiredEvaluations($path, $user);
+
+        return [
+            'attempt' => $this->serializer->serialize($attempt),
+            'userEvaluation' => $this->serializer->serialize($attempt->getResourceUserEvaluation(), [SerializerInterface::SERIALIZE_MINIMAL]),
+            'resourceEvaluations' => array_map(function (ResourceUserEvaluation $resourceEvaluation) {
+                return $this->serializer->serialize($resourceEvaluation);
+            }, $resourceEvaluations),
+        ];
     }
 }

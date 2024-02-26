@@ -28,16 +28,21 @@ actions.updateProgression = (stepId, status = constants.STATUS_SEEN, silent = tr
       method: 'PUT',
       body: JSON.stringify({status: status})
     },
-    success: (data, dispatch) => {
-      dispatch(resourceActions.updateUserEvaluation(data.userEvaluation))
-      dispatch(actions.updateStepProgression(data.userProgression.stepId, data.userProgression.status))
+    success: (response, dispatch) => {
+      dispatch(actions.loadAttempt(response.attempt, response.resourceEvaluations))
+      dispatch(resourceActions.updateUserEvaluation(response.userEvaluation))
+
+      dispatch(actions.updateStepProgression(response.userProgression.stepId, response.userProgression.status))
     }
   }
 })
 
-actions.getAttempt = (pathId) => ({
+actions.getUserProgression = (pathId) => ({
   [API_REQUEST]: {
-    url: ['innova_path_current_attempt', {id: pathId}],
-    success: (response, dispatch) => dispatch(actions.loadAttempt(response.attempt, response.resourceEvaluations))
+    url: ['innova_path_user_progression', {id: pathId}],
+    success: (response, dispatch) => {
+      dispatch(actions.loadAttempt(response.attempt, response.resourceEvaluations))
+      dispatch(resourceActions.updateUserEvaluation(response.userEvaluation))
+    }
   }
 })

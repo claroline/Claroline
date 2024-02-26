@@ -27,8 +27,8 @@ const PlayerMain = withRouter(connect(
     updateProgression(stepId, status = constants.STATUS_SEEN, silent) {
       dispatch(actions.updateProgression(stepId, status, silent))
     },
-    getAttempt(pathId) {
-      return dispatch(actions.getAttempt(pathId))
+    getUserProgression(pathId) {
+      return dispatch(actions.getUserProgression(pathId))
     },
     enableNavigation() {
       dispatch(actions.enableNavigation())

@@ -137,8 +137,6 @@ actions.navigateTo = (quizId, paperId, nextStep, pendingAnswers = {}, currentSte
 
 actions.finish = (quizId, paper, pendingAnswers = {}, showFeedback = false, navigate) => {
   return (dispatch, getState) => {
-    dispatch(resourceActions.triggerLifecycleAction('end'))
-
     if (!showFeedback) {
       dispatch(actions.submit(quizId, paper.id, pendingAnswers)).then(() => {
         endQuiz(quizId, paper, navigate, dispatch, getState)
@@ -191,6 +189,8 @@ actions.handleAttemptEnd = (paper, attempt, navigate) => {
       dispatch(paperAction.addPaper(paper))
       dispatch(paperAction.setCurrentPaper(paper))
     }
+
+    dispatch(resourceActions.triggerLifecycleAction('end'))
 
     // We will decide here if we show the correction now or not and where we redirect the user
     if (playerSelectors.hasEndPage(getState())) {
