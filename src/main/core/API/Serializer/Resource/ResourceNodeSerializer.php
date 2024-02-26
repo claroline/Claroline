@@ -24,8 +24,6 @@ class ResourceNodeSerializer
 {
     use SerializerTrait;
 
-    public const NO_PARENT = 'no_parent';
-
     private ObjectManager $om;
     private EventDispatcherInterface $eventDispatcher;
     private UserSerializer $userSerializer;
@@ -238,6 +236,10 @@ class ResourceNodeSerializer
             $this->deserializeRights($data['rights'], $resourceNode, $options);
         }
 
+        if (isset($data['tags'])) {
+            $this->deserializeTags($resourceNode, $data['tags'], $options);
+        }
+
         return $resourceNode;
     }
 
@@ -268,7 +270,29 @@ class ResourceNodeSerializer
         return $event->getResponse() ?? [];
     }
 
-    public function deserializeRights($rights, ResourceNode $resourceNode, array $options = [])
+    private function deserializeTags(ResourceNode $resourceNode, array $tags = [], array $options = []): void
+    {
+        if (in_array(Options::PERSIST_TAG, $options)) {
+            $event = new GenericDataEvent([
+                'tags' => $tags,
+                'data' => [
+                    [
+                        'class' => ResourceNode::class,
+                        'id' => $resourceNode->getUuid(),
+                        'name' => $resourceNode->getName(),
+                    ],
+                ],
+                'replace' => true,
+            ]);
+
+            $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
+        }
+    }
+
+    /**
+     * @internal should not be public
+     */
+    public function deserializeRights($rights, ResourceNode $resourceNode, array $options = []): void
     {
         $existingRights = $resourceNode->getRights();
 

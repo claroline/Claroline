@@ -321,7 +321,7 @@ class CourseSerializer
     /**
      * Deserializes Course tags.
      */
-    private function deserializeTags(Course $course, array $tags = [], array $options = [])
+    private function deserializeTags(Course $course, array $tags = [], array $options = []): void
     {
         if (in_array(Options::PERSIST_TAG, $options)) {
             $event = new GenericDataEvent([

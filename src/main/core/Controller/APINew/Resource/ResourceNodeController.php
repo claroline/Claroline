@@ -133,7 +133,8 @@ class ResourceNodeController extends AbstractCrudController
         return array_merge(parent::getOptions(), [
             'list' => [Options::NO_RIGHTS, Options::SERIALIZE_LIST],
             'get' => [Options::NO_RIGHTS],
-            'update' => [Options::NO_RIGHTS],
+            'create' => [Options::PERSIST_TAG],
+            'update' => [Options::PERSIST_TAG, Options::NO_RIGHTS],
         ]);
     }
 }

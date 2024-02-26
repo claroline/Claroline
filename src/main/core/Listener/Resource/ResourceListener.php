@@ -103,7 +103,7 @@ class ResourceListener
         $resourceNode = $event->getResourceNode();
         $data = $event->getData();
 
-        $this->crud->update($resourceNode, $data);
+        $this->crud->update($resourceNode, $data, [Options::PERSIST_TAG]);
 
         $event->setResponse(new JsonResponse(
             $this->serializer->serialize($resourceNode)

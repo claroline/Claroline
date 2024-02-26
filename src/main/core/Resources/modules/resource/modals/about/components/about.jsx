@@ -49,6 +49,10 @@ const AboutModal = props =>
               type: 'string',
               label: trans('code')
             }, {
+              name: 'tags',
+              type: 'tag',
+              label: trans('tags')
+            }, {
               name: 'meta.description',
               label: trans('description'),
               type: 'string'

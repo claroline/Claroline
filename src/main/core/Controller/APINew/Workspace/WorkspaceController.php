@@ -70,6 +70,14 @@ class WorkspaceController extends AbstractCrudController
         return Workspace::class;
     }
 
+    public static function getOptions(): array
+    {
+        return array_merge(parent::getOptions(), [
+            'create' => [Options::PERSIST_TAG],
+            'update' => [Options::PERSIST_TAG],
+        ]);
+    }
+
     /**
      * @ApiDoc(
      *     description="The list of registerable workspaces for the current security token.",

@@ -65,6 +65,10 @@ const ResourceFormComponent = (props) =>
               long: true
             }
           }, {
+            name: 'tags',
+            type: 'tag',
+            label: trans('tags')
+          }, {
             name: 'meta.published',
             label: trans('publish', {}, 'actions'),
             type: 'boolean'
