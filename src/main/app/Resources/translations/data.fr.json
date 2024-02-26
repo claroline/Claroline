@@ -32,5 +32,7 @@
   "integer": "Nombre entier",
   "object": "Objet",
   "cascade": "Choix à plusieurs niveaux",
-  "cascade_desc": "Permet de sélectionner une valeur parmis les groupes de choix prédéfinis."
+  "cascade_desc": "Permet de sélectionner une valeur parmis les groupes de choix prédéfinis.",
+  "help": "Texte d'aide",
+  "help_desc": "Permet d'afficher un texte riche de votre choix."
 }
