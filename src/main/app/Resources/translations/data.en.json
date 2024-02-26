@@ -16,5 +16,6 @@
   "url": "URL",
   "array_of": "A list of '%type%'",
   "integer": "Integer",
-  "object": "Object"
+  "object": "Object",
+  "help": "Help text"
 }

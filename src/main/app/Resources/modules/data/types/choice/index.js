@@ -19,14 +19,6 @@ const dataType = {
    */
   configure: () => [
     {
-      name: 'multiple',
-      type: 'boolean',
-      label: trans('allow_multiple_responses', {}, 'quiz')
-    }, {
-      name: 'condensed',
-      type: 'boolean',
-      label: trans('condensed_display')
-    }, {
       name: 'choices',
       type: 'enum',
       label: trans('choices_list'),
@@ -36,6 +28,14 @@ const dataType = {
         unique: true
       },
       required: true
+    }, {
+      name: 'multiple',
+      type: 'boolean',
+      label: trans('allow_multiple_responses', {}, 'quiz')
+    }, {
+      name: 'condensed',
+      type: 'boolean',
+      label: trans('condensed_display')
     }
   ],
   parse: (display, options) => {

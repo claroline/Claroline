@@ -95,7 +95,10 @@ class FieldList extends Component {
         {}
     }
 
-    return field.type === 'choice' ? Object.assign({}, field, {options: options}) : field
+    return Object.assign({}, field, {
+      hideLabel: get(field, 'display.hideLabel', false),
+      options: options
+    })
   }
 
   render() {
