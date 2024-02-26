@@ -30,6 +30,7 @@ function formatField(fieldDef, allFields, dataPath = null, hasLockedRights = fal
     type: fieldDef.type,
     label: fieldDef.label,
     required: fieldDef.required,
+    hideLabel: get(fieldDef, 'display.hideLabel', false),
     help: fieldDef.restrictions.confidentiality && 'manager' === fieldDef.restrictions.confidentiality ?
       [trans('field_confidentiality_manager_help')].concat(Array.isArray(fieldDef.help) ? fieldDef.help : [fieldDef.help]).filter(help => !!help)
       : fieldDef.help,

@@ -64,9 +64,9 @@ class ParametersModal extends Component {
                   type: 'type',
                   hideLabel: true,
                   calculated: () => this.state.typeDef ? ({
-                    icon: <span className={this.state.typeDef.meta.icon} />,
-                    name: this.state.typeDef.meta.label,
-                    description: this.state.typeDef.meta.description
+                    icon: <span className={get(this.state.typeDef, 'meta.icon')} />,
+                    name: get(this.state.typeDef, 'meta.label'),
+                    description: get(this.state.typeDef, 'meta.description')
                   }) : null
                 }, {
                   name: 'label',
@@ -77,18 +77,17 @@ class ParametersModal extends Component {
                   name: 'required',
                   type: 'boolean',
                   label: trans('field_required'),
-                  displayed: (fieldData) => !get(fieldData, 'restrictions.locked') || get(fieldData, 'restrictions.lockedEditionOnly')
+                  displayed: (fieldData) => get(this.state.typeDef, 'meta.editable', true) && !get(fieldData, 'restrictions.locked') || get(fieldData, 'restrictions.lockedEditionOnly')
                 }
-              ]
-            }, this.state.typeDef && {
-              id: 'parameters',
-              icon: 'fa fa-fw fa-cog',
-              title: trans('parameters'),
-              fields: this.generateParametersForm(this.state.typeDef.configure(this.props.formData.options || {}))
+              ].concat(this.state.typeDef ?
+                this.generateParametersForm(this.state.typeDef.configure(this.props.formData.options || {})) :
+                []
+              )
             }, {
               id: 'help',
               icon: 'fa fa-fw fa-circle-question',
               title: trans('help'),
+              displayed: get(this.state.typeDef, 'meta.editable', true),
               fields: [
                 {
                   name: 'help',
@@ -108,6 +107,10 @@ class ParametersModal extends Component {
                   name: 'display.order',
                   type: 'number',
                   label: trans('order')
+                }, {
+                  name: 'display.hideLabel',
+                  type: 'boolean',
+                  label: trans('field_hide_label')
                 }, {
                   name: 'display._conditional',
                   type: 'boolean',
@@ -195,6 +198,7 @@ class ParametersModal extends Component {
                   type: 'boolean',
                   label: trans('lock'),
                   help: trans('required_locked_conflict'),
+                  displayed: get(this.state.typeDef, 'meta.editable', true),
                   onChange: (checked) => {
                     if (!checked) {
                       this.props.update('restrictions.lockedEditionOnly', false)

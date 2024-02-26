@@ -19,7 +19,8 @@ class DataInput extends Component {
       error: false,
       loaded: false,
       input: null,
-      group: null
+      group: null,
+      editable: true
     }
 
     this.onChange = this.onChange.bind(this)
@@ -68,7 +69,8 @@ class DataInput extends Component {
           loaded: true,
           error: false,
           group: get(result[0], 'components.group'),
-          input: get(result[0], 'components.input')
+          input: get(result[0], 'components.input'),
+          editable: get(result[0], 'meta.editable', true)
         })
       )
       .then(
@@ -149,7 +151,7 @@ class DataInput extends Component {
         hideLabel: this.props.hideLabel,
         help: this.props.help,
         error: this.props.error,
-        optional: !this.props.required,
+        optional: !this.props.required && this.state.editable, // cheat to hide the "optional" label on non-editable fields
         validating: this.props.validating,
         warnOnly: !this.props.validating
       },

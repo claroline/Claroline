@@ -36,6 +36,7 @@ registry.add('ClarolineAppBundle', {
       'fields'      : () => { return import(/* webpackChunkName: "app-data-type-fields" */       '#/main/app/data/types/fields') },
       'file'        : () => { return import(/* webpackChunkName: "app-data-type-file" */         '#/main/app/data/types/file') },
       'filter'      : () => { return import(/* webpackChunkName: "app-data-type-filter" */       '#/main/app/data/types/filter') },
+      'help'        : () => { return import(/* webpackChunkName: "app-data-type-help" */         '#/main/app/data/types/help') },
       'html'        : () => { return import(/* webpackChunkName: "app-data-type-html" */         '#/main/app/data/types/html') },
       'image'       : () => { return import(/* webpackChunkName: "app-data-type-image" */        '#/main/app/data/types/image') },
       'ip'          : () => { return import(/* webpackChunkName: "app-data-type-ip" */           '#/main/app/data/types/ip') },
