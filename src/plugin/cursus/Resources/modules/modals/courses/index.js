@@ -9,11 +9,11 @@ import {registry} from '#/main/app/modals/registry'
 // gets the modal component
 import {CoursesModal} from '#/plugin/cursus/modals/courses/containers/modal'
 
-const MODAL_COURSES = 'MODAL_COURSES'
+const MODAL_TRAINING_COURSES = 'MODAL_TRAINING_COURSES'
 
 // make the modal available for use
-registry.add(MODAL_COURSES, CoursesModal)
+registry.add(MODAL_TRAINING_COURSES, CoursesModal)
 
 export {
-  MODAL_COURSES
+  MODAL_TRAINING_COURSES
 }

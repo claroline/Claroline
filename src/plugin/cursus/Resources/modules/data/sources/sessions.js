@@ -31,7 +31,7 @@ export default {
         displayed: false
       }, {
         name: 'course',
-        type: 'course',
+        type: 'training_course',
         label: trans('course', {}, 'cursus'),
         displayed: true
       }, {

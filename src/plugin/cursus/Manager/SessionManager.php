@@ -29,55 +29,32 @@ use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
+use Claroline\CursusBundle\Repository\SessionRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SessionManager
 {
-    private EventDispatcherInterface $eventDispatcher;
-    private TranslatorInterface $translator;
-    private ObjectManager $om;
-    private UrlGeneratorInterface $router;
-    private Crud $crud;
-    private PlatformManager $platformManager;
-    private RoleManager $roleManager;
-    private RoutingHelper $routingHelper;
-    private TemplateManager $templateManager;
-    private WorkspaceManager $workspaceManager;
-    private EventManager $sessionEventManager;
-
-    private $sessionRepo;
-    private $sessionUserRepo;
-    private $sessionGroupRepo;
+    private SessionRepository $sessionRepo;
+    private ObjectRepository $sessionUserRepo;
+    private ObjectRepository $sessionGroupRepo;
 
     public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        TranslatorInterface $translator,
-        ObjectManager $om,
-        UrlGeneratorInterface $router,
-        Crud $crud,
-        SerializerProvider $serializer,
-        PlatformManager $platformManager,
-        RoleManager $roleManager,
-        RoutingHelper $routingHelper,
-        TemplateManager $templateManager,
-        WorkspaceManager $workspaceManager,
-        EventManager $sessionEventManager
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly TranslatorInterface $translator,
+        private readonly ObjectManager $om,
+        private readonly UrlGeneratorInterface $router,
+        private readonly Crud $crud,
+        private readonly SerializerProvider $serializer,
+        private readonly PlatformManager $platformManager,
+        private readonly RoleManager $roleManager,
+        private readonly RoutingHelper $routingHelper,
+        private readonly TemplateManager $templateManager,
+        private readonly WorkspaceManager $workspaceManager,
+        private readonly EventManager $sessionEventManager
     ) {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->translator = $translator;
-        $this->om = $om;
-        $this->router = $router;
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->platformManager = $platformManager;
-        $this->roleManager = $roleManager;
-        $this->routingHelper = $routingHelper;
-        $this->templateManager = $templateManager;
-        $this->workspaceManager = $workspaceManager;
-        $this->sessionEventManager = $sessionEventManager;
-
         $this->sessionRepo = $om->getRepository(Session::class);
         $this->sessionUserRepo = $om->getRepository(SessionUser::class);
         $this->sessionGroupRepo = $om->getRepository(SessionGroup::class);
@@ -214,8 +191,6 @@ class SessionManager
      */
     public function confirmUsers(array $sessionUsers = []): array
     {
-        // TODO : check capacity
-
         $this->om->startFlushSuite();
 
         foreach ($sessionUsers as $sessionUser) {
@@ -235,8 +210,6 @@ class SessionManager
      */
     public function validateUsers(array $sessionUsers = []): array
     {
-        // TODO : check capacity
-
         $this->om->startFlushSuite();
 
         foreach ($sessionUsers as $sessionUser) {

@@ -11,7 +11,7 @@ import {EventAbout} from '#/plugin/cursus/event/components/about'
 import {EventParticipants} from '#/plugin/cursus/event/containers/participants'
 
 const EventDetails = (props) =>
-  <Fragment>
+  <>
     <ContentTabs
       backAction={{
         type: LINK_BUTTON,
@@ -63,7 +63,7 @@ const EventDetails = (props) =>
         }
       ]}
     />
-  </Fragment>
+  </>
 
 EventDetails.propTypes = {
   path: T.string.isRequired,

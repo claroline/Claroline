@@ -43,6 +43,7 @@
     margin-right: -$grid-gutter-width*.5; // to escape the page-content container-fluid
     flex: 1 0 auto;
     display: flex;
+    flex-direction: column;
 }
 
 // Cursors

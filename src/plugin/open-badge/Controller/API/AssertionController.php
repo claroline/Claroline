@@ -38,29 +38,14 @@ class AssertionController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var BadgeManager */
-    private $manager;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var PdfManager */
-    private $pdfManager;
-    /** @var AssertionManager */
-    private $assertionManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        BadgeManager $manager,
-        TokenStorageInterface $tokenStorage,
-        PdfManager $pdfManager,
-        AssertionManager $assertionManager
+        private readonly BadgeManager $manager,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly PdfManager $pdfManager,
+        private readonly AssertionManager $assertionManager
     ) {
         $this->authorization = $authorization;
-        $this->manager = $manager;
-        $this->tokenStorage = $tokenStorage;
-        $this->pdfManager = $pdfManager;
-        $this->assertionManager = $assertionManager;
     }
 
     public function getClass(): string

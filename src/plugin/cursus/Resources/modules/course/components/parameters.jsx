@@ -55,7 +55,7 @@ const CourseParameters = (props) => {
           fields: [
             {
               name: 'parent',
-              type: 'course',
+              type: 'training_course',
               label: trans('parent')
             }, {
               name: 'description',

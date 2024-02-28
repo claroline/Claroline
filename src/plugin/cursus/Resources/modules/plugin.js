@@ -10,7 +10,8 @@ registry.add('ClarolineCursusBundle', {
 
   data: {
     types: {
-      'course'          : () => { return import(/* webpackChunkName: "training-data-course" */  '#/plugin/cursus/data/types/course') },
+      'training_course' : () => { return import(/* webpackChunkName: "training-data-course" */  '#/plugin/cursus/data/types/course') },
+      'training_event'  : () => { return import(/* webpackChunkName: "training-data-session" */ '#/plugin/cursus/data/types/event') },
       'training_session': () => { return import(/* webpackChunkName: "training-data-session" */ '#/plugin/cursus/data/types/session') }
     },
     sources: {
@@ -33,11 +34,18 @@ registry.add('ClarolineCursusBundle', {
   },
 
   actions: {
-    course: {
+    training_course: {
       'open'      : () => { return import(/* webpackChunkName: "training-action-course-open" */       '#/plugin/cursus/actions/course/open') },
       'edit'      : () => { return import(/* webpackChunkName: "training-action-course-edit" */       '#/plugin/cursus/actions/course/edit') },
       'export-pdf': () => { return import(/* webpackChunkName: "training-action-course-export-pdf" */ '#/plugin/cursus/actions/course/export-pdf') },
       'delete'    : () => { return import(/* webpackChunkName: "training-action-course-delete" */     '#/plugin/cursus/actions/course/delete') }
+    },
+    training_presence: {
+      'export-pdf'             : () => { return import(/* webpackChunkName: "training-action-presence-export-pdf" */ '#/plugin/cursus/actions/presence/export-pdf') },
+      'mark-absent-justified'  : () => { return import(/* webpackChunkName: "training-action-presence-absent-justified" */ '#/plugin/cursus/actions/presence/mark-absent-justified') },
+      'mark-absent-unjustified': () => { return import(/* webpackChunkName: "training-action-presence-absent-unjustified" */ '#/plugin/cursus/actions/presence/mark-absent-unjustified') },
+      'mark-absent-present'    : () => { return import(/* webpackChunkName: "training-action-presence-present" */ '#/plugin/cursus/actions/presence/mark-present') },
+      'mark-unknown'           : () => { return import(/* webpackChunkName: "training-action-presence-unknown" */ '#/plugin/cursus/actions/presence/mark-unknown') }
     }
   },
 

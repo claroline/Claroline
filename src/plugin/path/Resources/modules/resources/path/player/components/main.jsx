@@ -118,8 +118,7 @@ PlayerMain.propTypes = {
   workspace: T.object,
   updateProgression: T.func.isRequired,
   enableNavigation: T.func.isRequired,
-  disableNavigation: T.func.isRequired,
-  getAttempt: T.func.isRequired
+  disableNavigation: T.func.isRequired
 }
 
 export {

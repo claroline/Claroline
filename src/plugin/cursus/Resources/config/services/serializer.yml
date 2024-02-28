@@ -37,8 +37,11 @@ services:
 
     Claroline\CursusBundle\Serializer\EventPresenceSerializer:
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+            - '@Claroline\CursusBundle\Serializer\SessionSerializer'
+            - '@Claroline\CursusBundle\Serializer\EventSerializer'
 
     # Registrations
     Claroline\CursusBundle\Serializer\Registration\CourseUserSerializer:

@@ -32,6 +32,12 @@ const EventsMenu = (props) =>
           label: trans('all_events', {}, 'cursus'),
           target: props.path + '/all',
           displayed: props.canEdit || props.canRegister
+        }, {
+          name: 'presences',
+          type: LINK_BUTTON,
+          label: trans('presences', {}, 'cursus'),
+          target: props.path + '/presences',
+          displayed: props.canEdit || props.canRegister
         }
       ]}
       onClick={props.autoClose}

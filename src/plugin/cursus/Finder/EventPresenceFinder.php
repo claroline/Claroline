@@ -25,7 +25,10 @@ class EventPresenceFinder extends AbstractFinder
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
+        $eventJoin = false;
         $userJoin = false;
+        $sessionJoin = false;
+
         if (!array_key_exists('user', $searches)) {
             $qb->join('obj.user', 'u');
             $userJoin = true;
@@ -39,8 +42,12 @@ class EventPresenceFinder extends AbstractFinder
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'event':
-                    $qb->join('obj.event', 'se');
-                    $qb->andWhere("se.uuid = :{$filterName}");
+                    if (!$eventJoin) {
+                        $qb->join('obj.event', 'e');
+                        $eventJoin = true;
+                    }
+
+                    $qb->andWhere("e.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
@@ -51,6 +58,38 @@ class EventPresenceFinder extends AbstractFinder
                     }
 
                     $qb->andWhere("u.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
+                case 'session':
+                    if (!$eventJoin) {
+                        $qb->join('obj.event', 'e');
+                        $eventJoin = true;
+                    }
+
+                    if (!$sessionJoin) {
+                        $qb->join('e.session', 's');
+                        $sessionJoin = true;
+                    }
+
+                    $qb->andWhere("s.uuid = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+
+                case 'workspace':
+                    if (!$eventJoin) {
+                        $qb->join('obj.event', 'e');
+                        $eventJoin = true;
+                    }
+
+                    if (!$sessionJoin) {
+                        $qb->join('e.session', 's');
+                        $sessionJoin = true;
+                    }
+
+                    $qb->join('s.workspace', 'w');
+                    $qb->andWhere("w.uuid = :{$filterName}");
+
                     $qb->setParameter($filterName, $filterValue);
                     break;
 
@@ -69,6 +108,25 @@ class EventPresenceFinder extends AbstractFinder
                         $qb->join('obj.user', 'u');
                     }
                     $qb->orderBy('u.lastName, u.firstName', $sortByDirection);
+                    break;
+
+                case 'session':
+                    if (!$sessionJoin) {
+                        $qb->join('e.session', 's');
+                    }
+                    $qb->orderBy('s.name', $sortByDirection);
+                    break;
+
+                case 'event':
+                    if (!$eventJoin) {
+                        $qb->join('obj.event', 'e');
+                    }
+
+                    if (!$sessionJoin) {
+                        $qb->join('e.session', 's');
+                    }
+
+                    $qb->orderBy('e.name', $sortByDirection);
                     break;
             }
         }
