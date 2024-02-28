@@ -75,7 +75,7 @@ class DenialBox extends Component {
               label={trans('denial_reason', {}, 'dropzone')}
               value={this.state.correction.correctionDeniedComment || ''}
               onChange={value => this.updateCorrectionDeniedComment(value)}
-              minRows={3}
+              options={{minRows: 3}}
               error={this.state.error}
             />
             <div className="btn-group btn-group-right">
@@ -142,11 +142,14 @@ class CorrectionModal extends Component {
                         id={`criterion-form-${c.id}-radio`}
                         label="correction_criterion_radio"
                         type="choice"
-                        choices={[...Array(this.props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
-                          acc[current] = `${current}`
+                        options={{
+                          inline: true,
+                          choices: [...Array(this.props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
+                            acc[current] = `${current}`
 
-                          return acc
-                        }, {})}
+                            return acc
+                          }, {})
+                        }}
                         disabled={true}
                         hideLabel={true}
                         value={this.props.correction.grades.find(g => g.criterion === c.id) ?
