@@ -34,11 +34,14 @@ const CriteriaForm = props =>
                   id={`criterion-form-${c.id}-radio`}
                   type="choice"
                   label={trans('criterion_form_radio')}
-                  choices={[...Array(props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
-                    acc[current] = `${current}`
+                  options={{
+                    inline: true,
+                    choices: [...Array(props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
+                      acc[current] = `${current}`
 
-                    return acc
-                  }, {})}
+                      return acc
+                    }, {})
+                  }}
                   hideLabel={true}
                   value={props.grades.find(g => g.criterion === c.id).value}
                   onChange={value => props.handleUpdate(c.id, parseInt(value))}
@@ -138,7 +141,7 @@ export class CorrectionForm extends Component {
               label={trans('comment', {}, 'platform')}
               value={this.state.correction.comment || ''}
               onChange={value => this.updateCorrection('comment', value)}
-              minRows={3}
+              options={{minRows: 3}}
               error={get(this.state.errors, 'comment')}
             />
           }
