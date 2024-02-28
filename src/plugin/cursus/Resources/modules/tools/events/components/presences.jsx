@@ -31,10 +31,27 @@ const EventsPresences = (props) =>
             label: trans('session_event', {}, 'cursus'),
             displayed: true
           }, {
+            name: 'event.start',
+            alias: 'startDate',
+            type: 'date',
+            label: trans('start_date'),
+            displayed: true,
+            options: {
+              time: true
+            }
+          }, {
+            name: 'event.end',
+            alias: 'endDate',
+            type: 'date',
+            label: trans('end_date'),
+            options: {
+              time: true
+            },
+            displayed: true
+          }, {
             name: 'session',
             type: 'training_session',
-            label: trans('session', {}, 'cursus'),
-            displayed: true
+            label: trans('session', {}, 'cursus')
           }
         ]}
       />

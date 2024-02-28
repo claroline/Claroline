@@ -111,6 +111,9 @@ class EventPresenceFinder extends AbstractFinder
                     break;
 
                 case 'session':
+                    if (!$eventJoin) {
+                        $qb->join('obj.event', 'e');
+                    }
                     if (!$sessionJoin) {
                         $qb->join('e.session', 's');
                     }
@@ -118,15 +121,29 @@ class EventPresenceFinder extends AbstractFinder
                     break;
 
                 case 'event':
-                    if (!$eventJoin) {
-                        $qb->join('obj.event', 'e');
-                    }
-
                     if (!$sessionJoin) {
                         $qb->join('e.session', 's');
                     }
 
                     $qb->orderBy('e.name', $sortByDirection);
+                    break;
+
+                case 'startDate':
+                    if (!$eventJoin) {
+                        $qb->join('obj.event', 'e');
+                    }
+
+                    $qb->join('e.plannedObject', 'po');
+                    $qb->orderBy('po.startDate', $sortByDirection);
+                    break;
+
+                case 'endDate':
+                    if (!$eventJoin) {
+                        $qb->join('obj.event', 'e');
+                    }
+
+                    $qb->join('e.plannedObject', 'po');
+                    $qb->orderBy('po.endDate', $sortByDirection);
                     break;
             }
         }
