@@ -12,7 +12,7 @@ import {MODAL_USERS} from '#/main/community/modals/users'
 
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
-import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
+import {MODAL_TRAINING_SESSIONS} from '#/plugin/cursus/modals/sessions'
 import {RegistrationUsers} from '#/plugin/cursus/registration/components/users'
 
 import {MODAL_REGISTRATION_PARAMETERS} from '#/plugin/cursus/registration/modals/parameters'
@@ -58,7 +58,7 @@ const CoursePending = (props) => {
             label: trans('move', {}, 'actions'),
             displayed: hasPermission('register', props.course),
             group: trans('management'),
-            modal: [MODAL_SESSIONS, {
+            modal: [MODAL_TRAINING_SESSIONS, {
               url: ['apiv2_cursus_course_list_sessions', {id: props.course.id}],
               filters: [{property: 'status', value: 'not_ended'}],
               selectAction: (selected) => ({

@@ -1,15 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 
-import {EventsAll} from '#/plugin/cursus/tools/events/components/all'
-import {EventsRegistered} from '#/plugin/cursus/tools/events/components/registered'
-import {EventsPublic} from '#/plugin/cursus/tools/events/components/public'
+import {EventsAll} from '#/plugin/cursus/tools/trainings/event/components/all'
+import {EventsRegistered} from '#/plugin/cursus/tools/trainings/event/components/registered'
+import {EventsPublic} from '#/plugin/cursus/tools/trainings/event/components/public'
 import {EventsDetails} from '#/plugin/cursus/tools/events/containers/details'
 
-import {selectors} from '#/plugin/cursus/tools/trainings/event/store'
 
 const EventMain = (props) =>
   <Routes
@@ -26,16 +24,6 @@ const EventMain = (props) =>
         render: () => (
           <EventsRegistered
             path={props.path+'/events'}
-            name={selectors.STORE_NAME}
-            invalidateList={props.invalidateList}
-            definition={[
-              {
-                name: 'session',
-                label: trans('session', {}, 'cursus'),
-                type: 'training_session',
-                displayed: true
-              }
-            ]}
           />
         )
       }, {
@@ -44,15 +32,6 @@ const EventMain = (props) =>
         render: () => (
           <EventsPublic
             path={props.path+'/events'}
-            name={selectors.STORE_NAME}
-            definition={[
-              {
-                name: 'session',
-                label: trans('session', {}, 'cursus'),
-                type: 'training_session',
-                displayed: true
-              }
-            ]}
           />
         )
       }, {
@@ -61,15 +40,6 @@ const EventMain = (props) =>
         render: () => (
           <EventsAll
             path={props.path+'/events'}
-            name={selectors.STORE_NAME}
-            definition={[
-              {
-                name: 'session',
-                label: trans('session', {}, 'cursus'),
-                type: 'training_session',
-                displayed: true
-              }
-            ]}
           />
         ),
         disabled: !props.authenticated || !props.canEdit || !props.canRegister

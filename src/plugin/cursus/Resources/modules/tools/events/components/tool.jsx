@@ -7,9 +7,9 @@ import {Routes} from '#/main/app/router'
 import {EventsAll} from '#/plugin/cursus/tools/events/components/all'
 import {EventsRegistered} from '#/plugin/cursus/tools/events/components/registered'
 import {EventsPublic} from '#/plugin/cursus/tools/events/components/public'
+import {EventsPresences} from '#/plugin/cursus/tools/events/containers/presences'
 import {EventsDetails} from '#/plugin/cursus/tools/events/containers/details'
 
-import {selectors} from '#/plugin/cursus/tools/events/store'
 
 const EventsTool = (props) =>
   <Routes
@@ -24,7 +24,6 @@ const EventsTool = (props) =>
         render: () => (
           <EventsRegistered
             path={props.path}
-            name={selectors.LIST_NAME}
             contextId={get(props.currentContext, 'data.id')}
             invalidateList={props.invalidateList}
           />
@@ -35,7 +34,6 @@ const EventsTool = (props) =>
         render: () => (
           <EventsPublic
             path={props.path}
-            name={selectors.LIST_NAME}
             contextId={get(props.currentContext, 'data.id')}
           />
         )
@@ -45,15 +43,17 @@ const EventsTool = (props) =>
         render: () => (
           <EventsAll
             path={props.path}
-            name={selectors.LIST_NAME}
             contextId={get(props.currentContext, 'data.id')}
           />
         ),
         disabled: !props.canEdit && !props.canRegister
       }, {
+        path: '/presences',
+        component: EventsPresences
+      }, {
         path: '/:id',
-        component: EventsDetails,
-        onEnter: (params = {}) => props.open(params.id)
+        onEnter: (params = {}) => props.open(params.id),
+        component: EventsDetails
       }
     ]}
   />

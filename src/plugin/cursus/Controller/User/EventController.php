@@ -30,11 +30,11 @@ class EventController
     /**
      * List the active (in progress and forthcoming) session events of the current user.
      *
-     * @Route("/active/{workspace}", name="apiv2_cursus_my_events_active", methods={"GET"})
+     * @Route("/{workspace}", name="apiv2_cursus_my_events", methods={"GET"})
      *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function listActiveAction(Request $request, Workspace $workspace = null): JsonResponse
+    public function listAction(Request $request, Workspace $workspace = null): JsonResponse
     {
         if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
@@ -44,32 +44,6 @@ class EventController
         $params['hiddenFilters'] = [];
         $params['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
         $params['hiddenFilters']['terminated'] = false;
-        if ($workspace) {
-            $params['hiddenFilters']['workspace'] = $workspace->getUuid();
-        }
-
-        return new JsonResponse(
-            $this->finder->search(Event::class, $params)
-        );
-    }
-
-    /**
-     * List the ended session events of the current user.
-     *
-     * @Route("/ended/{workspace}", name="apiv2_cursus_my_events_ended", methods={"GET"})
-     *
-     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
-     */
-    public function listEndedAction(Request $request, Workspace $workspace = null): JsonResponse
-    {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw new AccessDeniedException();
-        }
-
-        $params = $request->query->all();
-        $params['hiddenFilters'] = [];
-        $params['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
-        $params['hiddenFilters']['terminated'] = true;
         if ($workspace) {
             $params['hiddenFilters']['workspace'] = $workspace->getUuid();
         }

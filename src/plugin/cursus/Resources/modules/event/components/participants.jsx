@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
@@ -8,7 +7,6 @@ import {hasPermission} from '#/main/app/security'
 import {CALLBACK_BUTTON, DOWNLOAD_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {Routes} from '#/main/app/router/components/routes'
-import {ListData} from '#/main/app/content/list/containers/data'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 import {MODAL_USERS} from '#/main/community/modals/users'
 import {MODAL_GROUPS} from '#/main/community/modals/groups'
@@ -18,10 +16,10 @@ import {constants} from '#/plugin/cursus/constants'
 import {isFull} from '#/plugin/cursus/utils'
 
 import {selectors} from '#/plugin/cursus/event/store'
-import {MODAL_EVENT_PRESENCE} from '#/plugin/cursus/event/modals/presence'
 import {RegistrationGroups} from '#/plugin/cursus/registration/components/groups'
 import {RegistrationUsers} from '#/plugin/cursus/registration/components/users'
 import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
+import {PresencesList} from '#/plugin/cursus/presence/components/list'
 
 const EventUsers = (props) =>
   <RegistrationUsers
@@ -43,7 +41,7 @@ const EventUsers = (props) =>
         icon: 'fa fa-fw fa-file-pdf',
         label: trans('download_presence', {}, 'cursus'),
         file: {
-          url: ['apiv2_cursus_user_presence_download', {id: props.event.id, userId: rows[0].user.id}]
+          url: ['apiv2_cursus_user_presence_download', {id: rows[0].id}]
         },
         scope: ['object']
       }
@@ -111,71 +109,6 @@ EventGroups.propTypes = {
   ),
   addGroups: T.func.isRequired,
   inviteGroups: T.func.isRequired
-}
-
-const EventPresences = (props) =>
-  <ListData
-    name={selectors.STORE_NAME+'.presences'}
-    fetch={{
-      url: ['apiv2_cursus_event_presence_list', {id: props.event.id}],
-      autoload: true
-    }}
-    definition={[
-      {
-        name: 'user',
-        type: 'user',
-        label: trans('user'),
-        displayed: true
-      }, {
-        name: 'status',
-        type: 'choice',
-        label: trans('status'),
-        options: {
-          choices: constants.PRESENCE_STATUSES
-        },
-        render: (row) => (
-          <span className={classes('badge', `text-bg-${constants.PRESENCE_STATUS_COLORS[row.status]}`)}>
-            {constants.PRESENCE_STATUSES[row.status]}
-          </span>
-        ),
-        displayed: true
-      }, {
-        name: 'userDisabled',
-        label: trans('user_disabled', {}, 'community'),
-        type: 'boolean',
-        displayable: false,
-        sortable: false,
-        filterable: true
-      }
-    ]}
-    actions={(rows) => [
-      {
-        name: 'edit',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-pencil',
-        label: trans('edit', {}, 'actions'),
-        displayed: hasPermission('edit', props.event),
-        modal: [MODAL_EVENT_PRESENCE, {
-          changeStatus: (status) => props.setPresenceStatus(props.event.id, rows, status)
-        }]
-      }, {
-        name: 'download-presence',
-        type: DOWNLOAD_BUTTON,
-        icon: 'fa fa-fw fa-file-pdf',
-        label: trans('download_presence', {}, 'cursus'),
-        file: {
-          url: ['apiv2_cursus_user_presence_download', {id: props.event.id, userId: rows[0].user.id}]
-        },
-        scope: ['object']
-      }
-    ]}
-  />
-
-EventPresences.propTypes = {
-  event: T.shape(
-    EventTypes.propTypes
-  ),
-  setPresenceStatus: T.func.isRequired
 }
 
 const EventParticipants = (props) =>
@@ -278,9 +211,9 @@ const EventParticipants = (props) =>
             }, {
               path: '/presences',
               render: () => (
-                <EventPresences
-                  event={props.event}
-                  setPresenceStatus={props.setPresenceStatus}
+                <PresencesList
+                  name={selectors.STORE_NAME+'.presences'}
+                  url={['apiv2_cursus_event_presence_list', {id: props.event.id}]}
                 />
               )
             }
@@ -298,8 +231,7 @@ EventParticipants.propTypes = {
   addUsers: T.func.isRequired,
   inviteUsers: T.func.isRequired,
   addGroups: T.func.isRequired,
-  inviteGroups: T.func.isRequired,
-  setPresenceStatus: T.func.isRequired
+  inviteGroups: T.func.isRequired
 }
 
 export {
