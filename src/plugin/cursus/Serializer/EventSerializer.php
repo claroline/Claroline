@@ -11,7 +11,7 @@
 
 namespace Claroline\CursusBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
@@ -23,6 +23,7 @@ use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\EventUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Repository\EventRepository;
+use Claroline\CursusBundle\Repository\SessionRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -30,47 +31,29 @@ class EventSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var PlannedObjectSerializer */
-    private $plannedObjectSerializer;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var SessionSerializer */
-    private $sessionSerializer;
-    /** @var TemplateSerializer */
-    private $templateSerializer;
-
-    /** @var ObjectRepository */
-    private $sessionRepo;
-    /** @var EventRepository */
-    private $eventRepo;
-    /** @var ObjectRepository */
-    private $templateRepo;
+    private SessionRepository $sessionRepo;
+    private EventRepository $eventRepo;
+    private ObjectRepository $templateRepo;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        PlannedObjectSerializer $plannedObjectSerializer,
-        UserSerializer $userSerializer,
-        SessionSerializer $sessionSerializer,
-        TemplateSerializer $templateSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly PlannedObjectSerializer $plannedObjectSerializer,
+        private readonly UserSerializer $userSerializer,
+        private readonly SessionSerializer $sessionSerializer,
+        private readonly TemplateSerializer $templateSerializer
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->plannedObjectSerializer = $plannedObjectSerializer;
-        $this->userSerializer = $userSerializer;
-        $this->sessionSerializer = $sessionSerializer;
-        $this->templateSerializer = $templateSerializer;
-
         $this->sessionRepo = $om->getRepository(Session::class);
         $this->eventRepo = $om->getRepository(Event::class);
         $this->templateRepo = $om->getRepository(Template::class);
     }
 
-    public function getSchema()
+    public function getClass(): string
+    {
+        return Event::class;
+    }
+
+    public function getSchema(): string
     {
         return '#/plugin/cursus/session-event.json';
     }
@@ -79,16 +62,19 @@ class EventSerializer
     {
         $serialized = array_merge_recursive($this->plannedObjectSerializer->serialize($event->getPlannedObject(), $options), [
             'code' => $event->getCode(),
-            'permissions' => [
-                'open' => $this->authorization->isGranted('OPEN', $event),
-                'edit' => $this->authorization->isGranted('EDIT', $event),
-                'delete' => $this->authorization->isGranted('DELETE', $event),
-                'register' => $this->authorization->isGranted('REGISTER', $event),
-            ],
-            'session' => $event->getSession() ? $this->sessionSerializer->serialize($event->getSession(), [Options::SERIALIZE_MINIMAL]) : null,
+            'session' => $event->getSession() ? $this->sessionSerializer->serialize($event->getSession(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
         ]);
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+        if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
+            if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+                $serialized['permissions'] = [
+                    'open' => $this->authorization->isGranted('OPEN', $event),
+                    'edit' => $this->authorization->isGranted('EDIT', $event),
+                    'delete' => $this->authorization->isGranted('DELETE', $event),
+                    'register' => $this->authorization->isGranted('REGISTER', $event),
+                ];
+            }
+
             $tutors = $this->om->getRepository(EventUser::class)->findBy([
                 'event' => $event,
                 'type' => AbstractRegistration::TUTOR,
@@ -102,17 +88,17 @@ class EventSerializer
                 ],
                 'participants' => $this->eventRepo->countParticipants($event),
                 'tutors' => array_map(function (EventUser $eventUser) {
-                    return $this->userSerializer->serialize($eventUser->getUser(), [Options::SERIALIZE_MINIMAL]);
+                    return $this->userSerializer->serialize($eventUser->getUser(), [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $tutors),
                 'registration' => [
                     'registrationType' => $event->getRegistrationType(),
                     'mail' => $event->getRegistrationMail(),
                 ],
                 'presenceTemplate' => $event->getPresenceTemplate() ?
-                    $this->templateSerializer->serialize($event->getPresenceTemplate(), [Options::SERIALIZE_MINIMAL]) :
+                    $this->templateSerializer->serialize($event->getPresenceTemplate(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
                 'invitationTemplate' => $event->getInvitationTemplate() ?
-                    $this->templateSerializer->serialize($event->getInvitationTemplate(), [Options::SERIALIZE_MINIMAL]) :
+                    $this->templateSerializer->serialize($event->getInvitationTemplate(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
             ]);
         }

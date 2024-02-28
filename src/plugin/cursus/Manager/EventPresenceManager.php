@@ -12,7 +12,6 @@
 namespace Claroline\CursusBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\EventPresence;
@@ -20,21 +19,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EventPresenceManager
 {
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var ObjectManager */
-    private $om;
-    /** @var TemplateManager */
-    private $templateManager;
-
     public function __construct(
-        TranslatorInterface $translator,
-        ObjectManager $om,
-        TemplateManager $templateManager
+        private readonly TranslatorInterface $translator,
+        private readonly ObjectManager $om,
+        private readonly TemplateManager $templateManager
     ) {
-        $this->translator = $translator;
-        $this->om = $om;
-        $this->templateManager = $templateManager;
     }
 
     public function generate(Event $event, array $eventUsers): array
@@ -71,7 +60,7 @@ class EventPresenceManager
         return $presences;
     }
 
-    public function removePresence(Event $event, $user)
+    public function removePresence(Event $event, $user): void
     {
         $presence = $this->om->getRepository(EventPresence::class)->findOneBy([
             'event' => $event,
@@ -136,16 +125,11 @@ class EventPresenceManager
         return $this->templateManager->getTemplate('training_event_presences', $placeholders, $locale);
     }
 
-    public function downloadUser(Event $event, string $locale, User $user)
+    public function downloadUser(EventPresence $presence, string $locale): string
     {
-        $status = EventPresence::UNKNOWN;
-        $presence = $this->om->getRepository(EventPresence::class)->findOneBy([
-            'event' => $event,
-            'user' => $user,
-        ]);
-        if ($presence) {
-            $status = $presence->getStatus();
-        }
+        $event = $presence->getEvent();
+        $user = $presence->getUser();
+        $status = $presence->getStatus();
 
         $placeholders = array_merge([
                 'event_name' => $event->getName(),

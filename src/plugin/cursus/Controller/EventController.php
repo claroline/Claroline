@@ -42,23 +42,14 @@ class EventController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    private TokenStorageInterface $tokenStorage;
-    private TranslatorInterface $translator;
-    private EventManager $manager;
-    private PdfManager $pdfManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        EventManager $manager,
-        PdfManager $pdfManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly TranslatorInterface $translator,
+        private readonly EventManager $manager,
+        private readonly PdfManager $pdfManager
     ) {
         $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->manager = $manager;
-        $this->pdfManager = $pdfManager;
     }
 
     public function getName(): string
@@ -128,7 +119,6 @@ class EventController extends AbstractCrudController
         $query = $request->query->all();
         $query['hiddenFilters'] = $this->getDefaultHiddenFilters();
         $query['hiddenFilters']['registrationType'] = Session::REGISTRATION_PUBLIC;
-        $query['hiddenFilters']['terminated'] = false;
         if ($workspace) {
             $query['hiddenFilters']['workspace'] = $workspace->getUuid();
         }

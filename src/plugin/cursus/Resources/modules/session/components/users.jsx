@@ -14,7 +14,7 @@ import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/pr
 import {RegistrationUsers} from '#/plugin/cursus/registration/components/users'
 import {MODAL_REGISTRATION_PARAMETERS} from '#/plugin/cursus/registration/modals/parameters'
 import {MODAL_REGISTRATION_ABOUT} from '#/plugin/cursus/registration/modals/about'
-import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
+import {MODAL_TRAINING_SESSIONS} from '#/plugin/cursus/modals/sessions'
 
 const SessionUsers = (props) => {
   let customDefinition = [].concat(props.customDefinition || [])
@@ -91,7 +91,7 @@ const SessionUsers = (props) => {
           icon: 'fa fa-fw fa-arrows',
           label: trans('move', {}, 'actions'),
           group: trans('management'),
-          modal: [MODAL_SESSIONS, {
+          modal: [MODAL_TRAINING_SESSIONS, {
             url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
             filters: [{property: 'status', value: 'not_ended'}],
             selectAction: (selected) => ({

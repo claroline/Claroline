@@ -85,11 +85,12 @@ actions.inviteGroups = (eventId, groups) => ({
   }
 })
 
-actions.setPresenceStatus = (eventId, presences, status) => ({
+actions.setPresenceStatus = (presences, status) => ({
   [API_REQUEST]: {
-    url: url(['apiv2_cursus_event_presence_update', {id: eventId, status: status}], {ids: presences.map(presence => presence.id)}),
+    url: url(['apiv2_cursus_event_presence_update', {status: status}]),
     request: {
-      method: 'PUT'
+      method: 'PUT',
+      body: JSON.stringify(presences.map(presence => presence.id))
     },
     success: (response, dispatch) => dispatch(listActions.invalidateData(selectors.STORE_NAME+'.presences'))
   }

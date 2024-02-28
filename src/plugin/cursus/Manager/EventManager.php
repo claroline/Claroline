@@ -29,6 +29,9 @@ use Claroline\CursusBundle\Repository\Registration\EventGroupRepository;
 use Claroline\CursusBundle\Repository\Registration\EventUserRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @todo use Crud to manage registrations
+ */
 class EventManager
 {
     private EventUserRepository $eventUserRepo;
@@ -81,7 +84,6 @@ class EventManager
                 $eventUser->setEvent($event);
                 $eventUser->setUser($user);
 
-                // TODO : use CRUD
                 $eventUser->setType($type);
                 $eventUser->setDate($registrationDate);
                 // no validation for events
@@ -103,6 +105,9 @@ class EventManager
             }, $results));
         }
 
+        // initialize presences
+        $this->presenceManager->generate($event, $users);
+
         $this->om->endFlushSuite();
 
         return $results;
@@ -115,7 +120,6 @@ class EventManager
     {
         $this->om->startFlushSuite();
 
-        // TODO : use CRUD
         foreach ($eventUsers as $eventUser) {
             $this->om->remove($eventUser);
 
@@ -160,7 +164,6 @@ class EventManager
             if (empty($eventGroup)) {
                 $eventGroup = new EventGroup();
 
-                // TODO : use CRUD
                 $eventGroup->setEvent($event);
                 $eventGroup->setGroup($group);
                 $eventGroup->setType($type);
@@ -183,6 +186,9 @@ class EventManager
             $this->sendSessionEventInvitation($event, $users);
         }
 
+        // initialize presences
+        $this->presenceManager->generate($event, $users);
+
         $this->om->endFlushSuite();
 
         return $results;
@@ -195,7 +201,6 @@ class EventManager
     {
         $this->om->startFlushSuite();
 
-        // TODO : use CRUD
         foreach ($eventGroups as $eventGroup) {
             $this->om->remove($eventGroup);
 
@@ -315,27 +320,27 @@ class EventManager
     public function getRegisteredUsers(Event $event): array
     {
         /** @var EventUser[] $sessionLearners */
-        $sessionLearners = $this->eventUserRepo->findBy([
+        $eventLearners = $this->eventUserRepo->findBy([
             'event' => $event,
             'type' => AbstractRegistration::LEARNER,
             'validated' => true,
         ]);
 
         /** @var EventGroup[] $sessionGroups */
-        $sessionGroups = $this->eventGroupRepo->findBy([
+        $eventGroups = $this->eventGroupRepo->findBy([
             'event' => $event,
             'type' => AbstractRegistration::LEARNER,
         ]);
 
         $users = [];
 
-        foreach ($sessionLearners as $sessionLearner) {
-            $user = $sessionLearner->getUser();
+        foreach ($eventLearners as $eventLearner) {
+            $user = $eventLearner->getUser();
             $users[$user->getUuid()] = $user;
         }
 
-        foreach ($sessionGroups as $sessionGroup) {
-            $group = $sessionGroup->getGroup();
+        foreach ($eventGroups as $eventGroup) {
+            $group = $eventGroup->getGroup();
             $groupUsers = $group->getUsers();
 
             foreach ($groupUsers as $user) {
