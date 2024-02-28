@@ -1,11 +1,14 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {connect} from 'react-redux'
 import get from 'lodash/get'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
+import {actions as listActions} from '#/main/app/content/list/store'
 import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {constants} from '#/plugin/cursus/constants'
@@ -14,19 +17,13 @@ import {EventCard} from '#/plugin/cursus/event/components/card'
 import {MODAL_TRAINING_EVENT_ABOUT} from '#/plugin/cursus/event/modals/about'
 import {MODAL_TRAINING_EVENT_PARAMETERS} from '#/plugin/cursus/event/modals/parameters'
 
-const EventList = (props) =>
+const Events = (props) =>
   <ListData
-    className={props.className}
-    name={props.name}
-    fetch={{
-      url: props.url,
-      autoload: true
-    }}
-    primaryAction={props.primaryAction || ((row) => ({
+    primaryAction={(row) => ({
       type: LINK_BUTTON,
       target: props.path+'/'+row.id,
       label: trans('open', {}, 'actions')
-    }))}
+    })}
     actions={(rows) => [
       {
         name: 'about',
@@ -84,7 +81,7 @@ const EventList = (props) =>
         group: trans('presences', {}, 'cursus'),
         target: ['apiv2_cursus_event_presence_download', {id: rows[0].id, filled: 1}]
       }
-    ].concat(props.actions(rows))}
+    ].concat(props.customActions(rows))}
     delete={{
       url: ['apiv2_cursus_event_delete_bulk'],
       displayed: (rows) => -1 !== rows.findIndex(row => hasPermission('delete', row))
@@ -163,30 +160,50 @@ const EventList = (props) =>
           choices: constants.REGISTRATION_TYPES
         }
       }
-    ].concat(props.definition)}
-    card={EventCard}
+    ].concat(props.customDefinition)}
     display={{
       current: listConst.DISPLAY_LIST
     }}
+
+    {...omit(props, 'path', 'url', 'autoload', 'customDefinition', 'customActions', 'invalidate')}
+
+    name={props.name}
+    fetch={{
+      url: props.url,
+      autoload: true
+    }}
+    card={EventCard}
   />
 
-EventList.propTypes = {
-  className: T.string,
-  path: T.string.isRequired,
+Events.propTypes = {
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]).isRequired,
-  definition: T.arrayOf(T.shape({
-    // TODO : list property propTypes
+
+  path: T.string.isRequired,
+  autoload: T.bool,
+  customDefinition: T.arrayOf(T.shape({
+    // data list prop types
   })),
+  customActions: T.func,
   primaryAction: T.func,
   actions: T.func,
   invalidate: T.func.isRequired
 }
 
-EventList.defaultProps = {
-  actions: () => [],
-  definition: []
+Events.defaultProps = {
+  autoload: true,
+  customDefinition: [],
+  customActions: () => []
 }
+
+const EventList = connect(
+  null,
+  (dispatch, ownProps) => ({
+    invalidate() {
+      dispatch(listActions.invalidateData(ownProps.name))
+    }
+  })
+)(Events)
 
 export {
   EventList

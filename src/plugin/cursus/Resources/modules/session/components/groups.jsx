@@ -7,7 +7,7 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {RegistrationGroups} from '#/plugin/cursus/registration/components/groups'
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
-import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
+import {MODAL_TRAINING_SESSIONS} from '#/plugin/cursus/modals/sessions'
 
 const SessionGroups = (props) =>
   <RegistrationGroups
@@ -31,7 +31,7 @@ const SessionGroups = (props) =>
         icon: 'fa fa-fw fa-arrows',
         label: trans('move', {}, 'actions'),
         group: trans('management'),
-        modal: [MODAL_SESSIONS, {
+        modal: [MODAL_TRAINING_SESSIONS, {
           url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
           filters: [{property: 'status', value: 'not_ended'}],
           selectAction: (selected) => ({

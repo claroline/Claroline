@@ -18,7 +18,7 @@ import {CourseStats} from '#/plugin/cursus/course/components/stats'
 import {SessionGroups} from '#/plugin/cursus/session/containers/groups'
 import {SessionUsers} from '#/plugin/cursus/session/containers/users'
 import {Button} from '#/main/app/action'
-import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
+import {MODAL_TRAINING_SESSIONS} from '#/plugin/cursus/modals/sessions'
 
 const CourseParticipants = (props) =>
   <>
@@ -127,7 +127,7 @@ const CourseParticipants = (props) =>
                       selectAction: (selected) => ({
                         type: MODAL_BUTTON,
                         label: trans('register', {}, 'actions'),
-                        modal: [MODAL_SESSIONS, {
+                        modal: [MODAL_TRAINING_SESSIONS, {
                           url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
                           filters: [{property: 'status', value: 'not_ended'}],
                           selectAction: (selectedSessions) => ({
@@ -173,7 +173,7 @@ const CourseParticipants = (props) =>
                       selectAction: (selected) => ({
                         type: MODAL_BUTTON,
                         label: trans('register', {}, 'actions'),
-                        modal: [MODAL_SESSIONS, {
+                        modal: [MODAL_TRAINING_SESSIONS, {
                           url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
                           filters: [{property: 'status', value: 'not_ended'}],
                           selectAction: (selectedSessions) => ({
@@ -219,7 +219,7 @@ const CourseParticipants = (props) =>
                       selectAction: (selected) => ({
                         type: MODAL_BUTTON,
                         label: trans('register', {}, 'actions'),
-                        modal: [MODAL_SESSIONS, {
+                        modal: [MODAL_TRAINING_SESSIONS, {
                           url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
                           filters: [{property: 'status', value: 'not_ended'}],
                           selectAction: (selectedSessions) => ({
@@ -278,7 +278,7 @@ const CourseParticipants = (props) =>
                       selectAction: (selected) => ({
                         type: MODAL_BUTTON,
                         label: trans('register', {}, 'actions'),
-                        modal: [MODAL_SESSIONS, {
+                        modal: [MODAL_TRAINING_SESSIONS, {
                           url: ['apiv2_cursus_course_list_sessions', {id: get(props.course, 'id')}],
                           filters: [{property: 'status', value: 'not_ended'}],
                           selectAction: (selectedSessions) => ({

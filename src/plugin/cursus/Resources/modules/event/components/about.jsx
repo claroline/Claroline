@@ -256,7 +256,7 @@ const EventAbout = (props) =>
       />
 
       <SessionCard
-        style={{marginBottom: 20}}
+        className="mb-3"
         orientation="row"
         size="xs"
         data={props.event.session}

@@ -9,7 +9,7 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {SessionCard} from '#/plugin/cursus/session/components/card'
 import {Session as SessionTypes} from '#/plugin/cursus/prop-types'
-import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
+import {MODAL_TRAINING_SESSIONS} from '#/plugin/cursus/modals/sessions'
 
 const SessionButton = props =>
   <Button
@@ -18,7 +18,7 @@ const SessionButton = props =>
     icon="fa fa-fw fa-plus"
     label={trans('add_session', {}, 'cursus')}
     disabled={props.disabled}
-    modal={[MODAL_SESSIONS, {
+    modal={[MODAL_TRAINING_SESSIONS, {
       title: props.title,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
@@ -69,7 +69,7 @@ const SessionInput = props => {
   return (
     <ContentPlaceholder
       icon="fa fa-calendar-week"
-      title={trans('no_session')}
+      title={trans('no_session', {}, 'cursus')}
       size={props.size}
     >
       <SessionButton

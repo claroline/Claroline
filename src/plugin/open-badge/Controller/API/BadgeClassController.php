@@ -35,25 +35,13 @@ class BadgeClassController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var BadgeManager */
-    private $manager;
-    /** @var AssertionManager */
-    private $assertionManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        BadgeManager $manager,
-        AssertionManager $assertionManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly BadgeManager $manager,
+        private readonly AssertionManager $assertionManager
     ) {
         $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->manager = $manager;
-        $this->assertionManager = $assertionManager;
     }
 
     public function getName(): string

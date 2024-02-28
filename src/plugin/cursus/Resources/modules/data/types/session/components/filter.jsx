@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
-import {MODAL_SESSIONS} from '#/plugin/cursus/modals/sessions'
+import {MODAL_TRAINING_SESSIONS} from '#/plugin/cursus/modals/sessions'
 
 const SessionFilter = (props) =>
   <span className="data-filter session-filter">
@@ -20,7 +20,7 @@ const SessionFilter = (props) =>
       icon="fa fa-fw fa-calendar-week"
       label={props.placeholder || trans('select', {}, 'actions')}
       size="sm"
-      modal={[MODAL_SESSIONS, {
+      modal={[MODAL_TRAINING_SESSIONS, {
         ...props.picker,
         selectAction: (selected) => ({
           type: CALLBACK_BUTTON,

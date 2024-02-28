@@ -9,7 +9,7 @@ import {DataInput as DataInputTypes} from '#/main/app/data/types/prop-types'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {CourseCard} from '#/plugin/cursus/course/components/card'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
-import {MODAL_COURSES} from '#/plugin/cursus/modals/courses'
+import {MODAL_TRAINING_COURSES} from '#/plugin/cursus/modals/courses'
 
 const CourseButton = props =>
   <Button
@@ -18,7 +18,7 @@ const CourseButton = props =>
     icon="fa fa-fw fa-plus"
     label={trans('add_course', {}, 'cursus')}
     disabled={props.disabled}
-    modal={[MODAL_COURSES, {
+    modal={[MODAL_TRAINING_COURSES, {
       title: props.title,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,

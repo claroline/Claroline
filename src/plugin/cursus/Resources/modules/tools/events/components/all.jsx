@@ -4,8 +4,10 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
-import {EventList} from '#/plugin/cursus/event/containers/list'
+import {EventList} from '#/plugin/cursus/event/components/list'
+import {selectors} from '#/plugin/cursus/tools/events/store'
 
 const EventsAll = (props) =>
   <ToolPage
@@ -16,19 +18,19 @@ const EventsAll = (props) =>
     }]}
     subtitle={trans('all_events', {}, 'cursus')}
   >
-    <EventList
-      path={props.path}
-      name={props.name}
-      url={['apiv2_cursus_event_list', {workspace: props.contextId}]}
-      definition={props.definition}
-    />
+    <ContentSizing size="full">
+      <EventList
+        flush={true}
+        path={props.path}
+        name={selectors.LIST_NAME}
+        url={['apiv2_cursus_event_list', {workspace: props.contextId}]}
+      />
+    </ContentSizing>
   </ToolPage>
 
 EventsAll.propTypes = {
-  name: T.string.isRequired,
   path: T.string.isRequired,
-  contextId: T.string,
-  definition: T.array
+  contextId: T.string
 }
 
 export {
