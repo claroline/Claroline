@@ -18,6 +18,9 @@ const PdfPlayer = connect(
     currentUser: securitySelectors.currentUser(state)
   }),
   (dispatch) => ({
+    loadFile(url) {
+      return dispatch(actions.loadFile(url))
+    },
     updateProgression(id, currentPage, totalPage) {
       dispatch(actions.updateProgression(id, currentPage, totalPage))
     }

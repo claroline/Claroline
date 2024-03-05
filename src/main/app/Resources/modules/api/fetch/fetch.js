@@ -53,19 +53,22 @@ function handleResponse(dispatch, response, originalRequest) {
 function handleDownload(response) {
   const disposition = response.headers && response.headers.get('Content-Disposition')
 
-  const n = disposition.lastIndexOf('=')
-  const name = disposition.substring(n + 1)
-
-  // The actual download
   return response.blob().then(blob => {
-    const link = document.createElement('a')
-    link.href = window.URL.createObjectURL(blob)
-    link.download = name
+    // The actual download
+    if (disposition && disposition.indexOf('attachment') !== -1) {
+      const n = disposition.lastIndexOf('=')
+      const name = disposition.substring(n + 1)
 
-    document.body.appendChild(link)
+      const link = document.createElement('a')
+      link.href = window.URL.createObjectURL(blob)
+      link.download = name
+      document.body.appendChild(link)
 
-    link.click()
-    link.remove()
+      link.click()
+      link.remove()
+    }
+
+    return blob
   })
 }
 
