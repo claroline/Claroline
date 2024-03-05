@@ -34,7 +34,7 @@ const User = (props) =>
       }
     ].concat(props.user ? props.breadcrumb : [])}
     icon={
-      <UserAvatar className="img-thumbnail" picture={get(props.user, 'picture')} size="lg" />
+      <UserAvatar picture={get(props.user, 'picture')} size="lg" />
     }
     title={get(props.user, 'name', trans('loading'))}
     subtitle={get(props.user, 'username')}

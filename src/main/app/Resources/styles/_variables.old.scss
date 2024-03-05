@@ -144,7 +144,7 @@ $top-bar-height:              60px + $top-bar-border-bottom-size !default;
 
 $top-bar-brand-color:           $top-bar-color !default;
 $top-bar-brand-secondary-color: color-contrast($menu, $primary, $top-bar-brand-color) !default;
-$top-bar-brand-logo-size:       40px;
+$top-bar-brand-logo-size:       2.5rem;
 $top-bar-brand-font-size:       $font-size-lg !default;
 $top-bar-brand-font-weight:     $font-weight-semibold !default;
 
@@ -194,7 +194,8 @@ $toolbar-link-disabled-bg:    $top-bar-link-disabled-bg;
 // Page
 // ---
 
-$page-header-bg:           transparent  !default;
+$page-header-height:       420px !default;
+$page-header-bg:           transparent !default;
 $page-header-padding:      $grid-gutter-width*.5 $grid-gutter-width*.5 !default;
 $page-header-box-shadow:   none  !default;
 $page-header-border-width: 0 /*var(--#{$prefix}border-width)*/ !default;

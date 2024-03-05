@@ -52,16 +52,16 @@ const Users = (props) => {
             </div>
           )
         }, {
+          name: 'firstName',
+          type: 'string',
+          label: trans('first_name'),
+          displayed: true
+        }, {
           name: 'lastName',
           type: 'string',
           label: trans('last_name'),
           displayed: true,
           primary: !param('community.username')
-        }, {
-          name: 'firstName',
-          type: 'string',
-          label: trans('first_name'),
-          displayed: true
         }, {
           name: 'email',
           type: 'email',

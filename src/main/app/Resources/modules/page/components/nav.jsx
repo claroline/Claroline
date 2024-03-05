@@ -15,7 +15,7 @@ const PageNav = (props) => {
   const dispatch = useDispatch()
 
   return (
-    <div className="m-4 mb-auto d-flex gap-4 align-items-center">
+    <div className="m-4 d-flex gap-4 align-items-center">
       <CallbackButton
         className="app-menu-toggle position-relative"
         label={trans('menu')}

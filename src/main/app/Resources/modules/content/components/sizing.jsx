@@ -8,7 +8,7 @@ const ContentSizing = (props) =>
     'content-md': 'md' === props.size,
     'content-lg': 'lg' === props.size,
     'content-full': 'full' === props.size
-  })}>
+  })} role="presentation">
     {props.children}
   </div>
 

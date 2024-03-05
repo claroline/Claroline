@@ -79,6 +79,10 @@ function buildToolbar(toolbarConfig, actions = [], scope) {
     && (!scope || isEmpty(action.scope) || -1 !== action.scope.indexOf(scope))
   ), (a, b) => !isEmpty(a.name) && !isEmpty(b.name) && a.name === b.name)
 
+  if (0 === actions.length) {
+    return []
+  }
+
   if (1 === actions.length) {
     // avoid creating a more dropdown if there is only one action
     return [actions]

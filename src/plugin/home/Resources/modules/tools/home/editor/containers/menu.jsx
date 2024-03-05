@@ -11,15 +11,13 @@ import {actions, selectors} from '#/plugin/home/tools/home/editor/store'
 const EditorMenu = withRouter(
   connect(
     (state) => ({
-      path: toolSelectors.path(state),
-      currentContext: toolSelectors.context(state),
-      currentUser: securitySelectors.currentUser(state),
+      path: toolSelectors.path(state) + '/edit',
       tabs: selectors.editorTabs(state)
     }),
     (dispatch) => ({
       createTab(parent = null, tab, navigate) {
         dispatch(actions.createTab(parent, tab, navigate))
-      },
+      }/*,
       moveTab(tabId, newPosition) {
         dispatch(actions.moveTab(tabId, newPosition))
       },
@@ -28,7 +26,7 @@ const EditorMenu = withRouter(
       },
       deleteTab(tabs, currentTab) {
         dispatch(actions.deleteTab(tabs, currentTab))
-      }
+      }*/
     })
   )(EditorMenuComponent)
 )

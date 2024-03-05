@@ -1,4 +1,5 @@
-.table {
+.table,
+.table-sm {
     /*.users-cell,
     .user-cell {
         padding: 0 $table-cell-padding-x !important;
@@ -19,13 +20,13 @@
     }
 }
 
-.table-sm {
-    /*.users-cell,
+/*.table-sm {
+    !*.users-cell,
     .user-cell {
         padding: 0 $table-cell-padding-x-sm !important;
 
 
-    }*/
+    }*!
 
     .user-avatar {
         // for picture
@@ -35,4 +36,4 @@
         // for .fa when no picture
         font-size: 30px;
     }
-}
+}*/

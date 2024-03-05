@@ -74,7 +74,7 @@ const OrganizationShow = props =>
             <>
               {hasPermission('edit', props.organization) &&
                 <Button
-                  className="btn btn-primary my-3"
+                  className="btn btn-primary mt-3"
                   {...{
                     name: 'add',
                     type: MODAL_BUTTON,
@@ -91,6 +91,7 @@ const OrganizationShow = props =>
               }
 
               <UserList
+                className="mt-3"
                 path={props.path}
                 name={`${selectors.FORM_NAME}.users`}
                 url={['apiv2_organization_list_users', {id: props.organization.id}]}
@@ -111,7 +112,7 @@ const OrganizationShow = props =>
             <>
               {hasPermission('edit', props.organization) &&
                 <Button
-                  className="btn btn-primary my-3"
+                  className="btn btn-primary mt-3"
                   {...{
                     name: 'add-managers',
                     type: MODAL_BUTTON,
@@ -128,6 +129,7 @@ const OrganizationShow = props =>
               }
 
               <UserList
+                className="mt-3"
                 path={props.path}
                 name={`${selectors.FORM_NAME}.managers`}
                 url={['apiv2_organization_list_managers', {id: props.organization.id}]}
@@ -148,7 +150,7 @@ const OrganizationShow = props =>
             <>
               {hasPermission('edit', props.organization) &&
                 <Button
-                  className="btn btn-primary my-3"
+                  className="btn btn-primary mt-3"
                   {...{
                     name: 'add',
                     type: MODAL_BUTTON,
@@ -165,6 +167,7 @@ const OrganizationShow = props =>
               }
 
               <GroupList
+                className="mt-3"
                 path={props.path}
                 name={`${selectors.FORM_NAME}.groups`}
                 url={['apiv2_organization_list_groups', {id: props.organization.id}]}
@@ -185,7 +188,7 @@ const OrganizationShow = props =>
             <>
               {hasPermission('edit', props.organization) &&
                 <Button
-                  className="btn btn-primary my-3"
+                  className="btn btn-primary mt-3"
                   {...{
                     name: 'add-workspace',
                     type: MODAL_BUTTON,
@@ -203,6 +206,7 @@ const OrganizationShow = props =>
               }
 
               <WorkspaceList
+                className="mt-3"
                 name={`${selectors.FORM_NAME}.workspaces`}
                 url={['apiv2_organization_list_workspaces', {id: props.organization.id}]}
                 autoload={!!props.organization.id}

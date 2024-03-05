@@ -20,6 +20,6 @@ export default (workspaces, refresher) => ({
     workspaces: workspaces,
     onRegister: refresher.update
   }],
-  group: trans('registration'),
+  group: trans('community'),
   scope: ['object', 'collection']
 })

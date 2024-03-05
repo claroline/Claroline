@@ -10,35 +10,8 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 
-import {PageBreadcrumb} from '#/main/app/page/components/breadcrumb'
+import {PageTitle} from '#/main/app/page/components/title'
 import {PageNav} from '#/main/app/page/components/nav'
-
-/**
- * Title of the current page.
- */
-const PageTitle = props =>
-  <h1 className={classes('page-title', {'sr-only': !props.show})}>
-    {props.title}
-    {props.subtitle &&
-      <small>{props.subtitle}</small>
-    }
-  </h1>
-
-PageTitle.propTypes = {
-  /**
-   * The title of the current page.
-   */
-  title: T.string.isRequired,
-
-  /**
-   * An optional subtitle.
-   *
-   * Mostly used when the current page has subsections
-   * example : in quizzes, we have edit/play/papers/etc. sections
-   */
-  subtitle: T.node,
-  show: T.bool
-}
 
 /**
  * Header of the current page.
@@ -58,55 +31,46 @@ const PageHeader = props =>
       {props.menu}
     </PageNav>
 
-    <div className="page-header-content m-4 gap-4">
+    <div className="page-header-content m-4 gap-4" role="presentation">
       {props.icon &&
-        <div className="page-icon ratio ratio-1x1">
+        <div className="page-icon ratio ratio-1x1" role="presentation">
           {props.icon}
         </div>
       }
 
-      <div className="">
-        {!props.embedded &&
-          <PageBreadcrumb
-            path={props.path}
-            className={classes({
-              'sr-only': !props.showBreadcrumb
-            })}
-          />
-        }
-
+      <div className="d-flex flex-fill align-items-center" role="presentation">
         <PageTitle
+          embedded={props.embedded}
+          path={props.path}
           title={props.subtitle || props.title}
-          /*subtitle={props.subtitle}*/
-          show={props.showTitle}
         />
+
+        {(!isEmpty(props.primaryAction) || !isEmpty(props.actions) || props.actions instanceof Promise) &&
+          <div className="page-actions gap-3 ms-auto">
+            {props.primaryAction &&
+              <Button
+                {...props.primaryAction}
+                className="btn btn-primary page-actions-btn"
+                icon={undefined}
+                tooltip={undefined}
+              />
+            }
+
+            {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
+              <Toolbar
+                id={props.id || toKey(props.title)}
+                className="btn-toolbar gap-1"
+                buttonName="btn page-actions-btn"
+                tooltip="bottom"
+                toolbar={props.toolbar}
+                actions={props.actions}
+                disabled={props.disabled}
+                scope="object"
+              />
+            }
+          </div>
+        }
       </div>
-
-      {(!isEmpty(props.primaryAction) || !isEmpty(props.actions) || props.actions instanceof Promise) &&
-        <div className="page-actions gap-3 ms-auto">
-          {props.primaryAction &&
-            <Button
-              {...props.primaryAction}
-              className="btn btn-primary page-actions-btn"
-              icon={undefined}
-              tooltip={undefined}
-            />
-          }
-
-          {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
-            <Toolbar
-              id={props.id || toKey(props.title)}
-              className="btn-toolbar gap-1"
-              buttonName="btn page-actions-btn"
-              tooltip="bottom"
-              toolbar={props.toolbar}
-              actions={props.actions}
-              disabled={props.disabled}
-              scope="object"
-            />
-          }
-        </div>
-      }
     </div>
   </header>
 

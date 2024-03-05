@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
 import {toKey} from '#/main/core/scaffolding/text'
+import {Button} from '#/main/app/action'
 import {URL_BUTTON} from '#/main/app/buttons'
-import {Button} from '#/main/app/action/components/button'
 
 const PageBreadcrumb = props => {
   const items = props.path
@@ -50,6 +50,33 @@ PageBreadcrumb.defaultProps = {
   path: []
 }
 
+const PageTitle = props =>
+  <div className="" role="presentation">
+    {!props.embedded &&
+      <PageBreadcrumb
+        path={props.path}
+      />
+    }
+
+    <h1 className="page-title">
+      {props.title}
+    </h1>
+  </div>
+
+PageTitle.propTypes = {
+  title: T.string.isRequired,
+  /**
+   * The path of the page inside the application (used to build the breadcrumb).
+   */
+  path: T.arrayOf(T.shape({
+    label: T.string.isRequired,
+    displayed: T.bool,
+    target: T.oneOfType([T.string, T.array])
+  })),
+  embedded: T.bool
+}
+
+
 export {
-  PageBreadcrumb
+  PageTitle
 }

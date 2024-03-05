@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
+import {useReducer} from '#/main/app/store/hooks/useReducer'
 
 /**
  * Creates a new reducer.
@@ -77,6 +78,7 @@ function reduceReducers(...reducers) {
 
 export {
   combineReducers, // reexported from redux
+  useReducer,
   withReducer,
   makeReducer,
   makeInstanceReducer,

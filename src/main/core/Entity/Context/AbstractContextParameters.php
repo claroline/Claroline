@@ -4,9 +4,27 @@ namespace Claroline\CoreBundle\Entity\Context;
 
 abstract class AbstractContextParameters
 {
-    private ?string $opening;
+    /**
+     * Open the details page of the context.
+     */
+    public const OPEN_DEFAULT = 'default';
+
+    /**
+     * Open the selected tool when the context is opened.
+     */
+    public const OPEN_TOOL = 'tool';
+
+    /**
+     * Open the selected resource when the context is opened.
+     */
+    public const OPEN_RESOURCE = 'resource';
+
+    private string $opening = self::OPEN_DEFAULT;
+
+    private ?string $openingTarget = null;
+
     private bool $brand = true;
-    private bool $breadcrumbs = true;
+    private array $breadcrumbs = [];
     private ?string $menu;
 
     // contact email
@@ -26,7 +44,7 @@ abstract class AbstractContextParameters
         return $this->brand;
     }
 
-    public function hasBreadcrumbs(): bool
+    public function getBreadcrumbs(): array
     {
         return $this->breadcrumbs;
     }

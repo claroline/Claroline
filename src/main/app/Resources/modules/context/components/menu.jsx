@@ -11,7 +11,8 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
-//import {ToolMenu} from '#/main/core/tool/containers/menu'
+import {ContextUser} from '#/main/app/context/containers/user'
+import {MenuBrand} from '#/main/app/layout/menu/containers/brand'
 
 const ContextShortcuts = props =>
   <Toolbar
@@ -34,7 +35,6 @@ const ContextMenu = (props) => {
   return (
     <MenuMain
       title={props.title}
-      backAction={props.backAction}
 
       tools={props.tools
         .filter(tool => hasPermission('open', tool))
@@ -47,10 +47,15 @@ const ContextMenu = (props) => {
         }))
       }
       actions={props.actions}
+      thumbnail={props.thumbnail}
     >
+      <MenuBrand />
+      <ContextUser title={props.title}>
+
+      </ContextUser>
       {props.children}
 
-      {!isEmpty(props.shortcuts) &&
+      {false && !isEmpty(props.shortcuts) &&
         <ContextShortcuts
           shortcuts={actionPromise.then(actions => {
             return props.shortcuts
@@ -75,11 +80,6 @@ const ContextMenu = (props) => {
           })}
         />
       }
-
-      {/*<ToolMenu
-        opened={'tool' === props.section}
-        toggle={() => props.changeSection('tool')}
-      />*/}
     </MenuMain>
   )
 }
@@ -87,7 +87,6 @@ const ContextMenu = (props) => {
 ContextMenu.propTypes = {
   basePath: T.string,
   title: T.string.isRequired,
-  backAction: T.shape(ActionTypes.propTypes),
   actions: T.oneOfType([
     // a regular array of actions
     T.arrayOf(T.shape(

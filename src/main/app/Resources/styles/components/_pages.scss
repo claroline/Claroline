@@ -44,7 +44,7 @@
     //position: relative;
     display: flex;
     //align-items: flex-end;
-    //justify-content: space-between;
+    justify-content: space-between;
     flex-shrink: 0;
     //flex-wrap: wrap;
     flex-direction: column;
@@ -62,7 +62,7 @@
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    min-height: 420px;
+    min-height: $page-header-height;
 
     // use movie subtitles styles to make title always readable
     // maybe one day add a background checker
@@ -74,7 +74,7 @@
     .app-header-title, // FIXME
     .app-menu-toggle, // FIXME
     .page-title,
-    .page-title > small,
+    //.page-title > small,
     .page-actions-btn:not(.btn-primary) {
         @include text-movie-subtitles();
     }
@@ -94,48 +94,52 @@
 }
 
 .app-header-avatar {
-    background-color: var(--#{$prefix}body-bg);
-    border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
+    background-color: var(--#{$prefix}body-bg); // in case the user has uploaded an image with transparent bg
+    //border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
     //border-radius: var(--#{$prefix}border-radius);
     box-shadow: var(--#{$prefix}box-shadow-sm);
-    padding: .05rem;
+    //padding: .05rem;
+    height: 2.5rem;
+    width: 2.5rem;
+    font-size: 2.5rem;
 }
 
 .app-header-status {
-    //border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color-translucent);
     padding: .375rem;
     @include box-shadow(0 0 .125rem  rgba(0,0,0,.75));
 }
 
 .page-header-content {
-    //order: 2;
     display: flex;
-    //margin: $grid-gutter-width * .5;
     align-items: center;
 }
 
 .page-icon {
-    //order: 1;
     flex-shrink: 0;
-    width: 70px;
-    height: 70px;
-    //margin: 0 ($grid-gutter-width * .5);
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background: $body-bg;
 
-    > * {
-        max-width: 100%;
-        max-height: 100%;
+    .tool-icon,
+    .resource-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+
+        font-size: 1.5rem;
+        padding: map-get($spacers, 3);
     }
 }
 
 .page-title {
-    //order: 2;
+    margin: 0;
     flex: 1;
     color: $page-title-color;
     font-weight: $page-title-font-weight;
 
     @include font-size($page-title-font-size);
-
-    margin: 0;
 
     small {
         color: $page-subtitle-color;
@@ -144,8 +148,6 @@
 }
 
 .page-actions {
-    //order: 3;
-    //margin: $grid-gutter-width * .5;
     margin-left: auto;
     white-space: nowrap;
     display: flex;
@@ -160,11 +162,6 @@
     }
 }
 
-/*.page-actions-separator {
-    display: inline-block;
-    margin: 0 5px;
-}*/
-
 // Current styles permit to have 7 buttons in one line on 360px screens (without btn groups)
 .page-actions-btn {
     position: relative; // for buttons with labels
@@ -173,31 +170,6 @@
     
     &:not(.btn-primary) {
         font-size: $font-size-lg;
-    }
-
-    //text-align: center;
-    /*border-radius: $border-radius-pill;
-    padding: map-get($spacers, 3);
-    font-size: $font-size-lg;
-    line-height: $font-size-lg;
-
-    border: 1px solid transparent !important;*/ // not perfect, it's required to override default btn border
-
-    /*&.default {
-        @include button-variant($page-action-default-color, $page-action-default-bg, $page-action-default-border);
-    }
-
-    &.primary {
-        @include button-variant($page-action-primary-color, $page-action-primary-bg, $page-action-primary-border);
-     }
-
-    &.danger {
-        @include button-variant($page-action-danger-color, $page-action-danger-bg, $page-action-danger-border);
-    }*/
-
-    // displays icon as a square
-    .action-icon {
-        //width: 1.25em;
     }
 
     // puts labels in the bottom right corner
@@ -221,24 +193,6 @@
 .page-section {
     margin-left: -$grid-gutter-width*.5; // to escape the page-content container-fluid
     margin-right: -$grid-gutter-width*.5; // to escape the page-content container-fluid
-}
-
-.page-icon {
-    .tool-icon,
-    .resource-icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: white;
-        border-radius: 50%;
-        font-size: 32px;
-        padding: ($grid-gutter-width * .5);
-    }
-
-    .tool-icon {
-        height: 100%;
-        width: 100%;
-    }
 }
 
 @media (max-width: map-get($grid-breakpoints, 'sm')) {
