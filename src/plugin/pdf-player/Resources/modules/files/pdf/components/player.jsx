@@ -53,18 +53,21 @@ class PdfPlayer extends Component {
 
     eventBus.on('pagechanging', (event) => this.renderPage(event.pageNumber))
 
-    const loadingTask = pdfjsLib.getDocument({
-      url: this.props.file.url
-    })
+    this.props.loadFile(this.props.file.url).then((fileData) => {
+      const url = URL.createObjectURL(fileData)
+      const loadingTask = pdfjsLib.getDocument({
+        url: url
+      })
 
-    loadingTask.promise.then((pdf) => {
-      pdfSinglePageViewer.setDocument(pdf)
-      pdfLinkService.setDocument(pdf, null)
+      loadingTask.promise.then((pdf) => {
+        pdfSinglePageViewer.setDocument(pdf)
+        pdfLinkService.setDocument(pdf, null)
 
-      this.setState({
-        loaded: true,
-        pdf: pdf,
-        viewer: pdfSinglePageViewer
+        this.setState({
+          loaded: true,
+          pdf: pdf,
+          viewer: pdfSinglePageViewer
+        })
       })
     })
   }
@@ -222,7 +225,8 @@ PdfPlayer.propTypes = {
     FileTypes.propTypes
   ).isRequired,
   updateProgression: T.func.isRequired,
-  currentUser: T.object
+  currentUser: T.object,
+  loadFile: T.func.isRequired
 }
 
 export {

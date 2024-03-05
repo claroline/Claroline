@@ -14,3 +14,10 @@ actions.updateProgression = (id, currentPage, totalPage) => (dispatch) => dispat
     success: (response) => dispatch(resourceActions.updateUserEvaluation(response.userEvaluation))
   }
 })
+
+actions.loadFile = (url) => ({
+  [API_REQUEST]: {
+    silent: true,
+    url: url
+  }
+})
