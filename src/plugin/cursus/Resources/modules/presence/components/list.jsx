@@ -44,6 +44,14 @@ const Presences = props => {
           ),
           displayed: true
         }, {
+          name: 'validation_date',
+          type: 'date',
+          label: trans('presence_confirmation_date', {}, 'presence'),
+          displayed: true,
+          options: {
+            time: true
+          }
+        }, {
           name: 'userDisabled',
           label: trans('user_disabled', {}, 'community'),
           type: 'boolean',

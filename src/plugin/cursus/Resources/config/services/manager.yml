@@ -39,3 +39,4 @@ services:
             - '@translator'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'

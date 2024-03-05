@@ -8,3 +8,7 @@ services:
     Claroline\CursusBundle\Component\Tool\TrainingsTool:
         parent: Claroline\AppBundle\Component\Tool\AbstractTool
         tags: [ 'claroline.component.tool' ]
+
+    Claroline\CursusBundle\Component\Tool\PresenceTool:
+      parent: Claroline\AppBundle\Component\Tool\AbstractTool
+      tags: [ 'claroline.component.tool' ]

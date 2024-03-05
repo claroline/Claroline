@@ -10,6 +10,9 @@ plugin:
           tool_rights:
               - register
 
+        - name: presence
+          icon: signature
+
     data_sources:
         - name: course_sessions
           type: list
@@ -254,6 +257,9 @@ plugin:
               - event_end_date
               - event_end_time
               - event_presence_status
+              - event_presence_confirmation
+              - event_presence_validation_datetime
+              - event_presence_validation_datetime_utc
               - user_first_name
               - user_last_name
               - user_username

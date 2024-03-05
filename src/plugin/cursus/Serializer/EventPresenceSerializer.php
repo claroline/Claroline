@@ -16,6 +16,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CursusBundle\Entity\EventPresence;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -39,6 +40,8 @@ class EventPresenceSerializer
                 'id' => $eventPresence->getUuid(),
                 'user' => $this->userSerializer->serialize($eventPresence->getUser(), [SerializerInterface::SERIALIZE_MINIMAL]),
                 'status' => $eventPresence->getStatus(),
+                'signature' => $eventPresence->getSignature(),
+                'validation_date' => $eventPresence->getValidationDate(),
             ];
         }
 
@@ -48,6 +51,8 @@ class EventPresenceSerializer
             'event' => $this->eventSerializer->serialize($eventPresence->getEvent(), [SerializerInterface::SERIALIZE_MINIMAL]),
             'session' => $this->sessionSerializer->serialize($eventPresence->getEvent()->getSession(), [SerializerInterface::SERIALIZE_MINIMAL]),
             'status' => $eventPresence->getStatus(),
+            'signature' => $eventPresence->getSignature(),
+            'validation_date' => DateNormalizer::normalize($eventPresence->getValidationDate()),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
@@ -65,6 +70,8 @@ class EventPresenceSerializer
     {
         $this->sipe('id', 'setUuid', $data, $eventPresence);
         $this->sipe('status', 'setStatus', $data, $eventPresence);
+        $this->sipe('signature', 'setSignature', $data, $eventPresence);
+        $eventPresence->setValidationDate(DateNormalizer::denormalize($data['validation_date']));
 
         if (isset($data['user'])) {
             $user = null;

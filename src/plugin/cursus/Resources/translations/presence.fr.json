@@ -1,0 +1,22 @@
+{
+  "event_not_found": "Séance introuvable",
+  "event_not_found_desc": "Ce code ne correspond à aucune séance.",
+  "event_not_found_retry": "Saisir à nouveau le code de la séance",
+  "event_presence_label": "Entrer vos nom et prénom",
+
+  "not_registered": "Connexion requise",
+  "not_registered_desc": "Vous devez être connecté pour confirmer votre présence à cette séance.",
+
+  "presence_code": "Code de la séance",
+  "presence_code_desc": "Veuillez entrer le code de la séance pour laquelle vous souhaitez confirmer votre présence.",
+  "presence_confirm_already": "Vous avez déjà confirmé votre présence à cette séance.",
+  "presence_confirm_title": "Confirmation de présence",
+  "presence_confirm_desc": "Votre présence à la séance %event_title% a bien été enregistrée.",
+  "presence_confirmation_date": "Date de confirmation",
+  "presence_validation_date": "Date de validation par le formateur",
+  "presence_info": "Moi, %user%, étais présent à la séance %event_title% du %event_datetime_start% au %event_datetime_end%.",
+  "presence_validation": "Confirmer la présence",
+
+  "validate": "Valider",
+  "validation": "Validation"
+}

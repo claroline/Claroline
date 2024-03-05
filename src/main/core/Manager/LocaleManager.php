@@ -126,4 +126,33 @@ class LocaleManager
     {
         return $user->getLocale() ? $user->getLocale() : $this->getDefault();
     }
+
+    public function getLocaleDate(\DateTimeInterface $date): \DateTimeInterface
+    {
+        $timezone = $this->configHandler->getParameter('intl.timezone');
+
+        $dateTimezone = new \DateTimeZone($timezone ?: 'UTC');
+
+        $localeDate = clone $date;
+        $localeDate->setTimezone($dateTimezone);
+
+        return $localeDate;
+    }
+
+    public function getLocaleDateFormat(\DateTimeInterface $date): string
+    {
+        $localeDate = $this->getLocaleDate($date);
+        $dateFormat = $this->configHandler->getParameter('intl.dateFormat') ?: 'Y-m-d';
+
+        return $localeDate->format($dateFormat);
+    }
+
+    public function getLocaleDateTimeFormat(\DateTimeInterface $date): string
+    {
+        $localeDate = $this->getLocaleDate($date);
+        $dateFormat = $this->configHandler->getParameter('intl.dateFormat') ?: 'Y-m-d';
+        $timeFormat = $this->configHandler->getParameter('intl.timeFormat') ?: 'H:i';
+
+        return $localeDate->format($dateFormat.' '.$timeFormat);
+    }
 }

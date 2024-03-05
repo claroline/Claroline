@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\EventPresence;
@@ -22,7 +23,8 @@ class EventPresenceManager
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly ObjectManager $om,
-        private readonly TemplateManager $templateManager
+        private readonly TemplateManager $templateManager,
+        private readonly LocaleManager $localeManager
     ) {
     }
 
@@ -86,6 +88,30 @@ class EventPresenceManager
         return $presences;
     }
 
+    public function setValidationDate(array $presences, \DateTimeInterface $date): array
+    {
+        foreach ($presences as $presence) {
+            $presence->setValidationDate($date);
+            $this->om->persist($presence);
+        }
+
+        $this->om->flush();
+
+        return $presences;
+    }
+
+    public function setSignature(array $presences, string $signature): array
+    {
+        foreach ($presences as $presence) {
+            $presence->setSignature($signature);
+            $this->om->persist($presence);
+        }
+
+        $this->om->flush();
+
+        return $presences;
+    }
+
     public function download(Event $event, array $users, string $locale, bool $filled = false): string
     {
         $presences = $this->generate($event, $users);
@@ -100,12 +126,22 @@ class EventPresenceManager
         });
 
         $table = '<table style="border: 1px solid black; width: 100%; border-collapse: collapse;">';
+        $table .= '<tr>';
+        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('user', [], 'platform').'</th>';
+        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('status', [], 'platform').'</th>';
+        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('presence_confirm_title', [], 'presence').'</th>';
+        $table .= '<th style="border: 1px solid black; width: 75%; padding: 10px;">'.$this->translator->trans('presence_validation_date', [], 'presence').'</th>';
         foreach ($presences as $presence) {
             $table .= '<tr>';
-            $table .= "<td style='border: 1px solid black; width: 75%; padding: 10px;'>{$presence->getUser()->getLastName()} {$presence->getUser()->getFirstName()}</td>";
+            $table .= "<td style='border: 1px solid black; width: 75%; padding: 10px;'>".$presence->getUser()->getLastName().' '.$presence->getUser()->getFirstName().'</td>';
             if ($filled) {
-                $table .= "<td style='border: 1px solid black; padding: 10px;'>{$this->translator->trans('presence_'.$presence->getStatus(), [], 'cursus')}</td>";
+                $table .= "<td style='border: 1px solid black; padding: 10px;'>{$this->translator->trans('presence_'.$presence->getStatus(), [], 'cursus')}</td> ";
+                $table .= "<td style='border: 1px solid black; padding: 10px;'>{$presence->getSignature()}</td>";
+                $validationDate = $presence->getValidationDate() ? $this->localeManager->getLocaleDateTimeFormat($presence->getValidationDate()) : '';
+                $table .= "<td style='border: 1px solid black; padding: 10px;'>$validationDate</td>";
             } else {
+                $table .= '<td style="border: 1px solid black; padding: 10px;">&nbsp;</td>';
+                $table .= '<td style="border: 1px solid black; padding: 10px;">&nbsp;</td>';
                 $table .= '<td style="border: 1px solid black; padding: 10px;">&nbsp;</td>';
             }
             $table .= '</tr>';
@@ -113,11 +149,11 @@ class EventPresenceManager
         $table .= '</table>';
 
         $placeholders = array_merge([
-                'event_name' => $event->getName(),
-                'event_code' => $event->getCode(),
-                'event_description' => $event->getDescription(),
-                'event_presences_table' => $table,
-            ],
+            'event_name' => $event->getName(),
+            'event_code' => $event->getCode(),
+            'event_description' => $event->getDescription(),
+            'event_presences_table' => $table,
+        ],
             $this->templateManager->formatDatePlaceholder('event_start', $event->getStartDate()),
             $this->templateManager->formatDatePlaceholder('event_end', $event->getEndDate()),
         );
@@ -132,16 +168,18 @@ class EventPresenceManager
         $status = $presence->getStatus();
 
         $placeholders = array_merge([
-                'event_name' => $event->getName(),
-                'event_code' => $event->getCode(),
-                'event_description' => $event->getDescription(),
-                'event_presence_status' => $this->translator->trans('presence_'.$status, [], 'cursus'),
-                'user_username' => $user->getUsername(),
-                'user_first_name' => $user->getFirstName(),
-                'user_last_name' => $user->getLastName(),
-            ],
+            'event_name' => $event->getName(),
+            'event_code' => $event->getCode(),
+            'event_description' => $event->getDescription(),
+            'event_presence_status' => $this->translator->trans('presence_'.$status, [], 'cursus'),
+            'event_presence_confirmation' => $presence->getSignature(),
+            'user_username' => $user->getUsername(),
+            'user_first_name' => $user->getFirstName(),
+            'user_last_name' => $user->getLastName(),
+        ],
             $this->templateManager->formatDatePlaceholder('event_start', $event->getStartDate()),
             $this->templateManager->formatDatePlaceholder('event_end', $event->getEndDate()),
+            $this->templateManager->formatDatePlaceholder('event_presence_validation', $presence->getValidationDate()),
         );
 
         if ($event->getPresenceTemplate()) {
