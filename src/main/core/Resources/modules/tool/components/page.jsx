@@ -8,7 +8,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Await} from '#/main/app/components/await'
 import {PageFull} from '#/main/app/page/components/full'
 
-import {getTool, getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
+import {getTool, getToolBreadcrumb} from '#/main/core/tool/utils'
 import {ToolIcon} from '#/main/core/tool/components/icon'
 import {ToolMenu} from '#/main/core/tool/containers/menu'
 
@@ -17,7 +17,7 @@ const ToolPage = props => {
     <PageFull
       className={classes('tool-page', `${props.name}-page`, props.className)}
       title={trans(props.name, {}, 'tools')}
-      showBreadcrumb={showToolBreadcrumb(props.currentContext.type, props.currentContext.data)}
+      showBreadcrumb={true}
       path={[].concat(getToolBreadcrumb(props.name, props.currentContext.type, props.currentContext.data), props.path)}
       poster={props.poster || get(props.toolData, 'poster') || get(props.currentContext, 'data.poster')}
       icon={get(props.toolData, 'display.showIcon') ?
@@ -46,7 +46,7 @@ const ToolPage = props => {
 
       primaryAction={props.primaryAction}
       toolbar="more"
-      {...omit(props, 'name', 'currentContext', 'path', 'basePath', 'toolData', 'reload', 'poster')}
+      {...omit(props, 'name', 'className', 'currentContext', 'path', 'basePath', 'toolData', 'reload', 'poster')}
 
       actions={props.actions}
     >

@@ -16,8 +16,6 @@ const PageFull = (props) =>
       poster: props.poster
     }, props.meta || {})}
   >
-    <div className="app-loader" />
-
     {props.showHeader &&
       <PageHeader
         id={props.id}

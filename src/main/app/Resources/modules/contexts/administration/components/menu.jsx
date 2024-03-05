@@ -62,14 +62,6 @@ const AdministrationMenu = props =>
   <ContextMenu
     basePath={props.basePath}
     title={trans('administration')}
-    backAction={{
-      type: LINK_BUTTON,
-      icon: 'fa fa-fw fa-angle-double-left',
-      label: trans('desktop'),
-      target: '/desktop',
-      exact: true
-    }}
-
     tools={props.tools}
     shortcuts={props.shortcuts}
     actions={[

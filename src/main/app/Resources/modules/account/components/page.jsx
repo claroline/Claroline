@@ -15,7 +15,7 @@ const AccountPage = (props) =>
   <PageFull
     {...omit(props, 'currentUser')}
     className="user-page"
-    showBreadcrumb={showBreadcrumb()}
+    /*showBreadcrumb={showBreadcrumb()}*/
     path={[
       {
         type: LINK_BUTTON,
@@ -27,7 +27,7 @@ const AccountPage = (props) =>
     subtitle={props.title || props.currentUser.username}
     poster={props.currentUser.poster}
     icon={
-      <UserAvatar className="user-avatar-lg img-thumbnail" picture={props.currentUser.picture} />
+      <UserAvatar picture={props.currentUser.picture} size="lg" />
     }
     meta={{
       title: `${trans('my_account')} - ${props.title || props.currentUser.username}`,

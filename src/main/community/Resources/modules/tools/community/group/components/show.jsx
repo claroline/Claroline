@@ -74,7 +74,7 @@ const GroupShow = (props) =>
             <>
               {hasPermission('administrate', props.group) &&
                 <Button
-                  className="btn btn-primary my-3"
+                  className="btn btn-primary mt-3"
                   {...{
                     name: 'add-users',
                     type: MODAL_BUTTON,
@@ -92,6 +92,7 @@ const GroupShow = (props) =>
               }
 
               <UserList
+                className="mt-3"
                 path={props.path}
                 name={`${selectors.FORM_NAME}.users`}
                 url={['apiv2_group_list_users', {id: props.group.id}]}
@@ -114,7 +115,7 @@ const GroupShow = (props) =>
             <>
               {hasPermission('administrate', props.group) &&
                 <Button
-                  className="btn btn-primary my-3"
+                  className="btn btn-primary mt-3"
                   {...{
                     name: 'add',
                     type: MODAL_BUTTON,
@@ -131,6 +132,7 @@ const GroupShow = (props) =>
               }
 
               <OrganizationList
+                className="mt-3"
                 path={props.path}
                 name={`${selectors.FORM_NAME}.organizations`}
                 url={['apiv2_group_list_organizations', {id: props.group.id}]}
@@ -151,7 +153,7 @@ const GroupShow = (props) =>
           render: () => (
             <>
               <Button
-                className="btn btn-primary my-3"
+                className="btn btn-primary mt-3"
                 {...{
                   name: 'add-roles',
                   type: MODAL_BUTTON,
@@ -168,6 +170,7 @@ const GroupShow = (props) =>
               />
 
               <RoleList
+                className="mt-3"
                 path={props.path}
                 name={`${selectors.FORM_NAME}.roles`}
                 url={['apiv2_group_list_roles', {id: props.group.id}]}

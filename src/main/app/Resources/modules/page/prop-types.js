@@ -32,11 +32,17 @@ const PageSimple = {
       description: T.string,
       poster: T.string,
       type: T.string
-    })
+    }),
+
+    /**
+     * A list of additional styles to add to the page.
+     */
+    styles: T.arrayOf(T.string)
   },
   defaultProps: {
     embedded: false,
-    fullscreen: false
+    fullscreen: false,
+    styles: []
   }
 }
 

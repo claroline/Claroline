@@ -16,10 +16,15 @@ $content-sm: 540px !default;
 $content-md: 860px !default;
 $content-lg: 1180px !default;
 
+// 2 rem => xs
+// 2.5 rem => header
+// 5 rem => md
+
+
 $icon-sizes: (
-        xs: 30px,
-        sm: 40px,
-        md: 80px,
-        lg: 120px,
-        xl: 200px,
+    xs: 30px,
+    sm: 40px,
+    md: 80px,
+    lg: 120px,
+    xl: 200px,
 ) !default;

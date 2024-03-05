@@ -92,4 +92,15 @@ class ContextController
             'accessErrors' => $accessErrors,
         ], 403);
     }
+
+    /**
+     * Configures a context.
+     *
+     * @Route("", name="claro_context_configure", methods={"GET"})
+     */
+    public function configureAction(string $context, string $contextId = null): JsonResponse
+    {
+
+        return new JsonResponse();
+    }
 }
