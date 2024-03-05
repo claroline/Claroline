@@ -11,6 +11,7 @@ import {ContentNotFound} from '#/main/app/content/components/not-found'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentForbidden} from '#/main/app/content/components/forbidden'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import {ContextEditor} from '#/main/app/context/editor/containers/main'
 
 class ContextMain extends Component {
   componentDidMount() {
@@ -99,12 +100,16 @@ class ContextMain extends Component {
           title="Cet espace est vide pour le moment"
         />
       )
-    }else {
+    } else {
       CurrentComp = (
         <Routes
           path={this.props.path}
           routes={[
             {
+              path: '/edit',
+              component: ContextEditor,
+              onEnter: () => this.props.openEditor(this.props.contextData)
+            }, {
               path: '/:toolName',
               onEnter: (params = {}) => {
                 if (-1 !== this.props.tools.findIndex(tool => tool.name === params.toolName)) {

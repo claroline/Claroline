@@ -88,11 +88,19 @@
     .page-icon {
         width: 200px;
         height: 200px;
-        margin-top: $grid-gutter-width*.5;
+        //margin-top: $grid-gutter-width*.5;
         margin-bottom: map-get($spacers, 5) * -1;
+
+        .user-avatar {
+            padding: $thumbnail-padding;
+        }
     }
 
     .page-header {
         margin-bottom: map-get($spacers, 5);
+    }
+
+    .page-header-content {
+        align-items: flex-end;
     }
 }

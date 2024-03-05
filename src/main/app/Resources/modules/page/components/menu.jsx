@@ -15,7 +15,7 @@ const PageMenu = (props) =>
               <Button
                 {...action}
                 className="nav-link"
-                icon={undefined}
+                /*icon={undefined}*/
               />
             </li>
           )
@@ -28,7 +28,7 @@ const PageMenu = (props) =>
 
 PageMenu.propTypes = {
   actions: T.arrayOf(T.shape({
-    // action type
+    // action types
   }))
 }
 

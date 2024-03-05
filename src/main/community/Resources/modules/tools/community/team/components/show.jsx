@@ -107,7 +107,7 @@ const TeamShow = (props) => {
               <>
                 {hasPermission('edit', props.team) &&
                   <Button
-                    className="btn btn-primary my-3"
+                    className="btn btn-primary mt-3"
                     {...{
                       name: 'add-users',
                       type: MODAL_BUTTON,
@@ -126,6 +126,7 @@ const TeamShow = (props) => {
                 }
 
                 <UserList
+                  className="mt-3"
                   path={props.path}
                   name={`${selectors.FORM_NAME}.users`}
                   url={['apiv2_team_list_users', {id: get(props.team, 'id'), role: 'user'}]}
@@ -147,7 +148,7 @@ const TeamShow = (props) => {
               <>
                 {hasPermission('edit', props.team) &&
                   <Button
-                    className="btn btn-primary my-3"
+                    className="btn btn-primary mt-3"
                     {...{
                       name: 'add-managers',
                       type: MODAL_BUTTON,
@@ -166,6 +167,7 @@ const TeamShow = (props) => {
                 }
 
                 <UserList
+                  className="mt-3"
                   path={props.path}
                   name={`${selectors.FORM_NAME}.managers`}
                   url={['apiv2_team_list_users', {id: get(props.team, 'id'), role: 'manager'}]}

@@ -30,7 +30,7 @@ const HomePage = props =>
         showHidden={props.showHidden}
       /> : undefined
     }*/
-    nav={props.tabs
+    /*nav={props.tabs
       .filter(tab => props.showHidden || !get(tab, 'restrictions.hidden', false))
       .map((tab) => ({
         key: tab.id,
@@ -40,7 +40,7 @@ const HomePage = props =>
         icon: tab.icon ? `fa fa-fw fa-${tab.icon}` : undefined,
         label: tab.title,
       }))
-    }
+    }*/
     icon={props.currentTab && props.currentTab.icon ?
       <span className={`tool-icon fa fa-${props.currentTab.icon}`} /> : undefined
     }

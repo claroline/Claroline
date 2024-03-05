@@ -1,0 +1,37 @@
+.app-search {
+  position: relative;
+
+  .app-search-icon,
+  .app-search-loader,
+  .app-search-clear {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    font-size: $input-font-size-lg;
+    height: $input-height-lg;
+    line-height: $input-line-height;
+    padding: $input-padding-y-lg $input-padding-x-lg;
+    top: 1px; // because of the increased border size of the input
+  }
+
+  .app-search-icon {
+    left: 0;
+    color: var(--#{$prefix}primary);
+  }
+
+  .form-control {
+    padding-left: calc($input-padding-x-lg * 2 + $icon-fixed-width);
+    padding-right: calc($input-padding-x-lg * 2 + $icon-fixed-width);
+    border-color: var(--#{$prefix}primary);
+    border-width: 2px;
+  }
+
+  .app-search-loader {
+    right: 0;
+    color: var(--#{$prefix}secondary);
+  }
+
+  .app-search-clear {
+    right: 0;
+  }
+}

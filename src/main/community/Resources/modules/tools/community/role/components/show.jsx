@@ -146,7 +146,7 @@ const RoleShow = (props) =>
               <>
                 {hasPermission('edit', props.role) && ('workspace' !== props.contextType || constants.ROLE_PLATFORM !== props.role.type) &&
                   <Button
-                    className="btn btn-primary my-3"
+                    className="btn btn-primary mt-3"
                     {...{
                       name: 'add-users',
                       type: MODAL_BUTTON,
@@ -163,6 +163,7 @@ const RoleShow = (props) =>
                 }
 
                 <UserList
+                  className="mt-3"
                   path={props.path}
                   name={`${selectors.FORM_NAME}.users`}
                   url={['apiv2_role_list_users', {id: props.role.id}]}
@@ -183,7 +184,7 @@ const RoleShow = (props) =>
               <>
                 {hasPermission('edit', props.role) && ('workspace' !== props.contextType || constants.ROLE_PLATFORM !== props.role.type) &&
                   <Button
-                    className="btn btn-primary my-3"
+                    className="btn btn-primary mt-3"
                     {...{
                       name: 'add-groups',
                       type: MODAL_BUTTON,
@@ -200,6 +201,7 @@ const RoleShow = (props) =>
                 }
 
                 <GroupList
+                  className="mt-3"
                   path={props.path}
                   name={`${selectors.FORM_NAME}.groups`}
                   url={['apiv2_role_list_groups', {id: props.role.id}]}

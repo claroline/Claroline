@@ -1,6 +1,7 @@
 import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 import {Helmet} from 'react-helmet'
 
 import {asset} from '#/main/app/config/asset'
@@ -32,6 +33,10 @@ const PageSimple = props =>
       embedded: props.embedded
     })}
   >
+    {!props.embedded &&
+      <div className="app-loader" />
+    }
+
     {!props.embedded && props.meta &&
       <Helmet>
         {props.meta.title &&
@@ -51,6 +56,14 @@ const PageSimple = props =>
         {props.meta.description &&
           <meta name="description" property="og:description" content={props.meta.description} />
         }
+      </Helmet>
+    }
+
+    {!isEmpty(props.styles) &&
+      <Helmet>
+        {props.styles.map(style =>
+          <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
+        )}
       </Helmet>
     }
 

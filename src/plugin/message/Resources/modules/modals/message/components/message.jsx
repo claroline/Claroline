@@ -16,8 +16,10 @@ const MessageModal = props =>
     icon="fa fa-fw fa-paper-plane"
     title={trans('new_message', {}, 'message')}
     onEnter={() => props.reset(props.receivers)}
+    size="lg"
   >
     <FormData
+      flush={true}
       name={selectors.STORE_NAME}
       sections={[
         {

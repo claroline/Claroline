@@ -115,13 +115,6 @@ const WorkspaceMenu = (props) => {
     <ContextMenu
       basePath={props.basePath}
       title={!isEmpty(props.workspace) ? props.workspace.name : trans('workspace')}
-      backAction={{
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-angle-double-left',
-        label: trans('workspaces'),
-        target: toolRoute('workspaces'),
-        exact: true
-      }}
 
       tools={props.tools
         // hide tools that can not be configured in models for now
@@ -130,7 +123,7 @@ const WorkspaceMenu = (props) => {
       actions={workspaceActions}
       shortcuts={props.shortcuts}
     >
-      {!props.impersonated && get(props.workspace, 'display.showProgression') &&
+      {false && !props.impersonated && get(props.workspace, 'display.showProgression') &&
         <WorkspaceProgression
           roles={props.roles}
           userEvaluation={props.userEvaluation}
