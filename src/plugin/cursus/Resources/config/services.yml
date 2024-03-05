@@ -7,3 +7,4 @@ imports:
     - { resource: services/subscriber.yml }
     - { resource: services/transfer.yml }
     - { resource: services/voter.yml }
+    - { resource: services/updater.yml }

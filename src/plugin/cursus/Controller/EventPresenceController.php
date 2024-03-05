@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -48,7 +49,8 @@ class EventPresenceController
         private readonly SerializerProvider $serializer,
         private readonly EventPresenceManager $manager,
         private readonly EventManager $eventManager,
-        private readonly PdfManager $pdfManager
+        private readonly PdfManager $pdfManager,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
         $this->authorization = $authorization;
     }
@@ -117,6 +119,41 @@ class EventPresenceController
             $this->checkPermission('EDIT', $presence, [], true);
 
             $this->manager->setStatus([$presence], $status);
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (EventPresence $presence) {
+            return $this->serializer->serialize($presence);
+        }, $presences));
+    }
+
+    /**
+     * Updates the status of a EventPresence for current user.
+     *
+     * @Route("/sign", name="apiv2_cursus_event_presence_sign", methods={"PUT"})
+     */
+    public function signStatusAction(Request $request): JsonResponse
+    {
+        $event = $this->decodeRequest($request);
+        if (empty($event)) {
+            return new JsonResponse(null, 404);
+        }
+
+        $eventObject = $this->om->getRepository(Event::class)->findBy([
+            'uuid' => $event['id'],
+        ]);
+
+        $presences = $this->om->getRepository(EventPresence::class)->findBy([
+            'event' => $eventObject,
+            'user' => $this->tokenStorage->getToken()->getUser(),
+        ]);
+
+        $this->om->startFlushSuite();
+
+        foreach ($presences as $presence) {
+            $this->checkPermission('EDIT', $presence, [], true);
+            $this->manager->setStatus([$presence], EventPresence::PRESENT);
         }
 
         $this->om->endFlushSuite();

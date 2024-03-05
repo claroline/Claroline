@@ -1,0 +1,20 @@
+{
+  "access": "Access",
+  "event_code": "Event Code",
+  "event_presence_code": "Event presence Code",
+  "validate": "Validate",
+  "sign": "Sign",
+  "sign_label": "Enter your firstname and lastname",
+
+  "presence_info": "Me, %user%, was present at the event %event_title% from %event_date_start% to %event_date_end%.",
+  "presence_code_desc": "Please enter the event code to sign your presence.",
+
+  "not_registered": "Authentication required",
+  "not_registered_desc": "You must be logged for sign your presence at this event.",
+  "event_not_found": "Event not found",
+  "event_not_found_desc": "This code does not correspond to any event.",
+  "event_not_found_retry": "Enter again event code",
+
+  "presence_confirm_title": "Presence confirmation",
+  "presence_confirm_desc": "Your %event_title% event signature has been successfully recorded."
+}

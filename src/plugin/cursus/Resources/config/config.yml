@@ -10,6 +10,9 @@ plugin:
           tool_rights:
               - register
 
+        - name: presence
+          icon: signature
+
     data_sources:
         - name: course_sessions
           type: list
