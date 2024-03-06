@@ -4,3 +4,4 @@ imports:
     - { resource: services/serializer.yml }
     - { resource: services/subscriber.yml }
     - { resource: services/validator.yml }
+    - { resource: services/updater.yml }
