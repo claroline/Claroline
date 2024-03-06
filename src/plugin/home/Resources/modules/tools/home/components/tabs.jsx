@@ -37,15 +37,11 @@ const HomeTabs = (props) => {
   const tabs = props.tabs
     .filter(tab => props.showHidden || !get(tab, 'restrictions.hidden', false))
 
-  if (!isEmpty(tabs)) {
-    return (
-      <ToolMenu
-        actions={tabs.map(getTabSummary).concat(props.actions)}
-      />
-    )
-  }
-
-  return null
+  return (
+    <ToolMenu
+      actions={(1 < tabs.length ? tabs.map(getTabSummary) : []).concat(props.actions)}
+    />
+  )
 }
 
 HomeTabs.propTypes = {

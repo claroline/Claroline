@@ -3,28 +3,6 @@
  */
 
 
-//== Colors
-//
-//## Gray and brand colors for use across Bootstrap.
-
-$gray-base:              #000000 !default;
-//$gray-darker:            #262626; // #222
-$gray-dark:              lighten($gray-base, 20%) !default;   // #333
-//$gray:                   lighten($gray-base, 33.5%) !default; // #555
-$gray-light:             lighten($gray-base, 46.7%) !default; // #777
-$gray-lighter:           #ebebeb !default; // #eee
-$gray-lightest:          #F9F9F9 !default;
-
-//$primary:         #148AC7 /*#046d8a*/; // bootstrap original : #337ab7
-$brand-success:         $success !default;
-$brand-info:            $info !default;
-$brand-warning:         $warning !default;
-$brand-danger:          $danger !default;
-//$brand-secondary:       $pink; // #C51162
-
-$enable-border:           true !default;
-
-
 //** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
 $line-height-computed:    floor(($font-size-base * $line-height-base)) !default; // ~20px
 
@@ -65,7 +43,7 @@ $state-warning-text:             #686733 !default;
 $state-warning-bg:               #f4f3bf !default;
 $state-warning-border:           $state-warning-bg !default;
 
-$state-danger-text:              $brand-danger !default;
+$state-danger-text:              $danger !default;
 $state-danger-bg:                #ffd5d5 !default;
 $state-danger-border:            $state-danger-bg !default;
 
@@ -90,14 +68,6 @@ $icon-fixed-width: 1.25em; // same value as fa-fw (there is no var for it in fon
 
 $images-path: "images/";
 
-// a color to use on background which is considered 'dark' by tinycolor2
-// $see https://www.npmjs.com/package/tinycolor2#isdark
-$text-light-color: $gray-100;
-
-// a color to use on background which is considered 'light' by tinycolor2
-// $see https://www.npmjs.com/package/tinycolor2#islight
-$text-dark-color:  $gray-900;
-
 // -
 // Z-indexes
 // ---
@@ -107,16 +77,6 @@ $zindex-sidebar:       $zindex-fixed - 1;
 // we want to pass over navbars but under tooltips, popovers and modals
 // modify with caution !
 $zindex-fullscreen:    $zindex-offcanvas;
-$zindex-flying-alerts: $zindex-toast;
-
-
-// -
-// States
-// ---
-
-$state-selected-text:   $state-info-text !default;
-$state-selected-border: $state-info-border !default;
-$state-selected-bg:     $state-info-bg !default;
 
 
 // -
@@ -131,31 +91,38 @@ $login-max-width: 760px !default;
 // Header
 // ---
 
-$top-bar-bg:                  $menu !default;
-$top-bar-color:               color-contrast($menu) !default;
-$top-bar-font-size:           $font-size-base !default;
-$top-bar-border-bottom-size:  0 !default;
-$top-bar-border-bottom-color: $primary !default;
-$top-bar-border-bottom:       $top-bar-border-bottom-size solid $top-bar-border-bottom-color !default;
-$top-bar-box-shadow:          0 0 5px 1px rgba(0, 0, 0, 0.5) !default;
+$brand-color:           color-contrast($menu) !default;
+$brand-secondary-color: color-contrast($menu) !default;
+$brand-logo-size:       2.5rem;
+$brand-font-size:       $font-size-lg !default;
+$brand-font-weight:     $font-weight-semibold !default;
 
-$top-bar-max-width:           100%; // max width for the top bar content (do not affect top bar container)
-$top-bar-height:              60px + $top-bar-border-bottom-size !default;
 
-$top-bar-brand-color:           $top-bar-color !default;
-$top-bar-brand-secondary-color: color-contrast($menu, $primary, $top-bar-brand-color) !default;
-$top-bar-brand-logo-size:       2.5rem;
-$top-bar-brand-font-size:       $font-size-lg !default;
-$top-bar-brand-font-weight:     $font-weight-semibold !default;
+// -
+// Toolbars
+// By default it reuses some of the styles from the app header.
+// ---
 
-$top-bar-link-color:          lighten($top-bar-bg, 60%) !default;
-$top-bar-link-bg:             transparent !default;
-$top-bar-link-hover-color:    lighten($top-bar-bg, 70%) !default;
-$top-bar-link-hover-bg:       darken($top-bar-bg, 5%) !default;
-$top-bar-link-active-color:   lighten($top-bar-bg, 80%) !default;
-$top-bar-link-active-bg:      $top-bar-link-hover-bg !default;
-$top-bar-link-disabled-color: lighten($top-bar-bg, 30%) !default;
-$top-bar-link-disabled-bg:    transparent !default;
+$toolbar-size:           384px !default; // 1/5 of 1920
+$toolbar-bg:             $menu !default;
+$toolbar-color:          color-contrast($menu) !default;
+$toolbar-active-color:   $primary !default;
+
+// links
+$toolbar-link-spacer-y:       .25rem !default;
+$toolbar-link-spacer-x:       .5rem !default;
+$toolbar-link-padding-y:      .75rem !default;
+$toolbar-link-padding-x:      1rem !default;
+$toolbar-link-color:          fade-out($toolbar-color, .375) !default;
+$toolbar-link-bg:             null !default;
+$toolbar-link-border-radius:  $border-radius !default;
+
+$toolbar-link-hover-color:    fade-out($toolbar-color, .125) !default;
+$toolbar-link-hover-bg:       null !default;
+$toolbar-link-active-color:   color-contrast($toolbar-active-color) !default;
+$toolbar-link-active-bg:      $toolbar-active-color !default;
+$toolbar-link-disabled-color: fade-out($toolbar-color, .5) !default;
+$toolbar-link-disabled-bg:    null !default;
 
 
 // -
@@ -166,28 +133,6 @@ $loader-primary:   $primary !default;
 $loader-secondary: $learning !default;
 $loader-color:     var(--#{$prefix}secondary-color) !default;
 $loader-bg:        transparent !default;
-
-
-// -
-// Toolbars
-// By default it reuses some of the styles from the app header.
-// ---
-
-$toolbar-size:           400px;
-//$toolbar-font-size:      22px; // size for icons
-$toolbar-bg:             $menu;
-$toolbar-color:          $white;
-$toolbar-active-color:   $primary;
-
-// links
-$toolbar-link-color:          $top-bar-link-color;
-$toolbar-link-bg:             $top-bar-link-bg;
-$toolbar-link-hover-color:    $top-bar-link-hover-color;
-$toolbar-link-hover-bg:       $top-bar-link-hover-bg;
-$toolbar-link-active-color:   $top-bar-link-active-color;
-$toolbar-link-active-bg:      $top-bar-link-active-bg;
-$toolbar-link-disabled-color: $top-bar-link-disabled-color;
-$toolbar-link-disabled-bg:    $top-bar-link-disabled-bg;
 
 
 // -
@@ -203,25 +148,9 @@ $page-header-border-color: transparent /*var(--#{$prefix}border-color-translucen
 
 $page-title-color:          null !default;
 $page-title-font-size:      2rem !default;
-$page-title-font-weight:    600 !default;
+$page-title-font-weight:    $font-weight-semibold !default;
 $page-subtitle-color:       var(--#{$prefix}secondary-color) !default;
-$page-subtitle-font-weight: 300 !default;
-
-// -
-// Page actions
-// ---
-
-$page-action-primary-color:  color-contrast($primary);
-$page-action-primary-bg:     $primary;
-$page-action-primary-border: transparent;
-
-$page-action-default-color:  $body-color;
-$page-action-default-bg:     transparent;
-$page-action-default-border: transparent;
-
-$page-action-danger-color:   color-contrast($primary);
-$page-action-danger-bg:      $primary;
-$page-action-danger-border:  transparent;
+$page-subtitle-font-weight: $font-weight-base !default;
 
 
 // -
@@ -265,35 +194,20 @@ $flying-alert-pending-border: $flying-alert-pending-bg;
 
 // -
 // Summaries
-//
-// As summaries can have very different forms and usages (eg. path, quiz)
-// there is no default implementation in the base layout
-// but each UI component intended to be used as a summary MUST use this vars
-// and adapt to the use case in order to keep common look & feel between all summary implementations
 // ---
 
-$summary-font:              $font-size-base;
-$summary-font-style:        normal;
-$summary-color:             white;
 $summary-lvl-indent:        20px; // indent children of a step in the summary
-
-// deprecated (? still required by PDF player)
-$summary-padding:           15px;
-$summary-bg:                $menu;
-$summary-border-radius:     0;
-$summary-box-shadow:        0 0 4px 0 rgba(0, 0, 0, 0.4);
-$summary-box-shadow-v:      2px 0 4px 0 rgba(0, 0, 0, 0.4); // box shadow for vertical summaries
-$summary-box-shadow-h:      0 2px 4px 0 rgba(0, 0, 0, 0.4); // box shadow for horizontal summaries
-
 // Links
-$summary-link-bg:             $toolbar-link-bg;
-$summary-link-color:          $toolbar-link-color;
-$summary-link-hover-bg:       $toolbar-link-hover-bg;
-$summary-link-hover-color:    $toolbar-link-hover-color;
-$summary-link-active-bg:      $toolbar-link-active-bg;
-$summary-link-active-color:   $toolbar-link-active-color;
-$summary-link-disabled-bg:    $toolbar-link-disabled-bg;
-$summary-link-disabled-color: $toolbar-link-disabled-color;
+$summary-link-color:          $link-color;
+$summary-link-bg:             var(--#{$prefix}tertiary-bg);
+$summary-link-border-radius:  $border-radius-sm;
+
+$summary-link-hover-color:    $link-hover-color;
+$summary-link-hover-bg:       $summary-link-bg;
+$summary-link-active-color:   $link-hover-color;
+$summary-link-active-bg:      $summary-link-bg;
+$summary-link-disabled-color: $body-color;
+$summary-link-disabled-bg:    var(--#{$prefix}tertiary-bg);
 
 
 // -
@@ -331,13 +245,6 @@ $list-controls-bg:           var(--#{$prefix}tertiary-bg) !default;
 $list-controls-border-width: $border-width !default;
 $list-controls-border-color: var(--#{$prefix}border-color-translucent) !default;
 
-//$list-controls-color:          var(--#{$prefix}secondary-color) !default;
-//$list-controls-border:         transparent !default;
-//$list-controls-disabled-bg:    #F4F4F4 !default;
-//$list-controls-disabled-color: #666666 !default;
-//$list-controls-active-bg:      transparent !default;
-//$list-controls-active-color:   $gray-900 !default;
-
 
 // -
 // Headings
@@ -346,7 +253,7 @@ $list-controls-border-color: var(--#{$prefix}border-color-translucent) !default;
 $heading-numbering-padding-y:     .125em !default;
 $heading-numbering-padding-x:     .375em !default;
 $heading-numbering-bg:            $learning !default;
-$heading-numbering-color:         color-contrast($learning) !default;
+$heading-numbering-color:         color-contrast($heading-numbering-bg) !default;
 $heading-numbering-font-size:     null !default;
 $heading-numbering-weight:        $font-weight-bold !default;
 $heading-numbering-border-radius: 0 !default;
@@ -437,10 +344,10 @@ $data-card-inner-border-radius: subtract($data-card-border-radius, $data-card-bo
 $data-card-box-shadow:          $card-box-shadow;
 
 
-$data-card-inner-border-width: $data-card-border-width !default;
+$data-card-inner-border-width: 0 !default;
 $data-card-inner-border-color: $data-card-border-color !default;
 
-$data-card-header-bg:  $card-cap-bg;
+$data-card-header-bg:  tint-color($primary, 95%)/*$card-cap-bg*/;
 $data-card-icon-color: var(--#{$prefix}secondary-color) !default;
 
 // sizing
@@ -457,46 +364,28 @@ $data-card-active-color:              var(--#{$prefix}primary-text-emphasis) !de
 $data-card-active-bg:                 var(--#{$prefix}primary-bg-subtle) !default;
 $data-card-active-header-bg:          tint-color($primary, 70%) !default;
 $data-card-active-icon-color: $data-card-active-color !default;
-//$data-card-active-border-color:       $data-card-border-color;
-//$data-card-active-inner-border-color: $data-card-inner-border-color;
-//$data-card-active-box-shadow:   0 0 10px 2px rgba($primary, 0.25);
-
-/*$data-card-muted-color:         $gray-light;
-$data-card-muted-bg:            $gray-lightest;
-$data-card-muted-box-shadow:    0 0 2px rgba(0,0,0,.1);
-$data-card-muted-header-bg:     $gray-lighter;
-$data-card-muted-border:        #ededed;
-$data-card-muted-inner-border:  #ededed;*/
-
-
-// -
-// Progress bars
-// ---
-
-//$progress-box-shadow:     inset 0 1px 2px rgba(0,0,0,.1);
-//$progress-bar-box-shadow: none; // bootstrap default : inset 0 -1px 0 rgba(0,0,0,.15)
 
 
 // -
 // Scores
 // ---
 
-$score-border-radius:    $border-radius;
-$score-bg:               $learning;
-$score-color:            $white;
-$score-border:           none;
-$score-font-size:        $font-size-base;
-$score-padding-v:        .375rem; // same as button
-$score-padding-h:        .75rem; // same as button
+$score-border-radius:    $border-radius !default;
+$score-bg:               $learning !default;
+$score-color:            color-contrast($score-bg) !default;
+$score-border:           none !default;
+$score-font-size:        $font-size-base !default;
+$score-padding-v:        .375rem !default; // same as button
+$score-padding-h:        .75rem !default; // same as button
 
 // small box variant
-$score-border-radius-sm: $border-radius-sm;
-$score-font-size-sm:     $font-size-sm;
-$score-padding-v-sm:     .25rem; // same as button
-$score-padding-h-sm:     .5rem; // same as button
+$score-border-radius-sm: $border-radius-sm !default;
+$score-font-size-sm:     $font-size-sm !default;
+$score-padding-v-sm:     .25rem !default; // same as button
+$score-padding-h-sm:     .5rem !default; // same as button
 
 // large box variant
-$score-border-radius-lg: $border-radius-lg;
-$score-font-size-lg:     $font-size-lg;
-$score-padding-v-lg:     .5rem; // same as button
-$score-padding-h-lg:     1rem; // same as button
+$score-border-radius-lg: $border-radius-lg !default;
+$score-font-size-lg:     $font-size-lg !default;
+$score-padding-v-lg:     .5rem !default; // same as button
+$score-padding-h-lg:     1rem !default; // same as button

@@ -17,12 +17,7 @@ import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const PendingMain = props =>
   <ToolPage
-    path={[{
-      type: LINK_BUTTON,
-      label: trans('pending_registrations'),
-      target: `${props.path}/pending`
-    }]}
-    subtitle={trans('pending_registrations')}
+    title={trans('pending_registrations')}
   >
     <ContentSizing size="full">
       <ListData

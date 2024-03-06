@@ -10,13 +10,6 @@ import {selectors} from '#/main/core/tool/editor/store'
 const ToolEditor = (props) =>
   <ToolPage
     title={trans('parameters')}
-    breadcrumb={[
-      {
-        type: LINK_BUTTON,
-        label: trans('parameters'),
-        target: ''
-      }
-    ]}
   >
     <FormData
       className="mt-3"

@@ -16,17 +16,16 @@ const PageBreadcrumb = props => {
         <ol className="breadcrumb">
           {items
             .filter(item => undefined === item.displayed || item.displayed)
-            .map((item, index) => index !== items.length - 1 ?
+            .map((item) =>
               <li key={item.id || toKey(item.label)} className="breadcrumb-item">
                 <Button
                   type={item.type || URL_BUTTON}
                   {...omit(item, 'displayed')}
                 />
               </li>
-              :
-              <li key={item.id || toKey(item.label)} className="breadcrumb-item active visually-hidden"  aria-current="page">{item.label}</li>
             )
           }
+          <li className="breadcrumb-item active visually-hidden" aria-current="page">{props.current}</li>
         </ol>
       </nav>
     )
@@ -37,6 +36,7 @@ const PageBreadcrumb = props => {
 
 PageBreadcrumb.propTypes = {
   className: T.string,
+  current: T.string.isRequired,
   path: T.arrayOf(T.shape({
     id: T.string,
     type: T.string,
@@ -55,6 +55,7 @@ const PageTitle = props =>
     {!props.embedded &&
       <PageBreadcrumb
         path={props.path}
+        current={props.title}
       />
     }
 

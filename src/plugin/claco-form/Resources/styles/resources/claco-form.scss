@@ -40,7 +40,7 @@
             color: var(--#{$prefix}secondary-color);
             font-size: 72px;
             padding: 15px;
-            background: $gray-lightest;
+            background: var(--#{$prefix}tertiary-bg);
             border-bottom: 1px solid #e5e5e5; // todo : add var (same as feedback in exo)
         }
 
@@ -132,8 +132,8 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    color: $gray-light;
-    background: $gray-lightest; // panel heading
+    color: var(--#{$prefix}secondary-color);
+    background: var(--#{$prefix}tertiary-bg);
     padding: 5px 10px;
     margin-bottom: $component-margin-bottom;
 
@@ -168,7 +168,7 @@
 .entry-footer {
     .title {
         display: inline-block;
-        color: $gray-light;
+        color: var(--#{$prefix}secondary-color);
         font-size: $font-size-sm;
         min-width: 80px; // todo: find better
     }

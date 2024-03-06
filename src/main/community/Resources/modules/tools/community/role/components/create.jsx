@@ -15,10 +15,6 @@ const RoleCreate = (props) =>
         type: LINK_BUTTON,
         label: trans('roles', {}, 'community'),
         target: `${props.path}/roles`
-      }, {
-        type: LINK_BUTTON,
-        label: trans('new_role', {}, 'community'),
-        target: '' // current page, no need to add a link
       }
     ]}
     subtitle={trans('new_role', {}, 'community')}

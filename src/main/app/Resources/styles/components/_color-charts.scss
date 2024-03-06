@@ -54,10 +54,10 @@ $transparent-bg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf
             border-bottom: 2px solid;
 
             &.text-light {
-                border-color: $text-light-color;
+                border-color: $color-contrast-light;
             }
             &.text-dark {
-                border-color: $text-dark-color;
+                border-color: $color-contrast-dark;
             }
         }
 
@@ -66,10 +66,10 @@ $transparent-bg: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf
             margin-top: $component-margin-bottom;
 
             &.text-light {
-                border-color: $text-light-color;
+                border-color: $color-contrast-light;
             }
             &.text-dark {
-                border-color: $text-dark-color;
+                border-color: $color-contrast-dark;
             }
         }
     }

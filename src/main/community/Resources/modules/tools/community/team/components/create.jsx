@@ -15,10 +15,6 @@ const TeamCreate = (props) =>
         type: LINK_BUTTON,
         label: trans('teams', {}, 'community'),
         target: `${props.path}/teams`
-      }, {
-        type: LINK_BUTTON,
-        label: trans('new_team', {}, 'community'),
-        target: '' // current page, no need to add a link
       }
     ]}
     subtitle={trans('new_team', {}, 'community')}

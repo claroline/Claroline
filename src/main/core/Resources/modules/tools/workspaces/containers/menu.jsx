@@ -11,6 +11,7 @@ import {selectors} from '#/main/core/tools/workspaces/store'
 const WorkspacesMenu = withRouter(
   connect(
     (state) => ({
+      path: toolSelectors.path(state),
       authenticated: securitySelectors.isAuthenticated(state),
       canCreate: selectors.creatable(state),
       canArchive: hasPermission('archive', toolSelectors.toolData(state))

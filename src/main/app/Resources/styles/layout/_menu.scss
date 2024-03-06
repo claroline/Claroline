@@ -1,232 +1,47 @@
 
 @use "sass:math";
 
-// todo : write a mixin to generate menu btns variant (for shortcuts, search btn, menu items)
-
 .app-menu {
-    //z-index: 2;
-    //position: sticky;
     overflow-y: auto; // gets its own scrollbar
     max-width: $toolbar-size;
     width: 100%;
-    //top: $top-bar-height;
     top: 0;
     bottom: 0;
     display: flex;
     flex-direction: column;
     background-color: $toolbar-bg;
     color: $toolbar-color;
-
-    //transition: width 300ms ease-in-out;
-    /*@include box-shadow(0 0 .375rem rgba(0,0,0,.75));
-    border-right: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color-translucent);*/
-
-    .app-menu-title {
-        text-align: center;
-        padding: map-get($spacers, 3);
-        margin: 0;
-        font-family: $font-family-base;
-    }
-
-    .app-menu-status {
-        background-color: $toolbar-link-hover-bg;
-        padding: map-get($spacers, 3);
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-
-        .user-avatar {
-            max-width: 5rem;
-            max-height: 5rem;
-        }
-
-        .gauge {
-            flex-shrink: 0;
-        }
-
-        .app-menu-status-info {
-            flex: 1 0;
-            margin-left: ($grid-gutter-width * .5);
-            font-size: $font-size-sm;
-            color: $toolbar-link-color;
-
-            h3 {
-                margin-bottom: map-get($spacers, 1);
-                color: $toolbar-color;
-                display: flex;
-                justify-content: space-between;
-            }
-        }
-
-        .app-menu-status-toolbar {
-            flex: 1 0 100%;
-            text-align: right;
-
-            > .btn-link {
-                text-transform: uppercase;
-                padding: 0;
-                border: none;
-                color: $toolbar-link-color;
-
-                &:hover {
-                    color: $toolbar-link-hover-color;
-                }
-                &:focus {
-                    color: $toolbar-link-active-color;
-                }
-            }
-        }
-
-        + .app-menu-shortcuts {
-            margin-top: 2px;
-        }
-
-        + .app-menu-section .app-menu-section-toggle {
-            margin-top: 2px;
-        }
-    }
-
-    .app-menu-impersonation {
-        @include gradient-striped($toolbar-bg, 45deg);
-
-        background-size: 100px 100px;
-    }
-
-    .app-menu-shortcuts {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-
-        .app-menu-shortcuts-btn {
-            flex: 1;
-            font-size: 16px;
-            padding-left: 10px;
-            padding-right: 10px;
-            color: $toolbar-link-color;
-            background: $toolbar-link-hover-bg;
-            border-color: transparent;
-            box-shadow: none;
-
-            + .app-menu-shortcuts-btn {
-                margin-left: 2px;
-            }
-        }
-
-        + .app-menu-section .app-menu-section-toggle {
-            margin-top: 2px;
-        }
-    }
-
-    .app-menu-section {
-        &:first-of-type {
-            margin-top: auto;
-        }
-
-        &.opened {
-            flex: 1;
-        }
-
-        .app-menu-section-title {
-            margin: 0;
-        }
-
-        .app-menu-section-toggle {
-            text-align: left;
-            padding: ($grid-gutter-width * .5);
-            display: flex;
-            align-items: center;
-            width: 100%;
-            color: $toolbar-color;
-
-            margin-bottom: 2px;
-            background: $toolbar-link-hover-bg;
-
-            .toggle {
-                font-size: 12px;
-                margin-left: auto;
-            }
-        }
-    }
-
-    .list-group-item {
-        //font-style: italic;
-        padding-left: $grid-gutter-width !important;
-
-        &.active {
-            padding-left: 26px !important;
-            border-left: 4px solid $toolbar-active-color;
-        }
-
-        &.danger {
-            color: $brand-danger;
-
-            &:hover,
-            &:focus {
-                color: white;
-                background: $brand-danger;
-            }
-
-            &.disabled {
-                opacity: .65; // same than standard button
-                color: $brand-danger;
-                background: transparent;
-            }
-        }
-    }
-
-    .list-group-item/*,
-    .app-menu-back*/ {
-        display: block;
-        width: 100%;
-        padding: ($grid-gutter-width * .5);
-        line-height: 1;
-        color: $toolbar-link-color;
-        background: $toolbar-link-bg;
-        border: none;
-
-        &:hover {
-            color: $toolbar-link-hover-color;
-            background: $toolbar-link-hover-bg;
-        }
-
-        &:focus,
-        &:active,
-        &.active {
-            &,
-            &:hover,
-            &:focus {
-                color: $toolbar-link-active-color;
-                background-color: $toolbar-link-active-bg;
-            }
-        }
-
-        &[disabled],
-        &.disabled {
-            // avoid focus or hover effect on disabled
-            &,
-            &:hover,
-            &:focus {
-                color: $toolbar-link-disabled-color;
-                background-color: $toolbar-link-disabled-bg;
-            }
-
-            // preserve active state on disabled (because active links are disabled)
-            &.active {
-                &,
-                &:hover,
-                &:focus {
-                    color: $toolbar-link-active-color;
-                    background: $toolbar-link-active-bg;
-                    opacity: 1;
-                }
-            }
-        }
-    }
 }
 
-.app-menu-item {
+.app-menu-brand {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: map-get($spacers, 3);
+    white-space: nowrap;
+    color: $brand-color;
 
+    &:hover {
+        text-decoration: none;
+    }
+
+    .app-menu-logo {
+        height: $brand-logo-size;
+    }
+
+    .app-menu-title {
+        text-align: left;
+        margin: 0;
+        font-size: $brand-font-size;
+        font-weight: $brand-font-weight;
+
+        white-space: nowrap;
+
+        > small {
+            font-weight: $font-weight-lighter;
+            color: $brand-secondary-color;
+        }
+    }
 }
 
 .app-menu-cover {
@@ -238,19 +53,12 @@
 }
 
 .app-menu-current-user {
-
     display: flex;
     flex-direction: column;
-    //flex-wrap: wrap;
     align-items: center;
-    //justify-content: center;
-    //background-color: $toolbar-link-hover-bg;
-
-
-    //gap: map-get($spacers, 3);
     padding: map-get($spacers, 3);
     padding-top: 0;
-    margin-bottom: map-get($spacers, 3);
+    //margin-bottom: map-get($spacers, 3);
 
     .user-avatar {
         max-width: 5rem;
@@ -263,19 +71,9 @@
     h1 {
         font-weight: $font-weight-medium;
         font-size: $font-size-lg;
-        //margin: map-get($spacers, 2) 0;
     }
-    /*div {
-        text-align: center;
-        padding: map-get($spacers, 3);
-        padding-top: 0;
-        //margin: $btn-padding-y $btn-padding-x;
-        font-size: $font-size-lg;
-        flex: 1;
-    }*/
 
     nav {
-        //margin-top: map-get($spacers, 2);
         font-size: $font-size-base;
         gap: map-get($spacers, 2)
     }
@@ -304,7 +102,73 @@
     }
 }
 
-.app-menu-backdrop {
+.app-menu-impersonation {
+    @include gradient-striped($toolbar-bg, 45deg);
+
+    background-size: 100px 100px;
+}
+
+.app-menu-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}
+
+.app-menu-item {
+    /*display: block;
+    width: 100%;*/
+    padding: $toolbar-link-padding-y $toolbar-link-padding-x;
+    margin: $toolbar-link-spacer-y $toolbar-link-spacer-x;
+    color: $toolbar-link-color;
+    background: $toolbar-link-bg;
+    border: none;
+    box-shadow: none;
+    text-align: left;
+
+    @include border-radius($toolbar-link-border-radius);
+
+    &:hover {
+        color: $toolbar-link-hover-color;
+        background: $toolbar-link-hover-bg;
+        text-decoration: none;
+    }
+
+    &:focus,
+    &:active,
+    &.active {
+        &,
+        &:hover,
+        &:focus {
+            color: $toolbar-link-active-color;
+            background-color: $toolbar-link-active-bg;
+            box-shadow: none;
+        }
+    }
+
+    &[disabled],
+    &.disabled {
+        // avoid focus or hover effect on disabled
+        &,
+        &:hover,
+        &:focus {
+            color: $toolbar-link-disabled-color;
+            background-color: $toolbar-link-disabled-bg;
+        }
+
+        // preserve active state on disabled (because active links are disabled)
+        &.active {
+            &,
+            &:hover,
+            &:focus {
+                color: $toolbar-link-active-color;
+                background: $toolbar-link-active-bg;
+                opacity: 1;
+            }
+        }
+    }
+}
+
+/*.app-menu-backdrop {
     position: fixed;
     top: 0;
     left: 0;
@@ -312,21 +176,6 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 3;
-}
-
-/*.app-menu-search {
-    padding: ($grid-gutter-width * .5);
-
-    .form-control {
-        color: $toolbar-link-hover-color;
-        background: lighten($toolbar-bg, 8%);
-        border-color: transparent;
-        box-shadow: none;
-
-        &::placeholder {
-            color: $toolbar-link-color;
-        }
-    }
 }*/
 
 // XS/SM screens :
@@ -335,5 +184,16 @@
         position: absolute;
         z-index: 4;
         @include box-shadow(0 0 3px 1px rgba(0, 0, 0, 0.5));
+
+        &:after {
+            content: " ";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 3;
+        }
     }
 }

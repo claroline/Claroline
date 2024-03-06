@@ -9,7 +9,6 @@ import {UrlDisplay} from '#/plugin/url/components/display'
 
 const UrlTab = props =>
   <HomePage
-    tabs={props.tabs}
     currentTab={props.currentTab}
     title={props.title}
   >
@@ -22,9 +21,6 @@ const UrlTab = props =>
 
 UrlTab.propTypes = {
   currentContext: T.object,
-  tabs: T.arrayOf(T.shape(
-    TabTypes.propTypes
-  )),
   title: T.string.isRequired,
   currentTab: T.shape(
     TabTypes.propTypes

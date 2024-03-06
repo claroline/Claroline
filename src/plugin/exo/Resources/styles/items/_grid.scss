@@ -3,7 +3,7 @@
 .grid-editor {
   .col-controls,
   .row-controls {
-    background: $gray-lightest;
+    background: var(--#{$prefix}tertiary-bg);
     text-align: center;
 
     .grid-score {

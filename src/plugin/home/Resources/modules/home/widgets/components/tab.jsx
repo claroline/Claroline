@@ -15,7 +15,6 @@ const WidgetsTab = props => {
 
   return (
     <HomePage
-      tabs={props.tabs}
       currentTab={props.currentTab}
       title={props.title}
     >
@@ -45,9 +44,6 @@ const WidgetsTab = props => {
 
 WidgetsTab.propTypes = {
   currentContext: T.object,
-  tabs: T.arrayOf(T.shape(
-    TabTypes.propTypes
-  )),
   title: T.string.isRequired,
   currentTab: T.shape(
     TabTypes.propTypes

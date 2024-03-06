@@ -1,7 +1,0 @@
-@mixin border($border) {
-    @if $enable-border {
-        border: $border;
-    } @else {
-        border: none;
-    }
-}

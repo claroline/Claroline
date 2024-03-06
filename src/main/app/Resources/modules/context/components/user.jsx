@@ -123,7 +123,7 @@ const ContextUser = (props) => {
               name: 'favorites',
               type: MODAL_BUTTON,
               icon: 'fa fa-fw fa-star',
-              label: trans('favorites', {}, 'favorite'),
+              label: trans('favourites', {}, 'favourite'),
               modal: [MODAL_FAVOURITES]
             }, {
               name: 'parameters',

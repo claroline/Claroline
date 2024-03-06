@@ -23,7 +23,7 @@
         justify-content: space-between;
         margin-top: 5px;
         padding: 5px 10px;
-        background: $gray-lighter;
+        background: var(--#{$prefix}tertiary-bg);
 
         @include border-radius($border-radius-sm);
 

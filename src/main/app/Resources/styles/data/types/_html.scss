@@ -67,40 +67,14 @@
 .editor-toolbar {
     z-index: 2;
     position: absolute;
-    //font-size: 0; // fix spacing
     top: -13px;
     right: -13px;
 
     .editor-toolbar-btn {
-        /*font-size: $font-size-sm;
-        width: 26px;
-        height: 26px;*/
-
         width: 26px;
         height: 26px;
 
         // removes default btn styles
         padding: 0;
-        /*border: none;
-        line-height: 1 !important;
-        color: $white !important;
-        background: $gray-500 !important;
-        border-radius: 50%;*/
-
-        /*&:hover,
-        &:focus {
-            background: $gray-dark !important;
-        }
-
-        + .editor-toolbar-btn {
-            margin-left: 5px;
-        }*/
     }
 }
-
-/*[contenteditable=true]:empty:before {
-    content: attr(placeholder);
-    display: block; !* For Firefox *!
-    color: $input-placeholder-color;
-    cursor: text;
-}*/

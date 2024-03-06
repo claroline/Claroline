@@ -11,8 +11,8 @@
     .criterion-item {
         display: flex;
         align-items: flex-start;
-        background-color: $gray-lighter;
-        border: 1px solid $gray-lighter;
+        background-color: var(--#{$prefix}tertiary-bg);
+        border: 1px solid var(--#{$prefix}tertiary-bg);
         border-radius: $border-radius;
         padding: 10px;
         margin-bottom: 10px;

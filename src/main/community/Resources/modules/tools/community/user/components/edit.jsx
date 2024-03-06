@@ -2,8 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/app/intl'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 
 import {UserPage} from '#/main/community/user/components/page'
@@ -14,13 +12,6 @@ import {UserForm} from '#/main/community/user/components/form'
 const UserEdit = (props) =>
   <UserPage
     path={props.path}
-    breadcrumb={[
-      {
-        type: LINK_BUTTON,
-        label: trans('edition'),
-        target: '' // current page, link is not needed
-      }
-    ]}
     user={props.user}
     reload={props.reload}
   >

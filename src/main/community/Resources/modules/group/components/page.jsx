@@ -26,13 +26,9 @@ const Group = (props) =>
         type: LINK_BUTTON,
         label: trans('groups', {}, 'community'),
         target: `${props.path}/groups`
-      }, {
-        type: LINK_BUTTON,
-        label: get(props.group, 'name', trans('loading')),
-        target: !isEmpty(props.group) ? route(props.group, props.path) : ''
       }
     ].concat(props.group ? props.breadcrumb : [])}
-    subtitle={trans('group_name', {name: get(props.group, 'name', trans('loading'))}, 'community')}
+    title={get(props.group, 'name', trans('loading'))}
     toolbar="edit | send-message | fullscreen more"
     poster={get(props.group, 'poster')}
     actions={!isEmpty(props.group) ? getActions([props.group], {

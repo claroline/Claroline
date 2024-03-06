@@ -1,31 +1,37 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {trans} from '#/main/app/intl'
 import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {route} from '#/main/core/workspace/routing'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 import {WorkspaceForm} from '#/main/core/workspace/components/form'
 
 const WorkspaceCreation = (props) =>
-  <WorkspaceForm
-    level={3}
-    className="mt-3"
-    name="workspaces.creation"
-    meta={false}
-    buttons={true}
-    save={{
-      type: CALLBACK_BUTTON,
-      callback: () => props.save().then(workspace =>
-        props.history.push(route(workspace))
-      )
-    }}
-    cancel={{
-      type: LINK_BUTTON,
-      target: props.path,
-      exact: true
-    }}
-  />
+  <ToolPage
+    title={trans('new_workspace', {}, 'workspace')}
+  >
+    <WorkspaceForm
+      level={3}
+      className="mt-3"
+      name="workspaces.creation"
+      meta={false}
+      buttons={true}
+      save={{
+        type: CALLBACK_BUTTON,
+        callback: () => props.save().then(workspace =>
+          props.history.push(route(workspace))
+        )
+      }}
+      cancel={{
+        type: LINK_BUTTON,
+        target: props.path,
+        exact: true
+      }}
+    />
+  </ToolPage>
 
 WorkspaceCreation.propTypes = {
   history: T.shape({

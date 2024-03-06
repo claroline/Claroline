@@ -26,12 +26,7 @@ class ActivityMain extends Component {
   render() {
     return (
       <ToolPage
-        path={[{
-          type: LINK_BUTTON,
-          label: trans('activity'),
-          target: `${this.props.path}/activity`
-        }]}
-        subtitle={trans('activity')}
+        title={trans('activity')}
       >
         <ContentInfoBlocks
           className="my-4"

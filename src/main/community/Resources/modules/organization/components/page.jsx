@@ -26,13 +26,9 @@ const Organization = (props) =>
         type: LINK_BUTTON,
         label: trans('organizations', {}, 'community'),
         target: `${props.path}/organizations`
-      }, {
-        type: LINK_BUTTON,
-        label: get(props.organization, 'name', trans('loading')),
-        target: !isEmpty(props.organization) ? route(props.organization, props.path) : ''
       }
     ].concat(props.organization ? props.breadcrumb : [])}
-    subtitle={trans('organization_name', {name: get(props.organization, 'name', trans('loading'))}, 'community')}
+    title={get(props.organization, 'name', trans('loading'))}
     toolbar="edit | send-message | fullscreen more"
     poster={get(props.organization, 'poster')}
     actions={!isEmpty(props.organization) ? getActions([props.organization], {

@@ -15,10 +15,6 @@ const OrganizationCreate = (props) =>
         type: LINK_BUTTON,
         label: trans('organizations', {}, 'community'),
         target: `${props.path}/organizations`
-      }, {
-        type: LINK_BUTTON,
-        label: trans('new_organization', {}, 'community'),
-        target: '' // current page, no need to add a link
       }
     ]}
     subtitle={trans('new_organization', {}, 'community')}

@@ -18,12 +18,7 @@ import {MODAL_REGISTER} from '#/main/community/modals/register'
 
 const UserList = props =>
   <ToolPage
-    path={[{
-      type: LINK_BUTTON,
-      label: trans('users'),
-      target: `${props.path}/users`
-    }]}
-    subtitle={trans('users')}
+    title={trans('users')}
     /*primaryAction="add"*/
     primaryAction={'workspace' === props.contextType ?
       {

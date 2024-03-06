@@ -98,10 +98,10 @@ const AdministrationMenu = props =>
       }
     ]}
   >
-    <PlatformStatus
+    {/*<PlatformStatus
       disabled={props.disabled}
       maintenance={props.maintenance}
-    />
+    />*/}
   </ContextMenu>
 
 AdministrationMenu.propTypes = {

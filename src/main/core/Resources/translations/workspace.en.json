@@ -63,5 +63,8 @@
     "login_help": "You will automatically be registered for the workspace once you have logged in or registered."
   },
   "forbidden": "Access to the workspace not possible",
-  "forbidden_desc": "You do not have access to this workspace. Please contact an administrator to give you the necessary rights."
+  "forbidden_desc": "You do not have access to this workspace. Please contact an administrator to give you the necessary rights.",
+  "my_workspaces_menu": "My workspaces",
+  "public_workspaces_menu": "Public workspaces",
+  "managed_workspaces_menu": "Managed workspaces"
 }

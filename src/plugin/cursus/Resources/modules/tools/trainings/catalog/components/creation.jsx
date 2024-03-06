@@ -16,10 +16,6 @@ const CatalogCreation = (props) =>
         type: LINK_BUTTON,
         label: trans('catalog', {}, 'cursus'),
         target: props.path + '/catalog'
-      }, {
-        type: LINK_BUTTON,
-        label: trans('new_course', {}, 'cursus'),
-        target: '' // current page, no need to add a link
       }
     ]}
     title={trans('trainings', {}, 'tools')}

@@ -16,11 +16,6 @@ import {MODAL_REGISTER} from '#/main/community/modals/register'
 
 const GroupList = props =>
   <ToolPage
-    path={[{
-      type: LINK_BUTTON,
-      label: trans('groups', {}, 'community'),
-      target: `${props.path}/groups`
-    }]}
     subtitle={trans('groups', {}, 'community')}
     /*primaryAction="add"*/
     primaryAction={'desktop' === props.contextType ?

@@ -63,7 +63,7 @@
 
 .section-configuration {
     margin-top: 20px;
-    background-color: $gray-lighter;
+    background-color: var(--#{$prefix}tertiary-bg);
     border: 1px solid transparent;
     border-radius: 4px;
     padding: 10px;

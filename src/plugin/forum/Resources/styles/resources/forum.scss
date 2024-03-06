@@ -103,7 +103,7 @@
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  color: $gray-light;
+  color: var(--#{$prefix}secondary-color);
   font-size: $font-size-sm;
   margin: 0 15px;
   padding-bottom: 10px;

@@ -56,7 +56,7 @@
     width: 100%;
 
     .popover-title {
-        color: $gray-light;
+        color: var(--#{$prefix}secondary-color);
         font-family: $headings-font-family;
         font-size: $font-size-sm;
         text-align: center;

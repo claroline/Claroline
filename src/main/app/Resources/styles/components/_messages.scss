@@ -50,7 +50,7 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    color: $gray-light;
+    color: var(--#{$prefix}secondary-color);
     font-size: $font-size-sm;
     padding: 10px 0;
     margin: 0 15px;
@@ -170,13 +170,13 @@
 
 .user-message-hidden {
     .user-message {
-        background: $gray-lighter;
-        border: 1px solid $gray-lighter;
+        background: var(--#{$prefix}tertiary-bg);
+        border: 1px solid var(--#{$prefix}tertiary-bg);
         &:before {
-            border-color: transparent $gray-lighter transparent transparent;
+            border-color: transparent var(--#{$prefix}tertiary-bg) transparent transparent;
         }
         &:after {
-            border-color: transparent transparent transparent $gray-lighter;
+            border-color: transparent transparent transparent var(--#{$prefix}tertiary-bg);
         }
     }
 }
