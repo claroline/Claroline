@@ -9,8 +9,14 @@ registry.add('ClarolineAuthenticationBundle', {
   /**
    * Provides menu which can be used in the main header menu.
    */
-  header: {
-    'authentication': () => { return import(/* webpackChunkName: "authentication-header-authentication" */ '#/main/authentication/header/authentication') }
+  /*header: {
+    'authentication': () => { return import(/!* webpackChunkName: "authentication-header-authentication" *!/ '#/main/authentication/header/authentication') }
+  },*/
+
+  actions: {
+    desktop: {
+      'logout': () => { return import(/* webpackChunkName: "authentication-action-logout" */ '#/main/authentication/actions/desktop/logout') }
+    }
   },
 
   /**

@@ -12,13 +12,6 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 const ContextEditor = (props) =>
   <ContextPage
     title={trans('parameters')}
-    breadcrumb={[
-      {
-        type: LINK_BUTTON,
-        label: trans('parameters'),
-        target: ''
-      }
-    ]}
   >
     <FormData
       className="mt-3"

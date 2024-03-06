@@ -11,12 +11,7 @@ import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const TeamList = props =>
   <ToolPage
-    path={[{
-      type: LINK_BUTTON,
-      label: trans('teams', {}, 'community'),
-      target: `${props.path}/teams`
-    }]}
-    subtitle={trans('teams', {}, 'community')}
+    title={trans('teams', {}, 'community')}
     /*primaryAction="add"*/
     primaryAction={
       {

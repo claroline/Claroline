@@ -4,7 +4,7 @@
     background: var(--#{$prefix}secondary-bg);
     margin-bottom: $component-margin-bottom;
 
-    @include border(1px solid transparent); // for correct alignment
+    border: var(--#{$prefix}border-width) solid transparent; // for correct alignment
 
     hr {
         border-color: $body-bg;

@@ -10,9 +10,6 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
-import {MenuSection} from '#/main/app/layout/menu/components/section'
-import {MenuBrand} from '#/main/app/layout/menu/containers/brand'
-
 class MenuMain extends Component {
   constructor(props) {
     super(props)
@@ -59,66 +56,56 @@ class MenuMain extends Component {
     }
 
     return (
-      <>
-        <aside className="app-menu">
-          {/*<MenuBrand closeMenu={this.autoClose} />*/}
+      <aside className="app-menu">
+        {/*<MenuBrand closeMenu={this.autoClose} />*/}
 
-          {false && this.props.title &&
-            <h1 className="app-menu-title h6">{this.props.title}</h1>
-          }
+        {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
+          autoClose: this.autoClose
+        }))}
 
-          {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
-            autoClose: this.autoClose
-          }))}
+        {1 < this.props.tools.length &&
+          <Toolbar
+            className="app-menu-items"
+            buttonName="app-menu-item"
+            actions={this.props.tools
+              .filter((tool) => undefined === tool.displayed || tool.displayed)
+              .map((tool) => ({
+                name: tool.name,
+                type: LINK_BUTTON,
+                icon: `fa fa-fw fa-${tool.icon}`,
+                label: trans(tool.name, {}, 'tools'),
+                target: tool.path,
+                order: tool.order
+              }))
+              .sort((a, b) => {
+                if (isNumber(a.order) && isNumber(b.order) && a.order !== b.order) {
+                  return a.order - b.order
+                }
 
-          {1 < this.props.tools.length &&
+                if (a.label > b.label) {
+                  return 1
+                }
+
+                return -1
+              })
+            }
+            onClick={this.autoClose}
+          />
+        }
+
+        {(!isEmpty(this.props.actions) || !Array.isArray(this.props.actions)) &&
+          <>
+            <hr/>
             <Toolbar
-              className="list-group list-group-flush"
-              buttonName="list-group-item list-group-item-action"
-              actions={this.props.tools
-                .filter((tool) => undefined === tool.displayed || tool.displayed)
-                .map((tool) => ({
-                  name: tool.name,
-                  type: LINK_BUTTON,
-                  icon: `fa fa-fw fa-${tool.icon}`,
-                  label: trans(tool.name, {}, 'tools'),
-                  target: tool.path,
-                  order: tool.order
-                }))
-                .sort((a, b) => {
-                  if (isNumber(a.order) && isNumber(b.order) && a.order !== b.order) {
-                    return a.order - b.order
-                  }
-
-                  if (a.label > b.label) {
-                    return 1
-                  }
-
-                  return -1
-                })
-              }
+              id="app-menu-actions"
+              className="app-menu-items"
+              buttonName="app-menu-item"
+              actions={this.props.actions}
               onClick={this.autoClose}
             />
-          }
-
-          {(!isEmpty(this.props.actions) || !Array.isArray(this.props.actions)) &&
-            <>
-              <hr/>
-              <Toolbar
-                id="app-menu-actions"
-                className="list-group list-group-flush"
-                buttonName="list-group-item list-group-item-action"
-                actions={this.props.actions}
-                onClick={this.autoClose}
-              />
-            </>
-          }
-        </aside>
-
-        {(constants.SIZE_SM === this.state.computedSize || constants.SIZE_XS === this.state.computedSize) &&
-          <div className="app-menu-backdrop" />
+          </>
         }
-      </>
+      </aside>
     )
   }
 }

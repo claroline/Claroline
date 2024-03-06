@@ -69,5 +69,8 @@
     "you_are_manager": "You are a manager of the workspace."
   },
   "forbidden": "Access to the workspace not possible",
-  "forbidden_desc": "You do not have access to this workspace. Please contact an administrator to give you the necessary rights."
+  "forbidden_desc": "You do not have access to this workspace. Please contact an administrator to give you the necessary rights.",
+  "my_workspaces_menu": "My workspaces",
+  "public_workspaces_menu": "Public workspaces",
+  "managed_workspaces_menu": "Managed workspaces"
 }

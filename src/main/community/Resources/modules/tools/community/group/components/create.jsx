@@ -15,10 +15,6 @@ const GroupCreate = (props) =>
         type: LINK_BUTTON,
         label: trans('groups', {}, 'community'),
         target: `${props.path}/groups`
-      }, {
-        type: LINK_BUTTON,
-        label: trans('new_group', {}, 'community'),
-        target: '' // current page, no need to add a link
       }
     ]}
     subtitle={trans('new_group', {}, 'community')}

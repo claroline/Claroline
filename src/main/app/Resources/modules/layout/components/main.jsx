@@ -6,8 +6,6 @@ import {makeCancelable} from '#/main/app/api'
 import {Routes, Redirect} from '#/main/app/router'
 import {getContexts} from '#/main/app/context/registry'
 
-import {HeaderMain} from '#/main/app/layout/header/containers/main'
-
 import {LayoutForbidden} from '#/main/app/layout/containers/forbidden'
 import {HomeRegistration} from '#/main/app/layout/components/registration'
 import {SendPassword} from '#/main/app/layout/components/send-password'

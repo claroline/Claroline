@@ -27,13 +27,9 @@ const TemplatePage = (props) => {
           type: LINK_BUTTON,
           label: trans(get(props.templateType, 'type')),
           target: props.path + '/' + get(props.templateType, 'type')
-        }, {
-          type: LINK_BUTTON,
-          label: trans(get(props.templateType, 'name'), {}, 'template'),
-          target: ''
         }
       ]}
-      subtitle={trans(get(props.templateType, 'name'), {}, 'template')}
+      title={trans(get(props.templateType, 'name'), {}, 'template')}
       meta={{
         title: `${trans('templates', {}, 'tools')} - ${trans(get(props.templateType, 'name'), {}, 'template')}`,
         description: trans(get(props.templateType, 'name')+'_desc', {}, 'template')

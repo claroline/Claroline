@@ -17,12 +17,7 @@ import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const ProfileMain = props =>
   <ToolPage
-    path={[{
-      type: LINK_BUTTON,
-      label: trans('user_profile'),
-      target: `${props.path}/profile`
-    }]}
-    subtitle={trans('user_profile')}
+    title={trans('user_profile')}
   >
     <ContentSizing size="lg" className="mt-3">
       <div className="row">

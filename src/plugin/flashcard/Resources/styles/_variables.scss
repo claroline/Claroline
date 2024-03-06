@@ -20,10 +20,10 @@ $flashcard-bg:                      $card-bg !default;
 
 $flashcard-timeline-icon-size:      $font-size-lg*3;
 $flashcard-timeline-lines-width:    8px !default;
-$flashcard-timeline-lines-color:    $gray-lighter !default;
+$flashcard-timeline-lines-color:    var(--#{$prefix}tertiary-bg) !default;
 $flashcard-timeline-endpoint-size:  $font-size-lg*2 !default;
 
 $flashcard-progress-font-size:      $font-size-base * .75 !default;
 $flashcard-progress-bg:             var(--#{$prefix}secondary-bg) !default;
 $flashcard-progress-bar-color:      $primary !default;
-$flashcard-progress-bar-bg:         $gray-lighter !default;
+$flashcard-progress-bar-bg:         var(--#{$prefix}tertiary-bg) !default;

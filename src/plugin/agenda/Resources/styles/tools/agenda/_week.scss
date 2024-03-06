@@ -23,7 +23,7 @@
 
     .day-name {
         padding: 5px;
-        color: $gray-light;
+        color: var(--#{$prefix}secondary-color);
         font-family: $headings-font-family;
         font-size: $font-size-sm;
         text-align: center;

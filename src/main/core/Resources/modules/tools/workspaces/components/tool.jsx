@@ -14,6 +14,41 @@ import {WorkspaceList} from '#/main/core/workspace/components/list'
 import {WorkspaceCreation} from '#/main/core/tools/workspaces/containers/creation'
 import {MODAL_WORKSPACE_IMPORT} from '#/main/core/workspace/modals/import'
 
+const WorkspacesPage = (props) =>
+  <ToolPage
+    /*primaryAction="add"*/
+    primaryAction={{
+      name: 'add',
+      type: LINK_BUTTON,
+      icon: 'fa fa-fw fa-plus',
+      label: trans('create_workspace', {}, 'workspace'),
+      target: `${props.path}/new`,
+      primary: true,
+      displayed: props.canCreate
+    }}
+    actions={[
+      {
+        name: 'import',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-upload',
+        label: trans('import', {}, 'actions'),
+        modal: [MODAL_WORKSPACE_IMPORT],
+        displayed: props.canCreate,
+        group: trans('transfer')
+      }
+    ]}
+    title={props.title}
+  >
+    {props.children}
+  </ToolPage>
+
+WorkspacesPage.propTypes = {
+  path: T.string,
+  title: T.string.isRequired,
+  canCreate: T.bool.isRequired,
+  children: T.any
+}
+
 const WorkspacesTool = (props) => {
   // we invalidate all the workspaces list when we execute an action on one or many workspaces
   // because actions can make the ws appear/disappear from multiple mounted lists (e.g. archive or unarchive)
@@ -43,55 +78,24 @@ const WorkspacesTool = (props) => {
   }
 
   return (
-    <ToolPage
-      /*primaryAction="add"*/
-      primaryAction={{
-        name: 'add',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-plus',
-        label: trans('create_workspace', {}, 'workspace'),
-        target: `${props.path}/new`,
-        primary: true,
-        displayed: props.canCreate
-      }}
-      actions={[
-        {
-          name: 'import',
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-upload',
-          label: trans('import', {}, 'actions'),
-          modal: [MODAL_WORKSPACE_IMPORT],
-          displayed: props.canCreate,
-          group: trans('transfer')
-        }
+    <Routes
+      path={props.path}
+      redirect={[
+        {from: '/', exact: true, to: '/registered', disabled: isEmpty(props.currentUser)},
+        {from: '/', exact: true, to: '/public',     disabled: !isEmpty(props.currentUser)}
       ]}
-      subtitle={
-        <Routes
-          path={props.path}
-          routes={[
-            {path: '/new',        render: () => trans('new_workspace', {}, 'workspace'), disabled: !props.canCreate},
-            {path: '/registered', render: () => trans('my_workspaces', {}, 'workspace')},
-            {path: '/public',     render: () => trans('public_workspaces', {}, 'workspace')},
-            {path: '/managed',    render: () => trans('managed_workspaces', {}, 'workspace')},
-            {path: '/model',      render: () => trans('workspace_models', {}, 'workspace'), disabled: !props.canCreate},
-            {path: '/archived',   render: () => trans('workspace_archived', {}, 'workspace'), disabled: !props.canArchive}
-          ]}
-        />
-      }
-    >
-      <Routes
-        path={props.path}
-        routes={[
-          {
-            path: '/new',
-            disabled: !props.canCreate,
-            component: WorkspaceCreation,
-            onEnter: () => props.resetForm('workspaces.creation', merge({}, WorkspaceType.defaultProps, {meta: {creator: props.currentUser}}))
-          }, {
-            path: '/registered',
-            disabled: isEmpty(props.currentUser),
-            render: () => {
-              const Registered = (
+      routes={[
+        {
+          path: '/new',
+          disabled: !props.canCreate,
+          component: WorkspaceCreation,
+          onEnter: () => props.resetForm('workspaces.creation', merge({}, WorkspaceType.defaultProps, {meta: {creator: props.currentUser}}))
+        }, {
+          path: '/registered',
+          disabled: isEmpty(props.currentUser),
+          render: () => {
+            const Registered = (
+              <WorkspacesPage path={props.path} title={trans('my_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
                 <ContentSizing size="full">
                   <WorkspaceList
                     flush={true}
@@ -100,14 +104,16 @@ const WorkspacesTool = (props) => {
                     refresher={refresher}
                   />
                 </ContentSizing>
-              )
+              </WorkspacesPage>
+            )
 
-              return Registered
-            }
-          }, {
-            path: '/public',
-            render: () => {
-              const PublicList = (
+            return Registered
+          }
+        }, {
+          path: '/public',
+          render: () => {
+            const PublicList = (
+              <WorkspacesPage path={props.path} title={trans('public_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
                 <ContentSizing size="full">
                   <WorkspaceList
                     flush={true}
@@ -116,15 +122,17 @@ const WorkspacesTool = (props) => {
                     refresher={refresher}
                   />
                 </ContentSizing>
-              )
+              </WorkspacesPage>
+            )
 
-              return PublicList
-            }
-          }, {
-            path: '/managed',
-            disabled: isEmpty(props.currentUser),
-            render: () => {
-              const ManagedList = (
+            return PublicList
+          }
+        }, {
+          path: '/managed',
+          disabled: isEmpty(props.currentUser),
+          render: () => {
+            const ManagedList = (
+              <WorkspacesPage path={props.path} title={trans('managed_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
                 <ContentSizing size="full">
                   <WorkspaceList
                     flush={true}
@@ -133,15 +141,17 @@ const WorkspacesTool = (props) => {
                     refresher={refresher}
                   />
                 </ContentSizing>
-              )
+              </WorkspacesPage>
+            )
 
-              return ManagedList
-            }
-          }, {
-            path: '/model',
-            disabled: !props.canCreate,
-            render: () => {
-              const ModelList = (
+            return ManagedList
+          }
+        }, {
+          path: '/model',
+          disabled: !props.canCreate,
+          render: () => {
+            const ModelList = (
+              <WorkspacesPage path={props.path} title={trans('workspace_models', {}, 'workspace')} canCreate={props.canCreate}>
                 <ContentSizing size="full">
                   <WorkspaceList
                     url={['apiv2_workspace_list_model']}
@@ -150,15 +160,17 @@ const WorkspacesTool = (props) => {
                     flush={true}
                   />
                 </ContentSizing>
-              )
+              </WorkspacesPage>
+            )
 
-              return ModelList
-            }
-          }, {
-            path: '/archived',
-            disabled: !props.canArchive,
-            render: () => {
-              const ArchiveList = (
+            return ModelList
+          }
+        }, {
+          path: '/archived',
+          disabled: !props.canArchive,
+          render: () => {
+            const ArchiveList = (
+              <WorkspacesPage path={props.path} title={trans('workspaces_archived', {}, 'workspace')} canCreate={props.canCreate}>
                 <ContentSizing size="full">
                   <WorkspaceList
                     flush={true}
@@ -175,19 +187,14 @@ const WorkspacesTool = (props) => {
                     ]}
                   />
                 </ContentSizing>
-              )
+              </WorkspacesPage>
+            )
 
-              return ArchiveList
-            }
+            return ArchiveList
           }
-        ]}
-
-        redirect={[
-          {from: '/', exact: true, to: '/registered', disabled: isEmpty(props.currentUser)},
-          {from: '/', exact: true, to: '/public',     disabled: !isEmpty(props.currentUser)}
-        ]}
-      />
-    </ToolPage>
+        }
+      ]}
+    />
   )
 }
 

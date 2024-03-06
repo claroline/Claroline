@@ -10,7 +10,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: $gray-lighter;
+    background: var(--#{$prefix}tertiary-bg);
     margin-bottom: 5px;
 
     @include border-radius($border-radius);

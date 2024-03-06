@@ -117,7 +117,7 @@
         padding: $panel-body-padding;
         font-size: $font-size-base;
         color: var(--#{$prefix}secondary-color);
-        background: $gray-lightest;
+        background: var(--#{$prefix}tertiary-bg);
         border-bottom: 1px solid #e5e5e5; // todo : add var (same as feedback in exo)
 
         .fa {

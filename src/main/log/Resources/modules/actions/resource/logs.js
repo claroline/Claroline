@@ -9,5 +9,6 @@ export default (resourceNodes, nodesRefresher, path) => ({
   type: LINK_BUTTON,
   icon: 'fa fa-fw fa-wave-square',
   label: trans('show_activity', {}, 'actions'),
-  target: `${path}/${resourceNodes[0].slug}/logs`
+  target: `${path}/${resourceNodes[0].slug}/logs`,
+  scope: ['object']
 })

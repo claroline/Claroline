@@ -48,7 +48,7 @@ class EditorTab extends Component {
       return createElement(this.state.parameters, {
         path: `${this.props.path}/${this.props.currentTab ? this.props.currentTab.slug : ''}`,
         currentContext: this.props.currentContext,
-        tabs: this.props.tabs,
+        //tabs: this.props.tabs,
         currentTab: this.props.currentTab,
         title: this.props.currentTabTitle,
         update: (prop, data, tabId = null) => {
@@ -72,12 +72,11 @@ class EditorTab extends Component {
     return (
       <HomePage
         path="/edit"
-        tabs={this.props.tabs}
         currentTab={this.props.currentTab}
         title={this.props.currentTabTitle}
         showHidden={true}
         actions={[
-          {
+          /*{
             name: 'add',
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',
@@ -88,7 +87,7 @@ class EditorTab extends Component {
             }],
             primary: true,
             group: trans('management')
-          }, {
+          }, */{
             name: 'add-sub',
             type: MODAL_BUTTON,
             icon: 'fa fa-fw fa-plus',

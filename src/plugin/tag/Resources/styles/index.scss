@@ -16,7 +16,7 @@
     .tag-item {
         display: flex;
         justify-content: stretch;
-        border: 1px solid $gray-light;
+        border: 1px solid var(--#{$prefix}secondary-color);
         margin-bottom: 10px;
         border-radius: $border-radius;
     }

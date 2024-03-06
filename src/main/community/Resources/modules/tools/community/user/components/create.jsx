@@ -18,10 +18,6 @@ const UserCreate = (props) =>
         type: LINK_BUTTON,
         label: trans('users', {}, 'community'),
         target: `${props.path}/users`
-      }, {
-        type: LINK_BUTTON,
-        label: trans('new_user', {}, 'community'),
-        target: '' // current page, no need to add a link
       }
     ]}
     icon={

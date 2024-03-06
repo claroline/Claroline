@@ -32,7 +32,6 @@ const ToolShortcutTab = props => {
   // this is just to avoid a blank page in case of something goes wrong in the redirect
   return (
     <HomePage
-      tabs={props.tabs}
       currentTab={props.currentTab}
       title={props.title}
     />
@@ -44,9 +43,6 @@ ToolShortcutTab.propTypes = {
     type: T.string.isRequired,
     data: T.object
   }),
-  tabs: T.arrayOf(T.shape(
-    TabTypes.propTypes
-  )),
   title: T.string.isRequired,
   currentTab: T.shape(
     TabTypes.propTypes

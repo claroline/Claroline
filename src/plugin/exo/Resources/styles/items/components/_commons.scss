@@ -49,7 +49,7 @@
 .solution-score,
 .answer-stats {
     font-size: $font-size-sm;
-    background: $gray-light;
+    background: var(--#{$prefix}secondary-color);
     color: #eee;
     margin-left: map-get($spacers, 2);
 }
