@@ -5,6 +5,7 @@ namespace Claroline\CommunityBundle\Subscriber\Crud;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -103,13 +104,16 @@ class RoleSubscriber implements EventSubscriberInterface
                 ]);
 
             $this->conn
-                ->prepare("
+                ->prepare('
                     INSERT INTO claro_tool_rights (role_id, mask, ordered_tool_id)
-                    SELECT {$role->getId()}, 0, ot.id 
+                    SELECT :roleId, 0, ot.id 
                     FROM claro_ordered_tool AS ot
-                    WHERE ot.context_id IS NULL AND ot.context_name = {DesktopContext::getName()}
-                ")
-                ->execute();
+                    WHERE ot.context_id IS NULL AND ot.context_name = :contextName
+                ')
+                ->executeQuery([
+                    'roleId' => $role->getId(),
+                    'contextName' => DesktopContext::getName(),
+                ]);
         }
     }
 
