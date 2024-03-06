@@ -59,7 +59,6 @@ class PlayerTab extends Component {
     if (!isEmpty(this.props.accessErrors)) {
       return (
         <HomePage
-          tabs={this.props.tabs}
           currentTab={this.props.currentTab}
           title={this.props.currentTabTitle}
         >
@@ -77,7 +76,7 @@ class PlayerTab extends Component {
       return createElement(this.state.component, {
         path: `${this.props.path}/${this.props.currentTab.slug}`,
         currentContext: this.props.currentContext,
-        tabs: this.props.tabs,
+        //tabs: this.props.tabs,
         currentTab: this.props.currentTab,
         title: this.props.currentTabTitle
       })

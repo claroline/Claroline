@@ -3,12 +3,12 @@ svg.chart {
         .tick {
             opacity: 0.7;
             &, line {
-                stroke: $gray-light;
+                stroke: var(--#{$prefix}secondary-color);
             }
         }
         path {
             stroke-width: 1;
-            stroke: $gray-light;
+            stroke: var(--#{$prefix}secondary-color);
         }
     }
 
@@ -35,23 +35,6 @@ svg.chart {
         background: transparent;
         padding: 20px $panel-body-padding * 2;
     }
-
-    /*.card-title {
-        font-weight: bold;
-    }*/
-
-    /*.panel-actions {
-        right: $panel-body-padding;
-
-        .btn-link {
-            color: $gray-light;
-
-            &.active {
-                color: $gray-dark;
-                font-weight: bold;
-            }
-        }
-    }*/
 
     .chart-legend {
         .btn-link {

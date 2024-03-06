@@ -43,7 +43,7 @@
   &:hover,
   &:focus {
     margin: 0;
-    background: $gray-lightest;
+    background: var(--#{$prefix}tertiary-bg);
 
     .locale-icon {
       opacity: 1;

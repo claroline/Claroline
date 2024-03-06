@@ -32,7 +32,7 @@
     flex-direction: column;
 
     .data-card-header {
-        border-bottom: $data-card-border-width solid $data-card-border-color;
+        border-bottom: $data-card-inner-border-width solid $data-card-inner-border-color;
 
         @include border-radius($data-card-inner-border-radius $data-card-inner-border-radius 0 0);
     }
@@ -54,7 +54,7 @@
 
     .data-card-header {
         min-width: 40%;
-        border-right: $data-card-border-width solid $data-card-border-color;
+        border-right: $data-card-inner-border-width solid $data-card-inner-border-color;
 
         @include border-radius($data-card-inner-border-radius 0 0 $data-card-inner-border-radius);
     }
@@ -72,8 +72,8 @@
     color: $data-card-color;
     background: $data-card-bg;
     font-size: $data-card-font;
+    border: $data-card-border-width solid $data-card-border-color;
 
-    @include border($data-card-border-width solid $data-card-border-color);
     @include border-radius($data-card-border-radius);
     @include box-shadow($data-card-box-shadow);
 }
@@ -137,8 +137,6 @@
     color: $data-card-active-color;
     background-color: $data-card-active-bg;
     //border-color: $data-card-active-border-color;
-
-    //@include box-shadow(0 0 2px rgba($brand-info, .35));
 
     .data-card-header {
         background: $data-card-active-header-bg;

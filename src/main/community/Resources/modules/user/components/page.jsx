@@ -27,17 +27,12 @@ const User = (props) =>
         type: LINK_BUTTON,
         label: trans('users', {}, 'community'),
         target: `${props.path}/users`
-      }, {
-        type: LINK_BUTTON,
-        label: get(props.user, 'name', trans('loading')),
-        target: !isEmpty(props.user) ? route(props.user, props.path) : ''
       }
     ].concat(props.user ? props.breadcrumb : [])}
     icon={
       <UserAvatar picture={get(props.user, 'picture')} size="lg" />
     }
     title={get(props.user, 'name', trans('loading'))}
-    subtitle={get(props.user, 'username')}
     poster={get(props.user, 'poster')}
     toolbar="edit | send-message add-contact | fullscreen more"
     actions={!isEmpty(props.user) ? getActions([props.user], {

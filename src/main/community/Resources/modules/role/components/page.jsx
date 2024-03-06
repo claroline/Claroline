@@ -26,13 +26,9 @@ const Role = (props) =>
         type: LINK_BUTTON,
         label: trans('roles', {}, 'community'),
         target: `${props.path}/roles`
-      }, {
-        type: LINK_BUTTON,
-        label: trans(get(props.role, 'translationKey', 'loading')),
-        target: props.role ? route(props.role, props.path) : ''
       }
     ].concat(!isEmpty(props.role) ? props.breadcrumb : [])}
-    subtitle={trans('role_name', {name: trans(get(props.role, 'translationKey', 'loading'))}, 'community')}
+    title={trans(get(props.role, 'translationKey', 'loading'))}
     toolbar="edit | fullscreen more"
     actions={!isEmpty(props.role) ? getActions([props.role], {
       add: () => props.reload(props.role.id),

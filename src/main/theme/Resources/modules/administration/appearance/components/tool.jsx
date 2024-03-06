@@ -7,7 +7,7 @@ import {Toolbar} from '#/main/app/action'
 import {ASYNC_BUTTON, DOWNLOAD_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {getMenus} from '#/main/app/layout/header/utils'
+/*import {getMenus} from '#/main/app/layout/header/utils'*/
 import {selectors} from '#/main/core/administration/parameters/store/selectors'
 import {AppearanceIcons} from '#/main/theme/administration/appearance/containers/icons'
 import {AppearanceColorCharts} from '#/main/theme/administration/appearance/containers/colorCharts'
@@ -24,11 +24,11 @@ class AppearanceTool extends Component {
   }
 
   componentDidMount() {
-    getMenus().then(menus => {
+    /*getMenus().then(menus => {
       this.setState({headerWidgets: menus.reduce((acc, current) => Object.assign(acc, {
         [current.default.name]: current.default.label
       }), {})})
-    })
+    })*/
   }
 
   render() {

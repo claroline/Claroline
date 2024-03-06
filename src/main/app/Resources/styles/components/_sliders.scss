@@ -33,6 +33,6 @@
     padding: 13px 6px 3px;
     font-size: $font-size-sm;
     font-weight: 900;
-    color: $gray-light;
+    color: var(--#{$prefix}secondary-color);
     border-left: 1px solid rgba(0, 0, 0, 0.25);
 }

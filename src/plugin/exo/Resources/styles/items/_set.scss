@@ -57,8 +57,8 @@
     }
 
     .set-drop-placeholder {
-      border: 2px dashed $gray-light;
-      color: $gray-light;
+      border: 2px dashed var(--#{$prefix}secondary-color);
+      color: var(--#{$prefix}secondary-color);
       border-radius: 0 0 $answer-item-border-radius $answer-item-border-radius;
       text-align: center;
       padding: $answer-item-padding;

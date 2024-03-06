@@ -80,7 +80,7 @@
             background: $body-bg; // TODO : use its own var
 
             .day-number {
-                color: $gray-light;
+                color: var(--#{$prefix}secondary-color);
             }
         }
     }

@@ -1,7 +1,7 @@
 {
   "workspace": "Espace d'activités",
   "workspaces": "Espaces d'activités",
-  "create_workspace": "Créer un nouvel espace d'activités",
+  "create_workspace": "Créer un espace",
   "new_workspace": "Nouvel espace d'activités",
   "managed_workspaces": "Espaces d'activités gérés",
   "my_workspaces": "Mes espaces d'activités",
@@ -69,5 +69,8 @@
     "you_are_manager": "Vous êtes un gestionnaire de l'espace d'activités."
   },
   "forbidden": "Accès à l'espace d'activités impossible",
-  "forbidden_desc": "Vous n'avez pas accès à cet espace d'activités. Veuillez contacter un administrateur afin qu'il vous donne les droits nécessaires."
+  "forbidden_desc": "Vous n'avez pas accès à cet espace d'activités. Veuillez contacter un administrateur afin qu'il vous donne les droits nécessaires.",
+  "my_workspaces_menu": "Mes espaces",
+  "public_workspaces_menu": "Espaces publics",
+  "managed_workspaces_menu": "Espaces gérés"
 }

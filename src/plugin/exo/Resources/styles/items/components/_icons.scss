@@ -8,9 +8,9 @@
         padding: 0;
 
         // for SVG (question types)
-        stroke: $gray-light;
-        fill: $gray-light;
+        stroke: var(--#{$prefix}secondary-color);
+        fill: var(--#{$prefix}secondary-color);
         // for FontAwesome (content types)
-        color: $gray-light;
+        color: var(--#{$prefix}secondary-color);
     }
 }

@@ -26,13 +26,9 @@ const Team = (props) =>
         type: LINK_BUTTON,
         label: trans('teams', {}, 'community'),
         target: `${props.path}/teams`
-      }, {
-        type: LINK_BUTTON,
-        label: get(props.team, 'name', trans('loading')),
-        target: !isEmpty(props.team) ? route(props.team, props.path) : ''
       }
     ].concat(props.team ? props.breadcrumb : [])}
-    subtitle={trans('team_name', {name: get(props.team, 'name', trans('loading'))}, 'community')}
+    title={get(props.team, 'name', trans('loading'))}
     toolbar="edit | fullscreen more"
     poster={get(props.team, 'poster')}
     actions={!isEmpty(props.team) ? getActions([props.team], {

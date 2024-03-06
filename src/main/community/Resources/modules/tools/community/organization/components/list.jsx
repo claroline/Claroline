@@ -12,12 +12,7 @@ import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const OrganizationList = (props) =>
   <ToolPage
-    path={[{
-      type: LINK_BUTTON,
-      label: trans('organizations', {}, 'community'),
-      target: `${props.path}/organizations`
-    }]}
-    subtitle={trans('organizations', {}, 'community')}
+    title={trans('organizations', {}, 'community')}
     /*primaryAction="add"*/
     primaryAction={
       {

@@ -115,7 +115,7 @@ implementPropTypes(SummaryLink, ActionTypes, {
 const ContentSummary = props => {
   if (0 !== props.links.length ) {
     return (
-      <ul className={classes('summary', props.className)}>
+      <ul className={classes('content-summary', props.className)}>
         {props.links
           .filter(link => undefined === link.displayed || link.displayed)
           .map((link, index) =>

@@ -9,5 +9,5 @@ $agenda-bg:          white;
 $agenda-color:       $gray-500;
 $agenda-grid-border: var(--#{$prefix}border-color);
 
-$event-color-default: $gray-lighter;
+$event-color-default: var(--#{$prefix}tertiary-bg);
 $event-poster-border-radius:   $border-radius-lg;

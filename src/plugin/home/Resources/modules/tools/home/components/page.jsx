@@ -6,41 +6,12 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {getTabTitle} from '#/plugin/home/tools/home/utils'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
-import {HomeTabs} from '#/plugin/home/tools/home/components/tabs'
-import classes from 'classnames'
 
 const HomePage = props =>
   <ToolPage
     className="home-tool"
-    path={[].concat(props.currentTab ? [{
-      id: props.currentTab.id,
-      type: LINK_BUTTON,
-      label: getTabTitle(props.currentContext, props.currentTab),
-      target: props.basePath+props.path+'/'+props.currentTab.slug
-    }] : [], props.breadcrumb || [])}
-
-    /*header={1 < props.tabs.length  ?
-      <HomeTabs
-        prefix={props.basePath+props.path}
-        tabs={props.tabs}
-        currentTabId={get(props.currentTab, 'id')}
-        showSubMenu={props.showSubMenu}
-        showHidden={props.showHidden}
-      /> : undefined
-    }*/
-    /*nav={props.tabs
-      .filter(tab => props.showHidden || !get(tab, 'restrictions.hidden', false))
-      .map((tab) => ({
-        key: tab.id,
-        name: tab.id,
-        type: LINK_BUTTON,
-        target: `${props.basePath+props.path}/${tab.slug}`,
-        icon: tab.icon ? `fa fa-fw fa-${tab.icon}` : undefined,
-        label: tab.title,
-      }))
-    }*/
+    path={props.breadcrumb}
     icon={props.currentTab && props.currentTab.icon ?
       <span className={`tool-icon fa fa-${props.currentTab.icon}`} /> : undefined
     }
@@ -76,9 +47,6 @@ HomePage.propTypes = {
   currentTab: T.shape(
     TabTypes.propTypes
   ),
-  tabs: T.arrayOf(T.shape(
-    TabTypes.propTypes
-  )),
   actions: T.arrayOf(T.shape({
     // action types
   })),
