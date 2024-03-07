@@ -1,6 +1,6 @@
 import {registry} from '#/main/app/modals/registry'
 
-import {ChapterDeleteModal} from '#/plugin/lesson/resources/lesson/modals/chapter/components/delete'
+import {ChapterDeleteModal} from '#/plugin/lesson/resources/lesson/modals/chapter/containers/delete'
 
 const MODAL_LESSON_CHAPTER_DELETE = 'MODAL_LESSON_CHAPTER_DELETE'
 
