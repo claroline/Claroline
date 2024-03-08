@@ -4,30 +4,17 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ContentTitle} from '#/main/app/content/components/title'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {User as UserTypes} from '#/main/community/prop-types'
 import {AccountPage} from '#/main/app/account/containers/page'
-import {route} from '#/main/app/account/routing'
 
 import {selectors} from '#/main/core/account/parameters/store/selectors'
 
 const ParametersMain = (props) =>
   <AccountPage
-    path={[
-      {
-        type: LINK_BUTTON,
-        label: trans('parameters'),
-        target: route('parameters')
-      }
-    ]}
     title={trans('parameters')}
   >
-    <ContentTitle
-      title={trans('parameters')}
-    />
-
     <FormData
       name={selectors.STORE_NAME}
       target={['apiv2_user_update', {id: props.currentUser.id}]}

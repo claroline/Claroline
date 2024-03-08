@@ -4,10 +4,9 @@ services:
 
     Claroline\ThemeBundle\Subscriber\PlatformSubscriber:
         arguments:
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\ThemeBundle\Manager\IconSetManager'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\ThemeBundle\Manager\ThemeManager'
 
     # Administration
     Claroline\ThemeBundle\Subscriber\Administration\ParametersSubscriber:
@@ -16,3 +15,8 @@ services:
             - '@Claroline\ThemeBundle\Manager\IconSetManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    # Crud
+    Claroline\ThemeBundle\Subscriber\Crud\ThemeSubscriber:
+        arguments:
+            - '@Claroline\CoreBundle\Manager\FileManager'

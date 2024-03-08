@@ -2,6 +2,10 @@ plugin:
     themes:
         - name: Claroline
 
+    tools:
+        - name: appearance
+          icon: paintbrush
+
     resource_icons:
         # Texts
         - name: res_text

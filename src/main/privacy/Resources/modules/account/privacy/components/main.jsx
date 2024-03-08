@@ -3,7 +3,6 @@ import {url} from '#/main/app/api'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {route} from '#/main/app/account/routing'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {User as UserTypes} from '#/main/community/prop-types'
@@ -11,20 +10,13 @@ import {AccountPage} from '#/main/app/account/containers/page'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 import {constants as actionConstants} from '#/main/app/action/constants'
-import {LINK_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON, ASYNC_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, MODAL_BUTTON, ASYNC_BUTTON} from '#/main/app/buttons'
 
 import {PrivacySummary} from '#/main/privacy/component/summary'
 import {MODAL_TERMS_OF_SERVICE} from '#/main/privacy/modals/terms-of-service'
 
 const PrivacyMain = (props) =>
   <AccountPage
-    path={[
-      {
-        type: LINK_BUTTON,
-        label: trans('privacy'),
-        target: route('privacy')
-      }
-    ]}
     title={trans('privacy')}
   >
     <ContentSizing size="md">

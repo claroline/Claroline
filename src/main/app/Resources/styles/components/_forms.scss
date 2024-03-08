@@ -147,16 +147,15 @@
 .form-btn-cancel {
     // outline buttons have transparent background
     // this will avoid seeing trough the button when it overlaps the content
-    background-color: $body-bg;
+    background-color: var(--#{$prefix}body-bg);
 }
 
 .validation-status {
     background-color: $body-bg;
     border-radius: 50rem;
-    @include box-shadow($box-shadow-sm);
     cursor: help;
-    /*cursor: help;
-    margin: 0 $padding-base-horizontal;*/
+
+    @include box-shadow($box-shadow-sm);
 }
 
 // -

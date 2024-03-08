@@ -188,6 +188,7 @@ class ToolMain extends Component {
 
     if (this.state.app) {
       return createElement(this.state.app, {
+        path: this.props.path,
         loaded: this.props.loaded,
         styles: this.state.styles,
         children: this.state.component && createElement(this.state.component, {

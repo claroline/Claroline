@@ -4,11 +4,10 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {User as UserTypes} from '#/main/community/prop-types'
 import {AccountPage} from '#/main/app/account/containers/page'
-import {route} from '#/main/app/account/routing'
 
 import {MODAL_TOKEN_PARAMETERS} from '#/main/authentication/token/modals/parameters'
 import {TokenList} from '#/main/authentication/token/components/list'
@@ -17,14 +16,7 @@ import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const AuthenticationTool = props =>
   <AccountPage
-    path={[
-      {
-        type: LINK_BUTTON,
-        label: trans('tokens', {}, 'security'),
-        target: route('tokens')
-      }
-    ]}
-    title={trans('tokens', {}, 'security')}
+    title={trans('authentication', {}, 'tools')}
     actions={[
       {
         name: 'add-token',

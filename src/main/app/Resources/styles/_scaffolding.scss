@@ -1,8 +1,3 @@
-body {
-    //background: transparent; // removes bootstrap default for TinyMCE rendering
-    //font-weight: 300;
-}
-
 // We use classes for `html` and `body` tags
 // to avoid adding unwanted styles in iframe or tinyMCE
 
@@ -12,24 +7,22 @@ body {
 }
 
 .app-container {
-    //position: relative;
     height: 100%;
+    width: 100%;
     overflow-y: hidden;
-
-    display: flex;
-    flex-direction: row;
 }
 
 .app {
-    flex: 1;
-    position: relative; // to constrain sidebar
     height: 100%;
+    width: 100%;
     overflow-y: hidden;
+
+    position: relative; // to constrain sidebar on sm screens
     display: flex;
     flex-direction: row;
 }
 
-.app-content {
+.app-body {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -67,7 +60,7 @@ body {
     }
 }
 
-.app-menu + .app-content {
+.app-menu + .app-body {
     .app-loader {
         left: $toolbar-size;
     }
