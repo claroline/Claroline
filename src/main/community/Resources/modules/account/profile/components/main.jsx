@@ -7,7 +7,6 @@ import {Routes} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {AccountPage} from '#/main/app/account/containers/page'
 
-import {route} from '#/main/app/account/routing'
 import {ProfileShow} from '#/main/community/profile/containers/show'
 import {ProfileEdit} from '#/main/community/profile/containers/edit'
 
@@ -18,13 +17,6 @@ import {ContentSizing} from '#/main/app/content/components/sizing'
 const ProfileMain = (props) => {
   return (
     <AccountPage
-      path={[
-        {
-          type: LINK_BUTTON,
-          label: trans('user_profile'),
-          target: route('user_profile')
-        }
-      ]}
       title={trans('user_profile')}
       toolbar="edit password-change | fullscreen more"
       actions={[

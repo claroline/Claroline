@@ -1,0 +1,6 @@
+services:
+  Claroline\ThemeBundle\Component\Tool\AppearanceTool:
+    parent: Claroline\AppBundle\Component\Tool\AbstractTool
+    tags: [ 'claroline.component.tool' ]
+    arguments:
+      - '@Claroline\ThemeBundle\Manager\ThemeManager'

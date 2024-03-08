@@ -16,5 +16,21 @@
   "color_chart_delete_confirm_title": "Suppression de la palette de couleurs",
   "color_chart_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer cette palette de couleurs ?",
   "icon_set_delete_confirm_title": "{1} Suppression d'un jeu d'icones | [2,Inf[ Suppression de plusieurs jeux d'icones",
-  "icon_set_delete_confirm_message": "{1} Êtes-vous sûr de vouloir supprimer ce jeu d'icones ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% jeux d'icones ?"
+  "icon_set_delete_confirm_message": "{1} Êtes-vous sûr de vouloir supprimer ce jeu d'icones ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% jeux d'icones ?",
+
+  "theme_mode": "Mode",
+  "theme_mode_auto": "Système",
+  "theme_mode_light": "Claire",
+  "theme_mode_dark": "Sombre",
+
+  "font_size": "Taille de l'interface",
+  "font_size_auto": "Système",
+  "font_size_sm": "Petit",
+  "font_size_md": "Moyen",
+  "font_size_lg": "Large",
+
+  "font_weight": "Epaisseur des textes",
+  "font_weight_light": "Fin",
+  "font_weight_normal": "Normal",
+  "font_weight_medium": "Epais"
 }

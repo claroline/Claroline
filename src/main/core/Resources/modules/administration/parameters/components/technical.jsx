@@ -110,11 +110,12 @@ const Technical = props =>
       exact: true
     }}
     locked={props.lockedParameters}
-    sections={[
+    definition={[
       {
         icon: 'fa fa-fw fa-globe',
         title: trans('internet'),
-        defaultOpened: true,
+        /*defaultOpened: true,*/
+        displayed: false,
         fields: [
           {
             name: 'internet.domain_name',
@@ -135,7 +136,7 @@ const Technical = props =>
           }
         ]
       }, {
-        icon: 'fa fa-fw fa-envelope',
+        icon: 'fa fa-fw fa-at',
         title: trans('email'),
         fields: [
           {

@@ -10,6 +10,8 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
+import {MenuBrand} from '#/main/app/layout/menu/containers/brand'
+
 class MenuMain extends Component {
   constructor(props) {
     super(props)
@@ -57,7 +59,7 @@ class MenuMain extends Component {
 
     return (
       <aside className="app-menu">
-        {/*<MenuBrand closeMenu={this.autoClose} />*/}
+        <MenuBrand closeMenu={this.autoClose} />
 
         {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
           autoClose: this.autoClose

@@ -22,31 +22,6 @@ $padding-large-horizontal:  15px !default;
 
 $line-height-large:         1.3333333 !default; // extra decimals for Win 8.1 Chrome
 
-//== Forms
-//
-//##
-
-
-//== Form states and alerts
-//
-//## Define colors for form feedback states and, by default, alerts.
-
-$state-success-text:             $success !default;
-$state-success-bg:               #dafd8d !default;
-$state-success-border:           $state-success-bg !default;
-
-$state-info-text:                $info !default;
-$state-info-bg:                  #c9edfe !default;
-$state-info-border:              $state-info-bg !default;
-
-$state-warning-text:             #686733 !default;
-$state-warning-bg:               #f4f3bf !default;
-$state-warning-border:           $state-warning-bg !default;
-
-$state-danger-text:              $danger !default;
-$state-danger-bg:                #ffd5d5 !default;
-$state-danger-border:            $state-danger-bg !default;
-
 
 //== Panels
 // @deprecated

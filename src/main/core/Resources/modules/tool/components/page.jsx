@@ -36,10 +36,10 @@ const ToolPage = props => {
           for={getTool(props.name, props.currentContext.type)}
           then={(module) => {
             if (module.default.menu) {
-              return createElement(module.default.menu)
+              return createElement(module.default.menu, {path: props.basePath})
             }
 
-            return createElement(ToolMenu)
+            return createElement(ToolMenu, {path: props.basePath})
           }}
         />
       }

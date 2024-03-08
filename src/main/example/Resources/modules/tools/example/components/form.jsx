@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 import {FormData} from '#/main/app/content/form/containers/data'
 
@@ -9,14 +9,7 @@ import {selectors} from '#/main/example//tools/example/store/selectors'
 
 const ExampleForm = (props) =>
   <ToolPage
-    path={[
-      {
-        type: LINK_BUTTON,
-        label: 'Forms',
-        target: props.path+'/forms'
-      }
-    ]}
-    subtitle="Forms"
+    title="Forms"
   >
     <FormData
       className="mt-3"

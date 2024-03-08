@@ -15,3 +15,14 @@ services:
     Claroline\ThemeBundle\Controller\ColorCollectionController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
+
+    Claroline\ThemeBundle\Controller\ThemeController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true
+
+    Claroline\ThemeBundle\Controller\UserPreferencesController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'

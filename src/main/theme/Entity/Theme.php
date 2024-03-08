@@ -32,14 +32,19 @@ class Theme
     use Description;
     use FromPlugin;
 
+    use ThemeParameters;
+
     /**
      * Is it the default platform theme ?
      *
      * @ORM\Column(name="is_default", type="boolean")
-     *
-     * @var bool
      */
-    private $default = false;
+    private bool $default = false;
+
+    /**
+     * @ORM\Column(name="logo", nullable=true)
+     */
+    private ?string $logo = null;
 
     public function __construct()
     {
@@ -62,9 +67,14 @@ class Theme
         return $this->default;
     }
 
-    public function isCustom(): bool
+    public function getLogo(): ?string
     {
-        return empty($this->plugin);
+        return $this->logo;
+    }
+
+    public function setLogo(?string $logo): void
+    {
+        $this->logo = $logo;
     }
 
     /**

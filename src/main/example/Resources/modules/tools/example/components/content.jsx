@@ -6,6 +6,15 @@ import {ContentTitle} from '#/main/app/content/components/title'
 
 const ExampleContent = () =>
   <div>
+    <ContentTitle title="Titles" />
+
+    <ContentTitle title="Title 1" level={1} numbering={1} />
+    <ContentTitle title="Title 2" level={2} numbering={2} />
+    <ContentTitle title="Title 3" level={3} numbering={3} />
+    <ContentTitle title="Title 4" level={4} numbering={4} />
+    <ContentTitle title="Title 5" level={5} numbering={5} />
+    <ContentTitle title="Title 6" level={6} numbering={6} />
+
     <ContentTitle title="Content sizing" />
 
     {['lg', 'md', 'sm'].map(size =>
