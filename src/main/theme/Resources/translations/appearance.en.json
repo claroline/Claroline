@@ -16,5 +16,21 @@
   "color_chart_delete_confirm_title": "Color chart deletion",
   "color_chart_delete_confirm_message": "Are you sure you want to delete this color chart?",
   "icon_set_delete_confirm_title": "{1} Icons set deletion | [2,Inf[ Icons sets deletion",
-  "icon_set_delete_confirm_message": "{1} Are you sure you want to delete this icons set? | [2,Inf[ Are you sure you want to delete these %count% icons sets?"
+  "icon_set_delete_confirm_message": "{1} Are you sure you want to delete this icons set? | [2,Inf[ Are you sure you want to delete these %count% icons sets?",
+
+  "theme_mode": "Mode",
+  "theme_mode_auto": "System",
+  "theme_mode_light": "Light",
+  "theme_mode_dark": "Dark",
+
+  "font_size": "User interface size",
+  "font_size_auto": "System",
+  "font_size_sm": "Small",
+  "font_size_md": "Medium",
+  "font_size_lg": "Large",
+
+  "font_weight": "Text thickness",
+  "font_weight_light": "Light",
+  "font_weight_normal": "Normal",
+  "font_weight_medium": "Medium"
 }

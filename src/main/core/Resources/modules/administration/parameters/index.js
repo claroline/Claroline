@@ -1,7 +1,7 @@
 
 import {reducer} from '#/main/core/administration/parameters/store/reducer'
 import {ParametersTool} from '#/main/core/administration/parameters/containers/tool'
-import {ParametersMenu} from '#/main/core/administration/parameters/components/menu'
+import {ParametersMenu} from '#/main/core/administration/parameters/containers/menu'
 
 export default {
   component: ParametersTool,

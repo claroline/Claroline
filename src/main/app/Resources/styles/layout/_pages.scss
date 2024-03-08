@@ -119,7 +119,7 @@
     width: 4rem;
     height: 4rem;
     border-radius: 50%;
-    background: $body-bg;
+    background: var(--#{$prefix}body-bg);
 
     .tool-icon,
     .resource-icon {

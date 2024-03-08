@@ -40,16 +40,13 @@ class ParametersSubscriber extends AbstractToolSubscriber
     protected function onOpen(OpenToolEvent $event): void
     {
         $colorCharts = $this->objectManager->getRepository(ColorCollection::class)->findAll();
-        $chartsData = [];
-
-        foreach ($colorCharts as $chart) {
-            $chartsData[] = $this->serializer->serialize($chart);
-        }
 
         $event->addResponse([
             'availableThemes' => $this->themeManager->getAvailableThemes(),
             'availableIconSets' => $this->iconSetManager->getAvailableSets(),
-            'availableColorCharts' => $chartsData,
+            'availableColorCharts' => array_map(function (ColorCollection $colorCollection) {
+                return $this->serializer->serialize($colorCollection);
+            }, $colorCharts),
         ]);
     }
 }

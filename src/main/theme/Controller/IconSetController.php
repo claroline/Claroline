@@ -29,19 +29,12 @@ class IconSetController
 {
     use PermissionCheckerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var IconSetManager */
-    private $iconSetManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        IconSetManager $iconSetManager
+        private readonly ObjectManager $om,
+        private readonly IconSetManager $iconSetManager
     ) {
         $this->authorization = $authorization;
-        $this->om = $om;
-        $this->iconSetManager = $iconSetManager;
     }
 
     /**

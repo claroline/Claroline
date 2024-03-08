@@ -11,31 +11,27 @@
 
 namespace Claroline\ThemeBundle\Manager;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\ThemeBundle\Entity\Theme;
+use Claroline\ThemeBundle\Entity\UserPreferences;
 use Claroline\ThemeBundle\Repository\ThemeRepository;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ThemeManager
 {
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var ThemeRepository */
-    private $repository;
-
-    /** @var Theme */
-    private $currentTheme;
+    private ThemeRepository $repository;
+    private Theme $currentTheme;
 
     public function __construct(
-        ObjectManager $om,
-        PlatformConfigurationHandler $config
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly SerializerProvider $serializer,
+        private readonly IconSetManager $iconManager,
     ) {
-        $this->config = $config;
-        $this->om = $om;
-
         $this->repository = $om->getRepository(Theme::class);
     }
 
@@ -48,6 +44,24 @@ class ThemeManager
         $this->om->flush();
 
         return $theme;
+    }
+
+    /**
+     * Computes UI appearance based on the current platform theme and user preferences.
+     */
+    public function getAppearance(): array
+    {
+        $theme = $this->getCurrentTheme();
+
+        $userPreferences = null;
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        if ($currentUser instanceof User) {
+            $userPreferences = $this->om->getRepository(UserPreferences::class)->findOneBy(['user' => $currentUser]);
+        }
+
+        return array_merge([], $this->serializer->serialize($theme), [
+            'icons' => $this->iconManager->getCurrentSet(),
+        ], $userPreferences ? $this->serializer->serialize($userPreferences) : []);
     }
 
     /**

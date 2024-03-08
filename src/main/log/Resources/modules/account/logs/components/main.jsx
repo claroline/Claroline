@@ -13,13 +13,6 @@ import {SecurityLogList} from '#/main/log/account/logs/components/security'
 
 const LogsMain = () =>
   <AccountPage
-    path={[
-      {
-        type: LINK_BUTTON,
-        label: trans('logs', {}, 'tools'),
-        target: route('logs')
-      }
-    ]}
     title={trans('logs', {}, 'tools')}
   >
     <div className="row">

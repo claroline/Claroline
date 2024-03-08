@@ -15,14 +15,7 @@ import {ExampleProgression} from '#/main/example/tools/example/components/progre
 
 const ExampleComponents = (props) =>
   <ToolPage
-    path={[
-      {
-        type: LINK_BUTTON,
-        label: 'Components',
-        target: props.path+'/components'
-      }
-    ]}
-    subtitle="Components"
+    title="Components"
   >
     <ContentTabs
       className="mb-3"

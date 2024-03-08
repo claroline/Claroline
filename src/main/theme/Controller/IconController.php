@@ -11,12 +11,9 @@ use Symfony\Component\Yaml\Yaml;
  */
 class IconController
 {
-    /** @var string */
-    private $projectDir;
-
-    public function __construct(string $projectDir)
-    {
-        $this->projectDir = $projectDir;
+    public function __construct(
+        private readonly string $projectDir
+    ) {
     }
 
     /**

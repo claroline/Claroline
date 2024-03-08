@@ -2,11 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConstants} from '#/main/app/content/list/constants'
 import {AccountPage} from '#/main/app/account/containers/page'
-import {route} from '#/main/app/account/routing'
 
 import {NotificationCard} from '#/plugin/notification/components/card'
 import {selectors} from '#/plugin/notification/account/notifications/store/selectors'
@@ -14,13 +13,6 @@ import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const NotificationMain = (props) =>
   <AccountPage
-    breadcrumb={[
-      {
-        type: LINK_BUTTON,
-        label: trans('notifications'),
-        target: route('notifications')
-      }
-    ]}
     title={trans('notifications')}
   >
     <ContentSizing size="full">

@@ -135,7 +135,7 @@ class ContextMain extends Component {
       <>
         {createElement(this.props.menu)}
 
-        <div className="app-content" role="presentation">
+        <div className="app-body" role="presentation">
           {CurrentComp}
 
           {this.props.footer && createElement(this.props.footer)}

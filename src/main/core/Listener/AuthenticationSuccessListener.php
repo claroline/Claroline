@@ -53,14 +53,15 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $request->setLocale($user->getLocale());
         }
 
-        $this->eventDispatcher->dispatch(new UserLoginEvent($user), SecurityEvents::USER_LOGIN);
+        $loginEvent = new UserLoginEvent($user);
+        $this->eventDispatcher->dispatch($loginEvent, SecurityEvents::USER_LOGIN);
 
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse([
+            return new JsonResponse(array_merge([], $loginEvent->getResponse(), [
                 'user' => $this->serializer->serialize($user, [Options::SERIALIZE_FACET]), // TODO : we should only get the minimal representation of user here,
                 'messages' => $this->messageManager->getConnectionMessagesByUser($user),
                 'contexts' => $this->contextProvider->getAvailableContexts(),
-            ]);
+            ]));
         }
 
         return new RedirectResponse($this->getRedirectUrl($request));

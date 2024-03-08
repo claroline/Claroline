@@ -11,5 +11,9 @@ registry.add('ClarolineThemeBundle', {
       'color': () => { return import(/* webpackChunkName: "theme-data-type-color" */ '#/main/theme/data/types/color') },
       'icon' : () => { return import(/* webpackChunkName: "theme-data-type-icon" */  '#/main/theme/data/types/icon') },
     }
-  }
+  },
+
+  account: {
+    'appearance'     : () => { return import(/* webpackChunkName: "theme-tool-appearance" */ '#/main/theme/account/appearance') }
+  },
 })

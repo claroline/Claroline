@@ -56,14 +56,14 @@ button.widget-insert-content {
 button.widget-layout-preview {
     &:hover {
         .widget-col-preview {
-            background: $state-info-bg;
+            background: var(--#{$prefix}primary-bg-subtle);
         }
     }
 
     &:focus,
     &:active {
         .widget-col-preview {
-            background: $state-info-bg;
+            background: var(--#{$prefix}primary-bg-subtle);
         }
     }
 }

@@ -47,6 +47,7 @@ class AppearanceTool extends Component {
           {
             title: trans('general'),
             primary: true,
+            displayed: false,
             fields: [
               {
                 name: 'display.breadcrumb',
@@ -198,6 +199,7 @@ class AppearanceTool extends Component {
           }, {
             icon: 'fa fa-fw fa-copyright',
             title: trans('footer', {}, 'appearance'),
+            displayed: false,
             fields: [
               {
                 name: 'footer.content',

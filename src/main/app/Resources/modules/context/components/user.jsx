@@ -159,7 +159,6 @@ ContextUser.propTypes = {
     translationKey: T.string.isRequired
   })),
   impersonated: T.bool.isRequired,
-  unavailable: T.bool.isRequired,
   registration: T.bool.isRequired,
   closeMenu: T.func
 }

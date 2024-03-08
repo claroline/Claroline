@@ -66,6 +66,7 @@ const Meta = (props) =>
       }, {
         icon: 'fa fa-fw fa-home',
         title: trans('home'),
+        displayed: false,
         fields: [
           {
             name: 'home.type',
@@ -98,6 +99,7 @@ const Meta = (props) =>
         ]
       }, {
         icon: 'fa fa-fw fa-atlas',
+        displayed: false,
         title: trans('desktop'),
         fields: [
           {

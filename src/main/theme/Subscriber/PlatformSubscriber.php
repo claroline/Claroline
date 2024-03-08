@@ -4,53 +4,46 @@ namespace Claroline\ThemeBundle\Subscriber;
 
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\ThemeBundle\Entity\ColorCollection;
-use Claroline\ThemeBundle\Manager\IconSetManager;
+use Claroline\ThemeBundle\Manager\ThemeManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PlatformSubscriber implements EventSubscriberInterface
 {
-    private PlatformConfigurationHandler $config;
-    private IconSetManager $iconManager;
-    private ObjectManager $objectManager;
-    private SerializerProvider $serializer;
-
     public function __construct(
-        PlatformConfigurationHandler $config,
-        IconSetManager $iconManager,
-        ObjectManager $objectManager,
-        SerializerProvider $serializer
+        private readonly ObjectManager $objectManager,
+        private readonly SerializerProvider $serializer,
+        private readonly ThemeManager $themeManager
     ) {
-        $this->config = $config;
-        $this->iconManager = $iconManager;
-        $this->objectManager = $objectManager;
-        $this->serializer = $serializer;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
             'claroline_populate_client_config' => 'onConfig',
+            SecurityEvents::USER_LOGIN => 'onLogin',
         ];
     }
 
     public function onConfig(GenericDataEvent $event): void
     {
         $colorCharts = $this->objectManager->getRepository(ColorCollection::class)->findAll();
-        $chartsData = [];
-
-        foreach ($colorCharts as $chart) {
-            $chartsData[] = $this->serializer->serialize($chart);
-        }
 
         $event->setResponse([
-            'theme' => [
-                'name' => strtolower($this->config->getParameter('theme')),
-                'icons' => $this->iconManager->getCurrentSet(),
-            ],
-            'colorChart' => $chartsData,
+            'theme' => $this->themeManager->getAppearance(),
+            'colorChart' => array_map(function (ColorCollection $colorCollection) {
+                return $this->serializer->serialize($colorCollection);
+            }, $colorCharts),
+        ]);
+    }
+
+    public function onLogin(UserLoginEvent $event): void
+    {
+        $event->addResponse([
+            'config' => ['theme' => $this->themeManager->getAppearance()],
         ]);
     }
 }

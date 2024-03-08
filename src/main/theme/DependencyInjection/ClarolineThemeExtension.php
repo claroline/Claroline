@@ -27,5 +27,6 @@ class ClarolineThemeExtension extends Extension
         $loader = new YamlFileLoader($container, $locator);
         $loader->load('parameters.yml');
         $loader->load('services.yml');
+        $loader->load('components.yml');
     }
 }

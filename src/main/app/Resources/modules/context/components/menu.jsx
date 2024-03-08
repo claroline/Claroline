@@ -12,7 +12,6 @@ import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/ma
 
 import {MenuMain} from '#/main/app/layout/menu/containers/main'
 import {ContextUser} from '#/main/app/context/containers/user'
-import {MenuBrand} from '#/main/app/layout/menu/containers/brand'
 
 const ContextShortcuts = props =>
   <Toolbar
@@ -49,10 +48,8 @@ const ContextMenu = (props) => {
       actions={props.actions}
       thumbnail={props.thumbnail}
     >
-      <MenuBrand />
-      <ContextUser title={props.title}>
+      <ContextUser title={props.title} />
 
-      </ContextUser>
       {props.children}
 
       {false && !isEmpty(props.shortcuts) &&

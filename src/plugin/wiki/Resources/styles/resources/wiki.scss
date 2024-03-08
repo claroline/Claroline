@@ -81,7 +81,7 @@
     margin-bottom: $component-margin-bottom;
     &.wiki-section-invisible {
         .wiki-section-title {
-            background-color: $state-danger-bg;
+            background-color: var(--#{$prefix}danger-bg-subtle);
         }
     }
 }
@@ -120,18 +120,15 @@
     }
 
     .diff-html-changed {
-        background-color: $state-warning-bg;
-        border: 1px solid $state-warning-border;
+        background-color: var(--#{$prefix}warning-bg-subtle);
     }
 
     .diff-html-added {
-        background-color: $state-success-bg;
-        border: 1px solid $state-success-border;
+        background-color: var(--#{$prefix}success-bg-subtle);
         text-decoration: none;
     }
     .diff-html-removed {
-        background-color: $state-danger-bg;
-        border: 1px solid $state-danger-border;
+        background-color: var(--#{$prefix}danger-bg-subtle);
     }
 
     .diff-html-simple {
