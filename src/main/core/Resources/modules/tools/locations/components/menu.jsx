@@ -1,49 +1,34 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {Toolbar} from '#/main/app/action/components/toolbar'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {MenuSection} from '#/main/app/layout/menu/components/section'
+import {ToolMenu} from '#/main/core/tool/containers/menu'
 
 const LocationsMenu = (props) =>
-  <MenuSection
-    {...omit(props, 'path')}
-    title={trans('locations', {}, 'tools')}
-  >
-    <Toolbar
-      className="list-group list-group-flush"
-      buttonName="list-group-item list-group-item-action"
-      actions={[
-        {
-          name: 'locations',
-          type: LINK_BUTTON,
-          label: trans('locations'),
-          target: `${props.path}/locations`
-        }, {
-          name: 'materials',
-          type: LINK_BUTTON,
-          label: trans('materials', {}, 'location'),
-          target: `${props.path}/materials`
-        }, {
-          name: 'rooms',
-          type: LINK_BUTTON,
-          label: trans('rooms', {}, 'location'),
-          target: `${props.path}/rooms`
-        }
-      ]}
-      onClick={props.autoClose}
-    />
-  </MenuSection>
+  <ToolMenu
+    actions={[
+      {
+        name: 'locations',
+        type: LINK_BUTTON,
+        label: trans('locations'),
+        target: `${props.path}/locations`
+      }, {
+        name: 'materials',
+        type: LINK_BUTTON,
+        label: trans('materials', {}, 'location'),
+        target: `${props.path}/materials`
+      }, {
+        name: 'rooms',
+        type: LINK_BUTTON,
+        label: trans('rooms', {}, 'location'),
+        target: `${props.path}/rooms`
+      }
+    ]}
+  />
 
 LocationsMenu.propTypes = {
-  path: T.string.isRequired,
-
-  // from menu
-  opened: T.bool.isRequired,
-  toggle: T.func.isRequired,
-  autoClose: T.func.isRequired
+  path: T.string.isRequired
 }
 
 export {

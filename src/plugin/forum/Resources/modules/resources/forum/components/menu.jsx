@@ -2,19 +2,23 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {MenuSection} from '#/main/app/layout/menu/components/section'
+import {ToolMenu} from '#/main/core/tool/containers/menu'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 const ForumMenu = (props) =>
-  <MenuSection
-    {...props}
-    title={trans('claroline_forum', {}, 'resource')}
+  <ToolMenu
+    actions={[
+      {
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-list-ul',
+        label: trans('subjects', {}, 'forum'),
+        target: `${props.path}/subjects`
+      }
+    ]}
   />
 
 ForumMenu.propTypes = {
-  // from menu
-  opened: T.bool.isRequired,
-  toggle: T.func.isRequired,
-  autoClose: T.func.isRequired
+  path: T.string.isRequired
 }
 
 export {
