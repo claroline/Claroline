@@ -2,12 +2,13 @@ import {connect} from 'react-redux'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 
-import {Plugins as PluginsComponent} from '#/main/core/administration/plugins/components/plugins'
-import {actions} from '#/main/core/administration/plugins/store'
+import {Plugin as PluginComponent} from '#/main/core/administration/parameters/components/plugin'
+import {actions, selectors} from '#/main/core/administration/parameters/store'
 
-const Plugins = connect(
+const Plugin = connect(
   (state) => ({
-    path: toolSelectors.path(state)
+    path: toolSelectors.path(state),
+    plugin: selectors.plugin(state)
   }),
   (dispatch) => ({
     enable(plugin) {
@@ -17,8 +18,8 @@ const Plugins = connect(
       dispatch(actions.disable(plugin))
     }
   })
-)(PluginsComponent)
+)(PluginComponent)
 
 export {
-  Plugins
+  Plugin
 }

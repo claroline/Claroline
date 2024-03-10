@@ -154,9 +154,6 @@ plugin:
         - name: integration
           icon: plug
 
-        - name: plugins
-          icon: puzzle-piece
-
         - name: connection_messages
           icon: comment-dots
 
