@@ -1081,5 +1081,6 @@
     "after_today": "After today",
     "confirmed": "Confirmed",
     "validated": "Validated",
-    "other": "Other"
+    "other": "Other",
+    "plugins": "Plugins"
 }
