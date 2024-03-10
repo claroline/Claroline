@@ -22,13 +22,13 @@ const ParametersMenu = (props) =>
         //icon: 'fa fa-fw fa-drafting-compass',
         label: trans('appearance'),
         target: props.path+'/appearance'
-      }/*, {
-        name: 'technical',
+      }, {
+        name: 'plugins',
         type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-wrench',
-        label: trans('technical'),
-        target: props.path+'/technical'
-      }*/
+        //icon: 'fa fa-fw fa-drafting-compass',
+        label: trans('plugins'),
+        target: props.path+'/plugins'
+      }
     ]}
   />
 

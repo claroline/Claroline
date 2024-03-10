@@ -18,10 +18,6 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
 
-    Claroline\CoreBundle\Component\Tool\PluginsTool:
-        parent: Claroline\AppBundle\Component\Tool\AbstractTool
-        tags: [ 'claroline.component.tool' ]
-
     Claroline\CoreBundle\Component\Tool\ResourcesTool:
         parent: Claroline\AppBundle\Component\Tool\AbstractTool
         tags: [ 'claroline.component.tool' ]

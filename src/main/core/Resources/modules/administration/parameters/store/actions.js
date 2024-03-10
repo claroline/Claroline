@@ -4,7 +4,7 @@ import {API_REQUEST} from '#/main/app/api'
 
 import {actions as listActions} from '#/main/app/content/list/store/actions'
 
-import {selectors} from '#/main/core/administration/plugins/store/selectors'
+import {selectors} from '#/main/core/administration/parameters/store/selectors'
 
 export const PLUGIN_LOAD = 'PLUGIN_LOAD'
 
@@ -12,7 +12,7 @@ export const actions = {}
 
 actions.loadPlugin = makeActionCreator(PLUGIN_LOAD, 'plugin')
 
-actions.open = (pluginId, force = false) => (dispatch, getState) => {
+actions.openPlugin = (pluginId, force = false) => (dispatch, getState) => {
   const currentPlugin = selectors.plugin(getState())
   if (force || isEmpty(currentPlugin) || currentPlugin.id !== pluginId) {
     return dispatch({

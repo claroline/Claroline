@@ -1100,5 +1100,6 @@
     "after_today": "A partir d'aujourd'hui",
     "confirmed": "Confirmé",
     "validated": "Validé",
-    "other": "Autre"
+    "other": "Autre",
+    "plugins": "Plugins"
 }

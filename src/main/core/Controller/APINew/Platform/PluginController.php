@@ -19,21 +19,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PluginController extends AbstractSecurityController
 {
-    /** @var Crud */
-    private $crud;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var PluginManager */
-    private $pluginManager;
-
     public function __construct(
-        Crud $crud,
-        SerializerProvider $serializer,
-        PluginManager $pluginManager
+        private readonly Crud $crud,
+        private readonly SerializerProvider $serializer,
+        private readonly PluginManager $pluginManager
     ) {
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->pluginManager = $pluginManager;
     }
 
     /**
@@ -41,7 +31,7 @@ class PluginController extends AbstractSecurityController
      */
     public function listAction(Request $request): JsonResponse
     {
-        $this->canOpenAdminTool('plugins');
+        $this->canOpenAdminTool('parameters');
 
         return new JsonResponse(
             $this->crud->list(Plugin::class, $request->query->all(), [Options::SERIALIZE_LIST])
@@ -53,7 +43,7 @@ class PluginController extends AbstractSecurityController
      */
     public function getAction(Plugin $plugin): JsonResponse
     {
-        $this->canOpenAdminTool('plugins');
+        $this->canOpenAdminTool('parameters');
 
         return new JsonResponse(
             $this->serializer->serialize($plugin)
@@ -65,7 +55,7 @@ class PluginController extends AbstractSecurityController
      */
     public function configureAction(Plugin $plugin): JsonResponse
     {
-        $this->canOpenAdminTool('plugins');
+        $this->canOpenAdminTool('parameters');
 
         return new JsonResponse(
             $this->serializer->serialize($plugin)
@@ -77,7 +67,7 @@ class PluginController extends AbstractSecurityController
      */
     public function enableAction(Plugin $plugin): JsonResponse
     {
-        $this->canOpenAdminTool('plugins');
+        $this->canOpenAdminTool('parameters');
 
         $this->pluginManager->enable($plugin);
 
@@ -91,7 +81,7 @@ class PluginController extends AbstractSecurityController
      */
     public function disableAction(Plugin $plugin): JsonResponse
     {
-        $this->canOpenAdminTool('plugins');
+        $this->canOpenAdminTool('parameters');
 
         $this->pluginManager->disable($plugin);
 
