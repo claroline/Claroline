@@ -8,7 +8,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 
-import {selectors} from '#/main/authentication/integration/ips/modals/parameters/store'
+import {selectors} from '#/main/authentication/ip/modals/parameters/store'
 
 const ParametersModal = props =>
   <Modal
