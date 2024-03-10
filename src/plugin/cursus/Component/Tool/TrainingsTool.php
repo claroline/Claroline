@@ -13,6 +13,11 @@ class TrainingsTool extends AbstractTool
         return 'trainings';
     }
 
+    public static function getIcon(): string
+    {
+        return 'graduation-cap';
+    }
+
     public function supportsContext(string $context): bool
     {
         return DesktopContext::getName() === $context;

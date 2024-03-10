@@ -11,6 +11,7 @@
 
 namespace Claroline\CommunityBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -20,59 +21,55 @@ class RoleRepository extends EntityRepository
 {
     /**
      * Returns the collaborator role of a workspace.
-     *
-     * @return Role
      */
-    public function findCollaboratorRole(Workspace $workspace)
+    public function findCollaboratorRole(Workspace $workspace): ?Role
     {
         return $this->findBaseWorkspaceRole('COLLABORATOR', $workspace);
     }
 
     /**
      * Returns the manager role of a workspace.
-     *
-     * @return Role
      */
-    public function findManagerRole(Workspace $workspace)
+    public function findManagerRole(Workspace $workspace): ?Role
     {
         return $this->findBaseWorkspaceRole('MANAGER', $workspace);
     }
 
     /**
      * Returns the platform roles of a user.
-     *
-     * @return Role[]
+     * NB. This method is called in the UserSerializer. We bypass ORM for performances.
      */
-    public function findPlatformRoles(User $user)
+    public function loadByUser(User $user): array
     {
         return $this->getEntityManager()
             ->createQuery('
-                SELECT r 
-                FROM Claroline\CoreBundle\Entity\Role r
-                JOIN r.users u
+                SELECT r.uuid AS id, r.type, r.name, r.translationKey
+                FROM Claroline\CoreBundle\Entity\Role AS r
+                LEFT JOIN r.users AS u
+                LEFT JOIN r.groups AS g
+                LEFT JOIN g.users AS gu
                 WHERE u.id = :userId 
-                  AND r.type = :type
+                   OR gu.id = :userId
             ')
             ->setParameter('userId', $user->getId())
-            ->setParameter('type', Role::PLATFORM_ROLE)
-            ->getResult();
+            ->getArrayResult();
     }
 
     /**
-     * Returns all platform roles.
-     *
-     * @return Role[]
+     * Returns the platform roles of a user.
+     * NB. This method is called in the GroupSerializer. We bypass ORM for performances.
      */
-    public function findAllPlatformRoles()
+    public function loadByGroup(Group $group): array
     {
-        return $this
-            ->createQueryBuilder('role')
-            ->andWhere('role.type = :roleType')
-            ->setParameter('roleType', Role::PLATFORM_ROLE)
-            ->andWhere('role.name NOT LIKE :anonymous')
-            ->setParameter('anonymous', 'ROLE_ANONYMOUS')
-            ->getQuery()
-            ->getResult();
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT r.uuid AS id, r.type, r.name, r.translationKey
+                FROM Claroline\CoreBundle\Entity\Role AS r
+                LEFT JOIN r.groups AS g
+                WHERE g.id = :groupId
+            ')
+            ->setParameter('groupId', $group->getId())
+            ->getArrayResult();
     }
 
     /**
@@ -94,7 +91,7 @@ class RoleRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
-    private function findBaseWorkspaceRole(string $roleType, Workspace $workspace)
+    private function findBaseWorkspaceRole(string $roleType, Workspace $workspace): ?Role
     {
         return $this->getEntityManager()
             ->createQuery('

@@ -23,6 +23,11 @@ class AgendaTool extends AbstractTool
         return 'agenda';
     }
 
+    public static function getIcon(): string
+    {
+        return 'calendar';
+    }
+
     public function supportsContext(string $context): bool
     {
         return in_array($context, [

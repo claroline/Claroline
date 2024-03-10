@@ -13,6 +13,11 @@ class ConnectionMessagesTool extends AbstractTool
         return 'connection_messages';
     }
 
+    public static function getIcon(): string
+    {
+        return 'comments-dots';
+    }
+
     public function supportsContext(string $context): bool
     {
         return AdministrationContext::getName() === $context;

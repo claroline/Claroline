@@ -13,6 +13,11 @@ class NotificationsTool extends AbstractTool
         return 'notifications';
     }
 
+    public static function getIcon(): string
+    {
+        return 'bell';
+    }
+
     public function supportsContext(string $context): bool
     {
         return AccountContext::getName() === $context;

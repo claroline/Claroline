@@ -20,6 +20,11 @@ class WorkspacesTool extends AbstractTool
         return 'workspaces';
     }
 
+    public static function getIcon(): string
+    {
+        return 'book';
+    }
+
     public function supportsContext(string $context): bool
     {
         return DesktopContext::getName() === $context;

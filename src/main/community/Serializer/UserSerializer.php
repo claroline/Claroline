@@ -26,47 +26,19 @@ class UserSerializer
 {
     use SerializerTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var OrganizationSerializer */
-    private $organizationSerializer;
-    /** @var FacetManager */
-    private $facetManager;
-    /** @var WorkspaceUserQueueManager */
-    private $workspaceUserQueueManager;
-
-    private $organizationRepo;
-    /** @var RoleRepository */
-    private $roleRepo;
-    /** @var FieldFacetRepository */
-    private $fieldFacetRepo;
-    /** @var FieldFacetValueRepository */
-    private $fieldFacetValueRepo;
+    private RoleRepository $roleRepo;
+    private FieldFacetRepository $fieldFacetRepo;
+    private FieldFacetValueRepository $fieldFacetValueRepo;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        PlatformConfigurationHandler $config,
-        OrganizationSerializer $organizationSerializer,
-        FacetManager $facetManager,
-        WorkspaceUserQueueManager $workspaceUserQueueManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly OrganizationSerializer $organizationSerializer,
+        private readonly FacetManager $facetManager,
+        private readonly WorkspaceUserQueueManager $workspaceUserQueueManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->config = $config;
-        $this->organizationSerializer = $organizationSerializer;
-        $this->facetManager = $facetManager;
-        $this->workspaceUserQueueManager = $workspaceUserQueueManager;
-
-        $this->organizationRepo = $om->getRepository(Organization::class);
         $this->roleRepo = $om->getRepository(Role::class);
         $this->fieldFacetRepo = $om->getRepository(FieldFacet::class);
         $this->fieldFacetValueRepo = $om->getRepository(FieldFacetValue::class);
@@ -118,27 +90,6 @@ class UserSerializer
             ];
         }
 
-        $userRoles = array_map(function (Role $role) { // todo use role serializer with minimal option
-            return [
-                'id' => $role->getUuid(),
-                'type' => $role->getType(),
-                'name' => $role->getName(),
-                'translationKey' => $role->getTranslationKey(),
-                'workspace' => $role->getWorkspace() ? ['id' => $role->getWorkspace()->getUuid()] : null,
-                'context' => 'user',
-            ];
-        }, $user->getEntityRoles(false));
-        $groupRoles = array_map(function (Role $role) { // todo use role serializer with minimal option
-            return [
-                'id' => $role->getUuid(),
-                'type' => $role->getType(),
-                'name' => $role->getName(),
-                'translationKey' => $role->getTranslationKey(),
-                'workspace' => $role->getWorkspace() ? ['id' => $role->getWorkspace()->getUuid()] : null,
-                'context' => 'group',
-            ];
-        }, $user->getGroupRoles());
-
         $serializedUser = [
             'id' => $user->getUuid(),
             'autoId' => $user->getId(),
@@ -154,9 +105,7 @@ class UserSerializer
             'phone' => $showEmail ? $user->getPhone() : null,
             'meta' => $this->serializeMeta($user),
             'restrictions' => $this->serializeRestrictions($user),
-            // this has a uge negative impact on performances
-            // but this is useful to have the user roles in DataLists (mostly in workspace to know which ws role a user has)
-            'roles' => array_merge($userRoles, $groupRoles),
+            'roles' => $this->roleRepo->loadByUser($user),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {

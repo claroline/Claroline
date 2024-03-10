@@ -26,6 +26,11 @@ class TrainingEventsTool extends AbstractTool
         return 'training_events';
     }
 
+    public static function getIcon(): string
+    {
+        return 'graduation-cap';
+    }
+
     public function supportsContext(string $context): bool
     {
         return WorkspaceContext::getName() === $context;

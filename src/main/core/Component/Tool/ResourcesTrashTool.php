@@ -13,6 +13,11 @@ class ResourcesTrashTool extends AbstractTool
         return 'resource_trash';
     }
 
+    public static function getIcon(): string
+    {
+        return 'trash-alt';
+    }
+
     public function supportsContext(string $context): bool
     {
         return WorkspaceContext::getName() === $context;
