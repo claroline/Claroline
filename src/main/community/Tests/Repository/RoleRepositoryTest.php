@@ -48,13 +48,6 @@ class RoleRepositoryTest extends RepositoryTestCase
         $this->assertEquals('ROLE_WS_MANAGER_'.self::get('ws_1')->getUuid(), $role->getName());
     }
 
-    public function testFindPlatformRoles()
-    {
-        $roles = self::$repo->findPlatformRoles(self::get('john'));
-        $this->assertEquals(2, count($roles));
-        $this->assertEquals('ROLE_PLATFORM_CUSTOM', $roles[1]->getName());
-    }
-
     public function testFindByWorkspaceCodeTag()
     {
         $this->markTestSkipped('This method must be tested');

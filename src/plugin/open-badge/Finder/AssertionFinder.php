@@ -92,7 +92,7 @@ class AssertionFinder extends AbstractFinder
                     break;
                 case 'fromGrantableBadges':
                     $grantDecoder = $this->toolMaskDecoderManager->getMaskDecoderByToolAndName(
-                        $this->om->getRepository(Tool::class)->findOneBy(['name' => 'badges']),
+                        'badges',
                         'grant'
                     );
 

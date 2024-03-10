@@ -7,11 +7,6 @@ use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 
 abstract class AbstractTool implements ToolInterface
 {
-    public static function getAdditionalRights(): array
-    {
-        return [];
-    }
-
     public function isRequired(string $context, ?string $contextId): bool
     {
         return false;

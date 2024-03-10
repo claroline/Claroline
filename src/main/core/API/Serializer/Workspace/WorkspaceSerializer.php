@@ -25,34 +25,16 @@ class WorkspaceSerializer
 {
     use SerializerTrait;
 
-    private AuthorizationCheckerInterface $authorization;
-    private TokenStorageInterface $tokenStorage;
-
-    private EventDispatcherInterface $eventDispatcher;
-    private ObjectManager $om;
-    private WorkspaceManager $workspaceManager;
-    private OrganizationSerializer $organizationSerializer;
-    private UserSerializer $userSerializer;
-    private ResourceNodeSerializer $resNodeSerializer;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $eventDispatcher,
-        ObjectManager $om,
-        WorkspaceManager $workspaceManager,
-        UserSerializer $userSerializer,
-        OrganizationSerializer $organizationSerializer,
-        ResourceNodeSerializer $resNodeSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ObjectManager $om,
+        private readonly WorkspaceManager $workspaceManager,
+        private readonly UserSerializer $userSerializer,
+        private readonly OrganizationSerializer $organizationSerializer,
+        private readonly ResourceNodeSerializer $resNodeSerializer
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->authorization = $authorization;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->om = $om;
-        $this->workspaceManager = $workspaceManager;
-        $this->userSerializer = $userSerializer;
-        $this->organizationSerializer = $organizationSerializer;
-        $this->resNodeSerializer = $resNodeSerializer;
     }
 
     public function getClass(): string

@@ -119,6 +119,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Component\Tool\ToolProvider'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
 
     Claroline\CoreBundle\API\Serializer\Template\TemplateTypeSerializer:

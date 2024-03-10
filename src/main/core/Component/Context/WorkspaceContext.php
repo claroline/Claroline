@@ -47,10 +47,11 @@ class WorkspaceContext extends AbstractContext
 
         // we receive the slug on context open,
         // and we receive the uuid when tools are opened
-        $workspace = $this->om->getObject(['uuid' => $contextId, 'slug' => $contextId], Workspace::class, ['slug']);
+        $workspace = $this->om->getRepository(Workspace::class)->findByUuidOrSlug($contextId);
         if (empty($workspace)) {
             throw new NotFoundHttpException('Workspace not found');
         }
+
         return $workspace;
     }
 

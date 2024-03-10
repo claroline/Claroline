@@ -55,7 +55,7 @@ class ToolController
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
             $contextSubject = $contextHandler->getObject($contextId);
 
-            $orderedTool = $this->toolProvider->getTool($name, $context, $contextHandler->getObject($contextId));
+            $orderedTool = $this->toolProvider->getTool($name, $context, $contextSubject);
         } catch (\Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }

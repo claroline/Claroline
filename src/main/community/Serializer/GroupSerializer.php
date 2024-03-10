@@ -5,6 +5,7 @@ namespace Claroline\CommunityBundle\Serializer;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CommunityBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -13,21 +14,13 @@ class GroupSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var RoleSerializer */
-    private $roleSerializer;
+    private RoleRepository $roleRepo;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        RoleSerializer $roleSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->roleSerializer = $roleSerializer;
+        $this->roleRepo = $om->getRepository(Role::class);
     }
 
     public function getClass(): string
@@ -74,9 +67,7 @@ class GroupSerializer
                 'description' => $group->getDescription(),
                 'readOnly' => $group->isLocked(),
             ],
-            'roles' => array_map(function (Role $role) use ($options) {
-                return $this->roleSerializer->serialize($role, $options);
-            }, $group->getEntityRoles()->toArray()),
+            'roles' => $this->roleRepo->loadByGroup($group),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
