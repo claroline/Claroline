@@ -30,6 +30,11 @@ class HomeTool extends AbstractTool
         return 'home';
     }
 
+    public static function getIcon(): string
+    {
+        return 'home';
+    }
+
     public function supportsContext(string $context): bool
     {
         return in_array($context, [

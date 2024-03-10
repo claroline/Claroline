@@ -25,6 +25,11 @@ class TransferTool extends AbstractTool
         return 'transfer';
     }
 
+    public static function getIcon(): string
+    {
+        return 'exchange';
+    }
+
     public function supportsContext(string $context): bool
     {
         return in_array($context, [

@@ -32,6 +32,16 @@ class WorkspaceRepository extends EntityRepository
             ->getResult();
     }
 
+    public function findByUuidOrSlug(string $identifier): ?Workspace
+    {
+        return $this->createQueryBuilder('w')
+            ->where('w.uuid = :identifier')
+            ->orWhere('w.slug = :identifier')
+            ->setParameter('identifier', $identifier)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     /**
      * Counts the non personal workspaces.
      *

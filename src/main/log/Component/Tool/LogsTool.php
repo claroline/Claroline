@@ -20,6 +20,11 @@ class LogsTool extends AbstractTool
         return 'logs';
     }
 
+    public static function getIcon(): string
+    {
+        return 'shoe-prints';
+    }
+
     public function supportsContext(string $context): bool
     {
         return in_array($context, [

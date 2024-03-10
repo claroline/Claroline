@@ -13,6 +13,11 @@ class ExampleTool extends AbstractTool
         return 'example';
     }
 
+    public static function getIcon(): string
+    {
+        return 'tools';
+    }
+
     public function supportsContext(string $context): bool
     {
         return DesktopContext::getName() === $context;

@@ -46,12 +46,9 @@ class CommunityTool extends AbstractTool
         return 'community';
     }
 
-    public static function getAdditionalRights(): array
+    public static function getIcon(): string
     {
-        return [
-            'CREATE_USER',
-            'SHOW_ACTIVITY',
-        ];
+        return 'users';
     }
 
     public function supportsContext(string $context): bool

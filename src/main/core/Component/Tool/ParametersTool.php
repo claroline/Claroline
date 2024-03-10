@@ -22,6 +22,11 @@ class ParametersTool extends AbstractTool
         return 'parameters';
     }
 
+    public static function getIcon(): string
+    {
+        return 'cog';
+    }
+
     public function isRequired(string $context, ?string $contextId): bool
     {
         return true;

@@ -13,6 +13,11 @@ class SchedulerTool extends AbstractTool
         return 'scheduler';
     }
 
+    public static function getIcon(): string
+    {
+        return 'clock';
+    }
+
     public function supportsContext(string $context): bool
     {
         return AdministrationContext::getName() === $context;

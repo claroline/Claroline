@@ -103,7 +103,7 @@ class ParametersController extends AbstractSecurityController
                 'resources' => $this->om->getRepository(ResourceNode::class)->countActiveResources(),
                 'storage' => $this->fileManager->getUsedStorage(),
                 'users' => $this->om->getRepository(User::class)->countUsers(),
-                'roles' => count($this->om->getRepository(Role::class)->findAllPlatformRoles()),
+                //'roles' => count($this->om->getRepository(Role::class)->findAllPlatformRoles()),
                 'groups' => $this->om->getRepository(Group::class)->count([]),
                 'workspaces' => $this->om->getRepository(Workspace::class)->countNonPersonalWorkspaces(),
                 'organizations' => $this->om->getRepository(Organization::class)->count([]),

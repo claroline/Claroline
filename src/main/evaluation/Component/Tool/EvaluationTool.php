@@ -22,6 +22,11 @@ class EvaluationTool extends AbstractTool
         ]);
     }
 
+    public static function getIcon(): string
+    {
+        return 'award';
+    }
+
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
     {
         return [];

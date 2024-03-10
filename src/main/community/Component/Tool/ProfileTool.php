@@ -13,6 +13,11 @@ class ProfileTool extends AbstractTool
         return 'profile';
     }
 
+    public static function getIcon(): string
+    {
+        return 'user-circle';
+    }
+
     public function isRequired(string $context, ?string $contextId): bool
     {
         return true;

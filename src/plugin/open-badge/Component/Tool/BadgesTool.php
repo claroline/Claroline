@@ -31,6 +31,11 @@ class BadgesTool extends AbstractTool
         return 'badges';
     }
 
+    public static function getIcon(): string
+    {
+        return 'trophy';
+    }
+
     public function supportsContext(string $context): bool
     {
         return in_array($context, [

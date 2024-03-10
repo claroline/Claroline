@@ -13,6 +13,11 @@ class IntegrationTool extends AbstractTool
         return 'integration';
     }
 
+    public static function getIcon(): string
+    {
+        return 'plug';
+    }
+
     public function supportsContext(string $context): bool
     {
         return AdministrationContext::getName() === $context;

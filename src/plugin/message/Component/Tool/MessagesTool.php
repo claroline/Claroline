@@ -13,6 +13,11 @@ class MessagesTool extends AbstractTool
         return 'messaging';
     }
 
+    public static function getIcon(): string
+    {
+        return 'envelope';
+    }
+
     public function supportsContext(string $context): bool
     {
         return DesktopContext::getName() === $context;

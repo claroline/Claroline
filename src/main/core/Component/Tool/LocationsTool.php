@@ -13,6 +13,11 @@ class LocationsTool extends AbstractTool
         return 'locations';
     }
 
+    public static function getIcon(): string
+    {
+        return 'map-marker-alt';
+    }
+
     public function supportsContext(string $context): bool
     {
         return DesktopContext::getName() === $context;

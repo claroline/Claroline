@@ -15,25 +15,12 @@ class RoleSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
-    /** @var UserSerializer */
-    private $userSerializer;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        WorkspaceSerializer $workspaceSerializer,
-        UserSerializer $userSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly WorkspaceSerializer $workspaceSerializer,
+        private readonly UserSerializer $userSerializer
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->workspaceSerializer = $workspaceSerializer;
-        $this->userSerializer = $userSerializer;
     }
 
     public function getName(): string
@@ -57,7 +44,7 @@ class RoleSerializer
             'id' => $role->getUuid(),
             'autoId' => $role->getId(),
             'name' => $role->getName(),
-            'type' => $role->getType(), // TODO : should be a string for better data readability
+            'type' => $role->getType(),
             'translationKey' => $role->getTranslationKey(),
         ];
 

@@ -20,6 +20,11 @@ class PrivacyTool extends AbstractTool
         return 'privacy';
     }
 
+    public static function getIcon(): string
+    {
+        return 'user-shield';
+    }
+
     public function supportsContext(string $context): bool
     {
         return in_array($context, [

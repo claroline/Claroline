@@ -12,19 +12,24 @@
 namespace Claroline\CoreBundle\Manager\Tool;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
-use Claroline\CoreBundle\Repository\Tool\ToolMaskDecoderRepository;
 
 class ToolMaskDecoderManager
 {
-    private ObjectManager $om;
-    private ToolMaskDecoderRepository $maskRepo;
+    private array $maskDecoders = [];
 
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-        $this->maskRepo = $om->getRepository(ToolMaskDecoder::class);
+    public function __construct(
+        private readonly ObjectManager $om
+    ) {
+        // loads all mask decoders only once
+        // they cannot be changed at the runtime for now and it will save some DB calls
+        $maskDecoders = $this->om->getRepository(ToolMaskDecoder::class)->findAll();
+        foreach ($maskDecoders as $maskDecoder) {
+            if (empty($this->maskDecoders[$maskDecoder->getTool()])) {
+                $this->maskDecoders[$maskDecoder->getTool()] = [];
+            }
+            $this->maskDecoders[$maskDecoder->getTool()][] = $maskDecoder;
+        }
     }
 
     /**
@@ -33,18 +38,20 @@ class ToolMaskDecoderManager
     public function createDefaultToolMaskDecoders(string $toolName): void
     {
         foreach (ToolMaskDecoder::DEFAULT_ACTIONS as $action) {
-            $maskDecoder = $this->maskRepo
-                ->findMaskDecoderByToolAndName($toolName, $action);
+            $maskDecoder = $this->getMaskDecoderByToolAndName($toolName, $action);
 
-            if (is_null($maskDecoder)) {
+            if (empty($maskDecoder)) {
                 $maskDecoder = new ToolMaskDecoder();
                 $maskDecoder->setTool($toolName);
                 $maskDecoder->setName($action);
                 $maskDecoder->setValue(ToolMaskDecoder::DEFAULT_VALUES[$action]);
 
+                $this->maskDecoders[$toolName] = $maskDecoder;
+
                 $this->om->persist($maskDecoder);
             }
         }
+
         $this->om->flush();
     }
 
@@ -58,6 +65,8 @@ class ToolMaskDecoderManager
         $maskDecoder->setName($action);
         $maskDecoder->setValue($value);
 
+        $this->maskDecoders[$toolName] = $maskDecoder;
+
         $this->om->persist($maskDecoder);
         $this->om->flush();
     }
@@ -69,7 +78,7 @@ class ToolMaskDecoderManager
     {
         $perms = [];
 
-        $decoders = $this->maskRepo->findMaskDecodersByTool($toolName);
+        $decoders = $this->getMaskDecodersByTool($toolName);
         foreach ($decoders as $decoder) {
             $perms[$decoder->getName()] = ($mask & $decoder->getValue()) ? true : false;
         }
@@ -87,8 +96,7 @@ class ToolMaskDecoderManager
     {
         $mask = 0;
 
-        $decoders = $this->maskRepo->findMaskDecodersByTool($toolName);
-
+        $decoders = $this->getMaskDecodersByTool($toolName);
         foreach ($decoders as $decoder) {
             if (isset($perms[$decoder->getName()])) {
                 $mask += $perms[$decoder->getName()] ? $decoder->getValue() : 0;
@@ -101,18 +109,32 @@ class ToolMaskDecoderManager
     /**
      * @return ToolMaskDecoder[]
      */
-    public function getMaskDecodersByTool(string $toolName)
+    public function getMaskDecodersByTool(string $toolName): array
     {
-        return $this->maskRepo->findMaskDecodersByTool($toolName);
+        return $this->maskDecoders[$toolName] ?? [];
     }
 
     public function getMaskDecoderByToolAndName(string $toolName, string $name): ?ToolMaskDecoder
     {
-        return $this->maskRepo->findMaskDecoderByToolAndName($toolName, $name);
+        $toolDecoders = $this->getMaskDecodersByTool($toolName);
+        foreach ($toolDecoders as $toolDecoder) {
+            if ($toolDecoder->getName() === $name) {
+                return $toolDecoder;
+            }
+        }
+
+        return null;
     }
 
-    public function getCustomMaskDecodersByTool(string $toolName)
+    /**
+     * @return ToolMaskDecoder[]
+     */
+    public function getCustomMaskDecodersByTool(string $toolName): array
     {
-        return $this->maskRepo->findCustomMaskDecodersByTool($toolName);
+        $toolDecoders = $this->getMaskDecodersByTool($toolName);
+
+        return array_filter($toolDecoders, function (ToolMaskDecoder $maskDecoder) {
+            return !in_array($maskDecoder->getName(), ToolMaskDecoder::DEFAULT_ACTIONS);
+        });
     }
 }

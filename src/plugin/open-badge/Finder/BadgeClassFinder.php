@@ -73,7 +73,7 @@ class BadgeClassFinder extends AbstractFinder
                 case 'assignable':
                     if (!in_array('ROLE_ADMIN', $this->tokenStorage->getToken()->getRoleNames())) {
                         $grantDecoder = $this->toolMaskDecoderManager->getMaskDecoderByToolAndName(
-                            $this->om->getRepository(Tool::class)->findOneBy(['name' => 'badges']),
+                            'badges',
                             'grant'
                         );
 

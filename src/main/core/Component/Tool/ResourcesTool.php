@@ -39,6 +39,11 @@ class ResourcesTool extends AbstractTool
         return 'resources';
     }
 
+    public static function getIcon(): string
+    {
+        return 'folder';
+    }
+
     public function supportsContext(string $context): bool
     {
         return in_array($context, [

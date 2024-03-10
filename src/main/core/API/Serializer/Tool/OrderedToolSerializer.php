@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\API\Serializer\Tool;
 
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\Component\Tool\ToolProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -15,6 +16,7 @@ class OrderedToolSerializer
 
     public function __construct(
         private readonly ObjectManager $om,
+        private readonly ToolProvider $toolProvider,
         private readonly ToolManager $toolManager
     ) {
     }
@@ -31,12 +33,12 @@ class OrderedToolSerializer
 
     public function serialize(OrderedTool $orderedTool, ?array $options = []): array
     {
-        $tool = $this->om->getRepository(Tool::class)->findOneBy(['name' => $orderedTool->getName()]);
+        $tool = $this->toolProvider->getComponent($orderedTool->getName());
 
         $serialized = [
             'id' => $orderedTool->getUuid(),
             'name' => $orderedTool->getName(),
-            'icon' => $tool ? $tool->getIcon() : null,
+            'icon' => $tool::getIcon(),
             'poster' => $orderedTool->getPoster(),
             'thumbnail' => $orderedTool->getThumbnail(),
             'display' => [

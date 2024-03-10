@@ -13,6 +13,11 @@ class TemplatesTool extends AbstractTool
         return 'templates';
     }
 
+    public static function getIcon(): string
+    {
+        return 'file-alt';
+    }
+
     public function supportsContext(string $context): bool
     {
         return AdministrationContext::getName() === $context;

@@ -19,6 +19,11 @@ class AppearanceTool extends AbstractTool
         return 'appearance';
     }
 
+    public static function getIcon(): string
+    {
+        return 'paintbrush';
+    }
+
     public function isRequired(string $context, ?string $contextId): bool
     {
         return true;

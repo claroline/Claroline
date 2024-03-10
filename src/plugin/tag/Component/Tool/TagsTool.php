@@ -13,6 +13,11 @@ class TagsTool extends AbstractTool
         return 'tags';
     }
 
+    public static function getIcon(): string
+    {
+        return 'tags';
+    }
+
     public function supportsContext(string $context): bool
     {
         return DesktopContext::getName() === $context;
