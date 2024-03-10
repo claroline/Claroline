@@ -2,22 +2,17 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {Alert} from '#/main/app/alert/components/alert'
+import {MODAL_BUTTON} from '#/main/app/buttons'
+import {Alert} from '#/main/app/components/alert'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
-import {selectors} from '#/main/authentication/integration/ips/store/selectors'
-import {MODAL_IP_PARAMETERS} from '#/main/authentication/integration/ips/modals/parameters'
+import {selectors} from '#/main/authentication/administration/authentication/store'
+import {MODAL_IP_PARAMETERS} from '#/main/authentication/ip/modals/parameters'
 
-const IpsTool = props =>
+const AuthenticationIps = props =>
   <ToolPage
-    path={[{
-      type: LINK_BUTTON,
-      label: trans('ips', {}, 'integration'),
-      target: `${props.path}/ips`
-    }]}
-    subtitle={trans('ips', {}, 'integration')}
+    title={trans('ips', {}, 'integration')}
     /*primaryAction="add-ip"*/
     primaryAction={
       {
@@ -37,7 +32,7 @@ const IpsTool = props =>
     </Alert>
 
     <ListData
-      name={selectors.LIST_NAME}
+      name={selectors.STORE_NAME+'.ips'}
       fetch={{
         url: ['apiv2_ip_user_list'],
         autoload: true
@@ -90,11 +85,11 @@ const IpsTool = props =>
     />
   </ToolPage>
 
-IpsTool.propTypes = {
+AuthenticationIps.propTypes = {
   path: T.string.isRequired,
   invalidateList: T.func.isRequired
 }
 
 export {
-  IpsTool
+  AuthenticationIps
 }

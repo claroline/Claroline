@@ -4,21 +4,16 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {MODAL_TOKEN_PARAMETERS} from '#/main/authentication/token/modals/parameters'
 import {TokenList} from '#/main/authentication/token/components/list'
-import {selectors} from '#/main/authentication/integration/tokens/store'
+import {selectors} from '#/main/authentication/administration/authentication/store'
 
-const ApiToken = props =>
+const AuthenticationTokens = props =>
   <ToolPage
-    path={[{
-      type: LINK_BUTTON,
-      label: trans('tokens', {}, 'integration'),
-      target: `${props.path}/tokens`
-    }]}
-    subtitle={trans('tokens', {}, 'integration')}
+    title={trans('tokens', {}, 'integration')}
     /*primaryAction="add-token"*/
     primaryAction={
       {
@@ -34,7 +29,7 @@ const ApiToken = props =>
     }
   >
     <TokenList
-      name={selectors.STORE_NAME}
+      name={selectors.STORE_NAME+'.tokens'}
       definition={[
         {
           name: 'user',
@@ -62,11 +57,11 @@ const ApiToken = props =>
     />
   </ToolPage>
 
-ApiToken.propTypes = {
+AuthenticationTokens.propTypes = {
   path: T.string.isRequired,
   invalidateList: T.func.isRequired
 }
 
 export {
-  ApiToken
+  AuthenticationTokens
 }

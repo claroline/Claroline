@@ -7,8 +7,8 @@ import {
   selectors as formSelectors
 } from '#/main/app/content/form/store'
 
-import {ParametersModal as ParametersModalComponent} from '#/main/authentication/integration/ips/modals/parameters/components/modal'
-import {reducer, selectors} from '#/main/authentication/integration/ips/modals/parameters/store'
+import {ParametersModal as ParametersModalComponent} from '#/main/authentication/ip/modals/parameters/components/modal'
+import {reducer, selectors} from '#/main/authentication/ip/modals/parameters/store'
 
 const ParametersModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(

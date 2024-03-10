@@ -22,6 +22,11 @@ class AuthenticationTool extends AbstractTool
         return 'authentication';
     }
 
+    public static function getIcon(): string
+    {
+        return 'shield-alt';
+    }
+
     public function isRequired(string $context, ?string $contextId): bool
     {
         return true;

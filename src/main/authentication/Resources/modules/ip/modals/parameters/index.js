@@ -6,7 +6,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {ParametersModal} from '#/main/authentication/integration/ips/modals/parameters/containers/modal'
+import {ParametersModal} from '#/main/authentication/ip/modals/parameters/containers/modal'
 
 const MODAL_IP_PARAMETERS = 'MODAL_IP_PARAMETERS'
 
