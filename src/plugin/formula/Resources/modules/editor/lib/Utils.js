@@ -20,14 +20,18 @@ const DomUtils = {
   },
   replaceSVGUseWithGraphElements: function (svg) {
     var useElements = svg.getElementsByTagName('use')
+
     var originalElements = []
     var newUseElements = []
     // Get all use elements
     for (var i = 0; i < useElements.length; i++) {
       var useElement = useElements[i]
-      var originalElementId = useElement.getAttribute('href').replace('#', '')
+      var originalElementId = useElement.getAttribute('href').split('#')
+      originalElementId = originalElementId[originalElementId.length - 1]
+
       var originalElement = document.getElementById(originalElementId).cloneNode(true)
       originalElement.id += '-c-' + (new Date()).getTime()
+
       var position = {}
       //For every element get all attributes and copy them to graph element
       for (var j = 0; j < useElement.attributes.length; j++) {
