@@ -2,7 +2,6 @@
 
 namespace Claroline\OpenBadgeBundle\Serializer;
 
-use Claroline\AppBundle\API\Options as APIOptions;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -26,40 +25,18 @@ class BadgeClassSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    private $router;
-    private $workspaceSerializer;
-    private $om;
-    private $criteriaSerializer;
-    private $imageSerializer;
-    private $eventDispatcher;
-    private $organizationSerializer;
-    private $ruleSerializer;
-    private $templateSerializer;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        RouterInterface $router,
-        ObjectManager $om,
-        CriteriaSerializer $criteriaSerializer,
-        EventDispatcherInterface $eventDispatcher,
-        WorkspaceSerializer $workspaceSerializer,
-        ImageSerializer $imageSerializer,
-        OrganizationSerializer $organizationSerializer,
-        RuleSerializer $ruleSerializer,
-        TemplateSerializer $templateSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly RouterInterface $router,
+        private readonly ObjectManager $om,
+        private readonly CriteriaSerializer $criteriaSerializer,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly WorkspaceSerializer $workspaceSerializer,
+        private readonly ImageSerializer $imageSerializer,
+        private readonly OrganizationSerializer $organizationSerializer,
+        private readonly RuleSerializer $ruleSerializer,
+        private readonly TemplateSerializer $templateSerializer
     ) {
-        $this->authorization = $authorization;
-        $this->router = $router;
-        $this->workspaceSerializer = $workspaceSerializer;
-        $this->om = $om;
-        $this->criteriaSerializer = $criteriaSerializer;
-        $this->imageSerializer = $imageSerializer;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->organizationSerializer = $organizationSerializer;
-        $this->ruleSerializer = $ruleSerializer;
-        $this->templateSerializer = $templateSerializer;
     }
 
     public function getName(): string
@@ -87,7 +64,6 @@ class BadgeClassSerializer
             'criteria' => $badge->getCriteria(),
             'duration' => $badge->getDurationValidation(),
             'image' => $badge->getImage(),
-            'issuer' => $badge->getIssuer() ? $this->organizationSerializer->serialize($badge->getIssuer(), [APIOptions::SERIALIZE_MINIMAL]) : null,
             'tags' => $this->serializeTags($badge),
         ];
 
@@ -95,14 +71,15 @@ class BadgeClassSerializer
             $data['id'] = $this->router->generate('apiv2_open_badge__badge_class', ['badge' => $badge->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL);
             $data['type'] = 'BadgeClass';
             $data['criteria'] = $this->criteriaSerializer->serialize($badge)['id'];
-            $image = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $badge->getImage()]);
+            $data['issuer'] = $badge->getIssuer() ? $this->organizationSerializer->serialize($badge->getIssuer(), [SerializerInterface::SERIALIZE_MINIMAL]) : null;
 
+            $image = $this->om->getRepository(PublicFile::class)->findOneBy(['url' => $badge->getImage()]);
             if ($image) {
                 // wtf, this is for mozilla backpack
                 $data['image'] = $this->imageSerializer->serialize($image)['id'];
             }
         } else {
-            $data['workspace'] = $badge->getWorkspace() ? $this->workspaceSerializer->serialize($badge->getWorkspace(), [APIOptions::SERIALIZE_MINIMAL]) : null;
+            $data['workspace'] = $badge->getWorkspace() ? $this->workspaceSerializer->serialize($badge->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]) : null;
 
             if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
                 $data['permissions'] = $this->serializePermissions($badge);
@@ -114,7 +91,8 @@ class BadgeClassSerializer
                 'enabled' => $badge->getEnabled(),
             ];
 
-            if (!in_array(APIOptions::SERIALIZE_MINIMAL, $options)) {
+            if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options) && !in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
+                $data['issuer'] = $badge->getIssuer() ? $this->organizationSerializer->serialize($badge->getIssuer(), [SerializerInterface::SERIALIZE_MINIMAL]) : null;
                 $data['notifyGrant'] = $badge->getNotifyGrant();
                 $data['issuingPeer'] = $badge->hasIssuingPeer();
                 $data['restrictions'] = [
@@ -125,7 +103,7 @@ class BadgeClassSerializer
                 }, $badge->getRules()->toArray());
 
                 if ($badge->getTemplate()) {
-                    $data['template'] = $this->templateSerializer->serialize($badge->getTemplate(), [APIOptions::SERIALIZE_MINIMAL]);
+                    $data['template'] = $this->templateSerializer->serialize($badge->getTemplate(), [SerializerInterface::SERIALIZE_MINIMAL]);
                 }
             }
         }
@@ -184,7 +162,7 @@ class BadgeClassSerializer
         return $badge;
     }
 
-    private function deserializeRules(array $rules, BadgeClass $badge)
+    private function deserializeRules(array $rules, BadgeClass $badge): void
     {
         /** @var Rule[] $existingRules */
         $existingRules = $badge->getRules();
@@ -219,7 +197,7 @@ class BadgeClassSerializer
         }
     }
 
-    private function deserializeTags(BadgeClass $badge, array $tags = [])
+    private function deserializeTags(BadgeClass $badge, array $tags = []): void
     {
         $event = new GenericDataEvent([
             'tags' => $tags,
@@ -236,7 +214,7 @@ class BadgeClassSerializer
         $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
     }
 
-    private function serializeTags(BadgeClass $badge)
+    private function serializeTags(BadgeClass $badge): array
     {
         $event = new GenericDataEvent([
             'class' => BadgeClass::class,
@@ -247,7 +225,7 @@ class BadgeClassSerializer
         return $event->getResponse() ?? [];
     }
 
-    private function serializePermissions(BadgeClass $badge)
+    private function serializePermissions(BadgeClass $badge): array
     {
         return [
             'grant' => $this->authorization->isGranted('GRANT', $badge),

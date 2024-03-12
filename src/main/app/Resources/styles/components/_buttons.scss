@@ -39,11 +39,41 @@ input[type=reset] {
     @include button-text-variant($body-color);
 }
 
-.btn-text-menu {
-
-}
-
 .btn-text-subtitles {
     @include button-text-variant($white, $white, $white);
     @include text-movie-subtitles();
+}
+
+//-
+// Button effects
+// ----
+
+.btn-wave {
+    position: relative;
+    overflow: hidden;
+
+    &:before {
+        content: " ";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(130deg, fade-out($white, 1) 35%, fade-out($white, .75) 50%, fade-out($white, .75) 60%, fade-out($white, 1) 75%);
+        animation: btn-wave 3s ease-in-out infinite;
+    }
+
+    &:hover,
+    &:focus {
+        &:before {
+            animation: none;
+        }
+    }
+}
+
+@keyframes btn-wave {
+    // only starts animation at the end of animation-time to create a delay between each "wave"
+    // animation ends early to create a delay between each "wave"
+    25%  { left: 100%; }
+    100% { left: 100%; }
 }

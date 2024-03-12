@@ -5,9 +5,13 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MENU_BUTTON, POPOVER_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
 import {Toolbar} from '#/main/app/action'
+import {ContentTitle} from '#/main/app/content/components/title'
 
 const ExampleButtons = () =>
   <Fragment>
+    <ContentTitle level={2} title="Button variants" />
+    <ContentTitle level={3} title="btn" />
+
     <div className="btn-toolbar gap-1 mb-3">
       {['primary', 'secondary', 'success', 'danger', 'warning', 'info'].map(type =>
         <Button
@@ -24,6 +28,19 @@ const ExampleButtons = () =>
       {['primary', 'secondary', 'success', 'danger', 'warning', 'info'].map(type =>
         <Button
           key={type}
+          className={classes('btn btn-wave btn-'+type)}
+          type={CALLBACK_BUTTON}
+          label={type.charAt(0).toUpperCase() + type.slice(1)}
+          callback={() => true}
+        />
+      )}
+    </div>
+
+    <ContentTitle level={3} title="btn-outline" />
+    <div className="btn-toolbar gap-1 mb-3">
+      {['primary', 'secondary', 'success', 'danger', 'warning', 'info'].map(type =>
+        <Button
+          key={type}
           className={classes('btn btn-outline-'+type)}
           type={CALLBACK_BUTTON}
           label={type.charAt(0).toUpperCase() + type.slice(1)}
@@ -32,8 +49,9 @@ const ExampleButtons = () =>
       )}
     </div>
 
+    <ContentTitle level={3} title="btn-text" />
     <div className="btn-toolbar gap-1 mb-3">
-      {['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'body', 'menu', 'subtitles'].map(type =>
+      {['primary', 'secondary', 'success', 'danger', 'warning', 'info'].map(type =>
         <Button
           key={type}
           className={classes('btn btn-text-'+type)}
@@ -43,6 +61,28 @@ const ExampleButtons = () =>
         />
       )}
     </div>
+
+    <ContentTitle level={2} title="Special buttons" />
+    <div className="btn-toolbar gap-1 mb-3">
+      {['body', 'subtitles'].map(type =>
+        <Button
+          key={type}
+          className={classes('btn btn-text-'+type)}
+          type={CALLBACK_BUTTON}
+          label={type.charAt(0).toUpperCase() + type.slice(1)}
+          callback={() => true}
+        />
+      )}
+
+      <Button
+        className="btn btn-link"
+        type={CALLBACK_BUTTON}
+        label="Link"
+        callback={() => true}
+      />
+    </div>
+
+    <ContentTitle level={2} title="Button sizes" />
 
     <div className="mb-3">
       {['sm', undefined, 'lg'].map(size =>

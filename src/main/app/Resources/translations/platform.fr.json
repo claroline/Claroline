@@ -29,5 +29,10 @@
   "date_format": "d/m/Y",
   "time_format": "H:i",
   "action_confirm_message": "Êtes-vous sûr de vouloir effectuer cette action ?",
-  "max_filesize": "Taille maximale : %size%"
+  "max_filesize": "Taille maximale : %size%",
+  "user_online": "En ligne",
+  "user_absent": "Absent(e)",
+  "user_offline": "Hors ligne",
+  "user_offline_help": "Vous apparaissez hors ligne mais pouvez accéder à toutes les fonctionnalités de la plateforme.",
+  "user_dont_disturb": "Ne pas déranger"
 }

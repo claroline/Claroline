@@ -29,5 +29,10 @@
   "date_format": "m/d/Y",
   "time_format": "H:i",
   "action_confirm_message": "Are you sure you want to do this action?",
-  "max_filesize": "Max. file size : %size%"
+  "max_filesize": "Max. file size : %size%",
+  "user_online": "Online",
+  "user_absent": "Absent",
+  "user_offline": "Offline",
+  "user_offline_help": "Offline",
+  "user_dont_disturb": "Do not disturb"
 }

@@ -18,7 +18,6 @@ const DisableInactiveModal = (props) => {
       {...omit(props, 'disableInactive')}
       icon="fa fa-fw fa-user-clock"
       title={trans('disable_inactive_users', {}, 'community')}
-      save={(data) => props.disableInactive(data.lastActivity)}
     >
       <div className="modal-body">
         <Alert type="danger">{trans('disable_inactive_users_help', {}, 'community')}</Alert>

@@ -5,6 +5,7 @@ namespace Claroline\AppBundle\Controller\Component;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\Context\ContextProvider;
+use Claroline\AppBundle\Component\Tool\ToolInterface;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
@@ -53,7 +54,7 @@ class ContextController
         $isManager = $contextHandler->isManager($this->tokenStorage->getToken(), $contextObject);
         $accessErrors = $contextHandler->getAccessErrors($this->tokenStorage->getToken(), $contextObject);
 
-        // $this->authorization->isGranted('OPEN', $contextObject)
+        // $this->authorization->isGranted('OPEN', $contextObject);
 
         if (empty($accessErrors) || $isManager) {
             $openEvent = new OpenContextEvent($context, $contextObject);
@@ -96,11 +97,35 @@ class ContextController
     /**
      * Configures a context.
      *
-     * @Route("", name="claro_context_configure", methods={"GET"})
+     * @Route("", name="claro_context_configure", methods={"PUT"})
      */
     public function configureAction(string $context, string $contextId = null): JsonResponse
     {
+        // $this->authorization->isGranted('ADMINISTRATE', $contextObject);
 
         return new JsonResponse();
+    }
+
+    /**
+     * Gets the list of available tools (all tools implemented, not only the enabled ones in the context).
+     *
+     * @Route("/tools", name="claro_context_get_available_tools", methods={"GET"})
+     */
+    public function getAvailableToolsAction(string $context, string $contextId = null): JsonResponse
+    {
+        // $this->authorization->isGranted('ADMINISTRATE', $contextObject);
+
+        $contextHandler = $this->contextProvider->getContext($context);
+        $contextSubject = $contextHandler->getObject($contextId);
+
+        $tools = $contextHandler->getAvailableTools($contextSubject);
+
+        return new JsonResponse(array_map(function (ToolInterface $tool) use ($context, $contextSubject) {
+            return [
+                'icon' => $tool::getIcon(),
+                'name' => $tool::getName(),
+                'required' => $tool->isRequired($context, $contextSubject)
+            ];
+        }, $tools));
     }
 }

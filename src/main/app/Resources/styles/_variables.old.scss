@@ -322,7 +322,7 @@ $data-card-box-shadow:          $card-box-shadow;
 $data-card-inner-border-width: 0 !default;
 $data-card-inner-border-color: $data-card-border-color !default;
 
-$data-card-header-bg:  tint-color($primary, 95%)/*$card-cap-bg*/;
+$data-card-header-bg:  fade-out($primary, .9)/*$card-cap-bg*/;
 $data-card-icon-color: var(--#{$prefix}secondary-color) !default;
 
 // sizing

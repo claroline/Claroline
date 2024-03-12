@@ -18,7 +18,7 @@ class ProfileTool extends AbstractTool
         return 'user-circle';
     }
 
-    public function isRequired(string $context, ?string $contextId): bool
+    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
     {
         return true;
     }

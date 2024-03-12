@@ -20,6 +20,7 @@ const BadgeCard = props =>
       <img src={get(props.data, 'image') ? asset(get(props.data, 'image')) : null} />
     }
     title={props.data.name}
+    subtitle={get(props.data, 'workspace') ? get(props.data, 'workspace.name') : trans('platform')}
     color={props.data.color}
     contentText={props.data.description}
     flags={[

@@ -8,12 +8,12 @@ import {CallbackButton} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
 
 import {selectors as securitySelectors} from '#/main/app/security/store'
-import {actions as menuActions} from '#/main/app/layout/menu/store'
+import {actions as menuActions, selectors as menuSelectors} from '#/main/app/layout/menu/store'
 
 const PageNav = (props) => {
   const currentUser = useSelector(securitySelectors.currentUser)
   const dispatch = useDispatch()
-
+  const menuOpened = useSelector(menuSelectors.opened)
   return (
     <div className="m-4 d-flex gap-4 align-items-center">
       <CallbackButton
@@ -22,7 +22,8 @@ const PageNav = (props) => {
         tooltip="bottom"
         callback={() => dispatch(menuActions.toggle())}
       >
-        {currentUser ?
+        <span className={menuOpened ? 'fa fa-fw fa-chevron-left' : 'fa fa-fw fa-chevron-right'} />
+        {/*{currentUser ?
           <>
             <UserAvatar className="app-header-avatar" picture={currentUser.picture} alt={true} size="sm"/>
             <span
@@ -31,7 +32,8 @@ const PageNav = (props) => {
             </span>
           </> :
           <span className="fa fa-fw fa-bars" aria-hidden={true} />
-        }
+        }*/}
+
       </CallbackButton>
 
       {props.children}

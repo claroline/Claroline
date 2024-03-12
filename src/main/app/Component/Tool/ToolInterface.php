@@ -11,6 +11,11 @@ interface ToolInterface extends ComponentInterface, ContextualInterface
 {
     public static function getIcon(): string;
 
+    /**
+     * Checks if the tool is required in the specified context.
+     */
+    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool;
+
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array;
 
     public function configure(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array;

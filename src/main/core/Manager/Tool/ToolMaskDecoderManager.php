@@ -46,7 +46,10 @@ class ToolMaskDecoderManager
                 $maskDecoder->setName($action);
                 $maskDecoder->setValue(ToolMaskDecoder::DEFAULT_VALUES[$action]);
 
-                $this->maskDecoders[$toolName] = $maskDecoder;
+                if (empty($this->maskDecoders[$toolName])) {
+                    $this->maskDecoders[$toolName] = [];
+                }
+                $this->maskDecoders[$toolName][] = $maskDecoder;
 
                 $this->om->persist($maskDecoder);
             }
@@ -65,7 +68,10 @@ class ToolMaskDecoderManager
         $maskDecoder->setName($action);
         $maskDecoder->setValue($value);
 
-        $this->maskDecoders[$toolName] = $maskDecoder;
+        if (empty($this->maskDecoders[$toolName])) {
+            $this->maskDecoders[$toolName] = [];
+        }
+        $this->maskDecoders[$toolName][] = $maskDecoder;
 
         $this->om->persist($maskDecoder);
         $this->om->flush();
@@ -118,7 +124,7 @@ class ToolMaskDecoderManager
     {
         $toolDecoders = $this->getMaskDecodersByTool($toolName);
         foreach ($toolDecoders as $toolDecoder) {
-            if ($toolDecoder->getName() === $name) {
+            if (strtolower($toolDecoder->getName()) === strtolower($name)) {
                 return $toolDecoder;
             }
         }
