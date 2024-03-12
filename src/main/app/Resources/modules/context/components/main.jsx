@@ -12,6 +12,7 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentForbidden} from '#/main/app/content/components/forbidden'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContextEditor} from '#/main/app/context/editor/containers/main'
+import {ContextNav} from '#/main/app/context/containers/nav'
 
 class ContextMain extends Component {
   componentDidMount() {
@@ -133,9 +134,12 @@ class ContextMain extends Component {
 
     return (
       <>
+        <ContextNav />
         {createElement(this.props.menu)}
 
         <div className="app-body" role="presentation">
+          <div className="app-loader" />
+
           {CurrentComp}
 
           {this.props.footer && createElement(this.props.footer)}

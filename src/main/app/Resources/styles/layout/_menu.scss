@@ -34,6 +34,7 @@
         margin: 0;
         font-size: $brand-font-size;
         font-weight: $brand-font-weight;
+        text-overflow-ellipsis: ellipsis;
 
         white-space: nowrap;
 
@@ -45,7 +46,7 @@
 }
 
 .app-menu-cover {
-    height: 8rem;//120px;
+    height: 7rem;
     text-align: center;
     padding-bottom: 2.5rem;
     flex-shrink: 0;
@@ -58,6 +59,7 @@
     align-items: center;
     padding: map-get($spacers, 3);
     padding-top: 0;
+    min-height: 7rem;
     //margin-bottom: map-get($spacers, 3);
 
     .user-avatar {
@@ -67,6 +69,8 @@
         background: $toolbar-bg;
         padding: $thumbnail-padding;
     }
+
+
 
     h1 {
         font-weight: $font-weight-medium;
@@ -100,6 +104,18 @@
             transform: translate(-50%,-50%);
         }
     }
+}
+
+.app-user-status {
+    display: inline-block;
+    border: .25em solid $menu;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.app-menu-title {
+    font-weight: $font-weight-medium;
+    font-size: $font-size-lg;
 }
 
 .app-menu-impersonation {

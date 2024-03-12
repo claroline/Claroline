@@ -6,6 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {ContentTitle} from '#/main/app/content/components/title'
 
 import {FormActions} from '#/main/app/content/form/components/actions'
+import {FormSave} from '#/main/app/content/form/components/save'
 
 const FormWrapper = props => props.embedded ?
   <fieldset id={props.id} className={classes('form data-form', props.className, props.flush && 'data-form-flush')}>
@@ -84,10 +85,7 @@ class Form extends Component {
         {this.props.children}
 
         {(this.props.save || this.props.cancel) &&
-          <FormActions
-            validating={this.props.validating}
-            errors={this.props.errors}
-            disabled={this.props.disabled}
+          <FormSave
             pendingChanges={this.props.pendingChanges}
             save={this.props.save}
             cancel={this.props.cancel}

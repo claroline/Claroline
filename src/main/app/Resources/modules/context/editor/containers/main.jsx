@@ -9,7 +9,15 @@ import {actions, reducer, selectors} from '#/main/app/context/editor/store'
 const ContextEditor = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      tools: baseSelectors.tools(state)
+      contextName: baseSelectors.type(state),
+      contextId: baseSelectors.id(state),
+      tools: baseSelectors.tools(state),
+      availableTools: selectors.availableTools(state)
+    }),
+    (dispatch) => ({
+      getAvailableTools(contextName, contextId) {
+        return dispatch(actions.fetchAvailableTools(contextName, contextId))
+      }
     })
   )(ContextEditorComponent)
 )

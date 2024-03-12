@@ -7,13 +7,11 @@ import {trans} from '#/main/app/intl'
 import {url} from '#/main/app/api'
 import {asset} from '#/main/app/config'
 import {Button, Toolbar} from '#/main/app/action'
-import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON, LinkButton, MenuButton, URL_BUTTON} from '#/main/app/buttons'
 
 import {UserAvatar} from '#/main/core/user/components/avatar'
 import {User as UserTypes} from '#/main/community/user/prop-types'
-
-import {MODAL_HISTORY} from '#/plugin/history/modals/history'
-import {MODAL_FAVOURITES} from '#/plugin/favourite/modals/favourites'
+import {constants as userConst} from '#/main/app/user/constants'
 
 const ContextAuthentication = (props) =>
   <Toolbar
@@ -85,35 +83,98 @@ const ContextUser = (props) => {
       </div>
 
       <article className="app-menu-current-user">
-        <UserAvatar picture={props.currentUser.picture} alt={false} />
+        <LinkButton className="position-relative" target="/account/profile">
+          <UserAvatar picture={props.currentUser.picture} alt={false} />
+          <span
+            className="app-user-status position-absolute top-100 start-100 translate-middle m-n2 bg-success rounded-circle"
+            aria-hidden={true}
+          />
+        </LinkButton>
 
-        <h1 className="mb-0 mt-1">{props.currentUser.name}</h1>
-        <p className="mb-3">{props.title}</p>
+        <MenuButton
+          id="current-user-menu"
+          className="mt-2 text-center"
+          menu={{
+            className: 'dropdown-menu-full',
+            items: [].concat(Object.keys(userConst.USER_STATUSES).map((status) => ({
+              name: status,
+              type: CALLBACK_BUTTON,
+              //active: userConst.USER_STATUS_ONLINE === status,
+              //label: userConst.USER_STATUSES[status],
+              callback: () => true,
+              primary: true,
+              label: (
+                <div className="d-flex align-items-start">
+                  <span className={classes('d-inline-block p-1 my-2 rounded-circle icon-with-text-right', `bg-${userConst.USER_STATUS_COLORS[status]}`)} aria-hidden={true} />
 
-        <Toolbar
-          className="d-flex flex-direction-row justify-content-between"
-          buttonName="btn btn-menu"
-          onClick={props.closeMenu}
-          tooltip="bottom"
-          actions={[
-            {
-              name: 'profile',
-              type: LINK_BUTTON,
-              icon: 'fa fa-fw fa-user',
-              label: trans('Mon profile', {}, 'actions'),
-              target: '/account/profile'
-            }, {
-              name: 'notifications',
-              type: LINK_BUTTON,
-              icon: 'fa fa-fw fa-bell',
-              label: trans('notifications', {}, 'notification'),
-              target: '/registration',
-              subscript: {
-                type: 'label',
-                status: 'primary',
-                value: '99+'
+                  <span>
+                    {userConst.USER_STATUSES[status]}
+                    {userConst.USER_STATUS_OFFLINE === status &&
+                      <small className="text-secondary text-wrap d-block">{trans('user_offline_help')}</small>
+                    }
+                  </span>
+                </div>
+              )
+            })), [
+              {
+                name: 'profile',
+                type: LINK_BUTTON,
+                icon: 'fa fa-fw fa-user',
+                label: trans('Mon profile', {}, 'actions'),
+                target: '/account/profile'
+              }, {
+                name: 'parameters',
+                type: LINK_BUTTON,
+                icon: 'fa fa-fw fa-sliders',
+                label: trans('account', {}, 'context'),
+                target: '/account/parameters',
+                subscript: {
+                  type: 'text',
+                  status: 'warning',
+                  value: <span className="fa fa-warning" />
+                }
+              }, {
+                name: 'logout',
+                type: URL_BUTTON,
+                icon: 'fa fa-fw fa-power-off',
+                label: trans('logout'),
+                target: ['claro_security_logout']
               }
-            }, {
+            ])
+          }}
+        >
+          {props.currentUser.name}
+          <small className="d-block text-secondary">{userConst.USER_STATUSES[userConst.USER_STATUS_ONLINE]}</small>
+        </MenuButton>
+
+        {/*<h1 className="mb-0 mt-2">{props.currentUser.name}</h1>
+        <p className="mb-3">En ligne</p>*/}
+
+        {false &&
+          <Toolbar
+            className="d-flex flex-direction-row justify-content-between"
+            buttonName="btn btn-menu"
+            onClick={props.closeMenu}
+            tooltip="bottom"
+            actions={[
+              {
+                name: 'profile',
+                type: LINK_BUTTON,
+                icon: 'fa fa-fw fa-user',
+                label: trans('Mon profile', {}, 'actions'),
+                target: '/account/profile'
+              }, {
+                name: 'notifications',
+                type: LINK_BUTTON,
+                icon: 'fa fa-fw fa-bell',
+                label: trans('notifications', {}, 'notification'),
+                target: '/registration',
+                subscript: {
+                  type: 'label',
+                  status: 'primary',
+                  value: '99+'
+                }
+              }, /*{
               name: 'history',
               type: MODAL_BUTTON,
               icon: 'fa fa-fw fa-history',
@@ -125,26 +186,29 @@ const ContextUser = (props) => {
               icon: 'fa fa-fw fa-star',
               label: trans('favourites', {}, 'favourite'),
               modal: [MODAL_FAVOURITES]
-            }, {
-              name: 'parameters',
-              type: LINK_BUTTON,
-              icon: 'fa fa-fw fa-sliders',
-              label: trans('Mon compte', {}, 'actions'),
-              target: '/account',
-              subscript: {
-                type: 'text',
-                status: 'warning',
-                value: <span className="fa fa-warning" />
+            }, */{
+                name: 'parameters',
+                type: LINK_BUTTON,
+                icon: 'fa fa-fw fa-sliders',
+                label: trans('Mon compte', {}, 'actions'),
+                target: '/account',
+                subscript: {
+                  type: 'text',
+                  status: 'warning',
+                  value: <span className="fa fa-warning" />
+                }
+              }, {
+                name: 'administration',
+                type: LINK_BUTTON,
+                icon: 'fa fa-fw fa-wrench',
+                label: trans('Administration', {}, 'actions'),
+                target: '/administration',
+                displayed: false
               }
-            }, {
-              name: 'administration',
-              type: LINK_BUTTON,
-              icon: 'fa fa-fw fa-wrench',
-              label: trans('Administration', {}, 'actions'),
-              target: '/administration'
-            }
-          ]}
-        />
+            ]}
+          />
+        }
+
       </article>
     </>
   )

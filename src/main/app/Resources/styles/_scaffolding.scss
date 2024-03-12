@@ -29,16 +29,16 @@
     height: 100%;
     overflow-y: auto;
 
-    z-index: 2;
+    /*z-index: 2;*/
 
-    @include box-shadow(0 0 .375rem 1px rgba(0,0,0,.75));
+    /*@include box-shadow(0 0 .375rem 1px rgba(0,0,0,.75));*/
 }
 
 .app-loader {
     position: fixed;
     overflow: hidden;
     top: 0;
-    left: 0;
+    left: 72px;
     width: 100%;
     z-index: $zindex-toast + 1;
     height: 5px;
@@ -62,6 +62,6 @@
 
 .app-menu + .app-body {
     .app-loader {
-        left: $toolbar-size;
+        left: $toolbar-size + 72px;
     }
 }

@@ -33,10 +33,6 @@ const PageSimple = props =>
       embedded: props.embedded
     })}
   >
-    {!props.embedded &&
-      <div className="app-loader" />
-    }
-
     {!props.embedded && props.meta &&
       <Helmet>
         {props.meta.title &&

@@ -7,7 +7,6 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Component\Tool\ToolProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 
 class OrderedToolSerializer

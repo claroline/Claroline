@@ -7,7 +7,7 @@ use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 
 abstract class AbstractTool implements ToolInterface
 {
-    public function isRequired(string $context, ?string $contextId): bool
+    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
     {
         return false;
     }
