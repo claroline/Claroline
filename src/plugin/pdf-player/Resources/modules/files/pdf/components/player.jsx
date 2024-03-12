@@ -10,7 +10,7 @@ import {url} from '#/main/app/api'
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {Button} from '#/main/app/action/components/button'
-import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {File as FileTypes} from '#/main/core/files/prop-types'
 
@@ -185,12 +185,14 @@ class PdfPlayer extends Component {
 
                 <Button
                   className="btn btn-link"
-                  type={URL_BUTTON}
+                  type={ASYNC_BUTTON}
                   icon="fa fa-fw fa-file-download"
                   label={trans('download', {}, 'actions')}
-                  target={url(['claro_resource_download'], {ids: [this.props.nodeId]})}
                   disabled={!this.state.pdf}
                   tooltip="bottom"
+                  request={{
+                    url: url(['claro_resource_download'], {ids: [this.props.nodeId]})
+                  }}
                 />
               </div>
             </div>
