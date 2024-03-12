@@ -1,7 +1,7 @@
 import {registry} from '#/main/app/modals/registry'
 
 // gets the modal component
-import {SectionDeleteModal} from '#/plugin/wiki/resources/wiki/player/modals/section/components/delete'
+import {SectionDeleteModal} from '#/plugin/wiki/resources/wiki/player/modals/section/containers/delete'
 
 const MODAL_WIKI_SECTION_DELETE = 'MODAL_WIKI_SECTION_DELETE'
 

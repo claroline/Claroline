@@ -5,6 +5,7 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl/translation'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {FormData} from '#/main/app/content/form/components/data'
+import {selectors} from '#/plugin/wiki/resources/wiki/player/modals/section/store'
 
 class SectionDeleteModal extends Component {
   constructor(props) {
@@ -43,10 +44,12 @@ class SectionDeleteModal extends Component {
       >
         <FormData
           level={5}
+          name={selectors.STORE_NAME}
           data={this.state.data}
           setErrors={() => {}}
+          setMode={() => {}}
           updateProp={this.updateProp}
-          sections={[
+          definition={[
             {
               id: 'general',
               title: '',
