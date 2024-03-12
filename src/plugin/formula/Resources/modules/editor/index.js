@@ -218,7 +218,6 @@ Editor.prototype = {
   getEquationImage: function (callback) {
     const editor = this
     const svg = this.resultarea.getElementsByTagName('svg')[0]
-
     if (svg) {
       let cleanedSvg = svg.cloneNode(true)
       DomUtils.replaceSVGUseWithGraphElements(cleanedSvg)
