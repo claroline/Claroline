@@ -128,26 +128,14 @@
 // Buttons
 // ---
 
-.form-toolbar {
+.form-pending-changes {
     bottom: map-get($spacers, 3);
     z-index: $zindex-dropdown - 1;
+    background: $black;
+    color: color-contrast($black);
 
-    .btn {
-        width: 5rem;
-        height: 5rem;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        font-size: $h2-font-size;
-
-        @include box-shadow($box-shadow);
-    }
-}
-
-.form-btn-cancel {
-    // outline buttons have transparent background
-    // this will avoid seeing trough the button when it overlaps the content
-    background-color: var(--#{$prefix}body-bg);
+    @include box-shadow($box-shadow);
+    @include border-radius($border-radius);
 }
 
 .validation-status {
@@ -157,6 +145,7 @@
 
     @include box-shadow($box-shadow-sm);
 }
+
 
 // -
 // Utilities

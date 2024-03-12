@@ -309,7 +309,7 @@ $danger:        $red !default;
 $light:         $gray-100 !default;
 $dark:          $gray-900 !default;
 $learning:      $pink !default; // custom claroline
-$menu:          $gray-900 !default; // custom claroline
+$menu:          shade-color($gray-900, 10%) !default; // custom claroline
 // scss-docs-end theme-color-variables
 
 // scss-docs-start theme-colors-map

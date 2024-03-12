@@ -23,7 +23,6 @@ const AnnounceFormComponent = props =>
     buttons={true}
     save={{
       type: CALLBACK_BUTTON,
-      target: `${props.path}/${props.announcement.id}`,
       callback: () => props.new ?
         props.saveNewForm(props.aggregateId, props.history, props.addAnnounce, props.path) :
         props.saveForm(props.aggregateId, props.announcement, props.history, props.updateAnnounce, props.path)

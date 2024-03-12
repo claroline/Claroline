@@ -59,7 +59,15 @@ class MenuMain extends Component {
 
     return (
       <aside className="app-menu">
-        <MenuBrand closeMenu={this.autoClose} />
+        {false &&
+          <MenuBrand closeMenu={this.autoClose} />
+        }
+
+        {this.props.title &&
+          <h1 className="app-menu-title m-4">
+            <span className="text-truncate d-block">{this.props.title}</span>
+          </h1>
+        }
 
         {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
           autoClose: this.autoClose
@@ -114,7 +122,7 @@ class MenuMain extends Component {
 
 MenuMain.propTypes = {
   title: T.string,
-  backAction: T.shape(ActionTypes.propTypes),
+  //backAction: T.shape(ActionTypes.propTypes),
 
   tools: T.arrayOf(T.shape({
     icon: T.string.isRequired,

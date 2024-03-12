@@ -6,6 +6,7 @@
     "forbidden_desc": "Vous n'avez pas accès à cet outil. Veuillez contacter un administrateur afin qu'il vous donne les droits nécessaires.",
     "parameters": "Paramètres",
     "resources": "Ressources",
+    "resources_desc": "Créez et organisez vos contenus numériques. Des vidéos YouTube aux Parcours d'apprentissages.",
     "community": "Communauté",
     "connection_messages": "Messages à la connexion",
     "technical_settings": "Paramètres techniques",
