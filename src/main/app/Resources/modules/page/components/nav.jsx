@@ -1,48 +1,30 @@
 import React from 'react'
 import {useSelector, useDispatch} from 'react-redux'
-import {PropTypes as T} from 'prop-types'
 
-import {Button} from '#/main/app/action/components/button'
-import {UserAvatar} from '#/main/core/user/components/avatar'
-import {CallbackButton} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
+import {Button} from '#/main/app/action/components/button'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
-import {selectors as securitySelectors} from '#/main/app/security/store'
-import {actions as menuActions, selectors as menuSelectors} from '#/main/app/layout/menu/store'
+import {actions as contextActions, selectors as contextSelectors} from '#/main/app/context/store'
 
 const PageNav = (props) => {
-  const currentUser = useSelector(securitySelectors.currentUser)
   const dispatch = useDispatch()
-  const menuOpened = useSelector(menuSelectors.opened)
+  const menuOpened = useSelector(contextSelectors.menuOpened)
+
   return (
-    <div className="m-4 d-flex gap-4 align-items-center">
-      <CallbackButton
+    <div className="mx-4 my-3 d-flex gap-4 align-items-center">
+      <Button
+        type={CALLBACK_BUTTON}
         className="app-menu-toggle position-relative"
         label={trans('menu')}
+        icon={menuOpened ? 'fa fa-fw fa-chevron-left' : 'fa fa-fw fa-chevron-right'}
         tooltip="bottom"
-        callback={() => dispatch(menuActions.toggle())}
-      >
-        <span className={menuOpened ? 'fa fa-fw fa-chevron-left' : 'fa fa-fw fa-chevron-right'} />
-        {/*{currentUser ?
-          <>
-            <UserAvatar className="app-header-avatar" picture={currentUser.picture} alt={true} size="sm"/>
-            <span
-              className="app-header-status position-absolute top-100 start-100 translate-middle m-n1 bg-learning rounded-circle">
-              <span className="visually-hidden">New alerts</span>
-            </span>
-          </> :
-          <span className="fa fa-fw fa-bars" aria-hidden={true} />
-        }*/}
-
-      </CallbackButton>
+        callback={() => dispatch(contextActions.toggleMenu())}
+      />
 
       {props.children}
     </div>
   )
-}
-
-PageNav.propTypes = {
-
 }
 
 export {

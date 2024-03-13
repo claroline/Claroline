@@ -10,9 +10,11 @@ import {ListData} from '#/main/app/content/list/containers/data'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 
+import {constants} from '#/main/app/user/constants'
 import {getActions, getDefaultAction} from '#/main/community/user/utils'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {UserCard} from '#/main/community/user/components/card'
+import {UserStatus} from '#/main/app/user/components/status'
 
 const Users = (props) => {
   const usersRefresher = merge({
@@ -47,7 +49,7 @@ const Users = (props) => {
           primary: param('community.username'),
           render: (user) => (
             <div className="d-flex flex-direction-row gap-3 align-items-center">
-              <UserAvatar picture={user.picture} alt={false} />
+              <UserAvatar user={user} size="xs" />
               {user.username}
             </div>
           )
@@ -78,9 +80,19 @@ const Users = (props) => {
           label: trans('creation_date'),
           filterable: false
         }, {
-          name: 'meta.lastActivity',
+          name: 'status',
+          type: 'choice',
+          label: trans('status'),
+          displayable: true,
+          filterable: true,
+          sortable: false,
+          options: {
+            choices: constants.USER_STATUSES
+          },
+          render: (user) => <UserStatus user={user} variant="badge" />
+        }, {
+          name: 'lastActivity',
           type: 'date',
-          alias: 'lastActivity',
           label: trans('last_activity'),
           displayed: true,
           options: {

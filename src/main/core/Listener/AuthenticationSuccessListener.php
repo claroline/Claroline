@@ -61,6 +61,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 'user' => $this->serializer->serialize($user, [Options::SERIALIZE_FACET]), // TODO : we should only get the minimal representation of user here,
                 'messages' => $this->messageManager->getConnectionMessagesByUser($user),
                 'contexts' => $this->contextProvider->getAvailableContexts(),
+                'contextFavorites' => $this->contextProvider->getFavoriteContexts(),
             ]));
         }
 

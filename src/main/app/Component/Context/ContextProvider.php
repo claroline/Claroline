@@ -2,7 +2,13 @@
 
 namespace Claroline\AppBundle\Component\Context;
 
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\AbstractComponentProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
+use HeVinci\FavouriteBundle\Entity\WorkspaceFavourite;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Aggregates all the contexts defined in the Claroline app.
@@ -17,7 +23,10 @@ use Claroline\AppBundle\Component\AbstractComponentProvider;
 class ContextProvider extends AbstractComponentProvider
 {
     public function __construct(
-        private readonly iterable $registeredContexts
+        private readonly iterable $registeredContexts,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer
     ) {
     }
 
@@ -35,6 +44,22 @@ class ContextProvider extends AbstractComponentProvider
         return $this->registeredContexts;
     }
 
+    public function getFavoriteContexts(): array
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User) {
+            $workspaces = $this->om
+                ->getRepository(WorkspaceFavourite::class)
+                ->findBy(['user' => $user]);
+
+            return array_map(function (WorkspaceFavourite $favourite) {
+                return $this->serializer->serialize($favourite->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]);
+            }, $workspaces);
+        }
+
+        return [];
+    }
+
     public function getAvailableContexts(): array
     {
         $available = [];
@@ -43,6 +68,7 @@ class ContextProvider extends AbstractComponentProvider
                 $available[] = [
                     'icon' => $contextComponent::getIcon(),
                     'name' => $contextComponent::getName(),
+                    'order' => $contextComponent::getOrder(),
                     'root' => $contextComponent->isRoot(),
                 ];
             }

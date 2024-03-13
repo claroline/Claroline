@@ -27,7 +27,7 @@ const UserDetails = props =>
       <li className="list-group-item">
         {trans('last_activity_at')}
         <span className="value">
-          {props.user.meta.lastActivity ? displayDate(props.user.meta.lastActivity, false, true) : trans('never')}
+          {props.user.lastActivity ? displayDate(props.user.lastActivity, false, true) : trans('never')}
         </span>
       </li>
     </ul>

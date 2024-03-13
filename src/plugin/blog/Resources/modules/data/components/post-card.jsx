@@ -6,7 +6,7 @@ import {asset} from '#/main/app/config'
 import {getPlainText} from '#/main/app/data/types/html/utils'
 
 import {DataCard} from '#/main/app/data/components/card'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {UserMicro} from '#/main/core/user/components/micro'
 
 const PostCard = (props) =>
@@ -16,8 +16,8 @@ const PostCard = (props) =>
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon={
       get(props.data, 'meta.author') ?
-        <UserAvatar alt={true} /> :
-        <UserAvatar picture={get(props.data, 'meta.creator.picture')} alt={true} />
+        <UserAvatar /> :
+        <UserAvatar user={get(props.data, 'meta.creator')} />
     }
     title={props.data.title}
     contentText={getPlainText(props.data.content)}

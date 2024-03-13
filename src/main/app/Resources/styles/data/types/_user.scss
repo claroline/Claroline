@@ -1,9 +1,12 @@
 .table,
 .table-sm {
     .user-avatar {
-        max-height: 2rem;
-        max-width: 2rem;
+        // important to override default avatar sizing
+        // deprecated. use user-avatar-xs size
+
+        /*max-height: 2rem !important;
+        max-width: 2rem !important;
         // for .fa when no picture
-        font-size: 2rem;
+        font-size: 2rem !important;*/
     }
 }

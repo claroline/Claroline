@@ -24,55 +24,41 @@ class MessageSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var MessageManager */
-    private $manager;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var GroupSerializer */
-    private $groupSerializer;
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
-
-    /** @var GroupRepository */
-    private $groupRepo;
-    /** @var UserRepository */
-    private $userRepo;
-    /** @var WorkspaceRepository */
-    private $workspaceRepo;
+    private GroupRepository $groupRepo;
+    private UserRepository $userRepo;
+    private WorkspaceRepository $workspaceRepo;
 
     public function __construct(
-        ObjectManager $om,
-        TokenStorageInterface $tokenStorage,
-        MessageManager $manager,
-        UserSerializer $userSerializer,
-        GroupSerializer $groupSerializer,
-        WorkspaceSerializer $workspaceSerializer
+        private readonly ObjectManager $om,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly MessageManager $manager,
+        private readonly UserSerializer $userSerializer,
+        private readonly GroupSerializer $groupSerializer,
+        private readonly WorkspaceSerializer $workspaceSerializer
     ) {
-        $this->om = $om;
-        $this->tokenStorage = $tokenStorage;
-        $this->manager = $manager;
-
-        $this->userSerializer = $userSerializer;
-        $this->groupSerializer = $groupSerializer;
-        $this->workspaceSerializer = $workspaceSerializer;
-
         $this->groupRepo = $om->getRepository(Group::class);
         $this->userRepo = $om->getRepository(User::class);
         $this->workspaceRepo = $om->getRepository(Workspace::class);
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Message::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'message';
+    }
+
+    public function getSchema(): string
+    {
+        return '#/plugin/message/message.json';
+    }
+
+    public function getSamples(): string
+    {
+        return '#/plugin/message/message';
     }
 
     public function serialize(Message $message, array $options = []): array
@@ -85,7 +71,7 @@ class MessageSerializer
             'content' => $message->getContent(),
             'from' => $message->getSender() ?
                 $this->userSerializer->serialize($message->getSender(), [Options::SERIALIZE_MINIMAL]) :
-                ['username' => $message->getSenderUsername()],
+                ['name' => $message->getSenderUsername()],
             'to' => $message->getTo(),
             'meta' => [
                 'date' => DateNormalizer::normalize($message->getDate()),
@@ -165,7 +151,7 @@ class MessageSerializer
         return $message;
     }
 
-    private function getUserMessage(Message $message)
+    private function getUserMessage(Message $message): ?UserMessage
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
@@ -183,21 +169,5 @@ class MessageSerializer
         }
 
         return $userMessage;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSchema()
-    {
-        return '#/plugin/message/message.json';
-    }
-
-    /**
-     * @return string
-     */
-    public function getSamples()
-    {
-        return '#/plugin/message/message';
     }
 }

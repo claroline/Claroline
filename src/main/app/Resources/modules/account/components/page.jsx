@@ -9,7 +9,7 @@ import {PageFull} from '#/main/app/page/components/full'
 import {showBreadcrumb} from '#/main/app/layout/utils'
 
 import {User as UserTypes} from '#/main/community/prop-types'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 
 const AccountPage = (props) =>
   <PageFull
@@ -27,7 +27,7 @@ const AccountPage = (props) =>
     subtitle={props.title || props.currentUser.username}
     poster={props.currentUser.poster}
     icon={
-      <UserAvatar picture={props.currentUser.picture} size="lg" />
+      <UserAvatar user={props.currentUser} size="xl" />
     }
     meta={{
       title: `${trans('my_account')} - ${props.title || props.currentUser.username}`,

@@ -73,7 +73,7 @@ class ListExporter extends AbstractListExporter
                     'type' => 'date',
                     'description' => $this->translator->trans('The user creation date', [], 'schema'),
                 ], [
-                    'name' => 'meta.lastActivity',
+                    'name' => 'lastActivity',
                     'type' => 'date',
                     'description' => $this->translator->trans('The user last activity date', [], 'schema'),
                 ], [

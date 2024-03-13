@@ -12,7 +12,7 @@ import {WorkspaceCard} from '#/main/core/workspace/components/card'
  * Let the current user register himself to some workspaces.
  */
 export default (workspaces, refresher, path, currentUser) => {
-  const processable = workspaces.filter(workspace => !workspace.registered && !workspace.meta.model && !workspace.meta.archived && !get(workspace, 'registration.waitingForRegistration')
+  const processable = workspaces.filter(workspace => !workspace.registered && !get(workspace, 'meta.model') && !get(workspace, 'meta.archived') && !get(workspace, 'registration.waitingForRegistration')
     && (get(workspace, 'registration.selfRegistration') || isAdmin(currentUser)))
 
   return {

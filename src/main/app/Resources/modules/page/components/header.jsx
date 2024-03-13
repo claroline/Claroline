@@ -33,7 +33,7 @@ const PageHeader = props =>
 
     <div className="page-header-content m-4 gap-4" role="presentation">
       {props.icon &&
-        <div className="page-icon ratio ratio-1x1" role="presentation">
+        <div className="page-icon" role="presentation">
           {props.icon}
         </div>
       }

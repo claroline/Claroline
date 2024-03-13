@@ -1,15 +1,18 @@
 import {connect} from 'react-redux'
 
 import {ContextMenu as ContextMenuComponent} from '#/main/app/context/components/menu'
-import {actions as menuActions, selectors as menuSelectors} from '#/main/app/layout/menu/store'
+import {selectors, actions} from '#/main/app/context/store'
 
 const ContextMenu = connect(
   (state) => ({
-    section: menuSelectors.openedSection(state)
+    path: selectors.path(state),
+    opened: selectors.menuOpened(state),
+    untouched: selectors.menuUntouched(state),
+    //tools: contextSelectors.tools(state)
   }),
   (dispatch) => ({
-    changeSection(section) {
-      dispatch(menuActions.changeSection(section))
+    close() {
+      dispatch(actions.close())
     }
   })
 )(ContextMenuComponent)

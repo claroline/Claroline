@@ -27,6 +27,11 @@ class PublicContext extends AbstractContext
         return 'home';
     }
 
+    public static function getOrder(): int
+    {
+        return 1;
+    }
+
     public function getObject(?string $contextId): ?ContextSubjectInterface
     {
         return null;
@@ -34,7 +39,8 @@ class PublicContext extends AbstractContext
 
     public function isAvailable(): bool
     {
-        return 'tool' === $this->config->getParameter('home.type');
+        return 'tool' === $this->config->getParameter('home.type')
+            && (empty($this->securityManager->getCurrentUser()) || $this->securityManager->isAdmin());
     }
 
     public function isRoot(): bool

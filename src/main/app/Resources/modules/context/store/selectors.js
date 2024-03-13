@@ -155,7 +155,20 @@ const shortcuts = createSelector(
   }
 )
 
-// parameters
+const menu = createSelector(
+  [store],
+  (store) => store.menu
+)
+
+const menuUntouched = createSelector(
+  [menu],
+  (menu) => menu.untouched
+)
+
+const menuOpened = createSelector(
+  [menu],
+  (menu) => menu.opened
+)
 
 export const selectors = {
   STORE_NAME,
@@ -179,5 +192,9 @@ export const selectors = {
   tools,
   defaultOpening,
   allShortcuts,
-  shortcuts
+  shortcuts,
+
+  // selectors for menu
+  menuUntouched,
+  menuOpened
 }

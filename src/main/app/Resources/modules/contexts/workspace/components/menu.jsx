@@ -1,12 +1,13 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {url} from '#/main/app/api'
 import {trans, number} from '#/main/app/intl'
 import {Button} from '#/main/app/action/components/button'
-import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {URL_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
 import {route as toolRoute} from '#/main/core/tool/routing'
@@ -113,15 +114,23 @@ const WorkspaceMenu = (props) => {
 
   return (
     <ContextMenu
-      basePath={props.basePath}
-      title={!isEmpty(props.workspace) ? props.workspace.name : trans('workspace')}
+      title={
+        <>
+          <span className={classes({
+            'fa fa-fw fa-globe icon-with-text-right': get(props.workspace, 'registration.selfRegistration'),
+            /*'fa fa-fw fa-stamp icon-with-text-right': get(props.workspace, 'meta.model'),*/
+            'fa fa-fw fa-user icon-with-text-right': get(props.workspace, 'meta.personal')
+          })} aria-hidden={true} />
+
+          {!isEmpty(props.workspace) ? props.workspace.name : trans('workspace')}
+        </>
+      }
 
       tools={props.tools
         // hide tools that can not be configured in models for now
         .filter(tool => !get(props.workspace, 'meta.model', false) || -1 !== constants.WORKSPACE_MODEL_TOOLS.indexOf(tool.name))
       }
       actions={workspaceActions}
-      shortcuts={props.shortcuts}
     >
       {false && !props.impersonated && get(props.workspace, 'display.showProgression') &&
         <WorkspaceProgression

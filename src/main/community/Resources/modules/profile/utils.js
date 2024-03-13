@@ -130,11 +130,11 @@ function getFormDefaultSections(user, update, isNew = false) {
           name: 'poster',
           label: trans('poster'),
           type: 'image'
-        }, {
+        }, /*{
           name: 'thumbnail',
           label: trans('thumbnail'),
           type: 'image'
-        }, {
+        }, */{
           name: 'meta.locale',
           type: 'locale',
           label: trans('language'),

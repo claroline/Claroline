@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 
 import {DataCard} from '#/main/app/data/components/card'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {displayUsername} from '#/main/community/utils'
 
 import {BadgeCard} from '#/plugin/open-badge/tools/badges/badge/components/card'
@@ -36,7 +36,7 @@ const AssertionUserCard = props =>
     id={props.data.id}
     className={classes('notification-card', props.className)}
     icon={
-      <UserAvatar picture={get(props.data, 'user.picture')} />
+      <UserAvatar user={get(props.data, 'user')} />
     }
     title={displayUsername(get(props.data, 'user'))}
     subtitle={trans('granted_at', {

@@ -4,6 +4,9 @@ services:
     Claroline\AppBundle\Component\Context\ContextProvider:
         arguments:
             - !tagged_iterator claroline.component.context
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
 
     claroline.context_provider:
         alias: Claroline\AppBundle\Component\Context\ContextProvider

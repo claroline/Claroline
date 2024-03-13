@@ -18,6 +18,7 @@ bootstrap(
     footer: initialData.footer,
     config: initialData.config,
     contexts: initialData.contexts,
+    contextFavorites: initialData.contextFavorites,
     security: {
       impersonated: initialData.impersonated,
       currentUser: initialData.currentUser,

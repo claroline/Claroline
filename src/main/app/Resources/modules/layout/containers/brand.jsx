@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 
 import {selectors as configSelectors} from '#/main/app/config/store'
-import {MenuBrand as MenuBrandComponent} from '#/main/app/layout/menu/components/brand'
+import {MenuBrand as MenuBrandComponent} from '#/main/app/layout/components/brand'
 
 const MenuBrand = connect(
   (state) => ({

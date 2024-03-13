@@ -15,7 +15,7 @@ import {LinkButton} from '#/main/app/buttons/link'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {displayUsername} from '#/main/community/utils'
 import {route as userRoute} from '#/main/community/user/routing'
 
@@ -103,7 +103,7 @@ class BadgeLayoutComponent extends Component {
 
           {!isEmpty(this.props.assertion) && get(this.props.currentUser, 'id') !== get(this.props.assertion.user, 'id') &&
             <LinkButton className="badge-user badge-granted" target={userRoute(this.props.assertion.user)}>
-              <UserAvatar picture={this.props.assertion.user.picture} alt={false} />
+              <UserAvatar user={this.props.assertion.user} />
               <h2 className="h3">
                 {displayUsername(get(this.props.assertion, 'user'))}
                 <small>{trans('granted_at', {date: displayDate(get(this.props.assertion, 'issuedOn'), false, true)}, 'badge')}</small>

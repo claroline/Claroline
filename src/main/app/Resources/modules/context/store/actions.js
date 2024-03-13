@@ -1,8 +1,9 @@
 import get from 'lodash/get'
+import merge from 'lodash/merge'
 
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
-import {actions as menuActions} from '#/main/app/layout/menu/store'
+import {actions as securityActions} from '#/main/app/security/store/actions'
 
 /**
  * Action dispatched when the context is opened, before we fetch the context data.
@@ -32,6 +33,10 @@ export const CONTEXT_RESTRICTIONS_DISMISS = 'CONTEXT_RESTRICTIONS_DISMISS'
 
 export const CONTEXT_SHORTCUTS_LOAD = 'CONTEXT_SHORTCUTS_LOAD'
 
+export const CONTEXT_MENU_OPEN = 'MENU_OPEN'
+export const CONTEXT_MENU_CLOSE = 'MENU_CLOSE'
+export const CONTEXT_MENU_TOGGLE = 'MENU_TOGGLE'
+
 export const actions = {}
 
 actions.load = makeActionCreator(CONTEXT_LOAD, 'contextData')
@@ -55,7 +60,7 @@ actions.open = (contextType, contextId = null) => (dispatch) => dispatch({
       dispatch(actions.load(response))
 
       // set menu state based on ws configuration
-      dispatch(menuActions.setState(get(response, 'data.opening.menu')))
+      dispatch(actions.setMenuState(get(response, 'data.opening.menu')))
     },
     error: (response, status) => {
       switch (status) {
@@ -67,10 +72,38 @@ actions.open = (contextType, contextId = null) => (dispatch) => dispatch({
           dispatch(actions.load(response)) // the response contains why we can't access the context
 
           // set menu state based on ws configuration
-          dispatch(menuActions.setState(get(response, 'data.opening.menu')))
+          dispatch(actions.setMenuState(get(response, 'data.opening.menu')))
 
           break
       }
     }
+  }
+})
+
+actions.openMenu = makeActionCreator(CONTEXT_MENU_OPEN)
+actions.closeMenu = makeActionCreator(CONTEXT_MENU_CLOSE)
+actions.toggleMenu = makeActionCreator(CONTEXT_MENU_TOGGLE)
+actions.setMenuState = (state = null) => (dispatch) => {
+  switch (state) {
+    case 'open':
+      // force open the menu
+      dispatch(actions.open())
+      break
+
+    case 'close':
+      // force close the menu
+      dispatch(actions.close())
+      break
+
+    default:
+    // let the menu in its previous state
+  }
+}
+
+actions.changeStatus = (currentUser, status) => (dispatch) => dispatch({
+  [API_REQUEST]: {
+    url: ['apiv2_user_change_status', {status: status}],
+    success: (response) => dispatch(securityActions.updateUser(merge({}, currentUser, {status: response}))),
+    request: {method: 'PUT'}
   }
 })

@@ -6,11 +6,11 @@ import {registry} from '#/main/app/plugins/registry'
  * Declares applications provided by the Authentication plugin.
  */
 registry.add('ClarolineAuthenticationBundle', {
-  actions: {
+  /*actions: {
     desktop: {
-      'logout': () => { return import(/* webpackChunkName: "authentication-action-logout" */ '#/main/authentication/actions/desktop/logout') }
+      'logout': () => { return import(/!* webpackChunkName: "authentication-action-logout" *!/ '#/main/authentication/actions/desktop/logout') }
     }
-  },
+  },*/
 
   /**
    * Provides current user Account sections.

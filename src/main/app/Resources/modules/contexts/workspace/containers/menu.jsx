@@ -18,7 +18,7 @@ const WorkspaceMenu = withRouter(
 
       basePath: contextSelectors.path(state),
       tools: contextSelectors.tools(state),
-      shortcuts: contextSelectors.shortcuts(state),
+      //shortcuts: contextSelectors.shortcuts(state),
       userEvaluation: selectors.userEvaluation(state)
     }),
     (dispatch) => ({

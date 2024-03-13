@@ -121,6 +121,11 @@
     border-radius: 50%;
     background: var(--#{$prefix}body-bg);
 
+    > * {
+        width: 100%;
+        height: 100%;
+    }
+
     .tool-icon,
     .resource-icon {
         display: flex;
@@ -128,8 +133,8 @@
         justify-content: center;
 
 
-        font-size: 1.5rem;
-        padding: map-get($spacers, 3);
+        font-size: 2rem;
+        //padding: map-get($spacers, 3);
     }
 }
 

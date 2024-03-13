@@ -1,0 +1,20 @@
+
+@mixin user-avatar-size($size, $status-size, $status-spacer) {
+  // for picture
+  width: $size;
+  height: $size;
+  // for .fa when no picture
+  .user-status,
+  .user-avatar-placeholder {
+    font-size: $size * .5;
+  }
+
+  .user-status {
+    margin: $status-spacer;
+  }
+
+  .user-status-bullet {
+    width: $status-size;
+    height: $status-size;
+  }
+}

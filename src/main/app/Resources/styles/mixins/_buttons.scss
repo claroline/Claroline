@@ -8,7 +8,7 @@
   --#{$prefix}btn-font-weight: #{$font-weight-normal};
   --#{$prefix}btn-color: #{$color};
   --#{$prefix}btn-bg: transparent;
-  --#{$prefix}btn-border-color: transparent;
+  --#{$prefix}btn-border-color: transparent !important;
 
   --#{$prefix}btn-hover-color: #{$hover-color};
   --#{$prefix}btn-hover-bg: transparent;
@@ -23,9 +23,9 @@
   --#{$prefix}btn-disabled-bg: transparent;
   --#{$prefix}btn-disabled-border-color: transparent;
 
-  --#{$prefix}btn-box-shadow: none;
+  --#{$prefix}btn-box-shadow: none !important;
   --#{$prefix}gradient: none;
-  --#{$prefix}btn-focus-box-shadow: none;
+  --#{$prefix}btn-focus-box-shadow: none !important;
 
   // override box shadow forced by dropdown container (rule: .btn-group.show .dropdown-toggle)
   &.dropdown-toggle.show {

@@ -36,7 +36,12 @@ input[type=reset] {
 }
 
 .btn-text-body {
-    @include button-text-variant($body-color);
+    @include button-text-variant(
+        var(--#{$prefix}secondary-color),
+        var(--#{$prefix}body-color),
+        var(--#{$prefix}body-color)
+    );
+    // rgba(var(--#{$prefix}body-color-rgb), .03)
 }
 
 .btn-text-subtitles {

@@ -7,10 +7,26 @@ import {
   CONTEXT_NOT_FOUND,
   CONTEXT_RESTRICTIONS_DISMISS,
   CONTEXT_SHORTCUTS_LOAD,
-  CONTEXT_SET_LOADED
+  CONTEXT_SET_LOADED,
+  CONTEXT_MENU_CLOSE,
+  CONTEXT_MENU_OPEN,
+  CONTEXT_MENU_TOGGLE
 } from '#/main/app/context/store/actions'
 
 const reducer = combineReducers({
+  menu: combineReducers({
+    untouched: makeReducer(true, {
+      [CONTEXT_MENU_OPEN]: () => false,
+      [CONTEXT_MENU_CLOSE]: () => false,
+      [CONTEXT_MENU_TOGGLE]: () => false
+    }),
+    opened: makeReducer(true, {
+      [CONTEXT_MENU_OPEN]: () => true,
+      [CONTEXT_MENU_CLOSE]: () => false,
+      [CONTEXT_MENU_TOGGLE]: (state) => !state
+    })
+  }),
+
   /**
    * The type of the current context.
    *

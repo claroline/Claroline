@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LinkButton} from '#/main/app/buttons/link'
 
 import {route} from '#/main/community/user/routing'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 
 /**
  * Micro representation of a User.
@@ -15,33 +15,21 @@ import {UserAvatar} from '#/main/core/user/components/avatar'
  * @constructor
  */
 const UserMicro = props => {
-  let displayName
-  if (props.showUsername) {
-    displayName = props.username
-  } else if (props.name) {
-    displayName = props.name
-  } else {
-    displayName = (props.firstName || '') + ' ' + (props.lastName || '')
-    displayName = displayName.trim()
-  }
-
-  if (props.link && displayName) {
+  if (props.link && props.name) {
     return (
       <LinkButton className={classes('user-micro', props.className)} target={route(props)}>
-        <UserAvatar picture={props.picture} alt={false} />
+        <UserAvatar user={props} size="sm" />
 
-        {displayName}
+        {props.name}
       </LinkButton>
     )
   }
 
   return (
     <div className={classes('user-micro', props.className)}>
-      <UserAvatar picture={props.picture} alt={false} />
+      <UserAvatar user={props} size="sm" />
 
-      {displayName ?
-        displayName : trans('unknown')
-      }
+      {props.name || trans('unknown')}
     </div>
   )
 }
@@ -53,7 +41,6 @@ UserMicro.propTypes = {
   username: T.string,
   className: T.string,
   picture: T.string,
-  showUsername: T.bool,
   link: T.bool
 }
 

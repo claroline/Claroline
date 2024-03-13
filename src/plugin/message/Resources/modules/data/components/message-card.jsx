@@ -8,7 +8,7 @@ import {displayDate} from '#/main/app/intl/date'
 
 import {getPlainText} from '#/main/app/data/types/html/utils'
 import {DataCard} from '#/main/app/data/components/card'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 
 import {Message as MessageTypes} from '#/plugin/message/prop-types'
 
@@ -20,7 +20,7 @@ const MessageCard = (props) =>
       'data-card-muted': get(props.data, 'meta.read', false)
     })}
     icon={
-      <UserAvatar picture={get(props.data, 'from.picture')} />
+      <UserAvatar user={get(props.data, 'from')} size="md" />
     }
     title={props.data.object || trans('no_object', {}, 'message')}
     contentText={getPlainText(props.data.content)}

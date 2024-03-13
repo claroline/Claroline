@@ -14,6 +14,8 @@ interface ContextInterface extends ComponentInterface
 
     public static function getIcon(): string;
 
+    public static function getOrder(): int;
+
     public function isAvailable(): bool;
 
     public function isRoot(): bool;

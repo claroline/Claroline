@@ -300,11 +300,14 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     private $userOrganizationReferences;
 
     /**
-     * @var string
-     *
      * @ORM\Column(nullable=true)
      */
-    private $code;
+    private ?string $code = null;
+
+    /**
+     * @ORM\Column(name="user_status", nullable=true)
+     */
+    private ?string $status = null;
 
     public function __construct()
     {
@@ -372,6 +375,35 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     public function getFullName(): ?string
     {
         return trim($this->firstName.' '.$this->lastName);
+    }
+
+    public function getStatus(): ?string
+    {
+        if (!empty($this->status)) {
+            // return user defined status
+            return $this->status;
+        }
+
+        if ($this->lastActivity) {
+            $now = new \DateTime();
+            $now = $now->sub(\DateInterval::createFromDateString('15 minute'));
+
+            if ($this->lastActivity >= $now) {
+                return 'online';
+            }
+
+            $now = $now->sub(\DateInterval::createFromDateString('30 minute'));
+            if ($this->lastActivity >= $now) {
+                return 'absent';
+            }
+        }
+
+        return 'offline';
+    }
+
+    public function setStatus(string $status = null): void
+    {
+        $this->status = $status;
     }
 
     public function getUsername(): ?string

@@ -80,13 +80,18 @@ class UserSerializer
         if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             return [
                 'id' => $user->getUuid(),
-                'name' => $user->getFullName(), // can be removed later (will throw too much validation errors in JSONSchema for now)
-                'firstName' => $user->getFirstName(),
-                'lastName' => $user->getLastName(),
-                'username' => $user->getUsername(),
-                'email' => $showEmail ? $user->getEmail() : null,
+                'name' => $user->getFullName(),
+                'status' => $user->getStatus(),
+                'lastActivity' => DateNormalizer::normalize($user->getLastActivity()),
                 'picture' => $user->getPicture(),
-                'thumbnail' => $user->getThumbnail(),
+
+                'username' => $user->getUsername(), // required because used to user profile URL
+                //'firstName' => $user->getFirstName(),
+                //'lastName' => $user->getLastName(),
+                //'username' => $user->getUsername(),
+                //'email' => $showEmail ? $user->getEmail() : null,
+                //'thumbnail' => $user->getThumbnail(),
+                //'poster' => $user->getPoster(),
             ];
         }
 
@@ -94,11 +99,14 @@ class UserSerializer
             'id' => $user->getUuid(),
             'autoId' => $user->getId(),
             'name' => $user->getFullName(),
+            'status' => $user->getStatus(),
+            'lastActivity' => DateNormalizer::normalize($user->getLastActivity()),
+            'picture' => $user->getPicture(),
+
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
-            'picture' => $user->getPicture(),
-            'thumbnail' => $user->getThumbnail(),
+            //'thumbnail' => $user->getThumbnail(),
             'poster' => $user->getPoster(),
             'email' => $showEmail ? $user->getEmail() : null,
             'administrativeCode' => $user->getAdministrativeCode(),
@@ -115,6 +123,7 @@ class UserSerializer
         }
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+            $serializedUser['status'] = $user->getStatus();
             $serializedUser['permissions'] = $this->serializePermissions($user);
         }
 
@@ -244,7 +253,7 @@ class UserSerializer
     {
         return [
             'acceptedTerms' => $user->hasAcceptedTerms(),
-            'lastActivity' => DateNormalizer::normalize($user->getLastActivity()),
+            'lastActivity' => DateNormalizer::normalize($user->getLastActivity()), // deprecated
             'created' => DateNormalizer::normalize($user->getCreated()),
             'description' => $user->getDescription(),
             'mailValidated' => $user->isMailValidated(),

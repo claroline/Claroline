@@ -8,6 +8,7 @@ const User = {
     username: T.string.isRequired,
     picture: T.string,
     thumbnail: T.string,
+    status: T.string,
     meta: T.shape({
       created: T.string,
       lastActivity: T.string,
