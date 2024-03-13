@@ -78,9 +78,8 @@ const PendingMain = props =>
             type: 'string',
             label: trans('code')
           }, {
-            name: 'meta.lastActivity',
+            name: 'lastActivity',
             type: 'date',
-            alias: 'lastActivity',
             label: trans('last_activity'),
             displayed: true,
             options: {

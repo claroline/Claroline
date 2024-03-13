@@ -36,11 +36,14 @@ const selfRegistration = (state) => configSelectors.param(state, 'selfRegistrati
 
 const availableContexts = (state) => state.contexts
 
+const favoriteContexts = (state) => state.contextFavorites
+
 export const selectors = {
   unavailable,
   disabled,
   maintenance,
   maintenanceMessage,
   selfRegistration,
-  availableContexts
+  availableContexts,
+  favoriteContexts
 }

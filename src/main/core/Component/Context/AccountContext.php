@@ -26,6 +26,11 @@ class AccountContext extends AbstractContext
         return 'user';
     }
 
+    public static function getOrder(): int
+    {
+        return 4;
+    }
+
     public function getObject(?string $contextId): ?User
     {
         return $this->securityManager->getCurrentUser();
@@ -38,7 +43,7 @@ class AccountContext extends AbstractContext
 
     public function isRoot(): bool
     {
-        return true;
+        return false;
     }
 
     public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array

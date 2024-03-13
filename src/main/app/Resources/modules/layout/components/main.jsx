@@ -106,8 +106,7 @@ LayoutMain.propTypes = {
   unavailable: T.bool.isRequired,
   authenticated: T.bool.isRequired,
   changePassword: T.bool.isRequired,
-  selfRegistration: T.bool,
-  toggleMenu: T.func.isRequired
+  selfRegistration: T.bool
 }
 
 export {

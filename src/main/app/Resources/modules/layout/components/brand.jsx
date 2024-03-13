@@ -7,20 +7,20 @@ import {LinkButton} from '#/main/app/buttons/link'
 
 const MenuBrand = props =>
   <LinkButton
-    className="app-menu-brand my-4 mx-3 justify-content-center"
+    className="app-menu-brand justify-content-center"
     target="/"
     onClick={props.closeMenu}
   >
     {props.logo &&
       <img
-        className="app-menu-logo"
+        className="app-brand-logo"
         src={asset(props.logo)}
         alt={trans('logo')}
       />
     }
 
     {props.showTitle && props.title &&
-      <h1 className="app-menu-title d-none d-md-block">
+      <h1 className="app-brand-title d-none d-md-block">
         {props.title}
 
         {props.subtitle &&

@@ -6,7 +6,7 @@ import get from 'lodash/get'
 import {trans, displayDate} from '#/main/app/intl'
 
 import {DataCard} from '#/main/app/data/components/card'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {displayUsername} from '#/main/community/utils'
 
 const NotificationCard = props =>
@@ -17,7 +17,7 @@ const NotificationCard = props =>
       'data-card-muted': props.data.read
     })}
     icon={
-      <UserAvatar picture={get(props.data, 'notification.meta.creator.picture')} />
+      <UserAvatar user={get(props.data, 'notification.meta.creator')} />
     }
     title={displayUsername(get(props.data, 'notification.meta.creator')) + ' ' + props.data.text}
     subtitle={trans('done_at', {

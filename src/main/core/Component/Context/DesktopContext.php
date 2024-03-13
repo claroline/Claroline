@@ -27,6 +27,11 @@ class DesktopContext extends AbstractContext
         return 'atlas';
     }
 
+    public static function getOrder(): int
+    {
+        return 0;
+    }
+
     public function getObject(?string $contextId): ?ContextSubjectInterface
     {
         return null;

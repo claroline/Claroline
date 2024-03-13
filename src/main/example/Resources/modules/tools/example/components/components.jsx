@@ -51,6 +51,11 @@ const ExampleComponents = (props) =>
           type: LINK_BUTTON,
           label: 'Progression',
           target: props.path+'/components/progression'
+        }, {
+          name: 'users',
+          type: LINK_BUTTON,
+          label: 'Users',
+          target: props.path+'/components/users'
         }
       ]}
     />
@@ -78,6 +83,9 @@ const ExampleComponents = (props) =>
         }, {
           path: '/progression',
           component: ExampleProgression
+        }, {
+          path: '/users',
+          component: ExampleUsers
         }
       ]}
     />

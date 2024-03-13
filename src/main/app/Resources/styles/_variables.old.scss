@@ -78,7 +78,7 @@ $brand-font-weight:     $font-weight-semibold !default;
 // By default it reuses some of the styles from the app header.
 // ---
 
-$toolbar-size:           384px !default; // 1/5 of 1920
+$toolbar-size:           312px !default; // 1/5 of 1920 - 72px (context bar)
 $toolbar-bg:             $menu !default;
 $toolbar-color:          color-contrast($menu) !default;
 $toolbar-active-color:   $primary !default;

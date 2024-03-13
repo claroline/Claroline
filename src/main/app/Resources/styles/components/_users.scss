@@ -1,0 +1,150 @@
+/*
+ * Users barrel.
+ */
+
+
+.user-avatar {
+    display: inline-block;
+    border-radius: 50%;
+
+    img {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+    }
+
+    .user-avatar-placeholder {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+    }
+
+    .user-status-bullet {
+        border: .125em solid var(--#{$prefix}body-bg); // should be overridden in some places
+    }
+}
+
+// sizing variants
+.user-avatar-xs {
+    @include user-avatar-size(map-get($icon-sizes, xs), .75rem, -.2rem);
+}
+
+.user-avatar-sm {
+    @include user-avatar-size(map-get($icon-sizes, sm), 1rem, -.3rem);
+}
+
+.user-avatar-md {
+    @include user-avatar-size(map-get($icon-sizes, md), 1.25rem, -.375rem);
+}
+
+.user-avatar-lg {
+    @include user-avatar-size(map-get($icon-sizes, lg), 1.75rem, -.5rem);
+}
+
+.user-avatar-xl {
+    @include user-avatar-size(map-get($icon-sizes, xl), 3rem, -1rem);
+}
+
+.user-avatar-stack {
+
+}
+
+.user-avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--#{$prefix}primary-text-emphasis);
+    background: var(--#{$prefix}primary-bg-subtle);
+}
+
+.user-status {
+    display: inline-flex;
+    align-items: center;
+    gap: map-get($spacers, 2);
+}
+
+.user-status-bullet {
+    display: inline-block;
+    width: .625em;
+    height: .625em;
+}
+
+.user-micro {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    vertical-align: middle;
+    //font-size: $font-size-sm;
+    //font-weight: 400;
+    white-space: nowrap;
+    gap: map-get($spacers, 2);
+}
+
+.user-micro-list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .dropdown-menu {
+        .user-micro {
+            display: flex !important;
+            padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+        }
+    }
+}
+
+.user-page {
+    // make avatar looks bigger than standard page icons
+    .page-icon {
+        width: map-get($icon-sizes, xl);
+        height: map-get($icon-sizes, xl);
+        //margin-top: $grid-gutter-width*.5;
+        margin-bottom: map-get($spacers, 5) * -1;
+
+        .user-avatar {
+            padding: $thumbnail-padding;
+        }
+    }
+
+    .page-header {
+        margin-bottom: map-get($spacers, 5);
+    }
+
+    .page-header-content {
+        align-items: flex-end;
+    }
+}
+
+// FIXME
+.user-card {
+    .data-card-header {
+        background: transparent !important;
+        min-height: auto !important;
+    }
+
+    &.data-card-col {
+        &,
+        .data-card-content,
+        .data-card-description,
+        .data-card-footer {
+            text-align: center !important;
+        }
+
+
+
+        .user-avatar {
+            margin-top: $data-card-padding;
+        }
+    }
+
+    &.data-card-row {
+        .data-card-header {
+            min-width: auto !important;
+        }
+
+        .user-avatar {
+            margin-left: $data-card-padding;
+        }
+    }
+}

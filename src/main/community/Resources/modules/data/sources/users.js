@@ -5,9 +5,11 @@ import {trans} from '#/main/app/intl/translation'
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {UserCard} from '#/main/community/user/components/card'
 import {getActions, getDefaultAction} from '#/main/community/user/utils'
+import {constants} from '#/main/app/user/constants'
+import {UserStatus} from '#/main/app/user/components/status'
 
 export default (contextType, contextData, refresher, currentUser) => {
   let basePath
@@ -39,7 +41,7 @@ export default (contextType, contextData, refresher, currentUser) => {
         primary: true,
         render: (user) => (
           <div className="d-flex flex-direction-row gap-3 align-items-center">
-            <UserAvatar picture={user.picture} alt={false} />
+            <UserAvatar user={user} size="xs" />
             {user.username}
           </div>
         )
@@ -79,9 +81,19 @@ export default (contextType, contextData, refresher, currentUser) => {
         alias: 'created',
         label: trans('creation_date')
       }, {
-        name: 'meta.lastActivity',
+        name: 'status',
+        type: 'choice',
+        label: trans('status'),
+        displayable: true,
+        filterable: true,
+        sortable: false,
+        options: {
+          choices: constants.USER_STATUSES
+        },
+        render: (user) => <UserStatus user={user} variant="badge" />
+      }, {
+        name: 'lastActivity',
         type: 'date',
-        alias: 'lastActivity',
         label: trans('last_activity'),
         displayed: true,
         options: {

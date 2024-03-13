@@ -10,7 +10,7 @@ import {LinkButton} from '#/main/app/buttons/link/components/button'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {route} from '#/main/community/user/routing'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 
 import {selectors} from '#/plugin/blog/resources/blog/store/selectors'
 import {updateQueryParameters} from '#/plugin/blog/resources/blog/utils'
@@ -24,7 +24,7 @@ const RedactorsComponent = props =>
       {!isEmpty(props.authors) ? (props.authors.map((author, index) =>(
         <span key={index}>
           <LinkButton target={route(author)}>
-            <UserAvatar className="user-picture" picture={author ? author.picture : undefined} alt={true} />
+            <UserAvatar user={author} size="md" />
           </LinkButton>
           <CallbackButton className="redactor-name link" callback={() => {
             props.goHome(props.history, props.path)

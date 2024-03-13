@@ -92,6 +92,24 @@ class ProfileController
     }
 
     /**
+     * @Route("/status/{status}", name="apiv2_user_change_status", methods={"PUT"})
+     *
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     */
+    public function changeStatusAction(User $user, string $status): JsonResponse
+    {
+        if ('online' === $status) {
+            $status = null;
+        }
+        $user->setStatus($status);
+
+        $this->om->persist($user);
+        $this->om->flush();
+
+        return new JsonResponse($user->getStatus());
+    }
+
+    /**
      * @Route("", name="apiv2_profile_open", methods={"GET"})
      */
     public function openAction(): JsonResponse

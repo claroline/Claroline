@@ -17,9 +17,9 @@ registry.add('HeVinciFavouriteBundle', {
    * Provides actions for base Claroline objects.
    */
   actions: {
-    resource: {
-      'favourite': () => { return import(/* webpackChunkName: "favourite-action-favourite-res" */ '#/plugin/favourite/resource/actions/favourite') }
-    },
+    /*resource: {
+      'favourite': () => { return import(/!* webpackChunkName: "favourite-action-favourite-res" *!/ '#/plugin/favourite/resource/actions/favourite') }
+    },*/
 
     workspace: {
       'favourite': () => { return import(/* webpackChunkName: "favourite-action-favourite-ws" */ '#/plugin/favourite/workspace/actions/favourite') }

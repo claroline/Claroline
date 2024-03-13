@@ -4,7 +4,7 @@ import classes from 'classnames'
 import omit from 'lodash/omit'
 
 const Heading = props  => createElement(`h${props.level}`, Object.assign({},
-  omit(props, 'level', 'displayLevel', 'displayed', 'align'),
+  omit(props, 'title', 'subtitle', 'level', 'displayLevel', 'displayed', 'align'),
   {
     className: classes(
       props.className,
@@ -16,19 +16,15 @@ const Heading = props  => createElement(`h${props.level}`, Object.assign({},
       }
     )
   }
-), [props.title, props.subtitle ? <small>{props.subtitle}</small>:undefined])
+), [props.title, props.subtitle ? <small key="heading-subtitle">{props.subtitle}</small>:undefined])
 
 Heading.propTypes = {
   className: T.string,
   level: T.number.isRequired,
   displayLevel: T.number,
   title: T.string.isRequired,
-  subtitle: T.string,
+  subtitle: T.node,
   align: T.oneOf(['left', 'center', 'right'])
-}
-
-Heading.defaultProps = {
-  align: 'left'
 }
 
 export {

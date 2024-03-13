@@ -13,9 +13,9 @@ const PublicMenu = connect(
     authenticated: securitySelectors.isAuthenticated(state),
     unavailable: layoutSelectors.unavailable(state),
 
-    basePath: contextSelectors.path(state),
+    //basePath: contextSelectors.path(state),
     tools: contextSelectors.tools(state),
-    shortcuts: contextSelectors.shortcuts(state)
+    //shortcuts: contextSelectors.shortcuts(state)
   })
 )(PublicMenuComponent)
 

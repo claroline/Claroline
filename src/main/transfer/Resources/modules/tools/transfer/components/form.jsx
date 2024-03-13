@@ -18,7 +18,7 @@ const TransferForm = withRouter(props => {
 
   return (
     <ToolPage subtitle={props.title}>
-      <div className="content-lg">
+      <div className="content-lg mt-3">
         <div className="row">
           <div className="col-md-4">
             <Vertical

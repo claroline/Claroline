@@ -26,7 +26,7 @@ registry.add('ClarolineMessageBundle', {
       'send-message': () => { return import(/* webpackChunkName: "message-action-group-send-message" */ '#/plugin/message/actions/group/send-message') }
     },
     workspace: {
-      'send-message': () => { return import(/* webpackChunkName: "message-action-workspace-send-message" */ '#/plugin/message/actions/workspace/send-message') }
+      //'send-message': () => { return import(/* webpackChunkName: "message-action-workspace-send-message" */ '#/plugin/message/actions/workspace/send-message') }
     }
   }
 })
