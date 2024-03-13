@@ -15,13 +15,13 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {User as UserTypes} from '#/main/community/prop-types'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 
 import {selectors} from '#/plugin/forum/resources/forum/store'
 
 const SubjectFormWrapper = (props) =>
   <div className='user-message-container user-message-form-container user-message-left'>
-    <UserAvatar picture={get(props.user, 'picture')} alt={false} />
+    <UserAvatar user={props.user} size="sm" />
 
     <div className="user-message">
       <div className="user-message-meta">

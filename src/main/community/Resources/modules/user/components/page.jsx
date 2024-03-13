@@ -10,9 +10,8 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {getActions} from '#/main/community/user/utils'
-import {route} from '#/main/community/user/routing'
 import {User as UserTypes} from '#/main/community/user/prop-types'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
 const User = (props) =>
@@ -30,7 +29,7 @@ const User = (props) =>
       }
     ].concat(props.user ? props.breadcrumb : [])}
     icon={
-      <UserAvatar picture={get(props.user, 'picture')} size="lg" />
+      <UserAvatar user={!isEmpty(props.user) ? props.user : undefined} size="xl" />
     }
     title={get(props.user, 'name', trans('loading'))}
     poster={get(props.user, 'poster')}

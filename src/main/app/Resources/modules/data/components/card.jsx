@@ -11,7 +11,7 @@ import {Await} from '#/main/app/components/await'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Button} from '#/main/app/action/components/button'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
-import {Heading} from '#/main/core/layout/components/heading'
+import {Heading} from '#/main/app/components/heading'
 
 import {
   Action as ActionTypes,
@@ -113,13 +113,9 @@ const CardHeader = props => {
 
   return (
     <div className="data-card-header" style={!isEmpty(headerStyles) ? headerStyles : undefined}>
-      {props.icon &&
-        <CardAction action={props.action} className="data-card-icon">
-          {typeof props.icon === 'string' ?
-            <span className={props.icon} /> :
-            props.icon
-          }
-        </CardAction>
+      {typeof props.icon === 'string' ?
+        <span className={props.icon} /> :
+        props.icon
       }
 
       {0 !== props.flags.length &&
@@ -175,7 +171,7 @@ CardHeader.propTypes = {
  * @constructor
  */
 const DataCard = props =>
-  <div style={props.style} className={classes(`data-card data-card-${props.orientation} data-card-${props.size}`, props.className, {
+  <article style={props.style} className={classes(`data-card data-card-${props.orientation} data-card-${props.size}`, props.className, {
     'data-card-clickable': props.primaryAction && !props.primaryAction.disabled,
     'data-card-poster': !!props.poster || !!props.color
   })}>
@@ -193,15 +189,11 @@ const DataCard = props =>
       className="data-card-content text-reset text-decoration-none"
     >
       <Heading
-        key="data-card-title"
         level={props.level}
         className="data-card-title"
-      >
-        {props.title}
-        {-1 !== props.display.indexOf('subtitle') && props.subtitle &&
-          <small>{props.subtitle}</small>
-        }
-      </Heading>
+        title={props.title}
+        subtitle={-1 !== props.display.indexOf('subtitle') ? props.subtitle : undefined}
+      />
 
       {-1 === ['xs', 'sm'].indexOf(props.size) && -1 !== props.display.indexOf('description') && props.contentText &&
         <div key="data-card-description" className="data-card-description">
@@ -229,7 +221,7 @@ const DataCard = props =>
         scope="object"
       />
     }
-  </div>
+  </article>
 
 implementPropTypes(DataCard, DataCardTypes)
 

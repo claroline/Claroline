@@ -14,7 +14,7 @@ import {TextGroup} from '#/main/core/layout/form/components/group/text-group'
 import {ContentHtml} from '#/main/app/content/components/html'
 
 import {User as UserTypes} from '#/main/community/prop-types'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 
 class CommentForm extends Component {
   constructor(props) {
@@ -42,7 +42,7 @@ class CommentForm extends Component {
         'user-comment-right': 'right' === this.props.position
       })}>
         {'left' === this.props.position &&
-          <UserAvatar picture={this.props.user.picture} alt={false} />
+          <UserAvatar user={this.props.user} size="sm" />
         }
         <div className="user-comment">
           <div className="user-comment-meta">
@@ -88,7 +88,7 @@ class CommentForm extends Component {
         </div>
 
         {'right' === this.props.position &&
-          <UserAvatar picture={this.props.user.picture} alt={false} />
+          <UserAvatar user={this.props.user} size="sm" />
         }
       </div>
     )
@@ -149,7 +149,7 @@ const Comment = props => {
       'user-comment-right': 'right' === props.position
     })}>
       {'left' === props.position &&
-        <UserAvatar picture={props.user.picture} alt={false} />
+        <UserAvatar user={props.user} size="sm" />
       }
 
       <div className="user-comment">
@@ -186,7 +186,7 @@ const Comment = props => {
       </div>
 
       {'right' === props.position &&
-        <UserAvatar picture={props.user.picture} alt={false} />
+        <UserAvatar user={props.user} size="sm" />
       }
     </div>
   )

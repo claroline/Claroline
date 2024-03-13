@@ -70,7 +70,7 @@ ToolPage.propTypes = {
     permissions: T.object.isRequired
   }),
   currentContext: T.shape({
-    type: T.oneOf(['administration', 'desktop', 'workspace', 'account', 'home']),
+    type: T.oneOf(['administration', 'desktop', 'workspace', 'account', 'public']),
     data: T.object
   }).isRequired,
   // the name of the primary action of the tool (if we want to override the default one).

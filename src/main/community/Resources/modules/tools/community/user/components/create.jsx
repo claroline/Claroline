@@ -7,7 +7,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {UserForm} from '#/main/community/user/components/form'
 import {selectors} from '#/main/community/tools/community/user/store'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const UserCreate = (props) =>
@@ -21,7 +21,7 @@ const UserCreate = (props) =>
       }
     ]}
     icon={
-      <UserAvatar className="img-thumbnail" size="lg" />
+      <UserAvatar className="img-thumbnail" noStatus={true} size="xl" />
     }
     subtitle={trans('new_user', {}, 'community')}
   >

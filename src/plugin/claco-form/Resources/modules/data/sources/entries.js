@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {DataCard} from '#/main/app/data/components/card'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {displayDate} from '#/main/app/intl/date'
 import {constants as intlConstants} from '#/main/app/intl/constants'
 
@@ -265,10 +265,7 @@ export default (clacoForm, canViewMetadata = false, canEdit = false, isCategoryM
     ),
     card: (props) => createElement(DataCard, Object.assign({}, props, {
       id: props.data.id,
-      icon: createElement(UserAvatar, {
-        picture: props.data.user ? props.data.user.picture : undefined,
-        alt: true
-      }),
+      icon: createElement(UserAvatar, {user: props.data.user}),
       title: getCardValue(clacoForm, props.data, 'title', currentUser),
       subtitle: getCardValue(clacoForm, props.data, 'subtitle', currentUser),
       contentText: getCardValue(clacoForm, props.data, 'content', currentUser)

@@ -68,6 +68,7 @@ class PlatformController
                 'currentUser' => $currentUser,
                 'impersonated' => $this->securityManager->isImpersonated(),
                 'contexts' => $this->contextProvider->getAvailableContexts(),
+                'contextFavorites' => $this->contextProvider->getFavoriteContexts(),
                 'client' => [
                     'ip' => $request->getClientIp(),
                     'forwarded' => $request->headers->get('X-Forwarded-For'), // I can only get trusted proxies if I use symfony getClientIps()

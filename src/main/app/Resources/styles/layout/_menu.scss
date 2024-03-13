@@ -25,11 +25,11 @@
         text-decoration: none;
     }
 
-    .app-menu-logo {
+    .app-brand-logo {
         height: $brand-logo-size;
     }
 
-    .app-menu-title {
+    .app-brand-title {
         text-align: left;
         margin: 0;
         font-size: $brand-font-size;
@@ -46,7 +46,7 @@
 }
 
 .app-menu-cover {
-    height: 7rem;
+    height: 6.5rem;
     text-align: center;
     padding-bottom: 2.5rem;
     flex-shrink: 0;
@@ -59,63 +59,55 @@
     align-items: center;
     padding: map-get($spacers, 3);
     padding-top: 0;
-    min-height: 7rem;
-    //margin-bottom: map-get($spacers, 3);
+    min-height: 6.5rem;
 
-    .user-avatar {
-        max-width: 5rem;
-        max-height: 5rem;
+    > a {
         margin-top: -2.5rem;
         background: $toolbar-bg;
         padding: $thumbnail-padding;
+        border-radius: 50%;
     }
 
+    .user-status-bullet {
+        border-color: $toolbar-bg !important;
+    }
 
+    .app-menu-user {
+        color: $toolbar-color;
+        small {
+            color: $toolbar-link-color;
+        }
+    }
+}
 
-    h1 {
+.app-menu-header {
+    .app-menu-title {
+        margin: 0;
+        padding: 0;
         font-weight: $font-weight-medium;
-        font-size: $font-size-lg;
-    }
-
-    nav {
         font-size: $font-size-base;
-        gap: map-get($spacers, 2)
     }
 
     .btn {
-        padding: .5rem;
-        position: relative;
-        color: $toolbar-link-color;
-        border: 1px solid $toolbar-link-color;
-        line-height: $fa-fw-width;
-        border-radius: $border-radius-pill;
+        box-shadow: none !important;
+        border-color: transparent !important;
 
         &:hover {
             color: $toolbar-link-hover-color;
-        }
-        &:focus {
-            color: $toolbar-link-active-color;
+            //background: $toolbar-link-hover-bg;
         }
 
-        .action-subscript {
-            position: absolute;
-            top: 105%;
-            left: 50%;
-            transform: translate(-50%,-50%);
+        &:focus,
+        &:active,
+        &.active {
+            &,
+            &:hover,
+            &:focus {
+                color: $toolbar-link-active-color;
+                //background-color: $toolbar-link-active-bg;
+            }
         }
     }
-}
-
-.app-user-status {
-    display: inline-block;
-    border: .25em solid $menu;
-    width: 1.5em;
-    height: 1.5em;
-}
-
-.app-menu-title {
-    font-weight: $font-weight-medium;
-    font-size: $font-size-lg;
 }
 
 .app-menu-impersonation {
@@ -128,13 +120,12 @@
     display: flex;
     flex-direction: column;
     justify-content: stretch;
+    gap: $toolbar-link-spacer-y;
 }
 
 .app-menu-item {
-    /*display: block;
-    width: 100%;*/
     padding: $toolbar-link-padding-y $toolbar-link-padding-x;
-    margin: $toolbar-link-spacer-y $toolbar-link-spacer-x;
+    margin: 0 $toolbar-link-spacer-x;
     color: $toolbar-link-color;
     background: $toolbar-link-bg;
     border: none;

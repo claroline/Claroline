@@ -12,7 +12,7 @@ import {User as UserTypes} from '#/main/community/prop-types'
 import {LinkButton} from '#/main/app/buttons/link/components/button'
 
 import {route} from '#/main/community/user/routing'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 
 /**
  * Representation of a User message.
@@ -23,13 +23,13 @@ const ContentMessage = props => {
   if (props.user) {
     SenderComponent = (
       <LinkButton target={route(props.user)} className="user-message-sender">
-        <UserAvatar picture={props.user && props.user.picture} alt={false} />
+        <UserAvatar user={props.user} size="md" />
       </LinkButton>
     )
   } else {
     SenderComponent = (
       <span className="user-message-sender">
-        <UserAvatar alt={false} />
+        <UserAvatar size="md" />
       </span>
     )
   }

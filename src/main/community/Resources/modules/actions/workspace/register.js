@@ -12,8 +12,8 @@ import {MODAL_REGISTER} from '#/main/community/modals/register'
 export default (workspaces, refresher) => ({
   name: 'register-users-groups',
   type: MODAL_BUTTON,
-  icon: 'fa fa-fw fa-users',
-  label: trans('register_users_groups', {}, 'platform'),
+  icon: 'fa fa-fw fa-user-plus',
+  label: trans('register_users', {}, 'platform'),
   displayed: -1 !== workspaces.findIndex(workspace => !get(workspace, 'meta.model') && !get(workspace, 'meta.archived') && hasPermission('administrate', workspace)),
   modal: [MODAL_REGISTER, {
     title: trans('register_users_groups'),

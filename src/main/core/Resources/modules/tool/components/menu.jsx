@@ -14,20 +14,15 @@ const ToolMenu = (props) =>
       toolbar="configure more"
       tooltip="bottom"
       actions={getActions(props.toolData, props.currentContext, {
-        update: () => props.reload()
+        update: props.reload
       }, props.path)}
     />
   </PageMenu>
 
 ToolMenu.propTypes = {
   path: T.string.isRequired,
-  /*name: T.string.isRequired,*/
-
-  /*loaded: T.bool.isRequired,
-  notFound: T.bool.isRequired,*/
-
   currentContext: T.shape({
-    type: T.oneOf(['administration', 'desktop', 'workspace', 'account', 'home']),
+    type: T.oneOf(['administration', 'desktop', 'workspace', 'account', 'public']),
     data: T.object
   }).isRequired,
   toolData: T.shape({

@@ -5,14 +5,18 @@ import {trans} from '#/main/app/intl'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContextMenu} from '#/main/app/context/containers/menu'
 
+import {MenuBrand} from '#/main/app/layout/containers/brand'
+
 const PublicMenu = (props) =>
   <ContextMenu
-    basePath={props.basePath}
-    title={trans('home')}
+    //basePath={props.basePath}
+    title={
+      <MenuBrand />
+    }
 
     tools={props.tools}
     shortcuts={props.shortcuts}
-    actions={[
+    /*actions={[
       {
         name: 'login',
         type: LINK_BUTTON,
@@ -26,11 +30,11 @@ const PublicMenu = (props) =>
         target: '/registration',
         displayed: props.selfRegistration && !props.authenticated && !props.unavailable
       }
-    ]}
+    ]}*/
   />
 
 PublicMenu.propTypes = {
-  basePath: T.string.isRequired,
+  //basePath: T.string.isRequired,
   shortcuts: T.arrayOf(T.shape({
     type: T.oneOf(['tool', 'action']).isRequired,
     name: T.string.isRequired

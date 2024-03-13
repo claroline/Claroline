@@ -10,7 +10,7 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
-import {MenuBrand} from '#/main/app/layout/menu/containers/brand'
+import {MenuBrand} from '#/main/app/layout/containers/brand'
 
 class MenuMain extends Component {
   constructor(props) {
@@ -122,8 +122,6 @@ class MenuMain extends Component {
 
 MenuMain.propTypes = {
   title: T.string,
-  //backAction: T.shape(ActionTypes.propTypes),
-
   tools: T.arrayOf(T.shape({
     icon: T.string.isRequired,
     name: T.string.isRequired,
@@ -146,8 +144,6 @@ MenuMain.propTypes = {
 
   opened: T.bool.isRequired,
   untouched: T.bool.isRequired,
-  section: T.oneOf(['tool', 'tools', 'actions']),
-  changeSection: T.func.isRequired,
   close: T.func.isRequired
 }
 

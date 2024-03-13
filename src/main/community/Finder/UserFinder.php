@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Doctrine\ORM\QueryBuilder;
 
 class UserFinder extends AbstractFinder
@@ -41,6 +42,35 @@ class UserFinder extends AbstractFinder
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'status':
+                    $now = new \DateTime();
+                    switch ($filterValue) {
+                        case 'online':
+                            $qb
+                                ->andWhere('obj.status IS NULL AND obj.lastActivity >= :activityThreshold')
+                                ->setParameter('activityThreshold', DateNormalizer::normalize($now->sub(\DateInterval::createFromDateString('15 minute'))));
+                            break;
+                        case 'absent':
+                            $qb
+                                ->andWhere('(obj.status = :userStatus OR (obj.status IS NULL AND obj.lastActivity < :activityLow AND obj.lastActivity >= :activityHigh))')
+                                ->setParameter('userStatus', $filterValue)
+                                ->setParameter('activityLow', DateNormalizer::normalize($now->sub(\DateInterval::createFromDateString('15 minute'))))
+                                ->setParameter('activityHigh', DateNormalizer::normalize($now->sub(\DateInterval::createFromDateString('30 minute'))));
+                            break;
+                        case 'dont_disturb':
+                            $qb
+                                ->andWhere('obj.status = :userStatus')
+                                ->setParameter('userStatus', $filterValue);
+                            break;
+                        case 'offline':
+                            $qb
+                                ->andWhere('(obj.status = :userStatus OR obj.lastActivity IS NULL OR (obj.status IS NULL AND obj.lastActivity < :activityThreshold))')
+                                ->setParameter('userStatus', $filterValue)
+                                ->setParameter('activityThreshold', DateNormalizer::normalize($now->sub(\DateInterval::createFromDateString('45 minute'))));
+                            break;
+                    }
+                    break;
+
                 case 'username':
                     // because some users use numeric username
                     // if we let the default, the finder will add a strict check instead of a LIKE

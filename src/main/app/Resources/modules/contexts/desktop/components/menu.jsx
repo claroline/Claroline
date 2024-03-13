@@ -9,7 +9,7 @@ import {getActions} from '#/main/core/desktop'
 const DesktopMenu = props =>
   <ContextMenu
     basePath={props.basePath}
-    title={trans('desktop')}
+    title={trans('desktop', {}, 'context')}
     tools={props.tools}
     shortcuts={props.shortcuts}
     actions={getActions(props.currentUser)}

@@ -5,9 +5,11 @@ import {trans} from '#/main/app/intl/translation'
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {UserCard} from '#/main/community/user/components/card'
 import {getActions, getDefaultAction} from '#/main/community/user/utils'
+import {constants} from '#/main/app/user/constants'
+import {UserStatus} from '#/main/app/user/components/status'
 
 export default (contextType, contextData, refresher, currentUser) => {
   let basePath
@@ -21,7 +23,7 @@ export default (contextType, contextData, refresher, currentUser) => {
     primaryAction: (user) => getDefaultAction(user, refresher, basePath, currentUser),
     actions: (users) => getActions(users, refresher, basePath, currentUser),
     definition: [
-      {
+      /*{
         name: 'picture',
         type: 'user',
         label: trans('avatar'),
@@ -31,21 +33,27 @@ export default (contextType, contextData, refresher, currentUser) => {
         render: (user) => (
           <UserAvatar picture={user.picture} alt={false} />
         )
-      }, {
+      }, */{
         name: 'username',
         type: 'username',
         label: trans('username'),
         displayed: true,
-        primary: true
-      }, {
-        name: 'lastName',
-        type: 'string',
-        label: trans('last_name'),
-        displayed: true
+        primary: true,
+        render: (user) => (
+          <div className="d-flex flex-direction-row gap-3 align-items-center">
+            <UserAvatar user={user} size="xs" />
+            {user.username}
+          </div>
+        )
       }, {
         name: 'firstName',
         type: 'string',
         label: trans('first_name'),
+        displayed: true
+      }, {
+        name: 'lastName',
+        type: 'string',
+        label: trans('last_name'),
         displayed: true
       }, {
         name: 'email',
@@ -73,9 +81,19 @@ export default (contextType, contextData, refresher, currentUser) => {
         alias: 'created',
         label: trans('creation_date')
       }, {
-        name: 'meta.lastActivity',
+        name: 'status',
+        type: 'choice',
+        label: trans('status'),
+        displayable: true,
+        filterable: true,
+        sortable: false,
+        options: {
+          choices: constants.USER_STATUSES
+        },
+        render: (user) => <UserStatus user={user} variant="badge" />
+      }, {
+        name: 'lastActivity',
         type: 'date',
-        alias: 'lastActivity',
         label: trans('last_activity'),
         displayed: true,
         options: {

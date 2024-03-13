@@ -6,7 +6,7 @@ import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 import {DataCard} from '#/main/app/data/components/card'
 import {UserMicro} from '#/main/core/user/components/micro'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {ScoreGauge} from '#/main/core/layout/gauge/components/score'
 
 import {Paper as PaperTypes} from '#/plugin/exo/resources/quiz/papers/prop-types'
@@ -33,7 +33,7 @@ const PaperCard = props => {
           height={size}
           displayValue={value => undefined === value || null === value ? '?' : value+''}
         /> :
-        <UserAvatar picture={get(props.data, 'user.picture')} alt={true} />
+        <UserAvatar user={get(props.data, 'user')} size="md" />
       }
       title={props.data.user ? props.data.user.firstName + ' ' + props.data.user.lastName : trans('unknown')}
       subtitle={trans('attempt', {number: props.data.number}, 'quiz')}

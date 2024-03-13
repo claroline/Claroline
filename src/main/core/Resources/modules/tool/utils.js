@@ -112,12 +112,12 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
           label: trans('desktop'),
           displayed: -1 !== breadcrumbItems.indexOf('desktop'),
           target: '/desktop'
-        }, {
+        }, /*{
           type: LINK_BUTTON,
           label: trans('my_workspaces', {}, 'workspace'),
           displayed: -1 !== breadcrumbItems.indexOf('workspaces'),
           target: toolRoute('workspaces')
-        }, {
+        }, */{
           type: LINK_BUTTON,
           label: contextData.name,
           displayed: -1 !== breadcrumbItems.indexOf('current'),

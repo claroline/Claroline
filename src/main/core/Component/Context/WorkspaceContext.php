@@ -39,6 +39,11 @@ class WorkspaceContext extends AbstractContext
         return 'book';
     }
 
+    public static function getOrder(): int
+    {
+        return 3;
+    }
+
     public function getObject(?string $contextId): ?Workspace
     {
         if (empty($contextId)) {

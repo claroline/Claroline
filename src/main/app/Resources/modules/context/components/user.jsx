@@ -9,7 +9,7 @@ import {asset} from '#/main/app/config'
 import {Button, Toolbar} from '#/main/app/action'
 import {CALLBACK_BUTTON, LINK_BUTTON, LinkButton, MenuButton, URL_BUTTON} from '#/main/app/buttons'
 
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 import {User as UserTypes} from '#/main/community/user/prop-types'
 import {constants as userConst} from '#/main/app/user/constants'
 
@@ -45,7 +45,7 @@ const ContextImpersonation = (props) =>
   <div>
     {trans('impersonation_mode_alert')}
 
-    <div className="btn-toolbar gap-1 mt-3 justify-content-end">
+    <div className="btn-toolbar gap-1 mt-3 justify-content-end" role="presentation">
       <Button
         className="btn btn-warning"
         type={URL_BUTTON}
@@ -72,45 +72,38 @@ const ContextUser = (props) => {
   return (
     <>
       <div
-        className={classes('app-menu-cover', !isEmpty(props.currentUser.thumbnail) && 'app-menu-poster')}
-        style={!isEmpty(props.currentUser.thumbnail) && {
-          backgroundImage: `url(${asset(props.currentUser.thumbnail)})`,
+        className={classes('app-menu-cover', !isEmpty(props.currentUser.poster) && 'app-menu-poster')}
+        style={!isEmpty(props.currentUser.poster) ? {
+          backgroundImage: `url(${asset(props.currentUser.poster)})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center'
-        }}
-      >
-        {props.children}
-      </div>
+        } : undefined}
+        role="presentation"
+      />
 
       <article className="app-menu-current-user">
-        <LinkButton className="position-relative" target="/account/profile">
-          <UserAvatar picture={props.currentUser.picture} alt={false} />
-          <span
-            className="app-user-status position-absolute top-100 start-100 translate-middle m-n2 bg-success rounded-circle"
-            aria-hidden={true}
-          />
+        <LinkButton target="/account/profile">
+          <UserAvatar user={props.currentUser} noStatusTooltip={true} size="lg" />
         </LinkButton>
 
         <MenuButton
           id="current-user-menu"
-          className="mt-2 text-center"
+          className="app-menu-user mt-2 text-center"
           menu={{
             className: 'dropdown-menu-full',
             items: [].concat(Object.keys(userConst.USER_STATUSES).map((status) => ({
               name: status,
               type: CALLBACK_BUTTON,
-              //active: userConst.USER_STATUS_ONLINE === status,
-              //label: userConst.USER_STATUSES[status],
-              callback: () => true,
+              callback: () => props.changeStatus(props.currentUser, status),
               primary: true,
               label: (
-                <div className="d-flex align-items-start">
+                <div className="d-flex align-items-start" role="presentation">
                   <span className={classes('d-inline-block p-1 my-2 rounded-circle icon-with-text-right', `bg-${userConst.USER_STATUS_COLORS[status]}`)} aria-hidden={true} />
 
-                  <span>
+                  <span role="presentation">
                     {userConst.USER_STATUSES[status]}
                     {userConst.USER_STATUS_OFFLINE === status &&
-                      <small className="text-secondary text-wrap d-block">{trans('user_offline_help')}</small>
+                      <small className="text-body-secondary text-wrap d-block">{trans('user_offline_help')}</small>
                     }
                   </span>
                 </div>
@@ -144,71 +137,8 @@ const ContextUser = (props) => {
           }}
         >
           {props.currentUser.name}
-          <small className="d-block text-secondary">{userConst.USER_STATUSES[userConst.USER_STATUS_ONLINE]}</small>
+          <small className="d-block">{userConst.USER_STATUSES[props.currentUser.status]}</small>
         </MenuButton>
-
-        {/*<h1 className="mb-0 mt-2">{props.currentUser.name}</h1>
-        <p className="mb-3">En ligne</p>*/}
-
-        {false &&
-          <Toolbar
-            className="d-flex flex-direction-row justify-content-between"
-            buttonName="btn btn-menu"
-            onClick={props.closeMenu}
-            tooltip="bottom"
-            actions={[
-              {
-                name: 'profile',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-user',
-                label: trans('Mon profile', {}, 'actions'),
-                target: '/account/profile'
-              }, {
-                name: 'notifications',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-bell',
-                label: trans('notifications', {}, 'notification'),
-                target: '/registration',
-                subscript: {
-                  type: 'label',
-                  status: 'primary',
-                  value: '99+'
-                }
-              }, /*{
-              name: 'history',
-              type: MODAL_BUTTON,
-              icon: 'fa fa-fw fa-history',
-              label: trans('history', {}, 'history'),
-              modal: [MODAL_HISTORY]
-            }, {
-              name: 'favorites',
-              type: MODAL_BUTTON,
-              icon: 'fa fa-fw fa-star',
-              label: trans('favourites', {}, 'favourite'),
-              modal: [MODAL_FAVOURITES]
-            }, */{
-                name: 'parameters',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-sliders',
-                label: trans('Mon compte', {}, 'actions'),
-                target: '/account',
-                subscript: {
-                  type: 'text',
-                  status: 'warning',
-                  value: <span className="fa fa-warning" />
-                }
-              }, {
-                name: 'administration',
-                type: LINK_BUTTON,
-                icon: 'fa fa-fw fa-wrench',
-                label: trans('Administration', {}, 'actions'),
-                target: '/administration',
-                displayed: false
-              }
-            ]}
-          />
-        }
-
       </article>
     </>
   )
@@ -224,6 +154,7 @@ ContextUser.propTypes = {
   })),
   impersonated: T.bool.isRequired,
   registration: T.bool.isRequired,
+  changeStatus: T.func.isRequired,
   closeMenu: T.func
 }
 
