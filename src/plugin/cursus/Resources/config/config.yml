@@ -36,6 +36,11 @@ plugin:
           context: [workspace, desktop]
           tags: [community, event]
 
+        - name: event_presences
+          type: list
+          context: [workspace, desktop]
+          tags: [community, event]
+
     templates:
         - name: training_course
           type: pdf

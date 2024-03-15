@@ -1,15 +1,24 @@
 {
   "my_course_sessions": "Liste de mes sessions de formation",
   "my_course_sessions_desc": "Permet de lister les sessions auxquels l'utilisateur courant est inscrit.",
+
   "public_course_sessions": "Liste des sessions de formation publiques",
   "public_course_sessions_desc": "Permet de lister les sessions avec inscriptions publiques.",
+
   "course_sessions": "Liste des sessions de formation",
   "course_sessions_desc": "Permet de lister les sessions de formation.",
+
   "all_courses": "Liste de toutes les formations",
   "all_courses_desc": "Permet de lister les formations de la plateforme.",
   "public_courses_desc": "Permet de lister l'ensemble des formations publiques.",
+
+  "training_event": "Séance de formation",
   "training_events": "Liste des séances",
   "training_events_desc": "Permet de lister les séances de formation.",
+
   "my_training_events": "Liste de mes séances de formation",
-  "my_training_events_desc": "Permet de lister les séances auxquelles l'utilisateur courant est inscrit."
+  "my_training_events_desc": "Permet de lister les séances auxquelles l'utilisateur courant est inscrit.",
+
+  "event_presences": "Liste des présences",
+  "event_presences_desc": "Permet de lister les présences à une séance de formation."
 }
