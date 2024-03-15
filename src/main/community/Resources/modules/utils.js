@@ -5,7 +5,7 @@ import {constants} from '#/main/community/constants'
 
 function displayUsername(user = null) {
   if (user) {
-    return user.firstName + ' ' + user.lastName
+    return user.name
   }
 
   return trans('unknown')

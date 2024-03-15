@@ -1,10 +1,10 @@
-import React, {createElement, Component, Fragment} from 'react'
+import React, {createElement, Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {Helmet} from 'react-helmet'
 
 import {theme} from '#/main/theme/config'
 import {trans} from '#/main/app/intl/translation'
-import {withReducer} from '#/main/app/store/components/withReducer'
+import {withReducer} from '#/main/app/store/reducer'
 import {makeCancelable} from '#/main/app/api'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentForbidden} from '#/main/app/content/components/forbidden'
@@ -15,7 +15,7 @@ import {getTool} from '#/main/core/tool/utils'
 const Tool = props => {
   if (props.loaded) {
     return (
-      <Fragment>
+      <>
         {props.children}
 
         {0 !== props.styles.length &&
@@ -25,7 +25,7 @@ const Tool = props => {
             )}
           </Helmet>
         }
-      </Fragment>
+      </>
     )
   }
 

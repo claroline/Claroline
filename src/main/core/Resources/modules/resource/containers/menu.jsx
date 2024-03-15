@@ -1,22 +1,25 @@
 import {connect} from 'react-redux'
 
 import {withRouter} from '#/main/app/router'
-import {withReducer} from '#/main/app/store/components/withReducer'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {ResourceMenu as ResourceMenuComponent} from '#/main/core/resource/components/menu'
-import {selectors, reducer} from '#/main/core/resource/store'
+import {selectors, actions} from '#/main/core/resource/store'
 
 const ResourceMenu = withRouter(
-  withReducer(selectors.STORE_NAME, reducer)(
-    connect(
-      (state) => ({
-        path: selectors.path(state),
-        loaded: selectors.loaded(state),
-        resourceId: selectors.id(state),
-        resourceType: selectors.resourceType(state)
-      })
-    )(ResourceMenuComponent)
-  )
+  connect(
+    (state) => ({
+      path: selectors.path(state),
+      basePath: selectors.basePath(state),
+      resourceNode: selectors.resourceNode(state),
+      currentUser: securitySelectors.currentUser(state)
+    }),
+    (dispatch) => ({
+      reload() {
+        dispatch(actions.setResourceLoaded(false))
+      }
+    })
+  )(ResourceMenuComponent)
 )
 
 export {

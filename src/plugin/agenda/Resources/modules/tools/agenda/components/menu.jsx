@@ -8,7 +8,6 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Calendar} from '#/main/core/layout/calendar/components/calendar'
 import {Menu} from '#/main/app/overlays/menu'
-import {MenuSection} from '#/main/app/layout/menu/components/section'
 import {ContentSummary} from '#/main/app/content/components/summary'
 import {ColorChart} from '#/main/theme/color/containers/color-chart'
 
@@ -88,11 +87,7 @@ class AgendaMenu extends Component {
 
   render() {
     return (
-      <MenuSection
-        {...omit(this.props, 'history', 'path', 'view', 'selected')}
-        className="agenda-menu"
-        title={trans('agenda', {}, 'tools')}
-      >
+      <>
         <Calendar
           className="my-2"
           light={true}
@@ -189,7 +184,7 @@ class AgendaMenu extends Component {
             }
           ])}
         />
-      </MenuSection>
+      </>
     )
   }
 }

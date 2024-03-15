@@ -22,7 +22,7 @@ export const actions = {}
 
 actions.updateUser = makeActionCreator(SECURITY_USER_UPDATE, 'user')
 
-actions.changeUser = (user, impersonated = false, contexts = []) => (dispatch, getState) => {
+actions.changeUser = (user, impersonated = false, contexts = [], contextFavorites = []) => (dispatch, getState) => {
   // we will dispatch action only if the user has really changed
   // this will avoid false positive as it is used by other ui components
   // to know when to invalidate/reload data for the new user
@@ -32,12 +32,13 @@ actions.changeUser = (user, impersonated = false, contexts = []) => (dispatch, g
       type: SECURITY_USER_CHANGE,
       user: user,
       impersonated: impersonated,
-      contexts: contexts
+      contexts: contexts,
+      contextFavorites: contextFavorites
     })
   }
 }
 
-actions.login = (username, password, rememberMe) => ({
+actions.login = (username, password, rememberMe) => (dispatch) => dispatch({
   [apiConst.API_REQUEST]: {
     silent: true,
     forceReauthenticate: false,
@@ -50,7 +51,7 @@ actions.login = (username, password, rememberMe) => ({
         remember_me: rememberMe
       })
     },
-    success: (response, dispatch) => dispatch(actions.onLogin(response))
+    success: (response) => dispatch(actions.onLogin(response))
   }
 })
 
@@ -66,7 +67,7 @@ actions.onLogin = (response) => (dispatch) => {
     }))
   }
 
-  dispatch(actions.changeUser(response.user, false, response.contexts))
+  dispatch(actions.changeUser(response.user, false, response.contexts, response.contextFavorites))
 
   if (!isEmpty(response.messages)) {
     dispatch(modalActions.showModal(MODAL_CONNECTION, {
@@ -79,6 +80,6 @@ actions.logout = () => ({
   [apiConst.API_REQUEST]: {
     silent: true,
     url: ['claro_security_logout'],
-    success: (response, dispatch) => dispatch(actions.changeUser(null, false, []))
+    success: (response, dispatch) => dispatch(actions.changeUser(null, false, [], []))
   }
 })

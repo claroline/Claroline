@@ -15,6 +15,7 @@ import {ContentHtml} from '#/main/app/content/components/html'
 
 import {User as UserTypes} from '#/main/community/prop-types'
 import {UserAvatar} from '#/main/app/user/components/avatar'
+import {displayUsername} from '#/main/community/utils'
 
 class CommentForm extends Component {
   constructor(props) {
@@ -47,9 +48,7 @@ class CommentForm extends Component {
         <div className="user-comment">
           <div className="user-comment-meta">
             <div className="user-comment-info">
-              {this.props.user && this.props.user.name ?
-                this.props.user.name : trans('unknown')
-              }
+              {displayUsername(this.props.user)}
             </div>
             <div className="user-comment-actions">
               <Button
@@ -155,9 +154,7 @@ const Comment = props => {
       <div className="user-comment">
         <div className="user-comment-meta">
           <div className="user-comment-info">
-            {props.user && props.user.name ?
-              props.user.name : trans('unknown')
-            }
+            {displayUsername(props.user)}
 
             {props.date &&
               <div className="date">{trans('published_at', {date: displayDate(props.date, true, true)})}</div>

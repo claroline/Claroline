@@ -84,16 +84,17 @@ class ContextMenu extends Component
         show: this.props.opened
       })}>
         {this.props.title &&
-          <header className="app-menu-header m-3 ms-4 me-2 d-flex align-items-center justify-content-between">
+          <header className="app-menu-header m-3 ms-4 me-1 d-flex align-items-center justify-content-between">
             <h1 className="app-menu-title text-truncate d-block">{this.props.title}</h1>
 
             {(!isEmpty(this.props.actions) || !Array.isArray(this.props.actions)) &&
               <Toolbar
                 id="app-menu-actions"
+                className="flex-shrink-0"
                 buttonName="btn"
                 actions={this.props.actions}
                 onClick={this.autoClose}
-                toolbar="more"
+                toolbar="favourite more"
                 tooltip="bottom"
               />
             }

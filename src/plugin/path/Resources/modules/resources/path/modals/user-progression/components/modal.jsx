@@ -13,6 +13,7 @@ import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
+import {displayUsername} from '#/main/community/utils'
 
 const UserProgressionModal = props => {
   function getStepSummary(step) {
@@ -50,7 +51,7 @@ const UserProgressionModal = props => {
       {...omit(props, 'basePath', 'evaluation', 'path', 'stepsProgression', 'fetchUserStepsProgression', 'resetUserStepsProgression')}
       icon="fa fa-fw fa-tasks"
       title={trans('progression')}
-      subtitle={props.evaluation.user.name}
+      subtitle={displayUsername(props.evaluation.user)}
       onEntering={() => props.fetchUserStepsProgression(props.path.id, props.evaluation.user.id)}
       onExiting={() => props.resetUserStepsProgression()}
     >

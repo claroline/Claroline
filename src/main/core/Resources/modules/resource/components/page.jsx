@@ -1,26 +1,24 @@
-import React from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
+import omit from 'lodash/omit'
 
 import {Routes} from '#/main/app/router/components/routes'
 import {Route as RouteTypes} from '#/main/app/router/prop-types'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
-
-import {route as toolRoute} from '#/main/core/tool/routing'
-import {route as workspaceRoute} from '#/main/core/workspace/routing'
+import {Await} from '#/main/app/components/await'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {getActions, getToolbar} from '#/main/core/resource/utils'
 import {ToolPage} from '#/main/core/tool/containers/page'
-import {constants as toolConst} from '#/main/core/tool/constants'
-import {ResourceRestrictions} from '#/main/core/resource/components/restrictions'
+import {ResourceRestrictions} from '#/main/core/resource/containers/restrictions'
 
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
-import {UserProgression} from '#/main/core/resource/components/user-progression'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
+import {ResourceMenu} from '#/main/core/resource/containers/menu'
+import {getResource} from '#/main/core/resources'
 
 // FIXME
 import {EvaluationMain} from '#/main/evaluation/resource/evaluation/containers/main'
@@ -28,13 +26,9 @@ import {LogsMain} from '#/main/log/resource/logs/containers/main'
 
 const ResourcePage = (props) => {
   // remove workspace root from path (it's already known by the breadcrumb)
+  // remove resource from path (added by ToolPage)
   // find a better way to handle this
-  let ancestors
-  if (toolConst.TOOL_WORKSPACE === props.contextType) {
-    ancestors = props.resourceNode.path.slice(1)
-  } else {
-    ancestors = props.resourceNode.path.slice(0)
-  }
+  let ancestors  = props.resourceNode.path.slice(1, props.resourceNode.path.length - 1)
 
   const routes = [
     {
@@ -48,17 +42,15 @@ const ResourcePage = (props) => {
 
   return (
     <ToolPage
-      id={`resource-${props.resourceNode.id}`}
-      className={classes('resource-page', `${props.resourceNode.meta.type}-page`)}
+      className={classes('resource-page', `${props.resourceNode.meta.type}-page`, props.className)}
       meta={{
         title: props.resourceNode.name,
         description: props.resourceNode.meta ? props.resourceNode.meta.description : null
       }}
       embedded={props.embedded}
       showHeader={props.embedded ? props.showHeader : true}
-      showTitle={get(props.resourceNode, 'display.showTitle')}
-      title={props.resourceNode.name}
-      subtitle={props.subtitle}
+      /*showTitle={get(props.resourceNode, 'display.showTitle')}*/
+      title={props.subtitle || props.resourceNode.name}
       path={[].concat(ancestors.map(ancestorNode => ({
         type: LINK_BUTTON,
         label: ancestorNode.name,
@@ -70,49 +62,25 @@ const ResourcePage = (props) => {
           mimeType={props.resourceNode.meta.mimeType}
         /> : undefined
       }
-      nav={props.nav}
-      /*primaryAction={getToolbar(props.primaryAction, true)}*/
-      actions={getActions([props.resourceNode], {
-        add: () => {
-          props.reload()
-        },
-        update: (resourceNodes) => {
-          // checks if the action have modified the current node
-          const currentNode = resourceNodes.find(node => node.id === props.resourceNode.id)
-          if (currentNode) {
-            // grabs updated data
-            props.reload()
-          }
-        },
-        delete: (resourceNodes) => {
-          // checks if the action have deleted the current node
-          const currentNode = resourceNodes.find(node => node.id === props.resourceNode.id)
-          if (currentNode) {
-            let redirect
-            if (toolConst.TOOL_WORKSPACE === props.contextType && currentNode.workspace) {
-              redirect = workspaceRoute(currentNode.workspace, 'resources')
-            } else {
-              redirect = toolRoute('resources')
+
+      menu={
+        <Await
+          for={getResource(props.type)}
+          then={(module) => {
+            if (module.default.menu) {
+              return createElement(module.default.menu, {path: `${props.basePath}/${props.resourceNode.slug}`})
             }
 
-            if (currentNode.parent) {
-              redirect += '/'+currentNode.parent.slug
-            }
+            return createElement(ResourceMenu, {path: `${props.basePath}/${props.resourceNode.slug}`})
+          }}
+        />
+      }
 
-            props.history.push(redirect)
-          }
-        }
-      }, props.basePath, props.currentUser, false, props.disabledActions).then((actions) => [].concat(props.customActions || [], actions))}
+      {...omit(props, 'name', 'className', 'path', 'basePath', 'resourceNode', 'poster', 'accessErrors', 'userEvaluation', 'showHeader')}
+      actions={props.customActions || props.actions}
     >
       {!isEmpty(props.accessErrors) &&
-        <ResourceRestrictions
-          resourceNode={props.resourceNode}
-          errors={props.accessErrors}
-          dismiss={props.dismissRestrictions}
-          managed={props.managed}
-          authenticated={props.authenticated}
-          checkAccessCode={(code) => props.checkAccessCode(props.resourceNode, code, props.embedded)}
-        />
+        <ResourceRestrictions />
       }
 
       {isEmpty(props.accessErrors) && !isEmpty(routes) &&
@@ -131,18 +99,16 @@ const ResourcePage = (props) => {
 } 
 
 ResourcePage.propTypes = {
-  history: T.shape({
-    push: T.func.isRequired
-  }).isRequired,
-
+  className: T.string,
   basePath: T.string,
-  contextType: T.string.isRequired,
-  currentUser: T.object,
   embedded: T.bool,
   showHeader: T.bool,
-  managed: T.bool.isRequired,
-  authenticated: T.bool.isRequired,
+  type: T.string.isRequired,
+  /**
+   * @deprecated
+   */
   subtitle: T.string,
+  title: T.string,
   path: T.arrayOf(T.shape({
     label: T.string.isRequired,
     target: T.string.isRequired
@@ -157,10 +123,6 @@ ResourcePage.propTypes = {
 
   accessErrors: T.object,
 
-  reload: T.func.isRequired,
-  dismissRestrictions: T.func.isRequired,
-  checkAccessCode: T.func,
-
   /**
    * The current user evaluation.
    */
@@ -172,6 +134,13 @@ ResourcePage.propTypes = {
   // it can contain more than one action name
   primaryAction: T.string,
 
+  actions: T.arrayOf(T.shape(
+    ActionTypes.propTypes
+  )),
+
+  /**
+   * @deprecated use actions
+   */
   customActions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),
@@ -187,7 +156,7 @@ ResourcePage.propTypes = {
     exact: T.bool
   })),
   children: T.node,
-  disabledActions: T.arrayOf(T.string)
+  /*disabledActions: T.arrayOf(T.string)*/
 }
 
 ResourcePage.defaultProps = {

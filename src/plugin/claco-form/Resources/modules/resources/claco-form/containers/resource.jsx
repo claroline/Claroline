@@ -24,7 +24,8 @@ const ClacoFormResource = withRouter(
         canAddEntry: selectors.canAddEntry(state),
         canSearchEntry: selectors.canSearchEntry(state),
         defaultHome: selectors.params(state) ? selectors.params(state).default_home : null,
-        hasStatistics: selectors.hasStatistics(state)
+        hasStatistics: selectors.hasStatistics(state),
+        randomEnabled: selectors.clacoForm(state).random.enabled
       }),
       (dispatch) => ({
         resetForm(formData) {

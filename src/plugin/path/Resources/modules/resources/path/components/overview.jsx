@@ -12,7 +12,7 @@ import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
-import {PathSummary} from '#/plugin/path/resources/path/components/summary'
+import {PathSummary} from '#/plugin/path/resources/path/containers/summary'
 
 const PathOverview = (props) =>
   <ResourceOverview
@@ -52,18 +52,7 @@ const PathOverview = (props) =>
       {!isEmpty(props.path.steps) &&
         <>
           <h3 className="h2">{trans('summary')}</h3>
-          <PathSummary
-            className="component-container"
-            basePath={props.basePath}
-            path={props.path}
-            stepsProgression={props.stepsProgression}
-            resourceEvaluations={props.resourceEvaluations}
-            onNavigate={() => {
-              scrollTo(`#resource-${props.resourceId} > .page-content`)
-            }}
-            overview={props.overview}
-            showEndPage={props.showEndPage}
-          />
+          <PathSummary className="component-container" />
         </>
       }
 
