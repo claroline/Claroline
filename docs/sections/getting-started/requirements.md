@@ -5,7 +5,7 @@ title: Requirements
 
 # Requirements
 
-- PHP 7.2 or higher with the following extensions:
+- PHP 8.1 or higher with the following extensions:
     - curl
     - dom
     - fileinfo
@@ -20,8 +20,8 @@ title: Requirements
     - zip
 - MySQL/MariaDB 8.0 or higher
 - [Composer](https://getcomposer.org) 2 or higher
-- [node.js](https://nodejs.org) 10 or higher
-- [npm](https://docs.npmjs.com) 6 or higher
+- [node.js](https://nodejs.org) 18 or higher
+- [npm](https://docs.npmjs.com) 8 or higher
 - [Git](https://git-scm.com/)
 
 It's also highly recommended installing Claroline on an UNIX-like OS.
