@@ -1,15 +1,24 @@
 {
   "my_course_sessions": "List of my training sessions",
   "my_course_sessions_desc": "Allows to list the sessions to which the current user is registered.",
+
   "public_course_sessions": "List of public training sessions",
   "public_course_sessions_desc": "Allows to list sessions with public registrations.",
+
   "course_sessions": "List of training sessions",
   "course_sessions_desc": "Allows to list training sessions.",
+
   "all_courses": "List of courses",
   "all_courses_desc": "Allow to list platform trainings.",
   "public_courses_desc": "Allow to list all public courses.",
+
+  "training_event": "Training session event",
   "training_events": "List of session events",
   "training_events_desc": "Allow to list all training events.",
+
   "my_training_events": "List of my training events",
-  "my_training_events_desc": "Allows to list the events to which the current user is registered."
+  "my_training_events_desc": "Allows to list the events to which the current user is registered.",
+
+  "my_event_presences": "List of my event presences",
+  "my_event_presences_desc": "Allow to list my event presences."
 }
