@@ -13,6 +13,7 @@ import {LinkButton} from '#/main/app/buttons/link/components/button'
 
 import {route} from '#/main/community/user/routing'
 import {UserAvatar} from '#/main/app/user/components/avatar'
+import {displayUsername} from '#/main/community/utils'
 
 /**
  * Representation of a User message.
@@ -44,9 +45,7 @@ const ContentMessage = props => {
       <div className="user-message">
         <div className="user-message-meta">
           <div className="user-message-info">
-            {props.user && props.user.name ?
-              props.user.name : trans('anonymous')
-            }
+            {displayUsername(props.user)}
 
             {props.date &&
               <div className="date">{trans('published_at', {date: displayDate(props.date, true, true)})}</div>

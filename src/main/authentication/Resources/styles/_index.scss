@@ -8,7 +8,7 @@
 
 // adds a bg on login, reset-password, registration
 .auth-page {
-  background-color: $body-bg; // fallback to body color if theme has no image
+  background-color: var(--#{$prefix}body-bg); // fallback to body color if theme has no image
 
   // styles for bg image
   background-image: url($login-bg-image);

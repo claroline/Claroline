@@ -59,11 +59,11 @@ class ParametersModal extends Component {
                   name: 'poster',
                   label: trans('poster'),
                   type: 'image'
-                }, {
+                }, /*{
                   name: 'thumbnail',
                   label: trans('thumbnail'),
                   type: 'image'
-                }, {
+                }, */{
                   name: 'display.order',
                   type: 'number',
                   label: trans('order'),
@@ -74,11 +74,11 @@ class ParametersModal extends Component {
                   name: 'display.showIcon',
                   label: trans('resource_showIcon', {}, 'resource'),
                   type: 'boolean'
-                }, {
+                }, /*{
                   name: 'display.fullscreen',
                   label: trans('resource_fullscreen', {}, 'resource'),
                   type: 'boolean'
-                }, {
+                }, */{
                   name: 'restrictions.hidden',
                   type: 'boolean',
                   label: trans('restrict_hidden')

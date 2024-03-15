@@ -1,6 +1,5 @@
-import React, {Fragment, Component, createElement} from 'react'
+import React, {Component, createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {ReactReduxContext} from 'react-redux'
 import {Helmet} from 'react-helmet'
 
 import {theme} from '#/main/theme/config'
@@ -10,9 +9,45 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {makeCancelable} from '#/main/app/api'
 import {route as toolRoute} from '#/main/core/tool/routing'
 import {getResource} from '#/main/core/resources'
+import {withReducer} from '#/main/app/store/reducer'
 
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentNotFound} from '#/main/app/content/components/not-found'
+
+const Resource = props => {
+  if (props.loaded) {
+    return (
+      <>
+        {props.children}
+
+        {0 !== props.styles.length &&
+          <Helmet>
+            {props.styles.map(style =>
+              <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
+            )}
+          </Helmet>
+        }
+      </>
+    )
+  }
+
+  return (
+    <ContentLoader
+      size="lg"
+      description={trans('loading', {}, 'resource')}
+    />
+  )
+}
+
+Resource.propTypes = {
+  loaded: T.bool.isRequired,
+  styles: T.arrayOf(T.string),
+  children: T.node
+}
+
+Resource.defaultProps = {
+  styles: []
+}
 
 class ResourceMain extends Component {
   constructor(props) {
@@ -59,8 +94,8 @@ class ResourceMain extends Component {
             if (resolved.default) {
               this.setState({
                 type: resourceType,
+                app: resolved.default.store ? withReducer(resourceType, resolved.default.store)(Resource) : Resource,
                 component: resolved.default.component,
-                store: resolved.default.store,
                 styles: resolved.default.styles || []
               })
             }
@@ -82,6 +117,15 @@ class ResourceMain extends Component {
   }
 
   render() {
+    if (!this.state.type) {
+      return (
+        <ContentLoader
+          size="lg"
+          description={trans('loading', {}, 'resource')}
+        />
+      )
+    }
+
     if (this.props.notFound) {
       return (
         <ContentNotFound
@@ -104,42 +148,18 @@ class ResourceMain extends Component {
       )
     }
 
-    return (
-      <ReactReduxContext.Consumer>
-        {({ store }) => {
-          // this will mount the requested reducer into the current redux store
-          if (this.state.type && this.state.store) {
-            store.injectReducer(this.state.type, this.state.store)
-          }
+    if (this.state.app) {
+      return createElement(this.state.app, {
+        path: this.props.path,
+        loaded: this.props.loaded,
+        styles: this.state.styles,
+        children: this.state.component && createElement(this.state.component, {
+          path: this.props.path
+        })
+      })
+    }
 
-          // just render the original component and forward its props
-          if (!this.props.loaded) {
-            return (
-              <ContentLoader
-                size="lg"
-                description={trans('loading', {}, 'resource')}
-              />
-            )
-          }
-
-          return (
-            <Fragment>
-              {this.state.component && createElement(this.state.component, {
-                path: this.props.path
-              })}
-
-              {0 !== this.state.styles.length &&
-                <Helmet>
-                  {this.state.styles.map(style =>
-                    <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
-                  )}
-                </Helmet>
-              }
-            </Fragment>
-          )
-        }}
-      </ReactReduxContext.Consumer>
-    )
+    return null
   }
 }
 

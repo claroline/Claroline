@@ -8,7 +8,7 @@ import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-form/prop-types'
 
-import {Overview} from '#/plugin/claco-form/resources/claco-form/overview/components/overview'
+import {Overview} from '#/plugin/claco-form/resources/claco-form/components/overview'
 import {EditorMain} from '#/plugin/claco-form/resources/claco-form/editor/containers/main'
 import {Entries} from '#/plugin/claco-form/resources/claco-form/player/components/entries'
 import {EntryForm} from '#/plugin/claco-form/resources/claco-form/player/components/entry-form'
@@ -35,45 +35,26 @@ function getHome(type) {
 const ClacoFormResource = props =>
   <ResourcePage
     primaryAction="add-entry"
-    nav={[
-      {
-        type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-home',
-        label: trans('resource_overview', {}, 'resource'),
-        target: `${props.path}/menu`,
-        //exact: true
-      }, {
-        type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-sitemap',
-        label: trans('Liste des fiches'),
-        target: `${props.path}/entries`
-      }, {
-        type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-sitemap',
-        label: trans('Fiche aléatoire'),
-        target: `${props.path}/random`
-      }
-    ]}
     customActions={[
-      {
+      /*{
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         target: `${props.path}/menu`
-      }, {
+      }, */{
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-pie-chart',
         label: trans('show-statistics', {}, 'actions'),
         target: `${props.path}/stats`,
         displayed: props.canEdit && props.hasStatistics
-      }, {
+      }, /*{
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-search',
         label: trans('entries_list', {}, 'clacoform'),
         displayed: props.canSearchEntry,
         target: `${props.path}/entries`,
         exact: true
-      }, {
+      }, */{
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-download',
         label: trans('export_all_entries', {}, 'clacoform'),
@@ -111,8 +92,22 @@ const ClacoFormResource = props =>
           }
         }
       }, {
-        path: '/menu',
-        component: Overview
+        path: '/',
+        component: Overview,
+        exact: true
+      }, {
+        path: '/random',
+        disabled: !props.randomEnabled,
+        onEnter: () => {
+          fetch(url(['claro_claco_form_entry_random', {clacoForm: props.clacoForm.id}]), {
+            method: 'GET' ,
+            credentials: 'include'
+          })
+            .then(response => response.json())
+            .then(entryId => {
+              props.history.push(`${props.path}/entries/${entryId}`)
+            })
+        }
       }, {
         path: '/edit',
         component: EditorMain,

@@ -16,7 +16,7 @@ const ContextNav = (props) => {
   }
 
   let pinnedContexts = [].concat(props.favoriteContexts)
-  if (props.currentContext && 'workspace' === props.currentContextType) {
+  if (!isEmpty(props.currentContext) && 'workspace' === props.currentContextType) {
     let currentPos = pinnedContexts.findIndex((context) => context.id === props.currentContext.id)
     if (-1 === currentPos) {
       pinnedContexts.unshift(props.currentContext)

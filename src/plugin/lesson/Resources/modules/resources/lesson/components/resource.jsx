@@ -14,6 +14,7 @@ import {LessonOverview} from '#/plugin/lesson/resources/lesson/containers/overvi
 import {ChapterList} from '#/plugin/lesson/resources/lesson/containers/list'
 import {getNumbering, flattenChapters} from '#/plugin/lesson/resources/lesson/utils'
 import {constants as LESSON_NUMBERINGS} from '#/plugin/lesson/resources/lesson/constants'
+import {LessonSummary} from '#/plugin/lesson/resources/lesson/containers/summary'
 
 class LessonResource extends Component {
   constructor(props) {
@@ -60,14 +61,14 @@ class LessonResource extends Component {
       <ResourcePage
         primaryAction="chapter"
         customActions={[
-          {
+          /*{
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-home',
             label: trans('show_overview'),
             displayed: this.props.overview,
             target: this.props.path,
             exact: true
-          }, {
+          }, */{
             type: CALLBACK_BUTTON,
             icon: 'fa fa-fw fa-file-pdf',
             displayed: this.props.canExport,
@@ -81,6 +82,9 @@ class LessonResource extends Component {
         ]}
         routes={[
           {
+            path: '/summary',
+            component: LessonSummary
+          }, {
             path: '/chapters',
             component: ChapterList
           }, {

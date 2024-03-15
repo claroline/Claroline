@@ -3,7 +3,7 @@
 
 .app-menu {
     overflow-y: auto; // gets its own scrollbar
-    max-width: $toolbar-size;
+
     width: 100%;
     top: 0;
     bottom: 0;
@@ -11,6 +11,12 @@
     flex-direction: column;
     background-color: $toolbar-bg;
     color: $toolbar-color;
+
+    max-width: 0;
+    transition: max-width .6s ease;
+    &.show {
+        max-width: $toolbar-size;
+    }
 }
 
 .app-menu-brand {
@@ -131,6 +137,7 @@
     border: none;
     box-shadow: none;
     text-align: left;
+    white-space: nowrap;
 
     @include border-radius($toolbar-link-border-radius);
 

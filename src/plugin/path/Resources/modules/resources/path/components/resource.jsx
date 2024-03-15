@@ -8,33 +8,20 @@ import {ResourcePage} from '#/main/core/resource/containers/page'
 import {PathOverview} from '#/plugin/path/resources/path/containers/overview'
 import {EditorMain} from '#/plugin/path/resources/path/editor/containers/main'
 import {PlayerMain} from '#/plugin/path/resources/path/player/containers/main'
+import {PathSummary} from '#/plugin/path/resources/path/containers/summary'
 
 const PathResource = props =>
   <ResourcePage
-    nav={[
-      {
-        type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-home',
-        label: trans('resource_overview', {}, 'resource'),
-        displayed: props.overview,
-        target: props.path,
-        exact: true
-      }, {
-        type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-sitemap',
-        label: trans('summary'),
-        target: `${props.path}/summary`
-      }
-    ]}
     customActions={[
-      {
+      /*{
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
         displayed: props.overview,
         target: props.path,
         exact: true
-      }, {
+      }, */{
+        name: "start",
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('start', {}, 'actions'),
@@ -43,6 +30,9 @@ const PathResource = props =>
     ]}
     routes={[
       {
+        path: '/summary',
+        component: PathSummary
+      }, {
         path: '/edit',
         component: EditorMain,
         disabled: !props.editable
