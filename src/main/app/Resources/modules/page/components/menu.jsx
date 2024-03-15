@@ -5,21 +5,29 @@ import {toKey} from '#/main/core/scaffolding/text'
 import isEmpty from 'lodash/isEmpty'
 import {Await} from '#/main/app/components/await'
 
-const PageNav = (props) => !isEmpty(props.actions) &&
-  <ul className="nav nav-underline">
-    {props.actions
-      .filter(action => undefined === action.displayed || action.displayed)
-      .map((action) =>
-        <li className="nav-item" key={action.name || toKey(action.label)}>
-          <Button
-            {...action}
-            className="nav-link"
-            /*icon={undefined}*/
-          />
-        </li>
-      )
-    }
-  </ul>
+const PageNav = (props) =>  {
+  if (isEmpty(props.actions)) {
+    return null
+  }
+
+  return (
+    <ul className="nav nav-underline">
+      {props.actions
+        .filter(action => undefined === action.displayed || action.displayed)
+        .map((action) =>
+          <li className="nav-item" key={action.name || toKey(action.label)}>
+            <Button
+              {...action}
+              className="nav-link"
+              /*icon={undefined}*/
+            />
+          </li>
+        )
+      }
+    </ul>
+  )
+}
+
 
 PageNav.propTypes = {
   actions: T.arrayOf(T.shape({

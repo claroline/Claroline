@@ -14,6 +14,7 @@ import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
 import {number, trans} from '#/main/app/intl'
 import {constants as PATH_NUMBERINGS} from '#/plugin/path/resources/path/constants'
 import {getNumbering} from '#/plugin/path/resources/path/utils'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 const PathSummary = (props) => {
   function getStepSummary(step) {
@@ -116,13 +117,24 @@ const PathSummary = (props) => {
     }]
   }
 
+  const summaryLinks = baseLinks.concat(
+    props.path.steps.map(getStepSummary)
+  ).concat(endLink)
+
+  if (0 !== summaryLinks.length) {
+    return (
+      <ContentSummary
+        className={props.className}
+        links={summaryLinks}
+        noCollapse={true}
+      />
+    )
+  }
+
   return (
-    <ContentSummary
-      className={props.className}
-      links={baseLinks.concat(
-        props.path.steps.map(getStepSummary)
-      ).concat(endLink)}
-      noCollapse={true}
+    <ContentPlaceholder
+      size="lg"
+      title={trans('no_step', {}, 'path')}
     />
   )
 }

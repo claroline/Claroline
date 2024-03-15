@@ -6,14 +6,15 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
 
 import {QuizMenu as QuizMenuComponent} from '#/plugin/exo/resources/quiz/components/menu'
+import {selectors} from '#/plugin/exo/resources/quiz/store'
 
-const QuizMenu = withRouter(
+const QuizMenu = /*withRouter(*/
   connect(
     (state) => ({
-      editable: hasPermission('edit', resourceSelectors.resourceNode(state))
+      hasOverview: selectors.hasOverview(state),
     })
   )(QuizMenuComponent)
-)
+/*)*/
 
 export {
   QuizMenu

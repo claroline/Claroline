@@ -2,7 +2,6 @@ import get from 'lodash/get'
 
 import {makeActionCreator, makeInstanceActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
-import {actions as menuActions} from '#/main/app/layout/menu/store/actions'
 
 import {selectors} from '#/main/core/tool/store/selectors'
 
@@ -56,7 +55,6 @@ actions.fetch = (toolName, context, contextId) => (dispatch) => dispatch({
       dispatch(actions.loadType(toolName, response, context))
 
       dispatch(actions.setLoaded(true))
-      dispatch(menuActions.changeSection('tool'))
     },
     error: (error, status) => {
       switch (status) {

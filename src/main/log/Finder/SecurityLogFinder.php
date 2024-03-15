@@ -34,7 +34,7 @@ class SecurityLogFinder extends AbstractFinder
                         $doerJoin = true;
                     }
 
-                    $qb->andWhere('d.uuid = :id');
+                    $qb->andWhere('u.uuid = :id');
                     $qb->setParameter('id', $filterValue);
                     break;
 

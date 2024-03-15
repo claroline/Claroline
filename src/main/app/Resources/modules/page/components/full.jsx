@@ -31,6 +31,7 @@ const PageFull = (props) =>
         primaryAction={props.primaryAction}
         actions={props.actions}
         menu={props.menu}
+        embedded={props.embedded}
       >
         {props.header}
       </PageHeader>

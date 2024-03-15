@@ -1,48 +1,27 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
-import {MenuSection} from '#/main/app/layout/menu/components/section'
-
-import {EditorMenu} from '#/plugin/exo/resources/quiz/editor/containers/menu'
-
-// TODO : add menu in player too with a config
+import {ResourceMenu} from '#/main/core/resource/containers/menu'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 const QuizMenu = props =>
-  <MenuSection
-    {...omit(props, 'path', 'editable')}
-    title={trans('ujm_exercise', {}, 'resource')}
-  >
-    <Routes
-      path={props.path}
-      routes={[
-        {
-          path: '/edit',
-          disabled: !props.editable,
-          render() {
-            const Menu = (
-              <EditorMenu
-                autoClose={props.autoClose}
-              />
-            )
-
-            return Menu
-          }
-        }
-      ]}
-    />
-  </MenuSection>
+  <ResourceMenu
+    overview={props.hasOverview}
+    actions={[
+      {
+        name: 'summary',
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-sitemap',
+        label: trans('summary'),
+        target: `${props.path}/summary`
+      }
+    ]}
+  />
 
 QuizMenu.propTypes = {
   path: T.string.isRequired,
-  editable: T.bool.isRequired,
-
-  // from menu
-  opened: T.bool.isRequired,
-  toggle: T.func.isRequired,
-  autoClose: T.func.isRequired
+  hasOverview: T.bool.isRequired
 }
 
 export {

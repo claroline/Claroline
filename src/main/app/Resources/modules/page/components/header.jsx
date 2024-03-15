@@ -27,7 +27,7 @@ const PageHeader = props =>
       'page-poster': !!props.poster
     })}
   >
-    <PageNav>
+    <PageNav embedded={props.embedded}>
       {props.menu}
     </PageNav>
 

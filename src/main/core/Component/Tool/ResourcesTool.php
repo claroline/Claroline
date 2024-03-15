@@ -10,7 +10,6 @@ use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\Tool\AbstractTool;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -46,24 +45,15 @@ class ResourcesTool extends AbstractTool
 
     public function supportsContext(string $context): bool
     {
-        return in_array($context, [
-            DesktopContext::getName(),
-            WorkspaceContext::getName(),
-        ]);
+        return WorkspaceContext::getName() === $context;
     }
 
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
     {
-        $root = null;
-        if (WorkspaceContext::getName() === $context) {
-            // filters resources for the current workspace
-            $root = $this->serializer->serialize(
-                $this->resourceRepository->findWorkspaceRoot($contextSubject)
-            );
-        }
-
         return [
-            'root' => $root,
+            'root' => $this->serializer->serialize(
+                $this->resourceRepository->findWorkspaceRoot($contextSubject)
+            ),
         ];
     }
 
@@ -74,10 +64,6 @@ class ResourcesTool extends AbstractTool
 
     public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
     {
-        if (WorkspaceContext::getName() !== $context) {
-            return [];
-        }
-
         $root = $this->resourceRepository->findWorkspaceRoot($contextSubject);
         if (empty($root)) {
             return [];
@@ -90,10 +76,6 @@ class ResourcesTool extends AbstractTool
 
     public function import(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null, array $data = [], array $entities = []): ?array
     {
-        if (WorkspaceContext::getName() !== $context) {
-            return [];
-        }
-
         if (empty($data['resources'])) {
             return [];
         }

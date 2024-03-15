@@ -141,19 +141,19 @@ function getDefaultAction(resourceNode, nodesRefresher, path, currentUser = null
  *
  * @return {string}
  */
-function getToolbar(primaryAction = null) {
+/*function getToolbar(primaryAction = null) {
   let toolbar = 'edit'
   if (primaryAction) {
     toolbar = primaryAction + ' ' + toolbar
   }
 
   return toolbar
-}
+}*/
 
 export {
   getType,
   getTypes,
   getActions,
-  getDefaultAction,
-  getToolbar
+  getDefaultAction/*,
+  getToolbar*/
 }

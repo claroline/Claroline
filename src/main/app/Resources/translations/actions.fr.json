@@ -92,5 +92,7 @@
   "unregister": "Désinscrire",
   "upload": "Télécharger",
   "view-as": "Voir en tant que",
-  "replace_image": "Remplacer l'image"
+  "replace_image": "Remplacer l'image",
+  "show-menu": "Afficher le menu",
+  "hide-menu": "Cacher le menu"
 }

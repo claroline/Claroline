@@ -31,7 +31,7 @@ class ResourceRestrictions extends Component {
 
   submitCodeAccess() {
     if (this.state.codeAccess) {
-      this.props.checkAccessCode(this.state.codeAccess)
+      this.props.checkAccessCode(this.props.resourceNode, this.state.codeAccess)
     }
   }
 

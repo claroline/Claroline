@@ -13,7 +13,7 @@ import {ResourceAttempt as ResourceAttemptTypes, ResourceEvaluation as ResourceE
 
 import {ResourceEnd} from '#/main/core/resource/components/end'
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
-import {PathSummary} from '#/plugin/path/resources/path/components/summary'
+import {PathSummary} from '#/plugin/path/resources/path/containers/summary'
 
 const PlayerEnd = (props) =>
   <ResourceEnd
@@ -62,16 +62,7 @@ const PlayerEnd = (props) =>
   >
     <section className="resource-parameters mb-3">
       <h3 className="h2">{trans('summary')}</h3>
-      <PathSummary
-        className="component-container"
-        basePath={props.basePath}
-        path={props.path}
-        stepsProgression={props.stepsProgression}
-        resourceEvaluations={props.resourceEvaluations}
-        onNavigate={() => {
-          scrollTo(`#resource-${props.resourceId} > .page-content`)
-        }}
-      />
+      <PathSummary className="component-container" />
     </section>
   </ResourceEnd>
 

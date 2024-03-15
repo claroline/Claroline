@@ -10,24 +10,16 @@ use Doctrine\Migrations\AbstractMigration;
  *
  * Generation date: 2024/02/26 06:46:16
  */
-final class Version20240309090000 extends AbstractMigration
+final class Version20240315080000 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
         $this->addSql('
-            DELETE FROM claro_ordered_tool WHERE `tool_name` = "plugins"
-        ');
-
-        $this->addSql('
-            DELETE FROM claro_tools WHERE `name` = "plugins"
+            DELETE FROM claro_ordered_tool WHERE `tool_name` = "resources" AND context_name = "desktop"
         ');
     }
 
     public function down(Schema $schema): void
     {
-        $this->addSql('
-            ALTER TABLE claro_field_facet 
-            DROP hide_label
-        ');
     }
 }

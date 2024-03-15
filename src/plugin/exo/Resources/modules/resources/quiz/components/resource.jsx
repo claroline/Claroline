@@ -21,14 +21,14 @@ const QuizResource = props =>
   <DragDropProvider>
     <ResourcePage
       customActions={[
-        {
+        /*{
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-home',
           label: trans('show_overview'),
           displayed: props.hasOverview,
           target: props.path,
           exact: true
-        }, {
+        }, */{
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-play',
           label: trans('start', {}, 'actions'),

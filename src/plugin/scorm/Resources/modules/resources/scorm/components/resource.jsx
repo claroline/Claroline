@@ -9,6 +9,7 @@ import {Scorm as ScormType} from '#/plugin/scorm/resources/scorm/prop-types'
 import {Player} from '#/plugin/scorm/resources/scorm/player/containers/player'
 import {Editor} from '#/plugin/scorm/resources/scorm/editor/components/editor'
 import {Results} from '#/plugin/scorm/resources/scorm/player/components/results'
+import {ScormSummary} from '#/plugin/scorm/resources/scorm/containers/summary'
 
 const ScormResource = props =>
   <ResourcePage
@@ -47,6 +48,9 @@ const ScormResource = props =>
       {
         path: '/play',
         component: Player
+      }, {
+        path: '/summary',
+        component: ScormSummary
       }, {
         path: '/edit',
         component: Editor,

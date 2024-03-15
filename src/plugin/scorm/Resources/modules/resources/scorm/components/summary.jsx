@@ -8,7 +8,7 @@ import {ContentSummary} from '#/main/app/content/components/summary'
 
 import {Scorm as ScormTypes, Sco as ScoTypes} from '#/plugin/scorm/resources/scorm/prop-types'
 
-const PlayerMenu = props => {
+const ScormSummary = props => {
   function generateSummary(scos) {
     return scos
       .map(sco => ({
@@ -33,7 +33,7 @@ const PlayerMenu = props => {
   return null
 }
 
-PlayerMenu.propTypes = {
+ScormSummary.propTypes = {
   location: T.shape({
     pathname: T.string.isRequired
   }),
@@ -49,5 +49,5 @@ PlayerMenu.propTypes = {
 
 
 export {
-  PlayerMenu
+  ScormSummary
 }

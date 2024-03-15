@@ -14,7 +14,7 @@ const ToolCard = props =>
       'data-card-muted': get(props.data, 'restrictions.hidden', false)
     })}
     id={props.data.id}
-    icon={`fa fa-${props.data.icon}`}
+    icon={!props.data.thumbnail ? `fa fa-${props.data.icon}` : null}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     title={trans(props.data.name, {}, 'tools')}
   />

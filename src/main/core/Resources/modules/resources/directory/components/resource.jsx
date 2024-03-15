@@ -11,20 +11,6 @@ import {trans} from '#/main/app/intl'
 const DirectoryResource = (props) =>
   <ResourcePage
     /*primaryAction="add"*/
-    nav={[
-      {
-        type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-home',
-        label: trans('Corbeille'),
-        target: `${props.path}/trash`,
-        //exact: true
-      }, {
-        type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-sitemap',
-        label: trans('Arborescence'),
-        target: `${props.path}/summary`
-      }
-    ]}
     disabledActions={props.storageLock ? ['add', 'add_files', 'copy'] : []}
     routes={[
       {

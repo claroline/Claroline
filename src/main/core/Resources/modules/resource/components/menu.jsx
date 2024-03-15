@@ -1,43 +1,88 @@
-import React, {createElement} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {Await} from '#/main/app/components/await'
-import {getResource} from '#/main/core/resources'
+import {Toolbar} from '#/main/app/action'
+import {getActions} from '#/main/core/resource/utils'
+import {PageMenu} from '#/main/app/page/components/menu'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
+import {route} from '#/main/core/resource/routing'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {trans} from '#/main/app/intl'
 
-const ResourceMenu = props => {
-  if (props.resourceType && props.loaded) {
-    return (
-      <Await
-        for={getResource(props.resourceType)}
-        then={(module) => {
-          if (module.default.menu) {
-            return createElement(module.default.menu, {
-              path: props.path,
-              opened: props.opened,
-              toggle: props.toggle,
-              autoClose: props.autoClose
-            })
+const ResourceMenu = (props) =>
+  <PageMenu
+    actions={[
+      {
+        name: 'overview',
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-home',
+        //label: trans('home'),
+        label: trans('resource_overview', {}, 'resource'),
+        target: props.path,
+        displayed: props.overview,
+        exact: true
+      }
+    ].concat(props.actions)}
+  >
+    <Toolbar
+      className="nav nav-underline"
+      buttonName="nav-link"
+      toolbar="edit more"
+      tooltip="bottom"
+      actions={getActions([props.resourceNode], {
+        add: () => {
+          props.reload()
+        },
+        update: (resourceNodes) => {
+          // checks if the action have modified the current node
+          const currentNode = resourceNodes.find(node => node.id === props.resourceNode.id)
+          if (currentNode) {
+            // grabs updated data
+            props.reload()
           }
+        },
+        delete: (resourceNodes) => {
+          // checks if the action have deleted the current node
+          const currentNode = resourceNodes.find(node => node.id === props.resourceNode.id)
+          if (currentNode) {
+            let redirect
+            if (currentNode.parent) {
+              redirect = route(currentNode.parent)
+            } else {
+              redirect = workspaceRoute(currentNode.workspace, 'resources')
+            }
 
-          return null
-        }}
-      />
-    )
-  }
-
-  return null
-}
+            props.history.push(redirect)
+          }
+        }
+      }, props.basePath, props.currentUser, false)}
+    />
+  </PageMenu>
 
 ResourceMenu.propTypes = {
-  path: T.string.isRequired,
-  resourceId: T.string,
-  resourceType: T.string,
-  loaded: T.bool.isRequired,
+  overview: T.bool,
 
-  // from menu
-  opened: T.bool.isRequired,
-  toggle: T.func.isRequired,
-  autoClose: T.func.isRequired
+  // from resource
+  path: T.string.isRequired,
+  basePath: T.string.isRequired,
+  resourceNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ).isRequired,
+  reload: T.func.isRequired,
+
+  // from security
+  currentUser: T.object,
+
+  // from router
+  history: T.shape({
+    push: T.func.isRequired
+  })
+}
+
+ResourceMenu.defaultProps = {
+  overview: false,
+  actions: []
 }
 
 export {
