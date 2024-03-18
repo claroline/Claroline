@@ -6,7 +6,6 @@ import get from 'lodash/get'
 
 import {ContentSummary} from '#/main/app/content/components/summary'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 
 import {constants} from '#/main/evaluation/constants'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
@@ -15,6 +14,7 @@ import {number, trans} from '#/main/app/intl'
 import {constants as PATH_NUMBERINGS} from '#/plugin/path/resources/path/constants'
 import {getNumbering} from '#/plugin/path/resources/path/utils'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import {EvaluationScore} from '#/main/evaluation/components/score'
 
 const PathSummary = (props) => {
   function getStepSummary(step) {
@@ -47,7 +47,7 @@ const PathSummary = (props) => {
             {resourceEvaluation &&
               <Fragment>
                 {get(props.path, 'display.showScore') && resourceEvaluation.scoreMax &&
-                  <ScoreBox
+                  <EvaluationScore
                     score={get(props.path, 'score.total') ? (resourceEvaluation.score / resourceEvaluation.scoreMax) * get(props.path, 'score.total') : resourceEvaluation.score}
                     scoreMax={get(props.path, 'score.total') ? get(props.path, 'score.total') : resourceEvaluation.scoreMax}
                     size="sm"

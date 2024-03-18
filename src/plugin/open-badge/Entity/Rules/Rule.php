@@ -35,7 +35,6 @@ class Rule
 
     const IN_GROUP = 'in_group';
     const IN_ROLE = 'in_role';
-    const PROFILE_COMPLETED = 'profile_completed';
 
     /**
      * @var string

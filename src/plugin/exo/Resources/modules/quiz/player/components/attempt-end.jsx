@@ -14,13 +14,13 @@ import {selectors as securitySelectors} from '#/main/app/security/store/selector
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {ResourceEnd} from '#/main/core/resource/components/end'
 
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
 import {calculateScore, calculateTotal} from '#/plugin/exo/items/score'
 import {isQuestionType} from '#/plugin/exo/items/item-types'
 
 import {select as playerSelect} from '#/plugin/exo/quiz/player/selectors'
 import {showCorrection, showScore} from '#/plugin/exo/resources/quiz/papers/restrictions'
 import {AttemptsChart} from '#/plugin/exo/charts/attempts/components/chart'
+import {EvaluationScore} from '#/main/evaluation/components/score'
 
 const IntermediateScores = (props) => {
   let intermediate = []
@@ -83,7 +83,7 @@ const IntermediateScores = (props) => {
             {intermediateScore.title}
 
             <span className="value">
-              <ScoreBox className="pull-right" score={intermediateScore.score} scoreMax={intermediateScore.total}/>
+              <EvaluationScore className="pull-right" score={intermediateScore.score} scoreMax={intermediateScore.total}/>
             </span>
           </li>
         ))}

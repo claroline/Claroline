@@ -7,6 +7,7 @@ import {route as workspaceRoute} from '#/main/core/workspace/routing'
 import {constants} from '#/main/evaluation/constants'
 import {WorkspaceCard} from '#/main/evaluation/workspace/components/card'
 import {getActions, getDefaultAction} from '#/main/evaluation/workspace/utils'
+import {EvaluationStatus} from '#/main/evaluation/components/status'
 
 export default (contextType, contextData, refresher, currentUser) => {
   let basePath
@@ -28,11 +29,7 @@ export default (contextType, contextData, refresher, currentUser) => {
           choices: constants.EVALUATION_STATUSES_SHORT
         },
         displayed: true,
-        render: (row) => (
-          <span className={`badge text-bg-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
-            {constants.EVALUATION_STATUSES_SHORT[row.status]}
-          </span>
-        )
+        render: (row) => <EvaluationStatus status={row.status} />
       }, {
         name: 'user',
         type: 'user',

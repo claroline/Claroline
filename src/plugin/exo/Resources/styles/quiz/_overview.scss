@@ -7,7 +7,7 @@
     .exercise-parameter {
         flex: 1;
         background: var(--#{$prefix}secondary-bg);
-        padding: 10px $panel-body-padding;
+        padding: map-get($spacers, 2) map-get($spacers, 3);
         border: 1px solid transparent;
         border-radius: $border-radius-sm;
 

@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {asset} from '#/main/app/config'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {displayDuration, number, trans} from '#/main/app/intl'
-import {displayScore} from '#/main/app/data/types/score/utils'
+import {displayScore} from '#/main/evaluation/data/types/score/utils'
 import {DataCard} from '#/main/app/data/components/card'
 
 import {constants} from '#/main/evaluation/constants'
