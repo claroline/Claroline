@@ -1,21 +1,36 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
-
 import {makeInstanceAction} from '#/main/app/store/actions'
+import {makeFormReducer} from '#/main/app/content/form/store'
 import {TOOL_LOAD} from '#/main/core/tool/store'
 
 import {
-  APPEARANCE_ADD_ICON_SET, APPEARANCE_REMOVE_ICON_SET,
-  APPEARANCE_ADD_COLOR_CHART, APPEARANCE_UPDATE_COLOR_CHART, APPEARANCE_REMOVE_COLOR_CHART
+  APPEARANCE_ADD_ICON_SET,
+  APPEARANCE_REMOVE_ICON_SET,
+  APPEARANCE_ADD_COLOR_CHART,
+  APPEARANCE_UPDATE_COLOR_CHART,
+  APPEARANCE_REMOVE_COLOR_CHART
 } from '#/main/theme/administration/appearance/store/actions'
+import {selectors} from '#/main/theme/administration/appearance/store/selectors'
+
 
 export const reducer = combineReducers({
+  parameters: makeFormReducer(selectors.FORM_NAME, {
+    new: false
+  },{
+    data: makeReducer({}, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters
+    }),
+    originalData: makeReducer({}, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters
+    })
+  }),
   availableThemes: makeReducer({}, {
-    [makeInstanceAction(TOOL_LOAD, 'parameters')]: (state, action) => action.toolData.availableThemes
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.availableThemes
   }),
   availableIconSets: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, 'parameters')]: (state, action) => action.toolData.availableIconSets,
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.availableIconSets,
     [APPEARANCE_ADD_ICON_SET]: (state, action) => {
       const newState = cloneDeep(state)
 
@@ -35,7 +50,7 @@ export const reducer = combineReducers({
     }
   }),
   availableColorCharts: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, 'parameters')]: (state, action) => action.toolData.availableColorCharts,
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.availableColorCharts,
     [APPEARANCE_ADD_COLOR_CHART]: (state, action) => {
       const newState = cloneDeep(state)
 

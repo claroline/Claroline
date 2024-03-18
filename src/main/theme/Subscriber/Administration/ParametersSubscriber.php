@@ -19,6 +19,9 @@ use Claroline\ThemeBundle\Entity\ColorCollection;
 use Claroline\ThemeBundle\Manager\IconSetManager;
 use Claroline\ThemeBundle\Manager\ThemeManager;
 
+/**
+ * @deprecated
+ */
 class ParametersSubscriber extends AbstractToolSubscriber
 {
     public function __construct(

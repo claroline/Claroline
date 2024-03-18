@@ -6,7 +6,6 @@ import {Routes} from '#/main/app/router'
 import {Meta} from '#/main/core/administration/parameters/containers/meta'
 import {Plugins} from '#/main/core/administration/parameters/containers/plugins'
 import {Plugin} from '#/main/core/administration/parameters/containers/plugin'
-import {AppearanceTool} from '#/main/theme/administration/appearance/containers/tool'
 
 const ParametersTool = (props) =>
   <Routes
@@ -16,9 +15,6 @@ const ParametersTool = (props) =>
         path: '/',
         exact: true,
         component: Meta
-      }, {
-        path: '/appearance',
-        component: AppearanceTool
       }, {
         path: '/plugins',
         component: Plugins,

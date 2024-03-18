@@ -28,7 +28,7 @@ const Meta = (props) =>
         active: false
       }}
       locked={props.lockedParameters}
-      sections={[
+      definition={[
         {
           title: trans('general'),
           primary: true,

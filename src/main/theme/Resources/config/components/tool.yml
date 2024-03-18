@@ -3,4 +3,8 @@ services:
     parent: Claroline\AppBundle\Component\Tool\AbstractTool
     tags: [ 'claroline.component.tool' ]
     arguments:
+      - '@Claroline\AppBundle\Persistence\ObjectManager'
+      - '@Claroline\AppBundle\API\SerializerProvider'
       - '@Claroline\ThemeBundle\Manager\ThemeManager'
+      - '@Claroline\ThemeBundle\Manager\IconSetManager'
+      - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
