@@ -9,7 +9,7 @@ import {getActions} from '#/main/core/tool/utils'
 const ToolMenu = (props) =>
   <PageMenu actions={props.actions}>
     <Toolbar
-      className="nav nav-underline"
+      className="nav nav-underline text-shrink-0"
       buttonName="nav-link"
       toolbar="configure more"
       tooltip="bottom"

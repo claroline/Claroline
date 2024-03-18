@@ -192,7 +192,7 @@ $datepicker-btn-border-radius: $btn-border-radius;
 // Calendar variants
 // ---
 
-.calendar-container.light {
+/*.calendar-container.light {
     color: $toolbar-color;
 
     .calendar-current,
@@ -225,7 +225,7 @@ $datepicker-btn-border-radius: $btn-border-radius;
     .day-name {
         color: $toolbar-link-disabled-color;
     }
-}
+}*/
 
 .calendar-vertical {
     @include calendar-vertical-variant();
