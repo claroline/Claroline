@@ -8,14 +8,6 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\ThemeBundle\Manager\ThemeManager'
 
-    # Administration
-    Claroline\ThemeBundle\Subscriber\Administration\ParametersSubscriber:
-        arguments:
-            - '@Claroline\ThemeBundle\Manager\ThemeManager'
-            - '@Claroline\ThemeBundle\Manager\IconSetManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-
     # Crud
     Claroline\ThemeBundle\Subscriber\Crud\ThemeSubscriber:
         arguments:
