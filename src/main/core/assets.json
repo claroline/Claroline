@@ -2,8 +2,7 @@
   "styles": {
     "entry": {
       "administration-connection-messages": "administration/connection-messages.scss",
-      "administration-integration": "administration/integration.scss",
-      "administration-parameters": "administration/parameters.scss"
+      "administration-integration": "administration/integration.scss"
     }
   }
 }

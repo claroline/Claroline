@@ -20,9 +20,9 @@ IconPreview.propTypes = {
 }
 
 const IconSet = (props) =>
-  <Fragment>
+  <>
     <h3 className="h4">{trans(props.name)}</h3>
-    <div className="theme-icon-preview-container">
+    <div className="theme-icon-preview-container mb-3">
       {[]
         .concat(props.icons)
         .sort((a, b) => a.url < b.url ? 1 : -1)
@@ -31,7 +31,7 @@ const IconSet = (props) =>
         )
       }
     </div>
-  </Fragment>
+  </>
 
 IconSet.propTypes = {
   name: T.string.isRequired,
@@ -48,26 +48,22 @@ const AppearanceIcons = (props) => {
   }
 
   return (
-    <div className="row">
-      <div className="col-md-6">
-        <IconSet
-          name="resources"
-          icons={get(props.currentIconSet, 'icons.resources')}
-        />
-      </div>
+    <>
+      <IconSet
+        name="resources"
+        icons={get(props.currentIconSet, 'icons.resources')}
+      />
 
-      <div className="col-md-6">
-        <IconSet
-          name="widgets"
-          icons={get(props.currentIconSet, 'icons.widgets')}
-        />
+      <IconSet
+        name="widgets"
+        icons={get(props.currentIconSet, 'icons.widgets')}
+      />
 
-        <IconSet
-          name="data"
-          icons={get(props.currentIconSet, 'icons.data')}
-        />
-      </div>
-    </div>
+      <IconSet
+        name="data"
+        icons={get(props.currentIconSet, 'icons.data')}
+      />
+    </>
   )
 }
 

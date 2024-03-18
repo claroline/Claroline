@@ -1,14 +1,15 @@
 import {createSelector} from 'reselect'
 import get from 'lodash/get'
 
-import {selectors as paramSelectors} from '#/main/core/administration/parameters/store/selectors'
+import {selectors as formSelectors} from '#/main/app/content/form/store'
 
-const STORE_NAME = 'appearanceParameters'
+const STORE_NAME = 'appearance'
 
-const store = createSelector(
-  [paramSelectors.store],
-  (baseStore) => baseStore[STORE_NAME]
-)
+const FORM_NAME = STORE_NAME+'.parameters'
+
+const store = (state) => state[STORE_NAME]
+
+const parameters = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
 
 const availableThemes = createSelector(
   [store],
@@ -26,9 +27,10 @@ const availableColorCharts = createSelector(
 )
 
 const currentIconSet = createSelector(
-  [paramSelectors.parameters, availableIconSets],
+  [parameters, availableIconSets],
   (parameters, availableIconSets) => {
-    const currentSetName = get(parameters, 'display.resource_icon_set')
+    return null
+    const currentSetName = get(parameters, 'icons')
 
     return availableIconSets.find(iconSet => iconSet.name === currentSetName)
   }
@@ -36,6 +38,7 @@ const currentIconSet = createSelector(
 
 export const selectors = {
   STORE_NAME,
+  FORM_NAME,
 
   store,
   availableThemes,

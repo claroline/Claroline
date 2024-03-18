@@ -1,36 +1,18 @@
 import {connect} from 'react-redux'
 
+import {withReducer} from '#/main/app/store/components/withReducer'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
-import {selectors as paramSelectors} from '#/main/core/administration/parameters/store'
-import {actions, selectors} from '#/main/theme/administration/appearance/store'
 
 import {AppearanceTool as AppearanceToolComponent} from '#/main/theme/administration/appearance/components/tool'
+import {reducer, selectors} from '#/main/theme/administration/appearance/store'
 
-const AppearanceTool = connect(
-  (state) => ({
-    path: toolSelectors.path(state),
-    lockedParameters: paramSelectors.lockedParameters(state),
-    availableThemes: selectors.availableThemes(state),
-    availableIconSets: selectors.availableIconSets(state)
-  }),
-  (dispatch) => ({
-    addIconSet(iconSet) {
-      dispatch(actions.addIconSet(iconSet))
-    },
-    removeIconSet(iconSet) {
-      dispatch(actions.removeIconSet(iconSet))
-    },
-    addColorChart(colorChart) {
-      dispatch(actions.addColorChart(colorChart))
-    },
-    updateColorChart(colorChart) {
-      dispatch(actions.updateColorChart(colorChart))
-    },
-    removeColorChart(colorChart) {
-      dispatch(actions.removeColorChart(colorChart))
-    }
-  })
-)(AppearanceToolComponent)
+const AppearanceTool = withReducer(selectors.STORE_NAME, reducer)(
+  connect(
+    (state) => ({
+      path: toolSelectors.path(state)
+    })
+  )(AppearanceToolComponent)
+)
 
 export {
   AppearanceTool

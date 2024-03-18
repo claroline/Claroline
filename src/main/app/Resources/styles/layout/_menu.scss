@@ -14,8 +14,14 @@
 
     max-width: 0;
     transition: max-width .6s ease;
+
     &.show {
         max-width: $toolbar-size;
+    }
+
+    .dropdown-menu {
+        width: $toolbar-size;
+        //margin: 0 10px;
     }
 }
 
@@ -67,11 +73,11 @@
     padding-top: 0;
     min-height: 6.5rem;
 
-    > a {
+    .user-avatar {
         margin-top: -2.5rem;
         background: $toolbar-bg;
         padding: $thumbnail-padding;
-        border-radius: 50%;
+        //border-radius: 50%;
     }
 
     .user-status-bullet {
@@ -181,16 +187,6 @@
         }
     }
 }
-
-/*.app-menu-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 3;
-}*/
 
 // XS/SM screens :
 @media (max-width: map-get($grid-breakpoints, 'md')) {

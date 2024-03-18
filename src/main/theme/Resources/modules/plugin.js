@@ -14,6 +14,10 @@ registry.add('ClarolineThemeBundle', {
   },
 
   account: {
-    'appearance'     : () => { return import(/* webpackChunkName: "theme-tool-appearance" */ '#/main/theme/account/appearance') }
+    'appearance'     : () => { return import(/* webpackChunkName: "theme-account-appearance" */ '#/main/theme/account/appearance') }
   },
+
+  administration: {
+    'appearance'     : () => { return import(/* webpackChunkName: "theme-administration-appearance" */ '#/main/theme/administration/appearance') }
+  }
 })

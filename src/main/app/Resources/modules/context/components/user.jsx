@@ -82,15 +82,13 @@ const ContextUser = (props) => {
       />
 
       <article className="app-menu-current-user">
-        <LinkButton target="/account/profile">
-          <UserAvatar user={props.currentUser} noStatusTooltip={true} size="lg" />
-        </LinkButton>
+        <UserAvatar user={props.currentUser} noStatusTooltip={true} size="lg" />
 
         <MenuButton
           id="current-user-menu"
           className="app-menu-user mt-2 text-center"
           menu={{
-            className: 'dropdown-menu-full',
+            //className: 'dropdown-menu-full',
             items: [].concat(Object.keys(userConst.USER_STATUSES).map((status) => ({
               name: status,
               type: CALLBACK_BUTTON,

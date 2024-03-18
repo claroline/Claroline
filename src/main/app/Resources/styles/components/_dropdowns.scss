@@ -15,3 +15,26 @@
     }
   }
 }
+
+.dropdown-menu {
+  //opacity: 0;
+  &.show {
+    animation-name: zoomIn;
+    animation-duration: .12s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+
+    transition: opacity .12s ease-out;
+    //opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  0% {
+    opacity: 0;
+    transform: scale3d(.3,.3,.3);
+  }
+  50% {
+    opacity: 1;
+  }
+}

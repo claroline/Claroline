@@ -6,30 +6,23 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {ToolMenu} from '#/main/core/tool/containers/menu'
 
-const ParametersMenu = (props) =>
+const AppearanceMenu = (props) =>
   <ToolMenu
     actions={[
-      {
-        name: 'general',
-        type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-circle-info',
-        label: trans('general'),
-        target: props.path+'/',
-        exact: true
-      }, {
-        name: 'plugins',
+      /*{
+        name: 'appearance',
         type: LINK_BUTTON,
         //icon: 'fa fa-fw fa-drafting-compass',
-        label: trans('plugins'),
-        target: props.path+'/plugins'
-      }
+        label: trans('appearance'),
+        target: props.path+'/'
+      }*/
     ]}
   />
 
-ParametersMenu.propTypes = {
+AppearanceMenu.propTypes = {
   path: T.string.isRequired
 }
 
 export {
-  ParametersMenu
+  AppearanceMenu
 }

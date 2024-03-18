@@ -1,0 +1,7 @@
+{
+  "styles": {
+    "entry": {
+      "administration-appearance": "appearance.scss"
+    }
+  }
+}

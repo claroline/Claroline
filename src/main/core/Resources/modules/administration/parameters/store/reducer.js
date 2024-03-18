@@ -6,9 +6,7 @@ import {makeListReducer} from '#/main/app/content/list/store'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
 import {selectors} from '#/main/core/administration/parameters/store/selectors'
 
-import {reducer as themeReducer, selectors as themeSelectors} from '#/main/theme/administration/appearance/store'
 import {PLUGIN_LOAD} from '#/main/core/administration/parameters/store/actions'
-
 
 const reducer = combineReducers({
   lockedParameters: makeReducer([], {
@@ -25,12 +23,11 @@ const reducer = combineReducers({
   availableLocales: makeReducer([], {
     [makeInstanceAction(TOOL_LOAD, 'parameters')]: (state, action) => action.toolData.availableLocales
   }),
-  // for appearance. Should be injected by ThemeBundle later
-  [themeSelectors.STORE_NAME]: themeReducer,
+
+  plugins: makeListReducer(selectors.STORE_NAME+'.plugins'),
   plugin: makeReducer(null, {
     [PLUGIN_LOAD]: (state, action) => action.plugin
-  }),
-  plugins: makeListReducer(selectors.STORE_NAME+'.plugins')
+  })
 })
 
 export {
