@@ -7,7 +7,7 @@
     flex-direction: column;
     margin: 0 (-(($grid-gutter-width * .5))); // absorb .page-content padding
     max-height: 100%;
-    background: $agenda-bg;
+    //background: $agenda-bg;
 
     // rows
     .calendar-row {
@@ -18,13 +18,17 @@
 
     .day-names {
         font-family: $headings-font-family;
-        color: $primary;
+        color: var(--#{$prefix}body-secondary-color);
         font-size: $font-size-sm;
     }
 
     .week {
         flex: 1;
         border-bottom: 1px solid $agenda-grid-border;
+
+        &:last-child {
+            border-bottom: none;
+        }
     }
 
     // cells
@@ -71,13 +75,13 @@
         }
 
         &.selected .day-number {
-            color: white;
+            color: color-contrast($primary);
             background: $primary;
             border-color: $primary;
         }
 
         &.fill {
-            background: $body-bg; // TODO : use its own var
+            background: var(--#{$prefix}tertiary-bg);
 
             .day-number {
                 color: var(--#{$prefix}secondary-color);
