@@ -31,6 +31,7 @@ final class Version20240307120358 extends AbstractMigration
             CREATE TABLE claro_theme_user_preferences (
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
+                theme VARCHAR(255) DEFAULT NULL,
                 list_display VARCHAR(255) DEFAULT NULL, 
                 theme_mode VARCHAR(255) DEFAULT NULL, 
                 font_size VARCHAR(255) DEFAULT NULL, 
