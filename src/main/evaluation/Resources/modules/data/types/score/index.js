@@ -3,9 +3,9 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {chain, number, inRange} from '#/main/app/data/types/validators'
 
-import {displayScore} from '#/main/app/data/types/score/utils'
-import {ScoreCell} from '#/main/app/data/types/score/components/cell'
-import {ScoreDisplay} from '#/main/app/data/types/score/components/display'
+import {displayScore} from '#/main/evaluation/data/types/score/utils'
+import {ScoreCell} from '#/main/evaluation/data/types/score/components/cell'
+import {ScoreDisplay} from '#/main/evaluation/data/types/score/components/display'
 
 /**
  * Score data type.

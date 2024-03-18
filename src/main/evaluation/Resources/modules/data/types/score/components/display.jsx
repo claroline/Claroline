@@ -1,12 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
+import {EvaluationScore} from '#/main/evaluation/components/score'
 
 const ScoreDisplay = props => {
   if (props.data) {
     return (
-      <ScoreBox
+      <EvaluationScore
         score={props.data.current}
         scoreMax={props.data.total}
       />

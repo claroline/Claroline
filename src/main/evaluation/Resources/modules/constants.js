@@ -28,11 +28,11 @@ const EVALUATION_STATUS_COLOR = {
   [EVALUATION_STATUS_NOT_ATTEMPTED]: 'secondary',
   [EVALUATION_STATUS_TODO]:          'secondary',
   [EVALUATION_STATUS_UNKNOWN]:       'secondary',
-  [EVALUATION_STATUS_OPENED]:        'warning',
-  [EVALUATION_STATUS_INCOMPLETE]:    'warning',
+  [EVALUATION_STATUS_OPENED]:        'info',
+  [EVALUATION_STATUS_INCOMPLETE]:    'info',
   [EVALUATION_STATUS_PARTICIPATED]:  'success',
   [EVALUATION_STATUS_FAILED]:        'danger',
-  [EVALUATION_STATUS_COMPLETED]:     'info',
+  [EVALUATION_STATUS_COMPLETED]:     'success',
   [EVALUATION_STATUS_PASSED]:        'success'
 }
 

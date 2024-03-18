@@ -6,7 +6,7 @@ import {asset} from '#/main/app/config'
 import {URL_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 import {displayDuration, number, trans} from '#/main/app/intl'
-import {displayScore} from '#/main/app/data/types/score/utils'
+import {displayScore} from '#/main/evaluation/data/types/score/utils'
 import {DataCard} from '#/main/app/data/components/card'
 
 import {route} from '#/main/core/workspace/routing'

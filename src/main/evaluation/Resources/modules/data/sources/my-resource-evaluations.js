@@ -6,6 +6,7 @@ import {URL_BUTTON} from '#/main/app/buttons'
 import {constants} from '#/main/evaluation/constants'
 import {route} from '#/main/core/resource/routing'
 import {ResourceCard} from '#/main/evaluation/resource/components/card'
+import {EvaluationStatus} from '#/main/evaluation/components/status'
 
 export default {
   name: 'my_resource_evaluations',
@@ -23,11 +24,7 @@ export default {
           choices: constants.EVALUATION_STATUSES_SHORT
         },
         displayed: true,
-        render: (row) => (
-          <span className={`badge text-bg-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
-            {constants.EVALUATION_STATUSES_SHORT[row.status]}
-          </span>
-        )
+        render: (row) => <EvaluationStatus status={row.status} />
       }, {
         name: 'resourceNode',
         type: 'resource',
