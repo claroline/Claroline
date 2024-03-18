@@ -5,7 +5,7 @@ import classes from 'classnames'
 import {number} from '#/main/app/intl'
 import {transChoice} from '#/main/app/intl/translation'
 
-const ScoreBox = props => {
+const EvaluationScore = props => {
   let userScore = props.score
   if (null !== userScore && props.display) {
     userScore = (userScore / props.scoreMax) * props.display
@@ -30,7 +30,7 @@ const ScoreBox = props => {
   )
 }
 
-ScoreBox.propTypes = {
+EvaluationScore.propTypes = {
   style: T.object,
   score: T.number,
   scoreMax: T.number.isRequired,
@@ -39,10 +39,10 @@ ScoreBox.propTypes = {
   className: T.string
 }
 
-ScoreBox.defaultProps = {
+EvaluationScore.defaultProps = {
   score: null
 }
 
 export {
-  ScoreBox
+  EvaluationScore
 }

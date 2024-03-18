@@ -5,7 +5,7 @@ import {registry} from '#/main/app/modals/registry'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {trans} from '#/main/app/intl/translation'
 import {ContentHtml} from '#/main/app/content/components/html'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box'
+import {EvaluationScore} from '#/main/evaluation/components/score'
 
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {validateNotBlank} from '#/plugin/drop-zone/resources/dropzone/correction/validator'
@@ -121,7 +121,7 @@ class CorrectionModal extends Component {
       <Modal {...this.props}>
         <div className="modal-body">
           {this.props.dropzone.display.showScore &&
-            <ScoreBox
+            <EvaluationScore
               score={this.props.correction.score}
               scoreMax={this.props.dropzone.parameters.scoreMax}
               size="lg"
