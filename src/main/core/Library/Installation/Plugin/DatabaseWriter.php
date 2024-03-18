@@ -529,7 +529,9 @@ class DatabaseWriter implements LoggerAwareInterface
         ]);
 
         foreach ($customDecoders as $decoder) {
-            $this->em->remove($decoder);
+            if (!in_array($decoder->getName(), ToolMaskDecoder::DEFAULT_ACTIONS)) {
+                $this->em->remove($decoder);
+            }
         }
         $this->em->flush();
     }
