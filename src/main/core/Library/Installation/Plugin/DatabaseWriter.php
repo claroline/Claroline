@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Template\TemplateType;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
@@ -523,7 +524,9 @@ class DatabaseWriter implements LoggerAwareInterface
 
     private function deleteCustomToolRights(Tool $tool): void
     {
-        $customDecoders = $this->toolMaskManager->getCustomMaskDecodersByTool($tool);
+        $customDecoders = $this->em->getRepository(ToolMaskDecoder::class)->findBy([
+            'tool' => $tool->getName(),
+        ]);
 
         foreach ($customDecoders as $decoder) {
             $this->em->remove($decoder);
