@@ -4,10 +4,10 @@ import {withRouter} from '#/main/app/router'
 
 import {selectors as resourcesToolSelectors} from '#/main/core/tools/resources/store'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {DirectoryMenu as DirectoryMenuComponent} from '#/main/core/resources/directory/components/menu'
+import {DirectorySummary as DirectorySummaryComponent} from '#/main/core/resources/directory/components/summary'
 import {actions, selectors} from '#/main/core/resources/directory/store'
 
-const DirectoryMenu = withRouter(
+const DirectorySummary = withRouter(
   connect(
     (state) => ({
       basePath: resourceSelectors.basePath(state),
@@ -23,9 +23,9 @@ const DirectoryMenu = withRouter(
         dispatch(actions.toggleDirectoryOpen(directoryId, opened))
       }
     })
-  )(DirectoryMenuComponent)
+  )(DirectorySummaryComponent)
 )
 
 export {
-  DirectoryMenu
+  DirectorySummary
 }

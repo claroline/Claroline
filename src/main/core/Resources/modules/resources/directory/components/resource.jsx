@@ -5,8 +5,7 @@ import {ResourcePage} from '#/main/core/resource/containers/page'
 
 import {PlayerMain} from '#/main/core/resources/directory/player/containers/main'
 import {EditorMain} from '#/main/core/resources/directory/editor/containers/main'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {trans} from '#/main/app/intl'
+import {DirectorySummary} from '#/main/core/resources/directory/containers/summary'
 
 const DirectoryResource = (props) =>
   <ResourcePage
@@ -26,6 +25,9 @@ const DirectoryResource = (props) =>
       }, {
         path: '/edit',
         component: EditorMain
+      }, {
+        path: '/summary',
+        component: DirectorySummary
       }
     ]}
   />

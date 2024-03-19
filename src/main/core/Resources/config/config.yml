@@ -137,9 +137,6 @@ plugin:
         - name: resources
           icon: folder
 
-        - name: resource_trash
-          icon: trash-alt
-
         - name: locations
           icon: map-marker-alt
           tool_rights:

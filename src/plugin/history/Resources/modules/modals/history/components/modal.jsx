@@ -27,7 +27,7 @@ const HistoryModal = (props) => {
       title={trans('history', {}, 'history')}
       onEntering={props.getHistory}
     >
-      {/*<ContentTabs
+      <ContentTabs
         sections={[
           {
             name: 'workspaces',
@@ -43,7 +43,7 @@ const HistoryModal = (props) => {
             callback: () => changeSection('resources')
           }
         ]}
-      />*/}
+      />
 
       {!props.loaded &&
         <ContentLoader

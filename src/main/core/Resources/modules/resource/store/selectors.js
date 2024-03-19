@@ -33,6 +33,11 @@ const path = createSelector(
   }
 )
 
+const isRoot = createSelector(
+  [resourceNode],
+  (resourceNode) => isEmpty(resourceNode.parent)
+)
+
 const embedded = createSelector(
   [store],
   (store) => store.embedded
@@ -135,6 +140,7 @@ export const selectors = {
 
   path,
   basePath,
+  isRoot,
   embedded,
   showHeader,
   managed,
