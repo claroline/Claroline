@@ -27,10 +27,6 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
 
-    Claroline\CoreBundle\Component\Tool\ResourcesTrashTool:
-        parent: Claroline\AppBundle\Component\Tool\AbstractTool
-        tags: [ 'claroline.component.tool' ]
-
     Claroline\CoreBundle\Component\Tool\TemplatesTool:
         parent: Claroline\AppBundle\Component\Tool\AbstractTool
         tags: [ 'claroline.component.tool' ]

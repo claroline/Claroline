@@ -1,6 +1,6 @@
 
 import {DirectoryResource} from '#/main/core/resources/directory/containers/resource'
-import {DirectoryMenu} from '#/main/core/resources/directory/components/menu'
+import {DirectoryMenu} from '#/main/core/resources/directory/containers/menu'
 import {reducer} from '#/main/core/resources/directory/store'
 
 /**
