@@ -4,35 +4,31 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
-import {ResourceMenu} from '#/main/core/resource/containers/menu'
+import {ToolMenu} from '#/main/core/tool/containers/menu'
 
-const DirectoryMenu = (props) =>
-  <ResourceMenu
+const ResourcesMenu = (props) =>
+  <ToolMenu
     actions={[
       {
         type: LINK_BUTTON,
         //icon: 'fa fa-fw fa-home',
         label: trans('trash'),
-        target: `${props.basePath}/trash`,
-        displayed: props.isRoot && props.canAdministrate
-        //exact: true
+        target: `${props.path}/trash`,
+        displayed: props.canAdministrate
       }, {
         type: LINK_BUTTON,
         //icon: 'fa fa-fw fa-sitemap',
         label: trans('Arborescence'),
-        target: `${props.path}/summary`,
-        displayed: props.isRoot
+        target: `${props.path}/summary`
       }
     ]}
   />
 
-DirectoryMenu.propTypes = {
-  basePath: T.string.isRequired,
+ResourcesMenu.propTypes = {
   path: T.string.isRequired,
-  isRoot: T.bool.isRequired,
   canAdministrate: T.bool.isRequired
 }
 
 export {
-  DirectoryMenu
+  ResourcesMenu
 }
