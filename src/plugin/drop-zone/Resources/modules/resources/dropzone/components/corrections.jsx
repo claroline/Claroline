@@ -23,7 +23,7 @@ const getTitle = (dropzone, correction, index = 0) => {
 const Corrections = (props) =>
   <TableData
     data={props.corrections}
-    columns={[
+    definition={[
       {
         name: 'correctionDenied',
         type: 'boolean',
