@@ -11,18 +11,10 @@ const EvaluationMenu = (props) =>
   <ToolMenu
     actions={getTabs(props.contextType, props.permissions).then((apps) => [
       {
-        name: 'my-progression',
-        type: LINK_BUTTON,
-        label: trans('my_progression'),
-        target: props.path+'/',
-        exact: true,
-        displayed: 'workspace' === props.contextType
-      }, {
         name: 'users-progression',
         type: LINK_BUTTON,
         label: trans('users_progression', {}, 'evaluation'),
-        target: props.path+'/users',
-        displayed: props.canShowEvaluations || props.canEdit
+        target: props.path+'/users'
       }
     ].concat(apps.map(app => ({
       name: app.name,
@@ -42,7 +34,6 @@ const EvaluationMenu = (props) =>
 EvaluationMenu.propTypes = {
   path: T.string,
   canEdit: T.bool.isRequired,
-  canShowEvaluations: T.bool.isRequired,
   contextType: T.string.isRequired,
   permissions: T.object
 }

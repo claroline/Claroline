@@ -30,42 +30,18 @@ const EvaluationTool = (props) =>
         <Routes
           path={props.path}
           redirect={[
-            {from: '/', exact: true, to: '/users', disabled: !!props.currentUserId && !!props.contextId}
+            {from: '/', exact: true, to: '/users'}
           ]}
           routes={[
             {
-              path: '/',
-              exact: true,
-              disabled: !props.currentUserId || !props.contextId,
-              render: () => (
-                <ToolPage subtitle={trans('my_progression')}>
-                  <EvaluationUser
-                    userId={props.currentUserId}
-                    workspaceId={props.contextId}
-                  />
-                </ToolPage>
-              )
-            }, {
               path: '/users',
               component: EvaluationUsers,
-              disabled: !props.canShowEvaluations && !props.canEdit,
               exact: true
             }, {
               path: '/users/:userId/:workspaceId?',
               disabled: !props.canShowEvaluations && !props.canEdit,
-              render: (routeProps) => (
-                <ToolPage subtitle={trans('users_progression', {}, 'evaluation')}>
-                  <EvaluationUser
-                    userId={routeProps.match.params.userId}
-                    workspaceId={routeProps.match.params.workspaceId || props.contextId}
-                    backAction={{
-                      type: LINK_BUTTON,
-                      target: props.path + '/users',
-                      exact: true
-                    }}
-                  />
-                </ToolPage>
-              )
+              onEnter: (params = {}) => props.openEvaluation(params.workspaceId || props.contextId, params.userId),
+              component: EvaluationUser
             }, {
               path: '/parameters',
               disabled: !props.canEdit || !props.contextId,
@@ -93,7 +69,8 @@ EvaluationTool.propTypes = {
   contextType: T.string.isRequired,
   contextId: T.string,
   currentUserId: T.string,
-  permissions: T.object
+  permissions: T.object,
+  openEvaluation: T.func.isRequired
 }
 
 export {

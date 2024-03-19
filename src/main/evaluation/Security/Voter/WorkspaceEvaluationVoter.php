@@ -42,8 +42,8 @@ class WorkspaceEvaluationVoter extends AbstractEvaluationVoter
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
-                $canShowEval = $this->isToolGranted(self::SHOW_EVALUATIONS, 'evaluation')
-                    || $this->isToolGranted(self::EDIT, 'evaluation', $object->getWorkspace());
+                $canShowEval = $this->isToolGranted(self::OPEN, 'evaluation')
+                    || $this->isToolGranted(self::OPEN, 'evaluation', $object->getWorkspace());
                 if ($canShowEval) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
