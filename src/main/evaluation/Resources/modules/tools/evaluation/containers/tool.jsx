@@ -5,6 +5,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store/selector
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {EvaluationTool as EvaluationToolComponent} from '#/main/evaluation/tools/evaluation/components/tool'
+import {actions} from '#/main/evaluation/tools/evaluation/store'
 
 const EvaluationTool = connect(
   (state) => ({
@@ -14,6 +15,11 @@ const EvaluationTool = connect(
     contextType: toolSelectors.contextType(state),
     currentUserId: securitySelectors.currentUserId(state),
     permissions: toolSelectors.permissions(state)
+  }),
+  (dispatch) => ({
+    openEvaluation(workspaceId, userId) {
+      dispatch(actions.fetchUserProgression(workspaceId, userId))
+    }
   })
 )(EvaluationToolComponent)
 

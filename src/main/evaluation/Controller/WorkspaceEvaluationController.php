@@ -68,18 +68,9 @@ class WorkspaceEvaluationController
     {
         $this->checkToolAccess('OPEN');
 
-        $hiddenFilters = [];
-
-        // don't show all users evaluations if no right
-        if (!$this->checkToolAccess('SHOW_EVALUATIONS', null, false)) {
-            /** @var User $user */
-            $user = $this->tokenStorage->getToken()->getUser();
-            $hiddenFilters['user'] = $user->getUuid();
-        }
-
         return new JsonResponse($this->crud->list(
             Evaluation::class,
-            array_merge($request->query->all(), ['hiddenFilters' => $hiddenFilters])
+            $request->query->all()
         ));
     }
 
@@ -92,20 +83,11 @@ class WorkspaceEvaluationController
     {
         $this->checkToolAccess('OPEN', $workspace);
 
-        $hiddenFilters = [
-            'workspace' => $workspace->getUuid(),
-        ];
-
-        // don't show all users evaluations if no right
-        if (!$this->checkToolAccess('SHOW_EVALUATIONS', $workspace, false)) {
-            /** @var User $user */
-            $user = $this->tokenStorage->getToken()->getUser();
-            $hiddenFilters['user'] = $user->getUuid();
-        }
-
         return new JsonResponse($this->crud->list(
             Evaluation::class,
-            array_merge($request->query->all(), ['hiddenFilters' => $hiddenFilters])
+            array_merge($request->query->all(), ['hiddenFilters' => [
+                'workspace' => $workspace->getUuid(),
+            ]])
         ));
     }
 
@@ -117,16 +99,12 @@ class WorkspaceEvaluationController
      */
     public function getAction(Workspace $workspace, User $user): JsonResponse
     {
-        if (!$this->checkToolAccess('SHOW_EVALUATIONS', $workspace, false)
-            && (!$this->tokenStorage->getToken()->getUser() instanceof User || $user->getUuid() !== $this->tokenStorage->getToken()->getUser()->getUuid())
-        ) {
-            throw new AccessDeniedException();
-        }
-
         $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
             'workspace' => $workspace,
             'user' => $user,
         ]);
+
+        $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
 
         return new JsonResponse(
             $this->serializer->serialize($workspaceEvaluation)
