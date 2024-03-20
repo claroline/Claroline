@@ -1,4 +1,8 @@
 import {createSelector} from 'reselect'
+import get from 'lodash/get'
+
+import {hasPermission} from '#/main/app/security'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 const STORE_NAME = 'claroline_forum'
 
@@ -7,6 +11,11 @@ const resource = (state) => state[STORE_NAME]
 const forum = createSelector(
   [resource],
   (resource) => resource.forum
+)
+
+const overview = createSelector(
+  [forum],
+  (forum) => !!get(forum, 'display.showOverview')
 )
 
 const isValidatedUser = createSelector(
@@ -52,8 +61,8 @@ const bannedUser = createSelector(
   (restrictions) => restrictions.banned
 )
 const moderator = createSelector(
-  [restrictions],
-  (restrictions) => restrictions.moderator
+  [resourceSelectors.resourceNode],
+  (resourceNode) => hasPermission('edit', resourceNode)
 )
 
 const myMessages = createSelector(
@@ -108,6 +117,7 @@ export const selectors = {
   STORE_NAME,
   resource,
   forum,
+  overview,
   isValidatedUser,
   subject,
   messages,
