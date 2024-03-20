@@ -502,13 +502,21 @@ class DatabaseWriter implements LoggerAwareInterface
 
     private function persistCustomToolRights(array $rights, Tool $tool): void
     {
-        $decoders = $this->toolMaskManager->getMaskDecodersByTool($tool->getName());
+        $decoders = $this->em->getRepository(ToolMaskDecoder::class)->findBy([
+            'tool' => $tool->getName(),
+        ]);
         $nb = count($decoders);
 
         foreach ($rights as $right) {
-            $maskDecoder = $this->toolMaskManager->getMaskDecoderByToolAndName($tool->getName(), $right);
+            $maskDecoder = null;
+            foreach ($decoders as $decoder) {
+                if ($decoder->getName() === $right) {
+                    $maskDecoder = $decoder;
+                    break;
+                }
+            }
 
-            if (is_null($maskDecoder)) {
+            if (empty($maskDecoder)) {
                 $value = pow(2, $nb);
                 $this->toolMaskManager->createToolMaskDecoder($tool->getName(), $right, $value);
                 ++$nb;

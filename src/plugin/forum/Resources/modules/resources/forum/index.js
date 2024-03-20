@@ -1,6 +1,6 @@
 import {reducer} from '#/plugin/forum/resources/forum/store'
 import {ForumResource} from '#/plugin/forum/resources/forum/containers/resource'
-import {ForumMenu} from '#/plugin/forum/resources/forum/components/menu'
+import {ForumMenu} from '#/plugin/forum/resources/forum/containers/menu'
 
 /**
  * Forum resource application.

@@ -17,7 +17,7 @@ const ForumResource = props =>
   <ResourcePage
     primaryAction="post"
     customActions={[
-      {
+      /*{
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
@@ -30,7 +30,7 @@ const ForumResource = props =>
         label: trans('see_subjects', {}, 'forum'),
         target: `${props.path}/subjects`,
         exact: true
-      }, {
+      }, */{
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-bell',
         label: trans('receive_notifications', {}, 'forum'),
@@ -74,7 +74,7 @@ const ForumResource = props =>
         component: Player
       }, {
         path: '/moderation',
-        disabled: !get(props.forum, 'restrictions.moderator', false),
+        disabled: props.moderator,
         render: () => {
           const component = <Moderation path={props.path} />
 
@@ -91,6 +91,7 @@ ForumResource.propTypes = {
   path: T.string.isRequired,
   currentUser: T.object,
   forum: T.shape(ForumType.propTypes).isRequired,
+  moderator: T.bool.isRequired,
   editable: T.bool.isRequired,
   loadLastMessages: T.func.isRequired,
   notify: T.func.isRequired,
