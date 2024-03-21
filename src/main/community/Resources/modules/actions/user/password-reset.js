@@ -3,6 +3,8 @@ import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
+// TODO : move in authentication bundle
+
 export default (users) => {
   const processable = users.filter(user => hasPermission('administrate', user))
 

@@ -112,18 +112,18 @@ const ContextUser = (props) => {
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-user',
                 label: trans('Mon profile', {}, 'actions'),
-                target: '/account/profile'
+                target: props.path+'/profile'
               }, {
                 name: 'parameters',
                 type: LINK_BUTTON,
                 icon: 'fa fa-fw fa-sliders',
                 label: trans('account', {}, 'context'),
-                target: '/account/parameters',
+                target: '/account'/*,
                 subscript: {
                   type: 'text',
                   status: 'warning',
                   value: <span className="fa fa-warning" />
-                }
+                }*/
               }, {
                 name: 'logout',
                 type: URL_BUTTON,
@@ -143,6 +143,7 @@ const ContextUser = (props) => {
 }
 
 ContextUser.propTypes = {
+  path: T.string.isRequired,
   authenticated: T.bool.isRequired,
   currentUser: T.shape(
     UserTypes.propTypes

@@ -80,13 +80,6 @@ registry.add('ClarolineCommunityBundle', {
     'community': () => { return import(/* webpackChunkName: "core-tool-users" */ '#/main/community/tools/community') }
   },
 
-  /**
-   * Provides current user Account sections.
-   */
-  account: {
-    'profile'   : () => { return import(/* webpackChunkName: "core-account-profile" */ '#/main/community/account/profile') }
-  },
-
   data: {
     types: {
       'group'        : () => { return import(/* webpackChunkName: "core-data-type-group" */         '#/main/community/data/types/group') },

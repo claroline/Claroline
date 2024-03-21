@@ -5,6 +5,8 @@ import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_USER_PASSWORD} from '#/main/community/user/modals/password'
 
+// TODO : move in authentication bundle
+
 export default (users) => ({
   name: 'password-change',
   type: MODAL_BUTTON,

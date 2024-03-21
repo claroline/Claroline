@@ -3,6 +3,8 @@ import {trans} from '#/main/app/intl'
 import {url} from '#/main/app/api'
 import {hasPermission} from '#/main/app/security'
 
+// TODO : move in authentication bundle
+
 export default (groups) => {
   const processable = groups.filter(group => hasPermission('administrate', group))
 

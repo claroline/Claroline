@@ -8,6 +8,7 @@ import {selectors, actions} from '#/main/app/context/store'
 
 const ContextUser = connect(
   (state) => ({
+    path: selectors.path(state),
     authenticated: securitySelectors.isAuthenticated(state),
     currentUser: securitySelectors.currentUser(state),
     impersonated: selectors.impersonated(state),

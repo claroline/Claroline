@@ -13,6 +13,7 @@ import {ContentForbidden} from '#/main/app/content/components/forbidden'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContextEditor} from '#/main/app/context/editor/containers/main'
 import {ContextNav} from '#/main/app/context/containers/nav'
+import {ContextProfile} from '#/main/app/context/profile/containers/main'
 
 class ContextMain extends Component {
   componentDidMount() {
@@ -107,6 +108,9 @@ class ContextMain extends Component {
           path={this.props.path}
           routes={[
             {
+              path: '/profile',
+              component: ContextProfile
+            }, {
               path: '/edit',
               component: ContextEditor,
               onEnter: () => this.props.openEditor(this.props.contextData)
