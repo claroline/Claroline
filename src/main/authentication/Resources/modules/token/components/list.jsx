@@ -8,6 +8,7 @@ import {ListData} from '#/main/app/content/list/containers/data'
 
 const TokenList = (props) =>
   <ListData
+    className={props.className}
     flush={props.flush}
     name={props.name}
     fetch={{
@@ -37,14 +38,14 @@ const TokenList = (props) =>
         name: 'restrictions.locked',
         alias: 'locked',
         label: trans('locked'),
-        type: 'boolean',
-        displayed: true
+        type: 'boolean'
       }
     ].concat(props.definition)}
     actions={props.actions}
   />
 
 TokenList.propTypes = {
+  className: T.string,
   flush: T.bool,
   name: T.string.isRequired,
   url: T.oneOfType([T.string, T.array]),

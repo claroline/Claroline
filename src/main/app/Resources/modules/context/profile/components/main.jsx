@@ -5,35 +5,39 @@ import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
 import {Routes} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {AccountPage} from '#/main/app/account/containers/page'
 
 import {ProfileShow} from '#/main/community/profile/containers/show'
 import {ProfileEdit} from '#/main/community/profile/containers/edit'
 
-import changePasswordAction from '#/main/community/actions/user/password-change'
-import {selectors} from '#/main/community/account/profile/store'
+import {selectors} from '#/main/app/context/profile/store'
 import {ContentSizing} from '#/main/app/content/components/sizing'
+import {ContextPage} from '#/main/app/context/containers/page'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 
-const ProfileMain = (props) => {
+const ContextProfile = (props) => {
   return (
-    <AccountPage
-      title={trans('user_profile')}
-      toolbar="edit password-change | fullscreen more"
+    <ContextPage
+      className="user-page"
+      title={props.currentUser.name}
+      poster={props.currentUser.poster}
+      icon={
+        <UserAvatar user={props.currentUser} size="xl" />
+      }
+      toolbar="edit"
       actions={[
         {
           name: 'edit',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-pencil',
           label: trans('edit', {}, 'actions'),
-          target: '/account/profile/edit',
+          target: `${props.path}/profile/edit`,
           primary: true
-        },
-        changePasswordAction([props.currentUser])
+        }
       ]}
     >
       <ContentSizing size="lg">
         <Routes
-          path="/account/profile"
+          path={`${props.path}/profile`}
           routes={[
             {
               path: '/edit',
@@ -42,9 +46,9 @@ const ProfileMain = (props) => {
               render: () => (
                 <ProfileEdit
                   name={selectors.STORE_NAME}
-                  path="/account/profile/edit"
+                  path={`${props.path}/profile/edit`}
                   user={props.currentUser}
-                  back="/account/profile"
+                  back={props.path+'/profile'}
                 />
               )
             }, {
@@ -52,7 +56,7 @@ const ProfileMain = (props) => {
               onEnter: () => props.reset(props.currentUser),
               render: () => (
                 <ProfileShow
-                  path="/account/profile"
+                  path={`${props.path}/profile`}
                   name={selectors.STORE_NAME}
                   user={props.currentUser}
                 />
@@ -61,11 +65,12 @@ const ProfileMain = (props) => {
           ]}
         />
       </ContentSizing>
-    </AccountPage>
+    </ContextPage>
   )
 }
 
-ProfileMain.propTypes = {
+ContextProfile.propTypes = {
+  path: T.string.isRequired,
   currentUser: T.shape({
     username: T.string.isRequired
   }),
@@ -73,5 +78,5 @@ ProfileMain.propTypes = {
 }
 
 export {
-  ProfileMain
+  ContextProfile
 }
