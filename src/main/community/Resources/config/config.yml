@@ -1,8 +1,5 @@
 plugin:
     tools:
-        - name: profile
-          icon: user-circle
-
         - name: community
           icon: users
           tool_rights:

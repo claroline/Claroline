@@ -9,6 +9,10 @@ import {ToolPage} from '#/main/core/tool/containers/page'
 
 import {LogFunctionalList} from '#/main/log/components/functional-list'
 import {selectors} from '#/main/community/tools/community/activity/store'
+import {ContentSizing} from '#/main/app/content/components/sizing'
+import {ContentTitle} from '#/main/app/content/components/title'
+import {ActivityCalendar} from '#/main/app/chart/activity-calendar/components/main'
+import {Activity} from '#/main/log/activity/components/main'
 
 class ActivityMain extends Component {
   constructor(props) {
@@ -28,21 +32,31 @@ class ActivityMain extends Component {
       <ToolPage
         title={trans('activity')}
       >
-        <ContentInfoBlocks
-          className="my-4"
-          size="lg"
-          items={[
-            {
-              icon: 'fa fa-user',
-              label: trans('users', {}, 'community'),
-              value: !this.state.loaded ? '?' : this.props.count.users
-            }, {
-              icon: 'fa fa-users',
-              label: trans('groups', {}, 'community'),
-              value: !this.state.loaded ? '?' : this.props.count.groups
-            }
-          ]}
-        />
+        {/*<div className="row" role="presentation">
+          <ContentSizing size="md">*/}
+            <ContentInfoBlocks
+              className="my-4"
+              size="lg"
+              items={[
+                {
+                  icon: 'fa fa-user',
+                  label: trans('users', {}, 'community'),
+                  value: !this.state.loaded ? '?' : this.props.count.users
+                }, {
+                  icon: 'fa fa-users',
+                  label: trans('groups', {}, 'community'),
+                  value: !this.state.loaded ? '?' : this.props.count.groups
+                }
+              ]}
+            />
+        {/*  </ContentSizing>
+        </div>*/}
+
+        {/*<div className="row py-4" role="presentation">
+          <ContentSizing size="md">
+            <Activity />
+          </ContentSizing>
+        </div>*/}
 
         <LogFunctionalList
           className="component-container"

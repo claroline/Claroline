@@ -13,50 +13,83 @@ import {MODAL_TOKEN_PARAMETERS} from '#/main/authentication/token/modals/paramet
 import {TokenList} from '#/main/authentication/token/components/list'
 import {selectors} from '#/main/authentication/account/authentication/store'
 import {ContentSizing} from '#/main/app/content/components/sizing'
+import {Button} from '#/main/app/action'
+import changePasswordAction from '#/main/community/actions/user/password-change'
+import {ContentTitle} from '#/main/app/content/components/title'
+import {Alert} from '#/main/app/components/alert'
 
 const AuthenticationTool = props =>
   <AccountPage
     title={trans('authentication', {}, 'tools')}
-    actions={[
-      {
-        name: 'add-token',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-plus',
-        label: trans('add_token', {}, 'security'),
-        primary: true,
-        modal: [MODAL_TOKEN_PARAMETERS, {
-          userDisabled: true,
-          token: {
-            user: props.currentUser
-          },
-          onSave: () => props.invalidateList()
-        }]
-      }
-    ]}
   >
-    <ContentSizing size="full">
-      <TokenList
-        flush={true}
-        name={selectors.STORE_NAME}
-        url={['apiv2_apitoken_list_current']}
-        actions={(rows) => [
-          {
-            name: 'edit',
+    <div className="row">
+      <ContentSizing size="md" className="my-4">
+        <Button
+          className="btn btn-primary"
+          {...changePasswordAction([props.currentUser])}
+          icon={undefined}
+        />
+      </ContentSizing>
+    </div>
+
+    <div className="row bg-body-tertiary">
+      <ContentSizing size="md" className="my-4">
+        <ContentTitle
+          displayLevel={3}
+          title={trans('tokens', {}, 'security')}
+        />
+
+        <p className="text-body-secondary">
+          {trans('tokens_help', {}, 'security')}
+        </p>
+
+        <Alert type="info">
+          {trans('tokens_info', {}, 'security')}
+        </Alert>
+
+        <Button
+          className="btn btn-outline-primary"
+          {...{
+            name: 'add-token',
             type: MODAL_BUTTON,
-            icon: 'fa fa-fw fa-pencil',
-            label: trans('edit', {}, 'actions'),
+            icon: 'fa fa-plus',
+            label: trans('add_token', {}, 'security'),
+            primary: true,
             modal: [MODAL_TOKEN_PARAMETERS, {
-              token: rows[0],
               userDisabled: true,
+              token: {
+                user: props.currentUser
+              },
               onSave: () => props.invalidateList()
-            }],
-            disabled: !hasPermission('edit', rows[0]) || get(rows[0], 'restrictions.locked', false),
-            scope: ['object'],
-            group: trans('management')
-          }
-        ]}
-      />
-    </ContentSizing>
+            }]
+          }}
+          icon={undefined}
+        />
+
+        <TokenList
+          className="mt-3"
+          name={selectors.STORE_NAME}
+          url={['apiv2_apitoken_list_current']}
+          actions={(rows) => [
+            {
+              name: 'edit',
+              type: MODAL_BUTTON,
+              icon: 'fa fa-fw fa-pencil',
+              label: trans('edit', {}, 'actions'),
+              modal: [MODAL_TOKEN_PARAMETERS, {
+                token: rows[0],
+                userDisabled: true,
+                onSave: () => props.invalidateList()
+              }],
+              disabled: !hasPermission('edit', rows[0]) || get(rows[0], 'restrictions.locked', false),
+              scope: ['object'],
+              group: trans('management')
+            }
+          ]}
+        />
+      </ContentSizing>
+    </div>
+
   </AccountPage>
 
 AuthenticationTool.propTypes = {

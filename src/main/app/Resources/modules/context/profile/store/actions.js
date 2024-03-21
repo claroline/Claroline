@@ -1,6 +1,6 @@
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
-import {selectors} from '#/main/community/account/profile/store/selectors'
+import {selectors} from '#/main/app/context/profile/store/selectors'
 
 export const actions = {}
 

@@ -13,7 +13,3 @@ services:
             - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CommunityBundle\Manager\TeamManager'
-
-    Claroline\CommunityBundle\Component\Tool\ProfileTool:
-        parent: Claroline\AppBundle\Component\Tool\AbstractTool
-        tags: [ 'claroline.component.tool' ]

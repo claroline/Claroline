@@ -9,7 +9,6 @@ use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\Tool\AbstractTool;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Component\Context\AccountContext;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Manager\FileManager;
@@ -39,7 +38,6 @@ class BadgesTool extends AbstractTool
     public function supportsContext(string $context): bool
     {
         return in_array($context, [
-            AccountContext::getName(),
             DesktopContext::getName(),
             WorkspaceContext::getName(),
         ]);
