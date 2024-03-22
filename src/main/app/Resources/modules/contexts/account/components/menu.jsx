@@ -7,18 +7,11 @@ import {ContextMenu} from '#/main/app/context/containers/menu'
 
 const AccountMenu = (props) =>
   <ContextMenu
-    basePath={props.basePath}
-    title={trans('my_account')}
+    title={trans('account', {}, 'context')}
     tools={props.tools}
-    shortcuts={props.shortcuts}
   />
 
 AccountMenu.propTypes = {
-  basePath: T.string,
-  shortcuts: T.arrayOf(T.shape({
-    type: T.oneOf(['tool', 'action']).isRequired,
-    name: T.string.isRequired
-  })),
   tools: T.arrayOf(T.shape({
     icon: T.string.isRequired,
     name: T.string.isRequired,

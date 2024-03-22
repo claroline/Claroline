@@ -5,8 +5,6 @@ plugin:
 
         - name: progression
           icon: award
-          tool_rights:
-            - show_evaluations
 
     resource_actions:
         - name: evaluation

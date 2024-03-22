@@ -444,17 +444,6 @@ const WorkspaceFormComponent = (props) =>
             ]
           }
         ]
-      }, {
-        icon: 'fa fa-fw fa-bell',
-        title: trans('notifications'),
-        mode: 'advanced',
-        fields: [
-          {
-            name: 'notifications.enabled',
-            type: 'boolean',
-            label: trans('enable_notifications')
-          }
-        ]
       }
     ]}
   >

@@ -1,9 +1,9 @@
 import {connect} from 'react-redux'
 
 import {selectors as configSelectors} from '#/main/app/config/store'
-import {MenuBrand as MenuBrandComponent} from '#/main/app/layout/components/brand'
+import {AppBrand as AppBrandComponent} from '#/main/app/layout/components/brand'
 
-const MenuBrand = connect(
+const AppBrand = connect(
   (state) => ({
     showTitle: true, //selectors.display(state).name,
 
@@ -12,8 +12,8 @@ const MenuBrand = connect(
     title: configSelectors.param(state, 'name'),
     subtitle: configSelectors.param(state, 'secondaryName'),
   })
-)(MenuBrandComponent)
+)(AppBrandComponent)
 
 export {
-  MenuBrand
+  AppBrand
 }

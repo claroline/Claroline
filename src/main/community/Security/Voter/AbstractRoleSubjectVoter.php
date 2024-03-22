@@ -54,7 +54,7 @@ class AbstractRoleSubjectVoter extends AbstractVoter
                     return false;
                 }
 
-                if ($this->isToolGranted('CREATE_USER', 'community', $workspace)
+                if ($this->isToolGranted('REGISTER', 'community', $workspace)
                     || $this->isToolGranted('ADMINISTRATE', 'community', $workspace)) {
                     // If the user try to give the default role let him pass
                     if ($workspace->getDefaultRole() && $workspace->getDefaultRole()->getId() === $role->getId()) {

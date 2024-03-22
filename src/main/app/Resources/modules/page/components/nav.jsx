@@ -7,6 +7,7 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {actions as contextActions, selectors as contextSelectors} from '#/main/app/context/store'
+import {AppBrand} from '#/main/app/layout/containers/brand'
 
 const PageNav = (props) => {
   const dispatch = useDispatch()
@@ -23,6 +24,10 @@ const PageNav = (props) => {
           tooltip="bottom"
           callback={() => dispatch(contextActions.toggleMenu())}
         />
+      }
+
+      {!props.embedded &&
+        <AppBrand />
       }
 
       {props.children}
