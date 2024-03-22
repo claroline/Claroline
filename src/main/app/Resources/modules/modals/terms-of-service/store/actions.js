@@ -14,3 +14,12 @@ actions.fetch = () => (dispatch) => dispatch({
     success: (response) => dispatch(actions.load(response))
   }
 })
+
+actions.acceptTerms = () => ({
+  [API_REQUEST]: {
+    url: ['apiv2_platform_terms_of_service_accept'],
+    request: {
+      method: 'PUT'
+    }
+  }
+})

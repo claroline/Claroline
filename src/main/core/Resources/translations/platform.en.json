@@ -784,7 +784,6 @@
     "registration_confirm": "Validate my registration",
     "show_password": "Show password",
     "hide_password": "Hide password",
-    "accept_terms_of_service": "Accept terms of service",
     "registered_at": "registered at",
     "last_activity_at": "last activity at",
     "add_organizations": "Add organizations",
@@ -1086,5 +1085,7 @@
     "edition": "Edition",
     "after_today": "After today",
     "confirmed": "Confirmed",
-    "validated": "Validated"
+    "validated": "Validated",
+    "accept_terms_of_service": "Accept terms of service",
+    "refuse_terms_of_service": "Refuse terms of service"
 }

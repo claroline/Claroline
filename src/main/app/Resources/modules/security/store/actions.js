@@ -9,6 +9,8 @@ import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
 import {MODAL_CONNECTION} from '#/main/app/modals/connection'
 import {selectors} from '#/main/app/security/store/selectors'
+import {MODAL_TERMS_OF_SERVICE} from '#/main/app/modals/terms-of-service'
+import {param} from '#/main/app/config'
 
 // actions
 export const SECURITY_USER_CHANGE = 'SECURITY_USER_CHANGE'
@@ -52,10 +54,21 @@ actions.login = (username, password, rememberMe) => ({
 })
 
 actions.onLogin = (response) => (dispatch) => {
+  if (!get(response.user, 'meta.acceptedTerms') && param('tosEnabled')) {
+    return dispatch(modalActions.showModal(MODAL_TERMS_OF_SERVICE, {
+      messages: response.messages,
+      validate: true,
+      onAccept: () => {
+        dispatch(actions.changeUser(response.user, false, response.administration))
+      },
+      onRefuse: () => dispatch(actions.logout())
+    }))
+  }
+
   dispatch(actions.changeUser(response.user, false, response.administration))
 
   if (!isEmpty(response.messages)) {
-    dispatch(modalActions.showModal(MODAL_CONNECTION, {
+    return dispatch(modalActions.showModal(MODAL_CONNECTION, {
       messages: response.messages
     }))
   }

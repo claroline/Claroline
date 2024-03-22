@@ -805,7 +805,6 @@
     "registration_confirm": "Valider mon inscription",
     "show_password": "Afficher le mot de passe",
     "hide_password": "Masquer le mot de passe",
-    "accept_terms_of_service": "Accepter les conditions d'utilisation",
     "registered_at": "inscrit le",
     "last_activity_at": "dernière activité le",
     "add_organizations": "Ajouter des organisations",
@@ -1108,5 +1107,7 @@
     "edition": "Modification",
     "after_today": "A partir d'aujourd'hui",
     "confirmed": "Confirmé",
-    "validated": "Validé"
+    "validated": "Validé",
+    "accept_terms_of_service": "Accepter les conditions d'utilisation",
+    "refuse_terms_of_service": "Refuser les conditions d'utilisation"
 }

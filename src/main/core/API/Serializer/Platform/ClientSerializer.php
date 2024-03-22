@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer\Platform;
 
 use Claroline\AppBundle\Manager\PlatformManager;
+use Claroline\AppBundle\Manager\TermsOfServiceManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -54,6 +55,8 @@ class ClientSerializer
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
+    private $termsOfServiceManager;
+
     public function __construct(
         string $env,
         EventDispatcherInterface $eventDispatcher,
@@ -65,7 +68,8 @@ class ClientSerializer
         VersionManager $versionManager,
         PluginManager $pluginManager,
         UserManager $userManager,
-        ResourceTypeSerializer $resourceTypeSerializer
+        ResourceTypeSerializer $resourceTypeSerializer,
+        TermsOfServiceManager $termsOfServiceManager
     ) {
         $this->env = $env;
         $this->tokenStorage = $tokenStorage;
@@ -78,6 +82,7 @@ class ClientSerializer
         $this->userManager = $userManager;
         $this->resourceTypeSerializer = $resourceTypeSerializer;
         $this->eventDispatcher = $eventDispatcher;
+        $this->termsOfServiceManager = $termsOfServiceManager;
     }
 
     public function getName()
@@ -128,6 +133,7 @@ class ClientSerializer
             'privacy' => $this->config->getParameter('privacy'),
             'pricing' => $this->config->getParameter('pricing'),
             'plugins' => $this->pluginManager->getEnabled(),
+            'tosEnabled' => $this->termsOfServiceManager->isActive(),
         ];
 
         $event = new GenericDataEvent();

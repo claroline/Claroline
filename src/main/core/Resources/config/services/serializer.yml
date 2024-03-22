@@ -204,6 +204,7 @@ services:
             - '@Claroline\CoreBundle\Manager\PluginManager'
             - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer'
+            - '@Claroline\AppBundle\Manager\TermsOfServiceManager'
 
     Claroline\CoreBundle\API\Serializer\Log\LogSerializer:
         tags: [claroline.serializer]
