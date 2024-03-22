@@ -22,7 +22,7 @@ const loaded = createSelector(
 const canCreate = createSelector(
   [toolSelectors.toolData, toolSelectors.contextType, toolSelectors.contextData],
   (tool, contextType, contextData) => {
-    const canCreate = hasPermission('create_user', tool)
+    const canCreate = hasPermission('register', tool)
     if (contextType === toolConstants.TOOL_WORKSPACE) {
       return !get(contextData, 'meta.model') && canCreate
     }

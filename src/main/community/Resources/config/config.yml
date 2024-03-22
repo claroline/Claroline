@@ -3,7 +3,7 @@ plugin:
         - name: community
           icon: users
           tool_rights:
-              - create_user
+              - register
               - show_activity
 
     data_sources:

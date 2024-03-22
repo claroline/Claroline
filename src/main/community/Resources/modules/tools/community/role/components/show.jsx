@@ -22,8 +22,8 @@ import {constants} from '#/main/community/constants'
 import {Role as RoleTypes} from '#/main/community/role/prop-types'
 import {RolePage} from '#/main/community/role/components/page'
 import {selectors} from '#/main/community/tools/community/role/store/selectors'
-import {RoleShortcuts} from '#/main/community/tools/community/role/containers/shortcuts'
 import {RoleRights} from '#/main/community/tools/community/role/components/rights'
+import {Alert} from '#/main/app/components/alert'
 
 const RoleShow = (props) =>
   <RolePage
@@ -79,56 +79,46 @@ const RoleShow = (props) =>
     </PageSection>
 
     <PageSection size="md">
-      <ContentSections level={3} defaultOpened="role-users" className="my-3">
-        {'workspace' === props.contextType &&
-          <RoleShortcuts
-            id="role-shortcuts"
-            disabled={!props.role.id}
-            role={props.role}
-            workspace={props.contextData}
-          />
-        }
+      {'ROLE_ADMIN' === props.role.name &&
+        <Alert className="my-3" type="warning" title={trans('Les utilisateurs possédant le rôle administrateur ne sont pas soumis à la gestion de droits.')}>
+          {trans('Ils peuvent tout voir et tout faire sans restrictions. Vous ne devriez donner ce rôle qu\'à un nombre limité de personnes.')}
+        </Alert>
+      }
 
-        {props.role.id && ('workspace' === props.contextType || constants.ROLE_WORKSPACE === props.role.type) &&
-          <RoleRights
-            id="role-workspace-rights"
-            disabled={!props.role.id}
-            icon="fa fa-fw fa-book"
-            title={trans('workspace_tools')}
-            role={props.role}
-            contextType="workspace"
-            contextId={props.contextData ? props.contextData.id : get(props.role, 'workspace.id')}
-            rights={props.workspaceRights}
-            reload={props.loadWorkspaceRights}
-          />
-        }
+      {'ROLE_ADMIN' !== props.role.name &&
+        <ContentSections level={3} defaultOpened="role-users" className="my-3">
+          {props.role.id && ('workspace' === props.contextType || constants.ROLE_WORKSPACE === props.role.type) &&
+            <RoleRights
+              id="role-workspace-rights"
+              disabled={!props.role.id}
+              icon="fa fa-fw fa-lock"
+              title={trans('permissions')}
+              subtitle={trans('Donnez ou retirez des droits d\'accès aux détenteurs de ce rôle')}
+              role={props.role}
+              contextType="workspace"
+              contextId={props.contextData ? props.contextData.id : get(props.role, 'workspace.id')}
+              rights={props.workspaceRights}
+              reload={props.loadWorkspaceRights}
+              fill={true}
+            />
+          }
 
-        {props.role.id && ('desktop' === props.contextType && constants.ROLE_WORKSPACE !== props.role.type) &&
-          <RoleRights
-            id="role-desktop-rights"
-            disabled={!props.role.id}
-            icon="fa fa-fw fa-tools"
-            title={trans('desktop_tools')}
-            role={props.role}
-            contextType="desktop"
-            rights={props.desktopRights}
-            reload={props.loadDesktopRights}
-          />
-        }
-
-        {props.role.id && ('desktop' === props.contextType && constants.ROLE_WORKSPACE !== props.role.type) &&
-          <RoleRights
-            id="role-administration-rights"
-            disabled={!props.role.id}
-            icon="fa fa-fw fa-cogs"
-            title={trans('administration_tools')}
-            role={props.role}
-            contextType="administration"
-            rights={props.administrationRights}
-            reload={props.loadAdministrationRights}
-          />
-        }
-      </ContentSections>
+          {props.role.id && ('desktop' === props.contextType && constants.ROLE_WORKSPACE !== props.role.type) &&
+            <RoleRights
+              id="role-desktop-rights"
+              disabled={!props.role.id}
+              icon="fa fa-fw fa-lock"
+              title={trans('permissions')}
+              subtitle={trans('Donnez ou retirez des droits d\'accès aux détenteurs de ce rôle')}
+              role={props.role}
+              contextType="desktop"
+              rights={props.desktopRights}
+              reload={props.loadDesktopRights}
+              fill={true}
+            />
+          }
+        </ContentSections>
+      }
     </PageSection>
 
     {'ROLE_ANONYMOUS' !== props.role.name &&
@@ -235,7 +225,6 @@ RoleShow.propTypes = {
   reload: T.func.isRequired,
   loadWorkspaceRights: T.func.isRequired,
   loadDesktopRights: T.func.isRequired,
-  loadAdministrationRights: T.func.isRequired,
   addUsers: T.func.isRequired,
   addGroups: T.func.isRequired
 }

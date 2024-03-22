@@ -199,7 +199,7 @@ class UserValidator implements ValidatorInterface
 
                 $workspace = $role->getWorkspace();
                 if ($workspace) {
-                    if ($this->authorization->isGranted(ToolPermissions::getPermission('community', 'CREATE_USER'), $workspace)) {
+                    if ($this->authorization->isGranted(ToolPermissions::getPermission('community', 'REGISTER'), $workspace)) {
                         // If user is workspace manager then grant access
                         if ($this->workspaceManager->isManager($workspace, $this->tokenStorage->getToken())) {
                             return false;

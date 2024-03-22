@@ -5,11 +5,10 @@ import {trans} from '#/main/app/intl/translation'
 import {asset} from '#/main/app/config'
 import {LinkButton} from '#/main/app/buttons/link'
 
-const MenuBrand = props =>
+const AppBrand = props =>
   <LinkButton
-    className="app-menu-brand justify-content-center"
+    className="app-brand justify-content-center"
     target="/"
-    onClick={props.closeMenu}
   >
     {props.logo &&
       <img
@@ -19,7 +18,7 @@ const MenuBrand = props =>
       />
     }
 
-    {props.showTitle && props.title &&
+    {props.title &&
       <h1 className="app-brand-title d-none d-md-block">
         {props.title}
 
@@ -30,14 +29,12 @@ const MenuBrand = props =>
     }
   </LinkButton>
 
-MenuBrand.propTypes = {
+AppBrand.propTypes = {
   logo: T.string,
   title: T.string.isRequired,
-  subtitle: T.string,
-  showTitle: T.bool,
-  closeMenu: T.func.isRequired
+  subtitle: T.string
 }
 
 export {
-  MenuBrand
+  AppBrand
 }

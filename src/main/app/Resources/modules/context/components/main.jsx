@@ -154,8 +154,6 @@ class ContextMain extends Component {
 }
 
 ContextMain.propTypes = {
-  parent: T.string,
-
   // context info
   path: T.string.isRequired,
   id: T.string,

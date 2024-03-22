@@ -25,7 +25,7 @@
     }
 }
 
-.app-menu-brand {
+.app-brand {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -52,7 +52,7 @@
 
         > small {
             font-weight: $font-weight-lighter;
-            color: $brand-secondary-color;
+            //color: $brand-secondary-color;
         }
     }
 }

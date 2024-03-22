@@ -60,10 +60,8 @@ PlatformStatus.propTypes = {
 
 const AdministrationMenu = props =>
   <ContextMenu
-    basePath={props.basePath}
     title={trans('administration')}
     tools={props.tools}
-    shortcuts={props.shortcuts}
     actions={[
       {
         name: 'about',
@@ -105,11 +103,6 @@ const AdministrationMenu = props =>
   </ContextMenu>
 
 AdministrationMenu.propTypes = {
-  basePath: T.string.isRequired,
-  shortcuts: T.arrayOf(T.shape({
-    type: T.oneOf(['tool', 'action']).isRequired,
-    name: T.string.isRequired
-  })),
   tools: T.arrayOf(T.shape({
     icon: T.string.isRequired,
     name: T.string.isRequired,

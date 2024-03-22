@@ -116,11 +116,11 @@ const WorkspaceMenu = (props) => {
     <ContextMenu
       title={
         <>
-          <span className={classes({
+          {/*<span className={classes({
             'fa fa-fw fa-globe icon-with-text-right': get(props.workspace, 'registration.selfRegistration'),
-            /*'fa fa-fw fa-stamp icon-with-text-right': get(props.workspace, 'meta.model'),*/
+            'fa fa-fw fa-stamp icon-with-text-right': get(props.workspace, 'meta.model'),
             'fa fa-fw fa-user icon-with-text-right': get(props.workspace, 'meta.personal')
-          })} aria-hidden={true} />
+          })} aria-hidden={true} />*/}
 
           {!isEmpty(props.workspace) ? props.workspace.name : trans('workspace')}
         </>
