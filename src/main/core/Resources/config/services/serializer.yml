@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Claroline\CoreBundle\API\Serializer\ParametersSerializer:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
@@ -140,9 +135,10 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@event_dispatcher'
-            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceCommentSerializer'
 
     Claroline\CoreBundle\API\Serializer\Resource\ResourceRightsSerializer:
         tags: [claroline.serializer]

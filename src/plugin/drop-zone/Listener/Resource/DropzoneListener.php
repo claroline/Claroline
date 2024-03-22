@@ -61,9 +61,8 @@ class DropzoneListener
         /** @var Dropzone $copy */
         $copy = $event->getCopy();
 
-        $copy = $this->dropzoneManager->copyDropzone($dropzone, $copy);
+        $this->dropzoneManager->copyDropzone($dropzone, $copy);
 
-        $event->setCopy($copy);
         $event->stopPropagation();
     }
 

@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Event\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -20,35 +19,14 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class CopyResourceEvent extends Event
 {
-    /** @var AbstractResource */
-    private $resource;
-
-    /** @var AbstractResource */
-    private $copy;
-
-    public function __construct(AbstractResource $resource, AbstractResource $copy)
-    {
-        $this->resource = $resource;
-        $this->copy = $copy;
+    public function __construct(
+        private readonly AbstractResource $resource,
+        private readonly AbstractResource $copy
+    ) {
     }
 
     /**
-     * Returns the new parent of the resource.
-     *
-     * @deprecated this can be retrieved directly from the `copiedNode`
-     */
-    public function getParent(): ?ResourceNode
-    {
-        return $this->copy->getResourceNode()->getParent();
-    }
-
-    public function getCopy()
-    {
-        return $this->copy;
-    }
-
-    /**
-     * Returns the resource to be copied.
+     * Returns the instance of the resource to be copied.
      */
     public function getResource(): AbstractResource
     {
@@ -56,10 +34,10 @@ class CopyResourceEvent extends Event
     }
 
     /**
-     * Sets the copy of the original resource.
+     * Returns the copy instance of the resource.
      */
-    public function setCopy(AbstractResource $copy)
+    public function getCopy(): AbstractResource
     {
-        $this->copy = $copy;
+        return $this->copy;
     }
 }

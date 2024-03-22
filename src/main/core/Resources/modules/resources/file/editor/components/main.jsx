@@ -14,8 +14,6 @@ import {getFile, getTypeName} from '#/main/core/files'
 import {constants} from '#/main/core/resources/file/constants'
 import {selectors} from '#/main/core/resources/file/editor/store/selectors'
 
-// TODO : find a way to reuse file creation form component
-
 const EditorMain = (props) =>
   <FormData
     level={2}
@@ -29,10 +27,23 @@ const EditorMain = (props) =>
       target: props.path,
       exact: true
     }}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,
+        fields: [
+          {
+            name: 'file',
+            type: 'file',
+            label: trans('file'),
+            required: true,
+            displayed: false
+          }
+        ]
+      }, {
+        icon: 'fa fa-fw fa-sign-in',
+        title: trans('opening_parameters'),
+        mode: 'advanced',
         fields: [
           {
             name: 'opening',
@@ -43,14 +54,9 @@ const EditorMain = (props) =>
               noEmpty: true,
               choices: constants.OPENING_TYPES
             }
-          }, {
-            name: 'commentsActivated',
-            label: trans('activate_comments'),
-            type: 'boolean',
-            displayed: -1 < props.mimeType.indexOf('video')
           }
         ]
-      }
+      },
     ]}
   >
     <Await

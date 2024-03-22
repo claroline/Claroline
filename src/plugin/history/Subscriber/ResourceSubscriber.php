@@ -19,7 +19,7 @@ class ResourceSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ResourceEvents::RESOURCE_OPEN => 'onLoad',
+            ResourceEvents::OPEN => 'onLoad',
         ];
     }
 

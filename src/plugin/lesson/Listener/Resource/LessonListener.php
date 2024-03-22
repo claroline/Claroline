@@ -82,7 +82,6 @@ class LessonListener
 
         $this->chapterManager->copyRoot($lesson->getRoot(), $newLesson->getRoot());
 
-        $event->setCopy($newLesson);
         $event->stopPropagation();
     }
 

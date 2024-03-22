@@ -197,7 +197,6 @@ class BlogListener
         $this->om->persist($newBlog);
         $this->om->flush();
 
-        $event->setCopy($newBlog);
         $event->stopPropagation();
     }
 }

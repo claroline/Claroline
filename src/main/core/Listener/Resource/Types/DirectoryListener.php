@@ -38,13 +38,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class DirectoryListener
 {
     public function __construct(
-        private ObjectManager $om,
-        private SerializerProvider $serializer,
-        private Crud $crud,
-        private FileManager $fileManager,
-        private ResourceManager $resourceManager,
-        private ResourceActionManager $actionManager,
-        private RightsManager $rightsManager
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly Crud $crud,
+        private readonly FileManager $fileManager,
+        private readonly ResourceManager $resourceManager,
+        private readonly ResourceActionManager $actionManager,
+        private readonly RightsManager $rightsManager
     ) {
     }
 
@@ -81,15 +81,15 @@ class DirectoryListener
         $created = $this->createResource($parent, $data['resourceNode'], !empty($data['resource']) ? $data['resource'] : [], $event->getOptions());
 
         $event->setResponse(new JsonResponse([
-            'resourceNode' => $this->serializer->serialize($created['resourceNode']),
-            'resource' => $this->serializer->serialize($created['resource']),
+            'resourceNode' => $this->serializer->serialize($created->getResourceNode()),
+            'resource' => $this->serializer->serialize($created),
         ], 201));
     }
 
     /**
      * Adds multiple files inside a directory.
      */
-    public function onAddFiles(ResourceActionEvent $event)
+    public function onAddFiles(ResourceActionEvent $event): void
     {
         $files = $event->getFiles();
         $parent = $event->getResourceNode();
@@ -128,7 +128,7 @@ class DirectoryListener
                 'hashName' => $publicFile->getUrl(),
             ], $event->getOptions());
 
-            $resources[] = $created['resourceNode'];
+            $resources[] = $created->getResourceNode();
         }
         $this->om->endFlushSuite();
 
@@ -137,7 +137,7 @@ class DirectoryListener
         }, $resources)));
     }
 
-    public function onDelete(DeleteResourceEvent $event)
+    public function onDelete(DeleteResourceEvent $event): void
     {
         // delete all children of the current directory
         // this may be interesting to put it in the messenger bus
@@ -148,7 +148,7 @@ class DirectoryListener
         }
     }
 
-    private function createResource(ResourceNode $parent, array $nodeData, ?array $resourceData = [], ?array $options = [])
+    private function createResource(ResourceNode $parent, array $nodeData, ?array $resourceData = [], ?array $options = []): AbstractResource
     {
         $this->om->startFlushSuite();
 
@@ -213,9 +213,6 @@ class DirectoryListener
             $this->rightsManager->copy($parent, $resourceNode);
         }
 
-        return [
-            'resourceNode' => $resourceNode,
-            'resource' => $resource,
-        ];
+        return $resource;
     }
 }

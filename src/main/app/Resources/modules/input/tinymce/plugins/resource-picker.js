@@ -31,7 +31,7 @@ function openResourcePicker(editor) {
 
         selected.map((resourceNode, index) => {
           fetch(
-            url(['claro_resource_embed', {type: resourceNode.meta.type, id: resourceNode.id}]), {
+            url(['claro_resource_embed', {id: resourceNode.id}]), {
               credentials: 'include'
             })
             .then(response => {

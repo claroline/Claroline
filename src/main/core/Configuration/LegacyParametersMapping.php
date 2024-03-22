@@ -59,7 +59,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'auto_validate_email' => 'database_restoration.auto_validate_email',
             'notifications_refresh_delay' => 'notifications_refresh_delay', // in ms
             'auto_enable_email_redirect' => 'database_restoration.auto_enable_email_redirect',
-            'auto_enable_notifications' => 'auto_enable_notifications',
             'force_organization_creation' => 'registration.force_organization_creation',
             'allow_workspace_at_registration' => 'registration.allow_workspace',
             'profile_roles_confidential' => 'profile.roles_confidential',

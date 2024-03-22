@@ -6,8 +6,8 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\CreateResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
@@ -20,21 +20,13 @@ use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
  */
 class ResourceLifecycleManager
 {
-    /** @var StrictDispatcher */
-    private $dispatcher;
-
-    /** @var ObjectManager */
-    private $om;
-
     public function __construct(
-        StrictDispatcher $eventDispatcher,
-        ObjectManager $om)
-    {
-        $this->dispatcher = $eventDispatcher;
-        $this->om = $om;
+        private readonly StrictDispatcher $dispatcher,
+        private readonly ObjectManager $om
+    ) {
     }
 
-    public function load(ResourceNode $resourceNode)
+    public function load(ResourceNode $resourceNode): LoadResourceEvent
     {
         /** @var LoadResourceEvent $event */
         $event = $this->dispatcher->dispatch(
@@ -46,7 +38,7 @@ class ResourceLifecycleManager
         return $event;
     }
 
-    public function embed(ResourceNode $resourceNode)
+    public function embed(ResourceNode $resourceNode): EmbedResourceEvent
     {
         /** @var EmbedResourceEvent $event */
         $event = $this->dispatcher->dispatch(
@@ -58,33 +50,7 @@ class ResourceLifecycleManager
         return $event;
     }
 
-    public function create(ResourceNode $resourceNode)
-    {
-        /** @var CreateResourceEvent $event */
-        $event = $this->dispatcher->dispatch(
-            static::eventName('create', $resourceNode),
-            CreateResourceEvent::class,
-            [$this->getResourceFromNode($resourceNode)]
-        );
-
-        return $event;
-    }
-
-    public function edit(ResourceNode $resourceNode)
-    {
-        // fixme : wrong event. Use crud instead ?
-
-        /** @var CopyResourceEvent $event */
-        $event = $this->dispatcher->dispatch(
-            static::eventName('edit', $resourceNode),
-            CopyResourceEvent::class,
-            [$this->getResourceFromNode($resourceNode)]
-        );
-
-        return $event;
-    }
-
-    public function copy($originalResource, $copiedResource)
+    public function copy($originalResource, $copiedResource): CopyResourceEvent
     {
         /** @var CopyResourceEvent $event */
         $event = $this->dispatcher->dispatch(
@@ -96,7 +62,7 @@ class ResourceLifecycleManager
         return $event;
     }
 
-    public function export(ResourceNode $resourceNode)
+    public function export(ResourceNode $resourceNode): DownloadResourceEvent
     {
         /** @var DownloadResourceEvent $event */
         $event = $this->dispatcher->dispatch(
@@ -108,7 +74,7 @@ class ResourceLifecycleManager
         return $event;
     }
 
-    public function delete(ResourceNode $resourceNode, bool $soft = true)
+    public function delete(ResourceNode $resourceNode, bool $soft = true): DeleteResourceEvent
     {
         /** @var DeleteResourceEvent $event */
         $event = $this->dispatcher->dispatch(
@@ -123,17 +89,15 @@ class ResourceLifecycleManager
     /**
      * Generates the names for dispatched events.
      */
-    private static function eventName(string $prefix, ResourceNode $resourceNode): string
+    private static function eventName(string $action, ResourceNode $resourceNode): string
     {
-        return 'resource.'.$resourceNode->getResourceType()->getName().'.'.$prefix;
+        return ResourceEvents::getEventName($action, $resourceNode->getResourceType()->getName());
     }
 
     /**
      * Returns the resource linked to a node.
-     *
-     * @return AbstractResource
      */
-    private function getResourceFromNode(ResourceNode $resourceNode)
+    private function getResourceFromNode(ResourceNode $resourceNode): ?AbstractResource
     {
         /** @var AbstractResource $resource */
         $resource = $this->om

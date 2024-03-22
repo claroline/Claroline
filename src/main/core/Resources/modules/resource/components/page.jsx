@@ -29,11 +29,15 @@ import {LogsMain} from '#/main/log/resource/logs/containers/main'
 const ResourcePage = (props) => {
   // remove workspace root from path (it's already known by the breadcrumb)
   // find a better way to handle this
-  let ancestors
-  if (toolConst.TOOL_WORKSPACE === props.contextType) {
-    ancestors = props.resourceNode.path.slice(1)
-  } else {
-    ancestors = props.resourceNode.path.slice(0)
+  const breadcrumb = []
+  if (props.resourceNode.parent) {
+    if (toolConst.TOOL_WORKSPACE !== props.contextType || !get(props.resourceNode, 'parent.root')) {
+      breadcrumb.push({
+        type: LINK_BUTTON,
+        label: props.resourceNode.parent.name,
+        target: `${props.basePath}/${props.resourceNode.parent.slug}`
+      })
+    }
   }
 
   const routes = [
@@ -59,11 +63,13 @@ const ResourcePage = (props) => {
       showTitle={get(props.resourceNode, 'display.showTitle')}
       title={props.resourceNode.name}
       subtitle={props.subtitle}
-      path={[].concat(ancestors.map(ancestorNode => ({
-        type: LINK_BUTTON,
-        label: ancestorNode.name,
-        target: `${props.basePath}/${ancestorNode.slug}`
-      })), props.path)}
+      path={breadcrumb.concat([
+        {
+          type: LINK_BUTTON,
+          label: props.resourceNode.name,
+          target: '' // current page
+        }
+      ])}
       poster={props.resourceNode.poster}
       icon={get(props.resourceNode, 'display.showIcon') && (props.userEvaluation ?
         <UserProgression

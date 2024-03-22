@@ -43,7 +43,6 @@ class FileComponent extends Component {
         this.props.onChange(file)
       }
     } else {
-      // Only manages multiple files if autoUpload is false
       if (this.props.autoUpload) {
         Promise.all(files.map(file => this.props.uploadFile(file, this.props.uploadUrl)))
           .then(this.props.onChange)

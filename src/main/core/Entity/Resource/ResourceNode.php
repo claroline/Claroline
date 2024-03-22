@@ -11,21 +11,22 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Display\Hidden;
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
-use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\AppBundle\Entity\Meta\Published;
-use Claroline\AppBundle\Entity\Meta\Thumbnail;
+use Claroline\AppBundle\Entity\Meta\UpdatedAt;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
-use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Model\HasWorkspace;
 use Claroline\EvaluationBundle\Entity\Evaluated;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -33,9 +34,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * Base entity for all resources.
  *
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository")
+ *
  * @ORM\Table(name="claro_resource_node")
+ *
  * @Gedmo\Tree(type="materializedPath")
- * @ORM\HasLifecycleCallbacks
  */
 class ResourceNode
 {
@@ -43,21 +45,26 @@ class ResourceNode
     use Id;
     use Uuid;
     use Code;
+
     // meta
-    use Thumbnail;
-    use Poster;
     use Description;
+    use CreatedAt;
+    use UpdatedAt;
     use Creator;
     use Published;
     use HasWorkspace;
-    // restrictions
+
+    // display
     use Hidden;
+    use Poster;
+    use Thumbnail;
+
+    // restrictions
     use AccessibleFrom;
     use AccessibleUntil;
+
     // evaluation parameters
     use Evaluated;
-    const PATH_SEPARATOR = '/';
-    const PATH_OLDSEPARATOR = '`';
 
     /**
      * @var string
@@ -67,25 +74,10 @@ class ResourceNode
     private $license;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="creation_date", type="datetime")
-     * @Gedmo\Timestampable(on="create")
-     */
-    private $creationDate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="modification_date", type="datetime")
-     * @Gedmo\Timestampable(on="update")
-     */
-    private $modificationDate;
-
-    /**
      * @var ResourceType
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType")
+     *
      * @ORM\JoinColumn(name="resource_type_id", onDelete="CASCADE", nullable=false)
      */
     private $resourceType;
@@ -110,6 +102,7 @@ class ResourceNode
      * @var string
      *
      * @Gedmo\TreePathSource
+     *
      * @ORM\Column()
      */
     private $name;
@@ -118,19 +111,20 @@ class ResourceNode
      * @var ResourceNode
      *
      * @Gedmo\TreeParent
+     *
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     inversedBy="children"
      * )
+     *
      * @ORM\JoinColumns({@ORM\JoinColumn(onDelete="CASCADE")})
      */
     protected $parent;
 
     /**
      * @Gedmo\TreeLevel
-     * @ORM\Column(type="integer", nullable=true)
      *
-     * @todo this property shouldn't be nullable (is it due to materialized path strategy ?)
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $lvl;
 
@@ -141,27 +135,17 @@ class ResourceNode
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
      *     mappedBy="parent"
      * )
+     *
      * @ORM\OrderBy({"index" = "ASC"})
      */
     protected $children;
 
     /**
-     * @var string
-     *
      * @Gedmo\TreePath(separator="`")
-     * @ORM\Column(type="text", nullable=true)
      *
-     * @todo remove me
-     */
-    protected $path;
-
-    /**
-     * @var string
-     *
-     * nullable true because it's a new property and migrations/updaters were needed
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $materializedPath;
+    protected ?string $path;
 
     /**
      * @var ArrayCollection|ResourceRights[]
@@ -187,11 +171,6 @@ class ResourceNode
      * @ORM\Column(name="mime_type", nullable=true)
      */
     protected $mimeType;
-
-    /**
-     * @var string
-     */
-    private $pathForCreationLog = '';
 
     /**
      * @var string
@@ -240,6 +219,7 @@ class ResourceNode
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceComment",
      *     mappedBy="resourceNode"
      * )
+     *
      * @ORM\OrderBy({"creationDate" = "DESC"})
      *
      * @todo : remove me. this relation should not be bi-directional
@@ -250,6 +230,7 @@ class ResourceNode
 
     /**
      * @Gedmo\Slug(fields={"name"})
+     *
      * @ORM\Column(length=128, unique=true)
      *
      * @var string
@@ -257,11 +238,9 @@ class ResourceNode
     private $slug;
 
     /**
-     * @var AbstractResource
-     *
      * @deprecated
      */
-    private $resource;
+    private ?AbstractResource $resource = null;
 
     public function __construct()
     {
@@ -270,6 +249,21 @@ class ResourceNode
         $this->rights = new ArrayCollection();
         $this->children = new ArrayCollection();
         $this->comments = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->code;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
     }
 
     /**
@@ -290,46 +284,6 @@ class ResourceNode
     public function setLicense($license)
     {
         $this->license = $license;
-    }
-
-    /**
-     * Returns the resource creation date.
-     *
-     * @return \DateTime
-     */
-    public function getCreationDate()
-    {
-        return $this->creationDate;
-    }
-
-    /**
-     * Sets the resource creation date.
-     *
-     * NOTE : creation date is already handled by the timestamp listener; this
-     *        setter exists mainly for testing purposes.
-     */
-    public function setCreationDate(\DateTime $date)
-    {
-        $this->creationDate = $date;
-        $this->modificationDate = $date;
-    }
-
-    /**
-     * Returns the resource modification date.
-     *
-     * @return \DateTime
-     */
-    public function getModificationDate()
-    {
-        return $this->modificationDate;
-    }
-
-    /**
-     * Sets the resource modification date.
-     */
-    public function setModificationDate(\DateTime $date)
-    {
-        $this->modificationDate = $date;
     }
 
     /**
@@ -425,56 +379,11 @@ class ResourceNode
     /**
      * Returns the "raw" path of the resource
      * (the path merge names and ids of all items).
-     * Eg.: "Root-1/sub_dir-2/file.txt-3/".
-     *
-     * @return string
+     * Eg.: "Root-1`sub_dir-2`file.txt-3`".
      */
-    public function getPath()
+    public function getPath(): ?string
     {
         return $this->path;
-    }
-
-    /**
-     * Returns the path cleaned from its ids.
-     * Eg.: "Root/sub_dir/file.txt".
-     *
-     * @return string
-     */
-    public function getPathForDisplay()
-    {
-        $pathForDisplay = preg_replace('/%([^\/]+)\//', ' / ', $this->path);
-
-        if (null !== $pathForDisplay && strlen($pathForDisplay) > 0) {
-            $pathForDisplay = substr_replace($pathForDisplay, '', -3);
-        }
-
-        return $pathForDisplay;
-    }
-
-    /**
-     * Sets the resource name.
-     *
-     * @param string $name
-     *
-     * @throws \InvalidArgumentException if the name contains the path separator ('/')
-     */
-    public function setName($name)
-    {
-        if (false !== strpos(self::PATH_SEPARATOR, $name)) {
-            throw new \InvalidArgumentException('Invalid character "'.self::PATH_SEPARATOR.'" in resource name.');
-        }
-
-        $this->name = $name;
-    }
-
-    /**
-     * Returns the resource name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -546,28 +455,6 @@ class ResourceNode
     }
 
     /**
-     * This is required for logging the resource path at the creation.
-     * Do not use this function otherwise.
-     *
-     * @param string $path
-     */
-    public function setPathForCreationLog($path)
-    {
-        $this->pathForCreationLog = $path;
-    }
-
-    /**
-     * This is required for logging the resource path at the creation.
-     * Do not use this function otherwise.
-     *
-     * @return string
-     */
-    public function getPathForCreationLog()
-    {
-        return $this->pathForCreationLog;
-    }
-
-    /**
      * Add a child resource node.
      */
     public function addChild(self $resourceNode)
@@ -629,25 +516,10 @@ class ResourceNode
 
     /**
      * Sets the resource active state.
-     *
-     * @param $active
      */
     public function setActive($active)
     {
         $this->active = $active;
-    }
-
-    /**
-     * toString method.
-     * used to display the no path in forms.
-     *
-     * @return string
-     *
-     * @deprecated
-     */
-    public function __toString()
-    {
-        return $this->getPathForDisplay();
     }
 
     public function setFullscreen($fullscreen)
@@ -673,155 +545,59 @@ class ResourceNode
         ];
     }
 
-    public function getAllowedIps()
+    public function getAllowedIps(): array
     {
         return isset($this->accesses['ip']) ? $this->accesses['ip']['ips'] : [];
     }
 
-    public function getAccessCode()
+    public function getAccessCode(): ?string
     {
         return isset($this->accesses['code']) ? $this->accesses['code'] : null;
     }
 
-    public function setAccessCode($code)
+    public function setAccessCode($code): void
     {
         $this->accesses['code'] = $code;
     }
 
-    public function getAccesses()
+    public function getAccesses(): ?array
     {
         return $this->accesses;
     }
 
-    public function setAccesses(array $accesses)
+    public function setAccesses(array $accesses): void
     {
         $this->accesses = $accesses;
     }
 
-    /**
-     * Gets how many times a resource has been viewed.
-     *
-     * @return int
-     */
-    public function getViewsCount()
+    public function getViews(): int
     {
         return $this->viewsCount;
     }
 
-    /**
-     * Adds one unit to the resource view count.
-     *
-     * @return ResourceNode
-     */
-    public function addView()
+    public function addView(): void
     {
         ++$this->viewsCount;
-
-        return $this;
     }
 
     /**
-     * Returns the ancestors of a resource.
-     *
-     * @return array[array] An array of resources represented as arrays
+     * @deprecated
      */
-    public function getAncestors(): array
-    {
-        // No need to access DB to get ancestors as they are given by the materialized path.
-        //I use \/ instead of PATH_SEPARATOR for escape purpose
-        $parts = preg_split('/%([^\/]+)\//', $this->materializedPath, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-
-        $ancestors = [];
-        $countAncestors = count($parts);
-        for ($i = 0; $i < $countAncestors; $i += 2) {
-            if (array_key_exists($i + 1, $parts)) {
-                $ancestors[] = [
-                  'id' => $parts[$i + 1], // retro-compatibility
-                  'slug' => $parts[$i + 1],
-                  'name' => $parts[$i],
-              ];
-            }
-        }
-
-        return $ancestors;
-    }
-
-    /**
-     * @ORM\PreFlush
-     */
-    public function preFlush(PreFlushEventArgs $args)
-    {
-        $ancestors = $this->getOldAncestors();
-        $ids = array_map(function ($ancestor) {
-            return $ancestor['id'];
-        }, $ancestors);
-        $ids = array_unique($ids);
-
-        if (count($ids) !== count($ancestors)) {
-            return;
-        }
-
-        $entityManager = $args->getObjectManager();
-
-        $this->materializedPath = $this->makePath($this);
-        $entityManager->persist($this);
-    }
-
-    private function makePath(self $node, $path = '')
-    {
-        if ($node->getParent()) {
-            $path = $this->makePath($node->getParent(), $node->getName().'%'.$node->getSlug().self::PATH_SEPARATOR.$path);
-        } else {
-            $path = $node->getName().'%'.$node->getSlug().self::PATH_SEPARATOR.$path;
-        }
-
-        return $path;
-    }
-
-    /**
-     * Returns the ancestors of a resource.
-     *
-     * @return array[array] An array of resources represented as arrays
-     */
-    private function getOldAncestors(): array
-    {
-        // No need to access DB to get ancestors as they are given by the materialized path.
-        $parts = preg_split('/-(\d+)'.ResourceNode::PATH_OLDSEPARATOR.'/', $this->path, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        $ancestors = [];
-        $countAncestors = count($parts);
-        for ($i = 0; $i < $countAncestors; $i += 2) {
-            if (array_key_exists($i + 1, $parts)) {
-                $ancestors[] = [
-                    'id' => $parts[$i + 1], // retro-compatibility
-                    'slug' => $parts[$i + 1],
-                    'name' => $parts[$i],
-                ];
-            }
-        }
-
-        return $ancestors;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isCommentsActivated()
+    public function isCommentsActivated(): bool
     {
         return $this->commentsActivated;
     }
 
     /**
-     * @param bool $commentsActivated
+     * @deprecated
      */
-    public function setCommentsActivated($commentsActivated)
+    public function setCommentsActivated(bool $commentsActivated): void
     {
         $this->commentsActivated = $commentsActivated;
     }
 
     /**
-     * Get comments.
-     *
-     * @return ResourceComment[]|ArrayCollection
+     * @deprecated
      */
     public function getComments()
     {
@@ -829,7 +605,7 @@ class ResourceNode
     }
 
     /**
-     * Add comment.
+     * @deprecated
      */
     public function addComment(ResourceComment $comment)
     {
@@ -839,7 +615,7 @@ class ResourceNode
     }
 
     /**
-     * Remove comment.
+     * @deprecated
      */
     public function removeComment(ResourceComment $comment)
     {
@@ -849,19 +625,19 @@ class ResourceNode
     }
 
     /**
-     * Remove all comments.
+     * @deprecated
      */
     public function emptyComments()
     {
         $this->comments->clear();
     }
 
-    public function getSlug()
+    public function getSlug(): ?string
     {
         return $this->slug;
     }
 
-    public function setSlug($slug = null)
+    public function setSlug(string $slug = null): void
     {
         $this->slug = $slug;
     }
