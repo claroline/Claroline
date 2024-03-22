@@ -13,8 +13,6 @@ const DesktopContext = (props) =>
   <ContextMain
     {...props}
 
-    parent="public"
-
     menu={DesktopMenu}
     loadingPage={DesktopLoading}
     forbiddenPage={DesktopForbidden}

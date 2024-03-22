@@ -66,8 +66,8 @@ $login-max-width: 760px !default;
 // Header
 // ---
 
-$brand-color:           color-contrast($menu) !default;
-$brand-secondary-color: color-contrast($menu) !default;
+$brand-color:           var(--#{$prefix}body-color) !default;
+//$brand-secondary-color: color-contrast($menu) !default;
 $brand-logo-size:       2.5rem;
 $brand-font-size:       $font-size-lg !default;
 $brand-font-weight:     $font-weight-semibold !default;

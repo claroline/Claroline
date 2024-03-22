@@ -16,6 +16,8 @@ interface ToolInterface extends ComponentInterface, ContextualInterface
      */
     public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool;
 
+    public function getStatus(string $context, ContextSubjectInterface $contextSubject = null): ?int;
+
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array;
 
     public function configure(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array;

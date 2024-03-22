@@ -5,9 +5,7 @@ import {selectors as contextSelectors} from '#/main/app/context/store'
 
 const AccountMenu = connect(
   (state) => ({
-    basePath: contextSelectors.path(state),
-    tools: contextSelectors.tools(state),
-    shortcuts: contextSelectors.shortcuts(state)
+    tools: contextSelectors.tools(state)
   })
 )(AccountMenuComponent)
 

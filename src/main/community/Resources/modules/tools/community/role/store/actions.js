@@ -100,33 +100,3 @@ actions.fetchDesktopRights = (id) => (dispatch) => dispatch({
     success: (response) => dispatch(actions.loadDesktopRights(response))
   }
 })
-
-actions.fetchAdministrationRights = (id) => (dispatch) => dispatch({
-  [API_REQUEST]: {
-    url: ['apiv2_role_rights_list', {id: id, contextType: 'administration'}],
-    silent: true,
-    success: (response) => dispatch(actions.loadAdministrationRights(response))
-  }
-})
-
-actions.addShortcuts = (workspaceId, roleId, shortcuts) => (dispatch) => dispatch({
-  [API_REQUEST] : {
-    url: ['apiv2_workspace_shortcuts_add', {workspace: workspaceId, role: roleId}],
-    request: {
-      method: 'PUT',
-      body: JSON.stringify({shortcuts: shortcuts})
-    },
-    success: (response) => dispatch(contextActions.loadShortcuts(response))
-  }
-})
-
-actions.removeShortcut = (workspaceId, roleId, type, name) => (dispatch) => dispatch({
-  [API_REQUEST] : {
-    url: ['apiv2_workspace_shortcut_remove', {workspace: workspaceId, role: roleId}],
-    request: {
-      method: 'PUT',
-      body: JSON.stringify({type: type, name: name})
-    },
-    success: (response) => dispatch(contextActions.loadShortcuts(response))
-  }
-})
