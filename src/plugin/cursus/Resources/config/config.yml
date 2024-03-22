@@ -26,6 +26,11 @@ plugin:
           context: [workspace, desktop, public]
           tags: [community, event]
 
+        - name: my_event_presences
+          type: list
+          context: [ workspace, desktop ]
+          tags: [ community, event ]
+
         - name: training_events
           type: list
           context: [workspace, desktop]
