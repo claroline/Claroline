@@ -2,6 +2,6 @@ services:
     _defaults:
         tags: [ 'claroline.platform.updater' ]
 
-    Claroline\YouTubeBundle\Installation\Updater\Updater141000:
+    Claroline\YouTubeBundle\Installation\Updater\Updater140103:
         arguments:
             - '@doctrine.dbal.default_connection'
