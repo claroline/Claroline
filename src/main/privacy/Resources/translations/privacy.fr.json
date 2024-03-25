@@ -22,6 +22,7 @@
 
   "terms_of_service": "Conditions d'utilisation",
   "terms_of_service_accept": "Accepter les conditions d'utilisation",
+  "terms_of_service_refuse": "Refuser les conditions d'utilisation",
   "terms_of_service_accepted": "Vous avez accepté les conditions d'utilisation de la plateforme",
   "terms_of_service_not_accepted": "Vous n'avez pas encore accepté les conditions d'utilisation de la plateforme",
   "terms_of_service_activation": "Activer les conditions d'utilisation",

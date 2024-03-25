@@ -22,6 +22,7 @@
 
   "terms_of_service": "Terms of service",
   "terms_of_service_accept": "Accept terms of service",
+  "terms_of_service_refuse": "Refuse terms of service",
   "terms_of_service_accepted": "You have accepted the terms of service of the platform",
   "terms_of_service_not_accepted": "You have not yet accepted the terms of service of the platform",
   "terms_of_service_activation": "Activate the terms of service",
