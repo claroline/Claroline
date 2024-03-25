@@ -3,7 +3,6 @@ import get from 'lodash/get'
 import {makeActionCreator, makeInstanceActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 
-import {actions as toolActions} from '#/main/core/tool/store/actions'
 import {actions as workspaceActions} from '#/main/app/contexts/workspace/store/actions'
 import {selectors} from '#/main/core/resource/store/selectors'
 
@@ -39,28 +38,28 @@ actions.openResource = (resourceSlug) => (dispatch, getState) => {
   }
 }
 
-actions.fetchResource = (slug, embedded = false, loadApp) => (dispatch) => dispatch({
+actions.fetchResource = (slug, embedded = false) => (dispatch) => dispatch({
   [API_REQUEST]: {
     silent: true,
-    url: ['claro_resource_load_embedded', {id: slug, embedded: embedded ? 1 : 0}],
+    url: embedded ?
+      ['claro_resource_load_embedded', {id: slug, embedded: embedded ? 1 : 0}] :
+      ['claro_resource_load', {id: slug}],
+    before: () => dispatch({
+      type: RESOURCE_OPEN,
+      resourceSlug: slug,
+      embedded: embedded
+    }),
     success: (response) => {
-      // weird time : I need to mount the correct resource type app before continuing loading data in store
-      // in order to have the custom store of the resource mounted
-      loadApp(response.resourceNode.meta.type).then(() => {
-        dispatch(actions.loadResource(response))
+      // load resource base data
+      dispatch(actions.loadResource(response))
 
-        // load resource data inside the store
-        dispatch(actions.loadResourceType(response.resourceNode.meta.type, response))
+      /*// load resource data inside the store
+      dispatch(actions.loadResourceType(get(response, 'resourceNode.meta.type'), response))
 
-        if (!embedded) {
-          dispatch(toolActions.setFullscreen(get(response.resourceNode, 'display.fullscreen', false)))
-        }
-
-        // mark the resource as loaded
-        // it's done through another action (not RESOURCE_LOAD) to be sure all reducers have been resolved
-        // and store is up-to-date
-        dispatch(actions.setResourceLoaded(true))
-      })
+      // mark the resource as loaded
+      // it's done through another action (not RESOURCE_LOAD) to be sure all reducers have been resolved
+      // and store is up-to-date
+      dispatch(actions.setResourceLoaded(true))*/
     },
     error: (response, status) => {
       switch (status) {
@@ -69,10 +68,9 @@ actions.fetchResource = (slug, embedded = false, loadApp) => (dispatch) => dispa
           break
         case 401:
         case 403:
-          loadApp(response.resourceNode.meta.type).then(() => {
-            dispatch(actions.loadResource(response))
-            dispatch(actions.setResourceLoaded(true))
-          })
+          // we don't have any custom resource type data here
+          dispatch(actions.loadResource(response)) // the response contains why we can't access the resource
+          dispatch(actions.setResourceLoaded(true))
           break
       }
     }

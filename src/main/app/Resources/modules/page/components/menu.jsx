@@ -1,9 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {Button} from '#/main/app/action'
-import {toKey} from '#/main/core/scaffolding/text'
 import isEmpty from 'lodash/isEmpty'
+
+import {toKey} from '#/main/core/scaffolding/text'
 import {Await} from '#/main/app/components/await'
+import {Button} from '#/main/app/action'
+import {Action, PromisedAction} from '#/main/app/action/prop-types'
 
 const PageNav = (props) =>  {
   if (isEmpty(props.actions)) {
@@ -28,7 +30,6 @@ const PageNav = (props) =>  {
   )
 }
 
-
 PageNav.propTypes = {
   actions: T.arrayOf(T.shape({
     // action types
@@ -48,9 +49,17 @@ const PageMenu = (props) =>
   </nav>
 
 PageMenu.propTypes = {
-  actions: T.arrayOf(T.shape({
-    // action types
-  }))
+  actions: T.oneOfType([
+    // a regular array of actions
+    T.arrayOf(T.shape(
+      Action.propTypes
+    )),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedAction.propTypes
+    )
+  ]),
+  children: T.any
 }
 
 export {

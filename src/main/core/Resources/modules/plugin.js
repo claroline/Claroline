@@ -7,13 +7,6 @@ import {registry} from '#/main/app/plugins/registry'
  */
 registry.add('ClarolineCoreBundle', {
   /**
-   * Provides stores which must be mounted in the base app store.
-   */
-  store: {
-    'tool': () => { return import(/* webpackChunkName: "core-store-tool" */ '#/main/core/tool/store') }
-  },
-
-  /**
    * Provides menu which can be used in the main header menu.
    */
   header: {

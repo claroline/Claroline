@@ -9,7 +9,7 @@ const ToolMain = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       path: selectors.path(state),
-      toolName: selectors.name(state),
+      //toolName: selectors.name(state),
       contextType: selectors.contextType(state),
       contextId: selectors.contextId(state),
       loaded: selectors.loaded(state),
@@ -18,7 +18,7 @@ const ToolMain = withReducer(selectors.STORE_NAME, reducer)(
     }),
     (dispatch) => ({
       open(toolName, context, contextId) {
-        return dispatch(actions.fetch(toolName, context, contextId))
+        return dispatch(actions.open(toolName, context, contextId))
       }
     })
   )(ToolMainComponent)

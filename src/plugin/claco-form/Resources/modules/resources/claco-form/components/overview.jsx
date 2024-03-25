@@ -10,6 +10,7 @@ import {LinkButton} from '#/main/app/buttons/link'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
+import get from 'lodash/get'
 
 const OverviewComponent = props =>
   <div className="resource-section resource-overview">
@@ -64,7 +65,7 @@ const Overview = withRouter(
       path: resourceSelectors.path(state),
       resourceId: selectors.clacoForm(state).id,
       canSearchEntry: selectors.canSearchEntry(state),
-      randomEnabled: selectors.clacoForm(state).random.enabled,
+      randomEnabled: get(selectors.clacoForm(state), 'random.enabled', false),
       canAddEntry: selectors.canAddEntry(state)
     })
   )(OverviewComponent)

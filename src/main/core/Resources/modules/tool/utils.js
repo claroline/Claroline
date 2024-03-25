@@ -71,7 +71,7 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
       path = [
         {
           type: LINK_BUTTON,
-          label: trans('account'),
+          label: trans('account', {}, 'context'),
           target: '/account'
         }
       ]
@@ -90,7 +90,7 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
       path = [
         {
           type: LINK_BUTTON,
-          label: trans('desktop'),
+          label: trans('desktop', {}, 'context'),
           target: '/desktop'
         }
       ]
@@ -107,12 +107,12 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
 
     case constants.TOOL_WORKSPACE:
       path = [
-        {
+        /*{
           type: LINK_BUTTON,
-          label: trans('desktop'),
+          label: trans('desktop', {}, 'context'),
           displayed: -1 !== breadcrumbItems.indexOf('desktop'),
           target: '/desktop'
-        }, /*{
+        }, {
           type: LINK_BUTTON,
           label: trans('my_workspaces', {}, 'workspace'),
           displayed: -1 !== breadcrumbItems.indexOf('workspaces'),
@@ -140,7 +140,7 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
       path = [
         {
           type: LINK_BUTTON,
-          label: trans('administration'),
+          label: trans('administration', {}, 'context'),
           target: '/administration'
         }
       ]

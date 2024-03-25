@@ -17,6 +17,7 @@ class WidgetContent extends Component {
   constructor(props) {
     super(props)
 
+    this.mountedApp = null
     this.mountWidget = this.mountWidget.bind(this)
   }
 
@@ -27,9 +28,10 @@ class WidgetContent extends Component {
   componentDidUpdate(prevProps) {
     // the embedded resource has changed
     if (!isEqual(this.props.instance, prevProps.instance)) {
-      if (prevProps.instance) {
+      if (prevProps.instance && this.mountedApp) {
         // remove old app
-        unmount(this.mountNode)
+        unmount(this.mountedApp)
+        this.mountedApp = null
       }
 
       setTimeout(this.mountWidget, 0)
@@ -37,8 +39,10 @@ class WidgetContent extends Component {
   }
 
   componentWillUnmount() {
-    // remove old app
-    unmount(this.mountNode)
+    if (this.mountedApp) {
+      // remove old app
+      unmount(this.mountedApp)
+    }
   }
 
   mountWidget() {
@@ -60,7 +64,7 @@ class WidgetContent extends Component {
 
         WidgetAppComponent.displayName = `WidgetApp(${this.props.instance.type})`
 
-        mount(this.mountNode, WidgetAppComponent, reducer, {
+        this.mountedApp = mount(this.mountNode, WidgetAppComponent, reducer, {
           [securitySelectors.STORE_NAME]: {
             currentUser: this.props.currentUser,
             impersonated: this.props.impersonated

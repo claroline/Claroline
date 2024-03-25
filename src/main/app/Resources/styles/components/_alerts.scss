@@ -3,28 +3,44 @@
  */
 
 .alert {
+    position: relative;
     display: flex;
     align-items: flex-start;
     flex-direction: row;
     text-align: justify;
-    //padding: 0;
-    //overflow: hidden; // for border-radius
     gap: var(--#{$prefix}alert-padding-x);
+    border: var(--#{$prefix}border-width) solid transparent;
 
-    .alert-icon {
-        //padding: var(--#{$prefix}alert-padding-y) var(--#{$prefix}alert-padding-x);
-        flex-shrink: 0;
+    &:before {
+        content: " ";
+        left: 0;
+        top: calc(var(--#{$prefix}border-width) * -1);
+        bottom: calc(var(--#{$prefix}border-width) * -1);
+        position: absolute;
+        width: $alert-border-width;
+        background: var(--#{$prefix}alert-icon-color);
     }
 
-    .alert-message {
+
+    .alert-icon {
+        color: var(--#{$prefix}alert-icon-color);
+        line-height: $line-height-base;
+    }
+
+    .alert-body {
         flex: 1;
-        /*padding: var(--#{$prefix}alert-padding-y) var(--#{$prefix}alert-padding-x);
-        color: $flying-alert-color;
-        background: $flying-alert-bg;*/
     }
 
     .alert-heading {
-        font-size: $lead-font-size;
+        font-size: $font-size-base;
+        font-weight: $font-weight-semibold;
+        line-height: $line-height-base;
+    }
+}
+
+@each $state in map-keys($theme-colors) {
+    .alert-#{$state} {
+        --#{$prefix}alert-icon-color: var(--#{$prefix}#{$state});
     }
 }
 
@@ -95,14 +111,7 @@
     @include flying-alert-variant($flying-alert-info-color, $flying-alert-info-bg, $flying-alert-info-border);
 }
 .flying-alert-pending {
-    @include flying-alert-variant($flying-alert-pending-color, $flying-alert-pending-bg, $flying-alert-pending-border);
-
-    &.flying-alert-save,
-    &.flying-alert-create,
-    &.flying-alert-update,
-    &.flying-alert-send {
-        @include flying-alert-variant($flying-alert-primary-color, $flying-alert-primary-bg, $flying-alert-primary-border);
-    }
+    @include flying-alert-variant($flying-alert-primary-color, $flying-alert-primary-bg, $flying-alert-primary-border);
 }
 
 // pulsating pending alert

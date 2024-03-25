@@ -132,14 +132,14 @@ $page-subtitle-font-weight: $font-weight-base !default;
 // Flying alerts
 // ---
 
-$flying-alert-color:          var(--#{$prefix}body-color);
-$flying-alert-bg:             var(--#{$prefix}body-bg);
-$flying-alert-width:          420px;
-$flying-alert-padding:        10px;
-$flying-alert-border-radius:  0;
-$flying-alert-box-shadow:     $box-shadow/*0 0 3px rgba(0,0,0,.5)*/;
-$flying-alert-margin-bottom:  10px;
-$flying-alert-icon-size:      32px;
+$flying-alert-color:          var(--#{$prefix}body-color) !default;
+$flying-alert-bg:             var(--#{$prefix}body-bg) !default;
+$flying-alert-width:          420px !default;
+$flying-alert-padding:        map-get($spacers, 2) !default;
+$flying-alert-border-radius:  0 !default;
+$flying-alert-box-shadow:     $box-shadow/*0 0 3px rgba(0,0,0,.5)*/ !default;
+$flying-alert-margin-bottom:  map-get($spacers, 2) !default;
+$flying-alert-icon-size:      1.75rem !default;
 
 // variants
 $flying-alert-primary-color:  white;
@@ -161,10 +161,6 @@ $flying-alert-error-border:   $flying-alert-error-bg;
 $flying-alert-info-color:     white;
 $flying-alert-info-bg:        $info;
 $flying-alert-info-border:    $flying-alert-info-bg;
-
-$flying-alert-pending-color:  white;
-$flying-alert-pending-bg:     #666;
-$flying-alert-pending-border: $flying-alert-pending-bg;
 
 
 // -
