@@ -55,6 +55,13 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    Claroline\CursusBundle\Subscriber\DataSource\EventPresenceSourceSubscriber:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\FinderProvider'
+        tags:
+          - { name: kernel.event_subscriber }
+
     Claroline\CursusBundle\Subscriber\DataSource\MyEventPresenceSourceSubscriber:
         arguments:
             - '@security.token_storage'

@@ -19,6 +19,9 @@
   "my_training_events": "Liste de mes séances de formation",
   "my_training_events_desc": "Permet de lister les séances auxquelles l'utilisateur courant est inscrit.",
 
+  "event_presences": "Liste des présences",
+  "event_presences_desc": "Permet de lister les présences à une séance de formation.",
+
   "my_event_presences": "Liste de mes présences",
   "my_event_presences_desc": "Permet de lister mes présences à une séance de formation."
 }
