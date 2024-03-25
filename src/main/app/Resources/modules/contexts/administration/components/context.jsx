@@ -11,8 +11,6 @@ import {AdministrationMenu} from '#/main/app/contexts/administration/containers/
 const AdministrationContext = (props) =>
   <ContextMain
     {...props}
-
-    parent="desktop"
     menu={AdministrationMenu}
     loadingPage={AdministrationLoading}
   />

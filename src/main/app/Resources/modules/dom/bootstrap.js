@@ -60,7 +60,7 @@ function bootstrap(
   const initialData = getInitialData(container)
 
   // mount the application
-  mount(container, rootComponent, reducers, transformData(initialData), false, defaultPath, customMiddlewares)
+  return mount(container, rootComponent, reducers, transformData(initialData), false, defaultPath, customMiddlewares)
 }
 
 export {

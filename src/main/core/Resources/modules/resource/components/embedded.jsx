@@ -13,11 +13,14 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 import {ResourceMain} from '#/main/core/resource/containers/main'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {actions, reducer, selectors} from '#/main/core/resource/store'
+import {ResourceWrapper} from '#/main/core/resource/containers/wrapper'
 
 // the class is because of the use of references and lifecycle
 class ResourceEmbedded extends Component {
   constructor(props) {
     super(props)
+
+    this.mountedApp = null
 
     this.mountResource = this.mountResource.bind(this)
   }
@@ -26,45 +29,35 @@ class ResourceEmbedded extends Component {
     this.mountResource()
   }
 
+  componentWillUnmount() {
+    if (this.mountedApp) {
+      // remove old app
+      unmount(this.mountedApp)
+    }
+  }
+
   componentDidUpdate(prevProps) {
     // the embedded resource has changed
     if (this.props.resourceNode.id !== prevProps.resourceNode.id) {
       // remove old app
-      unmount(this.mountNode)
+      if (this.mountedApp) {
+        unmount(this.mountedApp)
+        this.mountedApp = null
+      }
 
       setTimeout(this.mountResource, 0)
     }
   }
 
   mountResource() {
-    // I'm not sure this is the best way to do it
+    // I'm not sure if this is the best way to do it,
     // but I need to be able to open a directory directly in the widget
-    const RoutedResource = props =>
-      <Routes
-        path="/desktop/resources"
-        routes={[
-          {
-            path: '/:slug',
-            onEnter: (params = {}) => props.openResource(params.slug),
-            component: ResourceMain
-          }
-        ]}
-      />
+    const Resource = () =>
+      <ResourceWrapper slug={this.props.resourceNode.slug} embedded={true} />
 
-    const ConnectedResource = withReducer(selectors.STORE_NAME, reducer)(
-      connect(
-        null,
-        (dispatch) => ({
-          openResource(slug) {
-            dispatch(actions.openResource(slug))
-          }
-        })
-      )(RoutedResource)
-    )
+    Resource.displayName = `EmbeddedResource(${this.props.resourceNode.meta.type})`
 
-    ConnectedResource.displayName = `EmbeddedResourceApp(${this.props.resourceNode.meta.type})`
-
-    mount(this.mountNode, ConnectedResource, {}, {
+    this.mountedApp = mount(this.mountNode, Resource, {}, {
       [securitySelectors.STORE_NAME]: {
         currentUser: this.props.currentUser,
         impersonated: this.props.impersonated
@@ -80,7 +73,7 @@ class ResourceEmbedded extends Component {
         name: 'resources'
       },
       resources: {
-        root: this.props.resourceNode // I don't know why this is required
+        root: this.props.resourceNode
       },
       // mount the resource in the store
       resource: {

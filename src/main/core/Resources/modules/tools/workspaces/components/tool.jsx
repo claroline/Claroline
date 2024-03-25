@@ -170,7 +170,7 @@ const WorkspacesTool = (props) => {
           disabled: !props.canArchive,
           render: () => {
             const ArchiveList = (
-              <WorkspacesPage path={props.path} title={trans('workspaces_archived', {}, 'workspace')} canCreate={props.canCreate}>
+              <WorkspacesPage path={props.path} title={trans('workspace_archived', {}, 'workspace')} canCreate={props.canCreate}>
                 <ContentSizing size="full">
                   <WorkspaceList
                     flush={true}

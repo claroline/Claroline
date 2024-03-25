@@ -56,12 +56,7 @@ actions.open = (contextType, contextId = null) => (dispatch) => dispatch({
       contextType: contextType,
       contextId: contextId
     }),
-    success: (response) => {
-      dispatch(actions.load(response))
-
-      // set menu state based on ws configuration
-      dispatch(actions.setMenuState(get(response, 'data.opening.menu')))
-    },
+    success: (response) => dispatch(actions.load(response)),
     error: (response, status) => {
       switch (status) {
         case 404:
@@ -70,10 +65,6 @@ actions.open = (contextType, contextId = null) => (dispatch) => dispatch({
         case 401:
         case 403:
           dispatch(actions.load(response)) // the response contains why we can't access the context
-
-          // set menu state based on ws configuration
-          dispatch(actions.setMenuState(get(response, 'data.opening.menu')))
-
           break
       }
     }
@@ -83,22 +74,6 @@ actions.open = (contextType, contextId = null) => (dispatch) => dispatch({
 actions.openMenu = makeActionCreator(CONTEXT_MENU_OPEN)
 actions.closeMenu = makeActionCreator(CONTEXT_MENU_CLOSE)
 actions.toggleMenu = makeActionCreator(CONTEXT_MENU_TOGGLE)
-actions.setMenuState = (state = null) => (dispatch) => {
-  switch (state) {
-    case 'open':
-      // force open the menu
-      dispatch(actions.open())
-      break
-
-    case 'close':
-      // force close the menu
-      dispatch(actions.close())
-      break
-
-    default:
-    // let the menu in its previous state
-  }
-}
 
 actions.changeStatus = (currentUser, status) => (dispatch) => dispatch({
   [API_REQUEST]: {

@@ -40,7 +40,7 @@ const UserList = props =>
       } : {
         name: 'add',
         type: LINK_BUTTON,
-        label: trans('register', {}, 'actions'),
+        label: trans('register_users'),
         icon: 'fa fa-fw fa-plus',
         target: `${props.path}/users/new`,
         displayed: props.canRegister && !props.limitReached,

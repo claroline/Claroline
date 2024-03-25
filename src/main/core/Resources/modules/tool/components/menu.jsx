@@ -5,6 +5,7 @@ import {Toolbar} from '#/main/app/action'
 import {PageMenu} from '#/main/app/page/components/menu'
 
 import {getActions} from '#/main/core/tool/utils'
+import {Action, PromisedAction} from '#/main/app/action/prop-types'
 
 const ToolMenu = (props) =>
   <PageMenu actions={props.actions}>
@@ -20,6 +21,18 @@ const ToolMenu = (props) =>
   </PageMenu>
 
 ToolMenu.propTypes = {
+  actions: T.oneOfType([
+    // a regular array of actions
+    T.arrayOf(T.shape(
+      Action.propTypes
+    )),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedAction.propTypes
+    )
+  ]),
+
+  // from store
   path: T.string.isRequired,
   currentContext: T.shape({
     type: T.oneOf(['administration', 'desktop', 'workspace', 'account', 'public']),
@@ -34,7 +47,6 @@ ToolMenu.propTypes = {
     poster: T.string,
     permissions: T.object.isRequired
   }),
-
   reload: T.func.isRequired
 }
 

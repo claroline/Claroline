@@ -12,16 +12,14 @@ const Alert = props =>
     className={classes('alert', 'alert-'+props.type, props.className)}
     role="alert"
   >
-    <span className="alert-icon" role="presentation">
-      <span className={classes('fa fa-fw', props.icon || {
-        'fa-lightbulb': 'info' === props.type,
-        'fa-check': 'success' === props.type,
-        'fa-exclamation': 'warning' === props.type,
-        'fa-xmark': 'danger' === props.type
-      })} aria-hidden={true} />
-    </span>
+    <span className={classes('alert-icon fa fa-fw', props.icon || {
+      'fa-info-circle': 'info' === props.type,
+      'fa-circle-check': 'success' === props.type,
+      'fa-warning': 'warning' === props.type,
+      'fa-circle-xmark': 'danger' === props.type
+    })} aria-hidden={true} />
 
-    <span className="alert-message" role="presentation">
+    <span className="alert-body" role="presentation">
       {props.title &&
         <h4 className={classes('alert-heading', `text-${props.type}-emphasis`)}>{props.title}</h4>
       }

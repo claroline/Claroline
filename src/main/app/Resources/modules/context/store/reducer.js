@@ -12,6 +12,7 @@ import {
   CONTEXT_MENU_OPEN,
   CONTEXT_MENU_TOGGLE
 } from '#/main/app/context/store/actions'
+import get from 'lodash/get'
 
 const reducer = combineReducers({
   menu: combineReducers({
@@ -23,7 +24,17 @@ const reducer = combineReducers({
     opened: makeReducer(true, {
       [CONTEXT_MENU_OPEN]: () => true,
       [CONTEXT_MENU_CLOSE]: () => false,
-      [CONTEXT_MENU_TOGGLE]: (state) => !state
+      [CONTEXT_MENU_TOGGLE]: (state) => !state,
+      [CONTEXT_LOAD]: (state, action) => {
+        const menuState = get(action.contextData, 'data.opening.menu')
+        if ('open' === menuState) {
+          return true
+        } else if ('close' === menuState) {
+          return false
+        }
+
+        return state
+      }
     })
   }),
 

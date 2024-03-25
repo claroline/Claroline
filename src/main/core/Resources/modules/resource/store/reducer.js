@@ -24,14 +24,17 @@ const reducer = combineReducers({
   loaded: makeReducer(false, {
     [SECURITY_USER_CHANGE]: () => false,
     [RESOURCE_OPEN]: () => false,
-    [RESOURCE_SET_LOADED]: (state, action) => action.loaded
+    [RESOURCE_SET_LOADED]: (state, action) => action.loaded,
+    [RESOURCE_LOAD]: () => true
   }),
   notFound: makeReducer(false, {
     [RESOURCE_OPEN]: () => false,
     [RESOURCE_NOT_FOUND]: () => true
   }),
 
-  embedded: makeReducer(false), // this can not be changed at runtime
+  embedded: makeReducer(false, {
+    [RESOURCE_OPEN]: (state, action) => action.embedded
+  }),
 
   showHeader: makeReducer(true),
 

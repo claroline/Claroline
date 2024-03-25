@@ -4,8 +4,8 @@ import {PropTypes as T} from 'prop-types'
 import {Routes} from '#/main/app/router'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {ResourceMain} from '#/main/core/resource/containers/main'
 import {ResourcesTrash} from '#/main/core/tools/resources/containers/trash'
+import {ResourceWrapper} from '#/main/core/resource/containers/wrapper'
 
 const ResourcesTool = props =>
   <Routes
@@ -21,8 +21,11 @@ const ResourcesTool = props =>
         component: ResourcesTrash
       }, {
         path: '/:slug',
-        onEnter: (params = {}) => props.openResource(params.slug),
-        component: ResourceMain
+        render: (routerProps) => {
+          const params = routerProps.match.params
+
+          return <ResourceWrapper slug={params.slug} />
+        }
       }
     ]}
   />

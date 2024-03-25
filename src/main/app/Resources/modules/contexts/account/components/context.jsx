@@ -10,9 +10,6 @@ import {AccountMenu} from '#/main/app/contexts/account/containers/menu'
 const AccountContext = (props) =>
   <ContextMain
     {...props}
-
-    parent="desktop"
-    name="account"
     menu={AccountMenu}
   />
 

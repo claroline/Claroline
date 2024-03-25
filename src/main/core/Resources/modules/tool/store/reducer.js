@@ -8,9 +8,7 @@ import {
   TOOL_LOAD,
   TOOL_SET_LOADED,
   TOOL_SET_ACCESS_DENIED,
-  TOOL_SET_NOT_FOUND,
-  TOOL_TOGGLE_FULLSCREEN,
-  TOOL_SET_FULLSCREEN
+  TOOL_SET_NOT_FOUND
 } from '#/main/core/tool/store/actions'
 
 const reducer = combineReducers({
@@ -34,12 +32,6 @@ const reducer = combineReducers({
     [TOOL_SET_NOT_FOUND]: (state, action) => action.notFound,
     [CONTEXT_OPEN]: () => false,
     [TOOL_OPEN]: () => false
-  }),
-
-  fullscreen: makeReducer(false, {
-    [TOOL_LOAD]: (state, action) => get(action.toolData, 'data.display.fullscreen') || false,
-    [TOOL_TOGGLE_FULLSCREEN]: (state) => !state,
-    [TOOL_SET_FULLSCREEN]: (state, action) => action.fullscreen
   }),
   data: makeReducer({}, {
     [TOOL_LOAD]: (state, action) => action.toolData.data || {}

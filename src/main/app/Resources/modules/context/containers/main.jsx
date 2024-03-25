@@ -4,7 +4,6 @@ import {withRouter} from '#/main/app/router'
 import {withReducer} from '#/main/app/store/reducer'
 
 import {actions as formActions} from '#/main/app/content/form/store'
-import {actions as toolActions} from '#/main/core/tool/store'
 
 import {ContextMain as ContextMainComponent} from '#/main/app/context/components/main'
 import {actions, reducer, selectors} from '#/main/app/context/store'
@@ -25,9 +24,6 @@ const ContextMain = withRouter(
       (dispatch) => ({
         open(contextType, contextId) {
           return dispatch(actions.open(contextType, contextId))
-        },
-        openTool(toolName) {
-          dispatch(toolActions.open(toolName))
         },
         openEditor(contextData) {
           dispatch(formActions.reset(editorSelectors.STORE_NAME, contextData, false))

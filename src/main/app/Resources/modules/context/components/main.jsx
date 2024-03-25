@@ -1,4 +1,4 @@
-import React, {Component, createElement} from 'react'
+import React, {createElement, useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
@@ -12,100 +12,72 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentForbidden} from '#/main/app/content/components/forbidden'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContextEditor} from '#/main/app/context/editor/containers/main'
-import {ContextNav} from '#/main/app/context/containers/nav'
 import {ContextProfile} from '#/main/app/context/profile/containers/main'
 
-class ContextMain extends Component {
-  componentDidMount() {
-    if (this.props.name) {
-      this.open()
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    let needOpen = false
-
-    // loaded status has changed
-    if (this.props.loaded !== prevProps.loaded && !this.props.loaded) {
-      needOpen = true
+const ContextMain = (props) => {
+  // fetch current context data
+  useEffect(() => {
+    let openQuery
+    if (props.name) {
+      openQuery = makeCancelable(
+        props.open(props.name, props.id)
+      )
     }
 
-    // context has changed
-    if (this.props.name && (this.props.name !== prevProps.name || prevProps.id !== this.props.id)) {
-      needOpen = true
-
-      // close previous context
-      if (this.openQuery) {
-        this.openQuery.cancel()
-        this.openQuery = null
+    return () => {
+      if (openQuery) {
+        openQuery.cancel()
       }
     }
+  }, [props.name, props.id])
 
-    if (needOpen) {
-      // (re)open the current context
-      this.open()
-    }
+  if (!props.loaded) {
+    return props.loadingPage ?
+      createElement(props.loadingPage) :
+      <ContentLoader
+        size="lg"
+        description={trans('loading')}
+      />
   }
 
-  componentWillUnmount() {
-    if (this.openQuery) {
-      this.openQuery.cancel()
-      this.openQuery = null
-    }
+  if (props.notFound) {
+    return props.notFoundPage ?
+      createElement(props.notFoundPage) :
+      <ContentNotFound
+        size="lg"
+        title={trans('not_found')}
+        description={trans('not_found_desc')}
+      />
   }
 
-  open() {
-    if (this.openQuery) {
-      return
-    }
+  if (!isEmpty(props.accessErrors)) {
+    return props.forbiddenPage ?
+      createElement(props.forbiddenPage) :
+      <ContentForbidden
+        size="lg"
+        title={trans('access_forbidden')}
+        description={trans('access_forbidden_help')}
+      />
+  }
 
-    this.openQuery = makeCancelable(
-      this.props.open(this.props.name, this.props.id)
+  if (isEmpty(props.tools)) {
+    return (
+      <ContentPlaceholder
+        size="lg"
+        title="Cet espace est vide pour le moment"
+      />
     )
-
-    this.openQuery.promise
-      .then(
-        () => this.openQuery = null,
-        () => this.openQuery = null
-      )
   }
 
-  render() {
-    let CurrentComp
-    if (this.props.notFound) {
-      CurrentComp = this.props.notFoundPage ?
-        createElement(this.props.notFoundPage) :
-        <ContentNotFound
-          size="lg"
-          title={trans('not_found')}
-          description={trans('not_found_desc')}
-        />
-    } else if (!this.props.loaded) {
-      CurrentComp = this.props.loadingPage ?
-        createElement(this.props.loadingPage) :
-        <ContentLoader
-          size="lg"
-          description={trans('loading')}
-        />
-    } else if (!isEmpty(this.props.accessErrors)) {
-      CurrentComp = this.props.loadingPage ?
-        createElement(this.props.forbiddenPage) :
-        <ContentForbidden
-          size="lg"
-          title={trans('access_forbidden')}
-          description={trans('access_forbidden_help')}
-        />
-    } else if (isEmpty(this.props.tools)) {
-      CurrentComp = (
-        <ContentPlaceholder
-          size="lg"
-          title="Cet espace est vide pour le moment"
-        />
-      )
-    } else {
-      CurrentComp = (
+  return (
+    <>
+      {createElement(props.menu)}
+
+      <div className="app-body" role="presentation">
+        <div className="app-loader" />
+
         <Routes
-          path={this.props.path}
+          path={props.path}
           routes={[
             {
               path: '/profile',
@@ -113,44 +85,33 @@ class ContextMain extends Component {
             }, {
               path: '/edit',
               component: ContextEditor,
-              onEnter: () => this.props.openEditor(this.props.contextData)
+              onEnter: () => props.openEditor(props.contextData)
             }, {
               path: '/:toolName',
               onEnter: (params = {}) => {
-                if (-1 !== this.props.tools.findIndex(tool => tool.name === params.toolName)) {
-                  // tool is enabled for the context
-                  this.props.openTool(params.toolName)
-                } else {
+                if (-1 === props.tools.findIndex(tool => tool.name === params.toolName)) {
                   // tool is disabled (or does not exist) for the context
                   // let's go to the default opening of the context
-                  this.props.history.replace(this.props.path)
+                  props.history.replace(props.path)
                 }
               },
-              component: ToolMain
+              //component: ToolMain,
+              render: (routerProps) => {
+                const params = routerProps.match.params
+
+                return <ToolMain name={params.toolName} />
+              }
             }
           ]}
           redirect={[
-            {from: '/', exact: true, to: `/${this.props.defaultOpening}`, disabled: !this.props.defaultOpening}
+            {from: '/', exact: true, to: `/${props.defaultOpening}`, disabled: !props.defaultOpening}
           ]}
         />
-      )
-    }
 
-    return (
-      <>
-        <ContextNav />
-        {createElement(this.props.menu)}
-
-        <div className="app-body" role="presentation">
-          <div className="app-loader" />
-
-          {CurrentComp}
-
-          {this.props.footer && createElement(this.props.footer)}
-        </div>
-      </>
-    )
-  }
+        {props.footer && createElement(props.footer)}
+      </div>
+    </>
+  )
 }
 
 ContextMain.propTypes = {
@@ -176,7 +137,6 @@ ContextMain.propTypes = {
   forbiddenPage: T.elementType,
 
   open: T.func.isRequired,
-  openTool: T.func.isRequired,
   history: T.shape({
     replace: T.func.isRequired
   }).isRequired

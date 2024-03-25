@@ -1,12 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
-
-import {ResourcePage} from '#/main/core/resource/containers/page'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {Resource, ResourcePage} from '#/main/core/resource'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {Announces} from '#/plugin/announcement/resources/announcement/components/announces'
@@ -15,45 +15,50 @@ import {AnnounceForm} from '#/plugin/announcement/resources/announcement/compone
 import {AnnouncesEditor} from '#/plugin/announcement/resources/announcement/editor/containers/editor'
 
 const AnnouncementResource = props =>
-  <ResourcePage
-    primaryAction="create-announce"
-    customActions={[
-      {
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-list',
-        label: trans('announcements_list', {}, 'announcement'),
-        target: props.path,
-        exact: true
-      }
-    ]}
-    routes={[
-      {
-        path: '/',
-        exact: true,
-        component: Announces
-      }, {
-        path: '/edit',
-        component: AnnouncesEditor
-      }, {
-        path: '/add',
-        exact: true,
-        component: AnnounceForm,
-        onEnter: () => props.resetForm(merge({}, AnnouncementTypes.defaultProps, {
-          id: makeId()
-        }), true)
-      }, {
-        path: '/:id',
-        component: Announce,
-        exact: true,
-        onEnter: (params) => props.openDetail(params.id),
-        onLeave: props.resetDetail
-      }, {
-        path: '/:id/edit',
-        component: AnnounceForm,
-        onEnter: (params) => props.resetForm(props.posts.find(post => post.id === params.id))
-      }
-    ]}
-  />
+  <Resource
+    {...omit(props)}
+    styles={['claroline-distribution-plugin-announcement-announcement-resource']}
+  >
+    <ResourcePage
+      primaryAction="create-announce"
+      customActions={[
+        {
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-list',
+          label: trans('announcements_list', {}, 'announcement'),
+          target: props.path,
+          exact: true
+        }
+      ]}
+      routes={[
+        {
+          path: '/',
+          exact: true,
+          component: Announces
+        }, {
+          path: '/edit',
+          component: AnnouncesEditor
+        }, {
+          path: '/add',
+          exact: true,
+          component: AnnounceForm,
+          onEnter: () => props.resetForm(merge({}, AnnouncementTypes.defaultProps, {
+            id: makeId()
+          }), true)
+        }, {
+          path: '/:id',
+          component: Announce,
+          exact: true,
+          onEnter: (params) => props.openDetail(params.id),
+          onLeave: props.resetDetail
+        }, {
+          path: '/:id/edit',
+          component: AnnounceForm,
+          onEnter: (params) => props.resetForm(props.posts.find(post => post.id === params.id))
+        }
+      ]}
+    />
+  </Resource>
 
 AnnouncementResource.propTypes = {
   path: T.string.isRequired,

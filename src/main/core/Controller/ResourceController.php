@@ -78,7 +78,7 @@ class ResourceController
      * @param int|string $id       - the id or slug of the target node (we don't use ParamConverter to support ID and UUID)
      * @param int        $embedded
      */
-    public function openAction($id, $embedded = 0): JsonResponse
+    public function openAction(string $id, int $embedded = 0): JsonResponse
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $this->om->getRepository(ResourceNode::class)->findOneByUuidOrSlug($id);

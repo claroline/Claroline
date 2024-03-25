@@ -1568,10 +1568,10 @@ $modal-scale-transform:             scale(1.02) !default;
 // scss-docs-start alert-variables
 $alert-padding-y:               $spacer !default;
 $alert-padding-x:               $spacer !default;
-$alert-margin-bottom:           1rem !default;
-$alert-border-radius:           var(--#{$prefix}border-radius) !default;
+$alert-margin-bottom:           null !default;
+$alert-border-radius:           0 !default;
 $alert-link-font-weight:        $font-weight-bold !default;
-$alert-border-width:            var(--#{$prefix}border-width) !default;
+$alert-border-width:            .25rem/*var(--#{$prefix}border-width)*/ !default;
 $alert-bg-scale:                -80% !default;
 $alert-border-scale:            -70% !default;
 $alert-color-scale:             40% !default;

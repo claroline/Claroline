@@ -1,13 +1,16 @@
 import {connect} from 'react-redux'
+import {withReducer} from '#/main/app/store/reducer'
 
-import {selectors} from '#/main/core/resources/directory/store'
+import {selectors, reducer} from '#/main/core/resources/directory/store'
 import {DirectoryResource as DirectoryResourceComponent} from '#/main/core/resources/directory/components/resource'
 
-const DirectoryResource = connect(
-  (state) => ({
-    storageLock: selectors.storageLock(state)
-  })
-)(DirectoryResourceComponent)
+const DirectoryResource = withReducer(selectors.STORE_NAME, reducer)(
+  connect(
+    (state) => ({
+      storageLock: selectors.storageLock(state)
+    })
+  )(DirectoryResourceComponent)
+)
 
 export {
   DirectoryResource

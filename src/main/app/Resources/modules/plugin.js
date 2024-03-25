@@ -6,11 +6,6 @@ import {registry} from '#/main/app/plugins/registry'
  * Declares applications provided by the base application.
  */
 registry.add('ClarolineAppBundle', {
-  store: {
-    'config'  : () => { return import(/* webpackChunkName: "app-store-config" */ '#/main/app/config/store') },
-    'security': () => { return import(/* webpackChunkName: "app-store-security" */ '#/main/app/security/store') },
-    //'context': () => { return import(/* webpackChunkName: "app-store-security" */ '#/main/app/context/store') }
-  },
   context: {
     'public'        : () => { return import(/* webpackChunkName: "app-context-public" */        '#/main/app/contexts/public') },
     'desktop'       : () => { return import(/* webpackChunkName: "app-context-desktop" */        '#/main/app/contexts/desktop') },

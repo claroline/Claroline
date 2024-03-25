@@ -5,6 +5,7 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 const ResourcesTrash = connect(
   (state) => ({
+    path: toolSelectors.path(state),
     contextId: toolSelectors.contextId(state)
   })
 )(ResourcesTrashComponent)

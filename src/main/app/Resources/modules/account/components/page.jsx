@@ -19,12 +19,12 @@ const AccountPage = (props) =>
     path={[
       {
         type: LINK_BUTTON,
-        label: trans('my_account'),
+        label: trans('account', {}, 'context'),
         target: '/account'
       }
     ].concat(props.path || [])}
     title={props.currentUser.name}
-    subtitle={props.title || props.currentUser.username}
+    subtitle={props.title || props.currentUser.name}
     poster={props.currentUser.poster}
     icon={
       <UserAvatar user={props.currentUser} size="xl" />

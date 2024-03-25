@@ -1,29 +1,31 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import omit from 'lodash/omit'
 
-import {ResourcePage} from '#/main/core/resource/containers/page'
+import {Resource, ResourcePage} from '#/main/core/resource'
 
 import {Video as VideoTypes} from '#/integration/peertube/prop-types'
 import {VideoPlayer} from '#/integration/peertube/resources/video/containers/player'
 import {VideoEditor} from '#/integration/peertube/resources/video/containers/editor'
 
 const VideoResource = props =>
-  <ResourcePage
-    routes={[
-      {
-        path: '/',
-        exact: true,
-        component: VideoPlayer
-      }, {
-        path: '/edit',
-        component: VideoEditor,
-        onEnter: () => props.resetForm(props.video)
-      }
-    ]}
-  />
+  <Resource {...omit(props, 'video', 'resetForm')}>
+    <ResourcePage
+      routes={[
+        {
+          path: '/',
+          exact: true,
+          component: VideoPlayer
+        }, {
+          path: '/edit',
+          component: VideoEditor,
+          onEnter: () => props.resetForm(props.video)
+        }
+      ]}
+    />
+  </Resource>
 
 VideoResource.propTypes = {
-  path: T.string.isRequired,
   video: T.shape(
     VideoTypes.propTypes
   ),

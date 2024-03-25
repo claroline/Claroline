@@ -21,7 +21,7 @@ const DataCard = {
     color: T.string,
     icon: T.oneOfType([T.string, T.element]),
     title: T.node.isRequired,
-    subtitle: T.string,
+    subtitle: T.node,
     contentText: T.string,
     display: T.arrayOf(T.oneOf([
       'icon',

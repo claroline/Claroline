@@ -1,14 +1,14 @@
 import {connect} from 'react-redux'
 
-import {withRouter} from '#/main/app/router'
-
-import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {withReducer} from '#/main/app/store/reducer'
 import {hasPermission} from '#/main/app/security'
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {PathResource as PathResourceComponent} from '#/plugin/path/resources/path/components/resource'
-import {selectors} from '#/plugin/path/resources/path/store'
+import {reducer, selectors} from '#/plugin/path/resources/path/store'
 
-const PathResource = withRouter(
+
+const PathResource = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       overview: selectors.showOverview(state),
