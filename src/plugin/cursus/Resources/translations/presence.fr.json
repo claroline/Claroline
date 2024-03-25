@@ -1,0 +1,20 @@
+{
+  "access": "Accéder",
+  "event_code": "Code de la séance",
+  "event_presence_code": "Code d'émargement",
+  "validate": "Valider",
+  "sign": "Signer",
+  "sign_label": "Entrer vos nom et prénom",
+
+  "presence_info": "Moi, %user%, étais présent à la séance %event_title% du %event_datetime_start% au %event_datetime_end%.",
+  "presence_code_desc": "Veuillez entrer le code de la séance pour laquelle vous souhaitez signer votre présence.",
+
+  "not_registered": "Connexion requise",
+  "not_registered_desc": "Vous devez être connecté pour signer votre présence à cette séance.",
+  "event_not_found": "Séance introuvable",
+  "event_not_found_desc": "Ce code ne correspond à aucune séance.",
+  "event_not_found_retry": "Saisir à nouveau le code de la séance",
+
+  "presence_confirm_title": "Confirmation de présence",
+  "presence_confirm_desc": "Votre signature à la séance %event_title% a bien été enregistrée."
+}
