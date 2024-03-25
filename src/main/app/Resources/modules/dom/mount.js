@@ -1,5 +1,6 @@
 import {createElement} from 'react'
-import {render, unmountComponentAtNode} from 'react-dom'
+import {createRoot} from 'react-dom/client'
+import merge from 'lodash/merge'
 
 // todo : find where I must put it
 // (I put it here for now because it's the root of all apps)
@@ -16,7 +17,8 @@ if ('development' === env()) {
 
 import {createStore} from '#/main/app/store'
 import {Main} from '#/main/app/components/main'
-import {getApps} from '#/main/app/plugins'
+import {selectors as configSelectors, reducer as configReducer} from '#/main/app/config/store'
+import {selectors as securitySelectors, reducer as securityReducer} from '#/main/app/security/store'
 
 /**
  * Mounts a new React/Redux app into the DOM.
@@ -38,24 +40,25 @@ function mount(
   defaultPath = '',
   customMiddlewares= []
 ) {
-  // append plugin reducers
-  const pluginStores = getApps('store') || {}
+  // create store
+  const store = createStore(rootComponent.displayName, merge({}, reducers, {
+    [configSelectors.STORE_NAME]: configReducer,
+    [securitySelectors.STORE_NAME]: securityReducer
+  }), initialData, customMiddlewares)
 
-  Promise.all(
-    Object.keys(pluginStores).map(pluginStore => pluginStores[pluginStore]())
-  ).then((loadedStores) => {
-    loadedStores.map(storeModule => {
-      // TODO : add some checks
-      reducers[storeModule.selectors.STORE_NAME] = storeModule.reducer
-    })
+  const appRoot = createElement(
+    Main, {
+      store: store,
+      embedded: embedded,
+      defaultPath: defaultPath
+    },
+    createElement(rootComponent)
+  )
 
-    // create store
-    // we initialize a new store even if the mounted app does not declare reducers
-    // we have dynamic reducers which can be added during runtime, and they will be fucked up
-    // if they don't find a store to use.
-    const store = createStore(rootComponent.displayName, reducers, initialData, customMiddlewares)
-
-    const appRoot = createElement(
+  // render app
+  const root = createRoot(container)
+  root.render(
+    createElement(
       Main, {
         store: store,
         embedded: embedded,
@@ -63,14 +66,15 @@ function mount(
       },
       createElement(rootComponent)
     )
+  )
 
-    // Render app
-    render(appRoot, container)
-  })
+  //render(appRoot, container)
+
+  return root
 }
 
-function unmount(container) {
-  unmountComponentAtNode(container)
+function unmount(app) {
+  app.unmount()
 }
 
 export {

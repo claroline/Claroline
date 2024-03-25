@@ -12,9 +12,6 @@ import {WorkspaceMenu} from '#/main/app/contexts/workspace/containers/menu'
 const WorkspaceContext = (props) =>
   <ContextMain
     {...props}
-    parent="desktop"
-    name="workspace"
-
     menu={WorkspaceMenu}
     loadingPage={WorkspaceLoading}
     notFoundPage={WorkspaceNotFound}

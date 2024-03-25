@@ -62,17 +62,19 @@ class ToolMain extends Component {
   }
 
   componentDidMount() {
-    this.loadApp().then(() => {
-      if (!this.props.loaded) {
-        // open current tool
-        this.open()
-      }
-    })
+    if (this.props.name) {
+      this.loadApp().then(() => {
+        if (!this.props.loaded) {
+          // open current tool
+          this.open()
+        }
+      })
+    }
   }
 
   componentDidUpdate(prevProps) {
     let appPromise
-    if (this.props.toolName && this.props.toolName !== prevProps.toolName) {
+    if (this.props.name && this.props.name !== prevProps.name) {
       if (this.pendingApp) {
         this.pendingApp.cancel()
         this.pendingApp = null
@@ -89,7 +91,7 @@ class ToolMain extends Component {
     }
 
     appPromise.then(() => {
-      if (!this.props.loaded && this.props.loaded !== prevProps.loaded) {
+      if ((this.props.name && this.props.name !== prevProps.name) || (!this.props.loaded && this.props.loaded !== prevProps.loaded)) {
         if (!this.pending) {
           // open current tool
           this.open()
@@ -100,7 +102,7 @@ class ToolMain extends Component {
 
   open() {
     this.pending = makeCancelable(
-      this.props.open(this.props.toolName, this.props.contextType, this.props.contextId)
+      this.props.open(this.props.name, this.props.contextType, this.props.contextId)
     )
 
     this.pending.promise
@@ -115,7 +117,7 @@ class ToolMain extends Component {
       this.setState({appLoaded: false})
 
       this.pendingApp = makeCancelable(
-        getTool(this.props.toolName, this.props.contextType)
+        getTool(this.props.name, this.props.contextType)
       )
 
       this.pendingApp.promise
@@ -126,7 +128,7 @@ class ToolMain extends Component {
                 appLoaded: true,
                 // I build the store here because if I do it in the render()
                 // it will be called many times and will cause multiple mount/unmount of the app
-                app: resolved.default.store ? withReducer(this.props.toolName, resolved.default.store)(Tool) : Tool,
+                app: resolved.default.store ? withReducer(this.props.name, resolved.default.store)(Tool) : Tool,
                 component: resolved.default.component,
                 styles: resolved.default.styles
               })
@@ -203,7 +205,7 @@ class ToolMain extends Component {
 
 ToolMain.propTypes = {
   path: T.string,
-  toolName: T.string.isRequired,
+  name: T.string.isRequired,
   contextType: T.string.isRequired,
   contextId: T.string,
   loaded: T.bool.isRequired,

@@ -9,7 +9,6 @@ const ToolMenu = connect(
     path: selectors.path(state),
     toolData: selectors.toolData(state),
     loaded: selectors.loaded(state),
-    notFound: selectors.notFound(state),
     currentContext: selectors.context(state)
   }),
   (dispatch) => ({

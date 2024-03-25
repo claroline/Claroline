@@ -9,16 +9,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class BuildDefaultsCommand extends Command
 {
-    private $workspaceManager;
-
-    public function __construct(WorkspaceManager $workspaceManager)
+    public function __construct(private readonly WorkspaceManager $workspaceManager)
     {
-        $this->workspaceManager = $workspaceManager;
-
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription('This command allows you to rebuild the default workspaces');
     }

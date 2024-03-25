@@ -14,26 +14,24 @@ import {reducer, selectors} from '#/plugin/exo/resources/quiz/store'
 import {actions as playerActions} from '#/plugin/exo/quiz/player/actions'
 
 const QuizResource = DragNDropContext(
-  withRouter(
-    withReducer(selectors.STORE_NAME, reducer)(
-      connect(
-        (state) => ({
-          quizId: selectors.id(state),
-          empty: selectors.empty(state),
-          editable: hasPermission('edit', resourceSelectors.resourceNode(state)),
-          papersAdmin: hasPermission('manage_papers', resourceSelectors.resourceNode(state)),
-          docimologyAdmin: hasPermission('view_docimology', resourceSelectors.resourceNode(state)),
-          hasOverview: selectors.hasOverview(state),
-          showStatistics: selectors.showStatistics(state),
-          registeredUser: securitySelectors.isAuthenticated(state)
-        }),
-        (dispatch) => ({
-          testMode(testMode) {
-            dispatch(playerActions.setTestMode(testMode))
-          }
-        })
-      )(QuizResourceComponent)
-    )
+  withReducer(selectors.STORE_NAME, reducer)(
+    connect(
+      (state) => ({
+        quizId: selectors.id(state),
+        empty: selectors.empty(state),
+        editable: hasPermission('edit', resourceSelectors.resourceNode(state)),
+        papersAdmin: hasPermission('manage_papers', resourceSelectors.resourceNode(state)),
+        docimologyAdmin: hasPermission('view_docimology', resourceSelectors.resourceNode(state)),
+        hasOverview: selectors.hasOverview(state),
+        showStatistics: selectors.showStatistics(state),
+        registeredUser: securitySelectors.isAuthenticated(state)
+      }),
+      (dispatch) => ({
+        testMode(testMode) {
+          dispatch(playerActions.setTestMode(testMode))
+        }
+      })
+    )(QuizResourceComponent)
   )
 )
 
