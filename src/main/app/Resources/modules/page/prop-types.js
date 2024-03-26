@@ -53,9 +53,7 @@ const PageSimple = {
  */
 const PageFull = {
   propTypes: merge({}, PageSimple.propTypes, {
-    showBreadcrumb: T.bool,
     showHeader: T.bool,
-    showTitle: T.bool,
 
     disabled: T.bool,
 
@@ -88,6 +86,8 @@ const PageFull = {
      * An optional subtitle for the page.
      *
      * @type {React.node}
+     *
+     * @deprecated use title
      */
     subtitle: T.node,
 
@@ -106,26 +106,21 @@ const PageFull = {
      */
     poster: T.string,
 
-    nav: T.arrayOf(T.shape({
-
-    })),
+    /**
+     * The name of an optional primary action of the page.
+     * NB. The action MUST be defined in the `actions` list.
+     */
+    primaryAction: T.string,
 
     /**
-     * A custom component to add in the page header.
+     * The name of an optional secondary action of the page.
+     * NB. The action MUST be defined in the `actions` list.
      */
-    header: T.node,
-
-    /**
-     * The configuration for actions rendering.
-     *
-     * @type {string}
-     */
-    toolbar: T.string,
-
-    primaryAction: T.shape(Action.propTypes),
+    secondaryAction: T.string,
 
     /**
      * The list of actions available for the current page.
+     * NB. This list MUST contain the actions for `primaryAction` and `secondaryAction` if defined.
      *
      * @type {Array}
      */

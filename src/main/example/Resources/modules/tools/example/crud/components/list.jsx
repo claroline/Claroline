@@ -18,8 +18,8 @@ const CrudList = (props) =>
       target: `${props.path}/crud`
     }]}
     subtitle="Simple CRUD"
-    /*primaryAction="add"*/
-    primaryAction={
+    primaryAction="add"
+    actions={[
       {
         name: 'add',
         type: LINK_BUTTON,
@@ -28,7 +28,7 @@ const CrudList = (props) =>
         target: `${props.path}/crud/new`,
         primary: true
       }
-    }
+    ]}
   >
     <ContentSizing size="full">
       <ListData

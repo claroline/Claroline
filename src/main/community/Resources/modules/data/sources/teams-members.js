@@ -23,17 +23,7 @@ export default (contextType, contextData, refresher, currentUser) => {
     primaryAction: (user) => getDefaultAction(user, refresher, basePath, currentUser),
     actions: (users) => getActions(users, refresher, basePath, currentUser),
     definition: [
-      /*{
-        name: 'picture',
-        type: 'user',
-        label: trans('avatar'),
-        displayed: true,
-        filterable: false,
-        sortable: false,
-        render: (user) => (
-          <UserAvatar picture={user.picture} alt={false} />
-        )
-      }, */{
+      {
         name: 'username',
         type: 'username',
         label: trans('username'),

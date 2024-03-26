@@ -19,36 +19,34 @@ import {MODAL_REGISTER} from '#/main/community/modals/register'
 const UserList = props =>
   <ToolPage
     title={trans('users')}
-    /*primaryAction="add"*/
-    primaryAction={'workspace' === props.contextType ?
-      {
-        name: 'add',
-        type: MODAL_BUTTON,
-        label: trans('register_users'),
-        icon: 'fa fa-fw fa-plus',
-        primary: true,
-        displayed: props.canRegister,
-
-        // select users to register
-        modal: [MODAL_REGISTER, {
-          title: trans('register_users'),
-          subtitle: trans('workspace_register_select_users'),
-          workspaces: [props.contextData],
-          onRegister: props.registerUsers,
-          mode: 'users'
-        }]
-      } : {
-        name: 'add',
-        type: LINK_BUTTON,
-        label: trans('register_users'),
-        icon: 'fa fa-fw fa-plus',
-        target: `${props.path}/users/new`,
-        displayed: props.canRegister && !props.limitReached,
-        primary: true
-      }
-    }
+    primaryAction="add"
     actions={[
-      {
+      'workspace' === props.contextType ?
+        {
+          name: 'add',
+          type: MODAL_BUTTON,
+          label: trans('register_users'),
+          icon: 'fa fa-fw fa-plus',
+          primary: true,
+          displayed: props.canRegister,
+
+          // select users to register
+          modal: [MODAL_REGISTER, {
+            title: trans('register_users'),
+            subtitle: trans('workspace_register_select_users'),
+            workspaces: [props.contextData],
+            onRegister: props.registerUsers,
+            mode: 'users'
+          }]
+        } : {
+          name: 'add',
+          type: LINK_BUTTON,
+          label: trans('register_users'),
+          icon: 'fa fa-fw fa-plus',
+          target: `${props.path}/users/new`,
+          displayed: props.canRegister && !props.limitReached,
+          primary: true
+        }, {
         name: 'disable-inactive',
         type: MODAL_BUTTON,
         icon: 'fa fa-fw fa-user-clock',

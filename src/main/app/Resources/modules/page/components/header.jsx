@@ -4,7 +4,6 @@ import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 
 import {asset} from '#/main/app/config/asset'
-import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 
@@ -12,6 +11,84 @@ import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/ma
 
 import {PageTitle} from '#/main/app/page/components/title'
 import {PageNav} from '#/main/app/page/components/nav'
+import {Await} from '#/main/app/components/await'
+
+const PageActions = (props) => {
+  if (isEmpty(props.actions)) {
+    return null
+  }
+
+  let actions = [].concat(props.actions)
+
+  let primaryAction
+  if (props.primaryAction) {
+    const primaryPos = actions.findIndex(action => action.name === props.primaryAction)
+    if (-1 !== primaryPos) {
+      primaryAction = actions[primaryPos]
+      actions.splice(primaryPos, 1)
+    }
+  }
+
+  let secondaryAction
+  if (props.secondaryAction) {
+    const secondaryPos = actions.findIndex(action => action.name === props.secondaryAction)
+    if (-1 !== secondaryPos) {
+      secondaryAction = actions[secondaryPos]
+      actions.splice(secondaryPos, 1)
+    }
+  }
+
+  if (!secondaryAction && 1 === actions.length) {
+    secondaryAction = actions[0]
+    actions.splice(0, 1)
+  }
+
+  return (
+    <div className="page-actions gap-3 ms-auto" role="presentation">
+      {primaryAction &&
+        <Button
+          {...primaryAction}
+          className="btn btn-primary page-action-btn"
+          icon={undefined}
+          tooltip={undefined}
+          disabled={props.disabled}
+        />
+      }
+
+      {secondaryAction &&
+        <Button
+          {...secondaryAction}
+          className="btn btn-body page-actions-btn"
+          icon={undefined}
+          tooltip={undefined}
+          disabled={props.disabled}
+        />
+      }
+
+      {!isEmpty(actions) &&
+        <Toolbar
+          id="page-actions-toolbar"
+          className="btn-toolbar"
+          buttonName="btn btn-body page-actions-btn"
+          tooltip="bottom"
+          toolbar="more"
+          actions={actions}
+          disabled={props.disabled}
+          scope="object"
+        />
+      }
+    </div>
+  )
+}
+
+PageActions.propTypes = {
+  primaryAction: T.string,
+  secondaryAction: T.string,
+  actions: T.arrayOf(T.shape(
+    ActionTypes.propTypes
+  )),
+  disabled: T.bool
+}
 
 /**
  * Header of the current page.
@@ -42,33 +119,24 @@ const PageHeader = props =>
         <PageTitle
           embedded={props.embedded}
           path={props.path}
-          title={props.subtitle || props.title}
+          title={props.title}
         />
 
-        {(!isEmpty(props.primaryAction) || !isEmpty(props.actions) || props.actions instanceof Promise) &&
-          <div className="page-actions gap-3 ms-auto">
-            {props.primaryAction &&
-              <Button
-                {...props.primaryAction}
-                className="btn btn-primary page-actions-btn"
-                icon={undefined}
-                tooltip={undefined}
-              />
-            }
-
-            {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
-              <Toolbar
-                id={props.id || toKey(props.title)}
-                className="btn-toolbar gap-1"
-                buttonName="btn page-actions-btn"
-                tooltip="bottom"
-                toolbar={props.toolbar}
-                actions={props.actions}
-                disabled={props.disabled}
-                scope="object"
-              />
-            }
-          </div>
+        {props.actions instanceof Promise ?
+          <Await for={props.actions} then={(resolvedActions) => (
+            <PageActions
+              actions={resolvedActions}
+              primaryAction={props.primaryAction}
+              secondaryAction={props.secondaryAction}
+              disabled={props.disabled}
+            />
+          )} /> :
+          <PageActions
+            actions={props.actions}
+            primaryAction={props.primaryAction}
+            secondaryAction={props.secondaryAction}
+            disabled={props.disabled}
+          />
         }
       </div>
     </div>
@@ -76,14 +144,12 @@ const PageHeader = props =>
 
 PageHeader.propTypes = {
   id: T.string,
-  showTitle: T.bool,
-  showBreadcrumb: T.bool,
-  title: T.string.isRequired,
-  subtitle: T.node,
+  title: T.node.isRequired,
   icon: T.oneOfType([T.string, T.node]),
   embedded: T.bool,
   poster: T.string,
   disabled: T.bool,
+
   /**
    * The path of the page inside the application (used to build the breadcrumb).
    */
@@ -93,11 +159,8 @@ PageHeader.propTypes = {
     target: T.oneOfType([T.string, T.array])
   })),
 
-  toolbar: T.string,
-
-  primaryAction: T.shape(
-    ActionTypes.propTypes
-  ),
+  primaryAction: T.string,
+  secondaryAction: T.string,
   actions: T.oneOfType([
     // a regular array of actions
     T.arrayOf(T.shape(

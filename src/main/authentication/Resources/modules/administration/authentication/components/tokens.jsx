@@ -14,8 +14,8 @@ import {selectors} from '#/main/authentication/administration/authentication/sto
 const AuthenticationTokens = props =>
   <ToolPage
     title={trans('tokens', {}, 'integration')}
-    /*primaryAction="add-token"*/
-    primaryAction={
+    primaryAction="add-token"
+    actions={[
       {
         name: 'add-token',
         type: MODAL_BUTTON,
@@ -26,7 +26,7 @@ const AuthenticationTokens = props =>
           onSave: () => props.invalidateList()
         }]
       }
-    }
+    ]}
   >
     <TokenList
       name={selectors.STORE_NAME+'.tokens'}

@@ -49,6 +49,43 @@ input[type=reset] {
     @include text-movie-subtitles();
 }
 
+.btn-body {
+    --#{$prefix}btn-color: var(--#{$prefix}body-color);
+    --#{$prefix}btn-bg: var(--#{$prefix}body-bg);
+    --#{$prefix}btn-border-color: var(--#{$prefix}border-color-translucent);
+
+    --#{$prefix}btn-hover-color: var(--#{$prefix}body-color);
+    --#{$prefix}btn-hover-bg: var(--#{$prefix}tertiary-bg);
+    --#{$prefix}btn-hover-border-color: var(--#{$prefix}border-color-translucent);
+
+    --#{$prefix}btn-active-color: var(--#{$prefix}body-color);
+    --#{$prefix}btn-active-bg: var(--#{$prefix}secondary-bg);
+    --#{$prefix}btn-active-border-color: var(--#{$prefix}border-color-translucent);
+
+    --#{$prefix}btn-disabled-color: var(--#{$prefix}tertiary-color-color);
+    --#{$prefix}btn-disabled-bg: var(--#{$prefix}body-bg);
+    --#{$prefix}btn-disabled-border-color: var(--#{$prefix}border-color-translucent);
+
+    /*@include button-variant(
+        // normal state
+        var(--#{$prefix}body-bg),
+        var(--#{$prefix}border-color-translucent),
+        var(--#{$prefix}body-color),
+        // hover state
+        var(--#{$prefix}tertiary-bg),
+        var(--#{$prefix}border-color-translucent),
+        var(--#{$prefix}body-color),
+        // active state
+        var(--#{$prefix}secondary-bg),
+        var(--#{$prefix}border-color-translucent),
+        var(--#{$prefix}body-color),
+        // disabled state
+        var(--#{$prefix}body-bg),
+        var(--#{$prefix}border-color-translucent),
+        var(--#{$prefix}secondary-color)
+    )*/
+}
+
 //-
 // Button effects
 // ----
