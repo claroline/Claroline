@@ -19,11 +19,8 @@ const PageFull = (props) =>
     {props.showHeader &&
       <PageHeader
         id={props.id}
-        showTitle={props.showTitle}
-        showBreadcrumb={props.showBreadcrumb}
         path={props.path}
-        title={props.title}
-        subtitle={props.subtitle}
+        title={props.subtitle || props.title}
         icon={props.icon}
         poster={props.poster}
         toolbar={props.toolbar}
@@ -32,9 +29,7 @@ const PageFull = (props) =>
         actions={props.actions}
         menu={props.menu}
         embedded={props.embedded}
-      >
-        {props.header}
-      </PageHeader>
+      />
     }
 
     <div role="presentation" className={classes('page-content container-fluid', {'main-page-content': !props.embedded})}>

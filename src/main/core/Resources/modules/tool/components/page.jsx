@@ -16,7 +16,6 @@ const ToolPage = props =>
   <PageFull
     className={classes('tool-page', `${props.name}-page`, props.className)}
     title={trans(props.name, {}, 'tools')}
-    showBreadcrumb={true}
     path={[].concat(getToolBreadcrumb(props.name, props.currentContext.type, props.currentContext.data), props.path)}
     poster={props.poster || get(props.toolData, 'poster') || get(props.currentContext, 'data.poster')}
     icon={get(props.toolData, 'display.showIcon') ?

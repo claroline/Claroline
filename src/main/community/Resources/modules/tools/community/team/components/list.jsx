@@ -12,18 +12,17 @@ import {ContentSizing} from '#/main/app/content/components/sizing'
 const TeamList = props =>
   <ToolPage
     title={trans('teams', {}, 'community')}
-    /*primaryAction="add"*/
-    primaryAction={
+    primaryAction="add"
+    actions={[
       {
         name: 'add',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
         label: trans('add_team', {}, 'actions'),
         target: `${props.path}/teams/new`,
-        displayed: props.canCreate,
-        primary: true
+        displayed: props.canCreate
       }
-    }
+    ]}
   >
     <ContentSizing size="full">
       <BaseTeamList

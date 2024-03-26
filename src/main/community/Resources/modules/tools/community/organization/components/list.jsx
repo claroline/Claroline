@@ -13,8 +13,8 @@ import {ContentSizing} from '#/main/app/content/components/sizing'
 const OrganizationList = (props) =>
   <ToolPage
     title={trans('organizations', {}, 'community')}
-    /*primaryAction="add"*/
-    primaryAction={
+    primaryAction="add"
+    actions={[
       {
         name: 'add',
         type: LINK_BUTTON,
@@ -24,7 +24,7 @@ const OrganizationList = (props) =>
         primary: true,
         displayed: props.canCreate
       }
-    }
+    ]}
   >
     <ContentSizing size="full">
       <BaseOrganizationList
