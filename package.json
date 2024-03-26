@@ -53,7 +53,7 @@
     "sass": "^1.62.1",
     "swagger-ui-react": "^5.1.0",
     "tinycolor2": "^1.6.0",
-    "tinymce": "^6.7",
+    "tinymce": "^7.0",
     "@tinymce/tinymce-react": "^4.2",
     "uuid": "^9.0.0",
     "video.js": "^8.3.0",
