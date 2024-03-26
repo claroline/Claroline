@@ -12,7 +12,7 @@ const PageBreadcrumb = props => {
 
   if (0 !== items.length) {
     return (
-      <nav aria-label="breadcrumb" className={props.className}>
+      <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           {items
             .filter(item => undefined === item.displayed || item.displayed)
@@ -35,7 +35,6 @@ const PageBreadcrumb = props => {
 }
 
 PageBreadcrumb.propTypes = {
-  className: T.string,
   current: T.string.isRequired,
   path: T.arrayOf(T.shape({
     id: T.string,
@@ -51,7 +50,7 @@ PageBreadcrumb.defaultProps = {
 }
 
 const PageTitle = props =>
-  <div className="" role="presentation">
+  <div role="presentation">
     {!props.embedded &&
       <PageBreadcrumb
         path={props.path}
@@ -76,7 +75,6 @@ PageTitle.propTypes = {
   })),
   embedded: T.bool
 }
-
 
 export {
   PageTitle

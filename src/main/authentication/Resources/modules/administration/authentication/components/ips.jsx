@@ -13,8 +13,8 @@ import {MODAL_IP_PARAMETERS} from '#/main/authentication/ip/modals/parameters'
 const AuthenticationIps = props =>
   <ToolPage
     title={trans('ips', {}, 'integration')}
-    /*primaryAction="add-ip"*/
-    primaryAction={
+    primaryAction="add-ip"
+    actions={[
       {
         name: 'add-ip',
         type: MODAL_BUTTON,
@@ -25,7 +25,7 @@ const AuthenticationIps = props =>
           onSave: () => props.invalidateList()
         }]
       }
-    }
+    ]}
   >
     <Alert type="info" style={{marginTop: 20}}>
       {trans('ips_help', {}, 'security')}

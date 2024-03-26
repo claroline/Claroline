@@ -16,8 +16,8 @@ import {MODAL_WORKSPACE_IMPORT} from '#/main/core/workspace/modals/import'
 
 const WorkspacesPage = (props) =>
   <ToolPage
-    /*primaryAction="add"*/
-    primaryAction={{
+    primaryAction="add"
+    actions={[{
       name: 'add',
       type: LINK_BUTTON,
       icon: 'fa fa-fw fa-plus',
@@ -25,7 +25,7 @@ const WorkspacesPage = (props) =>
       target: `${props.path}/new`,
       primary: true,
       displayed: props.canCreate
-    }}
+    }]}
     actions={[
       {
         name: 'import',

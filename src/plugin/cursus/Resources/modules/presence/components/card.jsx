@@ -10,7 +10,7 @@ import {DataCard} from '#/main/app/data/components/card'
 import {constants} from '#/plugin/cursus/constants'
 import {displayUsername} from '#/main/community/utils'
 import {User as UserTypes} from '#/main/community/prop-types'
-import {UserAvatar} from '#/main/core/user/components/avatar'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 
 const PresenceCard = props =>
   <DataCard
@@ -21,9 +21,8 @@ const PresenceCard = props =>
     id={props.data.user.id}
     poster={props.data.user.thumbnail ? asset(props.data.user.thumbnail) : null}
     icon={
-      <UserAvatar
-        picture={props.data.user.picture}
-        alt={true}/>}
+      <UserAvatar user={props.data.user} />
+    }
     title={displayUsername(props.data.user)}
     subtitle={
       <div

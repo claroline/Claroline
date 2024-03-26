@@ -28,17 +28,7 @@ const Users = (props) => {
       primaryAction={(row) => getDefaultAction(row, usersRefresher, props.path, props.currentUser)}
       actions={(rows) => getActions(rows, usersRefresher, props.path, props.currentUser).then((actions) => [].concat(actions, props.customActions(rows)))}
       definition={[
-        /*{
-          name: 'picture',
-          type: 'user', // required to get correct styles (no padding + small picture size)
-          label: trans('avatar'),
-          displayed: true,
-          filterable: false,
-          sortable: false,
-          render: (user) => (
-            <UserAvatar picture={user.picture} alt={false} />
-          )
-        }, */{
+        {
           name: 'username',
           type: 'username',
           label: trans('username'),

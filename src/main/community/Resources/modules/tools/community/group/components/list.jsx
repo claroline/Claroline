@@ -17,8 +17,8 @@ import {MODAL_REGISTER} from '#/main/community/modals/register'
 const GroupList = props =>
   <ToolPage
     subtitle={trans('groups', {}, 'community')}
-    /*primaryAction="add"*/
-    primaryAction={'desktop' === props.contextType ?
+    primaryAction="add"
+    actions={['desktop' === props.contextType ?
       {
         name: 'add',
         type: LINK_BUTTON,
@@ -44,7 +44,7 @@ const GroupList = props =>
           mode: 'groups'
         }]
       }
-    }
+    ]}
   >
     <ContentSizing size="full">
       <BaseGroupList
