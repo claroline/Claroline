@@ -103,7 +103,7 @@ class Modal extends Component {
       >
         {(this.props.title || this.props.icon) &&
           <BaseModal.Header
-            closeButton={true}
+            closeButton={this.props.closeButton}
             style={this.props.poster && {
               backgroundImage: `url("${asset(this.props.poster)}")`
             }}
@@ -137,6 +137,7 @@ Modal.propTypes = {
   fadeModal: T.func.isRequired,
   hideModal: T.func.isRequired,
   show: T.bool.isRequired,
+  closeButton: T.bool,
   size: T.oneOf(['sm', 'lg', 'xl']),
   fullscreen: T.oneOf([true, 'sm-down','md-down', 'lg-down', 'xl-down', 'xxl-down']),
   // modal events (from react-bootstrap)
@@ -160,7 +161,8 @@ Modal.propTypes = {
 }
 
 Modal.defaultProps = {
-  disabled: true
+  disabled: true,
+  closeButton: true
 }
 
 export {

@@ -37,6 +37,15 @@ actions.fetch = () => (dispatch) => dispatch({
   }
 })
 
+actions.acceptTerms = () => ({
+  [API_REQUEST]: {
+    url: ['apiv2_platform_terms_of_service_accept'],
+    request: {
+      method: 'PUT'
+    }
+  }
+})
+
 export const reducer = combineReducers({
   loaded: makeReducer(false, {
     [TERMS_OF_SERVICE_LOAD]: () => true
