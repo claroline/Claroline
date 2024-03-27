@@ -6,7 +6,7 @@ use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 
-class Updater141000 extends Updater
+class Updater140103 extends Updater
 {
     private Connection $connection;
 
