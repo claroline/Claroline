@@ -134,7 +134,7 @@ class Chapter
         $this->lesson = $lesson;
     }
 
-    public function getLesson(): Lesson
+    public function getLesson(): ?Lesson
     {
         return $this->lesson;
     }
