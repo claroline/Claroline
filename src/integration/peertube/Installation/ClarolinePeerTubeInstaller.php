@@ -3,7 +3,7 @@
 namespace Claroline\PeerTubeBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller;
-use Claroline\PeerTubeBundle\Installation\Updater\Updater141000;
+use Claroline\PeerTubeBundle\Installation\Updater\Updater140103;
 
 class ClarolinePeerTubeInstaller extends AdditionalInstaller
 {
@@ -15,7 +15,7 @@ class ClarolinePeerTubeInstaller extends AdditionalInstaller
     public static function getUpdaters(): array
     {
         return [
-            '14.1.0' => Updater141000::class,
+            '14.1.3' => Updater140103::class,
         ];
     }
 }
