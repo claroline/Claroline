@@ -11,6 +11,7 @@ interface VoterInterface extends BaseVoterInterface
     const CREATE = 'CREATE';
     /** @var string */
     const EDIT = 'EDIT';
+    const COPY = 'COPY';
     /** @var string */
     const ADMINISTRATE = 'ADMINISTRATE';
     /** @var string */

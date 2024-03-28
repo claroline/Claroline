@@ -19,15 +19,11 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CopyWorkspaceHandler implements MessageHandlerInterface
 {
-    /** @var Crud */
-    private $crud;
-
-    public function __construct(Crud $crud)
+    public function __construct(private readonly Crud $crud)
     {
-        $this->crud = $crud;
     }
 
-    public function __invoke(CopyWorkspace $copyWorkspace)
+    public function __invoke(CopyWorkspace $copyWorkspace): void
     {
         $workspace = $this->crud->get(Workspace::class, $copyWorkspace->getWorkspaceId());
         if (empty($workspace)) {
