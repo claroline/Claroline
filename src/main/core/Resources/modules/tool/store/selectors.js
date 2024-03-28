@@ -44,7 +44,7 @@ const fullscreen = createSelector(
 
 const toolData = createSelector(
   [store],
-  (store) => store.data
+  (store) => store.data || {}
 )
 
 const permissions = createSelector(

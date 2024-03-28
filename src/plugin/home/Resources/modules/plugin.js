@@ -25,5 +25,5 @@ registry.add('ClarolineHomeBundle', {
    */
   administration: {
     'home': () => { return import(/* webpackChunkName: "home-tool-home" */ '#/plugin/home/tools/home') }
-  },
+  }
 })

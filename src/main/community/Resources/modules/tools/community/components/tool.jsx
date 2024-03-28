@@ -13,50 +13,56 @@ import {PendingMain} from '#/main/community/tools/community/pending/containers/m
 import {ProfileMain} from '#/main/community/tools/community/profile/containers/main'
 import {OrganizationMain} from '#/main/community/tools/community/organization/containers/main'
 import {TeamMain} from '#/main/community/tools/community/team/containers/main'
+import {Tool} from '#/main/core/tool'
 
 const CommunityTool = (props) =>
-  <Routes
-    path={props.path}
-    redirect={[
-      {from: '/', exact: true, to: '/users', disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')},
-      {from: '/', exact: true, to: '/roles', disabled: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'meta.model')}
-    ]}
-    routes={[
-      {
-        path: '/activity',
-        component: ActivityMain,
-        disabled: !props.canShowActivity || (props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model'))
-      }, {
-        path: '/users',
-        component: UserMain,
-        disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')
-      }, {
-        path: '/groups',
-        component: GroupMain,
-        disabled:  props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')
-      }, {
-        path: '/roles',
-        component: RoleMain,
-        disabled: !props.canEdit
-      }, {
-        path: '/organizations',
-        component: OrganizationMain,
-        disabled: props.contextType !== toolConstants.TOOL_DESKTOP/* || !props.canEdit*/
-      }, {
-        path: '/teams',
-        component: TeamMain,
-        disabled: props.contextType === toolConstants.TOOL_DESKTOP
-      }, {
-        path: '/pending',
-        component: PendingMain,
-        disabled: !props.canEdit || props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'registration.selfRegistration') || !get(props.workspace, 'registration.validation')
-      }, {
-        path: '/parameters/profile',
-        component: ProfileMain,
-        disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canEdit
-      }
-    ]}
-  />
+  <Tool
+    {...props}
+    styles={['claroline-distribution-main-community-tool']}
+  >
+    <Routes
+      path={props.path}
+      redirect={[
+        {from: '/', exact: true, to: '/users', disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')},
+        {from: '/', exact: true, to: '/roles', disabled: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'meta.model')}
+      ]}
+      routes={[
+        {
+          path: '/activity',
+          component: ActivityMain,
+          disabled: !props.canShowActivity || (props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model'))
+        }, {
+          path: '/users',
+          component: UserMain,
+          disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')
+        }, {
+          path: '/groups',
+          component: GroupMain,
+          disabled:  props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')
+        }, {
+          path: '/roles',
+          component: RoleMain,
+          disabled: !props.canEdit
+        }, {
+          path: '/organizations',
+          component: OrganizationMain,
+          disabled: props.contextType !== toolConstants.TOOL_DESKTOP/* || !props.canEdit*/
+        }, {
+          path: '/teams',
+          component: TeamMain,
+          disabled: props.contextType === toolConstants.TOOL_DESKTOP
+        }, {
+          path: '/pending',
+          component: PendingMain,
+          disabled: !props.canEdit || props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'registration.selfRegistration') || !get(props.workspace, 'registration.validation')
+        }, {
+          path: '/parameters/profile',
+          component: ProfileMain,
+          disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canEdit
+        }
+      ]}
+    />
+  </Tool>
 
 CommunityTool.propTypes = {
   contextType: T.string,

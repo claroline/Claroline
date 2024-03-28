@@ -118,6 +118,8 @@ const PageFull = {
      */
     secondaryAction: T.string,
 
+    toolbar: T.string,
+
     /**
      * The list of actions available for the current page.
      * NB. This list MUST contain the actions for `primaryAction` and `secondaryAction` if defined.
@@ -140,7 +142,8 @@ const PageFull = {
     showHeader: true,
     showTitle: true,
     disabled: false,
-    actions: []
+    actions: [],
+    toolbar: 'more'
   })
 }
 

@@ -22,7 +22,7 @@ function getTools(contextType) {
   return getApps('tools')
 }
 
-function getTool(name, contextType) {
+async function getTool(name, contextType) {
   if (constants.TOOL_ADMINISTRATION === contextType) {
     return getApp('administration', name)()
   } else if (constants.TOOL_ACCOUNT === contextType) {

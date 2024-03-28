@@ -1,5 +1,5 @@
 import {reducer} from '#/main/core/administration/integration/store/reducer'
-import {IntegrationTool} from '#/main/core/administration/integration/components/tool'
+import {IntegrationTool} from '#/main/core/administration/integration/containers/tool'
 import {IntegrationMenu} from '#/main/core/administration/integration/components/menu'
 
 export default {

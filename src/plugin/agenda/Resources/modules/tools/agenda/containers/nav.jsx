@@ -7,7 +7,7 @@ import {constants as toolConstants} from '#/main/core/tool/constants'
 import {AgendaMenu as AgendaMenuComponent} from '#/plugin/agenda/tools/agenda/components/menu'
 import {selectors, actions} from '#/plugin/agenda/tools/agenda/store'
 
-const AgendaMenu = withRouter(
+const AgendaNav = withRouter(
   connect(
     (state) => ({
       multiplePlannings: toolConstants.TOOL_WORKSPACE !== toolSelectors.contextType(state),

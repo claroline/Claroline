@@ -65,7 +65,7 @@
             //color: $agenda-color;
             background: transparent;
             border: 1px solid transparent;
-            font-weight: bold;
+            font-weight: $font-weight-medium;
         }
 
         &.now .day-number {

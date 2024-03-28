@@ -14,7 +14,7 @@ import {PlayerEnd} from '#/plugin/flashcard/resources/flashcard/player/component
 
 const FlashcardResource = props =>
   <Resource
-    {...omit(props)}
+    {...omit(props, 'editable', 'empty', 'overview', 'getAttempt', 'flashcardDeck')}
     styles={['claroline-distribution-plugin-flashcard-flashcard']}
   >
     <ResourcePage
@@ -31,7 +31,7 @@ const FlashcardResource = props =>
           icon: 'fa fa-fw fa-play',
           label: trans('start', {}, 'actions'),
           target: `${props.path}/play`,
-          displayed: props.flashcardDeck.cards.length > 0
+          displayed: !props.empty
         }
       ]}
       routes={[
@@ -42,13 +42,13 @@ const FlashcardResource = props =>
         }, {
           path: '/play/end',
           exact: true,
-          disabled: props.flashcardDeck.cards.length === 0,
+          disabled: props.empty,
           component: PlayerEnd
         }, {
           path: '/play',
           exact: true,
           component: Player,
-          disabled: props.flashcardDeck.cards.length === 0,
+          disabled: props.empty,
           onEnter: () => {
             props.getAttempt(props.flashcardDeck.id)
           }
@@ -62,7 +62,7 @@ const FlashcardResource = props =>
         }
       ]}
       redirect={[
-        { from: '/', exact: true, to: '/play', disabled: props.overview || props.flashcardDeck.cards.length === 0 }
+        { from: '/', exact: true, to: '/play', disabled: props.overview || props.empty }
       ]}
     />
   </Resource>
@@ -70,6 +70,7 @@ const FlashcardResource = props =>
 FlashcardResource.propTypes = {
   path: T.string.isRequired,
   editable: T.bool.isRequired,
+  empty: T.bool.isRequired,
   overview: T.bool.isRequired,
   getAttempt: T.func,
   flashcardDeck: T.shape({

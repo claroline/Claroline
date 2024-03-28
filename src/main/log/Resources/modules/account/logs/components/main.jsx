@@ -10,46 +10,49 @@ import {route} from '#/main/app/account/routing'
 
 import {FunctionalLogList} from '#/main/log/account/logs/components/functional'
 import {SecurityLogList} from '#/main/log/account/logs/components/security'
+import {Tool} from '#/main/core/tool'
 
-const LogsMain = () =>
-  <AccountPage
-    title={trans('logs', {}, 'tools')}
-  >
-    <div className="row">
-      <div className="col-md-3">
-        <Vertical
-          basePath={route('logs')}
-          tabs={[
-            {
-              title: trans('functional', {}, 'log'),
-              path: '/functional'
-            }, {
-              title: trans('security', {}, 'log'),
-              path: '/security'
-            }
-          ]}
-        />
-      </div>
+const LogsMain = (props) =>
+  <Tool {...props}>
+    <AccountPage
+      title={trans('logs', {}, 'tools')}
+    >
+      <div className="row">
+        <div className="col-md-3">
+          <Vertical
+            basePath={route('logs')}
+            tabs={[
+              {
+                title: trans('functional', {}, 'log'),
+                path: '/functional'
+              }, {
+                title: trans('security', {}, 'log'),
+                path: '/security'
+              }
+            ]}
+          />
+        </div>
 
-      <div className="col-md-9">
-        <Routes
-          path={route('logs')}
-          redirect={[
-            {from: '/', exact: true, to: '/functional'}
-          ]}
-          routes={[
-            {
-              path: '/functional',
-              component: FunctionalLogList
-            }, {
-              path: '/security',
-              component: SecurityLogList
-            }
-          ]}
-        />
+        <div className="col-md-9">
+          <Routes
+            path={route('logs')}
+            redirect={[
+              {from: '/', exact: true, to: '/functional'}
+            ]}
+            routes={[
+              {
+                path: '/functional',
+                component: FunctionalLogList
+              }, {
+                path: '/security',
+                component: SecurityLogList
+              }
+            ]}
+          />
+        </div>
       </div>
-    </div>
-  </AccountPage>
+    </AccountPage>
+  </Tool>
 
 export {
   LogsMain

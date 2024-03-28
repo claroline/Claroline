@@ -1,12 +1,13 @@
 import {connect} from 'react-redux'
 
-import {withRouter} from '#/main/app/router'
+import {withReducer} from '#/main/app/store/reducer'
 import {hasPermission} from '#/main/app/security'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {CommunityTool as CommunityToolComponent} from '#/main/community/tools/community/components/tool'
+import {reducer, selectors} from '#/main/community/tools/community/store'
 
-const CommunityTool = withRouter(
+const CommunityTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       contextType: toolSelectors.contextType(state),

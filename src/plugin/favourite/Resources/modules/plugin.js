@@ -7,13 +7,6 @@ import {registry} from '#/main/app/plugins/registry'
  */
 registry.add('HeVinciFavouriteBundle', {
   /**
-   * Provides menu which can be used in the main header menu.
-   */
-  header: {
-    'favourites': () => { return import(/* webpackChunkName: "plugin-favourite-header-favourites" */ '#/plugin/favourite/header/favourites') }
-  },
-
-  /**
    * Provides actions for base Claroline objects.
    */
   actions: {
