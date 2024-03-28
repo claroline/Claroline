@@ -44,7 +44,7 @@ const PageActions = (props) => {
   }
 
   return (
-    <div className="page-actions gap-3 ms-auto" role="presentation">
+    <div className="page-actions gap-2 ms-auto" role="presentation">
       {primaryAction &&
         <Button
           {...primaryAction}
@@ -68,10 +68,10 @@ const PageActions = (props) => {
       {!isEmpty(actions) &&
         <Toolbar
           id="page-actions-toolbar"
-          className="btn-toolbar"
+          className="btn-toolbar gap-1"
           buttonName="btn btn-body page-actions-btn"
           tooltip="bottom"
-          toolbar="more"
+          toolbar={props.toolbar}
           actions={actions}
           disabled={props.disabled}
           scope="object"
@@ -84,6 +84,7 @@ const PageActions = (props) => {
 PageActions.propTypes = {
   primaryAction: T.string,
   secondaryAction: T.string,
+  toolbar: T.string.isRequired,
   actions: T.arrayOf(T.shape(
     ActionTypes.propTypes
   )),
@@ -128,6 +129,7 @@ const PageHeader = props =>
               actions={resolvedActions}
               primaryAction={props.primaryAction}
               secondaryAction={props.secondaryAction}
+              toolbar={props.toolbar}
               disabled={props.disabled}
             />
           )} /> :
@@ -135,6 +137,7 @@ const PageHeader = props =>
             actions={props.actions}
             primaryAction={props.primaryAction}
             secondaryAction={props.secondaryAction}
+            toolbar={props.toolbar}
             disabled={props.disabled}
           />
         }
@@ -161,6 +164,7 @@ PageHeader.propTypes = {
 
   primaryAction: T.string,
   secondaryAction: T.string,
+  toolbar: T.string,
   actions: T.oneOfType([
     // a regular array of actions
     T.arrayOf(T.shape(

@@ -7,7 +7,7 @@ const resource = (state) => state[STORE_NAME]
 
 const flashcardDeck = createSelector(
   [resource],
-  (resource) => resource.data.flashcardDeck
+  (resource) => get(resource, 'data.flashcardDeck', {})
 )
 
 const id = createSelector(

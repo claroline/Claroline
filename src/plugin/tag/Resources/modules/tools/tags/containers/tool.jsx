@@ -1,13 +1,13 @@
 import {connect} from 'react-redux'
 
-import {withRouter} from '#/main/app/router'
+import {withReducer} from '#/main/app/store/reducer'
 import {hasPermission} from '#/main/app/security'
 import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 
 import {TagsTool as TagsToolComponent} from '#/plugin/tag/tools/tags/components/tool'
-import {actions} from '#/plugin/tag/tools/tags/store'
+import {actions, reducer, selectors} from '#/plugin/tag/tools/tags/store'
 
-const TagsTool = withRouter(
+const TagsTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       canCreate: hasPermission('create', toolSelectors.toolData(state))

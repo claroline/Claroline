@@ -7,13 +7,6 @@ import {registry} from '#/main/app/plugins/registry'
  */
 registry.add('ClarolineCoreBundle', {
   /**
-   * Provides menu which can be used in the main header menu.
-   */
-  header: {
-    'search': () => { return import(/* webpackChunkName: "core-header-search" */ '#/main/core/header/search') }
-  },
-
-  /**
    * Provides new tabs for the administration integration tool.
    */
   integration: {
@@ -32,10 +25,6 @@ registry.add('ClarolineCoreBundle', {
    * Provides actions for base Claroline objects.
    */
   actions: {
-    account: {},
-    administration: {},
-    desktop: {},
-
     tool: {
       'configure': () => { return import(/* webpackChunkName: "core-action-tool-configure" */ '#/main/core/actions/tool/configure') },
       'rights'   : () => { return import(/* webpackChunkName: "core-action-tool-rights" */    '#/main/core/actions/tool/rights') }

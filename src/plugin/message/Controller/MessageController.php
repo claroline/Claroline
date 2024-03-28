@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
 use Claroline\MessageBundle\Manager\MessageManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,22 +40,6 @@ class MessageController extends AbstractCrudController
     public function getName(): string
     {
         return 'message';
-    }
-
-    /**
-     * @Route("/count/unread", name="apiv2_message_count_unread", methods={"GET"})
-     *
-     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     */
-    public function countUnreadAction(): JsonResponse
-    {
-        return new JsonResponse(
-            $this->crud->count(Message::class, [
-                'read' => false,
-                'removed' => false,
-                'sent' => false,
-            ])
-        );
     }
 
     /**

@@ -70,19 +70,6 @@ class NotificationsViewerController
     }
 
     /**
-     * @Route("/unread/count", name="apiv2_user_notifications_count")
-     * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * @return JsonResponse
-     */
-    public function countUnreadAction(User $user)
-    {
-        return new JsonResponse(
-            $this->notificationManager->countUnviewedNotifications($user)
-        );
-    }
-
-    /**
      * @Route("/read", name="apiv2_user_notifications_read", methods={"PUT"})
      * @EXT\ParamConverter("user", converter="current_user")
      *

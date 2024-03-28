@@ -11,12 +11,5 @@ registry.add('ClarolineTransferBundle', {
    */
   tools: {
     'transfer': () => { return import(/* webpackChunkName: "transfer-tool-transfer" */ '#/main/transfer/tools/transfer') }
-  },
-
-  /**
-   * Provides Administration tools.
-   */
-  administration: {
-    'transfer': () => { return import(/* webpackChunkName: "transfer-tool-transfer" */ '#/main/transfer/tools/transfer') }
   }
 })

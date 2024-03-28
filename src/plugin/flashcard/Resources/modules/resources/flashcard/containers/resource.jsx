@@ -11,6 +11,7 @@ const FlashcardResource = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       flashcardDeck: selectors.flashcardDeck(state),
+      empty: selectors.empty(state),
       overview: selectors.showOverview(state),
       editable: hasPermission('edit', resourceSelectors.resourceNode(state))
     }),

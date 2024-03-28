@@ -5,23 +5,29 @@ import {Routes} from '#/main/app/router'
 
 import {ImportMain} from '#/main/transfer/tools/transfer/import/containers/main'
 import {ExportMain} from '#/main/transfer/tools/transfer/export/containers/main'
+import {Tool} from '#/main/core/tool'
 
 const TransferTool = (props) =>
-  <Routes
-    path={props.path}
-    redirect={[
-      {from: '/', exact: true, to: '/import'}
-    ]}
-    routes={[
-      {
-        path: '/import',
-        component: ImportMain
-      }, {
-        path: '/export',
-        component: ExportMain
-      }
-    ]}
-  />
+  <Tool
+    {...props}
+    styles={['claroline-distribution-main-transfer-transfer-tool']}
+  >
+    <Routes
+      path={props.path}
+      redirect={[
+        {from: '/', exact: true, to: '/import'}
+      ]}
+      routes={[
+        {
+          path: '/import',
+          component: ImportMain
+        }, {
+          path: '/export',
+          component: ExportMain
+        }
+      ]}
+    />
+  </Tool>
 
 TransferTool.propTypes = {
   path: T.string.isRequired

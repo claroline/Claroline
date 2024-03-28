@@ -18,9 +18,10 @@ import {MODAL_LOGIN} from '#/main/app/modals/login'
 import {MODAL_REGISTRATION} from '#/main/app/modals/registration'
 
 import {constants as toolConstants} from '#/main/core/tool/constants'
-import {getToolBreadcrumb, showToolBreadcrumb} from '#/main/core/tool/utils'
+import {getToolBreadcrumb} from '#/main/core/tool/utils'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {getRestrictions} from '#/main/core/workspace/utils'
+import {PageSection} from '#/main/app/page/components/section'
 
 class StandardRestrictions extends Component {
   constructor(props) {
@@ -52,15 +53,15 @@ class StandardRestrictions extends Component {
 
     return (
       <>
-        <div className="content-md mt-3">
-          {get(this.props.workspace, 'meta.description') &&
-            <div className="card mb-3">
-              <ContentHtml className="card-body">{get(this.props.workspace, 'meta.description')}</ContentHtml>
-            </div>
-          }
+        {get(this.props.workspace, 'meta.description') &&
+          <PageSection size="md">
+            <ContentHtml className="lead my-5">{get(this.props.workspace, 'meta.description')}</ContentHtml>
+          </PageSection>
+        }
 
+        <PageSection size="md" className="py-4 bg-body-tertiary">
           <h2 className="h3 text-center">{trans('restricted_access')}</h2>
-          <p className="lead text-center">{trans('restricted_workspace.access_message', {}, 'workspace')}</p>
+          <p className="lead text-body-secondary text-center">{trans('restricted_workspace.access_message', {}, 'workspace')}</p>
 
           {!this.props.errors.pendingRegistration &&
             <ContentRestriction
@@ -270,7 +271,7 @@ class StandardRestrictions extends Component {
               />
             </>
           }
-        </div>
+        </PageSection>
       </>
     )
   }
@@ -287,7 +288,6 @@ const WorkspaceForbidden = (props) => {
 
   return (
     <PageFull
-      showBreadcrumb={showToolBreadcrumb(toolConstants.TOOL_WORKSPACE, props.workspace)}
       path={getToolBreadcrumb(null, toolConstants.TOOL_WORKSPACE, props.workspace)}
       title={props.workspace.name}
       poster={props.workspace.poster ? props.workspace.poster : undefined}

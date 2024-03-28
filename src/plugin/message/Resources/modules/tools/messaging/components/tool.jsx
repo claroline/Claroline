@@ -14,78 +14,82 @@ import {ReceivedMessages} from '#/plugin/message/tools/messaging/components/rece
 import {SentMessages} from '#/plugin/message/tools/messaging/components/sent-messages'
 import {DeletedMessages} from '#/plugin/message/tools/messaging/components/deleted-messages'
 import {Message} from '#/plugin/message/tools/messaging/components/message'
+import {Tool} from '#/main/core/tool'
 
 const MessagingTool = (props) =>
-  <ToolPage
-    primaryAction="send add-contact"
-    actions={[
-      {
-        name: 'send',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-plus',
-        label: trans('send-message', {}, 'actions'),
-        modal: [MODAL_MESSAGE],
-        primary: true
-      }, {
-        name: 'add-contact',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-user-plus',
-        label: trans('new-contact', {}, 'actions'),
-        modal: [MODAL_USERS, {
-          selectAction: (users) => ({
-            type: CALLBACK_BUTTON,
-            label: trans('add-contact', {}, 'actions'),
-            callback: () => props.addContacts(users.map(r => r.id))
-          })
-        }]
-      }
-    ]}
-    subtitle={
-      <Routes
-        path={props.path}
-        routes={[
-          {path: '/received', render: () => trans('messages_received', {}, 'message')},
-          {path: '/sent',     render: () => trans('messages_sent', {}, 'message')},
-          {path: '/deleted',  render: () => trans('messages_removed', {}, 'message')},
-          {path: '/contacts', render: () => trans('contacts', {}, 'message')}
-        ]}
-      />
-    }
-  >
-    <Routes
-      path={props.path}
-      redirect={[
-        {from: '/', exact: true, to: '/received' }
-      ]}
-      routes={[
+  <Tool {...props}>
+    <ToolPage
+      primaryAction="send"
+      secondaryAction="add-contact"
+      actions={[
         {
-          path: '/contacts',
-          component: Contacts
+          name: 'send',
+          type: MODAL_BUTTON,
+          icon: 'fa fa-fw fa-plus',
+          label: trans('send-message', {}, 'actions'),
+          modal: [MODAL_MESSAGE],
+          primary: true
         }, {
-          path: '/received',
-          component: ReceivedMessages
-        }, {
-          path: '/sent',
-          component: SentMessages
-        }, {
-          path: '/deleted',
-          component: DeletedMessages
-        }, {
-          path: '/message/:id',
-          onEnter: (params) => props.openMessage(params.id),
-          render(routeProps) {
-            const CurrentMessage = (
-              <Message
-                currentId={routeProps.match.params.id}
-              />
-            )
-
-            return CurrentMessage
-          }
+          name: 'add-contact',
+          type: MODAL_BUTTON,
+          icon: 'fa fa-fw fa-user-plus',
+          label: trans('new-contact', {}, 'actions'),
+          modal: [MODAL_USERS, {
+            selectAction: (users) => ({
+              type: CALLBACK_BUTTON,
+              label: trans('add-contact', {}, 'actions'),
+              callback: () => props.addContacts(users.map(r => r.id))
+            })
+          }]
         }
       ]}
-    />
-  </ToolPage>
+      subtitle={
+        <Routes
+          path={props.path}
+          routes={[
+            {path: '/received', render: () => trans('messages_received', {}, 'message')},
+            {path: '/sent',     render: () => trans('messages_sent', {}, 'message')},
+            {path: '/deleted',  render: () => trans('messages_removed', {}, 'message')},
+            {path: '/contacts', render: () => trans('contacts', {}, 'message')}
+          ]}
+        />
+      }
+    >
+      <Routes
+        path={props.path}
+        redirect={[
+          {from: '/', exact: true, to: '/received' }
+        ]}
+        routes={[
+          {
+            path: '/contacts',
+            component: Contacts
+          }, {
+            path: '/received',
+            component: ReceivedMessages
+          }, {
+            path: '/sent',
+            component: SentMessages
+          }, {
+            path: '/deleted',
+            component: DeletedMessages
+          }, {
+            path: '/message/:id',
+            onEnter: (params) => props.openMessage(params.id),
+            render(routeProps) {
+              const CurrentMessage = (
+                <Message
+                  currentId={routeProps.match.params.id}
+                />
+              )
+
+              return CurrentMessage
+            }
+          }
+        ]}
+      />
+    </ToolPage>
+  </Tool>
 
 MessagingTool.propTypes = {
   path: T.string.isRequired,

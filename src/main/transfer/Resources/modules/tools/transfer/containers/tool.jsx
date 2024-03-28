@@ -1,9 +1,9 @@
-import {withReducer} from '#/main/app/store/components/withReducer'
+import {withReducer} from '#/main/app/store/reducer'
 
 import {TransferTool as TransferToolComponent} from '#/main/transfer/tools/transfer/components/tool'
-import {reducer as toolReducer, selectors as toolSelectors} from '#/main/core/tool/store'
+import {reducer, selectors} from '#/main/transfer/tools/transfer/store'
 
-const TransferTool = withReducer(toolSelectors.STORE_NAME, toolReducer)(TransferToolComponent)
+const TransferTool = withReducer(selectors.STORE_NAME, reducer)(TransferToolComponent)
 
 export {
   TransferTool

@@ -1,14 +1,11 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {Helmet} from 'react-helmet'
 
 import {trans} from '#/main/app/intl/translation'
-import {theme} from '#/main/theme/config'
 import {Routes} from '#/main/app/router'
 import {Await} from '#/main/app/components/await'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {Tool} from '#/main/core/tool'
 
 import {getTabs} from '#/main/evaluation/evaluation'
 
@@ -17,16 +14,16 @@ import {EvaluationUsers} from '#/main/evaluation/tools/evaluation/containers/use
 import {EvaluationParameters} from '#/main/evaluation/tools/evaluation/containers/parameters'
 
 const EvaluationTool = (props) =>
-  <Await
-    for={getTabs(props.contextType, props.permissions)}
-    placeholder={
-      <ContentLoader
-        size="lg"
-        description={trans('loading', {}, 'tools')}
-      />
-    }
-    then={(apps) => (
-      <Fragment>
+  <Tool {...props}>
+    <Await
+      for={getTabs(props.contextType, props.permissions)}
+      placeholder={
+        <ContentLoader
+          size="lg"
+          description={trans('loading', {}, 'tools')}
+        />
+      }
+      then={(apps) => (
         <Routes
           path={props.path}
           redirect={[
@@ -52,15 +49,9 @@ const EvaluationTool = (props) =>
             component: app.component
           })))}
         />
-
-        <Helmet>
-          {apps.map(app => app.styles && app.styles.map(styles => (
-            <link key={styles} rel="stylesheet" type="text/css" href={theme(styles)} />
-          )))}
-        </Helmet>
-      </Fragment>
-    )}
-  />
+      )}
+    />
+  </Tool>
 
 EvaluationTool.propTypes = {
   path: T.string.isRequired,

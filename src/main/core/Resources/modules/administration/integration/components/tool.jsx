@@ -7,29 +7,35 @@ import {Await} from '#/main/app/components/await'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
 import {getIntegrations} from '#/main/core/integration'
+import {Tool} from '#/main/core/tool'
 
 const IntegrationTool = props =>
-  <Await
-    for={getIntegrations()}
-    placeholder={
-      <ContentLoader
-        size="lg"
-        description={trans('loading', {}, 'tools')}
-      />
-    }
-    then={(apps) => (
-      <Routes
-        path={props.path}
-        redirect={[
-          {from: '/', exact: true, to: `/${apps[0].default.name}`}
-        ]}
-        routes={apps.map(app => ({
-          path: `/${app.default.name}`,
-          component: app.default.component
-        }))}
-      />
-    )}
-  />
+  <Tool
+    {...props}
+    styles={['claroline-distribution-main-core-administration-integration']}
+  >
+    <Await
+      for={getIntegrations()}
+      placeholder={
+        <ContentLoader
+          size="lg"
+          description={trans('loading', {}, 'tools')}
+        />
+      }
+      then={(apps) => (
+        <Routes
+          path={props.path}
+          redirect={[
+            {from: '/', exact: true, to: `/${apps[0].default.name}`}
+          ]}
+          routes={apps.map(app => ({
+            path: `/${app.default.name}`,
+            component: app.default.component
+          }))}
+        />
+      )}
+    />
+  </Tool>
 
 IntegrationTool.propTypes = {
   path: T.string.isRequired

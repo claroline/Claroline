@@ -1,18 +1,15 @@
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {mount, unmount} from '#/main/app/dom/mount'
-import {withReducer} from '#/main/app/store/components/withReducer'
-import {Routes} from '#/main/app/router'
 
 import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
+import {reducer as contextReducer, selectors as contextSelectors} from '#/main/app/context/store'
+import {reducer as toolReducer, selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {ResourceMain} from '#/main/core/resource/containers/main'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {actions, reducer, selectors} from '#/main/core/resource/store'
 import {ResourceWrapper} from '#/main/core/resource/containers/wrapper'
 
 // the class is because of the use of references and lifecycle
@@ -57,7 +54,10 @@ class ResourceEmbedded extends Component {
 
     Resource.displayName = `EmbeddedResource(${this.props.resourceNode.meta.type})`
 
-    this.mountedApp = mount(this.mountNode, Resource, {}, {
+    this.mountedApp = mount(this.mountNode, Resource, {
+      [contextSelectors.STORE_NAME]: contextReducer,
+      [toolSelectors.STORE_NAME]: toolReducer
+    }, {
       [securitySelectors.STORE_NAME]: {
         currentUser: this.props.currentUser,
         impersonated: this.props.impersonated

@@ -43,6 +43,7 @@ $icon-fixed-width: 1.25em; // same value as fa-fw (there is no var for it in fon
 
 $images-path: "images/";
 
+
 // -
 // Z-indexes
 // ---
@@ -118,8 +119,8 @@ $page-header-height:       420px !default;
 $page-header-bg:           transparent !default;
 $page-header-padding:      $grid-gutter-width*.5 $grid-gutter-width*.5 !default;
 $page-header-box-shadow:   none  !default;
-$page-header-border-width: 0 /*var(--#{$prefix}border-width)*/ !default;
-$page-header-border-color: transparent /*var(--#{$prefix}border-color-translucent)*/ !default;
+$page-header-border-width: 0 !default;
+$page-header-border-color: transparent !default;
 
 $page-title-color:          null !default;
 $page-title-font-size:      2rem !default;

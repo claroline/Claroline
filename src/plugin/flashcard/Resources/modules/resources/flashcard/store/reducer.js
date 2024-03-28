@@ -17,7 +17,7 @@ const reducer = combineReducers(Object.assign({
       newState.attempt = action.data.attempt
       return newState
     },
-    [`${FORM_SUBMIT_SUCCESS}/${editorSelectors.FORM_NAME}`]: (state, action) => ({
+    [makeInstanceAction(FORM_SUBMIT_SUCCESS, editorSelectors.FORM_NAME)]: (state, action) => ({
       attempt : state.attempt,
       flashcardDeck: action.updatedData
     })

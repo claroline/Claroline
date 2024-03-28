@@ -7,7 +7,7 @@ import {EventsAll} from '#/plugin/cursus/tools/trainings/event/components/all'
 import {EventsRegistered} from '#/plugin/cursus/tools/trainings/event/components/registered'
 import {EventsPublic} from '#/plugin/cursus/tools/trainings/event/components/public'
 import {EventsDetails} from '#/plugin/cursus/tools/events/containers/details'
-
+import {EventMain as Event} from '#/plugin/cursus/events/event/containers/main'
 
 const EventMain = (props) =>
   <Routes
@@ -45,11 +45,10 @@ const EventMain = (props) =>
         disabled: !props.authenticated || !props.canEdit || !props.canRegister
       }, {
         path: '/:id',
-        onEnter: (params = {}) => props.open(params.id),
-        render: () => (
-          <EventsDetails
-            path={props.path+'/events'}
-          />
+        render: (routerProps) => (
+          <Event eventId={routerProps.match.params.id}>
+            <EventsDetails path={props.path+'/events'} />
+          </Event>
         )
       }
     ]}
@@ -60,8 +59,7 @@ EventMain.propTypes = {
   authenticated: T.bool.isRequired,
   canEdit: T.bool.isRequired,
   canRegister: T.bool.isRequired,
-  invalidateList: T.func.isRequired,
-  open: T.func.isRequired
+  invalidateList: T.func.isRequired
 }
 
 export {

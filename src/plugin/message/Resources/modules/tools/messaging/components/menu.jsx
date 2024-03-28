@@ -13,25 +13,25 @@ const MessagingMenu = (props) =>
         type: LINK_BUTTON,
         //icon: 'fa fa-fw fa-inbox',
         label: trans('messages_received', {}, 'message'),
-        target: '/received'
+        target: props.path+'/received'
       }, {
         name: 'sent',
         type: LINK_BUTTON,
         //icon: 'fa fa-fw fa-paper-plane',
         label: trans('messages_sent', {}, 'message'),
-        target: '/sent'
+        target: props.path+'/sent'
       }, {
         name: 'deleted',
         type: LINK_BUTTON,
         //icon: 'fa fa-fw fa-trash',
         label: trans('messages_removed', {}, 'message'),
-        target: '/deleted'
+        target: props.path+'/deleted'
       }, {
         name: 'contact',
         type: LINK_BUTTON,
         //icon: 'fa fa-fw fa-address-book',
         label: trans('contacts', {}, 'message'),
-        target: '/contacts'
+        target: props.path+'/contacts'
       }
     ]}
   />

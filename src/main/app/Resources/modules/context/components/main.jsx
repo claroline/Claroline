@@ -13,6 +13,8 @@ import {ContentForbidden} from '#/main/app/content/components/forbidden'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContextEditor} from '#/main/app/context/editor/containers/main'
 import {ContextProfile} from '#/main/app/context/profile/containers/main'
+import {getTool} from '#/main/core/tool/utils'
+import {Await} from '#/main/app/components/await'
 
 const ContextMain = (props) => {
   // fetch current context data
@@ -98,8 +100,17 @@ const ContextMain = (props) => {
               //component: ToolMain,
               render: (routerProps) => {
                 const params = routerProps.match.params
-
-                return <ToolMain name={params.toolName} />
+                return (
+                  <Await
+                    for={getTool(params.toolName, props.name)}
+                    then={(resolved) => {
+                      return createElement(resolved.default.component, {
+                        name: params.toolName,
+                        path: props.path+'/'+params.toolName,
+                      })
+                    }}
+                   />
+                )
               }
             }
           ]}
