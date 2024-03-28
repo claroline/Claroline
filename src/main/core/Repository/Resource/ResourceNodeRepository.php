@@ -166,7 +166,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
                 FROM Claroline\CoreBundle\Entity\Resource\ResourceNode n
                 WHERE UPPER(n.code) LIKE :search
             ')
-            ->setParameter('search', strtoupper($prefix).'%')
+            ->setParameter('search', strtoupper(addcslashes($prefix, '%_')).'%')
             ->getResult();
 
         return array_map(function (array $resource) {

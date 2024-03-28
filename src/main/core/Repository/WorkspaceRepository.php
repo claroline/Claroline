@@ -172,7 +172,7 @@ class WorkspaceRepository extends EntityRepository
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
                 WHERE UPPER(w.code) LIKE :search
             ')
-            ->setParameter('search', strtoupper($prefix).'%')
+            ->setParameter('search', strtoupper(addcslashes($prefix, '%_')).'%')
             ->getResult()
         );
     }
