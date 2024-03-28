@@ -168,11 +168,11 @@ class WorkspaceRepository extends EntityRepository
                 return $ws['code'];
             },
             $this->getEntityManager()->createQuery('
-                SELECT UPPER(w.code) AS code
+                SELECT LOWER(w.code) AS code
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE UPPER(w.code) LIKE :search
+                WHERE LOWER(w.code) LIKE :search
             ')
-            ->setParameter('search', strtoupper(addcslashes($prefix, '%_')).'%')
+            ->setParameter('search', strtolower(addcslashes($prefix, '%_')).'%')
             ->getResult()
         );
     }

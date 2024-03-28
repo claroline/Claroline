@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Repository\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\ORM\AbstractQuery;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 
 class ResourceNodeRepository extends MaterializedPathRepository
@@ -162,12 +163,12 @@ class ResourceNodeRepository extends MaterializedPathRepository
     public function findCodesWithPrefix(string $prefix): array
     {
         $results = $this->getEntityManager()->createQuery('
-                SELECT UPPER(n.code) AS code
+                SELECT LOWER(n.code) AS code
                 FROM Claroline\CoreBundle\Entity\Resource\ResourceNode n
-                WHERE UPPER(n.code) LIKE :search
+                WHERE LOWER(n.code) LIKE :search
             ')
-            ->setParameter('search', strtoupper(addcslashes($prefix, '%_')).'%')
-            ->getResult();
+            ->setParameter('search', strtolower(addcslashes($prefix, '%_')).'%')
+            ->getResult(AbstractQuery::HYDRATE_ARRAY);
 
         return array_map(function (array $resource) {
             return $resource['code'];
