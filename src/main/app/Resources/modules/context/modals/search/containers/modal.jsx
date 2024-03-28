@@ -2,8 +2,8 @@ import {connect} from 'react-redux'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
 
-import {SearchModal as SearchModalComponent} from '#/main/core/header/search/modals/search/components/modal'
-import {actions, reducer, selectors} from '#/main/core/header/search/modals/search/store'
+import {SearchModal as SearchModalComponent} from '#/main/app/context/modals/search/components/modal'
+import {actions, reducer, selectors} from '#/main/app/context/modals/search/store'
 
 const SearchModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(

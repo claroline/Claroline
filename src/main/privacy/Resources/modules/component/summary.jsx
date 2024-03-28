@@ -98,8 +98,15 @@ PrivacySummary.propTypes = {
       }),
       phone: T.string
     }),
-    countryStorage: T.bool
+    countryStorage: T.string
   })
+}
+
+PrivacySummary.defaultProps = {
+  parameters: {
+    dpo: {},
+    tos: {}
+  }
 }
 
 export {

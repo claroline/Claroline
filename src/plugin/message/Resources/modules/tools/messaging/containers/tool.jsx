@@ -1,11 +1,10 @@
 import {connect} from 'react-redux'
-
-import {withRouter} from '#/main/app/router'
+import {withReducer} from '#/main/app/store/reducer'
 
 import {MessagingTool as MessagingToolComponent} from '#/plugin/message/tools/messaging/components/tool'
-import {actions} from '#/plugin/message/tools/messaging/store'
+import {actions, reducer, selectors} from '#/plugin/message/tools/messaging/store'
 
-const MessagingTool = withRouter(
+const MessagingTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     null,
     (dispatch) => ({

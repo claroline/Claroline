@@ -60,16 +60,16 @@ const Player = props => {
     <>
       {props.flashcardDeck.showProgression &&
         <ProgressBar
-          className="mb-3 progress-minimal"
+          className="progress-minimal"
           value={(currentCardIndex+1) / maxCards * 100}
           size="xs"
           type="learning"
         />
       }
 
-      <div className="flashcard-player content-sm">
+      <div className="flashcard-player content-sm mt-5">
         {props.flashcardDeck.showProgression &&
-          <div className="flashcard-counter mt-3">
+          <div className="flashcard-counter mb-1">
             <div>
               Session {`${props.attempt.data.session}`}
             </div>

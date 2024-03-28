@@ -5,10 +5,12 @@ import isEmpty from 'lodash/isEmpty'
 import {asset} from '#/main/app/config'
 import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {UserAvatar} from '#/main/app/user/components/avatar'
-import {MODAL_HISTORY} from '#/plugin/history/modals/history'
 import {route} from '#/main/core/workspace/routing'
+
+import {MODAL_HISTORY} from '#/plugin/history/modals/history'
+import {MODAL_CONTEXT_SEARCH} from '#/main/app/context/modals/search'
 
 const ContextNav = (props) => {
   if (!props.currentUser) {
@@ -100,17 +102,6 @@ const ContextNav = (props) => {
         </Button>
       ))}
 
-      {false &&
-        <Button
-          type={CALLBACK_BUTTON}
-          className="app-context-btn"
-          icon="fa fa-fw fa-plus"
-          label={trans('Epingler un espace')}
-          tooltip="right"
-          callback={() => true}
-        />
-      }
-
       <Button
         className="app-context-btn"
         tooltip="right"
@@ -120,6 +111,15 @@ const ContextNav = (props) => {
           label: trans('history', {}, 'history'),
           modal: [MODAL_HISTORY]
         }}
+      />
+
+      <Button
+        type={MODAL_BUTTON}
+        className="app-context-btn"
+        icon="fa fa-fw fa-search"
+        label={trans('search')}
+        tooltip="right"
+        modal={[MODAL_CONTEXT_SEARCH]}
       />
     </aside>
   )

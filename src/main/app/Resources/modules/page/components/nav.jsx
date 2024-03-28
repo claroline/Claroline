@@ -9,31 +9,33 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {actions as contextActions, selectors as contextSelectors} from '#/main/app/context/store'
 import {AppBrand} from '#/main/app/layout/containers/brand'
 
-const PageNav = (props) => {
+const MenuButton = (props) => {
   const dispatch = useDispatch()
   const menuOpened = useSelector(contextSelectors.menuOpened)
-
   return (
-    <div className="mx-4 my-3 d-flex gap-4 align-items-center">
-      {!props.embedded &&
-        <Button
-          type={CALLBACK_BUTTON}
-          className="app-menu-toggle position-relative"
-          label={trans(menuOpened ? 'hide-menu' : 'show-menu', {}, 'actions')}
-          icon={'fa fa-bars'/*menuOpened ? 'fa fa-fw fa-chevron-left' : 'fa fa-fw fa-chevron-right'*/}
-          tooltip="bottom"
-          callback={() => dispatch(contextActions.toggleMenu())}
-        />
-      }
-
-      {!props.embedded &&
-        <AppBrand />
-      }
-
-      {props.children}
-    </div>
+    <Button
+      type={CALLBACK_BUTTON}
+      className="app-menu-toggle position-relative"
+      label={trans(menuOpened ? 'hide-menu' : 'show-menu', {}, 'actions')}
+      icon={'fa fa-bars'/*menuOpened ? 'fa fa-fw fa-chevron-left' : 'fa fa-fw fa-chevron-right'*/}
+      tooltip="bottom"
+      callback={() => dispatch(contextActions.toggleMenu())}
+    />
   )
 }
+
+const PageNav = (props) =>
+  <div className="mx-4 my-3 d-flex gap-4 align-items-center">
+    {!props.embedded &&
+      <MenuButton />
+    }
+
+    {!props.embedded &&
+      <AppBrand />
+    }
+
+    {props.children}
+  </div>
 
 PageNav.propTypes = {
   embedded: T.bool.isRequired
