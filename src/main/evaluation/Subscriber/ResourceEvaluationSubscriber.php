@@ -7,6 +7,7 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -18,6 +19,7 @@ use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\UpdateResourceEvaluations;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ResourceEvaluationSubscriber implements EventSubscriberInterface
 {
@@ -26,6 +28,7 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
     private UserRepository $userRepo;
 
     public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
         MessageBusInterface $messageBus,
         ObjectManager $om,
         ResourceEvaluationManager $manager
@@ -59,7 +62,8 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
                 }, $registeredUsers);
 
                 $this->messageBus->dispatch(
-                    new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_TODO)
+                    new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_TODO),
+                    [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
                 );
             }
         }
@@ -80,11 +84,13 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
 
                 if ($resourceNode->isRequired()) {
                     $this->messageBus->dispatch(
-                        new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_TODO)
+                        new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_TODO),
+                        [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
                     );
                 } else {
                     $this->messageBus->dispatch(
-                        new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_NOT_ATTEMPTED, false)
+                        new UpdateResourceEvaluations($resourceNode->getId(), $registeredUserIds, AbstractEvaluation::STATUS_NOT_ATTEMPTED, false),
+                        [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
                     );
                 }
             }

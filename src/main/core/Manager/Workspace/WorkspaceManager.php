@@ -421,8 +421,8 @@ class WorkspaceManager implements LoggerAwareInterface
         do {
             ++$index;
             $currentCode = $code.'_'.$index;
-            $upperCurrentCode = strtoupper($currentCode);
-        } while (in_array($upperCurrentCode, $existingCodes));
+            $lowerCurrentCode = strtolower($currentCode);
+        } while (in_array($lowerCurrentCode, $existingCodes));
 
         return $currentCode;
     }
