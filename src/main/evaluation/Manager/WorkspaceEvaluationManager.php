@@ -12,6 +12,7 @@
 namespace Claroline\EvaluationBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
@@ -28,10 +29,12 @@ use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
 use Claroline\EvaluationBundle\Messenger\Message\RecomputeWorkspaceEvaluations;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class WorkspaceEvaluationManager extends AbstractEvaluationManager
 {
     public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly MessageBusInterface $messageBus,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly ObjectManager $om,
@@ -50,7 +53,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             $this->messageBus->dispatch(
                 new RecomputeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
                     return $user->getId();
-                }, $users))
+                }, $users)), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
             );
         }
     }
@@ -65,7 +68,7 @@ class WorkspaceEvaluationManager extends AbstractEvaluationManager
             $this->messageBus->dispatch(
                 new InitializeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
                     return $user->getId();
-                }, $users))
+                }, $users)), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
             );
         }
     }

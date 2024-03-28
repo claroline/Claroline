@@ -1,6 +1,7 @@
 services:
     Claroline\EvaluationBundle\Subscriber\ResourceEvaluationSubscriber:
         arguments:
+            - '@security.token_storage'
             - '@messenger.default_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'

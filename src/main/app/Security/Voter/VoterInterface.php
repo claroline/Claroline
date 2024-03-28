@@ -8,23 +8,21 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface as BaseVo
 interface VoterInterface extends BaseVoterInterface
 {
     /** @var string */
-    const CREATE = 'CREATE';
+    public const CREATE = 'CREATE';
     /** @var string */
-    const EDIT = 'EDIT';
+    public const EDIT = 'EDIT';
+    public const COPY = 'COPY';
     /** @var string */
-    const ADMINISTRATE = 'ADMINISTRATE';
+    public const ADMINISTRATE = 'ADMINISTRATE';
     /** @var string */
-    const DELETE = 'DELETE';
+    public const DELETE = 'DELETE';
     /** @var string */
-    const VIEW = 'VIEW';
+    public const VIEW = 'VIEW';
     /** @var string */
-    const OPEN = 'OPEN';
+    public const OPEN = 'OPEN';
     /** @var string */
-    const PATCH = 'PATCH';
+    public const PATCH = 'PATCH';
 
-    /**
-     * @param mixed $object
-     */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int;
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Claroline\LogBundle\Subscriber;
 
+use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\LogBundle\Manager\LogManager;
 use Claroline\LogBundle\Messenger\Message\CreateFunctionalLog;
 use Claroline\LogBundle\Messenger\Message\CreateMessageLog;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Sends all the logs created during the process of the current request to the messenger to be persisted in DB.
@@ -20,6 +22,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class SubmitLogsSubscriber implements EventSubscriberInterface
 {
     public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly MessageBusInterface $messageBus,
         private readonly LogManager $logManager
     ) {
@@ -59,7 +62,7 @@ class SubmitLogsSubscriber implements EventSubscriberInterface
         }
 
         // dispatch stashed messages
-        $this->messageBus->dispatch(new SubmitLogs($type, $doerIp, $logs));
+        $this->messageBus->dispatch(new SubmitLogs($type, $doerIp, $logs), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
     }
 
     private function getDoerIp(Request $request = null): string
