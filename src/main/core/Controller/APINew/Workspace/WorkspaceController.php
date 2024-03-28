@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\APINew\Workspace;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\File\TempFileManager;
@@ -210,7 +211,7 @@ class WorkspaceController extends AbstractCrudController
      */
     public function copyAction(Request $request): JsonResponse
     {
-        $options = [];
+        $options = [Crud::NO_PERMISSIONS];
         if (1 === (int) $request->query->get('model') || 'true' === $request->query->get('model')) {
             $options[] = Options::AS_MODEL;
         }

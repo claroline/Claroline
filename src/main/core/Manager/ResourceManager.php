@@ -430,15 +430,15 @@ class ResourceManager implements LoggerAwareInterface
 
         $toInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
         foreach ($toInsert as $entityInsertion) {
-            if ($entityInsertion instanceof ResourceNode && str_starts_with(strtoupper($entityInsertion->getCode()), strtoupper($code))) {
-                $existingCodes[] = strtoupper($entityInsertion->getCode());
+            if ($entityInsertion instanceof ResourceNode && str_starts_with(strtolower($entityInsertion->getCode()), strtolower($code))) {
+                $existingCodes[] = strtolower($entityInsertion->getCode());
             }
         }
 
         $toUpdate = $this->om->getUnitOfWork()->getScheduledEntityUpdates();
         foreach ($toUpdate as $entityUpdate) {
-            if ($entityUpdate instanceof ResourceNode && str_starts_with(strtoupper($entityUpdate->getCode()), strtoupper($code))) {
-                $existingCodes[] = strtoupper($entityUpdate->getCode());
+            if ($entityUpdate instanceof ResourceNode && str_starts_with(strtolower($entityUpdate->getCode()), strtolower($code))) {
+                $existingCodes[] = strtolower($entityUpdate->getCode());
             }
         }
 
@@ -448,7 +448,7 @@ class ResourceManager implements LoggerAwareInterface
 
         $index = 0;
         $currentCode = $code;
-        while (in_array(strtoupper($currentCode), $existingCodes)) {
+        while (in_array(strtolower($currentCode), $existingCodes)) {
             ++$index;
             $currentCode = $code.'_'.$index;
         }
