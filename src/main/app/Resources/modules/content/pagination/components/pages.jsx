@@ -9,20 +9,18 @@ import {MenuButton} from '#/main/app/buttons/menu/components/button'
 const PaginationPages = props =>
   <nav className="pagination-condensed btn-group">
     <CallbackButton
-      className="btn-previous"
-      variant="btn"
-      disabled={0 === props.current}
+      className="btn-previous btn btn-link"
+      disabled={props.disabled || 0 === props.current}
       callback={() => props.changePage(props.current - 1)}
     >
       <span className="fa fa-angle-double-left" aria-hidden="true" />
-      <span className="sr-only">{trans('previous')}</span>
+      <span className="visually-hidden">{trans('previous')}</span>
     </CallbackButton>
 
     <MenuButton
       id="pagination-pages-dropdown"
-      className="w-100"
-      variant="btn"
-      disabled={1 === props.pages}
+      className="w-100 btn btn-link"
+      disabled={props.disabled || 1 === props.pages}
       menu={{
         position: 'top',
         label: trans('pages'),
@@ -38,17 +36,17 @@ const PaginationPages = props =>
     </MenuButton>
 
     <CallbackButton
-      className="btn-next"
-      variant="btn"
-      disabled={props.pages - 1 === props.current}
+      className="btn-next btn btn-link"
+      disabled={props.disabled || props.pages - 1 === props.current}
       callback={() => props.changePage(props.current + 1)}
     >
-      <span className="d-none d-sm-inline icon-with-text-right">{trans('next')}</span>
+      <span className="visually-hidden">{trans('next')}</span>
       <span className="fa fa-angle-double-right" aria-hidden="true" />
     </CallbackButton>
   </nav>
 
 PaginationPages.propTypes = {
+  disabled: T.bool.isRequired,
   current: T.number,
   pages: T.number.isRequired,
   changePage: T.func.isRequired

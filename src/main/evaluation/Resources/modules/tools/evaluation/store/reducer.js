@@ -1,7 +1,6 @@
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
-import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeListReducer} from '#/main/app/content/list/store/reducer'
-import {TOOL_LOAD} from '#/main/core/tool/store'
+import {TOOL_OPEN} from '#/main/core/tool/store'
 
 import {USER_PROGRESSION_LOAD, USER_PROGRESSION_RESET} from '#/main/evaluation/tools/evaluation/store/actions'
 import {selectors} from '#/main/evaluation/tools/evaluation/store/selectors'
@@ -13,13 +12,13 @@ const reducer = combineReducers({
    */
   workspaceEvaluations: makeListReducer(selectors.STORE_NAME+'.workspaceEvaluations', {}, {
     invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, 'evaluation')]: () => true
+      [TOOL_OPEN]: () => true
     })
   }),
 
   requiredResources: makeListReducer(selectors.STORE_NAME+'.requiredResources', {}, {
     invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, 'evaluation')]: () => true
+      [TOOL_OPEN]: () => true
     })
   }),
 
@@ -28,7 +27,7 @@ const reducer = combineReducers({
    */
   current: combineReducers({
     loaded: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, 'evaluation')]: () => false,
+      [TOOL_OPEN]: () => false,
       [USER_PROGRESSION_LOAD]: () => true,
       [USER_PROGRESSION_RESET]: () => false
     }),

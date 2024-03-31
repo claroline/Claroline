@@ -57,11 +57,6 @@ class HomeTool extends AbstractTool
         ];
     }
 
-    public function configure(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
-    {
-        return [];
-    }
-
     public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
     {
         $homeTabs = $this->om->getRepository(HomeTab::class)->findBy([

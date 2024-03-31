@@ -4,7 +4,7 @@ import {makeListReducer} from '#/main/app/content/list/store/reducer'
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
-import {TOOL_LOAD} from '#/main/core/tool/store/actions'
+import {TOOL_OPEN} from '#/main/core/tool/store/actions'
 
 import {selectors} from '#/plugin/tag/tools/tags/store/selectors'
 
@@ -13,15 +13,15 @@ export const reducer = combineReducers({
     sortBy: {property: 'name', direction: 1}
   }, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.tag.form']: () => true,
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+      [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.STORE_NAME + '.tag.form')]: () => true,
+      [TOOL_OPEN]: () => true
     })
   }),
   tag: combineReducers({
     form: makeFormReducer(selectors.STORE_NAME + '.tag.form'),
     objects: makeListReducer(selectors.STORE_NAME + '.tag.objects', {}, {
       invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+        [TOOL_OPEN]: () => true
       })
     })
   })

@@ -9,7 +9,7 @@ const PaginationSize = props =>
   <MenuButton
     id="page-sizes-dropdown"
     containerClassName="results-per-page"
-    variant="btn"
+    className="btn btn-link"
     menu={{
       position: 'top',
       align: 'right',
@@ -21,12 +21,14 @@ const PaginationSize = props =>
         callback: () => props.updatePageSize(size)
       }))
     }}
+    disabled={props.disabled}
   >
     {-1 !== props.pageSize ? props.pageSize : trans('all')}
-    <span className="fa fa-sort icon-with-text-left" />
+    <span className="fa fa-list ms-2" />
   </MenuButton>
 
 PaginationSize.propTypes = {
+  disabled: T.bool.isRequired,
   pageSize: T.number.isRequired,
   availableSizes: T.arrayOf(T.number).isRequired,
   updatePageSize: T.func.isRequired

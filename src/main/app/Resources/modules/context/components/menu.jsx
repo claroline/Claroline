@@ -50,7 +50,7 @@ class ContextMenu extends Component
 
   autoClose() {
     // only auto close on small windows
-    if (constants.SIZE_SM === this.state.computedSize || constants.SIZE_XS === this.state.computedSize) {
+    if (constants.SCREEN_LG_MAX > this.state.computedSize) {
       this.props.close()
     }
   }
@@ -80,42 +80,45 @@ class ContextMenu extends Component
 
 
     return (
-      <aside className={classes('app-menu', {
-        show: this.props.opened
-      })}>
-        {this.props.title &&
-          <header className="app-menu-header m-3 ms-4 me-1 d-flex align-items-center justify-content-between">
-            <h1 className="app-menu-title text-truncate d-block">{this.props.title}</h1>
+      <>
+        <aside className={classes('app-menu', {
+          show: this.props.opened
+        })}>
+          {this.props.title &&
+            <header className="app-menu-header m-3 ms-4 me-1 d-flex align-items-center justify-content-between">
+              <h1 className="app-menu-title text-truncate d-block">{this.props.title}</h1>
 
-            {(!isEmpty(this.props.actions) || !Array.isArray(this.props.actions)) &&
-              <Toolbar
-                id="app-menu-actions"
-                className="flex-shrink-0"
-                buttonName="btn"
-                actions={this.props.actions}
-                onClick={this.autoClose}
-                toolbar="favourite more"
-                tooltip="bottom"
-              />
-            }
-          </header>
-        }
+              {(!isEmpty(this.props.actions) || !Array.isArray(this.props.actions)) &&
+                <Toolbar
+                  id="app-menu-actions"
+                  className="flex-shrink-0"
+                  buttonName="btn"
+                  actions={this.props.actions}
+                  onClick={this.autoClose}
+                  toolbar="favourite more"
+                  tooltip="bottom"
+                />
+              }
+            </header>
+          }
 
-        <ContextUser />
+          <ContextUser />
 
-        {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
-          autoClose: this.autoClose
-        }))}
+          {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
+            autoClose: this.autoClose
+          }))}
 
-        {1 < toolActions.length &&
-          <Toolbar
-            className="app-menu-items"
-            buttonName="app-menu-item"
-            actions={toolActions}
-            onClick={this.autoClose}
-          />
-        }
-      </aside>
+          {1 < toolActions.length &&
+            <Toolbar
+              className="app-menu-items"
+              buttonName="app-menu-item"
+              actions={toolActions}
+              onClick={this.autoClose}
+            />
+          }
+        </aside>
+        <div className="app-menu-backdrop" role="presentation" onClick={this.props.close} />
+      </>
     )
   }
 }

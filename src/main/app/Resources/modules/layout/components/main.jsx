@@ -14,15 +14,22 @@ import {HomeLogin} from '#/main/app/layout/components/login'
 import {ContextNav} from '#/main/app/context/containers/nav'
 
 const LayoutMain = props => {
+  const [loaded, setLoaded] = useState(false)
   const [appContexts, setAppContexts] = useState([])
 
   useEffect(() => {
     const contextFetching = makeCancelable(getContexts())
 
-    contextFetching.promise.then(definedContexts => setAppContexts(definedContexts))
+    contextFetching.promise.then(definedContexts => {
+      setAppContexts(definedContexts)
+      setLoaded(true)
+    })
 
-    return () => contextFetching.cancel()
-  })
+    return () => {
+      console.log('context apps loading cancelled')
+      contextFetching.cancel()
+    }
+  }, [loaded])
 
   if (isEmpty(appContexts)) {
     return null

@@ -1,10 +1,9 @@
-import React, {createElement, useEffect} from 'react'
+import React, {createElement, useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
 import {makeCancelable} from '#/main/app/api'
 import {Routes} from '#/main/app/router'
-import {ToolMain} from '#/main/core/tool/containers/main'
 import {FooterMain} from '#/main/app/layout/footer/containers/main'
 import {trans} from '#/main/app/intl'
 import {ContentNotFound} from '#/main/app/content/components/not-found'
@@ -15,6 +14,7 @@ import {ContextEditor} from '#/main/app/context/editor/containers/main'
 import {ContextProfile} from '#/main/app/context/profile/containers/main'
 import {getTool} from '#/main/core/tool/utils'
 import {Await} from '#/main/app/components/await'
+import {hasPermission} from '#/main/app/security'
 
 const ContextMain = (props) => {
   // fetch current context data
@@ -28,12 +28,40 @@ const ContextMain = (props) => {
 
     return () => {
       if (openQuery) {
+        console.log('context open cancelled')
         openQuery.cancel()
       }
     }
   }, [props.name, props.id])
 
-  if (!props.loaded) {
+  // fetch tool apps
+  const [toolApps, setToolApps] = useState(null)
+  useEffect(() => {
+    let appPromise
+    if (props.loaded) {
+      appPromise = makeCancelable(Promise.all(
+        props.tools.map(tool => getTool(tool.name, props.name).then(toolApp => ({
+          name: tool.name,
+          app: toolApp.default.component
+        })))
+      ))
+
+      appPromise.promise.then(loadedApps => {
+        setToolApps(loadedApps.reduce((acc, current) => Object.assign(acc, {
+          [current.name]: current.app
+        }), {}))
+      })
+    }
+
+    return () => {
+      if (appPromise) {
+        console.log('tool apps loading cancelled')
+        appPromise.cancel()
+      }
+    }
+  }, [props.loaded])
+
+  if (!props.loaded || !toolApps) {
     return props.loadingPage ?
       createElement(props.loadingPage) :
       <ContentLoader
@@ -76,7 +104,7 @@ const ContextMain = (props) => {
       {createElement(props.menu)}
 
       <div className="app-body" role="presentation">
-        <div className="app-loader" />
+        {/*<div className="app-loader" />*/}
 
         <Routes
           path={props.path}
@@ -91,7 +119,8 @@ const ContextMain = (props) => {
             }, {
               path: '/:toolName',
               onEnter: (params = {}) => {
-                if (-1 === props.tools.findIndex(tool => tool.name === params.toolName)) {
+                const openedTool = props.tools.find(tool => tool.name === params.toolName)
+                if (isEmpty(openedTool) || !hasPermission('open', openedTool)) {
                   // tool is disabled (or does not exist) for the context
                   // let's go to the default opening of the context
                   props.history.replace(props.path)
@@ -100,17 +129,11 @@ const ContextMain = (props) => {
               //component: ToolMain,
               render: (routerProps) => {
                 const params = routerProps.match.params
-                return (
-                  <Await
-                    for={getTool(params.toolName, props.name)}
-                    then={(resolved) => {
-                      return createElement(resolved.default.component, {
-                        name: params.toolName,
-                        path: props.path+'/'+params.toolName,
-                      })
-                    }}
-                   />
-                )
+
+                return createElement(toolApps[params.toolName], {
+                  name: params.toolName,
+                  path: props.path+'/'+params.toolName,
+                })
               }
             }
           ]}
@@ -138,7 +161,10 @@ ContextMain.propTypes = {
   // context params
   defaultOpening: T.string,
   tools: T.arrayOf(T.shape({
-
+    name: T.string.isRequired,
+    permissions: T.shape({
+      open: T.bool
+    })
   })),
   // custom context components
   menu: T.elementType,

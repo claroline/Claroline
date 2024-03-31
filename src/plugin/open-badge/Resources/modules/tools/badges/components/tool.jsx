@@ -1,92 +1,80 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
-import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {Tool} from '#/main/core/tool'
 
 import {Assertions} from '#/plugin/open-badge/tools/badges/assertion/components/list'
-import {Badges}  from '#/plugin/open-badge/tools/badges/badge/components/list'
-import {BadgeDetails} from '#/plugin/open-badge/tools/badges/badge/components/details'
-import {BadgeForm} from '#/plugin/open-badge/tools/badges/badge/components/form'
+
 import {AssertionDetails} from '#/plugin/open-badge/tools/badges/assertion/components/details'
+
+import {BadgeList}  from '#/plugin/open-badge/tools/badges/badge/containers/list'
+import {BadgeEdit} from '#/plugin/open-badge/tools/badges/badge/containers/edit'
+import {BadgeCreate} from '#/plugin/open-badge/tools/badges/badge/components/create'
+import {BadgeShow} from '#/plugin/open-badge/tools/badges/badge/containers/show'
+import {trans} from '#/main/app/intl'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {constants as toolConstants} from '#/main/core/tool/constants'
+import get from 'lodash/get'
 import {MODAL_TRANSFER} from '#/plugin/open-badge/modals/transfer'
-import {Tool} from '#/main/core/tool'
 
 const BadgeTool = props =>
   <Tool
     {...props}
     styles={['claroline-distribution-plugin-open-badge-badges-tool']}
-  >
-    <ToolPage
-      primaryAction="new"
-      actions={[
-        {
-          name: 'new',
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-plus',
-          label: trans('add_badge', {}, 'badge'),
-          target: `${props.path}/new`,
-          primary: true,
-          displayed: props.canEdit
-        },{
-          name: 'transfer-badges',
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-right-left',
-          label: trans('transfer_badges', {}, 'actions'),
-          modal: [MODAL_TRANSFER],
-          displayed: props.canAdministrate,
-          primary: false
-        }
-      ]}
-      subtitle={
-        <Routes
-          path={props.path}
-          routes={[
-            {path: '/new',        render: () => trans('new_badge', {}, 'badge')},
-            {path: '/my-badges',  render: () => trans('my_badges', {}, 'badge')},
-            {path: '/badges',     render: () => trans('all_badges', {}, 'badge')}
-          ]}
-        />
+    menu={[
+      {
+        name: 'my-badges',
+        label: trans('my_badges', {}, 'badge'),
+        target: props.path+'/my',
+        type: LINK_BUTTON,
+        displayed: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'meta.model')
+      }, {
+        name: 'all-badges',
+        label: trans('all_badges', {}, 'badge'),
+        target: props.path,
+        type: LINK_BUTTON
       }
-    >
-      <Routes
-        path={props.path}
-        redirect={[
-          {from: '/', exact: true, to: '/badges'}
-        ]}
-        routes={[
-          {
-            path: '/new',
-            onEnter: () => props.openBadge(null, props.currentContext.data),
-            component: BadgeForm
-          }, {
-            path: '/my-badges',
-            component: Assertions
-          }, {
-            path: '/badges',
-            component: Badges,
-            exact: true
-          }, {
-            path: '/badges/:id',
-            onEnter: (params) => props.openBadge(params.id, props.currentContext.data),
-            component: BadgeDetails,
-            exact: true
-          }, {
-            path: '/badges/:id/edit',
-            onEnter: (params) => props.openBadge(params.id, props.currentContext.data),
-            component: BadgeForm
-          }, {
-            path: '/badges/:id/assertion/:assertionId',
-            component: AssertionDetails,
-            onEnter: (params) => props.openAssertion(params.assertionId),
-            exact: true
-          }
-        ]}
-      />
-    </ToolPage>
-  </Tool>
+    ]}
+    actions={[
+      {
+        name: 'transfer-badges',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-right-left',
+        label: trans('transfer_badges', {}, 'actions'),
+        modal: [MODAL_TRANSFER],
+        displayed: props.canAdministrate,
+        dangerous: true
+      }
+    ]}
+    pages={[
+      {
+        path: '/my',
+        component: Assertions
+      }, {
+        path: '',
+        component: BadgeList,
+        exact: true
+      }, {
+        path: '/new',
+        onEnter: () => props.openBadge(null, props.currentContext.data),
+        component: BadgeCreate
+      }, {
+        path: '/:id/edit',
+        onEnter: (params) => props.openBadge(params.id, props.currentContext.data),
+        component: BadgeEdit
+      }, {
+        path: '/:id',
+        onEnter: (params) => props.openBadge(params.id, props.currentContext.data),
+        component: BadgeShow,
+        exact: true
+      }, {
+        path: '/badges/:id/assertion/:assertionId',
+        component: AssertionDetails,
+        onEnter: (params) => props.openAssertion(params.assertionId),
+        exact: true
+      }
+    ]}
+  />
 
 BadgeTool.propTypes = {
   path: T.string.isRequired,

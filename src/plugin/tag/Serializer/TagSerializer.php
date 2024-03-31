@@ -13,25 +13,19 @@ class TagSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var TaggedObjectRepository */
-    private $taggedObjectRepo;
+    private TaggedObjectRepository $taggedObjectRepo;
 
     public function __construct(ObjectManager $om)
     {
-        $this->om = $om;
-
         $this->taggedObjectRepo = $om->getRepository(TaggedObject::class);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'tag';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Tag::class;
     }

@@ -336,7 +336,6 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'roles' => $this->getRoles(),
         ];
     }
 
@@ -347,9 +346,6 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     {
         $this->id = $data['id'];
         $this->username = $data['username'];
-
-        $this->roles = new ArrayCollection();
-        $this->groups = new ArrayCollection();
     }
 
     public function getUserIdentifier(): string
@@ -676,7 +672,8 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
 
     public function isAccountNonExpired(): bool
     {
-        foreach ($this->getRoles() as $role) {
+        $roles = $this->getRoles();
+        foreach ($roles as $role) {
             if ('ROLE_ADMIN' === $role) {
                 return true;
             }

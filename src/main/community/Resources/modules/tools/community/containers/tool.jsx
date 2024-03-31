@@ -12,8 +12,8 @@ const CommunityTool = withReducer(selectors.STORE_NAME, reducer)(
     (state) => ({
       contextType: toolSelectors.contextType(state),
       contextData: toolSelectors.contextData(state),
-      workspace: toolSelectors.contextData(state),
       canEdit: hasPermission('edit', toolSelectors.toolData(state)),
+      canAdministrate: hasPermission('administrate', toolSelectors.toolData(state)),
       canShowActivity: hasPermission('show_activity', toolSelectors.toolData(state))
     })
   )(CommunityToolComponent)

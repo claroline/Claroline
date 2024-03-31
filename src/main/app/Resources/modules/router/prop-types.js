@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 const Route = {
   propTypes: {
     path: T.string.isRequired,
-    component: T.any, // todo find better typing
+    component: T.any,
     render: T.func,
     exact: T.bool,
     disabled: T.bool,
@@ -30,16 +30,7 @@ const Redirect = {
   }
 }
 
-const LocationAware = {
-  propTypes: {
-    location: T.shape({
-      pathname: T.string
-    }).isRequired
-  }
-}
-
 export {
-  LocationAware,
   Route,
   Redirect
 }

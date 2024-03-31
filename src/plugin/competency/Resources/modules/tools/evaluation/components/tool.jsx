@@ -37,6 +37,7 @@ const CompetencyTool = (props) =>
       }
     ]}
     subtitle={trans('competencies', {}, 'evaluation')}
+    styles={['claroline-distribution-plugin-competency-competency']}
   >
     <ContentTabs
       sections={[

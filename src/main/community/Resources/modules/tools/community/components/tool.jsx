@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {Routes} from '#/main/app/router'
+import {Tool} from '#/main/core/tool'
 import {constants as toolConstants} from '#/main/core/tool/constants'
 
 import {ActivityMain} from '#/main/community/tools/community/activity/containers/main'
@@ -13,63 +13,132 @@ import {PendingMain} from '#/main/community/tools/community/pending/containers/m
 import {ProfileMain} from '#/main/community/tools/community/profile/containers/main'
 import {OrganizationMain} from '#/main/community/tools/community/organization/containers/main'
 import {TeamMain} from '#/main/community/tools/community/team/containers/main'
-import {Tool} from '#/main/core/tool'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {trans} from '#/main/app/intl'
+import {MODAL_USER_DISABLE_INACTIVE} from '#/main/community/tools/community/user/modals/disable-inactive'
 
 const CommunityTool = (props) =>
   <Tool
     {...props}
     styles={['claroline-distribution-main-community-tool']}
-  >
-    <Routes
-      path={props.path}
-      redirect={[
-        {from: '/', exact: true, to: '/users', disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')},
-        {from: '/', exact: true, to: '/roles', disabled: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'meta.model')}
-      ]}
-      routes={[
-        {
-          path: '/activity',
-          component: ActivityMain,
-          disabled: !props.canShowActivity || (props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model'))
-        }, {
-          path: '/users',
-          component: UserMain,
-          disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')
-        }, {
-          path: '/groups',
-          component: GroupMain,
-          disabled:  props.contextType === toolConstants.TOOL_WORKSPACE && get(props.workspace, 'meta.model')
-        }, {
-          path: '/roles',
-          component: RoleMain,
-          disabled: !props.canEdit
-        }, {
-          path: '/organizations',
-          component: OrganizationMain,
-          disabled: props.contextType !== toolConstants.TOOL_DESKTOP/* || !props.canEdit*/
-        }, {
-          path: '/teams',
-          component: TeamMain,
-          disabled: props.contextType === toolConstants.TOOL_DESKTOP
-        }, {
-          path: '/pending',
-          component: PendingMain,
-          disabled: !props.canEdit || props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.workspace, 'registration.selfRegistration') || !get(props.workspace, 'registration.validation')
-        }, {
-          path: '/parameters/profile',
-          component: ProfileMain,
-          disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canEdit
-        }
-      ]}
-    />
-  </Tool>
+    redirect={[
+      {from: '/', exact: true, to: '/users', disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.contextData, 'meta.model')},
+      {from: '/', exact: true, to: '/roles', disabled: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'meta.model')}
+    ]}
+    menu={[
+      {
+        name: 'activity',
+        type: LINK_BUTTON,
+        /*icon: 'fa fa-fw fa-wave-square',*/
+        label: trans('activity'),
+        target: `${props.path}/activity`,
+        displayed: props.canShowActivity && (props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'meta.model'))
+      }, {
+        name: 'users',
+        type: LINK_BUTTON,
+        /*icon: 'fa fa-fw fa-user',*/
+        label: trans('users', {}, 'community'),
+        target: `${props.path}/users`,
+        displayed: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'meta.model')
+      }, {
+        name: 'groups',
+        type: LINK_BUTTON,
+        /*icon: 'fa fa-fw fa-users',*/
+        label: trans('groups', {}, 'community'),
+        target: `${props.path}/groups`,
+        displayed: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'meta.model')
+      }, {
+        name: 'pending',
+        type: LINK_BUTTON,
+        /*icon: 'fa fa-fw fa-user-plus',*/
+        label: trans('pending_registrations'),
+        target: `${props.path}/pending`,
+        displayed: props.contextType === toolConstants.TOOL_WORKSPACE && props.canEdit && get(props.contextData, 'registration.validation')
+      }, {
+        name: 'teams',
+        type: LINK_BUTTON,
+        /*icon: 'fa fa-fw fa-user-group',*/
+        label: trans('teams', {}, 'community'),
+        target: `${props.path}/teams`,
+        displayed: props.contextType === toolConstants.TOOL_WORKSPACE
+      }, {
+        name: 'organizations',
+        type: LINK_BUTTON,
+        /*icon: 'fa fa-fw fa-building',*/
+        label: trans('organizations'),
+        target: `${props.path}/organizations`,
+        displayed: props.contextType === toolConstants.TOOL_DESKTOP/* && props.canEdit*/
+      }, {
+        name: 'roles',
+        type: LINK_BUTTON,
+        /*icon: 'fa fa-fw fa-id-badge',*/
+        label: trans('roles', {}, 'community'),
+        target: `${props.path}/roles`,
+        displayed: props.canEdit
+      }, {
+        name: 'profile',
+        type: LINK_BUTTON,
+        /*icon: 'fa fa-fw fa-user-circle',*/
+        label: trans('user_profile'),
+        target: `${props.path}/parameters/profile`,
+        displayed: props.contextType === toolConstants.TOOL_DESKTOP && props.canEdit
+      }
+    ]}
+    pages={[
+      {
+        path: '/activity',
+        component: ActivityMain,
+        disabled: !props.canShowActivity || (props.contextType === toolConstants.TOOL_WORKSPACE && get(props.contextData, 'meta.model'))
+      }, {
+        path: '/users',
+        component: UserMain,
+        disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.contextData, 'meta.model')
+      }, {
+        path: '/groups',
+        component: GroupMain,
+        disabled:  props.contextType === toolConstants.TOOL_WORKSPACE && get(props.contextData, 'meta.model')
+      }, {
+        path: '/roles',
+        component: RoleMain,
+        disabled: !props.canEdit
+      }, {
+        path: '/organizations',
+        component: OrganizationMain,
+        disabled: props.contextType !== toolConstants.TOOL_DESKTOP/* || !props.canEdit*/
+      }, {
+        path: '/teams',
+        component: TeamMain,
+        disabled: props.contextType === toolConstants.TOOL_DESKTOP
+      }, {
+        path: '/pending',
+        component: PendingMain,
+        disabled: !props.canEdit || props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'registration.selfRegistration') || !get(props.contextData, 'registration.validation')
+      }, {
+        path: '/parameters/profile',
+        component: ProfileMain,
+        disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canEdit
+      }
+    ]}
+    actions={[
+      {
+        name: 'disable-inactive',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-user-clock',
+        label: trans('disable_inactive_users', {}, 'community'),
+        modal: [MODAL_USER_DISABLE_INACTIVE],
+        displayed: 'desktop' === props.contextType && props.canAdministrate,
+        dangerous: true
+      }
+    ]}
+  />
 
 CommunityTool.propTypes = {
+  path: T.string.isRequired,
   contextType: T.string,
   contextData: T.object,
-  path: T.string.isRequired,
   workspace: T.object,
   canEdit: T.bool.isRequired,
+  canAdministrate: T.bool.isRequired,
   canShowActivity: T.bool.isRequired
 }
 

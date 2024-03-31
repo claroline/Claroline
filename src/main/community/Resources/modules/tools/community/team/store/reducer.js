@@ -7,7 +7,7 @@ import {makeListReducer} from '#/main/app/content/list/store'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {makeInstanceAction} from '#/main/app/store/actions'
 
-import {TOOL_LOAD} from '#/main/core/tool/store/actions'
+import {TOOL_LOAD, TOOL_OPEN} from '#/main/core/tool/store/actions'
 
 import {selectors as baseSelectors} from '#/main/community/tools/community/store/selectors'
 import {selectors} from '#/main/community/tools/community/team/store/selectors'
@@ -38,7 +38,7 @@ const reducer = combineReducers({
     sortBy: {property: 'name', direction: 1}
   }, {
     invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: () => true,
+      [TOOL_OPEN]: () => true,
       [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.FORM_NAME)]: () => true
     })
   }),
@@ -47,14 +47,14 @@ const reducer = combineReducers({
       sortBy: {property: 'lastName', direction: 1}
     }, {
       invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+        [TOOL_OPEN]: () => true
       })
     }),
     managers: makeListReducer(selectors.FORM_NAME + '.managers', {
       sortBy: {property: 'lastName', direction: 1}
     }, {
       invalidated: makeReducer(false, {
-        [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+        [TOOL_OPEN]: () => true
       })
     })
   })

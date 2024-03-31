@@ -19,8 +19,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
     {
         return [
             'name' => 'display.name',
-            'secondary_name' => 'display.secondary_name',
-            'name_active' => 'display.name_active',
             'support_email' => 'help.support_email',
             'footer' => 'footer.content',
             'logo' => 'display.logo',

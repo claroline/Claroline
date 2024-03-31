@@ -12,5 +12,6 @@
   "schedule": "Planifier l'exécution",
   "once": "Exécution unique",
   "recurring": "Exécution récurente",
-  "interval": "Interval d'exécution"
+  "interval": "Interval d'exécution",
+  "new_task": "Nouvelle tâche planifiée"
 }

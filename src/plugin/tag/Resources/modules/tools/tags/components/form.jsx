@@ -12,78 +12,83 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {selectors} from '#/plugin/tag/tools/tags/store'
 import {TaggedObjectCard} from '#/plugin/tag/card/components/tagged-object'
+import {ToolPage} from '#/main/core/tool'
 
 const TagFormComponent = (props) =>
-  <FormData
-    name={selectors.STORE_NAME + '.tag.form'}
-    buttons={true}
-    target={(tag, isNew) => isNew ?
-      ['apiv2_tag_create'] :
-      ['apiv2_tag_update', {id: tag.id}]
-    }
-    cancel={{
-      type: LINK_BUTTON,
-      target: props.path,
-      exact: true
-    }}
-    sections={[
-      {
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            name: 'name',
-            type: 'string',
-            label: trans('name'),
-            required: true
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-circle-info',
-        title: trans('information'),
-        fields: [
-          {
-            name: 'meta.description',
-            type: 'string',
-            label: trans('description'),
-            options: {
-              long: true
-            }
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-desktop',
-        title: trans('display_parameters'),
-        fields: [
-          {
-            name: 'color',
-            label: trans('color'),
-            type: 'color'
-          }
-        ]
-      }
-    ]}
+  <ToolPage
+    title={props.tag.name ? props.tag.name : trans('new_tag', {}, 'tag')}
   >
-    <ListData
-      name={selectors.STORE_NAME + '.tag.objects'}
-      fetch={{
-        url: ['apiv2_tag_list_objects', {id: props.tagId}],
-        autoload: props.tagId && !props.new
+    <FormData
+      name={selectors.STORE_NAME + '.tag.form'}
+      buttons={true}
+      target={(tag, isNew) => isNew ?
+        ['apiv2_tag_create'] :
+        ['apiv2_tag_update', {id: tag.id}]
+      }
+      cancel={{
+        type: LINK_BUTTON,
+        target: props.path,
+        exact: true
       }}
-      delete={{
-        url: ['apiv2_tag_remove_objects', {id: props.tagId}]
-      }}
-      definition={[
+      sections={[
         {
-          name: 'name',
-          label: trans('name'),
-          type: 'string',
-          displayed: true
+          title: trans('general'),
+          primary: true,
+          fields: [
+            {
+              name: 'name',
+              type: 'string',
+              label: trans('name'),
+              required: true
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-circle-info',
+          title: trans('information'),
+          fields: [
+            {
+              name: 'meta.description',
+              type: 'string',
+              label: trans('description'),
+              options: {
+                long: true
+              }
+            }
+          ]
+        }, {
+          icon: 'fa fa-fw fa-desktop',
+          title: trans('display_parameters'),
+          fields: [
+            {
+              name: 'color',
+              label: trans('color'),
+              type: 'color'
+            }
+          ]
         }
       ]}
-      card={TaggedObjectCard}
-    />
-  </FormData>
+    >
+      <ListData
+        name={selectors.STORE_NAME + '.tag.objects'}
+        fetch={{
+          url: ['apiv2_tag_list_objects', {id: props.tagId}],
+          autoload: props.tagId && !props.new
+        }}
+        delete={{
+          url: ['apiv2_tag_remove_objects', {id: props.tagId}]
+        }}
+        definition={[
+          {
+            name: 'name',
+            label: trans('name'),
+            type: 'string',
+            displayed: true
+          }
+        ]}
+        card={TaggedObjectCard}
+      />
+    </FormData>
+  </ToolPage>
 
 TagFormComponent.propTypes = {
   path: T.bool.isRequired,
@@ -95,6 +100,7 @@ const TagForm = connect(
   (state) => ({
     path: toolSelectors.path(state),
     new: formSelectors.isNew(formSelectors.form(state, selectors.STORE_NAME + '.tag.form')),
+    tag: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME + '.tag.form')),
     tagId: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME + '.tag.form')).id
   })
 )(TagFormComponent)

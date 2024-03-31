@@ -7,7 +7,6 @@
 $line-height-computed:    floor(($font-size-base * $line-height-base)) !default; // ~20px
 
 $component-margin-bottom:       map-get($spacers, 3) !default;
-$component-margin-bottom-small: map-get($spacers, 2) !default; // ~10px
 
 
 //== Components
@@ -34,14 +33,14 @@ $panel-body-padding:          15px !default;
 // Base & utilities
 // ---
 
-
+$images-path: "images/";
 
 // react strips whitespaces, so we need to move icons from text
 $icon-text-spacer:     15px;
 
 $icon-fixed-width: 1.25em; // same value as fa-fw (there is no var for it in font awesome)
 
-$images-path: "images/";
+
 
 
 // -
@@ -59,7 +58,7 @@ $zindex-fullscreen:    $zindex-offcanvas;
 // Login
 // ---
 
-$login-bg-image:  "#{$images-path}login-bg.png" !default; // will fallback on $body-bg if theme has no image
+$login-bg-image:  "#{$images-path}login.jpg" !default; // will fallback on $body-bg if theme has no image
 $login-max-width: 760px !default;
 
 
@@ -67,11 +66,11 @@ $login-max-width: 760px !default;
 // Header
 // ---
 
-$brand-color:           var(--#{$prefix}body-color) !default;
+//$brand-color:           var(--#{$prefix}body-color) !default;
 //$brand-secondary-color: color-contrast($menu) !default;
-$brand-logo-size:       2.5rem;
-$brand-font-size:       $font-size-lg !default;
-$brand-font-weight:     $font-weight-semibold !default;
+$brand-size:       2.5rem;
+//$brand-font-size:       $font-size-lg !default;
+//$brand-font-weight:     $font-weight-semibold !default;
 
 
 // -

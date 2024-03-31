@@ -3,7 +3,7 @@ import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store/reducer'
 import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 
-import {TOOL_LOAD} from '#/main/core/tool/store/actions'
+import {TOOL_LOAD, TOOL_OPEN} from '#/main/core/tool/store/actions'
 
 import {Workspace} from '#/main/core/workspace/prop-types'
 
@@ -36,7 +36,7 @@ export const reducer = combineReducers({
     sortBy: {property: 'createdAt', direction: -1}
   }, {
     invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
+      [TOOL_OPEN]: () => true
     })
   }),
 
@@ -47,7 +47,7 @@ export const reducer = combineReducers({
     sortBy: {property: 'createdAt', direction: -1}
   }, {
     invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
+      [TOOL_OPEN]: () => true
     })
   }),
 
@@ -61,7 +61,7 @@ export const reducer = combineReducers({
     sortBy: {property: 'createdAt', direction: -1}
   }, {
     invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
+      [TOOL_OPEN]: () => true
     })
   }),
 
@@ -72,7 +72,7 @@ export const reducer = combineReducers({
     sortBy: {property: 'createdAt', direction: -1}
   }, {
     invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
+      [TOOL_OPEN]: () => true
     })
   }),
 
@@ -83,7 +83,7 @@ export const reducer = combineReducers({
     sortBy: {property: 'createdAt', direction: -1}
   }, {
     invalidated: makeReducer(false, {
-      [makeInstanceAction(TOOL_LOAD, 'workspaces')]: () => true
+      [TOOL_OPEN]: () => true
     })
   })
 })

@@ -12,7 +12,7 @@ const ContextMenu = connect(
   }),
   (dispatch) => ({
     close() {
-      dispatch(actions.close())
+      dispatch(actions.closeMenu())
     }
   })
 )(ContextMenuComponent)

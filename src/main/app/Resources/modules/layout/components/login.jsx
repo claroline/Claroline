@@ -12,10 +12,7 @@ const LoginPage = (props) =>
   >
     <LoginMain
       forceInternalAccount={props.match.params.forceInternalAccount}
-      onLogin={() => {
-        console.log('coucou')
-        props.history.push('/desktop')
-      }}
+      onLogin={() => props.history.push('/desktop')}
     />
   </PageSimple>
 

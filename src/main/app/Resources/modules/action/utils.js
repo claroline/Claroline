@@ -6,7 +6,12 @@ import uniqWith from 'lodash/uniqWith'
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text'
-import {LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+
+import {LINK_BUTTON} from '#/main/app/buttons/link'
+import {MENU_BUTTON} from '#/main/app/buttons/menu'
+import {MODAL_BUTTON} from '#/main/app/buttons/modal'
+import {URL_BUTTON} from '#/main/app/buttons/url'
+
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 
 const GROUP_SEPARATOR  = '|'

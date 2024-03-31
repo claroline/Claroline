@@ -18,7 +18,7 @@ const UserMicro = props => {
   if (props.link && props.name) {
     return (
       <LinkButton className={classes('user-micro', props.className)} target={route(props)}>
-        <UserAvatar user={props} size="sm" />
+        <UserAvatar user={props} size="xs" />
 
         {props.name}
       </LinkButton>
@@ -27,7 +27,7 @@ const UserMicro = props => {
 
   return (
     <div className={classes('user-micro', props.className)}>
-      <UserAvatar user={props} size="sm" />
+      <UserAvatar user={props} size="xs" />
 
       {props.name || trans('unknown')}
     </div>

@@ -57,11 +57,6 @@ class ResourcesTool extends AbstractTool
         ];
     }
 
-    public function configure(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
-    {
-        return [];
-    }
-
     public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
     {
         $root = $this->resourceRepository->findWorkspaceRoot($contextSubject);

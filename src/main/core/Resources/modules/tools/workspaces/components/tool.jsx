@@ -4,16 +4,16 @@ import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 
-import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
+import {Tool} from '#/main/core/tool'
 import {ToolPage} from '#/main/core/tool/containers/page'
+
+import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {WorkspaceList} from '#/main/core/workspace/components/list'
 import {WorkspaceCreation} from '#/main/core/tools/workspaces/containers/creation'
 import {MODAL_WORKSPACE_IMPORT} from '#/main/core/workspace/modals/import'
-import {Tool} from '#/main/core/tool'
 
 const WorkspacesPage = (props) =>
   <ToolPage
@@ -80,125 +80,153 @@ const WorkspacesTool = (props) => {
   return (
     <Tool
       {...props}
-    >
-      <Routes
-        path={props.path}
-        redirect={[
-          {from: '/', exact: true, to: '/registered', disabled: isEmpty(props.currentUser)},
-          {from: '/', exact: true, to: '/public',     disabled: !isEmpty(props.currentUser)}
-        ]}
-        routes={[
-          {
-            path: '/new',
-            disabled: !props.canCreate,
-            component: WorkspaceCreation,
-            onEnter: () => props.resetForm('workspaces.creation', merge({}, WorkspaceType.defaultProps, {meta: {creator: props.currentUser}}))
-          }, {
-            path: '/registered',
-            disabled: isEmpty(props.currentUser),
-            render: () => {
-              const Registered = (
-                <WorkspacesPage path={props.path} title={trans('my_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
-                  <ContentSizing size="full">
-                    <WorkspaceList
-                      flush={true}
-                      url={['apiv2_workspace_list_registered']}
-                      name="workspaces.registered"
-                      refresher={refresher}
-                    />
-                  </ContentSizing>
-                </WorkspacesPage>
-              )
+      redirect={[
+        {from: '/', exact: true, to: '/registered', disabled: isEmpty(props.currentUser)},
+        {from: '/', exact: true, to: '/public',     disabled: !isEmpty(props.currentUser)}
+      ]}
+      menu={[
+        {
+          name: 'registered',
+          type: LINK_BUTTON,
+          label: trans('my_workspaces_menu', {}, 'workspace'),
+          target: props.path+'/registered',
+          displayed: !isEmpty(props.currentUser)
+        }, {
+          name: 'public',
+          type: LINK_BUTTON,
+          label: trans('public_workspaces_menu', {}, 'workspace'),
+          target: props.path+'/public'
+        }, {
+          name: 'managed',
+          type: LINK_BUTTON,
+          label: trans('managed_workspaces_menu', {}, 'workspace'),
+          target: props.path+'/managed',
+          displayed: !isEmpty(props.currentUser)
+        }, {
+          name: 'model',
+          type: LINK_BUTTON,
+          label: trans('models'),
+          target: props.path+'/model',
+          displayed: props.canCreate
+        }, {
+          name: 'archive',
+          type: LINK_BUTTON,
+          label: trans('archives'),
+          target: props.path+'/archived',
+          displayed: props.canArchive
+        }
+      ]}
+      pages={[
+        {
+          path: '/new',
+          disabled: !props.canCreate,
+          component: WorkspaceCreation,
+          onEnter: () => props.resetForm('workspaces.creation', merge({}, WorkspaceType.defaultProps, {meta: {creator: props.currentUser}}))
+        }, {
+          path: '/registered',
+          disabled: isEmpty(props.currentUser),
+          render: () => {
+            const Registered = (
+              <WorkspacesPage path={props.path} title={trans('my_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
+                <ContentSizing size="full">
+                  <WorkspaceList
+                    flush={true}
+                    url={['apiv2_workspace_list_registered']}
+                    name="workspaces.registered"
+                    refresher={refresher}
+                  />
+                </ContentSizing>
+              </WorkspacesPage>
+            )
 
-              return Registered
-            }
-          }, {
-            path: '/public',
-            render: () => {
-              const PublicList = (
-                <WorkspacesPage path={props.path} title={trans('public_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
-                  <ContentSizing size="full">
-                    <WorkspaceList
-                      flush={true}
-                      url={['apiv2_workspace_list_registerable']}
-                      name="workspaces.public"
-                      refresher={refresher}
-                    />
-                  </ContentSizing>
-                </WorkspacesPage>
-              )
-
-              return PublicList
-            }
-          }, {
-            path: '/managed',
-            disabled: isEmpty(props.currentUser),
-            render: () => {
-              const ManagedList = (
-                <WorkspacesPage path={props.path} title={trans('managed_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
-                  <ContentSizing size="full">
-                    <WorkspaceList
-                      flush={true}
-                      url={['apiv2_workspace_list_managed']}
-                      name="workspaces.managed"
-                      refresher={refresher}
-                    />
-                  </ContentSizing>
-                </WorkspacesPage>
-              )
-
-              return ManagedList
-            }
-          }, {
-            path: '/model',
-            disabled: !props.canCreate,
-            render: () => {
-              const ModelList = (
-                <WorkspacesPage path={props.path} title={trans('workspace_models', {}, 'workspace')} canCreate={props.canCreate}>
-                  <ContentSizing size="full">
-                    <WorkspaceList
-                      url={['apiv2_workspace_list_model']}
-                      name="workspaces.models"
-                      refresher={refresher}
-                      flush={true}
-                    />
-                  </ContentSizing>
-                </WorkspacesPage>
-              )
-
-              return ModelList
-            }
-          }, {
-            path: '/archived',
-            disabled: !props.canArchive,
-            render: () => {
-              const ArchiveList = (
-                <WorkspacesPage path={props.path} title={trans('workspace_archived', {}, 'workspace')} canCreate={props.canCreate}>
-                  <ContentSizing size="full">
-                    <WorkspaceList
-                      flush={true}
-                      url={['apiv2_workspace_list_archive']}
-                      name="workspaces.archives"
-                      refresher={refresher}
-                      customDefinition={[
-                        {
-                          name: 'meta.model',
-                          label: trans('model'),
-                          type: 'boolean',
-                          alias: 'model'
-                        }
-                      ]}
-                    />
-                  </ContentSizing>
-                </WorkspacesPage>
-              )
-
-              return ArchiveList
-            }
+            return Registered
           }
-        ]}
-      />
-    </Tool>
+        }, {
+          path: '/public',
+          render: () => {
+            const PublicList = (
+              <WorkspacesPage path={props.path} title={trans('public_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
+                <ContentSizing size="full">
+                  <WorkspaceList
+                    flush={true}
+                    url={['apiv2_workspace_list_registerable']}
+                    name="workspaces.public"
+                    refresher={refresher}
+                  />
+                </ContentSizing>
+              </WorkspacesPage>
+            )
+
+            return PublicList
+          }
+        }, {
+          path: '/managed',
+          disabled: isEmpty(props.currentUser),
+          render: () => {
+            const ManagedList = (
+              <WorkspacesPage path={props.path} title={trans('managed_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
+                <ContentSizing size="full">
+                  <WorkspaceList
+                    flush={true}
+                    url={['apiv2_workspace_list_managed']}
+                    name="workspaces.managed"
+                    refresher={refresher}
+                  />
+                </ContentSizing>
+              </WorkspacesPage>
+            )
+
+            return ManagedList
+          }
+        }, {
+          path: '/model',
+          disabled: !props.canCreate,
+          render: () => {
+            const ModelList = (
+              <WorkspacesPage path={props.path} title={trans('workspace_models', {}, 'workspace')} canCreate={props.canCreate}>
+                <ContentSizing size="full">
+                  <WorkspaceList
+                    url={['apiv2_workspace_list_model']}
+                    name="workspaces.models"
+                    refresher={refresher}
+                    flush={true}
+                  />
+                </ContentSizing>
+              </WorkspacesPage>
+            )
+
+            return ModelList
+          }
+        }, {
+          path: '/archived',
+          disabled: !props.canArchive,
+          render: () => {
+            const ArchiveList = (
+              <WorkspacesPage path={props.path} title={trans('workspace_archived', {}, 'workspace')} canCreate={props.canCreate}>
+                <ContentSizing size="full">
+                  <WorkspaceList
+                    flush={true}
+                    url={['apiv2_workspace_list_archive']}
+                    name="workspaces.archives"
+                    refresher={refresher}
+                    customDefinition={[
+                      {
+                        name: 'meta.model',
+                        label: trans('model'),
+                        type: 'boolean',
+                        alias: 'model'
+                      }
+                    ]}
+                  />
+                </ContentSizing>
+              </WorkspacesPage>
+            )
+
+            return ArchiveList
+          }
+        }
+      ]}
+    />
   )
 }
 

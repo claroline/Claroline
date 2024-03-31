@@ -11,7 +11,6 @@ import {ResourceIcon} from '#/main/core/resource/components/icon'
 
 const restrictedByDates = (node) => get(node, 'restrictions.enableDates') || !isEmpty(get(node, 'restrictions.dates'))
 const restrictedByCode = (node) => get(node, 'restrictions.enableCode') || !!get(node, 'restrictions.code')
-const restrictedByIps = (node) => get(node, 'restrictions.enableIps') || !isEmpty(get(node, 'restrictions.allowedIps'))
 
 const ResourceFormComponent = (props) =>
   <FormData
@@ -145,30 +144,6 @@ const ResourceFormComponent = (props) =>
                 displayed: restrictedByCode,
                 type: 'password',
                 required: true
-              }
-            ]
-          }, {
-            name: 'restrictions.enableIps',
-            label: trans('restrict_by_ips'),
-            type: 'boolean',
-            calculated: restrictedByIps,
-            onChange: activated => {
-              if (!activated) {
-                props.updateProp('restrictions.allowedIps', [])
-              }
-            },
-            linked: [
-              {
-                name: 'restrictions.allowedIps',
-                label: trans('allowed_ips'),
-                type: 'collection',
-                required: true,
-                displayed: restrictedByIps,
-                options: {
-                  type: 'ip',
-                  placeholder: trans('no_allowed_ip'),
-                  button: trans('add_ip')
-                }
               }
             ]
           }

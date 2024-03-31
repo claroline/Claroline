@@ -22,6 +22,11 @@ abstract class AbstractTool implements ToolInterface
         return null;
     }
 
+    public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
+    {
+        return null;
+    }
+
     public function configure(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
     {
         return [];

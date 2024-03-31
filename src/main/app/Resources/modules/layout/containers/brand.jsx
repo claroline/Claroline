@@ -5,12 +5,8 @@ import {AppBrand as AppBrandComponent} from '#/main/app/layout/components/brand'
 
 const AppBrand = connect(
   (state) => ({
-    showTitle: true, //selectors.display(state).name,
-
-    // platform parameters
-    logo: configSelectors.param(state, 'logo'),
-    title: configSelectors.param(state, 'name'),
-    subtitle: configSelectors.param(state, 'secondaryName'),
+    name: configSelectors.param(state, 'name'),
+    logo: configSelectors.param(state, 'logo')
   })
 )(AppBrandComponent)
 

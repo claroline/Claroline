@@ -1,41 +1,50 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
-import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
-import {Await} from '#/main/app/components/await'
-import {ContentLoader} from '#/main/app/content/components/loader'
-
-import {getIntegrations} from '#/main/core/integration'
+import {trans} from '#/main/app/intl'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {makeCancelable} from '#/main/app/api'
 import {Tool} from '#/main/core/tool'
 
-const IntegrationTool = props =>
-  <Tool
-    {...props}
-    styles={['claroline-distribution-main-core-administration-integration']}
-  >
-    <Await
-      for={getIntegrations()}
-      placeholder={
-        <ContentLoader
-          size="lg"
-          description={trans('loading', {}, 'tools')}
-        />
-      }
-      then={(apps) => (
-        <Routes
-          path={props.path}
-          redirect={[
-            {from: '/', exact: true, to: `/${apps[0].default.name}`}
-          ]}
-          routes={apps.map(app => ({
-            path: `/${app.default.name}`,
-            component: app.default.component
-          }))}
-        />
-      )}
+import {getIntegrations} from '#/main/core/integration'
+
+const IntegrationTool = props => {
+  const [pages, setPages] = useState([])
+
+  useEffect(() => {
+    const integrationPages = makeCancelable(getIntegrations())
+
+    integrationPages.promise.then((loadedPages) => {
+      setPages(loadedPages.map(app => ({
+        name: app.default.name,
+        icon: app.default.icon,
+        path: `/${app.default.name}`,
+        component: app.default.component
+      })))
+    })
+
+    return integrationPages.cancel
+  }, [props.path])
+
+  return (
+    <Tool
+      {...props}
+      styles={['claroline-distribution-main-core-administration-integration']}
+      redirect={!isEmpty(pages) ? [
+        {from: '/', exact: true, to: pages[0].path}
+      ] : undefined}
+      menu={pages.map(page => ({
+        name: page.name,
+        type: LINK_BUTTON,
+        icon: page.icon,
+        label: trans(page.name, {}, 'integration'),
+        target: `${props.path}/${page.name}`
+      }))}
+      pages={pages}
     />
-  </Tool>
+  )
+}
 
 IntegrationTool.propTypes = {
   path: T.string.isRequired

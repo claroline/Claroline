@@ -14,7 +14,6 @@ bootstrap(
   reducer,
   (initialData) => ({
     maintenance: initialData.maintenance,
-    header: initialData.header,
     footer: initialData.footer,
     config: initialData.config,
     contexts: initialData.contexts,

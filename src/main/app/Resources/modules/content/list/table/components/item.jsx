@@ -12,6 +12,7 @@ import {getType} from '#/main/app/data/types'
 import {TableRow, TableCell} from '#/main/app/content/components/table'
 import {DataListProperty} from '#/main/app/content/list/prop-types'
 import {ListActions, ListPrimaryAction} from '#/main/app/content/list/components/actions'
+import {getActions, getPrimaryAction} from '#/main/app/content/list/utils'
 
 const DataCellContent = props => {
   let cellData
@@ -101,7 +102,7 @@ const TableItem = props => {
   }
 
   return (
-    <TableRow className={props.selected ? 'selected table-primary' : null}>
+    <TableRow className={classes(props.selected && 'selected table-primary', props.loading && 'placeholder-glow')}>
       {props.onSelect &&
         <TableCell align="center" className="checkbox-cell">
           <input
@@ -109,27 +110,47 @@ const TableItem = props => {
             type="checkbox"
             checked={props.selected}
             onChange={props.onSelect}
+            disabled={props.loading}
           />
         </TableCell>
       }
 
-      {props.columns.map((column, index) =>
+      {props.loading && props.columns.map((column, index) =>
+        <td key={column.name} className={classes(props.onSelect && 0 === index ? 'ps-0' : undefined, `${column.type}-cell`, column.primary && 'primary-cell')}>
+          <div className="d-flex flex-direction-row gap-3 align-items-center">
+            {column.primary &&
+              <div className={classes('placeholder user-avatar user-avatar-xs', props.primaryAction && 'bg-primary')} />
+            }
+            <div className={classes('placeholder rounded-1 w-100', column.primary && props.primaryAction && 'bg-primary')}>
+              &nbsp;
+            </div>
+          </div>
+        </td>
+      )}
+
+      {!props.loading && props.columns.map((column, index) =>
         <DataCell
           key={column.name}
           className={props.onSelect && 0 === index ? 'ps-0' : undefined}
           column={column}
           rowData={props.row}
-          action={props.primaryAction && columnAction === column ? props.primaryAction : undefined}
+          action={props.primaryAction && columnAction === column ? getPrimaryAction(props.row, props.primaryAction)  : undefined}
         />
       )}
 
       <TableCell align="right" className="actions-cell">
-        {(!isEmpty(props.actions) || props.actions instanceof Promise) &&
+        {!props.loading && props.actions &&
           <ListActions
             className="text-end"
             id={`data-table-item-${props.row.id}-actions`}
-            actions={props.actions}
+            actions={getActions([props.row], props.actions)}
           />
+        }
+
+        {props.loading && props.actions &&
+          <div className="placeholder bg-primary rounded-1">
+            &nbsp;
+          </div>
         }
       </TableCell>
     </TableRow>
@@ -143,19 +164,11 @@ TableItem.propTypes = {
   columns: T.arrayOf(
     T.shape(DataListProperty.propTypes)
   ).isRequired,
-  primaryAction: T.object,
-  actions: T.oneOfType([
-    // a regular array of actions
-    T.arrayOf(T.shape(
-      ActionTypes.propTypes
-    )),
-    // a promise that will resolve a list of actions
-    T.shape(
-      PromisedActionTypes.propTypes
-    )
-  ]),
+  primaryAction: T.func,
+  actions: T.func,
   selected: T.bool,
-  onSelect: T.func
+  onSelect: T.func,
+  loading: T.bool.isRequired
 }
 
 TableItem.defaultProps = {

@@ -181,6 +181,8 @@ const DataListView = {
     selection: T.shape(
       DataListSelection.propTypes
     ),
+    loading: T.bool.isRequired,
+    invalidated: T.bool.isRequired,
 
     /**
      * Data primary action (aka open/edit action for rows in most cases).
@@ -188,6 +190,10 @@ const DataListView = {
     primaryAction: T.func,
 
     actions: T.func
+  },
+  defaultProps: {
+    loading: false,
+    invalidated: false
   }
 }
 

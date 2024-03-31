@@ -6,6 +6,7 @@
 .user-avatar {
     display: inline-block;
     border-radius: 50%;
+    flex-shrink: 0 !important;
 
     img {
         border-radius: 50%;
@@ -54,8 +55,8 @@
     align-items: center;
     justify-content: center;
 
-    color: var(--#{$prefix}primary-text-emphasis);
-    background: var(--#{$prefix}primary-bg-subtle);
+    color: $primary;
+    background: fade-out($primary, .85);
 }
 
 .user-status {
@@ -75,10 +76,8 @@
     flex-direction: row;
     align-items: center;
     vertical-align: middle;
-    //font-size: $font-size-sm;
-    //font-weight: 400;
     white-space: nowrap;
-    gap: map-get($spacers, 2);
+    gap: map-get($spacers, 3);
 }
 
 .user-micro-list {
@@ -94,6 +93,7 @@
     }
 }
 
+// FIXME
 .user-page {
     // make avatar looks bigger than standard page icons
     .page-icon {

@@ -4,7 +4,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import {now, getApiFormat} from '#/main/app/intl/date'
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
-import {TOOL_LOAD} from '#/main/core/tool/store/actions'
+import {TOOL_LOAD, TOOL_OPEN} from '#/main/core/tool/store/actions'
 
 import {
   AGENDA_CHANGE_TYPES,
@@ -21,18 +21,18 @@ import {
 
 const reducer = combineReducers({
   view: makeReducer('month', {
-    [makeInstanceAction(TOOL_LOAD, 'agenda')]: () => 'month',
+    [TOOL_OPEN]: () => 'month',
     [AGENDA_CHANGE_VIEW]: (state, action) => action.view
   }),
 
   referenceDate: makeReducer(now(), {
-    [makeInstanceAction(TOOL_LOAD, 'agenda')]: () => now(),
+    [TOOL_OPEN]: () => now(),
     [AGENDA_CHANGE_VIEW]: (state, action) => moment(action.referenceDate).format(getApiFormat()),
     [AGENDA_LOAD_EVENT]: (state, action) => action.event && action.event.start ? moment(action.event.start).format(getApiFormat()) : state
   }),
 
   types: makeReducer(['event', 'task'], {
-    [makeInstanceAction(TOOL_LOAD, 'agenda')]: () => ['event', 'task'],
+    [TOOL_OPEN]: () => ['event', 'task'],
     [AGENDA_CHANGE_TYPES]: (state, action) => action.types
   }),
 
@@ -125,7 +125,7 @@ const reducer = combineReducers({
   }),
 
   events: makeReducer({}, {
-    [makeInstanceAction(TOOL_LOAD, 'agenda')]: () => ({}),
+    [TOOL_OPEN]: () => ({}),
     [AGENDA_LOAD_EVENTS]: (state, action) => {
       const newState = cloneDeep(state)
 
@@ -136,7 +136,7 @@ const reducer = combineReducers({
   }),
 
   current: makeReducer(null, {
-    [makeInstanceAction(TOOL_LOAD, 'agenda')]: () => null,
+    [TOOL_OPEN]: () => null,
     [AGENDA_LOAD_EVENT]: (state, action) => action.event
   })
 })

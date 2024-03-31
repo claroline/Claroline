@@ -4,7 +4,7 @@ import {makeFormReducer} from '#/main/app/content/form/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store/reducer'
 import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 
-import {TOOL_LOAD} from '#/main/core/tool/store/actions'
+import {TOOL_OPEN} from '#/main/core/tool/store/actions'
 import {selectors} from '#/main/core/administration/template/store/selectors'
 import {TEMPLATE_TYPE_LOAD} from '#/main/core/administration/template/store/actions'
 
@@ -16,8 +16,8 @@ const reducer = combineReducers({
     //sortBy: {property: 'name', direction: 1}
   }, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS + '/' + selectors.STORE_NAME + '.template']: () => true,
-      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: () => true
+      [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.STORE_NAME + '.template')]: () => true,
+      [TOOL_OPEN]: () => true
     })
   }),
   template: makeFormReducer(selectors.STORE_NAME + '.template')
