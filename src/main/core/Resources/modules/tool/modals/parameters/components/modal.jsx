@@ -78,11 +78,11 @@ class ParametersModal extends Component {
                   name: 'display.fullscreen',
                   label: trans('resource_fullscreen', {}, 'resource'),
                   type: 'boolean'
-                }, {
+                },*/ {
                   name: 'restrictions.hidden',
                   type: 'boolean',
                   label: trans('restrict_hidden')
-                }*/
+                }
               ]
             }
           ]}

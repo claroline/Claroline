@@ -7,6 +7,8 @@ import {route as desktopRoute} from '#/main/core/tool/routing'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
 import {AssertionBadgeCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
+import {BadgeImage} from '#/plugin/open-badge/badge/components/image'
+import React from 'react'
 
 export default {
   name: 'my_badges',
@@ -24,7 +26,13 @@ export default {
         type: 'string',
         label: trans('name'),
         displayed: true,
-        primary: true
+        primary: true,
+        render: (assertion) => (
+          <div className="d-flex flex-direction-row gap-3 align-items-center">
+            <BadgeImage badge={assertion.badge} size="xs" />
+            {assertion.badge.name}
+          </div>
+        )
       }, {
         name: 'issuedOn',
         label: trans('granted_date', {}, 'badge'),

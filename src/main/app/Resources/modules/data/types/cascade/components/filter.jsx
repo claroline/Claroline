@@ -17,7 +17,6 @@ const hasChildren = (props, lvl) => {
 }
 
 const generateChoices = (props, lvl) => {
-  console.log(props.errors)
   const choices = props.choices.slice()
   let child = choices.find(c => props.value && c.value === props.value[0])
 

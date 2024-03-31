@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {transChoice} from '#/main/app/intl/translation'
 
 const ListCount = props =>
-  <div className="count">
+  <div className="count text-body-secondary">
     {transChoice('list_results_count', props.totalResults, {count: props.totalResults}, 'platform')}
   </div>
 

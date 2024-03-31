@@ -23,7 +23,9 @@ const PrivacyTool = (props) => {
     props.parameters.dpo.address.country
 
   return (
-    <Tool {...props}>
+    <Tool
+      {...props}
+    >
       <ToolPage>
         <ContentSizing size="md">
           <PrivacySummary

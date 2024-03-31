@@ -6,9 +6,9 @@
     }
 
     .list-footer {
-        padding: 5px;
-        background: $list-controls-bg;
-        border-top: $list-controls-border-width solid $list-controls-border-color;
+        //padding: 5px;
+        /*background: $list-controls-bg;
+        border-top: $list-controls-border-width solid $list-controls-border-color;*/
     }
 
     .content-loader {
@@ -26,15 +26,15 @@
         margin-left: $data-grid-gutter;
         margin-right: $data-grid-gutter;
 
-        + .list-footer {
+        /*+ .list-footer {
             margin-top: $data-grid-gutter;
-        }
+        }*/
     }
 
     .data-table {
-        margin-bottom: -($list-controls-border-width) !important; // merge last row and footer borders. important is to override .modal-content > .table
+        //margin-bottom: -($list-controls-border-width) !important; // merge last row and footer borders. important is to override .modal-content > .table
 
-        th:first-child,
+        /*th:first-child,
         td:first-child {
             border-left: none;
         }
@@ -42,6 +42,6 @@
         th:last-child,
         td:last-child {
             border-right: none;
-        }
+        }*/
     }
 }

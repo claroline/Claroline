@@ -73,14 +73,6 @@ class PlatformController
                     'ip' => $request->getClientIp(),
                     'forwarded' => $request->headers->get('X-Forwarded-For'), // I can only get trusted proxies if I use symfony getClientIps()
                 ],
-                'header' => [
-                    'menus' => $this->configHandler->getParameter('header'),
-                    'display' => [
-                        'name' => $this->configHandler->getParameter('name_active'),
-                        'about' => $this->configHandler->getParameter('show_about_button'),
-                        'help' => $this->configHandler->getParameter('show_help_button'),
-                    ],
-                ],
                 'footer' => [
                     'content' => $this->configHandler->getParameter('footer.content'),
                     'display' => [

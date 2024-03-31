@@ -33,7 +33,7 @@ const ButtonComponent = forwardRef((props, ref) => {
         props.icon
       }
       {props.hideLabel ?
-        <span key="button-label" className="action-label sr-only">{props.label}</span> :
+        <span key="button-label" className="action-label sr-only" role="presentation">{props.label}</span> :
         props.label
       }
 

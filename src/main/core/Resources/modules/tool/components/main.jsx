@@ -1,13 +1,11 @@
 import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {Helmet} from 'react-helmet'
+import isEmpty from 'lodash/isEmpty'
 
-import {theme} from '#/main/theme/config'
-import {trans} from '#/main/app/intl/translation'
 import {makeCancelable} from '#/main/app/api'
-import {ContentLoader} from '#/main/app/content/components/loader'
-import {ContentForbidden} from '#/main/app/content/components/forbidden'
-import {ContentNotFound} from '#/main/app/content/components/not-found'
+import {Routes, RouteTypes, RedirectTypes} from '#/main/app/router'
+
+import {ToolContext} from '#/main/core/tool/context'
 
 const ToolMain = (props) => {
   // fetch current context data
@@ -26,61 +24,49 @@ const ToolMain = (props) => {
     }
   }, [props.name, props.contextType, props.contextId])
 
-  if (!props.loaded) {
-    return (
-      <ContentLoader
-        size="lg"
-        description={trans('loading', {}, 'tools')}
-      />
-    )
-  }
-
-  if (props.notFound) {
-    return (
-      <ContentNotFound
-        size="lg"
-        title={trans('not_found', {}, 'tools')}
-        description={trans('not_found_desc', {}, 'tools')}
-      />
-    )
-  }
-
-  if (props.accessDenied) {
-    return (
-      <ContentForbidden
-        size="lg"
-        title={trans('forbidden', {}, 'tools')}
-        description={trans('forbidden_desc', {}, 'tools')}
-      />
-    )
-  }
-
   return (
-    <>
-      {props.loaded && props.children}
-
-      {0 !== props.styles.length &&
-        <Helmet>
-          {props.styles.map(style =>
-            <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
-          )}
-        </Helmet>
+    <ToolContext.Provider
+      value={{
+        menu: props.menu,
+        actions: props.actions,
+        styles: props.styles
+      }}
+    >
+      {(!isEmpty(props.pages) || props.children) &&
+        <Routes
+          path={props.path}
+          routes={[]
+            .concat(props.pages || [])
+            .concat([
+              {
+                path: '/',
+                disabled: isEmpty(props.children),
+                render: () => props.children
+              }
+            ])
+          }
+          redirect={props.redirect}
+        />
       }
-    </>
+    </ToolContext.Provider>
   )
 }
 
 ToolMain.propTypes = {
   name: T.string.isRequired,
   styles: T.arrayOf(T.string),
+  pages: T.arrayOf(T.shape(
+    RouteTypes.propTypes
+  )),
+  redirect: T.arrayOf(T.shape(
+    RedirectTypes.propTypes
+  )),
   children: T.node,
 
   // from store
+  path: T.string.isRequired,
   contextType: T.string.isRequired,
   contextId: T.string,
-  loaded: T.bool.isRequired,
-  notFound: T.bool.isRequired,
-  accessDenied: T.bool.isRequired,
   open: T.func.isRequired
 }
 

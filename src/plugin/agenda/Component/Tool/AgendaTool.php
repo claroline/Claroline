@@ -56,9 +56,4 @@ class AgendaTool extends AbstractTool
             ],
         ];
     }
-
-    public function configure(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
-    {
-        return [];
-    }
 }

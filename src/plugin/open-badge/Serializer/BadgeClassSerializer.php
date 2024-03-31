@@ -228,6 +228,7 @@ class BadgeClassSerializer
     private function serializePermissions(BadgeClass $badge): array
     {
         return [
+            'open' => $this->authorization->isGranted('OPEN', $badge),
             'grant' => $this->authorization->isGranted('GRANT', $badge),
             'edit' => $this->authorization->isGranted('EDIT', $badge),
             'administrate' => $this->authorization->isGranted('ADMINISTRATE', $badge),

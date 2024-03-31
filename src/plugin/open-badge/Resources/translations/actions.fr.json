@@ -1,5 +1,6 @@
 {
   "grant": "Attribuer des badges",
-  "transfer_badges": "Transférer les badges",
-  "transfer": "Transférer"
+  "transfer_badges": "Transférer des badges",
+  "transfer": "Transférer",
+  "add_badge": "Ajouter un badge"
 }

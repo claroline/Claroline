@@ -142,14 +142,14 @@ class ListData extends Component {
         {(displayTool || filtersTool || this.props.customActions) &&
           <ListHeader
             id={this.props.id}
-            disabled={0 === this.props.totalResults}
+            disabled={this.props.loading || 0 === this.props.totalResults}
             display={displayTool}
             filters={filtersTool}
             customActions={this.props.customActions}
           />
         }
 
-        {this.props.loading &&
+        {false && this.props.loading &&
           <ContentLoader />
         }
 
@@ -157,7 +157,7 @@ class ListData extends Component {
           <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
         }
 
-        {(!this.props.loading && 0 !== this.props.totalResults) &&
+        {(this.props.loading || 0 !== this.props.totalResults) &&
           createElement(DISPLAY_MODES[this.state.display.current].component, Object.assign({},
             DISPLAY_MODES[this.state.display.current].options,
             {
@@ -168,16 +168,20 @@ class ListData extends Component {
               selection:     this.props.selection,
               primaryAction: this.props.primaryAction,
               actions:       this.props.actions,
-              card:          this.props.card
+              card:          this.props.card,
+
+              loading: this.props.loading,
+              invalidated: this.props.invalidated
             }
           ))
         }
 
-        {(!this.props.loading && 0 !== this.props.totalResults) && (this.props.count || this.props.pagination) &&
+        {0 !== this.props.totalResults && (this.props.count || this.props.pagination) &&
           <ListFooter
             count={this.props.count}
             totalResults={this.props.totalResults}
             pagination={this.props.pagination}
+            disabled={this.props.loading}
           />
         }
       </div>
@@ -299,6 +303,7 @@ ListData.propTypes = {
 ListData.defaultProps = {
   level: 2,
   loading: false,
+  invalidated: false,
   count: false,
   display: {
     available: listConst.DEFAULT_DISPLAY_MODES,

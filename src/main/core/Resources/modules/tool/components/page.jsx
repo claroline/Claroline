@@ -1,4 +1,4 @@
-import React, {createElement} from 'react'
+import React, {createElement, useContext} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
@@ -10,42 +10,47 @@ import {PageFull} from '#/main/app/page/components/full'
 
 import {getTool, getToolBreadcrumb} from '#/main/core/tool/utils'
 import {ToolIcon} from '#/main/core/tool/components/icon'
-import {ToolMenu} from '#/main/core/tool/containers/menu'
+import {ToolMenu} from '#/main/core/tool/components/menu'
+import {ToolContext} from '#/main/core/tool/context'
 
-const ToolPage = props =>
-  <PageFull
-    className={classes('tool-page', `${props.name}-page`, props.className)}
-    title={trans(props.name, {}, 'tools')}
-    path={[].concat(getToolBreadcrumb(props.name, props.currentContext.type, props.currentContext.data), props.path)}
-    poster={props.poster || get(props.toolData, 'poster') || get(props.currentContext, 'data.poster')}
-    icon={get(props.toolData, 'display.showIcon') ?
-      <ToolIcon type={get(props.toolData, 'icon')} />
-      :
-      undefined
-    }
-    fullscreen={props.fullscreen}
-    meta={{
-      title: `${trans(props.name, {}, 'tools')} - ${'workspace' === props.currentContext.type ? props.currentContext.data.name : trans(props.currentContext.type)}`,
-      description: get(props.currentContext.data, 'meta.description')
-    }}
+const ToolPage = props => {
+  const toolDef = useContext(ToolContext)
 
-    menu={
-      <Await
-        for={getTool(props.name, props.currentContext.type)}
-        then={(module) => {
-          if (module.default.menu) {
-            return createElement(module.default.menu, {path: props.basePath})
-          }
+  return (
+    <PageFull
+      className={classes('tool-page', `${props.name}-page`, props.className)}
+      title={trans(props.name, {}, 'tools')}
+      path={[].concat(getToolBreadcrumb(props.name, props.currentContext.type, props.currentContext.data), props.path)}
+      poster={props.poster || get(props.toolData, 'poster') || get(props.currentContext, 'data.poster')}
+      icon={get(props.toolData, 'display.showIcon') ?
+        <ToolIcon type={get(props.toolData, 'icon')}/>
+        :
+        undefined
+      }
+      fullscreen={props.fullscreen}
+      meta={{
+        title: `${trans(props.name, {}, 'tools')} - ${'workspace' === props.currentContext.type ? props.currentContext.data.name : trans(props.currentContext.type)}`,
+        description: get(props.currentContext.data, 'meta.description')
+      }}
 
-          return createElement(ToolMenu, {path: props.basePath})
-        }}
-      />
-    }
+      menu={
+        <ToolMenu
+          path={props.basePath}
+          currentContext={props.currentContext}
+          toolData={props.toolData}
+          menu={toolDef.menu}
+          actions={toolDef.actions}
+          reload={props.reload}
+        />
+      }
 
-    {...omit(props, 'name', 'className', 'currentContext', 'path', 'basePath', 'toolData', 'poster')}
-  >
-    {props.children}
-  </PageFull>
+      styles={toolDef.styles}
+      {...omit(props, 'name', 'className', 'currentContext', 'path', 'basePath', 'toolData', 'poster')}
+    >
+      {props.children}
+    </PageFull>
+  )
+}
 
 ToolPage.propTypes = {
   className: T.string,
@@ -78,7 +83,8 @@ ToolPage.propTypes = {
   subtitle: T.node,
   actions: T.any,
   path: T.arrayOf(T.object),
-  children: T.any
+  children: T.any,
+  reload: T.func.isRequired
 }
 
 ToolPage.defaultProps = {

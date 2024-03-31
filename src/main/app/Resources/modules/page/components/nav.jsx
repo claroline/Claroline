@@ -9,7 +9,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {actions as contextActions, selectors as contextSelectors} from '#/main/app/context/store'
 import {AppBrand} from '#/main/app/layout/containers/brand'
 
-const MenuButton = (props) => {
+const MenuButton = () => {
   const dispatch = useDispatch()
   const menuOpened = useSelector(contextSelectors.menuOpened)
   return (
@@ -25,7 +25,7 @@ const MenuButton = (props) => {
 }
 
 const PageNav = (props) =>
-  <div className="mx-4 my-3 d-flex gap-4 align-items-center">
+  <div className="mx-4 my-3 d-flex gap-4 align-items-center" role="presentation">
     {!props.embedded &&
       <MenuButton />
     }

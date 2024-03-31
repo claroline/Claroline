@@ -1,9 +1,8 @@
 import React, {useState} from 'react'
+import fill from 'lodash/fill'
 
 import {DataListView} from '#/main/app/content/list/prop-types'
 import {
-  getPrimaryAction,
-  getActions,
   isRowSelected,
   getDisplayedProps
 } from '#/main/app/content/list/utils'
@@ -15,8 +14,13 @@ import {TableItem} from '#/main/app/content/list/table/components/item'
 const TableData = props => {
   const [displayedColumns, setDisplayedColumns] = useState(getDisplayedProps(props.definition).map(column => column.name))
 
+  let data = props.data
+  if (props.loading) {
+    data = fill(new Array(30), {id: ''})
+  }
+
   return (
-    <Table className="data-table" condensed={'sm' === props.size}>
+    <Table className="data-table mb-0" condensed={'sm' === props.size}>
       <TableHeader
         count={props.count}
         data={props.data}
@@ -26,22 +30,24 @@ const TableData = props => {
         selection={props.selection}
         sorting={props.sorting}
         actions={props.actions}
+        disabled={props.loading}
       />
 
       <tbody>
-        {props.data.map((row) =>
+        {data.map((row, index) =>
           <TableItem
-            key={row.id}
+            key={index}
             row={row}
             columns={props.definition.filter(prop => -1 !== displayedColumns.indexOf(prop.name))}
-            primaryAction={getPrimaryAction(row, props.primaryAction)}
-            actions={getActions([row], props.actions)}
+            primaryAction={props.primaryAction}
+            actions={props.actions}
             selected={isRowSelected(row, props.selection ? props.selection.current : [])}
             onSelect={
               props.selection ? () => {
                 props.selection.toggle(row, !isRowSelected(row, props.selection ? props.selection.current : []))
               }: null
             }
+            loading={props.loading}
           />
         )}
       </tbody>

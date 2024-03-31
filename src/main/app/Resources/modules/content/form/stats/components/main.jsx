@@ -172,13 +172,13 @@ const FormStats = (props) => {
       <div className="d-flex flex-direction-row align-items-center mb-2">
         <span>{trans('stats_mode')}</span>
         <Button
-          className="btn btn-text-primary fw-bold"
+          className="btn btn-link fw-bold"
           type={CALLBACK_BUTTON}
           label={trans('percentage' === displayMode ? 'stats_mode_percentage' : 'stats_mode_count')}
           callback={() => setDisplayMode('percentage' === displayMode ? 'count' : 'percentage')}
         />
         <Button
-          className="btn btn-text-primary ms-auto"
+          className="btn btn-link ms-auto"
           type={CALLBACK_BUTTON}
           label={trans(!isEmpty(openedInputs) ? 'hide_all' : 'show_all')}
           callback={() => setOpenedInputs(!isEmpty(openedInputs) ? [] : allInputs)}

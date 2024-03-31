@@ -7,6 +7,38 @@
 // Modal
 // ---
 
+.tag-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0 !important;
+    color: $primary;
+
+    &:before {
+        content: " ";
+        position: absolute;
+        background: currentColor;
+        opacity: .15;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+@each $size, $value in $icon-sizes {
+    .tag-icon-#{$size} {
+        // for picture
+        width: $value;
+        height: $value;
+        // for .fa when no picture
+        font-size: $value * .5;
+    }
+}
+
 // @deprecated
 .tags-list {
     list-style-type: none;

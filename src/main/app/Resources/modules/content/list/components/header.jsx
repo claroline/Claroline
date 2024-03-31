@@ -59,7 +59,6 @@ ListHeader.propTypes = {
     available: T.arrayOf(
       T.shape(DataListProperty.propTypes)
     ).isRequired,
-    readOnly: T.bool,
     addFilter: T.func.isRequired,
     removeFilter: T.func.isRequired
   }),

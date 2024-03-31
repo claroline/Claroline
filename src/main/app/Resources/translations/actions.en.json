@@ -93,6 +93,6 @@
   "upload": "Upload",
   "view-as": "Show as",
   "replace_image": "Replace image",
-  "show-menu": "Show menu",
-  "hide-menu": "Hide menu"
+  "show-menu": "Open menu",
+  "hide-menu": "Close menu"
 }

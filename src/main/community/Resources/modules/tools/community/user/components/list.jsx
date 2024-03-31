@@ -10,7 +10,6 @@ import {Alert} from '#/main/app/components/alert'
 import {getPlatformRoles, getWorkspaceRoles} from '#/main/community/utils'
 import {UserList as BaseUserList} from '#/main/community/user/components/list'
 
-import {MODAL_USER_DISABLE_INACTIVE} from '#/main/community/tools/community/user/modals/disable-inactive'
 import {selectors} from '#/main/community/tools/community/user/store'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 
@@ -46,15 +45,7 @@ const UserList = props =>
           target: `${props.path}/users/new`,
           displayed: props.canRegister && !props.limitReached,
           primary: true
-        }, {
-        name: 'disable-inactive',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-user-clock',
-        label: trans('disable_inactive_users', {}, 'community'),
-        modal: [MODAL_USER_DISABLE_INACTIVE],
-        displayed: 'desktop' === props.contextType && props.canAdministrate,
-        dangerous: true
-      }
+        }
     ]}
   >
     {props.limitReached && props.canRegister &&

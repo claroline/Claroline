@@ -79,7 +79,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'theme' => 'claroline',
                 'resource_icon_set' => 'claroline',
                 'name' => 'Claroline Connect',
-                'secondary_name' => 'Easy & flexible learning',
                 'name_active' => true,
                 'breadcrumb' => true,
             ],

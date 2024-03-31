@@ -13,9 +13,9 @@ import {ListData as ListDataComponent} from '#/main/app/content/list/components/
  * Connected DataList.
  *
  * It automatically displays list features registered in the store (@see makeListReducer()).
- * It can also performs API calls to refresh data if configured to.
+ * It can also perform API calls to refresh data if configured to.
  */
-class AutoloadedListData extends Component {
+class AutoloadListData extends Component {
   constructor(props) {
     super(props)
 
@@ -63,12 +63,13 @@ class AutoloadedListData extends Component {
       <ListDataComponent
         {...this.props}
         loading={!this.props.loaded || this.props.invalidated}
+        /*loading={true}*/
       />
     )
   }
 }
 
-AutoloadedListData.propTypes = {
+AutoloadListData.propTypes = {
   // calculated from redux store
   loaded: T.bool,
   invalidated: T.bool,
@@ -86,7 +87,7 @@ AutoloadedListData.propTypes = {
 }
 
 // connect list to redux
-const ListData = connect()(AutoloadedListData)
+const ListData = connect()(AutoloadListData)
 
 ListData.propTypes = {
   /**

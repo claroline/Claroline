@@ -50,7 +50,6 @@ class ClientSerializer
         $data = [
             'logo' => $this->config->getParameter('logo'),
             'name' => $this->config->getParameter('name'),
-            'secondaryName' => $this->config->getParameter('secondary_name'),
             'description' => null, // the one for the current locale
             'version' => $this->versionManager->getCurrent(),
             'environment' => $this->env,
@@ -59,9 +58,9 @@ class ClientSerializer
             'community' => $this->config->getParameter('community'),
             'serverUrl' => $this->platformManager->getUrl(),
             'locale' => $this->serializeLocale(),
-            'display' => [ // TODO : to move
+            /*'display' => [ // TODO : to move
                 'breadcrumb' => $this->config->getParameter('display.breadcrumb'),
-            ],
+            ],*/
             'restrictions' => $this->config->getParameter('restrictions'),
             'richTextScript' => $this->config->getParameter('rich_text_script'),
             'home' => $this->config->getParameter('home'),

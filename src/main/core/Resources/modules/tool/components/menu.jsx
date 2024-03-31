@@ -8,7 +8,7 @@ import {getActions} from '#/main/core/tool/utils'
 import {Action, PromisedAction} from '#/main/app/action/prop-types'
 
 const ToolMenu = (props) =>
-  <PageMenu actions={props.actions}>
+  <PageMenu actions={props.menu}>
     <Toolbar
       className="nav nav-underline text-shrink-0"
       buttonName="nav-link"
@@ -16,12 +16,12 @@ const ToolMenu = (props) =>
       tooltip="bottom"
       actions={getActions(props.toolData, props.currentContext, {
         update: props.reload
-      }, props.path)}
+      }, props.path).then(loadedActions => [].concat(loadedActions, props.actions || []))}
     />
   </PageMenu>
 
 ToolMenu.propTypes = {
-  actions: T.oneOfType([
+  menu: T.oneOfType([
     // a regular array of actions
     T.arrayOf(T.shape(
       Action.propTypes
@@ -31,6 +31,9 @@ ToolMenu.propTypes = {
       PromisedAction.propTypes
     )
   ]),
+  actions: T.arrayOf(T.shape(
+    Action.propTypes
+  )),
 
   // from store
   path: T.string.isRequired,

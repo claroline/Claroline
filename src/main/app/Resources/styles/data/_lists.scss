@@ -18,7 +18,7 @@
     //  - all columns get the same width. So for some data it's too large (cf. boolean) or too small (long text / links).
     //
     // It breaks dropdowns if applied to actions cells
-    .table th:not(.actions-cell) {
+    .table th:not(.actions-cell):not(.checkbox-cell) {
         max-width: 1px;
         overflow: hidden;
         white-space: nowrap;
@@ -95,13 +95,17 @@ button.list-primary-action {
     width: 100%;
 
     .count {
-        padding: $padding-base-vertical $padding-base-horizontal;
-        border: $list-controls-border-width solid transparent;
+        /*padding: $padding-base-vertical $padding-base-horizontal;
+        border: $list-controls-border-width solid transparent;*/
         font-weight: $font-weight-bolder;
+        margin: map-get($spacers, 3);
     }
 
     .pagination-container {
         margin-left: auto;
+        margin-right: map-get($spacers, 1);
+        margin-top: map-get($spacers, 2);
+        margin-bottom: map-get($spacers, 2);
     }
 }
 
@@ -135,9 +139,9 @@ button.list-primary-action {
             order: 2;
             text-align: center;
 
-            + .pagination-container {
+            /*+ .pagination-container {
                 margin-bottom: floor(math.div($component-margin-bottom, 2));
-            }
+            }*/
         }
 
         .pagination-container {

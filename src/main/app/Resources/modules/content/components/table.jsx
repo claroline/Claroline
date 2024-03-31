@@ -77,7 +77,9 @@ const TableSortingCell = props =>
     })}
     onClick={e => {
       e.stopPropagation()
-      props.onSort()
+      if (!props.disabled) {
+        props.onSort()
+      }
     }}
   >
     {props.children}
@@ -90,13 +92,15 @@ TableSortingCell.propTypes = {
   align: T.oneOf(['left', 'center', 'right']),
   direction: T.oneOf([0, -1, 1]),
   onSort: T.func.isRequired,
-  children: T.node
+  children: T.node,
+  disabled: T.bool.isRequired
 }
 
 TableSortingCell.defaultProps = {
   align: 'left',
   direction: 0,
-  children: null
+  children: null,
+  disabled: false
 }
 
 const TableHeader = props =>

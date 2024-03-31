@@ -104,7 +104,7 @@ const data = createSelector(
 
 const tools = createSelector(
   [store],
-  (store) => store.tools
+  (store) => store.tools || []
 )
 
 const defaultOpening = createSelector(

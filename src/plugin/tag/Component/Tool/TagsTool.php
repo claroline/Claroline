@@ -22,14 +22,4 @@ class TagsTool extends AbstractTool
     {
         return DesktopContext::getName() === $context;
     }
-
-    public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
-    {
-        return [];
-    }
-
-    public function configure(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
-    {
-        return [];
-    }
 }

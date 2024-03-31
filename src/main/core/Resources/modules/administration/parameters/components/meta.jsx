@@ -39,10 +39,6 @@ const Meta = (props) =>
               label: trans('name'),
               required: true
             }, {
-              name: 'display.secondary_name',
-              type: 'string',
-              label: trans('secondary_name')
-            }, {
               name: 'locales.available',
               type: 'locale',
               label: trans('available_languages'),

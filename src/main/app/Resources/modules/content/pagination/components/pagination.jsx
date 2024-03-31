@@ -10,19 +10,21 @@ import {PaginationSize} from '#/main/app/content/pagination/components/size'
 const Pagination = props => {
   if (props.availableSizes[0] < props.totalResults) {
     return (
-      <nav className="pagination-container">
+      <div className="pagination-container" role="presentation">
         <PaginationPages
+          disabled={props.disabled}
           current={props.current}
           pages={countPages(props.totalResults, props.pageSize)}
           changePage={props.changePage}
         />
 
         <PaginationSize
+          disabled={props.disabled}
           pageSize={props.pageSize}
           availableSizes={props.availableSizes}
           updatePageSize={props.updatePageSize}
         />
-      </nav>
+      </div>
     )
   }
 
@@ -30,6 +32,7 @@ const Pagination = props => {
 }
 
 Pagination.propTypes = {
+  disabled: T.bool.isRequired,
   totalResults: T.number.isRequired,
   current: T.number,
   pageSize: T.number,
@@ -39,6 +42,7 @@ Pagination.propTypes = {
 }
 
 Pagination.defaultProps = {
+  disabled: false,
   current: 0,
   pageSize: constants.DEFAULT_PAGE_SIZE,
   availableSizes: constants.AVAILABLE_PAGE_SIZES

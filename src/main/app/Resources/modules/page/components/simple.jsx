@@ -5,6 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import {Helmet} from 'react-helmet'
 
 import {asset} from '#/main/app/config/asset'
+import {theme} from '#/main/app/config/theme'
 
 import {PageSimple as PageSimpleTypes} from '#/main/app/page/prop-types'
 

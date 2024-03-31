@@ -9,17 +9,7 @@ const tool = store
 
 const loaded = createSelector(
   [store],
-  (store) => store.loaded
-)
-
-const notFound = createSelector(
-  [store],
-  (store) => store.notFound
-)
-
-const accessDenied = createSelector(
-  [store],
-  (store) => store.accessDenied
+  (store) => store.loaded || false
 )
 
 const name = createSelector(
@@ -37,14 +27,9 @@ const path = createSelector(
   (basePath, name) => basePath + '/' + name
 )
 
-const fullscreen = createSelector(
-  [store],
-  (store) => store.fullscreen
-)
-
 const toolData = createSelector(
-  [store],
-  (store) => store.data || {}
+  [contextSelectors.tools, name],
+  (tools, name) => tools.find(tool => tool.name === name) || {}
 )
 
 const permissions = createSelector(
@@ -66,7 +51,7 @@ const contextId = createSelector(
 )
 
 /**
- * @deprecated use one of contextType, contextData, contextType.
+ * @deprecated use one of contextType, contextData.
  */
 const context = createSelector(
   [contextType, contextData],
@@ -82,16 +67,12 @@ const contextTools = contextSelectors.tools
 
 export const selectors = {
   STORE_NAME,
-  store,
   tool,
 
   loaded,
-  notFound,
-  accessDenied,
   name,
   basePath,
   path,
-  fullscreen,
   toolData,
   permissions,
   context,

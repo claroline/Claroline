@@ -12,5 +12,6 @@
   "schedule": "Planning execution",
   "once": "Unique execution",
   "recurring": "Recurrent execution",
-  "interval": "Execution interval"
+  "interval": "Execution interval",
+  "new_task": "New scheduled task"
 }

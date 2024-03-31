@@ -6,12 +6,12 @@ use Claroline\TagBundle\Entity\TaggedObject;
 
 class TaggedObjectSerializer
 {
-    public function getClass()
+    public function getClass(): string
     {
         return TaggedObject::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'tagged_object';
     }

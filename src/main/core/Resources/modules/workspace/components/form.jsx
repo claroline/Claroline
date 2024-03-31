@@ -19,7 +19,6 @@ import {route} from '#/main/core/workspace/routing'
 // easy selection for restrictions
 const restrictByDates = (workspace) => get(workspace, 'restrictions.enableDates') || !isEmpty(get(workspace, 'restrictions.dates'))
 const restrictByCode  = (workspace) => get(workspace, 'restrictions.enableCode') || !!get(workspace, 'restrictions.code')
-const restrictByIps   = (workspace) => get(workspace, 'restrictions.enableIps') || !isEmpty(get(workspace, 'restrictions.allowedIps'))
 
 // easy selection for evaluation
 const enableSuccessCondition = (workspace) => get(workspace, 'evaluation._enableSuccess')
@@ -310,31 +309,6 @@ const WorkspaceFormComponent = (props) =>
                 displayed: restrictByCode,
                 type: 'password',
                 required: true
-              }
-            ]
-          }, {
-            name: 'restrictions.enableIps',
-            label: trans('restrict_by_ips'),
-            type: 'boolean',
-            calculated: restrictByIps,
-            onChange: activated => {
-              if (!activated) {
-                props.updateProp('restrictions.allowedIps', [])
-              }
-            },
-            mode: 'expert',
-            linked: [
-              {
-                name: 'restrictions.allowedIps',
-                label: trans('allowed_ips'),
-                type: 'collection',
-                required: true,
-                displayed: restrictByIps,
-                options: {
-                  type: 'ip',
-                  placeholder: trans('no_allowed_ip'),
-                  button: trans('add_ip')
-                }
               }
             ]
           }

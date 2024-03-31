@@ -15,17 +15,23 @@ const ListFooter = props =>
     {props.pagination &&
       <Pagination
         {...props.pagination}
+        disabled={props.disabled}
         totalResults={props.totalResults}
       />
     }
   </div>
 
 ListFooter.propTypes = {
+  disabled: T.bool.isRequired,
   count: T.bool.isRequired,
   totalResults: T.number.isRequired,
   pagination: T.shape(
     DataListPaginationTypes.propTypes
   )
+}
+
+ListFooter.defaultProps = {
+  disabled: false
 }
 
 export {

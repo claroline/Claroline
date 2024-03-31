@@ -11,8 +11,9 @@ import {trans} from '#/main/app/intl/translation'
 import {now} from '#/main/app/intl/date'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ContentTitle} from '#/main/app/content/components/title'
 import {selectors as securitySelectors} from '#/main/app/security/store'
+import {Toolbar} from '#/main/app/action'
+import {ToolPage} from '#/main/core/tool'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
@@ -20,7 +21,6 @@ import {UserMessageForm} from '#/main/core/user/message/components/user-message-
 
 import {Message as MessageTypes} from '#/plugin/message/prop-types'
 import {actions, selectors} from '#/plugin/message/tools/messaging/store'
-import {Toolbar} from '#/main/app/action'
 
 function flattenMessages(root) {
   let messages = [root]
@@ -72,12 +72,7 @@ class MessageComponent extends Component {
     const messages = flattenMessages(this.props.message)
 
     return (
-      <Fragment>
-        <ContentTitle
-          level={2}
-          title={this.props.message.object}
-        />
-
+      <ToolPage title={this.props.message.object}>
         {messages
           .filter(message => !get(message, 'meta.removed') || message.id === this.props.currentId)
           .sort((a, b) => {
@@ -171,7 +166,7 @@ class MessageComponent extends Component {
             cancel={() => this.setState({reply: false, all: false})}
           />
         }
-      </Fragment>
+      </ToolPage>
     )
   }
 }

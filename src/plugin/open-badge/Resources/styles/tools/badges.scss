@@ -10,19 +10,56 @@
 // Plugin vars
 @import "../variables";
 
+// FIXME
+.badge-page {
+  // make image looks bigger than standard page icons
+  .page-icon {
+    width: map-get($icon-sizes, xl);
+    height: map-get($icon-sizes, xl);
+    margin-bottom: map-get($spacers, 5) * -1;
 
+    .badge-image {
+      padding: $thumbnail-padding;
+    }
+  }
+
+  .page-header {
+    margin-bottom: map-get($spacers, 5);
+  }
+
+  .page-header-content {
+    align-items: flex-end;
+  }
+}
+
+// FIXME
 .badge-card {
   .data-card-header {
-    min-width: 0 !important;
+    background: transparent !important;
+    min-height: auto !important;
   }
 
-  .data-card-content {
-    max-width: none !important;
+  &.data-card-col {
+    &,
+    .data-card-content,
+    .data-card-description,
+    .data-card-footer {
+      text-align: center !important;
+    }
+
+    .badge-image {
+      margin-top: $data-card-padding;
+    }
   }
 
-  .data-card-icon {
-    background: none;
-    border-radius: 0;
+  &.data-card-row {
+    .data-card-header {
+      min-width: auto !important;
+    }
+
+    .badge-image {
+      margin-left: $data-card-padding;
+    }
   }
 }
 
@@ -81,32 +118,28 @@
 }
 
 .badge-image {
-  flex-shrink: 0;
-  margin: 0 ($grid-gutter-width * .5);
-  margin-bottom: $component-margin-bottom;
-  width: 200px;
-  height: 200px;
   border-radius: 50%;
   overflow: hidden;
+  flex-shrink: 0 !important;
 
-  > div {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    height: 100%;
-    width: 100%;
-
-    border-radius: 50%;
-  }
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   img {
+    border-radius: 50%;
     max-height: 100%;
     max-width: 100%;
   }
+}
 
-  .fa {
-    font-size: 72px;
+@each $size, $value in $icon-sizes {
+  .badge-image-#{$size} {
+    // for picture
+    width: $value;
+    height: $value;
+    // for .fa when no picture
+    font-size: $value * .5;
   }
 }
 

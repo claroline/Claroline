@@ -11,6 +11,7 @@ import {actions as listActions} from '#/main/app/content/list/store'
 
 import {getActions, getDefaultAction} from '#/main/core/workspace/utils'
 import {WorkspaceCard} from '#/main/core/workspace/components/card'
+import {WorkspaceIcon} from '#/main/app/contexts/workspace/components/icon'
 
 const Workspaces = (props) => {
   const workspacesRefresher = merge({
@@ -29,7 +30,13 @@ const Workspaces = (props) => {
           type: 'string',
           label: trans('name'),
           displayed: true,
-          primary: true
+          primary: true,
+          render: (workspace) => (
+            <div className="d-flex flex-direction-row gap-3 align-items-center">
+              <WorkspaceIcon workspace={workspace} size="xs" />
+              {workspace.name}
+            </div>
+          )
         }, {
           name: 'code',
           type: 'string',

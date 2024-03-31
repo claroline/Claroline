@@ -166,7 +166,7 @@ const DataGridSort = props =>
 
     <Button
       id="data-tree-sort-menu"
-      className="btn btn-text-primary fw-bold"
+      className="btn btn-link fw-bold"
       type={MENU_BUTTON}
       label={props.current.property && getPropDefinition(props.current.property, props.available) ?
         getPropDefinition(props.current.property, props.available).label :
@@ -188,7 +188,7 @@ const DataGridSort = props =>
     <div className="vr" role="presentation" />
 
     <Button
-      className="btn btn-text-primary"
+      className="btn btn-link"
       type={CALLBACK_BUTTON}
       icon={classes('fa fa-fw', {
         'fa-sort'     :  0 === props.current.direction || !props.current.direction,

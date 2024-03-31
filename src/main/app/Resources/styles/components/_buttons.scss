@@ -23,7 +23,7 @@ input[type=reset] {
 
 .toolbar-separator {
     display: inline-block;
-    margin: $component-margin-bottom-small;
+    margin: map-get($spacers, 2);
 }
 
 

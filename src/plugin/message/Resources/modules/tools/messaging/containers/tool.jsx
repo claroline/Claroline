@@ -10,9 +10,6 @@ const MessagingTool = withReducer(selectors.STORE_NAME, reducer)(
     (dispatch) => ({
       openMessage(id) {
         dispatch(actions.openMessage(id))
-      },
-      addContacts(users) {
-        dispatch(actions.addContacts(users))
       }
     })
   )(MessagingToolComponent)

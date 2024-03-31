@@ -36,9 +36,4 @@ class WorkspacesTool extends AbstractTool
             'creatable' => $this->authorization->isGranted('CREATE', new Workspace()),
         ];
     }
-
-    public function configure(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
-    {
-        return [];
-    }
 }

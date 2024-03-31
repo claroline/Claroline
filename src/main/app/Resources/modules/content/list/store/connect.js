@@ -162,7 +162,6 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     card:          ownProps.card,
     display:       ownProps.display,
     translations:  ownProps.translations,
-    readOnly:      stateProps.readOnly,
     loaded:        stateProps.loaded,
     invalidated:   stateProps.invalidated,
     data:          stateProps.data,
@@ -203,14 +202,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       if (actions instanceof Promise) {
         if (actions) {
           actions = actions.then((actions) => [deleteAction].concat(actions))
-          //actions = actions.then((actions) => actions.concat([deleteAction]))
         } else {
           actions = Promise.resolve([deleteAction])
         }
       } else {
         if (actions) {
           actions = [deleteAction].concat(actions)
-          // actions = actions.concat([deleteAction])
         } else {
           actions = [deleteAction]
         }

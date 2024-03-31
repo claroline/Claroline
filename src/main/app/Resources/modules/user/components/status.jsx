@@ -8,7 +8,6 @@ import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 import {constants} from '#/main/app/user/constants'
 
-
 const UserStatusBullet = (props) =>
   <span
     className={classes('user-status-bullet rounded-circle', `bg-${constants.USER_STATUS_COLORS[props.status]}`)}
