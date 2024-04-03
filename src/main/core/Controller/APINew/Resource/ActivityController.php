@@ -37,7 +37,7 @@ class ActivityController
      */
     public function functionalLogsAction(ResourceNode $resourceNode, Request $request): JsonResponse
     {
-        $this->checkPermission($resourceNode, 'ADMINISTRATE', [], true);
+        $this->checkPermission('ADMINISTRATE', $resourceNode, [], true);
 
         $hiddenFilters = [
             'resource' => $resourceNode->getUuid(),
@@ -48,7 +48,7 @@ class ActivityController
 
             $organizations = array_map(function (Organization $organization) {
                 return $organization->getUuid();
-            }, $user->getOrganizations()->toArray());
+            }, $user->getOrganizations());
             $hiddenFilters['organizations'] = $organizations;
         }
 
