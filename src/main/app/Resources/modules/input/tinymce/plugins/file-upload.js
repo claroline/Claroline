@@ -26,7 +26,7 @@ function openFileUpload(editor) {
     add: (newResourceNode) => {
       editor.setProgressState(true)
       fetch(
-        url(['claro_resource_embed', {type: newResourceNode.meta.type, id: newResourceNode.id}]), {
+        url(['claro_resource_embed', {id: newResourceNode.id}]), {
           credentials: 'include'
         })
         .then(response => {

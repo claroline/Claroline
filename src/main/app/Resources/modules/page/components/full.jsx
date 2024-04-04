@@ -10,7 +10,7 @@ import {PageHeader} from '#/main/app/page/components/header'
 
 const PageFull = (props) =>
   <PageSimple
-    {...omit(props, 'showHeader', 'showTitle', 'header', 'title', 'subtitle', 'icon', 'poster', 'toolbar', 'actions', 'menu')}
+    {...omit(props, 'showHeader', 'header', 'title', 'subtitle', 'icon', 'poster', 'toolbar', 'actions', 'menu')}
     meta={merge({}, {
       title: props.title,
       poster: props.poster

@@ -30,15 +30,15 @@ const PlayerComponent = props => {
 
   return (
     <Carousel
-      className="row slideshow-carousel"
+
       defaultActiveIndex={activeIndex}
-      interval={props.autoPlay && props.interval}
+      interval={props.autoPlay ? props.interval : undefined}
       controls={props.showControls}
       indicators={props.showControls}
 
-      prevIcon={<span className="fa fa-chevron-left" />}
+      //prevIcon={<span className="fa fa-chevron-left" />}
       prevLabel={trans('previous')}
-      nextIcon={<span className="fa fa-chevron-right" />}
+      //nextIcon={<span className="fa fa-chevron-right" />}
       nextLabel={trans('next')}
     >
       {props.slides.map(slide => {
@@ -54,7 +54,7 @@ const PlayerComponent = props => {
               backgroundColor: color.toRgbString()
             } : undefined}
           >
-            <img src={asset(slide.content.url)} alt={slide.title} />
+            <img src={asset(slide.content.url)} alt={slide.title} className="d-block m-auto" />
 
             {(slide.meta.title || slide.meta.description) &&
               <Carousel.Caption>

@@ -3,7 +3,6 @@ import identity from 'lodash/identity'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {showBreadcrumb} from '#/main/app/layout/utils'
 import {getApp, getApps} from '#/main/app/plugins'
 
 import {constants} from '#/main/core/tool/constants'
@@ -120,7 +119,7 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
         }, */{
           type: LINK_BUTTON,
           label: contextData.name,
-          displayed: -1 !== breadcrumbItems.indexOf('current'),
+          //displayed: -1 !== breadcrumbItems.indexOf('current'),
           target: workspaceRoute(contextData)
         }
       ]
@@ -129,7 +128,7 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
         path.push({
           type: LINK_BUTTON,
           label: trans(toolName, {}, 'tools'),
-          displayed: -1 !== breadcrumbItems.indexOf('tool'),
+          //displayed: -1 !== breadcrumbItems.indexOf('tool'),
           target: workspaceRoute(contextData, toolName)
         })
       }
@@ -170,22 +169,9 @@ function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
   return path
 }
 
-function showToolBreadcrumb(contextType, contextData) {
-  if (showBreadcrumb()) {
-    if (constants.TOOL_WORKSPACE === contextType) {
-      return !!get(contextData, 'breadcrumb.displayed')
-    }
-
-    return true
-  }
-
-  return false
-}
-
 export {
   getTools,
   getTool,
   getActions,
-  getToolBreadcrumb,
-  showToolBreadcrumb
+  getToolBreadcrumb
 }

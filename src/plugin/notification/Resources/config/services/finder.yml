@@ -1,4 +1,0 @@
-services:
-    Icap\NotificationBundle\Finder\NotificationViewerFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]

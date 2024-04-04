@@ -8,11 +8,11 @@ import {trans} from '#/main/app/intl/translation'
 import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action/components/button'
 import {Toolbar} from '#/main/app/action/components/toolbar'
+import {Heading} from '#/main/app/components/heading'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_CONFIRM} from '#/main/app/modals/confirm'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
-import {Heading} from '#/main/core/layout/components/heading'
 import {
   WidgetContainer as WidgetContainerTypes,
   WidgetInstance as WidgetInstanceTypes

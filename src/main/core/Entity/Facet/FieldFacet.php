@@ -15,6 +15,7 @@ use Claroline\AppBundle\Entity\Display\Order;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -89,10 +90,8 @@ class FieldFacet
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice",
      *     mappedBy="fieldFacet"
      * )
-     *
-     * @var ArrayCollection
      */
-    private $fieldFacetChoices;
+    private ?Collection $fieldFacetChoices;
 
     /**
      * @ORM\Column(name="isRequired", type="boolean")
@@ -137,7 +136,7 @@ class FieldFacet
     /**
      * @ORM\Column(name="condition_value", type="json", nullable=true)
      */
-    private mixed $conditionValue = null;
+    private ?array $conditionValue = null;
 
     /**
      * @ORM\Column(name="hide_label", type="boolean")
@@ -208,10 +207,7 @@ class FieldFacet
         }
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getFieldFacetChoices()
+    public function getFieldFacetChoices(): ?Collection
     {
         return $this->fieldFacetChoices;
     }

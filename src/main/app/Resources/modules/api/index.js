@@ -1,5 +1,7 @@
 /**
  * API module.
+ *
+ * Manages communication with the backend server.
  */
 
 import {makeCancelable} from '#/main/app/api/fetch/makeCancelable'

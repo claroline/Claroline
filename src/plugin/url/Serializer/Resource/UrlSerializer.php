@@ -9,12 +9,12 @@ use HeVinci\UrlBundle\Serializer\AbstractUrlSerializer;
 
 class UrlSerializer extends AbstractUrlSerializer
 {
-    public function getName()
+    public function getName(): string
     {
         return 'url';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Url::class;
     }

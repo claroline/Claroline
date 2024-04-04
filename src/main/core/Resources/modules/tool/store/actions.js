@@ -23,7 +23,6 @@ actions.setLoaded = makeActionCreator(TOOL_SET_LOADED, 'loaded')
  */
 actions.open = (toolName, context, contextId) => (dispatch) => dispatch({
   [API_REQUEST]: {
-    silent: true,
     url: ['claro_tool_open', {context: context, contextId: contextId, name: toolName}],
     before: () => dispatch({
       type: TOOL_OPEN,

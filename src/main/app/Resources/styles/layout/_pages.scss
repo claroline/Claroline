@@ -39,13 +39,17 @@
     }
 }
 
+.page-brand {
+    height: $page-brand-size;
+}
+
 .page-header {
     display: flex;
     justify-content: space-between;
     flex-shrink: 0;
     flex-direction: column;
     align-items: stretch;
-    background-color: $page-header-bg;
+    //background-color: $page-header-bg;
     margin: 0;
     border-bottom: $page-header-border-width solid $page-header-border-color;
 
@@ -59,8 +63,6 @@
     min-height: $page-header-height;
 
     // use movie subtitles styles to make title always readable
-    // maybe one day add a background checker
-    //.app-brand,
     .breadcrumb, // FIXME
     .breadcrumb-item::before, // FIXME
     .breadcrumb a, // FIXME

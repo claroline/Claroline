@@ -49,8 +49,7 @@ const ResourcePage = (props) => {
       }}
       embedded={props.embedded}
       showHeader={props.embedded ? props.showHeader : true}
-      /*showTitle={get(props.resourceNode, 'display.showTitle')}*/
-      title={props.subtitle || props.resourceNode.name}
+      title={props.title || props.subtitle || props.resourceNode.name}
       path={[].concat(ancestors.map(ancestorNode => ({
         type: LINK_BUTTON,
         label: ancestorNode.name,

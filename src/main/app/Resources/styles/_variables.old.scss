@@ -68,7 +68,7 @@ $login-max-width: 760px !default;
 
 //$brand-color:           var(--#{$prefix}body-color) !default;
 //$brand-secondary-color: color-contrast($menu) !default;
-$brand-size:       2.5rem;
+//$brand-size:       2.5rem;
 //$brand-font-size:       $font-size-lg !default;
 //$brand-font-weight:     $font-weight-semibold !default;
 
@@ -101,11 +101,13 @@ $toolbar-link-disabled-bg:    null !default;
 
 
 // -
-// Loader (aka hourglass)
+// Loader
 // ---
 
-$loader-primary:   $primary !default;
-$loader-secondary: $learning !default;
+$loader-height:    .25rem !default;
+$loader-primary:   var(--#{$prefix}primary) !default;
+$loader-secondary: var(--#{$prefix}learning) !default;
+
 $loader-color:     var(--#{$prefix}secondary-color) !default;
 $loader-bg:        transparent !default;
 
@@ -114,8 +116,9 @@ $loader-bg:        transparent !default;
 // Page
 // ---
 
+$page-brand-size:          2.5rem !default;
 $page-header-height:       420px !default;
-$page-header-bg:           transparent !default;
+//$page-header-bg:           transparent !default;
 $page-header-padding:      $grid-gutter-width*.5 $grid-gutter-width*.5 !default;
 $page-header-box-shadow:   none  !default;
 $page-header-border-width: 0 !default;
@@ -230,16 +233,6 @@ $heading-numbering-weight:        $font-weight-bold !default;
 $heading-numbering-border-radius: 0 !default;
 $heading-numbering-box-shadow:    none !default;
 $heading-numbering-separator:     "." !default; // separator between numbering levels
-
-
-// -
-// Carousel
-// @deprecated
-// ---
-
-$carousel-indicator-size:        10px;
-$carousel-indicator-active-size: 12px;
-$carousel-control-font-size:     $font-size-lg;
 
 
 // -

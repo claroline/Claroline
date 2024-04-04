@@ -2,15 +2,16 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Meta\Creator;
-use Claroline\AppBundle\Entity\Meta\Poster;
-use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
  * @ORM\Table(name="icap__blog_post")
@@ -19,95 +20,72 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
  */
 class Post extends Statusable
 {
+    use Id;
     use Creator;
     use Poster;
     use Thumbnail;
     use Uuid;
 
     /**
-     * @var int
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @var string
      * @ORM\Column(type="string", length=255)
      */
-    protected $title;
+    private ?string $title;
 
     /**
-     * @var string
      * @ORM\Column(type="text")
      */
-    protected $content;
+    private ?string $content;
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=true, updatable=false)
      * @ORM\Column(length=128, unique=true)
      */
-    protected $slug;
+    private ?string $slug;
 
     /**
-     * @var \Datetime
-     *
      * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
      */
-    protected $creationDate;
+    private ?\DateTimeInterface $creationDate;
 
     /**
-     * @var \Datetime
-     *
      * @ORM\Column(type="datetime", name="modification_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field={"title", "content"})
      */
-    protected $modificationDate;
+    private ?\DateTimeInterface $modificationDate;
 
     /**
-     * @var \Datetime
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="status", value="1")
      */
-    protected $publicationDate;
+    private ?\DateTimeInterface $publicationDate;
 
     /**
-     * @var int
      * @ORM\Column(type="integer", options={"default": "0"})
      */
-    protected $viewCounter = 0;
+    private int $viewCounter = 0;
 
     /**
-     * @var bool
      * @ORM\Column(type="boolean", name="pinned")
      */
-    protected $pinned = false;
+    private bool $pinned = false;
 
     /**
-     * @var Comment[]|ArrayCollection
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"all"})
      * @ORM\OrderBy({"creationDate" = "DESC"})
      */
-    protected $comments;
+    private Collection $comments;
 
     /**
      * @ORM\Column(nullable=true)
-     *
-     * @var string
      */
-    protected $author;
+    private ?string $author;
 
     /**
-     * @var Blog
-     *
      * @ORM\ManyToOne(targetEntity="Icap\BlogBundle\Entity\Blog", inversedBy="posts")
      * @ORM\JoinColumn(name="blog_id", referencedColumnName="id")
      */
-    protected $blog;
-
-    protected $userPicker = null;
+    private ?Blog $blog;
 
     public function __construct()
     {
@@ -116,201 +94,77 @@ class Post extends Statusable
         $this->comments = new ArrayCollection();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set title.
-     *
-     * @param string $title
-     *
-     * @return Post
-     */
-    public function setTitle($title)
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
-
-        return $this;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * Set content.
-     *
-     * @param string $content
-     *
-     * @return Post
-     */
-    public function setContent($content)
+    public function setContent(?string $content): void
     {
         $this->content = $content;
-
-        return $this;
     }
 
-    /**
-     * Get content.
-     *
-     * @return string
-     */
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    /**
-     * @param string $url
-     * @param string $text
-     *
-     * @return string
-     */
-    public function getShortContent($url, $text)
-    {
-        if (!empty($this->content)) {
-            $readMoreText = sprintf('... <a href="%s" class="read_more">%s <span class="fa fa-long-arrow-right"></span></a>', $url, $text);
-
-            return TextNormalizer::resumeHtml($this->content, 400, $readMoreText);
-        }
-
-        return '';
-    }
-
-    /**
-     * Set slug.
-     *
-     * @param string $slug
-     *
-     * @return Post
-     */
-    public function setSlug($slug)
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
-
-        return $this;
     }
 
-    /**
-     * Get slug.
-     *
-     * @return string
-     */
-    public function getSlug()
+    public function getSlug(): ?string
     {
         return $this->slug;
     }
 
-    /**
-     * Set creationDate.
-     *
-     * @return Post
-     */
-    public function setCreationDate(\DateTimeInterface $creationDate)
+    public function setCreationDate(\DateTimeInterface $creationDate): void
     {
         $this->creationDate = $creationDate;
-
-        return $this;
     }
 
-    /**
-     * Get creationDate.
-     *
-     * @return \DateTime
-     */
-    public function getCreationDate()
+    public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->creationDate;
     }
 
-    /**
-     * Set modificationDate.
-     *
-     * @return Post
-     */
-    public function setModificationDate(\DateTimeInterface $modificationDate)
+    public function setModificationDate(\DateTimeInterface $modificationDate): void
     {
         $this->modificationDate = $modificationDate;
-
-        return $this;
     }
 
-    /**
-     * Get modificationDate.
-     *
-     * @return \DateTime
-     */
-    public function getModificationDate()
+    public function getModificationDate(): ?\DateTimeInterface
     {
         return $this->modificationDate;
     }
 
-    /**
-     * Set publicationDate.
-     *
-     * @return Post
-     */
-    public function setPublicationDate(\DateTimeInterface $publicationDate = null)
+    public function setPublicationDate(\DateTimeInterface $publicationDate = null): void
     {
         $this->publicationDate = $publicationDate;
-
-        return $this;
     }
 
-    /**
-     * Get publicationDate.
-     *
-     * @return \DateTime
-     */
-    public function getPublicationDate()
+    public function getPublicationDate(): ?\DateTimeInterface
     {
         return $this->publicationDate;
     }
 
-    /**
-     * Add comments.
-     *
-     * @return Post
-     */
-    public function addComment(Comment $comments)
+    public function addComment(Comment $comments): void
     {
         $this->comments[] = $comments;
-
-        return $this;
     }
 
-    /**
-     * Remove comments.
-     *
-     * @return Post
-     */
-    public function removeComment(Comment $comments)
+    public function removeComment(Comment $comment): void
     {
-        $this->comments->removeElement($comments);
-
-        return $this;
+        $this->comments->removeElement($comment);
     }
 
-    /**
-     * Set comments.
-     *
-     * @return Post
-     */
-    public function setComments(ArrayCollection $comments)
+    public function setComments(Collection $comments): void
     {
         /** @var Comment[] $comments */
         foreach ($comments as $comment) {
@@ -318,70 +172,40 @@ class Post extends Statusable
         }
 
         $this->comments = $comments;
-
-        return $this;
     }
 
     /**
      * Get comments.
      *
-     * @return ArrayCollection|Comment[]
+     * @return Comment[]
      */
-    public function getComments()
+    public function getComments(): Collection
     {
         return $this->comments;
     }
 
-    /**
-     * Set author.
-     *
-     * @return Post
-     */
-    public function setAuthor(?string $author = null)
+    public function setAuthor(?string $author = null): void
     {
         $this->author = $author;
 
-        return $this;
     }
 
-    /**
-     * Get author.
-     *
-     * @return string
-     */
-    public function getAuthor()
+    public function getAuthor(): ?string
     {
         return $this->author;
     }
 
-    /**
-     * Set blog.
-     *
-     * @return Post
-     */
-    public function setBlog(Blog $blog = null)
+    public function setBlog(Blog $blog = null): void
     {
         $this->blog = $blog;
-
-        return $this;
     }
 
-    /**
-     * Get blog.
-     *
-     * @return Blog
-     */
-    public function getBlog()
+    public function getBlog(): ?Blog
     {
         return $this->blog;
     }
 
-    /**
-     * @param bool $countUnpublished
-     *
-     * @return int
-     */
-    public function countComments($countUnpublished = false)
+    public function countComments(bool $countUnpublished = false): int
     {
         $countComments = 0;
 
@@ -399,20 +223,12 @@ class Post extends Statusable
         return $countComments;
     }
 
-    /**
-     * @return int
-     */
-    public function countUnpublishedComments()
+    public function countUnpublishedComments(): int
     {
         return $this->countComments(true) - $this->countComments(false);
     }
 
-    /**
-     * @param bool $checkDate
-     *
-     * @return bool
-     */
-    public function isPublished($checkDate = true)
+    public function isPublished(bool $checkDate = true): bool
     {
         $isStatusPublished = parent::isPublished();
 
@@ -429,84 +245,37 @@ class Post extends Statusable
         return false;
     }
 
-    /**
-     * @param int $viewCounter
-     *
-     * @return Post
-     */
-    public function setViewCounter($viewCounter)
+    public function setViewCounter(int $viewCounter): void
     {
         $this->viewCounter = $viewCounter;
-
-        return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getViewCounter()
+    public function getViewCounter(): int
     {
         return $this->viewCounter;
     }
 
-    /**
-     * @return Post
-     */
-    public function increaseViewCounter()
+    public function increaseViewCounter(): void
     {
-        return $this->setViewCounter(++$this->viewCounter);
+        $this->setViewCounter(++$this->viewCounter);
     }
 
-    /**
-     * @return $this
-     */
-    public function setUserPicker(UserPickerContent $userPicker)
-    {
-        $this->userPicker = $userPicker;
-
-        return $this;
-    }
-
-    /**
-     * @return \Icap\NotificationBundle\Entity\UserPickerContent
-     */
-    public function getUserPicker()
-    {
-        return $this->userPicker;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAbstract()
+    public function getAbstract(): ?string
     {
         return !empty($this->content) && strlen($this->content) > 400 ? TextNormalizer::resumeHtml($this->content, 400) : $this->content;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAbstract()
+    public function isAbstract(): bool
     {
         return strlen($this->content) > 400;
     }
 
-    /**
-     * @param bool $pinned
-     *
-     * @return Post
-     */
-    public function setPinned($pinned)
+    public function setPinned($pinned): void
     {
         $this->pinned = $pinned;
-
-        return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPinned()
+    public function isPinned(): bool
     {
         return $this->pinned;
     }

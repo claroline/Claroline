@@ -65,7 +65,6 @@ class FileSerializer
             'id' => $file->getUuid(),
             'size' => $file->getSize(),
             'opening' => $file->getOpening(),
-            'commentsActivated' => $file->getResourceNode()->isCommentsActivated(),
             'name' => $fileName, // the name of the file which will be used for file download
             'hashName' => $file->getHashName(),
 
@@ -104,10 +103,6 @@ class FileSerializer
         $this->sipe('hashName', 'setHashName', $data, $file);
         $this->sipe('opening', 'setOpening', $data, $file);
 
-        if (isset($data['commentsActivated']) && $file->getResourceNode()) {
-            $resourceNode = $file->getResourceNode();
-            $resourceNode->setCommentsActivated($data['commentsActivated']);
-        }
         if ($file->getResourceNode()) {
             $dataEvent = new GenericDataEvent([
                 'resourceNode' => $file->getResourceNode(),

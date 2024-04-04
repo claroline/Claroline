@@ -14,7 +14,7 @@ final class SessionConfigPass implements CompilerPassInterface
 {
     private const STORAGE_TYPES = ['native', 'file', 'redis'];
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         /** @var PlatformConfigurationHandler $platformConfig */
         $platformConfig = $container->get(PlatformConfigurationHandler::class);

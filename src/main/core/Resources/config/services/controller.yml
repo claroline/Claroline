@@ -36,10 +36,6 @@ services:
             - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
             - '@Claroline\AppBundle\Manager\PdfManager'
 
-    Claroline\CoreBundle\Controller\APINew\Resource\ResourceCommentController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-
     Claroline\CoreBundle\Controller\APINew\Resource\ResourceNodeController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true

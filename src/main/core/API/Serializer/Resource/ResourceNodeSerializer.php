@@ -8,13 +8,11 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
-use Claroline\CoreBundle\Entity\Resource\ResourceComment;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
@@ -24,26 +22,13 @@ class ResourceNodeSerializer
 {
     use SerializerTrait;
 
-    public const NO_PARENT = 'no_parent';
-
-    private ObjectManager $om;
-    private EventDispatcherInterface $eventDispatcher;
-    private UserSerializer $userSerializer;
-    private RightsManager $rightsManager;
-    private SerializerProvider $serializer;
-
     public function __construct(
-        ObjectManager $om,
-        EventDispatcherInterface $eventDispatcher,
-        UserSerializer $userSerializer,
-        RightsManager $rightsManager,
-        SerializerProvider $serializer
+        private readonly ObjectManager $om,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly UserSerializer $userSerializer,
+        private readonly RightsManager $rightsManager,
+        private readonly SerializerProvider $serializer
     ) {
-        $this->om = $om;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->userSerializer = $userSerializer;
-        $this->rightsManager = $rightsManager;
-        $this->serializer = $serializer;
     }
 
     public function getClass(): string
@@ -111,7 +96,6 @@ class ResourceNodeSerializer
                 'views' => $resourceNode->getViewsCount(),
                 'authors' => $resourceNode->getAuthor(),
                 'license' => $resourceNode->getLicense(),
-                'commentsActivated' => $resourceNode->isCommentsActivated(),
             ],
             'thumbnail' => $resourceNode->getThumbnail(),
             'poster' => $resourceNode->getPoster(),
@@ -125,7 +109,6 @@ class ResourceNodeSerializer
                 'hidden' => $resourceNode->isHidden(),
                 'dates' => DateRangeNormalizer::normalize($resourceNode->getAccessibleFrom(), $resourceNode->getAccessibleUntil()),
                 'code' => $resourceNode->getAccessCode(),
-                'allowedIps' => $resourceNode->getAllowedIps(),
             ],
             'tags' => $this->serializeTags($resourceNode),
         ];
@@ -143,11 +126,7 @@ class ResourceNodeSerializer
                 'display' => [
                     'fullscreen' => $resourceNode->isFullscreen(),
                     'showIcon' => $resourceNode->getShowIcon(),
-                    'showTitle' => $resourceNode->getShowTitle(),
                 ],
-                'comments' => array_map(function (ResourceComment $comment) { // TODO : should not be exposed here
-                    return $this->serializer->serialize($comment);
-                }, $resourceNode->getComments()->toArray()),
             ]);
         }
 
@@ -156,7 +135,7 @@ class ResourceNodeSerializer
             $serializedNode['rights'] = array_values($this->rightsManager->getRights($resourceNode));
         }
 
-        return $this->decorate($resourceNode, $serializedNode, $options);
+        return $serializedNode;
     }
 
     /**
@@ -206,17 +185,14 @@ class ResourceNodeSerializer
         $this->sipe('meta.description', 'setDescription', $data, $resourceNode);
         $this->sipe('meta.license', 'setLicense', $data, $resourceNode);
         $this->sipe('meta.authors', 'setAuthor', $data, $resourceNode);
-        $this->sipe('meta.commentsActivated', 'setCommentsActivated', $data, $resourceNode);
 
         // display
         $this->sipe('display.fullscreen', 'setFullscreen', $data, $resourceNode);
         $this->sipe('display.showIcon', 'setShowIcon', $data, $resourceNode);
-        $this->sipe('display.showTitle', 'setShowTitle', $data, $resourceNode);
 
         // restrictions
         if (isset($data['restrictions'])) {
             $this->sipe('restrictions.code', 'setAccessCode', $data, $resourceNode);
-            $this->sipe('restrictions.allowedIps', 'setAllowedIps', $data, $resourceNode);
             $this->sipe('restrictions.hidden', 'setHidden', $data, $resourceNode);
 
             if (isset($data['restrictions']['dates'])) {
@@ -238,22 +214,12 @@ class ResourceNodeSerializer
             $this->deserializeRights($data['rights'], $resourceNode, $options);
         }
 
+
+        if (isset($data['tags'])) {
+            $this->deserializeTags($resourceNode, $data['tags'], $options);
+        }
+
         return $resourceNode;
-    }
-
-    /**
-     * Dispatches an event to let plugins add some custom data to the serialized node.
-     * For example, Notification adds a flag to know if the current user follows the resource.
-     */
-    private function decorate(ResourceNode $resourceNode, array $serializedNode, array $options = []): array
-    {
-        // avoid plugins override the standard node properties
-        $unauthorizedKeys = array_keys($serializedNode);
-
-        $event = new DecorateResourceNodeEvent($resourceNode, $unauthorizedKeys, $options);
-        $this->eventDispatcher->dispatch($event, 'serialize_resource_node');
-
-        return array_merge($serializedNode, $event->getInjectedData());
     }
 
     private function serializeTags(ResourceNode $resourceNode): array
@@ -268,7 +234,29 @@ class ResourceNodeSerializer
         return $event->getResponse() ?? [];
     }
 
-    public function deserializeRights($rights, ResourceNode $resourceNode, array $options = [])
+    private function deserializeTags(ResourceNode $resourceNode, array $tags = [], array $options = []): void
+    {
+        if (in_array(Options::PERSIST_TAG, $options)) {
+            $event = new GenericDataEvent([
+                'tags' => $tags,
+                'data' => [
+                    [
+                        'class' => ResourceNode::class,
+                        'id' => $resourceNode->getUuid(),
+                        'name' => $resourceNode->getName(),
+                    ],
+                ],
+                'replace' => true,
+            ]);
+
+            $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
+        }
+    }
+
+    /**
+     * @internal should not be public
+     */
+    public function deserializeRights($rights, ResourceNode $resourceNode, array $options = []): void
     {
         $existingRights = $resourceNode->getRights();
 

@@ -28,13 +28,13 @@ const ResourceCard = (props) =>
       />
     }
     title={
-      <Fragment>
+      <>
         <span className={`badge text-bg-${constants.EVALUATION_STATUS_COLOR[props.data.status]} icon-with-text-right`}>
           {constants.EVALUATION_STATUSES_SHORT[props.data.status]}
         </span>
 
         {props.data.resourceNode.name}
-      </Fragment>
+      </>
     }
     subtitle={trans(props.data.resourceNode.meta.type, {}, 'resource')}
   >

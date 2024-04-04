@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class PlatformConfigPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (false === $container->hasDefinition('Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler')) {
             return;

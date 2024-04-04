@@ -72,18 +72,6 @@
           "items": {
             "type": ["string", "null"]
           }
-        },
-        "maxUsers": {
-          "type": ["integer", "null"],
-          "description": "The maximum amount of users the workspace can have"
-        },
-        "maxStorage": {
-          "type": ["integer", "string", "null"],
-          "description": "The maximum amount of data storage the workspace is allowed to take"
-        },
-        "maxResources": {
-          "type": ["integer", "null"],
-          "description": "The maximum amount of resources in the workspace"
         }
       }
     },
@@ -102,30 +90,6 @@
           "type": "boolean",
           "description": "Users can unregister themselves from the workspace"
         }
-      }
-    },
-    "managers": {
-      "type": "array",
-      "uniqueItems": true,
-      "items": {
-        "oneOf": [
-          {
-            "type": "object",
-            "properties": {
-              "email": {
-                "type": "string",
-                "description": "The user email address"
-              },
-              "username": {
-                "type": "string",
-                "description": "The user username"
-              }
-            }
-          },
-          {
-              "type": "null"
-          }
-        ]
       }
     },
     "organizations": {

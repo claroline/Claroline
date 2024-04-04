@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Library\Configuration\LegacyParametersMappingInterface;
 
 class LegacyParametersMapping implements LegacyParametersMappingInterface
 {
-    public function getMapping()
+    public function getMapping(): array
     {
         return [
             'name' => 'display.name',
@@ -41,7 +41,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'header_locale' => 'footer.show_locale',
             'token' => 'statistics.token',
             'country' => 'country',
-            'auto_logging_after_registration' => 'registration.auto_logging',
             'registration_mail_validation' => 'registration.validation',
             'show_help_button' => 'help.show',
             'show_about_button' => 'show_about_button',
@@ -53,11 +52,8 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'ssl_enabled' => 'ssl.enabled',
             'ssl_version_value' => 'ssl.version',
             'resource_icon_set' => 'display.resource_icon_set',
-            'platform_log_enabled' => 'logs.enabled',
             'auto_validate_email' => 'database_restoration.auto_validate_email',
-            'notifications_refresh_delay' => 'notifications_refresh_delay', // in ms
             'auto_enable_email_redirect' => 'database_restoration.auto_enable_email_redirect',
-            'auto_enable_notifications' => 'auto_enable_notifications',
             'force_organization_creation' => 'registration.force_organization_creation',
             'allow_workspace_at_registration' => 'registration.allow_workspace',
             'profile_roles_confidential' => 'profile.roles_confidential',

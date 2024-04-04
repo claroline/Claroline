@@ -69,8 +69,6 @@ class HomeTabSerializer
             ],
             'display' => [
                 'color' => $homeTab->getColor(),
-                'centerTitle' => $homeTab->isCenterTitle(),
-                'showTitle' => $homeTab->getShowTitle(),
             ],
 
             // TODO : should no longer be exposed here (still required by update and ws import)
@@ -117,7 +115,6 @@ class HomeTabSerializer
         $this->sipe('class', 'setClass', $data, $homeTab);
         $this->sipe('display.color', 'setColor', $data, $homeTab);
         $this->sipe('display.centerTitle', 'setCenterTitle', $data, $homeTab);
-        $this->sipe('display.showTitle', 'setShowTitle', $data, $homeTab);
 
         if (isset($data['restrictions'])) {
             $this->sipe('restrictions.code', 'setAccessCode', $data, $homeTab);

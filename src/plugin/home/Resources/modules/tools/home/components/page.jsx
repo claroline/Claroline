@@ -17,7 +17,6 @@ const HomePage = props =>
     }
     title={props.title}
     subtitle={props.subtitle}
-    showTitle={get(props.currentTab, 'display.showTitle')}
     poster={props.poster || get(props.currentTab, 'poster')}
     /*primaryAction="add"*/
     actions={props.currentTab ? [
@@ -37,8 +36,6 @@ const HomePage = props =>
   </ToolPage>
 
 HomePage.propTypes = {
-  showSubMenu: T.bool,
-  showHidden: T.bool,
   path: T.string,
   breadcrumb: T.array,
   title: T.string.isRequired,

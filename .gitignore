@@ -17,7 +17,6 @@ public/packages
 public/themes/*
 !public/themes/.gitkeep
 .env
-docker-compose.override.yml
 installed
 .php-cs-fixer.cache
 .phpunit.result.cache

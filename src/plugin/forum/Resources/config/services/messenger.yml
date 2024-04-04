@@ -2,7 +2,7 @@ services:
     Claroline\ForumBundle\Messenger\NotifyUsersOnMessageCreatedHandler:
         tags: [ messenger.message_handler ]
         arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

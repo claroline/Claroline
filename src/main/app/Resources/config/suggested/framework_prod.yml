@@ -9,6 +9,7 @@ framework:
         fallback: en
     default_locale: "%locale%"
     session:
+        name: claroline
         handler_id: "claroline.session_handler.file" # Overridden by SessionConfigPass
         cookie_httponly: true
         cookie_secure: auto

@@ -25,14 +25,8 @@ const Workspace = {
     }),
     opening: T.shape({
       type: T.oneOf(['resource', 'tool']),
-      target: T.oneOfType([T.string, T.shape(ResourceNode.propTypes)])
-    }),
-    display: T.shape({
-      showProgression: T.bool,
-      showMenu: T.bool
-    }),
-    breadcrumb: T.shape({
-      displayed: T.bool
+      target: T.oneOfType([T.string, T.shape(ResourceNode.propTypes)]),
+      menu: T.oneOf(['open', 'close', null])
     }),
     registration: T.shape({
       validation: T.bool,
@@ -42,9 +36,6 @@ const Workspace = {
     restrictions: T.shape({
       hidden: T.bool,
       dates: T.arrayOf(T.string)
-    }),
-    notifications: T.shape({
-      enabled: T.bool
     }),
     evaluation: T.shape({
       estimatedDuration: T.number,

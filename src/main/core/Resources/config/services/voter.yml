@@ -32,9 +32,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
-    Claroline\CoreBundle\Security\Voter\ResourceCommentVoter:
-        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
-
     Claroline\CoreBundle\Security\Voter\ResourceVoter:
         tags: [security.voter]
         arguments:
@@ -42,7 +39,6 @@ services:
             - '@translator'
             - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
             - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
-            - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager'
 

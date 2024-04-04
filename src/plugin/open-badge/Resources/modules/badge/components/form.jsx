@@ -74,11 +74,11 @@ const BadgeFormComponent = (props) =>
         icon: 'fa fa-fw fa-desktop',
         title: trans('display_parameters'),
         fields: [
-          {
+          /*{
             name: 'color',
             label: trans('color'),
             type: 'color'
-          }, {
+          }, */{
             name: 'template',
             label: trans('badge_certificate', {}, 'template'),
             type: 'template',
