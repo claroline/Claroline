@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Manager\Resource\MaskManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceRestrictionsManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceRightsRepository;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
@@ -32,58 +31,32 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ResourceVoter implements VoterInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var MaskManager */
-    private $maskManager;
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-    /** @var ResourceManager */
-    private $resourceManager;
-    /** @var RightsManager */
-    private $rightsManager;
-    /** @var ResourceRestrictionsManager */
-    private $restrictionsManager;
+    private array $specialActions = ['move', 'create', 'copy'];
 
-    /** @var string[] */
-    private $specialActions = ['move', 'create', 'copy'];
-
-    /** @var ResourceRightsRepository */
-    private $repository;
+    private ResourceRightsRepository $repository;
 
     public function __construct(
-        ObjectManager $om,
-        TranslatorInterface $translator,
-        MaskManager $maskManager,
-        WorkspaceManager $workspaceManager,
-        ResourceManager $resourceManager,
-        RightsManager $rightsManager,
-        ResourceRestrictionsManager $restrictionsManager
+        private readonly ObjectManager $om,
+        private readonly TranslatorInterface $translator,
+        private readonly MaskManager $maskManager,
+        private readonly WorkspaceManager $workspaceManager,
+        private readonly RightsManager $rightsManager,
+        private readonly ResourceRestrictionsManager $restrictionsManager
     ) {
-        $this->om = $om;
-        $this->translator = $translator;
-        $this->maskManager = $maskManager;
-        $this->workspaceManager = $workspaceManager;
-        $this->resourceManager = $resourceManager;
-        $this->rightsManager = $rightsManager;
-        $this->restrictionsManager = $restrictionsManager;
-
         $this->repository = $om->getRepository(ResourceRights::class);
     }
 
-    public function vote(TokenInterface $token, $object, array $attributes)
+    public function vote(TokenInterface $token, $subject, array $attributes): int
     {
-        if ($object instanceof ObjectCollection) {
-            $object = $object->toArray()[0];
+        if ($subject instanceof ObjectCollection) {
+            $subject = $subject->toArray()[0];
         }
 
-        $classes = $this->supportsClass($object);
+        $classes = $this->supportsClass($subject);
 
         $supports = false;
         foreach ($classes as $class) {
-            if ($object instanceof $class) {
+            if ($subject instanceof $class) {
                 $supports = true;
                 break;
             }
@@ -93,24 +66,24 @@ class ResourceVoter implements VoterInterface
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
-        if ($this->isAdmin($object)) {
+        if ($this->isAdmin($subject)) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        if (!$this->validateAccesses($object)) {
+        if (!$this->validateAccesses($subject)) {
             return VoterInterface::ACCESS_DENIED;
         }
 
-        $object = $object instanceof AbstractResource ? $object->getResourceNode() : $object;
+        $subject = $subject instanceof AbstractResource ? $subject->getResourceNode() : $subject;
 
-        if ($object instanceof ResourceCollection) {
+        if ($subject instanceof ResourceCollection) {
             $errors = [];
             if ('create' === strtolower($attributes[0])) {
-                if ($object->getResources()[0]) {
-                    foreach ($object->getResources() as $resource) {
+                if ($subject->getResources()[0]) {
+                    foreach ($subject->getResources() as $resource) {
                         $errors = array_merge(
                             $errors,
-                            $this->checkCreation($object->getAttribute('type'), $resource, $token)
+                            $this->checkCreation($subject->getAttribute('type'), $resource, $token)
                         );
                     }
                 } else {
@@ -119,23 +92,23 @@ class ResourceVoter implements VoterInterface
             } elseif ('move' === strtolower($attributes[0])) {
                 // this should not be done here (required by ResourceController::executeAction/ResourceController::executeCollectionAction)
                 // it directly forward the query string without knowing what there is inside
-                $parent = $object->getAttribute('parent');
+                $parent = $subject->getAttribute('parent');
                 if (is_string($parent)) {
                     $parent = $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $parent]);
                 }
 
-                $errors = array_merge($errors, $this->checkMove($parent, $object->getResources(), $token));
+                $errors = array_merge($errors, $this->checkMove($parent, $subject->getResources(), $token));
             } elseif ('copy' === strtolower($attributes[0])) {
-                $parent = $object->getAttribute('parent');
+                $parent = $subject->getAttribute('parent');
                 if (is_string($parent)) {
                     $parent = $this->om->getRepository(ResourceNode::class)->findOneBy(['uuid' => $parent]);
                 }
 
-                $errors = array_merge($errors, $this->checkCopy($parent, $object->getResources(), $token));
+                $errors = array_merge($errors, $this->checkCopy($parent, $subject->getResources(), $token));
             } else {
                 $errors = array_merge(
                     $errors,
-                    $this->checkAction(strtolower($attributes[0]), $object->getResources(), $token)
+                    $this->checkAction(strtolower($attributes[0]), $subject->getResources(), $token)
                 );
             }
 
@@ -144,17 +117,17 @@ class ResourceVoter implements VoterInterface
             }
 
             $errors = array_unique($errors);
-            $object->setErrors($errors);
+            $subject->setErrors($errors);
 
             return VoterInterface::ACCESS_DENIED;
-        } elseif ($object instanceof ResourceNode) {
+        } elseif ($subject instanceof ResourceNode) {
             if (in_array($attributes[0], $this->specialActions)) {
                 throw new \Exception('A ResourceCollection class must be used for this action.');
             }
 
-            $errors = $this->checkAction($attributes[0], [$object], $token);
+            $errors = $this->checkAction($attributes[0], [$subject], $token);
 
-            return 0 === count($errors) && $object->isActive() ?
+            return 0 === count($errors) && $subject->isActive() ?
                 VoterInterface::ACCESS_GRANTED :
                 VoterInterface::ACCESS_DENIED;
         }
@@ -162,7 +135,7 @@ class ResourceVoter implements VoterInterface
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    private function supportsClass($class)
+    private function supportsClass($class): array
     {
         return [
             AbstractResource::class,
@@ -245,13 +218,13 @@ class ResourceVoter implements VoterInterface
                     $grant = $decoder ? $mask & $decoder->getValue() : 0;
 
                     if ($decoder && 0 === $grant) {
-                        $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
+                        $errors[] = $this->getRoleActionDeniedMessage($action, $node);
                     }
                 } else {
-                    $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
+                    $errors[] = $this->getRoleActionDeniedMessage($action, $node);
                 }
             } else {
-                $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
+                $errors[] = $this->getRoleActionDeniedMessage($action, $node);
             }
         }
 
@@ -280,19 +253,10 @@ class ResourceVoter implements VoterInterface
         $rightsCreation = $this->repository->findCreationRights($token->getRoleNames(), $node);
 
         if (!$this->canCreate($rightsCreation, $type)) {
-            $errors[] = $this->translator
-                ->trans(
-                    'resource_creation_wrong_type',
-                    [
-                        '%path%' => $node->getPathForDisplay(),
-                        '%type%' => $this->translator->trans(
-                            strtolower($type),
-                            [],
-                            'resource'
-                        ),
-                    ],
-                    'platform'
-                );
+            $errors[] = $this->translator->trans('resource_creation_wrong_type', [
+                '%path%' => $node->getName(),
+                '%type%' => $this->translator->trans(strtolower($type), [], 'resource'),
+            ], 'platform');
         }
 
         return $errors;
@@ -316,9 +280,7 @@ class ResourceVoter implements VoterInterface
         $errors = array_merge($errors, $this->checkCopy($parent, $nodes, $token));
 
         // and finally I need to know if I can delete
-        $errors = array_merge($errors, $this->checkAction('DELETE', $nodes, $token));
-
-        return $errors;
+        return array_merge($errors, $this->checkAction('DELETE', $nodes, $token));
     }
 
     /**
@@ -338,22 +300,15 @@ class ResourceVoter implements VoterInterface
         }
 
         // then we need to know if we can copy
-        $errors = array_merge($errors, $this->checkAction('COPY', $nodes, $token));
-
-        return $errors;
+        return array_merge($errors, $this->checkAction('COPY', $nodes, $token));
     }
 
-    private function getRoleActionDeniedMessage($action, $path): string
+    private function getRoleActionDeniedMessage(string $action, ResourceNode $resourceNode): string
     {
-        return $this->translator
-            ->trans(
-                'resource_action_denied_message',
-                [
-                    '%path%' => $path,
-                    '%action%' => $action,
-                ],
-                'platform'
-            );
+        return $this->translator->trans('resource_action_denied_message', [
+            '%path%' => $resourceNode->getName(),
+            '%action%' => $action,
+        ], 'platform');
     }
 
     private function validateAccesses($object): bool
@@ -366,8 +321,7 @@ class ResourceVoter implements VoterInterface
 
         /** @var ResourceNode $node */
         foreach ($nodes as $node) {
-            if (!$this->restrictionsManager->isUnlocked($node)
-                || !$this->restrictionsManager->isIpAuthorized($node)) {
+            if (!$this->restrictionsManager->isUnlocked($node)) {
                 return false;
             }
         }
@@ -375,7 +329,7 @@ class ResourceVoter implements VoterInterface
         return true;
     }
 
-    protected function isAdmin($object): bool
+    private function isAdmin($object): bool
     {
         if ($object instanceof ResourceNode) {
             $nodes = [$object];

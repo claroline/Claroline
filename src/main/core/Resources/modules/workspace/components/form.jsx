@@ -112,7 +112,7 @@ const WorkspaceFormComponent = (props) =>
             name: 'thumbnail',
             type: 'image',
             label: trans('thumbnail')
-          }, {
+          }, /*{
             name: 'display.showProgression',
             type: 'boolean',
             label: trans('showProgression'),
@@ -143,7 +143,7 @@ const WorkspaceFormComponent = (props) =>
                 }
               }
             ]
-          }, {
+          }, */{
             name: 'restrictions.hidden',
             type: 'boolean',
             label: trans('restrict_hidden'),

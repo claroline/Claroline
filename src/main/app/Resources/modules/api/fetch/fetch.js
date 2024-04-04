@@ -164,8 +164,6 @@ function getResponseData(response) {
  *
  * @param {object}   apiRequest - the request to send (@see `ApiRequest` from '#/main/app/api/prop-types" for the expected format).
  * @param {function} dispatch   - the redux action dispatcher
- *
- * @todo integrates makeCancelable by default
  */
 function apiFetch(apiRequest, dispatch) {
   // add default parameters
@@ -186,7 +184,7 @@ function apiFetch(apiRequest, dispatch) {
       response =>  handleResponse(dispatch, response, requestParameters)
     )
     .then(
-      responseData  => handleResponseSuccess(dispatch, responseData, requestParameters.success),
+      responseData => handleResponseSuccess(dispatch, responseData, requestParameters.success),
       responseError => handleResponseError(dispatch, responseError, requestParameters, requestParameters.error)
     )
 }

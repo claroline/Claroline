@@ -13,8 +13,8 @@ import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContextEditor} from '#/main/app/context/editor/containers/main'
 import {ContextProfile} from '#/main/app/context/profile/containers/main'
 import {getTool} from '#/main/core/tool/utils'
-import {Await} from '#/main/app/components/await'
 import {hasPermission} from '#/main/app/security'
+import {AppLoader} from '#/main/app/layout/components/loader'
 
 const ContextMain = (props) => {
   // fetch current context data
@@ -46,16 +46,20 @@ const ContextMain = (props) => {
         })))
       ))
 
-      appPromise.promise.then(loadedApps => {
-        setToolApps(loadedApps.reduce((acc, current) => Object.assign(acc, {
-          [current.name]: current.app
-        }), {}))
-      })
+      appPromise.promise
+        .then(loadedApps => {
+          setToolApps(loadedApps.reduce((acc, current) => Object.assign(acc, {
+            [current.name]: current.app
+          }), {}))
+        })
+        .then(
+          () => appPromise = null,
+          () => appPromise = null
+        )
     }
 
     return () => {
       if (appPromise) {
-        console.log('tool apps loading cancelled')
         appPromise.cancel()
       }
     }
@@ -104,7 +108,7 @@ const ContextMain = (props) => {
       {createElement(props.menu)}
 
       <div className="app-body" role="presentation">
-        {/*<div className="app-loader" />*/}
+        <AppLoader />
 
         <Routes
           path={props.path}

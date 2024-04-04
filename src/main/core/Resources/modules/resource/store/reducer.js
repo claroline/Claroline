@@ -1,5 +1,4 @@
 import merge from 'lodash/merge'
-import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 
@@ -11,10 +10,7 @@ import {
   RESOURCE_UPDATE_NODE,
   RESOURCE_EVALUATION_UPDATE,
   RESOURCE_RESTRICTIONS_DISMISS,
-  RESOURCE_NOT_FOUND,
-  RESOURCE_COMMENT_ADD,
-  RESOURCE_COMMENT_UPDATE,
-  RESOURCE_COMMENT_REMOVE
+  RESOURCE_NOT_FOUND
 } from '#/main/core/resource/store/actions'
 
 const reducer = combineReducers({
@@ -54,37 +50,7 @@ const reducer = combineReducers({
      * @param {object} state  - the current node data.
      * @param {object} action - the action. New node data is stored in `resourceNode`
      */
-    [RESOURCE_UPDATE_NODE]: (state, action) => merge({}, state, action.resourceNode),
-    [RESOURCE_COMMENT_ADD]: (state, action) => {
-      const newState = cloneDeep(state)
-      const comment = newState['comments'].find(c => c.id === action.comment.id)
-
-      if (!comment) {
-        newState['comments'].unshift(action.comment)
-      }
-
-      return newState
-    },
-    [RESOURCE_COMMENT_UPDATE]: (state, action) => {
-      const newState = cloneDeep(state)
-      const index = newState['comments'].findIndex(c => c.id === action.comment.id)
-
-      if (index > -1) {
-        newState['comments'][index] = action.comment
-      }
-
-      return newState
-    },
-    [RESOURCE_COMMENT_REMOVE]: (state, action) => {
-      const newState = cloneDeep(state)
-      const index = newState['comments'].findIndex(c => c.id === action.commentId)
-
-      if (index > -1) {
-        newState['comments'].splice(index, 1)
-      }
-
-      return newState
-    }
+    [RESOURCE_UPDATE_NODE]: (state, action) => merge({}, state, action.resourceNode)
   }),
 
   /**

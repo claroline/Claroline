@@ -22,11 +22,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UrlController extends AbstractCrudController
 {
-    private $placeholderManager;
-
-    public function __construct(PlaceholderManager $placeholderManager)
-    {
-        $this->placeholderManager = $placeholderManager;
+    public function __construct(
+        private readonly PlaceholderManager $placeholderManager
+    ) {
     }
 
     public function getName(): string

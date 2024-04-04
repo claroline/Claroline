@@ -89,7 +89,7 @@ EvaluationDetails.propTypes = {
   scoreMax: T.number,
   successScore: T.number,
   evaluation: T.shape({
-    id: T.number.isRequired,
+    id: T.string.isRequired,
     status: T.string.isRequired,
     score: T.number,
     scoreMax: T.number,

@@ -31,7 +31,7 @@ const PageNav = (props) =>
     }
 
     {!props.embedded &&
-      <AppBrand />
+      <AppBrand className="page-brand" />
     }
 
     {props.children}

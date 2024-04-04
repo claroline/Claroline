@@ -90,7 +90,7 @@
 
     .btn-drop-nav, .btn-revision-nav {
         flex: 0;
-        font-size: $carousel-control-font-size;
+        font-size: $font-size-lg;
         padding: 0;
         border: none;
     }
@@ -98,7 +98,7 @@
     // Scale up controls for tablets and up
     @media screen and (min-width: map-get($grid-breakpoints, 'sm')) {
         .btn-drop-nav, .btn-revision-nav {
-            font-size: ($carousel-control-font-size * 1.5);
+            font-size: ($font-size-lg * 1.5);
         }
     }
 }

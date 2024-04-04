@@ -20,12 +20,11 @@ class PlatformDefaults implements ParameterProviderInterface
     public const REGISTRATION_MAIL_VALIDATION_PARTIAL = 1;
     public const REGISTRATION_MAIL_VALIDATION_FULL = 2;
 
-    public function getDefaultParameters()
+    public function getDefaultParameters(): array
     {
         return [
             'meta' => [],
             'home' => [
-                'show_sub_menu' => false,
                 'type' => 'none',
                 'data' => null,
                 'menu' => null,
@@ -34,12 +33,9 @@ class PlatformDefaults implements ParameterProviderInterface
                 'roles_confidential' => [],
                 'roles_locked' => [],
                 'roles_edition' => [],
-                'show_email' => [PlatformRoles::USER],
+                'show_email' => [PlatformRoles::ADMIN],
             ],
             'country' => '-',
-            'logs' => [
-                'enabled' => true,
-            ],
             'community' => [ // to move in community parameters
                 'username' => true,
             ],
@@ -105,21 +101,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'enabled' => false,
                 'version' => 3,
             ],
-            'auto_enable_notifications' => [
-                'resource-create' => ['visible'],
-                'resource-publish' => ['visible'],
-                'role-change_right' => ['visible'],
-                'role-subscribe' => ['visible'],
-                'badge-award' => ['visible'],
-                'resource-text' => ['visible'],
-                'forum' => ['visible'],
-                'portfolio' => ['visible'],
-                'icap_blog' => ['visible'],
-                'icap_dropzone' => ['visible'],
-                'icap_wiki' => ['visible'],
-                'innova_path' => ['visible'],
-                'icap_lesson' => ['visible'],
-            ],
             'locales' => [ // to move in `intl` block
                 'default' => 'fr',
                 'available' => ['fr', 'en'],
@@ -128,24 +109,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'timezone' => null, // default to UTC
                 'dateFormat' => 'd/m/Y',
                 'timeFormat' => 'H:i',
-            ],
-            'maintenance' => [
-                'enable' => false,
-                'message' => null,
-            ],
-            'header' => [
-                'search' => [
-                    'order' => 1,
-                ],
-                'history' => [
-                    'order' => 2,
-                ],
-                'favourites' => [
-                    'order' => 3,
-                ],
-                'notifications' => [
-                    'order' => 4,
-                ],
             ],
             'search' => [
                 'limit' => 5,
@@ -165,7 +128,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'menu' => null,
             ],
             'show_about_button' => true,
-            'notifications_refresh_delay' => 0, // in ms
             'javascripts' => [],
             'restrictions' => [
                 'users' => null,

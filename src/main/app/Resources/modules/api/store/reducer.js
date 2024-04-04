@@ -1,11 +1,11 @@
-import {makeReducer} from '#/main/app/store/reducer'
+import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
 import {
   REQUEST_SEND,
   RESPONSE_RECEIVE
 } from '#/main/app/api/store/actions'
 
-const reducer = {
+const reducer = combineReducers({
   /**
    * Reduces the current number of pending requests.
    */
@@ -17,7 +17,13 @@ const reducer = {
      *
      * @return {number}
      */
-    [REQUEST_SEND]: (state) => state + 1,
+    [REQUEST_SEND]: (state, action) => {
+      console.log(action.apiRequest)
+      if (!action.apiRequest.silent) {
+        return state + 1
+      }
+      return state
+    },
 
     /**
      * Decrements the number of pending requests when a new response is received.
@@ -26,9 +32,14 @@ const reducer = {
      *
      * @return {number}
      */
-    [RESPONSE_RECEIVE]: (state) => state - 1
+    [RESPONSE_RECEIVE]: (state, action) => {
+      if (!action.apiRequest.silent) {
+        return state - 1
+      }
+      return state
+    }
   })
-}
+})
 
 export {
   reducer

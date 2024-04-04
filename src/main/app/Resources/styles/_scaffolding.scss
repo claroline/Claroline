@@ -30,35 +30,41 @@
     overflow-y: auto;
 }
 
-.app-brand {
-    height: $brand-size;
-}
-
 .app-loader {
-    position: fixed;
-    overflow: hidden;
-    top: 0;
-    left: 72px;
     width: 100%;
-    z-index: $zindex-toast + 1;
-    height: 5px;
-    background: fade-out($primary, .6);
+    height: $loader-height;
+    flex-shrink: 0;
 
-    &:before {
+    background: linear-gradient(90deg, $loader-primary, $loader-secondary, $loader-primary, $loader-secondary, $loader-primary);
+    background-size: 500%;
+    transition: opacity .3s ease;
+    animation: loader-wave 15s linear infinite;
+
+    opacity: 0;
+    &.show {
+        opacity: 1;
+    }
+
+    &:after {
         content: " ";
         position: absolute;
-        left: 0;
-        top: 0;
-        background: $primary;
-        width: 50%;
-        height: 5px;
+        inset: 0;
+        background: linear-gradient(90deg, $loader-primary, $loader-secondary, $loader-primary, $loader-secondary, $loader-primary);
+        animation: loader-wave 15s linear infinite;
+        background-size: 500%;
+        filter: blur($loader-height*2);
     }
 }
 
-.app-menu + .app-body {
-    .app-loader {
-        left: $toolbar-size + 72px;
-    }
+@keyframes loader-wave {
+    // only starts animation at the end of animation-time to create a delay between each "wave"
+    // animation ends early to create a delay between each "wave"
+    0%  { background-position: 0 0; }
+    0% { background-position: 500% 0; }
+}
+
+.app-loader + .page {
+    margin-top: -$loader-height;
 }
 
 .context-icon {

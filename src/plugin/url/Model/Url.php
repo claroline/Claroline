@@ -8,36 +8,30 @@ trait Url
 {
     /**
      * @ORM\Column(name="url", type="text")
-     *
-     * @var string
      */
-    private $url;
+    private ?string $url;
 
     /**
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    private $mode = 'redirect';
+    private ?String $mode = 'redirect';
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     *
-     * @var float
      */
-    private $ratio = 56.25;
+    private ?float $ratio = 56.25;
 
-    public function setUrl(string $url)
+    public function setUrl(string $url): void
     {
         $this->url = $url;
     }
 
-    public function getUrl(): string
+    public function getUrl(): ?string
     {
         return $this->url;
     }
 
-    public function setMode(string $mode)
+    public function setMode(string $mode): void
     {
         $this->mode = $mode;
     }
@@ -47,7 +41,7 @@ trait Url
         return $this->mode;
     }
 
-    public function setRatio(?float $ratio = null)
+    public function setRatio(?float $ratio = null): void
     {
         $this->ratio = $ratio;
     }

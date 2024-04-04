@@ -25,7 +25,7 @@ const EvaluationTool = (props) => {
     }))))
 
     return evaluationPages.cancel
-  }, [props.contextType])
+  }, [props.contextType, JSON.stringify(props.permissions)])
 
   return (
     <Tool

@@ -15,11 +15,6 @@ export const RESOURCE_SET_LOADED           = 'RESOURCE_SET_LOADED'
 export const RESOURCE_RESTRICTIONS_DISMISS = 'RESOURCE_RESTRICTIONS_DISMISS'
 export const RESOURCE_NOT_FOUND            = 'RESOURCE_NOT_FOUND'
 
-// this ones should not be here
-export const RESOURCE_COMMENT_ADD          = 'RESOURCE_COMMENT_ADD'
-export const RESOURCE_COMMENT_UPDATE       = 'RESOURCE_COMMENT_UPDATE'
-export const RESOURCE_COMMENT_REMOVE       = 'RESOURCE_COMMENT_REMOVE'
-
 // action creators
 export const actions = {}
 
@@ -112,8 +107,3 @@ actions.checkAccessCode = (resourceNode, code) => (dispatch) => dispatch({
     success: () => dispatch(actions.setResourceLoaded(false)) // force reload the resource
   }
 })
-
-// this ones should not be here
-actions.addResourceComment = makeActionCreator(RESOURCE_COMMENT_ADD, 'comment')
-actions.updateResourceComment = makeActionCreator(RESOURCE_COMMENT_UPDATE, 'comment')
-actions.removeResourceComment = makeActionCreator(RESOURCE_COMMENT_REMOVE, 'commentId')

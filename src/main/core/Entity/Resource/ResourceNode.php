@@ -91,13 +91,6 @@ class ResourceNode
     private $resourceType;
 
     /**
-     * Display resource title when the resource is rendered.
-     *
-     * @ORM\Column(type="boolean", options={"default"=1})
-     */
-    private $showTitle = true;
-
-    /**
      * Display resource icon/evaluation when the resource is rendered.
      *
      * @var bool
@@ -190,11 +183,6 @@ class ResourceNode
 
     /**
      * @var string
-     */
-    private $pathForCreationLog = '';
-
-    /**
-     * @var string
      *
      * @ORM\Column(nullable=true)
      */
@@ -227,28 +215,6 @@ class ResourceNode
     protected $viewsCount = 0;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="comments_activated", type="boolean")
-     *
-     * @todo : remove me. Should not be here
-     */
-    protected $commentsActivated = false;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceComment",
-     *     mappedBy="resourceNode"
-     * )
-     * @ORM\OrderBy({"creationDate" = "DESC"})
-     *
-     * @todo : remove me. this relation should not be bi-directional
-     *
-     * @var ResourceComment[]|ArrayCollection
-     */
-    protected $comments;
-
-    /**
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(length=128, unique=true)
      *
@@ -269,7 +235,6 @@ class ResourceNode
 
         $this->rights = new ArrayCollection();
         $this->children = new ArrayCollection();
-        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -435,23 +400,6 @@ class ResourceNode
     }
 
     /**
-     * Returns the path cleaned from its ids.
-     * Eg.: "Root/sub_dir/file.txt".
-     *
-     * @return string
-     */
-    public function getPathForDisplay()
-    {
-        $pathForDisplay = preg_replace('/%([^\/]+)\//', ' / ', $this->path);
-
-        if (null !== $pathForDisplay && strlen($pathForDisplay) > 0) {
-            $pathForDisplay = substr_replace($pathForDisplay, '', -3);
-        }
-
-        return $pathForDisplay;
-    }
-
-    /**
      * Sets the resource name.
      *
      * @param string $name
@@ -546,43 +494,16 @@ class ResourceNode
     }
 
     /**
-     * This is required for logging the resource path at the creation.
-     * Do not use this function otherwise.
-     *
-     * @param string $path
-     */
-    public function setPathForCreationLog($path)
-    {
-        $this->pathForCreationLog = $path;
-    }
-
-    /**
-     * This is required for logging the resource path at the creation.
-     * Do not use this function otherwise.
-     *
-     * @return string
-     */
-    public function getPathForCreationLog()
-    {
-        return $this->pathForCreationLog;
-    }
-
-    /**
      * Add a child resource node.
      */
-    public function addChild(self $resourceNode)
+    public function addChild(self $resourceNode): void
     {
         if (!$this->children->contains($resourceNode)) {
             $this->children->add($resourceNode);
         }
     }
 
-    /**
-     * Sets the resource index.
-     *
-     * @param int $index
-     */
-    public function setIndex($index)
+    public function setIndex(int $index): void
     {
         $this->index = $index;
     }
@@ -635,19 +556,6 @@ class ResourceNode
     public function setActive($active)
     {
         $this->active = $active;
-    }
-
-    /**
-     * toString method.
-     * used to display the no path in forms.
-     *
-     * @return string
-     *
-     * @deprecated
-     */
-    public function __toString()
-    {
-        return $this->getPathForDisplay();
     }
 
     public function setFullscreen($fullscreen)
@@ -802,60 +710,6 @@ class ResourceNode
         return $ancestors;
     }
 
-    /**
-     * @return bool
-     */
-    public function isCommentsActivated()
-    {
-        return $this->commentsActivated;
-    }
-
-    /**
-     * @param bool $commentsActivated
-     */
-    public function setCommentsActivated($commentsActivated)
-    {
-        $this->commentsActivated = $commentsActivated;
-    }
-
-    /**
-     * Get comments.
-     *
-     * @return ResourceComment[]|ArrayCollection
-     */
-    public function getComments()
-    {
-        return $this->comments;
-    }
-
-    /**
-     * Add comment.
-     */
-    public function addComment(ResourceComment $comment)
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-        }
-    }
-
-    /**
-     * Remove comment.
-     */
-    public function removeComment(ResourceComment $comment)
-    {
-        if ($this->comments->contains($comment)) {
-            $this->comments->removeElement($comment);
-        }
-    }
-
-    /**
-     * Remove all comments.
-     */
-    public function emptyComments()
-    {
-        $this->comments->clear();
-    }
-
     public function getSlug()
     {
         return $this->slug;
@@ -866,13 +720,4 @@ class ResourceNode
         $this->slug = $slug;
     }
 
-    public function getShowTitle(): bool
-    {
-        return $this->showTitle;
-    }
-
-    public function setShowTitle(bool $showTitle)
-    {
-        $this->showTitle = $showTitle;
-    }
 }

@@ -17,6 +17,7 @@ if ('development' === env()) {
 
 import {createStore} from '#/main/app/store'
 import {Main} from '#/main/app/components/main'
+import {selectors as apiSelectors, reducer as apiReducer} from '#/main/app/api/store'
 import {selectors as configSelectors, reducer as configReducer} from '#/main/app/config/store'
 import {selectors as securitySelectors, reducer as securityReducer} from '#/main/app/security/store'
 
@@ -41,10 +42,11 @@ function mount(
   customMiddlewares= []
 ) {
   // create store
-  const store = createStore(rootComponent.displayName, merge({}, reducers, {
+  const store = createStore(rootComponent.displayName, merge({
+    [apiSelectors.STORE_NAME]: apiReducer,
     [configSelectors.STORE_NAME]: configReducer,
     [securitySelectors.STORE_NAME]: securityReducer
-  }), initialData, customMiddlewares)
+  }, reducers), initialData, customMiddlewares)
 
   const appRoot = createElement(
     Main, {

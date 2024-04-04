@@ -4,7 +4,7 @@ import sum from 'lodash/sum'
 import times from 'lodash/times'
 import isEmpty from 'lodash/isEmpty'
 
-import {Heading} from '#/main/core/layout/components/heading'
+import {Heading} from '#/main/app/components/heading'
 import {WidgetContent} from '#/main/core/widget/content/containers/content'
 import {
   WidgetContainer as WidgetContainerTypes,

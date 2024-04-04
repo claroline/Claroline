@@ -18,7 +18,7 @@ actions.processRequest = makeActionCreator(REQUEST_SEND, 'apiRequest')
 actions.sendRequest = (apiRequest) => (dispatch) => {
   if (!apiRequest.silent) {
     // display a user alert
-    const currentAction = apiRequest.type || constants.HTTP_ACTIONS[apiRequest.request.method]
+    /*const currentAction = apiRequest.type || constants.HTTP_ACTIONS[apiRequest.request.method]
     const customMessages = apiRequest.messages[alertConstants.ALERT_STATUS_PENDING]
 
     dispatch(alertActions.addAlert(
@@ -32,7 +32,7 @@ actions.sendRequest = (apiRequest) => (dispatch) => {
       customMessages && customMessages.title,
       // message
       customMessages && customMessages.message
-    ))
+    ))*/
   }
 
   return dispatch(actions.processRequest(apiRequest))
@@ -43,9 +43,9 @@ actions.processResponse = makeActionCreator(RESPONSE_RECEIVE, 'apiRequest', 'sta
 actions.receiveResponse = (apiRequest, status, statusText) => dispatch => {
   if (!apiRequest.silent) {
     // removes pending alert
-    dispatch(alertActions.removeAlert(
+    /*dispatch(alertActions.removeAlert(
       apiRequest.id + alertConstants.ALERT_STATUS_PENDING
-    ))
+    ))*/
   }
 
   // add new status alert

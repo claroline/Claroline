@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Workspace;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -96,18 +97,12 @@ class WorkspaceSerializer
             'contactEmail' => $workspace->getContactEmail(),
             'tags' => $this->serializeTags($workspace),
             'opening' => $this->getOpening($workspace),
-            'display' => $this->getDisplay($workspace),
-            'breadcrumb' => $this->getBreadcrumb($workspace),
             'restrictions' => [
                 'hidden' => $workspace->isHidden(),
                 'dates' => DateRangeNormalizer::normalize($workspace->getAccessibleFrom(), $workspace->getAccessibleUntil()),
                 'code' => $workspace->getAccessCode(),
-                'allowedIps' => $workspace->getAllowedIps(),
             ],
             'registration' => $this->getRegistration($workspace, $options),
-            'notifications' => [
-                'enabled' => $workspace->hasNotifications(),
-            ],
             'evaluation' => [
                 'successCondition' => $workspace->getSuccessCondition(),
                 'estimatedDuration' => $workspace->getEstimatedDuration(),
@@ -187,26 +182,6 @@ class WorkspaceSerializer
         return $openingData;
     }
 
-    private function getDisplay(Workspace $workspace): array
-    {
-        $options = $workspace->getOptions()->getDetails();
-
-        return [
-            'color' => !empty($options['background_color']) ? $options['background_color'] : null,
-            'showProgression' => $workspace->getShowProgression(),
-        ];
-    }
-
-    private function getBreadcrumb(Workspace $workspace): array
-    {
-        $options = $workspace->getOptions();
-
-        return [
-            'displayed' => $options->getShowBreadcrumb(),
-            'items' => $options->getBreadcrumbItems(),
-        ];
-    }
-
     private function getRegistration(Workspace $workspace, array $options): array
     {
         $defaultRole = null;
@@ -234,17 +209,6 @@ class WorkspaceSerializer
         }
 
         return $serialized;
-    }
-
-    private function serializeTags(Workspace $workspace)
-    {
-        $event = new GenericDataEvent([
-            'class' => Workspace::class,
-            'ids' => [$workspace->getUuid()],
-        ]);
-        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
-
-        return $event->getResponse() ?? [];
     }
 
     /**
@@ -295,8 +259,6 @@ class WorkspaceSerializer
             }
         }
 
-        $this->sipe('notifications.enabled', 'setNotifications', $data, $workspace);
-
         if (isset($data['registration'])) {
             $this->sipe('registration.validation', 'setRegistrationValidation', $data, $workspace);
             $this->sipe('registration.selfRegistration', 'setSelfRegistration', $data, $workspace);
@@ -313,7 +275,6 @@ class WorkspaceSerializer
         if (!empty($data['restrictions'])) {
             $this->sipe('restrictions.hidden', 'setHidden', $data, $workspace);
             $this->sipe('restrictions.code', 'setAccessCode', $data, $workspace);
-            $this->sipe('restrictions.allowedIps', 'setAllowedIps', $data, $workspace);
 
             if (isset($data['restrictions']['dates'])) {
                 $dateRange = DateRangeNormalizer::denormalize($data['restrictions']['dates']);
@@ -325,15 +286,10 @@ class WorkspaceSerializer
 
         $workspaceOptions = $this->workspaceManager->getWorkspaceOptions($workspace);
 
-        if (isset($data['display']) || isset($data['opening'])) {
+        if (isset($data['opening'])) {
             $details = $workspaceOptions->getDetails();
             if (empty($details)) {
                 $details = [];
-            }
-
-            if (isset($data['display'])) {
-                $this->sipe('display.showProgression', 'setShowProgression', $data, $workspace);
-                $details['background_color'] = !empty($data['display']['color']) ? $data['display']['color'] : null;
             }
 
             if (isset($data['opening'])) {
@@ -354,16 +310,6 @@ class WorkspaceSerializer
                 }
             }
             $workspaceOptions->setDetails($details);
-        }
-
-        if (isset($data['breadcrumb'])) {
-            if (isset($data['breadcrumb']['displayed'])) {
-                $workspaceOptions->setShowBreadcrumb($data['breadcrumb']['displayed']);
-            }
-
-            if (isset($data['breadcrumb']['items'])) {
-                $workspaceOptions->setBreadcrumbItems($data['breadcrumb']['items']);
-            }
         }
 
         if (isset($data['evaluation'])) {
@@ -389,7 +335,41 @@ class WorkspaceSerializer
             $workspace->setOrganizations(array_values($organizations));
         }
 
+        if (isset($data['tags'])) {
+            $this->deserializeTags($workspace, $data['tags'], $options);
+        }
+
         return $workspace;
+    }
+
+    private function serializeTags(Workspace $workspace): array
+    {
+        $event = new GenericDataEvent([
+            'class' => Workspace::class,
+            'ids' => [$workspace->getUuid()],
+        ]);
+        $this->eventDispatcher->dispatch($event, 'claroline_retrieve_used_tags_by_class_and_ids');
+
+        return $event->getResponse() ?? [];
+    }
+
+    private function deserializeTags(Workspace $workspace, array $tags = [], array $options = []): void
+    {
+        if (in_array(Options::PERSIST_TAG, $options)) {
+            $event = new GenericDataEvent([
+                'tags' => $tags,
+                'data' => [
+                    [
+                        'class' => Workspace::class,
+                        'id' => $workspace->getUuid(),
+                        'name' => $workspace->getName(),
+                    ],
+                ],
+                'replace' => true,
+            ]);
+
+            $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
+        }
     }
 
     private function waitingForRegistration(Workspace $workspace): bool

@@ -132,11 +132,6 @@ class ResourceManager implements LoggerAwareInterface
         }
         $this->om->persist($node);
         $this->om->persist($resource);
-        $parentPath = '';
-        if ($parent) {
-            $parentPath .= $parent->getPathForDisplay().' / ';
-        }
-        $node->setPathForCreationLog($parentPath.$node->getName());
         $this->om->endFlushSuite();
 
         return $resource;

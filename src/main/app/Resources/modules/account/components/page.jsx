@@ -6,7 +6,6 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {PageFull} from '#/main/app/page/components/full'
-import {showBreadcrumb} from '#/main/app/layout/utils'
 
 import {User as UserTypes} from '#/main/community/prop-types'
 import {UserAvatar} from '#/main/app/user/components/avatar'
@@ -15,7 +14,6 @@ const AccountPage = (props) =>
   <PageFull
     {...omit(props, 'currentUser')}
     className="user-page"
-    /*showBreadcrumb={showBreadcrumb()}*/
     path={[
       {
         type: LINK_BUTTON,

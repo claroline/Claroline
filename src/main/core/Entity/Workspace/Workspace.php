@@ -156,13 +156,6 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     private $personal = false;
 
     /**
-     * @ORM\Column(name="disabled_notifications", type="boolean")
-     *
-     * @var bool
-     */
-    private $disabledNotifications = false;
-
-    /**
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions",
      *     inversedBy="workspace",
@@ -174,15 +167,6 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
      * @var WorkspaceOptions
      */
     private $options;
-
-    /**
-     * Display user progression when the workspace is rendered.
-     *
-     * @var bool
-     *
-     * @ORM\Column(type="boolean")
-     */
-    private $showProgression = true;
 
     /**
      * @var string
@@ -263,7 +247,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
         return $this->slug;
     }
 
-    public function setSlug(string $slug)
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
@@ -283,7 +267,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     /**
      * @deprecated
      */
-    public function addRole(Role $role)
+    public function addRole(Role $role): void
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
@@ -293,7 +277,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     /**
      * @deprecated
      */
-    public function removeRole(Role $role)
+    public function removeRole(Role $role): void
     {
         $this->roles->removeElement($role);
     }
@@ -301,7 +285,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     /**
      * @deprecated
      */
-    public function setSelfRegistration($selfRegistration)
+    public function setSelfRegistration($selfRegistration): void
     {
         $this->selfRegistration = $selfRegistration;
     }
@@ -309,7 +293,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     /**
      * @deprecated
      */
-    public function getSelfRegistration()
+    public function getSelfRegistration(): bool
     {
         return $this->selfRegistration;
     }
@@ -317,7 +301,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     /**
      * @deprecated
      */
-    public function getRegistrationValidation()
+    public function getRegistrationValidation(): bool
     {
         return $this->registrationValidation;
     }
@@ -325,7 +309,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     /**
      * @deprecated
      */
-    public function setRegistrationValidation($registrationValidation)
+    public function setRegistrationValidation(bool $registrationValidation): void
     {
         $this->registrationValidation = $registrationValidation;
     }
@@ -333,7 +317,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     /**
      * @deprecated
      */
-    public function setSelfUnregistration($selfUnregistration)
+    public function setSelfUnregistration(bool $selfUnregistration): void
     {
         $this->selfUnregistration = $selfUnregistration;
     }
@@ -341,7 +325,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     /**
      * @deprecated
      */
-    public function getSelfUnregistration()
+    public function getSelfUnregistration(): bool
     {
         return $this->selfUnregistration;
     }
@@ -362,7 +346,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
         $this->maxTeams = $maxTeams;
     }
 
-    public function setPersonal(bool $personal)
+    public function setPersonal(bool $personal): void
     {
         $this->personal = $personal;
     }
@@ -372,15 +356,12 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
         return $this->personal;
     }
 
-    /**
-     * @return WorkspaceOptions
-     */
-    public function getOptions()
+    public function getOptions(): ?WorkspaceOptions
     {
         return $this->options;
     }
 
-    public function setOptions(WorkspaceOptions $options = null)
+    public function setOptions(WorkspaceOptions $options = null): void
     {
         $this->options = $options;
     }
@@ -407,7 +388,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
         return null;
     }
 
-    public function setModel(bool $model)
+    public function setModel(bool $model): void
     {
         $this->model = $model;
     }
@@ -417,20 +398,10 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
         return $this->model;
     }
 
-    public function hasNotifications(): bool
-    {
-        return !$this->disabledNotifications;
-    }
-
-    public function setNotifications(bool $notifications)
-    {
-        $this->disabledNotifications = !$notifications;
-    }
-
     /**
      * @deprecated
      */
-    public function setDefaultRole(Role $role = null)
+    public function setDefaultRole(Role $role = null): void
     {
         $this->defaultRole = $role;
     }
@@ -452,24 +423,14 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
         return $this->defaultRole;
     }
 
-    public function setWorkspaceModel(self $model)
+    public function setWorkspaceModel(self $model): void
     {
         $this->workspaceModel = $model;
     }
 
-    public function getWorkspaceModel()
+    public function getWorkspaceModel(): ?self
     {
         return $this->workspaceModel;
-    }
-
-    public function getShowProgression()
-    {
-        return $this->showProgression;
-    }
-
-    public function setShowProgression($showProgression)
-    {
-        $this->showProgression = $showProgression;
     }
 
     public function getContactEmail(): ?string
@@ -477,7 +438,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
         return $this->contactEmail;
     }
 
-    public function setContactEmail(string $email = null)
+    public function setContactEmail(string $email = null): void
     {
         $this->contactEmail = $email;
     }
@@ -487,7 +448,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
         return $this->successCondition;
     }
 
-    public function setSuccessCondition(?array $successCondition)
+    public function setSuccessCondition(?array $successCondition): void
     {
         $this->successCondition = $successCondition;
     }
@@ -521,7 +482,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
         return $this->estimatedDuration;
     }
 
-    public function setEstimatedDuration(int $estimatedDuration = null)
+    public function setEstimatedDuration(int $estimatedDuration = null): void
     {
         $this->estimatedDuration = $estimatedDuration;
     }

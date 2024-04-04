@@ -43,11 +43,6 @@ const EditorMain = (props) =>
               noEmpty: true,
               choices: constants.OPENING_TYPES
             }
-          }, {
-            name: 'commentsActivated',
-            label: trans('activate_comments'),
-            type: 'boolean',
-            displayed: -1 < props.mimeType.indexOf('video')
           }
         ]
       }

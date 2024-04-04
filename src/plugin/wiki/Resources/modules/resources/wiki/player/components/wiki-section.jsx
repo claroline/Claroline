@@ -14,7 +14,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
-import {Heading} from '#/main/core/layout/components/heading'
+import {Heading} from '#/main/app/components/heading'
 import {ContentHtml} from '#/main/app/content/components/html'
 
 import {Section as SectionTypes} from '#/plugin/wiki/resources/wiki/prop-types'

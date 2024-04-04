@@ -20,7 +20,7 @@ use Symfony\Component\Mailer\Transport\Transports;
 
 class MailingConfigPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $transport = new Definition();
         $transport->setClass(TransportInterface::class);

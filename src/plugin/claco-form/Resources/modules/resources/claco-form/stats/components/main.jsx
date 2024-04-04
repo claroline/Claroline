@@ -3,13 +3,13 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
-import {Heading} from '#/main/app/components/heading'
 import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 import {FormStats} from '#/main/app/content/form/stats/components/main'
+import {ContentTitle} from '#/main/app/content/components/title'
 
 const StatsMain = (props) =>
   <>
-    <Heading className="mt-3" level={2} title={trans('statistics')} />
+    <ContentTitle className="mt-3" level={2} title={trans('statistics')} />
 
     <ContentInfoBlocks
       className="my-4"

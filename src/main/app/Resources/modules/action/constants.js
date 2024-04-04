@@ -21,7 +21,7 @@ const ACTION_UPLOAD    = 'upload'
 const ACTION_DOWNLOAD  = 'download'
 const ACTION_PUBLISH   = 'publish'
 const ACTION_UNPUBLISH = 'unpublish'
-const ACTION_SCHEDULE = 'schedule'
+const ACTION_SCHEDULE  = 'schedule'
 
 const ACTIONS = {
   [ACTION_GENERIC]: {},

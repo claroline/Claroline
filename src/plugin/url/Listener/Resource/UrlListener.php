@@ -8,19 +8,15 @@ use HeVinci\UrlBundle\Entity\Url;
 
 class UrlListener
 {
-    /** @var SerializerProvider */
-    private $serializer;
-
     public function __construct(
-        SerializerProvider $serializer
+        private readonly SerializerProvider $serializer
     ) {
-        $this->serializer = $serializer;
     }
 
     /**
-     * Loads an URL resource.
+     * Loads a URL resource.
      */
-    public function onLoad(LoadResourceEvent $event)
+    public function onLoad(LoadResourceEvent $event): void
     {
         /** @var Url $url */
         $url = $event->getResource();

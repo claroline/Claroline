@@ -23,7 +23,7 @@ import {DataCard as DataCardTypes} from '#/main/app/data/prop-types'
 const StaticCardAction = props => {
   if (isEmpty(props.action) || props.action.disabled || (props.action.displayed !== undefined && !props.action.displayed)) {
     return (
-      <span className={props.className}>
+      <span className={props.className} role="presentation">
         {props.children}
       </span>
     )
@@ -112,14 +112,14 @@ const CardHeader = props => {
   }
 
   return (
-    <div className="data-card-header" style={!isEmpty(headerStyles) ? headerStyles : undefined}>
+    <div className="data-card-header" style={!isEmpty(headerStyles) ? headerStyles : undefined} role="presentation">
       {typeof props.icon === 'string' ?
-        <span className={props.icon} /> :
+        <span className={props.icon} aria-hidden={true} /> :
         props.icon
       }
 
       {0 !== props.flags.length &&
-        <div className="data-card-flags">
+        <div className="data-card-flags" role="presentation">
           {props.flags.map((flag, flagIndex) => flag &&
             <TooltipOverlay
               key={flagIndex}
@@ -127,11 +127,11 @@ const CardHeader = props => {
               tip={flag[1]}
             >
               {undefined !== flag[2] ?
-                <span className="data-card-flag">
+                <span className="data-card-flag" role="presentation">
                   {number(flag[2], true)}
                   <span className={flag[0]} />
                 </span> :
-                <span className={classes('data-card-flag', flag[0])} />
+                <span className={classes('data-card-flag', flag[0])} aria-labelledby={`data-card-${props.id}-flag-${flagIndex}`} />
               }
             </TooltipOverlay>
           )}
@@ -191,20 +191,23 @@ const DataCard = props =>
       <Heading
         level={props.level}
         className="data-card-title"
-        title={props.title}
-        subtitle={-1 !== props.display.indexOf('subtitle') ? props.subtitle : undefined}
-      />
+      >
+        {props.title}
+        {-1 !== props.display.indexOf('subtitle') && props.subtitle &&
+          <small>{props.subtitle}</small>
+        }
+      </Heading>
 
       {-1 === ['xs', 'sm'].indexOf(props.size) && -1 !== props.display.indexOf('description') && props.contentText &&
-        <div key="data-card-description" className="data-card-description">
+        <p key="data-card-description" className="data-card-description">
           {getPlainText(props.contentText)}
-        </div>
+        </p>
       }
 
       {props.children}
 
       {-1 === ['xs', 'sm'].indexOf(props.size) && -1 !== props.display.indexOf('footer') && props.footer &&
-        <div key="data-card-footer" className="data-card-footer">
+        <div key="data-card-footer" className="data-card-footer" role="presentation">
           {props.footer}
         </div>
       }

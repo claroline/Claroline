@@ -1,14 +1,13 @@
-import React, {createElement, useContext} from 'react'
+import React, {useContext} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {Await} from '#/main/app/components/await'
 import {PageFull} from '#/main/app/page/components/full'
 
-import {getTool, getToolBreadcrumb} from '#/main/core/tool/utils'
+import {getToolBreadcrumb} from '#/main/core/tool/utils'
 import {ToolIcon} from '#/main/core/tool/components/icon'
 import {ToolMenu} from '#/main/core/tool/components/menu'
 import {ToolContext} from '#/main/core/tool/context'
@@ -70,14 +69,9 @@ ToolPage.propTypes = {
     type: T.oneOf(['administration', 'desktop', 'workspace', 'account', 'public']),
     data: T.object
   }).isRequired,
-  // the name of the primary action of the tool (if we want to override the default one).
-  // it can contain more than one action name
-  //primaryAction: T.string,
 
   // from store
   basePath: T.string,
-  /*fullscreen: T.bool,*/
-  /*toggleFullscreen: T.func.isRequired,*/
 
   // page props
   subtitle: T.node,

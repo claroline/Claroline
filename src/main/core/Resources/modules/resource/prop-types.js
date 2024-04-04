@@ -18,16 +18,6 @@ const ResourceType = {
   }
 }
 
-const ResourceComment = {
-  propTypes: {
-    id: T.string,
-    content: T.string,
-    user: T.object,
-    creationDate: T.string,
-    editionDate: T.string
-  }
-}
-
 const ResourceNode = {
   propTypes: {
     id: T.string.isRequired,
@@ -36,14 +26,6 @@ const ResourceNode = {
     slug: T.string,
     thumbnail: T.string,
     poster: T.string,
-
-    /**
-     * The workspace to which the resource belongs
-     */
-    workspace: T.shape({
-      id: T.string.isRequired,
-      name: T.string.isRequired
-    }),
 
     /**
      * Metadata.
@@ -61,7 +43,6 @@ const ResourceNode = {
       ),
       created: T.string,
       updated: T.string,
-      commentsActivated: T.bool,
       authors: T.string,
       license: T.string
     }),
@@ -90,16 +71,7 @@ const ResourceNode = {
       name: T.string.isRequired,
       translationKey: T.string.isRequired,
       permissions: T.object.isRequired
-    })),
-
-    /**
-     * Notifications configuration.
-     */
-    notifications: T.shape({
-      enabled: T.bool
-    }),
-
-    comments: T.arrayOf(T.shape(ResourceComment.propTypes))
+    }))
   },
   defaultProps: {
     meta: {
@@ -113,15 +85,11 @@ const ResourceNode = {
     },
     restrictions: {
       dates: []
-    },
-    notifications: {
-      enabled: false
     }
   }
 }
 
 export {
   ResourceType,
-  ResourceComment,
   ResourceNode
 }

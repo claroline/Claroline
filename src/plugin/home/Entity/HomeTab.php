@@ -72,16 +72,6 @@ class HomeTab
     private string $longTitle = '';
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private bool $centerTitle = false;
-
-    /**
-     * @ORM\Column(type="boolean", options={"default"=1})
-     */
-    private bool $showTitle = true;
-
-    /**
      * Parent tab.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\HomeBundle\Entity\HomeTab", inversedBy="children")
@@ -156,26 +146,6 @@ class HomeTab
     public function setLongTitle($longTitle): void
     {
         $this->longTitle = $longTitle;
-    }
-
-    public function isCenterTitle()
-    {
-        return $this->centerTitle;
-    }
-
-    public function setCenterTitle($centerTitle): void
-    {
-        $this->centerTitle = $centerTitle;
-    }
-
-    public function getShowTitle(): bool
-    {
-        return $this->showTitle;
-    }
-
-    public function setShowTitle(bool $showTitle): void
-    {
-        $this->showTitle = $showTitle;
     }
 
     /**

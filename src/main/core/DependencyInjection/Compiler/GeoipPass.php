@@ -22,7 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class GeoipPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!(new Filesystem())->exists($container->getParameter('claroline.param.geoip_db_path'))) {
             $container->removeDefinition(MaxMindGeoIpInfoProvider::class);

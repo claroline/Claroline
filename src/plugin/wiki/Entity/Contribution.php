@@ -4,10 +4,8 @@ namespace Icap\WikiBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
-use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
  * @ORM\Entity(repositoryClass="Icap\WikiBundle\Repository\ContributionRepository")
@@ -35,8 +33,6 @@ class Contribution
      */
     protected $text;
 
-    protected $textForPdf;
-
     /**
      * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
@@ -56,8 +52,6 @@ class Contribution
      * @ORM\JoinColumn(name="section_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $section;
-
-    protected $userPicker = null;
 
     public function __construct()
     {
@@ -193,35 +187,5 @@ class Contribution
     public function getSection()
     {
         return $this->section;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setUserPicker(UserPickerContent $userPicker)
-    {
-        $this->userPicker = $userPicker;
-
-        return $this;
-    }
-
-    /**
-     * @return \Icap\NotificationBundle\Entity\UserPickerContent
-     */
-    public function getUserPicker()
-    {
-        return $this->userPicker;
-    }
-
-    /**
-     * @ORM\PrePersist
-     */
-    public function createUserPicker(PrePersistEventArgs $event)
-    {
-        if (null !== $this->getText()) {
-            $userPicker = new UserPickerContent($this->getText());
-            $this->setUserPicker($userPicker);
-            $this->setText($userPicker->getFinalText());
-        }
     }
 }

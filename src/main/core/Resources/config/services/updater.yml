@@ -20,3 +20,8 @@ services:
             - '@doctrine.dbal.default_connection'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
+
+    Claroline\CoreBundle\Installation\Updater\Updater150000:
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

@@ -19,21 +19,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class PlatformConfigurationHandler
 {
-    /** @var string */
-    private $configFile;
-    /** @var RequestStack */
-    private $requestStack;
-    /** @var array */
-    private $parameters = [];
-    /** @var array */
-    private $defaultConfigs = [];
-    /** @var string[] */
-    private $mapping = [];
+    private array $parameters = [];
+    private array $defaultConfigs = [];
+    private array $mapping = [];
 
-    public function __construct(string $configFile, RequestStack $requestStack)
-    {
-        $this->configFile = $configFile;
-        $this->requestStack = $requestStack;
+    public function __construct(
+        private readonly string $configFile,
+        private readonly RequestStack $requestStack
+    ) {
         if (file_exists($this->configFile)) {
             $this->parameters = json_decode(file_get_contents($this->configFile), true);
         }
@@ -47,10 +40,8 @@ class PlatformConfigurationHandler
     /**
      * @param string $parameter  - The path of the parameter inside the parameters array
      * @param bool   $fromDomain - Get the parameter value for the client IP domain (return the platform one if no override)
-     *
-     * @return mixed|null
      */
-    public function getParameter(string $parameter, bool $fromDomain = true)
+    public function getParameter(string $parameter, bool $fromDomain = true): mixed
     {
         if ($fromDomain) {
             $request = $this->requestStack->getMainRequest();
@@ -107,7 +98,7 @@ class PlatformConfigurationHandler
         return $this->parameters;
     }
 
-    public function setParameter(string $parameter, $value)
+    public function setParameter(string $parameter, $value): void
     {
         if (!is_writable($this->configFile)) {
             throw new \RuntimeException('Platform options is not writable');
@@ -118,14 +109,14 @@ class PlatformConfigurationHandler
         $this->saveParameters();
     }
 
-    public function setParameters(array $parameters)
+    public function setParameters(array $parameters): void
     {
         $this->parameters = array_replace_recursive($this->parameters, $parameters);
 
         $this->saveParameters();
     }
 
-    public function addDefaultParameters(ParameterProviderInterface $config)
+    public function addDefaultParameters(ParameterProviderInterface $config): void
     {
         $newDefault = $config->getDefaultParameters();
         $newDefaultClass = get_class($config);
@@ -143,12 +134,12 @@ class PlatformConfigurationHandler
         $this->parameters = array_replace_recursive($newDefault, $this->parameters);
     }
 
-    public function addLegacyMapping(LegacyParametersMappingInterface $mapping)
+    public function addLegacyMapping(LegacyParametersMappingInterface $mapping): void
     {
         $this->mapping = array_merge($this->mapping, $mapping->getMapping());
     }
 
-    public function saveParameters()
+    public function saveParameters(): void
     {
         ksort($this->parameters);
         file_put_contents($this->configFile, json_encode($this->parameters, JSON_PRETTY_PRINT));

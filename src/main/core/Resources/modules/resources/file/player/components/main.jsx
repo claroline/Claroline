@@ -12,7 +12,7 @@ import {getFile} from '#/main/core/files'
 import {File as FileTypes} from '#/main/core/files/prop-types'
 
 import {constants} from '#/main/core/resources/file/constants'
-import {ContentComments} from '#/main/app/content/components/comments'
+
 import {PlayerOverview} from '#/main/core/resources/file/player/components/overview'
 
 const PlayerMain = (props) => {
@@ -40,19 +40,6 @@ const PlayerMain = (props) => {
                     <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
                   )}
                 </Helmet>
-              }
-
-              {props.file && props.file.commentsActivated &&
-                <ContentComments
-                  currentUser={props.currentUser}
-                  comments={props.resourceNode.comments}
-                  canComment={!!props.currentUser}
-                  createComment={(comment) => props.createComment(comment, props.resourceNode)}
-                  editComment={(comment) => props.editComment(comment, props.resourceNode)}
-                  canEditComment={(comment) => props.currentUser && comment.user.id === props.currentUser.id}
-                  deleteComment={(comment) => props.deleteComment(comment.id)}
-                  canManage={props.canEdit}
-                />
               }
             </Fragment>
           )

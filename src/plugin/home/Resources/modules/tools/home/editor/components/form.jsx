@@ -66,18 +66,6 @@ const TabForm = (props) =>
             label: trans('color'),
             type: 'color'
           }, {
-            name: 'display.showTitle',
-            label: trans('show_title'),
-            type: 'boolean',
-            linked: [
-              {
-                name: 'display.centerTitle',
-                type: 'boolean',
-                label: trans('center_title'),
-                displayed: (homeTab) => get(homeTab, 'display.showTitle', false)
-              }
-            ]
-          }, {
             name: 'poster',
             label: trans('poster'),
             type: 'image'

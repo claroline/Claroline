@@ -2,11 +2,11 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
  * @ORM\Table(name="icap__blog_comment")
@@ -15,244 +15,119 @@ use Icap\NotificationBundle\Entity\UserPickerContent;
  */
 class Comment extends Statusable
 {
+    use Id;
     use Uuid;
 
     /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(type="text")
      */
-    protected $message;
+    private ?string $message;
 
     /**
-     * @var \Datetime
-     *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", name="creation_date")
      */
-    protected $creationDate;
+    private ?\DateTimeInterface $creationDate;
 
     /**
-     * @var \Datetime
-     *
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="status", value="1")
      */
-    protected $publicationDate;
+    private ?\DateTimeInterface $publicationDate;
 
     /**
-     * @var \Datetime
-     *
      * @ORM\Column(type="datetime", name="update_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="message")
      */
-    protected $updateDate;
+    private ?\DateTimeInterface $updateDate;
 
     /**
-     * @var User
-     *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
      */
-    protected $author;
+    private ?User $author;
 
     /**
-     * @var Post
-     *
      * @ORM\ManyToOne(targetEntity="Icap\BlogBundle\Entity\Post", inversedBy="comments")
      */
-    protected $post;
+    private ?Post $post;
 
     /**
      * @ORM\Column(type="smallint")
      */
-    protected $reported = 0;
+    private int $reported = 0;
 
-    protected $userPicker = null;
-
-    /**
-     * Comment constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set message.
-     *
-     * @param string $message
-     *
-     * @return Comment
-     */
-    public function setMessage($message)
+    public function setMessage(string $message): void
     {
         $this->message = $message;
-
-        return $this;
     }
 
-    /**
-     * Get message.
-     *
-     * @return string
-     */
-    public function getMessage()
+    public function getMessage(): ?string
     {
         return $this->message;
     }
 
-    /**
-     * Set creationDate.
-     *
-     * @param \DateTimeInterface $creationDate
-     *
-     * @return Comment
-     */
-    public function setCreationDate(\DateTimeInterface $creationDate = null)
+    public function setCreationDate(?\DateTimeInterface $creationDate = null): void
     {
         $this->creationDate = $creationDate;
-
-        return $this;
     }
 
-    /**
-     * Get creationDate.
-     *
-     * @return \DateTimeInterface
-     */
-    public function getCreationDate()
+    public function getCreationDate(): ?\DateTimeInterface
     {
         return $this->creationDate;
     }
 
-    /**
-     * Set author.
-     *
-     * @return Comment
-     */
-    public function setAuthor(User $author = null)
+    public function setAuthor(User $author = null): void
     {
         $this->author = $author;
-
-        return $this;
     }
 
-    /**
-     * Get author.
-     *
-     * @return User
-     */
-    public function getAuthor()
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    /**
-     * Set post.
-     *
-     * @return Comment
-     */
-    public function setPost(Post $post = null)
+    public function setPost(Post $post = null): void
     {
         $this->post = $post;
-
-        return $this;
     }
 
-    /**
-     * Get post.
-     *
-     * @return Post
-     */
-    public function getPost()
+    public function getPost(): ?Post
     {
         return $this->post;
     }
 
-    /**
-     * @param \DateTimeInterface $publicationDate
-     *
-     * @return Comment
-     */
-    public function setPublicationDate(\DateTimeInterface $publicationDate = null)
+    public function setPublicationDate(\DateTimeInterface $publicationDate = null): void
     {
         $this->publicationDate = $publicationDate;
-
-        return $this;
     }
 
-    /**
-     * @return \Datetime
-     */
-    public function getPublicationDate()
+    public function getPublicationDate(): ?\DateTimeInterface
     {
         return $this->publicationDate;
     }
 
-    /**
-     * @param \DateTimeInterface $updateDate
-     *
-     * @return Comment
-     */
-    public function setUpdateDate(\DateTimeInterface $updateDate = null)
+    public function setUpdateDate(\DateTimeInterface $updateDate = null): void
     {
         $this->updateDate = $updateDate;
-
-        return $this;
     }
 
-    /**
-     * @return \Datetime
-     */
-    public function getUpdateDate()
+    public function getUpdateDate(): ?\DateTimeInterface
     {
         return $this->updateDate;
     }
 
-    /**
-     * @return $this
-     */
-    public function setUserPicker(UserPickerContent $userPicker)
-    {
-        $this->userPicker = $userPicker;
-
-        return $this;
-    }
-
-    /**
-     * @return \Icap\NotificationBundle\Entity\UserPickerContent
-     */
-    public function getUserPicker()
-    {
-        return $this->userPicker;
-    }
-
-    public function setReported($num)
+    public function setReported(int $num): void
     {
         $this->reported = $num;
     }
 
-    public function getReported()
+    public function getReported(): int
     {
         return $this->reported;
     }

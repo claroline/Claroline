@@ -152,12 +152,6 @@ services:
             - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
             - '@Claroline\CoreBundle\Manager\Resource\MaskManager'
 
-    Claroline\CoreBundle\API\Serializer\Resource\ResourceCommentSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-
     Claroline\CoreBundle\API\Serializer\Resource\Types\TextSerializer:
         tags: [claroline.serializer]
         arguments:

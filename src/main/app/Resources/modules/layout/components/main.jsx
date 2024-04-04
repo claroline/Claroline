@@ -18,16 +18,25 @@ const LayoutMain = props => {
   const [appContexts, setAppContexts] = useState([])
 
   useEffect(() => {
-    const contextFetching = makeCancelable(getContexts())
+    let contextFetching
+    if (!loaded) {
+      contextFetching = makeCancelable(getContexts())
 
-    contextFetching.promise.then(definedContexts => {
-      setAppContexts(definedContexts)
-      setLoaded(true)
-    })
+      contextFetching.promise
+        .then(definedContexts => {
+          setAppContexts(definedContexts)
+          setLoaded(true)
+        })
+        .then(
+          () => contextFetching = null,
+          () => contextFetching = null
+        )
+    }
 
     return () => {
-      console.log('context apps loading cancelled')
-      contextFetching.cancel()
+      if (contextFetching) {
+        contextFetching.cancel()
+      }
     }
   }, [loaded])
 

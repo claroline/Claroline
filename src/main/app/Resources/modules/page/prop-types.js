@@ -138,9 +138,7 @@ const PageFull = {
     ])
   }),
   defaultProps: merge({}, PageSimple.defaultProps, {
-    showBreadcrumb: true,
     showHeader: true,
-    showTitle: true,
     disabled: false,
     actions: [],
     toolbar: 'more'
