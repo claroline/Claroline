@@ -38,34 +38,6 @@ const Message = {
   }
 }
 
-const ContactCategory = {
-  propTypes: {
-    id: T.number.isRequired,
-    name: T.string.isRequired,
-    order: T.number,
-    user: T.shape(
-      User.propTypes
-    ).isRequired
-  }
-}
-
-const Contact = {
-  propTypes: {
-    id: T.number.isRequired,
-    user: T.shape(
-      User.propTypes
-    ).isRequired,
-    data: T.shape(
-      User.propTypes
-    ).isRequired,
-    categories: T.arrayOf(T.shape(
-      ContactCategory.propTypes
-    ))
-  }
-}
-
 export {
-  Message,
-  Contact,
-  ContactCategory
+  Message
 }

@@ -1,11 +1,10 @@
-import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_MESSAGE} from '#/plugin/message/modals/message'
 
 export default (users, usersRefresher, path, currentUser) => {
-  const processable = users.filter(user => currentUser && user.id !== currentUser.id && hasPermission('contact', user))
+  const processable = users.filter(user => currentUser && user.id !== currentUser.id)
 
   return {
     name: 'send-message',

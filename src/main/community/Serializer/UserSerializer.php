@@ -276,11 +276,8 @@ class UserSerializer
         $token = $this->tokenStorage->getToken();
         $currentUser = $token ? $token->getUser() : null;
 
-        $isOwner = $currentUser instanceof User && $currentUser->getUuid() === $user->getUuid();
-
         return [
             'open' => true,
-            'contact' => !$isOwner,
             'edit' => $this->authorization->isGranted('EDIT', $user),
             'administrate' => $this->authorization->isGranted('ADMINISTRATE', $user),
             'delete' => $this->authorization->isGranted('DELETE', $user),

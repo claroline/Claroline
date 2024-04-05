@@ -1,8 +1,4 @@
 services:
-    Claroline\MessageBundle\Finder\ContactFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
     Claroline\MessageBundle\Finder\MessageFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

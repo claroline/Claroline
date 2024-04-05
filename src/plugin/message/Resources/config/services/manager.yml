@@ -1,13 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
-    Claroline\MessageBundle\Manager\ContactManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-
     Claroline\MessageBundle\Manager\MessageManager:
         arguments:
             - '@Claroline\CoreBundle\Manager\MailManager'
