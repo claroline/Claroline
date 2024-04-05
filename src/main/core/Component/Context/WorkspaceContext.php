@@ -121,15 +121,4 @@ class WorkspaceContext extends AbstractContext
             'root' => $this->serializer->serialize($rootNode, [SerializerInterface::SERIALIZE_MINIMAL]),
         ];
     }
-
-    public function getShortcuts(?ContextSubjectInterface $contextSubject): array
-    {
-        /** @var Workspace $workspace */
-        $workspace = $contextSubject;
-
-        // TODO : only export current user shortcuts (we get all roles for the configuration in community/editor)
-        // $this->manager->getShortcuts($workspace, $this->tokenStorage->getToken()->getRoleNames()),
-
-        return $workspace->getShortcuts()->toArray();
-    }
 }

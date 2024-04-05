@@ -6,7 +6,6 @@ import {
   CONTEXT_LOAD,
   CONTEXT_NOT_FOUND,
   CONTEXT_RESTRICTIONS_DISMISS,
-  CONTEXT_SHORTCUTS_LOAD,
   CONTEXT_SET_LOADED,
   CONTEXT_MENU_CLOSE,
   CONTEXT_MENU_OPEN,
@@ -104,14 +103,6 @@ const reducer = combineReducers({
    */
   tools: makeReducer([], {
     [CONTEXT_LOAD]: (state, action) => action.contextData.tools || []
-  }),
-
-  /**
-   * The list of shortcuts to tools or actions.
-   */
-  shortcuts: makeReducer([], {
-    [CONTEXT_LOAD]: (state, action) => action.contextData.shortcuts || [],
-    [CONTEXT_SHORTCUTS_LOAD]: (state, action) => action.shortcuts || []
   })
 })
 
