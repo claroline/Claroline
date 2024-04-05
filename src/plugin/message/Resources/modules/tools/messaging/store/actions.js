@@ -11,16 +11,6 @@ export const MESSAGE_LOAD = 'MESSAGE_LOAD'
 // actions creators
 export const actions = {}
 
-actions.addContacts = users => ({
-  [API_REQUEST]: {
-    url: url(['apiv2_contacts_create'], {ids: users}),
-    request: {
-      method: 'PATCH'
-    },
-    success: (data, dispatch) => dispatch(listActions.invalidateData(`${selectors.STORE_NAME}.contacts`))
-  }
-})
-
 actions.loadMessage = makeActionCreator(MESSAGE_LOAD, 'message')
 actions.openMessage = (id) => (dispatch) => dispatch({
   [API_REQUEST]: {

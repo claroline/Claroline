@@ -2,9 +2,6 @@ services:
     _defaults:
         tags: [security.voter]
 
-    Claroline\MessageBundle\Security\Voter\ContactVoter:
-        parent: Claroline\AppBundle\Security\Voter\AbstractVoter
-
     Claroline\MessageBundle\Security\Voter\MessageVoter:
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
 

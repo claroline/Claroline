@@ -13,7 +13,6 @@
     "messages_received": "Inbox",
     "messages_removed": "Removed messages",
     "messages_sent": "Trash",
-    "contacts": "Contacts",
     "message_read" : "Read",
     "marked_read_message": "Mark read",
     "marked_unread_message": "Mark as unread",

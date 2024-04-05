@@ -7,12 +7,6 @@ import {selectors} from '#/plugin/message/tools/messaging/store/selectors'
 import {MESSAGE_LOAD} from '#/plugin/message/tools/messaging/store/actions'
 
 const reducer = combineReducers({
-  contacts: makeListReducer(`${selectors.STORE_NAME}.contacts`, {}, {
-    invalidated: makeReducer(false, {
-      [TOOL_OPEN]: () => true
-    })
-  }),
-
   receivedMessages: makeListReducer(`${selectors.STORE_NAME}.receivedMessages`, {}, {
     invalidated: makeReducer(false, {
       [TOOL_OPEN]: () => true

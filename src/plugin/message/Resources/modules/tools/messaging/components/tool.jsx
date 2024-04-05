@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 
 import {Tool} from '#/main/core/tool'
 
-import {Contacts} from '#/plugin/message/tools/messaging/components/contacts'
 import {MessageInbox} from '#/plugin/message/tools/messaging/components/inbox'
 import {MessageSent} from '#/plugin/message/tools/messaging/components/sent'
 import {MessageTrash} from '#/plugin/message/tools/messaging/components/trash'
@@ -34,12 +33,6 @@ const MessagingTool = (props) =>
         //icon: 'fa fa-fw fa-trash',
         label: trans('messages_removed', {}, 'message'),
         target: props.path+'/deleted'
-      }, {
-        name: 'contact',
-        type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-address-book',
-        label: trans('contacts', {}, 'message'),
-        target: props.path+'/contacts'
       }
     ]}
     pages={[
@@ -53,9 +46,6 @@ const MessagingTool = (props) =>
       }, {
         path: '/deleted',
         component: MessageTrash
-      }, {
-        path: '/contacts',
-        component: Contacts
       }, {
         path: '/message/:id',
         onEnter: (params) => props.openMessage(params.id),

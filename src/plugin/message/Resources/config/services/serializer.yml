@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Claroline\MessageBundle\Serializer\MessageSerializer:
         tags: [claroline.serializer]
         arguments:
@@ -13,22 +8,3 @@ services:
            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
            - '@Claroline\CommunityBundle\Serializer\GroupSerializer'
            - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
-
-    Claroline\MessageBundle\Serializer\Contact\OptionsSerializer:
-        tags: [claroline.serializer]
-        arguments:
-           - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-           - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\MessageBundle\Serializer\Contact\ContactSerializer:
-        tags: [claroline.serializer]
-        arguments:
-           - '@Claroline\MessageBundle\Serializer\Contact\CategorySerializer'
-           - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-           - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\MessageBundle\Serializer\Contact\CategorySerializer:
-        tags: [claroline.serializer]
-        arguments:
-           - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-           - '@Claroline\AppBundle\Persistence\ObjectManager'
