@@ -12,7 +12,7 @@ import {constants} from '#/plugin/agenda/events/event/constants'
 import {selectors} from '#/plugin/agenda/events/event/store'
 
 const EventParticipants = (props) =>
-  <Sections level={3}>
+  <Sections level={3} flush={props.flush}>
     <Section
       className="embedded-list-section"
       icon="fa fa-fw fa-user"
@@ -81,6 +81,7 @@ const EventParticipants = (props) =>
   </Sections>
 
 EventParticipants.propTypes = {
+  flush: T.bool,
   isNew: T.bool,
   canEdit: T.bool.isRequired,
   eventId: T.string.isRequired,

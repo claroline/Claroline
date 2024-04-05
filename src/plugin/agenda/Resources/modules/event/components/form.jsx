@@ -11,6 +11,7 @@ import {EventIcon} from '#/plugin/agenda/event/components/icon'
 
 const EventForm = (props) =>
   <FormData
+    flush={props.flush}
     name={props.name}
     meta={true}
     sections={[
@@ -51,6 +52,7 @@ const EventForm = (props) =>
   </FormData>
 
 EventForm.propTypes = {
+  flush: T.bool,
   name: T.string.isRequired,
   target: T.oneOfType([T.string, T.array, T.func]),
   sections: T.array,

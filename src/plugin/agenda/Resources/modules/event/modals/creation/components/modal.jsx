@@ -78,6 +78,7 @@ class EventCreationModal extends Component {
       case 'parameters':
         return (
           <EventParameters
+            flush={true}
             name={selectors.STORE_NAME}
             event={this.props.formData}
             update={this.props.update}
@@ -105,6 +106,7 @@ class EventCreationModal extends Component {
         title={trans('new_event', {}, 'agenda')}
         subtitle={this.renderStepTitle()}
         fadeModal={() => this.close()}
+        size="lg"
       >
         {this.renderStep()}
       </Modal>
