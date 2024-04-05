@@ -102,7 +102,7 @@ class FieldFacet
     /**
      * @ORM\Column(type="json")
      */
-    private array $options = [];
+    private ?array $options = [];
 
     /**
      * @ORM\Column(type="string")
