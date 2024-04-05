@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -102,7 +103,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
             $this->messageBus->dispatch(
                 new InitializeWorkspaceEvaluations($workspace->getId(), array_map(function (User $user) {
                     return $user->getId();
-                }, $event->getUsers()))
+                }, $event->getUsers())), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]
             );
         }
     }

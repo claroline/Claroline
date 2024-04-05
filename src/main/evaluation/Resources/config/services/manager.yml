@@ -6,6 +6,7 @@ services:
 
     Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager:
         arguments:
+            - '@security.token_storage'
             - '@messenger.default_bus'
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

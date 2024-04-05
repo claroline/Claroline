@@ -1,12 +1,12 @@
 <?php
 
-namespace Claroline\YouTubeBundle\Installation\Updater;
+namespace Claroline\PeerTubeBundle\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 
-class Updater141000 extends Updater
+class Updater140103 extends Updater
 {
     private Connection $connection;
 
@@ -22,9 +22,9 @@ class Updater141000 extends Updater
     public function postUpdate(): void
     {
         $updateControls = $this->connection->prepare('
-            UPDATE claro_youtube_video 
-            AS ytv 
-            SET ytv.controls = true
+            UPDATE claro_peertube_video
+            AS ptv 
+            SET ptv.controls = true
         ');
 
         $updateControls->executeQuery();
