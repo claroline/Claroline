@@ -17,9 +17,11 @@ const ParametersModal = props =>
     title={props.event.id ? props.event.name : trans('new_event', {}, 'agenda')}
     subtitle={trans('parameters')}
     onEntering={() => props.loadEvent(props.event)}
+    size="lg"
   >
     {!isEmpty(props.formData) &&
       <EventParameters
+        flush={true}
         name={selectors.STORE_NAME}
         event={props.formData}
         update={props.update}

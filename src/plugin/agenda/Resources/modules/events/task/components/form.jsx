@@ -10,11 +10,13 @@ import {EventForm} from '#/plugin/agenda/event/containers/form'
 
 const TaskForm = (props) =>
   <EventForm
+    flush={props.flush}
     name={props.name}
     target={(task, isNew) => isNew ? ['apiv2_task_create']: ['apiv2_task_update', {id: task.id}]}
     onSave={props.onSave}
   >
     <FormData
+      flush={props.flush}
       name={props.name}
       embedded={true}
       sections={[
@@ -131,6 +133,7 @@ const TaskForm = (props) =>
   </EventForm>
 
 TaskForm.propTypes = {
+  flush: T.bool,
   name: T.string.isRequired,
   event: T.object,
   update: T.func.isRequired,

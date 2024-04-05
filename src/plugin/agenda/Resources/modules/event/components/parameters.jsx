@@ -23,6 +23,7 @@ class EventParameters extends Component {
   renderCustomForm() {
     if (this.state.customForm) {
       return createElement(this.state.customForm, {
+        flush: this.props.flush,
         name: this.props.name,
         event: this.props.event,
         isNew: this.props.isNew,
@@ -40,6 +41,7 @@ class EventParameters extends Component {
 }
 
 EventParameters.propTypes = {
+  flush: T.bool,
   name: T.string.isRequired,
   event: T.shape(
     EventTypes.propTypes
@@ -51,6 +53,7 @@ EventParameters.propTypes = {
 }
 
 EventParameters.defaultProps = {
+  flush: false,
   isNew: false
 }
 

@@ -11,11 +11,13 @@ import {EventParticipants} from '#/plugin/agenda/events/event/containers/partici
 
 const EventForm = (props) =>
   <BaseEventForm
+    flush={props.flush}
     name={props.name}
     target={(event, isNew) => isNew ? ['apiv2_event_create']: ['apiv2_event_update', {id: event.id}]}
     onSave={props.onSave}
   >
     <FormData
+      flush={props.flush}
       name={props.name}
       embedded={true}
       sections={[
@@ -142,11 +144,13 @@ const EventForm = (props) =>
         isNew={props.isNew}
         eventId={props.event.id}
         canEdit={true}
+        flush={props.flush}
       />
     </FormData>
   </BaseEventForm>
 
 EventForm.propTypes = {
+  flush: T.bool,
   isNew: T.bool.isRequired,
   event: T.shape({
     id: T.string
