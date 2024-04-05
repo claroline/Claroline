@@ -1,10 +1,9 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {selectors} from '#/main/core/tool/editor/store'
 
 const ToolEditor = (props) =>

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {ContentTabs} from '#/main/app/content/components/tabs'
 import {LINK_BUTTON} from '#/main/app/buttons'
 

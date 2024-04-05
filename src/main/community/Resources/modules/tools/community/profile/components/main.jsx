@@ -4,16 +4,14 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 
 import {ProfileFacet} from '#/main/community/tools/community/profile/containers/facet'
 import {getMainFacet} from '#/main/community/profile/utils'
 import {ContentSizing} from '#/main/app/content/components/sizing'
-
-// TODO : redirect on facet delete
 
 const ProfileMain = props =>
   <ToolPage

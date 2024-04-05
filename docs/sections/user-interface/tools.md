@@ -97,7 +97,7 @@ export default {
 
 import React from 'react'
 
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 const MyToolTool = (props) =>
   <ToolPage>
@@ -259,7 +259,7 @@ You can now manipulate the passed data into your component :
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 const MyToolTool = (props) =>
   <ToolPage>

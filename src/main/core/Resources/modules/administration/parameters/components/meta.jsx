@@ -8,7 +8,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/main/core/administration/parameters/store'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 const restrictedByDates = (parameters) => get(parameters, 'restrictions.enableDates') || !isEmpty(get(parameters, 'restrictions.dates'))
 const restrictedUsersCount = (parameters) => get(parameters, 'restrictions.enableUsers') || get(parameters, 'restrictions.users')

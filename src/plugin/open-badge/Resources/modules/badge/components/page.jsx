@@ -5,12 +5,10 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {ToolPage} from '#/main/core/tool'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {getActions} from '#/plugin/open-badge/badge/utils'
-import {route} from '#/plugin/open-badge/badge/routing'
 import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
 import {BadgeImage} from '#/plugin/open-badge/badge/components/image'
 import {ContentLoader} from '#/main/app/content/components/loader'
@@ -22,11 +20,11 @@ const Badge = (props) =>
       title: trans('badge_name', {name: get(props.badge, 'name', trans('loading'))}, 'badge'),
       description: get(props.badge, 'meta.description')
     }}
-    path={props.badge ? props.breadcrumb : []}
+    breadcrumb={props.badge ? props.breadcrumb : []}
     icon={
       <BadgeImage badge={props.badge} size="xl" />
     }
-    subtitle={get(props.badge, 'name', trans('loading'))}
+    title={get(props.badge, 'name', trans('loading'))}
     primaryAction="grant"
     poster={get(props.badge, 'poster')}
     actions={!isEmpty(props.badge) ? getActions([props.badge], {

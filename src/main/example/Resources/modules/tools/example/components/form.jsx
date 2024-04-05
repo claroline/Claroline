@@ -2,7 +2,7 @@ import React from 'react'
 
 import {trans} from '#/main/app/intl'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/main/example//tools/example/store/selectors'

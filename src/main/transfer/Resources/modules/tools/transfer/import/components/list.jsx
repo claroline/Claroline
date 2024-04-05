@@ -7,13 +7,13 @@ import {hasPermission} from '#/main/app/security'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {transAction} from '#/main/transfer/utils'
 import {selectors} from '#/main/transfer/tools/transfer/import/store'
 
 const ImportList = props =>
-  <ToolPage subtitle={trans('all_imports', {}, 'transfer')}>
+  <ToolPage title={trans('all_imports', {}, 'transfer')}>
     <ListData
       name={selectors.STORE_NAME + '.list'}
       primaryAction={(row) => ({

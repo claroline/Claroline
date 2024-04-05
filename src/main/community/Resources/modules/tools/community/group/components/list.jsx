@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans, transChoice} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {getPlatformRoles, getWorkspaceRoles} from '#/main/community/utils'
 
@@ -16,7 +16,7 @@ import {MODAL_REGISTER} from '#/main/community/modals/register'
 
 const GroupList = props =>
   <ToolPage
-    subtitle={trans('groups', {}, 'community')}
+    title={trans('groups', {}, 'community')}
     primaryAction="add"
     actions={['desktop' === props.contextType ?
       {

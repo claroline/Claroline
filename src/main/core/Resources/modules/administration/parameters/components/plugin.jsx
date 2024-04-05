@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, TOGGLE_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
 const PluginMeta = props =>
@@ -57,7 +57,7 @@ const Plugin = (props) => {
 
   return (
     <ToolPage
-      path={[
+      breadcrumb={[
         {
           type: LINK_BUTTON,
           label: trans(props.plugin.name, {}, 'plugin'),

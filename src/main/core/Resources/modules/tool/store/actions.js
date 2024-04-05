@@ -13,6 +13,7 @@ export const actions = {}
 
 actions.load = makeInstanceActionCreator(TOOL_LOAD, 'toolData', 'context')
 actions.setLoaded = makeActionCreator(TOOL_SET_LOADED, 'loaded')
+actions.reload = () => actions.setLoaded(false)
 
 /**
  * Fetch a tool.

@@ -20,7 +20,7 @@ const User = {
       dates: T.arrayOf(T.string)
     }),
     permissions: T.shape({
-      contact: T.bool.isRequired,
+      open: T.bool.isRequired,
       edit: T.bool.isRequired,
       administrate: T.bool.isRequired,
       delete: T.bool.isRequired
@@ -34,7 +34,6 @@ const User = {
   },
   defaultProps: {
     permissions: {
-      contact: false,
       edit: false,
       administrate: false,
       delete: false

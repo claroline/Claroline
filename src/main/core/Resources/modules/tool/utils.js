@@ -1,15 +1,8 @@
-import get from 'lodash/get'
 import identity from 'lodash/identity'
 
-import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {getApp, getApps} from '#/main/app/plugins'
 
 import {constants} from '#/main/core/tool/constants'
-
-import {route as toolRoute} from '#/main/core/tool/routing'
-import {route as workspaceRoute} from '#/main/core/workspace/routing'
-import {route as adminRoute} from '#/main/core/administration/routing'
 
 function getTools(contextType) {
   if (constants.TOOL_ADMINISTRATION === contextType) {
@@ -39,7 +32,7 @@ function getActions(tool, context, toolRefresher, path, currentUser) {
     delete: identity
   }, toolRefresher)
 
-  // get all actions declared for workspace
+  // get all actions declared for the tool
   const actions = getApps('actions.tool')
 
   return Promise.all(
@@ -51,127 +44,8 @@ function getActions(tool, context, toolRefresher, path, currentUser) {
   )
 }
 
-/**
- * Gets the path of a tool based on its rendering context.
- *
- * @param {null|string} toolName
- * @param {string} contextType
- * @param {object} contextData
- *
- * @return {Array}
- */
-function getToolBreadcrumb(toolName = null, contextType, contextData = {}) {
-  const breadcrumbItems = get(contextData, 'breadcrumb.items') || []
-
-  let path = []
-
-  switch (contextType) {
-    case constants.TOOL_ACCOUNT:
-      path = [
-        {
-          type: LINK_BUTTON,
-          label: trans('account', {}, 'context'),
-          target: '/account'
-        }
-      ]
-
-      if (toolName) {
-        path.push({
-          type: LINK_BUTTON,
-          label: trans(toolName, {}, 'tools'),
-          target: toolRoute(toolName)
-        })
-      }
-
-      break
-
-    case constants.TOOL_DESKTOP:
-      path = [
-        {
-          type: LINK_BUTTON,
-          label: trans('desktop', {}, 'context'),
-          target: '/desktop'
-        }
-      ]
-
-      if (toolName) {
-        path.push({
-          type: LINK_BUTTON,
-          label: trans(toolName, {}, 'tools'),
-          target: toolRoute(toolName)
-        })
-      }
-
-      break
-
-    case constants.TOOL_WORKSPACE:
-      path = [
-        /*{
-          type: LINK_BUTTON,
-          label: trans('desktop', {}, 'context'),
-          displayed: -1 !== breadcrumbItems.indexOf('desktop'),
-          target: '/desktop'
-        }, {
-          type: LINK_BUTTON,
-          label: trans('my_workspaces', {}, 'workspace'),
-          displayed: -1 !== breadcrumbItems.indexOf('workspaces'),
-          target: toolRoute('workspaces')
-        }, */{
-          type: LINK_BUTTON,
-          label: contextData.name,
-          //displayed: -1 !== breadcrumbItems.indexOf('current'),
-          target: workspaceRoute(contextData)
-        }
-      ]
-
-      if (toolName) {
-        path.push({
-          type: LINK_BUTTON,
-          label: trans(toolName, {}, 'tools'),
-          //displayed: -1 !== breadcrumbItems.indexOf('tool'),
-          target: workspaceRoute(contextData, toolName)
-        })
-      }
-
-      break
-
-    case constants.TOOL_ADMINISTRATION:
-      path = [
-        {
-          type: LINK_BUTTON,
-          label: trans('administration', {}, 'context'),
-          target: '/administration'
-        }
-      ]
-
-      if (toolName) {
-        path.push({
-          type: LINK_BUTTON,
-          label: trans(toolName, {}, 'tools'),
-          target: adminRoute(toolName)
-        })
-      }
-
-      break
-
-    default:
-      if (toolName) {
-        path.push({
-          type: LINK_BUTTON,
-          label: trans(toolName, {}, 'tools'),
-          target: `/${toolName}`
-        })
-      }
-
-      break
-  }
-
-  return path
-}
-
 export {
   getTools,
   getTool,
-  getActions,
-  getToolBreadcrumb
+  getActions
 }

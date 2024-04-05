@@ -1,39 +1,44 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {useSelector} from 'react-redux'
 import classes from 'classnames'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
+import {trans} from '#/main/app/intl'
 import {PageFull} from '#/main/app/page'
 
-import {getToolBreadcrumb} from '#/main/core/tool/utils'
+import {selectors} from '#/main/app/context/store'
 
-const ContextPage = (props) =>
-  <PageFull
-    className={classes('context-page', `${props.name}-page`, props.className)}
-    showBreadcrumb={true}
-    path={[].concat(getToolBreadcrumb(null, props.name, props.contextData), props.breadcrumb)}
-    poster={props.poster || get(props.contextData, 'poster')}
+const ContextPage = (props) => {
+  const contextType = useSelector(selectors.type)
+  const contextData = useSelector(selectors.data)
+  const contextPath = useSelector(selectors.path)
 
-    {...omit(props, 'name', 'className', 'contextData', 'breadcrumb', 'poster')}
-  >
-    {props.children}
-  </PageFull>
+  return (
+    <PageFull
+      className={classes('context-page', `${contextType}-page`, props.className)}
+      breadcrumb={[
+        {
+          label: get(contextData, 'name') || trans(contextType, {}, 'context'),
+          target: contextPath
+        }
+      ].concat(props.breadcrumb || [])}
+      poster={props.poster || get(contextData, 'poster')}
+      meta={{
+        title: get(contextData, 'name') || trans(contextType, {}, 'context'),
+        description: get(contextData, 'meta.description')
+      }}
+      title={get(contextData, 'name') || trans(contextType, {}, 'context')}
 
-ContextPage.propTypes = {
-  className: T.string,
-  name: T.string.isRequired,
-  contextData: T.shape({
-
-  }),
-  breadcrumb: T.arrayOf(T.shape({
-
-  }))
+      {...omit(props, 'className', 'breadcrumb', 'poster')}
+    >
+      {props.children}
+    </PageFull>
+  )
 }
 
-ContextPage.defaultProps = {
-  breadcrumb: []
-}
+ContextPage.propTypes = PageFull.propTypes
+ContextPage.defaultProps = PageFull.defaultProps
 
 export {
   ContextPage

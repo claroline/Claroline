@@ -5,12 +5,11 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {getActions} from '#/main/community/team/utils'
-import {route} from '#/main/community/team/routing'
 import {Team as TeamTypes} from '#/main/community/team/prop-types'
 import {ContentLoader} from '#/main/app/content/components/loader'
 
@@ -21,7 +20,7 @@ const Team = (props) =>
       title: trans('team_name', {name: get(props.team, 'name', trans('loading'))}, 'community'),
       description: get(props.team, 'meta.description')
     }}
-    path={[
+    breadcrumb={[
       {
         type: LINK_BUTTON,
         label: trans('teams', {}, 'community'),

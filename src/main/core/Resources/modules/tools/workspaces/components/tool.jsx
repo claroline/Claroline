@@ -8,7 +8,7 @@ import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 
 import {Tool} from '#/main/core/tool'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {WorkspaceList} from '#/main/core/workspace/components/list'

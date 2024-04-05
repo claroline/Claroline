@@ -18,7 +18,6 @@ const reducer = combineReducers({
      * @return {number}
      */
     [REQUEST_SEND]: (state, action) => {
-      console.log(action.apiRequest)
       if (!action.apiRequest.silent) {
         return state + 1
       }

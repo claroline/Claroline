@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {Message} from '#/main/core/administration/connection-messages/containers/message'
 import {Messages} from '#/main/core/administration/connection-messages/components/messages'
@@ -23,7 +23,7 @@ const ConnectionMessagesTool = (props) =>
         primary : true
       }
     ]}
-    subtitle={trans('connection_messages', {}, 'tools')}
+    title={trans('connection_messages', {}, 'tools')}
   >
     <Routes
       path={props.path}

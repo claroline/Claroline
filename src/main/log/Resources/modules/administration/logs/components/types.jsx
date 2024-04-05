@@ -5,14 +5,14 @@ import {trans} from '#/main/app/intl/translation'
 
 import {selectors} from '#/main/log/administration/logs/store/selectors'
 import {ContentTitle} from '#/main/app/content/components/title'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const LogsTypes = () => {
   const types = useSelector(selectors.types)
 
   return (
-    <ToolPage subtitle={trans('parameters')}>
+    <ToolPage title={trans('parameters')}>
       <ContentSizing className="mt-3" size="md">
         <ContentTitle title={trans('functional', {}, 'log')} />
         <ul className="list-group list-group-striped mb-3">

@@ -1,47 +1,37 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import omit from 'lodash/omit'
 
 import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action'
-import {URL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 const PageBreadcrumb = props => {
-  const items = props.path
-    .filter(item => undefined === item.displayed || item.displayed)
-
-  if (0 !== items.length) {
+  if (0 !== props.breadcrumb.length) {
     return (
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
-          {items
-            .filter(item => undefined === item.displayed || item.displayed)
-            .map((item) =>
-              <li key={item.id || toKey(item.label)} className="breadcrumb-item">
-                <Button
-                  type={item.type || URL_BUTTON}
-                  {...omit(item, 'displayed')}
-                />
-              </li>
-            )
-          }
+          {props.breadcrumb.map((item) =>
+            <li key={item.id || toKey(item.label)} className="breadcrumb-item">
+              <Button
+                {...item}
+                type={LINK_BUTTON}
+              />
+            </li>
+          )}
           <li className="breadcrumb-item active visually-hidden" aria-current="page">{props.current}</li>
         </ol>
       </nav>
     )
   }
 
-  return null
+  return undefined
 }
 
 PageBreadcrumb.propTypes = {
   current: T.string.isRequired,
-  path: T.arrayOf(T.shape({
-    id: T.string,
-    type: T.string,
+  breadcrumb: T.arrayOf(T.shape({
     label: T.string.isRequired,
-    displayed: T.bool,
-    target: T.oneOfType([T.string, T.array])
+    target: T.string
   }))
 }
 
@@ -53,7 +43,7 @@ const PageTitle = props =>
   <div role="presentation">
     {!props.embedded &&
       <PageBreadcrumb
-        path={props.path}
+        breadcrumb={props.breadcrumb}
         current={props.title}
       />
     }
@@ -68,7 +58,7 @@ PageTitle.propTypes = {
   /**
    * The path of the page inside the application (used to build the breadcrumb).
    */
-  path: T.arrayOf(T.shape({
+  breadcrumb: T.arrayOf(T.shape({
     label: T.string.isRequired,
     displayed: T.bool,
     target: T.oneOfType([T.string, T.array])

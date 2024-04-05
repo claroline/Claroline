@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {TemplateTypeCard} from '#/main/core/data/types/template-type/components/card'
@@ -11,7 +11,7 @@ import {selectors} from '#/main/core/administration/template/store'
 
 const TemplateList = (props) =>
   <ToolPage
-    subtitle={trans(props.type)}
+    title={trans(props.type)}
   >
     <ListData
       name={selectors.STORE_NAME + '.templates'}

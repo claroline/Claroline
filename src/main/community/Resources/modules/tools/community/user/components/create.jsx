@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {UserForm} from '#/main/community/user/components/form'
@@ -13,7 +13,7 @@ import {ContentSizing} from '#/main/app/content/components/sizing'
 const UserCreate = (props) =>
   <ToolPage
     className="user-page"
-    path={[
+    breadcrumb={[
       {
         type: LINK_BUTTON,
         label: trans('users', {}, 'community'),
@@ -23,7 +23,7 @@ const UserCreate = (props) =>
     icon={
       <UserAvatar className="img-thumbnail" noStatus={true} size="xl" />
     }
-    subtitle={trans('new_user', {}, 'community')}
+    title={trans('new_user', {}, 'community')}
   >
     <ContentSizing size="lg">
       <UserForm

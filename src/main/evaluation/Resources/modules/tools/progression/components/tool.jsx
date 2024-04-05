@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {Alert} from '#/main/app/components/alert'
 import {Tool} from '#/main/core/tool'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {WorkspaceEvaluation} from '#/main/evaluation/workspace/components/evaluation'
 import {ContentLoader} from '#/main/app/content/components/loader'

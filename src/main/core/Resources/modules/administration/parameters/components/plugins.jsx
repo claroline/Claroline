@@ -7,7 +7,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {DataCard} from '#/main/app/data/components/card'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {selectors} from '#/main/core/administration/parameters/store'
 

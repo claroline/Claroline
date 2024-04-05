@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {CrudCard} from '#/main/example/tools/example/crud/components/card'
@@ -12,12 +12,12 @@ import {selectors} from '#/main/example/tools/example/crud/store/selectors'
 
 const CrudList = (props) =>
   <ToolPage
-    path={[{
+    breadcrumb={[{
       type: LINK_BUTTON,
       label: 'Simple CRUD',
       target: `${props.path}/crud`
     }]}
-    subtitle="Simple CRUD"
+    title="Simple CRUD"
     primaryAction="add"
     actions={[
       {

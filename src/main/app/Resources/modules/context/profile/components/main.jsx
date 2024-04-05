@@ -11,7 +11,7 @@ import {ProfileEdit} from '#/main/community/profile/containers/edit'
 
 import {selectors} from '#/main/app/context/profile/store'
 import {ContentSizing} from '#/main/app/content/components/sizing'
-import {ContextPage} from '#/main/app/context/containers/page'
+import {ContextPage} from '#/main/app/context/components/page'
 import {UserAvatar} from '#/main/app/user/components/avatar'
 
 const ContextProfile = (props) => {

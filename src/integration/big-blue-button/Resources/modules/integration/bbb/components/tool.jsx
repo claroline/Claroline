@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
 
 import {BBBMetrics} from '#/integration/big-blue-button/integration/bbb/components/metrics'
@@ -33,12 +33,12 @@ class BBBTool extends Component {
 
     return (
       <ToolPage
-        path={[{
+        breadcrumb={[{
           type: LINK_BUTTON,
           label: trans('bbb', {}, 'integration'),
           target: `${this.props.path}/bbb`
         }]}
-        subtitle={trans('bbb', {}, 'integration')}
+        title={trans('bbb', {}, 'integration')}
       >
         <BBBMetrics
           meetings={this.props.activeMeetingsCount}

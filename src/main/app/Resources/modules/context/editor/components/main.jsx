@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import {trans} from '#/main/app/intl'
 import {FormData} from '#/main/app/content/form/containers/data'
 
-import {ContextPage} from '#/main/app/context/containers/page'
+import {ContextPage} from '#/main/app/context/components/page'
 import {selectors} from '#/main/app/context/editor/store'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {Checkbox} from '#/main/app/input/components/checkbox'

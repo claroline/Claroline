@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {getAddressString} from '#/main/app/data/types/address/utils'
 
 import {Location as LocationTypes} from '#/main/core/tools/locations/prop-types'
@@ -23,7 +23,7 @@ const LocationPage = (props) => {
 
   return (
     <ToolPage
-      path={[
+      breadcrumb={[
         {
           type: LINK_BUTTON,
           label: trans('locations', {}, 'tools'),
@@ -36,7 +36,6 @@ const LocationPage = (props) => {
       ]}
       poster={get(props.location, 'poster')}
       title={get(props.location, 'name')}
-      subtitle={getAddressString(get(props.location, 'address'))}
       primaryAction="edit"
       actions={[
         {

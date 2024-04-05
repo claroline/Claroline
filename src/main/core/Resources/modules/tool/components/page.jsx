@@ -1,89 +1,66 @@
-import React, {useContext} from 'react'
-import {PropTypes as T} from 'prop-types'
+import React, {useCallback, useContext} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
 import classes from 'classnames'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-import {PageFull} from '#/main/app/page/components/full'
 
-import {getToolBreadcrumb} from '#/main/core/tool/utils'
+import {ContextPage} from '#/main/app/context/components/page'
+import {ToolContext} from '#/main/core/tool/context'
+import {selectors, actions} from '#/main/core/tool/store'
 import {ToolIcon} from '#/main/core/tool/components/icon'
 import {ToolMenu} from '#/main/core/tool/components/menu'
-import {ToolContext} from '#/main/core/tool/context'
 
 const ToolPage = props => {
   const toolDef = useContext(ToolContext)
 
+  const toolName = useSelector(selectors.name)
+  const toolPath = useSelector(selectors.path)
+  const toolData = useSelector(selectors.toolData)
+  const currentContext = useSelector(selectors.context)
+
+  const dispatch = useDispatch()
+  const reload = useCallback(() => dispatch(actions.reload()), [toolName])
+
   return (
-    <PageFull
-      className={classes('tool-page', `${props.name}-page`, props.className)}
-      title={trans(props.name, {}, 'tools')}
-      path={[].concat(getToolBreadcrumb(props.name, props.currentContext.type, props.currentContext.data), props.path)}
-      poster={props.poster || get(props.toolData, 'poster') || get(props.currentContext, 'data.poster')}
-      icon={get(props.toolData, 'display.showIcon') ?
-        <ToolIcon type={get(props.toolData, 'icon')}/>
+    <ContextPage
+      className={classes('tool-page', `${toolName}-page`, props.className)}
+      breadcrumb={[
+        {
+          label: trans(toolName, {}, 'tools'),
+          target: toolPath
+        }
+      ].concat(props.breadcrumb || [])}
+      poster={props.poster || get(toolData, 'poster')}
+      title={trans(toolName, {}, 'tools')}
+      icon={get(toolData, 'display.showIcon') ?
+        <ToolIcon type={get(toolData, 'icon')} />
         :
         undefined
       }
-      fullscreen={props.fullscreen}
-      meta={{
-        title: `${trans(props.name, {}, 'tools')} - ${'workspace' === props.currentContext.type ? props.currentContext.data.name : trans(props.currentContext.type)}`,
-        description: get(props.currentContext.data, 'meta.description')
-      }}
 
       menu={
         <ToolMenu
-          path={props.basePath}
-          currentContext={props.currentContext}
-          toolData={props.toolData}
+          path={toolPath}
+          currentContext={currentContext}
+          toolData={toolData}
           menu={toolDef.menu}
           actions={toolDef.actions}
-          reload={props.reload}
+          reload={reload}
         />
       }
 
-      styles={toolDef.styles}
-      {...omit(props, 'name', 'className', 'currentContext', 'path', 'basePath', 'toolData', 'poster')}
+      styles={[].concat(toolDef.styles, props.styles || [])}
+      {...omit(props, 'className', 'breadcrumb', 'poster', 'styles')}
     >
       {props.children}
-    </PageFull>
+    </ContextPage>
   )
 }
 
-ToolPage.propTypes = {
-  className: T.string,
-
-  // tool props
-  name: T.string.isRequired,
-  toolData: T.shape({
-    icon: T.string,
-    display: T.shape({
-      showIcon: T.bool,
-      fullscreen: T.bool
-    }),
-    poster: T.string,
-    permissions: T.object.isRequired
-  }),
-  currentContext: T.shape({
-    type: T.oneOf(['administration', 'desktop', 'workspace', 'account', 'public']),
-    data: T.object
-  }).isRequired,
-
-  // from store
-  basePath: T.string,
-
-  // page props
-  subtitle: T.node,
-  actions: T.any,
-  path: T.arrayOf(T.object),
-  children: T.any,
-  reload: T.func.isRequired
-}
-
-ToolPage.defaultProps = {
-  path: []
-}
+ToolPage.propTypes = ContextPage.propTypes
+ToolPage.defaultProps = ContextPage.defaultProps
 
 export {
   ToolPage

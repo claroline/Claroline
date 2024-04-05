@@ -4,14 +4,14 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {selectors as baseSelectors} from '#/main/core/tools/locations/store'
 import {LocationCard} from '#/main/core/data/types/location/components/card'
 
 const LocationList = props =>
   <ToolPage
-    path={[
+    breadcrumb={[
       {
         type: LINK_BUTTON,
         label: trans('locations', {}, 'tools'),

@@ -4,19 +4,19 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentSizing} from '#/main/app/content/components/sizing'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {PresencesList} from '#/plugin/cursus/presence/components/list'
 import {selectors} from '#/plugin/cursus/tools/events/store'
 
 const EventsPresences = (props) =>
   <ToolPage
-    path={[{
+    breadcrumb={[{
       type: LINK_BUTTON,
       label: (props.canEdit || props.canRegister) ? trans('presences', {}, 'cursus') : trans('my_presences', {}, 'cursus'),
       target: `${props.path}/presences`
     }]}
-    subtitle={(props.canEdit || props.canRegister) ? trans('presences', {}, 'cursus') : trans('my_presences', {}, 'cursus')}
+    title={(props.canEdit || props.canRegister) ? trans('presences', {}, 'cursus') : trans('my_presences', {}, 'cursus')}
   >
     <ContentSizing size="full">
       <PresencesList
