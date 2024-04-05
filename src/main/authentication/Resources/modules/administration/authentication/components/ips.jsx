@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 import {Alert} from '#/main/app/components/alert'
 import {ListData} from '#/main/app/content/list/containers/data'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {selectors} from '#/main/authentication/administration/authentication/store'
 import {MODAL_IP_PARAMETERS} from '#/main/authentication/ip/modals/parameters'

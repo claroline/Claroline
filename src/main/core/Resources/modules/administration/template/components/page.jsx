@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {TemplateType as TemplateTypeTypes} from '#/main/core/data/types/template-type/prop-types'
 
@@ -22,7 +22,7 @@ const TemplatePage = (props) => {
 
   return (
     <ToolPage
-      path={[
+      breadcrumb={[
         {
           type: LINK_BUTTON,
           label: trans(get(props.templateType, 'type')),

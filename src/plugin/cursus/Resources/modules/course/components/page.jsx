@@ -7,6 +7,7 @@ import {PropTypes as T} from 'prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
 import {ToolPage} from '#/main/core/tool/containers/page'
+
 import {ContentLoader} from '#/main/app/content/components/loader'
 
 import {route} from '#/plugin/cursus/routing'
@@ -30,14 +31,13 @@ const Course = (props) => {
   return (
     <ToolPage
       className="training-page"
-      title={props.course.name}
-      subtitle={get(props.activeSession, 'name')}
+      title={props.course.name || get(props.activeSession, 'name')}
       poster={getInfo(props.course, props.activeSession, 'poster')}
       meta={{
         title: `${trans('trainings', {}, 'tools')} - ${props.course.name}`,
         description: props.course.description
       }}
-      path={[
+      breadcrumb={[
         {
           type: LINK_BUTTON,
           label: trans('catalog', {}, 'cursus'),

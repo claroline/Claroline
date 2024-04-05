@@ -7,7 +7,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router'
 import {now} from '#/main/app/intl/date'
 import {LINK_BUTTON, MENU_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {MODAL_EVENT_CREATION} from '#/plugin/agenda/event/modals/creation'
@@ -21,7 +21,7 @@ const AgendaCalendar = (props) => {
 
   return (
     <ToolPage
-      subtitle={currentView.display(props.referenceDate)}
+      title={currentView.display(props.referenceDate)}
       primaryAction="add"
       toolbar="previous range next | today"
       actions={[

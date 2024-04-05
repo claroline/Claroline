@@ -119,7 +119,7 @@ const PageHeader = props =>
       <div className="d-flex flex-fill align-items-center" role="presentation">
         <PageTitle
           embedded={props.embedded}
-          path={props.path}
+          breadcrumb={props.breadcrumb}
           title={props.title}
         />
 
@@ -156,7 +156,7 @@ PageHeader.propTypes = {
   /**
    * The path of the page inside the application (used to build the breadcrumb).
    */
-  path: T.arrayOf(T.shape({
+  breadcrumb: T.arrayOf(T.shape({
     label: T.string.isRequired,
     displayed: T.bool,
     target: T.oneOfType([T.string, T.array])

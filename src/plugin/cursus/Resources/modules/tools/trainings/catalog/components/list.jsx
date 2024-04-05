@@ -3,19 +3,19 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {CourseList} from '#/plugin/cursus/course/components/list'
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store'
 
 const CatalogList = (props) =>
   <ToolPage
-    path={[{
+    breadcrumb={[{
       type: LINK_BUTTON,
       label: trans('catalog', {}, 'cursus'),
       target: props.path + '/catalog'
     }]}
-    subtitle={trans('catalog', {}, 'cursus')}
+    title={trans('catalog', {}, 'cursus')}
     primaryAction="add"
     actions={[
       {

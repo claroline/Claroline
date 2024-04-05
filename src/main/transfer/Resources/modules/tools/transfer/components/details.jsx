@@ -9,7 +9,7 @@ import {hasPermission} from '#/main/app/security'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {UserMicro} from '#/main/core/user/components/micro'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {transAction} from '#/main/transfer/utils'
 import {Toolbar} from '#/main/app/action'
@@ -27,7 +27,7 @@ const TransferDetails = props => {
 
   return (
     <ToolPage
-      subtitle={
+      title={
         <Fragment>
           <span className={classes('badge icon-with-text-right', {
             'text-bg-secondary': 'pending' === props.transferFile.status,

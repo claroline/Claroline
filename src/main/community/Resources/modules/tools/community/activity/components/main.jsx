@@ -5,7 +5,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {LogFunctionalList} from '#/main/log/components/functional-list'
 import {selectors} from '#/main/community/tools/community/activity/store'

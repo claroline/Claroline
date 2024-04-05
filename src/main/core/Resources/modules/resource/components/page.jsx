@@ -12,7 +12,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Await} from '#/main/app/components/await'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {ResourceRestrictions} from '#/main/core/resource/containers/restrictions'
 
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
@@ -48,13 +48,12 @@ const ResourcePage = (props) => {
         description: props.resourceNode.meta ? props.resourceNode.meta.description : null
       }}
       embedded={props.embedded}
-      showHeader={props.embedded ? props.showHeader : true}
+      showHeader={!props.embedded || props.showHeader}
       title={props.title || props.subtitle || props.resourceNode.name}
-      path={[].concat(ancestors.map(ancestorNode => ({
-        type: LINK_BUTTON,
+      breadcrumb={[].concat(ancestors.map(ancestorNode => ({
         label: ancestorNode.name,
         target: `${props.basePath}/${ancestorNode.slug}`
-      })), props.path)}
+      })), props.breadcrumb || props.path)}
       poster={props.resourceNode.poster}
       icon={get(props.resourceNode, 'display.showIcon') ?
         <ResourceIcon

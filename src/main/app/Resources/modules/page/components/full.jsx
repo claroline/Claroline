@@ -3,14 +3,13 @@ import classes from 'classnames'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
-import {implementPropTypes} from '#/main/app/prop-types'
 import {PageFull as PageFullTypes} from '#/main/app/page/prop-types'
 import {PageSimple} from '#/main/app/page/components/simple'
 import {PageHeader} from '#/main/app/page/components/header'
 
 const PageFull = (props) =>
   <PageSimple
-    {...omit(props, 'showHeader', 'header', 'title', 'subtitle', 'icon', 'poster', 'toolbar', 'actions', 'menu')}
+    {...omit(props, 'showHeader', 'title', 'icon', 'poster', 'toolbar', 'actions', 'menu')}
     meta={merge({}, {
       title: props.title,
       poster: props.poster
@@ -19,8 +18,8 @@ const PageFull = (props) =>
     {props.showHeader &&
       <PageHeader
         id={props.id}
-        path={props.path}
-        title={props.subtitle || props.title}
+        breadcrumb={props.breadcrumb}
+        title={props.title}
         icon={props.icon}
         poster={props.poster}
         toolbar={props.toolbar}
@@ -37,7 +36,8 @@ const PageFull = (props) =>
     </div>
   </PageSimple>
 
-implementPropTypes(PageFull, PageFullTypes)
+PageFull.propTypes = PageFullTypes.propTypes
+PageFull.defaultProps = PageFullTypes.defaultProps
 
 export {
   PageFull

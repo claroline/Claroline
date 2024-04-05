@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {Alert} from '#/main/app/components/alert'
 
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
@@ -14,7 +14,7 @@ import {selectors} from '#/main/evaluation/tools/evaluation/store'
 
 const EvaluationParameters = (props) =>
   <ToolPage
-    subtitle={trans('parameters')}
+    title={trans('parameters')}
     actions={[
       {
         name: 'initialize',

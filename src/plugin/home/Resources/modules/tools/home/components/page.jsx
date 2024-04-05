@@ -4,19 +4,18 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 
 const HomePage = props =>
   <ToolPage
     className="home-tool"
-    path={props.breadcrumb}
+    breadcrumb={props.breadcrumb}
     icon={props.currentTab && props.currentTab.icon ?
       <span className={`tool-icon fa fa-${props.currentTab.icon}`} /> : undefined
     }
-    title={props.title}
-    subtitle={props.subtitle}
+    title={props.title || props.subtitle}
     poster={props.poster || get(props.currentTab, 'poster')}
     /*primaryAction="add"*/
     actions={props.currentTab ? [

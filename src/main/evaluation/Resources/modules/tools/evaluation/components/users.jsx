@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 
@@ -20,7 +20,7 @@ const EvaluationUsers = (props) => {
 
   return (
     <ToolPage
-      subtitle={trans('users_progression', {}, 'evaluation')}
+      title={trans('users_progression', {}, 'evaluation')}
     >
       <ContentSizing size="full">
         <ListData

@@ -15,13 +15,6 @@ const PageSimple = {
      */
     embedded: T.bool,
 
-    /**
-     * Is the current page displayed in fullscreen ?
-     *
-     * @type {bool}
-     */
-    fullscreen: T.bool,
-
     children: T.node.isRequired,
 
     /**
@@ -41,7 +34,6 @@ const PageSimple = {
   },
   defaultProps: {
     embedded: false,
-    fullscreen: false,
     styles: []
   }
 }
@@ -62,17 +54,7 @@ const PageFull = {
      */
     breadcrumb: T.arrayOf(T.shape({
       label: T.string.isRequired,
-      displayed: T.bool,
-      target: T.oneOfType([T.string, T.array])
-    })),
-
-    /**
-     * @deprecated use breadcrumb
-     */
-    path: T.arrayOf(T.shape({
-      label: T.string.isRequired,
-      displayed: T.bool,
-      target: T.oneOfType([T.string, T.array])
+      target: T.string
     })),
 
     /**
@@ -80,16 +62,7 @@ const PageFull = {
      *
      * @type {string}
      */
-    title: T.string.isRequired,
-
-    /**
-     * An optional subtitle for the page.
-     *
-     * @type {React.node}
-     *
-     * @deprecated use title
-     */
-    subtitle: T.node,
+    title: T.string,
 
     /**
      * An optional icon for the page.
@@ -141,7 +114,8 @@ const PageFull = {
     showHeader: true,
     disabled: false,
     actions: [],
-    toolbar: 'more'
+    toolbar: 'more',
+    breadcrumb: []
   })
 }
 

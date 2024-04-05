@@ -8,7 +8,6 @@ import isUndefined from 'lodash/isUndefined'
 import {trans, displayDate} from '#/main/app/intl'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action'
-import {PageFull} from '#/main/app/page/components/full'
 import {PasswordInput} from '#/main/app/data/types/password/components/input'
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {ContentRestriction} from '#/main/app/content/components/restriction'
@@ -17,11 +16,10 @@ import {ContentHtml} from '#/main/app/content/components/html'
 import {MODAL_LOGIN} from '#/main/app/modals/login'
 import {MODAL_REGISTRATION} from '#/main/app/modals/registration'
 
-import {constants as toolConstants} from '#/main/core/tool/constants'
-import {getToolBreadcrumb} from '#/main/core/tool/utils'
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {getRestrictions} from '#/main/core/workspace/utils'
 import {PageSection} from '#/main/app/page/components/section'
+import {ContextPage} from '#/main/app/context/components/page'
 
 class StandardRestrictions extends Component {
   constructor(props) {
@@ -287,11 +285,7 @@ const WorkspaceForbidden = (props) => {
   }, [props.workspace.id])
 
   return (
-    <PageFull
-      path={getToolBreadcrumb(null, toolConstants.TOOL_WORKSPACE, props.workspace)}
-      title={props.workspace.name}
-      poster={props.workspace.poster ? props.workspace.poster : undefined}
-    >
+    <ContextPage>
       {!isUndefined(restrictions) && 0 !== restrictions.length &&
         createElement(restrictions[0].component, {
           workspace: props.workspace,
@@ -305,7 +299,7 @@ const WorkspaceForbidden = (props) => {
       {!isUndefined(restrictions) && 0 === restrictions.length &&
         <StandardRestrictions {...props} />
       }
-    </PageFull>
+    </ContextPage>
   )
 }
 

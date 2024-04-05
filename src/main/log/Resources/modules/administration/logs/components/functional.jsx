@@ -1,14 +1,14 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 
 import {LogFunctionalList} from '#/main/log/components/functional-list'
 import {selectors} from '#/main/log/administration/logs/store/selectors'
 
 const LogsFunctional = () =>
-  <ToolPage subtitle={trans('functional', {}, 'log')}>
+  <ToolPage title={trans('functional', {}, 'log')}>
     <ContentSizing size="full">
       <LogFunctionalList
         flush={true}

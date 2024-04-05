@@ -6,12 +6,11 @@ import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {getActions} from '#/main/community/group/utils'
-import {route} from '#/main/community/group/routing'
 import {Group as GroupTypes} from '#/main/community/group/prop-types'
 
 const Group = (props) =>
@@ -21,7 +20,7 @@ const Group = (props) =>
       title: trans('group_name', {name: get(props.group, 'name', trans('loading'))}, 'community'),
       description: get(props.group, 'meta.description')
     }}
-    path={[
+    breadcrumb={[
       {
         type: LINK_BUTTON,
         label: trans('groups', {}, 'community'),

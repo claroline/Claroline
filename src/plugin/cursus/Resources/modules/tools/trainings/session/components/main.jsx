@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {Routes} from '#/main/app/router/components/routes'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentTabs} from '#/main/app/content/components/tabs'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
 import {SessionList} from '#/plugin/cursus/session/components/list'
@@ -13,12 +13,12 @@ import {selectors} from '#/plugin/cursus/tools/trainings/session/store/selectors
 
 const SessionMain = (props) =>
   <ToolPage
-    path={[{
+    breadcrumb={[{
       type: LINK_BUTTON,
       label: trans('my_sessions', {}, 'cursus'),
       target: `${props.path}/registered`
     }]}
-    subtitle={trans('my_sessions', {}, 'cursus')}
+    title={trans('my_courses', {}, 'cursus')}
   >
     <ContentTabs
       sections={[

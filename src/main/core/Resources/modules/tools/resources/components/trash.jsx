@@ -3,13 +3,13 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {selectors} from '#/main/core/tools/resources/store'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {ResourceList} from '#/main/core/resource/components/list'
 
 const ResourcesTrash = (props) =>
   <ToolPage
-    subtitle={trans('trash')}
+    title={trans('trash')}
   >
     <ResourceList
       className="my-3"

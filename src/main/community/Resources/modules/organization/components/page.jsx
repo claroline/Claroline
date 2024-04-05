@@ -5,11 +5,10 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
-import {route} from '#/main/community/organization/routing'
 import {getActions} from '#/main/community/organization/utils'
 import {Organization as OrganizationTypes} from '#/main/community/organization/prop-types'
 import {ContentLoader} from '#/main/app/content/components/loader'
@@ -21,7 +20,7 @@ const Organization = (props) =>
       title: trans('organization_name', {name: get(props.organization, 'name', trans('loading'))}, 'community'),
       description: get(props.organization, 'meta.description')
     }}
-    path={[
+    breadcrumb={[
       {
         type: LINK_BUTTON,
         label: trans('organizations', {}, 'community'),

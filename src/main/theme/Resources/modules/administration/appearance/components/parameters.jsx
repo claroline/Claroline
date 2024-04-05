@@ -6,7 +6,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {Toolbar} from '#/main/app/action'
 import {ASYNC_BUTTON, DOWNLOAD_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {FormData} from '#/main/app/content/form/containers/data'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {selectors} from '#/main/theme/administration/appearance/store/selectors'
 import {AppearanceIcons} from '#/main/theme/administration/appearance/containers/icons'

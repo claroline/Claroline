@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {selectors} from '#/plugin/open-badge/tools/badges/store'
 import {BadgeForm} from '#/plugin/open-badge/badge/components/form'

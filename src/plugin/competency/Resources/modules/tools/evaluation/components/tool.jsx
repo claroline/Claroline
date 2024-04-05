@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router'
 
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {FrameworkTab} from '#/plugin/competency/tools/evaluation/framework/components/framework-tab'
 import {ScaleTab} from '#/plugin/competency/tools/evaluation/scale/components/scale-tab'
@@ -36,7 +36,7 @@ const CompetencyTool = (props) =>
         target: `${props.path}/competencies/scales/form`
       }
     ]}
-    subtitle={trans('competencies', {}, 'evaluation')}
+    title={trans('competencies', {}, 'evaluation')}
     styles={['claroline-distribution-plugin-competency-competency']}
   >
     <ContentTabs

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl'
 import {LINK_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {route} from '#/main/core/workspace/routing'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {GroupForm} from '#/main/community/group/components/form'
@@ -10,14 +10,14 @@ import {selectors} from '#/main/community/tools/community/group/store'
 
 const GroupCreate = (props) =>
   <ToolPage
-    path={[
+    breadcrumb={[
       {
         type: LINK_BUTTON,
         label: trans('groups', {}, 'community'),
         target: `${props.path}/groups`
       }
     ]}
-    subtitle={trans('new_group', {}, 'community')}
+    title={trans('new_group', {}, 'community')}
   >
     <GroupForm
       className="mt-3"

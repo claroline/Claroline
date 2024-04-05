@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {EventList} from '#/plugin/cursus/event/components/list'
 import {ContentSizing} from '#/main/app/content/components/sizing'
@@ -11,12 +11,12 @@ import {selectors} from '#/plugin/cursus/tools/events/store'
 
 const EventsPublic = (props) =>
   <ToolPage
-    path={[{
+    breadcrumb={[{
       type: LINK_BUTTON,
       label: trans('public_events', {}, 'cursus'),
       target: `${props.path}/public`
     }]}
-    subtitle={trans('public_events', {}, 'cursus')}
+    title={trans('public_events', {}, 'cursus')}
   >
     <ContentSizing size="full">
       <EventList

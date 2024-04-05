@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import {trans, displayDate} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
 import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {Event as EventTypes} from '#/plugin/agenda/prop-types'
 import {route} from '#/plugin/agenda/tools/agenda/routing'
@@ -13,15 +13,14 @@ import {MODAL_EVENT_PARAMETERS} from '#/plugin/agenda/event/modals/parameters'
 
 const EventPage = (props) =>
   <ToolPage
-    path={[
+    breadcrumb={[
       {
-        type: LINK_BUTTON,
         label: props.event.name,
         target: props.path+'/event/'+props.event.id
       }
     ]}
-    title={props.event.name}
-    subtitle={displayDate(props.event.start, true, true)}
+    //title={props.event.name}
+    title={displayDate(props.event.start, true, true)}
     poster={get(props.event, 'thumbnail')}
     primaryAction="show-calendar"
     actions={[

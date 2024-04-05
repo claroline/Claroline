@@ -5,7 +5,7 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
@@ -21,7 +21,7 @@ const User = (props) =>
       title: get(props.user, 'name'),
       description: get(props.user, 'meta.description')
     }}
-    path={[
+    breadcrumb={[
       {
         type: LINK_BUTTON,
         label: trans('users', {}, 'community'),

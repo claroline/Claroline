@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {Material as MaterialTypes} from '#/main/core/tools/locations/prop-types'
 import {MODAL_MATERIAL_BOOKING} from '#/main/core/tools/locations/material/modals/booking'

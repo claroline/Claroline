@@ -6,7 +6,7 @@ import merge from 'lodash/merge'
 import {trans} from '#/main/app/intl/translation'
 import {Routes, withRouter} from '#/main/app/router'
 import {Vertical} from '#/main/app/content/tabs/components/vertical'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 const TransferForm = withRouter(props => {
   const entities = Object.keys(props.explanation)
@@ -17,7 +17,7 @@ const TransferForm = withRouter(props => {
     .sort((a, b) => (a.title < b.title) ? -1 : 1)
 
   return (
-    <ToolPage subtitle={props.title}>
+    <ToolPage title={props.title}>
       <div className="content-lg mt-3">
         <div className="row">
           <div className="col-md-4">

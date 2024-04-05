@@ -3,13 +3,13 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {LocationForm} from '#/main/core/tools/locations/location/containers/form'
 
 const LocationNew = (props) =>
   <ToolPage
-    path={[
+    breadcrumb={[
       {
         type: LINK_BUTTON,
         label: trans('locations'),
@@ -18,8 +18,7 @@ const LocationNew = (props) =>
         label: trans('new_location', {}, 'location')
       }
     ]}
-    title={trans('locations', {}, 'tools')}
-    subtitle={trans('new_location', {}, 'location')}
+    title={trans('new_location', {}, 'location')}
     primaryAction="add"
     actions={[
       {

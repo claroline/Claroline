@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 import {LINK_BUTTON} from '#/main/app/buttons'
 
 import {TeamForm} from '#/main/community/team/components/form'
@@ -10,7 +10,7 @@ import {selectors} from '#/main/community/tools/community/team/store'
 
 const TeamCreate = (props) =>
   <ToolPage
-    path={[
+    breadcrumb={[
       {
         type: LINK_BUTTON,
         label: trans('teams', {}, 'community'),
