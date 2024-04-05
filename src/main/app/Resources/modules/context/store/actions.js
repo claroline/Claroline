@@ -31,8 +31,6 @@ export const CONTEXT_NOT_FOUND = 'CONTEXT_NOT_FOUND'
  */
 export const CONTEXT_RESTRICTIONS_DISMISS = 'CONTEXT_RESTRICTIONS_DISMISS'
 
-export const CONTEXT_SHORTCUTS_LOAD = 'CONTEXT_SHORTCUTS_LOAD'
-
 export const CONTEXT_MENU_OPEN = 'MENU_OPEN'
 export const CONTEXT_MENU_CLOSE = 'MENU_CLOSE'
 export const CONTEXT_MENU_TOGGLE = 'MENU_TOGGLE'
@@ -43,7 +41,6 @@ actions.load = makeActionCreator(CONTEXT_LOAD, 'contextData')
 actions.setLoaded = makeActionCreator(CONTEXT_SET_LOADED, 'loaded')
 actions.setNotFound = makeActionCreator(CONTEXT_NOT_FOUND)
 actions.dismissRestrictions = makeActionCreator(CONTEXT_RESTRICTIONS_DISMISS)
-actions.loadShortcuts = makeActionCreator(CONTEXT_SHORTCUTS_LOAD, 'shortcuts')
 
 actions.open = (contextType, contextId = null) => (dispatch) => dispatch({
   [API_REQUEST]: {

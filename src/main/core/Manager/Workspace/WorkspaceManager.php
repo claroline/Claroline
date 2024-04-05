@@ -18,7 +18,6 @@ use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
@@ -29,39 +28,18 @@ class WorkspaceManager implements LoggerAwareInterface
 {
     use LoggableTrait;
 
-    /** @var string */
-    private $filesDir;
-    /** @var string */
-    private $defaultWorkspacePath;
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var TransferManager */
-    private $transferManager;
-
-    private $shortcutsRepo;
-    /** @var UserRepository */
-    private $userRepo;
-    /** @var WorkspaceRepository */
-    private $workspaceRepo;
+    private UserRepository $userRepo;
+    private WorkspaceRepository $workspaceRepo;
 
     public function __construct(
-        string $fileDir,
-        string $defaultWorkspacePath,
-        Crud $crud,
-        ObjectManager $om,
-        TransferManager $transferManager
+        private readonly string $filesDir,
+        private readonly string $defaultWorkspacePath,
+        private readonly Crud $crud,
+        private readonly ObjectManager $om,
+        private readonly TransferManager $transferManager
     ) {
-        $this->filesDir = $fileDir;
-        $this->defaultWorkspacePath = $defaultWorkspacePath;
-        $this->om = $om;
-        $this->crud = $crud;
-        $this->transferManager = $transferManager;
-
         $this->userRepo = $om->getRepository(User::class);
         $this->workspaceRepo = $om->getRepository(Workspace::class);
-        $this->shortcutsRepo = $om->getRepository(Shortcuts::class);
     }
 
     public function createPersonalWorkspace(User $user, Workspace $model = null): Workspace
@@ -134,25 +112,6 @@ class WorkspaceManager implements LoggerAwareInterface
     public function getStorageDirectory(Workspace $workspace): string
     {
         return $this->filesDir.DIRECTORY_SEPARATOR.'WORKSPACE_'.$workspace->getId();
-    }
-
-    /**
-     * Get the current used storage in a workspace.
-     */
-    public function getUsedStorage(Workspace $workspace): int
-    {
-        $dir = $this->getStorageDirectory($workspace);
-        $size = 0;
-
-        if (!is_dir($dir)) {
-            return $size;
-        }
-
-        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir)) as $file) {
-            $size += $file->getSize();
-        }
-
-        return $size;
     }
 
     public function getWorkspaceOptions(Workspace $workspace): WorkspaceOptions
@@ -303,40 +262,6 @@ class WorkspaceManager implements LoggerAwareInterface
             $workspace->setPersonal($isPersonal);
             $workspace->setModel(true);
 
-            if (0 === count($this->shortcutsRepo->findBy(['workspace' => $workspace]))) {
-                $this->log('Generating default shortcuts...');
-                $managerRole = $workspace->getManagerRole();
-                $collaboratorRole = $workspace->getCollaboratorRole();
-
-                if ($managerRole) {
-                    $shortcuts = new Shortcuts();
-                    $shortcuts->setWorkspace($workspace);
-                    $shortcuts->setRole($managerRole);
-                    $shortcuts->setData([
-                        ['type' => 'tool', 'name' => 'home'],
-                        ['type' => 'tool', 'name' => 'resources'],
-                        ['type' => 'tool', 'name' => 'agenda'],
-                        ['type' => 'tool', 'name' => 'community'],
-                        ['type' => 'action', 'name' => 'favourite'],
-                        ['type' => 'action', 'name' => 'configure'],
-                        ['type' => 'action', 'name' => 'impersonation'],
-                    ]);
-                    $this->om->persist($shortcuts);
-                }
-                if ($collaboratorRole) {
-                    $shortcuts = new Shortcuts();
-                    $shortcuts->setWorkspace($workspace);
-                    $shortcuts->setRole($collaboratorRole);
-                    $shortcuts->setData([
-                        ['type' => 'tool', 'name' => 'home'],
-                        ['type' => 'tool', 'name' => 'resources'],
-                        ['type' => 'tool', 'name' => 'agenda'],
-                        ['type' => 'action', 'name' => 'favourite'],
-                    ]);
-                    $this->om->persist($shortcuts);
-                }
-            }
-
             $this->om->persist($workspace);
             $this->om->flush();
         }
@@ -349,66 +274,8 @@ class WorkspaceManager implements LoggerAwareInterface
         $this->crud->patch($subject, 'role', Crud::COLLECTION_REMOVE, $workspace->getRoles()->toArray(), $options);
     }
 
-    public function getShortcuts(Workspace $workspace, array $roleNames = []): array
-    {
-        $shortcuts = [];
-        foreach ($workspace->getShortcuts() as $shortcut) {
-            if (in_array($shortcut->getRole()->getName(), $roleNames)) {
-                $shortcuts = array_merge($shortcuts, $shortcut->getData());
-            }
-        }
-
-        return $shortcuts;
-    }
-
-    public function addShortcuts(Workspace $workspace, Role $role, array $toAdd): void
-    {
-        $workspaceShortcuts = $this->shortcutsRepo->findOneBy(['workspace' => $workspace, 'role' => $role]);
-
-        if (!$workspaceShortcuts) {
-            $workspaceShortcuts = new Shortcuts();
-            $workspaceShortcuts->setWorkspace($workspace);
-            $workspaceShortcuts->setRole($role);
-        }
-        $data = $workspaceShortcuts->getData();
-
-        foreach ($toAdd as $shortcut) {
-            if (Shortcuts::SHORTCUTS_LIMIT > count($data)) {
-                $filteredArray = array_filter($data, function ($element) use ($shortcut) {
-                    return $element['type'] === $shortcut['type'] && $element['name'] === $shortcut['name'];
-                });
-
-                if (0 === count($filteredArray)) {
-                    $data[] = $shortcut;
-                }
-            }
-        }
-        $workspaceShortcuts->setData($data);
-        $this->om->persist($workspaceShortcuts);
-        $this->om->flush();
-    }
-
-    public function removeShortcut(Workspace $workspace, Role $role, $type, $name): void
-    {
-        $workspaceShortcuts = $this->shortcutsRepo->findOneBy(['workspace' => $workspace, 'role' => $role]);
-
-        if ($workspaceShortcuts) {
-            $data = $workspaceShortcuts->getData();
-            $newData = [];
-
-            foreach ($data as $shortcut) {
-                if ($shortcut['type'] !== $type || $shortcut['name'] !== $name) {
-                    $newData[] = $shortcut;
-                }
-            }
-            $workspaceShortcuts->setData($newData);
-            $this->om->persist($workspaceShortcuts);
-            $this->om->flush();
-        }
-    }
-
     /**
-     * Generates an unique workspace code from given one by iterating it.
+     * Generates a unique workspace code from given one by iterating it.
      */
     public function getUniqueCode(string $code): string
     {

@@ -167,10 +167,6 @@ WorkspaceMenu.propTypes = {
   roles: T.arrayOf(T.shape({
     translationKey: T.string.isRequired
   })),
-  shortcuts: T.arrayOf(T.shape({
-    type: T.oneOf(['tool', 'action']).isRequired,
-    name: T.string.isRequired
-  })),
   tools: T.arrayOf(T.shape({
     icon: T.string.isRequired,
     name: T.string.isRequired,
@@ -180,8 +176,7 @@ WorkspaceMenu.propTypes = {
 }
 
 WorkspaceMenu.defaultProps = {
-  workspace: {},
-  shortcuts: []
+  workspace: {}
 }
 
 export {

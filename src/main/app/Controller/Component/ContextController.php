@@ -8,7 +8,6 @@ use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Component\Tool\ToolInterface;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Event\CatalogEvents\ContextEvents;
 use Claroline\CoreBundle\Event\Context\OpenContextEvent;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -75,9 +74,6 @@ class ContextController
                 'tools' => array_map(function (OrderedTool $orderedTool) {
                     return $this->serializer->serialize($orderedTool, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $contextHandler->getTools($contextObject)),
-                'shortcuts' => array_map(function (Shortcuts $shortcuts) {
-                    return $this->serializer->serialize($shortcuts, [SerializerInterface::SERIALIZE_MINIMAL]);
-                }, $contextHandler->getShortcuts($contextObject)),
             ], $contextHandler->getAdditionalData($contextObject)));
         }
 

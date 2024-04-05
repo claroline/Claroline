@@ -22,25 +22,19 @@ use Doctrine\Persistence\ObjectRepository;
  */
 class ResourceListener
 {
-    /** @var Crud */
-    private $crud;
-
-    /** @var ObjectRepository */
-    private $repository;
+    private ObjectRepository $repository;
 
     public function __construct(
         ObjectManager $om,
-        Crud $crud
+        private readonly Crud $crud
     ) {
-        $this->crud = $crud;
-
         $this->repository = $om->getRepository(Shortcut::class);
     }
 
     /**
      * Removes all linked shortcuts when a resource is deleted.
      */
-    public function delete(DeleteEvent $event)
+    public function delete(DeleteEvent $event): void
     {
         $resourceNode = $event->getObject();
 

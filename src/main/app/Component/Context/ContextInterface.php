@@ -43,9 +43,4 @@ interface ContextInterface extends ComponentInterface
      * Gets the list of tools enabled for the context.
      */
     public function getTools(?ContextSubjectInterface $contextSubject): array;
-
-    /**
-     * Gets the list of shortcuts for the context.
-     */
-    public function getShortcuts(?ContextSubjectInterface $contextSubject): array;
 }

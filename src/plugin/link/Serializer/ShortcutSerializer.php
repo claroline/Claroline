@@ -13,29 +13,18 @@ class ShortcutSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var ResourceNodeSerializer */
-    private $resourceNodeSerializer;
-
-    /**
-     * ShortcutSerializer constructor.
-     */
     public function __construct(
-        ObjectManager $om,
-        ResourceNodeSerializer $resourceNodeSerializer)
-    {
-        $this->om = $om;
-        $this->resourceNodeSerializer = $resourceNodeSerializer;
+        private readonly ObjectManager $om,
+        private readonly ResourceNodeSerializer $resourceNodeSerializer
+    ) {
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Shortcut::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'shortcut';
     }

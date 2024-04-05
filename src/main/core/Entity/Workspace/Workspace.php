@@ -199,16 +199,6 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     private $workspaceModel;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Shortcuts",
-     *     mappedBy="workspace"
-     * )
-     *
-     * @var Shortcuts[]|ArrayCollection
-     */
-    private $shortcuts;
-
-    /**
      * @ORM\Column(type="integer", nullable=true)
      *
      * @var int
@@ -229,7 +219,6 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
         $this->roles = new ArrayCollection();
         $this->organizations = new ArrayCollection();
         $this->options = new WorkspaceOptions();
-        $this->shortcuts = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -451,30 +440,6 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     public function setSuccessCondition(?array $successCondition): void
     {
         $this->successCondition = $successCondition;
-    }
-
-    /**
-     * Get shortcuts.
-     *
-     * @return Shortcuts[]|ArrayCollection
-     */
-    public function getShortcuts()
-    {
-        return $this->shortcuts;
-    }
-
-    public function addShortcuts(Shortcuts $shortcuts)
-    {
-        if (!$this->shortcuts->contains($shortcuts)) {
-            $this->shortcuts->add($shortcuts);
-        }
-    }
-
-    public function removeShortcuts(Shortcuts $shortcuts)
-    {
-        if ($this->shortcuts->contains($shortcuts)) {
-            $this->shortcuts->removeElement($shortcuts);
-        }
     }
 
     public function getEstimatedDuration(): ?int

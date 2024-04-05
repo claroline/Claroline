@@ -112,7 +112,7 @@ const defaultOpening = createSelector(
   (data, tools) => {
     let defaultTool = null
     if (data && get(data, 'opening.type')) {
-      if ('resource' === get(data, 'opening.type')) { // TODO : resources should only be managed by workspaces
+      if ('resource' === get(data, 'opening.type')) {
         defaultTool = `resources/${data.opening.target.slug || ''}`
       } else if ('tool' === data.opening.type) {
         defaultTool = data.opening.target
@@ -129,29 +129,6 @@ const defaultOpening = createSelector(
     }
 
     return defaultTool
-  }
-)
-
-// shortcuts
-const allShortcuts = createSelector(
-  [store],
-  (store) => store.shortcuts || []
-)
-
-// the current user enabled shortcuts
-// TODO : `shortcut` should already contains only those available for the current user
-const shortcuts = createSelector(
-  [allShortcuts, securitySelectors.currentUser],
-  (allShortcuts, currentUser) => {
-    let definedShortcuts = []
-    allShortcuts.map(shortcut => {
-      if (hasRole(shortcut.role.name, currentUser)) {
-        definedShortcuts = definedShortcuts.concat(shortcut.data)
-      }
-    })
-
-    // remove duplicated shortcut
-    return uniqWith(definedShortcuts, (a, b) => a.type === b.type && a.name === b.name)
   }
 )
 
@@ -191,8 +168,6 @@ export const selectors = {
   data,
   tools,
   defaultOpening,
-  allShortcuts,
-  shortcuts,
 
   // selectors for menu
   menuUntouched,

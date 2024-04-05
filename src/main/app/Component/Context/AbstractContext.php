@@ -23,12 +23,6 @@ abstract class AbstractContext implements ContextInterface
         return $this->toolProvider->getEnabledTools(static::getName(), $contextSubject);
     }
 
-    public function getShortcuts(?ContextSubjectInterface $contextSubject): array
-    {
-        // only supported by Workspace context atm
-        return [];
-    }
-
     public function getAdditionalData(?ContextSubjectInterface $contextSubject): array
     {
         return [];

@@ -14,7 +14,6 @@ use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Shortcuts;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
@@ -226,25 +225,6 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         $workspaceCopy = $this->transferManager->deserialize($data, $newWorkspace, $fileBag);
 
         $workspaceCopy->setModel($model);
-
-        // Copy workspace shortcuts
-        /** @var Shortcuts[] $workspaceShortcuts */
-        $workspaceShortcuts = $this->om->getRepository(Shortcuts::class)->findBy(['workspace' => $workspace]);
-
-        foreach ($workspaceShortcuts as $shortcuts) {
-            $role = $shortcuts->getRole();
-
-            $roleName = preg_replace('/'.$workspace->getUuid().'$/', '', $role->getName()).$workspaceCopy->getUuid();
-            $roleCopy = $this->om->getRepository(Role::class)->findOneBy(['name' => $roleName]);
-
-            if ($roleCopy) {
-                $shortcutsCopy = new Shortcuts();
-                $shortcutsCopy->setWorkspace($workspaceCopy);
-                $shortcutsCopy->setRole($roleCopy);
-                $shortcutsCopy->setData($shortcuts->getData());
-                $this->om->persist($shortcutsCopy);
-            }
-        }
 
         return $workspaceCopy;
     }

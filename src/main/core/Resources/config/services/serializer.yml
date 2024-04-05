@@ -43,11 +43,6 @@ services:
             - '@Claroline\CommunityBundle\Serializer\OrganizationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
 
-    Claroline\CoreBundle\API\Serializer\Workspace\ShortcutsSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
-
     Claroline\CoreBundle\API\Serializer\Workspace\PendingRegistrationSerializer:
         tags: [claroline.serializer]
         arguments:
