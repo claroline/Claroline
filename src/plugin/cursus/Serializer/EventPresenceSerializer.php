@@ -53,12 +53,14 @@ class EventPresenceSerializer
             'status' => $eventPresence->getStatus(),
             'signature' => $eventPresence->getSignature(),
             'validation_date' => DateNormalizer::normalize($eventPresence->getValidationDate()),
+            'evidences' => $eventPresence->getEvidences(),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
             $serialized['permissions'] = [
                 'open' => $this->authorization->isGranted('OPEN', $eventPresence),
                 'edit' => $this->authorization->isGranted('EDIT', $eventPresence),
+                'administrate' => $this->authorization->isGranted('ADMINISTRATE', $eventPresence),
                 'delete' => $this->authorization->isGranted('DELETE', $eventPresence),
             ];
         }
@@ -80,6 +82,10 @@ class EventPresenceSerializer
             }
 
             $eventPresence->setUser($user);
+        }
+
+        if (array_key_exists('evidences', $data)) {
+            $eventPresence->setEvidences($data['evidences'] ?? null);
         }
 
         return $eventPresence;

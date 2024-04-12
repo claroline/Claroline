@@ -3,7 +3,7 @@ import {trans} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
 
 export default (presences, refresher) => {
-  const processable = presences.filter(presence => hasPermission('edit', presence))
+  const processable = presences.filter(presence => hasPermission('administrate', presence))
 
   return {
     name: 'confirm-presence',

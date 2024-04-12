@@ -1,4 +1,8 @@
 {
+  "add_evidences": "Ajouter un justificatif",
+  "evidence": "Justificatif",
+  "evidences": "Justificatifs",
+  "evidence_count": "{0} Aucun justificatif | {1} 1 justificatif | ]1,Inf[ %count% justificatifs",
   "event_not_found": "Séance introuvable",
   "event_not_found_desc": "Ce code ne correspond à aucune séance.",
   "event_not_found_retry": "Saisir à nouveau le code de la séance",

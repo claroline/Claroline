@@ -61,6 +61,11 @@ class EventPresence
      */
     private $validationDate;
 
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private ?array $evidences = null;
+
     public function __construct()
     {
         $this->refreshUuid();
@@ -114,5 +119,15 @@ class EventPresence
     public function setValidationDate(?\DateTimeInterface $validationDate): void
     {
         $this->validationDate = $validationDate;
+    }
+
+    public function getEvidences(): ?array
+    {
+        return $this->evidences;
+    }
+
+    public function setEvidences(array $evidences): void
+    {
+        $this->evidences = $evidences;
     }
 }

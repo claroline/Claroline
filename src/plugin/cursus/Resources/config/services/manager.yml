@@ -40,3 +40,4 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
+            - '%claroline.param.files_directory%'

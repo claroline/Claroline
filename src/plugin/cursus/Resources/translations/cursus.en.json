@@ -88,6 +88,7 @@
     "event_registration_pending_help": "You must confirm your registration using the link that was sent to you.",
     "event_registration_manager_help": "A manager must validate your registration request.",
     "my_events": "My session events",
+    "my_presences": "My presences",
     "public_events": "Public session events",
     "all_events": "All session events",
     "presences": "Presences",

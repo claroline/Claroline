@@ -90,6 +90,7 @@
     "event_registration_pending_help": "Vous devez confirmer votre inscription à la séance grâce au lien qui vous a été envoyé.",
     "event_registration_manager_help": "Un gestionnaire doit valider votre demande d'inscription à la séance.",
     "my_events": "Mes séances",
+    "my_presences": "Mes présences",
     "public_events": "Séances publiques",
     "all_events": "Toutes les séances",
     "presences": "Présences",

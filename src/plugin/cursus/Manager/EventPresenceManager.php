@@ -16,6 +16,9 @@ use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\EventPresence;
+use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EventPresenceManager
@@ -24,7 +27,8 @@ class EventPresenceManager
         private readonly TranslatorInterface $translator,
         private readonly ObjectManager $om,
         private readonly TemplateManager $templateManager,
-        private readonly LocaleManager $localeManager
+        private readonly LocaleManager $localeManager,
+        private readonly string $uploadDir
     ) {
     }
 
@@ -188,5 +192,13 @@ class EventPresenceManager
 
         // use the default template
         return $this->templateManager->getTemplate('training_event_presence', $placeholders, $locale);
+    }
+
+    public function uploadEvidence(UploadedFile $file, EventPresence $presence): File
+    {
+        return $file->move(
+            $this->uploadDir.DIRECTORY_SEPARATOR.'training_event_evidences'.DIRECTORY_SEPARATOR.$presence->getUuid().DIRECTORY_SEPARATOR,
+            Uuid::uuid4()->toString().'.'.$file->getClientOriginalExtension()
+        );
     }
 }

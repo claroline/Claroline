@@ -13,10 +13,10 @@ const EventsPresences = (props) =>
   <ToolPage
     path={[{
       type: LINK_BUTTON,
-      label: trans('presences', {}, 'cursus'),
+      label: (props.canEdit || props.canRegister) ? trans('presences', {}, 'cursus') : trans('my_presences', {}, 'cursus'),
       target: `${props.path}/presences`
     }]}
-    subtitle={trans('presences', {}, 'cursus')}
+    subtitle={(props.canEdit || props.canRegister) ? trans('presences', {}, 'cursus') : trans('my_presences', {}, 'cursus')}
   >
     <ContentSizing size="full">
       <PresencesList
@@ -60,7 +60,9 @@ const EventsPresences = (props) =>
 
 EventsPresences.propTypes = {
   path: T.string.isRequired,
-  contextId: T.string.isRequired
+  contextId: T.string.isRequired,
+  canEdit: T.bool.isRequired,
+  canRegister: T.bool.isRequired
 }
 
 export {

@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/cursus_event_presence")
@@ -50,7 +50,8 @@ class EventPresenceController
         private readonly EventPresenceManager $manager,
         private readonly EventManager $eventManager,
         private readonly PdfManager $pdfManager,
-        private readonly TokenStorageInterface $tokenStorage
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly TranslatorInterface $translator
     ) {
         $this->authorization = $authorization;
     }
@@ -87,14 +88,14 @@ class EventPresenceController
         $isManager = $this->checkPermission(ToolPermissions::getPermission(TrainingEventsTool::getName(), 'EDIT'), $workspace, [])
             || $this->checkPermission(ToolPermissions::getPermission(TrainingEventsTool::getName(), 'REGISTER'), $workspace, []);
 
-        if (!$isManager) {
-            throw new AccessDeniedException();
-        }
-
         $params = $request->query->all();
         $params['hiddenFilters'] = [
             'workspace' => $workspace->getUuid(),
         ];
+
+        if (!$isManager) {
+            $params['hiddenFilters']['user'] = $this->tokenStorage->getToken()->getUser()->getUuid();
+        }
 
         return new JsonResponse(
             $this->finder->search(EventPresence::class, $params)
@@ -182,7 +183,7 @@ class EventPresenceController
 
         $this->om->startFlushSuite();
         foreach ($presences as $presence) {
-            $this->checkPermission('EDIT', $presence, [], true);
+            $this->checkPermission('REGISTER', $presence, [], true);
 
             if ($presence->getValidationDate()) {
                 return new JsonResponse(['success' => false]);
@@ -230,6 +231,60 @@ class EventPresenceController
         }, 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($eventPresence->getEvent()->getName()).'-presence.pdf',
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/evidences", name="apiv2_cursus_presence_evidences_upload", methods={"POST"})
+     *
+     * @EXT\ParamConverter("eventPresence", class="Claroline\CursusBundle\Entity\EventPresence", options={"mapping": {"id": "uuid"}})
+     */
+    public function uploadEvidences(EventPresence $eventPresence, Request $request): JsonResponse
+    {
+        $this->checkPermission('EDIT', $eventPresence, [], true);
+
+        $files = $request->files->all();
+
+        $evidences = [];
+        foreach ($files as $index => $file) {
+            $evidenceFile = $this->manager->uploadEvidence($file, $eventPresence);
+            $evidences[] = [
+                'type' => $evidenceFile->getMimeType(),
+                'mimeType' => $evidenceFile->getMimeType(),
+                'name' => $evidenceFile->getFilename(),
+                'size' => $evidenceFile->getSize(),
+                'url' => $evidenceFile->getRealPath(),
+                'num' => $index + 1,
+            ];
+        }
+
+        $eventPresence->setEvidences($evidences);
+
+        $this->om->persist($eventPresence);
+        $this->om->flush();
+
+        return new JsonResponse($this->serializer->serialize($eventPresence));
+    }
+
+    /**
+     * @Route("/{id}/evidences", name="apiv2_cursus_presence_evidence_download", methods={"GET"})
+     *
+     * @EXT\ParamConverter("eventPresence", class="Claroline\CursusBundle\Entity\EventPresence", options={"mapping": {"id": "uuid"}})
+     */
+    public function downloadEvidenceAction(EventPresence $eventPresence, Request $request): StreamedResponse
+    {
+        $this->checkPermission('OPEN', $eventPresence, [], true);
+
+        $file = $request->get('file');
+        $content = file_get_contents($file['url']);
+        $downloadedName = $this->translator->trans('evidence', [], 'presence').'-'.$file['num'].'-'.$eventPresence->getUser()->getUsername().'-'.$eventPresence->getEvent()->getCode();
+        $extension = pathinfo($file['url'], \PATHINFO_EXTENSION);
+
+        return new StreamedResponse(function () use ($content) {
+            echo $content;
+        }, 200, [
+            'Content-Type' => $file['type'],
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($downloadedName).'.'.$extension,
         ]);
     }
 }
