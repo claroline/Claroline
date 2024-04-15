@@ -16,17 +16,13 @@ const FlashcardResource = props =>
   <Resource
     {...omit(props, 'editable', 'empty', 'overview', 'getAttempt', 'flashcardDeck')}
     styles={['claroline-distribution-plugin-flashcard-flashcard']}
+    overview={Overview}
   >
     <ResourcePage
-      customActions={[
+      primaryAction="play"
+      actions={[
         {
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-home',
-          label: trans('show_overview'),
-          target: props.path,
-          displayed: props.overview,
-          exact: true
-        }, {
+          name: 'play',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-play',
           label: trans('start', {}, 'actions'),

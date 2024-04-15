@@ -21,8 +21,6 @@ final class Version20240405051812 extends AbstractMigration
         ');
         $this->addSql('
             ALTER TABLE claro_resource_node 
-            DROP createdAt, 
-            DROP updatedAt, 
             DROP comments_activated, 
             DROP showTitle, 
             CHANGE creation_date creation_date DATETIME NOT NULL, 

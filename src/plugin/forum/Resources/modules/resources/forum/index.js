@@ -1,13 +1,8 @@
-import {reducer} from '#/plugin/forum/resources/forum/store'
+
+import {declareResource} from '#/main/core/resource'
 import {ForumResource} from '#/plugin/forum/resources/forum/containers/resource'
-import {ForumMenu} from '#/plugin/forum/resources/forum/containers/menu'
 
 /**
  * Forum resource application.
  */
-export default {
-  component: ForumResource,
-  menu: ForumMenu,
-  store: reducer,
-  styles: ['claroline-distribution-plugin-forum-forum-resource']
-}
+export default declareResource(ForumResource)

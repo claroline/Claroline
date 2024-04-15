@@ -12,6 +12,8 @@ import {
   CONTEXT_MENU_TOGGLE
 } from '#/main/app/context/store/actions'
 import get from 'lodash/get'
+import cloneDeep from 'lodash/cloneDeep'
+import {TOOL_LOAD} from '#/main/core/tool/store'
 
 const reducer = combineReducers({
   menu: combineReducers({
@@ -102,7 +104,18 @@ const reducer = combineReducers({
    * The list of available tools on the desktop.
    */
   tools: makeReducer([], {
-    [CONTEXT_LOAD]: (state, action) => action.contextData.tools || []
+    [CONTEXT_LOAD]: (state, action) => action.contextData.tools || [],
+    [TOOL_LOAD]: (state, action) => {
+      const toolPos = state.findIndex(tool => tool.name === action.toolName)
+      if (-1 !== toolPos) {
+        const newState = cloneDeep(state)
+        newState[toolPos] = action.toolData.data
+
+        return newState
+      }
+
+      return state
+    }
   })
 })
 

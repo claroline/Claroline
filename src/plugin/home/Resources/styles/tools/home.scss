@@ -5,13 +5,13 @@
 @import "../variables";
 @import "../components/widget";
 
-.home-nav {
-  /*order: 0;
+/*.home-nav {
+  order: 0;
   width: 100%;
   align-self: flex-start;
-  margin: 0 ($grid-gutter-width * .5);*/
+  margin: 0 ($grid-gutter-width * .5);
 
-  /*.home-nav-item {
+  .home-nav-item {
     color: $home-tab-color;
     background: $home-tab-bg;
     border: 1px solid transparent;
@@ -26,7 +26,7 @@
   .home-nav-item-hidden {
     color: var(--#{$prefix}secondary-color);
     text-decoration: line-through !important;
-  }*/
+  }
 
   .home-nav-expand {
     padding: $nav-link-padding-y ($nav-link-padding-x*.5);
@@ -36,16 +36,4 @@
   .home-nav-link {
     color: inherit;
   }
-}
-
-.home-menu {
-  // maybe enable it for all menu summaries
-  .btn-summary-primary {
-    padding-left: $grid-gutter-width;
-
-    &.active {
-      padding-left: 26px !important;
-      border-left: 4px solid $toolbar-active-color;
-    }
-  }
-}
+}*/

@@ -12,15 +12,12 @@ use Claroline\MessageBundle\Entity\Message;
 
 class MessageValidator implements ValidatorInterface
 {
-    /**
-     * GroupValidator constructor.
-     */
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
+    public function __construct(
+        private readonly ObjectManager $om
+    ) {
     }
 
-    public function validate($data, $mode, array $options = [])
+    public function validate($data, $mode, array $options = []): array
     {
         $errors = [];
 
@@ -59,7 +56,7 @@ class MessageValidator implements ValidatorInterface
         return $errors;
     }
 
-    private function validateTo($to)
+    private function validateTo($to): ?string
     {
         $error = null;
 
@@ -127,7 +124,7 @@ class MessageValidator implements ValidatorInterface
         return Message::class;
     }
 
-    public function getUniqueFields()
+    public function getUniqueFields(): array
     {
         return [];
     }

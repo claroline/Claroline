@@ -69,13 +69,13 @@ class ThemeManager
      *
      * @return string[]
      */
-    public function getAvailableThemes(): array
+    public function getAvailableThemes(bool $onlyEnabled = true): array
     {
-        $themes = $this->all(true);
+        $themes = $this->all($onlyEnabled);
         $themeNames = [];
 
         foreach ($themes as $theme) {
-            $themeNames[$theme->getNormalizedName()] = $theme->getName();
+            $themeNames[] = $this->serializer->serialize($theme);
         }
 
         return $themeNames;

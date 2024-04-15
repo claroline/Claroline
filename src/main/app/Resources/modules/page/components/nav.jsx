@@ -7,7 +7,8 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {actions as contextActions, selectors as contextSelectors} from '#/main/app/context/store'
-import {AppBrand} from '#/main/app/layout/containers/brand'
+import {AppBrand} from '#/main/app/layout/components/brand'
+import {PageMenu} from '#/main/app/page/components/menu'
 
 const MenuButton = () => {
   const dispatch = useDispatch()
@@ -34,11 +35,16 @@ const PageNav = (props) =>
       <AppBrand className="page-brand" />
     }
 
-    {props.children}
+    {props.menu &&
+      <PageMenu
+        {...props.menu}
+      />
+    }
   </div>
 
 PageNav.propTypes = {
-  embedded: T.bool.isRequired
+  embedded: T.bool.isRequired,
+  menu: T.shape(PageMenu.propTypes)
 }
 
 export {

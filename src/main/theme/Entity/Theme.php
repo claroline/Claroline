@@ -15,6 +15,7 @@ use Claroline\AppBundle\Entity\FromPlugin;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Meta\Disabled;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,6 +31,7 @@ class Theme
     use Uuid;
     use Name;
     use Description;
+    use Disabled;
     use FromPlugin;
 
     use ThemeParameters;
@@ -42,26 +44,30 @@ class Theme
     private bool $default = false;
 
     /**
-     * @ORM\Column(name="logo", nullable=true)
+     * @ORM\Column(nullable=true)
      */
     private ?string $logo = null;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    private ?string $primaryColor;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    private ?string $secondaryColor;
 
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    /**
-     * Set default.
-     */
     public function setDefault(bool $default): void
     {
         $this->default = $default;
     }
 
-    /**
-     * Is default ?
-     */
     public function isDefault(): bool
     {
         return $this->default;
@@ -75,6 +81,26 @@ class Theme
     public function setLogo(?string $logo): void
     {
         $this->logo = $logo;
+    }
+
+    public function getPrimaryColor(): ?string
+    {
+        return $this->primaryColor;
+    }
+
+    public function setPrimaryColor(?string $primaryColor): void
+    {
+        $this->primaryColor = $primaryColor;
+    }
+
+    public function getSecondaryColor(): ?string
+    {
+        return $this->secondaryColor;
+    }
+
+    public function setSecondaryColor(?string $secondaryColor): void
+    {
+        $this->secondaryColor = $secondaryColor;
     }
 
     /**

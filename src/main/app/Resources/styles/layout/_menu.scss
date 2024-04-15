@@ -1,19 +1,31 @@
 
-@use "sass:math";
-
 .app-menu {
-    overflow-y: auto; // gets its own scrollbar
+    --#{$prefix}menu-color: #{$toolbar-color};
+    --#{$prefix}menu-bg: #{$toolbar-bg-subtle};
 
+    --#{$prefix}menu-item-color: #{$toolbar-link-color};
+    --#{$prefix}menu-item-bg: #{$toolbar-link-bg};
+
+    --#{$prefix}menu-item-hover-color: #{$toolbar-link-hover-color};
+    --#{$prefix}menu-item-hover-bg: #{$toolbar-link-hover-bg};
+
+    --#{$prefix}menu-item-active-color: #{$toolbar-link-active-color};
+    --#{$prefix}menu-item-active-bg: #{$toolbar-link-active-bg};
+
+    --#{$prefix}menu-item-disabled-color: #{$toolbar-link-disabled-color};
+    --#{$prefix}menu-item-disabled-bg: #{$toolbar-link-disabled-bg};
+
+    overflow-y: auto; // gets its own scrollbar
     width: 100%;
     top: 0;
     bottom: 0;
     display: flex;
     flex-direction: column;
-    background-color: $toolbar-bg;
-    color: $toolbar-color;
+    background-color: var(--#{$prefix}menu-bg);
+    color: var(--#{$prefix}menu-color);
 
     max-width: 0;
-    transition: max-width .6s ease;
+    transition: max-width .4s ease;
 
     &.show {
         max-width: $toolbar-size;
@@ -34,7 +46,7 @@
     text-align: center;
     padding-bottom: 2.5rem;
     flex-shrink: 0;
-    background: $toolbar-link-hover-bg;
+    background: var(--#{$prefix}menu-bg);
 }
 
 .app-menu-current-user {
@@ -47,19 +59,18 @@
 
     .user-avatar {
         margin-top: -2.5rem;
-        background: $toolbar-bg;
+        background: var(--#{$prefix}menu-bg);
         padding: $thumbnail-padding;
-        //border-radius: 50%;
     }
 
     .user-status-bullet {
-        border-color: $toolbar-bg !important;
+        border-color: var(--#{$prefix}menu-bg) !important;
     }
 
     .app-menu-user {
-        color: $toolbar-color;
+        color: var(--#{$prefix}menu-color);
         small {
-            color: $toolbar-link-color;
+            color: var(--#{$prefix}menu-item-color);
         }
     }
 }
@@ -73,13 +84,13 @@
     }
 
     .btn {
-        color: $toolbar-link-color;
+        color: var(--#{$prefix}menu-item-color);
         box-shadow: none !important;
         border-color: transparent !important;
 
         &:hover {
-            color: $toolbar-link-hover-color;
-            //background: $toolbar-link-hover-bg;
+            color: var(--#{$prefix}menu-item-hover-color);
+            background: var(--#{$prefix}menu-item-hover-bg);
         }
 
         &:focus,
@@ -88,18 +99,18 @@
             &,
             &:hover,
             &:focus {
-                color: $toolbar-link-active-color;
-                //background-color: $toolbar-link-active-bg;
+                color: var(--#{$prefix}menu-item-hover-color);
+                background: var(--#{$prefix}menu-item-hover-bg);
             }
         }
     }
 }
 
-.app-menu-impersonation {
+/*.app-menu-impersonation {
     @include gradient-striped($toolbar-bg, 45deg);
 
     background-size: 100px 100px;
-}
+}*/
 
 .app-menu-items {
     display: flex;
@@ -111,8 +122,8 @@
 .app-menu-item {
     padding: $toolbar-link-padding-y $toolbar-link-padding-x;
     margin: 0 $toolbar-link-spacer-x;
-    color: $toolbar-link-color;
-    background: $toolbar-link-bg;
+    color: var(--#{$prefix}menu-item-color);
+    background: var(--#{$prefix}menu-item-bg);
     border: none;
     box-shadow: none;
     text-align: left;
@@ -121,8 +132,8 @@
     @include border-radius($toolbar-link-border-radius);
 
     &:hover {
-        color: $toolbar-link-hover-color;
-        background: $toolbar-link-hover-bg;
+        color: var(--#{$prefix}menu-item-hover-color);
+        background: var(--#{$prefix}menu-item-hover-bg);
         text-decoration: none;
     }
 
@@ -132,8 +143,8 @@
         &,
         &:hover,
         &:focus {
-            color: $toolbar-link-active-color;
-            background-color: $toolbar-link-active-bg;
+            color: var(--#{$prefix}menu-item-active-color);
+            background: var(--#{$prefix}menu-item-active-bg);
             box-shadow: none;
         }
     }
@@ -144,8 +155,8 @@
         &,
         &:hover,
         &:focus {
-            color: $toolbar-link-disabled-color;
-            background-color: $toolbar-link-disabled-bg;
+            color: var(--#{$prefix}menu-item-disabled-color);
+            background: var(--#{$prefix}menu-item-disabled-bg);
         }
 
         // preserve active state on disabled (because active links are disabled)
@@ -153,8 +164,8 @@
             &,
             &:hover,
             &:focus {
-                color: $toolbar-link-active-color;
-                background: $toolbar-link-active-bg;
+                color: var(--#{$prefix}menu-item-active-color);
+                background: var(--#{$prefix}menu-item-active-bg);
                 opacity: 1;
             }
         }
@@ -185,6 +196,28 @@
 
                 opacity: 1;
             }
+        }
+    }
+}
+
+
+@if $enable-dark-mode {
+    @include color-mode(dark) {
+        .app-menu {
+            --#{$prefix}menu-color: #{$toolbar-color-dark};
+            --#{$prefix}menu-bg: #{$toolbar-bg-subtle-dark};
+
+            --#{$prefix}menu-item-color: #{$toolbar-link-color-dark};
+            --#{$prefix}menu-item-bg: #{$toolbar-link-bg-dark};
+
+            --#{$prefix}menu-item-hover-color: #{$toolbar-link-hover-color-dark};
+            --#{$prefix}menu-item-hover-bg: #{$toolbar-link-hover-bg-dark};
+
+            --#{$prefix}menu-item-active-color: #{$toolbar-link-active-color-dark};
+            --#{$prefix}menu-item-active-bg: #{$toolbar-link-active-bg-dark};
+
+            --#{$prefix}menu-item-disabled-color: #{$toolbar-link-disabled-color-dark};
+            --#{$prefix}menu-item-disabled-bg: #{$toolbar-link-disabled-bg-dark};
         }
     }
 }

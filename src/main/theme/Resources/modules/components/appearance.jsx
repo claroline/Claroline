@@ -18,6 +18,13 @@ const Appearance = (props) => {
   styles['body-font-weight'] = themeConfig.fontWeight
   styles['root-font-size'] = themeConfig.fontSize
 
+  if (themeConfig.primaryColor) {
+    styles['primary'] = themeConfig.primaryColor
+  }
+  if (themeConfig.secondaryColor) {
+    styles['learning'] = themeConfig.secondaryColor
+  }
+
   let themeMode = themeConfig.themeMode
   if (!themeConfig.themeMode || constants.MODE_AUTO === themeConfig.themeMode) {
     themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'

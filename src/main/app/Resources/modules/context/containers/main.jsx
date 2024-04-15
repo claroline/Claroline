@@ -3,11 +3,8 @@ import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 import {withReducer} from '#/main/app/store/reducer'
 
-import {actions as formActions} from '#/main/app/content/form/store'
-
 import {ContextMain as ContextMainComponent} from '#/main/app/context/components/main'
 import {actions, reducer, selectors} from '#/main/app/context/store'
-import {selectors as editorSelectors} from '#/main/app/context/editor/store'
 
 const ContextMain = withRouter(
   withReducer(selectors.STORE_NAME, reducer)(
@@ -24,9 +21,6 @@ const ContextMain = withRouter(
       (dispatch) => ({
         open(contextType, contextId) {
           return dispatch(actions.open(contextType, contextId))
-        },
-        openEditor(contextData) {
-          dispatch(formActions.reset(editorSelectors.STORE_NAME, contextData, false))
         }
       })
     )(ContextMainComponent)

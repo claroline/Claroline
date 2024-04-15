@@ -29,7 +29,7 @@ const basePath = toolSelectors.path
 const path = createSelector(
   [basePath, resourceNode],
   (basePath, resourceNode) => {
-    return basePath + '/' + (resourceNode.meta ? resourceNode.slug: null)
+    return basePath + '/' + (resourceNode.slug || '')
   }
 )
 

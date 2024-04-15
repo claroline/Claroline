@@ -15,25 +15,30 @@ import {Records} from '#/integration/big-blue-button/resources/bbb/records/conta
 const BBBResource = props =>
   <Resource
     {...omit(props)}
+    menu={[
+      {
+        name: 'records',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-video',
+        label: trans('show-records', {}, 'actions'),
+        target: props.path+'/records',
+        displayed: props.allowRecords && props.bbb.record
+      }
+    ]}
+    actions={[
+      {
+        name: 'close',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-door-closed',
+        label: trans('end_meeting', {}, 'bbb'),
+        displayed: props.canEdit,
+        callback: () => props.endMeeting(props.bbb.id),
+        group: trans('management'),
+        dangerous: true
+      }
+    ]}
   >
     <ResourcePage
-      customActions={[
-        {
-          type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-door-closed',
-          label: trans('end_meeting', {}, 'bbb'),
-          displayed: props.canEdit,
-          callback: () => props.endMeeting(props.bbb.id),
-          group: trans('management'),
-          dangerous: true
-        }, {
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-video',
-          label: trans('show-records', {}, 'actions'),
-          target: props.path+'/records',
-          displayed: props.allowRecords && props.bbb.record
-        }
-      ]}
       routes={[
         {
           path: '/',

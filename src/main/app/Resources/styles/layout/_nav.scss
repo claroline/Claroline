@@ -1,5 +1,8 @@
 .app-contexts {
-  background: shade-color($menu, 15%);
+  --#{$prefix}menu-bg: #{$toolbar-bg};
+  --#{$prefix}menu-bg-subtle: #{$toolbar-bg-subtle};
+
+  background: var(--#{$prefix}menu-bg);
   height: 100%;
   width: 72px;
   display: flex;
@@ -15,11 +18,12 @@
   height: 48px;
   border-radius: 50%;
   font-size: 1.25rem;
-  background: $menu;
+  background: var(--#{$prefix}menu-bg-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--#{$prefix}link-color);
+  flex-shrink: 0;
 
   .user-avatar {
     max-width: 48px !important;
@@ -61,7 +65,7 @@
 }
 
 .app-context-status {
-  border: .25rem solid shade-color($menu, 15%);
+  border: .25rem solid var(--#{$prefix}menu-bg);
   width: .875em;
   height: .875em;
 }
@@ -76,4 +80,13 @@
 .app-context-separator {
   width: 48px;
   margin: 0;
+}
+
+@if $enable-dark-mode {
+  @include color-mode(dark) {
+    .app-contexts {
+      --#{$prefix}menu-bg: #{$toolbar-bg-dark};
+      --#{$prefix}menu-bg-subtle: #{$toolbar-bg-subtle-dark};
+    }
+  }
 }

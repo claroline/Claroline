@@ -1,0 +1,19 @@
+// Dark color mode variables
+
+//
+// Menu
+//
+
+$toolbar-bg-dark:             shade-color($gray-900, 25%) !default;
+$toolbar-bg-subtle-dark:      shade-color($gray-900, 10%) !default;
+$toolbar-color-dark:          color-contrast($toolbar-bg-subtle-dark) !default;
+
+$toolbar-link-color-dark:          fade-out($toolbar-color-dark, .375) !default;
+$toolbar-link-bg-dark:             null !default;
+
+$toolbar-link-hover-color-dark:    fade-out($toolbar-color-dark, .125) !default;
+$toolbar-link-hover-bg-dark:       null !default;
+$toolbar-link-active-color-dark:   $toolbar-color-dark !default;
+$toolbar-link-active-bg-dark:      fade-out($toolbar-color-dark, .9) !default;
+$toolbar-link-disabled-color-dark: fade-out($toolbar-color-dark, .5) !default;
+$toolbar-link-disabled-bg-dark:    null !default;

@@ -9,9 +9,9 @@ export const actions = {}
 
 actions.loadRights = makeActionCreator(TOOL_RIGHTS_LOAD, 'rights')
 
-actions.fetchRights = (toolName, context) => (dispatch) => dispatch({
+actions.fetchRights = (toolName, contextType, contextId) => (dispatch) => dispatch({
   [API_REQUEST]: {
-    url: ['apiv2_tool_get_rights', {name: toolName, context: context.type, contextId: get(context, 'data.id', null)}],
+    url: ['apiv2_tool_get_rights', {name: toolName, context: contextType, contextId: contextId}],
     success: (response) => dispatch(actions.loadRights(response))
   }
 })

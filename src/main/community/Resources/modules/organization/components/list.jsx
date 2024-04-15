@@ -1,4 +1,4 @@
-import {createElement, useState} from 'react'
+import React, {createElement, useState} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
@@ -12,6 +12,7 @@ import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {getActions, getDefaultAction} from '#/main/community/organization/utils'
 import {OrganizationCard} from '#/main/community/organization/components/card'
+import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
 
 const OrganizationListComponent = props => {
   const refresher = merge({
@@ -44,7 +45,13 @@ const OrganizationListComponent = props => {
         type: 'string',
         label: trans('name'),
         displayed: true,
-        primary: true
+        primary: true,
+        render: (organization) => (
+          <div className="d-flex flex-direction-row gap-3 align-items-center">
+            <ThumbnailIcon thumbnail={organization.thumbnail} name={organization.name} size="xs" />
+            {organization.name}
+          </div>
+        )
       }, {
         name: 'code',
         type: 'string',
@@ -56,7 +63,7 @@ const OrganizationListComponent = props => {
         options: {long: true},
         displayed: true,
         sortable: false
-      },{
+      }, {
         name: 'meta.default',
         type: 'boolean',
         label: trans('default')

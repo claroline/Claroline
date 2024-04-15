@@ -14,13 +14,13 @@ import {selectors} from '#/main/core/resource/store'
 const ResourcePage = connect(
   (state) => ({
     // tool params
-    basePath: selectors.basePath(state),
+    //basePath: selectors.basePath(state),
     // resource params
-    type: selectors.resourceType(state),
-    embedded: selectors.embedded(state),
+    //type: selectors.resourceType(state),
+    //embedded: selectors.embedded(state),
     showHeader: selectors.showHeader(state),
-    resourceNode: selectors.resourceNode(state),
-    userEvaluation: selectors.resourceEvaluation(state),
+    //resourceNode: selectors.resourceNode(state),
+    //userEvaluation: selectors.resourceEvaluation(state),
     accessErrors: selectors.accessErrors(state)
   })
 )(ResourcePageComponent)

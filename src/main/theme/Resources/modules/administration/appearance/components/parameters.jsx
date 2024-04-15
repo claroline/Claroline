@@ -13,9 +13,12 @@ import {AppearanceIcons} from '#/main/theme/administration/appearance/containers
 import {AppearanceColorCharts} from '#/main/theme/administration/appearance/containers/colorCharts'
 import {MODAL_ICON_SET_CREATION} from '#/main/theme/administration/appearance/modals/icon-set-creation'
 import {MODAL_PARAMETERS_COLOR_CHART} from '#/main/theme/administration/appearance/modals/color-chart-parameters'
+import {ThemeForm} from '#/main/theme/theme/components/form'
 
 const AppearanceParameters = (props) =>
   <ToolPage>
+    <ThemeForm name={selectors.THEME_NAME} />
+
     <FormData
       name={selectors.FORM_NAME}
       target={['apiv2_parameters_update']}
@@ -27,31 +30,6 @@ const AppearanceParameters = (props) =>
       }}
       definition={[
         {
-          title: trans('general'),
-          primary: true,
-          displayed: false,
-          fields: [
-            {
-              name: 'display.breadcrumb',
-              type: 'boolean',
-              label: trans('showBreadcrumbs')
-            }
-          ]
-        }, {
-          icon: 'fa fa-fw fa-heading',
-          title: trans('header'),
-          fields: [
-            {
-              name: 'display.logo',
-              type: 'image',
-              label: trans('logo')
-            }, {
-              name: 'display.name_active',
-              type: 'boolean',
-              label: trans('show_name_in_top_bar')
-            }
-          ]
-        }, {
           icon: 'fa fa-fw fa-swatchbook',
           title: trans('theme', {}, 'appearance'),
           fields: [
@@ -65,7 +43,9 @@ const AppearanceParameters = (props) =>
                 multiple: false,
                 condensed: false,
                 noEmpty: true,
-                choices: props.availableThemes
+                choices: props.availableThemes.reduce((acc, current) => Object.assign({
+                  [current.normalizedName]: current.name
+                }, acc), {})
               }
             }
           ]

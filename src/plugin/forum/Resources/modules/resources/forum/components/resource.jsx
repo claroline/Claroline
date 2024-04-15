@@ -18,24 +18,28 @@ const ForumResource = props =>
   <Resource
     {...omit(props)}
     styles={['claroline-distribution-plugin-forum-forum-resource']}
+    menu={[
+      {
+        name: 'subjects',
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-list-ul',
+        label: trans('subjects', {}, 'forum'),
+        target: `${props.path}/subjects`
+      }, {
+        name: 'moderation',
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-flag',
+        label: trans('moderation', {}, 'forum'),
+        displayed: props.moderator,
+        target: `${props.path}/moderation`
+      }
+    ]}
+    overview={Overview}
   >
     <ResourcePage
       primaryAction="post"
-      customActions={[
-        /*{
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-home',
-          label: trans('show_overview'),
-          displayed: !!get(props.forum, 'display.showOverview'),
-          target: props.path,
-          exact: true
-        }, {
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-list-ul',
-          label: trans('see_subjects', {}, 'forum'),
-          target: `${props.path}/subjects`,
-          exact: true
-        }, */{
+      actions={[
+        {
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-bell',
           label: trans('receive_notifications', {}, 'forum'),

@@ -21,11 +21,13 @@ class ThemeSerializer
             'name' => $theme->getName(),
             'normalizedName' => $theme->getNormalizedName(),
             'logo' => $theme->getLogo(),
-            /*'title' => $theme->getTitle(),
-            'subtitle' => $theme->getSubtitle(),*/
+            'default' => $theme->isDefault(),
             'themeMode' => $theme->getThemeMode(),
             'fontSize' => $theme->getFontSize(),
             'fontWeight' => $theme->getFontWeight(),
+            'disabled' => $theme->isDisabled(),
+            'primaryColor' => $theme->getPrimaryColor(),
+            'secondaryColor' => $theme->getSecondaryColor(),
         ];
     }
 
@@ -35,10 +37,13 @@ class ThemeSerializer
         $this->sipe('id', 'setUuid', $data, $theme);
         $this->sipe('name', 'setName', $data, $theme);
 
+        $this->sipe('default', 'setDefault', $data, $theme);
+        $this->sipe('disabled', 'setDisabled', $data, $theme);
+
         // params
         $this->sipe('logo', 'setLogo', $data, $theme);
-        /*$this->sipe('title', 'setTitle', $data, $theme);
-        $this->sipe('subtitle', 'setSubtitle', $data, $theme);*/
+        $this->sipe('primaryColor', 'setPrimaryColor', $data, $theme);
+        $this->sipe('secondaryColor', 'setSecondaryColor', $data, $theme);
 
         $this->sipe('themeMode', 'setThemeMode', $data, $theme);
         $this->sipe('fontSize', 'setFontSize', $data, $theme);

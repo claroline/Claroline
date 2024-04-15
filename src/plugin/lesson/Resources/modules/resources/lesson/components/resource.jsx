@@ -62,18 +62,22 @@ class LessonResource extends Component {
       <Resource
         {...omit(this.props)}
         styles={['claroline-distribution-plugin-lesson-lesson-resource']}
+        menu={[
+          {
+            name: 'summary',
+            type: LINK_BUTTON,
+            //icon: 'fa fa-fw fa-sitemap',
+            label: trans('summary'),
+            target: `${this.props.path}/summary`
+          }
+        ]}
+        overview={LessonOverview}
       >
         <ResourcePage
           primaryAction="chapter"
-          customActions={[
-            /*{
-              type: LINK_BUTTON,
-              icon: 'fa fa-fw fa-home',
-              label: trans('show_overview'),
-              displayed: this.props.overview,
-              target: this.props.path,
-              exact: true
-            }, */{
+          actions={[
+            {
+              name: 'download',
               type: CALLBACK_BUTTON,
               icon: 'fa fa-fw fa-file-pdf',
               displayed: this.props.canExport,

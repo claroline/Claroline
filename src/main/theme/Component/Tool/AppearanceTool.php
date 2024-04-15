@@ -9,6 +9,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Component\Context\AccountContext;
 use Claroline\CoreBundle\Component\Context\AdministrationContext;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\ThemeBundle\Entity\ColorCollection;
 use Claroline\ThemeBundle\Manager\IconSetManager;
 use Claroline\ThemeBundle\Manager\ThemeManager;
@@ -17,6 +18,7 @@ class AppearanceTool extends AbstractTool
 {
     public function __construct(
         private readonly ObjectManager $om,
+        private readonly PlatformConfigurationHandler $config,
         private readonly SerializerProvider $serializer,
         private readonly ThemeManager $themeManager,
         private readonly IconSetManager $iconSetManager,
@@ -55,13 +57,15 @@ class AppearanceTool extends AbstractTool
 
             return [
                 'parameters' => $parameters,
-                'availableThemes' => $this->themeManager->getAvailableThemes(),
+                'currentTheme' => $this->config->getParameter('display.theme'),
+                'availableThemes' => $this->themeManager->getAvailableThemes(false),
                 'availableIconSets' => $this->iconSetManager->getAvailableSets(),
                 'availableColorCharts' => array_map(function (ColorCollection $colorCollection) {
                     return $this->serializer->serialize($colorCollection);
                 }, $colorCharts),
             ];
         }
+
         return [
             'availableThemes' => $this->themeManager->getAvailableThemes(),
             'theme' => $this->themeManager->getAppearance(),

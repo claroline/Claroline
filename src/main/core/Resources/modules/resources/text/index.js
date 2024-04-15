@@ -1,10 +1,8 @@
-import {reducer} from '#/main/core/resources/text/store'
+
+import {declareResource} from '#/main/core/resource'
 import {TextResource} from '#/main/core/resources/text/containers/resource'
 
 /**
  * Text resource application.
  */
-export default {
-  component: TextResource,
-  store: reducer
-}
+export default declareResource(TextResource)

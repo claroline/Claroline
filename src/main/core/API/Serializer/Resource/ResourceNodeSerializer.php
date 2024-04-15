@@ -53,7 +53,7 @@ class ResourceNodeSerializer
     {
         $serializedWorkspace = null;
         if ($resourceNode->getWorkspace()) {
-            $serializedWorkspace = $this->serializer->serialize($resourceNode->getWorkspace(), [Options::SERIALIZE_MINIMAL]);
+            $serializedWorkspace = $this->serializer->serialize($resourceNode->getWorkspace(), [SerializerInterface::SERIALIZE_MINIMAL]);
         }
 
         if (in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
@@ -80,14 +80,14 @@ class ResourceNodeSerializer
             'slug' => $resourceNode->getSlug(),
             'name' => $resourceNode->getName(),
             'code' => $resourceNode->getCode(),
-            'path' => $resourceNode->getAncestors(),
+            //'path' => $resourceNode->getAncestors(),
             'meta' => [
                 'type' => $resourceNode->getType(), // try to remove. use mimeType instead
                 'className' => $resourceNode->getClass(), // try to remove. use mimeType instead
                 'mimeType' => $resourceNode->getMimeType(),
                 'description' => $resourceNode->getDescription(),
                 'creator' => $resourceNode->getCreator() ?
-                    $this->userSerializer->serialize($resourceNode->getCreator(), [Options::SERIALIZE_MINIMAL]) :
+                    $this->userSerializer->serialize($resourceNode->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
                 'created' => DateNormalizer::normalize($resourceNode->getCreationDate()),
                 'updated' => DateNormalizer::normalize($resourceNode->getModificationDate()),
@@ -118,10 +118,18 @@ class ResourceNodeSerializer
         }
 
         if (!empty($resourceNode->getParent())) {
-            $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [Options::SERIALIZE_MINIMAL]);
+            $serializedNode['parent'] = $this->serialize($resourceNode->getParent(), [SerializerInterface::SERIALIZE_MINIMAL]);
         }
 
-        if (!in_array(Options::SERIALIZE_LIST, $options)) {
+        if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
+            if (!empty($resourceNode->getParent())) {
+                $serializedNode['parent'] = array_merge($this->serialize($resourceNode->getParent(), [SerializerInterface::SERIALIZE_MINIMAL]), [
+                    'root' => empty($resourceNode->getParent()->getParent()),
+                ]);
+            } else {
+                $serializedNode['root'] = true; // this is not used (you can check if parent is not here), it's just to preserve the exposed data model
+            }
+
             $serializedNode = array_merge($serializedNode, [
                 'display' => [
                     'fullscreen' => $resourceNode->isFullscreen(),

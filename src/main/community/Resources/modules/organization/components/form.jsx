@@ -64,23 +64,23 @@ const OrganizationFormComponent = props => {
               options: {
                 long: true
               }
-            }, {
+            }, /*{
               name: 'type',
               type: 'choice',
               label: trans('type'),
               options: {
                 choices: constants.ORGANIZATION_TYPES
               }
-            }, {
+            }, */{
               name: 'email',
               type: 'email',
               label: trans('email')
-            }, {
+            }/*, {
               name: 'vat',
               label: trans('vat_number'),
               type: 'string',
               required: false
-            }
+            }*/
           ]
         }, {
           icon: 'fa fa-fw fa-desktop',
@@ -108,7 +108,7 @@ const OrganizationFormComponent = props => {
                 trans('make_organization_public_help1', {}, 'community'),
                 trans('make_organization_public_help2', {}, 'community')
               ]
-            }, {
+            }/*, {
               name: 'restrictions.maxUsers',
               type: 'boolean',
               label: trans('restrict_users_count'),
@@ -128,7 +128,7 @@ const OrganizationFormComponent = props => {
                   displayed: (organization) => get(organization, 'restrictions.maxUsers') || get(organization, 'restrictions.users', -1) > -1
                 }
               ]
-            }
+            }*/
           ]
         }
       ]}

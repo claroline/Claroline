@@ -8,6 +8,7 @@ use Claroline\AppBundle\API\ValidatorInterface;
 use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Entity\AuthenticationParameters;
+use Claroline\CommunityBundle\Repository\RoleRepository;
 use Claroline\CommunityBundle\Serializer\ProfileSerializer;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
@@ -25,48 +26,19 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class UserValidator implements ValidatorInterface
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var UserManager */
-    private $manager;
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-    /** @var OrganizationManager */
-    private $organizationManager;
-    /** @var FacetManager */
-    private $facetManager;
-    /** @var ProfileSerializer */
-    private $profileSerializer;
-
-    private $roleRepo;
+    private RoleRepository $roleRepo;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        PlatformConfigurationHandler $config,
-        UserManager $manager,
-        WorkspaceManager $workspaceManager,
-        OrganizationManager $organizationManager,
-        FacetManager $facetManager,
-        ProfileSerializer $profileSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly UserManager $manager,
+        private readonly WorkspaceManager $workspaceManager,
+        private readonly OrganizationManager $organizationManager,
+        private readonly FacetManager $facetManager,
+        private readonly ProfileSerializer $profileSerializer
     ) {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->config = $config;
-        $this->manager = $manager;
-        $this->workspaceManager = $workspaceManager;
-        $this->organizationManager = $organizationManager;
-        $this->facetManager = $facetManager;
-        $this->profileSerializer = $profileSerializer;
-
         $this->roleRepo = $om->getRepository(Role::class);
     }
 
@@ -75,7 +47,7 @@ class UserValidator implements ValidatorInterface
         return User::class;
     }
 
-    public function getUniqueFields()
+    public function getUniqueFields(): array
     {
         $unique = [
             'username' => 'username',
@@ -89,7 +61,7 @@ class UserValidator implements ValidatorInterface
         return $unique;
     }
 
-    public function validate($data, $mode, array $options = [])
+    public function validate($data, $mode, array $options = []): array
     {
         $errors = [];
 
@@ -157,7 +129,7 @@ class UserValidator implements ValidatorInterface
         return $errors;
     }
 
-    private function validateRoles(array $data, string $mode)
+    private function validateRoles(array $data, string $mode): array
     {
         if (!empty($data['roles'])) {
             // get the entities for the roles we try to add to the user

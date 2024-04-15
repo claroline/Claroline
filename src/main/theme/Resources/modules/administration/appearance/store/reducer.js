@@ -16,6 +16,16 @@ import {selectors} from '#/main/theme/administration/appearance/store/selectors'
 
 
 export const reducer = combineReducers({
+  currentTheme: makeFormReducer(selectors.THEME_NAME, {
+    new: false
+  }, {
+    data: makeReducer({}, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.availableThemes.find(t => t.normalizedName === action.toolData.currentTheme) || {}
+    }),
+    originalData: makeReducer({}, {
+      [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.availableThemes.find(t => t.normalizedName === action.toolData.currentTheme) || {}
+    })
+  }),
   parameters: makeFormReducer(selectors.FORM_NAME, {
     new: false
   },{
@@ -26,7 +36,7 @@ export const reducer = combineReducers({
       [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters
     })
   }),
-  availableThemes: makeReducer({}, {
+  availableThemes: makeReducer([], {
     [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.availableThemes
   }),
   availableIconSets: makeReducer([], {

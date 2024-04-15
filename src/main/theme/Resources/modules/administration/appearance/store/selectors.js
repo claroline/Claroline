@@ -6,6 +6,7 @@ import {selectors as formSelectors} from '#/main/app/content/form/store'
 const STORE_NAME = 'appearance'
 
 const FORM_NAME = STORE_NAME+'.parameters'
+const THEME_NAME = STORE_NAME+'.currentTheme'
 
 const store = (state) => state[STORE_NAME]
 
@@ -13,7 +14,7 @@ const parameters = (state) => formSelectors.data(formSelectors.form(state, FORM_
 
 const availableThemes = createSelector(
   [store],
-  (store) => store.availableThemes
+  (store) => store.availableThemes || []
 )
 
 const availableIconSets = createSelector(
@@ -39,6 +40,7 @@ const currentIconSet = createSelector(
 export const selectors = {
   STORE_NAME,
   FORM_NAME,
+  THEME_NAME,
 
   store,
   availableThemes,

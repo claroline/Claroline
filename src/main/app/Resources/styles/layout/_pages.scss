@@ -8,7 +8,7 @@
 
     &.fullscreen {
         position: fixed;
-        z-index: $zindex-fullscreen;
+        z-index: $zindex-offcanvas;
         left: 0;
         top: 0;
         bottom: 0;
@@ -20,7 +20,7 @@
 
 .fullscreen-close {
     position: absolute;
-    z-index: $zindex-fullscreen;
+    z-index: $zindex-offcanvas;
     top: ($grid-gutter-width * .5);
     right: $grid-gutter-width;
     font-size: 36px;

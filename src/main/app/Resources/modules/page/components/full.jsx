@@ -25,6 +25,7 @@ const PageFull = (props) =>
         toolbar={props.toolbar}
         disabled={props.disabled}
         primaryAction={props.primaryAction}
+        secondaryAction={props.secondaryAction}
         actions={props.actions}
         menu={props.menu}
         embedded={props.embedded}

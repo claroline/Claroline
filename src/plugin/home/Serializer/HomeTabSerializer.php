@@ -114,7 +114,7 @@ class HomeTabSerializer
         $this->sipe('type', 'setType', $data, $homeTab);
         $this->sipe('class', 'setClass', $data, $homeTab);
         $this->sipe('display.color', 'setColor', $data, $homeTab);
-        $this->sipe('display.centerTitle', 'setCenterTitle', $data, $homeTab);
+        //$this->sipe('display.centerTitle', 'setCenterTitle', $data, $homeTab);
 
         if (isset($data['restrictions'])) {
             $this->sipe('restrictions.code', 'setAccessCode', $data, $homeTab);

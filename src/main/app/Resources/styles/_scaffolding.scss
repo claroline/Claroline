@@ -1,9 +1,16 @@
 // We use classes for `html` and `body` tags
 // to avoid adding unwanted styles in iframe or tinyMCE
 
+body {
+    //background: transparent; // removes bootstrap default for TinyMCE rendering
+}
+
 // Moves the app scroll bar after the fixed header
 .claroline-app {
     height: 100%;
+
+    // only put body bg for claroline apps (avoids modifying TinyMCE content bg)
+    //background: var(--#{$prefix}body-bg);
 }
 
 .app-container {

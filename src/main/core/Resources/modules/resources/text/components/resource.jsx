@@ -15,7 +15,7 @@ const TextResource = (props) =>
     {...omit(props, 'canExport', 'text')}
   >
     <ResourcePage
-      customActions={[
+      actions={[
         {
           name: 'export-pdf',
           type: URL_BUTTON,

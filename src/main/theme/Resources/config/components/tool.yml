@@ -4,6 +4,7 @@ services:
     tags: [ 'claroline.component.tool' ]
     arguments:
       - '@Claroline\AppBundle\Persistence\ObjectManager'
+      - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
       - '@Claroline\AppBundle\API\SerializerProvider'
       - '@Claroline\ThemeBundle\Manager\ThemeManager'
       - '@Claroline\ThemeBundle\Manager\IconSetManager'

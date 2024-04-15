@@ -28,7 +28,8 @@ const Role = (props) =>
       }
     ].concat(!isEmpty(props.role) ? props.breadcrumb : [])}
     title={trans(get(props.role, 'translationKey', 'loading'))}
-    toolbar="edit | fullscreen more"
+    primaryAction="view-as"
+    toolbar="edit more"
     actions={!isEmpty(props.role) ? getActions([props.role], {
       add: () => props.reload(props.role.id),
       update: () => props.reload(props.role.id),

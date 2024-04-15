@@ -1,19 +1,33 @@
 import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useDispatch, useSelector} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 
 import {makeCancelable} from '#/main/app/api'
+import {hasPermission} from '#/main/app/security'
+import {useReducer} from '#/main/app/store/reducer'
 import {Routes, RouteTypes, RedirectTypes} from '#/main/app/router'
 
 import {ToolContext} from '#/main/core/tool/context'
+import {ToolEditor} from '#/main/core/tool/editor/containers/main'
+import {actions, reducer, selectors} from '#/main/core/tool/store'
 
 const ToolMain = (props) => {
-  // fetch current context data
+  useReducer(selectors.STORE_NAME, reducer)
+
+  const toolPath = useSelector(selectors.path)
+  const contextType = useSelector(selectors.contextType)
+  const contextId = useSelector(selectors.contextId)
+  const canEdit = useSelector((state) => hasPermission('edit', selectors.toolData(state)))
+
+  const dispatch = useDispatch()
+
+  // fetch current tool data
   useEffect(() => {
     let openQuery
     if (props.name) {
       openQuery = makeCancelable(
-        props.open(props.name, props.contextType, props.contextId)
+        dispatch(actions.open(props.name, contextType, contextId))
       )
     }
 
@@ -22,7 +36,7 @@ const ToolMain = (props) => {
         openQuery.cancel()
       }
     }
-  }, [props.name, props.contextType, props.contextId])
+  }, [props.name, contextType, contextId])
 
   return (
     <ToolContext.Provider
@@ -34,8 +48,14 @@ const ToolMain = (props) => {
     >
       {(!isEmpty(props.pages) || props.children) &&
         <Routes
-          path={props.path}
-          routes={[]
+          path={toolPath}
+          routes={[
+            {
+              path: '/edit',
+              disabled: !canEdit,
+              component: ToolEditor
+            }
+          ]
             .concat(props.pages || [])
             .concat([
               {
@@ -53,21 +73,33 @@ const ToolMain = (props) => {
 }
 
 ToolMain.propTypes = {
+  /**
+   * The name of the tool.
+   */
   name: T.string.isRequired,
+
+  /**
+   * A list of additional styles required by the tool.
+   */
   styles: T.arrayOf(T.string),
+
+  /**
+   * A list of sections/pages of the tool.
+   * If your tool contains only one section/page, use `children`.
+   *
+   * NB. Each page MUST start with a `ToolPage` component.
+   */
   pages: T.arrayOf(T.shape(
     RouteTypes.propTypes
   )),
   redirect: T.arrayOf(T.shape(
     RedirectTypes.propTypes
   )),
-  children: T.node,
 
-  // from store
-  path: T.string.isRequired,
-  contextType: T.string.isRequired,
-  contextId: T.string,
-  open: T.func.isRequired
+  /**
+   * The tool content if there is only one section/page in the tool.
+   */
+  children: T.node
 }
 
 ToolMain.defaultProps = {

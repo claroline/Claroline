@@ -1,7 +1,7 @@
-import {reducer} from '#/plugin/exo/resources/quiz/store'
+
+import {declareResource} from '#/main/core/resource'
 import {QuizCreation} from '#/plugin/exo/resources/quiz/containers/creation'
 import {QuizResource} from '#/plugin/exo/resources/quiz/containers/resource'
-import {QuizMenu} from '#/plugin/exo/resources/quiz/containers/menu'
 
 import {registerDefaultItemTypes} from '#/plugin/exo/items/item-types'
 import {registerDefaultContentItemTypes} from '#/plugin/exo/contents/utils'
@@ -20,9 +20,4 @@ export const Creation = () => ({
 /**
  * Quiz resource application.
  */
-export default {
-  component: QuizResource,
-  menu: QuizMenu,
-  store: reducer,
-  styles: ['claroline-distribution-plugin-exo-quiz-resource']
-}
+export default declareResource(QuizResource)

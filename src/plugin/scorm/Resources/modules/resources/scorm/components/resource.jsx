@@ -13,9 +13,20 @@ import {Results} from '#/plugin/scorm/resources/scorm/player/components/results'
 import {ScormSummary} from '#/plugin/scorm/resources/scorm/containers/summary'
 
 const ScormResource = props =>
-  <Resource {...omit(props, 'scorm', 'editable', 'resetForm')}>
+  <Resource
+    {...omit(props, 'scorm', 'editable', 'resetForm')}
+    menu={[
+      {
+        name: 'summary',
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-sitemap',
+        label: trans('summary'),
+        target: `${props.path}/summary`
+      }
+    ]}
+  >
     <ResourcePage
-      customActions={[
+      actions={[
         {
           name: 'play',
           type: LINK_BUTTON,

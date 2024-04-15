@@ -4,6 +4,9 @@ namespace Claroline\AppBundle\Entity\Restriction;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @deprecated the feature has been removed.
+ */
 trait AllowedIps
 {
     /**

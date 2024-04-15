@@ -34,7 +34,7 @@ const User = (props) =>
     title={get(props.user, 'name', trans('loading'))}
     poster={get(props.user, 'poster')}
     primaryAction="send-message"
-    toolbar="edit | more"
+    toolbar="edit more"
     actions={!isEmpty(props.user) ? getActions([props.user], {
       add: () => props.reload(props.user.id),
       update: () => props.reload(props.user.id),

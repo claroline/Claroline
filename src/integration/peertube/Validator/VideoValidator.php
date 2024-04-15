@@ -8,12 +8,9 @@ use Claroline\PeerTubeBundle\Manager\PeerTubeManager;
 
 class VideoValidator implements ValidatorInterface
 {
-    /** @var PeerTubeManager */
-    private $peerTubeManager;
-
-    public function __construct(PeerTubeManager $peerTubeManager)
-    {
-        $this->peerTubeManager = $peerTubeManager;
+    public function __construct(
+        private readonly PeerTubeManager $peerTubeManager
+    ) {
     }
 
     public static function getClass(): string

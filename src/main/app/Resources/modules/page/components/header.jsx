@@ -105,9 +105,10 @@ const PageHeader = props =>
       'page-poster': !!props.poster
     })}
   >
-    <PageNav embedded={props.embedded}>
-      {props.menu}
-    </PageNav>
+    <PageNav
+      embedded={props.embedded}
+      menu={props.menu}
+    />
 
     <div className="page-header-content m-4 gap-4" role="presentation">
       {props.icon &&

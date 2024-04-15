@@ -71,12 +71,9 @@ class PlatformDefaults implements ParameterProviderInterface
                 'redis_password' => '',
             ],
             'display' => [
-                'logo' => 'logo-sm.svg',
                 'theme' => 'claroline',
                 'resource_icon_set' => 'claroline',
                 'name' => 'Claroline Connect',
-                'name_active' => true,
-                'breadcrumb' => true,
             ],
             'footer' => [
                 'show' => true,

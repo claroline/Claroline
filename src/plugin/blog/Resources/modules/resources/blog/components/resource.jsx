@@ -20,12 +20,6 @@ const BlogResource = props =>
       primaryAction="blog_post"
       customActions={[
         {
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-home',
-          label: trans('show_overview'),
-          target: props.path,
-          exact: true
-        }, {
           name: 'moderation',
           displayed : props.canEdit || props.canModerate,
           type: LINK_BUTTON,

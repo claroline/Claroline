@@ -56,7 +56,7 @@ const ResourceWrapper = (props) => {
   }
 
   return createElement(app.component, {
-    path: props.path,
+    path: props.path + '/' + props.slug,
     type: app.type,
     slug: props.slug,
     open: (resourceType, resourceSlug) => props.openType(resourceType, resourceSlug, app.data)

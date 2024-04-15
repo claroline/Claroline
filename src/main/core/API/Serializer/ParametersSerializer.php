@@ -44,7 +44,7 @@ class ParametersSerializer
         $original = $data;
         $data = $this->getAssetsData('javascripts', $data);
         $data = $this->getAssetsData('stylesheets', $data);
-        $data = $this->getLogoData($data);
+        /*$data = $this->getLogoData($data);*/
 
         if (!empty($data['mailer'])) {
             $data['mailer'] = $this->deserializeMailer($data['mailer']);
@@ -97,7 +97,7 @@ class ParametersSerializer
         return $uploadedFiles;
     }
 
-    private function getLogoData(array $data): array
+    /*private function getLogoData(array $data): array
     {
         if (isset($data['display']) && isset($data['display']['logo'])) {
             $logo = $data['display']['logo'];
@@ -107,5 +107,5 @@ class ParametersSerializer
         }
 
         return $data;
-    }
+    }*/
 }

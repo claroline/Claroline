@@ -9,16 +9,14 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class PublicFileValidator implements ValidatorInterface
 {
-    private FileManager $fileManager;
-
     private static array $disallowedExtensions = [
         'php',
         'sh',
     ];
 
-    public function __construct(FileManager $fileManager)
-    {
-        $this->fileManager = $fileManager;
+    public function __construct(
+        private readonly FileManager $fileManager
+    ) {
     }
 
     public static function getClass(): string

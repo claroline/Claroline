@@ -11,18 +11,22 @@ import '#/main/app/input/tinymce/langs'
  * It is customized depending on the mode you choose (minimal, classic, full).
  */
 const config = {
-  language: locale(),
+  language: 'fr' === locale() ? 'fr_FR' : locale(),
   base_url: asset('packages/tinymce'),
   // convert all relatives URLs into absolute ones
   // this is required for templates to work
   relative_urls: false,
 
-  // styles
-  skin: null, // we provide it through theme system
-  content_css: [
-    theme('bootstrap')
-  ],
+  body_id: 'data-bs-theme="dark"',
 
+  // styles
+  skin: 'oxide-dark', // we provide it through theme system
+  content_css: [
+    theme('bootstrap'),
+    'dark'
+
+  ],
+  highlight_on_focus: false,
   // plugins
   plugins: [
     'autolink',
@@ -41,7 +45,6 @@ const config = {
     'quickbars',
     'searchreplace',
     'table',
-    //'template',
     'visualblocks',
     'visualchars',
     'wordcount',
