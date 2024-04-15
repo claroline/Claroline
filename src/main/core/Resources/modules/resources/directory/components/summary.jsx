@@ -9,6 +9,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentSummary} from '#/main/app/content/components/summary'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+import {ResourcePage} from '#/main/core/resource'
 
 class DirectorySummary extends Component {
   constructor(props) {
@@ -37,26 +38,28 @@ class DirectorySummary extends Component {
 
   render() {
     return (
-      <ContentSummary
-        links={[
-          {
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-arrow-left',
-            label: get(this.props.currentNode, 'parent') ?
-              trans('back_to', {target: get(this.props.currentNode, 'parent.name')}) :
-              trans('back'),
-            displayed: isEmpty(this.props.rootNode) || this.props.currentNode.slug !== this.props.rootNode.slug,
-            target: `${this.props.basePath}/${get(this.props.currentNode, 'parent.slug', '')}`,
-            exact: true
-          }, {
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-list-ul',
-            label: trans('all_resources', {}, 'resource'),
-            active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${this.props.currentNode.slug}/all`}),
-            target: `${this.props.basePath}/${this.props.currentNode.slug}/all`
-          }
-        ].concat(this.props.directories.map(this.getDirectorySummary))}
-      />
+      <ResourcePage title={trans('summary')}>
+        <ContentSummary
+          links={[
+            {
+              type: LINK_BUTTON,
+              icon: 'fa fa-fw fa-arrow-left',
+              label: get(this.props.currentNode, 'parent') ?
+                trans('back_to', {target: get(this.props.currentNode, 'parent.name')}) :
+                trans('back'),
+              displayed: isEmpty(this.props.rootNode) || this.props.currentNode.slug !== this.props.rootNode.slug,
+              target: `${this.props.basePath}/${get(this.props.currentNode, 'parent.slug', '')}`,
+              exact: true
+            }, {
+              type: LINK_BUTTON,
+              icon: 'fa fa-fw fa-list-ul',
+              label: trans('all_resources', {}, 'resource'),
+              active: !!matchPath(this.props.location.pathname, {path: `${this.props.basePath}/${this.props.currentNode.slug}/all`}),
+              target: `${this.props.basePath}/${this.props.currentNode.slug}/all`
+            }
+          ].concat(this.props.directories.map(this.getDirectorySummary))}
+        />
+      </ResourcePage>
     )
   }
 }

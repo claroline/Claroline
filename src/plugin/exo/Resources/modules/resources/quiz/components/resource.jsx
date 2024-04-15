@@ -18,23 +18,16 @@ import {PapersMain}     from '#/plugin/exo/resources/quiz/papers/containers/main
 import {CorrectionMain} from '#/plugin/exo/resources/quiz/correction/containers/main'
 import {StatisticsMain} from '#/plugin/exo/resources/quiz/statistics/containers/main'
 
-
 const QuizResource = props =>
   <Resource
     {...omit(props)}
     styles={['claroline-distribution-plugin-exo-quiz-resource']}
+    overview={QuizOverview}
   >
     <DragDropProvider>
       <ResourcePage
-        customActions={[
-          /*{
-            type: LINK_BUTTON,
-            icon: 'fa fa-fw fa-home',
-            label: trans('show_overview'),
-            displayed: props.hasOverview,
-            target: props.path,
-            exact: true
-          }, */{
+        actions={[
+          {
             type: LINK_BUTTON,
             icon: 'fa fa-fw fa-play',
             label: trans('start', {}, 'actions'),

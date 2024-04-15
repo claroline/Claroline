@@ -1,13 +1,8 @@
-import {reducer} from '#/plugin/flashcard/resources/flashcard/store'
+
+import {declareResource} from '#/main/core/resource'
 import {FlashcardResource} from '#/plugin/flashcard/resources/flashcard/containers/resource'
-import {FlashcardMenu} from '#/plugin/flashcard/resources/flashcard/containers/menu'
 
 /**
  * Flashcard resource application.
  */
-export default {
-  component: FlashcardResource,
-  menu: FlashcardMenu,
-  store: reducer,
-  styles: ['claroline-distribution-plugin-flashcard-flashcard']
-}
+export default declareResource(FlashcardResource)

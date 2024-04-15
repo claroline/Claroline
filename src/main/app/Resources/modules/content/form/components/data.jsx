@@ -61,6 +61,7 @@ const FormData = (props) => {
       cancel={props.cancel}
       buttons={props.buttons}
       target={props.target}
+      onSave={props.onSave}
     >
       {props.meta &&
         <ContentMeta
@@ -163,6 +164,8 @@ FormData.propTypes = {
     id: T.string.isRequired,
     className: T.string.isRequired
   }),
+
+  onSave: T.func,
 
   /**
    * The save action of the form.

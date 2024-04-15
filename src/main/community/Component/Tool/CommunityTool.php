@@ -177,22 +177,18 @@ class CommunityTool extends AbstractTool
 
     private function getDesktopParameters(): array
     {
-        $parameters = $this->parametersSerializer->serialize();
+        $registration = $this->config->getParameter('registration') ?? [];
 
         // load default role entity for UI rendering
-        $defaultRoleName = ArrayUtils::get($parameters, 'registration.default_role') ?? PlatformRoles::USER;
-        $roleUser = $this->roleManager->getRoleByName($defaultRoleName);
-        if (empty($parameters['registration'])) {
-            $parameters['registration'] = [];
-        }
-        $parameters['registration']['default_role'] = $this->serializer->serialize($roleUser, [SerializerInterface::SERIALIZE_MINIMAL]);
+        $defaultRoleName = $registration['default_role'] ?? PlatformRoles::USER;
+        $defaultRole = $this->roleManager->getRoleByName($defaultRoleName);
+        $registration['default_role'] = $this->serializer->serialize($defaultRole, [SerializerInterface::SERIALIZE_MINIMAL]);
 
         // only grab platform options we want
         return [
-            'registration' => $parameters['registration'] ?? [],
-            'authentication' => $parameters['authentication'] ?? [],
-            'profile' => $parameters['profile'] ?? [],
-            'community' => $parameters['community'] ?? [],
+            'registration' => $registration ?? [],
+            'profile' => $this->config->getParameter('profile')  ?? [],
+            'community' => $this->config->getParameter('community') ?? [],
         ];
     }
 
@@ -208,9 +204,7 @@ class CommunityTool extends AbstractTool
                 $communityParameters['registration']['default_role'] = $parametersData['registration']['default_role']['name'];
             }
         }
-        if (isset($parametersData['authentication'])) {
-            $communityParameters['authentication'] = $parametersData['authentication'];
-        }
+
         if (isset($parametersData['profile'])) {
             $communityParameters['profile'] = $parametersData['profile'];
         }

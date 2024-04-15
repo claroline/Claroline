@@ -1,167 +1,107 @@
-import React, {createElement} from 'react'
-import {PropTypes as T} from 'prop-types'
+import React, {useCallback, useContext} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
 import classes from 'classnames'
 import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
 
-import {Routes} from '#/main/app/router/components/routes'
-import {Route as RouteTypes} from '#/main/app/router/prop-types'
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {trans} from '#/main/app/intl'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {Await} from '#/main/app/components/await'
-
-import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {ToolPage} from '#/main/core/tool'
-import {ResourceRestrictions} from '#/main/core/resource/containers/restrictions'
 
-import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
-import {ResourceIcon} from '#/main/core/resource/components/icon'
-import {ResourceMenu} from '#/main/core/resource/containers/menu'
-import {getResource} from '#/main/core/resources'
-
-// FIXME
-import {EvaluationMain} from '#/main/evaluation/resource/evaluation/containers/main'
-import {LogsMain} from '#/main/log/resource/logs/containers/main'
+import {ResourceContext} from '#/main/core/resource/context'
+import {getActions} from '#/main/core/resource/utils'
+import {selectors, actions} from '#/main/core/resource/store'
+import {route} from '#/main/core/resource/routing'
+import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
 const ResourcePage = (props) => {
-  // remove workspace root from path (it's already known by the breadcrumb)
-  // remove resource from path (added by ToolPage)
-  // find a better way to handle this
-  let ancestors  = props.resourceNode.path.slice(1, props.resourceNode.path.length - 1)
+  const resourceDef = useContext(ResourceContext)
 
-  const routes = [
-    {
-      path: '/evaluation',
-      component: EvaluationMain
-    }, {
-      path: '/logs',
-      component: LogsMain
-    }
-  ].concat(props.routes)
+  const currentUser = useSelector(securitySelectors.currentUser)
+  const basePath = useSelector(selectors.basePath)
+  const resourcePath = useSelector(selectors.path)
+  const resourceNode = useSelector(selectors.resourceNode)
+  const embedded = useSelector(selectors.embedded)
+  const showHeader = useSelector(selectors.showHeader)
+  
+  const dispatch = useDispatch()
+  const reload = useCallback(() => dispatch(actions.reload()), [get(resourceNode, 'id')])
+
+  // remove workspace root from path (it's already known by the breadcrumb)
+  const breadcrumb = []
+  if (get(resourceNode, 'parent') && !get(resourceNode, 'parent.root')) {
+    breadcrumb.push({
+      label: get(resourceNode, 'parent.name'),
+      target: `${basePath}/${get(resourceNode, 'parent.slug')}`
+    })
+  }
 
   return (
     <ToolPage
-      className={classes('resource-page', `${props.resourceNode.meta.type}-page`, props.className)}
+      className={classes('resource-page', `${resourceNode.meta.type}-page`, props.className)}
       meta={{
-        title: props.resourceNode.name,
-        description: props.resourceNode.meta ? props.resourceNode.meta.description : null
+        title: resourceNode.name,
+        description: resourceNode.meta ? resourceNode.meta.description : null
       }}
-      embedded={props.embedded}
-      showHeader={!props.embedded || props.showHeader}
-      title={props.title || props.subtitle || props.resourceNode.name}
-      breadcrumb={[].concat(ancestors.map(ancestorNode => ({
-        label: ancestorNode.name,
-        target: `${props.basePath}/${ancestorNode.slug}`
-      })), props.breadcrumb || props.path)}
-      poster={props.resourceNode.poster}
-      icon={get(props.resourceNode, 'display.showIcon') ?
-        <ResourceIcon
-          mimeType={props.resourceNode.meta.mimeType}
-        /> : undefined
-      }
-
-      menu={
-        <Await
-          for={getResource(props.type)}
-          then={(module) => {
-            if (module.default.menu) {
-              return createElement(module.default.menu, {path: `${props.basePath}/${props.resourceNode.slug}`})
+      breadcrumb={breadcrumb.concat([
+        {
+          label: resourceNode.name,
+          target: resourcePath
+        }
+      ], props.breadcrumb || [])}
+      poster={props.poster || get(resourceNode, 'poster')}
+      title={props.title || props.subtitle || resourceNode.name}
+      embedded={embedded}
+      showHeader={!embedded || showHeader}
+      menu={{
+        nav: [
+          {
+            name: 'overview',
+            type: LINK_BUTTON,
+            label: trans('resource_overview', {}, 'resource'),
+            target: resourcePath,
+            displayed: !!resourceDef.overview,
+            exact: true
+          }
+        ].concat(resourceDef.menu || []),
+        toolbar: 'edit more',
+        // get actions injected through plugins and the ones defined by the current tool
+        actions: getActions([resourceNode], {
+          add: reload,
+          update: (resourceNodes) => {
+            // checks if the action have modified the current node
+            if (resourceNodes.find(node => node.id === resourceNode.id)) {
+              reload()
             }
+          },
+          delete: (resourceNodes) => {
+            // checks if the action have deleted the current node
+            const currentNode = resourceNodes.find(node => node.id === resourceNode.id)
+            if (currentNode) {
+              let redirect
+              if (currentNode.parent) {
+                redirect = route(currentNode.parent)
+              } else {
+                redirect = workspaceRoute(currentNode.workspace, 'resources')
+              }
 
-            return createElement(ResourceMenu, {path: `${props.basePath}/${props.resourceNode.slug}`})
-          }}
-        />
-      }
+              props.history.push(redirect)
+            }
+          }
+        }, basePath, currentUser, false).then(loadedActions => [].concat(loadedActions, resourceDef.actions || []))
+      }}
 
-      {...omit(props, 'name', 'className', 'path', 'basePath', 'resourceNode', 'poster', 'accessErrors', 'userEvaluation', 'showHeader')}
-      actions={props.customActions || props.actions}
+      {...omit(props, 'className', 'poster', 'styles')}
+      styles={[].concat(resourceDef.styles, props.styles || [])}
     >
-      {!isEmpty(props.accessErrors) &&
-        <ResourceRestrictions />
-      }
-
-      {isEmpty(props.accessErrors) && !isEmpty(routes) &&
-        <Routes
-          path={`${props.basePath}/${props.resourceNode.slug}`}
-          routes={routes}
-          redirect={props.redirect}
-        />
-      }
-
-      {isEmpty(props.accessErrors) &&
-        props.children
-      }
+      {props.children}
     </ToolPage>
   )
 } 
 
-ResourcePage.propTypes = {
-  className: T.string,
-  basePath: T.string,
-  embedded: T.bool,
-  showHeader: T.bool,
-  type: T.string.isRequired,
-  /**
-   * @deprecated
-   */
-  subtitle: T.string,
-  title: T.string,
-  path: T.arrayOf(T.shape({
-    label: T.string.isRequired,
-    target: T.string.isRequired
-  })),
-
-  /**
-   * The current resource node.
-   */
-  resourceNode: T.shape(
-    ResourceNodeTypes.propTypes
-  ).isRequired,
-
-  accessErrors: T.object,
-
-  /**
-   * The current user evaluation.
-   */
-  userEvaluation: T.shape(
-    ResourceEvaluationTypes.propTypes
-  ),
-
-  // the name of the primary action of the resource (if we want to override the default one).
-  // it can contain more than one action name
-  primaryAction: T.string,
-
-  actions: T.arrayOf(T.shape(
-    ActionTypes.propTypes
-  )),
-
-  /**
-   * @deprecated use actions
-   */
-  customActions: T.arrayOf(T.shape(
-    ActionTypes.propTypes
-  )),
-
-  // resource content
-  routes: T.arrayOf(
-    T.shape(RouteTypes.propTypes).isRequired
-  ),
-  redirect: T.arrayOf(T.shape({
-    disabled: T.bool,
-    from: T.string.isRequired,
-    to: T.string.isRequired,
-    exact: T.bool
-  })),
-  children: T.node,
-  /*disabledActions: T.arrayOf(T.string)*/
-}
-
-ResourcePage.defaultProps = {
-  path: [],
-  routes: [],
-  disabledActions: []
-}
+ResourcePage.propTypes = ToolPage.propTypes
+ResourcePage.defaultProps = ToolPage.defaultProps
 
 export {
   ResourcePage

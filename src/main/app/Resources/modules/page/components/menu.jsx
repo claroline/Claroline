@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {toKey} from '#/main/core/scaffolding/text'
 import {Await} from '#/main/app/components/await'
-import {Button} from '#/main/app/action'
+import {Button, Toolbar} from '#/main/app/action'
 import {Action, PromisedAction} from '#/main/app/action/prop-types'
 
 const PageNav = (props) =>  {
@@ -37,19 +37,30 @@ PageNav.propTypes = {
 }
 
 const PageMenu = (props) =>
-  <nav className="page-nav ms-auto d-flex gap-3">
-    {props.actions instanceof Promise ?
-      <Await for={props.actions} then={(resolvedActions) => (
+  <nav className="page-nav ms-auto d-flex gap-3" role="presentation">
+    {props.nav instanceof Promise ?
+      <Await for={props.nav} then={(resolvedActions) => (
         <PageNav actions={resolvedActions} />
       )} /> :
-      <PageNav actions={props.actions} />
+      <PageNav actions={props.nav} />
     }
 
-    {props.children}
+    {props.actions &&
+      <Toolbar
+        className="nav nav-underline text-shrink-0"
+        buttonName="nav-link"
+        toolbar={props.toolbar}
+        tooltip="bottom"
+        actions={props.actions}
+      />
+    }
   </nav>
 
 PageMenu.propTypes = {
-  actions: T.oneOfType([
+  /**
+   * The main navigation elements.
+   */
+  nav: T.oneOfType([
     // a regular array of actions
     T.arrayOf(T.shape(
       Action.propTypes
@@ -59,7 +70,25 @@ PageMenu.propTypes = {
       PromisedAction.propTypes
     )
   ]),
-  children: T.any
+  toolbar: T.string,
+
+  /**
+   * A list of additional actions.
+   */
+  actions: T.oneOfType([
+    // a regular array of actions
+    T.arrayOf(T.shape(
+      Action.propTypes
+    )),
+    // a promise that will resolve a list of actions
+    T.shape(
+      PromisedAction.propTypes
+    )
+  ])
+}
+
+PageMenu.defaultProps = {
+  toolbar: 'more'
 }
 
 export {

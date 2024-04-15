@@ -7,12 +7,12 @@ use Claroline\CoreBundle\Entity\Group;
 
 class GroupValidator implements ValidatorInterface
 {
-    public function validate($data, $mode, array $options = [])
+    public function validate($data, $mode, array $options = []): array
     {
         return [];
     }
 
-    public function getUniqueFields()
+    public function getUniqueFields(): array
     {
         return [
             'code' => 'code',

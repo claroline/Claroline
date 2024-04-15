@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class WorkspaceValidator implements ValidatorInterface
 {
-    public function validate($data, $mode, array $options = [])
+    public function validate($data, $mode, array $options = []): array
     {
         return [];
     }
@@ -17,7 +17,7 @@ class WorkspaceValidator implements ValidatorInterface
         return Workspace::class;
     }
 
-    public function getUniqueFields()
+    public function getUniqueFields(): array
     {
         return [
             'code' => 'code',

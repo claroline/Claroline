@@ -60,10 +60,14 @@ FormData.propTypes = {
    */
   target: T.oneOfType([T.string, T.array, T.func]),
 
+  onSave: T.func,
+
   /**
    * A custom save action for the form (only used if props.buttons === true).
    *
    * NB. If a target is provided, the api call will be made before executing the custom action.
+   *
+   * @deprecated use onSave callback instead.
    */
   save: T.shape({
     type: T.string.isRequired,

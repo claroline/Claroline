@@ -57,27 +57,29 @@ class ContextMenu extends Component
 
   render() {
     // TODO : create selector
-    const toolActions = this.props.tools
-      .filter(tool => hasPermission('open', tool) && !get(tool, 'restrictions.hidden', false))
-      .sort((a, b) => {
-        if (isNumber(a.order) && isNumber(b.order) && a.order !== b.order) {
-          return a.order - b.order
-        }
+    let toolLinks = []
+    if (!this.props.notFound && !this.props.hasErrors) {
+      toolLinks = this.props.tools
+        .filter(tool => hasPermission('open', tool) && !get(tool, 'restrictions.hidden', false))
+        .sort((a, b) => {
+          if (isNumber(a.order) && isNumber(b.order) && a.order !== b.order) {
+            return a.order - b.order
+          }
 
-        if (trans(a.name, {}, 'tools') > trans(b.name, {}, 'tools')) {
-          return 1
-        }
+          if (trans(a.name, {}, 'tools') > trans(b.name, {}, 'tools')) {
+            return 1
+          }
 
-        return -1
-      })
-      .map(tool => ({
-        name: tool.name,
-        type: LINK_BUTTON,
-        icon: `fa fa-fw fa-${tool.icon}`,
-        label: trans(tool.name, {}, 'tools'),
-        target: this.props.path + '/' + tool.name
-      }))
-
+          return -1
+        })
+        .map(tool => ({
+          name: tool.name,
+          type: LINK_BUTTON,
+          icon: `fa fa-fw fa-${tool.icon}`,
+          label: trans(tool.name, {}, 'tools'),
+          target: this.props.path + '/' + tool.name
+        }))
+    }
 
     return (
       <>
@@ -88,7 +90,7 @@ class ContextMenu extends Component
             <header className="app-menu-header m-3 ms-4 me-1 d-flex align-items-center justify-content-between">
               <h1 className="app-menu-title text-truncate d-block">{this.props.title}</h1>
 
-              {(!isEmpty(this.props.actions) || !Array.isArray(this.props.actions)) &&
+              {!this.props.notFound && !this.props.hasErrors && (!isEmpty(this.props.actions) || !Array.isArray(this.props.actions)) &&
                 <Toolbar
                   id="app-menu-actions"
                   className="flex-shrink-0"
@@ -108,11 +110,11 @@ class ContextMenu extends Component
             autoClose: this.autoClose
           }))}
 
-          {1 < toolActions.length &&
+          {1 < toolLinks.length &&
             <Toolbar
               className="app-menu-items"
               buttonName="app-menu-item"
-              actions={toolActions}
+              actions={toolLinks}
               onClick={this.autoClose}
             />
           }
@@ -144,6 +146,8 @@ ContextMenu.propTypes = {
   children: T.node,
 
   // from store
+  notFound: T.bool.isRequired,
+  hasErrors: T.bool.isRequired,
   opened: T.bool.isRequired,
   untouched: T.bool.isRequired,
   close: T.func.isRequired

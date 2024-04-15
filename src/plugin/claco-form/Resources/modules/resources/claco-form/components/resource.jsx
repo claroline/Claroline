@@ -37,37 +37,46 @@ const ClacoFormResource = props =>
   <Resource
     {...omit(props)}
     styles={['claroline-distribution-plugin-claco-form-resource']}
+    menu={[
+      {
+        name: 'list',
+        type: LINK_BUTTON,
+        /*icon: 'fa fa-fw fa-search',*/
+        label: trans('entries_list', {}, 'clacoform'),
+        displayed: props.canSearchEntry,
+        target: `${props.path}/entries`,
+        exact: true
+      }, {
+        name: 'random',
+        type: LINK_BUTTON,
+        label: trans('random_entry', {}, 'clacoform'),
+        target: `${props.path}/random`,
+        displayed: props.randomEnabled
+      }
+    ]}
+    actions={[
+      {
+        name: 'statistics',
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-pie-chart',
+        label: trans('show-statistics', {}, 'actions'),
+        target: `${props.path}/stats`,
+        displayed: props.canEdit && props.hasStatistics
+      }, {
+        name: 'export-entries',
+        type: URL_BUTTON,
+        icon: 'fa fa-fw fa-download',
+        label: trans('export_all_entries', {}, 'clacoform'),
+        displayed: props.canAdministrate,
+        target: ['claro_claco_form_entries_export', {clacoForm: props.clacoForm.id}],
+        group: trans('transfer')
+      }
+    ]}
+    overview={Overview}
   >
     <ResourcePage
       primaryAction="add-entry"
-      customActions={[
-        /*{
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-home',
-          label: trans('show_overview'),
-          target: `${props.path}/menu`
-        }, */{
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-pie-chart',
-          label: trans('show-statistics', {}, 'actions'),
-          target: `${props.path}/stats`,
-          displayed: props.canEdit && props.hasStatistics
-        }, /*{
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-search',
-          label: trans('entries_list', {}, 'clacoform'),
-          displayed: props.canSearchEntry,
-          target: `${props.path}/entries`,
-          exact: true
-        }, */{
-          type: URL_BUTTON,
-          icon: 'fa fa-fw fa-download',
-          label: trans('export_all_entries', {}, 'clacoform'),
-          displayed: props.canAdministrate,
-          target: ['claro_claco_form_entries_export', {clacoForm: props.clacoForm.id}],
-          group: trans('transfer')
-        }
-      ]}
+
       routes={[
         {
           path: '/',

@@ -22,16 +22,7 @@ actions.setResourceLoaded = makeActionCreator(RESOURCE_SET_LOADED, 'loaded')
 actions.setNotFound = makeActionCreator(RESOURCE_NOT_FOUND)
 actions.loadResource = makeActionCreator(RESOURCE_LOAD, 'resourceData')
 actions.loadResourceType = makeInstanceActionCreator(RESOURCE_LOAD, 'resourceData')
-
-actions.openResource = (resourceSlug) => (dispatch, getState) => {
-  const currentSlug = selectors.slug(getState())
-  if (currentSlug !== resourceSlug) {
-    dispatch({
-      type: RESOURCE_OPEN,
-      resourceSlug: resourceSlug
-    })
-  }
-}
+actions.reload = () => actions.setResourceLoaded(false)
 
 actions.fetchResource = (slug, embedded = false) => (dispatch) => dispatch({
   [API_REQUEST]: {

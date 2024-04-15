@@ -16,6 +16,7 @@ import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types
 import {getActions, getDefaultAction} from '#/main/core/resource/utils'
 import {ContentSizing} from '#/main/app/content/components/sizing'
 import {FileDrop} from '#/main/app/overlays/dnd/components/file-drop'
+import {ResourcePage} from '#/main/core/resource'
 
 /**
  * Transform resource node actions.
@@ -39,7 +40,7 @@ function transformAction(action, resourceNodes, embedded = false) {
 }
 
 const PlayerMain = props =>
-  <>
+  <ResourcePage>
     {props.storageLock &&
       <Alert type="warning" className="mt-3">{trans('storage_limit_reached_resources')}</Alert>
     }
@@ -97,7 +98,7 @@ const PlayerMain = props =>
         />
       </FileDrop>
     </ContentSizing>
-  </>
+  </ResourcePage>
 
 PlayerMain.propTypes = {
   path: T.string,

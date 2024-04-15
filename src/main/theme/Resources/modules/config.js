@@ -22,6 +22,10 @@ function theme(assetName = 'bootstrap') {
   return asset(`themes/${currentTheme()}/${assetName}.css?v=${param('version')}`)
 }
 
+function logo() {
+  return asset(param('theme.logo'))
+}
+
 /**
  * Get the icon defined for a mime-type.
  *
@@ -53,5 +57,6 @@ function icon(mimeType, set) {
 export {
   currentTheme,
   theme,
-  icon
+  icon,
+  logo
 }

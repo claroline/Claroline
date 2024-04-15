@@ -18,18 +18,18 @@ const AnnouncementResource = props =>
   <Resource
     {...omit(props)}
     styles={['claroline-distribution-plugin-announcement-announcement-resource']}
+    menu={[
+      {
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-list',
+        label: trans('announcements_list', {}, 'announcement'),
+        target: props.path,
+        exact: true
+      }
+    ]}
   >
     <ResourcePage
       primaryAction="create-announce"
-      customActions={[
-        {
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-list',
-          label: trans('announcements_list', {}, 'announcement'),
-          target: props.path,
-          exact: true
-        }
-      ]}
       routes={[
         {
           path: '/',

@@ -18,94 +18,97 @@ import {constants} from '#/main/evaluation/resource/constants'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 import {EvaluationFeedback} from '#/main/evaluation/components/feedback'
 import {EvaluationDetails} from '#/main/evaluation/components/details'
+import {ResourcePage} from '#/main/core/resource/components/page'
 
 const ResourceOverview = props =>
-  <section className="resource-overview content-lg mt-3">
-    <h2 className="sr-only">{trans('resource_overview', {}, 'resource')}</h2>
+  <ResourcePage>
+    <section className="resource-overview content-lg mt-3">
+      <h2 className="sr-only">{trans('resource_overview', {}, 'resource')}</h2>
 
-    <div className="row">
-      <div className="col-md-4">
-        <section className="user-progression mb-3">
-          <h3 className="h2">{trans('my_progression')}</h3>
-          {!isEmpty(props.evaluation) &&
-            <EvaluationDetails
-              evaluation={props.evaluation}
-              statusTexts={merge({}, constants.EVALUATION_STATUSES, props.statusTexts || {})}
-              details={[
-                [trans('last_activity'), get(props.evaluation, 'date') ? displayDate(props.evaluation.date, false, true) : '-']
-              ].concat(props.details || [])}
-              showScore={get(props, 'display.score', false)}
-              scoreMax={get(props, 'display.scoreMax')}
-              successScore={get(props, 'display.successScore')}
-              estimatedDuration={get(props, 'resourceNode.evaluation.estimatedDuration')}
-            />
-          }
-        </section>
-
-        {0 !== props.actions.length &&
-          <section className="overview-user-actions mb-3">
-            <h3 className="sr-only">{trans('resource_overview_actions', {}, 'resource')}</h3>
-
-            <div className="d-grid gap-1" role="presentation">
-              {props.actions
-                .filter(action => undefined === action.displayed || action.displayed)
-                .map((action, index) => !action.disabled ?
-                  <Button
-                    {...omit(action, 'disabledMessages')}
-                    key={index}
-                    className={classes('btn', {
-                      'btn-outline-primary': !action.primary && !action.dangerous,
-                      'btn-primary': action.primary,
-                      'btn-danger': action.dangerous
-                    })}
-                    size={action.primary ? 'lg' : undefined}
-                  /> :
-                  action.disabledMessages && action.disabledMessages.map((message, messageIndex) =>
-                    <Alert key={messageIndex} type="warning">{message}</Alert>
-                  )
-                )
-              }
-            </div>
-          </section>
-        }
-      </div>
-
-      <div className="col-md-8">
-        {((!isEmpty(props.evaluation) && get(props, 'display.feedback', false)) || !isEmpty(get(props.feedbacks, 'closed'))) &&
-          <section className="resource-feedbacks">
-            {!isEmpty(props.evaluation) && get(props, 'display.feedback', false) &&
-              <EvaluationFeedback
-                status={props.evaluation.status}
-                {...props.feedbacks}
+      <div className="row">
+        <div className="col-md-4">
+          <section className="user-progression mb-3">
+            <h3 className="h2">{trans('my_progression')}</h3>
+            {!isEmpty(props.evaluation) &&
+              <EvaluationDetails
+                evaluation={props.evaluation}
+                statusTexts={merge({}, constants.EVALUATION_STATUSES, props.statusTexts || {})}
+                details={[
+                  [trans('last_activity'), get(props.evaluation, 'date') ? displayDate(props.evaluation.date, false, true) : '-']
+                ].concat(props.details || [])}
+                showScore={get(props, 'display.score', false)}
+                scoreMax={get(props, 'display.scoreMax')}
+                successScore={get(props, 'display.successScore')}
+                estimatedDuration={get(props, 'resourceNode.evaluation.estimatedDuration')}
               />
             }
-
-            {!isEmpty(get(props.feedbacks, 'closed')) && props.feedbacks.closed.map(closedMessage =>
-              <AlertBlock key={toKey(closedMessage[0])} type="warning" title={closedMessage[0]}>
-                <ContentHtml>{closedMessage[1]}</ContentHtml>
-              </AlertBlock>
-            )}
           </section>
-        }
 
-        {props.contentText &&
-          <section className="resource-info mb-3">
-            <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
+          {0 !== props.actions.length &&
+            <section className="overview-user-actions mb-3">
+              <h3 className="sr-only">{trans('resource_overview_actions', {}, 'resource')}</h3>
 
-            <div className="card">
-              {typeof props.contentText === 'string' ?
-                <ContentHtml className="card-body">{props.contentText}</ContentHtml>
-                :
-                <div className="card-body">{props.contentText}</div>
+              <div className="d-grid gap-1" role="presentation">
+                {props.actions
+                  .filter(action => undefined === action.displayed || action.displayed)
+                  .map((action, index) => !action.disabled ?
+                    <Button
+                      {...omit(action, 'disabledMessages')}
+                      key={index}
+                      className={classes('btn', {
+                        'btn-outline-primary': !action.primary && !action.dangerous,
+                        'btn-primary': action.primary,
+                        'btn-danger': action.dangerous
+                      })}
+                      size={action.primary ? 'lg' : undefined}
+                    /> :
+                    action.disabledMessages && action.disabledMessages.map((message, messageIndex) =>
+                      <Alert key={messageIndex} type="warning">{message}</Alert>
+                    )
+                  )
+                }
+              </div>
+            </section>
+          }
+        </div>
+
+        <div className="col-md-8">
+          {((!isEmpty(props.evaluation) && get(props, 'display.feedback', false)) || !isEmpty(get(props.feedbacks, 'closed'))) &&
+            <section className="resource-feedbacks">
+              {!isEmpty(props.evaluation) && get(props, 'display.feedback', false) &&
+                <EvaluationFeedback
+                  status={props.evaluation.status}
+                  {...props.feedbacks}
+                />
               }
-            </div>
-          </section>
-        }
 
-        {props.children}
+              {!isEmpty(get(props.feedbacks, 'closed')) && props.feedbacks.closed.map(closedMessage =>
+                <AlertBlock key={toKey(closedMessage[0])} type="warning" title={closedMessage[0]}>
+                  <ContentHtml>{closedMessage[1]}</ContentHtml>
+                </AlertBlock>
+              )}
+            </section>
+          }
+
+          {props.contentText &&
+            <section className="resource-info mb-3">
+              <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
+
+              <div className="card">
+                {typeof props.contentText === 'string' ?
+                  <ContentHtml className="card-body">{props.contentText}</ContentHtml>
+                  :
+                  <div className="card-body">{props.contentText}</div>
+                }
+              </div>
+            </section>
+          }
+
+          {props.children}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </ResourcePage>
 
 ResourceOverview.propTypes = {
   contentText: T.node, // can be a string or an empty placeholder

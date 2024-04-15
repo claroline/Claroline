@@ -11,7 +11,8 @@ export const TOOL_SET_LOADED = 'TOOL_SET_LOADED'
 // action creators
 export const actions = {}
 
-actions.load = makeInstanceActionCreator(TOOL_LOAD, 'toolData', 'context')
+actions.load = makeActionCreator(TOOL_LOAD, 'toolName', 'toolData', 'context')
+actions.loadType = makeInstanceActionCreator(TOOL_LOAD, 'toolData', 'context')
 actions.setLoaded = makeActionCreator(TOOL_SET_LOADED, 'loaded')
 actions.reload = () => actions.setLoaded(false)
 
@@ -30,8 +31,10 @@ actions.open = (toolName, context, contextId) => (dispatch) => dispatch({
       name: toolName
     }),
     success: (response) => {
-      // load tool type data
+      // load tool data
       dispatch(actions.load(toolName, response, context))
+      // load tool type data
+      dispatch(actions.loadType(toolName, response, context))
 
       // mark the tool as loaded
       // it's done through another action (not TOOL_LOAD) to be sure all reducers have been resolved

@@ -7,7 +7,7 @@ import {FormData} from '#/main/app/content/form/containers/data'
 
 import {ContextPage} from '#/main/app/context/components/page'
 import {selectors} from '#/main/app/context/editor/store'
-import {LINK_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {Checkbox} from '#/main/app/input/components/checkbox'
 import classes from 'classnames'
 
@@ -52,55 +52,87 @@ ContextTools.propTypes = {
 const ContextEditor = (props) => {
   useEffect(() => {
     props.getAvailableTools(props.contextName, props.contextId)
+    props.openEditor(props.contextData)
   }, [props.contextName, props.contextId])
 
   return (
     <ContextPage
       title={trans('parameters')}
+      actions={[
+        {
+          name: 'edit-poster',
+          type: CALLBACK_BUTTON,
+          label: trans('Modifier la couverture'),
+          callback: () => true
+        }
+      ]}
+      menu={{
+        nav: [
+          {
+            name: 'overview',
+            label: trans('about'),
+            type: LINK_BUTTON,
+            target: props.path+'/edit',
+            exact: true
+          }, {
+            name: 'history',
+            label: trans('history'),
+            type: LINK_BUTTON,
+            target: props.path+'/edit/history'
+          }
+        ],
+        actions: [
+          {
+            name: 'close',
+            label: trans('close'),
+            icon: 'fa far fa-fw fa-times-circle',
+            type: LINK_BUTTON,
+            target: props.path,
+            exact: true
+          }
+        ]
+      }}
     >
       <FormData
         className="mt-3"
         name={selectors.FORM_NAME}
+        onSave={(savedData) => props.refresh(props.name, savedData, props.contextType)}
+        target={['apiv2_context_configure', {
+          context: props.contextName,
+          contextId: props.contextId
+        }]}
         buttons={true}
         definition={[
           {
+            title: trans('general'),
+            primary: true,
+            fields: [
+              {
+                name: 'name',
+                type: 'string',
+                label: trans('name'),
+                required: true
+              }, {
+                name: 'meta.description',
+                type: 'string',
+                label: trans('description'),
+                options: {
+                  long: true
+                }
+              }
+            ]
+          }, {
             icon: 'fa fa-fw fa-desktop',
             title: trans('display_parameters'),
             fields: [
-              {
+              /*{
                 name: 'poster',
                 type: 'image',
                 label: trans('poster')
-              }, {
+              }, */{
                 name: 'thumbnail',
                 type: 'image',
                 label: trans('thumbnail')
-              }, {
-                name: 'breadcrumb.displayed',
-                type: 'boolean',
-                label: trans('showBreadcrumbs'),
-                displayed: true,
-                mode: 'advanced',
-                linked: [
-                  {
-                    name: 'breadcrumb.items',
-                    type: 'choice',
-                    label: trans('links'),
-                    required: true,
-                    displayed: (workspace) => get(workspace, 'breadcrumb.displayed') || false,
-                    options: {
-                      choices: {
-                        desktop: trans('desktop'),
-                        workspaces: trans('workspace_list'),
-                        current: trans('current_workspace'),
-                        tool: trans('tool')
-                      },
-                      inline: false,
-                      condensed: false,
-                      multiple: true
-                    }
-                  }
-                ]
               }
             ]
           }, {
@@ -186,6 +218,7 @@ const ContextEditor = (props) => {
 
 
 ContextEditor.propTypes = {
+  path: T.string.isRequired,
   contextName: T.string.isRequired,
   contextId: T.string,
   tools: T.arrayOf(T.shape({
@@ -196,7 +229,9 @@ ContextEditor.propTypes = {
     name: T.string.isRequired,
     required: T.bool.isRequired
   })),
-  getAvailableTools: T.func.isRequired
+  getAvailableTools: T.func.isRequired,
+  openEditor: T.func.isRequired,
+  refresh: T.func.isRequired
 }
 
 export {

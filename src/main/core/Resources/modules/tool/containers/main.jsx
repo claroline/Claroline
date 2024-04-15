@@ -2,6 +2,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {withReducer} from '#/main/app/store/components/withReducer'
+import {hasPermission} from '#/main/app/security'
 
 import {ToolMain as ToolMainComponent} from '#/main/core/tool/components/main'
 import {actions, reducer, selectors} from '#/main/core/tool/store'
@@ -12,7 +13,8 @@ const ToolMain = withReducer(selectors.STORE_NAME, reducer)(
     (state) => ({
       path: selectors.path(state),
       contextType: selectors.contextType(state),
-      contextId: selectors.contextId(state)
+      contextId: selectors.contextId(state),
+      canEdit: hasPermission('edit', selectors.toolData(state))
     }),
     (dispatch) => ({
       open(toolName, context, contextId) {

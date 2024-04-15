@@ -12,25 +12,34 @@
     margin-right: $icon-text-spacer;
 }
 
-/*.fa-composite {
-    position: relative;
+.thumbnail-icon {
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0 !important;
 
-    .fa-composite-secondary {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        transform: translate(50%, 50%);
-        font-size: 50%;
-        width: 1.6em;
-        height: 1.6em;
-        border-radius: 100%;
-        border: 2px solid #777;
-        background: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    text-transform: uppercase;
+    font-weight: $font-weight-base !important;
+    color: $primary;
+
+    background-color: fade-out($primary, .85);
+    background-size: cover;
+    background-position: center;
+}
+
+@each $size, $value in $icon-sizes {
+    .thumbnail-icon-#{$size} {
+        // for picture
+        width: $value;
+        height: $value;
+        // for .fa when no picture
+        font-size: $value * .5;
     }
-}*/
+}
+
 
 .theme-icon {
     display: inline-block;

@@ -5,16 +5,17 @@ import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
-
+import {selectors as securitySelectors} from '#/main/app/security/store'
 import {ContextPage} from '#/main/app/context/components/page'
+
 import {ToolContext} from '#/main/core/tool/context'
 import {selectors, actions} from '#/main/core/tool/store'
-import {ToolIcon} from '#/main/core/tool/components/icon'
-import {ToolMenu} from '#/main/core/tool/components/menu'
+import {getActions} from '#/main/core/tool/utils'
 
 const ToolPage = props => {
   const toolDef = useContext(ToolContext)
 
+  const currentUser = useSelector(securitySelectors.currentUser)
   const toolName = useSelector(selectors.name)
   const toolPath = useSelector(selectors.path)
   const toolData = useSelector(selectors.toolData)
@@ -34,22 +35,14 @@ const ToolPage = props => {
       ].concat(props.breadcrumb || [])}
       poster={props.poster || get(toolData, 'poster')}
       title={trans(toolName, {}, 'tools')}
-      icon={get(toolData, 'display.showIcon') ?
-        <ToolIcon type={get(toolData, 'icon')} />
-        :
-        undefined
-      }
-
-      menu={
-        <ToolMenu
-          path={toolPath}
-          currentContext={currentContext}
-          toolData={toolData}
-          menu={toolDef.menu}
-          actions={toolDef.actions}
-          reload={reload}
-        />
-      }
+      menu={{
+        nav: toolDef.menu,
+        toolbar: 'configure more',
+        // get actions injected through plugins and the ones defined by the current tool
+        actions: getActions(toolData, currentContext, {
+          update: reload
+        }, toolPath, currentUser).then(loadedActions => [].concat(loadedActions, toolDef.actions || []))
+      }}
 
       styles={[].concat(toolDef.styles, props.styles || [])}
       {...omit(props, 'className', 'breadcrumb', 'poster', 'styles')}

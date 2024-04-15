@@ -39,6 +39,7 @@ const ContextMain = (props) => {
   useEffect(() => {
     let appPromise
     if (props.loaded) {
+      // load apps for every tool defined in this context
       appPromise = makeCancelable(Promise.all(
         props.tools.map(tool => getTool(tool.name, props.name).then(toolApp => ({
           name: tool.name,
@@ -65,49 +66,40 @@ const ContextMain = (props) => {
     }
   }, [props.loaded])
 
+  let CurrentPage
   if (!props.loaded || !toolApps) {
-    return props.loadingPage ?
+    CurrentPage = props.loadingPage ?
       createElement(props.loadingPage) :
       <ContentLoader
         size="lg"
         description={trans('loading')}
       />
-  }
-
-  if (props.notFound) {
-    return props.notFoundPage ?
+  } else if (props.notFound) {
+    CurrentPage = props.notFoundPage ?
       createElement(props.notFoundPage) :
       <ContentNotFound
         size="lg"
         title={trans('not_found')}
         description={trans('not_found_desc')}
       />
-  }
-
-  if (!isEmpty(props.accessErrors)) {
-    return props.forbiddenPage ?
+  } else if (!isEmpty(props.accessErrors)) {
+    CurrentPage = props.forbiddenPage ?
       createElement(props.forbiddenPage) :
       <ContentForbidden
         size="lg"
         title={trans('access_forbidden')}
         description={trans('access_forbidden_help')}
       />
-  }
-
-  if (isEmpty(props.tools)) {
-    return (
+  } else if (isEmpty(props.tools)) {
+    CurrentPage = (
       <ContentPlaceholder
         size="lg"
         title="Cet espace est vide pour le moment"
       />
     )
-  }
-
-  return (
-    <>
-      {createElement(props.menu)}
-
-      <div className="app-body" role="presentation">
+  } else {
+    CurrentPage = (
+      <>
         <AppLoader />
 
         <Routes
@@ -118,8 +110,7 @@ const ContextMain = (props) => {
               component: ContextProfile
             }, {
               path: '/edit',
-              component: ContextEditor,
-              onEnter: () => props.openEditor(props.contextData)
+              component: ContextEditor
             }, {
               path: '/:toolName',
               onEnter: (params = {}) => {
@@ -130,7 +121,6 @@ const ContextMain = (props) => {
                   props.history.replace(props.path)
                 }
               },
-              //component: ToolMain,
               render: (routerProps) => {
                 const params = routerProps.match.params
 
@@ -147,6 +137,16 @@ const ContextMain = (props) => {
         />
 
         {props.footer && createElement(props.footer)}
+      </>
+    )
+  }
+
+  return (
+    <>
+      {createElement(props.menu)}
+
+      <div className="app-body" role="presentation">
+        {CurrentPage}
       </div>
     </>
   )

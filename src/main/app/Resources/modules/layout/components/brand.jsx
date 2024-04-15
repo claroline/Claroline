@@ -2,15 +2,20 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import {useSelector} from 'react-redux'
+import {selectors as configSelectors} from '#/main/app/config/store'
 import {asset} from '#/main/app/config'
 
 const AppBrand = props => {
-  if (props.logo) {
+  const brand = useSelector((state) => configSelectors.param(state, 'theme.logo'))
+  const name = useSelector((state) => configSelectors.param(state, 'name'))
+
+  if (brand) {
     return (
       <img
         className={classes('app-brand', props.className)}
-        src={asset(props.logo)}
-        alt={props.name}
+        src={asset(brand)}
+        alt={name}
       />
     )
   }
@@ -19,9 +24,7 @@ const AppBrand = props => {
 }
 
 AppBrand.propTypes = {
-  className: T.string,
-  logo: T.string,
-  name: T.string.isRequired
+  className: T.string
 }
 
 export {

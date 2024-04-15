@@ -7,6 +7,7 @@ import {selectors} from '#/main/core/tools/resources/store/selectors'
 
 const reducer = combineReducers({
   root: makeReducer(null, {
+    [TOOL_OPEN]: () => null,
     [makeInstanceAction(TOOL_LOAD, 'resources')]: (state, action) => action.toolData.root || null
   }),
   trash: makeListReducer(selectors.STORE_NAME + '.trash', {}, {

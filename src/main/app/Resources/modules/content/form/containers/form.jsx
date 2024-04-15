@@ -32,7 +32,7 @@ const Form = connect(
   },
   (dispatch, ownProps) => ({
     saveForm(targetUrl) {
-      dispatch(actions.saveForm(ownProps.name, targetUrl))
+      return dispatch(actions.saveForm(ownProps.name, targetUrl))
     },
     cancelForm() {
       dispatch(actions.cancelChanges(ownProps.name))
@@ -65,7 +65,12 @@ const Form = connect(
             if (ownProps.target) {
               dispatchProps.saveForm(url(
                 typeof ownProps.target === 'function' ? ownProps.target(stateProps.data, stateProps.new) : ownProps.target
-              ))
+              )).then((response) => {
+                if (ownProps.onSave) {
+                  ownProps.onSave(response)
+                }
+              })
+
               if (ownProps.lock && ownProps.lock.autoUnlock) {
                 dispatchProps.unlock(ownProps.lock.className, ownProps.lock.id)
               }
@@ -122,6 +127,8 @@ Form.propTypes = {
    * If a function is provided it's called with the current data & new flag as param.
    */
   target: T.oneOfType([T.string, T.array, T.func]),
+
+  onSave: T.func,
 
   /**
    * A custom save action for the form (only used if props.buttons === true).

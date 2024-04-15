@@ -11,6 +11,7 @@ import {actions as listActions} from '#/main/app/content/list/store'
 
 import {getActions, getDefaultAction} from '#/main/community/group/utils'
 import {GroupCard} from '#/main/community/group/components/card'
+import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
 
 const Groups = props => {
   const refresher = merge({
@@ -29,7 +30,13 @@ const Groups = props => {
           type: 'string',
           label: trans('name'),
           displayed: true,
-          primary: true
+          primary: true,
+          render: (group) => (
+            <div className="d-flex flex-direction-row gap-3 align-items-center">
+              <ThumbnailIcon thumbnail={group.thumbnail} name={group.name} size="xs" />
+              {group.name}
+            </div>
+          )
         }, {
           name: 'code',
           type: 'string',

@@ -65,7 +65,7 @@ class ToolController
         }
 
         return new JsonResponse(array_merge([], $this->toolProvider->open($name, $context, $contextSubject), [
-            //'data' => $this->serializer->serialize($orderedTool),
+            'data' => $this->serializer->serialize($orderedTool),
         ]));
     }
 
@@ -89,7 +89,7 @@ class ToolController
 
         $data = $this->decodeRequest($request);
 
-        $this->crud->update($orderedTool, $data, [Crud::THROW_EXCEPTION]);
+        $this->crud->update($orderedTool, $data['data'], [Crud::THROW_EXCEPTION]);
 
         return new JsonResponse(array_merge([], $this->toolProvider->configure($name, $context, $contextSubject, $data), [
             'data' => $this->serializer->serialize($orderedTool),

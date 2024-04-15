@@ -12,9 +12,9 @@ const HomePage = props =>
   <ToolPage
     className="home-tool"
     breadcrumb={props.breadcrumb}
-    icon={props.currentTab && props.currentTab.icon ?
+    /*icon={props.currentTab && props.currentTab.icon ?
       <span className={`tool-icon fa fa-${props.currentTab.icon}`} /> : undefined
-    }
+    }*/
     title={props.title || props.subtitle}
     poster={props.poster || get(props.currentTab, 'poster')}
     /*primaryAction="add"*/

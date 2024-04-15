@@ -41,7 +41,6 @@ input[type=reset] {
         var(--#{$prefix}body-color),
         var(--#{$prefix}body-color)
     );
-    // rgba(var(--#{$prefix}body-color-rgb), .03)
 }
 
 .btn-text-subtitles {
@@ -65,25 +64,6 @@ input[type=reset] {
     --#{$prefix}btn-disabled-color: var(--#{$prefix}tertiary-color-color);
     --#{$prefix}btn-disabled-bg: var(--#{$prefix}body-bg);
     --#{$prefix}btn-disabled-border-color: var(--#{$prefix}border-color-translucent);
-
-    /*@include button-variant(
-        // normal state
-        var(--#{$prefix}body-bg),
-        var(--#{$prefix}border-color-translucent),
-        var(--#{$prefix}body-color),
-        // hover state
-        var(--#{$prefix}tertiary-bg),
-        var(--#{$prefix}border-color-translucent),
-        var(--#{$prefix}body-color),
-        // active state
-        var(--#{$prefix}secondary-bg),
-        var(--#{$prefix}border-color-translucent),
-        var(--#{$prefix}body-color),
-        // disabled state
-        var(--#{$prefix}body-bg),
-        var(--#{$prefix}border-color-translucent),
-        var(--#{$prefix}secondary-color)
-    )*/
 }
 
 //-

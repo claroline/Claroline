@@ -15,16 +15,14 @@ interface ValidatorInterface
      *
      * @return array - the list of found errors (should used prop names as keys)
      */
-    public function validate($data, $mode, array $options = []);
+    public function validate($data, $mode, array $options = []): ?array;
 
     /**
      * A list of unique properties you want to check (they will be checked by
      * the provider so the validate method is easier)
      * with the format [$dataPropName => $entityPropName].
      *
-     * @todo fetch default from json-schema
-     *
      * @return array
      */
-    public function getUniqueFields();
+    public function getUniqueFields(): array;
 }

@@ -114,8 +114,7 @@ const PageFull = {
     showHeader: true,
     disabled: false,
     actions: [],
-    toolbar: 'more',
-    breadcrumb: []
+    toolbar: 'more'
   })
 }
 

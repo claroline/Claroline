@@ -16,7 +16,7 @@ const FileResource = props =>
     {...omit(props, 'file', 'url', 'resetForm')}
   >
     <ResourcePage
-      customActions={[
+      actions={[
         {
           name: 'clipboard',
           type: CALLBACK_BUTTON,

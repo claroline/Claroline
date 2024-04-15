@@ -28,7 +28,8 @@ const Group = (props) =>
       }
     ].concat(props.group ? props.breadcrumb : [])}
     title={get(props.group, 'name', trans('loading'))}
-    toolbar="edit | send-message | fullscreen more"
+    primaryAction="send-message"
+    toolbar="edit more"
     poster={get(props.group, 'poster')}
     actions={!isEmpty(props.group) ? getActions([props.group], {
       add: () => props.reload(props.group.id),

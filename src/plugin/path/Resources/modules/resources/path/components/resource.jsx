@@ -8,29 +8,25 @@ import {PathOverview} from '#/plugin/path/resources/path/containers/overview'
 import {EditorMain} from '#/plugin/path/resources/path/editor/containers/main'
 import {PlayerMain} from '#/plugin/path/resources/path/player/containers/main'
 import {PathSummary} from '#/plugin/path/resources/path/containers/summary'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {trans} from '#/main/app/intl'
 
 const PathResource = props =>
   <Resource
     {...omit(props, 'editable', 'overview')}
     styles={['claroline-distribution-plugin-path-path-resource']}
+    menu={[
+      {
+        name: 'summary',
+        type: LINK_BUTTON,
+        //icon: 'fa fa-fw fa-sitemap',
+        label: trans('summary'),
+        target: `${props.path}/summary`
+      }
+    ]}
+    overview={PathOverview}
   >
     <ResourcePage
-      customActions={[
-        /*{
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-home',
-          label: trans('show_overview'),
-          displayed: props.overview,
-          target: props.path,
-          exact: true
-        }, {
-          name: "start",
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-play',
-          label: trans('start', {}, 'actions'),
-          target: `${props.path}/play`
-        }*/
-      ]}
       routes={[
         {
           path: '/summary',

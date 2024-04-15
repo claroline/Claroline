@@ -12,6 +12,7 @@ const ForumResource = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
       currentUser: securitySelectors.currentUser(state),
+      overview: selectors.overview(state),
       forum: selectors.forum(state),
       moderator: selectors.moderator(state),
       editable: hasPermission('edit', resourceSelectors.resourceNode(state))

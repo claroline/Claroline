@@ -1,5 +1,6 @@
 @import "variables.bootstrap";
 @import "variables.old";
+@import "variables-dark";
 
 $fa-font-path: "../../packages/@fortawesome/fontawesome-free/webfonts";
 $flag-icons-path: "../../packages/flag-icons/flags";
@@ -8,7 +9,7 @@ $text-selection-color: $white !default;
 $text-selection-bg:    $primary !default;
 
 // colors for SVG theme icons
-$icon-primary-color: $primary !default;
+$icon-primary-color: var(--#{$prefix}font-sans-serif) !default;
 $icon-secondary-color: $gray-900 !default;
 
 // content sizing
@@ -18,7 +19,7 @@ $content-lg: 1180px !default;
 
 $icon-sizes: (
     xs: 2rem,
-    sm: 3rem, // 2.5rem
+    sm: 3rem,
     md: 4rem,
     lg: 5rem,
     xl: 10rem,

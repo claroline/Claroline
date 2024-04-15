@@ -18,13 +18,15 @@ const FormSave = (props) => {
           Attention, il reste des modifications non enregistrées !
         </span>
 
-        <Button
-          {...props.cancel}
-          className="btn btn-link"
-          label={trans('Réinitialiser', {}, 'actions')}
-          type={CALLBACK_BUTTON}
-          size="sm"
-        />
+        {props.cancel &&
+          <Button
+            {...props.cancel}
+            className="btn btn-link"
+            label={trans('Réinitialiser', {}, 'actions')}
+            type={CALLBACK_BUTTON}
+            size="sm"
+          />
+        }
 
         <Button
           {...saveAction}
