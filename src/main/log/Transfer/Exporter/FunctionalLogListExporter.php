@@ -18,6 +18,11 @@ class FunctionalLogListExporter extends AbstractListExporter
         return FunctionalLog::class;
     }
 
+    public function supports(string $format, ?array $options = [], ?array $extra = []): bool
+    {
+        return in_array($format, ['json', 'csv']);
+    }
+
     public function getExtraDefinition(?array $options = [], ?array $extra = []): array
     {
         $extraDef = parent::getExtraDefinition($options, $extra);
