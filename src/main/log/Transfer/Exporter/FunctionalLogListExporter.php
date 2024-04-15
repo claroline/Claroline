@@ -22,7 +22,7 @@ class FunctionalLogListExporter extends AbstractListExporter
     {
         return in_array($format, ['json', 'csv']);
     }
-    
+
     public function getExtraDefinition(?array $options = [], ?array $extra = []): array
     {
         $extraDef = parent::getExtraDefinition($options, $extra);
