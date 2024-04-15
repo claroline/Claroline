@@ -20,6 +20,6 @@ export default (presences, refresher) => {
     },
     displayed: 0 !== processable.length,
     group: trans('validation', {}, 'presence'),
-    scope: ['object']
+    scope: ['collection', 'object']
   }
 }

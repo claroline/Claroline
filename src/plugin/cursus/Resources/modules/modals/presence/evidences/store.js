@@ -5,8 +5,6 @@ actions.createFiles = (presence, files, onSuccess) => {
   const formData = new FormData()
   files.forEach((file, index) => formData.append(index, file))
 
-  console.log( files )
-
   return ({
     [API_REQUEST]: {
       url: ['apiv2_cursus_presence_evidences_upload', {id: presence.id}],

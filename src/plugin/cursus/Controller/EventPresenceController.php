@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
@@ -20,6 +21,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\ToolPermissions;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\CursusBundle\Component\Tool\TrainingEventsTool;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\EventPresence;
@@ -51,7 +53,8 @@ class EventPresenceController
         private readonly EventManager $eventManager,
         private readonly PdfManager $pdfManager,
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
+        private readonly Crud $crud
     ) {
         $this->authorization = $authorization;
     }
@@ -138,7 +141,7 @@ class EventPresenceController
     {
         $data = $this->decodeRequest($request);
         if (empty($data)) {
-            return new JsonResponse(null, 404);
+            throw new InvalidDataException('Invalid data');
         }
 
         $event = $data['event'];
@@ -153,16 +156,19 @@ class EventPresenceController
             'user' => $this->tokenStorage->getToken()->getUser(),
         ]);
 
-        $this->checkPermission('EDIT', $presence, [], true);
+        if (!$presence) {
+            return new JsonResponse(null, 404);
+        }
 
         if (EventPresence::PRESENT === $presence->getStatus()) {
             return new JsonResponse(['success' => false]);
         }
 
-        $this->om->startFlushSuite();
-        $this->manager->setStatus([$presence], EventPresence::PRESENT);
-        $this->manager->setSignature([$presence], $signature);
-        $this->om->endFlushSuite();
+        $presenceData = $this->serializer->serialize($presence);
+        $presenceData['status'] = EventPresence::PRESENT;
+        $presenceData['signature'] = $signature;
+
+        $this->crud->update($presence, $presenceData);
 
         return new JsonResponse(['success' => true]);
     }
@@ -176,24 +182,19 @@ class EventPresenceController
     {
         $data = $this->decodeRequest($request);
         if (empty($data)) {
-            return new JsonResponse(null, 404);
+            throw new InvalidDataException('Invalid data');
         }
 
         $presences = $this->om->getRepository(EventPresence::class)->findBy(['uuid' => $data]);
-
         $this->om->startFlushSuite();
         foreach ($presences as $presence) {
-            $this->checkPermission('REGISTER', $presence, [], true);
-
-            if ($presence->getValidationDate()) {
-                return new JsonResponse(['success' => false]);
-            }
+            $this->checkPermission('ADMINISTRER', $presence, [], true);
 
             $this->manager->setValidationDate([$presence], new \DateTime());
         }
         $this->om->endFlushSuite();
 
-        return new JsonResponse(['success' => true]);
+        return new JsonResponse();
     }
 
     /**

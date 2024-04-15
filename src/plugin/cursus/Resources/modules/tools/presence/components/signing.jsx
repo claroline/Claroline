@@ -15,17 +15,12 @@ import {selectors, actions} from '#/plugin/cursus/tools/presence/store'
 import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 
 const SignPresenceComponent = (props) =>
-  <>
-    <h2 className="text-center my-5">{trans('presence', {}, 'tools')}</h2>
-
+  <ContentSizing size="md" className="d-flex flex-column align-items-center">
     { props.currentUser && props.eventLoaded && props.currentEvent &&
       <Form
-        flush={false}
-        embedded={true}
-        size="md"
-        className="align-items-center"
+        className="mt-5"
       >
-        <div className="row py-4 bg-body-secondary rounded-2">
+        <div className="bg-body-secondary rounded-2 p-4">
           <ContentHtml className="text-center mb-3">
             {trans('presence_info', {
               user: props.currentUser.name,
@@ -34,14 +29,16 @@ const SignPresenceComponent = (props) =>
               event_datetime_end: '<span class="fw-bold">' + displayDate(props.currentEvent.end, true, true) + '</span>'
             }, 'presence')}
           </ContentHtml>
-          <ContentSizing size="sm" className="d-flex flex-column align-items-center mt-3">
+
+          <ContentSizing size="sm" className="d-flex flex-column align-items-center">
             <input
               className="form-control"
               placeholder={trans('event_presence_label', {}, 'presence')}
               onChange={(event) => {props.setSignature(event.target.value.trim())}}
             />
+
             <Button
-              className="btn btn-md btn-primary mt-3 mb-3 "
+              className="btn btn-primary mt-3"
               type={CALLBACK_BUTTON}
               label={trans('validate', {}, 'presence')}
               primary={true}
@@ -53,8 +50,7 @@ const SignPresenceComponent = (props) =>
       </Form>
     }
 
-    <ContentSizing size="md">
-      { !props.currentUser && props.eventLoaded && props.currentEvent &&
+    { !props.currentUser && props.eventLoaded && props.currentEvent &&
         <Alert
           type="warning"
           title={trans('not_registered', {}, 'presence')}
@@ -73,9 +69,9 @@ const SignPresenceComponent = (props) =>
             />
           </div>
         </Alert>
-      }
+    }
 
-      { props.eventLoaded && !props.currentEvent &&
+    { props.eventLoaded && !props.currentEvent &&
         <Alert
           type="warning"
           title={trans('event_not_found', {}, 'presence')}
@@ -90,9 +86,8 @@ const SignPresenceComponent = (props) =>
             />
           </div>
         </Alert>
-      }
-    </ContentSizing>
-  </>
+    }
+  </ContentSizing>
 
 const SignPresence = connect(
   (state) => ({

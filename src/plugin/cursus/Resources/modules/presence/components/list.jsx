@@ -63,8 +63,7 @@ const Presences = props => {
               if( row.evidences.length === 1) {
                 return (
                   <Button
-                    className="btn-link"
-                    style={{whiteSpace: 'nowrap'}}
+                    className="btn btn-link"
                     type={DOWNLOAD_BUTTON}
                     label={(transChoice('evidence_count', 1, {count: 1}, 'presence') )}
                     file={{url: ['apiv2_cursus_presence_evidence_download', {id: row.id, file: row.evidences[0]}]}}
@@ -73,8 +72,7 @@ const Presences = props => {
               } else {
                 return (
                   <Button
-                    className="btn-link"
-                    style={{whiteSpace: 'nowrap'}}
+                    className="btn btn-link"
                     type={MODAL_BUTTON}
                     label={(transChoice('evidence_count', row.evidences.length, { count: row.evidences.length }, 'presence') )}
                     modal={[MODAL_EVIDENCE, {

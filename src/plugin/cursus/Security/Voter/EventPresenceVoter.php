@@ -32,12 +32,6 @@ class EventPresenceVoter extends AbstractVoter
 
         switch ($attributes[0]) {
             case self::ADMINISTRATE:
-                if ($this->isGranted('REGISTER', $object->getEvent())) {
-                    return VoterInterface::ACCESS_GRANTED;
-                }
-
-                return VoterInterface::ACCESS_DENIED;
-
             case self::DELETE:
                 if ($isManager) {
                     return VoterInterface::ACCESS_GRANTED;

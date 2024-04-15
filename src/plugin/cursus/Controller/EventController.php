@@ -108,18 +108,6 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/presence/{code}", name="apiv2_cursus_event_code", methods={"GET"})
-     *
-     * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"code": "code"}})
-     */
-    public function getByCodeAction(Event $sessionEvent): JsonResponse
-    {
-        return new JsonResponse([
-            'event' => $this->serializer->serialize($sessionEvent),
-        ]);
-    }
-
-    /**
      * @Route("/public/{workspace}", name="apiv2_cursus_event_public", methods={"GET"})
      *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})

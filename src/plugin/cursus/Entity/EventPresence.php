@@ -49,17 +49,13 @@ class EventPresence
 
     /**
      * @ORM\Column(name="presence_signature", nullable=true)
-     *
-     * @var string
      */
-    private $signature;
+    private ?string $signature = null;
 
     /**
      * @ORM\Column(name="presence_validation_date", type="datetime", nullable=true)
-     *
-     * @var \DateTimeInterface
      */
-    private $validationDate;
+    private ?\DateTimeInterface $validationDate = null;
 
     /**
      * @ORM\Column(type="json", nullable=true)
@@ -126,7 +122,7 @@ class EventPresence
         return $this->evidences;
     }
 
-    public function setEvidences(array $evidences): void
+    public function setEvidences(?array $evidences): void
     {
         $this->evidences = $evidences;
     }
