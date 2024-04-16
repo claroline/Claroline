@@ -31,6 +31,7 @@ class EventPresenceVoter extends AbstractVoter
         $isManager = $this->isGranted('EDIT', $object->getEvent()) || $this->isGranted('REGISTER', $object->getEvent());
 
         switch ($attributes[0]) {
+            case self::ADMINISTRATE:
             case self::DELETE:
                 if ($isManager) {
                     return VoterInterface::ACCESS_GRANTED;
@@ -51,6 +52,6 @@ class EventPresenceVoter extends AbstractVoter
 
     public function getSupportedActions(): ?array
     {
-        return [self::OPEN, self::EDIT, self::DELETE];
+        return [self::OPEN, self::EDIT, self::DELETE, self::ADMINISTRATE];
     }
 }

@@ -1,0 +1,26 @@
+{
+  "add_evidences": "Add evidence",
+  "evidence": "Evidence",
+  "evidences": "Evidences",
+  "evidence_count": "{0} No evidence | {1} 1 evidence | ]1,Inf[ %count% evidences",
+  "event_not_found": "Event not found",
+  "event_not_found_desc": "This code does not correspond to any event.",
+  "event_not_found_retry": "Enter again event code",
+  "event_presence_label": "Enter your firstname and lastname",
+
+  "not_registered": "Authentication required",
+  "not_registered_desc": "You must be logged to confirm your presence at this event.",
+
+  "presence_code": "Event Code",
+  "presence_code_desc": "Please enter the event code to confirm your presence.",
+  "presence_confirm_already":"You have already confirmed your presence at this event.",
+  "presence_confirm_title": "Presence confirmation",
+  "presence_confirm_desc": "Your %event_title% event signature has been successfully recorded.",
+  "presence_confirmation_date": "Confirmation date",
+  "presence_validation_date": "Validation date by tutor",
+  "presence_info": "Me, %user%, was present at the event %event_title% from %event_date_start% to %event_date_end%.",
+  "presence_validation": "Validate presence",
+
+  "validate": "Validate",
+  "validation": "Validation"
+}

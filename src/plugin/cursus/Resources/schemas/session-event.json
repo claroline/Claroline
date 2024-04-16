@@ -60,6 +60,6 @@
   "required": ["name", "code", "session"],
   "claroline": {
     "requiredAtCreation": ["name", "code", "session"],
-    "ids": ["id"]
+    "ids": ["id", "code"]
   }
 }

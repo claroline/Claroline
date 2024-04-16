@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Manager\Template;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PlaceholderManager
@@ -12,15 +13,18 @@ class PlaceholderManager
     private TokenStorageInterface $tokenStorage;
     private PlatformConfigurationHandler $config;
     private PlatformManager $platformManager;
+    private LocaleManager $localeManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $config,
-        PlatformManager $platformManager
+        PlatformManager $platformManager,
+        LocaleManager $localeManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->config = $config;
         $this->platformManager = $platformManager;
+        $this->localeManager = $localeManager;
     }
 
     public function getAvailablePlaceholders(): array
@@ -88,15 +92,9 @@ class PlaceholderManager
             ];
         }
 
-        $timezone = $this->config->getParameter('intl.timezone');
+        $localeDate = $this->localeManager->getLocaleDateTimeFormat($date);
         $dateFormat = $this->config->getParameter('intl.dateFormat') ?: 'Y-m-d';
         $timeFormat = $this->config->getParameter('intl.timeFormat') ?: 'H:i';
-
-        $dateTimezone = new \DateTimeZone($timezone ?: 'UTC');
-
-        // create a copy of the date object to avoid modifying the original data
-        $localeDate = clone $date;
-        $localeDate->setTimezone($dateTimezone);
 
         return [
             // UTC date parts

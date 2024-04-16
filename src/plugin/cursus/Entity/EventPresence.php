@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="claro_cursusbundle_presence_status")
+ *
  * @ORM\Entity
  */
 class EventPresence
@@ -16,13 +17,14 @@ class EventPresence
     use Id;
     use Uuid;
 
-    const UNKNOWN = 'unknown';
-    const PRESENT = 'present';
-    const ABSENT_JUSTIFIED = 'absent_justified';
-    const ABSENT_UNJUSTIFIED = 'absent_unjustified';
+    public const UNKNOWN = 'unknown';
+    public const PRESENT = 'present';
+    public const ABSENT_JUSTIFIED = 'absent_justified';
+    public const ABSENT_UNJUSTIFIED = 'absent_unjustified';
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Event")
+     *
      * @ORM\JoinColumn(name="event_id", nullable=false, onDelete="CASCADE")
      *
      * @var Event
@@ -31,6 +33,7 @@ class EventPresence
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
      * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
      *
      * @var User
@@ -43,6 +46,21 @@ class EventPresence
      * @var string
      */
     private $status = self::UNKNOWN;
+
+    /**
+     * @ORM\Column(name="presence_signature", nullable=true)
+     */
+    private ?string $signature = null;
+
+    /**
+     * @ORM\Column(name="presence_validation_date", type="datetime", nullable=true)
+     */
+    private ?\DateTimeInterface $validationDate = null;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private ?array $evidences = null;
 
     public function __construct()
     {
@@ -77,5 +95,35 @@ class EventPresence
     public function setStatus(string $status): void
     {
         $this->status = $status;
+    }
+
+    public function getSignature(): ?string
+    {
+        return $this->signature;
+    }
+
+    public function setSignature(?string $signature): void
+    {
+        $this->signature = $signature;
+    }
+
+    public function getValidationDate(): ?\DateTimeInterface
+    {
+        return $this->validationDate;
+    }
+
+    public function setValidationDate(?\DateTimeInterface $validationDate): void
+    {
+        $this->validationDate = $validationDate;
+    }
+
+    public function getEvidences(): ?array
+    {
+        return $this->evidences;
+    }
+
+    public function setEvidences(?array $evidences): void
+    {
+        $this->evidences = $evidences;
     }
 }

@@ -45,6 +45,9 @@ services:
             - '@Claroline\CursusBundle\Manager\EventPresenceManager'
             - '@Claroline\CursusBundle\Manager\EventManager'
             - '@Claroline\AppBundle\Manager\PdfManager'
+            - '@security.token_storage'
+            - '@translator'
+            - '@Claroline\AppBundle\API\Crud'
 
     # Registrations
     Claroline\CursusBundle\Controller\Registration\CourseUserController:

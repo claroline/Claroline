@@ -174,6 +174,7 @@ services:
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Manager\PlatformManager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
 
     Claroline\CoreBundle\Manager\Template\TemplateManager:
         arguments:
