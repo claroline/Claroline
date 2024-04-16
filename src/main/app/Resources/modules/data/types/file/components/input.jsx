@@ -79,7 +79,6 @@ class FileComponent extends Component {
             ref={input => this.input = input}
             onChange={this.onFileSelect}
             disabled={this.props.disabled}
-            capture={!isEmpty(this.props.capture) ? this.props.capture.join(' ') : undefined}
           />
 
           {param('uploadMaxFilesize') &&
@@ -147,8 +146,7 @@ implementPropTypes(FileComponent, DataInputTypes, {
   types: [],
   multiple: false,
   autoUpload: true,
-  uploadUrl: ['apiv2_file_upload'],
-  capture: ['user', 'environment']
+  uploadUrl: ['apiv2_file_upload']
 })
 
 const FileInput = connect(
