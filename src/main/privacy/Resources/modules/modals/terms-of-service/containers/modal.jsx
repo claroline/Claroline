@@ -13,7 +13,10 @@ const TermsOfServiceModal = withReducer(selectors.STORE_NAME, reducer)(
     }),
     (dispatch) => ({
       fetch() {
-        dispatch(actions.fetch())
+        return dispatch(actions.fetch())
+      },
+      accept() {
+        return dispatch(actions.acceptTerms())
       }
     })
   )(TermsOfServiceModalComponent)
