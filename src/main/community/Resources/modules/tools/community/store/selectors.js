@@ -14,6 +14,11 @@ const parameters = createSelector(
   (store) => store.parameters
 )
 
+const profile = createSelector(
+  [store],
+  (store) => store.profile
+)
+
 const loaded = createSelector(
   [store],
   (store) => store.user.loaded
@@ -47,6 +52,7 @@ export const selectors = {
 
   store,
   parameters,
+  profile,
   loaded,
   canCreate,
   defaultRole

@@ -1,10 +1,9 @@
-import {reducer} from '#/plugin/tag/tools/tags/store'
+import {declareTool} from '#/main/core/tool'
+
 import {TagsTool} from '#/plugin/tag/tools/tags/containers/tool'
+
 
 /**
  * Tags tool application.
  */
-export default {
-  component: TagsTool,
-  store: reducer
-}
+export default declareTool(TagsTool)

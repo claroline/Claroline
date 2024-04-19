@@ -1,10 +1,8 @@
-import {reducer} from '#/main/evaluation/tools/progression/store'
+import {declareTool} from '#/main/core/tool'
+
 import {ProgressionTool} from '#/main/evaluation/tools/progression/containers/tool'
 
 /**
  * Progression tool application.
  */
-export default {
-  component: ProgressionTool,
-  store: reducer
-}
+export default declareTool(ProgressionTool)

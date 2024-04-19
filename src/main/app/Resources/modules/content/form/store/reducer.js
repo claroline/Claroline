@@ -8,6 +8,7 @@ import {cleanErrors} from '#/main/app/content/form/utils'
 
 import {constants} from '#/main/app/content/form/constants'
 import {
+  FORM_LOAD,
   FORM_RESET,
   FORM_SET_MODE,
   FORM_SET_ERRORS,
@@ -72,6 +73,7 @@ const baseReducer = {
    * Reduces the data of the form.
    */
   data: makeInstanceReducer(defaultState.data, {
+    [FORM_LOAD]: (state, action) => merge({}, state, action.data || {}),
     [FORM_RESET]: (state, action) => action.data || {},
     [FORM_UPDATE]: (state, action) => {
       if (action.path) {
@@ -87,6 +89,7 @@ const baseReducer = {
   }),
 
   originalData: makeInstanceReducer(defaultState.originalData, {
+    [FORM_LOAD]: (state, action) => merge({}, state, action.data || {}),
     [FORM_RESET]: (state, action) => action.data || {}
   })
 }

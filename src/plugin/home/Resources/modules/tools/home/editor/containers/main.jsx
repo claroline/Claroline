@@ -3,21 +3,31 @@ import {connect} from 'react-redux'
 import {withRouter} from '#/main/app/router'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 
-import {EditorMain as EditorMainComponent} from '#/plugin/home/tools/home/editor/components/main'
+import {HomeEditor as HomeEditorComponent} from '#/plugin/home/tools/home/editor/components/main'
 import {actions} from '#/plugin/home/tools/home/store'
 import {actions as editorActions, selectors as editorSelectors} from '#/plugin/home/tools/home/editor/store'
+import {selectors as playerSelectors} from '#/plugin/home/tools/home/player/store'
+import {actions as formActions} from '#/main/app/content/form/store'
+import {selectors as parametersSelectors} from '#/main/core/tool/editor/store'
 
-const EditorMain = withRouter(
+const HomeEditor = withRouter(
   connect(
     (state) => ({
       path: toolSelectors.path(state),
+      loaded: toolSelectors.loaded(state),
       currentContext: toolSelectors.context(state),
+      contextType: toolSelectors.contextType(state),
+      contextId: toolSelectors.contextId(state),
 
-      tabs: editorSelectors.editorTabs(state),
+      tabs: playerSelectors.tabs(state),
+      editorTabs: editorSelectors.editorTabs(state),
       currentTabTitle: editorSelectors.currentTabTitle(state),
       currentTab: editorSelectors.currentTab(state)
     }),
     (dispatch) => ({
+      load(tabs) {
+        dispatch(formActions.load(parametersSelectors.STORE_NAME, {tabs: tabs}))
+      },
       setCurrentTab(tab){
         dispatch(actions.setCurrentTab(tab))
       },
@@ -34,9 +44,9 @@ const EditorMain = withRouter(
         dispatch(editorActions.deleteTab(tabs, currentTab))
       }
     })
-  )(EditorMainComponent)
+  )(HomeEditorComponent)
 )
 
 export {
-  EditorMain
+  HomeEditor
 }

@@ -134,6 +134,9 @@
     background: $black;
     color: color-contrast($black);
 
+    margin-left: calc($grid-gutter-width * -.5);
+    margin-right: calc($grid-gutter-width * -.5);
+
     @include box-shadow($box-shadow);
     @include border-radius($border-radius);
 }
@@ -162,3 +165,10 @@
 .input-placeholder {
     color: $input-placeholder-color;
 }
+
+/*@media (max-width: map-get($content-sizes, 'md')) {
+    .form-pending-changes {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}*/

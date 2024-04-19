@@ -41,10 +41,13 @@ const ContextMain = (props) => {
     if (props.loaded) {
       // load apps for every tool defined in this context
       appPromise = makeCancelable(Promise.all(
-        props.tools.map(tool => getTool(tool.name, props.name).then(toolApp => ({
-          name: tool.name,
-          app: toolApp.default.component
-        })))
+        props.tools.map(tool => getTool(tool.name, props.name)
+          .then(toolApp => ({
+            name: tool.name,
+            app: toolApp.default.component
+          }))
+          .catch(e => console.error(e))
+        )
       ))
 
       appPromise.promise

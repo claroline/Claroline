@@ -11,15 +11,18 @@ import {reducer as usersReducer} from '#/main/community/tools/community/user/sto
 import {reducer as groupsReducer} from '#/main/community/tools/community/group/store/reducer'
 import {reducer as rolesReducer} from '#/main/community/tools/community/role/store/reducer'
 import {reducer as organizationReducer} from '#/main/community/tools/community/organization/store/reducer'
-import {reducer as profileReducer} from '#/main/community/tools/community/profile/store/reducer'
 import {reducer as teamsReducer} from '#/main/community/tools/community/team/store/reducer'
 
 import {selectors} from '#/main/community/tools/community/store/selectors'
 
 const reducer = combineReducers({
   parameters: makeReducer({}, {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters,
-    [makeInstanceAction(FORM_SUBMIT_SUCCESS, parametersSelectors.STORE_NAME)]: (state, action) => action.updatedData.parameters
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters || state,
+    [makeInstanceAction(FORM_SUBMIT_SUCCESS, parametersSelectors.STORE_NAME)]: (state, action) => action.updatedData.parameters || state
+  }),
+  profile: makeReducer([], {
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.profile || state,
+    [makeInstanceAction(FORM_SUBMIT_SUCCESS, parametersSelectors.STORE_NAME)]: (state, action) => action.updatedData.profile || state
   }),
   activity: activityReducer,
   users: usersReducer,
@@ -27,7 +30,7 @@ const reducer = combineReducers({
   roles: rolesReducer,
   teams: teamsReducer,
   organizations: organizationReducer,
-  profile: profileReducer,
+  //profile: profileReducer,
   pending: pendingReducer
 })
 

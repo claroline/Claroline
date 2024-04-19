@@ -1,26 +1,27 @@
 import {connect} from 'react-redux'
 
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
-import {actions as toolActions, selectors as toolSelectors} from '#/main/core/tool/store'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 
 import {EditorRights as EditorRightsComponent} from '#/main/core/tool/editor/components/rights'
-import {selectors} from '#/main/core/tool/editor/store'
+import {actions, selectors} from '#/main/core/tool/editor/store'
 
 const EditorRights = connect(
   (state) => ({
     name: toolSelectors.name(state),
+    //loaded: toolSelectors.loaded(state),
     contextType: toolSelectors.contextType(state),
-    contextId: toolSelectors.contextId(state),
     contextData: toolSelectors.contextData(state),
     rights: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)).rights
   }),
   (dispatch) => ({
-    updateRights(perms) {
-      dispatch(formActions.update(selectors.STORE_NAME, perms))
+    load(toolName, contextType, contextId) {
+      return dispatch(actions.fetchRights(toolName, contextType, contextId)).then((rights) => {
+        dispatch(formActions.load(selectors.STORE_NAME, {rights: rights}))
+      })
     },
-    refresh(toolName, updatedData, contextType) {
-      dispatch(toolActions.load(toolName, updatedData, contextType))
-      dispatch(toolActions.loadType(toolName, updatedData, contextType))
+    updateRights(perms) {
+      dispatch(formActions.updateProp(selectors.STORE_NAME, 'rights', perms))
     }
   })
 )(EditorRightsComponent)

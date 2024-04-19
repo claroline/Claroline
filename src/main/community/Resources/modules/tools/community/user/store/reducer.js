@@ -43,7 +43,7 @@ const reducer = combineReducers({
     })
   }),
   limitReached: makeReducer(false, {
-    [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: (state, action) => action.toolData.usersLimitReached
+    [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: (state, action) => action.toolData.usersLimitReached || state
   })
 })
 

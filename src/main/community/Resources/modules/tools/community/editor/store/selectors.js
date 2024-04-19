@@ -1,14 +1,14 @@
 import {createSelector} from 'reselect'
-import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
+import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 
-import {selectors as baseSelectors} from '#/main/community/tools/community/store'
+import {selectors as baseSelectors} from '#/main/core/tool/editor/store/selectors'
 
-const FORM_NAME = baseSelectors.STORE_NAME+'.profile'
-const form =  state => formSelect.form(state, FORM_NAME)
+const FORM_NAME = baseSelectors.STORE_NAME
+const form =  state => formSelectors.form(state, FORM_NAME)
 
 const facets = createSelector(
   [form],
-  (form) => formSelect.data(form)
+  (form) => formSelectors.value(form, 'profile') || []
 )
 
 const currentFacetId = createSelector(

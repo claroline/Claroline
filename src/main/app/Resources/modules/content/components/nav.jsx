@@ -24,7 +24,7 @@ const ContentNav = (props) =>
           <li className="nav-item" key={section.id || toKey(section.title)}>
             <Button
               {...omit(section, 'title', 'displayed', 'path', 'actions')}
-              className="nav-link"
+              className="nav-link d-flex"
               type={LINK_BUTTON}
               label={section.title}
               target={props.path+section.path}

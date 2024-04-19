@@ -6,12 +6,12 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Facet\FacetSerializer;
 use Claroline\CoreBundle\Entity\Facet\Facet;
+use Doctrine\Persistence\ObjectRepository;
 
 class ProfileSerializer
 {
     private FacetSerializer $facetSerializer;
-
-    private $repository;
+    private ObjectRepository $repository;
 
     public function __construct(
         ObjectManager $om,

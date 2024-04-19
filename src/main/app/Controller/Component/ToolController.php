@@ -17,6 +17,7 @@ use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Component\Tool\ToolProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,12 +88,32 @@ class ToolController
             throw new AccessDeniedException();
         }
 
+        $isManager = $this->authorization->isGranted('ADMINISTRATE', $orderedTool);
+
         $data = $this->decodeRequest($request);
 
-        $this->crud->update($orderedTool, $data['data'], [Crud::THROW_EXCEPTION]);
+        $this->om->startFlushSuite();
+        // update base tool configuration
+        if (!empty($data['data'])) {
+            $this->crud->update($orderedTool, $data['data'], [Crud::THROW_EXCEPTION]);
+        }
 
-        return new JsonResponse(array_merge([], $this->toolProvider->configure($name, $context, $contextSubject, $data), [
+        // update tool rights
+        // user MUST have the administration right for this. We just skip if it has no rights
+        if (!empty($data['rights']) && $isManager) {
+            $this->updateRights($orderedTool, $data['rights']);
+        }
+
+        $this->om->endFlushSuite();
+
+        // update custom tool configuration if any
+        $updatedData = $this->toolProvider->configure($name, $context, $contextSubject, $data);
+
+        return new JsonResponse(array_merge([], $updatedData, [
             'data' => $this->serializer->serialize($orderedTool),
+            'rights' => $isManager ? array_map(function (ToolRights $rights) {
+                return $this->serializer->serialize($rights);
+            }, $orderedTool->getRights()->toArray()) : []
         ]));
     }
 
@@ -168,5 +189,38 @@ class ToolController
         $this->om->endFlushSuite();
 
         return $this->getRightsAction($name, $context, $contextId);
+    }
+
+    private function updateRights(OrderedTool $orderedTool, array $rightsData = []): void
+    {
+        $this->om->startFlushSuite();
+
+        $existingRights = $orderedTool->getRights()->toArray();
+
+        $roles = [];
+        foreach ($rightsData as $right) {
+            if (!empty($right['id'])) {
+                /** @var ToolRights $toolRights */
+                $toolRights = $this->crud->update(ToolRights::class, $right, [Crud::NO_PERMISSIONS]);
+            } else {
+                /** @var ToolRights $toolRights */
+                $toolRights = $this->crud->create(ToolRights::class, $right, [Crud::NO_PERMISSIONS]);
+            }
+
+            $orderedTool->addRight($toolRights);
+
+            // keep reference to the created/update rights, it will be used later to know the ones to delete.
+            // I don't use ToolRights id because there is a flush suite, and it is not already generated.
+            $roles[] = $toolRights->getRole()->getName();
+        }
+
+        // removes rights which no longer exists
+        foreach ($existingRights as $existingRight) {
+            if (!in_array($existingRight->getRole()->getName(), $roles)) {
+                $this->crud->delete($existingRight);
+            }
+        }
+
+        $this->om->endFlushSuite();
     }
 }

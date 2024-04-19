@@ -12,10 +12,16 @@ title: Best practices
 - [Symfony coding standards](http://symfony.com/doc/current/contributing/code/standards.html)
 - [JavaScript code conventions](https://www.crockford.com/code.html)
 
+## PHP
+
+- Use "Class constructor property promotion" whenever possible.
+
+
 ## Styles
 
 - Use [Margin](https://getbootstrap.com/docs/5.3/utilities/spacing/#margin-and-padding) utilities to manage spacing between components
-  - Use size `3` for standard spacing
+  - Use size `3` for standard spacing between components.
+  - Use size `1` (e.g. spacing between buttons in a toolbar) or `2` for lighter spacing INSIDE a component.
 
 - Limit page content size with `.content-sm`, `.content-md`, `.content-lg` :
   - `.content-md` : Forms and Details view
