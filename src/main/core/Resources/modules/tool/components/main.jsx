@@ -53,7 +53,7 @@ const ToolMain = (props) => {
             {
               path: '/edit',
               disabled: !canEdit,
-              component: ToolEditor
+              component: props.editor
             }
           ]
             .concat(props.pages || [])
@@ -83,6 +83,14 @@ ToolMain.propTypes = {
    */
   styles: T.arrayOf(T.string),
 
+  menu: T.arrayOf(T.shape({
+
+  })),
+
+  actions: T.arrayOf(T.shape({
+
+  })),
+
   /**
    * A list of sections/pages of the tool.
    * If your tool contains only one section/page, use `children`.
@@ -103,7 +111,10 @@ ToolMain.propTypes = {
 }
 
 ToolMain.defaultProps = {
-  styles: []
+  styles: [],
+  menu: [],
+  actions: [],
+  editor: ToolEditor
 }
 
 export {

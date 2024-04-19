@@ -2,33 +2,14 @@
 
 import {useState, useEffect} from 'react'
 
-import {constants} from '#/main/app/dom/size/constants'
-
-function getWindowDimensions() {
-  let newSize
-  if (window.innerWidth < constants.SCREEN_XS_MAX) {
-    // XS screen detected
-    newSize = constants.SIZE_XS
-  } else if (window.innerWidth < constants.SCREEN_SM_MAX) {
-    // SM screen detected
-    newSize = constants.SIZE_SM
-  } else if (window.innerWidth < constants.SCREEN_MD_MAX) {
-    // MD screen detected
-    newSize = constants.SIZE_MD
-  } else {
-    // LG screen detected
-    newSize = constants.SIZE_LG
-  }
-
-  return newSize
-}
+import {getWindowSize} from '#/main/app/dom/size/utils'
 
 function useSize() {
-  const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
+  const [windowDimensions, setWindowDimensions] = useState(getWindowSize())
 
   useEffect(() => {
     function handleResize() {
-      setWindowDimensions(getWindowDimensions())
+      setWindowDimensions(getWindowSize())
     }
 
     window.addEventListener('resize', handleResize)

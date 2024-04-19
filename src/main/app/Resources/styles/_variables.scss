@@ -17,6 +17,12 @@ $content-sm: 540px !default;
 $content-md: 860px !default;
 $content-lg: 1180px !default;
 
+$content-sizes: (
+        sm: $content-sm,
+        md: $content-md,
+        lg: $content-lg
+) !default;
+
 $icon-sizes: (
     xs: 2rem,
     sm: 3rem,

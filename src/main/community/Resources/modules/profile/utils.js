@@ -7,7 +7,7 @@ import {hasPermission} from '#/main/app/security'
 import {formatSections} from '#/main/app/content/form/parameters/utils'
 
 function getMainFacet(facets) {
-  return facets.find(facet => facet.meta.main)
+  return facets.find(facet => facet.meta.main) || {}
 }
 
 function getDefaultFacet() {

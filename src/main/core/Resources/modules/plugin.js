@@ -27,7 +27,7 @@ registry.add('ClarolineCoreBundle', {
   actions: {
     tool: {
       'configure': () => { return import(/* webpackChunkName: "core-action-tool-configure" */ '#/main/core/actions/tool/configure') },
-      'rights'   : () => { return import(/* webpackChunkName: "core-action-tool-rights" */    '#/main/core/actions/tool/rights') }
+      //'rights'   : () => { return import(/* webpackChunkName: "core-action-tool-rights" */    '#/main/core/actions/tool/rights') }
     },
 
     resource: {

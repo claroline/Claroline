@@ -1,20 +1,24 @@
 import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
-import {Routes} from '#/main/app/router'
+import {Routes, RouteTypes} from '#/main/app/router'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool/components/page'
 
-import {EditorParameters} from '#/main/core/tool/editor/containers/parameters'
 import {EditorRights} from '#/main/core/tool/editor/containers/rights'
 import {EditorHistory} from '#/main/core/tool/editor/components/history'
+import {Form} from '#/main/app/content/form/containers/form'
+import {selectors} from '#/main/core/tool/editor/store'
 
 const ToolEditor = (props) => {
   useEffect(() => {
-    props.openEditor(props.name, props.contextType, props.contextId, props.tool)
-  }, [props.contextType, props.contextId, props.name])
+    if (props.loaded) {
+      props.load(props.tool)
+    }
+  }, [props.contextType, props.contextId, props.name, props.loaded])
 
   return (
     <ToolPage
@@ -28,12 +32,13 @@ const ToolEditor = (props) => {
         }
       ]}
       menu={{
-        nav: [
+        nav: [].concat(props.menu, [
           {
             name: 'overview',
             label: trans('about'),
             type: LINK_BUTTON,
             target: props.path+'/edit',
+            displayed: !isEmpty(props.children),
             exact: true
           }, {
             name: 'permissions',
@@ -47,7 +52,7 @@ const ToolEditor = (props) => {
             type: LINK_BUTTON,
             target: props.path+'/edit/history'
           }
-        ],
+        ]),
         actions: [
           {
             name: 'close',
@@ -60,38 +65,74 @@ const ToolEditor = (props) => {
         ]
       }}
     >
-      <Routes
-        path={props.path+'/edit'}
-        routes={[
-          {
-            path: '/',
-            exact: true,
-            component: EditorParameters
-          }, {
-            path: '/permissions',
-            component: EditorRights,
-            disabled: !hasPermission('administrate', props.tool)
-          }, {
-            path: '/history',
-            component: EditorHistory
+      <Form
+        disabled={!props.loaded}
+        className="my-3"
+        name={selectors.STORE_NAME}
+        dataPart="data"
+        target={['apiv2_tool_configure', {
+          name: props.name,
+          context: props.contextType,
+          contextId: props.contextId
+        }]}
+        onSave={(savedData) => props.refresh(props.name, savedData, props.contextType)}
+        buttons={true}
+      >
+        <Routes
+          path={props.path+'/edit'}
+          routes={[
+            {
+              path: '/permissions',
+              component: EditorRights,
+              disabled: !hasPermission('administrate', props.tool)
+            }, {
+              path: '/history',
+              component: EditorHistory
+            }
+          ]
+            .concat(props.pages || [])
+            .concat([
+              {
+                path: '/',
+                disabled: isEmpty(props.children),
+                render: () => props.children,
+                exact: true
+              }
+            ])
           }
-        ]}
-      />
+          redirect={props.redirect}
+        />
+      </Form>
     </ToolPage>
   )
 }
 
 ToolEditor.propTypes = {
-  open: T.func,
+  /**
+   * A func to return the custom parameters data
+   */
+  additionalData: T.func,
+
+  menu: T.arrayOf(T.shape({
+
+  })),
+  pages: T.arrayOf(T.shape(
+    RouteTypes.propTypes
+  )),
 
   // from store
+  loaded: T.bool.isRequired,
   path: T.string.isRequired,
   name: T.string,
   tool: T.object,
   contextType: T.string.isRequired,
   contextId: T.string,
-  openEditor: T.func.isRequired,
+  load: T.func.isRequired,
   refresh: T.func.isRequired
+}
+
+ToolEditor.defaultProps = {
+  menu: []
 }
 
 export {

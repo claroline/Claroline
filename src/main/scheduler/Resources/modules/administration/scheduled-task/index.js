@@ -1,7 +1,5 @@
-import {ScheduledTaskTool} from '#/main/scheduler/administration/scheduled-task/containers/tool'
-import {reducer} from '#/main/scheduler/administration/scheduled-task/store'
+import {declareTool} from '#/main/core/tool'
 
-export default {
-  component: ScheduledTaskTool,
-  store: reducer
-}
+import {ScheduledTaskTool} from '#/main/scheduler/administration/scheduled-task/containers/tool'
+
+export default declareTool(ScheduledTaskTool)

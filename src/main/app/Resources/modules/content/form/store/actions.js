@@ -4,7 +4,7 @@ import set from 'lodash/set'
 import {makeInstanceAction, makeInstanceActionCreator} from '#/main/app/store/actions'
 
 import {displayDate} from '#/main/app/intl/date'
-import {trans, tval} from '#/main/app/intl/translation'
+import {trans} from '#/main/app/intl/translation'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as alertActions} from '#/main/app/overlays/alert/store'
 import {constants as alertConstants} from '#/main/app/overlays/alert/constants'
@@ -14,7 +14,16 @@ import {actions as modalActions} from '#/main/app/overlays/modal/store'
 import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 
+/**
+ * Reset the form data and cancels all the pending changes already made if any.
+ */
 export const FORM_RESET          = 'FORM_RESET'
+
+/**
+ * Load some data into the form state without toggling the pending state.
+ * Data are merged with the current data in the form (see FORM_RESET if you want to override all the form data)
+ */
+export const FORM_LOAD           = 'FORM_LOAD'
 export const FORM_SET_MODE       = 'FORM_SET_MODE'
 export const FORM_SET_ERRORS     = 'FORM_SET_ERRORS'
 export const FORM_SUBMIT         = 'FORM_SUBMIT'
@@ -32,6 +41,7 @@ actions.submit = makeInstanceActionCreator(FORM_SUBMIT)
 actions.submitSuccess = makeInstanceActionCreator(FORM_SUBMIT_SUCCESS, 'updatedData')
 actions.submitError = makeInstanceActionCreator(FORM_SUBMIT_ERROR, 'errors')
 
+actions.load = makeInstanceActionCreator(FORM_LOAD, 'data')
 actions.reset = (formName, data = {}, isNew = false) => ({
   type: makeInstanceAction(FORM_RESET, formName),
   data: data,
@@ -111,7 +121,7 @@ actions.errors = (formName, errors) => (dispatch) => {
         .replace(/^\/|\/$/g, '') // removes trailing and leading slashes
         .replace(/\//g, '.') // replaces / by . (for lodash)
 
-      set(formErrors, errorPath, tval(error.message))
+      set(formErrors, errorPath, trans(error.message, {}, 'validators'))
     })
 
     // dispatch an error action if the caller want to do something particular
@@ -174,6 +184,5 @@ actions.cancelChanges = (formName) => (dispatch, getState) => {
 
 // I keep them for retro compatibility.
 // Please don't use them and use new naming
-// TODO : remove me
 actions.resetForm = actions.reset
 actions.saveForm = actions.save

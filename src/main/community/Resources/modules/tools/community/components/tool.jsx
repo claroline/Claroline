@@ -2,6 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
+import {trans} from '#/main/app/intl'
+import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Tool} from '#/main/core/tool'
 import {constants as toolConstants} from '#/main/core/tool/constants'
 
@@ -10,12 +12,11 @@ import {UserMain} from '#/main/community/tools/community/user/containers/main'
 import {GroupMain} from '#/main/community/tools/community/group/containers/main'
 import {RoleMain} from '#/main/community/tools/community/role/containers/main'
 import {PendingMain} from '#/main/community/tools/community/pending/containers/main'
-import {ProfileMain} from '#/main/community/tools/community/profile/containers/main'
 import {OrganizationMain} from '#/main/community/tools/community/organization/containers/main'
 import {TeamMain} from '#/main/community/tools/community/team/containers/main'
-import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {trans} from '#/main/app/intl'
+
 import {MODAL_USER_DISABLE_INACTIVE} from '#/main/community/tools/community/user/modals/disable-inactive'
+import {CommunityEditor} from '#/main/community/tools/community/editor/containers/main'
 
 const CommunityTool = (props) =>
   <Tool
@@ -29,59 +30,45 @@ const CommunityTool = (props) =>
       {
         name: 'activity',
         type: LINK_BUTTON,
-        /*icon: 'fa fa-fw fa-wave-square',*/
         label: trans('activity'),
         target: `${props.path}/activity`,
         displayed: props.canShowActivity && (props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'meta.model'))
       }, {
         name: 'users',
         type: LINK_BUTTON,
-        /*icon: 'fa fa-fw fa-user',*/
         label: trans('users', {}, 'community'),
         target: `${props.path}/users`,
         displayed: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'meta.model')
       }, {
         name: 'groups',
         type: LINK_BUTTON,
-        /*icon: 'fa fa-fw fa-users',*/
         label: trans('groups', {}, 'community'),
         target: `${props.path}/groups`,
         displayed: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'meta.model')
       }, {
         name: 'pending',
         type: LINK_BUTTON,
-        /*icon: 'fa fa-fw fa-user-plus',*/
         label: trans('pending_registrations'),
         target: `${props.path}/pending`,
         displayed: props.contextType === toolConstants.TOOL_WORKSPACE && props.canEdit && get(props.contextData, 'registration.validation')
       }, {
         name: 'teams',
         type: LINK_BUTTON,
-        /*icon: 'fa fa-fw fa-user-group',*/
         label: trans('teams', {}, 'community'),
         target: `${props.path}/teams`,
         displayed: props.contextType === toolConstants.TOOL_WORKSPACE
       }, {
         name: 'organizations',
         type: LINK_BUTTON,
-        /*icon: 'fa fa-fw fa-building',*/
         label: trans('organizations'),
         target: `${props.path}/organizations`,
         displayed: props.contextType === toolConstants.TOOL_DESKTOP/* && props.canEdit*/
       }, {
         name: 'roles',
         type: LINK_BUTTON,
-        /*icon: 'fa fa-fw fa-id-badge',*/
         label: trans('roles', {}, 'community'),
         target: `${props.path}/roles`,
         displayed: props.canEdit
-      }, {
-        name: 'profile',
-        type: LINK_BUTTON,
-        /*icon: 'fa fa-fw fa-user-circle',*/
-        label: trans('user_profile'),
-        target: `${props.path}/parameters/profile`,
-        displayed: props.contextType === toolConstants.TOOL_DESKTOP && props.canEdit
       }
     ]}
     pages={[
@@ -113,10 +100,6 @@ const CommunityTool = (props) =>
         path: '/pending',
         component: PendingMain,
         disabled: !props.canEdit || props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'registration.selfRegistration') || !get(props.contextData, 'registration.validation')
-      }, {
-        path: '/parameters/profile',
-        component: ProfileMain,
-        disabled: props.contextType !== toolConstants.TOOL_DESKTOP || !props.canEdit
       }
     ]}
     actions={[
@@ -130,6 +113,7 @@ const CommunityTool = (props) =>
         dangerous: true
       }
     ]}
+    editor={CommunityEditor}
   />
 
 CommunityTool.propTypes = {

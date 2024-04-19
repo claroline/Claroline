@@ -1,49 +1,78 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {Routes} from '#/main/app/router'
+import {trans} from '#/main/app/intl'
+import {MODAL_BUTTON} from '#/main/app/buttons'
+import {ToolEditor} from '#/main/core/tool/editor/containers/main'
 
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
-import {flattenTabs} from '#/plugin/home/tools/home/utils'
+import {flattenTabs, getTabSummary} from '#/plugin/home/tools/home/utils'
+
 import {EditorTab} from '#/plugin/home/tools/home/editor/components/tab'
+import {MODAL_HOME_CREATION} from '#/plugin/home/tools/home/editor/modals/creation'
 
-const EditorMain = props =>
-  <Routes
-    path={props.path}
-    redirect={[
-      props.tabs[0] && {from: '/edit', exact: true, to: '/edit/'+props.tabs[0].slug }
-    ].filter(redirect => !!redirect)}
-    routes={[
-      {
-        path: '/edit/:slug',
-        onEnter: (params = {}) => props.setCurrentTab(params.slug),
-        render: (routeProps) => {
-          const flattened = flattenTabs(props.tabs)
-          if (flattened.find(tab => tab.slug === routeProps.match.params.slug)) {
-            const Editor = (
-              <EditorTab
-                {...props}
-                path={props.path}
-              />
-            )
+const HomeEditor = props => {
+  useEffect(() => {
+    if (props.loaded) {
+      // load tool parameters inside the form
+      props.load(props.tabs)
+    }
+  }, [props.contextType, props.contextId, props.loaded])
 
-            return Editor
-          }
+  const tabs = props.editorTabs.map((tab) => getTabSummary(`${props.path}/edit`, tab, true))
 
-          // tab does not exist, let redirection open the first available
-          routeProps.history.replace(props.path+'/edit')
-
-          return null
+  return (
+    <ToolEditor
+      menu={(1 < tabs.length ? tabs : []).concat([
+        {
+          type: MODAL_BUTTON,
+          icon: 'fa fa-fw fa-plus',
+          label: trans('add_tab', {}, 'home'),
+          modal: [MODAL_HOME_CREATION, {
+            position: props.editorTabs.length,
+            create: (tab) => {
+              props.createTab(null, tab, (slug) => props.history.push(`${props.path}/edit/${slug}`))
+            }
+          }]
         }
-      }
-    ]}
-  />
+      ])}
+      pages={[
+        {
+          path: '/:slug',
+          onEnter: (params = {}) => props.setCurrentTab(params.slug),
+          render: (routeProps) => {
+            const flattened = flattenTabs(props.tabs)
+            if (flattened.find(tab => tab.slug === routeProps.match.params.slug)) {
+              const Editor = (
+                <EditorTab
+                  {...props}
+                  path={props.path}
+                />
+              )
 
-EditorMain.propTypes = {
+              return Editor
+            }
+
+            // tab does not exist, let redirection open the first available
+            routeProps.history.replace(props.path + '/edit')
+
+            return null
+          }
+        }
+      ]}
+      redirect={[
+        props.tabs[0] && {from: '/edit', exact: true, to: '/edit/' + props.tabs[0].slug}
+      ].filter(redirect => !!redirect)}
+    />
+  )
+}
+HomeEditor.propTypes = {
   path: T.string.isRequired,
   setCurrentTab: T.func.isRequired,
-  currentContext: T.object.isRequired,
   tabs: T.arrayOf(T.shape(
+    TabTypes.propTypes
+  )),
+  editorTabs: T.arrayOf(T.shape(
     TabTypes.propTypes
   )),
   currentTabTitle: T.string,
@@ -56,5 +85,5 @@ EditorMain.propTypes = {
 }
 
 export {
-  EditorMain
+  HomeEditor
 }

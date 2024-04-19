@@ -22,9 +22,4 @@ class SchedulerTool extends AbstractTool
     {
         return AdministrationContext::getName() === $context;
     }
-
-    public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
-    {
-        return [];
-    }
 }

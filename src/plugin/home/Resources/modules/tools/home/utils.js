@@ -1,6 +1,8 @@
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
+import isEmpty from 'lodash/isEmpty'
+import {LINK_BUTTON, MENU_BUTTON} from '#/main/app/buttons'
 
 /**
  * Flattens a tree of tabs into a one-level array.
@@ -51,7 +53,33 @@ function getTabTitle(context, tab) {
   return trans('home')
 }
 
+function getTabSummary(path, tab, showHidden = false) {
+  const children = get(tab, 'children', [])
+    .filter(subTab => showHidden || !get(subTab, 'restrictions.hidden', false))
+
+  if (isEmpty(children)) {
+    return {
+      type: LINK_BUTTON,
+      icon: tab.icon ? `fa fa-fw fa-${tab.icon}` : undefined,
+      label: tab.title,
+      target: `${path}/${tab.slug}`
+    }
+  }
+
+  return {
+    type: MENU_BUTTON,
+    icon: tab.icon ? `fa fa-fw fa-${tab.icon}` : undefined,
+    label: tab.title,
+    target: `${path}/${tab.slug}`,
+    menu: {
+      align: 'right',
+      items: children.map((child) => getTabSummary(path, child, showHidden))
+    }
+  }
+}
+
 export {
   flattenTabs,
-  getTabTitle
+  getTabTitle,
+  getTabSummary
 }

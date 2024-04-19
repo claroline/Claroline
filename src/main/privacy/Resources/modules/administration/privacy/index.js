@@ -1,7 +1,5 @@
-import {PrivacyTool} from '#/main/privacy/administration/privacy/containers/tool'
-import {reducer} from '#/main/privacy/administration/privacy/store'
+import {declareTool} from '#/main/core/tool'
 
-export default {
-  component: PrivacyTool,
-  store: reducer
-}
+import {PrivacyTool} from '#/main/privacy/administration/privacy/containers/tool'
+
+export default declareTool(PrivacyTool)

@@ -5,7 +5,7 @@ import {IPv4} from '#/main/app/data/types/ip/utils'
 
 /**
  * Validates an IP string.
- *   - it MUST contains 4 groups separated by ".".
+ *   - it MUST contain 4 groups separated by ".".
  *   - each group MUST be a number between 0 and 255 or "*".
  *
  * @param {string} value

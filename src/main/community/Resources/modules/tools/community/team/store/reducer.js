@@ -16,7 +16,7 @@ import {MY_TEAMS_ADD, MY_TEAMS_REMOVE} from '#/main/community/tools/community/te
 const reducer = combineReducers({
   // the list of the current user teams
   userTeams: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: (state, action) => action.toolData.userTeams,
+    [makeInstanceAction(TOOL_LOAD, baseSelectors.STORE_NAME)]: (state, action) => action.toolData.userTeams || state,
     [MY_TEAMS_ADD]: (state, action) => {
       const newState = cloneDeep(state)
       newState.push(action.team)

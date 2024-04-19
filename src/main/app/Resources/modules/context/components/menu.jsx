@@ -44,13 +44,15 @@ class ContextMenu extends Component
     if (newSize !== this.state.computedSize) {
       this.setState({computedSize: newSize})
 
-      this.autoClose()
+      if (constants.SIZE_XL > newSize) {
+        this.props.close()
+      }
     }
   }
 
   autoClose() {
     // only auto close on small windows
-    if (constants.SCREEN_LG_MAX > this.state.computedSize) {
+    if (constants.SIZE_XL > this.state.computedSize) {
       this.props.close()
     }
   }

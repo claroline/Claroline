@@ -17,6 +17,7 @@ use Claroline\CommunityBundle\Serializer\ProfileSerializer;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
+use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -72,32 +73,34 @@ class CommunityTool extends AbstractTool
             }, $userTeams),
             'profile' => $this->profileSerializer->serialize(),
             'usersLimitReached' => $this->userManager->hasReachedLimit(),
-            // for retro compatibility :
-            //  - in workspace tool, configuration is stored in the workspace entity
-            //  - in desktop tool, configuration is stored in the platform options
-            // to remove when the community options get their own entity
             'parameters' => $contextSubject ? $this->getWorkspaceParameters($contextSubject) : $this->getDesktopParameters(),
         ];
     }
 
     public function configure(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array
     {
-        if (isset($configData['parameters'])) {
+        $this->om->startFlushSuite();
+
+        if (!empty($configData['parameters'])) {
             if (!empty($contextSubject)) {
                 // configure workspace tool
-                $updatedParameters = $this->updateWorkspaceParameters($configData['parameters'], $contextSubject);
+                $this->updateWorkspaceParameters($configData['parameters'], $contextSubject);
             } else {
                 // configure desktop tool
-                $updatedParameters = $this->updateDesktopParameters($configData['parameters']);
+                $this->updateDesktopParameters($configData['parameters']);
             }
-
-            // send updated data to the caller
-            return [
-                'parameters' => $updatedParameters,
-            ];
         }
 
-        return [];
+        if (!empty($configData['profile'])) {
+            $this->updateProfile($configData['profile']);
+        }
+
+        $this->om->endFlushSuite();
+
+        return [
+            'profile' => $this->profileSerializer->serialize(),
+            'parameters' => $contextSubject ? $this->getWorkspaceParameters($contextSubject) : $this->getDesktopParameters(),
+        ];
     }
 
     public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
@@ -192,7 +195,7 @@ class CommunityTool extends AbstractTool
         ];
     }
 
-    private function updateDesktopParameters(array $parametersData): array
+    private function updateDesktopParameters(array $parametersData): void
     {
         // only keep parameters linked to community to avoid exposing all the platform parameters here
         $communityParameters = [];
@@ -220,11 +223,9 @@ class CommunityTool extends AbstractTool
 
         // save updated parameters
         $this->parametersSerializer->deserialize($communityParameters);
-
-        return $this->parametersSerializer->serialize();
     }
 
-    private function updateWorkspaceParameters(array $parametersData, Workspace $workspace): array
+    private function updateWorkspaceParameters(array $parametersData, Workspace $workspace): void
     {
         // only keep parameters linked to community to avoid exposing all the workspace parameters here
         $communityParameters = [];
@@ -232,8 +233,31 @@ class CommunityTool extends AbstractTool
             $communityParameters['registration'] = $parametersData['registration'];
         }
 
-        $this->crud->update($workspace, $communityParameters, [Crud::THROW_EXCEPTION]);
+        $this->crud->update($workspace, $communityParameters);
+    }
 
-        return $this->serializer->serialize($workspace);
+    private function updateProfile(array $profileData): void
+    {
+        // dump current profile configuration (to know what to remove later)
+        /** @var Facet[] $facets */
+        $facets = $this->om->getRepository(Facet::class)->findAll();
+
+        $this->om->startFlushSuite();
+
+        // updates facets data
+        $updatedFacets = [];
+        foreach ($profileData as $facetData) {
+            $updated = $this->crud->update(Facet::class, $facetData);
+            $updatedFacets[$updated->getId()] = $updated;
+        }
+
+        // removes deleted facets
+        foreach ($facets as $facet) {
+            if (empty($updatedFacets[$facet->getId()])) {
+                $this->crud->delete($facet);
+            }
+        }
+
+        $this->om->endFlushSuite();
     }
 }

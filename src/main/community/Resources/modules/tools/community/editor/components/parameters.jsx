@@ -1,30 +1,18 @@
-import React, {Component} from 'react'
+import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
-
-import {url} from '#/main/app/api'
+import {selectors} from '#/main/core/tool/editor/store'
+import {FormContent} from '#/main/app/content/form/containers/content'
 import {trans} from '#/main/app/intl'
-import {FormData} from '#/main/app/content/form/containers/data'
-
+import get from 'lodash/get'
 import {constants as registrationConst} from '#/main/app/security/registration/constants'
-import {route} from '#/main/core/workspace/routing'
 
-import {selectors} from '#/main/core/tool/modals/parameters/store'
-
-const workspaceDefinition = (contextData, update) => [
+const workspaceDefinition = (contextId, update) => [
   {
     icon: 'fa fa-fw fa-user-plus',
     title: trans('registration'),
     primary: true,
     fields: [
       {
-        name: 'registration.url',
-        type: 'url',
-        label: trans('registration_url'),
-        calculated: () => `${url(['claro_index', {}, true])}#${route(contextData)}`,
-        required: true,
-        disabled: true
-      }, {
         name: 'registration.selfRegistration',
         type: 'boolean',
         label: trans('activate_self_registration'),
@@ -48,8 +36,8 @@ const workspaceDefinition = (contextData, update) => [
         type: 'role',
         label: trans('default_role'),
         options: {
-          picker: contextData ? {
-            url: ['apiv2_workspace_list_roles', {id: contextData.id}],
+          picker: contextId ? {
+            url: ['apiv2_workspace_list_roles', {id: contextId}],
             filters: []
           } : undefined
         }
@@ -97,13 +85,6 @@ const desktopDefinition = () => [
     title: trans('registration'),
     fields: [
       {
-        name: 'registration.url',
-        type: 'url',
-        label: trans('registration_url'),
-        calculated: () => `${url(['claro_index', {}, true])}#/registration`,
-        required: true,
-        disabled: true
-      }, {
         name: 'registration.self',
         type: 'boolean',
         label: trans('activate_self_registration'),
@@ -175,41 +156,36 @@ const desktopDefinition = () => [
   }
 ]
 
-class CommunityParameters extends Component {
-  componentDidMount() {
-    if (!this.props.pendingChanges) {
-      // this is the only thing I can check to be sure to do this only the first time
-      // as this form is mounted through a function in the standard tool parameters form
-      // it is re-mounted at each update instead of getting updated
-      this.props.load(this.props.parameters)
+const EditorParameters = (props) => {
+  useEffect(() => {
+    if (props.loaded) {
+      // load tool parameters inside the form
+      props.load(props.parameters)
     }
-  }
+  }, [props.contextType, props.contextId, props.loaded])
 
-  render() {
-    return (
-      <FormData
-        embedded={true}
-        flush={true}
-        name={selectors.STORE_NAME}
-        dataPart="parameters"
-        definition={'desktop' === this.props.contextType ?
-          desktopDefinition(this.props.contextData, this.props.updateProp) :
-          workspaceDefinition(this.props.contextData, this.props.updateProp)
-        }
-      />
-    )
-  }
+  return (
+    <FormContent
+      disabled={!props.loaded}
+      name={selectors.STORE_NAME}
+      dataPart="parameters"
+      definition={'desktop' === props.contextType ?
+        desktopDefinition(props.contextId, props.updateProp) :
+        workspaceDefinition(props.contextId, props.updateProp)
+      }
+    />
+  )
 }
 
-CommunityParameters.propTypes = {
+EditorParameters.propTypes = {
+  loaded: T.bool.isRequired,
   contextType: T.string.isRequired,
-  contextData: T.object,
+  contextId: T.string,
   parameters: T.object,
-  pendingChanges: T.bool.isRequired,
   load: T.func.isRequired,
   updateProp: T.func.isRequired
 }
 
 export {
-  CommunityParameters
+  EditorParameters
 }
