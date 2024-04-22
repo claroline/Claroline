@@ -11,6 +11,7 @@ import {route} from '#/main/core/workspace/routing'
 
 import {MODAL_HISTORY} from '#/plugin/history/modals/history'
 import {MODAL_CONTEXT_SEARCH} from '#/main/app/context/modals/search'
+import {AppBrand} from '#/main/app/layout/components/brand'
 
 const ContextNav = (props) => {
   if (!props.currentUser) {
@@ -26,7 +27,8 @@ const ContextNav = (props) => {
   }
 
   return (
-    <aside className="app-contexts">
+    <section className="app-contexts">
+      <AppBrand className="menu-brand" />
       {[]
         .concat(props.availableContexts)
         .filter(availableContext => availableContext.root)
@@ -121,7 +123,7 @@ const ContextNav = (props) => {
         tooltip="right"
         modal={[MODAL_CONTEXT_SEARCH]}
       />
-    </aside>
+    </section>
   )
 }
 

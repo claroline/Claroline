@@ -1,4 +1,26 @@
 
+.app-toolbar {
+    display: flex;
+    flex-direction: row;
+    width: map-get($icon-sizes, sm) + 1.5rem;
+    transition: width .4s ease;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+
+    &.show {
+        width: $toolbar-size;
+
+        .app-menu {
+
+        }
+    }
+}
+
+.app-body {
+    transition: padding .4s ease;
+}
+
 .app-menu {
     --#{$prefix}menu-color: #{$toolbar-color};
     --#{$prefix}menu-bg: #{$toolbar-bg-subtle};
@@ -16,20 +38,21 @@
     --#{$prefix}menu-item-disabled-bg: #{$toolbar-link-disabled-bg};
 
     overflow-y: auto; // gets its own scrollbar
-    width: 100%;
-    top: 0;
-    bottom: 0;
+    //width: 100%;
+    flex: 1;
+    /*top: 0;
+    bottom: 0;*/
     display: flex;
     flex-direction: column;
     background-color: var(--#{$prefix}menu-bg);
     color: var(--#{$prefix}menu-color);
 
-    max-width: 0;
+    /*max-width: 0;
     transition: max-width .4s ease;
 
     &.show {
         max-width: $toolbar-size;
-    }
+    }*/
 
     .dropdown-menu {
         width: $toolbar-size;
@@ -172,14 +195,17 @@
     }
 }
 
-// XS/SM screens :
+// MD/LG screens :
 @media (max-width: map-get($grid-breakpoints, 'xl')) {
-    .app-contexts + .app-menu,
+    /*.app-contexts + .app-menu,
     .app-contexts + .app-menu + .app-menu-backdrop {
         left: 72px !important; // FIXME
+    }*/
+    .app-body {
+        padding-left: map-get($icon-sizes, sm) + 1.5rem;
     }
 
-    .app-menu {
+    .app-toolbar {
         position: absolute;
         z-index: $zindex-fixed;
 
@@ -200,6 +226,16 @@
     }
 }
 
+// XS/SM screens :
+@media (max-width: map-get($grid-breakpoints, 'md')) {
+    .app-toolbar {
+        width: 0; // also hide contexts nav
+    }
+
+    .app-body {
+        padding-left: 0;
+    }
+}
 
 @if $enable-dark-mode {
     @include color-mode(dark) {

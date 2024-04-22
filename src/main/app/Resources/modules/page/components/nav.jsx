@@ -31,7 +31,7 @@ const PageNav = (props) =>
       <MenuButton />
     }
 
-    {!props.embedded &&
+    {false && !props.embedded &&
       <AppBrand className="page-brand" />
     }
 

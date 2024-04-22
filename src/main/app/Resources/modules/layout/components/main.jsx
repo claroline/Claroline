@@ -46,7 +46,6 @@ const LayoutMain = props => {
 
   return (
     <>
-      <ContextNav />
       <Routes
         redirect={[
           {from: '/', exact: true, to: '/unavailable', disabled: !props.unavailable},
