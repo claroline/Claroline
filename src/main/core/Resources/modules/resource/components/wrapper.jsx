@@ -25,6 +25,7 @@ const ResourceWrapper = (props) => {
                 data: response
               })
             })
+            .catch(e => console.error(e))
           )
       )
     }
@@ -56,7 +57,7 @@ const ResourceWrapper = (props) => {
   }
 
   return createElement(app.component, {
-    path: props.path + '/' + props.slug,
+    path: props.path,
     type: app.type,
     slug: props.slug,
     open: (resourceType, resourceSlug) => props.openType(resourceType, resourceSlug, app.data)

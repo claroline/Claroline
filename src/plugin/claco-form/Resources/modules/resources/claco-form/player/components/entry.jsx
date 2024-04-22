@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import classes from 'classnames'
@@ -35,6 +35,7 @@ import {actions, selectors as playerSelectors} from '#/plugin/claco-form/resourc
 import {EntryComments} from '#/plugin/claco-form/resources/claco-form/player/components/entry-comments'
 import {EntryMenu} from '#/plugin/claco-form/resources/claco-form/player/components/entry-menu'
 import isEmpty from 'lodash/isEmpty'
+import {ResourcePage} from '#/main/core/resource'
 
 // TODO : find a way to merge actions list with the one in entries list
 const EntryActions = props =>
@@ -230,7 +231,7 @@ class EntryComponent extends Component {
     }
 
     return (
-      <Fragment>
+      <ResourcePage>
         <div className="entry-container">
           {['up', 'both'].indexOf(this.props.menuPosition) > -1 &&
             <EntryMenu />
@@ -418,7 +419,7 @@ class EntryComponent extends Component {
             canViewComments={this.props.canViewComments}
           />
         }
-      </Fragment>
+      </ResourcePage>
     )
   }
 }

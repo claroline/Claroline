@@ -11,42 +11,45 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
 import get from 'lodash/get'
+import {ResourcePage} from '#/main/core/resource'
 
 const OverviewComponent = props =>
-  <div className="resource-section resource-overview">
-    {props.canAddEntry &&
-      <LinkButton
-        className="btn-overview"
-        target={`${props.path}/entry/form`}
-      >
-        <span className="action-icon fa fa-plus" />
-        <span className="action-label">{trans('add-entry', {}, 'actions')}</span>
-      </LinkButton>
-    }
+  <ResourcePage>
+    <div className="resource-section resource-overview">
+      {props.canAddEntry &&
+        <LinkButton
+          className="btn-overview"
+          target={`${props.path}/entry/form`}
+        >
+          <span className="action-icon fa fa-plus" />
+          <span className="action-label">{trans('add-entry', {}, 'actions')}</span>
+        </LinkButton>
+      }
 
-    {props.canSearchEntry &&
-      <LinkButton
-        className="btn-overview"
-        target={`${props.path}/entries`}
-      >
-        <span className="action-icon fa fa-search" />
-        <span className="action-label">{trans('find_entry', {}, 'clacoform')}</span>
-      </LinkButton>
-    }
+      {props.canSearchEntry &&
+        <LinkButton
+          className="btn-overview"
+          target={`${props.path}/entries`}
+        >
+          <span className="action-icon fa fa-search" />
+          <span className="action-label">{trans('find_entry', {}, 'clacoform')}</span>
+        </LinkButton>
+      }
 
-    {props.randomEnabled &&
-      <AsyncButton
-        className="btn-overview"
-        request={{
-          url: ['claro_claco_form_entry_random', {clacoForm: props.resourceId}],
-          success: (entryId) => props.history.push(`${props.path}/entries/${entryId}`)
-        }}
-      >
-        <span className="action-icon fa fa-random" />
-        <span className="action-label">{trans('random_entry', {}, 'clacoform')}</span>
-      </AsyncButton>
-    }
-  </div>
+      {props.randomEnabled &&
+        <AsyncButton
+          className="btn-overview"
+          request={{
+            url: ['claro_claco_form_entry_random', {clacoForm: props.resourceId}],
+            success: (entryId) => props.history.push(`${props.path}/entries/${entryId}`)
+          }}
+        >
+          <span className="action-icon fa fa-random" />
+          <span className="action-label">{trans('random_entry', {}, 'clacoform')}</span>
+        </AsyncButton>
+      }
+    </div>
+  </ResourcePage>
 
 OverviewComponent.propTypes = {
   path: T.string.isRequired,

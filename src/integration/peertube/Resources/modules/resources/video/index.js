@@ -1,4 +1,5 @@
-import {reducer} from '#/integration/peertube/resources/video/store'
+
+import {declareResource} from '#/main/core/resource'
 import {VideoCreation} from '#/integration/peertube/resources/video/components/creation'
 import {VideoResource} from '#/integration/peertube/resources/video/containers/resource'
 
@@ -12,7 +13,4 @@ export const Creation = () => ({
 /**
  * PeerTube video resource application.
  */
-export default {
-  component: VideoResource,
-  store: reducer
-}
+export default declareResource(VideoResource)

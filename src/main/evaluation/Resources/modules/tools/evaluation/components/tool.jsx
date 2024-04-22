@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {trans} from '#/main/app/intl'
 import {makeCancelable} from '#/main/app/api'
 import {Tool} from '#/main/core/tool'
 
@@ -8,9 +9,8 @@ import {getTabs} from '#/main/evaluation/evaluation'
 
 import {EvaluationUser} from '#/main/evaluation/tools/evaluation/containers/user'
 import {EvaluationUsers} from '#/main/evaluation/tools/evaluation/containers/users'
-import {EvaluationParameters} from '#/main/evaluation/tools/evaluation/containers/parameters'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {trans} from '#/main/app/intl'
+import {EvaluationEditor} from '#/main/evaluation/tools/evaluation/containers/editor'
+import {ASYNC_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 const EvaluationTool = (props) => {
   const [pages, setPages] = useState([])
@@ -45,14 +45,34 @@ const EvaluationTool = (props) => {
         type: LINK_BUTTON,
         label: trans(page.name, {}, 'evaluation'),
         target: `${props.path}/${page.name}`
-      }))).concat([{
-        name: 'parameters',
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-cog',
-        label: trans('parameters'),
-        target: props.path+'/parameters',
-        displayed: props.canEdit && 'workspace' === props.contextType
-      }])}
+      })))}
+      actions={[
+        {
+          name: 'initialize',
+          type: ASYNC_BUTTON,
+          icon: 'fa fa-fw fa-sync',
+          label: trans('initialize_evaluations', {}, 'evaluation'),
+          request: {
+            url: ['apiv2_workspace_evaluations_init', {workspace: props.contextId}],
+            request: {
+              method: 'PUT'
+            }
+          },
+          group: trans('management')
+        }, {
+          name: 'recompute',
+          type: ASYNC_BUTTON,
+          icon: 'fa fa-fw fa-calculator',
+          label: trans('recompute_evaluations', {}, 'evaluation'),
+          request: {
+            url: ['apiv2_workspace_evaluations_recompute', {workspace: props.contextId}],
+            request: {
+              method: 'PUT'
+            }
+          },
+          group: trans('management')
+        }
+      ]}
       pages={[
         {
           path: '/users',
@@ -63,12 +83,9 @@ const EvaluationTool = (props) => {
           disabled: !props.canShowEvaluations && !props.canEdit,
           onEnter: (params = {}) => props.openEvaluation(params.workspaceId || props.contextId, params.userId),
           component: EvaluationUser
-        }, {
-          path: '/parameters',
-          disabled: !props.canEdit || !props.contextId,
-          component: EvaluationParameters
         }
       ].concat(pages)}
+      editor={EvaluationEditor}
     />
   )
 }

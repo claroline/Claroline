@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {asset} from '#/main/app/config/asset'
 
 import {selectors} from '#/plugin/web-resource/resources/web-resource/store'
+import {ResourcePage} from '#/main/core/resource'
 
 class PlayerComponent extends Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class PlayerComponent extends Component {
     let contentHeight = this.iframe.contentWindow.document.body.scrollHeight
 
     if (contentHeight === 0) {
-      //really dirty, but we need this element if everything is populated through javascript in the iframe...
+      // dirty, but we need this element if everything is populated through javascript in the iframe...
       contentHeight = document.getElementsByClassName('page-content')[0].clientHeight
     }
 
@@ -36,14 +37,16 @@ class PlayerComponent extends Component {
 
   render() {
     return (
-      <iframe
-        className="web-resource"
-        ref={el => this.iframe = el}
-        onLoad={this.handleResize()}
-        height={this.state.height}
-        src={asset(this.props.resourcePath)}
-        allowFullScreen={true}
-      />
+      <ResourcePage>
+        <iframe
+          className="web-resource"
+          ref={el => this.iframe = el}
+          onLoad={this.handleResize()}
+          height={this.state.height}
+          src={asset(this.props.resourcePath)}
+          allowFullScreen={true}
+        />
+      </ResourcePage>
     )
   }
 }

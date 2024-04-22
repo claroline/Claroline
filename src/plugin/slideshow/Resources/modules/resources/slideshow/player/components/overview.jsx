@@ -14,58 +14,64 @@ import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {selectors} from '#/plugin/slideshow/resources/slideshow/player/store'
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'
+import {ResourcePage} from '#/main/core/resource'
+import {ContentSizing} from '#/main/app/content/components/sizing'
 
 // TODO : merge with standard overview when UserProgression will be implemented for slideshow
 
 const OverviewComponent = props =>
-  <section className="resource-section resource-overview">
-    <h2 className="sr-only">{trans('resource_overview', {}, 'resource')}</h2>
+  <ResourcePage>
+    <ContentSizing size="lg">
+      <section className="resource-section resource-overview">
+        <h2 className="sr-only">{trans('resource_overview', {}, 'resource')}</h2>
 
-    {props.overviewMessage &&
-      <section className="resource-info">
-        <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
+        {props.overviewMessage &&
+          <section className="resource-info">
+            <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
 
-        <div className="card mb-3">
-          <ContentHtml className="card-body">{props.overviewMessage}</ContentHtml>
-        </div>
-      </section>
-    }
+            <div className="card mb-3">
+              <ContentHtml className="card-body">{props.overviewMessage}</ContentHtml>
+            </div>
+          </section>
+        }
 
-    <section>
-      <h3 className="h2">{trans('slides', {}, 'slideshow')}</h3>
+        <section>
+          <h3 className="h2 visually-hidden">{trans('slides', {}, 'slideshow')}</h3>
 
-      {0 === props.slides.length &&
-        <ContentPlaceholder
+          {0 === props.slides.length &&
+            <ContentPlaceholder
+              size="lg"
+              icon="fa fa-image"
+              title={trans('no_slide', {}, 'slideshow')}
+            />
+          }
+
+          {0 !== props.slides.length &&
+            <ul className="slides justify-content-center">
+              {props.slides.map(slide =>
+                <li key={slide.id} className="slide-preview">
+                  <LinkButton target={`${props.path}/play/${slide.id}`}>
+                    <img src={asset(slide.content.url)} alt={slide.title} className="img-thumbnail"/>
+                  </LinkButton>
+                </li>
+              )}
+            </ul>
+          }
+        </section>
+
+        <Button
+          type={LINK_BUTTON}
+          className="btn btn-primary w-100"
+          /*icon="fa fa-fw fa-play"*/
+          label={trans('start_slideshow', {}, 'slideshow')}
+          target={`${props.path}/play`}
+          primary={true}
           size="lg"
-          icon="fa fa-image"
-          title={trans('no_slide', {}, 'slideshow')}
+          disabled={0 === props.slides.length}
         />
-      }
-
-      {0 !== props.slides.length &&
-        <ul className="slides">
-          {props.slides.map(slide =>
-            <li key={slide.id} className="slide-preview">
-              <LinkButton target={`${props.path}/play/${slide.id}`}>
-                <img src={asset(slide.content.url)} alt={slide.title} className="img-thumbnail"/>
-              </LinkButton>
-            </li>
-          )}
-        </ul>
-      }
-    </section>
-
-    <Button
-      type={LINK_BUTTON}
-      className="btn btn-primary w-100"
-      icon="fa fa-fw fa-play"
-      label={trans('start_slideshow', {}, 'slideshow')}
-      target={`${props.path}/play`}
-      primary={true}
-      size="lg"
-      disabled={0 === props.slides.length}
-    />
-  </section>
+      </section>
+    </ContentSizing>
+  </ResourcePage>
 
 OverviewComponent.propTypes = {
   path: T.string.isRequired,

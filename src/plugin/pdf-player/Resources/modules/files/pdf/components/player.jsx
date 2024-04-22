@@ -13,6 +13,7 @@ import {Button} from '#/main/app/action/components/button'
 import {ASYNC_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {File as FileTypes} from '#/main/core/files/prop-types'
+import {ResourcePage} from '#/main/core/resource'
 
 class PdfPlayer extends Component {
   constructor(props) {
@@ -111,7 +112,7 @@ class PdfPlayer extends Component {
 
   render() {
     return (
-      <Fragment>
+      <ResourcePage>
         {!this.state.loaded &&
           <ContentLoader
             className="row"
@@ -216,7 +217,7 @@ class PdfPlayer extends Component {
             <div id="viewer" className="pdfViewer" />
           </div>
         </div>
-      </Fragment>
+      </ResourcePage>
     )
   }
 }

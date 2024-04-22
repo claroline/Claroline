@@ -13,6 +13,8 @@ import {actions} from '#/plugin/drop-zone/resources/dropzone/player/store/action
 import {actions as correctionActions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
 import {CorrectionForm} from '#/plugin/drop-zone/resources/dropzone/correction/components/correction-form'
+import {ResourcePage} from '#/main/core/resource'
+import {Alert} from '#/main/app/components/alert'
 
 class PeerDrop extends Component {
   constructor(props) {
@@ -50,7 +52,7 @@ class PeerDrop extends Component {
   render() {
     if (this.props.drop) {
       return (
-        <Fragment>
+        <ResourcePage>
           <Documents
             documents={this.props.drop.documents}
             canEdit={false}
@@ -66,14 +68,16 @@ class PeerDrop extends Component {
             submitCorrection={(correctionId, navigate) => this.props.submitCorrection(correctionId, navigate, this.props.path)}
             cancelCorrection={this.cancelCorrection}
           />
-        </Fragment>
+        </ResourcePage>
       )
     }
 
     return (
-      <div className="alert alert-warning">
-        {trans('no_copy_to_correct', {}, 'dropzone')}
-      </div>
+      <ResourcePage>
+        <Alert type="warning">
+          {trans('no_copy_to_correct', {}, 'dropzone')}
+        </Alert>
+      </ResourcePage>
     )
   }
 }

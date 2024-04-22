@@ -12,6 +12,7 @@ import {HtmlInput} from '#/main/app/data/types/html/components/input'
 
 import {actions} from '#/plugin/exo/resources/quiz/correction/store/actions'
 import {selectors as correctionSelectors} from '#/plugin/exo/resources/quiz/correction/store/selectors'
+import {ResourcePage} from '#/main/core/resource'
 
 class AnswerRow extends Component {
   constructor(props) {
@@ -96,47 +97,49 @@ let Answers = props => {
   }
 
   return (
-    <div className="answers-list">
-      <h2 className="question-title">
-        <ContentHtml>
-          {props.question.title || props.question.content}
-        </ContentHtml>
+    <ResourcePage>
+      <div className="answers-list">
+        <h2 className="question-title">
+          <ContentHtml>
+            {props.question.title || props.question.content}
+          </ContentHtml>
 
-        {props.answers.length > 0 &&
-          <button
-            type="button"
-            className="btn btn-sm btn-primary"
-            disabled={!props.saveEnabled}
-            onClick={() => props.saveEnabled && props.saveCorrection(props.question.id)}
-          >
-            <span className="fa fa-fw fa-save"/>
-            {trans('save')}
-          </button>
+          {props.answers.length > 0 &&
+            <button
+              type="button"
+              className="btn btn-sm btn-primary"
+              disabled={!props.saveEnabled}
+              onClick={() => props.saveEnabled && props.saveCorrection(props.question.id)}
+            >
+              <span className="fa fa-fw fa-save"/>
+              {trans('save')}
+            </button>
+          }
+        </h2>
+
+        {0 < props.question.maxLength &&
+          <div className="alert alert-info">
+            {trans('max_text_length')} : {props.question.maxLength}
+          </div>
         }
-      </h2>
 
-      {0 < props.question.maxLength &&
-        <div className="alert alert-info">
-          {trans('max_text_length')} : {props.question.maxLength}
-        </div>
-      }
-
-      {props.answers.length > 0 ?
-        props.answers.map((answer, idx) =>
-          <AnswerRow
-            key={idx}
-            scoreMax={props.question.score && props.question.score.max}
-            maxLength={props.question.maxLength}
-            updateScore={props.updateScore}
-            updateFeedback={props.updateFeedback}
-            {...answer}
-          />
-        ) :
-        <div className="alert alert-warning">
-          {trans('no_answer_to_correct', {}, 'quiz')}
-        </div>
-      }
-    </div>
+        {props.answers.length > 0 ?
+          props.answers.map((answer, idx) =>
+            <AnswerRow
+              key={idx}
+              scoreMax={props.question.score && props.question.score.max}
+              maxLength={props.question.maxLength}
+              updateScore={props.updateScore}
+              updateFeedback={props.updateFeedback}
+              {...answer}
+            />
+          ) :
+          <div className="alert alert-warning">
+            {trans('no_answer_to_correct', {}, 'quiz')}
+          </div>
+        }
+      </div>
+    </ResourcePage>
   )
 }
 

@@ -1,9 +1,10 @@
-import {reducer} from '#/plugin/web-resource/resources/web-resource/store'
+
+import {declareResource} from '#/main/core/resource'
 import {WebResource} from '#/plugin/web-resource/resources/web-resource/containers/resource'
 import {WebResourceCreation} from '#/plugin/web-resource/resources/web-resource/components/creation'
+
 /**
  * WebResource creation app.
- * TODO: should use the FileForm of '#/main/core/resources/file/actions/creation.jsx'
  */
 export const Creation = () => ({
   component: WebResourceCreation
@@ -12,7 +13,4 @@ export const Creation = () => ({
 /**
  * WebResource application.
  */
-export default {
-  component: WebResource,
-  store: reducer
-}
+export default declareResource(WebResource)

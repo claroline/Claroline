@@ -2,20 +2,23 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {Image as ImageTypes} from '#/plugin/image-player/files/image/prop-types'
+import {ResourcePage} from '#/main/core/resource'
 
 const ImagePlayer = props =>
-  <img
-    style={{
-      marginLeft: 'auto',
-      marginRight: 'auto'
-    }}
-    className="img-fluid"
-    src={props.file.url}
-    alt={props.file.hashName}
-    onContextMenu={(e)=> {
-      e.preventDefault()
-    }}
-  />
+  <ResourcePage>
+    <img
+      style={{
+        marginLeft: 'auto',
+        marginRight: 'auto'
+      }}
+      className="img-fluid"
+      src={props.file.url}
+      alt={props.file.hashName}
+      onContextMenu={(e)=> {
+        e.preventDefault()
+      }}
+    />
+  </ResourcePage>
 
 ImagePlayer.propTypes = {
   file: T.shape(

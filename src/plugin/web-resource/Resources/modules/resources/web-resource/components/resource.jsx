@@ -6,20 +6,19 @@ import {Player} from '#/plugin/web-resource/resources/web-resource/player/compon
 import {Editor} from '#/plugin/web-resource/resources/web-resource/editor/components/editor'
 
 const WebResource = (props) =>
-  <Resource {...props}>
-    <ResourcePage
-      routes={[
-        {
-          path: '/',
-          exact: true,
-          component: Player
-        }, {
-          path: '/edit',
-          component: Editor
-        }
-      ]}
-    />
-  </Resource>
+  <Resource
+    {...props}
+    pages={[
+      {
+        path: '/',
+        exact: true,
+        component: Player
+      }, {
+        path: '/edit',
+        component: Editor
+      }
+    ]}
+  />
 
 export {
   WebResource

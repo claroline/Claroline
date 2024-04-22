@@ -9,19 +9,12 @@ import {ContentTitle} from '#/main/app/content/components/title'
 import {BBB as BBBTypes} from '#/integration/big-blue-button/resources/bbb/prop-types'
 import {selectors} from '#/integration/big-blue-button/resources/bbb/records/store/selectors'
 import {Recordings} from '#/integration/big-blue-button/components/recordings'
+import {ResourcePage} from '#/main/core/resource'
 
 const Records = props =>
-  <Fragment>
-    <ContentTitle
-      level={2}
-      title={trans('recordings', {}, 'bbb')}
-      backAction={{
-        type: LINK_BUTTON,
-        target: props.path+'/',
-        exact: true
-      }}
-    />
-
+  <ResourcePage
+    title={trans('recordings', {}, 'bbb')}
+  >
     <Recordings
       name={selectors.LIST_NAME}
       url={['apiv2_bbb_meeting_recordings_list', {id: props.bbb.id}]}
@@ -33,7 +26,7 @@ const Records = props =>
       })}
       customDefinition={[]}
     />
-  </Fragment>
+  </ResourcePage>
 
 Records.propTypes = {
   path: T.string.isRequired,

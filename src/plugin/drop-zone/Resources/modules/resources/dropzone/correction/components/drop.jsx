@@ -16,6 +16,7 @@ import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
 import {CorrectionCreation} from '#/plugin/drop-zone/resources/dropzone/correction/components/correction-creation'
 import {CorrectionRow} from '#/plugin/drop-zone/resources/dropzone/correction/components/correction-row'
+import {ResourcePage} from '#/main/core/resource'
 
 const Corrections = props =>
   <FormSections>
@@ -51,7 +52,7 @@ Corrections.propTypes = {
 }
 
 const Drop = props => props.drop ?
-  <div id="drop-container">
+  <ResourcePage>
     <div className="drop-nav">
       <Button
         className="btn-link btn-drop-nav"
@@ -112,7 +113,7 @@ const Drop = props => props.drop ?
     {props.drop.finished &&
       <CorrectionCreation {...props}/>
     }
-  </div> :
+  </ResourcePage> :
   <span className="fa fa-fw fa-circle-notch fa-spin"></span>
 
 

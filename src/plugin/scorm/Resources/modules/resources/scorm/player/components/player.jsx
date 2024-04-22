@@ -12,6 +12,7 @@ import {ContentIFrame} from '#/main/app/content/components/iframe'
 import {Scorm as ScormTypes, Sco as ScoTypes} from '#/plugin/scorm/resources/scorm/prop-types'
 import {getFirstOpenableSco} from '#/plugin/scorm/resources/scorm/utils'
 import {ContentSizing} from '#/main/app/content/components/sizing'
+import {ResourcePage} from '#/main/core/resource'
 
 const Player = (props) => {
   if (isEmpty(props.scos)) {
@@ -27,41 +28,43 @@ const Player = (props) => {
   const firstSco = getFirstOpenableSco(props.scos)
 
   return (
-    <Routes
-      path={props.path}
-      redirect={firstSco ? [
-        {from: '/play', to: `/play/${firstSco.id}`}
-      ] : undefined}
-      routes={[
-        {
-          path: '/play/:id',
-          onEnter(params = {}) {
-            const currentSco = props.scos.find(sco => sco.id === params.id)
-            if (currentSco) {
-              props.initializeScormAPI(currentSco, props.scorm, props.trackings, props.currentUser)
-            }
-          },
-          render(routeProps) {
-            const currentSco = props.scos.find(sco => sco.id === routeProps.match.params.id)
-            if (currentSco && !isEmpty(currentSco.data.entryUrl)) {
-              return (
-                <ContentSizing size="full">
-                  <ContentIFrame
-                    ratio={get(props.scorm, 'ratio')}
-                    url={`${asset('data/uploads/scorm/')}${props.workspaceUuid}/${props.scorm.hashName}/${currentSco.data.entryUrl}${currentSco.data.parameters ? currentSco.data.parameters : ''}`}
-                    sco={currentSco}
-                  />
-                </ContentSizing>
-              )
-            }
+    <ResourcePage>
+      <Routes
+        path={props.path}
+        redirect={firstSco ? [
+          {from: '/play', to: `/play/${firstSco.id}`}
+        ] : undefined}
+        routes={[
+          {
+            path: '/play/:id',
+            onEnter(params = {}) {
+              const currentSco = props.scos.find(sco => sco.id === params.id)
+              if (currentSco) {
+                props.initializeScormAPI(currentSco, props.scorm, props.trackings, props.currentUser)
+              }
+            },
+            render(routeProps) {
+              const currentSco = props.scos.find(sco => sco.id === routeProps.match.params.id)
+              if (currentSco && !isEmpty(currentSco.data.entryUrl)) {
+                return (
+                  <ContentSizing size="full">
+                    <ContentIFrame
+                      ratio={get(props.scorm, 'ratio')}
+                      url={`${asset('data/uploads/scorm/')}${props.workspaceUuid}/${props.scorm.hashName}/${currentSco.data.entryUrl}${currentSco.data.parameters ? currentSco.data.parameters : ''}`}
+                      sco={currentSco}
+                    />
+                  </ContentSizing>
+                )
+              }
 
-            routeProps.history.push(props.path+'/play')
+              routeProps.history.push(props.path+'/play')
 
-            return null
+              return null
+            }
           }
-        }
-      ]}
-    />
+        ]}
+      />
+    </ResourcePage>
   )
 }
 

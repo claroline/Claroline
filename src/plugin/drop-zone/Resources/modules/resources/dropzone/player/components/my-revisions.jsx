@@ -7,9 +7,10 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {ResourcePage} from '#/main/core/resource'
 
 const MyRevisionsComponent = props =>
-  <Fragment>
+  <ResourcePage>
     <h2>{trans('revisions_list', {}, 'dropzone')}</h2>
 
     <ListData
@@ -44,7 +45,7 @@ const MyRevisionsComponent = props =>
         }
       ]}
     />
-  </Fragment>
+  </ResourcePage>
 
 MyRevisionsComponent.propTypes = {
   path: T.string.isRequired,

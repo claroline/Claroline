@@ -1,13 +1,14 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
 
 import {ResourceEmbedded} from '#/main/core/resource/containers/embedded'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import {ResourcePage} from '#/main/core/resource'
 
 const ShortcutPlayer = (props) =>
-  <Fragment>
+  <ResourcePage>
     {!props.resource &&
       <ContentPlaceholder
         size="lg"
@@ -23,7 +24,7 @@ const ShortcutPlayer = (props) =>
         />
       </div>
     }
-  </Fragment>
+  </ResourcePage>
 
 ShortcutPlayer.propTypes = {
   resource: T.object.isRequired

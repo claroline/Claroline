@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
@@ -17,8 +18,8 @@ const BlockedSubjectsComponent = (props) =>
   <ListData
     name={`${selectors.STORE_NAME}.moderation.blockedSubjects`}
     fetch={{
-      url: ['apiv2_forum_subject_blocked_list', {forum: props.forum.id}],
-      autoload: true
+      url: ['apiv2_forum_subject_blocked_list', {forum: get(props.forum, 'id')}],
+      autoload: !!get(props.forum, 'id')
     }}
     delete={{
       url: ['apiv2_forum_subject_delete_bulk']

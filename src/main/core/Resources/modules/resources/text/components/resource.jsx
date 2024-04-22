@@ -13,31 +13,28 @@ import {Editor} from '#/main/core/resources/text/editor/containers/editor'
 const TextResource = (props) =>
   <Resource
     {...omit(props, 'canExport', 'text')}
-  >
-    <ResourcePage
-      actions={[
-        {
-          name: 'export-pdf',
-          type: URL_BUTTON,
-          icon: 'fa fa-fw fa-file-pdf',
-          label: trans('export-pdf', {}, 'actions'),
-          displayed: props.canExport,
-          target: ['apiv2_resource_text_download_pdf', {id: props.text.id}],
-          group: trans('transfer')
-        }
-      ]}
-      routes={[
-        {
-          path: '/',
-          component: Player,
-          exact: true
-        }, {
-          path: '/edit',
-          component: Editor
-        }
-      ]}
-    />
-  </Resource>
+    actions={[
+      {
+        name: 'export-pdf',
+        type: URL_BUTTON,
+        icon: 'fa fa-fw fa-file-pdf',
+        label: trans('export-pdf', {}, 'actions'),
+        displayed: props.canExport,
+        target: ['apiv2_resource_text_download_pdf', {id: props.text.id}],
+        group: trans('transfer')
+      }
+    ]}
+    pages={[
+      {
+        path: '/',
+        component: Player,
+        exact: true
+      }, {
+        path: '/edit',
+        component: Editor
+      }
+    ]}
+  />
 
 TextResource.propTypes = {
   canExport: T.bool.isRequired,

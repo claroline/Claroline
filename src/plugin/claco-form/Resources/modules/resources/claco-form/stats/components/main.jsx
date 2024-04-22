@@ -6,9 +6,10 @@ import {trans} from '#/main/app/intl/translation'
 import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 import {FormStats} from '#/main/app/content/form/stats/components/main'
 import {ContentTitle} from '#/main/app/content/components/title'
+import {ResourcePage} from '#/main/core/resource'
 
 const StatsMain = (props) =>
-  <>
+  <ResourcePage>
     <ContentTitle className="mt-3" level={2} title={trans('statistics')} />
 
     <ContentInfoBlocks
@@ -28,7 +29,7 @@ const StatsMain = (props) =>
     />
 
     <FormStats stats={props.stats} className="mb-3" />
-  </>
+  </ResourcePage>
 
 StatsMain.propTypes = {
   stats: T.shape({

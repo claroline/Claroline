@@ -11,6 +11,7 @@ import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {selectors} from '#/plugin/slideshow/resources/slideshow/player/store'
 import {Slide as SlideTypes} from '#/plugin/slideshow/resources/slideshow/prop-types'
+import {ResourcePage} from '#/main/core/resource'
 
 const PlayerComponent = props => {
   if (0 === props.slides.length) {
@@ -29,48 +30,49 @@ const PlayerComponent = props => {
   }
 
   return (
-    <Carousel
+    <ResourcePage>
+      <Carousel
+        defaultActiveIndex={activeIndex}
+        interval={props.autoPlay ? props.interval : undefined}
+        controls={props.showControls}
+        indicators={props.showControls}
 
-      defaultActiveIndex={activeIndex}
-      interval={props.autoPlay ? props.interval : undefined}
-      controls={props.showControls}
-      indicators={props.showControls}
+        //prevIcon={<span className="fa fa-chevron-left" />}
+        prevLabel={trans('previous')}
+        //nextIcon={<span className="fa fa-chevron-right" />}
+        nextLabel={trans('next')}
+      >
+        {props.slides.map(slide => {
+          let color
+          if (get(slide, 'display.color')) {
+            color = tinycolor(slide.display.color)
+          }
 
-      //prevIcon={<span className="fa fa-chevron-left" />}
-      prevLabel={trans('previous')}
-      //nextIcon={<span className="fa fa-chevron-right" />}
-      nextLabel={trans('next')}
-    >
-      {props.slides.map(slide => {
-        let color
-        if (get(slide, 'display.color')) {
-          color = tinycolor(slide.display.color)
-        }
+          return (
+            <Carousel.Item
+              key={slide.id}
+              style={color ? {
+                backgroundColor: color.toRgbString()
+              } : undefined}
+            >
+              <img src={asset(slide.content.url)} alt={slide.title} className="d-block m-auto" />
 
-        return (
-          <Carousel.Item
-            key={slide.id}
-            style={color ? {
-              backgroundColor: color.toRgbString()
-            } : undefined}
-          >
-            <img src={asset(slide.content.url)} alt={slide.title} className="d-block m-auto" />
+              {(slide.meta.title || slide.meta.description) &&
+                <Carousel.Caption>
+                  {slide.meta.title &&
+                    <h3>{slide.meta.title}</h3>
+                  }
 
-            {(slide.meta.title || slide.meta.description) &&
-              <Carousel.Caption>
-                {slide.meta.title &&
-                  <h3>{slide.meta.title}</h3>
-                }
-
-                {slide.meta.description &&
-                  <p>{slide.meta.description}</p>
-                }
-              </Carousel.Caption>
-            }
-          </Carousel.Item>
-        )
-      })}
-    </Carousel>
+                  {slide.meta.description &&
+                    <p>{slide.meta.description}</p>
+                  }
+                </Carousel.Caption>
+              }
+            </Carousel.Item>
+          )
+        })}
+      </Carousel>
+    </ResourcePage>
   )
 }
 

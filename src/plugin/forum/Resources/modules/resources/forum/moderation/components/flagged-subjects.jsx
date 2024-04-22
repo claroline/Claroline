@@ -14,13 +14,14 @@ import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
 import {selectors} from '#/plugin/forum/resources/forum/store'
 import {actions} from '#/plugin/forum/resources/forum/player/store'
 import {SubjectCard} from '#/plugin/forum/resources/forum/data/components/subject-card'
+import get from 'lodash/get'
 
 const FlaggedSubjectsComponent = (props) =>
   <ListData
     name={`${selectors.STORE_NAME}.moderation.flaggedSubjects`}
     fetch={{
-      url: ['apiv2_forum_subject_flagged_list', {forum: props.forum.id}],
-      autoload: true
+      url: ['apiv2_forum_subject_flagged_list', {forum: get(props.forum, 'id')}],
+      autoload: !!get(props.forum, 'id')
     }}
     delete={{
       url: ['apiv2_forum_subject_delete_bulk']

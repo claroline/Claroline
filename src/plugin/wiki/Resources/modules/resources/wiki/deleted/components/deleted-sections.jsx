@@ -7,9 +7,10 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {actions} from '#/plugin/wiki/resources/wiki/deleted/store/actions'
 import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
+import {ResourcePage} from '#/main/core/resource'
 
 const DeletedSectionsComponent = props =>
-  <section className="wiki-deleted-sections-list">
+  <ResourcePage>
     <h2>{trans('deleted_sections', {}, 'icap_wiki')}</h2>
     <ListData
       name={selectors.STORE_NAME + '.deletedSections'}
@@ -77,7 +78,7 @@ const DeletedSectionsComponent = props =>
         }
       ]}
     />
-  </section>
+  </ResourcePage>
 
 DeletedSectionsComponent.propTypes = {
   wiki: T.object.isRequired,

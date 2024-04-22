@@ -13,11 +13,12 @@ import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
+import {ResourcePage} from '#/main/core/resource'
 
 // TODO : restore list grid display
 
 const DropsList = props =>
-  <section className="resource-section drop-list">
+  <ResourcePage>
     <h2>{trans('corrections', {}, 'dropzone')}</h2>
 
     <ListData
@@ -143,7 +144,7 @@ const DropsList = props =>
         }
       ]}
     />
-  </section>
+  </ResourcePage>
 
 DropsList.propTypes = {
   path: T.string.isRequired,

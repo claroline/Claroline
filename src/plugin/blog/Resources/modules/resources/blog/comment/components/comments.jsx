@@ -42,7 +42,7 @@ const CommentsComponent = props =>
       <section className="comments-section">
         {!props.showComments && !props.showForm &&
           <button
-            className="btn btn-add-comment"
+            className="btn btn-primary btn-add-comment"
             onClick={() => props.switchCommentFormDisplay(!props.showForm)}
           >
             <span className="fa fa-fw fa-edit" style={{marginRight: '7px'}} />

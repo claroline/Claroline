@@ -1,17 +1,13 @@
 import get from 'lodash/get'
 import merge from 'lodash/merge'
 
-import {reducer} from '#/plugin/blog/resources/blog/store'
+import {declareResource} from '#/main/core/resource'
 import {BlogResource} from '#/plugin/blog/resources/blog/containers/resource'
 
 /**
  * Blog resource application.
  */
-export default {
-  component: BlogResource,
-  store: reducer,
-  styles: ['claroline-distribution-plugin-blog-blog-resource'],
-
+export default declareResource(BlogResource, {
   create(resourceData = {resource: {}, resourceNode: {}}) {
     // initializes the blog_post rights for all the roles which can
     // edit this resource. We do it here to allow the user to reset it directly into the
@@ -31,4 +27,4 @@ export default {
       resourceNode: newNode
     }
   }
-}
+})

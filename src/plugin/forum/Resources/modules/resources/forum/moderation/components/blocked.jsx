@@ -2,18 +2,33 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
+import {NavLink, Routes} from '#/main/app/router'
 
 import {BlockedMessages} from '#/plugin/forum/resources/forum/moderation/components/blocked-messages'
 import {BlockedSubjects} from '#/plugin/forum/resources/forum/moderation/components/blocked-subjects'
-import {BlockedPostsNav} from '#/plugin/forum/resources/forum/moderation/components/blocked-posts-nav'
+import {ResourcePage} from '#/main/core/resource'
 
 const Blocked = (props) =>
-  <div>
-    <h2>{trans('blocked_messages_subjects', {}, 'forum')}</h2>
+  <ResourcePage
+    title={trans('blocked_messages_subjects', {}, 'forum')}
+  >
     <div className="row">
       <div className="col-md-3">
-        <BlockedPostsNav path={props.path} />
+        <nav className="lateral-nav">
+          <NavLink
+            to={`${props.path}/moderation/blocked/subjects`}
+            className="lateral-link"
+          >
+            {trans('blocked_subjects', {}, 'forum')}
+          </NavLink>
+
+          <NavLink
+            to={`${props.path}/moderation/blocked/messages`}
+            className="lateral-link"
+          >
+            {trans('blocked_messages', {}, 'forum')}
+          </NavLink>
+        </nav>
       </div>
       <div className="col-md-9">
         <Routes
@@ -30,7 +45,7 @@ const Blocked = (props) =>
         />
       </div>
     </div>
-  </div>
+  </ResourcePage>
 
 Blocked.propTypes = {
   path: T.string.isRequired

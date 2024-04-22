@@ -27,6 +27,7 @@ import {Paper as PaperTypes} from '#/plugin/exo/resources/quiz/papers/prop-types
 import {actions, selectors} from '#/plugin/exo/resources/quiz/papers/store'
 import ScoreNone from '#/plugin/exo/scores/none'
 import {EvaluationScore} from '#/main/evaluation/components/score'
+import {ResourcePage} from '#/main/core/resource'
 
 // TODO : show used hints
 
@@ -122,110 +123,112 @@ PaperStep.propTypes = {
 }
 
 const PaperComponent = props =>
-  <div className="paper mt-3">
-    <ContentTitle
-      level={3}
-      displayLevel={2}
-      title={trans('results', {}, 'quiz')}
-      subtitle={props.paper ?
-        trans('attempt', {number: get(props.paper, 'number', '?')}, 'quiz')
-        :
-        trans('attempt_loading', {}, 'quiz')
-      }
-      actions={[
-        {
-          name: 'delete',
-          type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-trash',
-          label: trans('delete', {}, 'actions'),
-          displayed: props.admin,
-          callback: () => props.delete(props.quizId, props.paper).then(() => {
-            props.history.push(`${props.path}/papers`)
-          }),
-          confirm: {
-            title: trans('deletion'),
-            subtitle: trans('user_attempt', {
-              number: get(props.paper, 'number', '?'),
-              userName: displayUsername(get(props.paper, 'user'))
-            }, 'quiz'),
-            message: trans('remove_paper_confirm_message', {}, 'quiz')
-          },
-          dangerous: true,
-          group: trans('management')
+  <ResourcePage>
+    <div className="paper mt-3">
+      <ContentTitle
+        level={3}
+        displayLevel={2}
+        title={trans('results', {}, 'quiz')}
+        subtitle={props.paper ?
+          trans('attempt', {number: get(props.paper, 'number', '?')}, 'quiz')
+          :
+          trans('attempt_loading', {}, 'quiz')
         }
-      ]}
-    />
+        actions={[
+          {
+            name: 'delete',
+            type: CALLBACK_BUTTON,
+            icon: 'fa fa-fw fa-trash',
+            label: trans('delete', {}, 'actions'),
+            displayed: props.admin,
+            callback: () => props.delete(props.quizId, props.paper).then(() => {
+              props.history.push(`${props.path}/papers`)
+            }),
+            confirm: {
+              title: trans('deletion'),
+              subtitle: trans('user_attempt', {
+                number: get(props.paper, 'number', '?'),
+                userName: displayUsername(get(props.paper, 'user'))
+              }, 'quiz'),
+              message: trans('remove_paper_confirm_message', {}, 'quiz')
+            },
+            dangerous: true,
+            group: trans('management')
+          }
+        ]}
+      />
 
-    <div className="row">
-      <div className="col-md-4">
-        <div className="card mb-3">
-          <div className="card-header">
-            <UserMicro
-              className="content-creator"
-              {...get(props.paper, 'user', {})}
-              link={true}
-            />
+      <div className="row">
+        <div className="col-md-4">
+          <div className="card mb-3">
+            <div className="card-header">
+              <UserMicro
+                className="content-creator"
+                {...get(props.paper, 'user', {})}
+                link={true}
+              />
+            </div>
+
+            <div className="card-body text-center">
+              <ScoreGauge
+                type="user"
+                value={get(props.paper, 'score')}
+                total={get(props.paper, 'total')}
+                width={140}
+                height={140}
+                displayValue={value => undefined === value || null === value ? '?' : value+''}
+              />
+            </div>
+
+            <ul className="list-group list-group-flush list-group-values">
+              <li className="list-group-item">
+                {trans('start_date')}
+                <span className="value">{get(props.paper, 'startDate') ? displayDate(props.paper.startDate, false, true) : '-'}</span>
+              </li>
+
+              <li className="list-group-item">
+                {trans('end_date')}
+                <span className="value">{get(props.paper, 'endDate') ? displayDate(props.paper.endDate, false, true) : '-'}</span>
+              </li>
+
+              <li className="list-group-item">
+                {trans('duration')}
+                <span className="value">{get(props.paper, 'endDate') ? displayDuration(getTimeDiff(props.paper.startDate, props.paper.endDate)) : '-'}</span>
+              </li>
+            </ul>
           </div>
+        </div>
 
-          <div className="card-body text-center">
-            <ScoreGauge
-              type="user"
-              value={get(props.paper, 'score')}
-              total={get(props.paper, 'total')}
-              width={140}
-              height={140}
-              displayValue={value => undefined === value || null === value ? '?' : value+''}
-            />
-          </div>
+        <div className="col-md-8">
+          {!props.paper &&
+            <ContentLoader />
+          }
 
-          <ul className="list-group list-group-flush list-group-values">
-            <li className="list-group-item">
-              {trans('start_date')}
-              <span className="value">{get(props.paper, 'startDate') ? displayDate(props.paper.startDate, false, true) : '-'}</span>
-            </li>
-
-            <li className="list-group-item">
-              {trans('end_date')}
-              <span className="value">{get(props.paper, 'endDate') ? displayDate(props.paper.endDate, false, true) : '-'}</span>
-            </li>
-
-            <li className="list-group-item">
-              {trans('duration')}
-              <span className="value">{get(props.paper, 'endDate') ? displayDuration(getTimeDiff(props.paper.startDate, props.paper.endDate)) : '-'}</span>
-            </li>
-          </ul>
+          {props.paper && props.paper.structure.steps
+            .filter(step => step.items && 0 < step.items.length)
+            .map((step, index) =>
+              <PaperStep
+                key={step.id}
+                showTitle={props.showTitles}
+                showQuestionTitles={props.showQuestionTitles}
+                numberingType={props.numberingType}
+                questionNumberingType={props.questionNumberingType}
+                index={index}
+                id={step.id}
+                title={step.title}
+                items={step.items}
+                answers={props.paper.answers}
+                stats={props.stats}
+                showScore={props.showScore}
+                showExpectedAnswers={props.showExpectedAnswers}
+                showStatistics={props.showStatistics}
+              />
+            )
+          }
         </div>
       </div>
-
-      <div className="col-md-8">
-        {!props.paper &&
-          <ContentLoader />
-        }
-
-        {props.paper && props.paper.structure.steps
-          .filter(step => step.items && 0 < step.items.length)
-          .map((step, index) =>
-            <PaperStep
-              key={step.id}
-              showTitle={props.showTitles}
-              showQuestionTitles={props.showQuestionTitles}
-              numberingType={props.numberingType}
-              questionNumberingType={props.questionNumberingType}
-              index={index}
-              id={step.id}
-              title={step.title}
-              items={step.items}
-              answers={props.paper.answers}
-              stats={props.stats}
-              showScore={props.showScore}
-              showExpectedAnswers={props.showExpectedAnswers}
-              showStatistics={props.showStatistics}
-            />
-          )
-        }
-      </div>
     </div>
-  </div>
+  </ResourcePage>
 
 PaperComponent.propTypes = {
   path: T.string.isRequired,

@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
@@ -15,15 +16,17 @@ import {Subject as SubjectType} from '#/plugin/forum/resources/forum/player/prop
 import {selectors} from '#/plugin/forum/resources/forum/store'
 import {actions} from '#/plugin/forum/resources/forum/player/store'
 import {SubjectCard} from '#/plugin/forum/resources/forum/data/components/subject-card'
+import {ResourcePage} from '#/main/core/resource'
 
 const SubjectsList = props =>
-  <>
-    <h2>{trans('subjects', {}, 'forum')}</h2>
+  <ResourcePage
+    title={trans('subjects', {}, 'forum')}
+  >
     <ListData
       name={`${selectors.STORE_NAME}.subjects.list`}
       fetch={{
-        url: ['apiv2_forum_list_subjects', {id: props.forum.id}],
-        autoload: true
+        url: ['apiv2_forum_list_subjects', {id: get(props.forum, 'id')}],
+        autoload: !!get(props.forum, 'id')
       }}
       delete={{
         url: ['apiv2_forum_subject_delete_bulk'],
@@ -35,7 +38,7 @@ const SubjectsList = props =>
         label: trans('open', {}, 'actions')
       })}
       display={{
-        current: props.forum.display.subjectDataList || listConst.DISPLAY_LIST
+        current: get(props.forum, 'display.subjectDataList') || listConst.DISPLAY_LIST
       }}
       definition={[
         {
@@ -177,7 +180,7 @@ const SubjectsList = props =>
       ]}
       card={SubjectCard}
     />
-  </>
+  </ResourcePage>
 
 SubjectsList.propTypes = {
   path: T.string.isRequired,

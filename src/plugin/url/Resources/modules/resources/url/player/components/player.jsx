@@ -2,13 +2,16 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {UrlDisplay} from '#/plugin/url/components/display'
+import {ResourcePage} from '#/main/core/resource'
 
 const Player = (props) =>
-  <UrlDisplay
-    url={props.url.url}
-    mode={props.url.mode}
-    ratio={props.url.ratio}
-  />
+  <ResourcePage>
+    <UrlDisplay
+      url={props.url.url}
+      mode={props.url.mode}
+      ratio={props.url.ratio}
+    />
+  </ResourcePage>
 
 Player.propTypes = {
   url: T.shape({

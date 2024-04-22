@@ -2,9 +2,10 @@ import {route} from '#/main/core/resource/routing'
 import {ResourcePage} from '#/main/core/resource/components/page'
 import {ResourceMain as Resource} from '#/main/core/resource/components/main'
 
-function declareResource(ResourceComponent) {
+function declareResource(ResourceComponent, additional) {
   return {
-    component: ResourceComponent
+    component: ResourceComponent,
+    ...additional
   }
 }
 

@@ -9,9 +9,10 @@ import {ContentTabs} from '#/main/app/content/components/tabs'
 import {AnswersStats} from '#/plugin/exo/resources/quiz/statistics/containers/answers'
 import {AttemptsStats} from '#/plugin/exo/resources/quiz/statistics/containers/attempts'
 import {Docimology} from '#/plugin/exo/resources/quiz/statistics/containers/docimology'
+import {ResourcePage} from '#/main/core/resource'
 
 const StatisticsMain = props =>
-  <Fragment>
+  <ResourcePage>
     <ContentTabs
       sections={[
         {
@@ -54,7 +55,7 @@ const StatisticsMain = props =>
         }
       ]}
     />
-  </Fragment>
+  </ResourcePage>
 
 StatisticsMain.propTypes = {
   path: T.string.isRequired,

@@ -14,9 +14,10 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {buildParentChapterChoices} from '#/plugin/lesson/resources/lesson/utils'
 import {actions as lessonActions, selectors} from '#/plugin/lesson/resources/lesson/store'
 import {constants as LESSON_NUMBERINGS} from '#/plugin/lesson/resources/lesson/constants'
+import {ResourcePage} from '#/main/core/resource'
 
 const ChapterFormComponent = props =>
-  <Fragment>
+  <ResourcePage>
 
     <ContentTitle
       className="mt-3"
@@ -163,7 +164,7 @@ const ChapterFormComponent = props =>
         }
       ]}
     />
-  </Fragment>
+  </ResourcePage>
 
 const ChapterForm = withRouter(connect(
   state => ({

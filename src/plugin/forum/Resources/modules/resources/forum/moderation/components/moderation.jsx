@@ -8,18 +8,19 @@ import {Blocked} from '#/plugin/forum/resources/forum/moderation/components/bloc
 
 const Moderation = (props) =>
   <Routes
-    path={props.path}
+    path={props.path+'/moderation'}
     routes={[
       {
-        path: '/moderation/flagged',
+        path: '/flagged',
         render: () => {
           const component = <Flagged path={props.path} />
 
           return component
         }
       }, {
-        path: '/moderation/blocked',
+        path: '/blocked',
         render: () => {
+          console.log('coucou')
           const component = <Blocked path={props.path} />
 
           return component

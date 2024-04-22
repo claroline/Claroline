@@ -27,6 +27,9 @@ import {ItemFeedback} from '#/plugin/exo/items/components/item-feedback'
 import {ContentItemPlayer} from '#/plugin/exo/contents/components/content-item-player'
 import {PlayerNav} from '#/plugin/exo/quiz/player/components/nav-bar'
 import {PlayerRestrictions} from '#/plugin/exo/quiz/player/components/restrictions'
+import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
+import {DragDropProvider} from '#/main/app/overlays/dnd/components/provider'
+import {ResourcePage} from '#/main/core/resource'
 
 // TODO : rethink the loading paper process (it's a little hacky to make it quickly compatible with Router)
 
@@ -143,114 +146,119 @@ class PlayerComponent extends Component {
   // TODO : better error display
   render() {
     return (
-      <div className="quiz-player content-md">
-        {this.props.progression &&
-          <ProgressBar
-            className="progress-minimal"
-            value={Math.floor((this.props.progression.current / this.props.progression.total) * 100)}
-            size="xs"
-            type="learning"
-          />
-        }
+      <ResourcePage>
+        <DragDropProvider>
+          <div className="quiz-player content-md">
+            {this.props.progression &&
+              <ProgressBar
+                className="progress-minimal"
+                value={Math.floor((this.props.progression.current / this.props.progression.total) * 100)}
+                size="xs"
+                type="learning"
+              />
+            }
 
-        {(this.props.progression || this.props.isTimed) &&
-          <div className="quiz-gauges-container">
-            {this.props.isTimed && this.props.duration > 0 && this.props.paper.startDate &&
-              <div className="timer-container">
-                <Timer
-                  type="user"
-                  totalTime={this.props.duration}
-                  startDate={this.props.paper.startDate}
-                  onTimeOver={() => {
-                    this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, false, this.navigate)
-                    this.props.showTimeOverMessage()
-                  }}
-                  width={70}
-                  height={70}
-                />
+            {(this.props.progression || this.props.isTimed) &&
+              <div className="quiz-gauges-container">
+                {this.props.isTimed && this.props.duration > 0 && this.props.paper.startDate &&
+                  <div className="timer-container">
+                    <Timer
+                      type="user"
+                      totalTime={this.props.duration}
+                      startDate={this.props.paper.startDate}
+                      onTimeOver={() => {
+                        this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, false, this.navigate)
+                        this.props.showTimeOverMessage()
+                      }}
+                      width={70}
+                      height={70}
+                    />
+                  </div>
+                }
+
+                {this.props.progression &&
+                  <div className="quiz-progression-container">
+                    <ScoreGauge
+                      type="user"
+                      value={this.props.progression.current}
+                      total={this.props.progression.total}
+                      width={70}
+                      height={70}
+                    />
+                  </div>
+                }
               </div>
             }
 
-            {this.props.progression &&
-              <div className="quiz-progression-container">
-                <ScoreGauge
-                  type="user"
-                  value={this.props.progression.current}
-                  total={this.props.progression.total}
-                  width={70}
-                  height={70}
-                />
-              </div>
+            {this.props.testMode &&
+              <AlertBlock
+                type="info"
+                icon="fa fa-fw fa-flask"
+                title={trans('test_mode', {}, 'quiz')} className="alert-test-mode"
+              >
+                {trans('test_mode_desc', {}, 'quiz')}
+              </AlertBlock>
+            }
+
+            {this.state.fetching &&
+              <ContentLoader />
+            }
+
+            {(!this.state.fetching && this.state.error) &&
+              <PlayerRestrictions
+                {...this.state.error}
+                path={this.props.path}
+                workspace={this.props.workspace}
+                showStatistics={this.props.showStatistics}
+              />
+            }
+
+            {(!this.state.fetching && !this.state.error) &&
+              <CurrentStep
+                numbering={this.props.numbering}
+                questionNumbering={this.props.questionNumbering}
+                number={this.props.number}
+                showTitle={this.props.showTitles}
+                showQuestionTitles={this.props.showQuestionTitles}
+                step={this.props.step}
+                items={this.props.items}
+                answers={this.props.answers}
+                feedbackEnabled={this.props.feedbackEnabled}
+                answersEditable={this.props.answersEditable}
+                updateAnswer={this.props.updateAnswer}
+                showHint={(questionId, hint) => this.props.showHint(this.props.quizId, this.props.paper.id, questionId, hint)}
+              />
+            }
+
+            {(!this.state.fetching && !this.state.error) &&
+              <PlayerNav
+                resourceId={this.props.resourceId}
+                previous={this.props.previous}
+                mandatoryQuestions={this.props.mandatoryQuestions}
+                next={this.props.next}
+                step={this.props.step}
+                answers={this.props.answers}
+                showBack={this.props.showBack}
+                showFeedback={this.props.showFeedback}
+                feedbackEnabled={this.props.feedbackEnabled}
+                navigateTo={(step) => this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, false, false)}
+                navigateToAndValidate={(step) => {
+                  const confirm = !this.props.answersEditable && 0 < Object.values(this.props.answers).filter(a => 0 === a.tries).length
+                  this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, this.props.currentStepSend, false, confirm)}
+                }
+                openFeedbackAndValidate={(step) => {
+                  const confirm = !this.props.answersEditable && 0 < Object.values(this.props.answers).filter(a => 0 === a.tries).length
+                  this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, this.props.currentStepSend, true, confirm)
+                }}
+                submit={() => this.props.submit(this.props.quizId, this.props.paper.id, this.props.answers)}
+                finish={() => this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, this.props.showEndConfirm, this.navigate)}
+                currentStepSend={this.props.currentStepSend}
+              />
             }
           </div>
-        }
-
-        {this.props.testMode &&
-          <AlertBlock
-            type="info"
-            icon="fa fa-fw fa-flask"
-            title={trans('test_mode', {}, 'quiz')} className="alert-test-mode"
-          >
-            {trans('test_mode_desc', {}, 'quiz')}
-          </AlertBlock>
-        }
-
-        {this.state.fetching &&
-          <ContentLoader />
-        }
-
-        {(!this.state.fetching && this.state.error) &&
-          <PlayerRestrictions
-            {...this.state.error}
-            path={this.props.path}
-            workspace={this.props.workspace}
-            showStatistics={this.props.showStatistics}
-          />
-        }
-
-        {(!this.state.fetching && !this.state.error) &&
-          <CurrentStep
-            numbering={this.props.numbering}
-            questionNumbering={this.props.questionNumbering}
-            number={this.props.number}
-            showTitle={this.props.showTitles}
-            showQuestionTitles={this.props.showQuestionTitles}
-            step={this.props.step}
-            items={this.props.items}
-            answers={this.props.answers}
-            feedbackEnabled={this.props.feedbackEnabled}
-            answersEditable={this.props.answersEditable}
-            updateAnswer={this.props.updateAnswer}
-            showHint={(questionId, hint) => this.props.showHint(this.props.quizId, this.props.paper.id, questionId, hint)}
-          />
-        }
-
-        {(!this.state.fetching && !this.state.error) &&
-          <PlayerNav
-            resourceId={this.props.resourceId}
-            previous={this.props.previous}
-            mandatoryQuestions={this.props.mandatoryQuestions}
-            next={this.props.next}
-            step={this.props.step}
-            answers={this.props.answers}
-            showBack={this.props.showBack}
-            showFeedback={this.props.showFeedback}
-            feedbackEnabled={this.props.feedbackEnabled}
-            navigateTo={(step) => this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, false, false)}
-            navigateToAndValidate={(step) => {
-              const confirm = !this.props.answersEditable && 0 < Object.values(this.props.answers).filter(a => 0 === a.tries).length
-              this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, this.props.currentStepSend, false, confirm)}
-            }
-            openFeedbackAndValidate={(step) => {
-              const confirm = !this.props.answersEditable && 0 < Object.values(this.props.answers).filter(a => 0 === a.tries).length
-              this.props.navigateTo(this.props.quizId, this.props.paper.id, step, this.props.answers, this.props.currentStepSend, true, confirm)
-            }}
-            submit={() => this.props.submit(this.props.quizId, this.props.paper.id, this.props.answers)}
-            finish={() => this.props.finish(this.props.quizId, this.props.paper, this.props.answers, this.props.showFeedback, this.props.showEndConfirm, this.navigate)}
-            currentStepSend={this.props.currentStepSend}
-          />
-        }
-      </div>
+          <CustomDragLayer key="drag-layer" />
+        </DragDropProvider>
+      </ResourcePage>
     )
   }
 }

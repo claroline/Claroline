@@ -15,7 +15,7 @@ const PathResource = props =>
   <Resource
     {...omit(props, 'editable', 'overview')}
     styles={['claroline-distribution-plugin-path-path-resource']}
-    menu={[
+    /*menu={[
       {
         name: 'summary',
         type: LINK_BUTTON,
@@ -23,34 +23,26 @@ const PathResource = props =>
         label: trans('summary'),
         target: `${props.path}/summary`
       }
-    ]}
+    ]}*/
     overview={PathOverview}
-  >
-    <ResourcePage
-      routes={[
-        {
-          path: '/summary',
-          component: PathSummary
-        }, {
-          path: '/edit',
-          component: EditorMain,
-          disabled: !props.editable
-        }, {
-          path: '/play',
-          component: PlayerMain
-        }, {
-          path: '/',
-          exact: true,
-          component: PathOverview,
-          disabled: !props.overview
-        }
-      ]}
-      redirect={[
-        // redirect to player when no overview
-        {from: '/', exact: true, to: '/play', disabled: props.overview}
-      ]}
-    />
-  </Resource>
+    pages={[
+      {
+        path: '/summary',
+        component: PathSummary
+      }, {
+        path: '/edit',
+        component: EditorMain,
+        disabled: !props.editable
+      }, {
+        path: '/play',
+        component: PlayerMain
+      }
+    ]}
+    redirect={[
+      // redirect to player when no overview
+      {from: '/', exact: true, to: '/play', disabled: props.overview}
+    ]}
+  />
 
 PathResource.propTypes = {
   path: T.string.isRequired,

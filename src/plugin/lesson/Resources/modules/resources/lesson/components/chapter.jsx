@@ -12,62 +12,67 @@ import {Chapter as ChapterTypes} from '#/plugin/lesson/resources/lesson/prop-typ
 import {flattenChapters} from '#/plugin/lesson/resources/lesson/utils'
 import {LessonCurrent} from '#/plugin/lesson/resources/lesson/components/current'
 import {getNumbering} from '#/plugin/lesson/resources/lesson/utils'
+import {ResourcePage} from '#/main/core/resource'
 
 const Chapter = props => {
   if (isEmpty(props.chapter)) {
     return (
-      <ContentLoader
-        className="row"
-        size="lg"
-        description={trans('chapter_loading', {}, 'lesson')}
-      />
+      <ResourcePage>
+        <ContentLoader
+          className="row"
+          size="lg"
+          description={trans('chapter_loading', {}, 'lesson')}
+        />
+      </ResourcePage>
     )
   }
 
   let numbering = getNumbering(props.lesson.display.numbering, props.treeData.children, props.chapter)
 
   return (
-    <LessonCurrent
-      prefix={props.path}
-      current={props.chapter}
-      all={flattenChapters(props.treeData.children || [])}
-      onNavigate={props.onNavigate}
-    >
-      <section className="current-chapter">
-        {props.chapter.poster &&
-          <img className="chapter-poster img-fluid" alt={props.chapter.title} src={asset(props.chapter.poster)} />
-        }
+    <ResourcePage>
+      <LessonCurrent
+        prefix={props.path}
+        current={props.chapter}
+        all={flattenChapters(props.treeData.children || [])}
+        onNavigate={props.onNavigate}
+      >
+        <section className="current-chapter">
+          {props.chapter.poster &&
+            <img className="chapter-poster img-fluid" alt={props.chapter.title} src={asset(props.chapter.poster)} />
+          }
 
-        <ContentTitle
-          className="chapter-title"
-          level={1}
-          displayLevel={2}
-          title={props.chapter.title}
-          numbering={numbering}
-          backAction={props.backAction}
-        />
+          <ContentTitle
+            className="chapter-title"
+            level={1}
+            displayLevel={2}
+            title={props.chapter.title}
+            numbering={numbering}
+            backAction={props.backAction}
+          />
 
-        <div className="card mb-3">
-          <ContentHtml className="card-body">
-            {props.chapter.text ? props.chapter.text : ''}
-          </ContentHtml>
-        </div>
-
-        {props.internalNotes && props.chapter.internalNote &&
-          <Fragment>
-            <ContentTitle
-              level={2}
-              displayLevel={4}
-              title={trans('internal_note')}
-            />
-
-            <ContentHtml className="well">
-              {props.chapter.internalNote}
+          <div className="card mb-3">
+            <ContentHtml className="card-body">
+              {props.chapter.text ? props.chapter.text : ''}
             </ContentHtml>
-          </Fragment>
-        }
-      </section>
-    </LessonCurrent>
+          </div>
+
+          {props.internalNotes && props.chapter.internalNote &&
+            <Fragment>
+              <ContentTitle
+                level={2}
+                displayLevel={4}
+                title={trans('internal_note')}
+              />
+
+              <ContentHtml className="well">
+                {props.chapter.internalNote}
+              </ContentHtml>
+            </Fragment>
+          }
+        </section>
+      </LessonCurrent>
+    </ResourcePage>
   )
 }
 
