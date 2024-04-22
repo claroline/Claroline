@@ -10,6 +10,7 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {ContentHtml} from '#/main/app/content/components/html'
 
 import {selectors as correctionSelectors} from '#/plugin/exo/resources/quiz/correction/store/selectors'
+import {ResourcePage} from '#/main/core/resource'
 
 export const QuestionRow = props =>
   <tr>
@@ -47,17 +48,18 @@ QuestionRow.propTypes = {
 }
 
 const QuestionsComponent = props =>
-  props.questions.length > 0 ?
-    <div className="questions-list">
-      <table className="table table-striped table-hover">
-        <thead>
+  <ResourcePage>
+    {props.questions.length > 0 ?
+      <div className="questions-list">
+        <table className="table table-striped table-hover">
+          <thead>
           <tr>
             <th>{trans('question', {}, 'quiz')}</th>
             <th>{trans('number_of_papers_to_correct', {}, 'quiz')}</th>
             <th></th>
           </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
           {props.questions.map((question, idx) =>
             <QuestionRow
               key={idx}
@@ -65,14 +67,16 @@ const QuestionsComponent = props =>
               {...question}
             />
           )}
-        </tbody>
-      </table>
-    </div> :
-    <div className="questions-list">
-      <div className="alert alert-warning">
-        {trans('no_question_to_correct', {}, 'quiz')}
+          </tbody>
+        </table>
+      </div> :
+      <div className="questions-list">
+        <div className="alert alert-warning">
+          {trans('no_question_to_correct', {}, 'quiz')}
+        </div>
       </div>
-    </div>
+    }
+  </ResourcePage>
 
 QuestionsComponent.propTypes = {
   path: T.string.isRequired,

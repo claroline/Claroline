@@ -20,6 +20,7 @@ import {EvaluationFeedback} from '#/main/evaluation/components/feedback'
 import {EvaluationDetails} from '#/main/evaluation/components/details'
 import {AlertBlock} from '#/main/app/alert/components/alert-block'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
+import {ResourcePage} from '#/main/core/resource'
 
 const WorkspaceCertificatesToolbar = (props) => {
   const dispatch = useDispatch()
@@ -75,74 +76,76 @@ WorkspaceCertificatesToolbar.propTypes = {
 }
 
 const ResourceEnd = (props) =>
-  <section className="resource-end content-lg mt-3">
-    <h2 className="sr-only">{trans('resource_end', {}, 'resource')}</h2>
+  <ResourcePage>
+    <section className="resource-end content-lg mt-3">
+      <h2 className="sr-only">{trans('resource_end', {}, 'resource')}</h2>
 
-    <div className="row">
-      <div className="col-md-4">
-        {!isEmpty(props.attempt) &&
-          <EvaluationDetails
-            className="mb-3"
-            evaluation={props.attempt}
-            statusTexts={merge({}, constants.EVALUATION_STATUSES, props.statusTexts || {})}
-            details={props.details}
-            showScore={get(props, 'display.score', false)}
-            scoreMax={get(props, 'display.scoreMax')}
-            successScore={get(props, 'display.successScore')}
-          />
-        }
-      </div>
+      <div className="row">
+        <div className="col-md-4">
+          {!isEmpty(props.attempt) &&
+            <EvaluationDetails
+              className="mb-3"
+              evaluation={props.attempt}
+              statusTexts={merge({}, constants.EVALUATION_STATUSES, props.statusTexts || {})}
+              details={props.details}
+              showScore={get(props, 'display.score', false)}
+              scoreMax={get(props, 'display.scoreMax')}
+              successScore={get(props, 'display.successScore')}
+            />
+          }
+        </div>
 
-      <div className="col-md-8">
-        {((!isEmpty(props.attempt) && get(props, 'display.feedback', false) || !isEmpty(props.feedbacks.closed))) &&
-          <section className="resource-feedbacks">
-            {!isEmpty(props.attempt) &&
-              <EvaluationFeedback
-                status={props.attempt.status}
-                {...props.feedbacks}
-              />
-            }
-
-            {!isEmpty(props.feedbacks.closed) && props.feedbacks.closed.map(closedMessage =>
-              <AlertBlock key={toKey(closedMessage[0])} type="warning" title={closedMessage[0]}>
-                <ContentHtml>{closedMessage[1]}</ContentHtml>
-              </AlertBlock>
-            )}
-          </section>
-        }
-
-        {props.contentText &&
-          <section className="resource-info mb-3">
-            <div className="card">
-              {typeof props.contentText === 'string' ?
-                <ContentHtml className="card-body">{props.contentText}</ContentHtml>
-                :
-                <div className="card-body">{props.contentText}</div>
+        <div className="col-md-8">
+          {((!isEmpty(props.attempt) && get(props, 'display.feedback', false) || !isEmpty(props.feedbacks.closed))) &&
+            <section className="resource-feedbacks">
+              {!isEmpty(props.attempt) &&
+                <EvaluationFeedback
+                  status={props.attempt.status}
+                  {...props.feedbacks}
+                />
               }
-            </div>
-          </section>
-        }
 
-        {get(props, 'display.toolbar') &&
-          <Toolbar
-            className="d-grid gap-1 mb-3"
-            variant="btn"
-            buttonName="w-100"
-            actions={props.actions}
-          />
-        }
+              {!isEmpty(props.feedbacks.closed) && props.feedbacks.closed.map(closedMessage =>
+                <AlertBlock key={toKey(closedMessage[0])} type="warning" title={closedMessage[0]}>
+                  <ContentHtml>{closedMessage[1]}</ContentHtml>
+                </AlertBlock>
+              )}
+            </section>
+          }
 
-        {get(props, 'display.certificates') && props.workspace && get(props.attempt, 'user') &&
-          <WorkspaceCertificatesToolbar
-            workspace={props.workspace}
-            currentUser={get(props.attempt, 'user')}
-          />
-        }
+          {props.contentText &&
+            <section className="resource-info mb-3">
+              <div className="card">
+                {typeof props.contentText === 'string' ?
+                  <ContentHtml className="card-body">{props.contentText}</ContentHtml>
+                  :
+                  <div className="card-body">{props.contentText}</div>
+                }
+              </div>
+            </section>
+          }
 
-        {props.children}
+          {get(props, 'display.toolbar') &&
+            <Toolbar
+              className="d-grid gap-1 mb-3"
+              variant="btn"
+              buttonName="w-100"
+              actions={props.actions}
+            />
+          }
+
+          {get(props, 'display.certificates') && props.workspace && get(props.attempt, 'user') &&
+            <WorkspaceCertificatesToolbar
+              workspace={props.workspace}
+              currentUser={get(props.attempt, 'user')}
+            />
+          }
+
+          {props.children}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </ResourcePage>
 
 ResourceEnd.propTypes = {
   contentText: T.node, // can be a string or an empty placeholder

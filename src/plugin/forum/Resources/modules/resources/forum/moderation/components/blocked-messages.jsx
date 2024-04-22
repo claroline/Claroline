@@ -12,13 +12,14 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
 import {actions, selectors} from '#/plugin/forum/resources/forum/store'
 import {MessageCard} from '#/plugin/forum/resources/forum/data/components/message-card'
+import get from 'lodash/get'
 
 const BlockedMessagesComponent = (props) =>
   <ListData
     name={`${selectors.STORE_NAME}.moderation.blockedMessages`}
     fetch={{
-      url: ['apiv2_forum_message_blocked_list', {forum: props.forum.id}],
-      autoload: true
+      url: ['apiv2_forum_message_blocked_list', {forum: get(props.forum, 'id')}],
+      autoload: !!get(props.forum, 'id')
     }}
     delete={{
       url: ['apiv2_forum_message_delete_bulk']

@@ -1,17 +1,10 @@
 import get from 'lodash/get'
 import merge from 'lodash/merge'
+import {declareResource} from '#/main/core/resource'
 
-import {reducer} from '#/plugin/announcement/resources/announcement/store'
 import {AnnouncementResource} from '#/plugin/announcement/resources/announcement/containers/resource'
 
-/**
- * Announcement resource application.
- */
-export default {
-  component: AnnouncementResource,
-  store: reducer,
-  styles: ['claroline-distribution-plugin-announcement-announcement-resource'],
-
+export default declareResource(AnnouncementResource, {
   create(resourceData = {resource: {}, resourceNode: {}}) {
     // initializes the create-announce rights for all the roles which can
     // edit this resource. We do it here to allow the user to reset it directly into the
@@ -31,4 +24,4 @@ export default {
       resourceNode: newNode
     }
   }
-}
+})

@@ -10,6 +10,7 @@ import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
 import {Card} from '#/plugin/flashcard/resources/flashcard/components/card'
 import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
+import {ResourcePage} from '#/main/core/resource'
 
 const Player = props => {
   const history = useHistory()
@@ -57,7 +58,7 @@ const Player = props => {
   }
 
   return (
-    <>
+    <ResourcePage>
       {props.flashcardDeck.showProgression &&
         <ProgressBar
           className="progress-minimal"
@@ -129,7 +130,7 @@ const Player = props => {
           ]}
         />
       </div>
-    </>
+    </ResourcePage>
   )
 }
 

@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
@@ -14,6 +14,7 @@ import {ContentHtml} from '#/main/app/content/components/html'
 import {ContentIFrame} from '#/main/app/content/components/iframe'
 
 import {BBB as BBBTypes, Recording as RecordingTypes} from '#/integration/big-blue-button/resources/bbb/prop-types'
+import {ResourcePage} from '#/main/core/resource/containers/page'
 
 class Player extends Component {
   constructor(props) {
@@ -42,16 +43,18 @@ class Player extends Component {
   render() {
     if (!this.isClosed() && !this.state.ready) {
       return (
-        <ContentLoader
-          className="row"
-          size="lg"
-          description="Nous ouvrons votre classe virtuelle..."
-        />
+        <ResourcePage>
+          <ContentLoader
+            className="row"
+            size="lg"
+            description="Nous ouvrons votre classe virtuelle..."
+          />
+        </ResourcePage>
       )
     }
 
     return (
-      <Fragment>
+      <ResourcePage>
         {this.props.bbb.newTab && this.props.bbb.welcomeMessage &&
           <div className="card mb-3" style={{marginTop: 20}}>
             <ContentHtml className="card-body">
@@ -141,7 +144,7 @@ class Player extends Component {
             ratio={this.props.bbb.ratio}
           />
         }
-      </Fragment>
+      </ResourcePage>
     )
   }
 }

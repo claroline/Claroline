@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
@@ -8,11 +8,10 @@ import {ListData} from '#/main/app/content/list/containers/data'
 
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
+import {ResourcePage} from '#/main/core/resource'
 
 const RevisionsComponent = props =>
-  <Fragment>
-    <h2>{trans('revisions_list', {}, 'dropzone')}</h2>
-
+  <ResourcePage title={trans('revisions_list', {}, 'dropzone')}>
     <ListData
       name={`${selectors.STORE_NAME}.revisions`}
       fetch={{
@@ -45,7 +44,7 @@ const RevisionsComponent = props =>
         }
       ]}
     />
-  </Fragment>
+  </ResourcePage>
 
 RevisionsComponent.propTypes = {
   path: T.string.isRequired,

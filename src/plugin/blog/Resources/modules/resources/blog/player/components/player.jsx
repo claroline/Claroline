@@ -17,56 +17,59 @@ import {PostForm} from '#/plugin/blog/resources/blog/post/components/post-form'
 import {Tools} from '#/plugin/blog/resources/blog/toolbar/components/toolbar'
 import {BlogOptions} from '#/plugin/blog/resources/blog/editor/components/blog-options'
 import {initDatalistFilters} from '#/plugin/blog/resources/blog/utils'
+import {ResourcePage} from '#/main/core/resource'
 
 const PlayerComponent = props =>
-  <div className="row" style={{marginTop: 20}}>
-    <div className="col-lg-9 col-md-8 col-sm-7 col-xs-12">
-      <Routes
-        path={props.path}
-        routes={[
-          {
-            path: '/author/:authorId',
-            component: Posts,
-            exact: true,
-            onEnter: (params) => props.getPostByAuthor(props.blogId, params.authorId)
-          }, {
-            path: '/new',
-            component: PostForm,
-            disabled: !props.canEdit,
-            onEnter: () => props.createPost()
-          }, {
-            path: '/edit',
-            disabled: !props.canEdit,
-            component: BlogOptions,
-            onEnter: () => props.editBlogOptions(props.blogId),
-            exact: true
-          }, {
-            path: '/:id',
-            component: Post,
-            exact: true,
-            onEnter: (params) => props.getPost(props.blogId, params.id)
-          }, {
-            path: '/:id/edit',
-            component: PostForm,
-            disabled: !props.canEdit,
-            onEnter: (params) => props.editPost(props.blogId, params.id)
-          }, {
-            path: '/',
-            component: Posts,
-            exact: true,
-            onEnter: () => {
-              props.switchMode(constants.LIST_POSTS)
-              props.initDataListFilters(props.location.search)
+  <ResourcePage>
+    <div className="row" style={{marginTop: 20}}>
+      <div className="col-lg-9 col-md-8 col-sm-7 col-xs-12">
+        <Routes
+          path={props.path}
+          routes={[
+            {
+              path: '/author/:authorId',
+              component: Posts,
+              exact: true,
+              onEnter: (params) => props.getPostByAuthor(props.blogId, params.authorId)
+            }, {
+              path: '/new',
+              component: PostForm,
+              disabled: !props.canEdit,
+              onEnter: () => props.createPost()
+            }, {
+              path: '/edit',
+              disabled: !props.canEdit,
+              component: BlogOptions,
+              onEnter: () => props.editBlogOptions(props.blogId),
+              exact: true
+            }, {
+              path: '/:id',
+              component: Post,
+              exact: true,
+              onEnter: (params) => props.getPost(props.blogId, params.id)
+            }, {
+              path: '/:id/edit',
+              component: PostForm,
+              disabled: !props.canEdit,
+              onEnter: (params) => props.editPost(props.blogId, params.id)
+            }, {
+              path: '/',
+              component: Posts,
+              exact: true,
+              onEnter: () => {
+                props.switchMode(constants.LIST_POSTS)
+                props.initDataListFilters(props.location.search)
+              }
             }
-          }
-        ]}
-      />
-    </div>
+          ]}
+        />
+      </div>
 
-    <div className="col-lg-3 col-md-4 col-sm-5 col-xs-12">
-      <Tools />
+      <div className="col-lg-3 col-md-4 col-sm-5 col-xs-12">
+        <Tools />
+      </div>
     </div>
-  </div>
+  </ResourcePage>
 
 PlayerComponent.propTypes = {
   path: T.string.isRequired,

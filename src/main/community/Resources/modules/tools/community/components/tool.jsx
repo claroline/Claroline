@@ -50,7 +50,7 @@ const CommunityTool = (props) =>
         type: LINK_BUTTON,
         label: trans('pending_registrations'),
         target: `${props.path}/pending`,
-        displayed: props.contextType === toolConstants.TOOL_WORKSPACE && props.canEdit && get(props.contextData, 'registration.validation')
+        displayed: props.contextType === toolConstants.TOOL_WORKSPACE && props.canEdit && get(props.contextData, 'registration.selfRegistration') && get(props.contextData, 'registration.validation')
       }, {
         name: 'teams',
         type: LINK_BUTTON,

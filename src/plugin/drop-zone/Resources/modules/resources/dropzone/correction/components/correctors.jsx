@@ -11,12 +11,14 @@ import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {getCorrectionKey} from '#/plugin/drop-zone/resources/dropzone/utils'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
+import {ResourcePage} from '#/main/core/resource'
 
 // TODO : restore list grid display
 
 const Correctors = props =>
-  <div id="correctors-list">
-    <h2>{trans('correctors_list', {}, 'dropzone')}</h2>
+  <ResourcePage
+    title={trans('correctors_list', {}, 'dropzone')}
+  >
     {!props.corrections ?
       <span className="fa fa-fw fa-circle-notch fa-spin" /> :
       <ListData
@@ -114,7 +116,7 @@ const Correctors = props =>
         ]}
       />
     }
-  </div>
+  </ResourcePage>
 
 Correctors.propTypes = {
   path: T.string.isRequired,

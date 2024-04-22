@@ -2,19 +2,35 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {Routes} from '#/main/app/router'
+import {NavLink, Routes} from '#/main/app/router'
 
 import {FlaggedMessages} from '#/plugin/forum/resources/forum/moderation/components/flagged-messages'
 import {FlaggedSubjects} from '#/plugin/forum/resources/forum/moderation/components/flagged-subjects'
-import {FlaggedPostsNav} from '#/plugin/forum/resources/forum/moderation/components/flagged-posts-nav'
+import {ResourcePage} from '#/main/core/resource'
 
 const Flagged = (props) =>
-  <div>
-    <h2>{trans('flagged_messages_subjects', {}, 'forum')}</h2>
+  <ResourcePage
+    title={trans('flagged_messages_subjects', {}, 'forum')}
+  >
     <div className="row">
       <div className="col-md-3">
-        <FlaggedPostsNav path={props.path} />
+        <nav className="lateral-nav">
+          <NavLink
+            to={`${props.path}/moderation/flagged/subjects`}
+            className="lateral-link"
+          >
+            {trans('flagged_subjects', {}, 'forum')}
+          </NavLink>
+
+          <NavLink
+            to={`${props.path}/moderation/flagged/messages`}
+            className="lateral-link"
+          >
+            {trans('flagged_messages', {}, 'forum')}
+          </NavLink>
+        </nav>
       </div>
+
       <div className="col-md-9">
         <Routes
           path={props.path}
@@ -30,7 +46,7 @@ const Flagged = (props) =>
         />
       </div>
     </div>
-  </div>
+  </ResourcePage>
 
 Flagged.propTypes = {
   path: T.string.isRequired

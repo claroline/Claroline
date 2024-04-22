@@ -102,6 +102,14 @@ class ToolProvider extends AbstractComponentProvider
         return $orderedTool;
     }
 
+    public function getStatus(string $toolName, string $context, ContextSubjectInterface $contextSubject = null): mixed
+    {
+        /** @var ToolInterface $toolHandler */
+        $toolHandler = $this->getComponent($toolName);
+
+        return $toolHandler->getStatus($context, $contextSubject);
+    }
+
     public function open(string $toolName, string $context, ContextSubjectInterface $contextSubject = null): ?array
     {
         /** @var ToolInterface $toolHandler */

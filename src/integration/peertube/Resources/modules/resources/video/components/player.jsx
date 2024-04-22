@@ -3,35 +3,38 @@ import {PropTypes as T} from 'prop-types'
 
 import {Video as VideoTypes} from '#/integration/peertube/prop-types'
 import {PeerTubePlayer} from '#/integration/peertube/components/player'
+import {ResourcePage} from '#/main/core/resource'
 
 const VideoPlayer = props => {
   let lastSaved = 0
 
   return (
-    <PeerTubePlayer
-      video={props.video}
-      progression={props.progression}
-      onPlay={(currentTime, duration) => {
-        if (props.currentUser) {
-          props.updateProgression(props.video.id, currentTime, duration)
-        }
-      }}
-      onPause={(currentTime, duration) => {
-        if (props.currentUser) {
-          props.updateProgression(props.video.id, currentTime, duration)
-        }
-      }}
-      onTimeUpdate={(currentTime, duration) => {
-        if (props.currentUser) {
-          const interval = Math.round((duration / 100) * 5)
-          const roundedTime = Math.round(currentTime)
-          if (roundedTime > lastSaved && 0 === roundedTime % interval) {
+    <ResourcePage>
+      <PeerTubePlayer
+        video={props.video}
+        progression={props.progression}
+        onPlay={(currentTime, duration) => {
+          if (props.currentUser) {
             props.updateProgression(props.video.id, currentTime, duration)
-            lastSaved = roundedTime
           }
-        }
-      }}
-    />
+        }}
+        onPause={(currentTime, duration) => {
+          if (props.currentUser) {
+            props.updateProgression(props.video.id, currentTime, duration)
+          }
+        }}
+        onTimeUpdate={(currentTime, duration) => {
+          if (props.currentUser) {
+            const interval = Math.round((duration / 100) * 5)
+            const roundedTime = Math.round(currentTime)
+            if (roundedTime > lastSaved && 0 === roundedTime % interval) {
+              props.updateProgression(props.video.id, currentTime, duration)
+              lastSaved = roundedTime
+            }
+          }
+        }}
+      />
+    </ResourcePage>
   )
 }
 

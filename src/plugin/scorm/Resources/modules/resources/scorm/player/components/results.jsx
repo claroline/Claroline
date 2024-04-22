@@ -1,10 +1,9 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
 import {DOWNLOAD_BUTTON} from '#/main/app/buttons'
-import {ContentTitle} from '#/main/app/content/components/title'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {Scorm as ScormType, Sco as ScoType} from '#/plugin/scorm/resources/scorm/prop-types'
@@ -12,24 +11,24 @@ import {constants} from '#/plugin/scorm/resources/scorm/constants'
 import {selectors} from '#/plugin/scorm/resources/scorm/store'
 import {flattenScos} from '#/plugin/scorm/resources/scorm/utils'
 import {EvaluationScore} from '#/main/evaluation/components/score'
+import {ResourcePage} from '#/main/core/resource'
 
 const ResultsComponent = props =>
-  <Fragment>
-    <ContentTitle
-      title={trans('results')}
-      actions={[
-        {
-          name: 'export-results',
-          type: DOWNLOAD_BUTTON,
-          icon: 'fa fa-fw fa-download',
-          label: trans('export-results', {}, 'actions'),
-          file: {
-            url: ['apiv2_scormscotracking_export', {scorm: props.scorm.id}]
-          },
-          group: trans('transfer')
-        }
-      ]}
-    />
+  <ResourcePage
+    title={trans('results')}
+    actions={[
+      {
+        name: 'export-results',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-download',
+        label: trans('export-results', {}, 'actions'),
+        file: {
+          url: ['apiv2_scormscotracking_export', {scorm: props.scorm.id}]
+        },
+        group: trans('transfer')
+      }
+    ]}
+  >
     <ListData
       name={selectors.STORE_NAME+'.results'}
       fetch={{
@@ -136,7 +135,7 @@ const ResultsComponent = props =>
         }
       ]}
     />
-  </Fragment>
+  </ResourcePage>
 
 ResultsComponent.propTypes = {
   scorm: T.shape(ScormType.propTypes),

@@ -9,6 +9,7 @@ import {DropzoneType, DropType, CorrectionType} from '#/plugin/drop-zone/resourc
 import {selectors} from '#/plugin/drop-zone/resources/dropzone/store/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {getCorrectionKey} from '#/plugin/drop-zone/resources/dropzone/utils'
+import {ResourcePage} from '#/main/core/resource'
 
 const Corrections = props => props.corrections && props.corrections.length > 0 ?
   <table className="table">
@@ -46,24 +47,28 @@ Corrections.propTypes = {
   corrections: T.arrayOf(T.shape(CorrectionType.propTypes))
 }
 
-const Corrector = props => !props.drop || !props.corrections ?
-  <span className="fa fa-fw fa-circle-notch fa-spin"></span> :
-  <div id="corrector-container">
-    <h2>
-      {trans(
-        'corrections_list_from',
-        {'name': props.dropzone.parameters.dropType === constants.DROP_TYPE_USER ?
-          `${props.drop.user.firstName} ${props.drop.user.lastName}` :
-          props.drop.teamName
-        },
-        'dropzone'
-      )}
-    </h2>
-    <Corrections
-      corrections={props.corrections[getCorrectionKey(props.drop, props.dropzone)] || []}
-      dropzone={props.dropzone}
-    />
-  </div>
+const Corrector = props =>
+  <ResourcePage>
+    {!props.drop || !props.corrections ?
+      <span className="fa fa-fw fa-circle-notch fa-spin"></span> :
+      <div id="corrector-container">
+        <h2>
+          {trans(
+            'corrections_list_from',
+            {'name': props.dropzone.parameters.dropType === constants.DROP_TYPE_USER ?
+                `${props.drop.user.firstName} ${props.drop.user.lastName}` :
+                props.drop.teamName
+            },
+            'dropzone'
+          )}
+        </h2>
+        <Corrections
+          corrections={props.corrections[getCorrectionKey(props.drop, props.dropzone)] || []}
+          dropzone={props.dropzone}
+        />
+      </div>
+    }
+  </ResourcePage>
 
 Corrector.propTypes = {
   dropzone: T.shape(DropzoneType.propTypes).isRequired,

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
@@ -12,15 +12,19 @@ import {Player} from '#/plugin/flashcard/resources/flashcard/player/containers/p
 import {PlayerEnd} from '#/plugin/flashcard/resources/flashcard/player/components/end'
 
 
-const FlashcardResource = props =>
-  <Resource
-    {...omit(props, 'editable', 'empty', 'overview', 'getAttempt', 'flashcardDeck')}
-    styles={['claroline-distribution-plugin-flashcard-flashcard']}
-    overview={Overview}
-  >
-    <ResourcePage
-      primaryAction="play"
-      actions={[
+const FlashcardResource = props => {
+  useEffect(() => {
+    if (!props.empty && props.flashcardDeck) {
+      props.getAttempt(props.flashcardDeck.id)
+    }
+  }, [props.empty, props.flashcardDeck.id])
+
+  return (
+    <Resource
+      {...omit(props, 'editable', 'empty', 'overview', 'getAttempt', 'flashcardDeck')}
+      styles={['claroline-distribution-plugin-flashcard-flashcard']}
+      overview={Overview}
+      /*actions={[
         {
           name: 'play',
           type: LINK_BUTTON,
@@ -29,8 +33,8 @@ const FlashcardResource = props =>
           target: `${props.path}/play`,
           displayed: !props.empty
         }
-      ]}
-      routes={[
+      ]}*/
+      pages={[
         {
           path: '/edit',
           component: Editor,
@@ -44,25 +48,15 @@ const FlashcardResource = props =>
           path: '/play',
           exact: true,
           component: Player,
-          disabled: props.empty,
-          onEnter: () => {
-            props.getAttempt(props.flashcardDeck.id)
-          }
-        }, {
-          path: '/',
-          component: Overview,
-          disabled: !props.overview,
-          onEnter: () => {
-            props.getAttempt(props.flashcardDeck.id)
-          }
+          disabled: props.empty
         }
       ]}
       redirect={[
         { from: '/', exact: true, to: '/play', disabled: props.overview || props.empty }
       ]}
     />
-  </Resource>
-
+  )
+}
 FlashcardResource.propTypes = {
   path: T.string.isRequired,
   editable: T.bool.isRequired,

@@ -6,7 +6,7 @@ import omit from 'lodash/omit'
 import {scrollTo} from '#/main/app/dom/scroll'
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {Resource, ResourcePage} from '#/main/core/resource'
+import {Resource} from '#/main/core/resource'
 
 import {Chapter} from '#/plugin/lesson/resources/lesson/containers/chapter'
 import {ChapterForm} from '#/plugin/lesson/resources/lesson/components/chapter-form'
@@ -72,80 +72,71 @@ class LessonResource extends Component {
           }
         ]}
         overview={LessonOverview}
-      >
-        <ResourcePage
-          primaryAction="chapter"
-          actions={[
-            {
-              name: 'download',
-              type: CALLBACK_BUTTON,
-              icon: 'fa fa-fw fa-file-pdf',
-              displayed: this.props.canExport,
-              label: trans('export-pdf', {}, 'actions'),
-              group: trans('transfer'),
-              callback: () => this.props.downloadLessonPdf(this.props.lesson.id)
-            }
-          ]}
-          redirect={[
-            {from: '/', exact: true, to: '/'+get(this.props.tree, 'children[0].slug'), disabled: this.props.overview || !get(this.props.tree, 'children[0]')}
-          ]}
-          routes={[
-            {
-              path: '/summary',
-              component: LessonSummary
-            }, {
-              path: '/chapters',
-              component: ChapterList
-            }, {
-              path: '/edit',
-              component: Editor
-            }, {
-              path: '/new',
-              render: () => (
-                <ChapterForm
-                  numbering={this.newChapterNumbering(this.props)}
-                />
-              ),
-              onEnter: () => this.props.createChapter(this.props.lesson.id, this.props.root.slug)
-            }, {
-              path: '/:slug',
-              exact: true,
-              onEnter: params => this.props.loadChapter(this.props.lesson.id, params.slug),
-              render: () => (
-                <Chapter
-                  backAction={this.props.overview ? {
-                    type: LINK_BUTTON,
-                    target: this.props.path,
-                    exact: true
-                  } : undefined}
-                  onNavigate={() => scrollTo(`#resource-${this.props.resourceId} > .page-content`)}
-                />
-              )
-            }, {
-              path: '/:slug/subchapter',
-              render: (props) => (
-                <ChapterForm
-                  numbering={this.newChapterNumbering(this.props, props.match.params.slug)}
-                />
-              ),
-              onEnter: params => this.props.createChapter(this.props.lesson.id, params.slug)
-            }, {
-              path: '/:slug/edit',
-              component: ChapterForm,
-              onEnter: params => this.props.editChapter(this.props.lesson.id, params.slug)
-            }, {
-              path: '/:slug/copy',
-              component: ChapterForm,
-              onEnter: params => this.props.copyChapter(this.props.lesson.id, params.slug)
-            }, {
-              path: '/',
-              exact: true,
-              component: LessonOverview,
-              disabled: !this.props.overview
-            }
-          ]}
-        />
-      </Resource>
+        actions={[
+          {
+            name: 'download',
+            type: CALLBACK_BUTTON,
+            icon: 'fa fa-fw fa-file-pdf',
+            displayed: this.props.canExport,
+            label: trans('export-pdf', {}, 'actions'),
+            group: trans('transfer'),
+            callback: () => this.props.downloadLessonPdf(this.props.lesson.id)
+          }
+        ]}
+        redirect={[
+          {from: '/', exact: true, to: '/'+get(this.props.tree, 'children[0].slug'), disabled: this.props.overview || !get(this.props.tree, 'children[0]')}
+        ]}
+        pages={[
+          {
+            path: '/summary',
+            component: LessonSummary
+          }, {
+            path: '/chapters',
+            component: ChapterList
+          }, {
+            path: '/edit',
+            component: Editor
+          }, {
+            path: '/new',
+            render: () => (
+              <ChapterForm
+                numbering={this.newChapterNumbering(this.props)}
+              />
+            ),
+            onEnter: () => this.props.createChapter(this.props.lesson.id, this.props.root.slug)
+          }, {
+            path: '/:slug',
+            exact: true,
+            onEnter: params => this.props.loadChapter(this.props.lesson.id, params.slug),
+            render: () => (
+              <Chapter
+                backAction={this.props.overview ? {
+                  type: LINK_BUTTON,
+                  target: this.props.path,
+                  exact: true
+                } : undefined}
+                onNavigate={() => scrollTo(`#resource-${this.props.resourceId} > .page-content`)}
+              />
+            )
+          }, {
+            path: '/:slug/subchapter',
+            render: (props) => (
+              <ChapterForm
+                numbering={this.newChapterNumbering(this.props, props.match.params.slug)}
+              />
+            ),
+            onEnter: params => this.props.createChapter(this.props.lesson.id, params.slug)
+          }, {
+            path: '/:slug/edit',
+            component: ChapterForm,
+            onEnter: params => this.props.editChapter(this.props.lesson.id, params.slug)
+          }, {
+            path: '/:slug/copy',
+            component: ChapterForm,
+            onEnter: params => this.props.copyChapter(this.props.lesson.id, params.slug)
+          }
+        ]}
+      />
     )
   }
 }

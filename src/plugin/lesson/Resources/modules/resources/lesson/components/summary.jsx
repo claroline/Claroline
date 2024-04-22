@@ -7,6 +7,7 @@ import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {SearchMinimal} from '#/main/app/content/search/components/minimal'
 import {ContentSummary} from '#/main/app/content/components/summary'
 import {getNumbering} from '#/plugin/lesson/resources/lesson/utils'
+import {ResourcePage} from '#/main/core/resource'
 
 const LessonSummary = props => {
   function getChapterSummary(chapter) {
@@ -89,7 +90,7 @@ const LessonSummary = props => {
   }
 
   return (
-    <>
+    <ResourcePage>
       <SearchMinimal
         className="app-menu-search"
         placeholder={trans('lesson_search', {}, 'lesson')}
@@ -112,7 +113,7 @@ const LessonSummary = props => {
           displayed: props.editable
         }])}
       />
-    </>
+    </ResourcePage>
   )
 }
 

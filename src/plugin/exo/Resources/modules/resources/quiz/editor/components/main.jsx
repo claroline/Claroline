@@ -13,6 +13,8 @@ import {EditorParameters} from '#/plugin/exo/resources/quiz/editor/components/pa
 import {EditorStep} from '#/plugin/exo/resources/quiz/editor/components/step'
 import {MODAL_STEP_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/step-position'
 import {EditorBank} from '#/plugin/exo/resources/quiz/editor/containers/bank'
+import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
+import {DragDropProvider} from '#/main/app/overlays/dnd/components/provider'
 
 class EditorMain extends Component {
   getStepActions(step, index) {
@@ -87,83 +89,86 @@ class EditorMain extends Component {
 
   render() {
     return (
-      <Form
-        className="user-select-none mt-3"
-        validating={this.props.validating}
-        pendingChanges={this.props.pendingChanges}
-        errors={!isEmpty(this.props.errors)}
-        save={{
-          type: CALLBACK_BUTTON,
-          callback: () => this.props.save(this.props.quizId)
-        }}
-        cancel={{
-          type: LINK_BUTTON,
-          target: this.props.path,
-          exact: true
-        }}
-      >
-        <Routes
-          path={this.props.path}
-          routes={[
-            {
-              path: '/edit/parameters',
-              render: () => (
-                <EditorParameters
-                  formName={this.props.formName}
-                  quizType={this.props.quizType}
-                  score={this.props.score}
-                  numberingType={this.props.numberingType}
-                  randomPick={this.props.randomPick}
-                  tags={this.props.tags}
-                  workspace={this.props.workspace}
-                  steps={this.props.steps}
-                  update={this.props.update}
-                />
-              )
-            }, {
-              path: '/edit/bank',
-              component: EditorBank
-            }, {
-              path: '/edit/:slug',
-              render: (routeProps) => {
-                const stepIndex = this.props.steps.findIndex(step => routeProps.match.params.slug === step.slug)
-                if (-1 !== stepIndex) {
-                  const currentStep = this.props.steps[stepIndex]
+      <DragDropProvider>
+        <Form
+          className="user-select-none mt-3"
+          validating={this.props.validating}
+          pendingChanges={this.props.pendingChanges}
+          errors={!isEmpty(this.props.errors)}
+          save={{
+            type: CALLBACK_BUTTON,
+            callback: () => this.props.save(this.props.quizId)
+          }}
+          cancel={{
+            type: LINK_BUTTON,
+            target: this.props.path,
+            exact: true
+          }}
+        >
+          <Routes
+            path={this.props.path}
+            routes={[
+              {
+                path: '/edit/parameters',
+                render: () => (
+                  <EditorParameters
+                    formName={this.props.formName}
+                    quizType={this.props.quizType}
+                    score={this.props.score}
+                    numberingType={this.props.numberingType}
+                    randomPick={this.props.randomPick}
+                    tags={this.props.tags}
+                    workspace={this.props.workspace}
+                    steps={this.props.steps}
+                    update={this.props.update}
+                  />
+                )
+              }, {
+                path: '/edit/bank',
+                component: EditorBank
+              }, {
+                path: '/edit/:slug',
+                render: (routeProps) => {
+                  const stepIndex = this.props.steps.findIndex(step => routeProps.match.params.slug === step.slug)
+                  if (-1 !== stepIndex) {
+                    const currentStep = this.props.steps[stepIndex]
 
-                  return (
-                    <EditorStep
-                      formName={this.props.formName}
-                      path={`steps[${stepIndex}]`}
-                      numberingType={this.props.numberingType}
-                      questionNumberingType={this.props.questionNumberingType}
-                      steps={this.props.steps}
-                      index={stepIndex}
-                      id={currentStep.id}
-                      title={currentStep.title}
-                      hasExpectedAnswers={this.props.hasExpectedAnswers}
-                      score={this.props.score}
-                      items={currentStep.items}
-                      errors={get(this.props.errors, `steps[${stepIndex}]`)}
-                      actions={this.getStepActions(currentStep, stepIndex)}
-                      update={(prop, value) => this.props.update(`steps[${stepIndex}].${prop}`, value)}
-                      moveItem={(itemId, position) => this.props.moveItem(itemId, position)}
-                      copyItem={(itemId, position) => this.props.copyItem(itemId, position)}
-                    />
-                  )
+                    return (
+                      <EditorStep
+                        formName={this.props.formName}
+                        path={`steps[${stepIndex}]`}
+                        numberingType={this.props.numberingType}
+                        questionNumberingType={this.props.questionNumberingType}
+                        steps={this.props.steps}
+                        index={stepIndex}
+                        id={currentStep.id}
+                        title={currentStep.title}
+                        hasExpectedAnswers={this.props.hasExpectedAnswers}
+                        score={this.props.score}
+                        items={currentStep.items}
+                        errors={get(this.props.errors, `steps[${stepIndex}]`)}
+                        actions={this.getStepActions(currentStep, stepIndex)}
+                        update={(prop, value) => this.props.update(`steps[${stepIndex}].${prop}`, value)}
+                        moveItem={(itemId, position) => this.props.moveItem(itemId, position)}
+                        copyItem={(itemId, position) => this.props.copyItem(itemId, position)}
+                      />
+                    )
+                  }
+
+                  routeProps.history.push(`${this.props.path}/edit`)
+
+                  return null
                 }
-
-                routeProps.history.push(`${this.props.path}/edit`)
-
-                return null
               }
-            }
-          ]}
+            ]}
 
-          redirect={[
-            {from: '/edit', exact: true, to: '/edit/parameters'}
-          ]}
-        />
-      </Form>
+            redirect={[
+              {from: '/edit', exact: true, to: '/edit/parameters'}
+            ]}
+          />
+        </Form>
+        <CustomDragLayer key="drag-layer" />
+      </DragDropProvider>
     )
   }
 }

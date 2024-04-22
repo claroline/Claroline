@@ -4,7 +4,7 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {Resource, ResourcePage} from '#/main/core/resource'
+import {Resource} from '#/main/core/resource'
 
 import {BBB as BBBTypes} from '#/integration/big-blue-button/resources/bbb/prop-types'
 import {Player} from '#/integration/big-blue-button/resources/bbb/player/containers/player'
@@ -37,31 +37,28 @@ const BBBResource = props =>
         dangerous: true
       }
     ]}
-  >
-    <ResourcePage
-      routes={[
-        {
-          path: '/',
-          component: Player,
-          exact: true
-        }, {
-          path: '/edit',
-          component: Editor,
-          disabled: !props.canEdit,
-          onEnter: () => props.resetForm(props.bbb),
-          onLeave: () => props.resetForm()
-        }, {
-          path: '/end',
-          component: End,
-          exact: true
-        }, {
-          path: '/records',
-          component: Records,
-          disabled: !props.allowRecords || !props.bbb.record
-        }
-      ]}
-    />
-  </Resource>
+    pages={[
+      {
+        path: '/',
+        component: Player,
+        exact: true
+      }, {
+        path: '/edit',
+        component: Editor,
+        disabled: !props.canEdit,
+        onEnter: () => props.resetForm(props.bbb),
+        onLeave: () => props.resetForm()
+      }, {
+        path: '/end',
+        component: End,
+        exact: true
+      }, {
+        path: '/records',
+        component: Records,
+        disabled: !props.allowRecords || !props.bbb.record
+      }
+    ]}
+  />
 
 BBBResource.propTypes = {
   path: T.string.isRequired,

@@ -1,4 +1,4 @@
-import React, {Fragment, createElement} from 'react'
+import React, {createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import {Helmet} from 'react-helmet'
@@ -28,7 +28,7 @@ const PlayerMain = (props) => {
       then={module => {
         if (get(module, 'fileType.components.player')) {
           return (
-            <Fragment>
+            <>
               {createElement(get(module, 'fileType.components.player'), {
                 file: props.file,
                 path: props.path
@@ -41,7 +41,7 @@ const PlayerMain = (props) => {
                   )}
                 </Helmet>
               }
-            </Fragment>
+            </>
           )
         }
 

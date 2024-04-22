@@ -26,168 +26,162 @@ const DropzoneResource = props =>
   <Resource
     {...omit(props)}
     styles={['claroline-distribution-plugin-drop-zone-dropzone-resource']}
-  >
-    <ResourcePage
-      customActions={[
-        {
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-home',
-          label: trans('show_overview'),
-          target: props.path,
-          exact: true
-        }, {
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-upload',
-          label: trans('show_evaluation', {}, 'dropzone'),
-          target: `${props.path}/my/drop`,
-          displayed: !!props.myDrop,
-          exact: true
-        }, {
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-list',
-          label: trans('show_drops', {}, 'dropzone'),
-          target: `${props.path}/drops`,
-          displayed: props.canEdit
-        }, {
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-users',
-          label: trans('correctors', {}, 'dropzone'),
-          target: `${props.path}/correctors`,
-          displayed: props.canEdit && constants.REVIEW_TYPE_PEER === get(props.dropzone, 'parameters.reviewType')
-        }, {
-          type: LINK_BUTTON,
-          icon: 'fa fa-fw fa-history',
-          label: trans('show_revisions', {}, 'dropzone'),
-          target: `${props.path}/revisions`,
-          displayed: props.canEdit,
-          exact: true
-        }, {
-          name: 'export-results',
-          type: DOWNLOAD_BUTTON,
-          icon: 'fa fa-fw fa-download',
-          label: trans('export-results', {}, 'actions'),
-          file: {
-            url: ['claro_dropzone_drops_csv', {id: props.dropzone.id}]
-          },
-          group: trans('transfer')
+    customActions={[
+      {
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-home',
+        label: trans('show_overview'),
+        target: props.path,
+        exact: true
+      }, {
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-upload',
+        label: trans('show_evaluation', {}, 'dropzone'),
+        target: `${props.path}/my/drop`,
+        displayed: !!props.myDrop,
+        exact: true
+      }, {
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-list',
+        label: trans('show_drops', {}, 'dropzone'),
+        target: `${props.path}/drops`,
+        displayed: props.canEdit
+      }, {
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-users',
+        label: trans('correctors', {}, 'dropzone'),
+        target: `${props.path}/correctors`,
+        displayed: props.canEdit && constants.REVIEW_TYPE_PEER === get(props.dropzone, 'parameters.reviewType')
+      }, {
+        type: LINK_BUTTON,
+        icon: 'fa fa-fw fa-history',
+        label: trans('show_revisions', {}, 'dropzone'),
+        target: `${props.path}/revisions`,
+        displayed: props.canEdit,
+        exact: true
+      }, {
+        name: 'export-results',
+        type: DOWNLOAD_BUTTON,
+        icon: 'fa fa-fw fa-download',
+        label: trans('export-results', {}, 'actions'),
+        file: {
+          url: ['claro_dropzone_drops_csv', {id: props.dropzone.id}]
+        },
+        group: trans('transfer')
+      }
+    ]}
+    overview={Overview}
+    pages={[
+      {
+        path: '/edit',
+        component: Editor,
+        disabled: !props.canEdit,
+        onEnter: () => props.resetForm(props.dropzone)
+      }, {
+        path: '/my/drop',
+        component: MyDrop,
+        exact: true,
+        onEnter: () => {
+          if (props.currentRevisionId) {
+            props.fetchRevision(props.currentRevisionId)
+          }
+        },
+        onLeave: () => props.resetRevision()
+      }, {
+        path: '/drops',
+        render: () => {
+          const component = <Drops path={props.path} />
+
+          return component
         }
-      ]}
-      routes={[
-        {
-          path: '/',
-          component: Overview,
-          exact: true
-        }, {
-          path: '/edit',
-          component: Editor,
-          disabled: !props.canEdit,
-          onEnter: () => props.resetForm(props.dropzone)
-        }, {
-          path: '/my/drop',
-          component: MyDrop,
-          exact: true,
-          onEnter: () => {
-            if (props.currentRevisionId) {
-              props.fetchRevision(props.currentRevisionId)
-            }
-          },
-          onLeave: () => props.resetRevision()
-        }, {
-          path: '/drops',
-          render: () => {
-            const component = <Drops path={props.path} />
+      }, {
+        path: '/drop/:id',
+        render: () => {
+          const component = <Drop path={props.path} />
 
-            return component
-          }
-        }, {
-          path: '/drop/:id',
-          render: () => {
-            const component = <Drop path={props.path} />
+          return component
+        },
+        onEnter: (params) => props.fetchDrop(params.id, 'current'),
+        onLeave: () => props.resetCurrentDrop()
+      }, {
+        path: '/peer/drop',
+        render: () => {
+          const component = <PeerDrop path={props.path} />
 
-            return component
-          },
-          onEnter: (params) => props.fetchDrop(params.id, 'current'),
-          onLeave: () => props.resetCurrentDrop()
-        }, {
-          path: '/peer/drop',
-          render: () => {
-            const component = <PeerDrop path={props.path} />
+          return component
+        },
+        onEnter: () => props.fetchPeerDrop()
+      }, {
+        path: '/correctors',
+        render: () => {
+          const component = <Correctors path={props.path} />
 
-            return component
-          },
-          onEnter: () => props.fetchPeerDrop()
-        }, {
-          path: '/correctors',
-          render: () => {
-            const component = <Correctors path={props.path} />
-
-            return component
-          },
-          onEnter: () => {
-            props.fetchCorrections(props.dropzone.id)
-          }
-        }, {
-          path: '/corrector/:id',
-          component: Corrector,
-          onEnter: (params) => {
-            props.fetchDrop(params.id, 'corrector')
-            props.fetchCorrections(props.dropzone.id)
-          },
-          onLeave: () => props.resetCorrectorDrop()
-        }, {
-          path: '/my/drop/revisions',
-          render: () => {
-            const component = <MyRevisions path={props.path} />
-
-            return component
-          },
-          disabled: !props.dropzone || !props.dropzone.parameters || !props.dropzone.parameters.revisionEnabled,
-          exact: true
-        }, {
-          path: '/my/drop/revisions/:id',
-          render: () => {
-            const component = <Revision path={props.path} />
-
-            return component
-          },
-          disabled: !props.dropzone || !props.dropzone.parameters || !props.dropzone.parameters.revisionEnabled,
-          onEnter: (params) => {
-            props.fetchRevision(params.id)
-            props.fetchDropFromRevision(params.id)
-          },
-          onLeave: () => {
-            props.resetRevision()
-            props.resetCurrentDrop()
-          }
-        }, {
-          path: '/revisions',
-          render: () => {
-            const component = <Revisions path={props.path} />
-
-            return component
-          },
-          disabled: !props.canEdit,
-          exact: true
-        }, {
-          path: '/revisions/:id',
-          render: () => {
-            const component = <Revision path={props.path} />
-
-            return component
-          },
-          disabled: !props.canEdit,
-          onEnter: (params) => {
-            props.fetchRevision(params.id)
-            props.fetchDropFromRevision(params.id)
-          },
-          onLeave: () => {
-            props.resetRevision()
-            props.resetCurrentDrop()
-          }
+          return component
+        },
+        onEnter: () => {
+          props.fetchCorrections(props.dropzone.id)
         }
-      ]}
-    />
-  </Resource>
+      }, {
+        path: '/corrector/:id',
+        component: Corrector,
+        onEnter: (params) => {
+          props.fetchDrop(params.id, 'corrector')
+          props.fetchCorrections(props.dropzone.id)
+        },
+        onLeave: () => props.resetCorrectorDrop()
+      }, {
+        path: '/my/drop/revisions',
+        render: () => {
+          const component = <MyRevisions path={props.path} />
+
+          return component
+        },
+        disabled: !props.dropzone || !props.dropzone.parameters || !props.dropzone.parameters.revisionEnabled,
+        exact: true
+      }, {
+        path: '/my/drop/revisions/:id',
+        render: () => {
+          const component = <Revision path={props.path} />
+
+          return component
+        },
+        disabled: !props.dropzone || !props.dropzone.parameters || !props.dropzone.parameters.revisionEnabled,
+        onEnter: (params) => {
+          props.fetchRevision(params.id)
+          props.fetchDropFromRevision(params.id)
+        },
+        onLeave: () => {
+          props.resetRevision()
+          props.resetCurrentDrop()
+        }
+      }, {
+        path: '/revisions',
+        render: () => {
+          const component = <Revisions path={props.path} />
+
+          return component
+        },
+        disabled: !props.canEdit,
+        exact: true
+      }, {
+        path: '/revisions/:id',
+        render: () => {
+          const component = <Revision path={props.path} />
+
+          return component
+        },
+        disabled: !props.canEdit,
+        onEnter: (params) => {
+          props.fetchRevision(params.id)
+          props.fetchDropFromRevision(params.id)
+        },
+        onLeave: () => {
+          props.resetRevision()
+          props.resetCurrentDrop()
+        }
+      }
+    ]}
+  />
 
 DropzoneResource.propTypes = {
   path: T.string.isRequired,

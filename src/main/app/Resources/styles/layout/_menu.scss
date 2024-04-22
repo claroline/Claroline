@@ -10,10 +10,6 @@
 
     &.show {
         width: $toolbar-size;
-
-        .app-menu {
-
-        }
     }
 }
 
@@ -38,21 +34,12 @@
     --#{$prefix}menu-item-disabled-bg: #{$toolbar-link-disabled-bg};
 
     overflow-y: auto; // gets its own scrollbar
-    //width: 100%;
+    overflow-x: hidden; // do not display scrollbar during animation
     flex: 1;
-    /*top: 0;
-    bottom: 0;*/
     display: flex;
     flex-direction: column;
     background-color: var(--#{$prefix}menu-bg);
     color: var(--#{$prefix}menu-color);
-
-    /*max-width: 0;
-    transition: max-width .4s ease;
-
-    &.show {
-        max-width: $toolbar-size;
-    }*/
 
     .dropdown-menu {
         width: $toolbar-size;

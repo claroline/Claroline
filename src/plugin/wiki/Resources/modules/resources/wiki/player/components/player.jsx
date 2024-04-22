@@ -8,6 +8,7 @@ import {WikiSection} from '#/plugin/wiki/resources/wiki/player/components/wiki-s
 import {WikiSectionTree} from '#/plugin/wiki/resources/wiki/player/components/wiki-section-tree'
 import {actions} from '#/plugin/wiki/resources/wiki/player/store'
 import {selectors} from '#/plugin/wiki/resources/wiki/store/selectors'
+import {ResourcePage} from '#/main/core/resource'
 
 class PlayerComponent extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ class PlayerComponent extends Component {
 
   render() {
     return (
-      <div className="wiki-overview">
+      <ResourcePage>
         <WikiSection
           section={this.props.sections.tree}
           displaySectionNumbers={false}
@@ -56,7 +57,7 @@ class PlayerComponent extends Component {
             sections={this.props.sections}
           />
         }
-      </div>
+      </ResourcePage>
     )
   }
 }

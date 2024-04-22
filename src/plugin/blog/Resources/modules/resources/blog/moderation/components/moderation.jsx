@@ -11,10 +11,12 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {Reported} from '#/plugin/blog/resources/blog/moderation/components/reported'
 import {UnpublishedPosts} from '#/plugin/blog/resources/blog/moderation/components/unpublished-posts'
 import {UnpublishedComments} from '#/plugin/blog/resources/blog/moderation/components/unpublished-comments'
+import {ResourcePage} from '#/main/core/resource'
 
 const ModerationComponent = (props) =>
-  <div>
-    <h2>{trans('moderation', {}, 'icap_blog')}</h2>
+  <ResourcePage
+    title={trans('moderation', {}, 'icap_blog')}
+  >
     <div className="row">
       <div className="col-md-3">
         <div>
@@ -60,7 +62,7 @@ const ModerationComponent = (props) =>
         />
       </div>
     </div>
-  </div>
+  </ResourcePage>
 
 ModerationComponent.propTypes = {
   path: T.string.isRequired

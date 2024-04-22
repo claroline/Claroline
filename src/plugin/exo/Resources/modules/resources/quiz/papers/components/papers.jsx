@@ -13,9 +13,10 @@ import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {actions as papersActions, selectors as paperSelectors} from '#/plugin/exo/resources/quiz/papers/store'
 import {PaperCard} from '#/plugin/exo/resources/quiz/papers/components/card'
+import {ResourcePage} from '#/main/core/resource'
 
 const Papers = props =>
-  <Fragment>
+  <ResourcePage>
     <h3 className="h2 mt-3">
       {trans('results', {}, 'quiz')}
       <small style={{display: 'block', marginTop: '5px'}}>{trans('all_attempts', {}, 'quiz')}</small>
@@ -143,7 +144,7 @@ const Papers = props =>
 
       card={PaperCard}
     />
-  </Fragment>
+  </ResourcePage>
 
 Papers.propTypes = {
   path: T.string.isRequired,

@@ -24,6 +24,7 @@ import {actions} from '#/plugin/audio-player/files/audio/store'
 import {Audio as AudioType, Section as SectionType} from '#/plugin/audio-player/files/audio/prop-types'
 import {Waveform} from '#/plugin/audio-player/waveform/components/waveform'
 import {SectionsComments} from '#/plugin/audio-player/files/audio/components/sections-comments'
+import {ResourcePage} from '#/main/core/resource'
 
 const Transcripts = props =>
   <div className="audio-player-transcripts">
@@ -233,156 +234,158 @@ class Audio extends Component {
 
   render() {
     return (
-      <div className="audio-resource-player">
-        {this.props.canEdit &&
-          <div className="comments-buttons">
-            {(constants.USER_TYPE === this.props.file.sectionsType ||
-              (constants.MANAGER_TYPE === this.props.file.sectionsType && 0 < this.props.file.sections.filter(s => s.commentsAllowed).length)
-            ) &&
-              <CallbackButton
-                className="btn"
-                callback={() => this.setState({
-                  displayAllComments: !this.state.displayAllComments,
-                  ongoingSections: []
-                })}
-              >
-                {trans(this.state.displayAllComments ? 'display_my_comments' : 'display_all_comments', {}, 'audio')}
-              </CallbackButton>
-            }
-          </div>
-        }
+      <ResourcePage>
+        <div className="audio-resource-player">
+          {this.props.canEdit &&
+            <div className="comments-buttons">
+              {(constants.USER_TYPE === this.props.file.sectionsType ||
+                (constants.MANAGER_TYPE === this.props.file.sectionsType && 0 < this.props.file.sections.filter(s => s.commentsAllowed).length)
+              ) &&
+                <CallbackButton
+                  className="btn"
+                  callback={() => this.setState({
+                    displayAllComments: !this.state.displayAllComments,
+                    ongoingSections: []
+                  })}
+                >
+                  {trans(this.state.displayAllComments ? 'display_my_comments' : 'display_all_comments', {}, 'audio')}
+                </CallbackButton>
+              }
+            </div>
+          }
 
-        {this.props.file.description &&
-          <ContentHtml className="audio-player-transcripts">
-            {this.props.file.description}
-          </ContentHtml>
-        }
+          {this.props.file.description &&
+            <ContentHtml className="audio-player-transcripts">
+              {this.props.file.description}
+            </ContentHtml>
+          }
 
-        {(!this.props.canEdit || !this.state.displayAllComments) &&
-        0 < this.state.ongoingSections.length &&
-        0 < this.props.file.sections.filter(s => -1 < this.state.ongoingSections.indexOf(s.id) && s.showTranscript && s.transcript).length &&
-          <Transcripts
-            transcripts={this.props.file.sections
-              .filter(s => -1 < this.state.ongoingSections.indexOf(s.id) && s.showTranscript && s.transcript)
-              .map(s => s.transcript)
-            }
-          />
-        }
+          {(!this.props.canEdit || !this.state.displayAllComments) &&
+          0 < this.state.ongoingSections.length &&
+          0 < this.props.file.sections.filter(s => -1 < this.state.ongoingSections.indexOf(s.id) && s.showTranscript && s.transcript).length &&
+            <Transcripts
+              transcripts={this.props.file.sections
+                .filter(s => -1 < this.state.ongoingSections.indexOf(s.id) && s.showTranscript && s.transcript)
+                .map(s => s.transcript)
+              }
+            />
+          }
 
-        {(!this.props.canEdit || !this.state.displayAllComments) &&
-          <Waveform
-            id={`resource-audio-${this.props.file.id}`}
-            url={this.props.file.url}
-            editable={constants.USER_TYPE === this.props.file.sectionsType}
-            rateControl={this.props.file.rateControl}
-            regions={-1 < [constants.MANAGER_TYPE, constants.USER_TYPE].indexOf(this.props.file.sectionsType) && this.props.file.sections ?
-              this.props.file.sections :
-              []
-            }
-            eventsCallbacks={{
-              'seek-time': (time) => {
-                if (this.props.file.sections) {
-                  const newOngoingSections = this.props.file.sections.filter(s => s.start <= time && s.end >= time).map(s => s.id)
-                  this.setState({ongoingSections: newOngoingSections})
-                }
-              },
-              'region-in': (region) => {
-                const newOngoingSections = cloneDeep(this.state.ongoingSections)
-
-                if (-1 === newOngoingSections.indexOf(region.id)) {
-                  newOngoingSections.push(region.id)
-                  this.setState({ongoingSections: newOngoingSections})
-                }
-              },
-              'region-out': (region) => {
-                const newOngoingSections = cloneDeep(this.state.ongoingSections)
-                const idx = newOngoingSections.indexOf(region.id)
-
-                if (-1 < idx) {
-                  newOngoingSections.splice(idx, 1)
-                  this.setState({ongoingSections: newOngoingSections})
-                }
-              },
-              'region-update-end': (region) => {
-                if (constants.USER_TYPE === this.props.file.sectionsType && this.props.currentUser) {
-                  const regionId = region.id
-                  const start = parseFloat(region.start.toFixed(1))
-                  const end = parseFloat(region.end.toFixed(1))
-
-                  const section = this.props.file.sections.find(s => s.id === regionId || s.regionId === regionId)
-                  let newSection = null
-                  let isNew = false
-
-                  if (section) {
-                    newSection = Object.assign({}, section, {
-                      start: start,
-                      end: end
-                    })
-                  } else {
-                    const newId = makeId()
-
-                    newSection = Object.assign({}, SectionType.defaultProps, {
-                      id: newId,
-                      regionId: region.id,
-                      start: start,
-                      end: end,
-                      type: constants.USER_TYPE,
-                      commentsAllowed: true,
-                      meta: {
-                        resourceNode: {id: this.props.resourceNodeId},
-                        user: this.props.currentUser
-                      }
-                    })
-                    isNew = true
-
-                    const newOptions = cloneDeep(this.state.sectionsOptions)
-                    newOptions[newId] = {
-                      showHelp: false,
-                      showComment: constants.USER_TYPE === this.props.file.sectionsType,
-                      showCommentForm: false,
-                      showAudioUrl: false
-                    }
-                    this.setState({sectionsOptions: newOptions})
+          {(!this.props.canEdit || !this.state.displayAllComments) &&
+            <Waveform
+              id={`resource-audio-${this.props.file.id}`}
+              url={this.props.file.url}
+              editable={constants.USER_TYPE === this.props.file.sectionsType}
+              rateControl={this.props.file.rateControl}
+              regions={-1 < [constants.MANAGER_TYPE, constants.USER_TYPE].indexOf(this.props.file.sectionsType) && this.props.file.sections ?
+                this.props.file.sections :
+                []
+              }
+              eventsCallbacks={{
+                'seek-time': (time) => {
+                  if (this.props.file.sections) {
+                    const newOngoingSections = this.props.file.sections.filter(s => s.start <= time && s.end >= time).map(s => s.id)
+                    this.setState({ongoingSections: newOngoingSections})
                   }
-                  this.props.saveSection(this.props.file.sections, newSection, isNew)
+                },
+                'region-in': (region) => {
+                  const newOngoingSections = cloneDeep(this.state.ongoingSections)
+
+                  if (-1 === newOngoingSections.indexOf(region.id)) {
+                    newOngoingSections.push(region.id)
+                    this.setState({ongoingSections: newOngoingSections})
+                  }
+                },
+                'region-out': (region) => {
+                  const newOngoingSections = cloneDeep(this.state.ongoingSections)
+                  const idx = newOngoingSections.indexOf(region.id)
+
+                  if (-1 < idx) {
+                    newOngoingSections.splice(idx, 1)
+                    this.setState({ongoingSections: newOngoingSections})
+                  }
+                },
+                'region-update-end': (region) => {
+                  if (constants.USER_TYPE === this.props.file.sectionsType && this.props.currentUser) {
+                    const regionId = region.id
+                    const start = parseFloat(region.start.toFixed(1))
+                    const end = parseFloat(region.end.toFixed(1))
+
+                    const section = this.props.file.sections.find(s => s.id === regionId || s.regionId === regionId)
+                    let newSection = null
+                    let isNew = false
+
+                    if (section) {
+                      newSection = Object.assign({}, section, {
+                        start: start,
+                        end: end
+                      })
+                    } else {
+                      const newId = makeId()
+
+                      newSection = Object.assign({}, SectionType.defaultProps, {
+                        id: newId,
+                        regionId: region.id,
+                        start: start,
+                        end: end,
+                        type: constants.USER_TYPE,
+                        commentsAllowed: true,
+                        meta: {
+                          resourceNode: {id: this.props.resourceNodeId},
+                          user: this.props.currentUser
+                        }
+                      })
+                      isNew = true
+
+                      const newOptions = cloneDeep(this.state.sectionsOptions)
+                      newOptions[newId] = {
+                        showHelp: false,
+                        showComment: constants.USER_TYPE === this.props.file.sectionsType,
+                        showCommentForm: false,
+                        showAudioUrl: false
+                      }
+                      this.setState({sectionsOptions: newOptions})
+                    }
+                    this.props.saveSection(this.props.file.sections, newSection, isNew)
+                  }
                 }
-              }
-            }}
-          />
-        }
+              }}
+            />
+          }
 
-        {(!this.props.canEdit || !this.state.displayAllComments) && 0 < this.state.ongoingSections.length &&
-          <Sections
-            currentUser={this.props.currentUser}
-            sections={this.props.file.sections.filter(s => -1 < this.state.ongoingSections.indexOf(s.id))}
-            deleteSection={(sectionId) => this.props.deleteSection(this.props.file.sections, sectionId)}
-            saveComment={(sectionId, comment) => this.props.saveComment(this.props.file.sections, sectionId, comment)}
-            deleteComment={(sectionId, commentId) => this.props.deleteComment(this.props.file.sections, sectionId, commentId)}
-            options={this.state.sectionsOptions}
-            updateOption={(sectionId, prop, value) => {
-              const newOptions = cloneDeep(this.state.sectionsOptions)
+          {(!this.props.canEdit || !this.state.displayAllComments) && 0 < this.state.ongoingSections.length &&
+            <Sections
+              currentUser={this.props.currentUser}
+              sections={this.props.file.sections.filter(s => -1 < this.state.ongoingSections.indexOf(s.id))}
+              deleteSection={(sectionId) => this.props.deleteSection(this.props.file.sections, sectionId)}
+              saveComment={(sectionId, comment) => this.props.saveComment(this.props.file.sections, sectionId, comment)}
+              deleteComment={(sectionId, commentId) => this.props.deleteComment(this.props.file.sections, sectionId, commentId)}
+              options={this.state.sectionsOptions}
+              updateOption={(sectionId, prop, value) => {
+                const newOptions = cloneDeep(this.state.sectionsOptions)
 
-              if (!newOptions[sectionId]) {
-                newOptions[sectionId] = {
-                  showHelp: false,
-                  showComment: constants.USER_TYPE === this.props.file.sectionsType,
-                  showCommentForm: false,
-                  showAudioUrl: false
+                if (!newOptions[sectionId]) {
+                  newOptions[sectionId] = {
+                    showHelp: false,
+                    showComment: constants.USER_TYPE === this.props.file.sectionsType,
+                    showCommentForm: false,
+                    showAudioUrl: false
+                  }
                 }
-              }
-              newOptions[sectionId][prop] = value
-              this.setState({sectionsOptions: newOptions})
-            }}
-          />
-        }
+                newOptions[sectionId][prop] = value
+                this.setState({sectionsOptions: newOptions})
+              }}
+            />
+          }
 
-        {this.props.canEdit && this.state.displayAllComments &&
-          <SectionsComments
-            file={this.props.file}
-            resourceNodeId={this.props.resourceNodeId}
-          />
-        }
-      </div>
+          {this.props.canEdit && this.state.displayAllComments &&
+            <SectionsComments
+              file={this.props.file}
+              resourceNodeId={this.props.resourceNodeId}
+            />
+          }
+        </div>
+      </ResourcePage>
     )
   }
 }

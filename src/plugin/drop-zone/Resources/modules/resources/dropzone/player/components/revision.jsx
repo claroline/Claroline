@@ -25,9 +25,10 @@ import {actions} from '#/plugin/drop-zone/resources/dropzone/player/store/action
 import {MODAL_ADD_DOCUMENT} from '#/plugin/drop-zone/resources/dropzone/player/modals/document'
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
+import {ResourcePage} from '#/main/core/resource'
 
 const RevisionComponent = props => props.revision && props.drop ?
-  <section className="resource-section revision-panel">
+  <ResourcePage>
     <div className="revision-nav">
 
       {matchPath(props.location.pathname, {path: `${props.path}/revisions/`}) &&
@@ -139,7 +140,7 @@ const RevisionComponent = props => props.revision && props.drop ?
       createComment={(comment) => props.saveRevisionComment(props.revision.id, comment)}
       updateComment={(comment) => props.saveRevisionComment(props.revision.id, comment)}
     />
-  </section> :
+  </ResourcePage> :
   <div>
   </div>
 

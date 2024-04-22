@@ -1,4 +1,5 @@
-import {reducer} from '#/integration/youtube/resources/video/store'
+
+import {declareResource} from '#/main/core/resource'
 import {VideoCreation} from '#/integration/youtube/resources/video/components/creation'
 import {VideoResource} from '#/integration/youtube/resources/video/containers/resource'
 
@@ -12,10 +13,4 @@ export const Creation = () => ({
 /**
  * YouTube video resource application.
  */
-export default {
-  component: VideoResource,
-  store: reducer,
-  styles: [
-    'claroline-distribution-integration-youtube-youtube'
-  ]
-}
+export default declareResource(VideoResource)

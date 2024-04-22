@@ -8,9 +8,10 @@ import {Alert} from '#/main/app/alert/components/alert'
 import {Toolbar} from '#/main/app/action'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {route} from '#/main/core/workspace/routing'
+import {ResourcePage} from '#/main/core/resource'
 
 const PlayerOverview = (props) =>
-  <Fragment>
+  <ResourcePage>
     {get(props.resourceNode, 'meta.description') &&
       <div className="card my-3">
         <ContentHtml className="card-body">{get(props.resourceNode, 'meta.description')}</ContentHtml>
@@ -50,7 +51,7 @@ const PlayerOverview = (props) =>
         }
       ]}
     />
-  </Fragment>
+  </ResourcePage>
 
 PlayerOverview.propTypes = {
   file: T.shape({

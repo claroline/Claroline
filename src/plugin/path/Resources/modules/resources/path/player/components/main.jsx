@@ -12,6 +12,7 @@ import {PathCurrent} from '#/plugin/path/resources/path/components/current'
 import {Step} from '#/plugin/path/resources/path/player/components/step'
 import {PlayerEnd} from '#/plugin/path/resources/path/player/components/end'
 import {getNumbering} from '#/plugin/path/resources/path/utils'
+import {ResourcePage} from '#/main/core/resource'
 
 const PlayerMain = props => {
   if (0 === props.steps.length) {
@@ -62,27 +63,28 @@ const PlayerMain = props => {
               const step = props.steps.find(step => routeProps.match.params.slug === step.slug)
               if (step) {
                 const Current =
-                  <PathCurrent
-                    resourceId={props.resourceId}
-                    prefix={`${props.basePath}/play`}
-                    current={step}
-                    all={props.steps}
-                    navigation={props.navigationEnabled}
-                    endPage={get(props.path, 'end.display')}
-                  >
-                    <Step
-                      {...step}
-                      currentUser={props.currentUser}
-                      numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
-                      progression={props.stepsProgression[step.id]}
-                      manualProgressionAllowed={props.path.display.manualProgressionAllowed}
-                      updateProgression={props.updateProgression}
-                      enableNavigation={props.enableNavigation}
-                      disableNavigation={props.disableNavigation}
-                      secondaryResourcesTarget={props.path.opening.secondaryResources}
-                    />
-                  </PathCurrent>
-
+                  <ResourcePage>
+                    <PathCurrent
+                      resourceId={props.resourceId}
+                      prefix={`${props.basePath}/play`}
+                      current={step}
+                      all={props.steps}
+                      navigation={props.navigationEnabled}
+                      endPage={get(props.path, 'end.display')}
+                    >
+                      <Step
+                        {...step}
+                        currentUser={props.currentUser}
+                        numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
+                        progression={props.stepsProgression[step.id]}
+                        manualProgressionAllowed={props.path.display.manualProgressionAllowed}
+                        updateProgression={props.updateProgression}
+                        enableNavigation={props.enableNavigation}
+                        disableNavigation={props.disableNavigation}
+                        secondaryResourcesTarget={props.path.opening.secondaryResources}
+                      />
+                    </PathCurrent>
+                  </ResourcePage>
                 return Current
               }
 

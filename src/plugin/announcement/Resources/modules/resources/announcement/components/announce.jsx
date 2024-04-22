@@ -14,9 +14,10 @@ import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {actions, selectors} from '#/plugin/announcement/resources/announcement/store'
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
 import {AnnouncePost} from '#/plugin/announcement/resources/announcement/components/announce-post'
+import {ResourcePage} from '#/main/core/resource'
 
 const AnnounceDetail = props =>
-  <Fragment>
+  <ResourcePage>
     <div className="announces-sort">
       <Button
         className="btn btn-link"
@@ -39,7 +40,7 @@ const AnnounceDetail = props =>
       deletable={props.deletable}
       path={props.path}
     />
-  </Fragment>
+  </ResourcePage>
 
 AnnounceDetail.propTypes = {
   path: T.string.isRequired,

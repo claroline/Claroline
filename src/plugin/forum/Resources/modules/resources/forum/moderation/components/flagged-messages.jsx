@@ -14,13 +14,14 @@ import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
 import {actions} from '#/plugin/forum/resources/forum/player/store'
 import {selectors} from '#/plugin/forum/resources/forum/store'
 import {MessageCard} from '#/plugin/forum/resources/forum/data/components/message-card'
+import get from 'lodash/get'
 
 const FlaggedMessagesComponent = (props) =>
   <ListData
     name={`${selectors.STORE_NAME}.moderation.flaggedMessages`}
     fetch={{
-      url: ['apiv2_forum_message_flagged_list', {forum: props.forum.id}],
-      autoload: true
+      url: ['apiv2_forum_message_flagged_list', {forum: get(props.forum, 'id')}],
+      autoload: !!get(props.forum, 'id')
     }}
     delete={{
       url: ['apiv2_forum_message_delete_bulk']

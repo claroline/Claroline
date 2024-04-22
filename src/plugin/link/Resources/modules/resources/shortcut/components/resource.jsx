@@ -8,20 +8,20 @@ import {ShortcutPlayer} from '#/plugin/link/resources/shortcut/containers/player
 import {ShortcutEditor} from '#/plugin/link/resources/shortcut/containers/editor'
 
 const ShortcutResource = (props) =>
-  <Resource {...omit(props, 'editable')}>
-    <ResourcePage
-      routes={[
-        {
-          path: '/edit',
-          component: ShortcutEditor,
-          disabled: !props.editable
-        }, {
-          path: '/',
-          component: ShortcutPlayer,
-          exact: true
-        }
-      ]}
-    />
+  <Resource
+    {...omit(props, 'editable')}
+    pages={[
+      {
+        path: '/edit',
+        component: ShortcutEditor,
+        disabled: !props.editable
+      }, {
+        path: '/',
+        component: ShortcutPlayer,
+        exact: true
+      }
+    ]}
+  >
   </Resource>
 
 ShortcutResource.propTypes = {

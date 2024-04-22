@@ -14,9 +14,10 @@ import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {MODAL_ADD_DOCUMENT} from '#/plugin/drop-zone/resources/dropzone/player/modals/document'
 import {Documents} from '#/plugin/drop-zone/resources/dropzone/components/documents'
 import {Corrections} from '#/plugin/drop-zone/resources/dropzone/components/corrections'
+import {ResourcePage} from '#/main/core/resource'
 
 const MyDrop = props =>
-  <section className="resource-section">
+  <ResourcePage>
     <ContentTitle
       level={2}
       title={trans('my_drop', {}, 'dropzone')}
@@ -137,7 +138,7 @@ const MyDrop = props =>
         updateComment={(comment) => props.saveRevisionComment(props.currentRevisionId, comment)}
       />
     }
-  </section>
+  </ResourcePage>
 
 MyDrop.propTypes = {
   path: T.string.isRequired,

@@ -7,6 +7,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentSummary} from '#/main/app/content/components/summary'
 
 import {Scorm as ScormTypes, Sco as ScoTypes} from '#/plugin/scorm/resources/scorm/prop-types'
+import {ResourcePage} from '#/main/core/resource'
 
 const ScormSummary = props => {
   function generateSummary(scos) {
@@ -17,16 +18,17 @@ const ScormSummary = props => {
         target: `${props.path}/play/${sco.id}`,
         active: !!matchPath(props.location.pathname, {path: `${props.path}/play/${sco.id}`}),
         disabled: isEmpty(sco.data.entryUrl),
-        onClick: props.autoClose,
         children: sco.children && sco.children.length > 0 ? generateSummary(sco.children) : []
       }))
   }
 
   if (1 < props.scos.length) {
     return (
-      <ContentSummary
-        links={generateSummary(props.scorm.scos)}
-      />
+      <ResourcePage>
+        <ContentSummary
+          links={generateSummary(props.scorm.scos)}
+        />
+      </ResourcePage>
     )
   }
 
@@ -43,8 +45,7 @@ ScormSummary.propTypes = {
   ),
   scos: T.arrayOf(T.shape(
     ScoTypes.propTypes
-  )).isRequired,
-  autoClose: T.func.isRequired
+  )).isRequired
 }
 
 

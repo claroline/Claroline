@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import parse from 'html-react-parser'
@@ -31,6 +31,7 @@ import {
 } from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {actions} from '#/plugin/claco-form/resources/claco-form/player/store'
 import {EntryFormData} from '#/plugin/claco-form/resources/claco-form/player/components/entry-form-data'
+import {ResourcePage} from '#/main/core/resource'
 
 // TODO : split template form and standard form in 2 different components
 
@@ -225,7 +226,7 @@ class EntryFormComponent extends Component {
     const fields = this.getFields()
 
     return (
-      <Fragment>
+      <ResourcePage>
         {this.props.entry && (this.props.useTemplate && this.props.template) &&
           <Form
             pendingChanges={this.props.pendingChanges}
@@ -292,7 +293,7 @@ class EntryFormComponent extends Component {
             {this.renderCategories()}
           </FormData>
         }
-      </Fragment>
+      </ResourcePage>
     )
   }
 }
