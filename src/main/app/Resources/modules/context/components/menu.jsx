@@ -13,6 +13,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 
 import {ContextUser} from '#/main/app/context/containers/user'
+import {ContextNav} from '#/main/app/context/containers/nav'
 
 class ContextMenu extends Component
 {
@@ -85,7 +86,14 @@ class ContextMenu extends Component
 
     return (
       <>
-        <aside className={classes('app-menu', {
+      <aside
+        role="navigation"
+        className={classes('app-toolbar', {
+          show: this.props.opened
+        })}
+      >
+        <ContextNav />
+        <section className={classes('app-menu', {
           show: this.props.opened
         })}>
           {this.props.title &&
@@ -120,8 +128,9 @@ class ContextMenu extends Component
               onClick={this.autoClose}
             />
           }
-        </aside>
-        <div className="app-menu-backdrop" role="presentation" onClick={this.props.close} />
+        </section>
+      </aside>
+      <div className="app-menu-backdrop" role="presentation" onClick={this.props.close} />
       </>
     )
   }

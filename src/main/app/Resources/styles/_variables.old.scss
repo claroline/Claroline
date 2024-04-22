@@ -54,7 +54,7 @@ $login-max-width: 760px !default;
 // By default it reuses some of the styles from the app header.
 // ---
 
-$toolbar-size:           312px !default; // 1/5 of 1920 - 72px (context bar)
+$toolbar-size:           380px !default; // 1/5 of 1920 - 72px (context bar)
 $toolbar-bg:             $gray-400 !default;
 $toolbar-bg-subtle:      $gray-300 !default;
 $toolbar-color:          color-contrast($toolbar-bg-subtle) !default;

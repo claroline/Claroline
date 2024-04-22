@@ -4,18 +4,25 @@
 
   background: var(--#{$prefix}menu-bg);
   height: 100%;
-  width: 72px;
+  //width: 72px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: .75rem;
-  padding: .75rem 0;
+  padding: 1rem 0;
+  //padding: .75rem 0;
+}
+
+.menu-brand {
+  max-width: map-get($icon-sizes, sm);
+  height: $page-brand-size;
+  margin-bottom: .5rem;
 }
 
 .app-context-btn {
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: map-get($icon-sizes, sm);
+  height: map-get($icon-sizes, sm);
   border-radius: 50%;
   font-size: 1.25rem;
   background: var(--#{$prefix}menu-bg-subtle);
@@ -24,10 +31,11 @@
   justify-content: center;
   color: var(--#{$prefix}link-color);
   flex-shrink: 0;
+  margin: 0 .75rem;
 
   .user-avatar {
-    max-width: 48px !important;
-    max-height: 48px !important;
+    max-width: map-get($icon-sizes, sm) !important;
+    max-height: map-get($icon-sizes, sm) !important;
   }
 
   &:hover,
