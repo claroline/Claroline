@@ -14,7 +14,7 @@ const AccountPage = (props) =>
   <PageFull
     {...omit(props, 'currentUser')}
     className="user-page"
-    path={[
+    breadcrumb={[
       {
         type: LINK_BUTTON,
         label: trans('account', {}, 'context'),
