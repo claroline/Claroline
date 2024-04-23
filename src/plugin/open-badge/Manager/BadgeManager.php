@@ -13,28 +13,15 @@ use Twig\Environment;
 
 class BadgeManager
 {
-    /** @var TemplateManager */
-    private $templateManager;
-    /** @var Environment */
-    private $templating;
-    /** @var MessageBusInterface */
-    private $messageBus;
-    /** @var PlatformManager */
-    private $platformManager;
-
     public function __construct(
-        TemplateManager $templateManager,
-        Environment $templating,
-        MessageBusInterface $messageBus,
-        PlatformManager $platformManager
+        private readonly TemplateManager $templateManager,
+        private readonly Environment $templating,
+        private readonly MessageBusInterface $messageBus,
+        private readonly PlatformManager $platformManager
     ) {
-        $this->templateManager = $templateManager;
-        $this->templating = $templating;
-        $this->messageBus = $messageBus;
-        $this->platformManager = $platformManager;
     }
 
-    public function generateCertificate(Assertion $assertion)
+    public function generateCertificate(Assertion $assertion): string
     {
         $user = $assertion->getRecipient();
         $badge = $assertion->getBadge();
@@ -78,7 +65,7 @@ class BadgeManager
         return $this->templating->render('@ClarolineOpenBadge/pdf.html.twig', ['content' => $content]);
     }
 
-    public function grantAll(BadgeClass $badge)
+    public function grantAll(BadgeClass $badge): void
     {
         $this->messageBus->dispatch(new GrantBadge($badge->getId()));
     }

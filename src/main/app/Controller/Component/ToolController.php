@@ -66,7 +66,9 @@ class ToolController
         }
 
         return new JsonResponse(array_merge([], $this->toolProvider->open($name, $context, $contextSubject), [
-            'data' => $this->serializer->serialize($orderedTool),
+            'data' => array_merge([], $this->serializer->serialize($orderedTool), [
+                'status' => $this->toolProvider->getStatus($name, $context, $contextSubject),
+            ]),
         ]));
     }
 

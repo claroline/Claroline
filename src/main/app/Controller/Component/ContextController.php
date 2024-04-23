@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Component\Tool\ToolInterface;
+use Claroline\AppBundle\Component\Tool\ToolProvider;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Event\CatalogEvents\ContextEvents;
@@ -28,7 +29,8 @@ class ContextController
         private readonly TokenStorageInterface $tokenStorage,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly SerializerProvider $serializer,
-        private readonly ContextProvider $contextProvider
+        private readonly ContextProvider $contextProvider,
+        private readonly ToolProvider $toolProvider
     ) {
     }
 
@@ -59,6 +61,8 @@ class ContextController
             $openEvent = new OpenContextEvent($context, $contextObject);
             $this->eventDispatcher->dispatch($openEvent, ContextEvents::OPEN);
 
+            $contextTools = $contextHandler->getTools($contextObject);
+
             return new JsonResponse(array_merge($openEvent->getResponse() ?? [], [
                 'data' => $contextObject ? $this->serializer->serialize($contextObject) : null, // maybe only expose minimal ?
 
@@ -71,9 +75,13 @@ class ContextController
 
                 // get all enabled tools for the context, even those inaccessible to the current user
                 // this will allow the ui to know if a user try to access a closed tool or a non-existent one.
-                'tools' => array_map(function (OrderedTool $orderedTool) {
-                    return $this->serializer->serialize($orderedTool, [SerializerInterface::SERIALIZE_MINIMAL]);
-                }, $contextHandler->getTools($contextObject)),
+                'tools' => array_map(function (OrderedTool $orderedTool) use ($context, $contextObject) {
+                    $serializedTool = $this->serializer->serialize($orderedTool, [SerializerInterface::SERIALIZE_MINIMAL]);
+
+                    return array_merge([], $serializedTool, [
+                        'status' => $serializedTool['permissions']['open'] ? $this->toolProvider->getStatus($orderedTool->getName(), $context, $contextObject) : null,
+                    ]);
+                }, $contextTools),
             ], $contextHandler->getAdditionalData($contextObject)));
         }
 

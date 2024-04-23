@@ -21,7 +21,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Represents the obtaining of a BadgeClass by a User.
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\OpenBadgeBundle\Repository\AssertionRepository")
  * @ORM\Table(name="claro__open_badge_assertion")
  */
 class Assertion

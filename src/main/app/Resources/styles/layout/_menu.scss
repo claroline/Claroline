@@ -42,7 +42,7 @@
     color: var(--#{$prefix}menu-color);
 
     .dropdown-menu {
-        width: $toolbar-size;
+        width: calc($toolbar-size - (map-get($icon-sizes, sm) + 1.5rem));
     }
 }
 
@@ -130,6 +130,8 @@
 }
 
 .app-menu-item {
+    display: flex;
+    align-items: center;
     padding: $toolbar-link-padding-y $toolbar-link-padding-x;
     margin: 0 $toolbar-link-spacer-x;
     color: var(--#{$prefix}menu-item-color);
@@ -140,6 +142,10 @@
     white-space: nowrap;
 
     @include border-radius($toolbar-link-border-radius);
+
+    .action-subscript {
+        margin-left: auto;
+    }
 
     &:hover {
         color: var(--#{$prefix}menu-item-hover-color);

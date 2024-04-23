@@ -45,6 +45,7 @@ services:
             - '@event_dispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Component\Context\ContextProvider'
+            - '@Claroline\AppBundle\Component\Tool\ToolProvider'
 
     Claroline\AppBundle\Controller\Component\ToolController:
         arguments:

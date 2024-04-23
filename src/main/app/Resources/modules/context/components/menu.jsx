@@ -80,7 +80,13 @@ class ContextMenu extends Component
           type: LINK_BUTTON,
           icon: `fa fa-fw fa-${tool.icon}`,
           label: trans(tool.name, {}, 'tools'),
-          target: this.props.path + '/' + tool.name
+          target: this.props.path + '/' + tool.name,
+          status: tool.status,
+          subscript: (tool.status || 0 === tool.status) ? {
+            type: 'label',
+            value: tool.status,
+            status: 0 === tool.status ? 'secondary' : 'primary'
+          } : undefined
         }))
     }
 

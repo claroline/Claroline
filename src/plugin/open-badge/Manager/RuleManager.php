@@ -12,21 +12,11 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class RuleManager
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var MessageBusInterface */
-    private $messageBus;
-    /** @var iterable */
-    private $rules;
-
     public function __construct(
-        ObjectManager $om,
-        MessageBusInterface $messageBus,
-        iterable $rules
+        private readonly ObjectManager $om,
+        private readonly MessageBusInterface $messageBus,
+        private readonly iterable $rules
     ) {
-        $this->om = $om;
-        $this->messageBus = $messageBus;
-        $this->rules = $rules;
     }
 
     public function getRule(string $type): ?AbstractRule
@@ -39,7 +29,7 @@ class RuleManager
         return $rules[$type];
     }
 
-    public function grant(Rule $rule, User $user)
+    public function grant(Rule $rule, User $user): void
     {
         $this->messageBus->dispatch(new GrantRule($rule->getId(), $user->getId()));
     }
