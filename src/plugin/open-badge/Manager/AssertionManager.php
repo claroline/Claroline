@@ -20,33 +20,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AssertionManager
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var EventDispatcherInterface */
-    private $dispatcher;
-    /** @var PlatformManager */
-    private $platformManager;
-    /** @var RoutingHelper */
-    private $routingHelper;
-    /** @var TemplateManager */
-    private $templateManager;
-    /** @var TranslatorInterface */
-    private $translator;
-
     public function __construct(
-        ObjectManager $om,
-        EventDispatcherInterface $dispatcher,
-        PlatformManager $platformManager,
-        RoutingHelper $routingHelper,
-        TemplateManager $templateManager,
-        TranslatorInterface $translator
+        private readonly ObjectManager $om,
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly PlatformManager $platformManager,
+        private readonly RoutingHelper $routingHelper,
+        private readonly TemplateManager $templateManager,
+        private readonly TranslatorInterface $translator
     ) {
-        $this->om = $om;
-        $this->dispatcher = $dispatcher;
-        $this->platformManager = $platformManager;
-        $this->routingHelper = $routingHelper;
-        $this->templateManager = $templateManager;
-        $this->translator = $translator;
     }
 
     /**
@@ -125,7 +106,7 @@ class AssertionManager
         return $assertion;
     }
 
-    public function delete(Assertion $assertion)
+    public function delete(Assertion $assertion): void
     {
         $this->om->remove($assertion);
         $this->om->flush();
@@ -133,7 +114,7 @@ class AssertionManager
         $this->dispatcher->dispatch(new RemoveBadgeEvent($assertion->getRecipient(), $assertion->getBadge()), BadgeEvents::REMOVE_BADGE);
     }
 
-    private function notifyRecipient(Assertion $assertion)
+    private function notifyRecipient(Assertion $assertion): void
     {
         $user = $assertion->getRecipient();
         $badge = $assertion->getBadge();
@@ -169,7 +150,7 @@ class AssertionManager
         ), MessageEvents::MESSAGE_SENDING);
     }
 
-    public function transferBadgesAction(User $userFrom, User $userTo)
+    public function transferBadgesAction(User $userFrom, User $userTo): void
     {
         $assertions = $this->om->getRepository(Assertion::class)->findBy(['recipient' => $userFrom]);
 

@@ -25,25 +25,14 @@ use Claroline\MessageBundle\Entity\UserMessage;
 
 class MessageManager
 {
-    /** @var MailManager */
-    private $mailManager;
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var GroupRepository */
-    private $groupRepo;
-    /** @var UserRepository */
-    private $userRepo;
-    /** @var WorkspaceRepository */
-    private $workspaceRepo;
+    private GroupRepository $groupRepo;
+    private UserRepository $userRepo;
+    private WorkspaceRepository $workspaceRepo;
 
     public function __construct(
-        MailManager $mailManager,
-        ObjectManager $om
+        private readonly MailManager $mailManager,
+        private readonly ObjectManager $om
     ) {
-        $this->mailManager = $mailManager;
-        $this->om = $om;
-
         $this->groupRepo = $om->getRepository(Group::class);
         $this->userRepo = $om->getRepository(User::class);
         $this->workspaceRepo = $om->getRepository(Workspace::class);
@@ -143,12 +132,12 @@ class MessageManager
      * @param AbstractRoleSubject[] $receivers
      */
     public function sendMessage(
-        $content,
-        $object,
+        ?string $content,
+        ?string $object,
         array $receivers = null,
         User $sender = null,
         array $attachments = []
-    ) {
+    ): array {
         $users = [];
         foreach ($receivers as $receiver) {
             if ($receiver instanceof User) {
@@ -163,24 +152,16 @@ class MessageManager
         return $this->send($message);
     }
 
-    public function remove(UserMessage $message)
+    /**
+     * @deprecated
+     */
+    public function remove(UserMessage $message): void
     {
         $this->om->remove($message);
         $this->om->flush();
     }
 
-    /**
-     * Create a message.
-     *
-     * @param string                $content The message content
-     * @param string                $object  The message object
-     * @param AbstractRoleSubject[] $users   The users receiving the message
-     * @param null                  $sender  The user sending the message
-     * @param null                  $parent  The message parent (is it's a discussion)
-     *
-     * @return Message
-     */
-    private function create($content, $object, array $users, $sender = null, $parent = null, array $attachments = [])
+    private function create(?string $content, ?string $object, array $users, ?User $sender = null, ?Message $parent = null, array $attachments = []): Message
     {
         $message = new Message();
 

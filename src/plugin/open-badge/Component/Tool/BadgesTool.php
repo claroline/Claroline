@@ -11,13 +11,17 @@ use Claroline\AppBundle\Component\Tool\AbstractTool;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\FileManager;
+use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class BadgesTool extends AbstractTool
 {
     public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
         private readonly Crud $crud,
@@ -41,6 +45,16 @@ class BadgesTool extends AbstractTool
             DesktopContext::getName(),
             WorkspaceContext::getName(),
         ]);
+    }
+
+    public function getStatus(string $context, ContextSubjectInterface $contextSubject = null): ?int
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User) {
+            return $this->om->getRepository(Assertion::class)->countUserBadges($user, $contextSubject);
+        }
+
+        return 0;
     }
 
     public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
