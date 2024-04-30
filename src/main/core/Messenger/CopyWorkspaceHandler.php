@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Messenger;
 
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Messenger\Message\CopyWorkspace;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
@@ -19,13 +20,15 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CopyWorkspaceHandler implements MessageHandlerInterface
 {
-    public function __construct(private readonly Crud $crud)
-    {
+    public function __construct(
+        private readonly ObjectManager $om,
+        private readonly Crud $crud
+    ) {
     }
 
     public function __invoke(CopyWorkspace $copyWorkspace): void
     {
-        $workspace = $this->crud->get(Workspace::class, $copyWorkspace->getWorkspaceId());
+        $workspace = $this->om->getRepository(Workspace::class)->find($copyWorkspace->getWorkspaceId());
         if (empty($workspace)) {
             return;
         }
