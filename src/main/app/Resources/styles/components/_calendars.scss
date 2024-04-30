@@ -150,10 +150,10 @@ $datepicker-btn-border-radius: $btn-border-radius;
     }
 
     .day-name {
-        font-size: .75rem;
         font-weight: $font-weight-base;
-        color: var(--#{$prefix}tertiary-color);
-        text-transform: uppercase; // todo : use a var
+        font-size: $label-font-size;
+        color: $label-color;
+        text-transform: var(--#{$prefix}label-text-transform);
     }
 
     table {
@@ -191,41 +191,6 @@ $datepicker-btn-border-radius: $btn-border-radius;
 // -
 // Calendar variants
 // ---
-
-/*.calendar-container.light {
-    color: $toolbar-color;
-
-    .calendar-current,
-    .calendar-previous,
-    .calendar-next {
-        color: $toolbar-link-color;
-
-        &:hover,
-        &:focus {
-            color: $toolbar-link-hover-color;
-        }
-    }
-
-    .calendar-grid {
-        .btn {
-            color: $toolbar-link-color;
-
-            &.fill {
-                color: $toolbar-link-disabled-color;
-            }
-
-            &:not(.disabled):hover,
-            &:not(.disabled):focus {
-                color: $toolbar-link-hover-color;
-                background-color: $toolbar-link-hover-bg;
-            }
-        }
-    }
-
-    .day-name {
-        color: $toolbar-link-disabled-color;
-    }
-}*/
 
 .calendar-vertical {
     @include calendar-vertical-variant();

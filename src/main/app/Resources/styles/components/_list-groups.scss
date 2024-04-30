@@ -10,8 +10,9 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: $font-size-sm;
-        text-transform: uppercase;
+        font-size: $label-font-size;
+        color: $label-color;
+        text-transform: var(--#{$prefix}label-text-transform);
 
         .value {
             //color: $gray-light;

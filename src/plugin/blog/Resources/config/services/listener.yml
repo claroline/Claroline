@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
-
     Icap\BlogBundle\Listener\DataSource\BlogPostsSource:
         arguments:
             - '@security.token_storage'
@@ -20,8 +15,4 @@ services:
             - '@Icap\BlogBundle\Manager\BlogManager'
             - '@Icap\BlogBundle\Manager\PostManager'
             - '@Icap\BlogBundle\Manager\CommentManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.icap_blog.load, method: onLoad }
-            - { name: kernel.event_listener, event: resource.icap_blog.export, method: onExport }
-            - { name: kernel.event_listener, event: resource.icap_blog.import, method: onImport }
-            - { name: kernel.event_listener, event: resource.icap_blog.copy, method: onCopy }
+        tags: ['kernel.event_subscriber']

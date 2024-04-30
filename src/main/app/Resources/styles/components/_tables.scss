@@ -7,8 +7,8 @@
 .table {
     // header
     > thead th:not(.checkbox-cell) {
-        font-size: $font-size-sm;
-        text-transform: uppercase;
+        font-size: $label-font-size;
+        text-transform: var(--#{$prefix}label-text-transform);
         color: $table-th-color;
     }
 
@@ -59,7 +59,7 @@
     width: 50px; // because this cell should only contain a dropdown to gain horizontal space (no buttons bar)
     padding: 0 !important; // move padding on btns
     white-space: nowrap; // avoids buttons to break on multi lines
-    text-transform: none !important;
+    text-transform: none !important; // because in th can have a text transform base on the value of var(--#{$prefix}label-text-transform)
 
     .btn {
         padding: $table-cell-padding-y $table-cell-padding-x !important;

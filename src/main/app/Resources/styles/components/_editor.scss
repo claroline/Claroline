@@ -1,0 +1,103 @@
+
+.app-editor {
+  z-index: $zindex-fixed !important; // allow to open modals in editors (editors are just fullscreen modals)
+
+  .app-loader {
+    position: absolute; // FIXME
+  }
+}
+
+.app-editor .modal-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  overflow-y: hidden;
+  padding: 0; // override default modal-body
+}
+
+.app-editor-menu {
+  --#{$prefix}editor-menu-color: #{$toolbar-color};
+  --#{$prefix}editor-menu-bg: #{$toolbar-bg-subtle};
+
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  flex: 1;
+  max-width: calc(100% / 3);
+
+  background-color: var(--#{$prefix}editor-menu-bg);
+  color: var(--#{$prefix}editor-menu-color);
+  padding: map-get($spacers, 5) map-get($spacers, 3);
+
+  nav {
+    margin-left: auto;
+    max-width: 240px;
+  }
+}
+
+.app-editor-menu-header {
+  margin-left: auto;
+  max-width: 240px;
+  font-size: $label-font-size;
+  color: $label-color;
+  text-transform: var(--#{$prefix}label-text-transform);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.app-editor-menu-separator {
+  margin-left: auto;
+  max-width: 240px;
+}
+
+.app-editor-body {
+  height: 100%;
+  overflow-y: auto;
+  flex: 1;
+  padding: map-get($spacers, 5) map-get($spacers, 3);
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.app-editor-form {
+  padding: 0 map-get($spacers, 3);
+
+  margin: 0; // override .content-md
+  width: auto !important; // override .content-md
+}
+
+.app-editor-page {
+  flex: 1;
+}
+
+.app-editor-toolbar {
+  padding: 0 map-get($spacers, 3);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: map-get($spacers, 2);
+
+  .btn {
+    flex-shrink: 0;
+    padding: map-get($spacers, 2);
+    border: 2px solid currentColor;
+    border-radius: 50%;
+
+    height: 2.5rem;
+    width: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@if $enable-dark-mode {
+  @include color-mode(dark) {
+    .app-editor-menu {
+      --#{$prefix}editor-menu-color: #{$toolbar-color-dark};
+      --#{$prefix}editor-menu-bg: #{$toolbar-bg-subtle-dark};
+    }
+  }
+}

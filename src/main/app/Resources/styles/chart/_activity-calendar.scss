@@ -13,10 +13,10 @@
   }
 
   th {
-    font-size: 12px;
-    text-transform: uppercase;
+    font-size: $label-font-size;
+    color: $label-color;
+    text-transform: var(--#{$prefix}label-text-transform);
     font-weight: $font-weight-base;
-    color: var(--#{$prefix}tertiary-color);
   }
 }
 

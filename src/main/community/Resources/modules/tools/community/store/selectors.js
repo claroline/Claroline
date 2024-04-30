@@ -19,9 +19,9 @@ const profile = createSelector(
   (store) => store.profile
 )
 
-const loaded = createSelector(
-  [store],
-  (store) => store.user.loaded
+const registration = createSelector(
+  [parameters],
+  (parameters) => parameters.registration
 )
 
 const canCreate = createSelector(
@@ -36,15 +36,9 @@ const canCreate = createSelector(
   }
 )
 
-const defaultRole = createSelector(
-  [toolSelectors.contextType, toolSelectors.contextData],
-  (contextType, contextData) => {
-    if (contextType === toolConstants.TOOL_WORKSPACE) {
-      return contextData.defaultRole
-    }
-
-    return null
-  }
+const hasPendingRegistrations = createSelector(
+  [registration],
+  (registration) => get(registration, 'selfRegistration', false) && get(registration, 'validation', false)
 )
 
 export const selectors = {
@@ -53,7 +47,7 @@ export const selectors = {
   store,
   parameters,
   profile,
-  loaded,
+  registration,
   canCreate,
-  defaultRole
+  hasPendingRegistrations
 }

@@ -6,6 +6,4 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
             - '@Claroline\BigBlueButtonBundle\Manager\EvaluationManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.claroline_big_blue_button.load, method: onLoad }
-            - { name: kernel.event_listener, event: resource.claroline_big_blue_button.delete, method: onDelete }
+        tags: ['kernel.event_subscriber']

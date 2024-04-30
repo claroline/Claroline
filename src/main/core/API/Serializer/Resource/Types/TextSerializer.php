@@ -14,29 +14,18 @@ class TextSerializer
 {
     use SerializerTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var PlaceholderManager */
-    private $placeholderManager;
-
-    /**
-     * TextSerializer constructor.
-     */
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        PlaceholderManager $placeholderManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly PlaceholderManager $placeholderManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->placeholderManager = $placeholderManager;
     }
 
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/main/core/text.json';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'text';
     }

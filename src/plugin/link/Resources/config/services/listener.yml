@@ -9,5 +9,4 @@ services:
     Claroline\LinkBundle\Listener\Resource\Types\ShortcutListener:
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
-        tags:
-            - { name: kernel.event_listener, event: resource.shortcut.load, method: load }
+        tags: ['kernel.event_subscriber']

@@ -19,26 +19,17 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class DeleteResourceEvent extends Event
 {
-    /** @var AbstractResource */
-    private $resource;
-    private $files = [];
-    private $softDelete;
+    private AbstractResource $resource;
+    private array $files = [];
+    private bool $softDelete;
 
-    /**
-     * DeleteResourceEvent constructor.
-     *
-     * @param bool $softDelete
-     */
-    public function __construct(AbstractResource $resource, $softDelete = false)
+    public function __construct(AbstractResource $resource, bool $softDelete = false)
     {
         $this->resource = $resource;
         $this->softDelete = $softDelete;
     }
 
-    /**
-     * @return AbstractResource
-     */
-    public function getResource()
+    public function getResource(): AbstractResource
     {
         return $this->resource;
     }
@@ -46,22 +37,22 @@ class DeleteResourceEvent extends Event
     /**
      * Set an array of files which are going to be removed by the kernel.
      */
-    public function setFiles(array $files)
+    public function setFiles(array $files): void
     {
         $this->files = $files;
     }
 
-    public function getFiles()
+    public function getFiles(): array
     {
         return $this->files;
     }
 
-    public function enableSoftDelete()
+    public function enableSoftDelete(): void
     {
         $this->softDelete = true;
     }
 
-    public function isSoftDelete()
+    public function isSoftDelete(): bool
     {
         return $this->softDelete;
     }

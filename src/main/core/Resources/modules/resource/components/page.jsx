@@ -65,7 +65,7 @@ const ResourcePage = (props) => {
             exact: true
           }
         ].concat(resourceDef.menu || []),
-        toolbar: 'edit more',
+        toolbar: 'configure more',
         // get actions injected through plugins and the ones defined by the current tool
         actions: getActions([resourceNode], {
           add: reload,
@@ -92,7 +92,7 @@ const ResourcePage = (props) => {
         }, basePath, currentUser, false).then(loadedActions => [].concat(loadedActions, resourceDef.actions || []))
       }}
 
-      {...omit(props, 'className', 'poster', 'styles')}
+      {...omit(props, 'className', 'poster', 'styles', 'embedded', 'showHeader')}
       styles={[].concat(resourceDef.styles, props.styles || [])}
     >
       {props.children}

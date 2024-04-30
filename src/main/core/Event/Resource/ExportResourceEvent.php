@@ -8,19 +8,12 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ExportResourceEvent extends Event
 {
-    /** @var AbstractResource */
-    private $resource;
-    /** @var FileBag */
-    private $fileBag;
-    /** @var array */
-    private $data = [];
+    private array $data = [];
 
     public function __construct(
-        AbstractResource $resource,
-        FileBag $fileBag
+        private readonly AbstractResource $resource,
+        private readonly FileBag $fileBag
     ) {
-        $this->resource = $resource;
-        $this->fileBag = $fileBag;
     }
 
     public function getResource(): AbstractResource
@@ -28,7 +21,7 @@ class ExportResourceEvent extends Event
         return $this->resource;
     }
 
-    public function setData(?array $data = [])
+    public function setData(?array $data = []): void
     {
         $this->data = $data;
     }
@@ -38,7 +31,7 @@ class ExportResourceEvent extends Event
         return $this->data;
     }
 
-    public function addFile(string $path, string $file)
+    public function addFile(string $path, string $file): void
     {
         $this->fileBag->add($path, $file);
     }

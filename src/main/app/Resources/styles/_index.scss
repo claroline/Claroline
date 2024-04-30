@@ -9,23 +9,21 @@
 @import "variables";
 @import "mixins";
 
-// Import Bootstrap (v5, partial)
+// Libraries : Bootstrap (v5, partial), FontAwesome, FlagIcons
 @import "bootstrap";
 
-// Import FontAwesome
 @import "node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
 @import "node_modules/@fortawesome/fontawesome-free/scss/solid";
 @import "node_modules/@fortawesome/fontawesome-free/scss/brands";
 @import "node_modules/@fortawesome/fontawesome-free/scss/regular";
 
-// Import FlagIcons
 @import "node_modules/flag-icons/sass/flag-icons";
 
+// Claroline layout & components
+@import "root";
 @import "scaffolding";
 @import "utilities";
 @import "type";
-
-// Import Claroline layout
 @import "layout/footer";
 @import "layout/locale";
 @import "layout/menu";

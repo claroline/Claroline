@@ -872,7 +872,7 @@ $btn-active-border-tint-amount:   10% !default;
 
 // scss-docs-start form-text-variables
 $form-text-margin-top:                  .25rem !default;
-$form-text-font-size:                   $small-font-size !default;
+$form-text-font-size:                   $font-size-sm !default;
 $form-text-font-style:                  null !default;
 $form-text-font-weight:                 null !default;
 $form-text-color:                       var(--#{$prefix}secondary-color) !default;
@@ -880,10 +880,10 @@ $form-text-color:                       var(--#{$prefix}secondary-color) !defaul
 
 // scss-docs-start form-label-variables
 $form-label-margin-bottom:              .5rem !default;
-$form-label-font-size:                  null !default;
+$form-label-font-size:                  $font-size-sm !default;
 $form-label-font-style:                 null !default;
 $form-label-font-weight:                $font-weight-bolder !default;
-$form-label-color:                      null !default;
+$form-label-color:                      var(--#{$prefix}secondary-color) !default;
 // scss-docs-end form-label-variables
 
 // scss-docs-start form-input-variables
@@ -922,7 +922,7 @@ $input-focus-color:                     $input-color !default;
 $input-focus-width:                     $input-btn-focus-width !default;
 $input-focus-box-shadow:                $input-btn-focus-box-shadow !default;
 
-$input-placeholder-color:               var(--#{$prefix}secondary-color) !default;
+$input-placeholder-color:               var(--#{$prefix}tertiary-color) !default;
 $input-plaintext-color:                 var(--#{$prefix}body-color) !default;
 
 $input-height-border:                   calc(#{$input-border-width} * 2) !default; // stylelint-disable-line function-disallowed-list
@@ -1283,7 +1283,7 @@ $dropdown-link-disabled-color:      var(--#{$prefix}tertiary-color) !default;
 $dropdown-item-padding-y:           map-get($spacers, 2) !default;
 $dropdown-item-padding-x:           map-get($spacers, 3) !default;
 
-$dropdown-header-color:             $gray-600 !default;
+$dropdown-header-color:             var(--#{$prefix}secondary-color) !default; // same as $label-color
 $dropdown-header-padding-x:         $dropdown-item-padding-x !default;
 $dropdown-header-padding-y:         $dropdown-padding-y !default;
 // fusv-disable
@@ -1510,7 +1510,7 @@ $badge-font-weight:                 $font-weight-medium !default;
 $badge-color:                       $white !default;
 $badge-padding-y:                   .35em !default;
 $badge-padding-x:                   .65em !default;
-$badge-border-radius:               var(--#{$prefix}border-radius) !default;
+$badge-border-radius:               var(--#{$prefix}border-radius-sm) !default;
 // scss-docs-end badge-variables
 
 

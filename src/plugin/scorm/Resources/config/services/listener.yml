@@ -8,11 +8,4 @@ services:
             - '@Claroline\ScormBundle\Manager\EvaluationManager'
             - '%claroline.param.files_directory%'
             - '%claroline.param.uploads_directory%'
-        tags:
-           - { name: kernel.event_listener, event: resource.claroline_scorm.load, method: onLoad }
-           - { name: kernel.event_listener, event: resource.claroline_scorm.delete, method: onDelete }
-           - { name: kernel.event_listener, event: resource.claroline_scorm.export, method: onExport }
-           - { name: kernel.event_listener, event: resource.claroline_scorm.import, method: onImport }
-           - { name: kernel.event_listener, event: resource.claroline_scorm.copy, method: onCopy }
-           - { name: kernel.event_listener, event: resource.claroline_scorm.change_file, method: onFileChange }
-           - { name: kernel.event_listener, event: download_claroline_scorm, method: onDownload }
+        tags: ['kernel.event_subscriber']

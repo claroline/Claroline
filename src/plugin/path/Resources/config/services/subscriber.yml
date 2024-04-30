@@ -8,5 +8,4 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.resource_manager'
             - '@Innova\PathBundle\Manager\EvaluationManager'
-        tags:
-            - { name: kernel.event_subscriber }
+        tags: ['kernel.event_subscriber']

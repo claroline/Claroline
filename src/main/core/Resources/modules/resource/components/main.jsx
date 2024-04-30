@@ -9,9 +9,10 @@ import {hasPermission} from '#/main/app/security'
 import {ResourceContext} from '#/main/core/resource/context'
 import {selectors} from '#/main/core/resource/store'
 import {ResourceRestrictions} from '#/main/core/resource/containers/restrictions'
-import {ResourceEditor} from '#/main/core/resource/editor/components/main'
+import {ResourceEditor} from '#/main/core/resource/editor/containers/main'
 import {EvaluationMain} from '#/main/evaluation/resource/evaluation/containers/main'
 import {LogsMain} from '#/main/log/resource/logs/containers/main'
+import {ResourceOverview} from '#/main/core/resource/components/overview'
 
 const ResourceMain = props => {
   const [loaded, setLoaded] = useState(false)
@@ -46,7 +47,7 @@ const ResourceMain = props => {
             {
               path: '/edit',
               disabled: !canEdit,
-              component: ResourceEditor
+              component: props.editor
             }, {
               path: '/evaluation',
               component: EvaluationMain
@@ -89,12 +90,15 @@ ResourceMain.propTypes = {
    * The resource overview component
    * NB. This SHOULD extend the base <ResourceOverview /> component.
    */
-  overview: T.func
+  overview: T.elementType,
+  editor: T.elementType
 }
 
 ResourceMain.defaultProps = {
   styles: [],
-  actions: []
+  actions: [],
+  overview: ResourceOverview,
+  editor: ResourceEditor
 }
 
 export {

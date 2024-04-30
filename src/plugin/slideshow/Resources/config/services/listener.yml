@@ -1,15 +1,6 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
-
     Claroline\SlideshowBundle\Listener\Resource\SlideshowListener:
+        tags: ['kernel.event_subscriber']
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\FileManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.claro_slideshow.load, method: onLoad }
-            - { name: kernel.event_listener, event: resource.claro_slideshow.delete, method: onDelete }
-            - { name: kernel.event_listener, event: resource.claro_slideshow.export, method: onExport }
-            - { name: kernel.event_listener, event: resource.claro_slideshow.import, method: onImport }

@@ -1,14 +1,10 @@
 services:
     Icap\WikiBundle\Listener\Resource\WikiListener:
+        tags: ['kernel.event_subscriber']
         arguments:
+            - '@security.authorization_checker'
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Icap\WikiBundle\Serializer\WikiSerializer'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Icap\WikiBundle\Manager\WikiManager'
             - '@Icap\WikiBundle\Manager\SectionManager'
-            - '@security.authorization_checker'
-        tags:
-            - { name: kernel.event_listener, event: resource.icap_wiki.load, method: load }
-            - { name: kernel.event_listener, event: resource.icap_wiki.copy, method: onCopy }
-            - { name: kernel.event_listener, event: resource.icap_wiki.export, method: onExport }
-            - { name: kernel.event_listener, event: resource.icap_wiki.import, method: onImport }

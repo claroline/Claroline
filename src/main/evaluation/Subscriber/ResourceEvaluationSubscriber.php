@@ -44,7 +44,7 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
         return [
             Crud::getEventName('create', 'post', ResourceNode::class) => 'createEvaluations',
             Crud::getEventName('update', 'post', ResourceNode::class) => 'updateEvaluations',
-            ResourceEvents::RESOURCE_OPEN => ['open', 10],
+            ResourceEvents::OPEN => ['open', 10],
             Crud::getEventName('delete', 'pre', ResourceEvaluation::class) => 'updateNbAttempts',
         ];
     }
@@ -100,10 +100,10 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
     public function open(LoadResourceEvent $event): void
     {
         // Update current user evaluation
-        if ($event->getUser() instanceof User) {
+        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
             $this->manager->updateUserEvaluation(
                 $event->getResourceNode(),
-                $event->getUser(),
+                $this->tokenStorage->getToken()->getUser(),
                 ['status' => AbstractEvaluation::STATUS_OPENED]
             );
         }

@@ -2,6 +2,8 @@ services:
     Claroline\EvaluationBundle\Component\Tool\EvaluationTool:
         parent: Claroline\AppBundle\Component\Tool\AbstractTool
         tags: [ 'claroline.component.tool' ]
+        arguments:
+            - '@Claroline\AppBundle\API\Crud'
 
     Claroline\EvaluationBundle\Component\Tool\ProgressionTool:
         parent: Claroline\AppBundle\Component\Tool\AbstractTool

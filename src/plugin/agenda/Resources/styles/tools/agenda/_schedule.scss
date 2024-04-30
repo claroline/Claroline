@@ -17,10 +17,10 @@
 
         .day-name {
             min-width: 100px;
-            font-family: $headings-font-family;
-            color: $agenda-color;
             padding: 5px;
-            text-transform: uppercase; // todo : use a var
+            text-transform: var(--#{$prefix}label-text-transform);
+            //font-size: $label-font-size;
+            color: $label-color;
         }
 
         .day-number {

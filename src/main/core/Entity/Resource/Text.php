@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,7 +24,7 @@ class Text extends AbstractResource
     /**
      * @ORM\Column(type="integer")
      */
-    protected $version;
+    private int $version = 1;
 
     /**
      * @ORM\OneToMany(
@@ -33,53 +34,53 @@ class Text extends AbstractResource
      * )
      * @ORM\OrderBy({"version" = "DESC"})
      */
-    protected $revisions;
+    private Collection $revisions;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->version = 1;
         $this->revisions = new ArrayCollection();
     }
 
-    public function getVersion()
+    public function getVersion(): int
     {
         return $this->version;
     }
 
-    public function setVersion($version)
+    public function setVersion(int $version): void
     {
         $this->version = $version;
     }
 
-    public function getRevisions()
+    public function getRevisions(): Collection
     {
         return $this->revisions;
     }
 
-    public function addRevision($revision)
+    public function addRevision(Revision $revision): void
     {
         $this->revisions->add($revision);
     }
 
-    public function removeRevision($revision)
+    public function removeRevision(Revision $revision): void
     {
         $this->revisions->removeElement($revision);
     }
 
     /**
      * Get the current content of the Resource.
-     *
-     * @return string
      */
-    public function getContent()
+    public function getContent(): ?string
     {
-        $content = null;
         if (0 < $this->revisions->count()) {
-            $content = $this->revisions->get(0)->getContent();
+            foreach ($this->revisions as $revision) {
+                if ($revision->getVersion() === $this->getVersion()) {
+                    return $revision->getContent();
+                }
+            }
         }
 
-        return $content;
+        return null;
     }
 }

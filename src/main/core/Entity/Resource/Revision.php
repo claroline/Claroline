@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,17 +21,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Revision
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
 
     /**
      * @ORM\Column(type="integer")
      */
-    protected $version;
+    private int $version = 1;
 
     /**
      * @ORM\ManyToOne(
@@ -39,12 +36,12 @@ class Revision
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    protected $text;
+    private ?Text $text;
 
     /**
      * @ORM\Column(type="text")
      */
-    protected $content;
+    private ?string $content = null;
 
     /**
      * @ORM\ManyToOne(
@@ -53,55 +50,45 @@ class Revision
      * )
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    protected $user;
+    private ?User $user;
 
-    public function __construct()
-    {
-        $this->version = 1;
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getVersion()
+    public function getVersion(): int
     {
         return $this->version;
     }
 
-    public function setVersion($version)
+    public function setVersion(int $version): void
     {
         $this->version = $version;
     }
 
-    public function setText(Text $text)
+    public function setText(Text $text): void
     {
         $this->text = $text;
         $text->addRevision($this);
     }
 
-    public function getText()
+    public function getText(): ?Text
     {
         return $this->text;
     }
 
-    public function setContent($content)
+    public function setContent($content): void
     {
         $this->content = $content;
     }
 
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    public function setUser($user)
+    public function setUser(?User $user): void
     {
         $this->user = $user;
     }
 
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }

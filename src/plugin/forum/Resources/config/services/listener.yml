@@ -19,8 +19,4 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\ForumBundle\Manager\ForumManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.claroline_forum.load, method: onOpen }
-            - { name: kernel.event_listener, event: resource.claroline_forum.copy, method: onCopy }
-            - { name: kernel.event_listener, event: resource.claroline_forum.export, method: onExport }
-            - { name: kernel.event_listener, event: resource.claroline_forum.import, method: onImport }
+        tags: ['kernel.event_subscriber']

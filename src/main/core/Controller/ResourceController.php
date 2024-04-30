@@ -59,9 +59,6 @@ class ResourceController
      *
      * @Route("/load/{id}", name="claro_resource_load", methods={"GET"})
      * @Route("/load/{id}/embedded/{embedded}", name="claro_resource_load_embedded", methods={"GET"})
-     *
-     * @param int|string $id       - the id or slug of the target node (we don't use ParamConverter to support ID and UUID)
-     * @param int        $embedded
      */
     public function openAction(string $id, int $embedded = 0): JsonResponse
     {
@@ -77,7 +74,7 @@ class ResourceController
         $isManager = $this->manager->isManager($resourceNode);
 
         if (empty($accessErrors) || $isManager) {
-            $loaded = $this->manager->load($resourceNode, intval($embedded) ? true : false);
+            $loaded = $this->manager->load($resourceNode, $embedded ? true : false);
 
             return new JsonResponse(
                 array_merge($loaded, [

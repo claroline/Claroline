@@ -4,11 +4,10 @@ namespace UJM\ExoBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\API\Utils\FileBag;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -21,68 +20,33 @@ use UJM\ExoBundle\Manager\ExerciseManager;
 /**
  * Listens to resource events dispatched by the core.
  */
-class ExerciseListener
+class ExerciseListener extends ResourceComponent
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var ExerciseManager */
-    private $exerciseManager;
-
-    /** @var PaperManager */
-    private $paperManager;
-
-    /** @var AttemptManager */
-    private $attemptManager;
-
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var ResourceEvaluationManager */
-    private $resourceEvalManager;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
-    /**
-     * ExerciseListener constructor.
-     */
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ExerciseManager $exerciseManager,
-        PaperManager $paperManager,
-        AttemptManager $attemptManager,
-        ObjectManager $om,
-        ResourceEvaluationManager $resourceEvalManager,
-        TokenStorageInterface $tokenStorage,
-        SerializerProvider $serializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly SerializerProvider $serializer,
+        private readonly ExerciseManager $exerciseManager,
+        private readonly PaperManager $paperManager,
+        private readonly AttemptManager $attemptManager,
+        private readonly ResourceEvaluationManager $resourceEvalManager
     ) {
-        $this->authorization = $authorization;
-        $this->exerciseManager = $exerciseManager;
-        $this->paperManager = $paperManager;
-        $this->attemptManager = $attemptManager;
-        $this->om = $om;
-        $this->resourceEvalManager = $resourceEvalManager;
-        $this->tokenStorage = $tokenStorage;
-        $this->serializer = $serializer;
     }
 
-    /**
-     * Loads the Exercise resource.
-     */
-    public function onLoad(LoadResourceEvent $event)
+    public static function getName(): string
     {
-        /** @var Exercise $exercise */
-        $exercise = $event->getResource();
+        return 'ujm_exercise';
+    }
+
+    /** @var Exercise $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        $canEdit = $this->authorization->isGranted('EDIT', new ResourceCollection([$exercise->getResourceNode()]));
+        $canEdit = $this->authorization->isGranted('EDIT', $resource->getResourceNode());
 
         $options = [];
-        if ($canEdit || $exercise->hasStatistics()) {
+        if ($canEdit || $resource->hasStatistics()) {
             $options[] = Transfer::INCLUDE_SOLUTIONS;
         }
 
@@ -90,37 +54,26 @@ class ExerciseListener
         $lastAttempt = null;
         $userEvaluation = null;
         if ($currentUser instanceof User) {
-            $lastAttempt = $this->attemptManager->getLastPaper($exercise, $currentUser);
+            $lastAttempt = $this->attemptManager->getLastPaper($resource, $currentUser);
 
             $userEvaluation = $this->serializer->serialize(
-                $this->resourceEvalManager->getUserEvaluation($exercise->getResourceNode(), $currentUser),
+                $this->resourceEvalManager->getUserEvaluation($resource->getResourceNode(), $currentUser),
                 [Options::SERIALIZE_MINIMAL]
             );
         }
 
-        $event->setData([
-            'quiz' => $this->serializer->serialize($exercise, $options),
+        return [
+            'quiz' => $this->serializer->serialize($resource, $options),
             // user data
             'lastAttempt' => $lastAttempt ? $this->paperManager->serialize($lastAttempt) : null,
             'userEvaluation' => $userEvaluation,
-        ]);
-        $event->stopPropagation();
+        ];
     }
 
-    /**
-     * Deletes an Exercise resource.
-     */
-    public function onDelete(DeleteResourceEvent $event)
+    /** @var Exercise $resource */
+    public function delete(AbstractResource $resource, FileBag $fileBag, bool $softDelete = true): bool
     {
-        /** @var Exercise $exercise */
-        $exercise = $event->getResource();
-
-        $deletable = $this->exerciseManager->isDeletable($exercise);
-        if (!$deletable) {
-            // If papers, the Exercise is not completely removed
-            $event->enableSoftDelete();
-        }
-
-        $event->stopPropagation();
+        // we cannot delete an evaluative quiz with results
+        return $this->exerciseManager->isDeletable($resource);
     }
 }

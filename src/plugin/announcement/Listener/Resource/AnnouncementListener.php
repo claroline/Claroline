@@ -16,45 +16,31 @@ use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class AnnouncementListener
+class AnnouncementListener extends ResourceComponent
 {
-    use PermissionCheckerTrait;
-
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var Crud */
-    private $crud;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        Crud $crud
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly Crud $crud
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->crud = $crud;
     }
 
-    /**
-     * Loads an Announcement resource.
-     */
-    public function load(LoadResourceEvent $event)
+    public static function getName(): string
     {
-        /** @var AnnouncementAggregate $resource */
-        $resource = $event->getResource();
+        return 'claroline_announcement_aggregate';
+    }
+
+    /** @var AnnouncementAggregate $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
         $workspace = $resource->getResourceNode()->getWorkspace();
 
         $filters = [
@@ -68,27 +54,24 @@ class AnnouncementListener
             'filters' => $filters,
         ]);
 
-        $event->setData([
+        return [
             'announcement' => $this->serializer->serialize($resource),
             'posts' => $postsList['data'],
             'workspaceRoles' => array_map(function (Role $role) { // TODO : to remove. This can be retrieve directly from api later
                 return $this->serializer->serialize($role, [Options::SERIALIZE_MINIMAL]);
             }, $workspace->getRoles()->toArray()),
-        ]);
-
-        $event->stopPropagation();
+        ];
     }
 
-    public function copy(CopyResourceEvent $event)
+    /**
+     * @param AnnouncementAggregate $original
+     * @param AnnouncementAggregate $copy
+     */
+    public function copy(AbstractResource $original, AbstractResource $copy): void
     {
-        /** @var AnnouncementAggregate $aggregate */
-        $aggregate = $event->getResource();
-        /** @var AnnouncementAggregate $copy */
-        $copy = $event->getCopy();
-
         $this->om->startFlushSuite();
 
-        $announcements = $aggregate->getAnnouncements();
+        $announcements = $original->getAnnouncements();
         foreach ($announcements as $announcement) {
             $announcementData = $this->serializer->serialize($announcement);
 
@@ -102,32 +85,30 @@ class AnnouncementListener
         }
 
         $this->om->endFlushSuite();
-
-        $event->stopPropagation();
     }
 
-    public function onExport(ExportResourceEvent $exportEvent)
+    /** @var AnnouncementAggregate $resource */
+    public function export(AbstractResource $resource, FileBag $fileBag): ?array
     {
-        /** @var AnnouncementAggregate $announcements */
-        $announcements = $exportEvent->getResource();
-
-        $exportEvent->setData([
+        return [
             'posts' => array_map(function (Announcement $announcement) {
                 return $this->serializer->serialize($announcement);
-            }, $announcements->getAnnouncements()->toArray()),
-        ]);
+            }, $resource->getAnnouncements()->toArray()),
+        ];
     }
 
-    public function onImport(ImportResourceEvent $event)
+    /** @var AnnouncementAggregate $resource */
+    public function import(AbstractResource $resource, FileBag $fileBag, array $data = []): void
     {
-        $data = $event->getData();
-        /** @var AnnouncementAggregate $announcements */
-        $announcements = $event->getResource();
+        if (empty($data['posts'])) {
+            return;
+        }
 
         $this->om->startFlushSuite();
+
         foreach ($data['posts'] as $announcementData) {
             $newAnnouncement = new Announcement();
-            $newAnnouncement->setAggregate($announcements);
+            $newAnnouncement->setAggregate($resource);
 
             $this->crud->create($newAnnouncement, $announcementData, [
                 Crud::NO_PERMISSIONS, // this has already been checked by the core before forwarding the import
@@ -135,6 +116,7 @@ class AnnouncementListener
                 Options::REFRESH_UUID,
             ]);
         }
+
         $this->om->endFlushSuite();
     }
 }

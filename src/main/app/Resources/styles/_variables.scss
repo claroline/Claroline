@@ -18,9 +18,9 @@ $content-md: 860px !default;
 $content-lg: 1180px !default;
 
 $content-sizes: (
-        sm: $content-sm,
-        md: $content-md,
-        lg: $content-lg
+    sm: $content-sm,
+    md: $content-md,
+    lg: $content-lg
 ) !default;
 
 $icon-sizes: (
@@ -30,3 +30,8 @@ $icon-sizes: (
     lg: 5rem,
     xl: 10rem,
 ) !default;
+
+// customize labels (form input, details, groups in actions menu, etc.)
+$label-text-transform: uppercase !default;
+$label-font-size:      $form-label-font-size !default;
+$label-color:          $form-label-color;

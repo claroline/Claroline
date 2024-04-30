@@ -1,7 +1,6 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 
-const EditorHistory = (props) =>
+const EditorHistory = () =>
   <div className="p-4">
     <p>Cette page contiendra les logs opérationnels liés à l'outil</p>
     <p>Afficher aussi ici le créateur, date de création, date de dernière modifications</p>

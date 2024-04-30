@@ -11,7 +11,7 @@ const ResourceRestrictions = connect(
     authenticated: securitySelectors.isAuthenticated(state),
     managed: selectors.managed(state),
     resourceNode: selectors.resourceNode(state),
-    accessErrors: selectors.accessErrors(state)
+    errors: selectors.accessErrors(state)
   }),
   (dispatch) => ({
     dismiss() {

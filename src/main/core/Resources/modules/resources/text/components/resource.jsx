@@ -4,11 +4,11 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl'
 import {URL_BUTTON} from '#/main/app/buttons'
-import {Resource, ResourcePage} from '#/main/core/resource'
+import {Resource} from '#/main/core/resource'
 
 import {Text as TextTypes} from '#/main/core/resources/text/prop-types'
-import {Player} from '#/main/core/resources/text/player/components/player'
-import {Editor} from '#/main/core/resources/text/editor/containers/editor'
+import {TextPlayer} from '#/main/core/resources/text/components/player'
+import {TextEditor} from '#/main/core/resources/text/components/editor'
 
 const TextResource = (props) =>
   <Resource
@@ -24,14 +24,12 @@ const TextResource = (props) =>
         group: trans('transfer')
       }
     ]}
+    editor={TextEditor}
     pages={[
       {
         path: '/',
-        component: Player,
+        component: TextPlayer,
         exact: true
-      }, {
-        path: '/edit',
-        component: Editor
       }
     ]}
   />

@@ -12,42 +12,35 @@
 namespace Claroline\CoreBundle\Listener\Resource\Types;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
 
-class TextListener
+class TextListener extends ResourceComponent
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var PlaceholderManager */
-    private $placeholderManager;
-
-    /**
-     * TextListener constructor.
-     */
     public function __construct(
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        PlaceholderManager $placeholderManager)
-    {
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->placeholderManager = $placeholderManager;
+        private readonly SerializerProvider $serializer,
+        private readonly PlaceholderManager $placeholderManager
+    ) {
     }
 
-    /**
-     * Loads a Text resource.
-     */
-    public function load(LoadResourceEvent $event)
+    public static function getName(): string
     {
-        $event->setData([
-            'text' => $this->serializer->serialize($event->getResource()),
-            'placeholders' => $this->placeholderManager->getAvailablePlaceholders(),
-        ]);
+        return 'text';
+    }
 
-        $event->stopPropagation();
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
+        return [
+            'text' => $this->serializer->serialize($resource),
+            'placeholders' => $this->placeholderManager->getAvailablePlaceholders(),
+        ];
+    }
+
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        return [
+            'resource' => $this->serializer->serialize($resource),
+        ];
     }
 }

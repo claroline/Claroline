@@ -1,4 +1,4 @@
-import React, {createElement} from 'react'
+import React, {createElement, Fragment} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
@@ -53,45 +53,49 @@ const FormContent = (props) => {
 
   return (
     <>
-      {primarySections.map(primarySection =>
-        <section
-          id={`${getSectionId(primarySection, props.id)}-section`}
-          key={primarySection.id || toKey(primarySection.title)}
-          className={classes('form-primary-section', primarySection.className, !props.flush && 'mb-3')}
-        >
-          <ContentTitle
-            level={props.level}
-            displayed={false}
-            title={primarySection.title}
-            subtitle={primarySection.subtitle}
-          />
-
-          {!isEmpty(primarySection.actions) &&
-            <Toolbar
-              id={`${getSectionId(primarySection, props.id)}-actions`}
-              buttonName="btn"
-              className="text-right form-group"
-              size="sm"
-              actions={primarySection.actions}
-            />
+      {primarySections.map((primarySection, index) =>
+        <Fragment key={primarySection.id || toKey(primarySection.title)}>
+          {0 !== index &&
+            <hr />
           }
-
-          <FormFieldset
-            id={getSectionId(primarySection, props.id)}
-            mode={props.mode}
-            disabled={disabled || primarySection.disabled}
-            fields={primarySection.fields}
-            data={props.data}
-            errors={props.errors}
-            help={primarySection.help}
-            validating={props.validating}
-            updateProp={props.updateProp}
-            setErrors={props.setErrors}
+          <section
+            id={`${getSectionId(primarySection, props.id)}-section`}
+            className={classes('form-primary-section', primarySection.className, !props.flush && 'mb-3')}
           >
-            {primarySection.component && createElement(primarySection.component)}
-            {!primarySection.component && primarySection.render && primarySection.render(props.data, props.errors)}
-          </FormFieldset>
-        </section>
+            <ContentTitle
+              level={props.level}
+              displayed={false}
+              title={primarySection.title}
+              subtitle={primarySection.subtitle}
+            />
+
+            {!isEmpty(primarySection.actions) &&
+              <Toolbar
+                id={`${getSectionId(primarySection, props.id)}-actions`}
+                buttonName="btn"
+                className="text-right form-group"
+                size="sm"
+                actions={primarySection.actions}
+              />
+            }
+
+            <FormFieldset
+              id={getSectionId(primarySection, props.id)}
+              mode={props.mode}
+              disabled={disabled || primarySection.disabled}
+              fields={primarySection.fields}
+              data={props.data}
+              errors={props.errors}
+              help={primarySection.help}
+              validating={props.validating}
+              updateProp={props.updateProp}
+              setErrors={props.setErrors}
+            >
+              {primarySection.component && createElement(primarySection.component)}
+              {!primarySection.component && primarySection.render && primarySection.render(props.data, props.errors)}
+            </FormFieldset>
+          </section>
+        </Fragment>
       )}
 
       {0 !== otherSections.length &&

@@ -7,62 +7,52 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\PeerTubeBundle\Entity\Video;
 use Claroline\PeerTubeBundle\Manager\EvaluationManager;
 use Claroline\PeerTubeBundle\Manager\PeerTubeManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 
-class VideoSubscriber implements EventSubscriberInterface
+class VideoSubscriber extends ResourceComponent
 {
-    private TokenStorageInterface $tokenStorage;
-    private Environment $templating;
-    private SerializerProvider $serializer;
-    private EvaluationManager $evaluationManager;
-    private PeerTubeManager $peerTubeManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        Environment $templating,
-        SerializerProvider $serializer,
-        EvaluationManager $evaluationManager,
-        PeerTubeManager $peerTubeManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly Environment $templating,
+        private readonly SerializerProvider $serializer,
+        private readonly EvaluationManager $evaluationManager,
+        private readonly PeerTubeManager $peerTubeManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->templating = $templating;
-        $this->serializer = $serializer;
-        $this->evaluationManager = $evaluationManager;
-        $this->peerTubeManager = $peerTubeManager;
+    }
+
+    public static function getName(): string
+    {
+        return 'peertube_video';
     }
 
     public static function getSubscribedEvents(): array
     {
-        return [
-            'resource.peertube_video.load' => 'onLoad',
+        return array_merge([], parent::getSubscribedEvents(), [
             'resource.peertube_video.embed' => 'onEmbed',
-            Crud::getEventName('create', 'post', Video::class) => 'onCreate',
+            Crud::getEventName('create', 'post', Video::class) => 'onCrudCreate',
             Crud::getEventName('update', 'post', Video::class) => 'postUpdate',
-        ];
+        ]);
     }
 
-    public function onLoad(LoadResourceEvent $event): void
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
-        /** @var Video $video */
-        $video = $event->getResource();
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $event->setData([
-            'video' => $this->serializer->serialize($video),
+        return [
+            'video' => $this->serializer->serialize($resource),
             'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
-                $this->evaluationManager->getResourceUserEvaluation($video->getResourceNode(), $user),
+                $this->evaluationManager->getResourceUserEvaluation($resource->getResourceNode(), $user),
                 [SerializerInterface::SERIALIZE_MINIMAL]
             ) : null,
-        ]);
-        $event->stopPropagation();
+        ];
     }
 
     public function onEmbed(EmbedResourceEvent $event): void
@@ -74,7 +64,7 @@ class VideoSubscriber implements EventSubscriberInterface
         );
     }
 
-    public function onCreate(CreateEvent $event): void
+    public function onCrudCreate(CreateEvent $event): void
     {
         $video = $event->getObject();
         $this->peerTubeManager->handleThumbnailForVideo($video);

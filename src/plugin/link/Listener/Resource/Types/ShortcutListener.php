@@ -12,30 +12,30 @@
 namespace Claroline\LinkBundle\Listener\Resource\Types;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
 
 /**
  * Integrates the "Shortcut" resource.
  */
-class ShortcutListener
+class ShortcutListener extends ResourceComponent
 {
-    /** @var SerializerProvider */
-    private $serializer;
-
     public function __construct(
-        SerializerProvider $serializer
+        private readonly SerializerProvider $serializer
     ) {
-        $this->serializer = $serializer;
     }
 
-    public function load(LoadResourceEvent $event)
+    public static function getName(): string
     {
-        /** @var Shortcut $shortcut */
-        $shortcut = $event->getResource();
+        return 'shortcut';
+    }
 
-        $event->setData([
-            'shortcut' => $this->serializer->serialize($shortcut),
-        ]);
+    /** @var Shortcut $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
+        return [
+            'shortcut' => $this->serializer->serialize($resource),
+        ];
     }
 }

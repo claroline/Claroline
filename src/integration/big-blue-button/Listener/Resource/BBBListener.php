@@ -13,86 +13,78 @@ namespace Claroline\BigBlueButtonBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\BigBlueButtonBundle\Entity\BBB;
 use Claroline\BigBlueButtonBundle\Manager\BBBManager;
 use Claroline\BigBlueButtonBundle\Manager\EvaluationManager;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class BBBListener
+class BBBListener extends ResourceComponent
 {
-    private TokenStorageInterface $tokenStorage;
-    private PlatformConfigurationHandler $config;
-    private SerializerProvider $serializer;
-    private BBBManager $bbbManager;
-    private EvaluationManager $evaluationManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        PlatformConfigurationHandler $config,
-        SerializerProvider $serializer,
-        BBBManager $bbbManager,
-        EvaluationManager $evaluationManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly SerializerProvider $serializer,
+        private readonly BBBManager $bbbManager,
+        private readonly EvaluationManager $evaluationManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->config = $config;
-        $this->serializer = $serializer;
-        $this->bbbManager = $bbbManager;
-        $this->evaluationManager = $evaluationManager;
     }
 
-    public function onLoad(LoadResourceEvent $event): void
+    public static function getName(): string
     {
-        /** @var BBB $bbb */
-        $bbb = $event->getResource();
+        return 'claroline_big_blue_button';
+    }
 
+    /** @var BBB $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
         $joinStatus = 'closed';
-        $canStart = $this->bbbManager->canStartMeeting($bbb);
+        $canStart = $this->bbbManager->canStartMeeting($resource);
         if ($canStart) {
-            $joinStatus = $this->bbbManager->canJoinMeeting($bbb);
+            $joinStatus = $this->bbbManager->canJoinMeeting($resource);
         }
 
         $allowRecords = $this->config->getParameter('bbb.allow_records');
 
         $lastRecording = null;
-        if ($allowRecords && $bbb->isRecord()) {
+        if ($allowRecords && $resource->isRecord()) {
             // not the best place to do it
-            $this->bbbManager->syncRecordings($bbb);
+            $this->bbbManager->syncRecordings($resource);
 
-            if ($bbb->getLastRecording()) {
-                $lastRecording = $this->serializer->serialize($bbb->getLastRecording());
+            if ($resource->getLastRecording()) {
+                $lastRecording = $this->serializer->serialize($resource->getLastRecording());
             }
         }
 
         $userEvaluation = null;
         if ($this->tokenStorage->getToken()->getUser() instanceof User) {
-            $attempt = $this->evaluationManager->update($bbb->getResourceNode(), $this->tokenStorage->getToken()->getUser());
+            $attempt = $this->evaluationManager->update($resource->getResourceNode(), $this->tokenStorage->getToken()->getUser());
             $userEvaluation = $attempt->getResourceUserEvaluation();
         }
 
-        $event->setData([
+        return [
             'userEvaluation' => $this->serializer->serialize($userEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
             'servers' => $this->bbbManager->getServers(),
-            'bbb' => $this->serializer->serialize($bbb),
+            'bbb' => $this->serializer->serialize($resource),
             'allowRecords' => $allowRecords,
             'canStart' => $canStart,
             'joinStatus' => $joinStatus,
             'lastRecording' => $lastRecording,
-        ]);
-        $event->stopPropagation();
+        ];
     }
 
-    public function onDelete(DeleteResourceEvent $event): void
+
+    /** @var BBB $resource */
+    public function delete(AbstractResource $resource, FileBag $fileBag, bool $softDelete = true): bool
     {
-        /** @var BBB $bbb */
-        $bbb = $event->getResource();
-        if (!$event->isSoftDelete()) {
-            $this->bbbManager->deleteRecordings($bbb);
+        if (!$softDelete) {
+            $this->bbbManager->deleteRecordings($resource);
         }
 
-        $event->stopPropagation();
+        return true;
     }
 }

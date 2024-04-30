@@ -3,6 +3,9 @@
 
 body {
     //background: transparent; // removes bootstrap default for TinyMCE rendering
+    scrollbar-color: shade-color($gray-900, 40%) shade-color($gray-900, 10%);
+    scrollbar-width: auto;
+    scroll-behavior: smooth;
 }
 
 // Moves the app scroll bar after the fixed header

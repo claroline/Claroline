@@ -5,64 +5,60 @@ namespace Claroline\CoreBundle\Listener\Resource;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
+use Claroline\CoreBundle\Event\Resource\UpdateResourceEvent;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Twig\Environment;
 
 class ResourceListener
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var Environment */
-    private $templating;
-    /** @var Crud */
-    private $crud;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ResourceManager */
-    private $manager;
-    /** @var ResourceLifecycleManager */
-    private $lifecycleManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        Environment $templating,
-        Crud $crud,
-        SerializerProvider $serializer,
-        ResourceManager $manager,
-        ResourceLifecycleManager $lifecycleManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly Environment $templating,
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly SerializerProvider $serializer,
+        private readonly ResourceManager $manager,
+        private readonly ResourceLifecycleManager $lifecycleManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->templating = $templating;
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->manager = $manager;
-        $this->lifecycleManager = $lifecycleManager;
     }
 
-    public function load(LoadResourceEvent $event)
+    public function load(LoadResourceEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
-        $user = $event->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         // Increment view count if viewer is not creator of the resource
         if (!($user instanceof User) || $user !== $resourceNode->getCreator()) {
             $this->manager->addView($resourceNode);
         }
 
-        // propagate event to resource type
-        $subEvent = $this->lifecycleManager->load($resourceNode);
+        $openEvent = new LoadResourceEvent($this->getResourceFromNode($resourceNode), $event->isEmbedded());
+        $this->eventDispatcher->dispatch($openEvent, ResourceEvents::getEventName(ResourceEvents::OPEN, $resourceNode->getResourceType()->getName()));
 
-        $event->setData(array_merge($event->getData(), $subEvent->getData()));
+        $event->setData(array_merge($event->getData(), $openEvent->getData()));
     }
 
-    public function embed(EmbedResourceEvent $event)
+    /**
+     * Embed the resource in texts.
+     * It will generate a link for most of the resources. Some files (images, videos/audios) are directly rendered.
+     */
+    public function embed(EmbedResourceEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
 
@@ -84,34 +80,52 @@ class ResourceListener
         }
     }
 
-    public function create(ResourceActionEvent $event)
+    public function create(ResourceActionEvent $event): void
     {
         // forward to the resource type
         $this->lifecycleManager->create($event->getResourceNode());
     }
 
-    public function about(ResourceActionEvent $event)
-    {
-        $event->setResponse(
-            new JsonResponse($this->serializer->serialize($event->getResourceNode(), [Options::NO_RIGHTS]))
-        );
-        $event->stopPropagation();
-    }
-
-    public function configure(ResourceActionEvent $event)
+    public function configure(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
+        $resource = $this->getResourceFromNode($resourceNode);
+
         $data = $event->getData();
 
-        $this->crud->update($resourceNode, $data);
+        $isManager = $this->authorization->isGranted('ADMINISTRATE', $resourceNode);
+        if (!empty($data)) {
+            $this->om->startFlushSuite();
 
-        $event->setResponse(new JsonResponse(
-            $this->serializer->serialize($resourceNode)
-        ));
+            if (!empty($data['resourceNode'])) {
+                $this->crud->update($resourceNode, $data['resourceNode'], [Options::PERSIST_TAG]);
+            }
+
+            if (!empty($data['resource'])) {
+                $this->crud->update($resource, $data['resource']);
+            }
+
+            if (!empty($data['rights']) && $isManager) {
+                $this->crud->update($resourceNode, ['rights' => $data['rights']]);
+            }
+
+            $this->om->endFlushSuite();
+        }
+
+        $updateResource = new UpdateResourceEvent($resource, $data);
+        $this->eventDispatcher->dispatch($updateResource, ResourceEvents::getEventName(ResourceEvents::UPDATE, $resourceNode->getResourceType()->getName()));
+
+        $event->setResponse(new JsonResponse(array_merge([], $updateResource->getResponse(), [
+            'resourceNode' => $this->serializer->serialize($resourceNode, [Options::NO_RIGHTS]),
+            'rights' => $isManager ? array_map(function (ResourceRights $rights) {
+                return $this->serializer->serialize($rights);
+            }, $resourceNode->getRights()->toArray()) : []
+        ])));
+
         $event->stopPropagation();
     }
 
-    public function rights(ResourceActionEvent $event)
+    public function rights(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
 
@@ -131,12 +145,7 @@ class ResourceListener
         ));
     }
 
-    public function edit(ResourceActionEvent $event)
-    {
-        $this->lifecycleManager->edit($event->getResourceNode());
-    }
-
-    public function publish(ResourceActionEvent $event)
+    public function publish(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
 
@@ -150,7 +159,7 @@ class ResourceListener
         );
     }
 
-    public function unpublish(ResourceActionEvent $event)
+    public function unpublish(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
 
@@ -164,12 +173,12 @@ class ResourceListener
         );
     }
 
-    public function export(ResourceActionEvent $event)
+    public function export(ResourceActionEvent $event): void
     {
         $this->lifecycleManager->export($event->getResourceNode());
     }
 
-    public function delete(ResourceActionEvent $event)
+    public function delete(ResourceActionEvent $event): void
     {
         $options = $event->getOptions();
         if (isset($options['hard']) && 'false' === $options['hard']) {
@@ -184,7 +193,7 @@ class ResourceListener
         );
     }
 
-    public function restore(ResourceActionEvent $event)
+    public function restore(ResourceActionEvent $event): void
     {
         $this->manager->restore($event->getResourceNode());
 
@@ -193,7 +202,7 @@ class ResourceListener
         );
     }
 
-    public function copy(ResourceActionEvent $event)
+    public function copy(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
         $data = $event->getData();
@@ -216,7 +225,7 @@ class ResourceListener
         }
     }
 
-    public function move(ResourceActionEvent $event)
+    public function move(ResourceActionEvent $event): void
     {
         $resourceNode = $event->getResourceNode();
         $data = $event->getData();
@@ -234,5 +243,15 @@ class ResourceListener
                 new JsonResponse(null, 500)
             );
         }
+    }
+
+    private function getResourceFromNode(ResourceNode $resourceNode): ?AbstractResource
+    {
+        /** @var AbstractResource $resource */
+        $resource = $this->om
+            ->getRepository($resourceNode->getClass())
+            ->findOneBy(['resourceNode' => $resourceNode]);
+
+        return $resource;
     }
 }

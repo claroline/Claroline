@@ -11,46 +11,21 @@
 
 namespace Claroline\CoreBundle\Event\Resource;
 
-use Claroline\AppBundle\Event\DataConveyorEventInterface;
-use Claroline\AppBundle\Event\MandatoryEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event dispatched by the resource controller when a resource is loaded from the api.
  */
-class LoadResourceEvent extends Event implements MandatoryEventInterface, DataConveyorEventInterface
+class LoadResourceEvent extends Event
 {
-    /** @var AbstractResource */
-    private $resource;
-
-    /** @var bool */
-    private $embedded;
-
-    /** @var array */
-    private $data = [];
-
-    /** @var bool */
-    private $populated = false;
-
-    /** @var User */
-    private $user;
+    private array $data = [];
 
     public function __construct(
-        AbstractResource $resource,
-        User $user = null,
-        ?bool $embedded = false
+        private readonly AbstractResource $resource,
+        private readonly ?bool $embedded = false
     ) {
-        $this->resource = $resource;
-        $this->user = $user;
-        $this->embedded = $embedded;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
     }
 
     /**
@@ -81,16 +56,10 @@ class LoadResourceEvent extends Event implements MandatoryEventInterface, DataCo
     public function setData(array $data): void
     {
         $this->data = $data;
-        $this->populated = true;
     }
 
     public function getData(): ?array
     {
         return $this->data;
-    }
-
-    public function isPopulated(): bool
-    {
-        return $this->populated;
     }
 }

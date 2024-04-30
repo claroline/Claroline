@@ -14,6 +14,7 @@ namespace Claroline\ClacoFormBundle\Listener\Resource;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
@@ -21,74 +22,44 @@ use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class ClacoFormListener
+class ClacoFormListener extends ResourceComponent
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var PlatformConfigurationHandler */
-    private $platformConfigHandler;
-    /** @var RoleManager */
-    private $roleManager;
-    /** @var ClacoFormManager */
-    private $clacoFormManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        Crud $crud,
-        PlatformConfigurationHandler $platformConfigHandler,
-        RoleManager $roleManager,
-        ClacoFormManager $clacoFormManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly Crud $crud,
+        private readonly RoleManager $roleManager,
+        private readonly ClacoFormManager $clacoFormManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->crud = $crud;
-        $this->platformConfigHandler = $platformConfigHandler;
-        $this->roleManager = $roleManager;
-        $this->clacoFormManager = $clacoFormManager;
     }
 
-    /**
-     * Loads the ClacoForm resource.
-     */
-    public function onLoad(LoadResourceEvent $event): void
+    public static function getName(): string
     {
-        /** @var ClacoForm $clacoForm */
-        $clacoForm = $event->getResource();
+        return 'claroline_claco_form';
+    }
+
+    /** @var ClacoForm $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
         /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $isAnon = !$user instanceof User;
-        $myEntries = $isAnon ? [] : $this->clacoFormManager->getUserEntries($clacoForm, $user);
+        $myEntries = $isAnon ? [] : $this->clacoFormManager->getUserEntries($resource, $user);
         $canGeneratePdf = !$isAnon;
-        $cascadeLevelMax = $this->platformConfigHandler->hasParameter('claco_form_cascade_select_level_max') ?
-            $this->platformConfigHandler->getParameter('claco_form_cascade_select_level_max') :
-            2;
         $roles = [];
-        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $roleAnonymous = $this->roleManager->getRoleByName('ROLE_ANONYMOUS');
-        $workspaceRoles = $this->roleManager->getWorkspaceRoles($clacoForm->getResourceNode()->getWorkspace());
+        $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
+        $roleAnonymous = $this->roleManager->getRoleByName(PlatformRoles::ANONYMOUS);
+        $workspaceRoles = $this->roleManager->getWorkspaceRoles($resource->getResourceNode()->getWorkspace());
         $roles[] = $this->serializer->serialize($roleUser, [Options::SERIALIZE_MINIMAL]);
         $roles[] = $this->serializer->serialize($roleAnonymous, [Options::SERIALIZE_MINIMAL]);
 
@@ -96,10 +67,8 @@ class ClacoFormListener
             $roles[] = $this->serializer->serialize($workspaceRole, [Options::SERIALIZE_MINIMAL]);
         }
         $myRoles = $isAnon ? [$roleAnonymous->getName()] : $user->getRoles();
-        $serializedClacoForm = $this->serializer->serialize($clacoForm);
-        $canEdit = $isAnon ?
-            false :
-            $this->authorization->isGranted('EDIT', $clacoForm->getResourceNode());
+        $serializedClacoForm = $this->serializer->serialize($resource);
+        $canEdit = !$isAnon && $this->authorization->isGranted('EDIT', $resource->getResourceNode());
 
         if ($canEdit) {
             foreach ($serializedClacoForm['list']['filters'] as $key => $filter) {
@@ -108,54 +77,48 @@ class ClacoFormListener
             }
         }
 
-        $event->setData([
+        return [
             'clacoForm' => $serializedClacoForm,
             'canGeneratePdf' => $canGeneratePdf,
-            'cascadeLevelMax' => $cascadeLevelMax,
             'myEntriesCount' => count($myEntries),
             // do not expose this and precalculate missing user rights
             'roles' => $roles,
             'myRoles' => $myRoles,
-        ]);
-        $event->stopPropagation();
+        ];
     }
 
-    public function onCopy(CopyResourceEvent $event): void
+    /**
+     * @param ClacoForm $original
+     * @param ClacoForm $copy
+     */
+    public function copy(AbstractResource $original, AbstractResource $copy): void
     {
-        /** @var ClacoForm $clacoForm */
-        $clacoForm = $event->getResource();
-        /** @var ClacoForm $copy */
-        $copy = $event->getCopy();
-        $copy = $this->clacoFormManager->copyClacoForm($clacoForm, $copy);
-
-        $event->setCopy($copy);
-        $event->stopPropagation();
+        $this->clacoFormManager->copyClacoForm($original, $copy);
     }
 
-    public function onExport(ExportResourceEvent $exportEvent): void
+    /** @var ClacoForm $resource */
+    public function export(AbstractResource $resource, FileBag $fileBag): ?array
     {
-        /** @var ClacoForm $clacoForm */
-        $clacoForm = $exportEvent->getResource();
+        $categories = $resource->getCategories();
+        $keywords = $resource->getKeywords();
+        $entries = $this->clacoFormManager->getAllEntries($resource);
 
-        $exportEvent->setData([
+        return [
             'categories' => array_map(function (Category $category) {
                 return $this->serializer->serialize($category);
-            }, $clacoForm->getCategories()),
+            }, $categories),
             'keywords' => array_map(function (Keyword $keyword) {
                 return $this->serializer->serialize($keyword);
-            }, $clacoForm->getKeywords()),
+            }, $keywords),
             'entries' => array_map(function (Entry $entry) {
                 return $this->serializer->serialize($entry);
-            }, $this->clacoFormManager->getAllEntries($clacoForm)),
-        ]);
+            }, $entries),
+        ];
     }
 
-    public function onImport(ImportResourceEvent $event): void
+    /** @var ClacoForm $resource */
+    public function import(AbstractResource $resource, FileBag $fileBag, array $data = []): void
     {
-        /** @var ClacoForm $clacoForm */
-        $clacoForm = $event->getResource();
-        $data = $event->getData();
-
         // We will replace UUIDs in the string version of the data,
         // it will be easier to fix relationships this way than creating a mapping.
         // This may have a huge performances impact because we need to decode the string multiple times.
@@ -163,24 +126,24 @@ class ClacoFormListener
         if (!empty($data['resource']) && !empty($data['resource']['fields'])) {
             foreach ($data['resource']['fields'] as $fieldData) {
                 $newField = new Field();
-                $newField->setClacoForm($clacoForm);
-                $clacoForm->addField($newField);
+                $newField->setClacoForm($resource);
+                $resource->addField($newField);
 
                 // no Crud here. This is managed by the ClacoFormSerializer in the app
                 $newField = $this->serializer->deserialize($fieldData, $newField, [Options::REFRESH_UUID]);
 
                 $this->om->persist($newField);
-                $this->om->persist($clacoForm);
+                $this->om->persist($resource);
 
                 // replace UUIDs for Categories and Entries data
                 $rawData = str_replace($fieldData['id'], $newField->getUuid(), $rawData);
 
                 // update template placeholders if any
-                if (!empty($clacoForm->getTemplate())) {
-                    $template = str_replace("%field_{$fieldData['id']}%", "%field_{$newField->getUuid()}%", $clacoForm->getTemplate());
+                if (!empty($resource->getTemplate())) {
+                    $template = str_replace("%field_{$fieldData['id']}%", "%field_{$newField->getUuid()}%", $resource->getTemplate());
 
-                    $clacoForm->setTemplate($template);
-                    $this->om->persist($clacoForm);
+                    $resource->setTemplate($template);
+                    $this->om->persist($resource);
                 }
             }
         }
@@ -190,7 +153,7 @@ class ClacoFormListener
         if (!empty($data['categories'])) {
             foreach ($data['categories'] as $categoryData) {
                 $category = new Category();
-                $category->setClacoForm($clacoForm);
+                $category->setClacoForm($resource);
 
                 $this->crud->create($category, $categoryData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
 
@@ -204,7 +167,7 @@ class ClacoFormListener
         if (!empty($data['keywords'])) {
             foreach ($data['keywords'] as $keywordData) {
                 $keyword = new Keyword();
-                $keyword->setClacoForm($clacoForm);
+                $keyword->setClacoForm($resource);
 
                 $this->crud->create($keyword, $keywordData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
 
@@ -218,7 +181,7 @@ class ClacoFormListener
         if (!empty($data['entries'])) {
             foreach ($data['entries'] as $entryData) {
                 $entry = new Entry();
-                $entry->setClacoForm($clacoForm);
+                $entry->setClacoForm($resource);
 
                 $this->crud->create($entry, $entryData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
 

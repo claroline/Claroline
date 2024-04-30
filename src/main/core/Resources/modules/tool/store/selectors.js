@@ -3,6 +3,7 @@ import {createSelector} from 'reselect'
 import {selectors as contextSelectors} from '#/main/app/context/store/selectors'
 
 const STORE_NAME = 'tool'
+const EDITOR_NAME = 'toolEditor'
 
 const store = (state) => state[STORE_NAME] || {}
 const tool = store
@@ -23,7 +24,7 @@ const name = createSelector(
 const basePath = contextSelectors.path
 
 const path = createSelector(
-  [basePath, name],
+  [contextSelectors.path, name],
   (basePath, name) => basePath + '/' + name
 )
 
@@ -67,6 +68,7 @@ const contextTools = contextSelectors.tools
 
 export const selectors = {
   STORE_NAME,
+  EDITOR_NAME,
   tool,
 
   loaded,

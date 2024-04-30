@@ -12,24 +12,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class VideoListener
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        SerializerProvider $serializer,
-        EvaluationManager $evaluationManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly SerializerProvider $serializer,
+        private readonly EvaluationManager $evaluationManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->serializer = $serializer;
-        $this->evaluationManager = $evaluationManager;
     }
 
-    public function onLoad(LoadFileEvent $event)
+    public function onLoad(LoadFileEvent $event): void
     {
         /** @var File $resource */
         $video = $event->getResource();

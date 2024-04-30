@@ -2,9 +2,9 @@
 
 namespace Claroline\SlideshowBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Display\Color;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Meta\Color;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,37 +22,29 @@ class Slide
 
     /**
      * @ORM\Column(type="text")
-     *
-     * @var string
      */
-    private $content;
+    private ?string $content;
 
     /**
      * Order of the slide in the slideshow.
      *
      * @ORM\Column(name="slide_order", type="integer")
-     *
-     * @var int
      */
-    private $order;
+    private int $order = 0;
 
     /**
      * The title of the slide.
      *
      * @ORM\Column(nullable=true)
-     *
-     * @var string
      */
-    private $title;
+    private ?string $title;
 
     /**
      * Description of the slide.
      *
-     * @var string
-     *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    private ?string $description;
 
     /**
      * The parent slideshow.
@@ -60,119 +52,70 @@ class Slide
      * @ORM\ManyToOne(targetEntity="Claroline\SlideshowBundle\Entity\Resource\Slideshow", inversedBy="slides")
      *
      * @ORM\JoinColumn(name="slideshow_id", referencedColumnName="id", onDelete="CASCADE")
-     *
-     * @var Slideshow
      */
-    private $slideshow;
+    private ?Slideshow $slideshow = null;
 
-    /**
-     * Slide constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    /**
-     * Get mime type.
-     */
     public function getMimeType(): string
     {
         return $this->mimeType;
     }
 
-    /**
-     * Set mime type.
-     */
-    public function setMimeType(string $mimeType)
+    public function setMimeType(string $mimeType): void
     {
         $this->mimeType = $mimeType;
     }
 
-    /**
-     * Get content.
-     */
     public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * Set content.
-     */
-    public function setContent(string $content)
+    public function setContent(string $content): void
     {
         $this->content = $content;
     }
 
-    /**
-     * Get title.
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     */
-    public function setTitle($title)
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?String
     {
         return $this->description;
     }
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     */
-    public function setDescription($description)
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
 
-    /**
-     * Get order.
-     */
     public function getOrder(): int
     {
         return $this->order;
     }
 
-    /**
-     * Set order.
-     */
-    public function setOrder(int $order)
+    public function setOrder(int $order): void
     {
         $this->order = $order;
     }
 
-    /**
-     * Get parent slideshow.
-     */
     public function getSlideshow(): Slideshow
     {
         return $this->slideshow;
     }
 
-    /**
-     * Set parent slideshow.
-     */
-    public function setSlideshow(Slideshow $slideshow = null)
+    public function setSlideshow(Slideshow $slideshow = null): void
     {
         $this->slideshow = $slideshow;
     }

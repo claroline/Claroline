@@ -15,9 +15,11 @@
     @include border-radius($border-radius-pill);
   }
 
-  /*.content-info-block-label {
-    text-transform: uppercase;
-  }*/
+  .content-info-block-label {
+    text-transform: var(--#{$prefix}label-text-transform);
+    font-size: $label-font-size;
+    color: $label-color;
+  }
 
   .content-info-block-content {
     margin: 0;

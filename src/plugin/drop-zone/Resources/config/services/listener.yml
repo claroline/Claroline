@@ -4,7 +4,4 @@ services:
             - '%claroline.param.files_directory%'
             - '@security.token_storage'
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.claroline_dropzone.load, method: onLoad }
-            - { name: kernel.event_listener, event: resource.claroline_dropzone.copy, method: onCopy }
-            - { name: kernel.event_listener, event: resource.claroline_dropzone.delete, method: onDelete }
+        tags: ['kernel.event_subscriber']

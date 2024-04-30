@@ -6,11 +6,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.claroline_claco_form.load, method: onLoad }
-            - { name: kernel.event_listener, event: resource.claroline_claco_form.copy, method: onCopy }
-            - { name: kernel.event_listener, event: resource.claroline_claco_form.export, method: onExport }
-            - { name: kernel.event_listener, event: resource.claroline_claco_form.import, method: onImport }
+        tags: ['kernel.event_subscriber']

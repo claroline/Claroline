@@ -36,7 +36,7 @@ registry.add('ClarolineCoreBundle', {
       'configure': () => { return import(/* webpackChunkName: "core-action-resource-configure" */   '#/main/core/actions/resource/configure') },
       'copy'     : () => { return import(/* webpackChunkName: "core-action-resource-copy" */        '#/main/core/actions/resource/copy') },
       'delete'   : () => { return import(/* webpackChunkName: "core-action-resource-delete" */      '#/main/core/actions/resource/delete') },
-      'edit'     : () => { return import(/* webpackChunkName: "core-action-resource-edit" */        '#/main/core/actions/resource/edit') },
+      //'edit'     : () => { return import(/* webpackChunkName: "core-action-resource-edit" */        '#/main/core/actions/resource/edit') },
       'export'   : () => { return import(/* webpackChunkName: "core-action-resource-export" */      '#/main/core/actions/resource/export') },
       'move'     : () => { return import(/* webpackChunkName: "core-action-resource-move" */        '#/main/core/actions/resource/move') },
       'open'     : () => { return import(/* webpackChunkName: "core-action-resource-open" */        '#/main/core/actions/resource/open') },
