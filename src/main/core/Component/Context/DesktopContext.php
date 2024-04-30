@@ -5,20 +5,15 @@ namespace Claroline\CoreBundle\Component\Context;
 use Claroline\AppBundle\Component\Context\AbstractContext;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Manager\SecurityManager;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class DesktopContext extends AbstractContext
 {
     public function __construct(
         private readonly SecurityManager $securityManager,
-        private readonly PlatformConfigurationHandler $config,
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly ObjectManager $om
+        private readonly PlatformConfigurationHandler $config
     ) {
     }
 
@@ -39,7 +34,9 @@ class DesktopContext extends AbstractContext
 
     public function isAvailable(): bool
     {
-        return $this->om->getRepository(OrderedTool::class)->countByDesktopAndRoles($this->tokenStorage->getToken()->getRoleNames());
+        return !empty($this->securityManager->getCurrentUser());
+        // do user have access to at least one tool ?
+        // return !empty($this->toolManager->getOrderedToolsByDesktop($token->getRoleNames()));
     }
 
     public function isRoot(): bool
