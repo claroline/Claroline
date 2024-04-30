@@ -5,7 +5,7 @@
 
 <!DOCTYPE html>
 
-<html lang="{{ app.request.locale }}" class="claroline-app {{ config.getParameter('theme') }}" data-bs-theme="light">
+<html lang="{{ locale is defined ? locale : app.request.locale }}" class="claroline-app {{ config.getParameter('theme') }}" data-bs-theme="light">
     <head>
         <meta charset="utf-8" />
         {% if title is not empty %}
