@@ -22,24 +22,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ResourceAudioListener
 {
-    /** @var AudioPlayerManager */
-    private $manager;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        AudioPlayerManager $manager,
-        SerializerProvider $serializer,
-        TokenStorageInterface $tokenStorage
+        private readonly AudioPlayerManager $manager,
+        private readonly SerializerProvider $serializer,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->manager = $manager;
-        $this->serializer = $serializer;
-        $this->tokenStorage = $tokenStorage;
     }
 
-    public function onResourceAudioLoad(LoadFileEvent $event)
+    public function onResourceAudioLoad(LoadFileEvent $event): void
     {
         /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
@@ -84,7 +74,7 @@ class ResourceAudioListener
         $event->setData(array_merge($audioData, $event->getData()));
     }
 
-    public function onResourceAudioDeserialize(GenericDataEvent $event)
+    public function onResourceAudioDeserialize(GenericDataEvent $event): void
     {
         $eventData = $event->getData();
         $resourceNode = $eventData['resourceNode'];

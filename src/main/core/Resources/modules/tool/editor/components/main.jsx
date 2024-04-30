@@ -1,16 +1,12 @@
 import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
-import {Routes, RouteTypes} from '#/main/app/router'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {ToolPage} from '#/main/core/tool/components/page'
+import {Editor} from '#/main/app/editor'
 
 import {EditorRights} from '#/main/core/tool/editor/containers/rights'
 import {EditorHistory} from '#/main/core/tool/editor/components/history'
-import {Form} from '#/main/app/content/form/containers/form'
 import {selectors} from '#/main/core/tool/editor/store'
 
 const ToolEditor = (props) => {
@@ -21,104 +17,43 @@ const ToolEditor = (props) => {
   }, [props.contextType, props.contextId, props.name, props.loaded])
 
   return (
-    <ToolPage
-      title={trans('parameters')}
-      actions={[
+    <Editor
+      path={props.path+'/edit'}
+      title={trans(props.name, {}, 'tools')}
+      name={selectors.STORE_NAME}
+      target={['apiv2_tool_configure', {
+        name: props.name,
+        context: props.contextType,
+        contextId: props.contextId
+      }]}
+      close={props.path}
+      onSave={(savedData) => {
+        console.log('onSave')
+        console.log(savedData)
+        props.refresh(props.name, savedData, props.contextType)}
+      }
+      defaultPage={props.defaultPage}
+      overview={props.overview || (() => props.children)}
+      pages={[
         {
-          name: 'edit-poster',
-          type: CALLBACK_BUTTON,
-          label: trans('Modifier la couverture'),
-          callback: () => true
+          name: 'permissions',
+          title: trans('permissions'),
+          component: EditorRights,
+          disabled: !hasPermission('administrate', props.tool)
+        }, {
+          name: 'history',
+          title: trans('history'),
+          component: EditorHistory
         }
-      ]}
-      menu={{
-        nav: [].concat(props.menu, [
-          {
-            name: 'overview',
-            label: trans('about'),
-            type: LINK_BUTTON,
-            target: props.path+'/edit',
-            displayed: !isEmpty(props.children),
-            exact: true
-          }, {
-            name: 'permissions',
-            label: trans('permissions'),
-            type: LINK_BUTTON,
-            target: props.path+'/edit/permissions',
-            displayed: hasPermission('administrate', props.tool)
-          }, {
-            name: 'history',
-            label: trans('history'),
-            type: LINK_BUTTON,
-            target: props.path+'/edit/history'
-          }
-        ]),
-        actions: [
-          {
-            name: 'close',
-            label: trans('close'),
-            icon: 'fa far fa-fw fa-times-circle',
-            type: LINK_BUTTON,
-            target: props.path,
-            exact: true
-          }
-        ]
-      }}
-    >
-      <Form
-        disabled={!props.loaded}
-        className="my-3"
-        name={selectors.STORE_NAME}
-        dataPart="data"
-        target={['apiv2_tool_configure', {
-          name: props.name,
-          context: props.contextType,
-          contextId: props.contextId
-        }]}
-        onSave={(savedData) => props.refresh(props.name, savedData, props.contextType)}
-        buttons={true}
-      >
-        <Routes
-          path={props.path+'/edit'}
-          routes={[
-            {
-              path: '/permissions',
-              component: EditorRights,
-              disabled: !hasPermission('administrate', props.tool)
-            }, {
-              path: '/history',
-              component: EditorHistory
-            }
-          ]
-            .concat(props.pages || [])
-            .concat([
-              {
-                path: '/',
-                disabled: isEmpty(props.children),
-                render: () => props.children,
-                exact: true
-              }
-            ])
-          }
-          redirect={props.redirect}
-        />
-      </Form>
-    </ToolPage>
+      ].concat(props.pages || [])}
+    />
   )
 }
 
 ToolEditor.propTypes = {
-  /**
-   * A func to return the custom parameters data
-   */
-  additionalData: T.func,
-
-  menu: T.arrayOf(T.shape({
+  pages: T.arrayOf(T.shape({
 
   })),
-  pages: T.arrayOf(T.shape(
-    RouteTypes.propTypes
-  )),
 
   // from store
   loaded: T.bool.isRequired,

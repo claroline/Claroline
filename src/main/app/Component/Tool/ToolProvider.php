@@ -192,12 +192,14 @@ class ToolProvider extends AbstractComponentProvider
         $exportEvent = new ExportToolEvent($toolName, $context, $contextSubject, $fileBag);
         $this->eventDispatcher->dispatch($exportEvent, ToolEvents::EXPORT);
 
+        $toolRights = $orderedTool->getRights()->toArray();
+
         return [
             'name' => $toolName,
             'orderedTool' => $this->serializer->serialize($orderedTool, [SerializerInterface::SERIALIZE_TRANSFER]),
             'rights' => array_map(function (ToolRights $rights) {
                 return $this->serializer->serialize($rights, [SerializerInterface::SERIALIZE_TRANSFER]);
-            }, $orderedTool->getRights()->toArray()),
+            }, $toolRights),
             'data' => array_merge([], $toolData, $exportEvent->getData()),
         ];
     }

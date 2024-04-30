@@ -123,9 +123,6 @@ const reducer = combineReducers({
   canGeneratePdf: makeReducer(false, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.canGeneratePdf || state
   }),
-  cascadeLevelMax: makeReducer(5, {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.cascadeLevelMax || state
-  }),
   roles: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.roles || state
   }),

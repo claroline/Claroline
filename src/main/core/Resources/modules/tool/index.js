@@ -1,5 +1,7 @@
 import {ToolPage} from '#/main/core/tool/components/page'
 import {ToolMain as Tool} from '#/main/core/tool/components/main'
+import {ToolEditor} from '#/main/core/tool/editor/containers/main'
+import {constants} from '#/main/core/tool/constants'
 import {selectors} from '#/main/core/tool/store'
 
 /**
@@ -17,7 +19,9 @@ function declareTool(ToolComponent, ToolEditorComponent) {
 // Declare public element of the tool module
 export {
   Tool,
+  ToolEditor,
   ToolPage,
+  constants,
   selectors,
   declareTool
 }

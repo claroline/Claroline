@@ -3,11 +3,6 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Icap\LessonBundle\Manager\ChapterManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.icap_lesson.load, method: onLoad }
-            - { name: kernel.event_listener, event: resource.icap_lesson.copy, method: onCopy }
-            - { name: kernel.event_listener, event: resource.icap_lesson.export, method: onExport }
-            - { name: kernel.event_listener, event: resource.icap_lesson.import, method: onImport }
+        tags: ['kernel.event_subscriber']

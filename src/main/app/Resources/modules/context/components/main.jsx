@@ -113,7 +113,7 @@ const ContextMain = (props) => {
               component: ContextProfile
             }, {
               path: '/edit',
-              component: ContextEditor
+              component: props.editor
             }, {
               path: '/:toolName',
               onEnter: (params = {}) => {
@@ -179,6 +179,7 @@ ContextMain.propTypes = {
   loadingPage: T.elementType,
   notFoundPage: T.elementType,
   forbiddenPage: T.elementType,
+  editor: T.elementType,
 
   open: T.func.isRequired,
   history: T.shape({
@@ -188,7 +189,8 @@ ContextMain.propTypes = {
 
 ContextMain.defaultProps = {
   tools: [],
-  footer: FooterMain
+  footer: FooterMain,
+  editor: ContextEditor
 }
 
 export {

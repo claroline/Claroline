@@ -12,137 +12,107 @@
 namespace Claroline\WebResourceBundle\Listener;
 
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\WebResourceBundle\Manager\WebResourceManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class WebResourceListener
+class WebResourceListener extends ResourceComponent
 {
-    /** @var string */
-    private $filesDir;
-
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var string */
-    private $uploadDir;
-
-    /** @var WebResourceManager */
-    private $webResourceManager;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
-    /** @var ResourceManager */
-    private $resourceManager;
-
     public function __construct(
-        string $filesDir,
-        ObjectManager $om,
-        string $uploadDir,
-        WebResourceManager $webResourceManager,
-        ResourceManager $resourceManager,
-        SerializerProvider $serializer
+        private readonly string $filesDir,
+        private readonly ObjectManager $om,
+        private readonly string $uploadDir,
+        private readonly WebResourceManager $webResourceManager,
+        private readonly ResourceManager $resourceManager,
+        private readonly SerializerProvider $serializer
     ) {
-        $this->filesDir = $filesDir;
-        $this->om = $om;
-        $this->uploadDir = $uploadDir;
-        $this->webResourceManager = $webResourceManager;
-        $this->serializer = $serializer;
-        $this->resourceManager = $resourceManager;
     }
 
-    public function onLoad(LoadResourceEvent $event)
+    public static function getName(): string
+    {
+        return 'claroline_web_resource';
+    }
+
+    /** @var File $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
         $ds = DIRECTORY_SEPARATOR;
-        /** @var File $resource */
-        $resource = $event->getResource();
 
         $hash = $resource->getHashName();
         $workspace = $resource->getResourceNode()->getWorkspace();
-        $unzippedPath = $this->uploadDir.$ds.'webresource'.$ds.$workspace->getUuid();
-        $srcPath = 'data/uploads'.$ds.'webresource'.$ds.$workspace->getUuid().$ds.$hash;
+        $unzippedPath = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid();
 
+        $srcPath = 'data/uploads'.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$hash;
         if (!is_dir($srcPath)) {
             $this->webResourceManager->unzip($hash, $workspace);
         }
 
-        $event->setData([
+        return [
             'path' => rtrim($srcPath.$ds.$this->webResourceManager->guessRootFileFromUnzipped($unzippedPath.$ds.$hash), '/'),
             // common file data
             'file' => $this->serializer->serialize($resource),
-        ]);
-
-        $event->stopPropagation();
+        ];
     }
 
-    public function onExport(ExportResourceEvent $event)
+    /** @var File $resource */
+    public function download(AbstractResource $resource): ?string
     {
-        /** @var File $webResource */
-        $webResource = $event->getResource();
-        $workspace = $webResource->getResourceNode()->getWorkspace();
-
-        $path = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$webResource->getHashName();
-
-        $event->addFile($webResource->getHashName(), $path);
+        return $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.
+            DIRECTORY_SEPARATOR.$resource->getResourceNode()->getWorkspace()->getUuid().
+            DIRECTORY_SEPARATOR.$resource->getHashName();
     }
 
-    public function onImport(ImportResourceEvent $event)
+    /** @var File $resource */
+    public function export(AbstractResource $resource, FileBag $fileBag): ?array
     {
-        /** @var File $webResource */
-        $webResource = $event->getResource();
-        $workspace = $webResource->getResourceNode()->getWorkspace();
-        $bag = $event->getFileBag();
+        $workspace = $resource->getResourceNode()->getWorkspace();
 
-        $filesPath = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$webResource->getHashName();
+        $path = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$resource->getHashName();
+
+        $fileBag->add($resource->getHashName(), $path);
+
+        return [];
+    }
+
+    /** @var File $resource */
+    public function import(AbstractResource $resource, FileBag $fileBag, array $data = []): void
+    {
+        $workspace = $resource->getResourceNode()->getWorkspace();
+
+        $filesPath = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$resource->getHashName();
 
         $fileSystem = new Filesystem();
-        $fileSystem->mirror($bag->get($webResource->getHashName()), $filesPath);
+        $fileSystem->mirror($fileBag->get($resource->getHashName()), $filesPath);
     }
 
-    public function onDelete(DeleteResourceEvent $event)
+    /** @var File $resource */
+    public function delete(AbstractResource $resource, FileBag $fileBag, bool $softDelete = true): bool
     {
-        /** @var File $resource */
-        $resource = $event->getResource();
+        if ($softDelete) {
+            return true;
+        }
+
         $workspace = $resource->getResourceNode()->getWorkspace();
         $hashName = $resource->getHashName();
 
-        $files = [];
-
         $archiveFile = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$hashName;
         if (file_exists($archiveFile)) {
-            $files[] = $archiveFile;
+            $fileBag->add($hashName.'-archive', $archiveFile);
         }
 
         $webResourcesPath = $this->uploadDir.DIRECTORY_SEPARATOR.'webresource'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$hashName;
         if (file_exists($webResourcesPath)) {
-            $files[] = $webResourcesPath;
+            $fileBag->add($hashName, $webResourcesPath);
         }
 
-        $event->setFiles($files);
-        $event->stopPropagation();
-    }
-
-    public function onDownload(DownloadResourceEvent $event)
-    {
-        /** @var File $resource */
-        $resource = $event->getResource();
-
-        $name = $this->filesDir.DIRECTORY_SEPARATOR.'webresource'.
-            DIRECTORY_SEPARATOR.$resource->getResourceNode()->getWorkspace()->getUuid().
-            DIRECTORY_SEPARATOR.$resource->getHashName();
-
-        $event->setItem($name);
-        $event->stopPropagation();
+        return true;
     }
 
     /**

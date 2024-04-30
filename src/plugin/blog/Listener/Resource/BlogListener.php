@@ -4,13 +4,11 @@ namespace Icap\BlogBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
@@ -21,89 +19,67 @@ use Icap\BlogBundle\Serializer\CommentSerializer;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class BlogListener
+class BlogListener extends ResourceComponent
 {
-    use PermissionCheckerTrait;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var BlogManager */
-    private $blogManager;
-    /** @var PostManager */
-    private $postManager;
-    /** @var CommentManager */
-    private $commentManager;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        BlogManager $blogManager,
-        PostManager $postManager,
-        CommentManager $commentManager
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly BlogManager $blogManager,
+        private readonly PostManager $postManager,
+        private readonly CommentManager $commentManager
     ) {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->blogManager = $blogManager;
-        $this->postManager = $postManager;
-        $this->commentManager = $commentManager;
     }
 
-    public function onLoad(LoadResourceEvent $event)
+    public static function getName(): string
     {
-        /** @var Blog $blog */
-        $blog = $event->getResource();
+        return 'icap_blog';
+    }
 
+    /** @var Blog $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
         $posts = $this->postManager->getPosts(
-            $blog->getId(),
+            $resource->getId(),
             ['limit' => -1],
-            $this->checkPermission('ADMINISTRATE', $blog->getResourceNode())
-            || $this->checkPermission('EDIT', $blog->getResourceNode())
-            || $this->checkPermission('MODERATE', $blog->getResourceNode())
+            $this->authorization->isGranted('ADMINISTRATE', $resource->getResourceNode())
+            || $this->authorization->isGranted('EDIT', $resource->getResourceNode())
+            || $this->authorization->isGranted('MODERATE', $resource->getResourceNode())
                 ? PostManager::GET_ALL_POSTS
                 : PostManager::GET_PUBLISHED_POSTS,
-            !$blog->getOptions()->getDisplayFullPosts());
+            !$resource->getOptions()->getDisplayFullPosts());
 
         $postsData = [];
         if (!empty($posts)) {
             $postsData = $posts['data'];
         }
 
-        $event->setData([
-            'authors' => $this->postManager->getAuthors($blog),
-            'archives' => $this->postManager->getArchives($blog),
-            'tags' => $this->blogManager->getTags($blog, $postsData),
-            'blog' => $this->serializer->serialize($blog),
-        ]);
-
-        $event->stopPropagation();
+        return [
+            'authors' => $this->postManager->getAuthors($resource),
+            'archives' => $this->postManager->getArchives($resource),
+            'tags' => $this->blogManager->getTags($resource, $postsData),
+            'blog' => $this->serializer->serialize($resource),
+        ];
     }
 
-    public function onExport(ExportResourceEvent $exportEvent)
+    /** @var Blog $resource */
+    public function export(AbstractResource $resource, FileBag $fileBag): ?array
     {
-        /** @var Blog $blog */
-        $blog = $exportEvent->getResource();
-
-        $exportEvent->setData([
+        return [
             'posts' => array_map(function (Post $post) {
                 return $this->serializer->serialize($post, [CommentSerializer::INCLUDE_COMMENTS, CommentSerializer::FETCH_COMMENTS]);
-            }, $blog->getPosts()->toArray()),
-        ]);
+            }, $resource->getPosts()->toArray()),
+        ];
     }
 
-    public function onImport(ImportResourceEvent $event)
+    /** @var Blog $resource */
+    public function import(AbstractResource $resource, FileBag $fileBag, array $data = []): void
     {
-        $data = $event->getData();
-        $blog = $event->getResource();
+        if (empty($data['posts'])) {
+            return;
+        }
 
-        // TODO : use crud
         foreach ($data['posts'] as $postData) {
             /** @var Post $post */
             $post = $this->serializer->deserialize($postData, new Post(), [Options::REFRESH_UUID]);
@@ -120,14 +96,14 @@ class BlogListener
                 $post->setModificationDate(DateNormalizer::denormalize($postData['updateDate']));
             }
 
-            $post->setBlog($blog);
+            $post->setBlog($resource);
             $post->setCreator($this->tokenStorage->getToken()->getUser());
 
             foreach ($postData['comments'] as $commentData) {
                 /** @var Comment $comment */
                 $comment = $this->serializer->deserialize($commentData, new Comment(), [Options::REFRESH_UUID]);
 
-                $this->commentManager->createComment($blog, $post, $this->serializer->deserialize($data, null), $comment['isPublished']);
+                $this->commentManager->createComment($resource, $post, $this->serializer->deserialize($data, null), $comment['isPublished']);
 
                 if (isset($commentData['creationDate'])) {
                     $comment->setCreationDate(DateNormalizer::denormalize($commentData['creationDate']));
@@ -144,33 +120,30 @@ class BlogListener
                 $this->om->persist($comment);
             }
 
-            $post->setBlog($blog);
+            $post->setBlog($resource);
             $this->om->persist($post);
         }
     }
 
-    public function onCopy(CopyResourceEvent $event)
+    /**
+     * @param Blog $original
+     * @param Blog $copy
+     */
+    public function copy(AbstractResource $original, AbstractResource $copy): void
     {
-        /** @var Blog $blog */
-        $blog = $event->getResource();
-        /** @var Blog $newBlog */
-        $newBlog = $event->getCopy();
+        $this->blogManager->updateOptions($copy, $original->getOptions(), $original->getInfos());
 
-        $this->blogManager->updateOptions($newBlog, $blog->getOptions(), $blog->getInfos());
-
-        foreach ($blog->getPosts() as $post) {
+        foreach ($original->getPosts() as $post) {
             $newPost = new Post();
-            $newPost
-                ->setTitle($post->getTitle())
-                ->setContent($post->getContent())
-                ->setAuthor($post->getAuthor())
-                ->setStatus($post->getStatus())
-                ->setPinned($post->isPinned())
-                ->setCreationDate($post->getCreationDate())
-                ->setPublicationDate($post->getPublicationDate())
-                ->setModificationDate($post->getModificationDate())
-                ->setBlog($newBlog)
-            ;
+            $newPost->setTitle($post->getTitle());
+            $newPost->setContent($post->getContent());
+            $newPost->setAuthor($post->getAuthor());
+            $newPost->setStatus($post->getStatus());
+            $newPost->setPinned($post->isPinned());
+            $newPost->setCreationDate($post->getCreationDate());
+            $newPost->setPublicationDate($post->getPublicationDate());
+            $newPost->setModificationDate($post->getModificationDate());
+            $newPost->setBlog($copy);
 
             $newPost->setCreator($post->getCreator());
 
@@ -183,21 +156,16 @@ class BlogListener
 
             foreach ($post->getComments() as $comment) {
                 $newComment = new Comment();
-                $newComment
-                    ->setCreationDate($comment->getCreationDate())
-                    ->setPublicationDate($comment->getPublicationDate())
-                    ->setUpdateDate($comment->getUpdateDate())
-                    ->setAuthor($comment->getAuthor())
-                    ->setMessage($comment->getMessage())
-                    ->setPost($newPost)
-                ;
+                $newComment->setCreationDate($comment->getCreationDate());
+                $newComment->setPublicationDate($comment->getPublicationDate());
+                $newComment->setUpdateDate($comment->getUpdateDate());
+                $newComment->setAuthor($comment->getAuthor());
+                $newComment->setMessage($comment->getMessage());
+                $newComment->setPost($newPost);
             }
         }
 
-        $this->om->persist($newBlog);
+        $this->om->persist($copy);
         $this->om->flush();
-
-        $event->setCopy($newBlog);
-        $event->stopPropagation();
     }
 }

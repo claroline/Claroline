@@ -8,21 +8,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ImportResourceEvent extends Event
 {
-    /** @var AbstractResource */
-    private $resource;
-    /** @var FileBag */
-    private $fileBag;
-    /** @var array */
-    private $data;
-
     public function __construct(
-        AbstractResource $resource,
-        FileBag $fileBag,
-        ?array $data = []
+        private readonly AbstractResource $resource,
+        private readonly FileBag $fileBag,
+        private readonly ?array $data = []
     ) {
-        $this->fileBag = $fileBag;
-        $this->data = $data;
-        $this->resource = $resource;
     }
 
     public function getResource(): AbstractResource

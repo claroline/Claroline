@@ -9,7 +9,7 @@ import omit from 'lodash/omit'
  */
 const TinymceClassic = (props) =>
   <Editor
-    {...omit(props, 'minRows', 'init')}
+    {...omit(props, 'minRows', 'maxRows', 'init')}
     init={merge({}, props.init, {
       // customize toolbars
       menubar: false,
@@ -26,14 +26,19 @@ const TinymceClassic = (props) =>
 
       // plugin autoresize
       plugins: ['autoresize'],
-      min_height: `${props.minRows * 34}px`,
-      max_height: 500
+      min_height: `${props.minRows * 1.5}rem`,
+      max_height: `${props.maxRows * 1.5}rem`
     })}
   />
 
 TinymceClassic.propTypes = {
   init: T.object,
-  minRows: T.number
+  minRows: T.number,
+  maxRows: T.number
+}
+
+TinymceClassic.defaultProps = {
+  maxRows: 15
 }
 
 export {

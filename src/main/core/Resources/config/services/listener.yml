@@ -47,22 +47,16 @@ services:
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.directory.load, method: onLoad }
-            - { name: kernel.event_listener, event: resource.directory.add, method: onAdd }
-            - { name: kernel.event_listener, event: resource.directory.add_files, method: onAddFiles }
-            - { name: kernel.event_listener, event: resource.directory.delete, method: onDelete }
+        tags: ['kernel.event_subscriber']
 
     Claroline\CoreBundle\Listener\Resource\Types\FileListener:
         arguments:
-            - '@security.token_storage'
+            - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
         tags:
-            - { name: kernel.event_listener, event: resource.file.load, method: onLoad }
+            - { name: kernel.event_listener, event: resource.load.file, method: onLoad }
             - { name: kernel.event_listener, event: resource.file.change_file, method: onFileChange }
             - { name: kernel.event_listener, event: resource.file.delete, method: onDelete }
             - { name: kernel.event_listener, event: resource.file.export, method: onExport }
@@ -71,29 +65,28 @@ services:
             - { name: kernel.event_listener, event: download_file, method: onDownload }
 
     Claroline\CoreBundle\Listener\Resource\Types\TextListener:
+        tags: [kernel.event_subscriber]
         arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.text.load, method: load }
 
     Claroline\CoreBundle\Listener\Resource\ResourceListener:
         arguments:
             - '@security.token_storage'
+            - '@security.authorization_checker'
+            - '@event_dispatcher'
             - '@twig'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager'
         tags:
-            - { name: kernel.event_listener, event: resource_load, method: load }
+            - { name: kernel.event_listener, event: resource.load, method: load }
             - { name: kernel.event_listener, event: resource.embed, method: embed }
             - { name: kernel.event_listener, event: resource.create, method: create }
-            - { name: kernel.event_listener, event: resource.about, method: about }
             - { name: kernel.event_listener, event: resource.configure, method: configure }
             - { name: kernel.event_listener, event: resource.rights, method: rights }
-            - { name: kernel.event_listener, event: resource.edit, method: edit }
             - { name: kernel.event_listener, event: resource.publish, method: publish }
             - { name: kernel.event_listener, event: resource.unpublish, method: unpublish }
             - { name: kernel.event_listener, event: resource.export, method: export }

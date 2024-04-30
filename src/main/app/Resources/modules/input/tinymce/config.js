@@ -24,7 +24,6 @@ const config = {
   content_css: [
     theme('bootstrap'),
     'dark'
-
   ],
   highlight_on_focus: false,
   // plugins

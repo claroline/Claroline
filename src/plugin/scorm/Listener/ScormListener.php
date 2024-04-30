@@ -13,15 +13,12 @@ namespace Claroline\ScormBundle\Listener;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DownloadResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Manager\EvaluationManager;
@@ -30,149 +27,114 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ScormListener
+class ScormListener extends ResourceComponent
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ScormManager */
-    private $scormManager;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-
-    /** @var string */
-    private $filesDir;
-    /** @var string */
-    private $uploadDir;
-
-    private $scormResourceRepo;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        ScormManager $scormManager,
-        EvaluationManager $evaluationManager,
-        string $filesDir,
-        string $uploadDir
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly ScormManager $scormManager,
+        private readonly EvaluationManager $evaluationManager,
+        private readonly string $filesDir,
+        private readonly string $uploadDir
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->scormManager = $scormManager;
-        $this->evaluationManager = $evaluationManager;
-        $this->filesDir = $filesDir;
-        $this->uploadDir = $uploadDir;
-
-        $this->scormResourceRepo = $om->getRepository(Scorm::class);
     }
 
-    public function onLoad(LoadResourceEvent $event)
+    public static function getName(): string
     {
-        /** @var Scorm $scorm */
-        $scorm = $event->getResource();
+        return 'claroline_scorm';
+    }
 
-        $user = null;
+    /** @var Scorm $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
         $evaluation = null;
         $tracking = [];
-        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
-            /** @var User $user */
-            $user = $this->tokenStorage->getToken()->getUser();
 
+        /** @var User $user */
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User) {
             // retrieve user progression
             $evaluation = $this->serializer->serialize(
-                $this->evaluationManager->getResourceUserEvaluation($scorm, $user),
+                $this->evaluationManager->getResourceUserEvaluation($resource, $user),
                 [Options::SERIALIZE_MINIMAL]
             );
 
             // retrieve progression for each sco in the scorm
-            $tracking = $this->evaluationManager->generateScosTrackings($scorm->getRootScos(), $user);
+            $tracking = $this->evaluationManager->generateScosTrackings($resource->getRootScos(), $user);
         }
 
-        $event->setData([
-            'scorm' => $this->serializer->serialize($scorm),
+        return [
+            'scorm' => $this->serializer->serialize($resource),
             'userEvaluation' => $evaluation,
             'trackings' => $tracking,
-        ]);
-
-        $event->stopPropagation();
+        ];
     }
 
-    public function onDelete(DeleteResourceEvent $event)
+    /** @var Scorm $resource */
+    public function download(AbstractResource $resource): ?string
     {
-        $scorm = $event->getResource();
-        $workspace = $scorm->getResourceNode()->getWorkspace();
-        $hashName = $scorm->getHashName();
+        return $this->getScormArchive($resource).'.zip';
+    }
 
-        $nbScorm = (int) $this->scormResourceRepo->findNbScormWithSameSource($hashName, $workspace);
+    /** @var Scorm $resource */
+    public function delete(AbstractResource $resource, FileBag $fileBag, bool $softDelete = true): bool
+    {
+        if ($softDelete) {
+            return true;
+        }
+
+        $workspace = $resource->getResourceNode()->getWorkspace();
+        $hashName = $resource->getHashName();
+
+        $nbScorm = (int) $this->om->getRepository(Scorm::class)->findNbScormWithSameSource($hashName, $workspace);
         if (1 === $nbScorm) {
-            $files = [];
-
             $scormArchiveFile = $this->filesDir.DIRECTORY_SEPARATOR.'scorm'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$hashName;
             if (file_exists($scormArchiveFile)) {
-                $files[] = $scormArchiveFile;
+                $fileBag->add($hashName.'-archive', $scormArchiveFile);
             }
 
             $scormResourcesPath = $this->uploadDir.DIRECTORY_SEPARATOR.'scorm'.DIRECTORY_SEPARATOR.$workspace->getUuid().DIRECTORY_SEPARATOR.$hashName;
             if (file_exists($scormResourcesPath)) {
-                $files[] = $scormResourcesPath;
+                $fileBag->add($hashName, $scormResourcesPath);
             }
-
-            $event->setFiles($files);
         }
 
-        $event->stopPropagation();
+        return true;
     }
 
-    public function onExport(ExportResourceEvent $event)
+    /** @var Scorm $resource */
+    public function export(AbstractResource $resource, FileBag $fileBag): ?array
     {
-        /** @var Scorm $scorm */
-        $scorm = $event->getResource();
-
         // get the file path
-        $event->addFile($scorm->getHashName(), $this->getScormArchive($scorm));
+        $fileBag->add($resource->getHashName(), $this->getScormArchive($resource));
+
+        return [];
     }
 
-    public function onImport(ImportResourceEvent $event)
+    /** @var Scorm $resource */
+    public function import(AbstractResource $resource, FileBag $fileBag, array $data = []): void
     {
-        /** @var Scorm $scorm */
-        $scorm = $event->getResource();
-        $resourceNde = $scorm->getResourceNode();
-        $bag = $event->getFileBag();
+        $resourceNode = $resource->getResourceNode();
 
         try {
-            $file = new File($bag->get($scorm->getHashName()));
-            $this->scormManager->unzipScormArchive($resourceNde->getWorkspace(), $file, $scorm->getHashName());
+            $file = new File($fileBag->get($resource->getHashName()));
+            $this->scormManager->unzipScormArchive($resourceNode->getWorkspace(), $file, $resource->getHashName());
         } catch (\Exception $e) {
             // scorm was invalid.
         }
     }
 
-    public function onCopy(CopyResourceEvent $event)
+    /**
+     * @param Scorm $original
+     * @param Scorm $copy
+     */
+    public function copy(AbstractResource $original, AbstractResource $copy): void
     {
-        /** @var Scorm $resource */
-        $resource = $event->getResource();
-        $newWorkspace = $event->getCopy()->getResourceNode()->getWorkspace();
-
-        $this->scormManager->copy($resource, $newWorkspace);
-
-        $event->stopPropagation();
+        $this->scormManager->copy($original, $copy->getResourceNode()->getWorkspace());
     }
 
-    public function onDownload(DownloadResourceEvent $event)
-    {
-        /** @var Scorm $scorm */
-        $scorm = $event->getResource();
-
-        $event->setItem($this->getScormArchive($scorm));
-        $event->setExtension('zip');
-        $event->stopPropagation();
-    }
-
-    public function onFileChange(ResourceActionEvent $event)
+    public function onFileChange(ResourceActionEvent $event): void
     {
         /** @var ResourceNode $node */
         $node = $event->getResourceNode();
@@ -203,7 +165,7 @@ class ScormListener
         $event->setResponse(new JsonResponse($this->serializer->serialize($node)));
     }
 
-    private function getScormArchive(Scorm $scorm)
+    private function getScormArchive(Scorm $scorm): string
     {
         $workspace = $scorm->getResourceNode()->getWorkspace();
         $ds = DIRECTORY_SEPARATOR;
@@ -251,7 +213,7 @@ class ScormListener
     /**
      * Deletes recursively a directory and its content.
      */
-    private function deleteFiles(string $dirPath = '')
+    private function deleteFiles(string $dirPath = ''): void
     {
         foreach (glob($dirPath.DIRECTORY_SEPARATOR.'{*,.[!.]*,..?*}', GLOB_BRACE) as $content) {
             if (is_dir($content)) {

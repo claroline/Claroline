@@ -1,61 +1,63 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
-import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {hasPermission} from '#/main/app/security'
+import {Editor} from '#/main/app/editor/components/main'
 
 import {selectors} from '#/main/core/resource/store'
-import {ResourcePage} from '#/main/core/resource/components/page'
+import {EditorOverview} from '#/main/core/resource/editor/components/overview'
+import {EditorRights} from '#/main/core/resource/editor/components/rights'
+import {EditorHistory} from '#/main/core/resource/editor/components/history'
 
 const ResourceEditor = (props) => {
   const resourcePath = useSelector(selectors.path)
+  const resourceType = useSelector(selectors.resourceType)
+
+  useEffect(() => {
+    if (props.loaded) {
+      props.load(props.resourceNode)
+    }
+  }, [get(props.resourceNode, 'id'), props.loaded])
 
   return (
-    <ResourcePage
-      title={trans('parameters')}
-      actions={[
+    <Editor
+      path={resourcePath+'/edit'}
+      title={resourceType ? trans(resourceType, {}, 'resource') : trans('resource')}
+      name={selectors.EDITOR_NAME}
+      target={['claro_resource_action', {
+        action: 'configure',
+        id: get(props.resourceNode, 'id')
+      }]}
+      close={resourcePath}
+      onSave={(savedData) => props.refresh(savedData)}
+      defaultPage={props.defaultPage}
+      overview={props.overview}
+      pages={[
         {
-          name: 'edit-poster',
-          type: CALLBACK_BUTTON,
-          label: trans('Modifier la couverture'),
-          callback: () => true
+          name: 'permissions',
+          title: trans('permissions'),
+          component: EditorRights,
+          disabled: !hasPermission('administrate', props.resourceNode || {})
+        }, {
+          name: 'history',
+          title: trans('history'),
+          component: EditorHistory
         }
-      ]}
-      menu={{
-        nav: [
-          {
-            name: 'overview',
-            label: trans('about'),
-            type: LINK_BUTTON,
-            target: resourcePath+'/edit',
-            exact: true
-          }, {
-            name: 'permissions',
-            label: trans('permissions'),
-            type: LINK_BUTTON,
-            target: resourcePath+'/edit/permissions'
-          }, {
-            name: 'history',
-            label: trans('history'),
-            type: LINK_BUTTON,
-            target: resourcePath+'/edit/history'
-          }
-        ],
-        actions: [
-          {
-            name: 'close',
-            label: trans('close'),
-            icon: 'fa far fa-fw fa-times-circle',
-            type: LINK_BUTTON,
-            target: resourcePath,
-            exact: true
-          }
-        ]
-      }}
-    >
-      <div>Editor</div>
-    </ResourcePage>
+      ].concat(props.pages || [])}
+    />
   )
+}
+
+ResourceEditor.propTypes = {
+  overview: T.elementType,
+  defaultPage: T.string
+}
+
+ResourceEditor.defaultProps = {
+  overview: EditorOverview
 }
 
 export {

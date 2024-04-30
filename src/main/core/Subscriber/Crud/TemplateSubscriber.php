@@ -11,15 +11,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class TemplateSubscriber implements EventSubscriberInterface
 {
-    private $om;
-    private $templateManager;
-
     public function __construct(
-        ObjectManager $om,
-        TemplateManager $templateManager
+        private readonly ObjectManager $om,
+        private readonly TemplateManager $templateManager
     ) {
-        $this->om = $om;
-        $this->templateManager = $templateManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -29,7 +24,7 @@ class TemplateSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var Template $template */
         $template = $event->getObject();

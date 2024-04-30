@@ -4,8 +4,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {Tool} from '#/main/core/tool'
-import {constants as toolConstants} from '#/main/core/tool/constants'
+import {Tool, constants as toolConstants} from '#/main/core/tool'
 
 import {ActivityMain} from '#/main/community/tools/community/activity/containers/main'
 import {UserMain} from '#/main/community/tools/community/user/containers/main'
@@ -50,7 +49,7 @@ const CommunityTool = (props) =>
         type: LINK_BUTTON,
         label: trans('pending_registrations'),
         target: `${props.path}/pending`,
-        displayed: props.contextType === toolConstants.TOOL_WORKSPACE && props.canEdit && get(props.contextData, 'registration.selfRegistration') && get(props.contextData, 'registration.validation')
+        displayed: props.contextType === toolConstants.TOOL_WORKSPACE && props.canEdit && props.hasPendingRegistrations
       }, {
         name: 'teams',
         type: LINK_BUTTON,
@@ -99,7 +98,7 @@ const CommunityTool = (props) =>
       }, {
         path: '/pending',
         component: PendingMain,
-        disabled: !props.canEdit || props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'registration.selfRegistration') || !get(props.contextData, 'registration.validation')
+        disabled: !props.canEdit || props.contextType !== toolConstants.TOOL_WORKSPACE || !props.hasPendingRegistrations
       }
     ]}
     actions={[
@@ -109,7 +108,7 @@ const CommunityTool = (props) =>
         icon: 'fa fa-fw fa-user-clock',
         label: trans('disable_inactive_users', {}, 'community'),
         modal: [MODAL_USER_DISABLE_INACTIVE],
-        displayed: 'desktop' === props.contextType && props.canAdministrate,
+        displayed: toolConstants.TOOL_DESKTOP === props.contextType && props.canAdministrate,
         dangerous: true
       }
     ]}
@@ -121,6 +120,7 @@ CommunityTool.propTypes = {
   contextType: T.string,
   contextData: T.object,
   workspace: T.object,
+  hasPendingRegistrations: T.bool.isRequired,
   canEdit: T.bool.isRequired,
   canAdministrate: T.bool.isRequired,
   canShowActivity: T.bool.isRequired

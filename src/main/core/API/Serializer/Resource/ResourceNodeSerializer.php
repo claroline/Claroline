@@ -83,7 +83,7 @@ class ResourceNodeSerializer
             //'path' => $resourceNode->getAncestors(),
             'meta' => [
                 'type' => $resourceNode->getType(), // try to remove. use mimeType instead
-                'className' => $resourceNode->getClass(), // try to remove. use mimeType instead
+                //'className' => $resourceNode->getClass(), // try to remove. use mimeType instead
                 'mimeType' => $resourceNode->getMimeType(),
                 'description' => $resourceNode->getDescription(),
                 'creator' => $resourceNode->getCreator() ?

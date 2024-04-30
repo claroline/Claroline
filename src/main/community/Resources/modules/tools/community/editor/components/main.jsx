@@ -11,7 +11,8 @@ import {EditorParameters} from '#/main/community/tools/community/editor/containe
 
 const CommunityEditor = (props) =>
   <ToolEditor
-    menu={[
+    defaultPage="overview"
+    /*menu={[
       {
         name: 'overview',
         label: trans('about'),
@@ -25,14 +26,12 @@ const CommunityEditor = (props) =>
         target: `${props.path}/edit/profile`,
         displayed: props.contextType === toolConstants.TOOL_DESKTOP
       }
-    ]}
+    ]}*/
+    overview={EditorParameters}
     pages={[
       {
-        path: '/',
-        exact: true,
-        component: EditorParameters
-      }, {
-        path: '/profile',
+        name: 'profile',
+        title: trans('user_profile'),
         component: EditorProfile,
         disabled: props.contextType !== toolConstants.TOOL_DESKTOP
       }
@@ -42,11 +41,7 @@ const CommunityEditor = (props) =>
 CommunityEditor.propTypes = {
   path: T.string.isRequired,
   contextType: T.string.isRequired,
-  contextId: T.string,
-  /*parameters: T.object,
-  profile: T.array,*/
-  updateProp: T.func.isRequired,
-  /*load: T.func.isRequired*/
+  contextId: T.string
 }
 
 export {

@@ -10,4 +10,4 @@ services:
             - '@Claroline\AppBundle\Manager\SecurityManager'
             - '@Claroline\HistoryBundle\Manager\HistoryManager'
         tags:
-            - { name: kernel.event_listener, event: resource_load, method: onLoad }
+            - { name: kernel.event_listener, event: resource.load, method: onLoad }

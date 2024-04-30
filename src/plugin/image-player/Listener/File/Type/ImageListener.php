@@ -18,10 +18,10 @@ use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
  */
 class ImageListener
 {
-    public function onLoad(LoadFileEvent $event)
+    public function onLoad(LoadFileEvent $event): void
     {
         // setting empty data let the dispatcher know there is
-        // a player for image but it doesn't require any additional data
+        // a player for image, but it doesn't require any additional data
         // without it, the dispatcher will try to find a player for "application/*"
         $event->setData([]);
         $event->stopPropagation();

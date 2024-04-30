@@ -7,60 +7,54 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\YouTubeBundle\Entity\Video;
 use Claroline\YouTubeBundle\Manager\EvaluationManager;
 use Claroline\YouTubeBundle\Manager\YouTubeManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class VideoSubscriber implements EventSubscriberInterface
+class VideoSubscriber extends ResourceComponent
 {
-    private TokenStorageInterface $tokenStorage;
-    private SerializerProvider $serializer;
-    private EvaluationManager $evaluationManager;
-    private YouTubeManager $youtubeManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        SerializerProvider $serializer,
-        EvaluationManager $evaluationManager,
-        YouTubeManager $youtubeManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly SerializerProvider $serializer,
+        private readonly EvaluationManager $evaluationManager,
+        private readonly YouTubeManager $youtubeManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->serializer = $serializer;
-        $this->evaluationManager = $evaluationManager;
-        $this->youtubeManager = $youtubeManager;
+    }
+
+    public static function getName(): string
+    {
+        return 'youtube_video';
     }
 
     public static function getSubscribedEvents(): array
     {
-        return [
-            'resource.youtube_video.load' => 'onLoad',
-            Crud::getEventName('create', 'post', Video::class) => 'onCreate',
+        return array_merge([], parent::getSubscribedEvents(), [
+            Crud::getEventName('create', 'post', Video::class) => 'onCrudCreate',
             Crud::getEventName('update', 'post', Video::class) => 'postUpdate',
+        ]);
+    }
+
+    /** @var Video $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        return [
+            'video' => $this->serializer->serialize($resource),
+            'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
+                $this->evaluationManager->getResourceUserEvaluation($resource->getResourceNode(), $user),
+                [SerializerInterface::SERIALIZE_MINIMAL]
+            ) : null,
+            'url' => $resource->getUrl(),
         ];
     }
 
-    public function onLoad(LoadResourceEvent $event): void
-    {
-        /** @var Video $video */
-        $video = $event->getResource();
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        $event->setData([
-            'video' => $this->serializer->serialize($video),
-            'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
-                $this->evaluationManager->getResourceUserEvaluation($video->getResourceNode(), $user),
-                [SerializerInterface::SERIALIZE_MINIMAL]
-            ) : null,
-            'url' => $video->getUrl(),
-        ]);
-        $event->stopPropagation();
-    }
-
-    public function onCreate(CreateEvent $event): void
+    public function onCrudCreate(CreateEvent $event): void
     {
         $video = $event->getObject();
         $this->youtubeManager->handleThumbnailForVideo($video);

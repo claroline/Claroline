@@ -7,27 +7,25 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\EvaluationManager;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Used to integrate Path to Claroline resource manager.
  */
-class PathSubscriber implements EventSubscriberInterface
+class PathSubscriber extends ResourceComponent
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
@@ -40,22 +38,21 @@ class PathSubscriber implements EventSubscriberInterface
     ) {
     }
 
-    public static function getSubscribedEvents(): array
+    public static function getName(): string
     {
-        return [
-            'resource.innova_path.load' => 'onLoad',
-            'resource.innova_path.copy' => 'onCopy',
-            EvaluationEvents::RESOURCE_EVALUATION => 'onEvaluation',
-        ];
+        return 'innova_path';
     }
 
-    /**
-     * Loads the Path resource.
-     */
-    public function onLoad(LoadResourceEvent $event): void
+    public static function getSubscribedEvents(): array
     {
-        /** @var Path $path */
-        $path = $event->getResource();
+        return array_merge([], parent::getSubscribedEvents(), [
+            EvaluationEvents::RESOURCE_EVALUATION => 'onEvaluation',
+        ]);
+    }
+
+    /** @var Path $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
         $user = $this->tokenStorage->getToken()->getUser();
 
         $evaluation = null;
@@ -65,42 +62,38 @@ class PathSubscriber implements EventSubscriberInterface
         if ($user instanceof User) {
             // retrieve user progression
             $evaluation = $this->serializer->serialize(
-                $this->evaluationManager->getResourceUserEvaluation($path, $user),
+                $this->evaluationManager->getResourceUserEvaluation($resource, $user),
                 [SerializerInterface::SERIALIZE_MINIMAL]
             );
 
-            $currentAttempt = $this->serializer->serialize($this->evaluationManager->getCurrentAttempt($path, $user));
+            $currentAttempt = $this->serializer->serialize($this->evaluationManager->getCurrentAttempt($resource, $user));
 
             $resourceEvaluations = array_map(function (ResourceUserEvaluation $resourceEvaluation) {
                 return $this->serializer->serialize($resourceEvaluation);
-            }, $this->evaluationManager->getRequiredEvaluations($path, $user));
+            }, $this->evaluationManager->getRequiredEvaluations($resource, $user));
 
-            $stepsProgression = $this->evaluationManager->getStepsProgressionForUser($path, $user);
+            $stepsProgression = $this->evaluationManager->getStepsProgressionForUser($resource, $user);
         }
 
-        $event->setData([
-            'path' => $this->serializer->serialize($path),
+        return [
+            'path' => $this->serializer->serialize($resource),
             'userEvaluation' => $evaluation,
             'resourceEvaluations' => $resourceEvaluations,
             'attempt' => $currentAttempt,
             'stepsProgression' => $stepsProgression,
-        ]);
-        $event->stopPropagation();
+        ];
     }
 
     /**
-     * Fired when a ResourceNode of type Path is duplicated.
+     * @param Path $original
+     * @param Path $copy
      */
-    public function onCopy(CopyResourceEvent $event): void
+    public function copy(AbstractResource $original, AbstractResource $copy): void
     {
-        // Start the transaction. We'll copy every resource in one go that way.
         $this->om->startFlushSuite();
 
-        /** @var Path $path */
-        $path = $event->getCopy();
-        $pathNode = $path->getResourceNode();
-
-        if ($path->hasResources()) {
+        $pathNode = $copy->getResourceNode();
+        if ($copy->hasResources()) {
             // create a directory to store copied resources
             $resourcesDirectory = $this->createResourcesCopyDirectory($pathNode->getParent(), $pathNode->getName());
             // A forced flush is required for rights propagation on the copied resources
@@ -108,28 +101,24 @@ class PathSubscriber implements EventSubscriberInterface
 
             $copiedResources = [];
 
-            if (!empty($path->getOverviewResource())) {
-                $copiedResources = $this->copyResource($path->getOverviewResource(), $resourcesDirectory->getResourceNode(), $copiedResources);
+            if (!empty($copy->getOverviewResource())) {
+                $copiedResources = $this->copyResource($copy->getOverviewResource(), $resourcesDirectory->getResourceNode(), $copiedResources);
 
                 // replace resource by the copy
-                $path->setOverviewResource($copiedResources[$path->getOverviewResource()->getUuid()]);
+                $copy->setOverviewResource($copiedResources[$copy->getOverviewResource()->getUuid()]);
             }
 
             // copy resources for all steps
-            foreach ($path->getSteps() as $step) {
+            foreach ($copy->getSteps() as $step) {
                 if ($step->hasResources()) {
                     $copiedResources = $this->copyStepResources($step, $resourcesDirectory->getResourceNode(), $copiedResources);
                 }
             }
         }
 
-        $this->om->persist($path);
+        $this->om->persist($copy);
 
-        // End the transaction
         $this->om->endFlushSuite();
-        $event->setCopy($path);
-
-        $event->stopPropagation();
     }
 
     /**

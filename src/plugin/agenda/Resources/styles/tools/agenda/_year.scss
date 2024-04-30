@@ -8,10 +8,10 @@
     }
 
     .day-name {
-        font-size: 10px;
         font-weight: normal;
-        color: var(--#{$prefix}secondary-color);
-        text-transform: uppercase; // todo : use a var
+        text-transform: var(--#{$prefix}label-text-transform);
+        font-size: $label-font-size;
+        color: $label-color;
     }
 
     .day-number {
@@ -56,11 +56,10 @@
     width: 100%;
 
     .popover-title {
-        color: var(--#{$prefix}secondary-color);
-        font-family: $headings-font-family;
-        font-size: $font-size-sm;
         text-align: center;
-        text-transform: uppercase; // todo : use a var
+        text-transform: var(--#{$prefix}label-text-transform);
+        font-size: $label-font-size;
+        color: $label-color;
 
         .day-number {
             display: flex;

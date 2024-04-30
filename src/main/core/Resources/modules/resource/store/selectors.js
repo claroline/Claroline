@@ -6,6 +6,7 @@ import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 import {constants as baseConstants} from '#/main/evaluation/constants'
 
 const STORE_NAME = 'resource'
+const EDITOR_NAME = 'resourceEditor'
 
 const store = (state) => state[STORE_NAME]
 
@@ -137,6 +138,7 @@ const isTerminated = createSelector(
 
 export const selectors = {
   STORE_NAME,
+  EDITOR_NAME,
 
   path,
   basePath,

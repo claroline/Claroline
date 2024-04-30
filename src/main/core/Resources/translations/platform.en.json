@@ -1002,6 +1002,7 @@
     "password_value_mismatch": "The password values does not match",
     "password_changed": "Password successfully changed",
     "activity": "Activity",
+    "activities": "Activities",
     "enabled": "Enabled",
     "disabled": "Disabled",
     "default": "Default",

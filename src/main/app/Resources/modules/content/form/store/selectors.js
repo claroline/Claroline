@@ -3,9 +3,21 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 // retrieves a form instance in the store
-const form = (state, formName) => get(state, formName)
+const form = createSelector(
+  [
+    (state) => state,
+    (state, formName) => formName
+  ],
+  (state, formName) => get(state, formName)
+)
 
+/**
+ * Does the form create new data on save ?
+ *
+ * @return boolean
+ */
 const isNew = (formState) => formState.new
+
 const mode = (formState) => formState.mode
 const validating = (formState) => formState.validating
 const pendingChanges = (formState) => formState.pendingChanges
@@ -19,6 +31,17 @@ const valid = createSelector(
   [errors],
   (errors) => isEmpty(errors)
 )
+
+/*const hasChanged = createSelector(
+  [data, originalData, pendingChanges],
+  (pendingChanges) => {
+    if (!pendingChanges) {
+      return false
+    }
+
+    return JSON.stringify(data) !== JSON.stringify(originalData)
+  }
+)*/
 
 const saveEnabled = createSelector(
   [pendingChanges, validating, valid],

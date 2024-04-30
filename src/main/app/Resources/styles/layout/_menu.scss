@@ -34,6 +34,7 @@
     --#{$prefix}menu-item-disabled-bg: #{$toolbar-link-disabled-bg};
 
     overflow-y: auto; // gets its own scrollbar
+    scrollbar-width: thin;
     overflow-x: hidden; // do not display scrollbar during animation
     flex: 1;
     display: flex;

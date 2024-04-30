@@ -1,5 +1,6 @@
 .dropdown-header {
-  text-transform: uppercase;
+  text-transform: var(--#{$prefix}label-text-transform);
+  font-size: $label-font-size;
 }
 
 .dropdown-menu-full {

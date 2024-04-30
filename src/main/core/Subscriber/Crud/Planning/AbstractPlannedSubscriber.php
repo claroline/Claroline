@@ -19,14 +19,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    protected $tokenStorage;
-    /** @var ObjectManager */
-    protected $om;
-    /** @var FileManager */
-    protected $fileManager;
-    /** @var PlanningManager */
-    protected $planningManager;
+    protected TokenStorageInterface $tokenStorage;
+    protected ObjectManager $om;
+    protected FileManager $fileManager;
+    protected PlanningManager $planningManager;
 
     public function setTokenStorage(TokenStorageInterface $tokenStorage): void
     {

@@ -1,5 +1,5 @@
 // find a better naming
-// TODO : replace subscription-resume by this
+// @deprecated use ContentInfoBlocks
 .content-resume {
   display: flex;
   flex-direction: row;
@@ -12,8 +12,10 @@
   .content-resume-info {
     padding: $panel-body-padding;
 
-    .text-secondary { // TODO : wrong selector. adds its own
-      text-transform: uppercase;
+    .text-secondary {
+      text-transform: var(--#{$prefix}label-text-transform);
+      font-size: $label-font-size;
+      color: $label-color;
     }
   }
 

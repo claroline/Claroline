@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: false
-
     Claroline\AnnouncementBundle\Listener\DataSource\AnnouncementSource:
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
@@ -17,8 +12,4 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
-        tags:
-            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.load, method: load }
-            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.copy, method: copy }
-            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.export, method: onExport }
-            - { name: kernel.event_listener, event: resource.claroline_announcement_aggregate.import, method: onImport }
+        tags: ['kernel.event_subscriber']

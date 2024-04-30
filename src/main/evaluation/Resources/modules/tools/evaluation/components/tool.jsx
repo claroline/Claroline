@@ -11,6 +11,8 @@ import {EvaluationUser} from '#/main/evaluation/tools/evaluation/containers/user
 import {EvaluationUsers} from '#/main/evaluation/tools/evaluation/containers/users'
 import {EvaluationEditor} from '#/main/evaluation/tools/evaluation/containers/editor'
 import {ASYNC_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {EvaluationAbout} from '#/main/evaluation/tools/evaluation/components/about'
+import {EvaluationActivities} from '#/main/evaluation/tools/evaluation/components/activities'
 
 const EvaluationTool = (props) => {
   const [pages, setPages] = useState([])
@@ -35,10 +37,21 @@ const EvaluationTool = (props) => {
       ]}
       menu={[
         {
-          name: 'users-progression',
+          name: 'about',
           type: LINK_BUTTON,
-          label: trans('users_progression', {}, 'evaluation'),
+          label: trans('about'),
+          target: props.path,
+          exact: true
+        }, {
+          name: 'users',
+          type: LINK_BUTTON,
+          label: trans('users'),
           target: props.path+'/users'
+        }, {
+          name: 'activities',
+          type: LINK_BUTTON,
+          label: trans('activities'),
+          target: props.path+'/activities'
         }
       ].concat(pages.map(page => ({
         name: page.name,
@@ -75,12 +88,18 @@ const EvaluationTool = (props) => {
       ]}
       pages={[
         {
+          path: '/',
+          component: EvaluationAbout,
+          exact: true
+        }, {
+          path: '/activities',
+          component: EvaluationActivities,
+        }, {
           path: '/users',
           component: EvaluationUsers,
           exact: true
         }, {
           path: '/users/:userId/:workspaceId?',
-          disabled: !props.canShowEvaluations && !props.canEdit,
           onEnter: (params = {}) => props.openEvaluation(params.workspaceId || props.contextId, params.userId),
           component: EvaluationUser
         }
@@ -92,8 +111,6 @@ const EvaluationTool = (props) => {
 
 EvaluationTool.propTypes = {
   path: T.string.isRequired,
-  canEdit: T.bool.isRequired,
-  canShowEvaluations: T.bool.isRequired,
   contextType: T.string.isRequired,
   contextId: T.string,
   currentUserId: T.string,

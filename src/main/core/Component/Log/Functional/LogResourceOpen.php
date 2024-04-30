@@ -16,7 +16,7 @@ class LogResourceOpen extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            ResourceEvents::RESOURCE_OPEN => ['logOpen', -25],
+            ResourceEvents::OPEN => ['logOpen', -25],
         ];
     }
 

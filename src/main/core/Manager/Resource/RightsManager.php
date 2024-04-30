@@ -39,7 +39,7 @@ class RightsManager
     /**
      * @param array|int $permissions - either an array of perms or an encoded mask
      */
-    public function create($permissions, Role $role, ResourceNode $node, bool $isRecursive, ?array $creations = []): void
+    public function create($permissions, Role $role, ResourceNode $node, ?bool $isRecursive = false, ?array $creations = []): void
     {
         $this->update($permissions, $role, $node, $isRecursive, $creations);
     }

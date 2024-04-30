@@ -9,8 +9,14 @@ const text = createSelector(
   (resource) => resource.text
 )
 
+const availablePlaceholders = createSelector(
+  [resource],
+  (resource) => resource.availablePlaceholders
+)
+
 export const selectors = {
   STORE_NAME,
-  resource,
-  text
+
+  text,
+  availablePlaceholders
 }

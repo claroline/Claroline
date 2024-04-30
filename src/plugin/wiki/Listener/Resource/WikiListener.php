@@ -2,119 +2,82 @@
 
 namespace Icap\WikiBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
-use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Manager\SectionManager;
 use Icap\WikiBundle\Manager\WikiManager;
-use Icap\WikiBundle\Serializer\WikiSerializer;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class WikiListener
+class WikiListener extends ResourceComponent
 {
-    use PermissionCheckerTrait;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var WikiSerializer */
-    private $serializer;
-
-    /** @var WikiManager */
-    private $wikiManager;
-
-    /** @var SectionManager */
-    private $sectionManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $objectManager,
-        WikiSerializer $serializer,
-        WikiManager $wikiManager,
-        SectionManager $sectionManager,
-        AuthorizationCheckerInterface $authorization
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly WikiManager $wikiManager,
+        private readonly SectionManager $sectionManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $objectManager;
-        $this->serializer = $serializer;
-        $this->wikiManager = $wikiManager;
-        $this->sectionManager = $sectionManager;
-        $this->authorization = $authorization;
+    }
+
+    public static function getName(): string
+    {
+        return 'icap_wiki';
+    }
+
+    /** @var Wiki $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
+        $sectionTree = $this->sectionManager->getSerializedSectionTree(
+            $resource,
+            $this->tokenStorage->getToken()->getUser() instanceof User ? $this->tokenStorage->getToken()->getUser() : null,
+            $this->authorization->isGranted('EDIT', $resource->getResourceNode())
+        );
+
+        return [
+            'wiki' => $this->serializer->serialize($resource),
+            'sections' => $sectionTree,
+        ];
     }
 
     /**
-     * Loads a Wiki resource.
+     * @var Wiki $original
+     * @var Wiki $copy
      */
-    public function load(LoadResourceEvent $event)
+    public function copy(AbstractResource $original, AbstractResource $copy): void
     {
-        $resourceNode = $event->getResourceNode();
-
-        /** @var Wiki $wiki */
-        $wiki = $event->getResource();
-        $sectionTree = $this->sectionManager->getSerializedSectionTree(
-            $wiki,
-            $this->tokenStorage->getToken()->getUser() instanceof User ? $this->tokenStorage->getToken()->getUser() : null,
-            $this->checkPermission('EDIT', $resourceNode)
-        );
-
-        $event->setData([
-            'wiki' => $this->serializer->serialize($wiki),
-            'sections' => $sectionTree,
-        ]);
-
-        $event->stopPropagation();
+        $this->wikiManager->copyWiki($original, $copy, $this->tokenStorage->getToken()->getUser());
     }
 
-    public function onCopy(CopyResourceEvent $event)
+    /** @var Wiki $resource */
+    public function export(AbstractResource $resource, FileBag $fileBag): ?array
     {
-        /** @var Wiki $wiki */
-        $wiki = $event->getResource();
-        /** @var Wiki $copy */
-        $copy = $event->getCopy();
-
-        $newWiki = $this->wikiManager->copyWiki($wiki, $copy, $this->tokenStorage->getToken()->getUser());
-
-        $event->setCopy($newWiki);
-        $event->stopPropagation();
+        return [
+            'root' => $this->sectionManager->getSerializedSectionTree($resource, null, true),
+        ];
     }
 
-    public function onExport(ExportResourceEvent $event)
+    /** @var Wiki $resource */
+    public function import(AbstractResource $resource, FileBag $fileBag, array $data = []): void
     {
-        /** @var Wiki $wiki */
-        $wiki = $event->getResource();
-
-        $event->setData([
-            'root' => $this->sectionManager->getSerializedSectionTree($wiki, null, true),
-        ]);
-    }
-
-    public function onImport(ImportResourceEvent $event)
-    {
-        $data = $event->getData();
-        /** @var Wiki $wiki */
-        $wiki = $event->getResource();
-
         $rootSection = $data['root'];
-        $wiki->buildRoot();
-        $root = $wiki->getRoot();
+        $resource->buildRoot();
+        $root = $resource->getRoot();
 
         if (isset($rootSection['children'])) {
             $children = $rootSection['children'];
 
             foreach ($children as $child) {
-                $section = $this->importSection($child, $wiki);
-                $section->setWiki($wiki);
+                $section = $this->importSection($child, $resource);
+                $section->setWiki($resource);
                 $section->setParent($root);
 
                 $this->om->getRepository(Section::class)->persistAsLastChildOf($section, $root);
@@ -122,7 +85,7 @@ class WikiListener
         }
     }
 
-    private function importSection(array $data, Wiki $wiki)
+    private function importSection(array $data, Wiki $wiki): Section
     {
         $section = new Section();
         $contrib = new Contribution();

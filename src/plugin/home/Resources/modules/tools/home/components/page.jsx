@@ -18,7 +18,7 @@ const HomePage = props =>
     title={props.title || props.subtitle}
     poster={props.poster || get(props.currentTab, 'poster')}
     /*primaryAction="add"*/
-    actions={props.currentTab ? [
+    /*actions={props.currentTab ? [
       {
         name: 'edit',
         type: LINK_BUTTON,
@@ -29,7 +29,7 @@ const HomePage = props =>
         target: `${props.basePath}/edit/${props.currentTab.slug}`,
         group: trans('management')
       }
-    ].concat(props.actions) : undefined}
+    ].concat(props.actions) : undefined}*/
   >
     {props.children}
   </ToolPage>

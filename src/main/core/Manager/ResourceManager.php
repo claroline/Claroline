@@ -144,7 +144,7 @@ class ResourceManager implements LoggerAwareInterface
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
      * 'create' => array('directory', ...), 'role' => $entity))
      */
-    public function createRights(ResourceNode $node, array $rights = [], bool $withDefault = true, bool $log = true)
+    public function createRights(ResourceNode $node, array $rights = [], bool $withDefault = true): void
     {
         foreach ($rights as $data) {
             $resourceTypes = [];
@@ -152,7 +152,7 @@ class ResourceManager implements LoggerAwareInterface
                 $resourceTypes = $this->checkResourceTypes($data['create']);
             }
 
-            $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes, $log);
+            $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes);
         }
 
         if ($withDefault) {
@@ -160,14 +160,14 @@ class ResourceManager implements LoggerAwareInterface
                 /** @var Role $anonymous */
                 $anonymous = $this->roleRepo->findOneBy(['name' => 'ROLE_ANONYMOUS']);
 
-                $this->rightsManager->create(0, $anonymous, $node, false, [], $log);
+                $this->rightsManager->create(0, $anonymous, $node);
             }
 
             if (!array_key_exists('ROLE_USER', $rights)) {
                 /** @var Role $user */
                 $user = $this->roleRepo->findOneBy(['name' => 'ROLE_USER']);
 
-                $this->rightsManager->create(0, $user, $node, false, [], $log);
+                $this->rightsManager->create(0, $user, $node);
             }
         }
     }
@@ -380,9 +380,9 @@ class ResourceManager implements LoggerAwareInterface
         if ($resource) {
             /** @var LoadResourceEvent $event */
             $event = $this->dispatcher->dispatch(
-                ResourceEvents::RESOURCE_OPEN,
+                ResourceEvents::OPEN,
                 LoadResourceEvent::class,
-                [$resource, $this->security->getUser(), $embedded]
+                [$resource, $embedded]
             );
 
             return $event->getData();

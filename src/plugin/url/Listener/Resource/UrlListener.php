@@ -3,28 +3,27 @@
 namespace HeVinci\UrlBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use HeVinci\UrlBundle\Entity\Url;
 
-class UrlListener
+class UrlListener extends ResourceComponent
 {
     public function __construct(
         private readonly SerializerProvider $serializer
     ) {
     }
 
-    /**
-     * Loads a URL resource.
-     */
-    public function onLoad(LoadResourceEvent $event): void
+    public static function getName(): string
     {
-        /** @var Url $url */
-        $url = $event->getResource();
+        return 'hevinci_url';
+    }
 
-        $event->setData([
-            'url' => $this->serializer->serialize($url),
-        ]);
-
-        $event->stopPropagation();
+    /** @var Url $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
+        return [
+            'url' => $this->serializer->serialize($resource),
+        ];
     }
 }

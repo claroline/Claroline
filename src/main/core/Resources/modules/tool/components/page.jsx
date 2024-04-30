@@ -27,12 +27,12 @@ const ToolPage = props => {
   return (
     <ContextPage
       className={classes('tool-page', `${toolName}-page`, props.className)}
-      breadcrumb={[
+      breadcrumb={(!props.root ? [
         {
           label: trans(toolName, {}, 'tools'),
           target: toolPath
         }
-      ].concat(props.breadcrumb || [])}
+      ] : []).concat(props.breadcrumb || [])}
       poster={props.poster || get(toolData, 'poster')}
       title={trans(toolName, {}, 'tools')}
       menu={{

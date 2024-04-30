@@ -17,45 +17,33 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class LoadFileEvent extends Event
 {
-    /** @var File */
-    private $resource;
+    private array $data = [];
 
-    /** @var array */
-    private $data = [];
+    private bool $populated = false;
 
-    /** @var string */
-    private $path;
-
-    /** @var bool */
-    private $populated = false;
-
-    public function __construct(File $resource, string $path)
-    {
-        $this->resource = $resource;
-        $this->path = $path;
+    public function __construct(
+        private readonly File $resource,
+        private readonly string $path
+    ) {
     }
 
-    public function isPopulated()
+    public function isPopulated(): bool
     {
         return $this->populated;
     }
 
     /**
      * Returns the resource on which the action is to be taken.
-     *
-     * @return AbstractResource
      */
-    public function getResource()
+    public function getResource(): AbstractResource
     {
         return $this->resource;
     }
 
     /**
      * Gets the path to the real file.
-     *
-     * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -64,13 +52,13 @@ class LoadFileEvent extends Event
      * Sets data to return in the api.
      * NB. It MUST contain serialized structures.
      */
-    public function setData(array $data)
+    public function setData(array $data): void
     {
         $this->data = $data;
         $this->populated = true;
     }
 
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }

@@ -29,14 +29,14 @@ plugin:
 
         # Publishes one ore more resources
         - name: publish
-          decoder: administrate
+          decoder: edit
           group: management
           scope: [object, collection]
           api: [PUT]
 
         # Unpublishes one or more resources
         - name: unpublish
-          decoder: administrate
+          decoder: edit
           group: management
           scope: [object, collection]
           api: [PUT]
@@ -67,7 +67,7 @@ plugin:
 
         # Changes common resources info (the one from the node) for one or more resources
         - name: configure
-          decoder: administrate
+          decoder: edit
           group: management
           scope: [object]
           api: [PUT]

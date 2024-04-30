@@ -20,7 +20,7 @@ const EvaluationUsers = (props) => {
 
   return (
     <ToolPage
-      title={trans('users_progression', {}, 'evaluation')}
+      title={trans('users')}
     >
       <ContentSizing size="full">
         <ListData

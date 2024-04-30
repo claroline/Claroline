@@ -11,72 +11,60 @@
 
 namespace Claroline\DropZoneBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\Utils\FileBag;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class DropzoneListener
+class DropzoneListener extends ResourceComponent
 {
-    /** @var string */
-    private $filesDir;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var DropzoneManager */
-    private $dropzoneManager;
-
     public function __construct(
-        string $filesDir,
-        TokenStorageInterface $tokenStorage,
-        DropzoneManager $dropzoneManager
+        private readonly string $filesDir,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly DropzoneManager $dropzoneManager
     ) {
-        $this->filesDir = $filesDir;
-        $this->tokenStorage = $tokenStorage;
-        $this->dropzoneManager = $dropzoneManager;
     }
 
-    public function onLoad(LoadResourceEvent $event)
+    public static function getName(): string
     {
-        /** @var Dropzone $dropzone */
-        $dropzone = $event->getResource();
+        return 'claroline_dropzone';
+    }
 
+    /** @var Dropzone $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
         $user = $this->tokenStorage->getToken()->getUser();
         if (!$user instanceof User) {
             $user = null;
         }
 
-        $event->setData(
-            $this->dropzoneManager->getDropzoneData($dropzone, $user)
-        );
-        $event->stopPropagation();
+        return $this->dropzoneManager->getDropzoneData($resource, $user);
     }
 
-    public function onCopy(CopyResourceEvent $event)
+    /**
+     * @param Dropzone $original
+     * @param Dropzone $copy
+     */
+    public function copy(AbstractResource $original, AbstractResource $copy): void
     {
-        /** @var Dropzone $dropzone */
-        $dropzone = $event->getResource();
-        /** @var Dropzone $copy */
-        $copy = $event->getCopy();
-
-        $copy = $this->dropzoneManager->copyDropzone($dropzone, $copy);
-
-        $event->setCopy($copy);
-        $event->stopPropagation();
+        $this->dropzoneManager->copyDropzone($original, $copy);
     }
 
-    public function onDelete(DeleteResourceEvent $event)
+    /** @var Dropzone $resource */
+    public function delete(AbstractResource $resource, FileBag $fileBag, bool $softDelete = true): bool
     {
-        /** @var Dropzone $dropzone */
-        $dropzone = $event->getResource();
-
-        $dropzoneDir = $this->filesDir.DIRECTORY_SEPARATOR.'dropzone'.DIRECTORY_SEPARATOR.$dropzone->getUuid();
-        if (file_exists($dropzoneDir)) {
-            $event->setFiles([$dropzoneDir]);
+        if ($softDelete) {
+            return true;
         }
 
-        $event->stopPropagation();
+        $dropzoneDir = $this->filesDir.DIRECTORY_SEPARATOR.'dropzone'.DIRECTORY_SEPARATOR.$resource->getUuid();
+        if (file_exists($dropzoneDir)) {
+            $fileBag->add($resource->getUuid(), $dropzoneDir);
+        }
+
+        return true;
     }
 }

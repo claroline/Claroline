@@ -3,72 +3,51 @@
 namespace Claroline\SlideshowBundle\Listener\Resource;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Event\Resource\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\AppBundle\API\Utils\FileBag;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\SlideshowBundle\Entity\Resource\Slideshow;
 
 /**
  * Used to integrate Slideshow to Claroline resource manager.
  */
-class SlideshowListener
+class SlideshowListener extends ResourceComponent
 {
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var FileManager */
-    private $fileManager;
-
     public function __construct(
-        SerializerProvider $serializer,
-        FileManager $fileManager
+        private readonly SerializerProvider $serializer,
+        private readonly FileManager $fileManager
     ) {
-        $this->serializer = $serializer;
-        $this->fileManager = $fileManager;
     }
 
-    /**
-     * Loads the Slideshow resource.
-     */
-    public function onLoad(LoadResourceEvent $event)
+    public static function getName(): string
     {
-        /** @var Slideshow $slideshow */
-        $slideshow = $event->getResource();
-
-        $event->setData([
-            'slideshow' => $this->serializer->serialize($slideshow),
-        ]);
-        $event->stopPropagation();
+        return 'claro_slideshow';
     }
 
-    /**
-     * Deletes Slideshow files when the resource is deleted.
-     */
-    public function onDelete(DeleteResourceEvent $event)
+    /** @var Slideshow $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
-        /** @var Slideshow $slideshow */
-        $slideshow = $event->getResource();
+        return [
+            'slideshow' => $this->serializer->serialize($resource),
+        ];
+    }
 
+    /** @var Slideshow $resource */
+    public function delete(AbstractResource $resource, FileBag $fileBag, bool $softDelete = true): bool
+    {
         $files = [];
-        foreach ($slideshow->getSlides() as $slide) {
-            if (!$slide->getContent()) {
+        if ($softDelete) {
+            return true;
+        }
+
+        foreach ($resource->getSlides() as $slide) {
+            if (!empty($slide->getContent())) {
                 // for now all slides are files
-                $files[] = $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$slide->getContent();
+                $fileBag->add($slide->getContent(), $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$slide->getContent());
             }
         }
 
-        $event->setFiles($files);
-        $event->stopPropagation();
-    }
-
-    public function onExport(ExportResourceEvent $event)
-    {
-        // TODO : implement. It should export Slides files
-    }
-
-    public function onImport(ImportResourceEvent $event)
-    {
-        // TODO : implement. It should import Slides files
+        return true;
     }
 }

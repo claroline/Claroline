@@ -23,11 +23,10 @@
 
     .day-name {
         padding: 5px;
-        color: var(--#{$prefix}secondary-color);
-        font-family: $headings-font-family;
-        font-size: $font-size-sm;
         text-align: center;
-        text-transform: uppercase; // todo : use a var
+        text-transform: var(--#{$prefix}label-text-transform);
+        font-size: $label-font-size;
+        color: $label-color;
         border-bottom: 1px solid $agenda-grid-border;
     }
 

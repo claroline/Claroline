@@ -10,13 +10,10 @@ services:
     UJM\ExoBundle\Listener\Resource\ExerciseListener:
         arguments:
             - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@UJM\ExoBundle\Manager\ExerciseManager'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
             - '@UJM\ExoBundle\Manager\AttemptManager'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-        tags:
-            - { name: kernel.event_listener, event: resource.ujm_exercise.load, method: onLoad }
-            - { name: kernel.event_listener, event: resource.ujm_exercise.delete, method: onDelete }
+        tags: ['kernel.event_subscriber']

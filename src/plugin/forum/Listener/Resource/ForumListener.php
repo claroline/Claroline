@@ -15,88 +15,71 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Resource\ResourceComponent;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Resource\CopyResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ExportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\ImportResourceEvent;
-use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Manager\ForumManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ForumListener
+class ForumListener extends ResourceComponent
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var Crud */
-    private $crud;
-    /** @var FinderProvider */
-    private $finder;
-    /** @var ForumManager */
-    private $manager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        Crud $crud,
-        FinderProvider $finder,
-        ForumManager $manager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly Crud $crud,
+        private readonly FinderProvider $finder,
+        private readonly ForumManager $manager
     ) {
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->crud = $crud;
-        $this->finder = $finder;
-        $this->manager = $manager;
-        $this->tokenStorage = $tokenStorage;
     }
 
-    public function onOpen(LoadResourceEvent $event)
+    public static function getName(): string
     {
-        /** @var Forum $forum */
-        $forum = $event->getResource();
+        return 'claroline_forum';
+    }
+
+    /** @var Forum $resource */
+    public function open(AbstractResource $resource, bool $embedded = false): ?array
+    {
         /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $isValidatedUser = false;
 
         if ($user instanceof User) {
-            $validationUser = $this->manager->getValidationUser($user, $forum);
+            $validationUser = $this->manager->getValidationUser($user, $resource);
             $isValidatedUser = $validationUser->getAccess();
         }
 
         $myMessages = 0;
         if ($this->tokenStorage->getToken()->getUser() instanceof User) {
             $myMessages = $this->finder->fetch(Message::class, [
-                'forum' => $forum->getUuid(),
+                'forum' => $resource->getUuid(),
                 'creator' => $this->tokenStorage->getToken()->getUser()->getUuid(),
             ], null, 0, 0, true);
         }
 
-        $event->setData([
-            'forum' => $this->serializer->serialize($forum),
+        return [
+            'forum' => $this->serializer->serialize($resource),
             'isValidatedUser' => $isValidatedUser,
             'myMessages' => $myMessages,
-        ]);
-
-        $event->stopPropagation();
+        ];
     }
 
-    public function onCopy(CopyResourceEvent $event)
+    /**
+     * @param Forum $original
+     * @param Forum $copy
+     */
+    public function copy(AbstractResource $original, AbstractResource $copy): void
     {
-        /** @var Forum $forum */
-        $forum = $event->getResource();
-        /** @var Forum $copy */
-        $copy = $event->getCopy();
-
         $this->om->startFlushSuite();
-        foreach ($forum->getSubjects() as $subject) {
+
+        $subjects = $original->getSubjects()->toArray();
+        foreach ($subjects as $subject) {
             $subjectData = $this->serializer->serialize($subject);
             unset($subjectData['forum']);
 
@@ -105,43 +88,44 @@ class ForumListener
 
             $this->crud->create($newSubject, $subjectData, [
                 Crud::NO_PERMISSIONS, // this has already been checked by the core before forwarding the copy
+                Crud::NO_VALIDATION, // we pass data directly from the serializer, we don't need to valid it
                 Options::REFRESH_UUID,
             ]);
         }
-        $this->om->endFlushSuite();
 
-        $event->stopPropagation();
+        $this->om->endFlushSuite();
     }
 
-    public function onExport(ExportResourceEvent $event)
+    /** @var Forum $resource */
+    public function export(AbstractResource $resource, FileBag $fileBag): ?array
     {
-        /** @var Forum $forum */
-        $forum = $event->getResource();
+        $subjects = $resource->getSubjects()->toArray();
 
-        // maybe also export Forum messages
-        $event->setData([
+        return [
             'subjects' => array_map(function (Subject $subject) {
                 return $this->serializer->serialize($subject);
-            }, $forum->getSubjects()->toArray()),
-        ]);
+            }, $subjects),
+        ];
     }
 
-    public function onImport(ImportResourceEvent $event)
+    /** @var Forum $resource */
+    public function import(AbstractResource $resource, FileBag $fileBag, array $data = []): void
     {
-        $data = $event->getData();
-        /** @var Forum $forum */
-        $forum = $event->getResource();
+        if (empty($data['subjects'])) {
+            return;
+        }
 
         $this->om->startFlushSuite();
+
         foreach ($data['subjects'] as $subjectData) {
             unset($subjectData['forum']);
 
             $subject = new Subject();
-            $subject->setForum($forum);
+            $subject->setForum($resource);
 
-            // TODO : this should use the copy action
             $this->crud->create($subject, $subjectData, [Crud::NO_PERMISSIONS, Crud::NO_VALIDATION, Options::REFRESH_UUID]);
         }
+
         $this->om->endFlushSuite();
     }
 }

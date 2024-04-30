@@ -17,9 +17,9 @@
     }
 
     .day-names {
-        font-family: $headings-font-family;
-        color: var(--#{$prefix}body-secondary-color);
-        font-size: $font-size-sm;
+        font-size: $label-font-size;
+        color: $label-color;
+        text-transform: var(--#{$prefix}label-text-transform);
     }
 
     .week {
@@ -45,7 +45,6 @@
 
     .day-name {
         padding: 5px;
-        text-transform: uppercase; // todo : use a var
     }
 
     .day {
@@ -62,7 +61,6 @@
             margin: 5px auto;
             border-radius: 50%;
 
-            //color: $agenda-color;
             background: transparent;
             border: 1px solid transparent;
             font-weight: $font-weight-medium;
