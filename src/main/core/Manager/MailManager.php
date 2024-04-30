@@ -95,6 +95,7 @@ class MailManager
         $message->from($fromEmail);
         $message->replyTo($replyToEmail);
         $message->body($this->templating->render('@ClarolineApp/external.html.twig', [
+            'locale' => $locale,
             'baseUrl' => $this->platformManager->getUrl(),
             'title' => $subject,
             'content' => $body,
