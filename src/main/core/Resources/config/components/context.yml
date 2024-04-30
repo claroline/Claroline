@@ -23,8 +23,6 @@ services:
         arguments:
             - '@Claroline\AppBundle\Manager\SecurityManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@security.token_storage'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Component\Context\AccountContext:
         parent: Claroline\AppBundle\Component\Context\AbstractContext

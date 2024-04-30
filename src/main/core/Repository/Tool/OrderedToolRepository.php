@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Repository\Tool;
 
-use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Doctrine\ORM\EntityRepository;
 
@@ -46,30 +45,5 @@ class OrderedToolRepository extends EntityRepository
             ->setParameter('contextName', $context)
             ->setParameter('contextId', $contextId)
             ->getOneOrNullResult();
-    }
-
-    /**
-     * @deprecated
-     */
-    public function countByDesktopAndRoles(array $roles): int
-    {
-        if (0 === count($roles)) {
-            return 0;
-        }
-
-        return (int) $this->getEntityManager()
-            ->createQuery('
-                SELECT COUNT(ot.id)
-                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool AS ot
-                JOIN ot.rights AS r
-                JOIN r.role AS rr
-                WHERE ot.contextName = :contextName
-                    AND rr.name IN (:roleNames)
-                    AND BIT_AND(r.mask, 1) = 1
-                    ORDER BY ot.order
-            ')
-            ->setParameter('roleNames', $roles)
-            ->setParameter('contextName', DesktopContext::getName())
-            ->getSingleScalarResult();
     }
 }
