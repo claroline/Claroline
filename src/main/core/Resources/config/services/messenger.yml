@@ -8,6 +8,7 @@ services:
 
     Claroline\CoreBundle\Messenger\CopyWorkspaceHandler:
         arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
 
     Claroline\CoreBundle\Messenger\SendMessageHandler:
