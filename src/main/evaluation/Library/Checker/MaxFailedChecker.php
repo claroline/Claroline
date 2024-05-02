@@ -25,7 +25,7 @@ class MaxFailedChecker implements CheckerInterface
      */
     public function vote(EvaluationInterface $evaluation): ?string
     {
-        if (empty($this->maxFailed)) {
+        if (empty($this->maxFailed) && 0 !== $this->maxFailed) {
             // no failed threshold is defined, nothing to do here
             return null;
         }
