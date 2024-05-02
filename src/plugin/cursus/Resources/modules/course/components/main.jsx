@@ -6,24 +6,24 @@ import isEmpty from 'lodash/isEmpty'
 import {Routes} from '#/main/app/router'
 
 import {route} from '#/plugin/cursus/routing'
-import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 import {CoursePage} from '#/plugin/cursus/course/components/page'
 import {CourseDetails} from '#/plugin/cursus/course/components/details'
+import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 
-const CatalogDetails = (props) =>
+const Course = (props) =>
   <CoursePage
     path={props.path}
     course={props.course}
     activeSession={props.activeSession}
   >
-    {props.course &&
+    {props.path &&
       <Routes
-        path={route(props.course)}
+        path={props.path}
         routes={[
           {
             path: '/:id?',
             onEnter: (params = {}) => {
-              if (params.id && !['sessions', 'participants', 'pending', 'events'].includes(params.id)) {
+              if (params.id && !['sessions', 'participants', 'pending', 'events', 'about', 'desktop'].includes(params.id)) {
                 props.openSession(params.id)
               } else {
                 props.openSession(get(props.defaultSession, 'id') || null)
@@ -31,7 +31,7 @@ const CatalogDetails = (props) =>
             },
             render: (routerProps) => (
               <CourseDetails
-                path={route(props.course)+'/'+(routerProps.match.params.id && !['sessions', 'participants', 'pending', 'events'].includes(routerProps.match.params.id) ? routerProps.match.params.id : '')}
+                path={props.path + (routerProps.match.params.id && !['sessions', 'participants', 'pending', 'events', 'about', 'desktop'].includes(routerProps.match.params.id) ? '/' + routerProps.match.params.id : '')}
                 history={props.history}
                 course={props.course}
                 activeSession={props.activeSession}
@@ -57,7 +57,7 @@ const CatalogDetails = (props) =>
     }
   </CoursePage>
 
-CatalogDetails.propTypes = {
+Course.propTypes = {
   path: T.string.isRequired,
   history: T.shape({
     push: T.func.isRequired
@@ -83,9 +83,9 @@ CatalogDetails.propTypes = {
   switchParticipantsView: T.func.isRequired,
   openSession: T.func.isRequired,
   reload: T.func.isRequired,
-  register: T.func.isRequired
+  register: T.func.isRequired,
 }
 
 export {
-  CatalogDetails
+  Course
 }

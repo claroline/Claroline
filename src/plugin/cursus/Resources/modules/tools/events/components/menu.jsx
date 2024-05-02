@@ -17,6 +17,11 @@ const EventsMenu = (props) =>
       buttonName="list-group-item list-group-item-action"
       actions={[
         {
+          name: 'about',
+          type: LINK_BUTTON,
+          label: trans('about', {}, 'platform'),
+          target: props.path + '/about'
+        },{
           name: 'registered',
           type: LINK_BUTTON,
           label: trans('my_events', {}, 'cursus'),

@@ -1,24 +1,34 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router'
 
+import {Course} from '#/plugin/cursus/course/containers/main'
 import {EventsAll} from '#/plugin/cursus/tools/events/components/all'
-import {EventsRegistered} from '#/plugin/cursus/tools/events/components/registered'
 import {EventsPublic} from '#/plugin/cursus/tools/events/components/public'
-import {EventsPresences} from '#/plugin/cursus/tools/events/containers/presences'
 import {EventsDetails} from '#/plugin/cursus/tools/events/containers/details'
-
+import {EventsPresences} from '#/plugin/cursus/tools/events/containers/presences'
+import {EventsRegistered} from '#/plugin/cursus/tools/events/components/registered'
 
 const EventsTool = (props) =>
   <Routes
     path={props.path}
     redirect={[
-      {from: '/', exact: true, to: '/registered'}
+      {from: '/', exact: true, to: '/about'}
     ]}
     routes={[
       {
+        path: '/about',
+        onEnter: () => props.openCourse(props.course.slug),
+        render: (params = {}) => (
+          <Course
+            path={props.path+'/about'}
+            slug={props.course.slug}
+            history={params.history}
+          />
+        )
+      }, {
         path: '/registered',
         onEnter: props.invalidateList,
         render: () => (
@@ -67,7 +77,11 @@ EventsTool.propTypes = {
   canEdit: T.bool.isRequired,
   canRegister: T.bool.isRequired,
   invalidateList: T.func.isRequired,
-  open: T.func.isRequired
+  open: T.func.isRequired,
+  openCourse: T.func,
+  course: T.shape({
+    slug: T.string
+  })
 }
 
 export {

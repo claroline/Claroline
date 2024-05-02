@@ -14,7 +14,7 @@ import {
 import {MODAL_TRAINING_EVENT_ABOUT} from '#/plugin/cursus/event/modals/about'
 import {MODAL_TRAINING_EVENT_PARAMETERS} from '#/plugin/cursus/event/modals/parameters'
 import {EventList} from '#/plugin/cursus/event/components/list'
-import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
+import {selectors} from '#/plugin/cursus/course/store'
 
 const CourseEvents = (props) =>
   <Fragment>

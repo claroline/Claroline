@@ -3,11 +3,12 @@ import {PropTypes as T} from 'prop-types'
 
 import {Routes} from '#/main/app/router'
 
+import {route} from '#/plugin/cursus/routing'
+import {Course} from '#/plugin/cursus/course/containers/main'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
-import {CatalogList} from '#/plugin/cursus/tools/trainings/catalog/components/list'
-import {CatalogDetails} from '#/plugin/cursus/tools/trainings/catalog/containers/details'
-import {CatalogCreation} from '#/plugin/cursus/tools/trainings/catalog/components/creation'
 import {CatalogEdit} from '#/plugin/cursus/tools/trainings/catalog/containers/edit'
+import {CatalogList} from '#/plugin/cursus/tools/trainings/catalog/components/list'
+import {CatalogCreation} from '#/plugin/cursus/tools/trainings/catalog/components/creation'
 
 const CatalogMain = (props) =>
   <Routes
@@ -33,7 +34,13 @@ const CatalogMain = (props) =>
       }, {
         path: '/:slug',
         onEnter: (params = {}) => props.open(params.slug),
-        component: CatalogDetails
+        render: (params = {}) => (
+          <Course
+            path={props.course ? route(props.course) : ''}
+            slug={params.slug}
+            history={params.history}
+          />
+        )
       }
     ]}
   />

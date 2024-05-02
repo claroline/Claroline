@@ -1,20 +1,21 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import {connect} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
+import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ContentLoader} from '#/main/app/content/components/loader'
+import {trans} from '#/main/app/intl/translation'
 import {ToolPage} from '#/main/core/tool/containers/page'
+import {ContentLoader} from '#/main/app/content/components/loader'
 
 import {route} from '#/plugin/cursus/routing'
 import {getInfo} from '#/plugin/cursus/utils'
 import {getActions} from '#/plugin/cursus/course/utils'
-import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 
+import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
+import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 
 const Course = (props) => {
   if (isEmpty(props.course)) {
@@ -40,7 +41,8 @@ const Course = (props) => {
         {
           type: LINK_BUTTON,
           label: trans('catalog', {}, 'cursus'),
-          target: props.path + '/catalog'
+          target: props.path + '/catalog',
+          displayed: 'desktop' === props.contextType
         }, {
           type: LINK_BUTTON,
           label: get(props.course, 'name', trans('loading')),
@@ -48,7 +50,7 @@ const Course = (props) => {
         }
       ].concat(props.course ? props.breadcrumb : [])}
       primaryAction="edit"
-      actions={getActions([props.course], {}, props.path, props.currentUser)}
+      actions={getActions([props.course], {}, props.path, props.currentUser, props.activeSession)}
     >
       {props.children}
     </ToolPage>
@@ -65,6 +67,7 @@ Course.propTypes = {
     SessionTypes.propTypes
   ),
   currentUser: T.object,
+  contextType: T.string,
   children: T.any
 }
 
@@ -74,7 +77,8 @@ Course.defaultProps = {
 
 const CoursePage = connect(
   (state) => ({
-    currentUser: securitySelectors.currentUser(state)
+    currentUser: securitySelectors.currentUser(state),
+    contextType: toolSelectors.contextType(state)
   })
 )(Course)
 

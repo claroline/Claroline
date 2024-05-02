@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 
 import {constants} from '#/plugin/cursus/constants'
-import {actions, selectors} from '#/plugin/cursus/tools/trainings/catalog/store'
+import {actions, selectors} from '#/plugin/cursus/course/store'
 import {SessionParticipants as SessionParticipantsComponent} from '#/plugin/cursus/session/components/participants'
 
 const SessionParticipants = connect(
