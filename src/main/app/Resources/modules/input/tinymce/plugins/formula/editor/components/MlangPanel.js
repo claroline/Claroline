@@ -1,7 +1,7 @@
 
-import {DomUtils} from '#/plugin/formula/editor/lib/Utils'
-import {ButtonSection} from '#/plugin/formula/editor/components/ButtonSection'
-import {DropdownListItem} from '#/plugin/formula/editor/components/DropdownListItem'
+import {DomUtils} from '#/main/app/input/tinymce/plugins/formula/editor/lib/Utils'
+import {ButtonSection} from '#/main/app/input/tinymce/plugins/formula/editor/components/ButtonSection'
+import {DropdownListItem} from '#/main/app/input/tinymce/plugins/formula/editor/components/DropdownListItem'
 
 const MlangPanel = function (toolbar) {
   this.id = 'mlang'

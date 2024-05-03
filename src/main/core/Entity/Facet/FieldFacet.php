@@ -136,7 +136,7 @@ class FieldFacet
     /**
      * @ORM\Column(name="condition_value", type="json", nullable=true)
      */
-    private mixed $conditionValue = null;
+    private ?array $conditionValue = null;
 
     /**
      * @ORM\Column(name="hide_label", type="boolean")

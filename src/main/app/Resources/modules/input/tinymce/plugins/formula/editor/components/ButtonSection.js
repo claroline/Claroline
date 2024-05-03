@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {DomUtils} from '#/plugin/formula/editor/lib/Utils'
-import {Button} from '#/plugin/formula/editor/components/Button'
+import {DomUtils} from '#/main/app/input/tinymce/plugins/formula/editor/lib/Utils'
+import {Button} from '#/main/app/input/tinymce/plugins/formula/editor/components/Button'
 
 const ButtonSection = function (section, panel) {
   this.id = section.id

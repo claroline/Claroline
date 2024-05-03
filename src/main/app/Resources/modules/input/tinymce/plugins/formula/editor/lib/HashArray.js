@@ -1,4 +1,4 @@
-import {ArrayIterator} from '#/plugin/formula/editor/lib/ArrayIterator'
+import {ArrayIterator} from '#/main/app/input/tinymce/plugins/formula/editor/lib/ArrayIterator'
 
 const HashArray = function () {
   this.obj = {}

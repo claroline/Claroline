@@ -1,12 +1,12 @@
 
 import {trans} from '#/main/app/intl/translation'
 
-import {actions} from '#/plugin/formula/editor/parameters/actions'
-import {panels} from '#/plugin/formula/editor/parameters/panels'
+import {actions} from '#/main/app/input/tinymce/plugins/formula/editor/parameters/actions'
+import {panels} from '#/main/app/input/tinymce/plugins/formula/editor/parameters/panels'
 
-import {DomUtils} from '#/plugin/formula/editor/lib/Utils'
-import {HashArray} from '#/plugin/formula/editor/lib/HashArray'
-import {Toolbar} from '#/plugin/formula/editor/components/Toolbar'
+import {DomUtils} from '#/main/app/input/tinymce/plugins/formula/editor/lib/Utils'
+import {HashArray} from '#/main/app/input/tinymce/plugins/formula/editor/lib/HashArray'
+import {Toolbar} from '#/main/app/input/tinymce/plugins/formula/editor/components/Toolbar'
 
 const Editor = function (parameters) {
   this.lang = parameters.lang || this.lang

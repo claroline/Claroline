@@ -1,7 +1,7 @@
 import {trans} from '#/main/app/intl/translation'
 
-import {DomUtils} from '#/plugin/formula/editor/lib/Utils'
-import {ButtonSection} from '#/plugin/formula/editor/components/ButtonSection'
+import {DomUtils} from '#/main/app/input/tinymce/plugins/formula/editor/lib/Utils'
+import {ButtonSection} from '#/main/app/input/tinymce/plugins/formula/editor/components/ButtonSection'
 
 const ButtonPanel = function (panel, toolbar) {
   this.visible = panel.visible

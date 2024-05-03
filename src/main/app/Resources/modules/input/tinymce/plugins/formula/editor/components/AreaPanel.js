@@ -1,7 +1,7 @@
-import {DomUtils} from '#/plugin/formula/editor/lib/Utils'
-import {Button} from '#/plugin/formula/editor/components/Button'
-import {ButtonSection} from '#/plugin/formula/editor/components/ButtonSection'
-import {DropdownList} from '#/plugin/formula/editor/components/DropdownList'
+import {DomUtils} from '#/main/app/input/tinymce/plugins/formula/editor/lib/Utils'
+import {Button} from '#/main/app/input/tinymce/plugins/formula/editor/components/Button'
+import {ButtonSection} from '#/main/app/input/tinymce/plugins/formula/editor/components/ButtonSection'
+import {DropdownList} from '#/main/app/input/tinymce/plugins/formula/editor/components/DropdownList'
 
 const AreaPanel = function (panel, toolbar) {
   this.visible = panel.visible
