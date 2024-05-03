@@ -1,6 +1,6 @@
-import {AreaPanel} from '#/plugin/formula/editor/components/AreaPanel'
-import {ButtonPanel} from '#/plugin/formula/editor/components/ButtonPanel'
-import {MlangPanel} from '#/plugin/formula/editor/components/MlangPanel'
+import {AreaPanel} from '#/main/app/input/tinymce/plugins/formula/editor/components/AreaPanel'
+import {ButtonPanel} from '#/main/app/input/tinymce/plugins/formula/editor/components/ButtonPanel'
+import {MlangPanel} from '#/main/app/input/tinymce/plugins/formula/editor/components/MlangPanel'
 
 const Toolbar = function (panels, editor) {
   this.element = document.createElement('div')

@@ -1,0 +1,9 @@
+@import "src/main/app/Resources/styles/variables";
+
+
+// ATTENTION : I use the ID of the div where the editor is mounted
+// to get a more precise selector than tinymce theme
+#fm-editor-body {
+  @import "formula-editor-icons";
+  @import "formula-editor";
+}

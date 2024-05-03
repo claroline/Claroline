@@ -129,7 +129,6 @@
             "HeVinci\\FavouriteBundle\\": "src/plugin/favourite",
             "HeVinci\\UrlBundle\\": "src/plugin/url",
             "Icap\\BlogBundle\\": "src/plugin/blog",
-            "Icap\\FormulaPluginBundle\\": "src/plugin/formula",
             "Icap\\LessonBundle\\": "src/plugin/lesson",
             "Icap\\WikiBundle\\": "src/plugin/wiki",
             "Innova\\PathBundle\\": "src/plugin/path",

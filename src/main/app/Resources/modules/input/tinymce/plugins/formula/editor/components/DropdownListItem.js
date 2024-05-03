@@ -1,5 +1,5 @@
 
-import {DomUtils} from '#/plugin/formula/editor/lib/Utils'
+import {DomUtils} from '#/main/app/input/tinymce/plugins/formula/editor/lib/Utils'
 
 const DropdownListItem = function (section, dropdownList) {
   this.id = section.id

@@ -45,9 +45,9 @@ abstract class ResourceComponent implements ResourceInterface, EventSubscriberIn
 
     public function onEmbed(EmbedResourceEvent $event): void
     {
-        $event->setData(
+        /*$event->setData(
             $this->embed($event->getResource())
-        );
+        );*/
     }
 
     public function onDownload(DownloadResourceEvent $event): void
@@ -62,7 +62,7 @@ abstract class ResourceComponent implements ResourceInterface, EventSubscriberIn
 
     public function onCreate(CreateResourceEvent $event): void
     {
-        $this->create($event->getResource(), $event->getData());
+        /*$this->create($event->getResource(), $event->getData());*/
     }
 
     public function onUpdate(UpdateResourceEvent $event): void
@@ -91,10 +91,14 @@ abstract class ResourceComponent implements ResourceInterface, EventSubscriberIn
 
     public function onDelete(DeleteResourceEvent $event): void
     {
-        $delete = $this->delete($event->getResource(), $event->isSoftDelete());
+        $fileBag = new FileBag();
+
+        $delete = $this->delete($event->getResource(), $fileBag, $event->isSoftDelete());
         if (!$delete) {
             $event->enableSoftDelete();
         }
+
+        $event->setFiles($fileBag->all());
     }
 
     public function open(AbstractResource $resource, bool $embedded = false): ?array

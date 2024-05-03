@@ -1,8 +1,6 @@
 //import tinymce from 'tinymce/tinymce'
 
-import {theme} from '#/main/app/config/theme'
-
-import {Editor} from '#/plugin/formula/editor'
+import {Editor} from '#/main/app/input/tinymce/plugins/formula/editor'
 
 const isFormula = (node) => node.className.indexOf('fm-editor-equation') > -1 && node.nodeName.toLowerCase() === 'img'
 
@@ -28,9 +26,7 @@ const showFormulaDialog = (editor) => {
       items: [
         {
           type: 'htmlpanel',
-          html: `<div id="fm-editor-body">
-                    <link rel="stylesheet" type="text/css" href="${theme('claroline-distribution-plugin-formula-formula-editor')}" />
-                </div>`
+          html: `<div id="fm-editor-body"></div>`
         }
       ]
     },
