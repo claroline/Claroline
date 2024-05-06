@@ -89,6 +89,7 @@
     "event_registration_manager_help": "A manager must validate your registration request.",
     "my_events": "My session events",
     "my_presences": "My presences",
+    "my_sessions": "My sessions",
     "public_events": "Public session events",
     "all_events": "All session events",
     "presences": "Presences",
