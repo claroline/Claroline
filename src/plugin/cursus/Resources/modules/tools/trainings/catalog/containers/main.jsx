@@ -5,7 +5,7 @@ import {withReducer} from '#/main/app/store/reducer'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {actions as courseActions} from '#/plugin/cursus/course/store'
-import {actions, reducer, selectors} from '#/plugin/cursus/tools/trainings/catalog/store'
+import {reducer, selectors} from '#/plugin/cursus/tools/trainings/catalog/store'
 import {CatalogMain as CatalogMainComponent} from '#/plugin/cursus/tools/trainings/catalog/components/main'
 
 const CatalogMain = withReducer(selectors.STORE_NAME, reducer)(
@@ -20,7 +20,7 @@ const CatalogMain = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(courseActions.open(slug))
       },
       openForm(slug, defaultProps) {
-        dispatch(actions.openForm(slug, defaultProps))
+        dispatch(courseActions.openForm(slug, defaultProps))
       }
     })
   )(CatalogMainComponent)

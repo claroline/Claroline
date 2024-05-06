@@ -4,19 +4,20 @@ import {makeFormReducer, FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/stor
 
 import {LOAD_COURSE} from '#/plugin/cursus/course/store/actions'
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
+import {selectors as courseSelectors} from '#/plugin/cursus/course/store/selectors'
 
 const reducer = combineReducers({
   courses: makeListReducer(selectors.LIST_NAME, {
     sortBy: {property: 'name', direction: 1}
   }, {
     invalidated: makeReducer(false, {
-      [FORM_SUBMIT_SUCCESS+'/'+selectors.FORM_NAME]: () => true
+      [FORM_SUBMIT_SUCCESS+'/'+courseSelectors.FORM_NAME]: () => true
     })
   }),
   course: makeReducer(null, {
     [LOAD_COURSE]: (state, action) => action.course
   }),
-  courseForm: makeFormReducer(selectors.FORM_NAME)
+  courseForm: makeFormReducer(courseSelectors.FORM_NAME)
 })
 
 export {

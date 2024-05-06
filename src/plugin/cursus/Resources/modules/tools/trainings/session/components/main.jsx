@@ -15,10 +15,10 @@ const SessionMain = (props) =>
   <ToolPage
     path={[{
       type: LINK_BUTTON,
-      label: trans('my_courses', {}, 'cursus'),
+      label: trans('my_sessions', {}, 'cursus'),
       target: `${props.path}/registered`
     }]}
-    subtitle={trans('my_courses', {}, 'cursus')}
+    subtitle={trans('my_sessions', {}, 'cursus')}
   >
     <ContentTabs
       sections={[

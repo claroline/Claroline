@@ -6,13 +6,13 @@ import {Routes} from '#/main/app/router'
 import {route} from '#/plugin/cursus/routing'
 import {Course} from '#/plugin/cursus/course/containers/main'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
-import {CatalogEdit} from '#/plugin/cursus/tools/trainings/catalog/containers/edit'
+import {CourseEdit} from '#/plugin/cursus/course/components/edit'
 import {CatalogList} from '#/plugin/cursus/tools/trainings/catalog/components/list'
-import {CatalogCreation} from '#/plugin/cursus/tools/trainings/catalog/components/creation'
+import {CourseCreation} from '#/plugin/cursus/course/components/creation'
 
 const CatalogMain = (props) =>
   <Routes
-    path={`${props.path}/catalog`}
+    path={props.path+'/catalog'}
     routes={[
       {
         path: '/',
@@ -24,13 +24,11 @@ const CatalogMain = (props) =>
         path: '/new',
         onEnter: () => props.openForm(null, CourseTypes.defaultProps),
         disabled: !props.canEdit,
-        render: () => (
-          <CatalogCreation path={props.path} />
-        )
+        component: CourseCreation
       }, {
         path: '/:slug/edit',
         onEnter: (params = {}) => props.openForm(params.slug),
-        component: CatalogEdit
+        component: CourseEdit
       }, {
         path: '/:slug',
         onEnter: (params = {}) => props.open(params.slug),

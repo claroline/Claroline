@@ -16,45 +16,43 @@ const Course = (props) =>
     course={props.course}
     activeSession={props.activeSession}
   >
-    {props.path &&
-      <Routes
-        path={props.path}
-        routes={[
-          {
-            path: '/:id?',
-            onEnter: (params = {}) => {
-              if (params.id && !['sessions', 'participants', 'pending', 'events', 'about', 'desktop'].includes(params.id)) {
-                props.openSession(params.id)
-              } else {
-                props.openSession(get(props.defaultSession, 'id') || null)
-              }
-            },
-            render: (routerProps) => (
-              <CourseDetails
-                path={props.path + (routerProps.match.params.id && !['sessions', 'participants', 'pending', 'events', 'about', 'desktop'].includes(routerProps.match.params.id) ? '/' + routerProps.match.params.id : '')}
-                history={props.history}
-                course={props.course}
-                activeSession={props.activeSession}
-                availableSessions={props.availableSessions}
-                registrations={props.registrations}
-                participantsView={props.participantsView}
-                switchParticipantsView={props.switchParticipantsView}
-                reload={props.reload}
-                register={(course, sessionId = null, registrationData = null) => {
-                  props.register(course, sessionId, registrationData).then(() => {
-                    props.reload(course.slug)
+    <Routes
+      path={props.path}
+      routes={[
+        {
+          path: '/:id?',
+          onEnter: (params = {}) => {
+            if (params.id && !['sessions', 'participants', 'pending', 'events', 'about', 'desktop'].includes(params.id)) {
+              props.openSession(params.id)
+            } else {
+              props.openSession(get(props.defaultSession, 'id') || null)
+            }
+          },
+          render: (routerProps) => (
+            <CourseDetails
+              path={props.path + (routerProps.match.params.id && !['sessions', 'participants', 'pending', 'events', 'about', 'desktop'].includes(routerProps.match.params.id) ? '/' + routerProps.match.params.id : '')}
+              history={props.history}
+              course={props.course}
+              activeSession={props.activeSession}
+              availableSessions={props.availableSessions}
+              registrations={props.registrations}
+              participantsView={props.participantsView}
+              switchParticipantsView={props.switchParticipantsView}
+              reload={props.reload}
+              register={(course, sessionId = null, registrationData = null) => {
+                props.register(course, sessionId, registrationData).then(() => {
+                  props.reload(course.slug)
 
-                    if (!isEmpty(sessionId)) {
-                      props.history.push(route(course, {id: sessionId}))
-                    }
-                  })
-                }}
-              />
-            )
-          }
-        ]}
-      />
-    }
+                  if (!isEmpty(sessionId)) {
+                    props.history.push(route(course, {id: sessionId}))
+                  }
+                })
+              }}
+            />
+          )
+        }
+      ]}
+    />
   </CoursePage>
 
 Course.propTypes = {
@@ -83,7 +81,7 @@ Course.propTypes = {
   switchParticipantsView: T.func.isRequired,
   openSession: T.func.isRequired,
   reload: T.func.isRequired,
-  register: T.func.isRequired,
+  register: T.func.isRequired
 }
 
 export {

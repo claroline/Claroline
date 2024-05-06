@@ -50,7 +50,7 @@ const Course = (props) => {
         }
       ].concat(props.course ? props.breadcrumb : [])}
       primaryAction="edit"
-      actions={getActions([props.course], {}, props.path, props.currentUser, props.activeSession)}
+      actions={getActions([props.course], {}, '', props.currentUser)}
     >
       {props.children}
     </ToolPage>
