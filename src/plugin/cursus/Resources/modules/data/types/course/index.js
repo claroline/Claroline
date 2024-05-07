@@ -5,7 +5,7 @@ import {CourseInput} from '#/plugin/cursus/data/types/course/components/input'
 import {CourseFilter} from '#/plugin/cursus/data/types/course/components/filter'
 
 const dataType = {
-  name: 'course',
+  name: 'training_course',
   meta: {
     creatable: false,
     icon: 'fa fa-fw fa fa-graduation-cap',
