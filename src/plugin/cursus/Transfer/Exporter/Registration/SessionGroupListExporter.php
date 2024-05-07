@@ -85,7 +85,7 @@ class SessionGroupListExporter extends AbstractListExporter
         $extraDef['fields'][] = [
             'name' => 'course',
             'label' => $this->translator->trans('course', [], 'cursus'),
-            'type' => 'course',
+            'type' => 'training_course',
         ];
 
         return $extraDef;
