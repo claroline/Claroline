@@ -11,7 +11,7 @@ import {constants} from '#/plugin/cursus/constants'
 const EventForm = (props) =>
   <FormData
     {...props}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,
