@@ -35,7 +35,7 @@
     "lodash": "^4.17.21",
     "mathjax": "2.7.4",
     "moment": "^2.24.0",
-    "pdfjs-dist": "^3.8.162",
+    "pdfjs-dist": "^4.2.67",
     "postcss": "^8.4.31",
     "prop-types": "^15.8.1",
     "react": "^18.0",
