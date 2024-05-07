@@ -9,8 +9,8 @@ import {Resource} from '#/main/core/resource'
 import {BBB as BBBTypes} from '#/integration/big-blue-button/resources/bbb/prop-types'
 import {Player} from '#/integration/big-blue-button/resources/bbb/player/containers/player'
 import {End} from '#/integration/big-blue-button/resources/bbb/player/components/end'
-import {Editor} from '#/integration/big-blue-button/resources/bbb/editor/containers/editor'
 import {Records} from '#/integration/big-blue-button/resources/bbb/records/containers/records'
+import {BBBEditor} from '#/integration/big-blue-button/resources/bbb/editor/components/main'
 
 const BBBResource = props =>
   <Resource
@@ -19,8 +19,8 @@ const BBBResource = props =>
       {
         name: 'records',
         type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-video',
-        label: trans('show-records', {}, 'actions'),
+        //icon: 'fa fa-fw fa-video',
+        label: trans('recordings', {}, 'bbb'),
         target: props.path+'/records',
         displayed: props.allowRecords && props.bbb.record
       }
@@ -37,17 +37,12 @@ const BBBResource = props =>
         dangerous: true
       }
     ]}
+    editor={BBBEditor}
     pages={[
       {
         path: '/',
         component: Player,
         exact: true
-      }, {
-        path: '/edit',
-        component: Editor,
-        disabled: !props.canEdit,
-        onEnter: () => props.resetForm(props.bbb),
-        onLeave: () => props.resetForm()
       }, {
         path: '/end',
         component: End,

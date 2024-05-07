@@ -6,10 +6,10 @@ import {Chart as ChartTypes} from '#/main/core/layout/chart/prop-types'
 import {Chart} from '#/main/core/layout/chart/components/chart'
 import {DataSeries} from '#/main/core/layout/chart/pie/components/data-series'
 
-// TODO merge with pie chart
-
 /**
  * Draws a Circular gauge
+ *
+ * @deprecated
  */
 const CircularGauge = props => {
   const radius = props.width / 2

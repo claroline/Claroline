@@ -170,6 +170,7 @@ const DataListPagination = {
  */
 const DataListView = {
   propTypes: {
+    size: T.string,
     data: T.arrayOf(T.object).isRequired,
     count: T.number.isRequired,
     definition: T.arrayOf(

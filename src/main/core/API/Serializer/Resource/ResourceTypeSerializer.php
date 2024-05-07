@@ -8,15 +8,12 @@ use Claroline\CoreBundle\Manager\Resource\ResourceActionManager;
 
 class ResourceTypeSerializer
 {
-    /** @var ResourceActionManager */
-    private $actionManager;
-
-    public function __construct(ResourceActionManager $actionManager)
-    {
-        $this->actionManager = $actionManager;
+    public function __construct(
+        private readonly ResourceActionManager $actionManager
+    ) {
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'resource_type';
     }
@@ -32,6 +29,8 @@ class ResourceTypeSerializer
             'class' => $resourceType->getClass(),
             'tags' => $resourceType->getTags(),
             'enabled' => $resourceType->isEnabled(),
+            'evaluation' => true,
+            'downloadable' => true,
             'actions' => array_map(function (MenuAction $resourceAction) {
                 return [
                     'name' => $resourceAction->getName(),

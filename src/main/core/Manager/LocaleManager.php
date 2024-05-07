@@ -18,18 +18,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class LocaleManager
 {
-    private $userManager;
-    private $tokenStorage;
-    private $configHandler;
-
     public function __construct(
-        PlatformConfigurationHandler $configHandler,
-        UserManager $userManager,
-        TokenStorageInterface $tokenStorage
+        private readonly PlatformConfigurationHandler $configHandler,
+        private readonly UserManager $userManager,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->configHandler = $configHandler;
-        $this->userManager = $userManager;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function getLocales(): array
@@ -99,11 +92,6 @@ class LocaleManager
             $locale = $preferred[0];
         } else {
             $locale = $this->getDefault();
-        }
-
-        $session = $request->getSession();
-        if ($session) {
-            $session->set('_locale', $locale);
         }
 
         return $locale;

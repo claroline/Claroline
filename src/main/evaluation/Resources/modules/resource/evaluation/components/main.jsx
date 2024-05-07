@@ -12,7 +12,7 @@ import {MODAL_RESOURCE_EVALUATIONS} from '#/main/evaluation/modals/resource-eval
 import {selectors} from '#/main/evaluation/resource/evaluation/store'
 import {ResourcePage} from '#/main/core/resource/components/page'
 
-const EvaluationMain = (props) =>
+const ResourceEvaluations = (props) =>
   <ResourcePage
     title={trans('evaluation', {}, 'tools')}
   >
@@ -49,10 +49,10 @@ const EvaluationMain = (props) =>
     />
   </ResourcePage>
 
-EvaluationMain.propTypes = {
+ResourceEvaluations.propTypes = {
   nodeId: T.string.isRequired
 }
 
 export {
-  EvaluationMain
+  ResourceEvaluations
 }

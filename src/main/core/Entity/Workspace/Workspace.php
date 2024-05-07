@@ -23,6 +23,7 @@ use Claroline\AppBundle\Entity\Meta\Archived;
 use Claroline\AppBundle\Entity\Meta\CreatedAt;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Meta\DescriptionHtml;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\AppBundle\Entity\Meta\UpdatedAt;
 use Claroline\AppBundle\Entity\Restriction\AccessCode;
@@ -39,11 +40,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
- *
- * @ORM\Table(name="claro_workspace", indexes={
- *
- *     @ORM\Index(name="name_idx", columns={"entity_name"})
- * })
+ * @ORM\Table(name="claro_workspace", indexes={@ORM\Index(name="name_idx", columns={"entity_name"})})
  */
 class Workspace implements IdentifiableInterface, ContextSubjectInterface
 {
@@ -55,6 +52,7 @@ class Workspace implements IdentifiableInterface, ContextSubjectInterface
     use Archived;
     use Name;
     use Description;
+    use DescriptionHtml;
     use Creator;
     use CreatedAt;
     use UpdatedAt;

@@ -13,39 +13,34 @@
 
 .summary-link-container {
     list-style: none;
+
+    &:first-child {
+        & > .summary-link {
+            margin-top: 0;
+        }
+    }
 }
 
 .summary-link {
     display: flex;
     align-items: center;
     border-radius: $summary-link-border-radius;
-    margin-top: 5px;
     background-color: $summary-link-bg;
-
-    &:hover {
-        background-color: $summary-link-hover-bg;
-    }
-
-    &.active,
-    &:focus {
-        color: $summary-link-active-color;
-        background: $summary-link-active-bg;
-    }
+    margin-top: map-get($spacers, 1);
 }
 
 .summary-link-actions {
     white-space: nowrap; // avoid buttons to be displayed in column
 }
 
-.btn-summary-primary,
-.btn-summary {
-    border: none;
+.btn-summary-primary/*,
+.btn-summary*/ {
+    //border: none;
     padding: ($grid-gutter-width * .5) 0;
-    color: $summary-link-color;
+    //color: $summary-link-color;
 
     &:hover {
-        color: $summary-link-hover-color;
-        background: $summary-link-hover-bg;
+        //color: $summary-link-hover-color;
     }
 
     &:focus,
@@ -54,8 +49,7 @@
         &,
         &:hover,
         &:focus {
-            color: $summary-link-active-color;
-            background: $summary-link-active-bg;
+            //color: $summary-link-active-color;
         }
     }
 
@@ -65,8 +59,7 @@
         &,
         &:hover,
         &:focus {
-            color: $summary-link-disabled-color;
-            background: $summary-link-disabled-bg;
+            //color: $summary-link-disabled-color;
         }
 
         // preserve active state on disabled (because active links are disabled)
@@ -74,9 +67,8 @@
             &,
             &:hover,
             &:focus {
-                color: $summary-link-active-color;
-                background: $summary-link-active-bg;
-                opacity: 1;
+                //color: $summary-link-active-color;
+                //opacity: 1;
             }
         }
     }
@@ -97,9 +89,4 @@
     .action-subscript {
         margin-left: auto;
     }
-}
-
-.btn-summary {
-    padding-left: 5px;
-    padding-right: 5px;
 }

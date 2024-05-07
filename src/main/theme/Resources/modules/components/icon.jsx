@@ -41,14 +41,14 @@ const ThemeUrlIcon = (props) => {
     return (
       <span
         role="presentation"
-        className={classes('theme-icon', props.className)}
+        className={classes(props.className, 'theme-icon', props.size && `theme-icon-${props.size}`)}
         dangerouslySetInnerHTML={{ __html: svg }}
       />
     )
   }
 
   return (
-    <span role="presentation" className={classes('theme-icon', props.className)}>
+    <span role="presentation" className={classes(props.className, 'theme-icon', props.size && `theme-icon-${props.size}`)}>
       <img src={asset(props.url)} />
     </span>
   )
@@ -57,7 +57,8 @@ const ThemeUrlIcon = (props) => {
 ThemeUrlIcon.propTypes = {
   className: T.string,
   url: T.string.isRequired,
-  svg: T.bool.isRequired
+  svg: T.bool.isRequired,
+  size: T.oneOf(['xs', 'sm', 'md', 'lg', 'xl'])
 }
 
 const ThemeIcon = props => {
@@ -68,6 +69,7 @@ const ThemeIcon = props => {
       className={props.className}
       url={iconInfo.url}
       svg={iconInfo.svg}
+      size={props.size}
     />
   )
 }
@@ -75,7 +77,8 @@ const ThemeIcon = props => {
 ThemeIcon.propTypes = {
   className: T.string,
   mimeType: T.string,
-  set: T.oneOf(['resources', 'widgets', 'data'])
+  set: T.oneOf(['resources', 'widgets', 'data']),
+  size: T.oneOf(['xs', 'sm', 'md', 'lg', 'xl'])
 }
 
 export {

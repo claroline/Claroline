@@ -2,51 +2,40 @@
 
 namespace Claroline\ClacoFormBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
+use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Persistence\ObjectRepository;
 
 class CategorySerializer
 {
     use SerializerTrait;
 
-    /** @var FieldChoiceCategorySerializer */
-    private $fieldChoiceCategorySerializer;
+    private UserRepository $userRepo;
+    private ObjectRepository $fieldChoiceCategoryRepo;
 
-    /** @var UserSerializer */
-    private $userSerializer;
-
-    /** @var ObjectManager */
-    private $om;
-
-    private $clacoFormRepo;
-    private $fieldChoiceCategoryRepo;
-    private $userRepo;
-
-    /**
-     * CategorySerializer constructor.
-     */
     public function __construct(
-        FieldChoiceCategorySerializer $fieldChoiceCategorySerializer,
-        UserSerializer $userSerializer,
-        ObjectManager $om
+        private readonly FieldChoiceCategorySerializer $fieldChoiceCategorySerializer,
+        private readonly UserSerializer $userSerializer,
+        private readonly ObjectManager $om
     ) {
-        $this->fieldChoiceCategorySerializer = $fieldChoiceCategorySerializer;
-        $this->userSerializer = $userSerializer;
-        $this->om = $om;
-
-        $this->clacoFormRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\ClacoForm');
-        $this->fieldChoiceCategoryRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\FieldChoiceCategory');
-        $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
+        $this->fieldChoiceCategoryRepo = $om->getRepository(FieldChoiceCategory::class);
+        $this->userRepo = $om->getRepository(User::class);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'clacoform_category';
+    }
+
+    public function getClass(): string
+    {
+        return Category::class;
     }
 
     /**
@@ -57,7 +46,7 @@ class CategorySerializer
      *
      * @return array - the serialized representation of the category
      */
-    public function serialize(Category $category, array $options = [])
+    public function serialize(Category $category, array $options = []): array
     {
         $serialized = [
             'id' => $category->getUuid(),
@@ -65,10 +54,10 @@ class CategorySerializer
             'details' => $category->getDetails(),
         ];
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+        if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
                 'managers' => array_map(function (User $manager) {
-                    return $this->userSerializer->serialize($manager, [Options::SERIALIZE_MINIMAL]);
+                    return $this->userSerializer->serialize($manager, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $category->getManagers()),
             ]);
             $serialized = array_merge($serialized, [
@@ -81,23 +70,16 @@ class CategorySerializer
         return $serialized;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return Category
-     */
-    public function deserialize($data, Category $category, array $options = [])
+    public function deserialize(array $data, Category $category, array $options = []): Category
     {
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $category);
+        } else {
+            $category->refreshUuid();
+        }
+
         $this->sipe('name', 'setName', $data, $category);
         $this->sipe('details', 'setDetails', $data, $category);
-
-        if (isset($data['clacoForm']['id']) && !in_array(Options::REFRESH_UUID, $options)) {
-            $clacoForm = $this->clacoFormRepo->findOneBy(['uuid' => $data['clacoForm']['id']]);
-
-            if (!empty($clacoForm)) {
-                $category->setClacoForm($clacoForm);
-            }
-        }
 
         $category->emptyManagers();
         if (isset($data['managers'])) {
@@ -117,10 +99,7 @@ class CategorySerializer
         return $category;
     }
 
-    /**
-     * @param array $valuesData
-     */
-    private function deserializeFieldChoiceCategory($valuesData, Category $category)
+    private function deserializeFieldChoiceCategory(array $valuesData, Category $category): void
     {
         $oldFieldChoiceCategories = $this->fieldChoiceCategoryRepo->findBy(['category' => $category]);
         $newUuids = [];

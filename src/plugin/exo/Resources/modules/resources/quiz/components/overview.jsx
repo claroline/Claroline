@@ -10,8 +10,7 @@ import {ResourceOverview} from '#/main/core/resource/components/overview'
 
 import {correctionModes, markModes, SHOW_CORRECTION_AT_DATE, SHOW_SCORE_AT_NEVER} from '#/plugin/exo/quiz/enums'
 import {AttemptsChart} from '#/plugin/exo/charts/attempts/components/chart'
-
-// TODO : show info about number of attempts
+import {PageSection} from '#/main/app/page/components/section'
 
 const Parameters = props =>
   <ul className="exercise-parameters">
@@ -80,9 +79,7 @@ const QuizOverview = props => {
 
   return (
     <ResourceOverview
-      contentText={props.quiz.description}
       evaluation={props.userEvaluation}
-      resourceNode={props.resourceNode}
       display={{
         score: props.quiz.parameters.showScoreAt !== SHOW_SCORE_AT_NEVER,
         scoreMax: get(props.quiz, 'score.total'),
@@ -109,15 +106,17 @@ const QuizOverview = props => {
 
       actions={[
         {
+          name: 'start',
           type: LINK_BUTTON,
           label: trans('start', {}, 'actions'),
           target: `${props.path}/play`,
           primary: true,
           disabled: props.empty || (maxAttemptsReached && !props.editable),
-          disabledMessages: [
+          /*disabledMessages: [
             props.empty && trans('start_disabled_empty', {}, 'quiz')
-          ].filter(value => !!value)
+          ].filter(value => !!value)*/
         }, {
+          name: 'test',
           type: LINK_BUTTON,
           label: trans('test', {}, 'actions'),
           displayed: props.editable && !props.empty,
@@ -126,7 +125,7 @@ const QuizOverview = props => {
       ]}
     >
       {props.quiz.parameters.showMetadata &&
-        <section className="resource-parameters mb-3">
+        <PageSection size="md" className="py-3">
           <h3 className="h2">{trans('configuration')}</h3>
 
           <Parameters
@@ -138,24 +137,29 @@ const QuizOverview = props => {
             timeLimited={props.quiz.parameters.timeLimited}
             duration={props.quiz.parameters.duration}
           />
-        </section>
+        </PageSection>
       }
 
+
       {props.showStats && ['user', 'both'].includes(get(props.quiz, 'parameters.overviewStats')) &&
-        <AttemptsChart
-          quizId={props.quiz.id}
-          userId={props.currentUserId}
-          steps={props.quiz.steps}
-          questionNumberingType={get(props.quiz, 'parameters.questionNumbering')}
-        />
+        <PageSection size="md" className="py-3">
+          <AttemptsChart
+            quizId={props.quiz.id}
+            userId={props.currentUserId}
+            steps={props.quiz.steps}
+            questionNumberingType={get(props.quiz, 'parameters.questionNumbering')}
+          />
+        </PageSection>
       }
 
       {props.showStats && ['all', 'both'].includes(get(props.quiz, 'parameters.overviewStats')) &&
-        <AttemptsChart
-          quizId={props.quiz.id}
-          steps={props.quiz.steps}
-          questionNumberingType={get(props.quiz, 'parameters.questionNumbering')}
-        />
+        <PageSection size="md" className="py-3">
+          <AttemptsChart
+            quizId={props.quiz.id}
+            steps={props.quiz.steps}
+            questionNumberingType={get(props.quiz, 'parameters.questionNumbering')}
+          />
+        </PageSection>
       }
     </ResourceOverview>
   )

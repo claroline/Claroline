@@ -21,7 +21,10 @@ const ResourceCard = props =>
     id={props.data.id}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
     icon={!props.data.thumbnail ?
-      <ResourceIcon mimeType={props.data.meta.mimeType} /> :
+      <ResourceIcon
+        mimeType={props.data.meta.mimeType}
+        size={props.size}
+      /> :
       null
     }
     title={props.data.name}
@@ -56,6 +59,7 @@ const ResourceCard = props =>
 
 ResourceCard.propTypes = {
   className: T.string,
+  size: T.string,
   data: T.shape(
     ResourceNodeTypes.propTypes
   ).isRequired

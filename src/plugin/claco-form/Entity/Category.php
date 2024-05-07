@@ -11,9 +11,11 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -23,20 +25,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Category
 {
+    use Id;
     use Uuid;
-
-    /**
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
 
     /**
      * @ORM\Column(name="category_name")
      * @Assert\NotBlank()
      */
-    protected $name;
+    private ?string $name = null;
 
     /**
      * @ORM\ManyToOne(
@@ -45,18 +41,18 @@ class Category
      * )
      * @ORM\JoinColumn(name="claco_form_id", nullable=false, onDelete="CASCADE")
      */
-    protected $clacoForm;
+    private ?ClacoForm $clacoForm = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinTable(name="claro_clacoformbundle_category_manager")
      */
-    protected $managers;
+    private Collection $managers;
 
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    protected $details;
+    private ?array $details = [];
 
     public function __construct()
     {
@@ -64,32 +60,25 @@ class Category
         $this->managers = new ArrayCollection();
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getClacoForm()
+    public function getClacoForm(): ?ClacoForm
     {
         return $this->clacoForm;
     }
 
-    public function setClacoForm(ClacoForm $clacoForm)
+    /**
+     * @internal use ClacoForm::addCategory/ClacoForm::removeCategory
+     */
+    public function setClacoForm(ClacoForm $clacoForm = null): void
     {
         $this->clacoForm = $clacoForm;
     }
@@ -97,50 +86,46 @@ class Category
     /**
      * @return User[]
      */
-    public function getManagers()
+    public function getManagers(): array
     {
         return $this->managers->toArray();
     }
 
-    public function addManager(User $manager)
+    public function addManager(User $manager): void
     {
         if (!$this->managers->contains($manager)) {
             $this->managers->add($manager);
         }
-
-        return $this;
     }
 
-    public function removeManager(User $manager)
+    public function removeManager(User $manager): void
     {
         if ($this->managers->contains($manager)) {
             $this->managers->removeElement($manager);
         }
-
-        return $this;
     }
 
-    public function emptyManagers()
+    public function emptyManagers(): void
     {
         $this->managers->clear();
     }
 
-    public function getDetails()
+    public function getDetails(): ?array
     {
         return $this->details;
     }
 
-    public function setDetails($details)
+    public function setDetails(array $details): void
     {
         $this->details = $details;
     }
 
-    public function getColor()
+    public function getColor(): ?string
     {
         return !is_null($this->details) && isset($this->details['color']) ? $this->details['color'] : null;
     }
 
-    public function setColor($color)
+    public function setColor(string $color): void
     {
         if (is_null($this->details)) {
             $this->details = [];
@@ -148,12 +133,12 @@ class Category
         $this->details['color'] = $color;
     }
 
-    public function getNotifyAddition()
+    public function getNotifyAddition(): bool
     {
         return !is_null($this->details) && isset($this->details['notify_addition']) ? $this->details['notify_addition'] : true;
     }
 
-    public function setNotifyAddition($notifyAddition)
+    public function setNotifyAddition(bool $notifyAddition): void
     {
         if (is_null($this->details)) {
             $this->details = [];
@@ -161,12 +146,12 @@ class Category
         $this->details['notify_addition'] = $notifyAddition;
     }
 
-    public function getNotifyEdition()
+    public function getNotifyEdition(): bool
     {
         return !is_null($this->details) && isset($this->details['notify_edition']) ? $this->details['notify_edition'] : true;
     }
 
-    public function setNotifyEdition($notifyEdition)
+    public function setNotifyEdition(bool $notifyEdition): void
     {
         if (is_null($this->details)) {
             $this->details = [];
@@ -174,12 +159,12 @@ class Category
         $this->details['notify_edition'] = $notifyEdition;
     }
 
-    public function getNotifyRemoval()
+    public function getNotifyRemoval(): bool
     {
         return !is_null($this->details) && isset($this->details['notify_removal']) ? $this->details['notify_removal'] : true;
     }
 
-    public function setNotifyRemoval($notifyRemoval)
+    public function setNotifyRemoval(bool $notifyRemoval): void
     {
         if (is_null($this->details)) {
             $this->details = [];
@@ -187,14 +172,14 @@ class Category
         $this->details['notify_removal'] = $notifyRemoval;
     }
 
-    public function getNotifyPendingComment()
+    public function getNotifyPendingComment(): bool
     {
         return !is_null($this->details) && isset($this->details['notify_pending_comment']) ?
             $this->details['notify_pending_comment'] :
             true;
     }
 
-    public function setNotifyPendingComment($notifyPendingComment)
+    public function setNotifyPendingComment(bool $notifyPendingComment): void
     {
         if (is_null($this->details)) {
             $this->details = [];

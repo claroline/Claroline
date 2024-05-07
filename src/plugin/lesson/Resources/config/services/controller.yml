@@ -1,17 +1,15 @@
 services:
     _defaults:
-        autowire: false #change to true
-        autoconfigure: false
-        public: true #because controller
+        public: true # because controller
 
     Icap\LessonBundle\Controller\ChapterController:
         arguments:
+          - '@security.authorization_checker'
           - '@Claroline\AppBundle\Persistence\ObjectManager'
           - '@twig'
           - '@Claroline\AppBundle\API\FinderProvider'
           - '@Icap\LessonBundle\Serializer\ChapterSerializer'
           - '@Icap\LessonBundle\Manager\ChapterManager'
-          - '@security.authorization_checker'
           - '@Claroline\AppBundle\Manager\PdfManager'
 
     Icap\LessonBundle\Controller\LessonController:

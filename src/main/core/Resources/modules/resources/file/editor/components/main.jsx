@@ -14,8 +14,6 @@ import {getFile, getTypeName} from '#/main/core/files'
 import {constants} from '#/main/core/resources/file/constants'
 import {selectors} from '#/main/core/resources/file/editor/store/selectors'
 
-// TODO : find a way to reuse file creation form component
-
 const EditorMain = (props) =>
   <FormData
     level={2}

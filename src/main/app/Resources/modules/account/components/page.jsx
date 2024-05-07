@@ -13,7 +13,7 @@ import {UserAvatar} from '#/main/app/user/components/avatar'
 const AccountPage = (props) =>
   <PageFull
     {...omit(props, 'currentUser')}
-    className="user-page"
+    size="xl"
     breadcrumb={[
       {
         type: LINK_BUTTON,
@@ -21,8 +21,7 @@ const AccountPage = (props) =>
         target: '/account'
       }
     ].concat(props.path || [])}
-    title={props.currentUser.name}
-    subtitle={props.title || props.currentUser.name}
+    title={props.title || props.currentUser.name}
     poster={props.currentUser.poster}
     icon={
       <UserAvatar user={props.currentUser} size="xl" />

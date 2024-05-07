@@ -16,7 +16,6 @@ services:
             - '@translator'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\CurlManager'
             - '@Claroline\CoreBundle\Library\RoutingHelper'
             - '@Claroline\BigBlueButtonBundle\Manager\ServerManager'

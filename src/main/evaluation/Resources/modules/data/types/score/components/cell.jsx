@@ -7,7 +7,7 @@ const ScoreCell = props => {
   if (props.data) {
     return (
       <EvaluationScore
-        size="sm"
+        size={props.size}
         score={props.data.current}
         scoreMax={props.data.total}
       />
@@ -18,6 +18,7 @@ const ScoreCell = props => {
 }
 
 ScoreCell.propTypes = {
+  size: T.string,
   data: T.shape({
     current: T.number,
     total: T.number.isRequired

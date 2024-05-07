@@ -6,20 +6,18 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
+use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Claroline\EvaluationBundle\Repository\ResourceAttemptRepository;
 
 class EvaluationManager
 {
-    private ResourceEvaluationManager $resourceEvalManager;
     private ResourceAttemptRepository $attemptRepository;
 
     public function __construct(
         ObjectManager $om,
-        ResourceEvaluationManager $resourceEvalManager
+        private readonly ResourceEvaluationManager $resourceEvalManager
     ) {
-        $this->resourceEvalManager = $resourceEvalManager;
         $this->attemptRepository = $om->getRepository(ResourceEvaluation::class);
     }
 
@@ -32,7 +30,7 @@ class EvaluationManager
         $evaluation = $this->attemptRepository->findOneInProgress($resourceNode, $user);
 
         $evaluationData = [
-            'status' => AbstractEvaluation::STATUS_PARTICIPATED,
+            'status' => EvaluationStatus::PARTICIPATED,
             'progression' => 100,
         ];
 

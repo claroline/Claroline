@@ -1,0 +1,70 @@
+@mixin evaluation-gauge-color-variant($color, $light-color) {
+  .meter {
+    stroke: $color;
+  }
+  .bg {
+    stroke: fade-out($color, .75);
+  }
+}
+
+.evaluation-gauge {
+  display: inline-flex;
+  flex-direction: column;
+
+  .bg,
+  .meter {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1rem;
+    fill: none;
+  }
+
+  &.success {
+    @include evaluation-gauge-color-variant($success, $success-bg-subtle);
+  }
+  &.danger {
+    @include evaluation-gauge-color-variant($danger, $danger-bg-subtle);
+  }
+  &.warning {
+    @include evaluation-gauge-color-variant($warning, $warning-bg-subtle);
+  }
+  &.info {
+    @include evaluation-gauge-color-variant($info, $info-bg-subtle);
+  }
+  &.secondary {
+    @include evaluation-gauge-color-variant($secondary, $secondary-bg-subtle);
+  }
+
+  @include evaluation-gauge-color-variant($learning, $learning-bg-subtle);
+
+  .evaluation-status {
+    //margin-top: -40px;
+    margin-bottom: 0;
+    font-size: $lead-font-size;
+    text-transform: uppercase;
+    font-weight: 700;
+    white-space: normal;
+  }
+}
+
+.evaluation-gauge-md {
+  width: map-get($icon-sizes, md);
+  height: map-get($icon-sizes, md);
+}
+
+.evaluation-gauge-lg {
+  width: map-get($icon-sizes, lg);
+  height: map-get($icon-sizes, lg);
+}
+
+.evaluation-gauge-xl {
+  width: map-get($icon-sizes, xl);
+  height: map-get($icon-sizes, xl);
+}
+
+.evaluation-jumbotron {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}

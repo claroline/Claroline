@@ -9,10 +9,10 @@ import {getTabs} from '#/main/evaluation/evaluation'
 
 import {EvaluationUser} from '#/main/evaluation/tools/evaluation/containers/user'
 import {EvaluationUsers} from '#/main/evaluation/tools/evaluation/containers/users'
-import {EvaluationEditor} from '#/main/evaluation/tools/evaluation/containers/editor'
-import {ASYNC_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {EvaluationEditor} from '#/main/evaluation/tools/evaluation/editor/components/main'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {EvaluationAbout} from '#/main/evaluation/tools/evaluation/components/about'
-import {EvaluationActivities} from '#/main/evaluation/tools/evaluation/components/activities'
+import {EvaluationActivities} from '#/main/evaluation/tools/evaluation/containers/activities'
 
 const EvaluationTool = (props) => {
   const [pages, setPages] = useState([])
@@ -51,7 +51,8 @@ const EvaluationTool = (props) => {
           name: 'activities',
           type: LINK_BUTTON,
           label: trans('activities'),
-          target: props.path+'/activities'
+          target: props.path+'/activities',
+          displayed: 'workspace' === props.contextType
         }
       ].concat(pages.map(page => ({
         name: page.name,
@@ -59,33 +60,6 @@ const EvaluationTool = (props) => {
         label: trans(page.name, {}, 'evaluation'),
         target: `${props.path}/${page.name}`
       })))}
-      actions={[
-        {
-          name: 'initialize',
-          type: ASYNC_BUTTON,
-          icon: 'fa fa-fw fa-sync',
-          label: trans('initialize_evaluations', {}, 'evaluation'),
-          request: {
-            url: ['apiv2_workspace_evaluations_init', {workspace: props.contextId}],
-            request: {
-              method: 'PUT'
-            }
-          },
-          group: trans('management')
-        }, {
-          name: 'recompute',
-          type: ASYNC_BUTTON,
-          icon: 'fa fa-fw fa-calculator',
-          label: trans('recompute_evaluations', {}, 'evaluation'),
-          request: {
-            url: ['apiv2_workspace_evaluations_recompute', {workspace: props.contextId}],
-            request: {
-              method: 'PUT'
-            }
-          },
-          group: trans('management')
-        }
-      ]}
       pages={[
         {
           path: '/',

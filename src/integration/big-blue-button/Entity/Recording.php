@@ -18,52 +18,38 @@ class Recording
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\BigBlueButtonBundle\Entity\BBB", inversedBy="recordings")
      * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @var BBB
      */
-    private $meeting;
+    private ?BBB $meeting = null;
 
     /**
      * @ORM\Column()
-     *
-     * @var string
      */
-    private $recordId;
+    private ?string $recordId = null;
 
     /**
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    private $startTime;
+    private ?string $startTime = null;
 
     /**
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    private $endTime;
+    private ?string $endTime;
 
     /**
      * @ORM\Column()
-     *
-     * @var string
      */
-    private $status;
+    private ?string $status = null;
 
     /**
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    private $participants = 0;
+    private int $participants = 0;
 
     /**
      * @ORM\Column(type="json")
-     *
-     * @var array
      */
-    private $medias = [];
+    private ?array $medias = [];
 
     public function __construct()
     {
@@ -75,7 +61,7 @@ class Recording
         return $this->meeting;
     }
 
-    public function setMeeting(BBB $meeting)
+    public function setMeeting(BBB $meeting): void
     {
         $this->meeting = $meeting;
     }
@@ -85,7 +71,7 @@ class Recording
         return $this->recordId;
     }
 
-    public function setRecordId(string $recordId)
+    public function setRecordId(string $recordId): void
     {
         $this->recordId = $recordId;
     }
@@ -95,7 +81,7 @@ class Recording
         return $this->status;
     }
 
-    public function setStatus(string $status)
+    public function setStatus(string $status): void
     {
         $this->status = $status;
     }
@@ -105,7 +91,7 @@ class Recording
         return $this->startTime;
     }
 
-    public function setStartTime(string $startTime)
+    public function setStartTime(string $startTime): void
     {
         $this->startTime = $startTime;
     }
@@ -115,7 +101,7 @@ class Recording
         return $this->endTime;
     }
 
-    public function setEndTime(string $endTime)
+    public function setEndTime(string $endTime): void
     {
         $this->endTime = $endTime;
     }
@@ -125,7 +111,7 @@ class Recording
         return $this->participants;
     }
 
-    public function setParticipants(int $participants)
+    public function setParticipants(int $participants): void
     {
         $this->participants = $participants;
     }
@@ -135,7 +121,7 @@ class Recording
         return $this->medias;
     }
 
-    public function setMedias(array $medias)
+    public function setMedias(array $medias): void
     {
         $this->medias = $medias;
     }

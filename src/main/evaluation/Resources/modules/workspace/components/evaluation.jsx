@@ -20,6 +20,8 @@ import {route as resourceRoute} from '#/main/core/resource/routing'
 import {MODAL_RESOURCE_EVALUATIONS} from '#/main/evaluation/modals/resource-evaluations'
 import {EvaluationDetails} from '#/main/evaluation/components/details'
 import {route} from '#/main/community/user/routing'
+import {EvaluationJumbotron} from '#/main/evaluation/components/jumbotron'
+import {PageSection} from '#/main/app/page/components/section'
 
 class WorkspaceEvaluation extends Component {
   constructor(props) {
@@ -35,78 +37,11 @@ class WorkspaceEvaluation extends Component {
 
 
     return (
-      <div className="row mt-3">
-        <div className="col-md-4 user-progression">
-          <EvaluationDetails
-            evaluation={this.props.workspaceEvaluation}
-            statusTexts={constants.EVALUATION_STATUSES}
-            details={[
-              [trans('last_activity'), get(this.props.workspaceEvaluation, 'date') ? displayDate(this.props.workspaceEvaluation.date, false, true) : '-'],
-              [trans('duration'), get(this.props.workspaceEvaluation, 'duration') ? displayDuration(get(this.props.workspaceEvaluation, 'duration')) : '-'],
-              get(this.props.workspaceEvaluation, 'displayScore') && [
-                trans('score'),
-                (get(this.props.workspaceEvaluation, 'displayScore.current') ? number(get(this.props.workspaceEvaluation, 'displayScore.current')) : '?') + ' / ' + number(get(this.props.workspaceEvaluation, 'displayScore.total'))
-              ]
-            ].filter(value => !!value)}
-            estimatedDuration={get(this.props, 'workspace.estimatedDuration')}
-          />
-
-          <div className="mb-3">
-            <Toolbar
-              className="d-grid gap-1"
-              variant="btn"
-              toolbar="show-profile send-message"
-              actions={[
-                {
-                  name: 'show-profile',
-                  type: LINK_BUTTON,
-                  label: trans('show_profile', {}, 'actions'),
-                  target: route(get(this.props.workspaceEvaluation, 'user')),
-                  primary: true,
-                  size: 'lg',
-                  displayed: this.props.userId !== this.props.currentUserId
-                }, {
-                  name: 'send-message',
-                  type: MODAL_BUTTON,
-                  label: trans('send-message', {}, 'actions'),
-                  modal: [MODAL_MESSAGE, {
-                    receivers: {users: [get(this.props.workspaceEvaluation, 'user')]}
-                  }],
-                  displayed: this.props.userId !== this.props.currentUserId
-                }, {
-                  name: 'download-participation-certificate',
-                  type: URL_BUTTON,
-                  label: trans('download_participation_certificate', {}, 'actions'),
-                  target: ['apiv2_workspace_download_participation_certificate', {
-                    workspace: get(this.props.workspaceEvaluation, 'workspace.id'),
-                    user: get(this.props.workspaceEvaluation, 'user.id')
-                  }],
-                  displayed: [
-                    baseConstants.EVALUATION_STATUS_COMPLETED,
-                    baseConstants.EVALUATION_STATUS_PARTICIPATED
-                  ].includes(get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)),
-                  size: 'lg'
-                }, {
-                  name: 'download-success-certificate',
-                  size: 'lg',
-                  type: URL_BUTTON,
-                  label: trans('download_success_certificate', {}, 'actions'),
-                  target: ['apiv2_workspace_download_success_certificate', {
-                    workspace: get(this.props.workspaceEvaluation, 'workspace.id'),
-                    user: get(this.props.workspaceEvaluation, 'user.id')
-                  }],
-                  displayed: baseConstants.EVALUATION_STATUS_PASSED === get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)
-                }
-              ]}
-            />
-
-            <div className="text-secondary mt-1">
-              {trans('workspace_certificates_availability_help', {}, 'workspace')}
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-8">
+      <>
+        {/*<EvaluationJumbotron
+          evaluation={this.props.workspaceEvaluation}
+        />*/}
+        <PageSection size="md">
           <ul className="nav nav-tabs mb-3">
             <li className="nav-item">
               <Button
@@ -173,8 +108,8 @@ class WorkspaceEvaluation extends Component {
               />
             ))
           }
-        </div>
-      </div>
+        </PageSection>
+      </>
     )
   }
 }

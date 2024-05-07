@@ -2,37 +2,23 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {Resource, ResourcePage} from '#/main/core/resource'
+import {Resource} from '#/main/core/resource'
 
 import {PathOverview} from '#/plugin/path/resources/path/containers/overview'
-import {EditorMain} from '#/plugin/path/resources/path/editor/containers/main'
+import {PathEditor} from '#/plugin/path/resources/path/editor/components/main'
 import {PlayerMain} from '#/plugin/path/resources/path/player/containers/main'
 import {PathSummary} from '#/plugin/path/resources/path/containers/summary'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {trans} from '#/main/app/intl'
 
 const PathResource = props =>
   <Resource
     {...omit(props, 'editable', 'overview')}
     styles={['claroline-distribution-plugin-path-path-resource']}
-    /*menu={[
-      {
-        name: 'summary',
-        type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-sitemap',
-        label: trans('summary'),
-        target: `${props.path}/summary`
-      }
-    ]}*/
-    overview={PathOverview}
+    overviewPage={PathOverview}
+    editor={PathEditor}
     pages={[
       {
         path: '/summary',
         component: PathSummary
-      }, {
-        path: '/edit',
-        component: EditorMain,
-        disabled: !props.editable
       }, {
         path: '/play',
         component: PlayerMain

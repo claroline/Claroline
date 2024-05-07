@@ -33,7 +33,8 @@ const DataCellContent = props => {
       id: toKey(props.column.name + '-' + props.rowData.id),
       label: props.column.label,
       data: cellData,
-      placeholder: props.column.placeholder
+      placeholder: props.column.placeholder,
+      size: props.size
     }))
   } else {
     // use render defined in the type definition
@@ -70,7 +71,8 @@ DataCellContent.propTypes = {
   action: T.object,
   column: T.shape(
     DataListProperty.propTypes
-  ).isRequired
+  ).isRequired,
+  size: T.oneOf(['sm', 'md'])
 }
 
 const DataCell = props =>
@@ -90,7 +92,8 @@ DataCell.propTypes = {
   action: T.object,
   column: T.shape(
     DataListProperty.propTypes
-  ).isRequired
+  ).isRequired,
+  size: T.oneOf(['sm', 'md'])
 }
 
 const TableItem = props => {
@@ -134,6 +137,7 @@ const TableItem = props => {
           className={props.onSelect && 0 === index ? 'ps-0' : undefined}
           column={column}
           rowData={props.row}
+          size={props.size}
           action={props.primaryAction && columnAction === column ? getPrimaryAction(props.row, props.primaryAction)  : undefined}
         />
       )}
@@ -164,6 +168,7 @@ TableItem.propTypes = {
   columns: T.arrayOf(
     T.shape(DataListProperty.propTypes)
   ).isRequired,
+  size: T.oneOf(['sm', 'md']),
   primaryAction: T.func,
   actions: T.func,
   selected: T.bool,

@@ -4,7 +4,6 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {scrollTo} from '#/main/app/dom/scroll'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
@@ -13,12 +12,11 @@ import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/r
 
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
 import {PathSummary} from '#/plugin/path/resources/path/containers/summary'
+import {PageSection} from '#/main/app/page/components/section'
 
 const PathOverview = (props) =>
   <ResourceOverview
-    contentText={get(props.path, 'overview.message')}
     evaluation={props.evaluation}
-    resourceNode={props.resourceNode}
     display={{
       score: get(props.path, 'display.showScore'),
       scoreMax: get(props.path, 'score.total'),
@@ -31,40 +29,39 @@ const PathOverview = (props) =>
     }}
     actions={[
       {
+        name: 'start',
         type: LINK_BUTTON,
         label: trans('start', {}, 'actions'),
         target: `${props.basePath}/play`,
         primary: true,
-        disabled: props.empty,
-        disabledMessages: props.empty ? [trans('start_disabled_empty', {}, 'path')]:[]
+        disabled: props.empty
       }
     ]}
   >
-    <section className="resource-parameters mb-3">
-      {!isEmpty(get(props.path, 'overview.resource')) &&
+    {!isEmpty(get(props.path, 'overview.resource')) &&
+      <PageSection size="md">
         <ResourceEmbedded
           className="step-primary-resource"
           resourceNode={get(props.path, 'overview.resource')}
           showHeader={false}
         />
-      }
+      </PageSection>
+    }
 
-      {!isEmpty(props.path.steps) &&
-        <>
-          <h3 className="h2">{trans('summary')}</h3>
-          <PathSummary className="component-container" />
-        </>
-      }
-
-      {isEmpty(props.path.steps) &&
+    <PageSection
+      size="md"
+      className="py-3"
+      title={trans('summary')}
+    >
+      {!isEmpty(props.path.steps) ?
+        <PathSummary /> :
         <ContentPlaceholder
           size="lg"
           title={trans('no_step', {}, 'path')}
         />
       }
-    </section>
+    </PageSection>
   </ResourceOverview>
-
 
 PathOverview.propTypes = {
   basePath: T.string.isRequired,

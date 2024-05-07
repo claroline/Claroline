@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
-use Claroline\AppBundle\Entity\Meta\Poster;
-use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\AppBundle\Entity\Restriction\Locked;
 use Claroline\CommunityBundle\Model\HasOrganizations;
 use Claroline\CoreBundle\Entity\Organization\Organization;

@@ -12,6 +12,7 @@ import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {getActions, getDefaultAction, getTypes} from '#/main/core/resource/utils'
 import {ResourceCard} from '#/main/core/resource/components/card'
+import {ResourceIcon} from '#/main/core/resource/components/icon'
 
 const Resources = props => {
   const refresher = merge({
@@ -30,7 +31,13 @@ const Resources = props => {
           label: trans('name'),
           type: 'string',
           displayed: true,
-          primary: true
+          primary: true,
+          render: (resourceNode) => (
+            <div className="d-flex flex-direction-row gap-3 align-items-center" role="presentation">
+              <ResourceIcon mimeType={resourceNode.meta.mimeType} size="xs" />
+              {resourceNode.name}
+            </div>
+          )
         }, {
           name: 'code',
           label: trans('code'),
@@ -39,7 +46,6 @@ const Resources = props => {
           name: 'meta.type',
           alias: 'resourceType',
           label: trans('type'),
-          displayed: true,
           type: 'choice',
           options: {
             choices: getTypes()
@@ -59,8 +65,7 @@ const Resources = props => {
           name: 'meta.published',
           alias: 'published',
           type: 'boolean',
-          label: trans('published'),
-          displayed: true
+          label: trans('published')
         }, {
           name: 'meta.created',
           label: trans('creation_date'),

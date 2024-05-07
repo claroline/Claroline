@@ -14,6 +14,7 @@ namespace Claroline\WebResourceBundle\Listener;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\File;
@@ -23,7 +24,7 @@ use Claroline\WebResourceBundle\Manager\WebResourceManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class WebResourceListener extends ResourceComponent
+class WebResourceListener extends ResourceComponent implements DownloadableResourceInterface
 {
     public function __construct(
         private readonly string $filesDir,

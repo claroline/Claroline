@@ -1,5 +1,0 @@
-{
-    "resource-icap_lesson-chapter_create": "a créé le chapitre %chapter% dans le cours %lesson%",
-    "resource-icap_lesson-chapter_update": "a mis à jour le chapitre %chapter% du cours %lesson%",
-    "resource-icap_lesson-user_tagged": "vous a cité dans le chapitre %chapter% du cours %lesson%"
-}

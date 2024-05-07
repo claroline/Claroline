@@ -12,7 +12,7 @@ import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources
 import {Announces} from '#/plugin/announcement/resources/announcement/components/announces'
 import {Announce} from '#/plugin/announcement/resources/announcement/components/announce'
 import {AnnounceForm} from '#/plugin/announcement/resources/announcement/components/announce-form'
-import {AnnouncesEditor} from '#/plugin/announcement/resources/announcement/editor/containers/editor'
+import {AnnouncementEditor} from '#/plugin/announcement/resources/announcement/components/editor'
 
 const AnnouncementResource = props =>
   <Resource
@@ -20,21 +20,19 @@ const AnnouncementResource = props =>
     styles={['claroline-distribution-plugin-announcement-announcement-resource']}
     menu={[
       {
+        name: 'all',
         type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-list',
+        //icon: 'fa fa-fw fa-list',
         label: trans('announcements_list', {}, 'announcement'),
-        target: props.path,
-        exact: true
+        target: props.path+'/all'
       }
     ]}
+    editor={AnnouncementEditor}
     pages={[
       {
-        path: '/',
-        exact: true,
+        path: '/all',
+        //exact: true,
         component: Announces
-      }, {
-        path: '/edit',
-        component: AnnouncesEditor
       }, {
         path: '/add',
         exact: true,

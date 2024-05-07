@@ -93,7 +93,7 @@ $loader-bg:        transparent !default;
 // Page
 // ---
 
-$page-brand-size:          2.5rem !default;
+$brand-size:          2.5rem !default;
 $page-header-height:       20vw !default; // 20 vw
 //$page-header-bg:           transparent !default;
 $page-header-padding:      $grid-gutter-width*.5 $grid-gutter-width*.5 !default;
@@ -147,16 +147,16 @@ $flying-alert-info-border:    $flying-alert-info-bg;
 // Summaries
 // ---
 
-$summary-lvl-indent:        20px; // indent children of a step in the summary
+$summary-lvl-indent:        map-get($spacers, 3); // indent children of a step in the summary
 // Links
 $summary-link-color:          $link-color;
 $summary-link-bg:             var(--#{$prefix}tertiary-bg);
-$summary-link-border-radius:  $border-radius-sm;
+$summary-link-border-radius:  var(--#{$prefix}border-radius-sm);
 
 $summary-link-hover-color:    $link-hover-color;
-$summary-link-hover-bg:       $summary-link-bg;
+//$summary-link-hover-bg:       $summary-link-bg;
 $summary-link-active-color:   $link-hover-color;
-$summary-link-active-bg:      $summary-link-bg;
+//$summary-link-active-bg:      $summary-link-bg;
 $summary-link-disabled-color: $body-color;
 $summary-link-disabled-bg:    var(--#{$prefix}tertiary-bg);
 

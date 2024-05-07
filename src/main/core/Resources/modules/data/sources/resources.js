@@ -1,7 +1,10 @@
+import React from 'react'
+
 import {trans} from '#/main/app/intl/translation'
 
 import {getTypes, getActions, getDefaultAction} from '#/main/core/resource/utils'
 import {ResourceCard} from '#/main/core/resource/components/card'
+import {ResourceIcon} from '#/main/core/resource/components/icon'
 
 export default (contextType, contextData, refresher, currentUser) => ({
   primaryAction: (resourceNode) => getDefaultAction(resourceNode, refresher, null, currentUser),
@@ -12,7 +15,13 @@ export default (contextType, contextData, refresher, currentUser) => ({
       label: trans('name'),
       type: 'string',
       displayed: true,
-      primary: true
+      primary: true,
+      render: (resourceNode) => (
+        <div className="d-flex flex-direction-row gap-3 align-items-center" role="presentation">
+          <ResourceIcon mimeType={resourceNode.meta.mimeType} size="xs" />
+          {resourceNode.name}
+        </div>
+      )
     }, {
       name: 'code',
       label: trans('code'),

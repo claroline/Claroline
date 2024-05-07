@@ -3,11 +3,7 @@ import {PropTypes as T} from 'prop-types'
 const Slide = {
   propTypes: {
     id: T.string.isRequired,
-    content: T.shape({
-      mimeType: T.string.isRequired,
-      // TODO : enhance to allow more than files
-      url: T.string
-    }).isRequired,
+    content: T.string.isRequired,
     meta: T.shape({
       title: T.string,
       description: T.string

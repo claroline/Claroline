@@ -6,6 +6,7 @@ import {selectors} from '#/main/core/resource/editor/store/selectors'
 const reducer = makeFormReducer(selectors.STORE_NAME, {
   data: {
     resourceNode: ResourceNodeTypes.defaultProps,
+    resource: {},
     rights: []
   }
 })

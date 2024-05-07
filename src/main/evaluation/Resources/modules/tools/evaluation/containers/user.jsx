@@ -7,6 +7,7 @@ import {selectors} from '#/main/evaluation/tools/evaluation/store'
 
 const EvaluationUser = connect(
   (state) => ({
+    path: toolSelectors.path(state),
     contextPath: toolSelectors.basePath(state),
     loaded: selectors.currentLoaded(state),
     workspaceEvaluation: selectors.currentWorkspaceEvaluation(state),

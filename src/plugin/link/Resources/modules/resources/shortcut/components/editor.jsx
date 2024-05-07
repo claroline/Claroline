@@ -1,42 +1,58 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors} from '#/plugin/link/resources/shortcut/store'
+import {ResourceEditor} from '#/main/core/resource/editor'
+import {useSelector} from 'react-redux'
+import {EditorPage} from '#/main/app/editor'
 
-const ShortcutEditor = (props) =>
-  <FormData
-    level={2}
-    title={trans('parameters')}
-    name={selectors.FORM_NAME}
-    target={(shortcut) => ['apiv2_shortcut_update', {id: shortcut.id}]}
-    buttons={true}
-    cancel={{
-      type: LINK_BUTTON,
-      target: props.path,
-      exact: true
-    }}
-    sections={[
-      {
-        title: trans('general'),
-        primary: true,
-        fields: [
-          {
-            name: 'target',
-            type: 'resource',
-            label: trans('resource'),
-            required: true
-          }
-        ]
-      }
-    ]}
-  />
+const ShortcutEditor = () => {
+  const shortcut = useSelector(selectors.shortcut)
 
-ShortcutEditor.propTypes = {
-  path: T.string.isRequired
+  return (
+    <ResourceEditor
+      additionalData={() => ({
+        resource: shortcut
+      })}
+      defaultPage="target"
+      pages={[
+        {
+          name: 'target',
+          title: trans('target_resource', {}, 'link'),
+          primary: true,
+          render: () =>(
+            <EditorPage
+              title={trans('target_resource', {}, 'link')}
+              help={trans('target_resource_help', {}, 'link')}
+              dataPart="resource"
+              definition={[
+                {
+                  name: 'general',
+                  title: trans('general'),
+                  primary: true,
+                  hideTitle: true,
+                  fields: [
+                    {
+                      name: 'target',
+                      type: 'resource',
+                      label: trans('resource'),
+                      hideLabel: true,
+                      required: true,
+                      options: {
+                        embedded: true,
+                        showHeader: true,
+                      }
+                    }
+                  ]
+                }
+              ]}
+            />
+          )
+        }
+      ]}
+    />
+  )
 }
 
 export {

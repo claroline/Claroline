@@ -28,13 +28,11 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ClacoFormListener extends ResourceComponent
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly AuthorizationCheckerInterface $authorization,
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
         private readonly Crud $crud,
@@ -67,23 +65,111 @@ class ClacoFormListener extends ResourceComponent
             $roles[] = $this->serializer->serialize($workspaceRole, [Options::SERIALIZE_MINIMAL]);
         }
         $myRoles = $isAnon ? [$roleAnonymous->getName()] : $user->getRoles();
-        $serializedClacoForm = $this->serializer->serialize($resource);
-        $canEdit = !$isAnon && $this->authorization->isGranted('EDIT', $resource->getResourceNode());
 
-        if ($canEdit) {
-            foreach ($serializedClacoForm['list']['filters'] as $key => $filter) {
-                $filter['locked'] = false;
-                $serializedClacoForm['list']['filters'][$key] = $filter;
+        $categories = $resource->getCategories();
+        $keywords = $resource->getKeywords();
+
+        return [
+            'resource' => $this->serializer->serialize($resource),
+            'categories' => array_map(function (Category $category) {
+                return $this->serializer->serialize($category);
+            }, $categories),
+            'keywords' => array_map(function (Keyword $keyword) {
+                return $this->serializer->serialize($keyword);
+            }, $keywords),
+
+            'myEntriesCount' => count($myEntries),
+            // this should use the standard right system.
+            'canGeneratePdf' => $canGeneratePdf,
+            'roles' => $roles,
+            'myRoles' => $myRoles,
+        ];
+    }
+
+    /** @var ClacoForm $resource */
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        $this->om->startFlushSuite();
+
+        if (isset($data['categories'])) {
+            $ids = [];
+            foreach ($data['categories'] as $categoryData) {
+                $new = false;
+                if ($categoryData['id']) {
+                    $category = $resource->getCategory($categoryData['id']);
+                }
+
+                if (empty($category)) {
+                    $category = new Category();
+                    $new = true;
+                }
+
+                $resource->addCategory($category);
+                if ($new) {
+                    $this->crud->create($category, $categoryData, [Crud::NO_PERMISSIONS]);
+                } else {
+                    $this->crud->update($category, $categoryData, [Crud::NO_PERMISSIONS]);
+                }
+
+                $ids[] = $category->getUuid();
+            }
+
+            // removes categories which no longer exists
+            $currentCategories = $resource->getCategories();
+            foreach ($currentCategories as $currentCategory) {
+                if (!in_array($currentCategory->getUuid(), $ids)) {
+                    $this->crud->delete($currentCategory);
+                    $resource->removeCategory($currentCategory);
+                }
             }
         }
 
+        if (isset($data['keywords'])) {
+            $ids = [];
+            foreach ($data['keywords'] as $keywordData) {
+                $new = false;
+                if ($keywordData['id']) {
+                    $keyword = $resource->getKeyword($keywordData['id']);
+                }
+
+                if (empty($keyword)) {
+                    $keyword = new Keyword();
+                    $new = true;
+                }
+
+                $resource->addKeyword($keyword);
+                if ($new) {
+                    $this->crud->create($keyword, $keywordData, [Crud::NO_PERMISSIONS]);
+                } else {
+                    $this->crud->update($keyword, $keywordData, [Crud::NO_PERMISSIONS]);
+                }
+
+                $ids[] = $keyword->getUuid();
+            }
+
+            // removes categories which no longer exists
+            $currentKeywords = $resource->getKeywords();
+            foreach ($currentKeywords as $currentKeyword) {
+                if (!in_array($currentKeyword->getUuid(), $ids)) {
+                    $this->crud->delete($currentKeyword);
+                    $resource->removeKeyword($currentKeyword);
+                }
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        $categories = $resource->getCategories();
+        $keywords = $resource->getKeywords();
+
         return [
-            'clacoForm' => $serializedClacoForm,
-            'canGeneratePdf' => $canGeneratePdf,
-            'myEntriesCount' => count($myEntries),
-            // do not expose this and precalculate missing user rights
-            'roles' => $roles,
-            'myRoles' => $myRoles,
+            'resource' => $this->serializer->serialize($resource),
+            'categories' => array_map(function (Category $category) {
+                return $this->serializer->serialize($category);
+            }, $categories),
+            'keywords' => array_map(function (Keyword $keyword) {
+                return $this->serializer->serialize($keyword);
+            }, $keywords),
         ];
     }
 

@@ -23,7 +23,7 @@ class Slide
     /**
      * @ORM\Column(type="text")
      */
-    private ?string $content;
+    private ?string $content = null;
 
     /**
      * Order of the slide in the slideshow.
@@ -37,14 +37,14 @@ class Slide
      *
      * @ORM\Column(nullable=true)
      */
-    private ?string $title;
+    private ?string $title = null;
 
     /**
      * Description of the slide.
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private ?string $description;
+    private ?string $description = null;
 
     /**
      * The parent slideshow.
@@ -60,17 +60,7 @@ class Slide
         $this->refreshUuid();
     }
 
-    public function getMimeType(): string
-    {
-        return $this->mimeType;
-    }
-
-    public function setMimeType(string $mimeType): void
-    {
-        $this->mimeType = $mimeType;
-    }
-
-    public function getContent(): string
+    public function getContent(): ?string
     {
         return $this->content;
     }

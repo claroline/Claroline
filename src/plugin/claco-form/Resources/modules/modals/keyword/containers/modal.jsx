@@ -15,19 +15,11 @@ const KeywordModal = withReducer(selectors.STORE_NAME, reducer)(
       formData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
-      loadKeyword(clacoFormId, keyword = null) {
+      loadKeyword(keyword = null) {
         dispatch(formActions.reset(selectors.STORE_NAME, keyword || {
           id: makeId(),
-          name: '',
-          clacoForm: {id: clacoFormId}
+          name: ''
         }, !!keyword))
-      },
-      saveKeyword(keyword, isNew = false, callback) {
-        dispatch(formActions.saveForm(selectors.STORE_NAME, isNew ? ['apiv2_clacoformkeyword_create'] : ['apiv2_clacoformkeyword_update', {id: keyword.id}])).then(() => {
-          if (callback) {
-            callback(keyword)
-          }
-        })
       }
     })
   )(KeywordModalComponent)

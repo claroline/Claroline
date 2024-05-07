@@ -28,25 +28,21 @@ class Shortcut extends AbstractResource
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
-     *
-     * @var ResourceNode
      */
-    private $target;
+    private ?ResourceNode $target = null;
 
     /**
      * Sets the target of the shortcut.
      */
-    public function setTarget(ResourceNode $target)
+    public function setTarget(ResourceNode $target): void
     {
         $this->target = $target;
     }
 
     /**
      * Gets the target of the shortcut.
-     *
-     * @return ResourceNode
      */
-    public function getTarget()
+    public function getTarget(): ?ResourceNode
     {
         return $this->target;
     }

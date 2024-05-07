@@ -6,17 +6,10 @@ import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 import {makeListReducer} from '#/main/app/content/list/store'
 import {parseSortBy} from '#/main/app/content/list/utils'
 import {constants as listConst} from '#/main/app/content/list/constants'
-import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {RESOURCE_LOAD} from '#/main/core/resource/store/actions'
 
-import {selectors as editorSelectors} from '#/main/core/resources/directory/editor/store/selectors'
-import {reducer as editorReducer} from '#/main/core/resources/directory/editor/store/reducer'
-
-import {selectors as playerSelectors} from '#/main/core/resources/directory/player/store/selectors'
 import {DIRECTORIES_LOAD, DIRECTORY_TOGGLE_OPEN} from '#/main/core/resources/directory/store/actions'
 import {selectors} from '#/main/core/resources/directory/store/selectors'
-
-// TODO : move `directories` & `resources` in player
 
 /**
  * Replaces a directory data inside the directories tree.
@@ -45,11 +38,12 @@ function replaceDirectory(directories, newDir) {
 }
 
 const reducer = combineReducers({
-  directoryForm: editorReducer.directoryForm,
-  directory: makeReducer({}, {
-    [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => action.resourceData.directory,
-    // replaces directory data after success updates
-    [makeInstanceAction(FORM_SUBMIT_SUCCESS, editorSelectors.FORM_NAME)]: (state, action) => action.updatedData
+  resource: makeReducer({}, {
+    [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => action.resourceData.resource
+  }),
+
+  storageLock: makeReducer(false, {
+    [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => action.resourceData.storageLock
   }),
 
   /**
@@ -90,7 +84,7 @@ const reducer = combineReducers({
   /**
    * The list of the resources of the current directory.
    */
-  resources: makeListReducer(playerSelectors.LIST_NAME, {}, {
+  resources: makeListReducer(selectors.LIST_NAME, {}, {
     invalidated: makeReducer(false, {
       [makeInstanceAction(RESOURCE_LOAD, 'directory')]: () => true
     }),
@@ -98,22 +92,19 @@ const reducer = combineReducers({
       [makeInstanceAction(RESOURCE_LOAD, 'directory')]: () => []
     }),
     filters: makeReducer([], {
-      [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => get(action.resourceData.directory, 'list.filters') || []
+      [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => get(action.resourceData.resource, 'list.filters') || []
     }),
     pagination: combineReducers({
       page: makeReducer([], {
         [makeInstanceAction(RESOURCE_LOAD, 'directory')]: () => 0
       }),
       pageSize: makeReducer([], {
-        [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => get(action.resourceData.directory, 'list.pageSize') || listConst.DEFAULT_PAGE_SIZE
+        [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => get(action.resourceData.resource, 'list.pageSize') || listConst.DEFAULT_PAGE_SIZE
       })
     }),
     sortBy: makeReducer([], {
-      [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => parseSortBy(get(action.resourceData.directory, 'list.sorting', null))
+      [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => parseSortBy(get(action.resourceData.resource, 'list.sorting', null))
     })
-  }),
-  storageLock: makeReducer(false, {
-    [makeInstanceAction(RESOURCE_LOAD, 'directory')]: (state, action) => action.resourceData.storageLock
   })
 })
 

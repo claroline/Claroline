@@ -1,3 +1,4 @@
+import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {withReducer} from '#/main/app/store/reducer'
@@ -18,8 +19,8 @@ const ToolEditor = withReducer(selectors.STORE_NAME, reducer)(
       contextId: toolSelectors.contextId(state),
     }),
     (dispatch) => ({
-      load(toolParameters) {
-        dispatch(formActions.load(selectors.STORE_NAME, {data: toolParameters}))
+      load(initialData) {
+        dispatch(formActions.load(selectors.STORE_NAME, initialData))
       },
       refresh(toolName, updatedData, contextType) {
         dispatch(actions.refresh(toolName, updatedData, contextType))
@@ -27,6 +28,15 @@ const ToolEditor = withReducer(selectors.STORE_NAME, reducer)(
     })
   )(ToolEditorComponent)
 )
+
+ToolEditor.propTypes = {
+  // standard pages
+  overviewPage: T.elementType,
+  appearancePage: T.elementType,
+  historyPage: T.elementType,
+  permissionsPage: T.elementType,
+  actionsPage: T.elementType
+}
 
 export {
   ToolEditor

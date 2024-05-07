@@ -63,23 +63,18 @@ class ResourceType
      *
      * @var array
      */
-    private $tags = [];
+    private ?array $tags = [];
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private $plugin;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $defaultMask = 1;
+    private ?Plugin $plugin = null;
 
     /**
      * @ORM\Column(name="is_enabled", type="boolean")
      */
-    private $isEnabled = true;
+    private bool $isEnabled = true;
 
     /**
      * @ORM\ManyToMany(
@@ -91,86 +86,58 @@ class ResourceType
      */
     protected $rights;
 
-    /**
-     * ResourceType constructor.
-     */
     public function __construct()
     {
         $this->maskDecoders = new ArrayCollection();
         $this->rights = new ArrayCollection();
     }
 
-    /**
-     * Returns the resource type name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Sets the resource type name.
-     *
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * Returns the resource class name.
-     *
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->class;
     }
 
-    /**
-     * Sets the resource class name.
-     *
-     * @param string $class
-     */
-    public function setClass($class)
+    public function setClass(string $class): void
     {
         $this->class = $class;
     }
 
-    /**
-     * Get tags.
-     *
-     * @return array
-     */
-    public function getTags()
+    public function getTags(): array
     {
         return $this->tags;
     }
 
-    public function setTags(array $tags)
+    public function setTags(array $tags): void
     {
         $this->tags = $tags;
     }
 
-    public function setPlugin(Plugin $plugin)
+    public function setPlugin(Plugin $plugin): void
     {
         $this->plugin = $plugin;
     }
 
-    public function getPlugin()
+    public function getPlugin(): ?Plugin
     {
         return $this->plugin;
     }
 
-    public function setExportable($exportable)
+    public function setExportable(bool $exportable): void
     {
         $this->exportable = $exportable;
     }
 
-    public function isExportable()
+    public function isExportable(): bool
     {
         return $this->exportable;
     }
@@ -183,46 +150,26 @@ class ResourceType
         return $this->maskDecoders;
     }
 
-    public function addMaskDecoder(MaskDecoder $maskDecoder)
+    public function addMaskDecoder(MaskDecoder $maskDecoder): void
     {
         if (!$this->maskDecoders->contains($maskDecoder)) {
             $this->maskDecoders->add($maskDecoder);
         }
     }
 
-    public function removeMaskDecoder(MaskDecoder $maskDecoder)
+    public function removeMaskDecoder(MaskDecoder $maskDecoder): void
     {
         if ($this->maskDecoders->contains($maskDecoder)) {
             $this->maskDecoders->removeElement($maskDecoder);
         }
     }
 
-    public function setDefaultMask($mask)
-    {
-        $this->defaultMask = $mask;
-    }
-
-    public function getDefaultMask()
-    {
-        return $this->defaultMask;
-    }
-
-    /**
-     * @param $isEnabled
-     *
-     * @deprecated
-     */
-    public function setIsEnabled($isEnabled)
-    {
-        $this->setEnabled($isEnabled);
-    }
-
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled): void
     {
         $this->isEnabled = $enabled;
     }
 
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->isEnabled;
     }

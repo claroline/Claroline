@@ -6,6 +6,7 @@ import {File as FileType} from '#/main/core/files/prop-types'
 import {Resource} from '#/main/core/resource'
 import {PlayerMain} from '#/main/core/resources/file/player/containers/main'
 import {EditorMain} from '#/main/core/resources/file/editor/containers/main'
+import {FileOverview} from '#/main/core/resources/file/components/overview'
 
 const FileResource = props =>
   <Resource
@@ -20,6 +21,7 @@ const FileResource = props =>
         callback: () => copy(props.url)
       }
     ]}*/
+    overviewPage={FileOverview}
     pages={[
       {
         path: '/',

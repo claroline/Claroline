@@ -27,7 +27,7 @@ services:
         calls:
             - method: setDispatcher
               arguments:
-                - '@Claroline\AppBundle\Event\StrictDispatcher'
+                - '@event_dispatcher'
             - method: setObjectManager
               arguments:
                 - '@Claroline\AppBundle\Persistence\ObjectManager'

@@ -63,8 +63,9 @@ const FormContent = (props) => {
             className={classes('form-primary-section', primarySection.className, !props.flush && 'mb-3')}
           >
             <ContentTitle
+              className="mb-4 mt-5"
               level={props.level}
-              displayed={false}
+              displayed={0 !== index && !primarySection.hideTitle}
               title={primarySection.title}
               subtitle={primarySection.subtitle}
             />
@@ -168,7 +169,7 @@ FormContent.defaultProps = {
   level: 2,
   disabled: false,
   flush: false,
-  autoFocus: true,
+  //autoFocus: true,
   mode: constants.FORM_MODE_DEFAULT,
   data: {}
 }

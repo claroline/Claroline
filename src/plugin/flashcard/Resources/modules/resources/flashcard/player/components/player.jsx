@@ -1,26 +1,28 @@
 import React, { useState, useCallback } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { PropTypes as T } from 'prop-types'
+import get from 'lodash/get'
 
+import {trans} from '#/main/app/intl/translation'
 import {Toolbar} from '#/main/app/action'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import { trans } from '#/main/app/intl/translation'
 import {ProgressBar} from '#/main/app/content/components/progress-bar'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import {ResourcePage} from '#/main/core/resource'
 
 import {Card} from '#/plugin/flashcard/resources/flashcard/components/card'
 import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
-import {ResourcePage} from '#/main/core/resource'
 
 const Player = props => {
   const history = useHistory()
   const match = useRouteMatch()
   const [isFlipped, setIsFlipped] = useState(false)
   const [isAnswering, setIsAnswering] = useState(false)
-  const currentCardIndex = props.attempt.data.cardsAnsweredIds.length
-  const maxCards = props.attempt.data.cardsSessionIds.length + props.attempt.data.cardsAnsweredIds.length
-  const currentCardId = props.attempt.data.cardsSessionIds[0]
-  const currentCardProgression = props.attempt.data.cards.find(card => card.id === currentCardId)
+
+  const currentCardIndex = get(props.attempt, 'data.cardsAnsweredIds.length', 0)
+  const maxCards = get(props.attempt, 'data.cardsSessionIds.length') + get(props.attempt, 'data.cardsAnsweredIds.length')
+  const currentCardId = get(props.attempt, 'data.cardsSessionIds[0]', null)
+  const currentCardProgression = get(props.attempt, 'data.cards', []).find(card => card.id === currentCardId)
   const currentCard = currentCardProgression ? currentCardProgression.flashcard : null
 
   const goToNextCard = useCallback(() => {
@@ -33,7 +35,7 @@ const Player = props => {
         history.push(props.overview ? `${match.path}/overview` : props.path)
       }
     }
-  }, [props.attempt.data.cardsSessionIds, maxCards, props.flashcardDeck.end.display, match.path, history])
+  }, [get(props.attempt, 'data.cardsSessionIds'), maxCards, get(props.flashcardDeck, 'end.display'), match.path, history])
 
   const handleAnswer = useCallback(
     (isSuccessful) => {
@@ -54,7 +56,11 @@ const Player = props => {
   )
 
   if (!maxCards) {
-    return <ContentPlaceholder size="lg" title={trans('no_card', {}, 'flashcard')} />
+    return (
+      <ResourcePage>
+        <ContentPlaceholder size="lg" title={trans('no_card', {}, 'flashcard')} />
+      </ResourcePage>
+    )
   }
 
   return (

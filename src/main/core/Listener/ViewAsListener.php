@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\ViewAsEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -24,32 +24,16 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ViewAsListener
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var Authenticator */
-    private $authenticator;
-    /** @var RoleManager */
-    private $roleManager;
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        Authenticator $authenticator,
-        RoleManager $roleManager,
-        StrictDispatcher $eventDispatcher
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly Authenticator $authenticator,
+        private readonly RoleManager $roleManager,
     ) {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->authenticator = $authenticator;
-        $this->roleManager = $roleManager;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function onViewAs(RequestEvent $event)
+    public function onViewAs(RequestEvent $event): void
     {
         $request = $event->getRequest();
         $attributes = $request->query->all();
@@ -82,7 +66,9 @@ class ViewAsListener
                             $this->authenticator->createAnonymousToken();
                         } else {
                             $this->authenticator->createToken($this->tokenStorage->getToken()->getUser(), [PlatformRoles::USER, $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE']);
-                            $this->eventDispatcher->dispatch(SecurityEvents::VIEW_AS, ViewAsEvent::class, [$this->tokenStorage->getToken()->getUser(), $viewAs]);
+
+                            $event = new ViewAsEvent($this->tokenStorage->getToken()->getUser(), $viewAs);
+                            $this->eventDispatcher->dispatch($event, SecurityEvents::VIEW_AS);
                         }
                     } else {
                         throw new AccessDeniedException(sprintf('You do not have the right to usurp the role %s.', $viewAs));

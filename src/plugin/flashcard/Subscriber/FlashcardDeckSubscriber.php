@@ -9,13 +9,14 @@ use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Claroline\EvaluationBundle\Repository\ResourceAttemptRepository;
 use Claroline\FlashcardBundle\Entity\FlashcardDeck;
 use Claroline\FlashcardBundle\Manager\EvaluationManager;
 use Claroline\FlashcardBundle\Manager\FlashcardManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class FlashcardDeckSubscriber extends ResourceComponent
+class FlashcardDeckSubscriber extends ResourceComponent implements EvaluatedResourceInterface
 {
     private ResourceAttemptRepository $resourceEvalRepo;
 
@@ -51,10 +52,18 @@ class FlashcardDeckSubscriber extends ResourceComponent
         }
 
         return [
+            'resource' => $this->serializer->serialize($resource),
             'attempt' => $this->serializer->serialize($attempt),
             'userEvaluation' => $evaluation ? $this->serializer->serialize($evaluation, [SerializerInterface::SERIALIZE_MINIMAL]) : null,
-            'flashcardDeck' => $this->serializer->serialize($resource),
             'flashcardProgression' => $flashcardProgression,
+        ];
+    }
+
+    /** @var FlashcardDeck $resource */
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        return [
+            'resource' => $this->serializer->serialize($resource),
         ];
     }
 }

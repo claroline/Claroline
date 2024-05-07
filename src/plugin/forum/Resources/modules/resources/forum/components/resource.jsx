@@ -9,10 +9,10 @@ import {Resource} from '#/main/core/resource'
 
 import {Overview} from '#/plugin/forum/resources/forum/overview/components/overview'
 import {Moderation} from '#/plugin/forum/resources/forum/moderation/components/moderation'
-import {Editor} from '#/plugin/forum/resources/forum/editor/components/editor'
 import {Player} from '#/plugin/forum/resources/forum/player/components/player'
 import {Forum as ForumType} from '#/plugin/forum/resources/forum/prop-types'
 import {constants} from '#/plugin/forum/resources/forum/constants'
+import {ForumEditor} from '#/plugin/forum/resources/forum/editor/components/main'
 
 const ForumResource = props =>
   <Resource
@@ -63,13 +63,10 @@ const ForumResource = props =>
         target: `${props.path}/moderation/flagged/subjects`
       }
     ]}
-    overview={Overview}
+    editor={ForumEditor}
+    overviewPage={Overview}
     pages={[
       {
-        path: '/edit',
-        component: Editor,
-        disabled: !props.editable
-      }, {
         path: '/subjects',
         component: Player
       }, {

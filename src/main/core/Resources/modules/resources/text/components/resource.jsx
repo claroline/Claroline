@@ -13,7 +13,7 @@ import {TextEditor} from '#/main/core/resources/text/components/editor'
 const TextResource = (props) =>
   <Resource
     {...omit(props, 'canExport', 'text')}
-    actions={[
+    /*actions={[
       {
         name: 'export-pdf',
         type: URL_BUTTON,
@@ -23,7 +23,7 @@ const TextResource = (props) =>
         target: ['apiv2_resource_text_download_pdf', {id: props.text.id}],
         group: trans('transfer')
       }
-    ]}
+    ]}*/
     editor={TextEditor}
     pages={[
       {

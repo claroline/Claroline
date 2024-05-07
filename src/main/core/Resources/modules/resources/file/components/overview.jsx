@@ -1,0 +1,73 @@
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
+
+import {trans, fileSize} from '#/main/app/intl'
+import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {Alert} from '#/main/app/alert/components/alert'
+import {Toolbar} from '#/main/app/action'
+import {ContentHtml} from '#/main/app/content/components/html'
+import {route} from '#/main/core/workspace/routing'
+import {ResourcePage} from '#/main/core/resource'
+
+const FileOverview = (props) =>
+  <ResourcePage>
+    {get(props.resourceNode, 'meta.description') &&
+      <div className="card my-3">
+        <ContentHtml className="card-body">{get(props.resourceNode, 'meta.description')}</ContentHtml>
+      </div>
+    }
+
+    <div className="well well-sm mb-3" style={{marginTop: !get(props.resourceNode, 'meta.description') ? 20 : 0}}>
+      <span className="fa fa-fw fa-file icon-with-text-right" />
+      {props.file.name}
+      <b className="pull-right">
+        {fileSize(props.file.size)}
+      </b>
+    </div>
+
+    <Alert type="info">{trans('auto_download_help', {}, 'file')}</Alert>
+
+    <Toolbar
+      className="d-grid gap-1 mb-3"
+      variant="btn"
+      toolbar="download home"
+      actions={[
+        {
+          name: 'download',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-download',
+          label: trans('download', {}, 'actions'),
+          callback: () => props.download(props.resourceNode),
+          primary: true,
+          size: 'lg'
+        }, {
+          name: 'home',
+          type: URL_BUTTON, // we require an URL_BUTTON here to escape the embedded resource router
+          icon: 'fa fa-fw fa-home',
+          label: trans('return-home', {}, 'actions'),
+          target: '#'+route(props.workspace),
+          displayed: !!props.workspace
+        }
+      ]}
+    />
+  </ResourcePage>
+
+FileOverview.propTypes = {
+  file: T.shape({
+    name: T.string.isRequired,
+    size: T.number
+  }).isRequired,
+  resourceNode: T.shape({
+    name: T.string.isRequired,
+    meta: T.shape({
+      description: T.string
+    })
+  }),
+  workspace: T.object,
+  download: T.func.isRequired
+}
+
+export {
+  FileOverview
+}

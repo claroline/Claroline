@@ -6,36 +6,36 @@ import {selectors as resourceSelect} from '#/main/core/resource/store'
 
 const STORE_NAME = 'claroline_big_blue_button'
 
-const resource = (state) => state[STORE_NAME]
+const store = (state) => state[STORE_NAME]
 
 const bbb = createSelector(
-  [resource],
-  (resource) => resource.bbb
+  [store],
+  (store) => store.resource
 )
 
 const servers = createSelector(
-  [resource],
-  (resource) => resource.servers
+  [store],
+  (store) => store.servers
 )
 
 const allowRecords = createSelector(
-  [resource],
-  (resource) => resource.allowRecords
+  [store],
+  (store) => store.allowRecords
 )
 
 const lastRecording = createSelector(
-  [resource],
-  (resource) => resource.lastRecording
+  [store],
+  (store) => store.lastRecording
 )
 
 const canStart = createSelector(
-  [resource],
-  (resource) => resource.canStart
+  [store],
+  (store) => store.canStart
 )
 
 const joinStatus = createSelector(
-  [resource],
-  (resource) => resource.joinStatus
+  [store],
+  (store) => store.joinStatus
 )
 
 const canEdit = createSelector(
@@ -46,7 +46,6 @@ const canEdit = createSelector(
 export const selectors = {
   STORE_NAME,
 
-  resource,
   bbb,
   servers,
   allowRecords,

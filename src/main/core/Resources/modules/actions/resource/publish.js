@@ -20,7 +20,7 @@ export default (resourceNodes, nodesRefresher) => ({
   displayed: -1 !== resourceNodes.findIndex(node => !get(node, 'meta.published')),
   subscript: 1 === resourceNodes.length ? {
     type: 'label',
-    status: 'default',
+    status: 'secondary',
     value: number(get(resourceNodes[0], 'meta.views') || 0, true)
   } : undefined,
   request: {

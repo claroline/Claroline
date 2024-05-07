@@ -152,6 +152,8 @@
     "delete_panel_confirm": "Êtes-vous sûr de vouloir supprimer ce panel ?",
     "deprecated": "Obsolète",
     "description": "Description",
+    "description_short": "Description courte",
+    "description_long": "Description détaillée",
     "desktop": "Bureau",
     "desktop_tools": "Outils du bureau",
     "workspace_tools": "Outils de l'espace d'activités",
@@ -1069,6 +1071,7 @@
     "root": "Racine",
     "support": "Assistance",
     "further_information": "Informations complémentaires",
+    "further_information_help": "Ajoutez des informations complémentaires pour décrire et classer vos contenus.",
     "plain_description": "Résumé",
     "plain_description_help": "Le résumé est affiché dans les listes à la place de la description HTML.",
     "pricing": "Tarification",
@@ -1102,5 +1105,6 @@
     "confirmed": "Confirmé",
     "validated": "Validé",
     "other": "Autre",
-    "plugins": "Plugins"
+    "plugins": "Plugins",
+    "notifications": "Notifications"
 }

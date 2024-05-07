@@ -40,10 +40,10 @@ class FileDrop extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener('dragenter', this.onDragStart)
-    document.addEventListener('dragleave', this.onDragEnd)
-    document.addEventListener('dragover', this.onDragOver)
-    document.addEventListener('drop', this.onDrop)
+    document.addEventListener('dragenter', this.onDragStart, false)
+    document.addEventListener('dragleave', this.onDragEnd, false)
+    document.addEventListener('dragover', this.onDragOver, false)
+    document.addEventListener('drop', this.onDrop, false)
   }
 
   componentWillUnmount() {
@@ -58,10 +58,9 @@ class FileDrop extends Component {
       e.stopPropagation()
       e.preventDefault()
 
-      this.setState({count: this.state.count + 1})
+      this.setState((state) => ({count: state.count + 1}))
     }
   }
-
 
   onDragOver(e) {
     if (!this.props.disabled && !isEmpty(getEventFiles(e))) {
@@ -75,7 +74,7 @@ class FileDrop extends Component {
       e.stopPropagation()
       e.preventDefault()
 
-      this.setState({count: this.state.count - 1})
+      this.setState((state) => ({count: state.count - 1}))
     }
   }
 
@@ -89,9 +88,7 @@ class FileDrop extends Component {
         this.props.onDrop(files)
       }
 
-      this.setState({
-        count: this.state.count - 1
-      })
+      this.setState((state) => ({count: state.count - 1}))
     }
   }
 
@@ -134,7 +131,8 @@ FileDrop.propTypes = {
 }
 
 FileDrop.defaultProps = {
-  help: trans('file_drop_help')
+  help: trans('file_drop_help'),
+  disabled: false
 }
 
 export {

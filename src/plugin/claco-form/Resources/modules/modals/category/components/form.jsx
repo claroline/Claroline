@@ -139,7 +139,7 @@ const CategoryFormModal = props => {
       <FormData
         name={selectors.STORE_NAME}
         flush={true}
-        sections={[
+        definition={[
           {
             id: 'general',
             title: trans('general'),
@@ -168,7 +168,7 @@ const CategoryFormModal = props => {
                 component: FieldsValuesComponent
               }
             ]
-          }, {
+          }, /*{
             id: 'display',
             icon: 'fa fa-fw fa-desktop',
             title: trans('display_parameters'),
@@ -179,7 +179,7 @@ const CategoryFormModal = props => {
                 label: trans('color')
               }
             ]
-          }, {
+          }, */{
             id: 'notifications',
             icon: 'fa fa-fw fa-bell',
             title: trans('notifications'),
@@ -222,7 +222,7 @@ const CategoryFormModal = props => {
         size="lg"
         type={CALLBACK_BUTTON}
         primary={true}
-        label={trans('save', {}, 'actions')}
+        label={trans('add', {}, 'actions')}
         disabled={!props.saveEnabled}
         callback={() => {
           props.saveCategory(props.formData)
@@ -242,7 +242,7 @@ CategoryFormModal.propTypes = {
     CategoryTypes.propTypes
   ),
   fields: T.arrayOf(T.shape({
-    // TODO : field propTypes
+    // field propTypes
   })),
   updateProp: T.func.isRequired,
   loadCategory: T.func.isRequired,

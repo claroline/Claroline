@@ -9,13 +9,18 @@ use Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
+use Claroline\CoreBundle\Library\RoutingHelper;
+use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -36,11 +41,14 @@ class AnnouncementController
     use PermissionCheckerTrait;
 
     public function __construct(
-        private readonly AnnouncementManager $manager,
-        private readonly AnnouncementSerializer $serializer,
+        AuthorizationCheckerInterface $authorization,
         private readonly Crud $crud,
         private readonly ObjectManager $om,
-        AuthorizationCheckerInterface $authorization
+        private readonly TemplateManager $templateManager,
+        private readonly PdfManager $pdfManager,
+        private readonly RoutingHelper $routing,
+        private readonly AnnouncementManager $manager,
+        private readonly AnnouncementSerializer $serializer,
     ) {
         $this->authorization = $authorization;
     }
@@ -51,7 +59,7 @@ class AnnouncementController
     }
 
     /**
-     * Creates a new announce.
+     * Creates a new announcement.
      *
      * @Route("/", name="claro_announcement_create", methods={"POST"})
      */
@@ -69,7 +77,7 @@ class AnnouncementController
     }
 
     /**
-     * Updates an existing announce.
+     * Updates an existing announcement.
      *
      * @Route("/{id}", name="claro_announcement_update", methods={"PUT"})
      *
@@ -89,7 +97,7 @@ class AnnouncementController
     }
 
     /**
-     * Deletes an announce.
+     * Deletes an announcement.
      *
      * @Route("/{id}", name="claro_announcement_delete", methods={"DELETE"})
      *
@@ -109,7 +117,7 @@ class AnnouncementController
     }
 
     /**
-     * Sends an announce (in current implementation, it's sent by email).
+     * Sends an announcement (in current implementation, it's sent by email).
      *
      * @Route("/{id}/validate", name="claro_announcement_validate", methods={"GET"})
      *
@@ -146,5 +154,42 @@ class AnnouncementController
         }, $roles)]]);
 
         return new JsonResponse($this->crud->list(User::class, $parameters, [Options::SERIALIZE_MINIMAL]));
+    }
+
+    /**
+     * @Route("/{id}/pdf", name="claro_announcement_export_pdf", methods={"GET"})
+     *
+     * @EXT\ParamConverter("announcement", class="Claroline\AnnouncementBundle\Entity\Announcement", options={"mapping": {"id": "uuid"}})
+     */
+    public function downloadPdfAction(AnnouncementAggregate $aggregate, Announcement $announcement): StreamedResponse
+    {
+        $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
+
+        $fileName = TextNormalizer::toKey($aggregate->getResourceNode()->getName());
+
+        $workspace = $aggregate->getResourceNode()->getWorkspace();
+        $publicationDate = $announcement->getPublicationDate() ?? $announcement->getCreationDate();
+
+        $placeholders = array_merge([
+            'title' => $announcement->getTitle(),
+            'content' => $announcement->getContent(),
+            'author' => $announcement->getAnnouncer() ?: $announcement->getCreator()->getFullName(),
+            'workspace_name' => $workspace->getName(),
+            'workspace_code' => $workspace->getCode(),
+            'workspace_url' => $this->routing->workspaceUrl($workspace),
+        ], $this->templateManager->formatDatePlaceholder('publication', $publicationDate));
+
+        if ($aggregate->getTemplatePdf()) {
+            $content = $this->templateManager->getTemplateContent($aggregate->getTemplatePdf(), $placeholders, '');
+        } else {
+            $content = $this->templateManager->getTemplate('pdf_announcement', $placeholders, '');
+        }
+
+        return new StreamedResponse(function () use ($content) {
+            echo $this->pdfManager->fromHtml($content);
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.$fileName.'.pdf',
+        ]);
     }
 }

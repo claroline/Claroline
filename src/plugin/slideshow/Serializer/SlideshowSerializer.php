@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
-use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\SlideshowBundle\Entity\Resource\Slide;
 use Claroline\SlideshowBundle\Entity\Resource\Slideshow;
 
@@ -14,50 +13,27 @@ class SlideshowSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
-
-    /**
-     * SlideshowSerializer constructor.
-     */
     public function __construct(
-        ObjectManager $om,
-        PublicFileSerializer $fileSerializer
+        private readonly ObjectManager $om
     ) {
-        $this->om = $om;
-        $this->fileSerializer = $fileSerializer;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'slideshow';
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return Slideshow::class;
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/plugin/slideshow/slideshow.json';
     }
 
-    /**
-     * Serializes a Slideshow entity for the JSON api.
-     *
-     * @return array
-     */
-    public function serialize(Slideshow $slideshow)
+    public function serialize(Slideshow $slideshow): array
     {
         return [
             'id' => $slideshow->getUuid(),
@@ -69,22 +45,9 @@ class SlideshowSerializer
                 'showControls' => $slideshow->getShowControls(),
             ],
             'slides' => array_map(function (Slide $slide) {
-                $content = null;
-                // TODO : enhance to allow more than files
-                if (!empty($slide->getContent())) {
-                    /** @var PublicFile $file */
-                    $file = $this->om
-                        ->getRepository(PublicFile::class)
-                        ->findOneBy(['url' => $slide->getContent()]);
-
-                    if ($file) {
-                        $content = $this->fileSerializer->serialize($file);
-                    }
-                }
-
                 return [
                     'id' => $slide->getUuid(),
-                    'content' => $content,
+                    'content' => $slide->getContent(),
                     'meta' => [
                         'title' => $slide->getTitle(),
                         'description' => $slide->getDescription(),
@@ -97,14 +60,7 @@ class SlideshowSerializer
         ];
     }
 
-    /**
-     * Deserializes Slideshow data into entities.
-     *
-     * @param array $data
-     *
-     * @return Slideshow
-     */
-    public function deserialize($data, Slideshow $slideshow, array $options = [])
+    public function deserialize(array $data, Slideshow $slideshow, array $options = []): Slideshow
     {
         $this->sipe('autoPlay', 'setAutoPlay', $data, $slideshow);
         $this->sipe('interval', 'setInterval', $data, $slideshow);
@@ -123,7 +79,6 @@ class SlideshowSerializer
                 /**
                  * check if slide already exists.
                  *
-                 * @var int
                  * @var Slide $existing
                  */
                 foreach ($existingSlides as $index => $existing) {
@@ -144,8 +99,6 @@ class SlideshowSerializer
                 $this->sipe('meta.title', 'setTitle', $slideData, $slide);
                 $this->sipe('meta.description', 'setDescription', $slideData, $slide);
                 $this->sipe('display.color', 'setColor', $slideData, $slide);
-
-                // TODO : enhance to allow more than files (eg. HTML)
                 $this->sipe('content.url', 'setContent', $slideData, $slide);
 
                 $slideshow->addSlide($slide);

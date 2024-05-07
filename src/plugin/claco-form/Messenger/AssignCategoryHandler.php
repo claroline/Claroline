@@ -10,24 +10,17 @@ use Claroline\ClacoFormBundle\Messenger\Message\AssignCategory;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 /**
- * Assign a Category to all of the eligible ClacoForm entries.
+ * Assign a Category to all the eligible ClacoForm entries.
  */
 class AssignCategoryHandler implements MessageHandlerInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var CategoryManager */
-    private $categoryManager;
-
     public function __construct(
-        ObjectManager $om,
-        CategoryManager $categoryManager
+        private readonly ObjectManager $om,
+        private readonly CategoryManager $categoryManager
     ) {
-        $this->om = $om;
-        $this->categoryManager = $categoryManager;
     }
 
-    public function __invoke(AssignCategory $assignCategory)
+    public function __invoke(AssignCategory $assignCategory): void
     {
         // retrieve the category to check
         $category = $this->om->getRepository(Category::class)->find($assignCategory->getCategoryId());

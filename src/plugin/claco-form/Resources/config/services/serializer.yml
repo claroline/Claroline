@@ -1,31 +1,22 @@
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
-    Claroline\ClacoFormBundle\Serializer\KeywordSerializer:
         tags: [claroline.serializer]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+    Claroline\ClacoFormBundle\Serializer\KeywordSerializer: ~
 
     Claroline\ClacoFormBundle\Serializer\FieldSerializer:
-        tags: [claroline.serializer]
         arguments:
             - '@Claroline\CoreBundle\API\Serializer\Facet\FieldFacetSerializer'
 
     Claroline\ClacoFormBundle\Serializer\FieldChoiceCategorySerializer:
-        tags: [claroline.serializer]
         arguments:
             - '@Claroline\ClacoFormBundle\Serializer\FieldSerializer'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\FacetManager'
 
-    Claroline\ClacoFormBundle\Serializer\EntryUserSerializer:
-        tags: [claroline.serializer]
+    Claroline\ClacoFormBundle\Serializer\EntryUserSerializer: ~
 
     Claroline\ClacoFormBundle\Serializer\EntrySerializer:
-        tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\ClacoFormBundle\Serializer\CategorySerializer'
@@ -35,12 +26,10 @@ services:
             - '@Claroline\CoreBundle\Manager\FacetManager'
 
     Claroline\ClacoFormBundle\Serializer\CommentSerializer:
-        tags: [claroline.serializer]
         arguments:
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
 
     Claroline\ClacoFormBundle\Serializer\ClacoFormSerializer:
-        tags: [claroline.serializer]
         arguments:
             - '@Claroline\ClacoFormBundle\Serializer\CategorySerializer'
             - '@Claroline\ClacoFormBundle\Serializer\FieldSerializer'
@@ -48,7 +37,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\ClacoFormBundle\Serializer\CategorySerializer:
-        tags: [claroline.serializer]
         arguments:
             - '@Claroline\ClacoFormBundle\Serializer\FieldChoiceCategorySerializer'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'

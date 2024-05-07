@@ -1,12 +1,18 @@
 import {createSelector} from 'reselect'
 
 const STORE_NAME = 'directory'
+const LIST_NAME = STORE_NAME+'.resources'
 
-const resource = (state) => state[STORE_NAME]
+const store = (state) => state[STORE_NAME]
+
+const resource = createSelector(
+  [store],
+  (store) => store.resource
+)
 
 const directories = createSelector(
-  [resource],
-  (resource) => resource.directories
+  [store],
+  (store) => store.directories
 )
 
 const directory = (dirs, directoryId) => {
@@ -22,15 +28,22 @@ const directory = (dirs, directoryId) => {
 }
 
 const storageLock = createSelector(
+  [store],
+  (store) => store.storageLock
+)
+
+const listConfiguration = createSelector(
   [resource],
-  (resource) => resource.storageLock
+  (resource) => resource.list || {}
 )
 
 export const selectors = {
   STORE_NAME,
+  LIST_NAME,
 
   resource,
   directories,
   directory,
-  storageLock
+  storageLock,
+  listConfiguration
 }

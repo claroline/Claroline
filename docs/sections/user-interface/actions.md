@@ -7,7 +7,7 @@ title: Actions
 
 An action is anything the user can do to make changes in the application (eg. navigation, data loading).
 
-It provides an low-level action API for apps.
+It provides a low-level action API for apps.
 It provides a common way to describe an action.
 It exposes components which render appropriate buttons for actions 
 (aka. it respects HTML semantics and offers the best accessibility possible).
@@ -86,7 +86,7 @@ Only interpreted in components that takes list of actions configurations (ex. `a
 
 ### Inherited from the Button API
 When using the `Button` component to trigger an action, you can also configure the underlying API
-responsible of rendering button components (for action objects, styles are correctly sets by the components that uses it).
+in charge of rendering button components (for action objects, styles are correctly sets by the components that uses it).
 
 - **className** [string]
 

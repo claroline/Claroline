@@ -19,34 +19,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CommandListener
 {
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var Authenticator */
-    private $authenticator;
-    /** @var UserManager */
-    private $userManager;
-
     public function __construct(
-        TranslatorInterface $translator,
-        PlatformConfigurationHandler $config,
-        Authenticator $authenticator,
-        UserManager $userManager
+        private readonly TranslatorInterface $translator,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly Authenticator $authenticator,
+        private readonly UserManager $userManager
     ) {
-        $this->translator = $translator;
-        $this->config = $config;
-        $this->authenticator = $authenticator;
-        $this->userManager = $userManager;
     }
 
     /**
      * Sets claroline default admin for cli because it's very annoying otherwise to do it manually everytime.
      */
-    public function setDefaultUser(ConsoleCommandEvent $event)
+    public function setDefaultUser(): void
     {
         try {
-            // try catch is here because in the install command, DB does not exist and will break the whole process
+            // try catch is here because in the installation command, DB does not exist and will break the whole process
             $user = $this->userManager->getDefaultClarolineAdmin();
         } catch (\Exception $e) {
             $user = null;
@@ -58,7 +45,7 @@ class CommandListener
     /**
      * Sets default locale for cli.
      */
-    public function setLocale(ConsoleCommandEvent $event)
+    public function setLocale(): void
     {
         $locale = $this->config->getParameter('locales.default');
         if ($locale) {

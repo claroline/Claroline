@@ -14,6 +14,7 @@ namespace Claroline\AnnouncementBundle\Entity;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,28 +33,22 @@ class AnnouncementAggregate extends AbstractResource
      *     cascade={"persist", "remove"},
      *     orphanRemoval=true
      * )
-     *
-     * @var ArrayCollection|Announcement[]
      */
-    private $announcements;
+    private Collection $announcements;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
      *
      * @ORM\JoinColumn(name="email_template_id", nullable=true, onDelete="SET NULL")
-     *
-     * @var Template
      */
-    private $templateEmail;
+    private ?Template $templateEmail = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
      *
      * @ORM\JoinColumn(name="pdf_template_id", nullable=true, onDelete="SET NULL")
-     *
-     * @var Template
      */
-    private $templatePdf;
+    private ?Template $templatePdf = null;
 
     /**
      * AnnouncementAggregate constructor.
@@ -68,9 +63,9 @@ class AnnouncementAggregate extends AbstractResource
     /**
      * Get announcements.
      *
-     * @return ArrayCollection|Announcement[]
+     * @return Announcement[]
      */
-    public function getAnnouncements()
+    public function getAnnouncements(): Collection
     {
         return $this->announcements;
     }

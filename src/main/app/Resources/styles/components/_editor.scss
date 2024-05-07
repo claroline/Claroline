@@ -5,6 +5,10 @@
   .app-loader {
     position: absolute; // FIXME
   }
+
+  /*.modal-fullscreen {
+    height: auto !important;
+  }*/
 }
 
 .app-editor .modal-content {
@@ -22,8 +26,9 @@
   height: 100%;
   overflow-y: auto;
   scrollbar-width: thin;
-  flex: 1;
+  flex: 1 0 auto;
   max-width: calc(100% / 3);
+  width: 100%;
 
   background-color: var(--#{$prefix}editor-menu-bg);
   color: var(--#{$prefix}editor-menu-color);
@@ -54,26 +59,38 @@
 .app-editor-body {
   height: 100%;
   overflow-y: auto;
-  flex: 1;
-  padding: map-get($spacers, 5) map-get($spacers, 3);
+  flex: 1 1 auto;
+  padding: 0 map-get($spacers, 3);
+  //padding: map-get($spacers, 5) map-get($spacers, 3);
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
 }
 
 .app-editor-form {
+  margin: 0; // override .content-md
+  /*height: 100%;
+  overflow-y: auto;
+  flex: 1 !important; // override .data-form
   padding: 0 map-get($spacers, 3);
+  display: flex;
+  flex-direction: row !important; // override .data-form
+  justify-content: flex-start !important; // override .data-form
 
   margin: 0; // override .content-md
-  width: auto !important; // override .content-md
+  max-width: none; // override .content-md
+  width: auto !important; // override .content-md*/
+  padding: map-get($spacers, 5) map-get($spacers, 3);
 }
 
 .app-editor-page {
-  flex: 1;
+  /*flex: 1;
+  max-width: map-get($content-sizes, md);
+  padding: map-get($spacers, 5) map-get($spacers, 3);*/
 }
 
 .app-editor-toolbar {
-  padding: 0 map-get($spacers, 3);
+  padding: map-get($spacers, 5) map-get($spacers, 3);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;

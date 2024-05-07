@@ -146,6 +146,8 @@
     "delete_panel_confirm": "Are you sure you want to remove this panel ?",
     "deprecated": "Deprecated",
     "description": "Description",
+    "description_short": "Short description",
+    "description_long": "Long description",
     "desktop": "Desktop",
     "desktop_tools": "Desktop tools",
     "workspace_tools": "Workspace tools",
@@ -1047,6 +1049,7 @@
     "root": "Root",
     "support": "Assistance",
     "further_information": "Further information",
+    "further_information_help": "Add additional information to describe and classify your content.",
     "plain_description": "Summary",
     "plain_description_help": "The summary is displayed in lists instead of the HTML description.",
     "enable_pricing": "Enable pricing options",
@@ -1079,5 +1082,6 @@
     "confirmed": "Confirmed",
     "validated": "Validated",
     "other": "Other",
-    "plugins": "Plugins"
+    "plugins": "Plugins",
+    "notifications": "Notifications"
 }

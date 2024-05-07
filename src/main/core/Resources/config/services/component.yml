@@ -1,0 +1,6 @@
+# Declares all services required for the management of Claroline Components (eg. resources).
+services:
+    # Resources
+    Claroline\CoreBundle\Component\Resource\ResourceProvider:
+        arguments:
+            - !tagged_iterator claroline.component.resource

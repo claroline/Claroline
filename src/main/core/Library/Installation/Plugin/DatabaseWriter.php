@@ -373,26 +373,7 @@ class DatabaseWriter implements LoggerAwareInterface
             }
         }
 
-        $this->setResourceTypeDefaultMask($resourceConfiguration['default_rights'], $resourceType);
-
         return $resourceType;
-    }
-
-    private function setResourceTypeDefaultMask(array $rightsName, ResourceType $resourceType): void
-    {
-        $mask = 0 === count($rightsName) ? 1 : 0;
-        $permMap = $this->mm->getPermissionMap($resourceType);
-
-        foreach ($rightsName as $rights) {
-            foreach ($permMap as $value => $perm) {
-                if ($perm === $rights['name']) {
-                    $mask += $value;
-                }
-            }
-        }
-
-        $resourceType->setDefaultMask($mask);
-        $this->em->persist($resourceType);
     }
 
     private function createWidget(array $widgetConfiguration, Plugin $plugin): Widget

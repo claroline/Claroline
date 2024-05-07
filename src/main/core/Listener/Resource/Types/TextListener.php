@@ -12,14 +12,18 @@
 namespace Claroline\CoreBundle\Listener\Resource\Types;
 
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Manager\PdfManager;
+use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\Text;
 use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
 
-class TextListener extends ResourceComponent
+class TextListener extends ResourceComponent implements DownloadableResourceInterface
 {
     public function __construct(
         private readonly SerializerProvider $serializer,
+        private readonly PdfManager $pdfManager,
         private readonly PlaceholderManager $placeholderManager
     ) {
     }
@@ -29,18 +33,28 @@ class TextListener extends ResourceComponent
         return 'text';
     }
 
+    /** @param Text $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
         return [
-            'text' => $this->serializer->serialize($resource),
+            'resource' => $this->serializer->serialize($resource),
             'placeholders' => $this->placeholderManager->getAvailablePlaceholders(),
         ];
     }
 
+    /** @param Text $resource */
     public function update(AbstractResource $resource, array $data): ?array
     {
         return [
             'resource' => $this->serializer->serialize($resource),
         ];
+    }
+
+    /** @param Text $resource */
+    public function download(AbstractResource $resource): ?string
+    {
+        return $this->pdfManager->fromHtml(
+            $this->placeholderManager->replacePlaceholders($resource->getContent() ?? '')
+        );
     }
 }

@@ -6,7 +6,7 @@
     "delete_also_children": "Voulez-vous également supprimer ses sous-chapitres ? Dans le cas contraire, ceux-ci seront remontés dans le parent immédiat.",
     "delete_warning": "Voulez-vous supprimer ce chapitre définitivement ?",
     "empty_lesson_message": "Ce cours est vide. Commencez par créer un nouveau chapitre.",
-    "internal_note_visibility_help": "Les notes internes sont uniquement visibles par les utilisateurs ayant le droit 'Voir les notes internes'.",
+    "internal_note_visibility_help": "Les notes internes sont uniquement visibles par les utilisateurs ayant la permission 'Voir les notes internes'.",
     "lesson_search": "Rechercher dans le cours",
     "lesson_numbering": "Numérotation des chapitres",
     "lesson_numbering_none": "Aucune",

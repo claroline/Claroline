@@ -29,13 +29,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserRepository extends ServiceEntityRepository implements UserProviderInterface, UserLoaderInterface, PasswordUpgraderInterface
 {
-    /** @var PlatformConfigurationHandler */
-    private $platformConfigHandler;
-
-    public function __construct(ManagerRegistry $registry, PlatformConfigurationHandler $platformConfigHandler)
-    {
-        $this->platformConfigHandler = $platformConfigHandler;
-
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly PlatformConfigurationHandler $platformConfigHandler
+    ) {
         parent::__construct($registry, User::class);
     }
 

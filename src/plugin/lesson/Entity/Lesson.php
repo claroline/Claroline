@@ -8,35 +8,29 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- *
  * @ORM\Table(name="icap__lesson")
- *
  * @ORM\HasLifecycleCallbacks()
  */
 class Lesson extends AbstractResource
 {
     /**
      * @ORM\Column(name="description", type="text", nullable=true)
-     *
-     * @var string
      */
-    private $description;
+    private ?string $description;
 
     /**
      * Show overview to users or directly start the lesson.
      *
      * @ORM\Column(name="show_overview", type="boolean", options={"default" = 1})
-     *
-     * @var bool
      */
-    private $showOverview = true;
+    private bool $showOverview = true;
 
     /**
      * @ORM\OneToOne(targetEntity="Icap\LessonBundle\Entity\Chapter", cascade={"all"})
      *
      * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $root;
+    private ?Chapter $root;
 
     /**
      * Numbering of the chapters.
@@ -48,42 +42,32 @@ class Lesson extends AbstractResource
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description = null)
+    public function setDescription(string $description = null): void
     {
         $this->description = $description;
     }
 
-    /**
-     * Set show overview.
-     *
-     * @param bool $showOverview
-     */
-    public function setShowOverview($showOverview)
+    public function setShowOverview(bool $showOverview): void
     {
         $this->showOverview = $showOverview;
     }
 
-    /**
-     * Is overview shown ?
-     *
-     * @return bool
-     */
-    public function getShowOverview()
+    public function getShowOverview(): bool
     {
         return $this->showOverview;
     }
 
-    public function setRoot($root)
+    public function setRoot(?Chapter $root): void
     {
         $this->root = $root;
     }
 
-    public function getRoot()
+    public function getRoot(): ?Chapter
     {
         return $this->root;
     }
@@ -101,7 +85,7 @@ class Lesson extends AbstractResource
     /**
      * @ORM\PostPersist
      */
-    public function createRoot(PostPersistEventArgs $event)
+    public function createRoot(PostPersistEventArgs $event): void
     {
         $em = $event->getObjectManager();
         $rootLesson = $this->buildRoot();
@@ -110,7 +94,7 @@ class Lesson extends AbstractResource
         $em->flush();
     }
 
-    public function buildRoot()
+    public function buildRoot(): Chapter
     {
         $rootLesson = $this->getRoot();
 

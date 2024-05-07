@@ -17,6 +17,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AuthenticationFailureEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,17 +28,15 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
 {
     use RequestDecoderTrait;
 
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var ObjectManager */
-    private $objectManager;
+    private EventDispatcherInterface $dispatcher;
+    private ObjectManager $objectManager;
 
-    public function setDispatcher(StrictDispatcher $dispatcher)
+    public function setDispatcher(EventDispatcherInterface $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
 
-    public function setObjectManager(ObjectManager $objectManager)
+    public function setObjectManager(ObjectManager $objectManager): void
     {
         $this->objectManager = $objectManager;
     }
@@ -66,13 +65,7 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
             $user = $username;
         }
 
-        $this->dispatcher->dispatch(
-            SecurityEvents::AUTHENTICATION_FAILURE,
-            AuthenticationFailureEvent::class,
-            [
-                $user,
-                $message,
-            ]
-        );
+        $failureEvent = new AuthenticationFailureEvent($user, $message);
+        $this->dispatcher->dispatch($failureEvent, SecurityEvents::AUTHENTICATION_FAILURE);
     }
 }

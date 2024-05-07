@@ -1,112 +1,114 @@
-import React, {createElement} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {useSelector} from 'react-redux'
-import get from 'lodash/get'
-import omit from 'lodash/omit'
+import {useHistory} from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl'
 import {Routes} from '#/main/app/router'
-import {Toolbar} from '#/main/app/action'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {Form, selectors as formSelectors} from '#/main/app/content/form'
 
 import {EditorMenu} from '#/main/app/editor/components/menu'
-import {EditorPage} from '#/main/app/editor/components/page'
 import {AppLoader} from '#/main/app/layout/components/loader'
-import {useHistory} from 'react-router-dom'
+import {EditorContext} from '#/main/app/editor/context'
+import isEmpty from 'lodash/isEmpty'
+import {Helmet} from 'react-helmet'
+import {theme} from '#/main/app/config/theme'
 
 const Editor = (props) => {
-  const formData = useSelector((state) => formSelectors.data(formSelectors.form(state, props.name)))
-
-  const pages = (props.overview ? [
+  const pages = [
     {
       name: 'overview',
       title: trans('overview'),
-      component: props.overview
+      disabled: !props.overviewPage,
+      component: props.overviewPage,
+      standard: true
+    }, {
+      name: 'appearance',
+      title: trans('appearance'),
+      help: trans('Personnalisez les paramètres d\'affichage avancés de vos contenus.'),
+      disabled: !props.appearancePage,
+      component: props.appearancePage,
+      standard: true
+    }, {
+      name: 'history',
+      title: trans('history'),
+      help: trans('Retrouvez toutes les modifications effectuées sur vos contenus.'),
+      disabled: !props.historyPage,
+      component: props.historyPage,
+      standard: true
+    }, {
+      name: 'permissions',
+      title: trans('permissions'),
+      help: trans('Gérez les différents droits d\'accès et de modifications de vos utilisateurs.'),
+      disabled: !props.permissionsPage,
+      component: props.permissionsPage,
+      standard: true,
+      managerOnly: true
     }
-  ] : []).concat(props.pages.filter(page => !page.disabled))
+  ]
+    .concat(props.pages)
+    .filter(page => !page.disabled && (!page.managerOnly || props.canAdministrate))
 
   const history = useHistory()
 
   return (
-    <Modal
-      show={true}
-      fullscreen={true}
-      className="app-editor"
-      animation={false}
-      backdrop={false}
-      onHide={() => {
-        // TODO : check pending changes
-        history.push(props.close)
+    <EditorContext.Provider
+      value={{
+        name: props.name,
+        target: props.target,
+        onSave: props.onSave,
+        close: props.close,
+        canAdministrate: props.canAdministrate
       }}
     >
-      <AppLoader />
-      <EditorMenu
-        path={props.path}
-        title={get(formData, 'name') || props.title}
-        pages={pages}
-        actions={props.actions}
-      />
+      {!isEmpty(props.styles) &&
+        <Helmet>
+          {props.styles.map(style =>
+            <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
+          )}
+        </Helmet>
+      }
 
-      <div className="app-editor-body" role="presentation">
-        <Form
-          className="app-editor-form"
-          name={props.name}
-          target={props.target}
-          onSave={props.onSave}
-          buttons={true}
-        >
+      <Modal
+        show={true}
+        fullscreen={true}
+        className="app-editor"
+        animation={false}
+        backdrop={false}
+        onHide={() => {
+          // TODO : check pending changes
+          history.push(props.close)
+        }}
+      >
+        <AppLoader />
+
+        <EditorMenu
+          path={props.path}
+          title={props.title}
+          pages={pages}
+          actions={!!props.actionsPage}
+        />
+
+        <div className="app-editor-body" role="presentation">
           <Routes
             path={props.path}
             redirect={props.defaultPage ? [
               {from: '/', exact: true, to: '/' + props.defaultPage}
             ] : undefined}
             routes={pages.map(page => ({
-              path: '/' + page.name,
-              ...omit(page, 'component', 'render'),
-              render: (routerProps) => (
-                <EditorPage
-                  {...omit(page, 'component', 'render')}
-                >
-                  {page.component ? createElement(page.component) : page.render(routerProps)}
-                </EditorPage>
-              )
-            }))}
+              path: page.path || '/' + page.name,
+              ...omit(page/*, 'component', 'render'*/)
+            })).concat(props.actionsPage ? [
+              {
+                name: 'actions',
+                path: '/actions',
+                component: props.actionsPage
+              }
+            ] : [])}
           />
-        </Form>
-
-        <Toolbar
-          className="app-editor-toolbar sticky-top"
-          buttonName="btn btn-text-body"
-          tooltip="left"
-          actions={[
-            {
-              name: 'close',
-              label: trans('close'),
-              icon: 'fa fa-fw fa-times',
-              type: LINK_BUTTON,
-              target: props.close,
-              exact: true
-            }, {
-              name: 'preview',
-              label: trans('preview'),
-              icon: 'fa fa-fw fa-eye',
-              type: LINK_BUTTON,
-              target: props.path,
-              exact: true
-            }, {
-              name: 'summary',
-              label: trans('summary'),
-              icon: 'fa fa-fw fa-list',
-              type: LINK_BUTTON,
-              target: props.path,
-              exact: true
-            }
-          ]}
-        />
-      </div>
-    </Modal>
+        </div>
+      </Modal>
+    </EditorContext.Provider>
   )
 }
 
@@ -133,23 +135,34 @@ Editor.propTypes = {
     // a symfony route
     T.array
   ]),
-
-  title: T.string,
-  overview: T.any,
+  canAdministrate: T.bool,
+  title: T.string.isRequired,
   pages: T.arrayOf(T.shape({
     name: T.string.isRequired,
     title: T.string.isRequired,
+    help: T.string,
     disabled: T.bool,
+    managerOnly: T.bool,
+    actions: T.arrayOf(T.shape({
+
+    })),
     component: T.elementType,
     render: T.func
   })),
   defaultPage: T.string,
-  actions: T.arrayOf(T.shape({}))
+
+  // standard pages
+  overviewPage: T.elementType,
+  appearancePage: T.elementType,
+  historyPage: T.elementType,
+  permissionsPage: T.elementType,
+  actionsPage: T.elementType
 }
 
 Editor.defaultProps = {
-  pages: T.string,
-  actions: []
+  pages: [],
+  actions: [],
+  canAdministrate: false
 }
 
 export {

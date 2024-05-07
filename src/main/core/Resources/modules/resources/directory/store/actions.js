@@ -23,7 +23,6 @@ actions.fetchDirectories = (parentId = null) => (dispatch, getState) => {
           resourceType: 'directory'
         },
         sortBy: 'name',
-        // todo: lazy load instead
         limit: 20
       }),
       success: (response, dispatch) => dispatch(actions.loadDirectories(currentId !== parentId ? parentId : null, response.data || []))

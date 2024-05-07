@@ -46,6 +46,19 @@ class LessonListener extends ResourceComponent
         ];
     }
 
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        if (!empty($data['chapters'])) {
+            foreach ($data['chapters'] as $chapterData) {
+
+            }
+        }
+
+        return [
+            'resource' => $this->serializer->serialize($resource),
+        ];
+    }
+
     /**
      * @param Lesson $original
      * @param Lesson $copy

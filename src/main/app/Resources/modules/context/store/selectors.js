@@ -1,12 +1,9 @@
 import {createSelector} from 'reselect'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
-import uniqWith from 'lodash/uniqWith'
-
-import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
-import {hasRole} from '#/main/app/security/permissions'
 
 const STORE_NAME = 'context'
+const EDITOR_NAME = 'contextEditor'
 
 /**
  * Root of the context store.
@@ -149,6 +146,7 @@ const menuOpened = createSelector(
 
 export const selectors = {
   STORE_NAME,
+  EDITOR_NAME,
 
   type,
   id,

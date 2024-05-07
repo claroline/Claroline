@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React, {createElement, useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 
+import {trans} from '#/main/app/intl'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {Routes} from '#/main/app/router'
 import {hasPermission} from '#/main/app/security'
 
@@ -10,9 +12,10 @@ import {ResourceContext} from '#/main/core/resource/context'
 import {selectors} from '#/main/core/resource/store'
 import {ResourceRestrictions} from '#/main/core/resource/containers/restrictions'
 import {ResourceEditor} from '#/main/core/resource/editor/containers/main'
-import {EvaluationMain} from '#/main/evaluation/resource/evaluation/containers/main'
+import {ResourceEvaluations} from '#/main/evaluation/resource/evaluation/containers/main'
 import {LogsMain} from '#/main/log/resource/logs/containers/main'
 import {ResourceOverview} from '#/main/core/resource/components/overview'
+
 
 const ResourceMain = props => {
   const [loaded, setLoaded] = useState(false)
@@ -29,11 +32,19 @@ const ResourceMain = props => {
   return (
     <ResourceContext.Provider
       value={{
-        menu: props.menu,
+        menu: [
+          {
+            name: 'overview',
+            type: LINK_BUTTON,
+            label: trans('resource_overview', {}, 'resource'),
+            target: resourcePath,
+            displayed: !!props.overviewPage,
+            exact: true
+          }
+        ].concat(props.menu || []),
         actions: props.actions,
         disabledActions: props.disabledActions,
-        styles: props.styles,
-        overview: props.overview
+        styles: props.styles
       }}
     >
       {loaded && !isEmpty(accessErrors) &&
@@ -50,7 +61,7 @@ const ResourceMain = props => {
               component: props.editor
             }, {
               path: '/evaluation',
-              component: EvaluationMain
+              component: ResourceEvaluations
             }, {
               path: '/logs',
               component: LogsMain
@@ -60,8 +71,8 @@ const ResourceMain = props => {
             .concat([
               {
                 path: '/',
-                disabled: isEmpty(props.overview),
-                component: props.overview,
+                disabled: !props.overviewPage,
+                component: props.overviewPage,
                 exact: true
               }, {
                 path: '/',
@@ -90,14 +101,18 @@ ResourceMain.propTypes = {
    * The resource overview component
    * NB. This SHOULD extend the base <ResourceOverview /> component.
    */
-  overview: T.elementType,
+  overviewPage: T.elementType,
+  /**
+   * The resource editor component
+   * NB. This SHOULD extend the base <ResourceEditor /> component.
+   */
   editor: T.elementType
 }
 
 ResourceMain.defaultProps = {
   styles: [],
   actions: [],
-  overview: ResourceOverview,
+  overviewPage: ResourceOverview,
   editor: ResourceEditor
 }
 

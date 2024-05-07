@@ -6,10 +6,10 @@ plugin:
         - name: progression
           icon: award
 
-    resource_actions:
-        - name: evaluation
-          decoder: administrate
-          scope: [ object ]
+    #resource_actions:
+          #    - name: evaluation
+          #decoder: administrate
+          #scope: [ object ]
 
     data_sources:
         - name: resource_attempts

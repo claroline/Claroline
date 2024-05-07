@@ -1,28 +1,19 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 
-import {trans} from '#/main/app/intl'
-import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {ContextEditor} from '#/main/app/context/editor/containers/main'
 
-import {EditorOverview} from '#/main/app/contexts/workspace/editor/components/overview'
+import {WorkspaceEditorOverview} from '#/main/app/contexts/workspace/editor/components/overview'
+import {WorkspaceEditorAppearance} from '#/main/app/contexts/workspace/editor/components/appearance'
+import {WorkspaceEditorHistory} from '#/main/app/contexts/workspace/editor/components/history'
+import {WorkspaceEditorActions} from '#/main/app/contexts/workspace/editor/components/actions'
 
-const WorkspaceEditor = (props) =>
+const WorkspaceEditor = () =>
   <ContextEditor
-    overview={EditorOverview}
-    actions={[
-      {
-        name: 'delete',
-        label: trans('delete', 'actions'),
-        type: CALLBACK_BUTTON,
-        callback: () => true
-      }
-    ]}
+    overviewPage={WorkspaceEditorOverview}
+    appearancePage={WorkspaceEditorAppearance}
+    historyPage={WorkspaceEditorHistory}
+    actionsPage={WorkspaceEditorActions}
   />
-
-WorkspaceEditor.propTypes = {
-
-}
 
 export {
   WorkspaceEditor

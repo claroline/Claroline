@@ -1,8 +1,9 @@
 services:
     Claroline\FlashcardBundle\Controller\FlashcardDeckController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
+            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\FlashcardBundle\Manager\FlashcardManager'
             - '@Claroline\FlashcardBundle\Manager\EvaluationManager'

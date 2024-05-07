@@ -1,5 +1,0 @@
-{
-    "resource-icap_lesson-chapter_create": "has created %chapter% chapter in %lesson% lesson",
-    "resource-icap_lesson-chapter_update": "has updated %chapter% chapter of %lesson% lesson",
-    "resource-icap_lesson-user_tagged": "has tagged you in %chapter% chapter of %lesson% lesson"
-}

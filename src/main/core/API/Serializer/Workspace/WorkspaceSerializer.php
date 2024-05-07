@@ -71,8 +71,8 @@ class WorkspaceSerializer
                 'slug' => $workspace->getSlug(),
                 'thumbnail' => $workspace->getThumbnail(),
                 'meta' => [
-                    // move outside meta
                     'model' => $workspace->isModel(),
+                    'description' => $workspace->getDescription(),
                 ],
             ];
         }
@@ -90,6 +90,7 @@ class WorkspaceSerializer
                 'model' => $workspace->isModel(),
                 'personal' => $workspace->isPersonal(),
                 'description' => $workspace->getDescription(),
+                'descriptionHtml' => $workspace->getDescriptionHtml(),
                 'created' => DateNormalizer::normalize($workspace->getCreatedAt()),
                 'updated' => DateNormalizer::normalize($workspace->getUpdatedAt()),
                 'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
@@ -114,12 +115,12 @@ class WorkspaceSerializer
             $editPerm = $this->authorization->isGranted('EDIT', $workspace);
 
             $serialized['permissions'] = [
-                'open' => $this->authorization->isGranted('OPEN', $workspace),
-                'delete' => $this->authorization->isGranted('DELETE', $workspace),
-                'configure' => $editPerm,
+                'open' => $editPerm || $this->authorization->isGranted('OPEN', $workspace),
+                'delete' => $editPerm || $this->authorization->isGranted('DELETE', $workspace),
+                'edit' => $editPerm,
                 'administrate' => $editPerm,
-                'export' => $this->authorization->isGranted('EXPORT', $workspace),
-                'archive' => $this->authorization->isGranted('ARCHIVE', $workspace),
+                'export' => $editPerm || $this->authorization->isGranted('EXPORT', $workspace),
+                'archive' => $editPerm || $this->authorization->isGranted('ARCHIVE', $workspace),
             ];
 
             // this is a huge performances bottleneck as it will check if the current user as at least one right on one ws tool
@@ -240,6 +241,7 @@ class WorkspaceSerializer
             $this->sipe('meta.personal', 'setPersonal', $data, $workspace);
             $this->sipe('meta.model', 'setModel', $data, $workspace);
             $this->sipe('meta.description', 'setDescription', $data, $workspace);
+            $this->sipe('meta.descriptionHtml', 'setDescriptionHtml', $data, $workspace);
 
             if (array_key_exists('created', $data['meta'])) {
                 $workspace->setCreatedAt(DateNormalizer::denormalize($data['meta']['created']));

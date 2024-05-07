@@ -2,7 +2,6 @@ import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl'
-import {FormContent} from '#/main/app/content/form/containers/content'
 import {Editor} from '#/main/app/editor/components/main'
 
 import {selectors} from '#/main/app/context/editor/store'
@@ -54,108 +53,21 @@ const ContextEditor = (props) => {
   return (
     <Editor
       path={props.path+'/edit'}
-      title={trans(props.contextName, {}, 'context')}
+      title={trans(props.contextName, {}, 'context') || props.title}
       name={selectors.FORM_NAME}
       onSave={(savedData) => props.refresh(props.name, savedData, props.contextType)}
-      target={['apiv2_context_configure', {
+      target={['claro_context_configure', {
         context: props.contextName,
         contextId: props.contextId
       }]}
+      canAdministrate={true}
       close={props.path}
-      overview={props.overview}
+      overviewPage={props.overviewPage}
+      appearancePage={props.appearancePage}
+      historyPage={props.historyPage}
+      actionsPage={props.actionsPage}
       defaultPage="overview"
-      pages={[
-        {
-          name: 'opening',
-          title: trans('Ouverture'),
-          help: 'Lorem ipsum dolor sit amet non sequiture et cetera',
-          render: () => (
-            <FormContent
-              name={selectors.FORM_NAME}
-              definition={[
-                {
-                  icon: 'fa fa-fw fa-sign-in',
-                  title: trans('opening_parameters'),
-                  mode: 'advanced',
-                  fields: [
-                    {
-                      name: 'opening.type',
-                      type: 'choice',
-                      label: trans('type'),
-                      required: true,
-                      options: {
-                        noEmpty: true,
-                        condensed: true,
-                        choices: {
-                          tool: trans('open_workspace_tool'),
-                          resource: trans('open_workspace_resource')
-                        }
-                      },
-                      onChange: () => props.updateProp('opening.target', null),
-                      linked: [
-                        {
-                          name: 'opening.target',
-                          type: 'choice',
-                          label: trans('tool'),
-                          required: true,
-                          displayed: (workspace) => workspace.opening && 'tool' === workspace.opening.type,
-                          options: {
-                            noEmpty: true,
-                            multiple: false,
-                            condensed: true,
-                            choices: props.tools ? props.tools.reduce((acc, tool) => Object.assign(acc, {
-                              [tool.name]: trans(tool.name, {}, 'tools')
-                            }), {}) : {}
-                          }
-                        }, {
-                          name: 'opening.target',
-                          type: 'resource',
-                          help: trans ('opening_target_resource_help'),
-                          label: trans('resource'),
-                          options: {
-                            picker: {
-                              current: props.root,
-                              root: props.root
-                            }
-                          },
-                          required: true,
-                          displayed: (workspace) => workspace.opening && 'resource' === workspace.opening.type,
-                          onChange: (selected) => {
-                            props.updateProp('opening.target', selected)
-                          }
-                        }
-                      ]
-                    }, {
-                      name: 'opening.menu',
-                      type: 'choice',
-                      label: trans('tools_menu'),
-                      mode: 'expert',
-                      placeholder: trans('do_nothing'),
-                      options: {
-                        condensed: false,
-                        noEmpty: false,
-                        choices: {
-                          open: trans('open_tools_menu'),
-                          close: trans('close_tools_menu')
-                        }
-                      }
-                    }
-                  ]
-                }
-              ]}
-            />
-          )
-        }, {
-          name: 'appearance',
-          title: trans('appearance'),
-          render: () => (<div>Apparence</div>)
-        }, {
-          name: 'history',
-          title: trans('history'),
-          render: () => (<div>History</div>)
-        }
-      ]}
-      actions={props.actions}
+      pages={props.pages}
     />
   )
 }
@@ -164,7 +76,6 @@ ContextEditor.propTypes = {
   path: T.string.isRequired,
   contextName: T.string.isRequired,
   contextId: T.string,
-  actions: T.Array,
   tools: T.arrayOf(T.shape({
 
   })).isRequired,

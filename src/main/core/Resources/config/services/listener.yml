@@ -39,6 +39,7 @@ services:
             - { name: kernel.event_listener, event: data_source.tools.load, method: getData }
 
     Claroline\CoreBundle\Listener\Resource\Types\DirectoryListener:
+        tags: [kernel.event_subscriber]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
@@ -47,27 +48,20 @@ services:
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
-        tags: ['kernel.event_subscriber']
 
     Claroline\CoreBundle\Listener\Resource\Types\FileListener:
+        tags: [kernel.event_subscriber]
         arguments:
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\FileManager'
-        tags:
-            - { name: kernel.event_listener, event: resource.load.file, method: onLoad }
-            - { name: kernel.event_listener, event: resource.file.change_file, method: onFileChange }
-            - { name: kernel.event_listener, event: resource.file.delete, method: onDelete }
-            - { name: kernel.event_listener, event: resource.file.export, method: onExport }
-            - { name: kernel.event_listener, event: resource.file.import, method: onImport }
-            - { name: kernel.event_listener, event: crud.pre.copy.file, method: onCopy }
-            - { name: kernel.event_listener, event: download_file, method: onDownload }
 
     Claroline\CoreBundle\Listener\Resource\Types\TextListener:
         tags: [kernel.event_subscriber]
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Manager\PdfManager'
             - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
 
     Claroline\CoreBundle\Listener\Resource\ResourceListener:
@@ -99,6 +93,7 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
+            - '@event_dispatcher'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\AppBundle\Event\StrictDispatcher'
@@ -142,8 +137,8 @@ services:
             - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
 
     Claroline\CoreBundle\Listener\Entity\UserListener:
-      arguments:
-        - '@security.encoder_factory'
-      tags:
-        - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'prePersist' }
-        - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'preUpdate' }
+        arguments:
+            - '@security.encoder_factory'
+        tags:
+            - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'prePersist' }
+            - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'preUpdate' }

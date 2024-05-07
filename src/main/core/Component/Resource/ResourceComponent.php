@@ -20,11 +20,10 @@ abstract class ResourceComponent implements ResourceInterface, EventSubscriberIn
 {
     public static function getSubscribedEvents(): array
     {
-        return [
+        $resourceEvents = [
             // Read
             ResourceEvents::getEventName(ResourceEvents::OPEN, static::getName()) => 'onOpen',
             ResourceEvents::getEventName(ResourceEvents::EMBED, static::getName()) => 'onEmbed',
-            ResourceEvents::getEventName(ResourceEvents::DOWNLOAD, static::getName()) => 'onDownload',
             // Update
             ResourceEvents::getEventName(ResourceEvents::CREATE, static::getName()) => 'onCreate',
             ResourceEvents::getEventName(ResourceEvents::UPDATE, static::getName()) => 'onUpdate',
@@ -34,6 +33,12 @@ abstract class ResourceComponent implements ResourceInterface, EventSubscriberIn
             ResourceEvents::getEventName(ResourceEvents::EXPORT, static::getName()) => 'onExport',
             ResourceEvents::getEventName(ResourceEvents::IMPORT, static::getName()) => 'onImport',
         ];
+
+        if (class_implements(static::class, DownloadableResourceInterface::class)) {
+            $resourceEvents[ResourceEvents::getEventName(ResourceEvents::DOWNLOAD, static::getName())] = 'onDownload';
+        }
+
+        return $resourceEvents;
     }
 
     public function onOpen(LoadResourceEvent $event): void
@@ -106,10 +111,10 @@ abstract class ResourceComponent implements ResourceInterface, EventSubscriberIn
         return [];
     }
 
-    public function download(AbstractResource $resource): ?string
+    /*public function download(AbstractResource $resource): ?string
     {
         return null;
-    }
+    }*/
 
     public function update(AbstractResource $resource, array $data): ?array
     {

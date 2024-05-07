@@ -26,18 +26,11 @@ use Symfony\Component\Security\Http\Firewall\AbstractListener;
  */
 class AnonymousAuthenticationListener extends AbstractListener
 {
-    private $tokenStorage;
-    private $secret;
-    private $logger;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        string $secret,
-        LoggerInterface $logger = null
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly string $secret,
+        private readonly LoggerInterface $logger
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->secret = $secret;
-        $this->logger = $logger;
     }
 
     public function supports(Request $request): ?bool
@@ -48,7 +41,7 @@ class AnonymousAuthenticationListener extends AbstractListener
     /**
      * Authenticates anonymous with correct roles.
      */
-    public function authenticate(RequestEvent $event)
+    public function authenticate(RequestEvent $event): void
     {
         if (null !== $this->tokenStorage->getToken()) {
             // user is already authenticated, there is nothing to do.

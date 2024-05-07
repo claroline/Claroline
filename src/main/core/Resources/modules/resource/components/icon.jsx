@@ -9,10 +9,12 @@ const ResourceIcon = props =>
     className={classes('resource-icon', props.className)}
     mimeType={props.mimeType}
     set="resources"
+    size={props.size}
   />
 
 ResourceIcon.propTypes = {
   className: T.string,
+  size: T.string,
   mimeType: T.string.isRequired
 }
 

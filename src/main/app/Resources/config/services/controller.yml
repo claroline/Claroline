@@ -41,9 +41,11 @@ services:
 
     Claroline\AppBundle\Controller\Component\ContextController:
         arguments:
+            - '@security.authorization_checker'
             - '@security.token_storage'
             - '@event_dispatcher'
             - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\Component\Context\ContextProvider'
             - '@Claroline\AppBundle\Component\Tool\ToolProvider'
 

@@ -63,7 +63,7 @@ const ContentTitle = props =>
       {props.title}
 
       {props.subtitle &&
-        <small>{props.subtitle}</small>
+        <small className="text-secondary">{props.subtitle}</small>
       }
     </span>
 

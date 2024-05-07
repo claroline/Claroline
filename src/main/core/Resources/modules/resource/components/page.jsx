@@ -4,8 +4,6 @@ import classes from 'classnames'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
-import {trans} from '#/main/app/intl'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {ToolPage} from '#/main/core/tool'
 
@@ -55,16 +53,7 @@ const ResourcePage = (props) => {
       embedded={embedded}
       showHeader={!embedded || showHeader}
       menu={{
-        nav: [
-          {
-            name: 'overview',
-            type: LINK_BUTTON,
-            label: trans('resource_overview', {}, 'resource'),
-            target: resourcePath,
-            displayed: !!resourceDef.overview,
-            exact: true
-          }
-        ].concat(resourceDef.menu || []),
+        nav: resourceDef.menu,
         toolbar: 'configure more',
         // get actions injected through plugins and the ones defined by the current tool
         actions: getActions([resourceNode], {

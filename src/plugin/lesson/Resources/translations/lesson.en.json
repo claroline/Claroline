@@ -6,7 +6,7 @@
     "delete_also_children": "Do you really want to delete its subchapters too? Otherwise they will be placed in the nearest parent chapter.",
     "delete_warning": "Do you really want to delete this chapter?",
     "empty_lesson_message": "This lesson is empty. You can start by adding a new chapter.",
-    "internal_note_visibility_help": "Internal notes are only visible to users with the 'View internal notes' right.",
+    "internal_note_visibility_help": "Internal notes are only visible to users with the 'View internal notes' permission.",
     "lesson_search": "Search in the lesson",
     "lesson_numbering": "Chapter numbering",
     "lesson_numbering_none": "None",

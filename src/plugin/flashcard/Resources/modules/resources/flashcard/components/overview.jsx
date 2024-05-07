@@ -1,6 +1,5 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
@@ -12,6 +11,7 @@ import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/r
 import {Timeline} from '#/plugin/flashcard/resources/flashcard/components/timeline'
 import {LeitnerRules} from '#/plugin/flashcard/resources/flashcard/components/rules'
 import {FlashcardDeck as FlashcardDeckTypes} from '#/plugin/flashcard/resources/flashcard/prop-types'
+import {PageSection} from '#/main/app/page/components/section'
 
 const Overview = (props) => {
   const attemptData = props.attempt && props.attempt.data
@@ -21,6 +21,7 @@ const Overview = (props) => {
 
   let statusText = trans('session_status_next', {}, 'flashcard')
   let action = action = {
+    name: 'start',
     type: LINK_BUTTON,
     label: trans('start', {}, 'actions'),
     target: `${props.basePath}/play`,
@@ -32,6 +33,7 @@ const Overview = (props) => {
   if (sessionCompleted) {
     statusText = trans('session_status_completed', {}, 'flashcard')
     action = {
+      name: 'start',
       type: LINK_BUTTON,
       label: trans('restart', {}, 'actions'),
       target: `${props.basePath}/play`,
@@ -42,6 +44,7 @@ const Overview = (props) => {
   } else if (sessionStarted) {
     statusText = trans('session_status_current', {}, 'flashcard')
     action = {
+      name: 'start',
       type: LINK_BUTTON,
       label: trans('continue', {}, 'actions'),
       target: `${props.basePath}/play`,
@@ -51,10 +54,9 @@ const Overview = (props) => {
 
   return (
     <ResourceOverview
-      contentText={get(props.flashcardDeck, 'overview.message')}
+      primaryAction="start"
       evaluation={props.evaluation}
       attempt={props.attempt}
-      resourceNode={props.resourceNode}
       actions={[action]}
       details={[
         [trans('session_indicator', {}, 'flashcard'), session + ' / 7'],
@@ -62,27 +64,29 @@ const Overview = (props) => {
       ]}
     >
 
-      {isEmpty(props.cards) &&
-        <ContentPlaceholder
-          size="lg"
-          title={trans('no_cards', {}, 'flashcard')}
-        />
-      }
+      <PageSection size="md" className="py-3">
+        {isEmpty(props.cards) &&
+          <ContentPlaceholder
+            size="lg"
+            title={trans('no_cards', {}, 'flashcard')}
+          />
+        }
 
-      {!isEmpty(props.cards) &&
-        <Timeline
-          session={session}
-          started={sessionStarted}
-          completed={sessionCompleted}
-        />
-      }
+        {!isEmpty(props.cards) &&
+          <Timeline
+            session={session}
+            started={sessionStarted}
+            completed={sessionCompleted}
+          />
+        }
 
-      {props.flashcardDeck.showLeitnerRules && !isEmpty(props.cards) &&
-        <LeitnerRules
-          session={session}
-          completed={sessionCompleted}
-        />
-      }
+        {props.flashcardDeck.showLeitnerRules && !isEmpty(props.cards) &&
+          <LeitnerRules
+            session={session}
+            completed={sessionCompleted}
+          />
+        }
+      </PageSection>
     </ResourceOverview>
   )
 }

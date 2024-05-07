@@ -1,145 +1,122 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {useDispatch, useSelector} from 'react-redux'
+import isEmpty from 'lodash/isEmpty'
 
-import {trans, transChoice} from '#/main/app/intl/translation'
-import {FormData} from '#/main/app/content/form/containers/data'
-import {ListData} from '#/main/app/content/list/containers/data'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
-import {ClacoForm as ClacoFormTypes} from '#/plugin/claco-form/resources/claco-form/prop-types'
+import {trans} from '#/main/app/intl/translation'
+import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {Button, Toolbar} from '#/main/app/action'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import {EditorPage} from '#/main/app/editor'
+
+import {actions, selectors} from '#/plugin/claco-form/resources/claco-form/editor/store'
 import {MODAL_CATEGORY_FORM} from '#/plugin/claco-form/modals/category'
-import {Button} from '#/main/app/action'
 
-const EditorCategories = props =>
-  <FormData
-    className="mt-3"
-    level={2}
-    title={trans('categories', {}, 'clacoform')}
-    name={selectors.STORE_NAME+'.clacoFormForm'}
-    buttons={true}
-    target={(clacoForm) => ['apiv2_clacoform_update', {id: clacoForm.id}]}
-    cancel={{
-      type: LINK_BUTTON,
-      target: props.path,
-      exact: true
-    }}
-    definition={[
-      {
-        id: 'general',
-        title: trans('general'),
-        fields: [
-          {
-            name: 'details.display_categories',
-            type: 'boolean',
-            label: trans('label_display_categories', {}, 'clacoform'),
-            help: trans('display_categories_help', {}, 'clacoform')
-          }
-        ]
-      }
-    ]}
-  >
-    <ListData
-      className="mb-3"
-      name={selectors.STORE_NAME+'.clacoFormForm.categories'}
-      fetch={{
-        url: ['apiv2_clacoformcategory_list', {clacoForm: props.clacoForm.id}],
-        autoload: !!props.clacoForm.id
-      }}
+const EditorCategories = () => {
+  const dispatch = useDispatch()
+
+  const clacoForm = useSelector(selectors.clacoForm)
+  const categories = useSelector(selectors.categories)
+
+  const addCategory = (category) => {
+    const newCategories = [].concat(categories, [category])
+
+    dispatch(actions.updateCategories(newCategories))
+  }
+
+  const updateCategory = (category) => {
+    const newCategories = [].concat(categories)
+    const categoryPos = newCategories.findIndex(cat => cat.id === category.id)
+
+    if (-1 !== categoryPos) {
+      newCategories[categoryPos] = category
+
+      dispatch(actions.updateCategories(newCategories))
+    }
+  }
+
+  const deleteCategory = (category) => {
+    const newCategories = [].concat(categories)
+    const categoryPos = newCategories.findIndex(cat => cat.id === category.id)
+
+    if (-1 !== categoryPos) {
+      newCategories.splice(categoryPos, 1)
+
+      dispatch(actions.updateCategories(newCategories))
+    }
+  }
+
+  return (
+    <EditorPage
+      title={trans('categories', {}, 'clacoform')}
+      dataPart="resource"
       definition={[
         {
-          name: 'name',
-          type: 'string',
-          label: trans('name'),
-          displayed: true
-        }, {
-          name: 'managers',
-          type: 'string',
-          label: trans('managers'),
-          displayed: true,
-          render: (rowData) => rowData.managers.map(m => m.firstName + ' ' + m.lastName).join(', ')
-        }, {
-          name: 'details.notify_addition',
-          type: 'boolean',
-          alias: 'notify_addition',
-          label: trans('addition', {}, 'clacoform'),
-          displayed: true,
-          sortable: false
-        }, {
-          name: 'details.notify_edition',
-          type: 'boolean',
-          alias: 'notify_edition',
-          label: trans('edition'),
-          displayed: true,
-          sortable: false
-        }, {
-          name: 'details.notify_removal',
-          type: 'boolean',
-          alias: 'notify_removal',
-          label: trans('removal', {}, 'clacoform'),
-          displayed: true,
-          sortable: false
-        }, {
-          name: 'details.notify_pending_comment',
-          type: 'boolean',
-          alias: 'notify_pending_comment',
-          label: trans('comment'),
-          displayed: true,
-          sortable: false
+          id: 'general',
+          title: trans('general'),
+          fields: [
+            {
+              name: 'details.display_categories',
+              type: 'boolean',
+              label: trans('label_display_categories', {}, 'clacoform'),
+              help: trans('display_categories_help', {}, 'clacoform')
+            }
+          ]
         }
       ]}
-      actions={(rows) => [
-        {
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-pencil',
-          label: trans('edit', {}, 'actions'),
-          modal: [MODAL_CATEGORY_FORM, {
-            category: rows[0],
-            fields: props.clacoForm.fields,
-            saveCategory: (category) => props.saveCategory(props.clacoForm.id, category, false)
-          }],
-          scope: ['object']
-        }, {
-          type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-trash',
-          label: trans('delete', {}, 'actions'),
-          dangerous: true,
-          confirm: {
-            title: trans('objects_delete_title'),
-            message: transChoice('objects_delete_question', rows.length, {count: rows.length}, 'platform')
-          },
-          callback: () => props.deleteCategories(rows)
-        }, {
-          type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-refresh',
-          label: trans('recalculate', {}, 'actions'),
-          callback: () => props.assignCategory(rows[0]),
-          scope: ['object'],
-          displayed: rows[0].fieldsValues && 0 !== rows[0].fieldsValues.length
-        }
-      ]}
-    />
+    >
+      {isEmpty(categories) &&
+        <ContentPlaceholder
+          className="mb-3"
+          title={trans('no_category', {}, 'clacoform')}
+        />
+      }
 
-    <Button
-      type={MODAL_BUTTON}
-      className="btn btn-primary w-100 mb-3"
-      size="lg"
-      label={trans('create_a_category', {}, 'clacoform')}
-      modal={[MODAL_CATEGORY_FORM, {
-        fields: props.clacoForm.fields,
-        saveCategory: (category) => props.saveCategory(props.clacoForm.id, category, true)
-      }]}
-      primary={true}
-    />
-  </FormData>
+      {!isEmpty(categories) &&
+        <ul className="list-group mb-3">
+          {categories.map(category =>
+            <li key={category.id} className="list-group-item d-flex gap-3 justify-content-between align-items-center">
+              {category.name}
 
-EditorCategories.propTypes = {
-  path: T.string.isRequired,
-  clacoForm: T.shape(
-    ClacoFormTypes.propTypes
-  ),
-  saveCategory: T.func.isRequired,
-  assignCategory: T.func.isRequired,
-  deleteCategories: T.func.isRequired
+              <Toolbar
+                buttonName="btn btn-link"
+                toolbar="edit delete"
+                size="sm"
+                actions={[
+                  {
+                    name: 'edit',
+                    label: trans('edit', 'actions'),
+                    type: MODAL_BUTTON,
+                    modal: [MODAL_CATEGORY_FORM, {
+                      category: category,
+                      fields: clacoForm.fields,
+                      saveCategory: updateCategory
+                    }]
+                  }, {
+                    name: 'delete',
+                    label: trans('delete', 'actions'),
+                    type: CALLBACK_BUTTON,
+                    callback: () => deleteCategory(category)
+                  }
+                ]}
+              />
+            </li>
+          )}
+        </ul>
+      }
+
+      <Button
+        type={MODAL_BUTTON}
+        className="btn btn-primary w-100 mb-3"
+        size="lg"
+        label={trans('add_category', {}, 'clacoform')}
+        modal={[MODAL_CATEGORY_FORM, {
+          fields: clacoForm.fields,
+          saveCategory: addCategory
+        }]}
+        primary={true}
+      />
+    </EditorPage>
+  )
 }
 
 export {

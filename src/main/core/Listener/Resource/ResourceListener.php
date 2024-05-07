@@ -115,9 +115,12 @@ class ResourceListener
         $updateResource = new UpdateResourceEvent($resource, $data);
         $this->eventDispatcher->dispatch($updateResource, ResourceEvents::getEventName(ResourceEvents::UPDATE, $resourceNode->getResourceType()->getName()));
 
+        $this->om->refresh($resourceNode);
+
         $event->setResponse(new JsonResponse(array_merge([], $updateResource->getResponse(), [
             'resourceNode' => $this->serializer->serialize($resourceNode, [Options::NO_RIGHTS]),
-            'rights' => $isManager ? array_map(function (ResourceRights $rights) {
+            // FIXME : rights are out of date
+            'rights' => !empty($data['rights']) && $isManager ? array_map(function (ResourceRights $rights) {
                 return $this->serializer->serialize($rights);
             }, $resourceNode->getRights()->toArray()) : []
         ])));

@@ -4,6 +4,10 @@ namespace Claroline\AppBundle\Entity\Meta;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * A short description of an entity.
+ * It SHOULD be available in the minimal representation of the entity to be displayed in lists/cards.
+ */
 trait Description
 {
     /**

@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {trans} from '#/main/app/intl'
 import {toKey} from '#/main/core/scaffolding/text'
 import {Button} from '#/main/app/action'
 import {LINK_BUTTON} from '#/main/app/buttons'
@@ -8,7 +9,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 const PageBreadcrumb = props => {
   if (0 !== props.breadcrumb.length) {
     return (
-      <nav aria-label="breadcrumb">
+      <nav aria-label={trans('breadcrumb')}>
         <ol className="breadcrumb">
           {props.breadcrumb.map((item) =>
             <li key={item.id || toKey(item.label)} className="breadcrumb-item">

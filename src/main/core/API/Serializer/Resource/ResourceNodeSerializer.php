@@ -64,6 +64,7 @@ class ResourceNodeSerializer
                 'code' => $resourceNode->getCode(),
                 'thumbnail' => $resourceNode->getThumbnail(),
                 'meta' => [
+                    'description' => $resourceNode->getDescription(),
                     'published' => $resourceNode->isPublished(), // not required but nice to have
                     // move outside meta
                     'type' => $resourceNode->getType(), // try to remove. use mimeType instead
@@ -86,6 +87,7 @@ class ResourceNodeSerializer
                 //'className' => $resourceNode->getClass(), // try to remove. use mimeType instead
                 'mimeType' => $resourceNode->getMimeType(),
                 'description' => $resourceNode->getDescription(),
+                'descriptionHtml' => $resourceNode->getDescriptionHtml(),
                 'creator' => $resourceNode->getCreator() ?
                     $this->userSerializer->serialize($resourceNode->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                     null,
@@ -191,6 +193,7 @@ class ResourceNodeSerializer
 
         $this->sipe('meta.published', 'setPublished', $data, $resourceNode);
         $this->sipe('meta.description', 'setDescription', $data, $resourceNode);
+        $this->sipe('meta.descriptionHtml', 'setDescriptionHtml', $data, $resourceNode);
         $this->sipe('meta.license', 'setLicense', $data, $resourceNode);
         $this->sipe('meta.authors', 'setAuthor', $data, $resourceNode);
 

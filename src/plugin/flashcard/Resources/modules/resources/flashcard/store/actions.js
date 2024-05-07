@@ -8,7 +8,7 @@ export const FLASHCARD_UPDATE_PROGRESSION = 'FLASHCARD_UPDATE_PROGRESSION'
 
 export const actions = {}
 
-actions.getAttemptAction = makeActionCreator(ATTEMPT_LOAD, 'data')
+actions.getAttemptAction = makeActionCreator(ATTEMPT_LOAD, 'attempt')
 actions.updateCardProgression = makeActionCreator(FLASHCARD_UPDATE_PROGRESSION, 'id', 'isSuccessful')
 
 actions.updateProgression = (cardId, isSuccessful) => ({
@@ -20,7 +20,7 @@ actions.updateProgression = (cardId, isSuccessful) => ({
     },
     success: (data, dispatch) => {
       dispatch(resourceActions.updateUserEvaluation(data.userEvaluation))
-      dispatch(actions.getAttemptAction(data))
+      dispatch(actions.getAttemptAction(data.attempt))
     }
   }
 })

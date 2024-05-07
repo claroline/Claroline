@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import * as pdfjsLib from 'pdfjs-dist/build/pdf'
@@ -13,7 +13,6 @@ import {Button} from '#/main/app/action/components/button'
 import {ASYNC_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {File as FileTypes} from '#/main/core/files/prop-types'
-import {ResourcePage} from '#/main/core/resource'
 
 class PdfPlayer extends Component {
   constructor(props) {
@@ -29,6 +28,7 @@ class PdfPlayer extends Component {
     }
 
     this.resize = this.resize.bind(this)
+    this.renderPage = this.renderPage.bind(this)
   }
 
   componentDidMount() {
@@ -47,11 +47,6 @@ class PdfPlayer extends Component {
     })
     pdfLinkService.setViewer(pdfSinglePageViewer)
 
-    eventBus.on('pagesinit', () => {
-      this.resize(pdfSinglePageViewer)
-      this.renderPage(1)
-    })
-
     eventBus.on('pagechanging', (event) => this.renderPage(event.pageNumber))
 
     this.props.loadFile(this.props.file.url).then((fileData) => {
@@ -68,6 +63,9 @@ class PdfPlayer extends Component {
           loaded: true,
           pdf: pdf,
           viewer: pdfSinglePageViewer
+        }, () => {
+          this.resize(pdfSinglePageViewer)
+          this.renderPage(1)
         })
       })
     })
@@ -112,7 +110,7 @@ class PdfPlayer extends Component {
 
   render() {
     return (
-      <ResourcePage>
+      <>
         {!this.state.loaded &&
           <ContentLoader
             className="row"
@@ -217,7 +215,7 @@ class PdfPlayer extends Component {
             <div id="viewer" className="pdfViewer" />
           </div>
         </div>
-      </ResourcePage>
+      </>
     )
   }
 }

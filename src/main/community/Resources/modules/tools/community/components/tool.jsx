@@ -102,15 +102,7 @@ const CommunityTool = (props) =>
       }
     ]}
     actions={[
-      {
-        name: 'disable-inactive',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-user-clock',
-        label: trans('disable_inactive_users', {}, 'community'),
-        modal: [MODAL_USER_DISABLE_INACTIVE],
-        displayed: toolConstants.TOOL_DESKTOP === props.contextType && props.canAdministrate,
-        dangerous: true
-      }
+
     ]}
     editor={CommunityEditor}
   />

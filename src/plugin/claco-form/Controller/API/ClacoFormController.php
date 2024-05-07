@@ -11,8 +11,10 @@
 
 namespace Claroline\ClacoFormBundle\Controller\API;
 
-use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
+use Claroline\ClacoFormBundle\Manager\CategoryManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,29 +24,17 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @Route("/clacoform")
  */
-class ClacoFormController extends AbstractCrudController
+class ClacoFormController
 {
     use PermissionCheckerTrait;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization
+        AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly CategoryManager $categoryManager
     ) {
         $this->authorization = $authorization;
-    }
-
-    public function getClass(): string
-    {
-        return ClacoForm::class;
-    }
-
-    public function getIgnore(): array
-    {
-        return ['create', 'deleteBulk', 'list', 'get'];
-    }
-
-    public function getName(): string
-    {
-        return 'clacoform';
     }
 
     /**
@@ -68,5 +58,22 @@ class ClacoFormController extends AbstractCrudController
                 ];
             }, $stats['fields']),
         ]);
+    }
+
+    /**
+     * @Route("/{id}/assign_categories", name="apiv2_clacoform_categories_assign", methods={"PUT"})
+     *
+     * @EXT\ParamConverter("category", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"id": "uuid"}})
+     */
+    public function reassignCategoriesAction(ClacoForm $clacoForm): JsonResponse
+    {
+        $this->checkPermission('EDIT', $clacoForm, [], true);
+
+        $categories = $clacoForm->getCategories();
+        foreach ($categories as $category) {
+            $this->categoryManager->assignCategory($category);
+        }
+
+        return new JsonResponse(null, 204);
     }
 }

@@ -15,14 +15,6 @@ interface ResourceInterface extends ComponentInterface
      */
     //public function embed(AbstractResource $resource): string;
 
-    /**
-     * Download a "stand alone" version of the resource (most likely a PDF).
-     * It returns the path to the generated file to download.
-     *
-     * NB. Not all resources types are able to create a downloadable version.
-     */
-    public function download(AbstractResource $resource): ?string;
-
     //public function create(AbstractResource $resource, array $data): void;
 
     public function update(AbstractResource $resource, array $data): ?array;

@@ -7,16 +7,19 @@
 .slides {
     list-style-type: none;
     padding: 0;
-    margin-bottom: $component-margin-bottom;
-
     display: flex;
     flex-direction: row;
+    justify-content: center;
+    align-items: start;
+    gap: map-get($spacers, 2)
 }
 
 .slide-preview {
     flex: 0 1 20%;
-    margin: 5px;
     position: relative;
+    border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color-translucent);
+    box-shadow: var(--#{$prefix}box-shadow-sm);
+    border-radius: var(--#{$prefix}border-radius);
 
     .slide-actions {
         position: absolute;
@@ -24,10 +27,7 @@
         right: 0;
     }
 
-    .btn {
-        padding: 4px;
-        border-radius: $thumbnail-border-radius;
-        border-bottom-right-radius: 0;
-        border-top-left-radius: 0;
+    img {
+        border-radius: var(--#{$prefix}border-radius);
     }
 }

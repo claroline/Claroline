@@ -10,6 +10,7 @@ import {PageHeader} from '#/main/app/page/components/header'
 const PageFull = (props) =>
   <PageSimple
     {...omit(props, 'showHeader', 'title', 'icon', 'poster', 'toolbar', 'actions', 'menu')}
+    className={classes(props.className, props.size && `page-${props.size}`)}
     meta={merge({}, {
       title: props.title,
       poster: props.poster

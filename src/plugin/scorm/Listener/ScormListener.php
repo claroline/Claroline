@@ -15,11 +15,13 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
+use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Claroline\ScormBundle\Entity\Scorm;
 use Claroline\ScormBundle\Manager\EvaluationManager;
 use Claroline\ScormBundle\Manager\ScormManager;
@@ -27,7 +29,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ScormListener extends ResourceComponent
+class ScormListener extends ResourceComponent implements DownloadableResourceInterface, EvaluatedResourceInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,

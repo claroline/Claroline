@@ -17,7 +17,7 @@ import {UserAvatar} from '#/main/app/user/components/avatar'
 const ContextProfile = (props) => {
   return (
     <ContextPage
-      className="user-page"
+      size="xl"
       title={props.currentUser.name}
       poster={props.currentUser.poster}
       icon={

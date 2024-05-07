@@ -2,6 +2,7 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -19,20 +20,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Keyword
 {
+    use Id;
     use Uuid;
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
 
     /**
      * @ORM\Column(name="keyword_name")
      * @Assert\NotBlank()
      */
-    protected $name;
+    private ?string $name = null;
 
     /**
      * @ORM\ManyToOne(
@@ -41,39 +36,32 @@ class Keyword
      * )
      * @ORM\JoinColumn(name="claco_form_id", nullable=false, onDelete="CASCADE")
      */
-    protected $clacoForm;
+    private ?ClacoForm $clacoForm = null;
 
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function getClacoForm()
+    public function getClacoForm(): ClacoForm
     {
         return $this->clacoForm;
     }
 
-    public function setClacoForm(ClacoForm $clacoForm)
+    /**
+     * @internal use ClacoForm::addKeyword/ClacoForm::removeKeyword
+     */
+    public function setClacoForm(ClacoForm $clacoForm = null): void
     {
         $this->clacoForm = $clacoForm;
     }

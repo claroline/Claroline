@@ -8,6 +8,7 @@ use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Claroline\EvaluationBundle\Manager\ResourceEvaluationManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -20,7 +21,7 @@ use UJM\ExoBundle\Manager\ExerciseManager;
 /**
  * Listens to resource events dispatched by the core.
  */
-class ExerciseListener extends ResourceComponent
+class ExerciseListener extends ResourceComponent implements EvaluatedResourceInterface
 {
     public function __construct(
         private readonly AuthorizationCheckerInterface $authorization,

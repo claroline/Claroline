@@ -7,7 +7,7 @@ const resource = (state) => state[STORE_NAME]
 
 const shortcut = createSelector(
   [resource],
-  (resource) => resource.shortcut
+  (resource) => resource.resource
 )
 
 const embeddedResource = createSelector(
@@ -18,5 +18,6 @@ const embeddedResource = createSelector(
 export const selectors = {
   STORE_NAME,
   FORM_NAME,
-  embeddedResource
+  embeddedResource,
+  shortcut
 }

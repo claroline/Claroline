@@ -22,7 +22,7 @@ export default {
     label: trans('list_display_table'),
     component: TableData,
     options: {
-      size: 'lg',
+      size: 'md',
       filterColumns: true // used to know if we need to enable the tool to filter displayed data properties
     }
   }
