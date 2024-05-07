@@ -63,7 +63,7 @@ class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
             case self::PATCH:  return $this->checkPatch($token, $object, $collection);
         }
 
-        if ($this->isWorkspaceManaged($token, $object)) {
+        if ($this->isToolGranted('ADMINISTRATE', 'workspaces') || $this->isWorkspaceManaged($token, $object)) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -100,7 +100,7 @@ class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
 
     private function checkEdit($token, Workspace $workspace): int
     {
-        if (!$this->isWorkspaceManaged($token, $workspace)) {
+        if (!$this->isToolGranted('ADMINISTRATE', 'workspaces') && !$this->isWorkspaceManaged($token, $workspace)) {
             return VoterInterface::ACCESS_DENIED;
         }
 
