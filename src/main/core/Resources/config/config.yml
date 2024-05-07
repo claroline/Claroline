@@ -7,25 +7,30 @@ plugin:
           default: true # This is the default action of the resource (it SHOULD NOT be overridden)
           api: [GET]
 
-        # Displays common resources info (the one from the node)
-        - name: about
+        # Downloads the underlying resource file
+        - name: download
           decoder: open
-          scope: [object]
+          #group: transfer
           api: [GET]
+        # Displays common resources info (the one from the node)
+        #- name: about
+          #decoder: open
+          #scope: [object]
+          #api: [GET]
 
         # Changes the content of a resource
-        - name: edit
-          decoder: edit
-          group: management
-          scope: [object]
-          api: [PUT]
+        #- name: edit
+          #  decoder: edit
+          # group: management
+          #scope: [object]
+          #api: [PUT]
 
         # Changes and manages the rights of a resource
-        - name: rights
-          decoder: administrate
-          group: management
-          scope: [object]
-          api: [GET, POST, PUT]
+        #- name: rights
+        #  decoder: administrate
+        #  group: management
+        #  scope: [object, collection]
+        #  api: [GET, POST, PUT]
 
         # Publishes one ore more resources
         - name: publish
@@ -42,12 +47,12 @@ plugin:
           api: [PUT]
 
         # Exports one or more resources in a Claroline format (archive + manifest)
-        - name: export
-          decoder: export
-          group: transfer
-          scope: [object, collection] # The action can be executed on multiple resources at once.
-          api: [GET]
-          recursive: true
+        #- name: export
+          #  decoder: export
+          #group: transfer
+          #scope: [object, collection] # The action can be executed on multiple resources at once.
+          #api: [GET]
+          #recursive: true
 
         # Deletes one or more resources
         - name: delete
@@ -95,16 +100,12 @@ plugin:
           tags: [content]
           exportable: true
           actions:
-              # Downloads the underlying resource file
-              - name: download
-                decoder: export
-                group: transfer
-                api: [GET]
+
               # Edits the underlying resource file
-              - name: change_file
-                decoder: edit
-                group: management
-                api: [PUT]
+              #- name: change_file
+            #  decoder: edit
+            #   group: management
+          #   api: [PUT]
 
         - name: directory
           class: Claroline\CoreBundle\Entity\Resource\Directory

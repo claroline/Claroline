@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 
@@ -14,24 +15,13 @@ class PathSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var ResourceNodeSerializer */
-    private $resourceNodeSerializer;
-    /** @var StepSerializer */
-    private $stepSerializer;
-
-    private $resourceNodeRepo;
+    private ResourceNodeRepository $resourceNodeRepo;
 
     public function __construct(
-        ObjectManager $om,
-        ResourceNodeSerializer $resourceSerializer,
-        StepSerializer $stepSerializer
+        private readonly ObjectManager $om,
+        private readonly ResourceNodeSerializer $resourceNodeSerializer,
+        private readonly StepSerializer $stepSerializer
     ) {
-        $this->om = $om;
-        $this->resourceNodeSerializer = $resourceSerializer;
-        $this->stepSerializer = $stepSerializer;
-
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
     }
 

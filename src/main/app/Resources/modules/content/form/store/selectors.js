@@ -25,7 +25,15 @@ const errors = (formState) => formState.errors
 const data = (formState) => formState.data
 const originalData = (formState) => formState.originalData
 
-const value = (formState, prop) => get(data(formState), prop)
+/**
+ * Get the current value of a prop using its path in the data model.
+ */
+const value = (formState, prop, defaultValue) => get(data(formState), prop, defaultValue)
+
+/**
+ * Get the original value (not modified, @see `value(formState, prop, defaultValue)`) of a prop using its path in the data model.
+ */
+const originalValue = (formState, prop, defaultValue) => get(originalData(formState), prop, defaultValue)
 
 const valid = createSelector(
   [errors],
@@ -59,5 +67,6 @@ export const selectors = {
   originalData,
   valid,
   saveEnabled,
-  value
+  value,
+  originalValue
 }

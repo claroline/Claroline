@@ -2,21 +2,16 @@
 
 namespace Icap\LessonBundle\Entity;
 
+use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Meta\Poster;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @Gedmo\Tree(type="nested")
- *
  * @ORM\Table(name="icap__lesson_chapter")
- *
  * @ORM\Entity(repositoryClass="Icap\LessonBundle\Repository\ChapterRepository")
- *
- * @ORM\HasLifecycleCallbacks()
+ * @Gedmo\Tree(type="nested")
  */
 class Chapter
 {
@@ -26,62 +21,60 @@ class Chapter
 
     /**
      * @ORM\Column(type="string", nullable=false)
-     *
-     * @Assert\NotBlank()
      */
-    private $title;
+    private ?string $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $text;
+    private ?string $text;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $internalNote;
+    private ?string $internalNote;
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\LessonBundle\Entity\Lesson")
      *
      * @ORM\JoinColumn(name="lesson_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $lesson;
+    private ?Lesson $lesson;
 
     /**
      * @Gedmo\Slug(fields={"title"}, unique=true, updatable=false)
      *
      * @ORM\Column(length=128, unique=true, nullable=false)
      */
-    protected $slug;
+    private ?string $slug;
 
     /**
      * @Gedmo\TreeLeft
      *
      * @ORM\Column(name="lft", type="integer")
      */
-    private $left;
+    private ?int $left;
 
     /**
      * @Gedmo\TreeLevel
      *
      * @ORM\Column(name="lvl", type="integer")
      */
-    private $level;
+    private ?int $level;
 
     /**
      * @Gedmo\TreeRight
      *
      * @ORM\Column(name="rgt", type="integer")
      */
-    private $right;
+    private ?int $right;
 
     /**
      * @Gedmo\TreeRoot
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $root;
+    private ?int $root;
 
     /**
      * @Gedmo\TreeParent
@@ -90,46 +83,41 @@ class Chapter
      *
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
      */
-    private $parent;
+    private ?Chapter $parent = null;
 
     /**
      * Custom numbering of the chapters.
      *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $customNumbering = '';
+    private ?string $customNumbering = '';
 
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    public function setSlug(string $slug)
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
 
-    /**
-     * Get slug.
-     *
-     * @return string
-     */
-    public function getSlug()
+    public function getSlug(): ?string
     {
         return $this->slug;
     }
 
-    public function setLeft($left)
+    public function setLeft(?int $left): void
     {
         $this->left = $left;
     }
 
-    public function getLeft()
+    public function getLeft(): ?int
     {
         return $this->left;
     }
 
-    public function setLesson(Lesson $lesson)
+    public function setLesson(Lesson $lesson): void
     {
         $this->lesson = $lesson;
     }
@@ -139,72 +127,72 @@ class Chapter
         return $this->lesson;
     }
 
-    public function setLevel($level)
+    public function setLevel(?int $level): void
     {
         $this->level = $level;
     }
 
-    public function getLevel()
+    public function getLevel(): ?int
     {
         return $this->level;
     }
 
-    public function setParent($parent)
+    public function setParent(?Chapter $parent = null): void
     {
         $this->parent = $parent;
     }
 
-    public function getParent()
+    public function getParent(): ?Chapter
     {
         return $this->parent;
     }
 
-    public function setRight($right)
+    public function setRight(?int $right): void
     {
         $this->right = $right;
     }
 
-    public function getRight()
+    public function getRight(): ?int
     {
         return $this->right;
     }
 
-    public function setRoot($root)
+    public function setRoot(?int $root): void
     {
         $this->root = $root;
     }
 
-    public function getRoot()
+    public function getRoot(): ?int
     {
         return $this->root;
     }
 
-    public function setText($text)
+    public function setText(?string $text = null): void
     {
         $this->text = $text;
     }
 
-    public function getText()
+    public function getText(): ?string
     {
         return $this->text;
     }
 
-    public function getInternalNote()
+    public function getInternalNote(): ?string
     {
         return $this->internalNote;
     }
 
-    public function setInternalNote(string $internalNote = null)
+    public function setInternalNote(string $internalNote = null): void
     {
         $this->internalNote = $internalNote;
     }
 
-    public function setTitle($title)
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
 
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }

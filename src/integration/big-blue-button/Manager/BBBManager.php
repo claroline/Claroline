@@ -2,7 +2,6 @@
 
 namespace Claroline\BigBlueButtonBundle\Manager;
 
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BigBlueButtonBundle\Entity\BBB;
 use Claroline\BigBlueButtonBundle\Entity\Recording;
@@ -17,45 +16,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BBBManager
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var CurlManager */
-    private $curlManager;
-    /** @var RoutingHelper */
-    private $routingHelper;
-    /** @var ServerManager */
-    private $serverManager;
-
-    /** @var BBBRepository */
-    private $bbbRepo;
+    private BBBRepository $bbbRepo;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        PlatformConfigurationHandler $config,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        CurlManager $curlManager,
-        RoutingHelper $routingHelper,
-        ServerManager $serverManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly TranslatorInterface $translator,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly ObjectManager $om,
+        private readonly CurlManager $curlManager,
+        private readonly RoutingHelper $routingHelper,
+        private readonly ServerManager $serverManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->config = $config;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->curlManager = $curlManager;
-        $this->routingHelper = $routingHelper;
-        $this->serverManager = $serverManager;
-
         $this->bbbRepo = $this->om->getRepository(BBB::class);
     }
 
@@ -64,7 +35,7 @@ class BBBManager
         return $this->serverManager->getServers($onlyAvailable);
     }
 
-    public function getMeetingUrl(BBB $bbb, bool $moderator = false, string $username = null)
+    public function getMeetingUrl(BBB $bbb, bool $moderator = false, string $username = null): string
     {
         $user = null;
         if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
@@ -102,7 +73,7 @@ class BBBManager
         return $url;
     }
 
-    public function canStartMeeting(BBB $bbb)
+    public function canStartMeeting(BBB $bbb): bool
     {
         $isRunning = $this->isMeetingRunning($bbb);
         if (!$isRunning) {
@@ -141,7 +112,7 @@ class BBBManager
         return null;
     }
 
-    public function createMeeting(BBB $bbb)
+    public function createMeeting(BBB $bbb): bool
     {
         $success = false;
 
@@ -149,7 +120,7 @@ class BBBManager
         $serverUrl = $server['url'];
         $securitySalt = $server['token'];
         $maxParticipants = $this->config->getParameter('bbb.max_meeting_participants');
-        $tag = $this->config->getParameter('mailer.tag'); // FIXME
+        $tag = $this->config->getParameter('mailer.tag');
 
         if ($serverUrl && $securitySalt) {
             $resourceNode = $bbb->getResourceNode();
@@ -208,7 +179,7 @@ class BBBManager
         return $success;
     }
 
-    public function endMeeting(BBB $bbb, string $serverName = null)
+    public function endMeeting(BBB $bbb, string $serverName = null): void
     {
         $meetingId = $bbb->getUuid();
 
@@ -279,11 +250,11 @@ class BBBManager
         return false;
     }
 
-    public function countParticipants()
+    public function countParticipants(): int
     {
         $count = 0;
 
-        $tag = $this->config->getParameter('mailer.tag'); // FIXME
+        $tag = $this->config->getParameter('mailer.tag');
         $servers = $this->bbbRepo->findUsedServers();
         foreach ($servers as $server) {
             $count += $this->serverManager->countParticipants($server, $tag);
@@ -292,14 +263,11 @@ class BBBManager
         return $count;
     }
 
-    /**
-     * @return array
-     */
-    public function fetchActiveMeetings()
+    public function fetchActiveMeetings(): array
     {
         $meetings = [];
 
-        $tag = $this->config->getParameter('mailer.tag'); // FIXME
+        $tag = $this->config->getParameter('mailer.tag');
         $servers = $this->bbbRepo->findUsedServers();
         foreach ($servers as $server) {
             $meetings = array_merge($meetings, $this->serverManager->getMeetings($server, $tag));
@@ -308,10 +276,7 @@ class BBBManager
         return $meetings;
     }
 
-    /**
-     * @return array
-     */
-    public function fetchActiveMeetingsWithParticipants()
+    public function fetchActiveMeetingsWithParticipants(): array
     {
         $meetingsWithParticipants = [];
         $meetings = $this->fetchActiveMeetings();
@@ -325,7 +290,7 @@ class BBBManager
         return $meetingsWithParticipants;
     }
 
-    public function syncAllRecordings()
+    public function syncAllRecordings(): void
     {
         $meetings = $this->bbbRepo->findAll();
         foreach ($meetings as $bbb) {
@@ -333,7 +298,7 @@ class BBBManager
         }
     }
 
-    public function syncRecordings(BBB $bbb)
+    public function syncRecordings(BBB $bbb): void
     {
         $recordings = $this->getRecordings($bbb);
         $existingRecordings = $bbb->getRecordings()->toArray();
@@ -430,7 +395,7 @@ class BBBManager
         return $recordings;
     }
 
-    public function deleteRecording(Recording $recording)
+    public function deleteRecording(Recording $recording): void
     {
         $server = $this->getMeetingServer($recording->getMeeting());
         $serverUrl = $server['url'];
@@ -445,7 +410,7 @@ class BBBManager
         }
     }
 
-    public function deleteRecordings(BBB $bbb)
+    public function deleteRecordings(BBB $bbb): void
     {
         $recordIds = [];
 
@@ -472,7 +437,7 @@ class BBBManager
         }
     }
 
-    private function getMeetingServer(BBB $bbb)
+    private function getMeetingServer(BBB $bbb): ?array
     {
         $server = null;
         if ($bbb->getRunningOn()) {

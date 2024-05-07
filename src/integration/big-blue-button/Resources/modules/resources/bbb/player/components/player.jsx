@@ -14,7 +14,7 @@ import {ContentHtml} from '#/main/app/content/components/html'
 import {ContentIFrame} from '#/main/app/content/components/iframe'
 
 import {BBB as BBBTypes, Recording as RecordingTypes} from '#/integration/big-blue-button/resources/bbb/prop-types'
-import {ResourcePage} from '#/main/core/resource/containers/page'
+import {ResourcePage} from '#/main/core/resource'
 
 class Player extends Component {
   constructor(props) {

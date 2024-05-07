@@ -2,7 +2,6 @@ services:
     Claroline\ClacoFormBundle\Listener\Resource\ClacoFormListener:
         arguments:
             - '@security.token_storage'
-            - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'

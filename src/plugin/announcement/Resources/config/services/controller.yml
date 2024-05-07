@@ -1,19 +1,14 @@
 services:
     _defaults:
-        public: true #because controller
+        public: true # because controller
 
     Claroline\AnnouncementBundle\Controller\AnnouncementController:
       arguments:
-        - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
-        - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'
+        - '@security.authorization_checker'
         - '@Claroline\AppBundle\API\Crud'
         - '@Claroline\AppBundle\Persistence\ObjectManager'
-        - '@security.authorization_checker'
-
-    Claroline\AnnouncementBundle\Controller\AnnouncementAggregateController:
-      arguments:
-        - '@Claroline\AppBundle\API\Crud'
-        - '@Claroline\AppBundle\API\SerializerProvider'
         - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
         - '@Claroline\AppBundle\Manager\PdfManager'
         - '@Claroline\CoreBundle\Library\RoutingHelper'
+        - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
+        - '@Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer'

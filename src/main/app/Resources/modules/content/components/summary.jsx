@@ -46,15 +46,15 @@ class SummaryLink extends Component {
           active: this.props.active
         })}>
           <Button
-            className="btn-summary-primary"
+            className="btn btn-text-body btn-summary-primary"
             {...omit(this.props, 'children', 'additional', 'collapsible', 'collapsed', 'toggleCollapse', 'noCollapse')}
           />
 
           {(collapsible || 0 !== this.props.additional.length) &&
             <Toolbar
               name="summary-link-actions"
-              buttonName="btn-summary"
-              tooltip="bottom"
+              buttonName="btn btn-text-secondary btn-summary"
+              tooltip="left"
               toolbar="collapse more"
               actions={(this.props.additional || []).concat([
                 {

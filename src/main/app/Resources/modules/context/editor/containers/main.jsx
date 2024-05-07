@@ -19,7 +19,7 @@ const ContextEditor = withReducer(selectors.STORE_NAME, reducer)(
     }),
     (dispatch) => ({
       openEditor(contextData) {
-        dispatch(formActions.reset(editorSelectors.STORE_NAME, contextData, false))
+        dispatch(formActions.reset(editorSelectors.FORM_NAME, {data: contextData}, false))
       },
       getAvailableTools(contextName, contextId) {
         return dispatch(actions.fetchAvailableTools(contextName, contextId))

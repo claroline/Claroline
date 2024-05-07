@@ -13,17 +13,10 @@ class BBBSerializer
 {
     use SerializerTrait;
 
-    /** @var ResourceNodeSerializer */
-    private $nodeSerializer;
-    /** @var BBBManager */
-    private $manager;
-
     public function __construct(
-        ResourceNodeSerializer $nodeSerializer,
-        BBBManager $manager
+        private readonly ResourceNodeSerializer $nodeSerializer,
+        private readonly BBBManager $manager
     ) {
-        $this->nodeSerializer = $nodeSerializer;
-        $this->manager = $manager;
     }
 
     public function serialize(BBB $bbb, array $options = []): array
@@ -65,6 +58,11 @@ class BBBSerializer
 
         if (isset($data['restrictions']) && isset($data['restrictions']['disabled'])) {
             $bbb->setActivated(!$data['restrictions']['disabled']);
+        }
+
+        if ($bbb->getRunningOn() && $bbb->getServer() && ($bbb->getRunningOn() !== $bbb->getServer())) {
+            // we want to force a server for this room, we reinitialize attributed server to move the room
+            $bbb->setRunningOn(null);
         }
 
         return $bbb;

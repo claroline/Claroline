@@ -29,14 +29,23 @@ class SlideshowListener extends ResourceComponent
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
         return [
-            'slideshow' => $this->serializer->serialize($resource),
+            'resource' => $this->serializer->serialize($resource),
+        ];
+    }
+
+    /** @var Slideshow $resource */
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        // TODO : manage slides PublicFiles
+
+        return [
+            'resource' => $this->serializer->serialize($resource),
         ];
     }
 
     /** @var Slideshow $resource */
     public function delete(AbstractResource $resource, FileBag $fileBag, bool $softDelete = true): bool
     {
-        $files = [];
         if ($softDelete) {
             return true;
         }

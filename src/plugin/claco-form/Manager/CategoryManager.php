@@ -17,28 +17,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CategoryManager
 {
-    /** @var MessageBusInterface */
-    private $messageBus;
-    /** @var RouterInterface */
-    private $router;
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var ObjectManager */
-    private $om;
-
     public function __construct(
-        MessageBusInterface $messageBus,
-        RouterInterface $router,
-        TranslatorInterface $translator,
-        ObjectManager $om
+        private readonly MessageBusInterface $messageBus,
+        private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
+        private readonly ObjectManager $om
     ) {
-        $this->messageBus = $messageBus;
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->om = $om;
     }
 
-    public function assignCategory(Category $category)
+    public function assignCategory(Category $category): void
     {
         $this->messageBus->dispatch(new AssignCategory($category->getId()));
     }
@@ -46,7 +33,7 @@ class CategoryManager
     /**
      * Add/Remove category from an entry based on its fields values.
      */
-    public function manageCategory(Category $category, Entry $entry)
+    public function manageCategory(Category $category, Entry $entry): void
     {
         /** @var FieldChoiceCategory[] $fieldsCategories */
         $fieldsCategories = $this->om->getRepository(FieldChoiceCategory::class)->findBy(['category' => $category]);
@@ -89,7 +76,7 @@ class CategoryManager
         }
     }
 
-    public function notifyNewEntry(Entry $entry, Category $addedCategory)
+    public function notifyNewEntry(Entry $entry, Category $addedCategory): void
     {
         if (!$addedCategory->getNotifyAddition() || empty($addedCategory->getManagers())) {
             return;
@@ -121,7 +108,7 @@ class CategoryManager
     /**
      * Notify managers when an entry is removed from a category.
      */
-    public function notifyRemovedEntry(Entry $entry, Category $removedCategory)
+    public function notifyRemovedEntry(Entry $entry, Category $removedCategory): void
     {
         if (!$removedCategory->getNotifyRemoval() || empty($removedCategory->getManagers())) {
             return;
@@ -150,7 +137,7 @@ class CategoryManager
     /**
      * Notify managers when an entry of their categories is edited.
      */
-    public function notifyEditedEntry(Entry $entry, array $categories)
+    public function notifyEditedEntry(Entry $entry, array $categories): void
     {
         if (empty($categories)) {
             return;

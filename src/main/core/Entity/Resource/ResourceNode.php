@@ -11,17 +11,18 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Display\Hidden;
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Creator;
 use Claroline\AppBundle\Entity\Meta\Description;
-use Claroline\AppBundle\Entity\Meta\Poster;
+use Claroline\AppBundle\Entity\Meta\DescriptionHtml;
 use Claroline\AppBundle\Entity\Meta\Published;
-use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
-use Claroline\AppBundle\Entity\Restriction\Hidden;
 use Claroline\CoreBundle\Model\HasWorkspace;
 use Claroline\EvaluationBundle\Entity\Evaluated;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -47,6 +48,7 @@ class ResourceNode
     use Thumbnail;
     use Poster;
     use Description;
+    use DescriptionHtml;
     use Creator;
     use Published;
     use HasWorkspace;
@@ -56,6 +58,7 @@ class ResourceNode
     use AccessibleUntil;
     // evaluation parameters
     use Evaluated;
+
     const PATH_SEPARATOR = '/';
     const PATH_OLDSEPARATOR = '`';
 

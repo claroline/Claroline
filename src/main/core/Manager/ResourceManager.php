@@ -347,7 +347,7 @@ class ResourceManager implements LoggerAwareInterface
         return null;
     }
 
-    public function addView(ResourceNode $node)
+    public function addView(ResourceNode $node): ResourceNode
     {
         $this->resourceNodeRepo->addView($node);
 
@@ -360,7 +360,7 @@ class ResourceManager implements LoggerAwareInterface
     /**
      * Restores a soft deleted resource node.
      */
-    public function restore(ResourceNode $resourceNode)
+    public function restore(ResourceNode $resourceNode): void
     {
         $this->setActive($resourceNode);
         $workspace = $resourceNode->getWorkspace();

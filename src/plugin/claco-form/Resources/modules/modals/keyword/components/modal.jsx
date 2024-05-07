@@ -17,12 +17,12 @@ const KeywordModal = (props) =>
     icon="fa fa-fw fa-font"
     title={trans('keyword', {}, 'clacoform')}
     subtitle={(props.keyword && props.keyword.name) || trans('new_keyword', {}, 'clacoform')}
-    onEntering={() => props.loadKeyword(props.clacoFormId, props.keyword)}
+    onEntering={() => props.loadKeyword(props.keyword)}
   >
     <FormData
       name={selectors.STORE_NAME}
       flush={true}
-      sections={[
+      definition={[
         {
           id: 'general',
           title: trans('general'),
@@ -53,15 +53,12 @@ const KeywordModal = (props) =>
       size="lg"
       type={CALLBACK_BUTTON}
       primary={true}
-      label={trans('save', {}, 'actions')}
+      label={trans('add', {}, 'actions')}
       disabled={!props.saveEnabled}
-      callback={() => props.saveKeyword(props.formData, props.isNew, (keyword) => {
-        if (props.onSave) {
-          props.onSave(keyword)
-        }
-
+      callback={() => {
+        props.saveKeyword(props.formData)
         props.fadeModal()
-      })}
+      }}
     />
   </Modal>
 
@@ -73,7 +70,6 @@ KeywordModal.propTypes = {
   formData: T.object,
   loadKeyword: T.func.isRequired,
   saveKeyword: T.func.isRequired,
-  onSave: T.func,
   fadeModal: T.func.isRequired
 }
 

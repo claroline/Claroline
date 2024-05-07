@@ -10,16 +10,16 @@ const Slides = props =>
   <ul className="slides">
     {props.slides.map(slide =>
       <li key={slide.id} className="slide-preview">
-        <img src={asset(slide.content.url)} alt={slide.title} className="img-thumbnail" />
+        <img src={asset(slide.content)} alt={slide.title} className="img-fluid" />
 
         {props.actions &&
           <Toolbar
             id={`${slide.id}-btn`}
             className="slide-actions"
-            buttonName="btn"
+            buttonName="btn btn-text-subtitles"
             tooltip="bottom"
             size="sm"
-            toolbar="more"
+            /*toolbar="more"*/
             actions={props.actions(slide)}
           />
         }

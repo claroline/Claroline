@@ -4,45 +4,78 @@ import {PropTypes as T} from 'prop-types'
 import {Toolbar} from '#/main/app/action'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import isEmpty from 'lodash/isEmpty'
+import {trans} from '#/main/app/intl'
 
-const EditorMenu = (props) =>
-  <div className="app-editor-menu" role="presentation">
-    {props.title &&
-      <h1 className="app-editor-menu-header">{props.title}</h1>
-    }
+const EditorMenu = (props) => {
+  const commonPages = props.pages.filter(page => page.standard)
+  const otherPages = props.pages.filter(page => !page.standard)
 
-    <Toolbar
-      className="nav nav-pills flex-column"
-      buttonName="nav-link text-start"
-      actions={props.pages.map(page => ({
-        name: page.name,
-        label: page.title,
-        type: LINK_BUTTON,
-        target: props.path + '/' + page.name
-      }))}
-    />
+  return (
+    <div className="app-editor-menu" role="presentation">
+      {props.title &&
+        <h1 className="app-editor-menu-header">{props.title}</h1>
+      }
 
-    {!isEmpty(props.actions) &&
-      <hr className="app-editor-menu-separator" />
-    }
-
-    {!isEmpty(props.actions) &&
       <Toolbar
         className="nav nav-pills flex-column"
         buttonName="nav-link text-start"
-        actions={props.actions}
+        actions={commonPages.map(page => ({
+          name: page.name,
+          label: page.title,
+          type: LINK_BUTTON,
+          target: props.path + '/' + page.name
+        }))}
       />
-    }
-  </div>
+
+      {!isEmpty(otherPages) &&
+        <hr className="app-editor-menu-separator my-2" />
+      }
+
+      {!isEmpty(otherPages) &&
+        <Toolbar
+          className="nav nav-pills flex-column"
+          buttonName="nav-link text-start"
+          actions={otherPages.map(page => ({
+            name: page.name,
+            label: page.title,
+            type: LINK_BUTTON,
+            target: props.path + '/' + page.name
+          }))}
+        />
+      }
+
+      {props.actions &&
+        <hr className="app-editor-menu-separator my-2" />
+      }
+
+      {props.actions &&
+        <Toolbar
+          className="nav nav-pills flex-column"
+          buttonName="nav-link text-start"
+          actions={[
+            {
+              name: 'actions',
+              type: LINK_BUTTON,
+              label: trans('Actions avancées'),
+              target: props.path + '/actions'
+            }
+          ]}
+        />
+      }
+    </div>
+  )
+}
 
 EditorMenu.propTypes = {
   path: T.string.isRequired,
   title: T.string.isRequired,
   pages: T.arrayOf(T.shape({
     name: T.string.isRequired,
-    title: T.string.isRequired
+    title: T.string.isRequired,
+    managerOnly: T.bool,
+    standard: T.bool
   })),
-  actions: T.array
+  actions: T.bool
 }
 
 export {

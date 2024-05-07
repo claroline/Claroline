@@ -16,10 +16,10 @@ class ClacoFormSerializer
     use SerializerTrait;
 
     public function __construct(
-        private CategorySerializer $categorySerializer,
-        private FieldSerializer $fieldSerializer,
-        private KeywordSerializer $keywordSerializer,
-        private ObjectManager $om
+        private readonly CategorySerializer $categorySerializer,
+        private readonly FieldSerializer $fieldSerializer,
+        private readonly KeywordSerializer $keywordSerializer,
+        private readonly ObjectManager $om
     ) {
     }
 
@@ -128,7 +128,6 @@ class ClacoFormSerializer
                 // grid config
                 'card' => [
                     'display' => $clacoForm->getCard(),
-                    'mapping' => [], // TODO : grab custom ClacoForm config when standard list can handle it
                 ],
             ],
         ];
@@ -138,18 +137,6 @@ class ClacoFormSerializer
                 'fields' => array_map(function (Field $field) {
                     return $this->fieldSerializer->serialize($field);
                 }, $clacoForm->getFields()),
-            ]);
-
-            // TODO : should not be managed here (they have their own API for the UI). This is no longer used.
-            $serialized = array_merge($serialized, [
-                'categories' => array_map(function (Category $category) {
-                    return $this->categorySerializer->serialize($category);
-                }, $clacoForm->getCategories()),
-            ]);
-            $serialized = array_merge($serialized, [
-                'keywords' => array_map(function (Keyword $keyword) {
-                    return $this->keywordSerializer->serialize($keyword);
-                }, $clacoForm->getKeywords()),
             ]);
         }
 
@@ -249,7 +236,7 @@ class ClacoFormSerializer
         return $clacoForm;
     }
 
-    private function deleteField(Field $field)
+    private function deleteField(Field $field): void
     {
         $fieldFacet = $field->getFieldFacet();
 

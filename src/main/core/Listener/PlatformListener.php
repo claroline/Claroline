@@ -29,22 +29,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PlatformListener
 {
-    private AuthorizationCheckerInterface $authorization;
-
-    private TokenStorageInterface $tokenStorage;
-
-    private TranslatorInterface $translator;
-
-    private PlatformConfigurationHandler $config;
-
-    private VersionManager $versionManager;
-
-    private TempFileManager $tempManager;
-
-    private LocaleManager $localeManager;
-
-    private RoutingHelper $routingHelper;
-
     /**
      * The list of public routes of the application.
      * NB. This is not the best place to declare it.
@@ -67,42 +51,37 @@ class PlatformListener
     ];
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
-        PlatformConfigurationHandler $config,
-        VersionManager $versionManager,
-        TempFileManager $tempManager,
-        LocaleManager $localeManager,
-        RoutingHelper $routingHelper
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly TranslatorInterface $translator,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly VersionManager $versionManager,
+        private readonly TempFileManager $tempManager,
+        private readonly LocaleManager $localeManager,
+        private readonly RoutingHelper $routingHelper
     ) {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-        $this->config = $config;
-        $this->versionManager = $versionManager;
-        $this->tempManager = $tempManager;
-        $this->localeManager = $localeManager;
-        $this->routingHelper = $routingHelper;
     }
 
     /**
      * Sets the platform language.
      */
-    public function setLocale(RequestEvent $event)
+    public function setLocale(RequestEvent $event): void
     {
         if ($event->isMainRequest()) {
             $request = $event->getRequest();
 
             $locale = $this->localeManager->getUserLocale($request);
             $request->setLocale($locale);
+
+            $session = $request->getSession();
+            $session->set('_locale', $locale);
         }
     }
 
     /**
      * Checks the app availability before displaying the platform.
      */
-    public function checkAvailability(RequestEvent $event)
+    public function checkAvailability(RequestEvent $event): void
     {
         if (!$event->isMainRequest() || in_array($event->getRequest()->get('_route'), static::PUBLIC_ROUTES)) {
             return;
@@ -128,7 +107,6 @@ class PlatformListener
         // checks platform maintenance
         if (MaintenanceHandler::isMaintenanceEnabled() || $this->config->getParameter('maintenance.enable')) {
             // only disable for non admin
-            // TODO : it may break the impersonation mode
             if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
                 throw new HttpException(503, 'Platform is not available (Platform is under maintenance).');
             }
@@ -138,7 +116,7 @@ class PlatformListener
     /**
      * Clears all temp files at the end of each request.
      */
-    public function clearTemp()
+    public function clearTemp(): void
     {
         $this->tempManager->clear();
     }

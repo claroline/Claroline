@@ -9,7 +9,7 @@ import {ThemeUrlIcon} from '#/main/theme/components/icon'
 const IconPreview = (props) =>
   <TooltipOverlay id={props.url} tip={props.mimeTypes.join(', ')} position="bottom">
     <div className="theme-icon-preview">
-      <ThemeUrlIcon className="lg" url={props.url} svg={props.svg}/>
+      <ThemeUrlIcon size="md" url={props.url} svg={props.svg}/>
     </div>
   </TooltipOverlay>
 

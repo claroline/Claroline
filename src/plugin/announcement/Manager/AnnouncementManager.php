@@ -24,31 +24,18 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class AnnouncementManager
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var FinderProvider */
-    private $finder;
-    /** @var MessageBusInterface */
-    private $messageBus;
-    /** @var Crud */
-    private $crud;
-
     public function __construct(
-        MessageBusInterface $messageBus,
-        ObjectManager $om,
-        FinderProvider $finder,
-        Crud $crud
+        private readonly MessageBusInterface $messageBus,
+        private readonly ObjectManager $om,
+        private readonly FinderProvider $finder,
+        private readonly Crud $crud
     ) {
-        $this->messageBus = $messageBus;
-        $this->om = $om;
-        $this->finder = $finder;
-        $this->crud = $crud;
     }
 
     /**
      * Sends an Announcement by message to Users that can access it.
      */
-    public function sendMessage(Announcement $announcement, array $roles)
+    public function sendMessage(Announcement $announcement, array $roles): void
     {
         $message = $this->getMessage($announcement, $roles);
 
@@ -63,7 +50,7 @@ class AnnouncementManager
         ));
     }
 
-    public function scheduleMessage(Announcement $announcement, array $roles, \DateTimeInterface $scheduledDate)
+    public function scheduleMessage(Announcement $announcement, array $roles, \DateTimeInterface $scheduledDate): void
     {
         $this->om->startFlushSuite();
 
@@ -99,7 +86,7 @@ class AnnouncementManager
         $this->om->endFlushSuite();
     }
 
-    public function unscheduleMessage(Announcement $announcement)
+    public function unscheduleMessage(Announcement $announcement): void
     {
         $this->om->startFlushSuite();
 

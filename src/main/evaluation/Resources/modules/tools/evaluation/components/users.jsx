@@ -10,6 +10,9 @@ import {constants} from '#/main/evaluation/constants'
 import {selectors} from '#/main/evaluation/tools/evaluation/store'
 import {WorkspaceCard} from '#/main/evaluation/workspace/components/card'
 import {getActions, getDefaultAction} from '#/main/evaluation/workspace/utils'
+import {EvaluationStatus} from '#/main/evaluation/components/status'
+import {EvaluationScore} from '#/main/evaluation/components/score'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 
 const EvaluationUsers = (props) => {
   const evaluationsRefresher = {
@@ -43,11 +46,7 @@ const EvaluationUsers = (props) => {
                 choices: constants.EVALUATION_STATUSES_SHORT
               },
               displayed: true,
-              render: (row) => (
-                <span className={`badge text-bg-${constants.EVALUATION_STATUS_COLOR[row.status]}`}>
-                  {constants.EVALUATION_STATUSES_SHORT[row.status]}
-                </span>
-              )
+              render: (row) => <EvaluationStatus status={row.status} />
             }, {
               name: 'workspace',
               type: 'workspace',
@@ -55,14 +54,6 @@ const EvaluationUsers = (props) => {
               displayable: !props.contextId,
               displayed: !props.contextId,
               filterable: false
-            }, {
-              name: 'workspaces',
-              type: 'workspaces',
-              label: trans('workspaces'),
-              displayable: false,
-              displayed: false,
-              filterable: !props.contextId,
-              sortable: false
             }, {
               name: 'user',
               type: 'user',
@@ -81,7 +72,6 @@ const EvaluationUsers = (props) => {
               name: 'duration',
               type: 'time',
               label: trans('duration'),
-              displayed: true,
               filterable: false
             }, {
               name: 'progression',
@@ -96,7 +86,21 @@ const EvaluationUsers = (props) => {
               name: 'displayScore',
               type: 'score',
               label: trans('score'),
-              displayed: true,
+              displayed: props.hasScore,
+              displayable: props.hasScore,
+              placeholder: props.hasScore && (
+                <div className="d-inline-flex gap-2 flex-row align-items-center" role="presentation">
+                  <TooltipOverlay
+                    id="score-help"
+                    tip={trans('Le score est calculé une fois que l\'utilisateur a terminé toutes les activités à faire.', {}, 'evaluation')}
+                    position="left"
+                  >
+                    <span className="fa fa-fw fa-info-circle cursor-help fs-sm text-body-tertiary" />
+                  </TooltipOverlay>
+
+                  <EvaluationScore scoreMax={props.totalScore} />
+                </div>
+              ),
               filterable: false
             }, {
               name: 'userDisabled',
@@ -118,6 +122,8 @@ EvaluationUsers.propTypes = {
   path: T.string.isRequired,
   currentUser: T.object,
   contextId: T.string,
+  hasScore: T.bool.isRequired,
+  totalScore: T.number,
   invalidate: T.func.isRequired
 }
 

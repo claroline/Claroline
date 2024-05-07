@@ -9,24 +9,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ServerManager
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var CurlManager */
-    private $curlManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        PlatformConfigurationHandler $config,
-        CurlManager $curlManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly CurlManager $curlManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->config = $config;
-        $this->curlManager = $curlManager;
     }
 
-    public function getServers(bool $onlyAvailable = true)
+    public function getServers(bool $onlyAvailable = true): array
     {
         $available = [];
 
@@ -55,7 +45,7 @@ class ServerManager
         return array_values($available);
     }
 
-    public function isAvailable(string $serverName)
+    public function isAvailable(string $serverName): bool
     {
         $server = $this->getServer($serverName);
         if (empty($server['limit'])) {
@@ -127,7 +117,7 @@ class ServerManager
         return $meetings;
     }
 
-    public function getServer(string $serverName)
+    public function getServer(string $serverName): ?array
     {
         $server = null;
 

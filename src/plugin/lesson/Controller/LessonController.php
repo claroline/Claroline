@@ -25,35 +25,17 @@ class LessonController
     use PermissionCheckerTrait;
     use RequestDecoderTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var Environment */
-    private $templating;
-    /** @var Crud */
-    private $crud;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var PdfManager */
-    private $pdfManager;
-
-    /** @var ChapterRepository */
-    private $chapterRepo;
+    private ChapterRepository $chapterRepo;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        Environment $templating,
-        Crud $crud,
-        SerializerProvider $serializer,
-        PdfManager $pdfManager
+        private readonly ObjectManager $om,
+        private readonly Environment $templating,
+        private readonly Crud $crud,
+        private readonly SerializerProvider $serializer,
+        private readonly PdfManager $pdfManager
     ) {
         $this->authorization = $authorization;
-        $this->om = $om;
-        $this->templating = $templating;
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->pdfManager = $pdfManager;
-
         $this->chapterRepo = $this->om->getRepository(Chapter::class);
     }
 

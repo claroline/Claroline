@@ -12,7 +12,7 @@ import {ContentSizing} from '#/main/app/content/components/sizing'
 
 const UserCreate = (props) =>
   <ToolPage
-    className="user-page"
+    size="xl"
     breadcrumb={[
       {
         type: LINK_BUTTON,

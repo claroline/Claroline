@@ -1,19 +1,19 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
+
 import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {Resource, ResourcePage} from '#/main/core/resource'
+import {Resource} from '#/main/core/resource'
 
-import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-form/prop-types'
-
+import {ClacoForm as ClacoFormTypes} from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {Overview} from '#/plugin/claco-form/resources/claco-form/components/overview'
-import {EditorMain} from '#/plugin/claco-form/resources/claco-form/editor/containers/main'
 import {Entries} from '#/plugin/claco-form/resources/claco-form/player/components/entries'
 import {EntryForm} from '#/plugin/claco-form/resources/claco-form/player/components/entry-form'
 import {Entry} from '#/plugin/claco-form/resources/claco-form/player/components/entry'
 import {StatsMain} from '#/plugin/claco-form/resources/claco-form/stats/containers/main'
+import {ClacoFormEditor} from '#/plugin/claco-form/resources/claco-form/editor/containers/main'
 
 
 function getHome(type) {
@@ -72,7 +72,8 @@ const ClacoFormResource = props =>
         group: trans('transfer')
       }
     ]}
-    overview={Overview}
+    editor={ClacoFormEditor}
+    overviewPage={Overview}
     pages={[
       {
         path: '/',
@@ -115,12 +116,6 @@ const ClacoFormResource = props =>
             })
         }
       }, {
-        path: '/edit',
-        component: EditorMain,
-        disabled: !props.canEdit,
-        onLeave: () => props.resetForm(),
-        onEnter: () => props.resetForm(props.clacoForm)
-      }, {
         path: '/entries',
         component: Entries,
         exact: true,
@@ -156,7 +151,7 @@ ClacoFormResource.propTypes = {
   path: T.string.isRequired,
   currentUser: T.object,
   clacoForm: T.shape(
-    ClacoFormType.propTypes
+    ClacoFormTypes.propTypes
   ).isRequired,
   hasStatistics: T.bool,
   canEdit: T.bool.isRequired,

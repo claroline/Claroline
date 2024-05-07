@@ -47,8 +47,6 @@ class ResourceEmbedded extends Component {
   }
 
   mountResource() {
-    // I'm not sure if this is the best way to do it,
-    // but I need to be able to open a directory directly in the widget
     const Resource = () =>
       <ResourceWrapper slug={this.props.resourceNode.slug} embedded={true} />
 

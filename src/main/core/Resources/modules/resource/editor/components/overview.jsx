@@ -1,39 +1,35 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
-import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
-import {FormContent} from '#/main/app/content/form/containers/content'
+import {EditorPage} from '#/main/app/editor'
 
-import {selectors} from '#/main/core/resource/store'
-import {ResourceIcon} from '#/main/core/resource/components/icon'
-
-const restrictedByDates = (node) => get(node, 'restrictions.enableDates') || !isEmpty(get(node, 'restrictions.dates'))
-const restrictedByCode = (node) => get(node, 'restrictions.enableCode') || !!get(node, 'restrictions.code')
-
-const EditorOverview = (props) =>
-  <FormContent
-    name={selectors.EDITOR_NAME}
-    dataPart="resourceNode"
-    autoFocus={true}
+const ResourceEditorOverview = (props) =>
+  <EditorPage
+    title={trans('overview')}
     definition={[
       {
         title: trans('general'),
         primary: true,
         fields: [
           {
-            name: 'name',
+            name: 'resourceNode.poster',
+            label: trans('poster'),
+            type: 'poster',
+            hideLabel: true
+          }, {
+            name: 'resourceNode.name',
             label: trans('name'),
             type: 'string',
-            required: true
+            required: true,
+            autoFocus: true
           }, {
-            name: 'code',
+            name: 'resourceNode.code',
             label: trans('code'),
             type: 'string',
             required: true
           }, {
-            name: 'meta.published',
+            name: 'resourceNode.meta.published',
             label: trans('publish', {}, 'actions'),
             type: 'boolean',
             help: [
@@ -42,149 +38,65 @@ const EditorOverview = (props) =>
             ]
           }
         ]
-      },{
-        title: trans('advanced'),
+      }, {
+        title: trans('further_information'),
+        subtitle: trans('further_information_help'),
         primary: true,
         fields: [
           {
-            name: 'meta.description',
-            label: trans('description'),
+            name: 'resourceNode.meta.description',
+            label: trans('description_short'),
+            help: trans('Décrivez succintement votre ressource (La description courte est affichée dans les listes et sur la vue "À propos").'),
             type: 'string',
             options: {
-              long: true
+              long: true,
+              minRows: 2
             }
           }, {
-            name: 'tags',
+            name: 'resourceNode.meta.descriptionHtml',
+            label: trans('description_long'),
+            type: 'html',
+            help: trans('Décrivez de manière détaillée le contenu de votre ressource, la travail attendu par vos utilisateurs (La description détaillée est affichée sur la vue "À propos" à la place de la description courte).'),
+          }, {
+            name: 'resourceNode.tags',
             label: trans('tags'),
             type: 'tag'
           }
         ]
       }, {
-        title: trans('custom'),
-        primary: true,
-        fill: true,
-        displayed: !!props.customSection,
-        render: () => props.customSection
-      }, {
-        icon: 'fa fa-fw fa-desktop',
-        title: trans('display_parameters'),
-        fields: [
-          {
-            name: 'poster',
-            label: trans('poster'),
-            type: 'image'
-          }, {
-            name: 'thumbnail',
-            label: trans('thumbnail'),
-            type: 'image'
-          }, {
-            name: 'restrictions.hidden',
-            type: 'boolean',
-            label: trans('restrict_hidden'),
-            help: trans('restrict_hidden_help')
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-key',
-        title: trans('access_restrictions'),
-        fields: [
-          {
-            name: 'restrictions.enableDates',
-            label: trans('restrict_by_dates'),
-            type: 'boolean',
-            calculated: restrictedByDates,
-            onChange: activated => {
-              if (!activated) {
-                props.updateProp('restrictions.dates', [])
-              }
-            },
-            linked: [
-              {
-                name: 'restrictions.dates',
-                type: 'date-range',
-                label: trans('access_dates'),
-                displayed: restrictedByDates,
-                required: true,
-                options: {
-                  time: true
-                }
-              }
-            ]
-          }, {
-            name: 'restrictions.enableCode',
-            label: trans('restrict_by_code'),
-            type: 'boolean',
-            calculated: restrictedByCode,
-            onChange: activated => {
-              if (!activated) {
-                props.updateProp('restrictions.code', '')
-              }
-            },
-            linked: [
-              {
-                name: 'restrictions.code',
-                label: trans('access_code'),
-                displayed: restrictedByCode,
-                type: 'password',
-                required: true
-              }
-            ]
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-award',
-        title: trans('evaluation'),
-        fields: [
-          {
-            name: 'evaluation.estimatedDuration',
-            label: trans('estimated_duration'),
-            type: 'number',
-            options: {
-              unit: trans('minutes')
-            }
-          }, {
-            name: 'evaluation.required',
-            label: trans('require_resource', {}, 'resource'),
-            type: 'boolean',
-            help: trans('require_resource_help', {}, 'resource'),
-            onChange: (required) => {
-              if (!required) {
-                props.updateProp('evaluation.evaluated', false)
-              }
-            },
-            linked: [
-              {
-                name: 'evaluation.evaluated',
-                label: trans('evaluate_resource', {}, 'resource'),
-                type: 'boolean',
-                help: trans('evaluate_resource_help', {}, 'resource'),
-                displayed: (resource) => get(resource, 'evaluation.required', false)
-              }
-            ]
-          }
-        ]
-      }, {
-        icon: 'fa fa-fw fa-copyright',
+        name: 'license',
+        //icon: 'fa fa-fw fa-copyright',
         title: trans('authors_license'),
+        subtitle: trans('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sit amet tristique diam, sit amet auctor erat.'),
+        primary: true,
         fields: [
           {
-            name: 'meta.authors',
+            name: 'resourceNode.meta.authors',
             label: trans('authors'),
             type: 'string'
           }, {
-            name: 'meta.license',
+            name: 'resourceNode.meta.license',
             label: trans('license'),
             type: 'string'
           }
         ]
       }
-    ]}
-  />
+    ].concat(props.definition)}
+  >
+    {props.children}
+  </EditorPage>
 
-EditorOverview.propTypes = {
+ResourceEditorOverview.propTypes = {
+  definition: T.arrayOf(T.shape({
 
+  })),
+  children: T.any
+}
+
+ResourceEditorOverview.defaultProps = {
+  definition: []
 }
 
 export {
-  EditorOverview
+  ResourceEditorOverview
 }

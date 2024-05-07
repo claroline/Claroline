@@ -103,7 +103,7 @@ const ContextMain = (props) => {
   } else {
     CurrentPage = (
       <>
-        <AppLoader />
+        {/*<AppLoader />*/}
 
         <Routes
           path={props.path}
@@ -149,6 +149,8 @@ const ContextMain = (props) => {
       {createElement(props.menu)}
 
       <div className="app-body" role="presentation">
+        <AppLoader />
+
         {CurrentPage}
       </div>
     </>

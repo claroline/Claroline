@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityRepository;
 
 class BBBRepository extends EntityRepository
 {
-    public function findUsedServers()
+    public function findUsedServers(): array
     {
         return array_map('current', $this->getEntityManager()
             ->createQuery('

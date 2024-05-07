@@ -63,7 +63,16 @@ class AnnouncementListener extends ResourceComponent
         ];
     }
 
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        return [
+            'resource' => $this->serializer->serialize($resource),
+        ];
+    }
+
     /**
+     * Copy all the Announces of the resource.
+     *
      * @param AnnouncementAggregate $original
      * @param AnnouncementAggregate $copy
      */
@@ -73,15 +82,11 @@ class AnnouncementListener extends ResourceComponent
 
         $announcements = $original->getAnnouncements();
         foreach ($announcements as $announcement) {
-            $announcementData = $this->serializer->serialize($announcement);
-
-            $newAnnouncement = new Announcement();
-            $newAnnouncement->setAggregate($copy);
-
-            $this->crud->create($newAnnouncement, $announcementData, [
+            $newAnnouncement = $this->crud->copy($announcement, [
                 Crud::NO_PERMISSIONS, // this has already been checked by the core before forwarding the copy
-                Options::REFRESH_UUID,
             ]);
+
+            $newAnnouncement->setAggregate($copy);
         }
 
         $this->om->endFlushSuite();
@@ -118,5 +123,19 @@ class AnnouncementListener extends ResourceComponent
         }
 
         $this->om->endFlushSuite();
+    }
+
+    /** @var AnnouncementAggregate $resource */
+    public function delete(AbstractResource $resource, FileBag $fileBag, bool $softDelete = true): bool
+    {
+        if ($softDelete) {
+            return true;
+        }
+
+        foreach ($resource->getAnnouncements() as $announcement) {
+            $this->crud->delete($announcement);
+        }
+
+        return true;
     }
 }

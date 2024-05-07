@@ -11,7 +11,9 @@ const EvaluationUsers = connect(
   (state) => ({
     path: toolSelectors.path(state),
     currentUser: securitySelectors.currentUser(state),
-    contextId: toolSelectors.contextId(state)
+    contextId: toolSelectors.contextId(state),
+    hasScore: selectors.hasScore(state),
+    totalScore: selectors.totalScore(state)
   }),
   (dispatch) => ({
     invalidate() {

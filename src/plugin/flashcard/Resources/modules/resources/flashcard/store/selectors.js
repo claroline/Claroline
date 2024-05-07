@@ -7,7 +7,7 @@ const resource = (state) => state[STORE_NAME]
 
 const flashcardDeck = createSelector(
   [resource],
-  (resource) => get(resource, 'data.flashcardDeck', {})
+  (resource) => get(resource, 'resource', {})
 )
 
 const id = createSelector(
@@ -42,7 +42,7 @@ const draw = createSelector(
 
 const attempt = createSelector(
   [resource],
-  (resource) => resource.data.attempt
+  (resource) => resource.attempt
 )
 
 export const selectors = {

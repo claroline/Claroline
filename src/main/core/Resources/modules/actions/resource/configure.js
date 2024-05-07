@@ -11,5 +11,7 @@ export default (resourceNodes, nodesRefresher, path) => ({
   type: LINK_BUTTON,
   icon: 'fa fa-fw fa-cog',
   label: trans('configure', {}, 'actions'),
-  target: `${route(resourceNodes[0], path)}/edit`
+  target: `${route(resourceNodes[0], path)}/edit`,
+  group: trans('management'),
+  scope: ['object']
 })

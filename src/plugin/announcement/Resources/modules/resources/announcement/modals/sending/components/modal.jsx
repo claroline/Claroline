@@ -18,14 +18,14 @@ import {selectors} from '#/plugin/announcement/resources/announcement/modals/sen
 const SendingModal = (props) =>
   <Modal
     {...omit(props, 'aggregateId', 'announcement', 'workspace', 'workspaceRoles', 'formData', 'send', 'reset', 'update', 'updateReceivers')}
-    className="data-picker-modal"
     title={trans('announcement_sending', {}, 'announcement')}
     subtitle={props.announcement.title}
     icon="fa fa-fw fa-paper-plane"
-    size="xl"
+    size="lg"
     onEnter={() => props.reset(props.announcement, props.workspaceRoles)}
   >
     <FormData
+      flush={true}
       name={selectors.STORE_NAME+'.form'}
       level={2}
       sections={[
@@ -85,8 +85,9 @@ const SendingModal = (props) =>
       ]}
     />
 
-    <FormSections level={3}>
+    <FormSections level={3} flush={true} defaultOpened="receivers">
       <FormSection
+        id="receivers"
         className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={trans('receivers')}

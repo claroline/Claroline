@@ -22,7 +22,7 @@ const QuizResource = props =>
   <Resource
     {...omit(props)}
     styles={['claroline-distribution-plugin-exo-quiz-resource']}
-    overview={QuizOverview}
+    overviewPage={QuizOverview}
     actions={[
       {
         type: LINK_BUTTON,
@@ -83,11 +83,11 @@ const QuizResource = props =>
     ]}
 
     pages={[
-      {
+      /*{
         path: '/edit',
         component: EditorMain,
         disabled: !props.editable
-      }, {
+      }, */{
         path: '/test',
         component: Player,
         disabled: !props.editable,

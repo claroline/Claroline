@@ -1,89 +1,51 @@
-import React, {Fragment} from 'react'
-import {PropTypes as T} from 'prop-types'
+import React from 'react'
+import {useSelector} from 'react-redux'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
-import {scrollTo} from '#/main/app/dom/scroll'
-import {trans} from '#/main/app/intl/translation'
+import {ResourceOverview, selectors as resourceSelectors} from '#/main/core/resource'
+import {selectors} from '#/plugin/lesson/resources/lesson/store'
+
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ContentSummary} from '#/main/app/content/components/summary'
-import {SearchMinimal} from '#/main/app/content/search/components/minimal'
-import {ResourceOverview} from '#/main/core/resource/components/overview'
-import {constants as LESSON_NUMBERINGS} from '#/plugin/lesson/resources/lesson/constants'
-import {getNumbering} from '#/plugin/lesson/resources/lesson/utils'
+import {trans} from '#/main/app/intl'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
+import {LessonSummary} from '#/plugin/lesson/resources/lesson/containers/summary'
+import {PageSection} from '#/main/app/page/components/section'
 
-const LessonOverview = (props) => {
-  function getChapterSummary(chapter) {
-    return {
-      id: chapter.id,
-      type: LINK_BUTTON,
-      label: (
-        <Fragment>
-          {(props.lesson.display.numbering && props.lesson.display.numbering !== LESSON_NUMBERINGS.NUMBERING_NONE && getNumbering(props.lesson.display.numbering, props.tree.children, chapter) ?
-            <span className="h-numbering">{getNumbering(props.lesson.display.numbering, props.tree.children, chapter)}</span>
-            : ''
-          )}
-          {chapter.title}
-        </Fragment>
-      ),
-      target: `${props.path}/${chapter.slug}`,
-      children: chapter.children ? chapter.children.map(getChapterSummary) : [],
-      onClick: () => {
-        scrollTo(`#resource-${props.resourceId} > .page-content`)
-      }
-    }
-  }
 
-  const chapters = get(props.tree, 'children', [])
+const LessonOverview = () => {
+  const resourcePath = useSelector(resourceSelectors.path)
+  const tree = useSelector(selectors.treeData)
+  const chapters = get(tree, 'children', [])
 
   return (
     <ResourceOverview
-      contentText={get(props.lesson, 'display.description')}
-      resourceNode={props.resourceNode}
       actions={[
         {
+          name: 'start',
           type: LINK_BUTTON,
           label: trans('start', {}, 'actions'),
-          target: `${props.path}/${get(chapters, '[0].slug')}`,
+          target: `${resourcePath}/${get(chapters, '[0].slug')}`,
           primary: true,
-          disabled: isEmpty(chapters),
-          disabledMessages: isEmpty(chapters) ? [trans('start_disabled_empty', {}, 'lesson')]:[]
+          disabled: isEmpty(chapters)
         }
       ]}
     >
-      <SearchMinimal
-        size="lg"
-        placeholder={trans('lesson_search', {}, 'lesson')}
-        search={(searchStr) => {
-          props.search(searchStr, props.internalNotes)
-          // open search list
-          props.history.push(props.path+'/chapters')
-        }}
-      />
-
-      <section className="resource-parameters mb-3">
-        <h3 className="h2">{trans('summary')}</h3>
-
-        <ContentSummary
-          className="component-container"
-          links={chapters.map(getChapterSummary)}
-        />
-      </section>
+      <PageSection
+        size="md"
+        className="py-3"
+        title={trans('summary')}
+      >
+        {isEmpty(chapters) ?
+          <ContentPlaceholder
+            title={trans('no_chapter', {}, 'lesson')}
+            size="lg"
+          /> :
+          <LessonSummary />
+        }
+      </PageSection>
     </ResourceOverview>
   )
-}
-
-LessonOverview.propTypes = {
-  history: T.shape({
-    push: T.func.isRequired
-  }).isRequired,
-  path: T.string.isRequired,
-  resourceId: T.string.isRequired,
-  tree: T.object,
-  lesson: T.object.isRequired,
-  internalNotes: T.bool.isRequired,
-  search: T.func.isRequired,
-  resourceNode: T.object
 }
 
 export {

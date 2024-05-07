@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useSelector} from 'react-redux'
 import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
@@ -11,70 +12,42 @@ import {toKey} from '#/main/core/scaffolding/text'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {Button} from '#/main/app/action/components/button'
-import {Alert} from '#/main/app/alert/components/alert'
-import {AlertBlock} from '#/main/app/alert/components/alert-block'
+import {Alert} from '#/main/app/components/alert'
+
+import {ResourcePage} from '#/main/core/resource/components/page'
+import {selectors} from '#/main/core/resource/store'
 
 import {constants} from '#/main/evaluation/resource/constants'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 import {EvaluationFeedback} from '#/main/evaluation/components/feedback'
 import {EvaluationDetails} from '#/main/evaluation/components/details'
-import {ResourcePage} from '#/main/core/resource/components/page'
+import {PageSection} from '#/main/app/page/components/section'
+import {EvaluationJumbotron} from '#/main/evaluation/components/jumbotron'
 
-const ResourceOverview = props =>
-  <ResourcePage>
-    <section className="resource-overview content-lg mt-3">
-      <h2 className="sr-only">{trans('resource_overview', {}, 'resource')}</h2>
+const ResourceOverview = props => {
+  const resourceNode = useSelector(selectors.resourceNode)
 
-      <div className="row">
-        <div className="col-md-4">
-          <section className="user-progression mb-3">
-            <h3 className="h2">{trans('my_progression')}</h3>
-            {!isEmpty(props.evaluation) &&
-              <EvaluationDetails
-                evaluation={props.evaluation}
-                statusTexts={merge({}, constants.EVALUATION_STATUSES, props.statusTexts || {})}
-                details={[
-                  [trans('last_activity'), get(props.evaluation, 'date') ? displayDate(props.evaluation.date, false, true) : '-']
-                ].concat(props.details || [])}
-                showScore={get(props, 'display.score', false)}
-                scoreMax={get(props, 'display.scoreMax')}
-                successScore={get(props, 'display.successScore')}
-                estimatedDuration={get(props, 'resourceNode.evaluation.estimatedDuration')}
-              />
-            }
-          </section>
+  const description = get(resourceNode, 'meta.descriptionHtml', null) || get(resourceNode, 'meta.description', null)
 
-          {0 !== props.actions.length &&
-            <section className="overview-user-actions mb-3">
-              <h3 className="sr-only">{trans('resource_overview_actions', {}, 'resource')}</h3>
+  return (
+    <ResourcePage
+      primaryAction={props.primaryAction}
+      actions={props.actions}
+    >
+      {description &&
+        <PageSection size="md" className="py-5">
+          <ContentHtml className="lead">{description}</ContentHtml>
+        </PageSection>
+      }
 
-              <div className="d-grid gap-1" role="presentation">
-                {props.actions
-                  .filter(action => undefined === action.displayed || action.displayed)
-                  .map((action, index) => !action.disabled ?
-                    <Button
-                      {...omit(action, 'disabledMessages')}
-                      key={index}
-                      className={classes('btn', {
-                        'btn-outline-primary': !action.primary && !action.dangerous,
-                        'btn-primary': action.primary,
-                        'btn-danger': action.dangerous
-                      })}
-                      size={action.primary ? 'lg' : undefined}
-                    /> :
-                    action.disabledMessages && action.disabledMessages.map((message, messageIndex) =>
-                      <Alert key={messageIndex} type="warning">{message}</Alert>
-                    )
-                  )
-                }
-              </div>
-            </section>
-          }
-        </div>
+      {props.evaluation &&
+        <>
+          <EvaluationJumbotron
+            evaluation={props.evaluation}
+          />
 
-        <div className="col-md-8">
           {((!isEmpty(props.evaluation) && get(props, 'display.feedback', false)) || !isEmpty(get(props.feedbacks, 'closed'))) &&
-            <section className="resource-feedbacks">
+            <PageSection size="md" className="resource-feedbacks py-3">
               {!isEmpty(props.evaluation) && get(props, 'display.feedback', false) &&
                 <EvaluationFeedback
                   status={props.evaluation.status}
@@ -83,36 +56,48 @@ const ResourceOverview = props =>
               }
 
               {!isEmpty(get(props.feedbacks, 'closed')) && props.feedbacks.closed.map(closedMessage =>
-                <AlertBlock key={toKey(closedMessage[0])} type="warning" title={closedMessage[0]}>
+                <Alert key={toKey(closedMessage[0])} type="warning" title={closedMessage[0]}>
                   <ContentHtml>{closedMessage[1]}</ContentHtml>
-                </AlertBlock>
+                </Alert>
               )}
-            </section>
+            </PageSection>
           }
+        </>
+      }
 
-          {props.contentText &&
-            <section className="resource-info mb-3">
-              <h3 className="h2">{trans('resource_overview_info', {}, 'resource')}</h3>
+      {props.children}
 
-              <div className="card">
-                {typeof props.contentText === 'string' ?
-                  <ContentHtml className="card-body">{props.contentText}</ContentHtml>
-                  :
-                  <div className="card-body">{props.contentText}</div>
-                }
-              </div>
-            </section>
-          }
+      {0 !== props.actions.length &&
+        <PageSection size="md" className="py-3">
+          <h3 className="sr-only">{trans('resource_overview_actions', {}, 'resource')}</h3>
 
-          {props.children}
-        </div>
-      </div>
-    </section>
-  </ResourcePage>
+          <div className="d-grid gap-1" role="presentation">
+            {props.actions
+              .filter(action => undefined === action.displayed || action.displayed)
+              .map((action, index) => !action.disabled ?
+                  <Button
+                    {...omit(action, 'disabledMessages')}
+                    key={index}
+                    className={classes('btn', {
+                      'btn-outline-primary': !action.primary && !action.dangerous,
+                      'btn-primary': action.primary,
+                      'btn-danger': action.dangerous
+                    })}
+                    size={action.primary ? 'lg' : undefined}
+                  /> :
+                  action.disabledMessages && action.disabledMessages.map((message, messageIndex) =>
+                    <Alert key={messageIndex} type="warning">{message}</Alert>
+                  )
+              )
+            }
+          </div>
+        </PageSection>
+      }
+    </ResourcePage>
+  )
+}
 
 ResourceOverview.propTypes = {
-  contentText: T.node, // can be a string or an empty placeholder
-  resourceNode: T.object,
   evaluation: T.shape(
     ResourceEvaluationTypes.propTypes
   ),
@@ -137,15 +122,15 @@ ResourceOverview.propTypes = {
   details: T.arrayOf(
     T.arrayOf(T.string)
   ),
+  primaryAction: T.string,
   actions: T.arrayOf(T.shape(
-    merge({}, ActionTypes.propTypes, {
-      disabledMessages: T.arrayOf(T.string)
-    })
+    ActionTypes.propTypes
   )),
   children: T.node
 }
 
 ResourceOverview.defaultProps = {
+  primaryAction: 'start',
   actions: []
 }
 

@@ -1,37 +1,21 @@
-import React, {Fragment} from 'react'
-import {PropTypes as T} from 'prop-types'
+import React from 'react'
+import {useSelector} from 'react-redux'
 
-import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {Alert} from '#/main/app/alert/components/alert'
+import {ResourceEditor} from '#/main/core/resource/editor'
 
-import {FormData} from '#/main/app/content/form/containers/data'
-import {ListForm} from '#/main/app/content/list/parameters/containers/form'
-import {selectors} from '#/main/core/resources/directory/editor/store'
+import {selectors} from '#/main/core/resources/directory/store'
+import {DirectoryEditorAppearance} from '#/main/core/resources/directory/editor/components/appearance'
 
-import resourcesSource from '#/main/core/data/sources/resources'
+const DirectoryEditor = () => {
+  const directory = useSelector(selectors.resource)
 
-import {Directory as DirectoryTypes} from '#/main/core/resources/directory/prop-types'
-
-const EditorMain = (props) =>
-  <Fragment>
-    {props.storageLock &&
-      <Alert type="warning">{trans('storage_limit_reached_resources')}</Alert>
-    }
-
-    <FormData
-      level={2}
-      className="mt-3"
-      title={trans('parameters')}
-      name={selectors.FORM_NAME}
-      target={['apiv2_resource_directory_update', {id: props.directory.id}]}
-      buttons={true}
-      cancel={{
-        type: LINK_BUTTON,
-        target: props.path,
-        exact: true
-      }}
-      sections={[
+  return (
+    <ResourceEditor
+      additionalData={() => ({
+        resource: directory
+      })}
+      appearancePage={DirectoryEditorAppearance}
+      /*sections={[
         {
           title: trans('general'),
           primary: true,
@@ -44,33 +28,11 @@ const EditorMain = (props) =>
             }
           ]
         }
-      ]}
-    >
-      <ListForm
-        level={3}
-        name={selectors.FORM_NAME}
-        dataPart="list"
-        list={resourcesSource('workspace', props.workspace, {}, props.currentUser)}
-        parameters={props.directory.list}
-      />
-    </FormData>
-  </Fragment>
-
-EditorMain.propTypes = {
-  path: T.string,
-  directory: T.shape(
-    DirectoryTypes.propTypes
-  ),
-  workspace: T.object,
-  currentUser: T.object,
-  storageLock: T.bool.isRequired
+      ]}*/
+    />
+  )
 }
-
-EditorMain.defaultProps = {
-  directory: DirectoryTypes.defaultProps
-}
-
 
 export {
-  EditorMain
+  DirectoryEditor
 }

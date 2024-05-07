@@ -8,8 +8,6 @@ use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\Entry;
-use Claroline\ClacoFormBundle\Entity\Field;
-use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
 use Claroline\ClacoFormBundle\Manager\CategoryManager;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -17,27 +15,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class EntrySubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var CategoryManager */
-    private $categoryManager;
-
-    private $fieldRepo;
-    private $fieldChoiceCategoryRepo;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        CategoryManager $categoryManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly CategoryManager $categoryManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->categoryManager = $categoryManager;
-
-        $this->fieldRepo = $om->getRepository(Field::class);
-        $this->fieldChoiceCategoryRepo = $om->getRepository(FieldChoiceCategory::class);
     }
 
     public static function getSubscribedEvents(): array
@@ -50,7 +32,7 @@ class EntrySubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var Entry $entry */
         $entry = $event->getObject();
@@ -67,7 +49,7 @@ class EntrySubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var Entry $entry */
         $entry = $event->getObject();
@@ -75,7 +57,7 @@ class EntrySubscriber implements EventSubscriberInterface
         $this->manageCategories($entry);
     }
 
-    public function preUpdate(UpdateEvent $event)
+    public function preUpdate(UpdateEvent $event): void
     {
         /** @var Entry $entry */
         $entry = $event->getObject();
@@ -83,7 +65,7 @@ class EntrySubscriber implements EventSubscriberInterface
         $entry->setEditionDate(new \DateTime());
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var Entry $entry */
         $entry = $event->getObject();
@@ -94,7 +76,7 @@ class EntrySubscriber implements EventSubscriberInterface
     /**
      * Add/remove categories from the Entry based on fields values.
      */
-    private function manageCategories(Entry $entry)
+    private function manageCategories(Entry $entry): void
     {
         $oldCategories = $entry->getCategories();
 

@@ -9,19 +9,19 @@ import {actions, reducer, selectors} from '#/plugin/lesson/resources/lesson/stor
 const LessonResource = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     state => ({
-      resourceId: resourceSelectors.id(state),
+      //resourceId: resourceSelectors.id(state),
       lesson: selectors.lesson(state),
-      tree: selectors.treeData(state),
-      invalidated: selectors.treeInvalidated(state),
-      root: selectors.root(state),
-      overview: selectors.showOverview(state),
-      canExport: selectors.canExport(state),
-      canEdit: selectors.canEdit(state)
+      //tree: selectors.treeData(state),
+      //invalidated: selectors.treeInvalidated(state),
+      //root: selectors.root(state),
+      //overview: selectors.showOverview(state),
+      //canExport: selectors.canExport(state),
+      //canEdit: selectors.canEdit(state)
     }),
     dispatch => ({
       loadChapter(lessonId, chapterSlug) {
         dispatch(actions.loadChapter(lessonId, chapterSlug))
-      },
+      },/*,
       editChapter(lessonId, chapterSlug) {
         dispatch(actions.editChapter(selectors.CHAPTER_EDIT_FORM_NAME, lessonId, chapterSlug))
       },
@@ -33,7 +33,7 @@ const LessonResource = withReducer(selectors.STORE_NAME, reducer)(
       },
       fetchChapterTree(lessonId) {
         dispatch(actions.fetchChapterTree(lessonId))
-      },
+      },*/
       downloadLessonPdf(lessonId) {
         return dispatch(actions.downloadLessonPdf(lessonId))
       }

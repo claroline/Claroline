@@ -12,35 +12,25 @@ class ChapterSerializer
     use SerializerTrait;
     public const INCLUDE_INTERNAL_NOTES = 'include_internal_notes';
 
-    /** @var ObjectManager */
-    private $om;
+    private ChapterRepository $chapterRepository;
 
-    /** @var ChapterRepository */
-    private $chapterRepository;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
+    public function __construct(
+        private readonly ObjectManager $om
+    ) {
         $this->chapterRepository = $om->getRepository(Chapter::class);
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return Chapter::class;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'lesson_chapter';
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/plugin/lesson/chapter.json';
     }
@@ -82,7 +72,7 @@ class ChapterSerializer
      *
      * @return array
      */
-    public function serializeChapterTree($tree)
+    public function serializeChapterTree($tree): array
     {
         return $this->serializeChapterTreeNode($tree);
     }
@@ -102,7 +92,7 @@ class ChapterSerializer
         return $chapter;
     }
 
-    private function serializeChapterTreeNode($node)
+    private function serializeChapterTreeNode(array $node): array
     {
         $children = [];
 

@@ -38,6 +38,7 @@ const TableData = props => {
           <TableItem
             key={index}
             row={row}
+            size={props.size}
             columns={props.definition.filter(prop => -1 !== displayedColumns.indexOf(prop.name))}
             primaryAction={props.primaryAction}
             actions={props.actions}

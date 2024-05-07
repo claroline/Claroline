@@ -30,7 +30,20 @@
     background-position: center;
 }
 
+.theme-icon {
+    display: inline-block;
+
+    // declare color vars to make it available in SVG
+    --primary-color: #{$icon-primary-color};
+    --secondary-color: #{$icon-secondary-color};
+}
+
 @each $size, $value in $icon-sizes {
+    .theme-icon-#{$size} {
+        width: $value;
+        height: $value;
+    }
+
     .thumbnail-icon-#{$size} {
         // for picture
         width: $value;
@@ -38,15 +51,6 @@
         // for .fa when no picture
         font-size: $value * .5;
     }
-}
-
-
-.theme-icon {
-    display: inline-block;
-
-    // declare color vars to make it available in SVG
-    --primary-color: #{$icon-primary-color};
-    --secondary-color: #{$icon-secondary-color};
 }
 
 // TODO : should be merged with date picker and color picker

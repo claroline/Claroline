@@ -16,10 +16,8 @@ class ToolShortcutTab extends AbstractTab
 
     /**
      * @ORM\Column(nullable=false)
-     *
-     * @var string
      */
-    private $tool;
+    private ?string $tool = null;
 
     public static function getType(): string
     {
@@ -31,7 +29,7 @@ class ToolShortcutTab extends AbstractTab
         return $this->tool;
     }
 
-    public function setTool(string $tool)
+    public function setTool(string $tool): void
     {
         $this->tool = $tool;
     }

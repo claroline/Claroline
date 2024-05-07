@@ -1,0 +1,5 @@
+services:
+    Claroline\BigBlueButtonBundle\Subscriber\RecordingSubscriber:
+        tags: [kernel.event_subscriber]
+        arguments:
+            - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'

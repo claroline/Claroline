@@ -110,12 +110,12 @@
 .flying-alert-info {
     @include flying-alert-variant($flying-alert-info-color, $flying-alert-info-bg, $flying-alert-info-border);
 }
-.flying-alert-pending {
+/*.flying-alert-pending {
     @include flying-alert-variant($flying-alert-primary-color, $flying-alert-primary-bg, $flying-alert-primary-border);
-}
+}*/
 
 // pulsating pending alert
-.flying-alert-pending {
+/*.flying-alert-pending {
     animation-name: pulse_animation;
     animation-duration: 1500ms;
     animation-iteration-count: infinite;
@@ -126,7 +126,7 @@
     &:hover {
         animation: none !important;
     }
-}
+}*/
 
 @keyframes pulse_animation {
     0% { opacity: 1; }

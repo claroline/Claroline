@@ -73,7 +73,7 @@ class ToolController
     }
 
     /**
-     * @Route("/configure/{name}/{context}/{contextId}", name="apiv2_tool_configure", methods={"PUT"})
+     * @Route("/configure/{name}/{context}/{contextId}", name="claro_tool_configure", methods={"PUT"})
      */
     public function configureAction(Request $request, string $name, string $context, string $contextId = null): JsonResponse
     {

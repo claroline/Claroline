@@ -29,7 +29,7 @@ registry.add('ClarolineEvaluationBundle', {
 
   actions: {
     resource: {
-      'evaluation': () => { return import(/* webpackChunkName: "evaluation-action-resource-evaluation" */ '#/main/evaluation/actions/resource/evaluation') }
+      //'evaluation': () => { return import(/* webpackChunkName: "evaluation-action-resource-evaluation" */ '#/main/evaluation/actions/resource/evaluation') }
     },
 
     workspace_evaluation: {

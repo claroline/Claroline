@@ -35,7 +35,7 @@ class RecordingSerializer
             'medias' => $recording->getMedias(),
         ];
 
-        // this is to display a link to the workspace in administration
+        // this is to display a link to the workspace in administration,
         // so I don't need much information
         $workspace = $resourceNode->getWorkspace();
         if ($workspace) {

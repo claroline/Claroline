@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {number} from '#/main/app/intl'
-import {transChoice} from '#/main/app/intl/translation'
 
 const EvaluationScore = props => {
   let userScore = props.score
@@ -21,11 +20,10 @@ const EvaluationScore = props => {
       <span className="sr-only">/</span>
 
       {props.display ?
-        <span className="max-score">{transChoice('points', props.display, {count: number(props.display)})}</span>
+        <span className="max-score">{number(props.display)}</span>
         :
-        <span className="max-score">{props.scoreMax || 0 === props.scoreMax ? transChoice('points', props.scoreMax, {count: number(props.scoreMax)}) : '-'}</span>
+        <span className="max-score">{props.scoreMax || 0 === props.scoreMax ? number(props.scoreMax) : '-'}</span>
       }
-
     </div>
   )
 }
@@ -35,7 +33,7 @@ EvaluationScore.propTypes = {
   score: T.number,
   scoreMax: T.number.isRequired,
   display: T.number,
-  size: T.oneOf(['sm', 'lg']),
+  size: T.oneOf(['sm', 'md', 'lg']),
   className: T.string
 }
 

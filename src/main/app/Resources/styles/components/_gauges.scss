@@ -33,15 +33,20 @@
     }
 }
 
+.gauge-border {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
 .count-gauge {
     .gauge-text {
-        font-weight: 900;
+        font-weight: 700;
     }
 }
 
 .liquid-gauge {
     .gauge-text {
-        font-weight: 900;
+        font-weight: 700;
     }
 
     // generates variants

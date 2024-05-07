@@ -15,7 +15,7 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 
 const Badge = (props) =>
   <ToolPage
-    className="badge-page"
+    size="xl"
     meta={{
       title: trans('badge_name', {name: get(props.badge, 'name', trans('loading'))}, 'badge'),
       description: get(props.badge, 'meta.description')

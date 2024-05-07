@@ -19,7 +19,7 @@ import {getValidationClassName} from '#/main/app/content/form/validator'
  * @constructor
  */
 const FormGroup = props =>
-  <div className={classes('form-group mb-3', props.className, getValidationClassName(props.error, props.validating))}>
+  <div className={classes('form-group mb-4', props.className, getValidationClassName(props.error, props.validating))}>
     {props.label &&
       <label
         className={classes('form-label', {

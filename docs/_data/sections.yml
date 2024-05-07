@@ -83,6 +83,9 @@
       - title: API
         doc: user-interface/api
 
+      - title: Editors
+        doc: user-interface/editor
+
       - title: Tools
         doc: user-interface/tools
 

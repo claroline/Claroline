@@ -14,6 +14,7 @@ const FileThumbnail = props =>
       className="file-preview-icon"
       mimeType={props.file.type || props.file.mimeType}
       set="resources"
+      size="xs"
     />
 
     <div className="file-preview-title">

@@ -70,6 +70,13 @@ class ForumListener extends ResourceComponent
         ];
     }
 
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        return [
+            'resource' => $this->serializer->serialize($resource),
+        ];
+    }
+
     /**
      * @param Forum $original
      * @param Forum $copy

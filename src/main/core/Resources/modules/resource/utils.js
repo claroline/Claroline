@@ -134,26 +134,9 @@ function getDefaultAction(resourceNode, nodesRefresher, path, currentUser = null
   return Promise.resolve(null)
 }
 
-/**
- * Generates the toolbar for resources.
- *
- * @param {string|null} primaryAction - the name of a custom primary resource which will be appended to the toolbar.
- *
- * @return {string}
- */
-/*function getToolbar(primaryAction = null) {
-  let toolbar = 'edit'
-  if (primaryAction) {
-    toolbar = primaryAction + ' ' + toolbar
-  }
-
-  return toolbar
-}*/
-
 export {
   getType,
   getTypes,
   getActions,
-  getDefaultAction/*,
-  getToolbar*/
+  getDefaultAction
 }

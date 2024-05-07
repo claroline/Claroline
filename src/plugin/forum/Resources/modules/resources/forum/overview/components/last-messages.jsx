@@ -5,10 +5,10 @@ import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {UserMessage} from '#/main/core/user/message/components/user-message'
+import {PageSection} from '#/main/app/page/components/section'
 
 const LastMessages = (props) =>
-  <section>
-    <h3 className="h2">{trans('last_messages', {}, 'forum')}</h3>
+  <PageSection size="md" title={trans('last_messages', {}, 'forum')}>
     <ul className="posts">
       {props.lastMessages.map(message =>
         <li key={message.id} className="post">
@@ -30,7 +30,7 @@ const LastMessages = (props) =>
         </li>
       )}
     </ul>
-  </section>
+  </PageSection>
 
 LastMessages.propTypes = {
   path: T.string.isRequired,

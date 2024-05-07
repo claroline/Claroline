@@ -13,6 +13,7 @@ namespace Claroline\BigBlueButtonBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,87 +24,65 @@ class BBB extends AbstractResource
 {
     /**
      * @ORM\Column(name="welcome_message", type="text", nullable=true)
-     *
-     * @var string
      */
-    private $welcomeMessage;
+    private ?string $welcomeMessage = null;
 
     /**
      * @ORM\Column(name="end_message", type="text", nullable=true)
-     *
-     * @var string
      */
-    private $endMessage;
+    private ?string $endMessage = null;
 
     /**
      * @ORM\Column(name="new_tab", type="boolean")
-     *
-     * @var bool
      */
-    private $newTab = true;
+    private bool $newTab = true;
 
     /**
      * @ORM\Column(name="moderator_required", type="boolean")
-     *
-     * @var bool
      */
-    private $moderatorRequired = true;
+    private bool $moderatorRequired = true;
 
     /**
      * @ORM\Column(name="record", type="boolean")
-     *
-     * @var bool
      */
-    private $record = false;
+    private bool $record = false;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     *
-     * @var float
      */
-    private $ratio = 56.25;
+    private ?float $ratio = 56.25;
 
     /**
      * @ORM\Column(name="activated", type="boolean")
-     *
-     * @var bool
      */
-    private $activated = true;
+    private bool $activated = true;
 
     /**
      * Forces the server on which the room will be running.
      *
      * @ORM\Column(nullable=true)
-     *
-     * @var string
      */
-    private $server = null;
+    private ?string $server = null;
 
     /**
      * Defines on which server the room is currently running.
      *
      * @ORM\Column(nullable=true)
-     *
-     * @var string
      */
-    private $runningOn = null;
+    private ?string $runningOn = null;
 
     /**
      * Allows users to change their username before entering the room.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    private $customUsernames = false;
+    private bool $customUsernames = false;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\BigBlueButtonBundle\Entity\Recording", mappedBy="meeting", orphanRemoval=true)
      * @ORM\OrderBy({"startTime": "DESC"})
-     *
-     * @var ArrayCollection|Recording[]
      */
-    private $recordings;
+    private Collection $recordings;
 
     public function __construct()
     {
@@ -112,121 +91,113 @@ class BBB extends AbstractResource
         $this->recordings = new ArrayCollection();
     }
 
-    public function getWelcomeMessage()
+    public function getWelcomeMessage(): ?string
     {
         return $this->welcomeMessage;
     }
 
-    public function setWelcomeMessage($welcomeMessage)
+    public function setWelcomeMessage(?string $welcomeMessage = null): void
     {
         $this->welcomeMessage = $welcomeMessage;
     }
 
-    public function getEndMessage()
+    public function getEndMessage(): ?string
     {
         return $this->endMessage;
     }
 
-    public function setEndMessage($endMessage)
+    public function setEndMessage(?string $endMessage = null): void
     {
         $this->endMessage = $endMessage;
     }
 
-    public function isNewTab()
+    public function isNewTab(): bool
     {
         return $this->newTab;
     }
 
-    public function setNewTab($newTab)
+    public function setNewTab(bool $newTab): void
     {
         $this->newTab = $newTab;
     }
 
-    public function isModeratorRequired()
+    public function isModeratorRequired(): bool
     {
         return $this->moderatorRequired;
     }
 
-    public function setModeratorRequired($moderatorRequired)
+    public function setModeratorRequired($moderatorRequired): void
     {
         $this->moderatorRequired = $moderatorRequired;
     }
 
-    public function isRecord()
+    public function isRecord(): bool
     {
         return $this->record;
     }
 
-    public function setRecord($record)
+    public function setRecord($record): void
     {
         $this->record = $record;
     }
 
-    public function getRatio()
+    public function getRatio(): ?float
     {
         return $this->ratio;
     }
 
-    public function setRatio($ratio)
+    public function setRatio(float $ratio = null): void
     {
         $this->ratio = $ratio;
     }
 
-    public function isActivated()
+    public function isActivated(): bool
     {
         return $this->activated;
     }
 
-    public function setActivated($activated)
+    public function setActivated(bool $activated): void
     {
         $this->activated = $activated;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getServer()
+    public function getServer(): ?string
     {
         return $this->server;
     }
 
-    public function setServer(string $server = null)
+    public function setServer(string $server = null): void
     {
         $this->server = $server;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getRunningOn()
+    public function getRunningOn(): ?string
     {
         return $this->runningOn;
     }
 
-    public function setRunningOn(string $server = null)
+    public function setRunningOn(string $server = null): void
     {
         $this->runningOn = $server;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasCustomUsernames()
+    public function hasCustomUsernames(): bool
     {
         return $this->customUsernames;
     }
 
-    public function setCustomUsernames(bool $customUsernames)
+    public function setCustomUsernames(bool $customUsernames): void
     {
         $this->customUsernames = $customUsernames;
     }
 
-    public function getRecordings()
+    /** @return Recording[] */
+    public function getRecordings(): Collection
     {
         return $this->recordings;
     }
 
-    public function addRecording(Recording $recording)
+    public function addRecording(Recording $recording): void
     {
         if (!$this->recordings->contains($recording)) {
             $this->recordings->add($recording);
@@ -234,14 +205,14 @@ class BBB extends AbstractResource
         }
     }
 
-    public function removeRecording(Recording $recording)
+    public function removeRecording(Recording $recording): void
     {
         if ($this->recordings->contains($recording)) {
             $this->recordings->removeElement($recording);
         }
     }
 
-    public function getLastRecording()
+    public function getLastRecording(): ?Recording
     {
         if (!empty($this->recordings)) {
             return $this->recordings[0];

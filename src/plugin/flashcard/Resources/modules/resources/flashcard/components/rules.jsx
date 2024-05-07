@@ -35,7 +35,7 @@ SessionRule.propTypes = {
 
 const LeitnerRules = (props) => (
   <ul
-    className="sessions-rules mb-3">
+    className="sessions-rules mb-0">
     {Array.from({length: 7}, (_, index) => (
       <SessionRule
         key={index}

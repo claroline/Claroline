@@ -2,7 +2,7 @@ import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
 import {DataProperty} from '#/main/app/data/types/prop-types'
-
+import {Action, PromisedAction} from '#/main/app/action/prop-types'
 import {constants} from '#/main/app/content/form/constants'
 
 const DataFormProperty = {
@@ -39,15 +39,25 @@ const DataFormProperty = {
 // todo merge with DataDetailsSection
 const DataFormSection = {
   propTypes: {
+    id: T.string,
     icon: T.string,
     title: T.string.isRequired,
+    subtitle: T.string,
+    help: T.string,
     primary: T.bool,
     displayed: T.oneOfType([T.bool, T.func]),
     disabled: T.oneOfType([T.bool, T.func]),
     defaultOpened: T.bool,
-    actions: T.arrayOf(T.shape({
-      // TODO : action types
-    })),
+    actions: T.oneOfType([
+      // a regular array of actions
+      T.arrayOf(T.shape(
+        Action.propTypes
+      )),
+      // a promise that will resolve a list of actions
+      T.shape(
+        PromisedAction.propTypes
+      )
+    ]),
     fields: T.arrayOf(T.shape(
       merge({}, DataFormProperty.propTypes, {
         // children

@@ -70,7 +70,7 @@ const DropzoneResource = props =>
         group: trans('transfer')
       }
     ]}
-    overview={Overview}
+    overviewPage={Overview}
     pages={[
       {
         path: '/edit',

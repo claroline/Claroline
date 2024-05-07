@@ -47,7 +47,7 @@ actions.open = (toolName, context, contextId) => (dispatch) => dispatch({
 actions.configure = (toolName, context, parameters) => ({
   [API_REQUEST] : {
     silent: true,
-    url: ['apiv2_tool_configure', {name: toolName, context: context.type, contextId: get(context, 'data.id', null)}],
+    url: ['claro_tool_configure', {name: toolName, context: context.type, contextId: get(context, 'data.id', null)}],
     request: {
       method: 'PUT',
       body: JSON.stringify(parameters)

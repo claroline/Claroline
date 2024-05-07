@@ -1,21 +1,19 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
+import {trans} from '#/main/app/intl'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {constants as toolConstants} from '#/main/core/tool/constants'
 import {Tool} from '#/main/core/tool'
 
 import {Assertions} from '#/plugin/open-badge/tools/badges/assertion/components/list'
-
 import {AssertionDetails} from '#/plugin/open-badge/tools/badges/assertion/components/details'
-
 import {BadgeList}  from '#/plugin/open-badge/tools/badges/badge/containers/list'
 import {BadgeEdit} from '#/plugin/open-badge/tools/badges/badge/containers/edit'
 import {BadgeCreate} from '#/plugin/open-badge/tools/badges/badge/components/create'
 import {BadgeShow} from '#/plugin/open-badge/tools/badges/badge/containers/show'
-import {trans} from '#/main/app/intl'
-import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {constants as toolConstants} from '#/main/core/tool/constants'
-import get from 'lodash/get'
-import {MODAL_TRANSFER} from '#/plugin/open-badge/modals/transfer'
+import {BadgesToolEditor} from '#/plugin/open-badge/tools/badges/components/editor'
 
 const BadgeTool = props =>
   <Tool
@@ -35,17 +33,7 @@ const BadgeTool = props =>
         type: LINK_BUTTON
       }
     ]}
-    actions={[
-      {
-        name: 'transfer-badges',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-right-left',
-        label: trans('transfer_badges', {}, 'actions'),
-        modal: [MODAL_TRANSFER],
-        displayed: props.canAdministrate,
-        dangerous: true
-      }
-    ]}
+    editor={BadgesToolEditor}
     pages={[
       {
         path: '/my',

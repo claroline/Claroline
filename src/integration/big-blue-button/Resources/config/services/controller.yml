@@ -12,10 +12,9 @@ services:
             - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
 
     Claroline\BigBlueButtonBundle\Controller\BBBController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
         arguments:
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
             - '@router'
             - '@Claroline\CoreBundle\Library\RoutingHelper'

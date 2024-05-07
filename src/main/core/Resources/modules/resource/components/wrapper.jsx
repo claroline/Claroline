@@ -17,17 +17,19 @@ const ResourceWrapper = (props) => {
     if (props.slug) {
       openQuery = makeCancelable(
         props.open(props.slug, props.embedded)
-          .then(response => getResource(get(response, 'resourceNode.meta.type'))
-            .then((resourceApp) => {
-              setApp({
-                type: get(response, 'resourceNode.meta.type'),
-                component: resourceApp.default.component,
-                data: response
-              })
-            })
-            .catch(e => console.error(e))
-          )
       )
+
+      openQuery.promise
+        .then(response => getResource(get(response, 'resourceNode.meta.type'))
+          .then((resourceApp) => {
+            setApp({
+              type: get(response, 'resourceNode.meta.type'),
+              component: resourceApp.default.component,
+              data: response
+            })
+          })
+          .catch(e => console.error(e))
+        )
     }
 
     return () => {

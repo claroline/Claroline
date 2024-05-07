@@ -21,9 +21,10 @@ use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class BBBListener extends ResourceComponent
+class BBBListener extends ResourceComponent implements EvaluatedResourceInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
@@ -67,9 +68,9 @@ class BBBListener extends ResourceComponent
         }
 
         return [
+            'resource' => $this->serializer->serialize($resource),
             'userEvaluation' => $this->serializer->serialize($userEvaluation, [SerializerInterface::SERIALIZE_MINIMAL]),
             'servers' => $this->bbbManager->getServers(),
-            'bbb' => $this->serializer->serialize($resource),
             'allowRecords' => $allowRecords,
             'canStart' => $canStart,
             'joinStatus' => $joinStatus,
@@ -77,6 +78,13 @@ class BBBListener extends ResourceComponent
         ];
     }
 
+    /** @var BBB $resource */
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        return [
+            'resource' => $this->serializer->serialize($resource),
+        ];
+    }
 
     /** @var BBB $resource */
     public function delete(AbstractResource $resource, FileBag $fileBag, bool $softDelete = true): bool
@@ -84,6 +92,9 @@ class BBBListener extends ResourceComponent
         if (!$softDelete) {
             $this->bbbManager->deleteRecordings($resource);
         }
+
+        // close the room
+        $this->bbbManager->endMeeting($resource);
 
         return true;
     }

@@ -2,16 +2,16 @@ import {createSelector} from 'reselect'
 
 const STORE_NAME = 'text'
 
-const resource = (state) => state[STORE_NAME]
+const store = (state) => state[STORE_NAME]
 
 const text = createSelector(
-  [resource],
-  (resource) => resource.text
+  [store],
+  (store) => store.resource
 )
 
 const availablePlaceholders = createSelector(
-  [resource],
-  (resource) => resource.availablePlaceholders
+  [store],
+  (store) => store.availablePlaceholders
 )
 
 export const selectors = {

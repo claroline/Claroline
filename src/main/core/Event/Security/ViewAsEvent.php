@@ -16,13 +16,10 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ViewAsEvent extends Event
 {
-    private $user;
-    private $role;
-
-    public function __construct(User $user, $role)
-    {
-        $this->user = $user;
-        $this->role = $role;
+    public function __construct(
+        private readonly User $user,
+        private readonly string $role
+    ) {
     }
 
     public function getUser(): User
@@ -30,7 +27,7 @@ class ViewAsEvent extends Event
         return $this->user;
     }
 
-    public function getRole()
+    public function getRole(): string
     {
         return $this->role;
     }

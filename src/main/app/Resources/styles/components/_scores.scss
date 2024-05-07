@@ -5,8 +5,14 @@
 // and is not intended to be customized.
 $separator-size: 1rem;
 
-// todo add mixin to generate size variant
-// todo add a mixin to force it in a panel corner
+@mixin score-box-variant($primary-color, $secondary-color) {
+    color: color-contrast($score-bg);
+    background: $score-bg;
+
+    .user-score {
+
+    }
+}
 
 .score-box {
     display: inline-block;
@@ -29,14 +35,14 @@ $separator-size: 1rem;
         color: $score-bg;
         font-weight: bold;
         background: lighten($score-bg, 50%);
-        border-bottom-left-radius: $score-border-radius - 1;
-        border-top-left-radius: $score-border-radius - 1;
-        padding-right: $separator-size + floor(math.div($score-padding-h, 2));
+        //padding-right: $separator-size + $score-padding-h*.5;
+
+        @include border-start-radius($score-border-radius-sm);
     }
 
     .max-score {
         position: relative;
-        padding-left: floor(math.div($score-padding-h, 2));
+        /*padding-left: $score-padding-h*.5;
         &:before {
             position: absolute;
             top: 0;
@@ -46,56 +52,56 @@ $separator-size: 1rem;
             bottom: 0;
             border-bottom: ($score-font-size + $score-padding-v*2) solid $score-bg;
             border-left: $separator-size solid transparent;
-        }
+        }*/
+    }
+}
+
+// small version of the box (for lists)
+.score-box-sm {
+    font-size: $score-font-size-sm;
+    @include border-radius($score-border-radius-sm);
+
+    .user-score,
+    .max-score {
+        padding: $score-padding-v-sm $score-padding-h-sm;
     }
 
-    // small version of the box (for lists)
-    &.score-box-sm {
-        font-size: $score-font-size-sm;
-        @include border-radius($score-border-radius-sm);
+    .user-score {
+        //padding-right: $separator-size + floor($score-padding-h-sm*.5);
 
-        .user-score,
-        .max-score {
-            padding: $score-padding-v-sm $score-padding-h-sm;
-        }
-
-        .user-score {
-            padding-right: $separator-size + floor(math.div($score-padding-h-sm, 2));
-
-            @include border-start-radius($score-border-radius-sm - 1);
-        }
-
-        .max-score {
-            padding-left: floor(math.div($score-padding-h-sm, 2));
-
-            &:before {
-                border-bottom-width: $score-font-size-sm + $score-padding-v-sm*2;
-            }
-        }
+        @include border-start-radius($score-border-radius-sm);
     }
 
-    // large version of the box
-    &.score-box-lg {
-        font-size: $score-font-size-lg;
-        @include border-radius($score-border-radius-lg);
+    .max-score {
+        //padding-left: $score-padding-h-sm*.5;
 
-        .user-score,
-        .max-score {
-            padding: $score-padding-v-lg $score-padding-h-lg;
+        &:before {
+            border-bottom-width: $score-font-size-sm + $score-padding-v-sm*2;
         }
+    }
+}
 
-        .user-score {
-            padding-right: $separator-size + floor(math.div($score-padding-h-lg, 2));
+// large version of the box
+.score-box-lg {
+    font-size: $score-font-size-lg;
+    @include border-radius($score-border-radius-lg);
 
-            @include border-start-radius($score-border-radius-lg - 1);
-        }
+    .user-score,
+    .max-score {
+        padding: $score-padding-v-lg $score-padding-h-lg;
+    }
 
-        .max-score {
-            padding-left: floor(math.div($score-padding-h-lg, 2));
+    .user-score {
+        //padding-right: $separator-size + floor(math.div($score-padding-h-lg, 2));
 
-            &:before {
-                border-bottom-width: $score-font-size-lg + $score-padding-v-lg*2;
-            }
+        @include border-start-radius($score-border-radius-lg);
+    }
+
+    .max-score {
+        //padding-left: floor(math.div($score-padding-h-lg, 2));
+
+        &:before {
+            border-bottom-width: $score-font-size-lg + $score-padding-v-lg*2;
         }
     }
 }

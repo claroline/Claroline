@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Listener\Resource\Types;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Component\Resource\DownloadableResourceInterface;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\File;
@@ -21,6 +22,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Resource\File\LoadFileEvent;
 use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\FileManager;
+use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -29,7 +31,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Integrates the File resource into Claroline.
  */
-class FileListener extends ResourceComponent
+class FileListener extends ResourceComponent implements DownloadableResourceInterface, EvaluatedResourceInterface
 {
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,
@@ -67,7 +69,7 @@ class FileListener extends ResourceComponent
     public function download(AbstractResource $resource): ?string
     {
         if ($this->fileManager->exists($resource->getHashName())) {
-            return  $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$resource->getHashName();
+            return $this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$resource->getHashName();
         }
 
         return null;

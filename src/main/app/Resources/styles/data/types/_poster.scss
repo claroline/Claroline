@@ -1,0 +1,19 @@
+
+.poster-control {
+
+}
+
+.poster-preview {
+  max-width: 100%;
+  //border-radius: $input-border-radius;
+
+  .poster {
+    max-width: 100%;
+    //border-radius: $input-border-radius;
+  }
+}
+
+.poster-placeholder {
+  background: var(--#{$prefix}tertiary-bg);
+  border-radius: $input-border-radius;
+}

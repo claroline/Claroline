@@ -68,7 +68,7 @@ const Keyword = {
 
 const ClacoForm = {
   propTypes: {
-    id: T.string.isRequired,
+    id: T.string,
     details: T.shape({
       max_entries: T.number,
       creation_enabled: T.bool,
@@ -100,7 +100,7 @@ const ClacoForm = {
       title_field_label: T.string,
       search_restricted: T.bool,
       search_restricted_columns: T.array
-    }).isRequired,
+    }),
     template: T.shape({
       enabled: T.bool.isRequired,
       content: T.string

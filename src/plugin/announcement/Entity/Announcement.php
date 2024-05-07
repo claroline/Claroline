@@ -11,13 +11,14 @@
 
 namespace Claroline\AnnouncementBundle\Entity;
 
+use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -108,10 +109,8 @@ class Announcement
      *     inversedBy="announcements"
      * )
      * @ORM\JoinColumn(name="aggregate_id", onDelete="CASCADE", nullable=false)
-     *
-     * @var AnnouncementAggregate
      */
-    private $aggregate;
+    private ?AnnouncementAggregate $aggregate = null;
 
     /**
      * @ORM\ManyToOne(
@@ -125,7 +124,7 @@ class Announcement
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
      * @ORM\JoinTable(name="claro_announcement_roles")
      */
-    private $roles;
+    private Collection $roles;
 
     public function __construct()
     {

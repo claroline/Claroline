@@ -8,10 +8,10 @@ import {Routes} from '#/main/app/router'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 import {ContentNav} from '#/main/app/content/components/nav'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 
 import {EditorFacet} from '#/main/community/tools/community/editor/components/facet'
 import {getDefaultFacet} from '#/main/community/profile/utils'
+import {EditorPage} from '#/main/app/editor'
 
 const EditorProfile = props => {
   useEffect(() => {
@@ -22,7 +22,10 @@ const EditorProfile = props => {
   }, [props.contextType, props.contextId, props.loaded])
 
   return (
-    <ContentSizing size="lg" className="mt-3">
+    <EditorPage
+      title={trans('user_profile')}
+      help={trans('Ajoutez des champs personnalisés pour enrichir le profil de vos utilisateurs.')}
+    >
       <div className="row">
         <div className="col-md-4">
           <ContentNav
@@ -101,7 +104,7 @@ const EditorProfile = props => {
           />
         </div>
       </div>
-    </ContentSizing>
+    </EditorPage>
   )
 }
 

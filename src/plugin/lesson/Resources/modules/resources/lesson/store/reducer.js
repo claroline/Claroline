@@ -17,15 +17,14 @@ import {
   POSITION_SELECTED
 } from '#/plugin/lesson/resources/lesson/store/actions'
 
-import {reducer as editorReducer} from '#/plugin/lesson/resources/lesson/editor/store/reducer'
-import {selectors as editorSelectors} from '#/plugin/lesson/resources/lesson/editor/store/selectors'
+//import {selectors as editorSelectors} from '#/plugin/lesson/resources/lesson/editor/store/selectors'
 
 const reducer = combineReducers({
   lesson: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.lesson,
-    [makeInstanceAction(FORM_SUBMIT_SUCCESS, editorSelectors.FORM_NAME)]: (state, action) => action.updatedData
+    //[makeInstanceAction(FORM_SUBMIT_SUCCESS, editorSelectors.FORM_NAME)]: (state, action) => action.updatedData
   }),
-  editor: editorReducer,
+  //editor: editorReducer,
   chapter: makeReducer({}, {
     [CHAPTER_LOAD]: (state, action) => action.chapter,
     [CHAPTER_RESET]: () => ({}),

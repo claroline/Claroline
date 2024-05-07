@@ -45,6 +45,7 @@ const PageSimple = {
  */
 const PageFull = {
   propTypes: merge({}, PageSimple.propTypes, {
+    size: T.oneOf(['xl']),
     showHeader: T.bool,
 
     disabled: T.bool,
@@ -56,6 +57,7 @@ const PageFull = {
       label: T.string.isRequired,
       target: T.string
     })),
+    root: T.bool,
 
     /**
      * The title of the page.
@@ -115,7 +117,8 @@ const PageFull = {
     disabled: false,
     actions: [],
     toolbar: 'more',
-    breadcrumb: []
+    breadcrumb: [],
+    root: false
   })
 }
 

@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
 use Innova\PathBundle\Entity\Path\Path;
@@ -25,7 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Used to integrate Path to Claroline resource manager.
  */
-class PathSubscriber extends ResourceComponent
+class PathSubscriber extends ResourceComponent implements EvaluatedResourceInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,

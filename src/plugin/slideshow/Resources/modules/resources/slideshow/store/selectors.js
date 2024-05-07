@@ -1,22 +1,41 @@
 import {createSelector} from 'reselect'
-import get from 'lodash/get'
 
 const STORE_NAME = 'claro_slideshow'
 
-const resource = (state) => state[STORE_NAME]
+const slideshow = (state) => state[STORE_NAME]
 
-const slideshow = createSelector(
-  [resource],
-  (resource) => resource.slideshow
-)
-
-const showOverview = createSelector(
+const slides = createSelector(
   [slideshow],
-  (slideshow) => get(slideshow, 'display.showOverview') || false
+  (slideshow) => slideshow.slides || []
 )
+
+const autoPlay = createSelector(
+  [slideshow],
+  (slideshow) => slideshow.autoPlay
+)
+
+const interval = createSelector(
+  [slideshow],
+  (slideshow) => slideshow.interval
+)
+
+const display = createSelector(
+  [slideshow],
+  (slideshow) => slideshow.display || {}
+)
+
+const showControls = createSelector(
+  [display],
+  (display) => display.showControls
+)
+
 
 export const selectors = {
   STORE_NAME,
+
   slideshow,
-  showOverview
+  slides,
+  autoPlay,
+  interval,
+  showControls
 }

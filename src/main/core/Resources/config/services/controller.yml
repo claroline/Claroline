@@ -17,24 +17,12 @@ services:
             - '@security.token_storage'
             - '@request_stack'
 
-    Claroline\CoreBundle\Controller\APINew\Resource\Types\DirectoryController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-
     Claroline\CoreBundle\Controller\APINew\Resource\Types\FileController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
-
-    Claroline\CoreBundle\Controller\APINew\Resource\Types\TextController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Manager\Template\PlaceholderManager'
-            - '@Claroline\AppBundle\Manager\PdfManager'
 
     Claroline\CoreBundle\Controller\APINew\Resource\ResourceNodeController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController

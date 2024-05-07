@@ -16,7 +16,7 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 
 const User = (props) =>
   <ToolPage
-    className="user-page"
+    size="xl"
     meta={{
       title: get(props.user, 'name'),
       description: get(props.user, 'meta.description')

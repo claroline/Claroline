@@ -14,7 +14,7 @@ const isAnon = (state) => !securitySelectors.isAuthenticated(state)
 
 const clacoForm = createSelector(
   [resource],
-  (resource) => resource.clacoForm
+  (resource) => resource.resource
 )
 
 const hasStatistics = createSelector(
@@ -91,13 +91,13 @@ const listConfiguration = createSelector(
 )
 
 const categories = createSelector(
-  [clacoForm],
-  (clacoForm) => clacoForm.categories
+  [resource],
+  (resource) => resource.categories
 )
 
 const keywords = createSelector(
-  [clacoForm],
-  (clacoForm) => clacoForm.keywords
+  [resource],
+  (resource) => resource.keywords
 )
 
 const roles = createSelector(

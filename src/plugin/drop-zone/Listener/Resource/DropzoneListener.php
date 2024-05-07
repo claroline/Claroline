@@ -17,9 +17,10 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
+use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class DropzoneListener extends ResourceComponent
+class DropzoneListener extends ResourceComponent implements EvaluatedResourceInterface
 {
     public function __construct(
         private readonly string $filesDir,

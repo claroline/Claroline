@@ -9,23 +9,17 @@ class LessonSerializer
 {
     use SerializerTrait;
 
-    public function getName()
+    public function getName(): string
     {
         return 'lesson';
     }
 
-    /**
-     * @return string
-     */
-    public function getClass()
+    public function getClass(): string
     {
         return Lesson::class;
     }
 
-    /**
-     * @return string
-     */
-    public function getSchema()
+    public function getSchema(): string
     {
         return '#/plugin/lesson/lesson.json';
     }

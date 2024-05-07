@@ -92,4 +92,9 @@ class ContextProvider extends AbstractComponentProvider
     {
 
     }
+
+    public function configure(): ?array
+    {
+
+    }
 }

@@ -43,6 +43,9 @@ class AnnouncementSubscriber implements EventSubscriberInterface
         /** @var Announcement $announcement */
         $announcement = $event->getObject();
 
+        /*$announcement->setUpdatedAt(new \DateTime());
+        $announcement->setUpdatedAt(new \DateTime());*/
+
         if (empty($announcement->getCreator())) {
             $currentUser = $this->tokenStorage->getToken()->getUser();
             if ($currentUser instanceof User) {
@@ -94,13 +97,6 @@ class AnnouncementSubscriber implements EventSubscriberInterface
     {
         /** @var Announcement $announcement */
         $announcement = $event->getObject();
-
-        if (!in_array(Options::SOFT_DELETE, $event->getOptions())) {
-            $send = $this->om->getRepository(AnnouncementSend::class)->findBy(['announcement' => $announcement]);
-            foreach ($send as $el) {
-                $this->om->remove($el);
-            }
-        }
 
         // delete scheduled task if any
         $this->manager->unscheduleMessage($announcement);

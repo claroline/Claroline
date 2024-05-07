@@ -11,28 +11,6 @@
 @import "../variables";
 
 // FIXME
-.badge-page {
-  // make image looks bigger than standard page icons
-  .page-icon {
-    width: map-get($icon-sizes, xl);
-    height: map-get($icon-sizes, xl);
-    margin-bottom: map-get($spacers, 5) * -1;
-
-    .badge-image {
-      padding: $thumbnail-padding;
-    }
-  }
-
-  .page-header {
-    margin-bottom: map-get($spacers, 5);
-  }
-
-  .page-header-content {
-    align-items: flex-end;
-  }
-}
-
-// FIXME
 .badge-card {
   .data-card-header {
     background: transparent !important;

@@ -14,6 +14,7 @@ namespace Claroline\ClacoFormBundle\Entity;
 use Claroline\AppBundle\Entity\Parameters\ListParameters;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,20 +47,17 @@ class ClacoForm extends AbstractResource
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Category",
      *     mappedBy="clacoForm"
      * )
-     *
-     * @var Category[]
      */
-    private $categories;
+    private Collection $categories;
 
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Keyword",
-     *     mappedBy="clacoForm"
+     *     mappedBy="clacoForm",
+     *     orphanRemoval=true
      * )
-     *
-     * @var Keyword[]
      */
-    private $keywords;
+    private Collection $keywords;
 
     /**
      * @ORM\Column(type="json", nullable=true)
@@ -112,48 +110,104 @@ class ClacoForm extends AbstractResource
      *
      * @return Field[]
      */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields->toArray();
     }
 
-    public function addField(Field $field)
+    public function addField(Field $field): void
     {
         if (!$this->fields->contains($field)) {
             $this->fields->add($field);
         }
-
-        return $this;
     }
 
-    public function removeField(Field $field)
+    public function removeField(Field $field): void
     {
         if ($this->fields->contains($field)) {
             $this->fields->removeElement($field);
         }
-
-        return $this;
     }
 
-    public function emptyFields()
+    public function emptyFields(): void
     {
-        return $this->fields->clear();
+        $this->fields->clear();
+    }
+
+    public function getCategory(string $categoryId): ?Category
+    {
+        $found = null;
+
+        foreach ($this->categories as $category) {
+            if ($category->getUuid() === $categoryId) {
+                $found = $category;
+                break;
+            }
+        }
+
+        return $found;
     }
 
     /**
      * @return Category[]
      */
-    public function getCategories()
+    public function getCategories(): array
     {
         return $this->categories->toArray();
+    }
+
+    public function addCategory(Category $category): void
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+            $category->setClacoForm($this);
+        }
+    }
+
+    public function removeCategory(Category $category): void
+    {
+        if ($this->categories->contains($category)) {
+            $this->categories->removeElement($category);
+            $category->setClacoForm(null);
+        }
+    }
+
+    public function getKeyword(string $keywordId): ?Keyword
+    {
+        $found = null;
+
+        foreach ($this->keywords as $keyword) {
+            if ($keyword->getUuid() === $keywordId) {
+                $found = $keyword;
+                break;
+            }
+        }
+
+        return $found;
     }
 
     /**
      * @return Keyword[]
      */
-    public function getKeywords()
+    public function getKeywords(): array
     {
         return $this->keywords->toArray();
+    }
+
+    public function addKeyword(Keyword $keyword): void
+    {
+        if (!$this->keywords->contains($keyword)) {
+            $this->keywords->add($keyword);
+            $keyword->setClacoForm($this);
+        }
+    }
+
+    public function removeKeyword(Keyword $keyword): void
+    {
+        if ($this->keywords->contains($keyword)) {
+            $this->keywords->removeElement($keyword);
+            $keyword->setClacoForm(null);
+        }
     }
 
     public function getShowConfirm(): bool

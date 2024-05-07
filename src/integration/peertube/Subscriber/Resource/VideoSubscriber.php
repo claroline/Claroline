@@ -11,13 +11,14 @@ use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
+use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Claroline\PeerTubeBundle\Entity\Video;
 use Claroline\PeerTubeBundle\Manager\EvaluationManager;
 use Claroline\PeerTubeBundle\Manager\PeerTubeManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Twig\Environment;
 
-class VideoSubscriber extends ResourceComponent
+class VideoSubscriber extends ResourceComponent implements EvaluatedResourceInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,

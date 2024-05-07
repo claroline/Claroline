@@ -23,6 +23,7 @@ const SlideModal = props =>
     })}
     title={trans(props.isNew ? 'new_slide' : 'slide_parameters', {}, 'slideshow')}
     subtitle={get(props.slide, 'meta.title')}
+    size="lg"
     onEntering={() => {
       if (props.slide) {
         props.reset(props.slide)
@@ -34,37 +35,17 @@ const SlideModal = props =>
     <FormData
       level={5}
       name={selectors.STORE_NAME}
+      flush={true}
       sections={[
         {
           title: trans('general'),
           primary: true,
           fields: [
             {
-              name: 'type',
-              label: trans('type'),
-              type: 'choice',
-              required: true,
-              //calculated: (slide) => slide.content slide.type || (slideslide.mimeType.s
-              options: {
-                condensed: true,
-                choices: {
-                  image: trans('image')/*,
-                  video: trans('video')*/
-                }
-              },
-              linked: [
-                {
-                  name: 'content',
-                  type: 'file',
-                  label: trans('file'),
-                  hideLabel: true,
-                  required: true,
-                  displayed: (slide) => -1 !== ['image', 'video'].indexOf(slide.type),
-                  options: {
-                    types: ['image/*']
-                  }
-                }
-              ]
+              name: 'content',
+              type: 'image',
+              label: trans('image'),
+              required: true
             }
           ]
         }, {

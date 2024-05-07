@@ -7,7 +7,6 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
 import {RESOURCE_LOAD} from '#/main/core/resource/store'
 
 import {USER_NOTIFIED, USER_NOT_NOTIFIED} from '#/plugin/forum/resources/forum/store/actions'
-import {reducer as editorReducer} from '#/plugin/forum/resources/forum/editor/store/reducer'
 import {reducer as playerReducer} from '#/plugin/forum/resources/forum/player/store/reducer'
 import {reducer as moderationReducer} from '#/plugin/forum/resources/forum/moderation/store/reducer'
 import {reducer as overviewReducer} from '#/plugin/forum/resources/forum/overview/store/reducer'
@@ -36,7 +35,6 @@ const reducer = combineReducers({
   }),
   lastMessages: overviewReducer,
   moderation: moderationReducer,
-  forumForm: editorReducer,
   subjects: playerReducer
 })
 

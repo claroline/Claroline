@@ -2,63 +2,41 @@
 
 namespace Claroline\ClacoFormBundle\Serializer;
 
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 
 class KeywordSerializer
 {
     use SerializerTrait;
 
-    private $clacoFormRepo;
-
-    /**
-     * KeywordSerializer constructor.
-     */
-    public function __construct(ObjectManager $om)
-    {
-        $this->clacoFormRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\ClacoForm');
-    }
-
-    public function getName()
+    public function getName(): string
     {
         return 'clacoform_keyword';
     }
 
-    /**
-     * Serializes a Keyword entity for the JSON api.
-     *
-     * @param Keyword $keyword - the keyword to serialize
-     * @param array   $options - a list of serialization options
-     *
-     * @return array - the serialized representation of the keyword
-     */
-    public function serialize(Keyword $keyword, array $options = [])
+    public function getClass(): string
     {
-        $serialized = [
+        return Keyword::class;
+    }
+
+    public function serialize(Keyword $keyword, array $options = []): array
+    {
+        return [
             'id' => $keyword->getUuid(),
             'name' => $keyword->getName(),
         ];
-
-        return $serialized;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return Keyword
-     */
-    public function deserialize($data, Keyword $keyword)
+    public function deserialize(array $data, Keyword $keyword, array $options = []): Keyword
     {
-        $this->sipe('name', 'setName', $data, $keyword);
-
-        if (isset($data['clacoForm']['id'])) {
-            $clacoForm = $this->clacoFormRepo->findOneBy(['uuid' => $data['clacoForm']['id']]);
-
-            if (!empty($clacoForm)) {
-                $keyword->setClacoForm($clacoForm);
-            }
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $keyword);
+        } else {
+            $keyword->refreshUuid();
         }
+
+        $this->sipe('name', 'setName', $data, $keyword);
 
         return $keyword;
     }

@@ -4,12 +4,12 @@ const BBB = {
   propTypes: {
     id: T.string,
     welcomeMessage: T.string,
-    newTab: T.boolean,
-    moderatorRequired: T.boolean,
-    record: T.boolean,
+    newTab: T.bool,
+    moderatorRequired: T.bool,
+    record: T.bool,
     ratio: T.number,
-    activated: T.boolean,
-    customUsernames: T.boolean,
+    activated: T.bool,
+    customUsernames: T.bool,
     runningOn: T.string,
     restrictions: T.shape({
       disabled: T.bool,

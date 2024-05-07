@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {withRouter} from '#/main/app/router'
@@ -10,46 +11,63 @@ import {LinkButton} from '#/main/app/buttons/link'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
-import get from 'lodash/get'
-import {ResourcePage} from '#/main/core/resource'
+
+import {ResourceOverview} from '#/main/core/resource'
+import {PageSection} from '#/main/app/page/components/section'
 
 const OverviewComponent = props =>
-  <ResourcePage>
-    <div className="resource-section resource-overview">
-      {props.canAddEntry &&
-        <LinkButton
-          className="btn-overview"
-          target={`${props.path}/entry/form`}
-        >
-          <span className="action-icon fa fa-plus" />
-          <span className="action-label">{trans('add-entry', {}, 'actions')}</span>
-        </LinkButton>
-      }
+  <ResourceOverview>
+    <PageSection size="md" className="py-3">
+      {(props.canAddEntry || props.canSearchEntry || props.randomEnabled) &&
+        <ul className="list-group">
+          {props.canAddEntry &&
+            <LinkButton
+              className="list-group-item list-group-item-action d-flex gap-3 p-3"
+              target={`${props.path}/entry/form`}
+            >
+              <span className="fa fa-fw fa-plus fs-2" aria-hidden={true} />
+              <div className="" role="presentation">
+                <h5 className="mb-1">{trans('new_entry', {}, 'clacoform')}</h5>
+                <p className="mb-0 text-body-secondary">{trans('new_entry_help', {}, 'clacoform')}</p>
+              </div>
+              <span className="fa fa-chevron-right text-body-tertiary ms-auto align-self-center" aria-hidden={true} />
+            </LinkButton>
+          }
 
-      {props.canSearchEntry &&
-        <LinkButton
-          className="btn-overview"
-          target={`${props.path}/entries`}
-        >
-          <span className="action-icon fa fa-search" />
-          <span className="action-label">{trans('find_entry', {}, 'clacoform')}</span>
-        </LinkButton>
-      }
+          {props.canSearchEntry &&
+            <LinkButton
+              className="list-group-item list-group-item-action d-flex gap-3 p-3"
+              target={`${props.path}/entries`}
+            >
+              <span className="fa fa-fw fa-search fs-2" />
+              <div className="" role="presentation">
+                <h5 className="mb-1">{trans('entries_list', {}, 'clacoform')}</h5>
+                <p className="mb-0 text-body-secondary">{trans('entries_list_help', {}, 'clacoform')}</p>
+              </div>
+              <span className="fa fa-chevron-right text-body-tertiary ms-auto align-self-center" aria-hidden={true} />
+            </LinkButton>
+          }
 
-      {props.randomEnabled &&
-        <AsyncButton
-          className="btn-overview"
-          request={{
-            url: ['claro_claco_form_entry_random', {clacoForm: props.resourceId}],
-            success: (entryId) => props.history.push(`${props.path}/entries/${entryId}`)
-          }}
-        >
-          <span className="action-icon fa fa-random" />
-          <span className="action-label">{trans('random_entry', {}, 'clacoform')}</span>
-        </AsyncButton>
+          {props.randomEnabled &&
+            <AsyncButton
+              className="list-group-item list-group-item-action d-flex gap-3 p-3"
+              request={{
+                url: ['claro_claco_form_entry_random', {clacoForm: props.resourceId}],
+                success: (entryId) => props.history.push(`${props.path}/entries/${entryId}`)
+              }}
+            >
+              <span className="fa fa-fw fa-random fs-2" />
+              <div className="" role="presentation">
+                <h5 className="mb-1">{trans('random_entry', {}, 'clacoform')}</h5>
+                <p className="mb-0 text-body-secondary">{trans('random_entry_help', {}, 'clacoform')}</p>
+              </div>
+              <span className="fa fa-chevron-right text-body-tertiary ms-auto align-self-center" aria-hidden={true} />
+            </AsyncButton>
+          }
+        </ul>
       }
-    </div>
-  </ResourcePage>
+    </PageSection>
+  </ResourceOverview>
 
 OverviewComponent.propTypes = {
   path: T.string.isRequired,

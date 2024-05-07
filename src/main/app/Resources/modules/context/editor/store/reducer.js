@@ -5,7 +5,7 @@ import {CONTEXT_LOAD_AVAILABLE_TOOLS} from '#/main/app/context/editor/store/acti
 import {selectors} from '#/main/app/context/editor/store/selectors'
 
 const reducer = combineReducers({
-  form: makeFormReducer(selectors.STORE_NAME),
+  form: makeFormReducer(selectors.FORM_NAME),
   availableTools: makeReducer([], {
     [CONTEXT_LOAD_AVAILABLE_TOOLS]: (state, action) => action.tools || []
   })

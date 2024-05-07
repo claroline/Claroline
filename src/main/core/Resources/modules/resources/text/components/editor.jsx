@@ -1,19 +1,18 @@
-import React, {useEffect} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import React from 'react'
+import {useSelector} from 'react-redux'
 
 import {trans} from '#/main/app/intl'
-import {actions as formActions} from '#/main/app/content/form/store'
-import {ResourceEditor, selectors as resourceSelectors} from '#/main/core/resource'
+import {EditorPage} from '#/main/app/editor'
+import {ResourceEditor} from '#/main/core/resource'
 
 import {selectors} from '#/main/core/resources/text/store'
-import {FormContent} from '#/main/app/content/form/containers/content'
 
 const TextContent = () => {
   const availablePlaceholders = useSelector(selectors.availablePlaceholders)
 
   return (
-    <FormContent
-      name={resourceSelectors.EDITOR_NAME}
+    <EditorPage
+      title={trans('content')}
       definition={[
         {
           title: trans('general'),
@@ -39,16 +38,11 @@ const TextContent = () => {
 }
 
 const TextEditor = () => {
-  const dispatch = useDispatch()
   const originalText = useSelector(selectors.text)
-
-  // load text resource in editor
-  useEffect(() => {
-    dispatch(formActions.load(resourceSelectors.EDITOR_NAME, {resource: originalText}))
-  }, [originalText.id])
 
   return (
     <ResourceEditor
+      additionalData={() => ({resource: originalText})}
       defaultPage="content"
       pages={[{
         name: 'content',

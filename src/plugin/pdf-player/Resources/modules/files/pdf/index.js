@@ -1,8 +1,8 @@
-import {PdfPlayer} from '#/plugin/pdf-player/files/pdf/containers/player'
+import {PdfFile} from '#/plugin/pdf-player/files/pdf/containers/file'
 
 const fileType = {
   components: {
-    player: PdfPlayer
+    player: PdfFile
   },
   styles: ['claroline-distribution-plugin-pdf-player-pdf-resource']
 }

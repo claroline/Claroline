@@ -8,8 +8,9 @@ const EVALUATION_STATUS_UNKNOWN       = 'unknown'
 const EVALUATION_STATUS_OPENED        = 'opened'
 const EVALUATION_STATUS_INCOMPLETE    = 'incomplete'
 const EVALUATION_STATUS_PARTICIPATED  = 'participated'
-const EVALUATION_STATUS_FAILED        = 'failed'
 const EVALUATION_STATUS_COMPLETED     = 'completed'
+const EVALUATION_STATUS_PENDING       = 'pending'
+const EVALUATION_STATUS_FAILED        = 'failed'
 const EVALUATION_STATUS_PASSED        = 'passed'
 
 const EVALUATION_STATUS_PRIORITY = {
@@ -21,7 +22,8 @@ const EVALUATION_STATUS_PRIORITY = {
   [EVALUATION_STATUS_PARTICIPATED]:  4,
   [EVALUATION_STATUS_FAILED]:        5,
   [EVALUATION_STATUS_COMPLETED]:     6,
-  [EVALUATION_STATUS_PASSED]:        7
+  [EVALUATION_STATUS_PENDING]:       7,
+  [EVALUATION_STATUS_PASSED]:        8
 }
 
 const EVALUATION_STATUS_COLOR = {
@@ -31,8 +33,9 @@ const EVALUATION_STATUS_COLOR = {
   [EVALUATION_STATUS_OPENED]:        'info',
   [EVALUATION_STATUS_INCOMPLETE]:    'info',
   [EVALUATION_STATUS_PARTICIPATED]:  'success',
-  [EVALUATION_STATUS_FAILED]:        'danger',
   [EVALUATION_STATUS_COMPLETED]:     'success',
+  [EVALUATION_STATUS_PENDING]:       'warning',
+  [EVALUATION_STATUS_FAILED]:        'danger',
   [EVALUATION_STATUS_PASSED]:        'success'
 }
 
@@ -43,8 +46,9 @@ const EVALUATION_STATUSES = {
   [EVALUATION_STATUS_OPENED]:        trans('evaluation_opened_status', {}, 'evaluation'),
   [EVALUATION_STATUS_INCOMPLETE]:    trans('evaluation_incomplete_status', {}, 'evaluation'),
   [EVALUATION_STATUS_PARTICIPATED]:  trans('evaluation_participated_status', {}, 'evaluation'),
-  [EVALUATION_STATUS_FAILED]:        trans('evaluation_failed_status', {}, 'evaluation'),
   [EVALUATION_STATUS_COMPLETED]:     trans('evaluation_completed_status', {}, 'evaluation'),
+  [EVALUATION_STATUS_PENDING]:       trans('evaluation_pending_status', {}, 'evaluation'),
+  [EVALUATION_STATUS_FAILED]:        trans('evaluation_failed_status', {}, 'evaluation'),
   [EVALUATION_STATUS_PASSED]:        trans('evaluation_passed_status', {}, 'evaluation')
 }
 
@@ -55,8 +59,9 @@ const EVALUATION_STATUSES_SHORT = {
   [EVALUATION_STATUS_OPENED]:        trans('evaluation_opened_short', {}, 'evaluation'),
   [EVALUATION_STATUS_INCOMPLETE]:    trans('evaluation_incomplete_short', {}, 'evaluation'),
   [EVALUATION_STATUS_PARTICIPATED]:  trans('evaluation_participated_short', {}, 'evaluation'),
-  [EVALUATION_STATUS_FAILED]:        trans('evaluation_failed_short', {}, 'evaluation'),
   [EVALUATION_STATUS_COMPLETED]:     trans('evaluation_completed_short', {}, 'evaluation'),
+  [EVALUATION_STATUS_PENDING]:       trans('evaluation_pending_short', {}, 'evaluation'),
+  [EVALUATION_STATUS_FAILED]:        trans('evaluation_failed_short', {}, 'evaluation'),
   [EVALUATION_STATUS_PASSED]:        trans('evaluation_passed_short', {}, 'evaluation')
 }
 
@@ -72,6 +77,7 @@ export const constants = {
   EVALUATION_STATUS_UNKNOWN,
   EVALUATION_STATUS_OPENED,
   EVALUATION_STATUS_INCOMPLETE,
+  EVALUATION_STATUS_PENDING,
   EVALUATION_STATUS_PARTICIPATED,
   EVALUATION_STATUS_COMPLETED,
   EVALUATION_STATUS_PASSED,

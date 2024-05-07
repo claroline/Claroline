@@ -31,41 +31,18 @@ class ChapterController
 {
     use PermissionCheckerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var Environment */
-    private $templating;
-    /** @var FinderProvider */
-    private $finder;
-    /** @var ChapterManager */
-    private $chapterManager;
-    /** @var ChapterSerializer */
-    private $chapterSerializer;
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var PdfManager */
-    private $pdfManager;
-
-    /** @var ChapterRepository */
-    private $chapterRepository;
+    private ChapterRepository $chapterRepository;
 
     public function __construct(
-        ObjectManager $om,
-        Environment $templating,
-        FinderProvider $finder,
-        ChapterSerializer $chapterSerializer,
-        ChapterManager $chapterManager,
         AuthorizationCheckerInterface $authorization,
-        PdfManager $pdfManager
+        private readonly ObjectManager $om,
+        private readonly Environment $templating,
+        private readonly FinderProvider $finder,
+        private readonly ChapterSerializer $chapterSerializer,
+        private readonly ChapterManager $chapterManager,
+        private readonly PdfManager $pdfManager
     ) {
-        $this->om = $om;
-        $this->templating = $templating;
-        $this->finder = $finder;
-        $this->chapterSerializer = $chapterSerializer;
-        $this->chapterManager = $chapterManager;
         $this->authorization = $authorization;
-        $this->pdfManager = $pdfManager;
-
         $this->chapterRepository = $this->om->getRepository(Chapter::class);
     }
 
@@ -74,7 +51,7 @@ class ChapterController
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'chapter';
     }
@@ -100,6 +77,8 @@ class ChapterController
      * Get chapter tree.
      *
      * @Route("/tree", name="apiv2_lesson_tree_get", methods={"GET"})
+     *
+     * @deprecated
      */
     public function getTreeAction(Lesson $lesson): JsonResponse
     {

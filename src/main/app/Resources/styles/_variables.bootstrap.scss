@@ -655,7 +655,8 @@ $font-sizes: (
         3: $h3-font-size,
         4: $h4-font-size,
         5: $h5-font-size,
-        6: $h6-font-size
+        6: $h6-font-size,
+        sm: $font-size-sm
 ) !default;
 // scss-docs-end font-sizes
 
@@ -1589,7 +1590,7 @@ $alert-color-scale:             40% !default; // Deprecated in v5.2.0, to be rem
 $progress-height:                   1rem !default;
 $progress-font-size:                $font-size-base * .75 !default;
 $progress-bg:                       var(--#{$prefix}secondary-bg) !default;
-$progress-border-radius:            var(--#{$prefix}border-radius) !default;
+$progress-border-radius:            var(--#{$prefix}border-radius-sm) !default;
 $progress-box-shadow:               var(--#{$prefix}box-shadow-inset) !default;
 $progress-bar-color:                $white !default;
 $progress-bar-bg:                   $primary !default;

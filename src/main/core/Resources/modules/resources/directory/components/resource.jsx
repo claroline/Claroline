@@ -2,15 +2,13 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import omit from 'lodash/omit'
 
-import {ResourcePage} from '#/main/core/resource/containers/page'
-
-import {PlayerMain} from '#/main/core/resources/directory/player/containers/main'
-import {EditorMain} from '#/main/core/resources/directory/editor/containers/main'
-import {DirectorySummary} from '#/main/core/resources/directory/containers/summary'
-import {Resource} from '#/main/core/resource'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl'
+import {LINK_BUTTON} from '#/main/app/buttons'
+import {Resource} from '#/main/core/resource'
 
+import {DirectoryEditor} from '#/main/core/resources/directory/editor/components/main'
+import {DirectoryPlayer} from '#/main/core/resources/directory/containers/player'
+import {DirectorySummary} from '#/main/core/resources/directory/containers/summary'
 
 const DirectoryResource = (props) =>
   <Resource
@@ -24,28 +22,26 @@ const DirectoryResource = (props) =>
         target: `${props.basePath}/trash`,
         displayed: props.isRoot && props.canAdministrate
         //exact: true
-      }, {
+      }/*, {
         type: LINK_BUTTON,
         //icon: 'fa fa-fw fa-sitemap',
         label: trans('Arborescence'),
         target: `${props.path}/summary`,
         displayed: props.isRoot
-      }
+      }*/
     ]}
+    editor={DirectoryEditor}
     pages={[
       {
         path: '/:all(all)?',
         exact: true,
         render(routeProps) {
           return (
-            <PlayerMain
+            <DirectoryPlayer
               all={routeProps.match.params.all}
             />
           )
         }
-      }, {
-        path: '/edit',
-        component: EditorMain
       }, {
         path: '/summary',
         component: DirectorySummary

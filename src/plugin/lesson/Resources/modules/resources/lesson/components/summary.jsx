@@ -6,8 +6,8 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {SearchMinimal} from '#/main/app/content/search/components/minimal'
 import {ContentSummary} from '#/main/app/content/components/summary'
+
 import {getNumbering} from '#/plugin/lesson/resources/lesson/utils'
-import {ResourcePage} from '#/main/core/resource'
 
 const LessonSummary = props => {
   function getChapterSummary(chapter) {
@@ -20,12 +20,19 @@ const LessonSummary = props => {
     return {
       id: chapter.id,
       type: LINK_BUTTON,
-      label: numbering + chapter.title,
+      label: (
+        <>
+          {numbering &&
+            <b className="me-2 text-primary">{numbering}</b>
+          }
+          {chapter.title}
+        </>
+      ),
       target: `${props.path}/${chapter.slug}`,
       onClick: props.autoClose,
       active: !!matchPath(props.location.pathname, {path: `${props.path}/${chapter.slug}`}),
       additional: [
-        {
+        /*{
           name: 'add',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-plus',
@@ -52,7 +59,7 @@ const LessonSummary = props => {
           onClick: props.autoClose,
           displayed: props.editable,
           group: trans('management')
-        }, {
+        }, */{
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-file-pdf',
           displayed: props.canExport,
@@ -60,7 +67,7 @@ const LessonSummary = props => {
           group: trans('transfer'),
           onClick: props.autoClose,
           callback: () => props.downloadChapterPdf(props.lesson.id, chapter.id)
-        }, {
+        }/*, {
           name: 'delete',
           type: CALLBACK_BUTTON,
           icon: 'fa fa-fw fa-trash',
@@ -69,7 +76,7 @@ const LessonSummary = props => {
           displayed: props.editable,
           dangerous: true,
           group: trans('management')
-        }
+        }*/
       ],
       children: chapter.children ? chapter.children.map(getChapterSummary) : []
     }
@@ -79,41 +86,40 @@ const LessonSummary = props => {
 
   let baseLinks = []
   if (props.overview) {
-    baseLinks = [{
+    /*baseLinks = [{
       name: 'overview',
       type: LINK_BUTTON,
       icon: 'fa fa-fw fa-home',
       label: trans('home'),
       target: props.path + '/',
       exact: true
-    }]
+    }]*/
   }
 
   return (
-    <ResourcePage>
+    <>
       <SearchMinimal
-        className="app-menu-search"
+        className="mb-3"
+        /*size="lg"*/
         placeholder={trans('lesson_search', {}, 'lesson')}
         search={(searchStr) => {
           props.search(searchStr, props.internalNotes)
           // open search list
           props.history.push(props.path+'/chapters')
-
-          props.autoClose()
         }}
       />
 
       <ContentSummary
-        links={baseLinks.concat(chapters.map(getChapterSummary), [{
+        links={baseLinks.concat(chapters.map(getChapterSummary), [/*{
           name: 'create-chapter',
           type: LINK_BUTTON,
           icon: 'fa fa-fw fa-plus',
           label: trans('chapter_creation', {}, 'lesson'),
           target: `${props.path}/new`,
           displayed: props.editable
-        }])}
+        }*/])}
       />
-    </ResourcePage>
+    </>
   )
 }
 

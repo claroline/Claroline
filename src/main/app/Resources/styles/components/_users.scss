@@ -94,29 +94,6 @@
 }
 
 // FIXME
-.user-page {
-    // make avatar looks bigger than standard page icons
-    .page-icon {
-        width: map-get($icon-sizes, xl);
-        height: map-get($icon-sizes, xl);
-        //margin-top: $grid-gutter-width*.5;
-        margin-bottom: map-get($spacers, 5) * -1;
-
-        .user-avatar {
-            padding: $thumbnail-padding;
-        }
-    }
-
-    .page-header {
-        margin-bottom: map-get($spacers, 5);
-    }
-
-    .page-header-content {
-        align-items: flex-end;
-    }
-}
-
-// FIXME
 .user-card {
     .data-card-header {
         background: transparent !important;

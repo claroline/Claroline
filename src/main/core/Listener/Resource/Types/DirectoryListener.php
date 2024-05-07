@@ -62,14 +62,20 @@ class DirectoryListener extends ResourceComponent
         ]);
     }
 
-    /**
-     * Loads a directory.
-     */
+    /** @param Directory $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
         return [
-            'directory' => $this->serializer->serialize($resource),
+            'resource' => $this->serializer->serialize($resource),
             'storageLock' => $this->fileManager->isStorageFull(),
+        ];
+    }
+
+    /** @param Directory $resource */
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        return [
+            'resource' => $this->serializer->serialize($resource),
         ];
     }
 

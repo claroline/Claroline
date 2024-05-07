@@ -86,7 +86,7 @@ class Modal extends Component {
   render() {
     return (
       <BaseModal
-        {...omit(this.props, 'fadeModal', 'hideModal', 'icon', 'title', 'subtitle', 'className', 'children')}
+        {...omit(this.props, 'fadeModal', 'hideModal', 'closeButton', 'icon', 'title', 'subtitle', 'className', 'children')}
         autoFocus={true}
         enforceFocus={false}
         dialogClassName={this.props.className}
