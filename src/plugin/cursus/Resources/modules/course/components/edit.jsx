@@ -23,7 +23,7 @@ const CourseEditComponent = (props) =>
     course={props.course}
   >
     <CourseForm
-      path={props.path + '/catalog'}
+      path={props.path}
       name={selectors.FORM_NAME}
     />
   </CoursePage>

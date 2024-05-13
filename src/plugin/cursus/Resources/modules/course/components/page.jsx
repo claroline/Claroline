@@ -41,7 +41,7 @@ const Course = (props) => {
         {
           type: LINK_BUTTON,
           label: trans('catalog', {}, 'cursus'),
-          target: props.path + '/catalog',
+          target: props.path,
           displayed: 'desktop' === props.contextType
         }, {
           type: LINK_BUTTON,
@@ -50,7 +50,7 @@ const Course = (props) => {
         }
       ].concat(props.course ? props.breadcrumb : [])}
       primaryAction="edit"
-      actions={getActions([props.course], {}, '', props.currentUser)}
+      actions={getActions([props.course], {}, props.path, props.currentUser)}
     >
       {props.children}
     </ToolPage>

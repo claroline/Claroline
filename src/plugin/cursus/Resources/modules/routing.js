@@ -3,7 +3,7 @@ import {route as toolRoute} from '#/main/core/tool/routing'
 function route(course, session = null, basePath = null) {
   let coursePath
   if (basePath) {
-    coursePath = `${basePath}/catalog/${course.slug}`
+    coursePath = `${basePath}/${course.slug}`
   } else {
     coursePath = `${toolRoute('trainings') }/catalog/${course.slug}`
   }

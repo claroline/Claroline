@@ -16,7 +16,8 @@ const CourseCreationComponent = (props) =>
     path={[{
       type: LINK_BUTTON,
       label: trans('catalog', {}, 'cursus'),
-      target: props.path + '/catalog'
+      target: props.path,
+      displayed: 'desktop' === props.contextType
     }, {
       type: LINK_BUTTON,
       label: trans('new_course', {}, 'cursus'),
@@ -30,25 +31,27 @@ const CourseCreationComponent = (props) =>
       type: LINK_BUTTON,
       icon: 'fa fa-fw fa-plus',
       label: trans('add_course', {}, 'cursus'),
-      target: `${props.path}/catalog/new`,
+      target: props.path,
       group: trans('management'),
       primary: true
     }]}
   >
     <CourseForm
-      path={props.path + '/catalog'}
+      path={props.path}
       name={selectors.FORM_NAME}
     />
   </ToolPage>
 
 CourseCreationComponent.propTypes = {
-  path: T.string.isRequired
+  path: T.string.isRequired,
+  contextType: T.string.isRequired
 }
 
 const CourseCreation = connect(
   (state) => ({
     path: toolSelectors.path(state),
-    course: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME))
+    course: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)),
+    contextType: toolSelectors.contextType(state)
   })
 )(CourseCreationComponent)
 
