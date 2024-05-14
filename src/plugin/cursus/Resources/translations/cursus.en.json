@@ -105,6 +105,7 @@
     "export-presences-empty": "Download the attendance list (empty)",
     "export-presences-filled": "Download the attendance list (filled)",
     "no_course": "No training",
+    "no_course_help": "No training is linked to this workspace",
     "no_session": "No session",
     "session_info": "Session information",
     "download_presence": "Download the certificate of presence (.pdf)",

@@ -24,7 +24,11 @@ const CourseRegistration = (props) => {
         type: CALLBACK_BUTTON,
         callback: () => props.save(props.course, props.isNew, props.name).then(course => {
           if (props.isNew) {
-            history.push(route(course))
+            if ('workspace' === props.contextType) {
+              history.push(props.path)
+            } else {
+              history.push(route(course))
+            }
           }
         })
       }}
@@ -166,7 +170,8 @@ CourseRegistration.propTypes = {
   course: T.shape(
     CourseTypes.propTypes
   ),
-  update: T.func.isRequired
+  update: T.func.isRequired,
+  contextType: T.string.isRequired
 }
 
 export {
