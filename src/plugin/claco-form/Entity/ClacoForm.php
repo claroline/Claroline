@@ -64,7 +64,7 @@ class ClacoForm extends AbstractResource
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    private array $details = [];
+    private ?array $details = [];
 
     /**
      * Ask for confirmation when a user submit a new entry.
@@ -188,7 +188,7 @@ class ClacoForm extends AbstractResource
 
     public function getDetails()
     {
-        return $this->details;
+        return $this->details || [];
     }
 
     public function setDetails($details): void
