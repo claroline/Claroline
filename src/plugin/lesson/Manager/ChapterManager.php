@@ -85,7 +85,7 @@ class ChapterManager
      */
     public function createChapter(Lesson $lesson, array $data = [], Chapter $parent = null): Chapter
     {
-        $newChapter = $this->crud->create(Chapter::class, $data);
+        $newChapter = $this->crud->create(Chapter::class, $data, [Crud::NO_PERMISSIONS]);
         $newChapter->setLesson($lesson);
 
         $this->insertChapterInPlace($newChapter, $parent, $data);
