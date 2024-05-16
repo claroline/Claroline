@@ -30,6 +30,7 @@ const Course = (props) =>
           },
           render: (routerProps) => (
             <CourseDetails
+              contextType={props.contextType}
               path={props.path + (routerProps.match.params.id && !['sessions', 'participants', 'pending', 'events', 'about', 'desktop'].includes(routerProps.match.params.id) ? '/' + routerProps.match.params.id : '')}
               history={props.history}
               course={props.course}
@@ -79,6 +80,7 @@ Course.propTypes = {
   }),
   participantsView: T.string.isRequired,
   switchParticipantsView: T.func.isRequired,
+  contextType: T.string.isRequired,
   openSession: T.func.isRequired,
   reload: T.func.isRequired,
   register: T.func.isRequired

@@ -11,7 +11,7 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 
 import {route} from '#/plugin/cursus/routing'
 import {getInfo} from '#/plugin/cursus/utils'
-import {getActions} from '#/plugin/cursus/course/utils'
+import {hasPermission} from '#/main/app/security'
 
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {selectors as securitySelectors} from '#/main/app/security/store'
@@ -50,7 +50,19 @@ const Course = (props) => {
         }
       ].concat(props.course ? props.breadcrumb : [])}
       primaryAction="edit"
-      actions={getActions([props.course], {}, props.path, props.currentUser)}
+      actions={[
+        {
+          name: 'edit',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-pencil',
+          label: trans('edit', {}, 'actions'),
+          target: ('desktop' === props.contextType ? route(props.course, null) : props.path.replace('/about', '')) + '/edit',
+          displayed: hasPermission('edit', props.course),
+          primary: true,
+          group: trans('management'),
+          scope: ['object']
+        }
+      ]}
     >
       {props.children}
     </ToolPage>

@@ -10,7 +10,6 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
-import {route} from '#/plugin/cursus/routing'
 import {MODAL_SESSION_FORM} from '#/plugin/cursus/session/modals/parameters'
 import {SessionList} from '#/plugin/cursus/session/components/list'
 import {selectors} from '#/plugin/cursus/course/store'
@@ -24,6 +23,7 @@ const CourseSessions = (props) =>
       className="my-3"
       path={props.path}
       name={selectors.STORE_NAME+'.courseSessions'}
+      contextType={props.contextType}
       url={['apiv2_cursus_course_list_sessions', {id: props.course.id}]}
       delete={{
         url: ['apiv2_cursus_session_delete_bulk'],
@@ -111,9 +111,9 @@ const CourseSessions = (props) =>
         label={trans('add_session', {}, 'cursus')}
         modal={[MODAL_SESSION_FORM, {
           course: props.course,
-          onSave: (newSession) => {
+          onSave: () => {
             // open created session, but let user on sessions list to allow multiples creations
-            props.history.push(route(props.course, newSession)+'/sessions')
+            props.history.push(props.path +'/sessions')
             props.reload(props.course.slug)
           }
         }]}
@@ -135,6 +135,7 @@ CourseSessions.propTypes = {
     users: T.array,
     groups: T.array
   }),
+  contextType: T.string.isRequired,
   reload: T.func.isRequired,
   register: T.func.isRequired
 }

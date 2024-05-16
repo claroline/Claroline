@@ -23,6 +23,7 @@ const CourseEditComponent = (props) =>
     course={props.course}
   >
     <CourseForm
+      contextType={props.contextType}
       path={props.path}
       name={selectors.FORM_NAME}
     />
@@ -30,6 +31,7 @@ const CourseEditComponent = (props) =>
 
 CourseEditComponent.propTypes = {
   path: T.string.isRequired,
+  contextType: T.string.isRequired,
   course: T.shape(
     CourseTypes.propTypes
   )
@@ -38,7 +40,8 @@ CourseEditComponent.propTypes = {
 const CourseEdit = connect(
   (state) => ({
     path: toolSelectors.path(state),
-    course: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME))
+    course: formSelectors.data(formSelectors.form(state, selectors.FORM_NAME)),
+    contextType: toolSelectors.contextType(state)
   })
 )(CourseEditComponent)
 

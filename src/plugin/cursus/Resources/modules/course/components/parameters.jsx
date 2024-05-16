@@ -34,7 +34,7 @@ const CourseParameters = (props) => {
       }}
       cancel={{
         type: LINK_BUTTON,
-        target: props.isNew ? props.path : route(props.course),
+        target: props.isNew ? props.path : (('workspace' === props.contextType) ? props.path : route(props.course)),
         exact: true
       }}
       definition={[

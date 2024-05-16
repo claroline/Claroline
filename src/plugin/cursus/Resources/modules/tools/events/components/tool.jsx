@@ -6,6 +6,7 @@ import {Routes} from '#/main/app/router'
 import {Course} from '#/plugin/cursus/course/containers/main'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {CourseCreation} from '#/plugin/cursus/course/components/creation'
+import {CourseEdit} from '#/plugin/cursus/course/components/edit'
 
 import {EmptyCourse} from '#/plugin/cursus/course/components/empty'
 import {EventsAll} from '#/plugin/cursus/tools/events/components/all'
@@ -26,6 +27,10 @@ const EventsTool = (props) =>
         onEnter: () => props.openForm(null, CourseTypes.defaultProps, props.currentContext.data),
         disabled: !props.canEdit,
         component: CourseCreation
+      }, {
+        path: '/edit',
+        onEnter: () => props.openForm(props.course.slug),
+        component: CourseEdit
       }, {
         path: '/about',
         onEnter: () => {
