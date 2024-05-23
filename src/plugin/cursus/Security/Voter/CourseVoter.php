@@ -30,18 +30,18 @@ class CourseVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
+        $workspace = null;
+        if ($object->getWorkspace()) {
+            $workspace = $object->getWorkspace();
+        }
+
         switch ($attributes[0]) {
-            case self::CREATE: // EDIT right on tool
-                if ($this->isToolGranted('EDIT', 'trainings')) {
-                    return VoterInterface::ACCESS_GRANTED;
-                }
-
-                return VoterInterface::ACCESS_DENIED;
-
+            case self::ADMINISTRATE:
+            case self::CREATE:
             case self::EDIT: // admin of organization | EDIT right on tool
             case self::PATCH:
             case self::DELETE:
-                if ($this->isToolGranted('EDIT', 'trainings')) {
+                if ($this->isToolGranted('ADMINISTRATE', 'training_events', $workspace)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -49,14 +49,14 @@ class CourseVoter extends AbstractVoter
 
             case self::OPEN: // member of organization & OPEN right on tool
             case self::VIEW:
-                if ($this->isToolGranted('OPEN', 'trainings')) {
+                if ($this->isToolGranted('OPEN', 'training_events', $workspace)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
                 return VoterInterface::ACCESS_DENIED;
 
             case self::REGISTER:
-                if ($this->isToolGranted('REGISTER', 'trainings')) {
+                if ($this->isToolGranted('REGISTER', 'training_events', $workspace)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -68,6 +68,6 @@ class CourseVoter extends AbstractVoter
 
     public function getSupportedActions(): array
     {
-        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::REGISTER];
+        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::REGISTER, self::ADMINISTRATE];
     }
 }

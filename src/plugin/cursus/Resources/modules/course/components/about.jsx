@@ -67,6 +67,11 @@ const CourseAbout = (props) => {
   const availableSessions = props.availableSessions
     .filter(session => (!props.activeSession || props.activeSession.id !== session.id) && !get(session, 'restrictions.hidden'))
 
+  let basePath = props.path.split('/').slice(0, -1).join('/')
+  if (props.path.split('/').slice(-1)[0] === 'about') {
+    basePath = props.path
+  }
+
   return (
     <div className="row mt-3">
       <div className="col-md-3">
@@ -371,7 +376,7 @@ const CourseAbout = (props) => {
                 data={session}
                 primaryAction={{
                   type: LINK_BUTTON,
-                  target: route(props.course, session)
+                  target: basePath.includes('workspace') ? basePath + '/' + session.id : route(props.course, session)
                 }}
               />
             )}
@@ -397,6 +402,7 @@ CourseAbout.propTypes = {
     groups: T.array.isRequired,
     pending: T.array.isRequired
   }),
+  path: T.string.isRequired,
   actions: T.array
 }
 
