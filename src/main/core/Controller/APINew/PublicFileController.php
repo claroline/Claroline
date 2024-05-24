@@ -64,7 +64,7 @@ class PublicFileController extends AbstractCrudController
 
         $objects = [];
         foreach ($files as $file) {
-            if (!empty($this->config->getParameter('file_blacklist')) && in_array($file->getMimeType(), $this->config->getParameter('file_blacklist'))) {
+            if (empty($file->getMimeType()) || (!empty($this->config->getParameter('file_blacklist')) && in_array($file->getMimeType(), $this->config->getParameter('file_blacklist')))) {
                 throw new InvalidDataException('Unauthorized file type.');
             }
 
@@ -86,7 +86,7 @@ class PublicFileController extends AbstractCrudController
 
         $objects = [];
         foreach ($files as $file) {
-            if (!empty($this->config->getParameter('file_blacklist')) && in_array($file->getMimeType(), $this->config->getParameter('file_blacklist'))) {
+            if (empty($file->getMimeType()) || (!empty($this->config->getParameter('file_blacklist')) && in_array($file->getMimeType(), $this->config->getParameter('file_blacklist')))) {
                 throw new InvalidDataException('Unauthorized file type.');
             }
 
