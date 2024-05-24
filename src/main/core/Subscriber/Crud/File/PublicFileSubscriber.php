@@ -13,13 +13,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class PublicFileSubscriber implements EventSubscriberInterface
 {
-    /** @var FileManager */
-    private $fileManager;
-
     public function __construct(
-        FileManager $fileManager
+        private readonly FileManager $fileManager
     ) {
-        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -30,42 +26,36 @@ class PublicFileSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var PublicFile $publicFile */
         $publicFile = $event->getObject();
         $options = $event->getOptions();
         $tmpFile = $options['file'];
 
-        $fileName = !method_exists($tmpFile, 'getClientOriginalName') || !$tmpFile->getClientOriginalName() ?
-            $tmpFile->getFileName() :
-            $tmpFile->getClientOriginalName();
-        $directoryName = $this->fileManager->getActiveDirectoryName();
-        $size = filesize($tmpFile);
-        $mimeType = !$tmpFile->getMimeType() && method_exists($tmpFile, 'getClientMimeType') ?
-            $tmpFile->getClientMimeType() :
-            $tmpFile->getMimeType();
-        $extension = !method_exists($tmpFile, 'getClientOriginalExtension') || !$tmpFile->getClientOriginalExtension() ?
-            $tmpFile->guessExtension() :
-            $tmpFile->getClientOriginalExtension();
-        $hashName = Uuid::uuid4()->toString().'.'.$extension;
-        $prefix = 'data'.DIRECTORY_SEPARATOR.$directoryName;
-        $url = $prefix.DIRECTORY_SEPARATOR.$hashName;
+        $hashName = Uuid::uuid4()->toString();
+        $extension = $tmpFile->guessExtension();
+        if ($extension) {
+            $hashName .= '.'.$extension;
+        }
 
-        $publicFile->setFilename($fileName);
-        $publicFile->setSize($size);
-        $publicFile->setMimeType($mimeType);
+        $destinationDir = 'data'.DIRECTORY_SEPARATOR.$this->fileManager->getActiveDirectoryName();
+        $url = $destinationDir.DIRECTORY_SEPARATOR.$hashName;
+
+        $publicFile->setFilename(method_exists($tmpFile, 'getClientOriginalName') ? $tmpFile->getClientOriginalName() : $tmpFile->getFileName());
+        $publicFile->setSize(filesize($tmpFile));
+        $publicFile->setMimeType($tmpFile->getMimeType());
         $publicFile->setUrl($url);
 
-        $tmpFile->move($this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$prefix, $hashName);
+        $tmpFile->move($this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$destinationDir, $hashName);
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var PublicFile $object */
         $object = $event->getObject();
         if ($object->getUrl()) {
-            $fs = new FileSystem();
+            $fs = new Filesystem();
             $fs->remove($this->fileManager->getDirectory().DIRECTORY_SEPARATOR.$object->getUrl());
         }
     }
