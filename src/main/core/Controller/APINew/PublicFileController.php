@@ -15,10 +15,12 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Manages platform uploaded files... sort of.
@@ -27,9 +29,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PublicFileController extends AbstractCrudController
 {
+    use PermissionCheckerTrait;
+
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         private readonly PlatformConfigurationHandler $config
     ) {
+        $this->authorization = $authorization;
     }
 
     public function getClass(): string
@@ -52,6 +58,8 @@ class PublicFileController extends AbstractCrudController
      */
     public function uploadAction(Request $request): JsonResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         $files = $request->files->all();
 
         $objects = [];
@@ -72,6 +80,8 @@ class PublicFileController extends AbstractCrudController
      */
     public function uploadImageAction(Request $request): JsonResponse
     {
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
+
         $files = $request->files->all();
 
         $objects = [];
