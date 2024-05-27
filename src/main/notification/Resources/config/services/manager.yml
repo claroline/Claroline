@@ -1,0 +1,4 @@
+services:
+    Claroline\NotificationBundle\Manager\NotificationManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'

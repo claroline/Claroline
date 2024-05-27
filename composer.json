@@ -86,7 +86,6 @@
     },
     "autoload": {
         "psr-4": {
-            "Claroline\\PrivacyBundle\\": "src/main/privacy",
             "Claroline\\AgendaBundle\\": "src/plugin/agenda",
             "Claroline\\AnnouncementBundle\\": "src/plugin/announcement",
             "Claroline\\AppBundle\\": "src/main/app",
@@ -112,9 +111,11 @@
             "Claroline\\LogBundle\\": "src/main/log",
             "Claroline\\MessageBundle\\": "src/plugin/message",
             "Claroline\\MigrationBundle\\": "src/main/migration",
+            "Claroline\\NotificationBundle\\": "src/main/notification",
             "Claroline\\OpenBadgeBundle\\": "src/plugin/open-badge",
             "Claroline\\PdfPlayerBundle\\": "src/plugin/pdf-player",
             "Claroline\\PeerTubeBundle\\": "src/integration/peertube",
+            "Claroline\\PrivacyBundle\\": "src/main/privacy",
             "Claroline\\SchedulerBundle\\": "src/main/scheduler",
             "Claroline\\ScormBundle\\": "src/plugin/scorm",
             "Claroline\\SlideshowBundle\\": "src/plugin/slideshow",

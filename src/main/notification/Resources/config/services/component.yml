@@ -1,0 +1,16 @@
+services:
+    Claroline\NotificationBundle\Component\Notification\NotificationProvider:
+        arguments:
+            - !tagged_iterator claroline.component.notification
+
+    claroline.notification_provider:
+        alias: Claroline\NotificationBundle\Component\Notification\NotificationProvider
+        public: true
+
+    Claroline\NotificationBundle\Component\Notification\AbstractNotification:
+        abstract: true
+        calls:
+            - method: setTranslator
+              arguments: [ '@translator' ]
+            - method: setNotificationManager
+              arguments: [ '@Claroline\NotificationBundle\Manager\NotificationManager' ]

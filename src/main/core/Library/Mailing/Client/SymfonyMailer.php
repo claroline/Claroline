@@ -3,27 +3,22 @@
 namespace Claroline\CoreBundle\Library\Mailing\Client;
 
 use Claroline\CoreBundle\Library\Mailing\Message;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
 class SymfonyMailer implements MailClientInterface
 {
-    private $mailer;
-    private $logger;
-
-    public function __construct(MailerInterface $mailer, LoggerInterface $logger)
-    {
-        $this->mailer = $mailer;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly MailerInterface $mailer
+    ) {
     }
 
-    public function getTransports()
+    public function getTransports(): array
     {
         return ['smtp', 'gmail', 'sendmail'];
     }
 
-    public function send(Message $message)
+    public function send(Message $message): void
     {
         $email = new Email();
         $email->subject($message->getAttribute('subject'));

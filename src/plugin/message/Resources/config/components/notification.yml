@@ -1,0 +1,4 @@
+services:
+    Claroline\MessageBundle\Component\Notification\NewMessageNotification:
+        parent: Claroline\NotificationBundle\Component\Notification\AbstractNotification
+        tags: [ 'claroline.component.notification' ]

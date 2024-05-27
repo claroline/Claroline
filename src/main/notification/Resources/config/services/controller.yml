@@ -1,0 +1,8 @@
+services:
+    Claroline\NotificationBundle\Controller\NotificationController:
+        public: true
+        arguments:
+            - '@security.authorization_checker'
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'

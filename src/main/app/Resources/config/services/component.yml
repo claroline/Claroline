@@ -28,5 +28,9 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\Crud'
 
+    claroline.tool_provider:
+        alias: Claroline\AppBundle\Component\Tool\ToolProvider
+        public: true
+
     Claroline\AppBundle\Component\Tool\AbstractTool:
         abstract: true

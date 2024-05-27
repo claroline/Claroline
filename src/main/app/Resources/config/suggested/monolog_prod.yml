@@ -11,7 +11,7 @@ monolog:
             type:  stream
             path:  "%kernel.logs_dir%/%kernel.environment%.log"
             level: error
-            channels: ["!messenger"]
+            channels: ["!messenger", '!email']
 
         console:
             type: console
@@ -23,3 +23,9 @@ monolog:
             path: "%kernel.logs_dir%/messenger.log"
             level: error
             channels: ["messenger"]
+
+        email:
+            type: stream
+            path: "%kernel.logs_dir%/email.log"
+            level: error
+            channels: ["email"]

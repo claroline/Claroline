@@ -89,76 +89,117 @@ const EvaluationAbout = (props) => {
 
       <PageSection size="full" className="text-center pt-5">
         <div className="mx-auto d-flex align-items-center gap-5">
-          <CountGauge
-            value={27}
-            total={100}
-            type="warning"
-            displayValue={(value) => value + '%'}
-            width={120}
-            height={120}
-          />
+
 
           <StatusChart />
 
-          <CountGauge
-            value={63.5}
-            total={100}
-            type="success"
-            displayValue={(value) => value + '%'}
-            width={120}
-            height={120}
-          />
+
         </div>
       </PageSection>
 
       <PageSection
         size="lg"
-        title={trans('Répartition de la progression et des scores des utilisateurs', {}, 'evaluation')}
+        title={trans('Répartition de la progression des utilisateurs', {}, 'evaluation')}
         className="pb-5"
       >
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart
-            width={500}
-            height={300}
-            data={data}
-            margin={{
-              top: 20,
-              right: 0,
-              left: 20,
-              bottom: 0
-            }}
-          >
-            <CartesianGrid vertical={false} strokeDasharray="5 5" stroke="var(--bs-secondary)" strokeOpacity={.5} strokeWidth={1} shapeRendering="crispEdges" />
-
-            <XAxis dataKey="name" stroke="var(--bs-secondary)" shapeRendering="crispEdges" strokeOpacity={1} />
-            <YAxis stroke="var(--bs-secondary)" shapeRendering="crispEdges" strokeOpacity={1}/>
-
-            <Tooltip />
-            <Legend />
-            <ReferenceLine x="50-60%" stroke="var(--bs-learning)" strokeWidth={1} shapeRendering="crispEdges">
-              <Label position={"top"} stroke="var(--bs-learning)">Score de réussite</Label>
-            </ReferenceLine>
-
-            <Bar
-              barSize={18}
-              /*shapeRendering="crispEdges"*/
-              dataKey="progression"
-              fill="var(--bs-primary-text-emphasis)"
-              /*activeBar={<Rectangle fill="var(--bs-primary-text-emphasis)" />}*/
-              label={trans('progression', {}, 'evaluation')}
-              radius={[2, 2, 0, 0]}
+        <div className="row">
+          <div className="col-3">
+            <CountGauge
+              value={27}
+              total={100}
+              type="warning"
+              displayValue={(value) => value + '%'}
+              width={120}
+              height={120}
             />
-            <Bar
-              barSize={18}
-              /*shapeRendering="crispEdges"*/
-              dataKey="score"
-              fill="var(--bs-primary)"
-              radius={[2, 2, 0, 0]}
-              label={trans('score', {}, 'evaluation')}
-              /*activeBar={<Rectangle fill="var(--bs-learning-text-emphasis)" />}*/
+          </div>
+          <div className="col-9">
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart
+                /*width={500}
+                height={300}*/
+                data={data}
+                /*margin={{
+                  top: 20,
+                  right: 0,
+                  left: 20,
+                  bottom: 0
+                }}*/
+              >
+                <CartesianGrid vertical={false} strokeDasharray="5 5" stroke="var(--bs-secondary)" strokeOpacity={.5} strokeWidth={1} shapeRendering="crispEdges" />
+
+                <XAxis dataKey="name" stroke="var(--bs-secondary)" shapeRendering="crispEdges" strokeOpacity={1} />
+                <YAxis stroke="var(--bs-secondary)" shapeRendering="crispEdges" strokeOpacity={1}/>
+
+                <Tooltip />
+                {/*<Legend />*/}
+
+                <Bar
+                  barSize={18}
+                  /*shapeRendering="crispEdges"*/
+                  dataKey="progression"
+                  fill="var(--bs-primary)"
+                  /*activeBar={<Rectangle fill="var(--bs-primary-text-emphasis)" />}*/
+                  label={trans('progression', {}, 'evaluation')}
+                  radius={[2, 2, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </PageSection>
+
+      <PageSection
+        size="lg"
+        title={trans('Répartition des scores des utilisateurs', {}, 'evaluation')}
+        className="pb-5"
+      >
+        <div className="row">
+          <div className="col-md-3">
+            <CountGauge
+              value={63.5}
+              total={100}
+              type="success"
+              displayValue={(value) => value + '%'}
+              width={120}
+              height={120}
             />
-          </BarChart>
-        </ResponsiveContainer>
+          </div>
+          <div className="col-md-9">
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart
+                width={500}
+                height={300}
+                data={data}
+                margin={{
+                  top: 20,
+                  right: 0,
+                  left: 0,
+                  bottom: 0
+                }}
+              >
+                <CartesianGrid vertical={false} strokeDasharray="5 5" stroke="var(--bs-secondary)" strokeOpacity={.5} strokeWidth={1} shapeRendering="crispEdges" />
+
+                <XAxis dataKey="name" stroke="var(--bs-secondary)" shapeRendering="crispEdges" strokeOpacity={1} />
+                <YAxis stroke="var(--bs-secondary)" shapeRendering="crispEdges" strokeOpacity={1}/>
+
+                <Tooltip />
+                {/*<Legend />*/}
+                <ReferenceLine x="50-60%" stroke="var(--bs-learning)" strokeWidth={1} shapeRendering="crispEdges">
+                  <Label position={"top"} stroke="var(--bs-learning)">Score de réussite</Label>
+                </ReferenceLine>
+
+                <Bar
+                  barSize={18}
+                  dataKey="score"
+                  fill="var(--bs-primary)"
+                  radius={[2, 2, 0, 0]}
+                  label={trans('score', {}, 'evaluation')}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </PageSection>
     </ToolPage>
   )

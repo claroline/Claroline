@@ -11,21 +11,20 @@
 
 namespace Claroline\CoreBundle\Library\Mailing;
 
-use Claroline\AppBundle\Log\FileLogger;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Mailing\Client\MailClientInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
-class Mailer
+class Mailer implements LoggerAwareInterface
 {
-    private PlatformConfigurationHandler $ch;
+    use LoggerAwareTrait;
+
     private array $clients = [];
-    private FileLogger $logger;
 
     public function __construct(
-        PlatformConfigurationHandler $ch,
-        string $logDir
+        private readonly PlatformConfigurationHandler $ch
     ) {
-        $this->ch = $ch;
-        $this->logger = FileLogger::get($logDir.'/email.log');
     }
 
     public function send(Message $message): bool
@@ -53,12 +52,12 @@ class Mailer
         }
     }
 
-    public function add($client): void
+    public function add(MailClientInterface $client): void
     {
         $this->clients[] = $client;
     }
 
-    public function getClient()
+    public function getClient(): MailClientInterface
     {
         $transport = $this->ch->getParameter('mailer_transport');
 

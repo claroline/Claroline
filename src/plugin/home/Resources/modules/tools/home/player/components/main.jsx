@@ -40,7 +40,7 @@ const PlayerMain = props =>
           }
 
           // tab does not exist
-          // let's redirection open the first available
+          // let redirection open the first available
           routeProps.history.replace(props.path)
 
           return null

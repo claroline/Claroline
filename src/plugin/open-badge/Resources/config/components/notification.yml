@@ -1,0 +1,4 @@
+services:
+    Claroline\OpenBadgeBundle\Component\Notification\BadgeGrantedNotification:
+        parent: Claroline\NotificationBundle\Component\Notification\AbstractNotification
+        tags: [ 'claroline.component.notification' ]

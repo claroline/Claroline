@@ -42,6 +42,15 @@ trait LogComponentTrait
         return $this->translator;
     }
 
+    /**
+     * Shortcut to the app Translator.
+     * It's equivalent to $this->>getTranslator()->trans(string $message, array $parameters = [], ?string $domain = null).
+     */
+    protected function trans(string $message, array $parameters = [], ?string $domain = null): string
+    {
+        return $this->getTranslator()->trans($message, $parameters, $domain);
+    }
+
     protected function getCurrentUser(): ?User
     {
         if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {

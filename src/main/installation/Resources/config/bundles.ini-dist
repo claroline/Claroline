@@ -1,6 +1,7 @@
 Claroline\InstallationBundle\ClarolineInstallationBundle = true
 Claroline\MigrationBundle\ClarolineMigrationBundle = true
 Claroline\CoreBundle\ClarolineCoreBundle = true
+Claroline\NotificationBundle\ClarolineNotificationBundle = true
 Claroline\ThemeBundle\ClarolineThemeBundle = true
 Claroline\CommunityBundle\ClarolineCommunityBundle = true
 Claroline\SchedulerBundle\ClarolineSchedulerBundle = true
