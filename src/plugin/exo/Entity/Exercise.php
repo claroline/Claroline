@@ -67,28 +67,22 @@ class Exercise extends AbstractResource
      * Add a button to stop the Exercise before the end.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    private $interruptible = true;
+    private bool $interruptible = true;
 
     /**
      * Show back button in player.
      *
      * @ORM\Column(name="show_back", type="boolean")
-     *
-     * @var bool
      */
-    private $showBack = true;
+    private bool $showBack = true;
 
     /**
      * Show an end page when the user has finished the quiz.
      *
      * @ORM\Column(name="show_end_confirm", type="boolean")
-     *
-     * @var bool
      */
-    private $showEndConfirm = true;
+    private bool $showEndConfirm = true;
 
     /**
      * Show intermediates scores by steps, by tags or not at all on the end page.
@@ -103,10 +97,8 @@ class Exercise extends AbstractResource
      * A message to display when a user has done all its attempts.
      *
      * @ORM\Column(name="attempts_reached_message", type="text", nullable=true)
-     *
-     * @var string
      */
-    private $attemptsReachedMessage = '';
+    private ?string $attemptsReachedMessage = '';
 
     /**
      * Show attempts stats on the end page.
@@ -115,10 +107,8 @@ class Exercise extends AbstractResource
      *  - all : all participants stats displayed.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    private $endStats = 'none';
+    private string $endStats = 'none';
 
     /**
      * Show attempts stats on the overview page.
@@ -127,56 +117,44 @@ class Exercise extends AbstractResource
      *  - all : all participants stats displayed.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    private $overviewStats = 'none';
+    private string $overviewStats = 'none';
 
     /**
      * Show the Exercise meta in the overview of the Exercise.
      *
      * @ORM\Column(name="metadata_visible", type="boolean")
-     *
-     * @var bool
      */
-    private $metadataVisible = true;
+    private bool $metadataVisible = true;
 
     /**
      * Show stats about User responses in the Correction.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    private $statistics = false;
+    private bool $statistics = false;
 
     /**
      * Flag indicating that we do not show the entire correction for the exercise
      * (equals hide Awaited answer filed) when displaying instant feedback and exercise correction page.
      *
      * @ORM\Column(name="minimal_correction", type="boolean")
-     *
-     * @var bool
      */
-    private $minimalCorrection = false;
+    private bool $minimalCorrection = false;
 
     /**
      * If true, the users who pass the exercise are anonymized in papers.
      *
      * @ORM\Column(name="anonymous", type="boolean", nullable=true)
-     *
-     * @var bool
      */
-    private $anonymizeAttempts = false;
+    private bool $anonymizeAttempts = false;
 
     /**
      * Show feedback flag.
      *
      * @ORM\Column(name="show_feedback", type="boolean")
-     *
-     * @var bool
      */
-    private $showFeedback = false;
+    private bool $showFeedback = false;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -192,103 +170,71 @@ class Exercise extends AbstractResource
      *
      * @var float
      */
-    private $successScore = 50;
+    private float $successScore = 50;
 
     /**
      * Displays step numbering.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    private $numbering = ExerciseNumbering::NONE;
+    private string $numbering = ExerciseNumbering::NONE;
 
     /**
      * Displays question numbering.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    private $questionNumbering = ExerciseNumbering::NONE;
+    private string $questionNumbering = ExerciseNumbering::NONE;
 
     /**
      * Displays step titles.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    private $showTitles = true;
+    private bool $showTitles = true;
 
     /**
      * Displays question titles.
      *
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    private $showQuestionTitles = true;
-
-    /**
-     * Number of papers allowed.
-     * If 0, infinite amount of papers.
-     *
-     * @ORM\Column(name="max_papers", type="integer")
-     *
-     * @var int
-     *
-     * @todo to remove. not implemented.
-     */
-    public $maxPapers = 0;
+    private bool $showQuestionTitles = true;
 
     /**
      * Use all papers to compute stats.
      *
      * @ORM\Column(name="all_papers_stats", type="boolean", options={"default" = 1})
-     *
-     * @var bool
      */
-    private $allPapersStatistics = true;
+    private bool $allPapersStatistics = true;
 
     /**
      * Sets the mandatory question flag.
      *
      * @ORM\Column(name="mandatory_questions", type="boolean")
-     *
-     * @var bool
      */
-    private $mandatoryQuestions = false;
+    private bool $mandatoryQuestions = false;
 
     /**
      * If true, the time to answer the exercise will be limited by the defined duration.
      *
      * @ORM\Column(name="time_limited", type="boolean", options={"default" = 0})
-     *
-     * @var bool
      */
-    private $timeLimited = false;
+    private bool $timeLimited = false;
 
     /**
      * @ORM\Column(name="progression_displayed", type="boolean", options={"default" = 1})
-     *
-     * @var bool
      */
-    private $progressionDisplayed = true;
+    private bool $progressionDisplayed = true;
 
     /**
      * @ORM\Column(name="answers_editable", type="boolean", options={"default" = 1})
-     *
-     * @var bool
      */
-    private $answersEditable = true;
+    private bool $answersEditable = true;
 
     /**
      * @ORM\Column(name="expected_answers", type="boolean")
-     *
-     * @var bool
      */
-    private $expectedAnswers = true;
+    private bool $expectedAnswers = true;
 
     /**
      * @ORM\OneToMany(targetEntity="Step", mappedBy="exercise", cascade={"all"}, orphanRemoval=true)

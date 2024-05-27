@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\DropZoneBundle\Controller\API;
+namespace Claroline\DropZoneBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -33,8 +33,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/dropzone", options={"expose"=true})
- *
- * @todo use crud and move Correction management inside its own controller
  */
 class DropzoneController
 {
@@ -50,30 +48,6 @@ class DropzoneController
         private readonly CorrectionManager $correctionManager
     ) {
         $this->authorization = $authorization;
-    }
-
-    /**
-     * Updates a Dropzone resource.
-     *
-     * @Route("/{id}", name="claro_dropzone_update", methods={"PUT"})
-     *
-     * @EXT\ParamConverter("dropzone", class="Claroline\DropZoneBundle\Entity\Dropzone", options={"mapping": {"id": "uuid"}})
-     */
-    public function updateAction(Dropzone $dropzone, Request $request): JsonResponse
-    {
-        $this->crud->update($dropzone, json_decode($request->getContent(), true));
-
-        $closedDropStates = [
-            Dropzone::STATE_FINISHED,
-            Dropzone::STATE_PEER_REVIEW,
-            Dropzone::STATE_WAITING_FOR_PEER_REVIEW,
-        ];
-
-        if (!$dropzone->getDropClosed() && $dropzone->getManualPlanning() && in_array($dropzone->getManualState(), $closedDropStates)) {
-            $this->manager->closeAllUnfinishedDrops($dropzone);
-        }
-
-        return new JsonResponse($this->serializer->serialize($dropzone));
     }
 
     /**
@@ -316,7 +290,7 @@ class DropzoneController
         return $response->send();
     }
 
-    private function checkCorrectionEdition(Correction $correction, User $user, $teamId = null)
+    private function checkCorrectionEdition(Correction $correction, User $user, $teamId = null): void
     {
         // TODO : move this in the CorrectionVoter
         $dropzone = $correction->getDrop()->getDropzone();
@@ -334,7 +308,7 @@ class DropzoneController
         throw new AccessDeniedException();
     }
 
-    private function checkCorrectionDenial(Correction $correction, User $user, $teamId = null)
+    private function checkCorrectionDenial(Correction $correction, User $user, $teamId = null): void
     {
         // TODO : move this in the voter
         $drop = $correction->getDrop();
@@ -351,7 +325,7 @@ class DropzoneController
         throw new AccessDeniedException();
     }
 
-    private function checkTeamUser(Team $team, User $user)
+    private function checkTeamUser(Team $team, User $user): void
     {
         // TODO : move this in the voter
         if (!$user->hasRole($team->getRole()->getName())) {
@@ -359,7 +333,7 @@ class DropzoneController
         }
     }
 
-    private function checkDocumentAccess(Document $document)
+    private function checkDocumentAccess(Document $document): void
     {
         // TODO : move this in the voter
         $dropzone = $document->getDrop()->getDropzone();

@@ -1,7 +1,8 @@
 services:
     Claroline\DropZoneBundle\Listener\Resource\DropzoneListener:
+        tags: [kernel.event_subscriber]
         arguments:
             - '%claroline.param.files_directory%'
             - '@security.token_storage'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'
-        tags: ['kernel.event_subscriber']

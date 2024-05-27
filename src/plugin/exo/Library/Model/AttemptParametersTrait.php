@@ -62,18 +62,6 @@ trait AttemptParametersTrait
     private $maxAttempts = 0;
 
     /**
-     * Number of attempts allowed per day.
-     * If 0, the user can retry as many times a he wishes.
-     *
-     * @ORM\Column(name="max_day_attempts", type="integer")
-     *
-     * @var int
-     *
-     * @todo not implemented, to remove
-     */
-    public $maxAttemptsPerDay = 0;
-
-    /**
      * Sets random order.
      *
      * @param string $randomOrder

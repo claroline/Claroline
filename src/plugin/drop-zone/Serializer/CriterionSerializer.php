@@ -4,27 +4,28 @@ namespace Claroline\DropZoneBundle\Serializer;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\DropZoneBundle\Entity\Criterion;
+use Doctrine\Persistence\ObjectRepository;
 
 class CriterionSerializer
 {
-    private $criterionRepo;
-    private $dropzoneRepo;
+    private ObjectRepository $criterionRepo;
 
     public function __construct(ObjectManager $om)
     {
         $this->criterionRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Criterion');
-        $this->dropzoneRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Dropzone');
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'dropzone_criterion';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Criterion $criterion)
+    public function getClass(): string
+    {
+        return Criterion::class;
+    }
+
+    public function serialize(Criterion $criterion): array
     {
         return [
             'id' => $criterion->getUuid(),
@@ -32,13 +33,7 @@ class CriterionSerializer
         ];
     }
 
-    /**
-     * @param string $class
-     * @param array  $data
-     *
-     * @return Criterion
-     */
-    public function deserialize($class, $data)
+    public function deserialize(string $class, array $data): Criterion
     {
         $criterion = $this->criterionRepo->findOneBy(['uuid' => $data['id']]);
 

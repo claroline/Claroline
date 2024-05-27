@@ -11,6 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -25,7 +26,8 @@ class DropzoneListener extends ResourceComponent implements EvaluatedResourceInt
     public function __construct(
         private readonly string $filesDir,
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly DropzoneManager $dropzoneManager
+        private readonly SerializerProvider $serializer,
+        private readonly DropzoneManager $dropzoneManager,
     ) {
     }
 
@@ -43,6 +45,14 @@ class DropzoneListener extends ResourceComponent implements EvaluatedResourceInt
         }
 
         return $this->dropzoneManager->getDropzoneData($resource, $user);
+    }
+
+    /** @var Dropzone $resource */
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        return [
+            'resource' => $this->serializer->serialize($resource),
+        ];
     }
 
     /**

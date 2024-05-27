@@ -1,4 +1,5 @@
 monolog:
+    channels: ['file', 'email']
     handlers:
         main:
             type:         fingers_crossed

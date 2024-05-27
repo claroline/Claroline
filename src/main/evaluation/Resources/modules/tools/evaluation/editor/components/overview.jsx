@@ -18,7 +18,6 @@ const enableSuccessScore = (workspace) => get(workspace, 'evaluation._enableSucc
 const enableSuccessMinSuccess = (workspace) => get(workspace, 'evaluation._enableSuccessCount') || null !== get(workspace, 'evaluation.successCondition.minSuccess', null)
 const enableSuccessMaxFailed = (workspace) => get(workspace, 'evaluation._enableFailureCount') || null !== get(workspace, 'evaluation.successCondition.maxFailed', null)
 
-
 const EvaluationEditorOverview = () => {
   const dispatch = useDispatch()
   const updateProp = useCallback((prop, value) => {

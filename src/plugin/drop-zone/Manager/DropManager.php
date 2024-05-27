@@ -11,32 +11,13 @@ use Claroline\DropZoneBundle\Repository\DropRepository;
 
 class DropManager
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var DocumentManager */
-    private $documentManager;
-
-    /** @var DropRepository */
-    private $dropRepo;
+    private DropRepository $dropRepo;
 
     public function __construct(
-        ObjectManager $om,
-        DocumentManager $documentManager
+        private readonly ObjectManager $om,
+        private readonly DocumentManager $documentManager
     ) {
-        $this->om = $om;
-        $this->documentManager = $documentManager;
-
         $this->dropRepo = $om->getRepository(Drop::class);
-    }
-
-    /**
-     * Gets all drops for given Dropzone.
-     *
-     * @return array
-     */
-    public function getAllDrops(Dropzone $dropzone)
-    {
-        return $this->dropRepo->findBy(['dropzone' => $dropzone]);
     }
 
     /**

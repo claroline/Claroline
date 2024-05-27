@@ -5,41 +5,35 @@ namespace Claroline\DropZoneBundle\Serializer;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\DropZoneBundle\Entity\Correction;
+use Doctrine\Persistence\ObjectRepository;
 
 class CorrectionSerializer
 {
-    private $gradeSerializer;
-    private $userSerializer;
+    private ObjectRepository $correctionRepo;
+    private ObjectRepository $dropRepo;
+    private ObjectRepository $userRepo;
 
-    private $correctionRepo;
-    private $dropRepo;
-    private $userRepo;
-
-    /**
-     * CorrectionSerializer constructor.
-     */
     public function __construct(
-        GradeSerializer $gradeSerializer,
-        UserSerializer $userSerializer,
+        private readonly GradeSerializer $gradeSerializer,
+        private readonly UserSerializer $userSerializer,
         ObjectManager $om
     ) {
-        $this->gradeSerializer = $gradeSerializer;
-        $this->userSerializer = $userSerializer;
-
         $this->correctionRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Correction');
         $this->dropRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Drop');
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'dropzone_correction';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Correction $correction)
+    public function getClass(): string
+    {
+        return Correction::class;
+    }
+
+    public function serialize(Correction $correction): array
     {
         return [
             'id' => $correction->getUuid(),
@@ -133,7 +127,7 @@ class CorrectionSerializer
         return $correction;
     }
 
-    private function getGrades(Correction $correction)
+    private function getGrades(Correction $correction): array
     {
         $grades = [];
 
@@ -144,7 +138,7 @@ class CorrectionSerializer
         return $grades;
     }
 
-    private function deserializeGrades(Correction $correction, $gradesData)
+    private function deserializeGrades(Correction $correction, $gradesData): void
     {
         $correction->emptyGrades();
 

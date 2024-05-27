@@ -13,6 +13,7 @@ namespace Claroline\DropZoneBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,215 +29,146 @@ class Dropzone extends AbstractResource
     const STATE_ALLOW_DROP_AND_PEER_REVIEW = 'drop_review';
     const STATE_WAITING_FOR_PEER_REVIEW = 'review_standby';
 
-    const AUTO_CLOSED_STATE_WAITING = 0;
-    const AUTO_CLOSED_STATE_CLOSED = 1;
-
     const DROP_TYPE_USER = 'user';
     const DROP_TYPE_TEAM = 'team';
 
     /**
-     * 1 = common
-     * 2 = criteria
-     * 3 = participant
-     * 4 = finished.
-     *
-     * @ORM\Column(name="edition_state", type="smallint", nullable=false)
-     *
-     * @var int
-     *
-     * @todo remove me. it's not used anymore
-     */
-    protected $editionState = 1;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $instruction = null;
+    private ?string $instruction = null;
 
     /**
      * @ORM\Column(name="correction_instruction", type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $correctionInstruction = null;
+    private ?string $correctionInstruction = null;
 
     /**
      * @ORM\Column(name="success_message", type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $successMessage = null;
+    private ?string $successMessage = null;
 
     /**
      * @ORM\Column(name="fail_message",type="text", nullable=true)
-     *
-     * @var string
      */
-    protected $failMessage = null;
+    private ?string $failMessage = null;
 
     /**
      * @ORM\Column(name="workspace_resource_enabled", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $workspaceResourceEnabled = false;
+    private bool $workspaceResourceEnabled = false;
 
     /**
      * @ORM\Column(name="upload_enabled", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $uploadEnabled = true;
+    private bool $uploadEnabled = true;
 
     /**
      * @ORM\Column(name="url_enabled", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $urlEnabled = false;
+    private bool $urlEnabled = false;
 
     /**
      * @ORM\Column(name="rich_text_enabled", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $richTextEnabled = false;
+    private bool $richTextEnabled = false;
 
     /**
      * @ORM\Column(name="peer_review", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $peerReview = false;
+    private bool $peerReview = false;
 
     /**
      * @ORM\Column(name="expected_correction_total", type="smallint", nullable=false)
-     *
-     * @var int
      */
-    protected $expectedCorrectionTotal = 3;
+    private int $expectedCorrectionTotal = 3;
 
     /**
      * @ORM\Column(name="display_notation_to_learners", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $displayNotationToLearners = true;
+    private bool $displayNotationToLearners = true;
 
     /**
      * @ORM\Column(name="display_notation_message_to_learners", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $displayNotationMessageToLearners = false;
+    private bool $displayNotationMessageToLearners = false;
 
     /**
      * @ORM\Column(name="score_to_pass", type="float", nullable=false)
-     *
-     * @var float
      */
-    protected $scoreToPass = 50;
+    private ?float $scoreToPass = 50;
 
     /**
      * @ORM\Column(name="score_max", type="integer", nullable=false)
-     *
-     * @var int
      */
-    protected $scoreMax = 100;
+    private int $scoreMax = 100;
 
     /**
      * @ORM\Column(name="drop_type", type="text", nullable=false)
-     *
-     * @var string
      */
-    protected $dropType = self::DROP_TYPE_USER;
+    private string $dropType = self::DROP_TYPE_USER;
 
     /**
      * @ORM\Column(name="manual_planning", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $manualPlanning = true;
+    private bool $manualPlanning = true;
 
     /**
      * @ORM\Column(name="manual_state", type="text", nullable=false)
-     *
-     * @var string
      */
-    protected $manualState = self::STATE_NOT_STARTED;
+    private string $manualState = self::STATE_NOT_STARTED;
 
     /**
      * @ORM\Column(name="drop_start_date", type="datetime", nullable=true)
-     *
-     * @var \DateTime
      */
-    protected $dropStartDate = null;
+    private ?\DateTimeInterface $dropStartDate = null;
 
     /**
      * @ORM\Column(name="drop_end_date", type="datetime", nullable=true)
-     *
-     * @var \DateTime
      */
-    protected $dropEndDate = null;
+    private ?\DateTimeInterface $dropEndDate = null;
 
     /**
      * @ORM\Column(name="review_start_date", type="datetime", nullable=true)
      */
-    protected $reviewStartDate = null;
+    private ?\DateTimeInterface $reviewStartDate = null;
 
     /**
      * @ORM\Column(name="review_end_date", type="datetime", nullable=true)
-     *
-     * @var \DateTime
      */
-    protected $reviewEndDate = null;
+    private ?\DateTimeInterface $reviewEndDate = null;
 
     /**
      * @ORM\Column(name="comment_in_correction_enabled", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $commentInCorrectionEnabled = false;
+    private bool $commentInCorrectionEnabled = false;
 
     /**
      * @ORM\Column(name="comment_in_correction_forced",type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $commentInCorrectionForced = false;
+    private bool $commentInCorrectionForced = false;
 
     /**
      * @ORM\Column(name="display_corrections_to_learners", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $displayCorrectionsToLearners = false;
+    private bool $displayCorrectionsToLearners = false;
 
     /**
-     * Depend on diplayCorrectionsToLearners, need diplayCorrectionsToLearners to be true in order to work.
+     * Depend on displayCorrectionsToLearners, need displayCorrectionsToLearners to be true in order to work.
      * Allow users to flag that they are not agree with the correction.
      *
      * @ORM\Column(name="correction_denial_enabled", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $correctionDenialEnabled = false;
+    private bool $correctionDenialEnabled = false;
 
     /**
      * @ORM\Column(name="criteria_enabled", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $criteriaEnabled = false;
+    private bool $criteriaEnabled = false;
 
     /**
      * @ORM\Column(name="criteria_total", type="smallint", nullable=false)
-     *
-     * @var int
      */
-    protected $criteriaTotal = 4;
+    private int $criteriaTotal = 4;
 
     /**
      * if true,
@@ -244,38 +176,16 @@ class Dropzone extends AbstractResource
      * That will allow them to access the next step ( correction by users or admins ).
      *
      * @ORM\Column(name="auto_close_drops_at_drop_end_date", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $autoCloseDropsAtDropEndDate = true;
-
-    /**
-     * @ORM\Column(name="auto_close_state", type="integer", nullable=false)
-     *
-     * @var int
-     *
-     * @todo remove me. it's not used anymore
-     */
-    protected $autoCloseState = self::AUTO_CLOSED_STATE_WAITING;
+    private bool $autoCloseDropsAtDropEndDate = true;
 
     /**
      * Becomes true when all the drops have been force closed at the end of the evaluation.
      * (Used when `autoCloseDropsAtDropEndDate` = true).
      *
      * @ORM\Column(name="drop_closed", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $dropClosed = false;
-
-    /**
-     * Notify Evaluation admins when a someone made a drop.
-     *
-     * @ORM\Column(name="notify_on_drop", type="boolean", nullable=false)
-     *
-     * @var bool
-     */
-    protected $notifyOnDrop = false;
+    private bool $dropClosed = false;
 
     /**
      * @ORM\OneToMany(
@@ -283,41 +193,30 @@ class Dropzone extends AbstractResource
      *     mappedBy="dropzone",
      *     cascade={"persist", "remove"}
      * )
-     *
-     * @var ArrayCollection|Criterion[]
      */
-    protected $criteria;
+    private Collection $criteria;
 
     /**
      * Display the name of the corrector.
      *
      * @ORM\Column(name="corrector_displayed", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $correctorDisplayed = false;
+    private bool $correctorDisplayed = false;
 
     /**
      * Allows to submit drop for a revision.
      *
      * @ORM\Column(name="revision_enabled", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $revisionEnabled = false;
+    private bool $revisionEnabled = false;
 
     /**
      * If true, drops for the current dropzone can not be deleted.
      *
      * @ORM\Column(name="lock_drops", type="boolean", nullable=false)
-     *
-     * @var bool
      */
-    protected $lockDrops = false;
+    private bool $lockDrops = false;
 
-    /**
-     * Dropzone constructor.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -325,22 +224,12 @@ class Dropzone extends AbstractResource
         $this->criteria = new ArrayCollection();
     }
 
-    public function getEditionState()
-    {
-        return $this->editionState;
-    }
-
-    public function setEditionState($editionState)
-    {
-        $this->editionState = $editionState;
-    }
-
     public function getInstruction()
     {
         return $this->instruction;
     }
 
-    public function setInstruction($instruction)
+    public function setInstruction($instruction): void
     {
         $this->instruction = $instruction;
     }
@@ -350,7 +239,7 @@ class Dropzone extends AbstractResource
         return $this->correctionInstruction;
     }
 
-    public function setCorrectionInstruction($correctionInstruction)
+    public function setCorrectionInstruction($correctionInstruction): void
     {
         $this->correctionInstruction = $correctionInstruction;
     }
@@ -360,7 +249,7 @@ class Dropzone extends AbstractResource
         return $this->successMessage;
     }
 
-    public function setSuccessMessage($successMessage)
+    public function setSuccessMessage($successMessage): void
     {
         $this->successMessage = $successMessage;
     }
@@ -370,17 +259,17 @@ class Dropzone extends AbstractResource
         return $this->failMessage;
     }
 
-    public function setFailMessage($failMessage)
+    public function setFailMessage($failMessage): void
     {
         $this->failMessage = $failMessage;
     }
 
-    public function isPeerReview()
+    public function isPeerReview(): bool
     {
         return $this->peerReview;
     }
 
-    public function setPeerReview($peerReview)
+    public function setPeerReview($peerReview): void
     {
         $this->peerReview = $peerReview;
     }
@@ -390,7 +279,7 @@ class Dropzone extends AbstractResource
         return $this->expectedCorrectionTotal;
     }
 
-    public function setExpectedCorrectionTotal($expectedCorrectionTotal)
+    public function setExpectedCorrectionTotal($expectedCorrectionTotal): void
     {
         $this->expectedCorrectionTotal = $expectedCorrectionTotal;
     }
@@ -400,7 +289,7 @@ class Dropzone extends AbstractResource
         return $this->displayNotationToLearners;
     }
 
-    public function setDisplayNotationToLearners($displayNotationToLearners)
+    public function setDisplayNotationToLearners($displayNotationToLearners): void
     {
         $this->displayNotationToLearners = $displayNotationToLearners;
     }
@@ -410,37 +299,37 @@ class Dropzone extends AbstractResource
         return $this->displayNotationMessageToLearners;
     }
 
-    public function setDisplayNotationMessageToLearners($displayNotationMessageToLearners)
+    public function setDisplayNotationMessageToLearners($displayNotationMessageToLearners): void
     {
         $this->displayNotationMessageToLearners = $displayNotationMessageToLearners;
     }
 
-    public function getScoreMax()
+    public function getScoreMax(): ?int
     {
         return $this->scoreMax;
     }
 
-    public function setScoreMax($scoreMax)
+    public function setScoreMax($scoreMax): void
     {
         $this->scoreMax = $scoreMax;
     }
 
-    public function getScoreToPass()
+    public function getScoreToPass(): ?float
     {
         return $this->scoreToPass;
     }
 
-    public function setScoreToPass($scoreToPass)
+    public function setScoreToPass($scoreToPass): void
     {
         $this->scoreToPass = $scoreToPass;
     }
 
-    public function getDropType()
+    public function getDropType(): string
     {
         return $this->dropType;
     }
 
-    public function setDropType($dropType)
+    public function setDropType($dropType): void
     {
         $this->dropType = $dropType;
     }
@@ -450,7 +339,7 @@ class Dropzone extends AbstractResource
         return $this->manualPlanning;
     }
 
-    public function setManualPlanning($manualPlanning)
+    public function setManualPlanning($manualPlanning): void
     {
         $this->manualPlanning = $manualPlanning;
     }
@@ -460,67 +349,67 @@ class Dropzone extends AbstractResource
         return $this->manualState;
     }
 
-    public function setManualState($manualState)
+    public function setManualState($manualState): void
     {
         $this->manualState = $manualState;
     }
 
-    public function getDropStartDate()
+    public function getDropStartDate(): ?\DateTimeInterface
     {
         return $this->dropStartDate;
     }
 
-    public function setDropStartDate(\DateTime $dropStartDate = null)
+    public function setDropStartDate(\DateTimeInterface $dropStartDate = null): void
     {
         $this->dropStartDate = $dropStartDate;
     }
 
-    public function getDropEndDate()
+    public function getDropEndDate(): ?\DateTimeInterface
     {
         return $this->dropEndDate;
     }
 
-    public function setDropEndDate(\DateTime $dropEndDate = null)
+    public function setDropEndDate(\DateTimeInterface $dropEndDate = null): void
     {
         $this->dropEndDate = $dropEndDate;
     }
 
-    public function getReviewStartDate()
+    public function getReviewStartDate(): ?\DateTimeInterface
     {
         return $this->reviewStartDate;
     }
 
-    public function setReviewStartDate(\DateTime $reviewStartDate = null)
+    public function setReviewStartDate(\DateTimeInterface $reviewStartDate = null): void
     {
         $this->reviewStartDate = $reviewStartDate;
     }
 
-    public function getReviewEndDate()
+    public function getReviewEndDate(): ?\DateTimeInterface
     {
         return $this->reviewEndDate;
     }
 
-    public function setReviewEndDate(\DateTime $reviewEndDate = null)
+    public function setReviewEndDate(\DateTimeInterface $reviewEndDate = null): void
     {
         $this->reviewEndDate = $reviewEndDate;
     }
 
-    public function isCommentInCorrectionEnabled()
+    public function isCommentInCorrectionEnabled(): bool
     {
         return $this->commentInCorrectionEnabled;
     }
 
-    public function setCommentInCorrectionEnabled($commentInCorrectionEnabled)
+    public function setCommentInCorrectionEnabled($commentInCorrectionEnabled): void
     {
         $this->commentInCorrectionEnabled = $commentInCorrectionEnabled;
     }
 
-    public function isCommentInCorrectionForced()
+    public function isCommentInCorrectionForced(): bool
     {
         return $this->commentInCorrectionForced;
     }
 
-    public function setCommentInCorrectionForced($commentInCorrectionForced)
+    public function setCommentInCorrectionForced($commentInCorrectionForced): void
     {
         $this->commentInCorrectionForced = $commentInCorrectionForced;
     }
@@ -530,27 +419,27 @@ class Dropzone extends AbstractResource
         return $this->displayCorrectionsToLearners;
     }
 
-    public function setDisplayCorrectionsToLearners($displayCorrectionsToLearners)
+    public function setDisplayCorrectionsToLearners($displayCorrectionsToLearners): void
     {
         $this->displayCorrectionsToLearners = $displayCorrectionsToLearners;
     }
 
-    public function isCorrectionDenialEnabled()
+    public function isCorrectionDenialEnabled(): bool
     {
         return $this->correctionDenialEnabled;
     }
 
-    public function setCorrectionDenialEnabled($correctionDenialEnabled)
+    public function setCorrectionDenialEnabled($correctionDenialEnabled): void
     {
         $this->correctionDenialEnabled = $correctionDenialEnabled;
     }
 
-    public function isCriteriaEnabled()
+    public function isCriteriaEnabled(): bool
     {
         return $this->criteriaEnabled;
     }
 
-    public function setCriteriaEnabled($criteriaEnabled)
+    public function setCriteriaEnabled($criteriaEnabled): void
     {
         $this->criteriaEnabled = $criteriaEnabled;
     }
@@ -560,7 +449,7 @@ class Dropzone extends AbstractResource
         return $this->criteriaTotal;
     }
 
-    public function setCriteriaTotal($criteriaTotal)
+    public function setCriteriaTotal($criteriaTotal): void
     {
         $this->criteriaTotal = $criteriaTotal;
     }
@@ -570,39 +459,19 @@ class Dropzone extends AbstractResource
         return $this->autoCloseDropsAtDropEndDate;
     }
 
-    public function setAutoCloseDropsAtDropEndDate($autoCloseDropsAtDropEndDate)
+    public function setAutoCloseDropsAtDropEndDate($autoCloseDropsAtDropEndDate): void
     {
         $this->autoCloseDropsAtDropEndDate = $autoCloseDropsAtDropEndDate;
     }
 
-    public function getAutoCloseState()
-    {
-        return $this->autoCloseState;
-    }
-
-    public function setAutoCloseState($autoCloseState)
-    {
-        $this->autoCloseState = $autoCloseState;
-    }
-
-    public function getDropClosed()
+    public function getDropClosed(): bool
     {
         return $this->dropClosed;
     }
 
-    public function setDropClosed($dropClosed)
+    public function setDropClosed($dropClosed): void
     {
         $this->dropClosed = $dropClosed;
-    }
-
-    public function getNotifyOnDrop()
-    {
-        return $this->notifyOnDrop;
-    }
-
-    public function setNotifyOnDrop($notifyOnDrop)
-    {
-        $this->notifyOnDrop = $notifyOnDrop;
     }
 
     /**
@@ -613,12 +482,12 @@ class Dropzone extends AbstractResource
         return $this->criteria->toArray();
     }
 
-    public function emptyCriteria()
+    public function emptyCriteria(): void
     {
-        return $this->criteria->clear();
+        $this->criteria->clear();
     }
 
-    public function addCriterion(Criterion $criterion)
+    public function addCriterion(Criterion $criterion): void
     {
         if (!$this->criteria->contains($criterion)) {
             $this->criteria->add($criterion);
@@ -626,14 +495,14 @@ class Dropzone extends AbstractResource
         }
     }
 
-    public function removeCriterion(Criterion $criterion)
+    public function removeCriterion(Criterion $criterion): void
     {
         if ($this->criteria->contains($criterion)) {
             $this->criteria->removeElement($criterion);
         }
     }
 
-    public function getAllowedDocuments()
+    public function getAllowedDocuments(): array
     {
         $allowed = [];
         if ($this->uploadEnabled) {
@@ -652,7 +521,7 @@ class Dropzone extends AbstractResource
         return $allowed;
     }
 
-    public function setAllowedDocuments(array $allowedDocuments)
+    public function setAllowedDocuments(array $allowedDocuments): void
     {
         $this->uploadEnabled = in_array('file', $allowedDocuments);
         $this->richTextEnabled = in_array('html', $allowedDocuments);
@@ -660,7 +529,7 @@ class Dropzone extends AbstractResource
         $this->workspaceResourceEnabled = in_array('resource', $allowedDocuments);
     }
 
-    public function isDropEnabled()
+    public function isDropEnabled(): bool
     {
         $currentDate = new \DateTime();
 
@@ -674,7 +543,7 @@ class Dropzone extends AbstractResource
         );
     }
 
-    public function isReviewEnabled()
+    public function isReviewEnabled(): bool
     {
         $currentDate = new \DateTime();
 
@@ -688,22 +557,22 @@ class Dropzone extends AbstractResource
         ));
     }
 
-    public function isCorrectorDisplayed()
+    public function isCorrectorDisplayed(): bool
     {
         return $this->correctorDisplayed;
     }
 
-    public function setCorrectorDisplayed($correctorDisplayed)
+    public function setCorrectorDisplayed($correctorDisplayed): void
     {
         $this->correctorDisplayed = $correctorDisplayed;
     }
 
-    public function isRevisionEnabled()
+    public function isRevisionEnabled(): bool
     {
         return $this->revisionEnabled;
     }
 
-    public function setRevisionEnabled($revisionEnabled)
+    public function setRevisionEnabled($revisionEnabled): void
     {
         $this->revisionEnabled = $revisionEnabled;
     }
@@ -713,7 +582,7 @@ class Dropzone extends AbstractResource
         return $this->lockDrops;
     }
 
-    public function setLockDrops(bool $locked)
+    public function setLockDrops(bool $locked): void
     {
         $this->lockDrops = $locked;
     }

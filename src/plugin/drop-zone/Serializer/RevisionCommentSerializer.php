@@ -11,7 +11,7 @@
 
 namespace Claroline\DropZoneBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
@@ -19,28 +19,31 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\DropZoneBundle\Entity\Revision;
 use Claroline\DropZoneBundle\Entity\RevisionComment;
+use Doctrine\Persistence\ObjectRepository;
 
 class RevisionCommentSerializer
 {
     use SerializerTrait;
 
-    /** @var UserSerializer */
-    private $userSerializer;
+    private ObjectRepository $revisionRepo;
+    private ObjectRepository $userRepo;
 
-    private $revisionRepo;
-    private $userRepo;
-
-    public function __construct(ObjectManager $om, UserSerializer $userSerializer)
-    {
-        $this->userSerializer = $userSerializer;
-
+    public function __construct(
+        ObjectManager $om,
+        private readonly UserSerializer $userSerializer
+    ) {
         $this->revisionRepo = $om->getRepository(Revision::class);
         $this->userRepo = $om->getRepository(User::class);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'dropzone_revision_comment';
+    }
+
+    public function getClass(): string
+    {
+        return RevisionComment::class;
     }
 
     public function serialize(RevisionComment $comment): array
@@ -49,7 +52,7 @@ class RevisionCommentSerializer
             'id' => $comment->getUuid(),
             'content' => $comment->getContent(),
             'user' => $comment->getUser() ?
-                $this->userSerializer->serialize($comment->getUser(), [Options::SERIALIZE_MINIMAL]) :
+                $this->userSerializer->serialize($comment->getUser(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                 null,
             'creationDate' => DateNormalizer::normalize($comment->getCreationDate()),
             'editionDate' => DateNormalizer::normalize($comment->getEditionDate()),
