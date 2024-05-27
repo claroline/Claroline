@@ -111,10 +111,10 @@ abstract class ResourceComponent implements ResourceInterface, EventSubscriberIn
         return [];
     }
 
-    /*public function download(AbstractResource $resource): ?string
+    public function download(AbstractResource $resource): ?string
     {
         return null;
-    }*/
+    }
 
     public function update(AbstractResource $resource, array $data): ?array
     {

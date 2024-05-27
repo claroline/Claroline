@@ -4,7 +4,6 @@ import {withReducer} from '#/main/app/store/components/withReducer'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {hasPermission} from '#/main/app/security'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
 
 import {DropzoneResource as DropzoneResourceComponent} from '#/plugin/drop-zone/resources/dropzone/components/resource'
 import {reducer, selectors} from '#/plugin/drop-zone/resources/dropzone/store'
@@ -20,8 +19,6 @@ const DropzoneResource = withReducer(selectors.STORE_NAME, reducer)(
       currentRevisionId: selectors.currentRevisionId(state)
     }),
     (dispatch) => ({
-      resetForm: (formData) => dispatch(formActions.resetForm(selectors.STORE_NAME+'.dropzoneForm', formData)),
-
       fetchDrop: (dropId, type) => dispatch(correctionActions.fetchDrop(dropId, type)),
       resetCurrentDrop: () => dispatch(correctionActions.resetCurrentDrop()),
       fetchCorrections: (dropzoneId) => dispatch(correctionActions.fetchCorrections(dropzoneId)),

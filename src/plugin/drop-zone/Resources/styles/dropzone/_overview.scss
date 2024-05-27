@@ -9,8 +9,8 @@
         flex: 1;
         background: var(--#{$prefix}secondary-bg);
         padding: 10px $panel-body-padding;
-        border: 1px solid transparent;
-        border-radius: $border-radius-sm;
+        border: var(--#{$prefix}border-width) solid transparent;
+        border-radius: var(--#{$prefix}border-radius-sm);
 
         + .evaluation-parameter {
             margin-top: 5px;
@@ -25,22 +25,21 @@
     list-style-type: none;
     padding: 0 $timeline-endpoint-size;
     padding-top: $timeline-endpoint-size + $component-margin-bottom;
-    margin: 0 0 $component-margin-bottom;
+    margin: 0;
+    gap: map-get($spacers, 2);
 
     // timeline line
     &:before {
-        //z-index: 1;
         content: " ";
         position: absolute;
         border-top: $timeline-lines-width solid $timeline-lines-color;
         left: 0;
         right: $timeline-endpoint-size;
-        top: calc(math.div($timeline-endpoint-size, 2) - math.div($timeline-lines-width, 2));
+        top: calc($timeline-endpoint-size*.5 - $timeline-lines-width*.5);
     }
 
     // timeline arrow
     &:after {
-        //z-index: 1;
         content: " ";
         position: absolute;
         top: 0;
@@ -59,11 +58,11 @@
     display: flex;
     flex-direction: column;
     background: $card-bg;
-    border: 1px solid $card-border-color;
+    border: $card-border-width solid $card-border-color;
+    border-radius: var(--#{$prefix}border-radius);
     text-align: center;
 
     &:before {
-        //z-index: 1;
         content: " ";
         position: absolute;
         left: 50%;
@@ -75,7 +74,6 @@
     }
 
     &:after {
-        //z-index: 2;
         content: " ";
         position: absolute;
         top: -($timeline-endpoint-size + $component-margin-bottom);
@@ -87,13 +85,8 @@
         background: $timeline-lines-color;
     }
 
-    + .evaluation-status {
-        margin-left: 5px;
-        margin-top: 0;
-    }
-
     &.active {
-        @include box-shadow($dropdown-box-shadow);
+        @include box-shadow($box-shadow);
 
         &:before,
         &:after {
@@ -102,36 +95,28 @@
 
         .evaluation-status-heading {
             background: $primary;
-            color: white;
-            border-color: $primary;
-        }
-
-        .evaluation-planning {
-            color: $body-color;
+            color: color-contrast($primary);
         }
     }
 
     .evaluation-status-heading {
         flex: 1 0 60%;
         margin: 0;
-        padding: $panel-body-padding;
+        padding: $card-spacer-y $card-spacer-x;
         font-size: $font-size-base;
-        color: var(--#{$prefix}secondary-color);
         background: var(--#{$prefix}tertiary-bg);
-        border-bottom: 1px solid #e5e5e5; // todo : add var (same as feedback in exo)
 
         .fa {
             opacity: .5;
             display: block;
-            font-size: 42px;
-            margin-bottom: 10px;
+            font-size: map-get($icon-sizes, sm);
+            margin-bottom: map-get($spacers, 2);
         }
     }
 
     .evaluation-planning {
         flex: 1 0 40%;
-        padding: $panel-body-padding;
-        font-style: italic;
+        padding: $card-spacer-y $card-spacer-x;
         color: var(--#{$prefix}secondary-color);
     }
 }
@@ -143,10 +128,5 @@
 
     .evaluation-status {
         flex-direction: row;
-
-        + .evaluation-status {
-            margin-left: 0;
-            margin-top: 5px;
-        }
     }
 }

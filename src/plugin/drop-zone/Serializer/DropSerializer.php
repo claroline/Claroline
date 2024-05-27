@@ -7,38 +7,34 @@ use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\DropComment;
 use Claroline\DropZoneBundle\Entity\Dropzone;
+use Doctrine\Persistence\ObjectRepository;
 
 class DropSerializer
 {
-    private $correctionSerializer;
-    private $documentSerializer;
-    private $dropCommentSerializer;
-    private $userSerializer;
-
-    private $dropRepo;
-    private $dropzoneRepo;
-    private $userRepo;
+    private ObjectRepository $dropRepo;
+    private ObjectRepository $dropzoneRepo;
+    private ObjectRepository $userRepo;
 
     public function __construct(
-        CorrectionSerializer $correctionSerializer,
-        DocumentSerializer $documentSerializer,
-        DropCommentSerializer $dropCommentSerializer,
-        UserSerializer $userSerializer,
+        private readonly CorrectionSerializer $correctionSerializer,
+        private readonly DocumentSerializer $documentSerializer,
+        private readonly DropCommentSerializer $dropCommentSerializer,
+        private readonly UserSerializer $userSerializer,
         ObjectManager $om
     ) {
-        $this->correctionSerializer = $correctionSerializer;
-        $this->documentSerializer = $documentSerializer;
-        $this->dropCommentSerializer = $dropCommentSerializer;
-        $this->userSerializer = $userSerializer;
-
         $this->dropRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Drop');
         $this->dropzoneRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Dropzone');
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'dropzone_drop';
+    }
+
+    public function getClass(): string
+    {
+        return Drop::class;
     }
 
     public function serialize(Drop $drop): array
@@ -61,13 +57,7 @@ class DropSerializer
         ];
     }
 
-    /**
-     * @param string $class
-     * @param array  $data
-     *
-     * @return Drop
-     */
-    public function deserialize($class, $data)
+    public function deserialize(string $class, array $data): Drop
     {
         $drop = $this->dropRepo->findOneBy(['uuid' => $data['id']]);
 
@@ -114,7 +104,7 @@ class DropSerializer
         return $drop;
     }
 
-    private function getDocuments(Drop $drop)
+    private function getDocuments(Drop $drop): array
     {
         $documents = [];
         $revisionDocuments = [];
@@ -135,7 +125,7 @@ class DropSerializer
         return 0 < count($documents) ? $documents : $revisionDocuments;
     }
 
-    private function getCorrections(Drop $drop)
+    private function getCorrections(Drop $drop): array
     {
         $corrections = [];
 
@@ -146,7 +136,7 @@ class DropSerializer
         return $corrections;
     }
 
-    private function getUsers(Drop $drop)
+    private function getUsers(Drop $drop): array
     {
         $users = [];
 
@@ -157,14 +147,14 @@ class DropSerializer
         return $users;
     }
 
-    private function getComments(Drop $drop)
+    private function getComments(Drop $drop): array
     {
         return array_values(array_map(function (DropComment $comment) {
             return $this->dropCommentSerializer->serialize($comment);
         }, $drop->getComments()->toArray()));
     }
 
-    private function deserializeDocuments(Drop $drop, $documentsData)
+    private function deserializeDocuments(Drop $drop, $documentsData): void
     {
         $drop->emptyDocuments();
 
@@ -174,17 +164,17 @@ class DropSerializer
         }
     }
 
-    private function deserializeCorrections(Drop $drop, $correctionsData)
+    private function deserializeCorrections(Drop $drop, $correctionsData): void
     {
         $drop->emptyCorrections();
 
         foreach ($correctionsData as $correctionData) {
-            $correction = $this->correctionSerializer->deserialize('Claroline\DropZoneBundle\Entity\Correction', $correctionData);
+            $correction = $this->correctionSerializer->deserialize($correctionData);
             $drop->addCorrection($correction);
         }
     }
 
-    private function deserializeUsers(Drop $drop, $usersData)
+    private function deserializeUsers(Drop $drop, $usersData): void
     {
         $drop->emptyUsers();
 

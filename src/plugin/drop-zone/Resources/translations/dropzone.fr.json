@@ -48,6 +48,7 @@
     "drop_disabled_not_started": "Le dépôt de productions n'a pas encore commencé.",
     "drop_disabled_team_required": "Une équipe est requise.",
     "drop_disabled_user_required": "Un utilisateur est requis.",
+    "drop": "Production",
     "drop_from": "Production de «%name%»",
     "drop_type": "Type de dépôt",
     "drop_type_team": "par les Equipes",

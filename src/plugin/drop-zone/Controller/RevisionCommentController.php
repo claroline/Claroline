@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\DropZoneBundle\Controller\API;
+namespace Claroline\DropZoneBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\DropZoneBundle\Entity\RevisionComment;

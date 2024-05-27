@@ -5,12 +5,13 @@ namespace Claroline\DropZoneBundle\Serializer;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\DropZoneBundle\Entity\Correction;
 use Claroline\DropZoneBundle\Entity\Grade;
+use Doctrine\Persistence\ObjectRepository;
 
 class GradeSerializer
 {
-    private $correctionRepo;
-    private $criterionRepo;
-    private $gradeRepo;
+    private ObjectRepository $correctionRepo;
+    private ObjectRepository $criterionRepo;
+    private ObjectRepository $gradeRepo;
 
     public function __construct(ObjectManager $om)
     {
@@ -19,9 +20,14 @@ class GradeSerializer
         $this->gradeRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Grade');
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'dropzone_grade';
+    }
+
+    public function getClass(): string
+    {
+        return Grade::class;
     }
 
     public function serialize(Grade $grade): array
@@ -34,13 +40,7 @@ class GradeSerializer
         ];
     }
 
-    /**
-     * @param string $class
-     * @param array  $data
-     *
-     * @return Grade
-     */
-    public function deserialize($class, $data)
+    public function deserialize(string $class, array $data): Grade
     {
         $grade = $this->gradeRepo->findOneBy(['uuid' => $data['id']]);
 

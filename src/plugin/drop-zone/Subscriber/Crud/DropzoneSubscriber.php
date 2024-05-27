@@ -10,12 +10,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DropzoneSubscriber implements EventSubscriberInterface
 {
-    /** @var DropzoneManager */
-    private $dropzoneManager;
-
-    public function __construct(DropzoneManager $dropzoneManager)
-    {
-        $this->dropzoneManager = $dropzoneManager;
+    public function __construct(
+        private readonly DropzoneManager $dropzoneManager
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -25,7 +22,7 @@ class DropzoneSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         $dropzone = $event->getObject();
         $oldData = $event->getOldData();

@@ -40,7 +40,7 @@ class ShortcutListener extends ResourceComponent implements EvaluatedResourceInt
         ];
     }
 
-    function update(AbstractResource $resource, array $data): ?array
+    public function update(AbstractResource $resource, array $data): ?array
     {
         return [
             'resource' => $this->serializer->serialize($resource),

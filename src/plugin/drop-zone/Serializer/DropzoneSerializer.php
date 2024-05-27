@@ -12,22 +12,20 @@ class DropzoneSerializer
 {
     use SerializerTrait;
 
-    /** @var CriterionSerializer */
-    private $criterionSerializer;
-    /** @var ObjectManager */
-    private $om;
-
     public function __construct(
-        CriterionSerializer $criterionSerializer,
-        ObjectManager $om
+        private readonly CriterionSerializer $criterionSerializer,
+        private readonly ObjectManager $om
     ) {
-        $this->criterionSerializer = $criterionSerializer;
-        $this->om = $om;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'dropzone';
+    }
+
+    public function getClass(): string
+    {
+        return Dropzone::class;
     }
 
     public function serialize(Dropzone $dropzone): array
@@ -35,10 +33,34 @@ class DropzoneSerializer
         return [
             'id' => $dropzone->getUuid(),
             'instruction' => $dropzone->getInstruction(),
-            'parameters' => $this->serializeParameters($dropzone),
-            'display' => $this->serializeDisplay($dropzone),
+            'parameters' => [
+                'dropType' => $dropzone->getDropType(),
+                'reviewType' => $dropzone->isPeerReview() ? 'peer' : 'manager',
+                'documents' => $dropzone->getAllowedDocuments(),
+                'expectedCorrectionTotal' => $dropzone->getExpectedCorrectionTotal(),
+                'scoreMax' => $dropzone->getScoreMax(),
+                'scoreToPass' => $dropzone->getScoreToPass(),
+                'commentInCorrectionEnabled' => $dropzone->isCommentInCorrectionEnabled(),
+                'commentInCorrectionForced' => $dropzone->isCommentInCorrectionForced(),
+                'correctionDenialEnabled' => $dropzone->isCorrectionDenialEnabled(),
+                'criteriaEnabled' => $dropzone->isCriteriaEnabled(),
+                'criteria' => array_map(function (Criterion $criterion) {
+                    return $this->criterionSerializer->serialize($criterion);
+                }, $dropzone->getCriteria()),
+                'criteriaTotal' => $dropzone->getCriteriaTotal(),
+                'autoCloseDropsAtDropEndDate' => $dropzone->getAutoCloseDropsAtDropEndDate(),
+                'revisionEnabled' => $dropzone->isRevisionEnabled(),
+            ],
+            'display' => [
+                'correctionInstruction' => $dropzone->getCorrectionInstruction(),
+                'successMessage' => $dropzone->getSuccessMessage(),
+                'failMessage' => $dropzone->getFailMessage(),
+                'showScore' => $dropzone->getDisplayNotationToLearners(),
+                'showFeedback' => $dropzone->getDisplayNotationMessageToLearners(),
+                'displayCorrectionsToLearners' => $dropzone->getDisplayCorrectionsToLearners(),
+                'correctorDisplayed' => $dropzone->isCorrectorDisplayed(),
+            ],
             'planning' => $this->serializePlanning($dropzone),
-            'notifications' => $this->serializeNotifications($dropzone),
             'restrictions' => [
                 'lockDrops' => $dropzone->hasLockDrops(),
             ],
@@ -66,39 +88,10 @@ class DropzoneSerializer
             $this->deserializePlanning($data['planning'], $dropzone);
         }
 
-        if (isset($data['notifications'])) {
-            $notifyOnDrop = isset($data['notifications']['enabled']) &&
-                $data['notifications']['enabled'] &&
-                isset($data['notifications']['actions']) &&
-                is_array($data['notifications']['actions']) &&
-                in_array('drop', $data['notifications']['actions']);
-            $dropzone->setNotifyOnDrop($notifyOnDrop);
-        }
-
         return $dropzone;
     }
 
-    private function serializeParameters(Dropzone $dropzone)
-    {
-        return [
-            'dropType' => $dropzone->getDropType(),
-            'reviewType' => $dropzone->isPeerReview() ? 'peer' : 'manager',
-            'documents' => $dropzone->getAllowedDocuments(),
-            'expectedCorrectionTotal' => $dropzone->getExpectedCorrectionTotal(),
-            'scoreMax' => $dropzone->getScoreMax(),
-            'scoreToPass' => $dropzone->getScoreToPass(),
-            'commentInCorrectionEnabled' => $dropzone->isCommentInCorrectionEnabled(),
-            'commentInCorrectionForced' => $dropzone->isCommentInCorrectionForced(),
-            'correctionDenialEnabled' => $dropzone->isCorrectionDenialEnabled(),
-            'criteriaEnabled' => $dropzone->isCriteriaEnabled(),
-            'criteria' => $this->serializeCriteria($dropzone),
-            'criteriaTotal' => $dropzone->getCriteriaTotal(),
-            'autoCloseDropsAtDropEndDate' => $dropzone->getAutoCloseDropsAtDropEndDate(),
-            'revisionEnabled' => $dropzone->isRevisionEnabled(),
-        ];
-    }
-
-    private function deserializeParameters(array $data, Dropzone $dropzone)
+    private function deserializeParameters(array $data, Dropzone $dropzone): void
     {
         if (isset($data['parameters']['reviewType'])) {
             $dropzone->setPeerReview('peer' === $data['parameters']['reviewType']);
@@ -124,7 +117,7 @@ class DropzoneSerializer
         }
     }
 
-    private function serializePlanning(Dropzone $dropzone)
+    private function serializePlanning(Dropzone $dropzone): array
     {
         if ($dropzone->getManualPlanning()) {
             return [
@@ -140,7 +133,7 @@ class DropzoneSerializer
         }
     }
 
-    private function deserializePlanning(array $planningData, Dropzone $dropzone)
+    private function deserializePlanning(array $planningData, Dropzone $dropzone): void
     {
         if (isset($planningData['type'])) {
             $dropzone->setManualPlanning('manual' === $planningData['type']);
@@ -169,35 +162,7 @@ class DropzoneSerializer
         }
     }
 
-    private function serializeDisplay(Dropzone $dropzone)
-    {
-        return [
-            'correctionInstruction' => $dropzone->getCorrectionInstruction(),
-            'successMessage' => $dropzone->getSuccessMessage(),
-            'failMessage' => $dropzone->getFailMessage(),
-            'showScore' => $dropzone->getDisplayNotationToLearners(),
-            'showFeedback' => $dropzone->getDisplayNotationMessageToLearners(),
-            'displayCorrectionsToLearners' => $dropzone->getDisplayCorrectionsToLearners(),
-            'correctorDisplayed' => $dropzone->isCorrectorDisplayed(),
-        ];
-    }
-
-    private function serializeNotifications(Dropzone $dropzone)
-    {
-        return [
-            'enabled' => $dropzone->getNotifyOnDrop(),
-            'actions' => ['drop'],
-        ];
-    }
-
-    private function serializeCriteria(Dropzone $dropzone)
-    {
-        return array_map(function (Criterion $criterion) {
-            return $this->criterionSerializer->serialize($criterion);
-        }, $dropzone->getCriteria());
-    }
-
-    private function deserializeCriteria(Dropzone $dropzone, array $criteriaData)
+    private function deserializeCriteria(Dropzone $dropzone, array $criteriaData): void
     {
         $oldCriteria = $dropzone->getCriteria();
         $newCriteriaUuids = [];

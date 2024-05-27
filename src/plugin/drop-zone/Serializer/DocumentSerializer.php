@@ -12,49 +12,42 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Revision;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class DocumentSerializer
 {
     use SerializerTrait;
 
-    private $revisionSerializer;
-    private $resourceSerializer;
-    private $userSerializer;
-    private $tokenStorage;
-
-    private $documentRepo;
-    private $dropRepo;
-    private $revisionRepo;
-    private $resourceNodeRepo;
+    private ObjectRepository $documentRepo;
+    private ObjectRepository $dropRepo;
+    private ObjectRepository $revisionRepo;
+    private ObjectRepository $resourceNodeRepo;
 
     public function __construct(
-        RevisionSerializer $revisionSerializer,
-        ResourceNodeSerializer $resourceSerializer,
-        UserSerializer $userSerializer,
-        TokenStorageInterface $tokenStorage,
+        private readonly RevisionSerializer $revisionSerializer,
+        private readonly ResourceNodeSerializer $resourceSerializer,
+        private readonly UserSerializer $userSerializer,
+        private readonly TokenStorageInterface $tokenStorage,
         ObjectManager $om
     ) {
-        $this->revisionSerializer = $revisionSerializer;
-        $this->resourceSerializer = $resourceSerializer;
-        $this->userSerializer = $userSerializer;
-        $this->tokenStorage = $tokenStorage;
-
         $this->documentRepo = $om->getRepository(Document::class);
         $this->dropRepo = $om->getRepository(Drop::class);
         $this->revisionRepo = $om->getRepository(Revision::class);
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'dropzone_document';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Document $document, array $options = [])
+    public function getClass(): string
+    {
+        return Document::class;
+    }
+
+    public function serialize(Document $document, array $options = []): array
     {
         $documentData = $document->getData();
         if (Document::DOCUMENT_TYPE_RESOURCE === $document->getType() && !empty($documentData)) {
@@ -75,13 +68,7 @@ class DocumentSerializer
         ];
     }
 
-    /**
-     * @param string $class
-     * @param array  $data
-     *
-     * @return Document
-     */
-    public function deserialize($class, $data)
+    public function deserialize(string $class, array $data): Document
     {
         $document = $this->documentRepo->findOneBy(['uuid' => $data['id']]);
 

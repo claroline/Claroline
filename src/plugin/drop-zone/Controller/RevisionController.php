@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\DropZoneBundle\Controller\API;
+namespace Claroline\DropZoneBundle\Controller;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Entity\Revision;
@@ -31,18 +31,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class RevisionController extends AbstractCrudController
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorization;
+    use PermissionCheckerTrait;
 
-    /** @var DropzoneManager */
-    private $manager;
-
-    public function __construct(AuthorizationCheckerInterface $authorization, DropzoneManager $manager)
-    {
-        $this->authorization = $authorization;
-        $this->manager = $manager;
+    public function __construct(
+        AuthorizationCheckerInterface $authorization,
+        private readonly FinderProvider $finder,
+        private readonly DropzoneManager $manager
+    ) {
     }
 
     public function getName(): string
@@ -71,13 +66,11 @@ class RevisionController extends AbstractCrudController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function submitForRevisionAction(Drop $drop, User $user)
+    public function submitForRevisionAction(Drop $drop, User $user): JsonResponse
     {
         $dropzone = $drop->getDropzone();
-        $this->checkPermission('OPEN', $dropzone->getResourceNode());
+        $this->checkPermission('OPEN', $dropzone->getResourceNode(), [], true);
         $this->checkDropEdition($drop, $user);
 
         try {
@@ -101,12 +94,10 @@ class RevisionController extends AbstractCrudController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function revisionsListAction(Dropzone $dropzone, Request $request)
+    public function revisionsListAction(Dropzone $dropzone, Request $request): JsonResponse
     {
-        $this->checkPermission('EDIT', $dropzone->getResourceNode());
+        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
 
         $data = $this->crud->list(Revision::class, array_merge(
             $request->query->all(),
@@ -125,15 +116,11 @@ class RevisionController extends AbstractCrudController
      *     options={"mapping": {"drop": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function dropRevisionsListAction(Drop $drop, User $user, Request $request)
+    public function dropRevisionsListAction(Drop $drop, User $user, Request $request): JsonResponse
     {
         $dropzone = $drop->getDropzone();
-        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
-
-        if (!$this->authorization->isGranted('EDIT', $collection) && $drop->getUser() !== $user && !in_array($user, $drop->getUsers())) {
+        if (!$this->authorization->isGranted('EDIT', $dropzone->getResourceNode()) && $drop->getUser() !== $user && !in_array($user, $drop->getUsers())) {
             throw new AccessDeniedException();
         }
 
@@ -154,16 +141,13 @@ class RevisionController extends AbstractCrudController
      *     options={"mapping": {"id": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @return JsonResponse
      */
-    public function dropFromRevisionFetcAction(Revision $revision, User $user)
+    public function dropFromRevisionFetchAction(Revision $revision, User $user): JsonResponse
     {
         $drop = $revision->getDrop();
         $dropzone = $drop->getDropzone();
-        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
 
-        if (!$this->authorization->isGranted('EDIT', $collection) && $drop->getUser() !== $user && !in_array($user, $drop->getUsers())) {
+        if (!$this->authorization->isGranted('EDIT', $dropzone->getResourceNode()) && $drop->getUser() !== $user && !in_array($user, $drop->getUsers())) {
             throw new AccessDeniedException();
         }
 
@@ -181,14 +165,12 @@ class RevisionController extends AbstractCrudController
      *     class="Claroline\DropZoneBundle\Entity\Revision",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @return JsonResponse
      */
-    public function nextRevisionAction(Revision $revision, Request $request)
+    public function nextRevisionAction(Revision $revision, Request $request): JsonResponse
     {
         $dropzone = $revision->getDrop()->getDropzone();
 
-        $this->checkPermission('EDIT', $dropzone->getResourceNode());
+        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
 
         $params = $request->query->all();
         $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
@@ -222,14 +204,12 @@ class RevisionController extends AbstractCrudController
      *     class="Claroline\DropZoneBundle\Entity\Revision",
      *     options={"mapping": {"id": "uuid"}}
      * )
-     *
-     * @return JsonResponse
      */
-    public function previousRevisionAction(Revision $revision, Request $request)
+    public function previousRevisionAction(Revision $revision, Request $request): JsonResponse
     {
         $dropzone = $revision->getDrop()->getDropzone();
 
-        $this->checkPermission('EDIT', $dropzone->getResourceNode());
+        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
 
         $params = $request->query->all();
         $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
@@ -252,23 +232,14 @@ class RevisionController extends AbstractCrudController
         return new JsonResponse($this->serializer->serialize($previousDrop), 200);
     }
 
-    private function checkPermission($permission, ResourceNode $resourceNode)
-    {
-        $collection = new ResourceCollection([$resourceNode]);
-
-        if (!$this->authorization->isGranted($permission, $collection)) {
-            throw new AccessDeniedException();
-        }
-    }
-
-    private function checkDropEdition(Drop $drop, User $user)
+    private function checkDropEdition(Drop $drop, User $user): void
     {
         $dropzone = $drop->getDropzone();
-        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
 
-        if ($this->authorization->isGranted('EDIT', $collection)) {
+        if ($this->authorization->isGranted('EDIT', $dropzone->getResourceNode())) {
             return;
         }
+
         if ($dropzone->isDropEnabled()) {
             if ($drop->getUser() === $user || in_array($user, $drop->getUsers())) {
                 return;

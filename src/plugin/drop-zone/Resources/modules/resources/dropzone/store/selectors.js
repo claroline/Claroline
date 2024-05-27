@@ -19,7 +19,7 @@ const userEvaluation = (state) => resourceSelect.resourceEvaluation(state)
 
 const dropzone = createSelector(
   [resource],
-  (resource) => resource.dropzone
+  (resource) => resource.resource
 )
 
 const teams = createSelector(

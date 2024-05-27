@@ -113,7 +113,6 @@ class DropzoneManager
                 break;
         }
 
-        /* TODO: generate ResourceUserEvaluation for team */
         $userEvaluation = !empty($user) ? $this->evaluationManager->getResourceUserEvaluation($dropzone, $user) : null;
         $mySerializedDrop = !empty($myDrop) ? $this->serializer->serialize($myDrop) : null;
         $currentRevisionId = null;
@@ -123,7 +122,7 @@ class DropzoneManager
         }
 
         return [
-            'dropzone' => $this->serializer->serialize($dropzone),
+            'resource' => $this->serializer->serialize($dropzone),
             'myDrop' => $mySerializedDrop,
             'nbCorrections' => count($finishedPeerDrops),
             'userEvaluation' => $this->serializer->serialize($userEvaluation, [Options::SERIALIZE_MINIMAL]),

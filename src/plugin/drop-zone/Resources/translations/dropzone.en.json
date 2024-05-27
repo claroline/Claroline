@@ -48,6 +48,7 @@
     "drop_disabled_not_started": "Evaluation has not started yet.",
     "drop_disabled_team_required": "A team is required.",
     "drop_disabled_user_required": "An user is required.",
+    "drop": "Drop",
     "drop_from": "Copy from «%name%»",
     "drop_type": "Drop type",
     "drop_type_team": "by Teams",

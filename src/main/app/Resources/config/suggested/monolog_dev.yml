@@ -1,10 +1,11 @@
 monolog:
+    channels: ['file', 'email']
     handlers:
         main:
             type:  stream
             path:  "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
-            channels: ["!event", "!messenger"]
+            channels: ["!event", "!messenger", "!email"]
 
         console:
             type: console
@@ -16,3 +17,9 @@ monolog:
             path: "%kernel.logs_dir%/messenger.log"
             level: debug
             channels: [ "messenger" ]
+
+        email:
+            type: stream
+            path: "%kernel.logs_dir%/email.log"
+            level: error
+            channels: [ "email" ]

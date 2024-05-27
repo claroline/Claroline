@@ -5,12 +5,12 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {DOWNLOAD_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
-import {Resource, ResourcePage} from '#/main/core/resource'
+import {Resource} from '#/main/core/resource'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
 import {Overview} from '#/plugin/drop-zone/resources/dropzone/overview/containers/overview'
-import {Editor} from '#/plugin/drop-zone/resources/dropzone/editor/containers/editor'
+import {DropzoneEditor} from '#/plugin/drop-zone/resources/dropzone/editor/components/editor'
 import {MyDrop} from '#/plugin/drop-zone/resources/dropzone/player/containers/my-drop'
 import {Drops} from '#/plugin/drop-zone/resources/dropzone/correction/components/drops'
 import {Correctors} from '#/plugin/drop-zone/resources/dropzone/correction/components/correctors'
@@ -21,19 +21,12 @@ import {MyRevisions} from '#/plugin/drop-zone/resources/dropzone/player/componen
 import {Revisions} from '#/plugin/drop-zone/resources/dropzone/player/components/revisions'
 import {Revision} from '#/plugin/drop-zone/resources/dropzone/player/components/revision'
 
-
 const DropzoneResource = props =>
   <Resource
     {...omit(props)}
     styles={['claroline-distribution-plugin-drop-zone-dropzone-resource']}
     customActions={[
       {
-        type: LINK_BUTTON,
-        icon: 'fa fa-fw fa-home',
-        label: trans('show_overview'),
-        target: props.path,
-        exact: true
-      }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-upload',
         label: trans('show_evaluation', {}, 'dropzone'),
@@ -70,14 +63,10 @@ const DropzoneResource = props =>
         group: trans('transfer')
       }
     ]}
+    editor={DropzoneEditor}
     overviewPage={Overview}
     pages={[
       {
-        path: '/edit',
-        component: Editor,
-        disabled: !props.canEdit,
-        onEnter: () => props.resetForm(props.dropzone)
-      }, {
         path: '/my/drop',
         component: MyDrop,
         exact: true,

@@ -176,13 +176,13 @@ class FlashcardManager
                 'progression' => 0,
                 'data' => [
                     'session' => 1,
-                    'cards' => array_map(function ($card) {
+                    'cards' => array_map(function (CardDrawnProgression $card) {
                         return $this->cardDrawnProgressionSerializer->serialize($card);
                     }, $cards),
-                    'cardsSessionIds' => array_map(function ($card) {
+                    'cardsSessionIds' => array_map(function (CardDrawnProgression $card) {
                         return $card->getId();
                     }, $cardsSession),
-                    'cardsAnsweredIds' => array_map(function ($card) {
+                    'cardsAnsweredIds' => array_map(function (CardDrawnProgression $card) {
                         return $card->getId();
                     }, $cardsAnswered),
                 ],
@@ -235,13 +235,13 @@ class FlashcardManager
             'progression' => $progression,
             'data' => [
                 'session' => $session,
-                'cards' => array_map(function ($card) {
+                'cards' => array_map(function (CardDrawnProgression $card) {
                     return $this->cardDrawnProgressionSerializer->serialize($card);
                 }, $cards),
-                'cardsSessionIds' => array_map(function ($card) {
+                'cardsSessionIds' => array_map(function (CardDrawnProgression $card) {
                     return $card->getId();
                 }, $cardsSession),
-                'cardsAnsweredIds' => array_map(function ($card) {
+                'cardsAnsweredIds' => array_map(function (CardDrawnProgression $card) {
                     return $card->getId();
                 }, $cardsAnswered),
             ],

@@ -6,5 +6,4 @@ use Claroline\AppBundle\Component\ComponentInterface;
 
 interface NotificationInterface extends ComponentInterface
 {
-    //public function notify(string $message, array $users): void;
 }

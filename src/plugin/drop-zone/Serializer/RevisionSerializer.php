@@ -11,54 +11,56 @@
 
 namespace Claroline\DropZoneBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\DropZoneBundle\Entity\Document;
+use Claroline\DropZoneBundle\Entity\Drop;
 use Claroline\DropZoneBundle\Entity\Revision;
 use Claroline\DropZoneBundle\Entity\RevisionComment;
+use Doctrine\Persistence\ObjectRepository;
 
 class RevisionSerializer
 {
     use SerializerTrait;
 
-    /** @var SerializerProvider */
-    private $serializer;
+    private ObjectRepository $revisionRepo;
+    private ObjectRepository $dropRepo;
+    private ObjectRepository $userRepo;
 
-    private $revisionRepo;
-    private $dropRepo;
-    private $userRepo;
-
-    public function __construct(ObjectManager $om, SerializerProvider $serializer)
-    {
-        $this->serializer = $serializer;
-
-        $this->revisionRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Revision');
-        $this->dropRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Drop');
-        $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
+    public function __construct(
+        ObjectManager $om,
+        private readonly SerializerProvider $serializer
+    ) {
+        $this->revisionRepo = $om->getRepository(Revision::class);
+        $this->dropRepo = $om->getRepository(Drop::class);
+        $this->userRepo = $om->getRepository(User::class);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'dropzone_revision';
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Revision $revision, array $options = [])
+    public function getClass(): string
+    {
+        return Revision::class;
+    }
+
+    public function serialize(Revision $revision, array $options = []): array
     {
         $serialized = [
             'id' => $revision->getUuid(),
             'creator' => $revision->getCreator() ?
-                $this->serializer->serialize($revision->getCreator(), [Options::SERIALIZE_MINIMAL]) :
+                $this->serializer->serialize($revision->getCreator(), [SerializerInterface::SERIALIZE_MINIMAL]) :
                 null,
             'creationDate' => DateNormalizer::normalize($revision->getCreationDate()),
         ];
 
-        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+        if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
                 'documents' => array_values(array_map(function (Document $document) {
                     return $this->serializer->serialize($document);
@@ -72,11 +74,7 @@ class RevisionSerializer
         return $serialized;
     }
 
-    /**
-     * @param array    $data
-     * @param Revision $revision
-     */
-    public function deserialize($data, Revision $revision = null): Revision
+    public function deserialize(array $data, Revision $revision = null): Revision
     {
         if (empty($revision)) {
             $revision = $this->revisionRepo->findOneBy(['uuid' => $data['id']]);

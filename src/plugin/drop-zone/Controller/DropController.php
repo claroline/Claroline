@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\DropZoneBundle\Controller\API;
+namespace Claroline\DropZoneBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\SerializerProvider;
@@ -46,39 +46,17 @@ class DropController
     use RequestDecoderTrait;
     use PermissionCheckerTrait;
 
-    /** @var FinderProvider */
-    private $finder;
-    /** @var DropzoneManager */
-    private $manager;
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-    /** @var DropManager */
-    private $dropManager;
-    /** @var DocumentManager */
-    private $documentManager;
-
     public function __construct(
-        FinderProvider $finder,
-        DropzoneManager $manager,
-        ObjectManager $om,
+        private readonly FinderProvider $finder,
+        private readonly DropzoneManager $manager,
+        private readonly ObjectManager $om,
         AuthorizationCheckerInterface $authorization,
-        SerializerProvider $serializer,
-        EvaluationManager $evaluationManager,
-        DropManager $dropManager,
-        DocumentManager $documentManager
+        private readonly SerializerProvider $serializer,
+        private readonly EvaluationManager $evaluationManager,
+        private readonly DropManager $dropManager,
+        private readonly DocumentManager $documentManager
     ) {
-        $this->finder = $finder;
-        $this->manager = $manager;
-        $this->om = $om;
         $this->authorization = $authorization;
-        $this->serializer = $serializer;
-        $this->evaluationManager = $evaluationManager;
-        $this->dropManager = $dropManager;
-        $this->documentManager = $documentManager;
     }
 
     /**
@@ -581,7 +559,7 @@ class DropController
         return new JsonResponse($this->serializer->serialize($previousDrop), 200);
     }
 
-    private function checkDropEdition(Drop $drop, User $user)
+    private function checkDropEdition(Drop $drop, User $user): void
     {
         $dropzone = $drop->getDropzone();
 
@@ -598,7 +576,7 @@ class DropController
         throw new AccessDeniedException();
     }
 
-    private function checkTeamUser(Team $team, User $user)
+    private function checkTeamUser(Team $team, User $user): void
     {
         if (!$user->hasRole($team->getRole()->getName())) {
             throw new AccessDeniedException();

@@ -11,6 +11,7 @@ import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop
 
 import {Parameters} from '#/plugin/drop-zone/resources/dropzone/overview/components/parameters'
 import {Timeline} from '#/plugin/drop-zone/resources/dropzone/overview/components/timeline'
+import {PageSection} from '#/main/app/page/components/section'
 
 const Overview = props =>
   <ResourceOverview
@@ -44,6 +45,7 @@ const Overview = props =>
       ]
     ].filter(value => !!value)}
 
+    primaryAction="participate"
     actions={[
       {
         name: 'participate',
@@ -67,9 +69,11 @@ const Overview = props =>
       }
     ]}
   >
-    <section className="resource-parameters mb-3">
-      <h3 className="h2">{trans('evaluation_configuration', {}, 'dropzone')}</h3>
-
+    <PageSection
+      size="md"
+      title={trans('evaluation_configuration', {}, 'dropzone')}
+      className="py-3"
+    >
       <Parameters
         dropType={props.dropzone.parameters.dropType}
         reviewType={props.dropzone.parameters.reviewType}
@@ -80,7 +84,7 @@ const Overview = props =>
         planning={props.dropzone.planning}
         reviewType={props.dropzone.parameters.reviewType}
       />
-    </section>
+    </PageSection>
   </ResourceOverview>
 
 Overview.propTypes = {
