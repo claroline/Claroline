@@ -1,3 +1,4 @@
 imports:
     - { resource: components/log.yml }
+    - { resource: components/notification.yml }
     - { resource: components/tool.yml }

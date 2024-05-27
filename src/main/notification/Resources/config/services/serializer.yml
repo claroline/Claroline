@@ -1,0 +1,3 @@
+services:
+    Claroline\NotificationBundle\Serializer\NotificationSerializer:
+        tags: [ claroline.serializer ]

@@ -24,11 +24,6 @@ class ColorHelper
         return static::color($text, 'success');
     }
 
-    public static function learning(string $text): string
-    {
-        return static::color($text, 'learning');
-    }
-
     private static function color(string $text, string $variant): string
     {
         return "<span class='text-$variant'>$text</span>";

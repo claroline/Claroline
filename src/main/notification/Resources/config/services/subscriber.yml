@@ -1,0 +1,7 @@
+services:
+    Claroline\NotificationBundle\Subscriber\NotificationSubscriber:
+        tags: [ kernel.event_subscriber ]
+        arguments:
+            - '@security.token_storage'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\NotificationBundle\Manager\NotificationManager'

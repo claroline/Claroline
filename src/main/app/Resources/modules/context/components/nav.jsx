@@ -52,11 +52,11 @@ const ContextNav = (props) => {
                 target="/desktop"
               >
                 <UserAvatar user={props.currentUser} size="md" noStatus={true}/>
-                <span
+                {/*<span
                   className="app-context-status position-absolute top-100 start-100 translate-middle m-n1 bg-learning rounded-circle"
                 >
                   <span className="visually-hidden">New alerts</span>
-                </span>
+                </span>*/}
               </Button>
             )
           }

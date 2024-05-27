@@ -40,13 +40,16 @@ services:
     Claroline\CoreBundle\Library\Mailing\Mailer:
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '%kernel.logs_dir%'
+        calls:
+            - method: setLogger
+              arguments: [ '@logger' ]
+              tags:
+                  - { name: monolog.logger, channel: email }
 
     Claroline\CoreBundle\Library\Mailing\Client\SymfonyMailer:
         tags: ['claroline.mailing']
         arguments:
             - '@mailer'
-            - '@logger'
 
     Claroline\CoreBundle\Library\Mailing\Client\PostalMailer:
         tags: ['claroline.mailing']

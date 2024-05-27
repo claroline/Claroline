@@ -9,20 +9,17 @@ use Postal\SendMessage;
 
 class PostalMailer implements MailClientInterface
 {
-    /** @var PlatformConfigurationHandler */
-    private $ch;
-
-    public function __construct(PlatformConfigurationHandler $ch)
-    {
-        $this->ch = $ch;
+    public function __construct(
+        private readonly PlatformConfigurationHandler $ch
+    ) {
     }
 
-    public function getTransports()
+    public function getTransports(): array
     {
         return ['postal'];
     }
 
-    public function send(Message $message)
+    public function send(Message $message): void
     {
         $client = new Client(
             $this->ch->getParameter('mailer_host'),
@@ -51,6 +48,6 @@ class PostalMailer implements MailClientInterface
             $sendMessage->attach($attachment['name'], $attachment['type'], file_get_contents($attachment['url']));
         }
 
-        return $sendMessage->send();
+        $sendMessage->send();
     }
 }

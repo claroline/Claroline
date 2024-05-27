@@ -1,4 +1,4 @@
-claro_log_new_api:
+claro_log:
     resource: "@ClarolineLogBundle/Controller/"
     prefix: apiv2
     type: api
