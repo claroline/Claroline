@@ -23,7 +23,14 @@ class UrlListener extends ResourceComponent
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
         return [
-            'url' => $this->serializer->serialize($resource),
+            'resource' => $this->serializer->serialize($resource),
+        ];
+    }
+
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        return [
+            'resource' => $this->serializer->serialize($resource),
         ];
     }
 }

@@ -34,7 +34,7 @@ class UrlForm extends Component {
       <FormData
         {...omit(this.props)}
         name={this.props.name}
-        sections={[
+        definition={[
           {
             title: trans('url'),
             primary: true,
@@ -47,7 +47,7 @@ class UrlForm extends Component {
               }, {
                 name: 'mode',
                 label: trans('mode'),
-                help: 'iframe' === get(this.props.url, 'mode') ? trans('https_iframe_help', {}, 'url') : undefined,
+                //help: 'iframe' === get(this.props.url, 'mode') ? trans('https_iframe_help', {}, 'url') : undefined,
                 type: 'choice',
                 required: true,
                 options: {
@@ -63,7 +63,7 @@ class UrlForm extends Component {
                   {
                     name: 'ratioList',
                     type: 'choice',
-                    displayed: 'iframe' === get(this.props.url, 'mode'),
+                    displayed: (url) => 'iframe' === get(url, 'mode'),
                     label: trans('display_ratio_list'),
                     options: {
                       multiple: false,
@@ -74,7 +74,7 @@ class UrlForm extends Component {
                   }, {
                     name: 'ratio',
                     type: 'number',
-                    displayed: 'iframe' === get(this.props.url, 'mode'),
+                    displayed: (url) => 'iframe' === get(url, 'mode'),
                     label: trans('display_ratio'),
                     options: {
                       min: 0,
@@ -123,9 +123,9 @@ class UrlForm extends Component {
 
 UrlForm.propTypes = {
   name: T.string.isRequired,
-  url: T.shape(
+  /*url: T.shape(
     UrlTypes.propTypes
-  ).isRequired,
+  ).isRequired,*/
   updateProp: T.func.isRequired
 }
 

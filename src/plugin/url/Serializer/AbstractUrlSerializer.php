@@ -10,12 +10,9 @@ abstract class AbstractUrlSerializer
 {
     use SerializerTrait;
 
-    /** @var PlaceholderManager */
-    private $placeholderManager;
-
-    public function __construct(PlaceholderManager $placeholderManager)
-    {
-        $this->placeholderManager = $placeholderManager;
+    public function __construct(
+        private readonly PlaceholderManager $placeholderManager
+    ) {
     }
 
     public function serialize(UrlInterface $url): array

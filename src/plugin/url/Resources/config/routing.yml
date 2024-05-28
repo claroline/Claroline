@@ -1,4 +1,4 @@
-url_api:
+claro_url:
     resource: "@HeVinciUrlBundle/Controller/"
     prefix: apiv2
     type: api

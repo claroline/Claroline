@@ -11,30 +11,18 @@
 
 namespace HeVinci\UrlBundle\Controller;
 
-use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Manager\Template\PlaceholderManager;
-use HeVinci\UrlBundle\Entity\Url;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/url")
  */
-class UrlController extends AbstractCrudController
+class UrlController
 {
     public function __construct(
         private readonly PlaceholderManager $placeholderManager
     ) {
-    }
-
-    public function getName(): string
-    {
-        return 'url';
-    }
-
-    public function getClass(): string
-    {
-        return Url::class;
     }
 
     /**
