@@ -2,11 +2,11 @@ import {createSelector} from 'reselect'
 
 const STORE_NAME = 'hevinci_url'
 
-const resource = (state) => state[STORE_NAME]
+const store = (state) => state[STORE_NAME]
 
 const url = createSelector(
-  [resource],
-  (resource) => resource.url
+  [store],
+  (store) => store.resource
 )
 
 export const selectors = {
