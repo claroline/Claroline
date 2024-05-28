@@ -16,28 +16,22 @@ class Video extends AbstractResource
      * The URL (scheme + host) of the PeerTube server where the video is stored.
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    private $server;
+    private ?string $server = null;
 
     /**
      * The UUID of the video (retrieved from the PeerTube API and required to construct the embedded URL).
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    private $originalUuid;
+    private ?string $originalUuid = null;
 
     /**
      * The short UUID of the video (retrieved from the PeerTube share URL).
      *
      * @ORM\Column(type="string")
-     *
-     * @var string
      */
-    private $shortUuid;
+    private ?string $shortUuid = null;
 
     /**
      * @ORM\Column(name="timecode_start", type="integer", nullable=true)

@@ -3,7 +3,7 @@
 namespace Claroline\PeerTubeBundle\Controller;
 
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
-use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\PeerTubeBundle\Entity\Video;
@@ -16,37 +16,16 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @Route("/peertube_video")
  */
-class VideoController extends AbstractCrudController
+class VideoController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        EvaluationManager $evaluationManager
+        private readonly SerializerProvider $serializer,
+        private readonly EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
-        $this->evaluationManager = $evaluationManager;
-    }
-
-    public function getClass(): string
-    {
-        return Video::class;
-    }
-
-    public function getName(): string
-    {
-        return 'peertube_video';
-    }
-
-    public function getIgnore(): array
-    {
-        // we only keep update method
-        return ['list', 'get', 'create', 'deleteBulk'];
     }
 
     /**
