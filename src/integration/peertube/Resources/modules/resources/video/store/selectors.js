@@ -3,16 +3,16 @@ import {createSelector} from 'reselect'
 const STORE_NAME = 'peertube_video'
 const FORM_NAME = 'peertube_video.form'
 
-const resource = (state) => state[STORE_NAME]
+const store = (state) => state[STORE_NAME]
 
 const video = createSelector(
-  [resource],
-  (resource) => resource.video
+  [store],
+  (store) => store.resource
 )
 
 const progression = createSelector(
-  [resource],
-  (resource) => resource.progression
+  [store],
+  (store) => store.progression
 )
 
 const url = createSelector(
@@ -24,7 +24,6 @@ export const selectors = {
   STORE_NAME,
   FORM_NAME,
 
-  resource,
   video,
   progression,
   url

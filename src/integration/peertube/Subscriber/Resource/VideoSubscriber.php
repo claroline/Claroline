@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
@@ -39,20 +38,30 @@ class VideoSubscriber extends ResourceComponent implements EvaluatedResourceInte
         return array_merge([], parent::getSubscribedEvents(), [
             'resource.peertube_video.embed' => 'onEmbed',
             Crud::getEventName('create', 'post', Video::class) => 'onCrudCreate',
-            Crud::getEventName('update', 'post', Video::class) => 'postUpdate',
         ]);
     }
 
+    /** @param Video $resource */
     public function open(AbstractResource $resource, bool $embedded = false): ?array
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
         return [
-            'video' => $this->serializer->serialize($resource),
+            'resource' => $this->serializer->serialize($resource),
             'userEvaluation' => $user instanceof User ? $this->serializer->serialize(
                 $this->evaluationManager->getResourceUserEvaluation($resource->getResourceNode(), $user),
                 [SerializerInterface::SERIALIZE_MINIMAL]
             ) : null,
+        ];
+    }
+
+    /** @param Video $resource */
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        $this->peerTubeManager->handleThumbnailForVideo($resource);
+
+        return [
+            'resource' => $this->serializer->serialize($resource),
         ];
     }
 
@@ -66,12 +75,6 @@ class VideoSubscriber extends ResourceComponent implements EvaluatedResourceInte
     }
 
     public function onCrudCreate(CreateEvent $event): void
-    {
-        $video = $event->getObject();
-        $this->peerTubeManager->handleThumbnailForVideo($video);
-    }
-
-    public function postUpdate(UpdateEvent $event): void
     {
         $video = $event->getObject();
         $this->peerTubeManager->handleThumbnailForVideo($video);

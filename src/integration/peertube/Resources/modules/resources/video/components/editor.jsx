@@ -1,28 +1,20 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {useSelector} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {FormData} from '#/main/app/content/form/containers/data'
+import {EditorPage} from '#/main/app/editor'
+import {ResourceEditor} from '#/main/core/resource/editor'
 
 import {selectors} from '#/integration/peertube/resources/video/store/selectors'
 
-const VideoEditor = (props) =>
-  <FormData
-    level={2}
+const VideoEditorParameters = () =>
+  <EditorPage
     title={trans('parameters')}
-    name={selectors.FORM_NAME}
-    buttons={true}
-    target={['apiv2_peertube_video_update', {id: props.video.id}]}
-    cancel={{
-      type: LINK_BUTTON,
-      target: props.path,
-      exact: true
-    }}
     definition={[
       {
         title: trans('general'),
         primary: true,
+        hideTitle: true,
         fields: [
           {
             name: 'url',
@@ -35,6 +27,7 @@ const VideoEditor = (props) =>
         icon: 'fa fa-fw fa-play',
         title: trans('playback_param', {}, 'peertube'),
         help: trans('timecode_help',{}, 'peertube'),
+        primary: true,
         fields: [
           {
             name: 'timecodeStart',
@@ -70,11 +63,23 @@ const VideoEditor = (props) =>
     ]}
   />
 
-VideoEditor.propTypes = {
-  path: T.string.isRequired,
-  video: T.shape({
-    id: T.string.isRequired
-  }).isRequired
+const VideoEditor = () => {
+  const video = useSelector(selectors.video)
+
+  return (
+    <ResourceEditor
+      additionalData={() => ({
+        resource: video
+      })}
+      pages={[
+        {
+          name: 'parameters',
+          title: trans('parameters'),
+          component: VideoEditorParameters
+        }
+      ]}
+    />
+  )
 }
 
 export {
