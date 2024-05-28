@@ -73,15 +73,10 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ICSGenerator
 {
-    /** @var string */
-    private $filesDir;
-    /** @var Filesystem */
-    private $filesystem;
-
-    public function __construct(string $filesDir, ?Filesystem $filesystem = null)
-    {
-        $this->filesDir = $filesDir;
-        $this->filesystem = $filesystem ?? new Filesystem();
+    public function __construct(
+        private readonly string $filesDir,
+        private readonly Filesystem $filesystem
+    ) {
     }
 
     public function create(array $icsProps): string
@@ -99,7 +94,7 @@ class ICSGenerator
 
         $path = $this->filesDir.DIRECTORY_SEPARATOR.'ics'.DIRECTORY_SEPARATOR.$filename.'.ics';
 
-        $this->filesystem->appendToFile($path, $this->create($icsProps));
+        $this->filesystem->dumpFile($path, $this->create($icsProps));
 
         return $path;
     }

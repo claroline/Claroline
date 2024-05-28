@@ -288,18 +288,19 @@ class EventManager
 
     public function getICS(Event $event, bool $toFile = false): string
     {
+        $session = $event->getSession();
         $location = $event->getLocation();
         $locationAddress = '';
         if ($location) {
             $locationAddress = $location->getName();
-            $locationAddress .= '<br>'.$location->getAddress();
+            $locationAddress .= ', '.$location->getAddress();
             if ($location->getPhone()) {
-                $locationAddress .= '<br>'.$location->getPhone();
+                $locationAddress .= ', '.$location->getPhone();
             }
         }
 
         $icsProps = [
-            'summary' => $event->getName(),
+            'summary' => $session ? $session->getName().' - '.$event->getName() : $event->getName(),
             'description' => $event->getDescription(),
             'location' => $locationAddress,
             'dtstart' => DateNormalizer::normalize($event->getStartDate()),
@@ -384,22 +385,22 @@ class EventManager
         }
 
         return array_merge([
-                // course info
-                'course_name' => $course->getName(),
-                'course_code' => $course->getCode(),
-                'course_description' => $course->getDescription(),
-                // session info
-                'session_name' => $session->getName(),
-                'session_description' => $session->getDescription(),
-                'session_code' => $session->getCode(),
-                // event info
-                'event_name' => $event->getName(),
-                'event_description' => $event->getDescription(),
-                'event_code' => $event->getCode(),
-                'event_location_name' => $locationName,
-                'event_location_address' => $locationAddress,
-                'event_trainers' => $trainersList,
-            ],
+            // course info
+            'course_name' => $course->getName(),
+            'course_code' => $course->getCode(),
+            'course_description' => $course->getDescription(),
+            // session info
+            'session_name' => $session->getName(),
+            'session_description' => $session->getDescription(),
+            'session_code' => $session->getCode(),
+            // event info
+            'event_name' => $event->getName(),
+            'event_description' => $event->getDescription(),
+            'event_code' => $event->getCode(),
+            'event_location_name' => $locationName,
+            'event_location_address' => $locationAddress,
+            'event_trainers' => $trainersList,
+        ],
             $this->templateManager->formatDatePlaceholder('session_start', $session->getStartDate()),
             $this->templateManager->formatDatePlaceholder('session_end', $session->getEndDate()),
             $this->templateManager->formatDatePlaceholder('event_start', $event->getStartDate()),

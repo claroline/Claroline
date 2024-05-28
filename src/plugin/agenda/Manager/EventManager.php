@@ -50,9 +50,9 @@ class EventManager
         $locationAddress = '';
         if ($location) {
             $locationAddress = $location->getName();
-            $locationAddress .= '<br>'.$location->getAddress();
+            $locationAddress .= ', '.$location->getAddress();
             if ($location->getPhone()) {
-                $locationAddress .= '<br>'.$location->getPhone();
+                $locationAddress .= ', '.$location->getPhone();
             }
         }
 
