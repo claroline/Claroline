@@ -1,12 +1,7 @@
 services:
-    Claroline\LinkBundle\Listener\Resource\ResourceListener:
+    Claroline\LinkBundle\Listener\Resource\Types\ShortcutListener:
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\Crud'
-        tags:
-            - { name: kernel.event_listener, event: crud.post.delete.resource_node, method: delete }
-
-    Claroline\LinkBundle\Listener\Resource\Types\ShortcutListener:
-        arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
-        tags: ['kernel.event_subscriber']
+            - '@Claroline\AppBundle\API\Crud'

@@ -1,9 +1,9 @@
 services:
     Claroline\BigBlueButtonBundle\Listener\Resource\BBBListener:
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@security.token_storage'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
             - '@Claroline\BigBlueButtonBundle\Manager\EvaluationManager'
-        tags: ['kernel.event_subscriber']

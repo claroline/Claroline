@@ -1,5 +1,6 @@
 services:
     Claroline\ClacoFormBundle\Listener\Resource\ClacoFormListener:
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -7,4 +8,3 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\ClacoFormBundle\Manager\ClacoFormManager'
-        tags: ['kernel.event_subscriber']

@@ -1,9 +1,4 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Claroline\ForumBundle\Listener\DataSource\ForumSource:
         arguments:
             - '@security.token_storage'
@@ -12,6 +7,7 @@ services:
             - { name: kernel.event_listener, event: data_source.forum_messages.load, method: getData }
 
     Claroline\ForumBundle\Listener\Resource\ForumListener:
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -19,4 +15,3 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\ForumBundle\Manager\ForumManager'
-        tags: ['kernel.event_subscriber']

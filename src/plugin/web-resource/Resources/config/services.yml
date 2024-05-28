@@ -10,6 +10,7 @@ services:
             - '@Claroline\WebResourceBundle\Manager\WebResourceManager'
 
     Claroline\WebResourceBundle\Listener\WebResourceListener:
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '%claroline.param.files_directory%'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -17,4 +18,3 @@ services:
             - '@Claroline\WebResourceBundle\Manager\WebResourceManager'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
-        tags: ['kernel.event_subscriber']

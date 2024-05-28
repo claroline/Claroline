@@ -1,5 +1,6 @@
 services:
     Innova\PathBundle\Subscriber\PathSubscriber:
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@security.token_storage'
             - '@translator'
@@ -8,4 +9,3 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@claroline.manager.resource_manager'
             - '@Innova\PathBundle\Manager\EvaluationManager'
-        tags: ['kernel.event_subscriber']

@@ -8,13 +8,9 @@ use Twig\Environment;
 
 class PluginSubscriber implements EventSubscriberInterface
 {
-    /** @var Environment */
-    private $templating;
-
     public function __construct(
-        Environment $templating
+        private readonly Environment $templating
     ) {
-        $this->templating = $templating;
     }
 
     public static function getSubscribedEvents(): array

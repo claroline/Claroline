@@ -1,6 +1,6 @@
 services:
     Icap\WikiBundle\Listener\Resource\WikiListener:
-        tags: ['kernel.event_subscriber']
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'

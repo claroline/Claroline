@@ -18,26 +18,12 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class CrudEvent extends Event
 {
-    private $object;
+    private bool $block = false;
 
-    /**
-     * @var bool
-     */
-    private $block = false;
-
-    /**
-     * @var array
-     */
-    private $options = [];
-
-    /**
-     * @param mixed $object  - The object created
-     * @param array $options - An array of options
-     */
-    public function __construct($object, array $options = [])
-    {
-        $this->object = $object;
-        $this->options = $options;
+    public function __construct(
+        private readonly mixed $object,
+        private readonly array $options = []
+    ) {
     }
 
     public function getClass(): string
@@ -46,38 +32,28 @@ class CrudEvent extends Event
         return get_class($this->object);
     }
 
-    public function setObject($object)
-    {
-        $this->object = $object;
-    }
-
-    public function getObject()
+    public function getObject(): mixed
     {
         return $this->object;
     }
 
-    /**
-     * @return array
-     */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
 
-    public function block()
+    /**
+     * @deprecated only used by Organization to avoid deleting the default Organization.
+     */
+    public function block(): void
     {
         $this->block = true;
-    }
-
-    public function allow()
-    {
-        $this->block = false;
     }
 
     /**
      * @return bool
      */
-    public function isAllowed()
+    public function isAllowed(): bool
     {
         return !$this->block;
     }

@@ -7,19 +7,23 @@ use Claroline\TransferBundle\Transfer\ImportProvider;
 
 abstract class AbstractCreateOrUpdateImporter extends AbstractImporter
 {
-    /** @var Crud */
-    protected $crud;
-    /** @var ImportProvider */
-    protected $transfer;
+    protected Crud $crud;
+    protected ImportProvider $transfer;
 
     abstract protected static function getClass(): string;
 
-    public function setCrud(Crud $crud)
+    /**
+     * @internal Only used by DI.
+     */
+    public function setCrud(Crud $crud): void
     {
         $this->crud = $crud;
     }
 
-    public function setTransfer(ImportProvider $transfer)
+    /**
+     * @internal Only used by DI.
+     */
+    public function setTransfer(ImportProvider $transfer): void
     {
         $this->transfer = $transfer;
     }

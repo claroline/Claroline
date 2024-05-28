@@ -1,11 +1,21 @@
 services:
-    Claroline\AuthenticationBundle\Subscriber\RefreshTokenSubscriber:
+    _defaults:
         tags: [ kernel.event_subscriber ]
+
+    Claroline\AuthenticationBundle\Subscriber\Crud\ApiTokenSubscriber:
+        arguments:
+            - '@security.token_storage'
+
+    Claroline\AuthenticationBundle\Subscriber\DataSource\MyTokensSource:
+        arguments:
+            - '@Claroline\AppBundle\API\FinderProvider'
+            - '@security.token_storage'
+
+    Claroline\AuthenticationBundle\Subscriber\RefreshTokenSubscriber:
         arguments:
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
 
     Claroline\AuthenticationBundle\Subscriber\AuthenticationParametersSubscriber:
-        tags: [ kernel.event_subscriber ]
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'

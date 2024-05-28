@@ -1,13 +1,14 @@
 import isNumber from 'lodash/isNumber'
 
-import {getApps, getActions as getPluginsActions, getDefaultAction as getPluginsDefaultAction} from '#/main/app/plugins'
+import {getApps} from '#/main/app/plugins'
+import {getActions as getContextActions, getDefaultAction as getContextDefaultAction} from '#/main/app/context/utils'
 
 function getActions(workspaces, workspacesRefresher, path, currentUser, withDefault = false) {
-  return getPluginsActions('workspace', workspaces, workspacesRefresher, path, currentUser, withDefault)
+  return getContextActions('workspace', workspaces, workspacesRefresher, path, currentUser, withDefault)
 }
 
 function getDefaultAction(workspace, workspacesRefresher, path, currentUser = null) {
-  return getPluginsDefaultAction('workspace', workspace, workspacesRefresher, path, currentUser)
+  return getContextDefaultAction('workspace', workspace, workspacesRefresher, path, currentUser)
 }
 
 function getRestrictions(workspace, errors, managed, currentUser) {

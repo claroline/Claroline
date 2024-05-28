@@ -69,30 +69,6 @@ const AdministrationMenu = props =>
         icon: 'fa fa-fw fa-circle-info',
         label: trans('show-info', {}, 'actions'),
         modal: [MODAL_PLATFORM_ABOUT]
-      }, {
-        name: 'enable-maintenance',
-        type: MODAL_BUTTON,
-        icon: 'fa fa-fw fa-hard-hat',
-        label: trans('enable-maintenance', {}, 'actions'),
-        modal: [MODAL_MAINTENANCE, {
-          handleConfirm: (message) => props.enableMaintenance(message)
-        }],
-        displayed: !props.maintenance,
-        group: trans('management')
-      }, {
-        name: 'disable-maintenance',
-        type: CALLBACK_BUTTON,
-        icon: 'fa fa-fw fa-hard-hat',
-        label: trans('disable-maintenance', {}, 'actions'),
-        callback: () => props.disableMaintenance(),
-        confirm: {
-          title: trans('maintenance_mode', {}, 'administration'),
-          subtitle: trans('deactivation'),
-          message: trans('maintenance_mode_deactivation', {}, 'administration'),
-          button: trans('disable', {}, 'actions')
-        },
-        displayed: props.maintenance,
-        group: trans('management')
       }
     ]}
   >

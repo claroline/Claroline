@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 
 import {constants as baseConstants} from '#/main/evaluation/constants'
+import {getType} from '#/main/core/resource/utils'
 
 const STORE_NAME = 'resource'
 const EDITOR_NAME = 'resourceEditor'
@@ -111,6 +112,11 @@ const accessErrors = createSelector(
   (store) => !store.accessErrors.dismissed && !isEmpty(store.accessErrors.details) ? store.accessErrors.details : {}
 )
 
+const hasEvaluation = createSelector(
+  [resourceNode],
+  (resourceNode) => !!getType(resourceNode).evaluation
+)
+
 // evaluation selectors
 const resourceEvaluation = createSelector(
   [store],
@@ -120,11 +126,6 @@ const resourceEvaluation = createSelector(
 const evaluationStatus = createSelector(
   [resourceEvaluation],
   (evaluation) => evaluation.status
-)
-
-const hasEvaluation = createSelector(
-  [resourceEvaluation],
-  (evaluation) => !isEmpty(evaluation)
 )
 
 const isTerminated = createSelector(

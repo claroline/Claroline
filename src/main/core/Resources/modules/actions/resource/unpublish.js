@@ -5,6 +5,7 @@ import {number} from '#/main/app/intl'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
 import {trans} from '#/main/app/intl/translation'
+import {hasPermission} from '#/main/app/security'
 
 /**
  * Unpublishes some resource nodes.
@@ -17,7 +18,7 @@ export default (resourceNodes, nodesRefresher) => ({
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-eye-slash',
   label: trans('unpublish', {}, 'actions'),
-  displayed: -1 !== resourceNodes.findIndex(node => !!get(node, 'meta.published')),
+  displayed: -1 !== resourceNodes.findIndex(node => !!get(node, 'meta.published') && hasPermission('edit', node)),
   subscript: 1 === resourceNodes.length ? {
     type: 'label',
     status: 'primary',

@@ -9,26 +9,26 @@ const LIST_NAME = STORE_NAME + '.chapters'
 
 const CHAPTER_EDIT_FORM_NAME = STORE_NAME + '.chapter_form'
 
-const resource = (state) => state[STORE_NAME]
+const store = (state) => state[STORE_NAME]
 
 const lesson = createSelector(
-  [resource],
-  (resource) => resource.lesson
+  [store],
+  (store) => store.resource
 )
 
 const chapter = createSelector(
-  [resource],
-  (resource) => resource.chapter
+  [store],
+  (store) => store.chapter
 )
 
 const root = createSelector(
-  [resource],
-  (resource) => resource.root
+  [store],
+  (store) => store.root
 )
 
 const tree = createSelector(
-  [resource],
-  (resource) => resource.tree
+  [store],
+  (store) => store.tree
 )
 
 const treeData = createSelector(
@@ -54,7 +54,7 @@ export const selectors = {
   STORE_NAME,
   LIST_NAME,
   CHAPTER_EDIT_FORM_NAME,
-  resource,
+
   lesson,
   chapter,
   root,

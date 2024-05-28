@@ -1,6 +1,6 @@
 services:
     Claroline\DropZoneBundle\Listener\Resource\DropzoneListener:
-        tags: [kernel.event_subscriber]
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '%claroline.param.files_directory%'
             - '@security.token_storage'

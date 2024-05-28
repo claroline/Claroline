@@ -21,19 +21,7 @@ const LessonResource = withReducer(selectors.STORE_NAME, reducer)(
     dispatch => ({
       loadChapter(lessonId, chapterSlug) {
         dispatch(actions.loadChapter(lessonId, chapterSlug))
-      },/*,
-      editChapter(lessonId, chapterSlug) {
-        dispatch(actions.editChapter(selectors.CHAPTER_EDIT_FORM_NAME, lessonId, chapterSlug))
       },
-      copyChapter(lessonId, chapterSlug) {
-        dispatch(actions.copyChapter(selectors.CHAPTER_EDIT_FORM_NAME, lessonId, chapterSlug))
-      },
-      createChapter(lessonId, parentChapterSlug = null) {
-        dispatch(actions.createChapter(selectors.CHAPTER_EDIT_FORM_NAME, lessonId, parentChapterSlug))
-      },
-      fetchChapterTree(lessonId) {
-        dispatch(actions.fetchChapterTree(lessonId))
-      },*/
       downloadLessonPdf(lessonId) {
         return dispatch(actions.downloadLessonPdf(lessonId))
       }

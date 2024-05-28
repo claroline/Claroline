@@ -3,7 +3,7 @@
 namespace Claroline\YouTubeBundle\Controller;
 
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
-use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\YouTubeBundle\Entity\Video;
@@ -16,36 +16,16 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @Route("/youtube_video")
  */
-class VideoController extends AbstractCrudController
+class VideoController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        EvaluationManager $evaluationManager
+        private readonly SerializerProvider $serializer,
+        private readonly EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
-        $this->evaluationManager = $evaluationManager;
-    }
-
-    public function getClass(): string
-    {
-        return Video::class;
-    }
-
-    public function getName(): string
-    {
-        return 'youtube_video';
-    }
-
-    public function getIgnore(): array
-    {
-        return ['list', 'get', 'create', 'deleteBulk'];
     }
 
     /**

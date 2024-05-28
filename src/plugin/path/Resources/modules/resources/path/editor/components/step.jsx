@@ -12,6 +12,8 @@ import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 import {selectors} from '#/plugin/path/resources/path/editor/store'
+import {EditorPage} from '#/main/app/editor'
+import get from 'lodash/get'
 
 const EditorStep = props =>
   <Fragment>
@@ -24,19 +26,9 @@ const EditorStep = props =>
       actions={props.actions}
     />
 
-    <FormData
-      id={`step-${props.id}`}
-      level={3}
-      displayLevel={2}
-      name={selectors.FORM_NAME}
+    <EditorPage
+      title={props.title || trans('step', {}, 'path')}
       dataPart={props.stepPath}
-      target={['apiv2_path_update', {id: props.pathId}]}
-      buttons={true}
-      cancel={{
-        type: LINK_BUTTON,
-        target: props.basePath,
-        exact: true
-      }}
       definition={[
         {
           title: trans('general'),

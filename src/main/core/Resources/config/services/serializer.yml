@@ -129,6 +129,7 @@ services:
     Claroline\CoreBundle\API\Serializer\Resource\ResourceTypeSerializer:
         tags: [claroline.serializer]
         arguments:
+            - '@Claroline\CoreBundle\Component\Resource\ResourceProvider'
             - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
 
     Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer:

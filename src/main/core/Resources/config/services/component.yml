@@ -4,3 +4,7 @@ services:
     Claroline\CoreBundle\Component\Resource\ResourceProvider:
         arguments:
             - !tagged_iterator claroline.component.resource
+
+    claroline.resource_provider:
+        alias: Claroline\CoreBundle\Component\Resource\ResourceProvider
+        public: true

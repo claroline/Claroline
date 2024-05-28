@@ -1,6 +1,7 @@
 imports:
     - { resource: services/checker.yml }
     - { resource: services/command.yml }
+    - { resource: services/component.yml }
     - { resource: services/configuration.yml }
     - { resource: services/controller.yml }
     - { resource: services/converter.yml }
