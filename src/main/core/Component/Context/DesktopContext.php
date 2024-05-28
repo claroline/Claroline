@@ -83,6 +83,10 @@ class DesktopContext extends AbstractContext
 
         return [
             'data' => [
+                'permissions' => [
+                    'open' => !$this->securityManager->isAnonymous(),
+                    'administrate' => $this->securityManager->isAdmin(),
+                ],
                 'opening' => [
                     'type' => $defaultTool ? 'tool' : null,
                     'target' => $defaultTool,

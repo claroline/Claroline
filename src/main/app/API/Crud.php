@@ -3,11 +3,11 @@
 namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\Event\Crud\CrudEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -34,7 +34,7 @@ class Crud
 
     public function __construct(
         private readonly ObjectManager $om,
-        private readonly StrictDispatcher $dispatcher,
+        private readonly EventDispatcherInterface $dispatcher,
         private readonly FinderProvider $finder,
         private readonly SerializerProvider $serializer,
         private readonly ValidatorProvider $validator,
@@ -203,6 +203,16 @@ class Crud
         return $object;
     }
 
+    public function createOrUpdate(string $className, array $data, array $options = []): mixed
+    {
+        $object = $this->om->getObject($data, $className, $this->schema->getIdentifiers($className) ?? []);
+        if (empty($object)) {
+            return $this->update($object, $data, $options);
+        }
+
+        return $this->create(new $className(), $data, $options);
+    }
+
     /**
      * Deletes an entry `object`.
      *
@@ -368,7 +378,7 @@ class Crud
         if (!in_array(static::NO_PERMISSIONS, $options)) {
             // add the options to pass on here
             $this->checkPermission('PATCH', $object, [], true);
-            // we'll need to pass the $action and $data here aswell later
+            // we'll need to pass the $action and $data here as well later
         }
 
         if ($this->dispatch('patch', 'pre', [$object, $options, $property, $data, self::PROPERTY_SET])) {
@@ -400,30 +410,23 @@ class Crud
         $className = $this->getRealClass($args[0]);
 
         $eventClass = ucfirst($action);
-        /** @var CrudEvent $generic */
-        $generic = $this->dispatcher->dispatch(static::getEventName($action, $when), 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
+        /** @var CrudEvent $genericEvent */
+        $genericEvent = new $eventClass(...$args);
+        $this->dispatcher->dispatch($genericEvent, static::getEventName($action, $when));
 
-        /** @var CrudEvent $specific */
-        $specific = $this->dispatcher->dispatch(static::getEventName($action, $when, $className), 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
-        $isAllowed = $specific->isAllowed();
+        if ($genericEvent->isAllowed()) {
+            /** @var CrudEvent $specificEvent */
+            $specificEvent = new $eventClass(...$args);
+            $this->dispatcher->dispatch($specificEvent, static::getEventName($action, $when, $className));
 
-        if ($this->serializer->has($className)) {
-            $serializer = $this->serializer->get($className);
-
-            if (method_exists($serializer, 'getName')) {
-                $shortName = 'crud.'.$when.'.'.$action.'.'.$serializer->getName();
-                $specific = $this->dispatcher->dispatch($shortName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
-            }
+            return $specificEvent->isAllowed();
         }
 
-        // TODO : let the event explain why it has blocked the process
-        // for now we will do nothing and the user will not know why.
-        return $generic->isAllowed() && $specific->isAllowed() && $isAllowed;
+        return false;
     }
 
     public static function getEventName(string $action, string $when, string $className = null): string
     {
-        // TODO : find a way to make shortcut work (will require to inject the service to make it work for now)
         $name = 'crud_'.$when.'_'.$action.'_object';
         if ($className) {
             $name = $name.'_'.strtolower(str_replace('\\', '_', $className));

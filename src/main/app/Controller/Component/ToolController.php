@@ -141,58 +141,6 @@ class ToolController
         }, $orderedTool->getRights()->toArray()));
     }
 
-    /**
-     * @Route("/rights/{name}/{context}/{contextId}", name="apiv2_tool_update_rights", methods={"PUT"})
-     */
-    public function updateRightsAction(Request $request, string $name, string $context, string $contextId = null): JsonResponse
-    {
-        try {
-            $contextHandler = $this->contextProvider->getContext($context, $contextId);
-
-            $orderedTool = $this->toolProvider->getTool($name, $context, $contextHandler->getObject($contextId));
-        } catch (\Exception $e) {
-            throw new NotFoundHttpException($e->getMessage());
-        }
-
-        if (!$this->authorization->isGranted('ADMINISTRATE', $orderedTool)) {
-            throw new AccessDeniedException();
-        }
-
-        $requestData = $this->decodeRequest($request);
-
-        $this->om->startFlushSuite();
-
-        $existingRights = $orderedTool->getRights()->toArray();
-
-        $roles = [];
-        foreach ($requestData as $right) {
-            if (!empty($right['id'])) {
-                /** @var ToolRights $toolRights */
-                $toolRights = $this->crud->update(ToolRights::class, $right, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS]);
-            } else {
-                /** @var ToolRights $toolRights */
-                $toolRights = $this->crud->create(ToolRights::class, $right, [Crud::THROW_EXCEPTION, Crud::NO_PERMISSIONS]);
-            }
-
-            $orderedTool->addRight($toolRights);
-
-            // keep reference to the created/update rights, it will be used later to know the ones to delete.
-            // I don't use ToolRights id because there is a flush suite, and it is not already generated.
-            $roles[] = $toolRights->getRole()->getName();
-        }
-
-        // removes rights which no longer exists
-        foreach ($existingRights as $existingRight) {
-            if (!in_array($existingRight->getRole()->getName(), $roles)) {
-                $this->crud->delete($existingRight);
-            }
-        }
-
-        $this->om->endFlushSuite();
-
-        return $this->getRightsAction($name, $context, $contextId);
-    }
-
     private function updateRights(OrderedTool $orderedTool, array $rightsData = []): void
     {
         $this->om->startFlushSuite();

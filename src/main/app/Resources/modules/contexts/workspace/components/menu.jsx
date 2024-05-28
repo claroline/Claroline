@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
@@ -10,12 +9,9 @@ import {Button} from '#/main/app/action/components/button'
 import {URL_BUTTON} from '#/main/app/buttons'
 import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
-import {route as toolRoute} from '#/main/core/tool/routing'
-import {User as UserTypes} from '#/main/community/prop-types'
 import {constants as baseConstants} from '#/main/evaluation/constants'
 
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
-import {getActions} from '#/main/core/workspace/utils'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
 import {constants} from '#/main/core/workspace/constants'
@@ -100,18 +96,6 @@ WorkspaceProgression.propTypes = {
 }
 
 const WorkspaceMenu = (props) => {
-  let workspaceActions
-  if (!isEmpty(props.workspace)) {
-    workspaceActions = getActions([props.workspace], {
-      update(workspaces) {
-        props.update(workspaces[0])
-      },
-      delete() {
-        props.history.push(toolRoute('workspaces'))
-      }
-    }, props.basePath, props.currentUser)
-  }
-
   return (
     <ContextMenu
       title={
@@ -130,7 +114,6 @@ const WorkspaceMenu = (props) => {
         // hide tools that can not be configured in models for now
         .filter(tool => !get(props.workspace, 'meta.model', false) || -1 !== constants.WORKSPACE_MODEL_TOOLS.indexOf(tool.name))
       }
-      actions={workspaceActions}
     >
       {false && !props.impersonated && get(props.workspace, 'display.showProgression') &&
         <WorkspaceProgression
@@ -150,17 +133,10 @@ const WorkspaceMenu = (props) => {
 }
 
 WorkspaceMenu.propTypes = {
-  history: T.shape({
-    push: T.func.isRequired
-  }).isRequired,
-  basePath: T.string,
   workspace: T.shape(
     WorkspaceTypes.propTypes
   ),
   impersonated: T.bool.isRequired,
-  currentUser: T.shape(
-    UserTypes.propTypes
-  ),
   userEvaluation: T.shape(
     WorkspaceEvaluationTypes.propTypes
   ),
@@ -171,8 +147,7 @@ WorkspaceMenu.propTypes = {
     icon: T.string.isRequired,
     name: T.string.isRequired,
     permissions: T.object
-  })),
-  update: T.func.isRequired
+  }))
 }
 
 WorkspaceMenu.defaultProps = {

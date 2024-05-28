@@ -39,7 +39,7 @@ services:
             - { name: kernel.event_listener, event: data_source.tools.load, method: getData }
 
     Claroline\CoreBundle\Listener\Resource\Types\DirectoryListener:
-        tags: [kernel.event_subscriber]
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
@@ -50,7 +50,7 @@ services:
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
 
     Claroline\CoreBundle\Listener\Resource\Types\FileListener:
-        tags: [kernel.event_subscriber]
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -58,7 +58,7 @@ services:
             - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\CoreBundle\Listener\Resource\Types\TextListener:
-        tags: [kernel.event_subscriber]
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Manager\PdfManager'

@@ -1,33 +1,33 @@
 <?php
 
-namespace Claroline\AuthenticationBundle\Listener\DataSource;
+namespace Claroline\AuthenticationBundle\Subscriber\DataSource;
 
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * List the authentication tokens of the current user.
  */
-class MyTokensSource
+class MyTokensSource implements EventSubscriberInterface
 {
-    /** @var FinderProvider */
-    private $finder;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        FinderProvider $finder,
-        TokenStorageInterface $tokenStorage
+        private readonly FinderProvider $finder,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->finder = $finder;
-        $this->tokenStorage = $tokenStorage;
     }
 
-    public function getData(GetDataEvent $event)
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            'data_source.my_tokens.load' => 'getData',
+        ];
+    }
+
+    public function getData(GetDataEvent $event): void
     {
         $options = $event->getOptions();
 

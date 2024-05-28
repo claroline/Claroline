@@ -2,8 +2,18 @@
 
 namespace Claroline\CoreBundle\Entity\Context;
 
-abstract class AbstractContextParameters
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\Display\Thumbnail;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\MappedSuperclass()
+ */
+abstract class AbstractContext
 {
+    use Poster;
+    use Thumbnail;
+
     /**
      * Open the details page of the context.
      */

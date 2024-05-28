@@ -6,6 +6,7 @@ import {trans, transChoice} from '#/main/app/intl/translation'
 import {ASYNC_BUTTON} from '#/main/app/buttons'
 
 import {ResourceCard} from '#/main/core/resource/components/card'
+import {hasPermission} from '#/main/app/security'
 
 /**
  * Restores some soft deleted resource nodes.
@@ -14,7 +15,7 @@ import {ResourceCard} from '#/main/core/resource/components/card'
  * @param {object} nodesRefresher - an object containing methods to update context in response to action (eg. add, update, delete).
  */
 export default (resourceNodes, nodesRefresher) => {
-  const processable = resourceNodes.filter(node => !get(node, 'meta.active'))
+  const processable = resourceNodes.filter(node => !get(node, 'meta.active') && hasPermission('administrate', node))
 
   return {
     name: 'restore',

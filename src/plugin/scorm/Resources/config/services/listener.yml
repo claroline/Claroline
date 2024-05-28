@@ -1,5 +1,6 @@
 services:
     Claroline\ScormBundle\Listener\ScormListener:
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -8,4 +9,3 @@ services:
             - '@Claroline\ScormBundle\Manager\EvaluationManager'
             - '%claroline.param.files_directory%'
             - '%claroline.param.uploads_directory%'
-        tags: ['kernel.event_subscriber']

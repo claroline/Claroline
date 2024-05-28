@@ -8,6 +8,7 @@ services:
             - { name: 'doctrine.orm.entity_listener', entity: 'UJM\ExoBundle\Entity\Item\Item', event: 'preRemove' }
 
     UJM\ExoBundle\Listener\Resource\ExerciseListener:
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
@@ -16,4 +17,3 @@ services:
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
             - '@UJM\ExoBundle\Manager\AttemptManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
-        tags: ['kernel.event_subscriber']

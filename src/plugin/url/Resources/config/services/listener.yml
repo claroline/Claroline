@@ -1,5 +1,5 @@
 services:
     HeVinci\UrlBundle\Listener\Resource\UrlListener:
-        tags: ['kernel.event_subscriber']
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'

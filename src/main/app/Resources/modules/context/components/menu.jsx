@@ -10,10 +10,11 @@ import {hasPermission} from '#/main/app/security/permissions'
 import {getWindowSize, constants} from '#/main/app/dom/size'
 import {Toolbar} from '#/main/app/action'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 
 import {ContextUser} from '#/main/app/context/containers/user'
 import {ContextNav} from '#/main/app/context/containers/nav'
+import {getActions} from '#/main/app/context/utils'
+import {route} from '#/main/app/context/routing'
 
 class ContextMenu extends Component
 {
@@ -90,53 +91,63 @@ class ContextMenu extends Component
         }))
     }
 
+    let actions
+    if (!isEmpty(this.props.contextData)) {
+      actions = getActions(this.props.contextType, [this.props.contextData], {
+        update: this.props.reload,
+        delete() {
+          this.props.history.push(route(this.props.contextType))
+        }
+      }, this.props.path, this.props.currentUser)
+    }
+
     return (
       <>
-      <aside
-        role="navigation"
-        className={classes('app-toolbar', {
-          show: this.props.opened
-        })}
-      >
-        <ContextNav />
-        <section className={classes('app-menu', {
-          show: this.props.opened
-        })}>
-          {this.props.title &&
-            <header className="app-menu-header m-3 ms-4 me-1 d-flex align-items-center justify-content-between">
-              <h1 className="app-menu-title text-truncate d-block">{this.props.title}</h1>
+        <aside
+          role="navigation"
+          className={classes('app-toolbar', {
+            show: this.props.opened
+          })}
+        >
+          <ContextNav />
+          <section className={classes('app-menu', {
+            show: this.props.opened
+          })}>
+            {this.props.title &&
+              <header className="app-menu-header m-3 ms-4 me-1 d-flex align-items-center justify-content-between">
+                <h1 className="app-menu-title text-truncate d-block">{this.props.title}</h1>
 
-              {!this.props.notFound && !this.props.hasErrors && (!isEmpty(this.props.actions) || !Array.isArray(this.props.actions)) &&
-                <Toolbar
-                  id="app-menu-actions"
-                  className="flex-shrink-0"
-                  buttonName="btn"
-                  actions={this.props.actions}
-                  onClick={this.autoClose}
-                  toolbar="favourite more"
-                  tooltip="bottom"
-                />
-              }
-            </header>
-          }
+                {!this.props.notFound && !this.props.hasErrors &&
+                  <Toolbar
+                    id="app-menu-actions"
+                    className="flex-shrink-0"
+                    buttonName="btn"
+                    actions={actions}
+                    onClick={this.autoClose}
+                    toolbar="favourite more"
+                    tooltip="bottom"
+                  />
+                }
+              </header>
+            }
 
-          <ContextUser />
+            <ContextUser />
 
-          {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
-            autoClose: this.autoClose
-          }))}
+            {this.props.children && Children.map(this.props.children, child => child && cloneElement(child, {
+              autoClose: this.autoClose
+            }))}
 
-          {1 < toolLinks.length &&
-            <Toolbar
-              className="app-menu-items"
-              buttonName="app-menu-item"
-              actions={toolLinks}
-              onClick={this.autoClose}
-            />
-          }
-        </section>
-      </aside>
-      <div className="app-menu-backdrop" role="presentation" onClick={this.props.close} />
+            {1 < toolLinks.length &&
+              <Toolbar
+                className="app-menu-items"
+                buttonName="app-menu-item"
+                actions={toolLinks}
+                onClick={this.autoClose}
+              />
+            }
+          </section>
+        </aside>
+        <div className="app-menu-backdrop" role="presentation" onClick={this.props.close} />
       </>
     )
   }
@@ -145,16 +156,6 @@ class ContextMenu extends Component
 ContextMenu.propTypes = {
   path: T.string,
   title: T.node.isRequired,
-  actions: T.oneOfType([
-    // a regular array of actions
-    T.arrayOf(T.shape(
-      ActionTypes.propTypes
-    )),
-    // a promise that will resolve a list of actions
-    T.shape(
-      PromisedActionTypes.propTypes
-    )
-  ]),
   tools: T.arrayOf(T.shape({
     icon: T.string.isRequired,
     name: T.string.isRequired,
@@ -163,11 +164,14 @@ ContextMenu.propTypes = {
   children: T.node,
 
   // from store
+  contextData: T.object,
+  contextType: T.string,
   notFound: T.bool.isRequired,
   hasErrors: T.bool.isRequired,
   opened: T.bool.isRequired,
   untouched: T.bool.isRequired,
-  close: T.func.isRequired
+  close: T.func.isRequired,
+  reload: T.func.isRequired
 }
 
 ContextMenu.defaultProps = {

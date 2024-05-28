@@ -1,8 +1,9 @@
 services:
     Icap\LessonBundle\Listener\Resource\LessonListener:
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\API\Crud'
             - '@Icap\LessonBundle\Manager\ChapterManager'
-        tags: ['kernel.event_subscriber']

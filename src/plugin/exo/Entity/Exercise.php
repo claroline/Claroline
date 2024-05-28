@@ -167,10 +167,8 @@ class Exercise extends AbstractResource
      * Score to obtain to pass the exercise.
      *
      * @ORM\Column(name="success_score", type="float", nullable=true)
-     *
-     * @var float
      */
-    private float $successScore = 50;
+    private ?float $successScore = 50;
 
     /**
      * Displays step numbering.

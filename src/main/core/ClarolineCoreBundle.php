@@ -16,6 +16,7 @@ use Claroline\CoreBundle\DependencyInjection\Compiler\GeoipPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\MailingConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\MessengerConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\PlatformConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Compiler\RegisterResourceSubscriberPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\SessionConfigPass;
 use Claroline\KernelBundle\Bundle\DistributionPluginBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -32,5 +33,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle
         $container->addCompilerPass(new SessionConfigPass());
         $container->addCompilerPass(new MessengerConfigPass());
         $container->addCompilerPass(new GeoipPass());
+
+        //$container->addCompilerPass(new RegisterResourceSubscriberPass());
     }
 }

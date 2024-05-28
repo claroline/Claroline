@@ -2,6 +2,7 @@
 
 namespace Icap\LessonBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -22,6 +23,7 @@ class LessonListener extends ResourceComponent
         private readonly AuthorizationCheckerInterface $authorization,
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
+        private readonly Crud $crud,
         private readonly ChapterManager $chapterManager
     ) {
         $this->chapterRepository = $this->om->getRepository(Chapter::class);
@@ -40,7 +42,7 @@ class LessonListener extends ResourceComponent
         $internalNotes = $this->authorization->isGranted('VIEW_INTERNAL_NOTES', $resource->getResourceNode());
 
         return [
-            'lesson' => $this->serializer->serialize($resource),
+            'resource' => $this->serializer->serialize($resource),
             'tree' => $this->chapterManager->serializeChapterTree($resource),
             'root' => $root ? $this->serializer->serialize($root, $internalNotes ? [ChapterSerializer::INCLUDE_INTERNAL_NOTES] : []) : null,
         ];
@@ -48,14 +50,24 @@ class LessonListener extends ResourceComponent
 
     public function update(AbstractResource $resource, array $data): ?array
     {
+        $chapters = [];
         if (!empty($data['chapters'])) {
-            foreach ($data['chapters'] as $chapterData) {
+            $this->om->startFlushSuite();
 
+            foreach ($data['chapters'] as $chapterData) {
+                $chapters[] = $this->crud->createOrUpdate(Chapter::class, $chapterData);
             }
+
+            // TODO : remove deleted chapters
+
+            $this->om->endFlushSuite();
         }
 
         return [
             'resource' => $this->serializer->serialize($resource),
+            'chapters' => array_map(function (Chapter $chapter) {
+                return $this->serializer->serialize($chapter);
+            }, $chapters),
         ];
     }
 

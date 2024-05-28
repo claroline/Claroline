@@ -15,11 +15,10 @@ const ContextEditor = withReducer(selectors.STORE_NAME, reducer)(
       contextName: baseSelectors.type(state),
       contextId: baseSelectors.id(state),
       tools: baseSelectors.tools(state),
-      availableTools: selectors.availableTools(state)
     }),
     (dispatch) => ({
-      openEditor(contextData) {
-        dispatch(formActions.reset(editorSelectors.FORM_NAME, {data: contextData}, false))
+      openEditor(contextData, tools) {
+        dispatch(formActions.reset(editorSelectors.FORM_NAME, {data: contextData, tools: tools}, false))
       },
       getAvailableTools(contextName, contextId) {
         return dispatch(actions.fetchAvailableTools(contextName, contextId))

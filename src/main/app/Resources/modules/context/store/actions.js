@@ -43,6 +43,7 @@ actions.load = makeActionCreator(CONTEXT_LOAD, 'contextData')
 actions.setLoaded = makeActionCreator(CONTEXT_SET_LOADED, 'loaded')
 actions.setNotFound = makeActionCreator(CONTEXT_NOT_FOUND)
 actions.dismissRestrictions = makeActionCreator(CONTEXT_RESTRICTIONS_DISMISS)
+actions.reload = () => actions.setLoaded(false)
 
 actions.open = (contextType, contextId = null) => (dispatch) => dispatch({
   [API_REQUEST]: {

@@ -74,6 +74,10 @@ class AdministrationContext extends AbstractContext
 
         return [
             'data' => [
+                'permissions' => [
+                    'open' => $this->securityManager->isAdmin(),
+                    'administrate' => $this->securityManager->isAdmin(),
+                ],
                 'opening' => [
                     'type' => $defaultTool ? 'tool' : null,
                     'target' => $defaultTool,

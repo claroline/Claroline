@@ -33,6 +33,11 @@ class LogsTool extends AbstractTool
         ]);
     }
 
+    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
+    {
+        return true;
+    }
+
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
     {
         if (AdministrationContext::getName() === $context) {

@@ -60,6 +60,11 @@ class CommunityTool extends AbstractTool
         ]);
     }
 
+    public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
+    {
+        return true;
+    }
+
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
     {
         $userTeams = [];

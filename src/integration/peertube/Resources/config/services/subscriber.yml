@@ -5,7 +5,7 @@ services:
             - '@twig'
 
     Claroline\PeerTubeBundle\Subscriber\Resource\VideoSubscriber:
-        tags: [ kernel.event_subscriber ]
+        tags: ['claroline.component.resource', 'kernel.event_subscriber']
         arguments:
             - '@security.token_storage'
             - '@twig'

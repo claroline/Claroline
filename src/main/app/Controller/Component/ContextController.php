@@ -10,6 +10,7 @@ use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Component\Tool\ToolInterface;
 use Claroline\AppBundle\Component\Tool\ToolProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Event\CatalogEvents\ContextEvents;
@@ -36,6 +37,7 @@ class ContextController
         private readonly AuthorizationCheckerInterface $authorization,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
         private readonly Crud $crud,
         private readonly ContextProvider $contextProvider,
@@ -121,13 +123,35 @@ class ContextController
         }
 
         $contextObject = $contextHandler->getObject($contextId);
+        $contextTools = $contextHandler->getTools($contextObject);
 
         $this->authorization->isGranted('ADMINISTRATE', $contextObject);
 
         $data = $this->decodeRequest($request);
-        $this->crud->update($contextObject, $data['data'], [Options::PERSIST_TAG]);
 
-        $contextTools = $contextHandler->getTools($contextObject);
+        $this->om->startFlushSuite();
+        if (!empty($data['data'])) {
+            $this->crud->update($contextObject, $data['data'], [Crud::NO_PERMISSIONS, Options::PERSIST_TAG]);
+        }
+
+        if (!empty($data['tools'])) {
+            $updatedTools = [];
+            foreach ($data['tools'] as $toolData) {
+                /** @var OrderedTool $updatedTool */
+                $updatedTool = $this->crud->createOrUpdate(OrderedTool::class, $toolData, [Crud::NO_PERMISSIONS]);
+                $updatedTools[$updatedTool->getName()] = $updatedTool;
+            }
+
+            foreach ($contextTools as $existingTool) {
+                if (!array_key_exists($existingTool->getName(), $updatedTools)) {
+                    $this->crud->delete($existingTool);
+                }
+            }
+
+            $contextTools = array_values($updatedTools);
+        }
+
+        $this->om->endFlushSuite();
 
         return new JsonResponse(array_merge([], [
             'data' => $contextObject ? $this->serializer->serialize($contextObject) : null, // maybe only expose minimal ?
@@ -148,10 +172,10 @@ class ContextController
      */
     public function getAvailableToolsAction(string $context, string $contextId = null): JsonResponse
     {
-        // $this->authorization->isGranted('ADMINISTRATE', $contextObject);
-
         $contextHandler = $this->contextProvider->getContext($context);
         $contextSubject = $contextHandler->getObject($contextId);
+
+        $this->authorization->isGranted('ADMINISTRATE', $contextSubject);
 
         $tools = $contextHandler->getAvailableTools($contextSubject);
 
