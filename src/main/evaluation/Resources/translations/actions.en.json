@@ -1,7 +1,6 @@
 {
   "open_evaluation": "Show learning Report",
   "show_evaluations": "Show evaluations",
-  "download_participation_certificate": "Download the certificate of participation",
-  "download_success_certificate": "Download the certificate of achievement",
+  "download_certificate": "Download the certificate",
   "give_attempt": "Give one more attempt"
 }

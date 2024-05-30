@@ -60,7 +60,7 @@ class PdfManager
         );
     }
 
-    private function getCommonPlaceholders(Evaluation $evaluation): array
+    public function getCommonPlaceholders(Evaluation $evaluation): array
     {
         $workspace = $evaluation->getWorkspace();
         $user = $evaluation->getUser();

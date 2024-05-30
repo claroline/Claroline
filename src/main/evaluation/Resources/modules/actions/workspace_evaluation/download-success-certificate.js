@@ -9,7 +9,7 @@ export default (evaluations) => ({
   name: 'download-success-certificate',
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-file-pdf',
-  label: trans('download_success_certificate', {}, 'actions'),
+  label: trans('download_certificate', {}, 'actions'),
   displayed: -1 !== evaluations.findIndex((row) => constants.EVALUATION_STATUS_PASSED === get(row, 'status', constants.EVALUATION_STATUS_UNKNOWN)),
   request: {
     url: ['apiv2_workspace_download_success_certificates'],

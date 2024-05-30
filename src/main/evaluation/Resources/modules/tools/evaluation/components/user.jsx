@@ -119,10 +119,11 @@ class EvaluationUser extends Component {
                   }, {
                     name: 'download-participation-certificate',
                     type: URL_BUTTON,
-                    label: trans('download_participation_certificate', {}, 'actions'),
-                    target: ['apiv2_workspace_download_participation_certificate', {
+                    label: trans('download_certificate', {}, 'actions'),
+                    target: ['apiv2_workspace_download_certificate', {
                       workspace: get(this.props.workspaceEvaluation, 'workspace.id'),
-                      user: get(this.props.workspaceEvaluation, 'user.id')
+                      user: get(this.props.workspaceEvaluation, 'user.id'),
+                      type: 'participation'
                     }],
                     displayed: [
                       baseConstants.EVALUATION_STATUS_COMPLETED,
@@ -133,10 +134,11 @@ class EvaluationUser extends Component {
                     name: 'download-success-certificate',
                     size: 'lg',
                     type: URL_BUTTON,
-                    label: trans('download_success_certificate', {}, 'actions'),
-                    target: ['apiv2_workspace_download_success_certificate', {
+                    label: trans('download_certificate', {}, 'actions'),
+                    target: ['apiv2_workspace_download_certificate', {
                       workspace: get(this.props.workspaceEvaluation, 'workspace.id'),
-                      user: get(this.props.workspaceEvaluation, 'user.id')
+                      user: get(this.props.workspaceEvaluation, 'user.id'),
+                      type: 'success'
                     }],
                     displayed: baseConstants.EVALUATION_STATUS_PASSED === get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)
                   }

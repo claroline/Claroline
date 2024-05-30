@@ -20,3 +20,11 @@ services:
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@Claroline\AppBundle\Manager\File\ArchiveManager'
+
+    Claroline\EvaluationBundle\Manager\CertificateManager:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AppBundle\Manager\PdfManager'
+            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\CoreBundle\Manager\FileManager'
+            - '@Claroline\EvaluationBundle\Manager\PdfManager'

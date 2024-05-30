@@ -27,6 +27,7 @@ const WorkspaceCertificatesToolbar = (props) => {
 
   const userId = props.currentUser.id
   const workspaceId = props.workspace.id
+
   useEffect(() => {
     if (!wsEval) {
       const evalFetching = makeCancelable(dispatch(evalActions.fetchEvaluation(workspaceId, userId)))
@@ -47,8 +48,8 @@ const WorkspaceCertificatesToolbar = (props) => {
         {
           name: 'download-participation-certificate',
           type: CALLBACK_BUTTON,
-          label: trans('download_participation_certificate', {}, 'actions'),
-          callback: () => dispatch(evalActions.downloadParticipationCertificate(workspaceId, userId)),
+          label: trans('download_certificate', {}, 'actions'),
+          callback: () => dispatch(evalActions.downloadCertificate(workspaceId, userId,'participation')),
           displayed: [
             evalConstants.EVALUATION_STATUS_COMPLETED,
             evalConstants.EVALUATION_STATUS_PARTICIPATED
@@ -56,8 +57,8 @@ const WorkspaceCertificatesToolbar = (props) => {
         }, {
           name: 'download-success-certificate',
           type: CALLBACK_BUTTON,
-          label: trans('download_success_certificate', {}, 'actions'),
-          callback: () => dispatch(evalActions.downloadSuccessCertificate(workspaceId, userId)),
+          label: trans('download_certificate', {}, 'actions'),
+          callback: () => dispatch(evalActions.downloadCertificate(workspaceId, userId,'success')),
           displayed: evalConstants.EVALUATION_STATUS_PASSED === get(wsEval, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN)
         }
       ]}
