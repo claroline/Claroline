@@ -18,6 +18,7 @@ use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CursusBundle\Entity\Course;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -35,11 +36,11 @@ class CourseSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Course::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Course::class) => 'postCreate',
-            Crud::getEventName('update', 'pre', Course::class) => 'preUpdate',
-            Crud::getEventName('update', 'post', Course::class) => 'postUpdate',
-            Crud::getEventName('delete', 'post', Course::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Course::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Course::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::PRE_UPDATE, Course::class) => 'preUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, Course::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, Course::class) => 'postDelete',
         ];
     }
 

@@ -10,7 +10,6 @@
 
 namespace Claroline\AuthenticationBundle\Manager;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\ForgotPasswordEvent;
@@ -19,6 +18,7 @@ use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager as BaseMailManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -28,20 +28,20 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class MailManager
 {
     public function __construct(
-        private TranslatorInterface $translator,
-        private UrlGeneratorInterface $router,
-        private StrictDispatcher $dispatcher,
-        private PlatformConfigurationHandler $config,
-        private BaseMailManager $mailManager,
-        private LocaleManager $localeManager,
-        private TemplateManager $templateManager,
-        private UserManager $userManager
+        private readonly TranslatorInterface $translator,
+        private readonly UrlGeneratorInterface $router,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly BaseMailManager $mailManager,
+        private readonly LocaleManager $localeManager,
+        private readonly TemplateManager $templateManager,
+        private readonly UserManager $userManager
     ) {
     }
 
     public function sendForgotPassword(User $user): bool
     {
-        $this->dispatcher->dispatch(SecurityEvents::FORGOT_PASSWORD, ForgotPasswordEvent::class, [$user]);
+        $this->eventDispatcher->dispatch(new ForgotPasswordEvent($user), SecurityEvents::FORGOT_PASSWORD);
 
         $locale = $this->localeManager->getLocale($user);
         $placeholders = [

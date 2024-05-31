@@ -18,6 +18,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Claroline\LinkBundle\Entity\Resource\Shortcut;
 use Doctrine\Persistence\ObjectRepository;
@@ -40,7 +41,7 @@ class ShortcutListener extends ResourceComponent implements EvaluatedResourceInt
     public static function getSubscribedEvents(): array
     {
         return array_merge(parent::getSubscribedEvents(), [
-            Crud::getEventName('delete', 'post', ResourceNode::class) => 'cleanShortcuts',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, ResourceNode::class) => 'cleanShortcuts',
         ]);
     }
 

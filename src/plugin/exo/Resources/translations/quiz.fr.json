@@ -326,10 +326,6 @@
     "score_rule_text_1": "Si l'apprenant a",
     "score_rule_text_2": "il obtiendra",
     "score_rules_conflict_warning": "Si plusieurs règles valides sont en conflit, seulement la première règle sera appliquée.",
-    "search_by_title_or_content": "Rechercher sur le titre / contenu de la question",
-    "search_question": "Chercher des questions",
-    "see_shared_with": "Question partagée avec des utilisateurs",
-    "select": "Choisir",
     "selected_correct_choices": "les choix justes cochés",
     "selected_incorrect_choices": "les choix faux cochés",
     "selection": "=> Pour répondre, utilisez la technique du glisser/déposer.",
@@ -369,7 +365,6 @@
     "stat_have_responded": "ont répondu",
     "stat_users": "[0, 1] %count% utilisateur|]1,Inf[ %count% utilisateurs",
     "step": "Étape %number%",
-    "steps": "Étapes",
     "step_score": "Score de l'étape",
     "submit_a_list": "Soumettre une liste",
     "sum_score_choice_at_least_one_correct_answer_error": "Au moins une réponse doit avoir un score positif.",
@@ -523,5 +518,6 @@
     "show_attempts_stats": "Afficher le graphique d'évolution des tentatives",
     "attempts_chart_all": "Evolution de toutes les tentatives",
     "attempts_chart_user": "Evolution de mes tentatives",
-    "allow_multiple_responses": "Autoriser les réponses multiples"
+    "allow_multiple_responses": "Autoriser les réponses multiples",
+    "steps": "Questions et Étapes"
 }

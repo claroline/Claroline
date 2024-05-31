@@ -13,10 +13,8 @@ import {reducer as correctionReducer, selectors as correctionSelectors} from '#/
 import {reducer as statisticsReducer, selectors as statisticsSelectors} from '#/plugin/exo/resources/quiz/statistics/store'
 
 export const reducer = combineReducers({
-  quiz: makeReducer({}, {
-    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.quiz || state,
-    // replaces quiz data after success updates
-    [`${FORM_SUBMIT_SUCCESS}/${editorSelectors.FORM_NAME}`]: (state, action) => action.updatedData
+  resource: makeReducer({}, {
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.resource || state,
   }),
   lastAttempt: makeReducer(null, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.lastAttempt || state

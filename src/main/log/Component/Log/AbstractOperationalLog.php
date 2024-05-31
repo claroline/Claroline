@@ -12,6 +12,7 @@ use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\LogBundle\Helper\LinkHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -26,11 +27,11 @@ abstract class AbstractOperationalLog implements EventSubscriberInterface, Compo
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'post', static::getEntityClass()) => ['logCreate', -25],
-            Crud::getEventName('update', 'post', static::getEntityClass()) => ['logUpdate', -25],
-            Crud::getEventName('copy', 'post', static::getEntityClass()) => ['logCopy', -25],
-            Crud::getEventName('patch', 'post', static::getEntityClass()) => ['logPatch', -25],
-            Crud::getEventName('delete', 'post', static::getEntityClass()) => ['logDelete', -25],
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, static::getEntityClass()) => ['logCreate', -25],
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, static::getEntityClass()) => ['logUpdate', -25],
+            CrudEvents::getEventName(CrudEvents::POST_COPY, static::getEntityClass()) => ['logCopy', -25],
+            CrudEvents::getEventName(CrudEvents::POST_PATCH, static::getEntityClass()) => ['logPatch', -25],
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, static::getEntityClass()) => ['logDelete', -25],
         ];
     }
 

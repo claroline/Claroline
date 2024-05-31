@@ -8,12 +8,14 @@ use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Component\Tool\ToolProvider;
+use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Manager\File\ArchiveManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -52,14 +54,15 @@ class TransferManager implements LoggerAwareInterface
 
         $workspace = $this->importWorkspace($data, $workspace, $fileBag, $options);
 
-        if ($this->crud->dispatch('create', 'pre', [$workspace, $options, $data])) {
+        $event = new CreateEvent($workspace, $options, $data);
+        if ($this->crud->dispatch(CrudEvents::PRE_CREATE, Workspace::class, $event)) {
             $this->om->persist($workspace);
             $this->om->flush();
 
             $roles = $this->importRoles($data, $workspace, $defaultRole);
             $this->importTools($data, $workspace, $roles, $fileBag);
 
-            $this->crud->dispatch('create', 'post', [$workspace, $options, $data]);
+            $this->crud->dispatch(CrudEvents::POST_CREATE, Workspace::class, $event);
         }
 
         $archive->close();

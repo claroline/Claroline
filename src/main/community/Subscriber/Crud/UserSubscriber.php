@@ -9,13 +9,13 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Manager\MailManager;
 use Claroline\CoreBundle\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\NewPasswordEvent;
@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -32,13 +33,13 @@ class UserSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly ObjectManager $om,
         private readonly PlatformConfigurationHandler $config,
         private readonly Crud $crud,
         private readonly RoleManager $roleManager,
         private readonly MailManager $mailManager,
         private readonly OrganizationManager $organizationManager,
-        private readonly StrictDispatcher $dispatcher,
         private readonly FileManager $fileManager
     ) {
     }
@@ -46,13 +47,13 @@ class UserSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', User::class) => 'preCreate',
-            Crud::getEventName('create', 'post', User::class) => 'postCreate',
-            Crud::getEventName('update', 'pre', User::class) => 'preUpdate',
-            Crud::getEventName('update', 'post', User::class) => 'postUpdate',
-            Crud::getEventName('patch', 'post', User::class) => 'postPatch',
-            Crud::getEventName('delete', 'pre', User::class) => 'preDelete',
-            Crud::getEventName('delete', 'post', User::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, User::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, User::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::PRE_UPDATE, User::class) => 'preUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, User::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_PATCH, User::class) => 'postPatch',
+            CrudEvents::getEventName(CrudEvents::PRE_DELETE, User::class) => 'preDelete',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, User::class) => 'postDelete',
         ];
     }
 
@@ -184,7 +185,8 @@ class UserSubscriber implements EventSubscriberInterface
         );
 
         if ($user->getPlainpassword()) {
-            $this->dispatcher->dispatch(SecurityEvents::NEW_PASSWORD, NewPasswordEvent::class, [$user]);
+            $event = new NewPasswordEvent($user);
+            $this->eventDispatcher->dispatch($event, SecurityEvents::NEW_PASSWORD);
         }
     }
 
@@ -198,18 +200,22 @@ class UserSubscriber implements EventSubscriberInterface
             $hasRoleFromGroup = $user->hasRole($role->getName(), true) && !$user->hasRole($role->getName(), false);
             if (!$hasRoleFromGroup) {
                 if ('add' === $event->getAction()) {
-                    $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $role]);
+                    $event = new AddRoleEvent([$user], $role);
+                    $this->eventDispatcher->dispatch($event, AddRoleEvent::class);
                 } elseif ('remove' === $event->getAction()) {
-                    $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [[$user], $role]);
+                    $event = new RemoveRoleEvent([$user], $role);
+                    $this->eventDispatcher->dispatch($event, RemoveRoleEvent::class);
                 }
             }
         } elseif ($event->getValue() instanceof Group) {
             foreach ($event->getValue()->getEntityRoles() as $role) {
                 if (!$user->hasRole($role->getName(), false)) {
                     if ('add' === $event->getAction()) {
-                        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $role]);
+                        $event = new AddRoleEvent([$user], $role);
+                        $this->eventDispatcher->dispatch($event, AddRoleEvent::class);
                     } elseif ('remove' === $event->getAction()) {
-                        $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [[$user], $role]);
+                        $event = new RemoveRoleEvent([$user], $role);
+                        $this->eventDispatcher->dispatch($event, RemoveRoleEvent::class);
                     }
                 }
             }

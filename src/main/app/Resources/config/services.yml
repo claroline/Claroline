@@ -46,10 +46,6 @@ services:
             - !tagged_locator { tag: 'claroline.validator', default_index_method: 'getClass' }
             - '@Claroline\AppBundle\API\SchemaProvider'
 
-    Claroline\AppBundle\Event\StrictDispatcher:
-        arguments:
-            - '@event_dispatcher'
-
     Claroline\AppBundle\Routing\ApiLoader:
         tags: ['routing.loader']
         arguments:

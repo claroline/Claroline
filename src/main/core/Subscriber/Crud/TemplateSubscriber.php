@@ -2,10 +2,10 @@
 
 namespace Claroline\CoreBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Template\Template;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -20,7 +20,7 @@ class TemplateSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('delete', 'post', Template::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, Template::class) => 'postDelete',
         ];
     }
 

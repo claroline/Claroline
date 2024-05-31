@@ -89,5 +89,6 @@
   "replace_image": "Replace image",
   "show-menu": "Open menu",
   "hide-menu": "Close menu",
-  "initialize": "Initialize"
+  "initialize": "Initialize",
+  "purge": "Purger"
 }

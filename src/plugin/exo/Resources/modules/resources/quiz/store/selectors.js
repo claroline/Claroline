@@ -10,7 +10,7 @@ const STORE_NAME = 'ujm_exercise'
  *
  * @type {object}
  */
-const resource = (state) => state[STORE_NAME]
+const store = (state) => state[STORE_NAME]
 
 const evaluation = resourceSelectors.resourceEvaluation
 
@@ -20,8 +20,8 @@ const evaluation = resourceSelectors.resourceEvaluation
  * @type {object}
  */
 const quiz = createSelector(
-  [resource],
-  (resource) => resource.quiz
+  [store],
+  (store) => store.resource
 )
 
 /**
@@ -106,7 +106,7 @@ const showOverviewStats = createSelector(
 export const selectors = {
   STORE_NAME,
 
-  resource,
+  store,
   evaluation,
   quiz,
   id,

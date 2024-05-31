@@ -12,5 +12,6 @@ export default (workspaces) => ({
   displayed: -1 !== workspaces.findIndex(workspace => hasPermission('administrate', workspace)),
   target: `${route(workspaces[0])}/edit`,
   group: trans('management'),
-  scope: ['object']
+  scope: ['object'],
+  primary: true
 })

@@ -2,7 +2,7 @@ import React from 'react'
 import {useSelector} from 'react-redux'
 
 import {trans} from '#/main/app/intl'
-import {ASYNC_BUTTON} from '#/main/app/buttons'
+import {ASYNC_BUTTON, CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {selectors as toolSelectors} from '#/main/core/tool'
 import {ToolEditorActions} from '#/main/core/tool/editor'
@@ -44,7 +44,17 @@ const EvaluationEditorActions = () => {
               }
             }
           }
-        }
+        }, {
+          title: trans('Purger les évaluations'),
+          help: trans('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
+          action: {
+            label: trans('purge', {}, 'actions'),
+            type: CALLBACK_BUTTON,
+            callback: () => true
+          },
+          dangerous: true,
+          managerOnly: true
+        },
       ]}
     />
   )

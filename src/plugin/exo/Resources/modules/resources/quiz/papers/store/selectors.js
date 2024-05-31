@@ -14,7 +14,7 @@ const quizHasScore = createSelector(
 )
 
 const papers = createSelector(
-  [baseSelectors.resource],
+  [baseSelectors.store],
   (resourceState) => resourceState[STORE_NAME]
 )
 

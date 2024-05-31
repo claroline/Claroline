@@ -4,7 +4,7 @@ import omit from 'lodash/omit'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
-import {Resource, ResourcePage} from '#/main/core/resource'
+import {Resource} from '#/main/core/resource'
 
 import {DragDropProvider} from '#/main/app/overlays/dnd/components/provider'
 import {CustomDragLayer} from '#/plugin/exo/utils/custom-drag-layer'
@@ -13,7 +13,7 @@ import {Player}     from '#/plugin/exo/quiz/player/components/player'
 import {AttemptEnd} from '#/plugin/exo/quiz/player/components/attempt-end'
 
 import {QuizOverview}   from '#/plugin/exo/resources/quiz/containers/overview'
-import {EditorMain}     from '#/plugin/exo/resources/quiz/editor/containers/main'
+import {QuizEditor}     from '#/plugin/exo/resources/quiz/editor/components/main'
 import {PapersMain}     from '#/plugin/exo/resources/quiz/papers/containers/main'
 import {CorrectionMain} from '#/plugin/exo/resources/quiz/correction/containers/main'
 import {StatisticsMain} from '#/plugin/exo/resources/quiz/statistics/containers/main'
@@ -24,7 +24,7 @@ const QuizResource = props =>
     styles={['claroline-distribution-plugin-exo-quiz-resource']}
     overviewPage={QuizOverview}
     actions={[
-      {
+      /*{
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-play',
         label: trans('start', {}, 'actions'),
@@ -38,7 +38,8 @@ const QuizResource = props =>
         disabled: props.empty,
         target: `${props.path}/test`,
         group: trans('management')
-      }, {
+      }, */{
+        name: 'results',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-tasks',
         label: trans('show-results', {}, 'actions'),
@@ -46,6 +47,7 @@ const QuizResource = props =>
         target: `${props.path}/papers`,
         exact: true
       }, {
+        name: 'results-cvs',
         type: URL_BUTTON,
         icon: 'fa fa-fw fa-file-csv',
         label: trans('export_csv_results', {}, 'quiz'),
@@ -82,12 +84,9 @@ const QuizResource = props =>
       }
     ]}
 
+    editor={QuizEditor}
     pages={[
-      /*{
-        path: '/edit',
-        component: EditorMain,
-        disabled: !props.editable
-      }, */{
+      {
         path: '/test',
         component: Player,
         disabled: !props.editable,

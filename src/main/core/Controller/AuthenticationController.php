@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Manager\MailManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
@@ -22,9 +21,11 @@ use Claroline\CoreBundle\Event\Security\ValidateEmailEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -36,12 +37,12 @@ class AuthenticationController
     use RequestDecoderTrait;
 
     public function __construct(
-        private UserManager $userManager,
-        private ObjectManager $om,
-        private MailManager $mailManager,
-        private RoutingHelper $routingHelper,
-        private Authenticator $authenticator,
-        private StrictDispatcher $eventDispatcher
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly UserManager $userManager,
+        private readonly ObjectManager $om,
+        private readonly MailManager $mailManager,
+        private readonly RoutingHelper $routingHelper,
+        private readonly Authenticator $authenticator
     ) {
     }
 
@@ -51,7 +52,7 @@ class AuthenticationController
      *
      * @Route("/user/registration/activate/{hash}", name="claro_security_activate_user")
      */
-    public function activateUserAction(string $hash, Request $request)
+    public function activateUserAction(string $hash, Request $request): Response
     {
         if (!empty($hash)) {
             $user = $this->userManager->getByResetPasswordHash($hash);
@@ -143,7 +144,7 @@ class AuthenticationController
                 throw new NotFoundHttpException('User not found.');
             }
 
-            $this->eventDispatcher->dispatch(SecurityEvents::VALIDATE_EMAIL, ValidateEmailEvent::class, [$this->userManager->getByEmailValidationHash($hash)]);
+            $this->eventDispatcher->dispatch(new ValidateEmailEvent($this->userManager->getByEmailValidationHash($hash)), SecurityEvents::VALIDATE_EMAIL);
         }
 
         return new RedirectResponse(

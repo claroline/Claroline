@@ -11,8 +11,8 @@
 
 namespace Claroline\CursusBundle\Subscriber\Crud\Registration;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CursusBundle\Entity\Registration\CourseUser;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -21,7 +21,7 @@ class CourseUserSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', CourseUser::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, CourseUser::class) => 'preCreate',
         ];
     }
 

@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Subscriber\Crud\Planning;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
@@ -12,6 +11,7 @@ use Claroline\CoreBundle\Entity\Location\Room;
 use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
 use Claroline\CoreBundle\Entity\Planning\PlannedObject;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\PlanningManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -52,10 +52,10 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', static::getPlannedClass()) => 'preCreate',
-            Crud::getEventName('create', 'post', static::getPlannedClass()) => 'postCreate',
-            Crud::getEventName('update', 'pre', static::getPlannedClass()) => 'preUpdate',
-            Crud::getEventName('delete', 'post', static::getPlannedClass()) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, static::getPlannedClass()) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, static::getPlannedClass()) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::PRE_UPDATE, static::getPlannedClass()) => 'preUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, static::getPlannedClass()) => 'postDelete',
         ];
     }
 

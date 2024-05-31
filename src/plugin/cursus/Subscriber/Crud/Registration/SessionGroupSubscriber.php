@@ -11,9 +11,9 @@
 
 namespace Claroline\CursusBundle\Subscriber\Crud\Registration;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Manager\SessionManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -28,9 +28,9 @@ class SessionGroupSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', SessionGroup::class) => 'preCreate',
-            Crud::getEventName('create', 'post', SessionGroup::class) => 'postCreate',
-            Crud::getEventName('delete', 'post', SessionGroup::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, SessionGroup::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, SessionGroup::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, SessionGroup::class) => 'postDelete',
         ];
     }
 

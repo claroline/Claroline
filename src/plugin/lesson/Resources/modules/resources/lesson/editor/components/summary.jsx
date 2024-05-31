@@ -9,6 +9,7 @@ import {EditorPage} from '#/main/app/editor'
 import {selectors as resourceSelectors} from '#/main/core/resource/editor'
 
 import {getNumbering} from '#/plugin/lesson/resources/lesson/utils'
+import {Button} from '#/main/app/action'
 
 const LessonEditorSummary = () => {
   const resourceEditorPath = useSelector(resourceSelectors.path) + '/content'
@@ -70,6 +71,14 @@ const LessonEditorSummary = () => {
     >
       <ContentSummary
         links={editedChapters.map(getChapterSummary)}
+      />
+
+      <Button
+        type={CALLBACK_BUTTON}
+        className="btn btn-primary w-100 mt-3"
+        label={trans('Ajouter une section')}
+        size="lg"
+        callback={() => true}
       />
     </EditorPage>
   )

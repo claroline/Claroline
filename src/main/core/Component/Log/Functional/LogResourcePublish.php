@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Component\Log\Functional;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\LogBundle\Component\Log\AbstractFunctionalLog;
 
 class LogResourcePublish extends AbstractFunctionalLog
@@ -17,7 +17,7 @@ class LogResourcePublish extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('update', 'post', ResourceNode::class) => ['logPublish', -25],
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, ResourceNode::class) => ['logPublish', -25],
         ];
     }
 

@@ -7,6 +7,7 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
@@ -15,35 +16,25 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class BadgeClassSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var OrganizationManager */
-    private $organizationManager;
-    /** @var FileManager */
-    private $fileManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        OrganizationManager $organizationManager,
-        FileManager $fileManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly OrganizationManager $organizationManager,
+        private readonly FileManager $fileManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->organizationManager = $organizationManager;
-        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', BadgeClass::class) => 'preCreate',
-            Crud::getEventName('create', 'post', BadgeClass::class) => 'postCreate',
-            Crud::getEventName('update', 'pre', BadgeClass::class) => 'preUpdate',
-            Crud::getEventName('update', 'post', BadgeClass::class) => 'postUpdate',
-            Crud::getEventName('delete', 'post', BadgeClass::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, BadgeClass::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, BadgeClass::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::PRE_UPDATE, BadgeClass::class) => 'preUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, BadgeClass::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, BadgeClass::class) => 'postDelete',
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
@@ -51,7 +42,7 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         $this->checkOrganization($badge);
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
@@ -61,7 +52,7 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preUpdate(UpdateEvent $event)
+    public function preUpdate(UpdateEvent $event): void
     {
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
@@ -69,7 +60,7 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         $this->checkOrganization($badge);
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
@@ -83,7 +74,7 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         );
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
@@ -96,7 +87,7 @@ class BadgeClassSubscriber implements EventSubscriberInterface
     /**
      * Auto link badge to the correct Organization if the user has not selected one.
      */
-    private function checkOrganization(BadgeClass $badge)
+    private function checkOrganization(BadgeClass $badge): void
     {
         if (empty($badge->getIssuer())) {
             $organization = null;

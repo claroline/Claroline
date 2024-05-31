@@ -8,6 +8,7 @@ import {hasPermission} from '#/main/app/security'
 import {Editor} from '#/main/app/editor/components/main'
 import {actions as formActions} from '#/main/app/content/form'
 
+import {supportEvaluation} from '#/main/core/resource/utils'
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 import {ResourceEditorAppearance} from '#/main/core/resource/editor/components/appearance'
 import {ResourceEditorOverview} from '#/main/core/resource/editor/components/overview'
@@ -59,7 +60,8 @@ const ResourceEditor = (props) => {
           name: 'evaluation',
           title: trans('evaluation'),
           help: trans('Activez le suivi pédagogique pour enregistrer et suivre la progression des utilisateurs.'),
-          component: ResourceEditorEvaluation
+          component: ResourceEditorEvaluation,
+          disabled: !supportEvaluation(editedNode)
         }
       ].concat(props.pages || [])}
     />

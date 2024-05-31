@@ -11,9 +11,6 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\Event\StrictDispatcher;
-use Claroline\AppBundle\Log\LoggableTrait;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Repository\RoleRepository;
@@ -31,44 +28,25 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\Resource\ResourceTypeRepository;
-use Psr\Log\LoggerAwareInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Mime\MimeTypes;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Security;
 
-class ResourceManager implements LoggerAwareInterface
+class ResourceManager
 {
-    use LoggableTrait;
-
-    private AuthorizationCheckerInterface $authorization;
-    private StrictDispatcher $dispatcher;
-    private ObjectManager $om;
-    private Crud $crud;
-    private RightsManager $rightsManager;
-    private TempFileManager $tempManager;
-    private Security $security;
-
     private ResourceTypeRepository $resourceTypeRepo;
     private ResourceNodeRepository $resourceNodeRepo;
     private RoleRepository $roleRepo;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        RightsManager $rightsManager,
-        StrictDispatcher $dispatcher,
-        ObjectManager $om,
-        Crud $crud,
-        TempFileManager $tempManager,
-        Security $security
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly RightsManager $rightsManager,
+        private readonly ObjectManager $om,
+        private readonly TempFileManager $tempManager,
+        private readonly Security $security
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->rightsManager = $rightsManager;
-        $this->dispatcher = $dispatcher;
-        $this->crud = $crud;
-        $this->tempManager = $tempManager;
-        $this->security = $security;
-
         $this->resourceTypeRepo = $om->getRepository(ResourceType::class);
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
         $this->roleRepo = $om->getRepository(Role::class);
@@ -81,9 +59,7 @@ class ResourceManager implements LoggerAwareInterface
      * array('ROLE_WS_XXX' => array('open' => true, 'edit' => false, ...
      * 'create' => array('directory', ...), 'role' => $entity))
      *
-     * @deprecated: use directory listener: onAdd instead ? I don't know. This is weird.
-     *
-     * @return AbstractResource
+     * @deprecated use directory listener: onAdd instead ? I don't know. This is weird.
      */
     public function create(
         AbstractResource $resource,
@@ -94,9 +70,9 @@ class ResourceManager implements LoggerAwareInterface
         array $rights = [],
         bool $isPublished = true,
         bool $createRights = true
-    ) {
+    ): AbstractResource {
         $this->om->startFlushSuite();
-        /** @var ResourceNode $node */
+
         $node = new ResourceNode();
         $node->setResourceType($resourceType);
         $node->setPublished($isPublished);
@@ -219,11 +195,9 @@ class ResourceManager implements LoggerAwareInterface
 
         $nodes = $this->expandResources($elements);
         if (!$forceArchive && 1 === count($nodes)) {
-            /** @var DownloadResourceEvent $event */
-            $event = $this->dispatcher->dispatch(
-                "download_{$nodes[0]->getResourceType()->getName()}",
-                DownloadResourceEvent::class,
-                [$this->getResourceFromNode($this->getRealTarget($nodes[0]))]
+            $event = $this->eventDispatcher->dispatch(
+                new DownloadResourceEvent($this->getResourceFromNode($this->getRealTarget($nodes[0]))),
+                "download_{$nodes[0]->getResourceType()->getName()}"
             );
             $extension = $event->getExtension();
             $hasExtension = '' !== pathinfo($nodes[0]->getName(), PATHINFO_EXTENSION);
@@ -272,10 +246,9 @@ class ResourceManager implements LoggerAwareInterface
 
                     if ('directory' !== $node->getResourceType()->getName()) {
                         /** @var DownloadResourceEvent $event */
-                        $event = $this->dispatcher->dispatch(
-                            "download_{$node->getResourceType()->getName()}",
-                            DownloadResourceEvent::class,
-                            [$resource]
+                        $event = $this->eventDispatcher->dispatch(
+                            new DownloadResourceEvent($resource),
+                            "download_{$node->getResourceType()->getName()}"
                         );
 
                         $obj = $event->getItem();
@@ -319,10 +292,7 @@ class ResourceManager implements LoggerAwareInterface
         return $this->resourceTypeRepo->findAll();
     }
 
-    /**
-     * @return ResourceNode
-     */
-    public function getById($id)
+    public function getById($id): ?ResourceNode
     {
         /** @var ResourceNode $resourceNode */
         $resourceNode = $this->resourceNodeRepo->findOneBy(['id' => $id]);
@@ -335,16 +305,10 @@ class ResourceManager implements LoggerAwareInterface
      */
     public function getResourceFromNode(ResourceNode $node): ?AbstractResource
     {
-        try {
-            /* @var AbstractResource $resource */
-            $resource = $this->om->getRepository($node->getClass())->findOneBy(['resourceNode' => $node]);
+        /* @var AbstractResource $resource */
+        $resource = $this->om->getRepository($node->getClass())->findOneBy(['resourceNode' => $node]);
 
-            return $resource;
-        } catch (\Exception $e) {
-            $this->log('class '.$node->getClass().' does not exists', 'error');
-        }
-
-        return null;
+        return $resource;
     }
 
     public function addView(ResourceNode $node): ResourceNode
@@ -379,10 +343,9 @@ class ResourceManager implements LoggerAwareInterface
         $resource = $this->getResourceFromNode($resourceNode);
         if ($resource) {
             /** @var LoadResourceEvent $event */
-            $event = $this->dispatcher->dispatch(
-                ResourceEvents::OPEN,
-                LoadResourceEvent::class,
-                [$resource, $embedded]
+            $event = $this->eventDispatcher->dispatch(
+                new LoadResourceEvent($resource, $embedded),
+                ResourceEvents::OPEN
             );
 
             return $event->getData();
@@ -399,10 +362,9 @@ class ResourceManager implements LoggerAwareInterface
         $resource = $this->getResourceFromNode($resourceNode);
         if ($resource) {
             /** @var EmbedResourceEvent $event */
-            $event = $this->dispatcher->dispatch(
-                ResourceEvents::EMBED,
-                EmbedResourceEvent::class,
-                [$resource]
+            $event = $this->eventDispatcher->dispatch(
+                new EmbedResourceEvent($resource),
+                ResourceEvents::EMBED
             );
 
             return $event->getData();
@@ -535,7 +497,7 @@ class ResourceManager implements LoggerAwareInterface
 
     /**
      * Checks if an array of resource type name exists.
-     * Expects an array of types array(array('name' => 'type'),...).
+     * Expects an array of types [['name' => 'type'],...].
      */
     private function checkResourceTypes(array $resourceTypes): array
     {

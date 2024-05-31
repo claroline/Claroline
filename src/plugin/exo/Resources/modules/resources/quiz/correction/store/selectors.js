@@ -7,7 +7,7 @@ const STORE_NAME = 'correction'
 const quizId = quizSelectors.id
 
 const correction = createSelector(
-  [quizSelectors.resource],
+  [quizSelectors.store],
   (resourceState) => resourceState[STORE_NAME]
 )
 

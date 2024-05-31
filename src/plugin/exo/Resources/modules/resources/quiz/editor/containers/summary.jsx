@@ -8,18 +8,18 @@ import {toKey} from '#/main/core/scaffolding/text'
 import {selectors as formSelectors} from '#/main/app/content/form/store'
 
 import {refreshIdentifiers} from '#/plugin/exo/resources/quiz/utils'
-import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {EditorMenu as EditorMenuComponent} from '#/plugin/exo/resources/quiz/editor/components/menu'
+import {selectors as editorSelectors} from '#/main/core/resource/editor'
+import {QuizEditorSummary as QuizEditorSummaryComponent} from '#/plugin/exo/resources/quiz/editor/components/summary'
 import {actions, selectors} from '#/plugin/exo/resources/quiz/editor/store'
 import {getStepSlug} from '#/plugin/exo/resources/quiz/editor/utils'
 
-const EditorMenu = withRouter(
+const QuizEditorSummary = withRouter(
   connect(
     (state) => ({
-      path: resourceSelectors.path(state),
+      path: editorSelectors.path(state),
       steps: selectors.steps(state),
-      validating: formSelectors.validating(formSelectors.form(state, selectors.FORM_NAME)),
-      errors: formSelectors.errors(formSelectors.form(state, selectors.FORM_NAME))
+      validating: formSelectors.validating(formSelectors.form(state, editorSelectors.STORE_NAME)),
+      errors: formSelectors.errors(formSelectors.form(state, editorSelectors.STORE_NAME))
     }),
     (dispatch) => ({
       addStep(steps = []) {
@@ -87,9 +87,9 @@ const EditorMenu = withRouter(
         dispatch(actions.moveStep(stepId, position))
       }
     })
-  )(EditorMenuComponent)
+  )(QuizEditorSummaryComponent)
 )
 
 export {
-  EditorMenu
+  QuizEditorSummary
 }

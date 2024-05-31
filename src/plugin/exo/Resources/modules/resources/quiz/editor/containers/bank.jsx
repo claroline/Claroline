@@ -1,17 +1,17 @@
 import {connect} from 'react-redux'
 
-import {EditorBank as EditorBankComponent} from '#/plugin/exo/resources/quiz/editor/components/bank'
+import {QuizEditorBank as QuizEditorBankComponent} from '#/plugin/exo/resources/quiz/editor/components/bank'
 import {actions} from '#/plugin/exo/resources/quiz/editor/store/actions'
 
-const EditorBank = connect(
+const QuizEditorBank = connect(
   null,
   (dispatch) => ({
     shareQuestions(questions, users, adminRights) {
       dispatch(actions.shareQuestions(questions, users, adminRights))
     }
   })
-)(EditorBankComponent)
+)(QuizEditorBankComponent)
 
 export {
-  EditorBank
+  QuizEditorBank
 }

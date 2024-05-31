@@ -9,6 +9,7 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Event\Resource\EmbedResourceEvent;
 use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Claroline\PeerTubeBundle\Entity\Video;
@@ -37,7 +38,7 @@ class VideoSubscriber extends ResourceComponent implements EvaluatedResourceInte
     {
         return array_merge([], parent::getSubscribedEvents(), [
             'resource.peertube_video.embed' => 'onEmbed',
-            Crud::getEventName('create', 'post', Video::class) => 'onCrudCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Video::class) => 'onCrudCreate',
         ]);
     }
 

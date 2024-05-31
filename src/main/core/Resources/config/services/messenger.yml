@@ -13,5 +13,5 @@ services:
 
     Claroline\CoreBundle\Messenger\SendMessageHandler:
         arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'

@@ -4,12 +4,12 @@ namespace Claroline\AgendaBundle\Messenger;
 
 use Claroline\AgendaBundle\Entity\EventInvitation;
 use Claroline\AgendaBundle\Messenger\Message\SendEventInvitation;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -19,32 +19,16 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class SendEventInvitationHandler implements MessageHandlerInterface
 {
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var ObjectManager */
-    private $om;
-    /** @var RouterInterface */
-    private $router;
-    /** @var PlatformManager */
-    private $platformManager;
-    /** @var TemplateManager */
-    private $templateManager;
-
     public function __construct(
-        StrictDispatcher $dispatcher,
-        ObjectManager $om,
-        RouterInterface $router,
-        PlatformManager $platformManager,
-        TemplateManager $templateManager
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly RouterInterface $router,
+        private readonly ObjectManager $om,
+        private readonly PlatformManager $platformManager,
+        private readonly TemplateManager $templateManager
     ) {
-        $this->dispatcher = $dispatcher;
-        $this->om = $om;
-        $this->router = $router;
-        $this->platformManager = $platformManager;
-        $this->templateManager = $templateManager;
     }
 
-    public function __invoke(SendEventInvitation $sendEventInvitation)
+    public function __invoke(SendEventInvitation $sendEventInvitation): void
     {
         /** @var EventInvitation $invitation */
         $invitation = $this->om->getRepository(EventInvitation::class)->find($sendEventInvitation->getInvitationId());
@@ -108,15 +92,17 @@ class SendEventInvitationHandler implements MessageHandlerInterface
                 $content = $this->templateManager->getTemplate('event_invitation', $placeholders, $locale);
             }
 
-            $this->dispatcher->dispatch(MessageEvents::MESSAGE_SENDING, SendMessageEvent::class, [
+            $event = new SendMessageEvent(
                 $content,
                 $title,
                 [$user],
                 $event->getCreator(),
                 [
                     ['name' => 'invitation.ics', 'type' => 'text/calendar', 'url' => $sendEventInvitation->getICSPath()],
-                ],
-            ]);
+                ]
+            );
+
+            $this->eventDispatcher->dispatch($event, MessageEvents::MESSAGE_SENDING);
         }
     }
 }

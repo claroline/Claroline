@@ -1,9 +1,8 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans, transChoice} from '#/main/app/intl'
 import {hasPermission} from '#/main/app/security'
-import {ContentTitle} from '#/main/app/content/components/title'
 
 import {selectors} from '#/plugin/exo/resources/quiz/editor/store/selectors'
 import {MODAL_BUTTON} from '#/main/app/buttons'
@@ -11,15 +10,12 @@ import {MODAL_USERS} from '#/main/community/modals/users'
 
 import {ItemList} from '#/plugin/exo/items/components/list'
 import {MODAL_ITEM_SHARING} from '#/plugin/exo/items/modals/sharing'
+import {EditorPage} from '#/main/app/editor'
 
-const EditorBank = (props) =>
-  <Fragment>
-    <ContentTitle
-      level={3}
-      displayLevel={2}
-      title={trans('questions_bank', {}, 'quiz')}
-    />
-
+const QuizEditorBank = (props) =>
+  <EditorPage
+    title={trans('questions_bank', {}, 'quiz')}
+  >
     <ItemList
       name={selectors.BANK_NAME}
       delete={{
@@ -47,12 +43,12 @@ const EditorBank = (props) =>
         }
       ]}
     />
-  </Fragment>
+  </EditorPage>
 
-EditorBank.propTypes = {
+QuizEditorBank.propTypes = {
   shareQuestions: T.func.isRequired
 }
 
 export {
-  EditorBank
+  QuizEditorBank
 }

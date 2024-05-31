@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;

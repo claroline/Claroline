@@ -1,8 +1,4 @@
 services:
-    _defaults:
-        autoconfigure: false
-        public: false
-
     Claroline\CoreBundle\Manager\Workspace\WorkspaceUserQueueManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -22,10 +18,10 @@ services:
 
     Claroline\CoreBundle\Manager\UserManager:
         arguments:
+            - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@messenger.default_bus'
 
     claroline.manager.user_manager:
@@ -47,10 +43,6 @@ services:
             - '@Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager'
             - '@Claroline\CoreBundle\Manager\Tool\ToolRightsManager'
 
-    claroline.manager.tool_manager:
-        alias: Claroline\CoreBundle\Manager\Tool\ToolManager
-        public: true
-
     Claroline\CoreBundle\Manager\RoleManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -62,14 +54,11 @@ services:
     Claroline\CoreBundle\Manager\ResourceManager:
         arguments:
             - '@security.authorization_checker'
+            - '@event_dispatcher'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@security.helper'
-        calls:
-            - setLogger: ['@logger']
 
     claroline.manager.resource_manager:
         alias: Claroline\CoreBundle\Manager\ResourceManager
@@ -119,8 +108,8 @@ services:
     Claroline\CoreBundle\Manager\DataSourceManager:
         arguments:
             - '@security.token_storage'
+            - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\Manager\CurlManager: ~
@@ -202,14 +191,14 @@ services:
 
     Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager:
         arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Manager\Resource\ResourceActionManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
             - '@Claroline\CoreBundle\Manager\ResourceManager'
 
     Claroline\CoreBundle\Manager\Resource\MaskManager:

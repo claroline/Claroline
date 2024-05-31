@@ -2,13 +2,13 @@
 
 namespace Claroline\CoreBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -23,9 +23,9 @@ class UserSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'post', User::class) => 'postCreate',
-            Crud::getEventName('update', 'post', User::class) => 'postUpdate',
-            Crud::getEventName('delete', 'post', User::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, User::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, User::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, User::class) => 'postDelete',
         ];
     }
 

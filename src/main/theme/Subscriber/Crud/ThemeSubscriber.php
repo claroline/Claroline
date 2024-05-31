@@ -2,30 +2,27 @@
 
 namespace Claroline\ThemeBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\ThemeBundle\Entity\Theme;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ThemeSubscriber implements EventSubscriberInterface
 {
-    private FileManager $fileManager;
-
     public function __construct(
-        FileManager $fileManager
+        private readonly FileManager $fileManager
     ) {
-        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'post', Theme::class) => 'postCreate',
-            Crud::getEventName('update', 'post', Theme::class) => 'postUpdate',
-            Crud::getEventName('delete', 'post', Theme::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Theme::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, Theme::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, Theme::class) => 'postDelete',
         ];
     }
 

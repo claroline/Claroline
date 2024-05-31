@@ -129,16 +129,15 @@ services:
 
     Claroline\CoreBundle\Controller\AuthenticationController:
         arguments:
-          - '@Claroline\CoreBundle\Manager\UserManager'
-          - '@Claroline\AppBundle\Persistence\ObjectManager'
-          - '@Claroline\AuthenticationBundle\Manager\MailManager'
-          - '@Claroline\CoreBundle\Library\RoutingHelper'
-          - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
-          - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
+            - '@Claroline\CoreBundle\Manager\UserManager'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\AuthenticationBundle\Manager\MailManager'
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
+            - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
 
     Claroline\CoreBundle\Controller\FileController:
         arguments:
-            - '@session'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CoreBundle\Manager\ResourceManager'

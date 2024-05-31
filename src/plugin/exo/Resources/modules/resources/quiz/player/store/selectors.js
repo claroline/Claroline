@@ -5,7 +5,7 @@ import {selectors as baseSelectors} from '#/plugin/exo/resources/quiz/store/sele
 const STORE_NAME = 'player'
 
 const player = createSelector(
-  [baseSelectors.resource],
+  [baseSelectors.store],
   (resourceState) => resourceState[STORE_NAME]
 )
 

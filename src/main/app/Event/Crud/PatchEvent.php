@@ -11,51 +11,30 @@
 
 namespace Claroline\AppBundle\Event\Crud;
 
-/**
- * Crud event class.
- */
 class PatchEvent extends CrudEvent
 {
-    /** @var string */
-    private $property;
-    /** @var mixed */
-    private $value;
-    /** @var string */
-    private $action;
-
-    /**
-     * @param mixed  $object   - The object created
-     * @param array  $options  - An array of options
-     * @param string $property - The property name
-     * @param mixed  $value    - The property value
-     * @param string $action   - The setter mode
-     */
-    public function __construct($object, array $options, $property, $value, $action)
-    {
+    public function __construct(
+        mixed $object,
+        array $options,
+        private readonly string $property,
+        private readonly mixed $value,
+        private readonly string $action
+    ) {
         parent::__construct($object, $options);
-
-        $this->property = $property;
-        $this->value = $value;
-        $this->action = $action;
     }
 
-    public function getProperty()
+    public function getProperty(): string
     {
         return $this->property;
     }
 
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
-    public function getAction()
+    public function getAction(): string
     {
         return $this->action;
-    }
-
-    public function getMethodName()
-    {
-        return $this->action.ucfirst(strtolower($this->property));
     }
 }

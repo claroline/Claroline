@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Manager\Resource;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -20,6 +19,7 @@ use Claroline\CoreBundle\Event\Resource\ResourceActionEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Repository\Resource\ResourceActionRepository;
 use Claroline\CoreBundle\Security\Collection\ResourceCollection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -31,37 +31,19 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class ResourceActionManager
 {
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var StrictDispatcher */
-    private $dispatcher;
-
-    /** @var ResourceActionRepository */
-    private $repository;
-
-    /** @var ResourceManager */
-    private $resourceManager;
+    private ResourceActionRepository $repository;
 
     /**
      * @var MenuAction[]
      */
-    private $actions = [];
+    private array $actions = [];
 
     public function __construct(
-        ObjectManager $om,
-        AuthorizationCheckerInterface $authorization,
-        StrictDispatcher $dispatcher,
-        ResourceManager $resourceManager
+        private readonly ObjectManager $om,
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ResourceManager $resourceManager
     ) {
-        $this->om = $om;
-        $this->authorization = $authorization;
-        $this->dispatcher = $dispatcher;
-        $this->resourceManager = $resourceManager;
-
         $this->repository = $this->om->getRepository(MenuAction::class);
     }
 
@@ -87,12 +69,8 @@ class ResourceActionManager
         $resourceAction = $this->get($resourceNode, $actionName);
         $resource = $this->resourceManager->getResourceFromNode($resourceNode);
 
-        /** @var ResourceActionEvent $event */
-        $event = $this->dispatcher->dispatch(
-            static::eventName($actionName, $resourceAction->getResourceType()),
-            ResourceActionEvent::class,
-            [$resource, $options, $content, $files, $resourceNode]
-        );
+        $event = new ResourceActionEvent($resource, $options, $content, $files, $resourceNode);
+        $this->eventDispatcher->dispatch($event, static::eventName($actionName, $resourceAction->getResourceType()));
 
         return $event->getResponse();
     }

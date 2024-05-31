@@ -22,7 +22,7 @@ registry.add('ClarolineLogBundle', {
 
   actions: {
     resource: {
-      'logs': () => { return import(/* webpackChunkName: "log-action-resource-logs" */ '#/main/log/actions/resource/logs') }
+      //'logs': () => { return import(/* webpackChunkName: "log-action-resource-logs" */ '#/main/log/actions/resource/logs') }
     }
   }
 })

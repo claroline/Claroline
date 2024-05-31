@@ -19,13 +19,9 @@ const GeneralStats = props =>
     size="lg"
     items={[
       {
-        icon: 'fa fa-table-list',
-        label: trans('steps', {}, 'quiz'),
-        value: props.statistics.nbSteps
-      }, {
         icon: 'fa fa-question',
-        label: trans('questions', {}, 'quiz'),
-        value: props.statistics.nbQuestions
+        label: trans('steps', {}, 'quiz'),
+        value: props.statistics.nbSteps + ' / ' + props.statistics.nbQuestions
       }, {
         icon: 'fa fa-user',
         label: trans('users'),

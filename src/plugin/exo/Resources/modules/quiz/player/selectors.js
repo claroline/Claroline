@@ -12,7 +12,7 @@ import {selectors as playerSelectors} from '#/plugin/exo/resources/quiz/player/s
 const quizId = quizSelectors.id
 
 const testMode = createSelector(
-  [quizSelectors.resource],
+  [quizSelectors.store],
   (resource) => resource.testMode || false
 )
 
@@ -22,14 +22,14 @@ const offline = createSelector(
 )
 
 const paper = createSelector(
-  [quizSelectors.resource],
+  [quizSelectors.store],
   (resource) => resource.paper
 )
 
 const attempt = playerSelectors.attempt
 
 const answers = createSelector(
-  [quizSelectors.resource],
+  [quizSelectors.store],
   (resource) => resource.answers || {}
 )
 
@@ -143,11 +143,11 @@ const steps = createSelector(
 )
 
 const currentStepId = createSelector(
-  [quizSelectors.resource],
+  [quizSelectors.store],
   (resource) => resource.currentStep.id
 )
 const feedbackEnabled = createSelector(
-  [quizSelectors.resource],
+  [quizSelectors.store],
   (resource) => resource.currentStep.feedbackEnabled || false
 )
 

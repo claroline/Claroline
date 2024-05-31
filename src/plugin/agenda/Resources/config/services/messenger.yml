@@ -2,8 +2,8 @@ services:
     Claroline\AgendaBundle\Messenger\SendEventInvitationHandler:
         tags: [ messenger.message_handler ]
         arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@event_dispatcher'
             - '@router'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'

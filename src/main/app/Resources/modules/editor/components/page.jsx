@@ -70,7 +70,7 @@ const EditorPage = (props) => {
 }
 
 EditorPage.propTypes = {
-  title: T.string.isRequired,
+  title: T.node.isRequired,
   help: T.string,
   children: T.any,
   managerOnly: T.bool,

@@ -11,9 +11,6 @@
 
 namespace Claroline\AppBundle\Event\Crud;
 
-/**
- * Crud event class.
- */
 class DeleteEvent extends CrudEvent
 {
 }

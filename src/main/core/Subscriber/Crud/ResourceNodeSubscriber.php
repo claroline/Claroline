@@ -13,6 +13,7 @@ use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
@@ -37,12 +38,12 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', ResourceNode::class) => 'preCreate',
-            Crud::getEventName('create', 'post', ResourceNode::class) => 'postCreate',
-            Crud::getEventName('update', 'post', ResourceNode::class) => 'postUpdate',
-            Crud::getEventName('copy', 'pre', ResourceNode::class) => 'preCopy',
-            Crud::getEventName('copy', 'post', ResourceNode::class) => 'postCopy',
-            Crud::getEventName('delete', 'pre', ResourceNode::class) => 'preDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, ResourceNode::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, ResourceNode::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, ResourceNode::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::PRE_COPY, ResourceNode::class) => 'preCopy',
+            CrudEvents::getEventName(CrudEvents::POST_COPY, ResourceNode::class) => 'postCopy',
+            CrudEvents::getEventName(CrudEvents::PRE_DELETE, ResourceNode::class) => 'preDelete',
         ];
     }
 

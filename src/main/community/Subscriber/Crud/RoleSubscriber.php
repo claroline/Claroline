@@ -2,13 +2,13 @@
 
 namespace Claroline\CommunityBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
@@ -28,9 +28,9 @@ class RoleSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Role::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Role::class) => 'postCreate',
-            Crud::getEventName('patch', 'post', Role::class) => 'postPatch',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Role::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Role::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_PATCH, Role::class) => 'postPatch',
         ];
     }
 

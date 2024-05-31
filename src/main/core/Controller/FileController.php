@@ -32,7 +32,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -48,51 +47,25 @@ class FileController
     use PermissionCheckerTrait;
     use RequestDecoderTrait;
 
-    /** @var SessionInterface */
-    private $session;
-    /** @var ObjectManager */
-    private $om;
-    /** @var ResourceNodeSerializer */
-    private $serializer;
-    /** @var ResourceManager */
-    private $resourceManager;
-    /** @var RoleManager */
-    private $roleManager;
-    /** @var FileManager */
-    private $fileManager;
-    /** @var FinderProvider */
-    private $finder;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        SessionInterface $session,
-        ObjectManager $om,
-        ResourceNodeSerializer $serializer,
-        ResourceManager $resourceManager,
-        RoleManager $roleManager,
-        FileManager $fileManager,
-        FinderProvider $finder,
-        TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly ResourceNodeSerializer $serializer,
+        private readonly ResourceManager $resourceManager,
+        private readonly RoleManager $roleManager,
+        private readonly FileManager $fileManager,
+        private readonly FinderProvider $finder,
+        private readonly TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->session = $session;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->resourceManager = $resourceManager;
-        $this->roleManager = $roleManager;
-        $this->fileManager = $fileManager;
-        $this->finder = $finder;
         $this->authorization = $authorization;
     }
 
     /**
      * @Route("/stream/{id}", name="claro_file_stream", methods={"GET"})
      */
-    public function streamAction(ResourceNode $resourceNode): BinaryFileResponse
+    public function streamAction(ResourceNode $resourceNode, Request $request): BinaryFileResponse
     {
-        return $this->stream($resourceNode);
+        return $this->stream($resourceNode, $request);
     }
 
     /**
@@ -100,9 +73,9 @@ class FileController
      *
      * @deprecated for retro compatibility with old tinymce embedded resources
      */
-    public function streamMediaAction(ResourceNode $node): BinaryFileResponse
+    public function streamMediaAction(ResourceNode $node, Request $request): BinaryFileResponse
     {
-        return $this->stream($node);
+        return $this->stream($node, $request);
     }
 
     /**
@@ -219,14 +192,14 @@ class FileController
     /**
      * Streams a resource file to the user browser.
      */
-    private function stream(ResourceNode $resourceNode): BinaryFileResponse
+    private function stream(ResourceNode $resourceNode, Request $request): BinaryFileResponse
     {
         //temporary because otherwise injected resource must have the "open" right
         $this->checkPermission('OPEN', $resourceNode, [], true);
 
         // free the session as soon as possible
         // see https://github.com/claroline/CoreBundle/commit/7cee6de85bbc9448f86eb98af2abb1cb072c7b6b
-        $this->session->save();
+        $request->getSession()->save();
 
         /** @var File $file */
         $file = $this->resourceManager->getResourceFromNode($resourceNode);
