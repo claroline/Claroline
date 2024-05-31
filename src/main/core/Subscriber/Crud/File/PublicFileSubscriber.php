@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Subscriber\Crud\File;
 
-use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\CoreBundle\Entity\File\PublicFile;
@@ -21,8 +21,8 @@ class PublicFileSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', PublicFile::class) => 'preCreate',
-            Crud::getEventName('delete', 'post', PublicFile::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, PublicFile::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, PublicFile::class) => 'postDelete',
         ];
     }
 

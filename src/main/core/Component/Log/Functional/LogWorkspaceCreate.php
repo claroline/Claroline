@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\Component\Log\Functional;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\LogBundle\Component\Log\AbstractFunctionalLog;
 
 class LogWorkspaceCreate extends AbstractFunctionalLog
@@ -17,7 +17,7 @@ class LogWorkspaceCreate extends AbstractFunctionalLog
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'post', Workspace::class) => ['logCreate', -25],
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Workspace::class) => ['logCreate', -25],
         ];
     }
 

@@ -2,11 +2,11 @@
 
 namespace Claroline\ExampleBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\ExampleBundle\Entity\Example;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -14,25 +14,20 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ExampleSubscriber implements EventSubscriberInterface
 {
-    private TokenStorageInterface $tokenStorage;
-    private FileManager $fileManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        FileManager $fileManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly FileManager $fileManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Example::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Example::class) => 'postCreate',
-            Crud::getEventName('update', 'pre', Example::class) => 'preUpdate',
-            Crud::getEventName('update', 'post', Example::class) => 'postUpdate',
-            Crud::getEventName('delete', 'post', Example::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Example::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Example::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::PRE_UPDATE, Example::class) => 'preUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, Example::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, Example::class) => 'postDelete',
         ];
     }
 

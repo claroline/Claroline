@@ -7,5 +7,5 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@claroline.manager.resource_manager'
+            - '@Claroline\CoreBundle\Manager\ResourceManager'
             - '@Innova\PathBundle\Manager\EvaluationManager'

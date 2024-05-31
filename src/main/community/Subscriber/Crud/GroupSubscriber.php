@@ -2,12 +2,11 @@
 
 namespace Claroline\CommunityBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -15,36 +14,27 @@ use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Manager\FileManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class GroupSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var FileManager */
-    private $fileManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        StrictDispatcher $dispatcher,
-        FileManager $fileManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly FileManager $fileManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->dispatcher = $dispatcher;
-        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Group::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Group::class) => 'postCreate',
-            Crud::getEventName('update', 'post', Group::class) => 'postUpdate',
-            Crud::getEventName('patch', 'post', Group::class) => 'postPatch',
-            Crud::getEventName('delete', 'post', Group::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Group::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Group::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, Group::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_PATCH, Group::class) => 'postPatch',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, Group::class) => 'postDelete',
         ];
     }
 
@@ -107,9 +97,11 @@ class GroupSubscriber implements EventSubscriberInterface
             });
 
             if ('add' === $event->getAction()) {
-                $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [$users, $role]);
+                $event = new AddRoleEvent($users, $role);
+                $this->dispatcher->dispatch($event, SecurityEvents::ADD_ROLE);
             } elseif ('remove' === $event->getAction()) {
-                $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [$users, $role]);
+                $event = new RemoveRoleEvent($users, $role);
+                $this->dispatcher->dispatch($event, SecurityEvents::REMOVE_ROLE);
             }
         } elseif ($event->getValue() instanceof User) {
             $user = $event->getValue();
@@ -117,9 +109,11 @@ class GroupSubscriber implements EventSubscriberInterface
             foreach ($group->getEntityRoles() as $role) {
                 if (!$user->hasRole($role->getName(), false)) {
                     if ('add' === $event->getAction()) {
-                        $this->dispatcher->dispatch(SecurityEvents::ADD_ROLE, AddRoleEvent::class, [[$user], $role]);
+                        $event = new AddRoleEvent([$user], $role);
+                        $this->dispatcher->dispatch($event, SecurityEvents::ADD_ROLE);
                     } elseif ('remove' === $event->getAction()) {
-                        $this->dispatcher->dispatch(SecurityEvents::REMOVE_ROLE, RemoveRoleEvent::class, [[$user], $role]);
+                        $event = new RemoveRoleEvent([$user], $role);
+                        $this->dispatcher->dispatch($event, SecurityEvents::REMOVE_ROLE);
                     }
                 }
             }

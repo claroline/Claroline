@@ -8,6 +8,7 @@ use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Claroline\TransferBundle\Entity\ImportFile;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -16,38 +17,25 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ImportFileSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var string */
-    private $logDir;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        Crud $crud,
-        string $logDir
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly string $logDir
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->crud = $crud;
-        $this->logDir = $logDir;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', ImportFile::class) => 'preCreate',
-            Crud::getEventName('create', 'post', ImportFile::class) => 'postCreate',
-            Crud::getEventName('update', 'post', ImportFile::class) => 'postUpdate',
-            Crud::getEventName('delete', 'post', ImportFile::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, ImportFile::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, ImportFile::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, ImportFile::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, ImportFile::class) => 'postDelete',
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var ImportFile $object */
         $object = $event->getObject();
@@ -60,7 +48,7 @@ class ImportFileSubscriber implements EventSubscriberInterface
         $object->setCreatedAt(new \DateTime());
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var ImportFile $object */
         $object = $event->getObject();
@@ -77,7 +65,7 @@ class ImportFileSubscriber implements EventSubscriberInterface
         ]), [Crud::THROW_EXCEPTION]);
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var ImportFile $object */
         $object = $event->getObject();
@@ -106,7 +94,7 @@ class ImportFileSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var ImportFile $object */
         $object = $event->getObject();

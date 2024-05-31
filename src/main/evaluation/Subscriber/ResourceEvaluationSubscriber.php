@@ -2,7 +2,6 @@
 
 namespace Claroline\EvaluationBundle\Subscriber;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
@@ -12,6 +11,7 @@ use Claroline\CommunityBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\ResourceEvents;
 use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
@@ -42,10 +42,10 @@ class ResourceEvaluationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'post', ResourceNode::class) => 'createEvaluations',
-            Crud::getEventName('update', 'post', ResourceNode::class) => 'updateEvaluations',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, ResourceNode::class) => 'createEvaluations',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, ResourceNode::class) => 'updateEvaluations',
+            CrudEvents::getEventName(CrudEvents::PRE_DELETE, ResourceEvaluation::class) => 'updateNbAttempts',
             ResourceEvents::OPEN => ['open', 10],
-            Crud::getEventName('delete', 'pre', ResourceEvaluation::class) => 'updateNbAttempts',
         ];
     }
 

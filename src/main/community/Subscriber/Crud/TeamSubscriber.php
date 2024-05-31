@@ -2,7 +2,6 @@
 
 namespace Claroline\CommunityBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
@@ -10,43 +9,31 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Entity\Team;
 use Claroline\CommunityBundle\Manager\TeamManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class TeamSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var FileManager */
-    private $fileManager;
-    /** @var TeamManager */
-    private $manager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        FileManager $fileManager,
-        TeamManager $manager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly FileManager $fileManager,
+        private readonly TeamManager $manager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->fileManager = $fileManager;
-        $this->manager = $manager;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'post', Team::class) => 'postCreate',
-            Crud::getEventName('update', 'post', Team::class) => 'postUpdate',
-            Crud::getEventName('delete', 'post', Team::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Team::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, Team::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, Team::class) => 'postDelete',
         ];
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var Team $team */
         $team = $event->getObject();
@@ -63,7 +50,7 @@ class TeamSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var Team $team */
         $team = $event->getObject();
@@ -87,7 +74,7 @@ class TeamSubscriber implements EventSubscriberInterface
         );
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var Team $team */
         $team = $event->getObject();
@@ -111,7 +98,7 @@ class TeamSubscriber implements EventSubscriberInterface
         $this->om->endFlushSuite();
     }
 
-    private function createDirectoryAndRoles(Team $team, array $data)
+    private function createDirectoryAndRoles(Team $team, array $data): void
     {
         // Checks and creates role for team members & team manager if needed.
         $teamRole = $team->getRole();

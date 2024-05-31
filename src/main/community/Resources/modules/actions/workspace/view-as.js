@@ -26,6 +26,6 @@ export default (workspaces) => ({
       target: !isEmpty(selected) ? url(['claro_index', {}], {view_as: selected[0].name}) + '#' + route(workspaces[0]) : ''
     })
   }],
-  group: trans('management'),
+  group: trans('community'),
   scope: ['object']
 })

@@ -42,12 +42,12 @@ const ResourcePage = (props) => {
         title: resourceNode.name,
         description: resourceNode.meta ? resourceNode.meta.description : null
       }}
-      breadcrumb={breadcrumb.concat([
+      breadcrumb={breadcrumb.concat(!props.root ? [
         {
           label: resourceNode.name,
           target: resourcePath
         }
-      ], props.breadcrumb || [])}
+      ] : [], props.breadcrumb || [])}
       poster={props.poster || get(resourceNode, 'poster')}
       title={props.title || props.subtitle || resourceNode.name}
       embedded={embedded}
@@ -81,7 +81,7 @@ const ResourcePage = (props) => {
         }, basePath, currentUser, false).then(loadedActions => [].concat(loadedActions, resourceDef.actions || []))
       }}
 
-      {...omit(props, 'className', 'poster', 'styles', 'embedded', 'showHeader')}
+      {...omit(props, 'className', 'breadcrumb', 'poster', 'styles', 'embedded', 'showHeader', 'root')}
       styles={[].concat(resourceDef.styles, props.styles || [])}
     >
       {props.children}

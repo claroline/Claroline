@@ -64,10 +64,17 @@ class ExerciseListener extends ResourceComponent implements EvaluatedResourceInt
         }
 
         return [
-            'quiz' => $this->serializer->serialize($resource, $options),
+            'resource' => $this->serializer->serialize($resource, $options),
             // user data
             'lastAttempt' => $lastAttempt ? $this->paperManager->serialize($lastAttempt) : null,
             'userEvaluation' => $userEvaluation,
+        ];
+    }
+
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        return [
+            'resource' => $this->serializer->serialize($resource),
         ];
     }
 

@@ -17,4 +17,4 @@ services:
 
     Claroline\AuthenticationBundle\Security\Logout\LogoutHandler:
         arguments:
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'

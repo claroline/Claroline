@@ -2,8 +2,6 @@
 
 namespace Claroline\CoreBundle\Event\DataSource;
 
-use Claroline\AppBundle\Event\DataConveyorEventInterface;
-use Claroline\AppBundle\Event\MandatoryEventInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -13,65 +11,40 @@ use Symfony\Contracts\EventDispatcher\Event;
  *
  * The DataSource MUST populate the event and can be configured with an `options` array.
  */
-class GetDataEvent extends Event implements MandatoryEventInterface, DataConveyorEventInterface
+class GetDataEvent extends Event
 {
-    /** @var string */
-    private $context;
-
-    /** @var Workspace */
-    private $workspace;
-
-    /** @var User */
-    private $user;
-
-    /**
-     * A list of options to configure the DataSource.
-     *
-     * @var array
-     */
-    private $options;
-
     /**
      * The data returned by the source.
      */
-    private $data;
+    private mixed $data = null;
 
-    /**
-     * Is the event correctly populated ?
-     *
-     * @var bool
-     */
-    private $populated = false;
-
-    public function __construct(string $context, array $options = [], User $user = null, Workspace $workspace = null)
-    {
-        $this->context = $context;
-        $this->options = $options;
-        $this->user = $user;
-        $this->workspace = $workspace;
+    public function __construct(
+        private readonly string $context,
+        private readonly array $options = [],
+        private readonly ?User $user = null,
+        private readonly ?Workspace $workspace = null
+    ) {
     }
 
-    public function getContext()
+    public function getContext(): string
     {
         return $this->context;
     }
 
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function getWorkspace()
+    public function getWorkspace(): ?Workspace
     {
         return $this->workspace;
     }
 
     /**
      * Get the current options of the DataSource.
-     *
-     * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -79,7 +52,7 @@ class GetDataEvent extends Event implements MandatoryEventInterface, DataConveyo
     /**
      * Get the data provided by the DataSource.
      */
-    public function getData()
+    public function getData(): mixed
     {
         return $this->data;
     }
@@ -87,19 +60,8 @@ class GetDataEvent extends Event implements MandatoryEventInterface, DataConveyo
     /**
      * Set the event data.
      */
-    public function setData($data)
+    public function setData(mixed $data): void
     {
         $this->data = $data;
-        $this->populated = true;
-    }
-
-    /**
-     * Check if the event is correctly populated.
-     *
-     * @return bool
-     */
-    public function isPopulated()
-    {
-        return $this->populated;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Claroline\DropZoneBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Manager\DropzoneManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -18,7 +18,7 @@ class DropzoneSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('update', 'post', Dropzone::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, Dropzone::class) => 'postUpdate',
         ];
     }
 

@@ -10,6 +10,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Cryptography\CryptographicKey;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\CryptographyManager;
 use Claroline\CoreBundle\Manager\FileManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -17,43 +18,27 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class OrganizationSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var CryptographyManager */
-    private $cryptoManager;
-    /** @var Crud */
-    private $crud;
-    /** @var FileManager */
-    private $fileManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        CryptographyManager $cryptoManager,
-        Crud $crud,
-        FileManager $fileManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly CryptographyManager $cryptoManager,
+        private readonly Crud $crud,
+        private readonly FileManager $fileManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->crud = $crud;
-        $this->cryptoManager = $cryptoManager;
-        $this->fileManager = $fileManager;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Organization::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Organization::class) => 'postCreate',
-            Crud::getEventName('update', 'post', Organization::class) => 'postUpdate',
-            Crud::getEventName('delete', 'pre', Organization::class) => 'preDelete',
-            Crud::getEventName('delete', 'post', Organization::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Organization::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Organization::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, Organization::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::PRE_DELETE, Organization::class) => 'preDelete',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, Organization::class) => 'postDelete',
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         $organization = $event->getObject();
         $user = $this->tokenStorage->getToken()->getUser();

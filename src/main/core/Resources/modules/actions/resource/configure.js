@@ -15,5 +15,6 @@ export default (resourceNodes, nodesRefresher, path) => ({
   target: `${route(resourceNodes[0], path)}/edit`,
   displayed: -1 !== resourceNodes.findIndex(resourceNode => hasPermission('edit', resourceNode)),
   group: trans('management'),
-  scope: ['object']
+  scope: ['object'],
+  primary: true
 })

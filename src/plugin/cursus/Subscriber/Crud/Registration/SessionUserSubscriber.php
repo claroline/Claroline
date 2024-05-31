@@ -15,6 +15,7 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Manager\SessionManager;
@@ -30,10 +31,10 @@ class SessionUserSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', SessionUser::class) => 'preCreate',
-            Crud::getEventName('create', 'post', SessionUser::class) => 'postCreate',
-            Crud::getEventName('update', 'post', SessionUser::class) => 'postUpdate',
-            Crud::getEventName('delete', 'post', SessionUser::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, SessionUser::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, SessionUser::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, SessionUser::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, SessionUser::class) => 'postDelete',
         ];
     }
 

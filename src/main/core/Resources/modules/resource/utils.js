@@ -26,6 +26,12 @@ function getType(resourceNode) {
     .find(type => type.name === resourceNode.meta.type)
 }
 
+function supportEvaluation(resourceNode) {
+  const resourceType = getType(resourceNode)
+
+  return !!resourceType && resourceType.evaluation
+}
+
 /**
  * Loads the available actions apps from configuration.
  *
@@ -137,6 +143,7 @@ function getDefaultAction(resourceNode, nodesRefresher, path, currentUser = null
 export {
   getType,
   getTypes,
+  supportEvaluation,
   getActions,
   getDefaultAction
 }

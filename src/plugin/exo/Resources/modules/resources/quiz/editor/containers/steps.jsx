@@ -10,11 +10,11 @@ import {actions as formActions, selectors as formSelectors} from '#/main/app/con
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {refreshIdentifiers} from '#/plugin/exo/resources/quiz/utils'
-import {EditorMain as EditorMainComponent} from '#/plugin/exo/resources/quiz/editor/components/main'
+import {QuizEditorSteps as QuizEditorStepsComponent} from '#/plugin/exo/resources/quiz/editor/components/steps'
 import {actions, selectors} from '#/plugin/exo/resources/quiz/editor/store'
 import {getStepSlug} from '#/plugin/exo/resources/quiz/editor/utils'
 
-const EditorMain = withRouter(
+const QuizEditorSteps = withRouter(
   connect(
     (state) => ({
       path: resourceSelectors.path(state),
@@ -128,9 +128,9 @@ const EditorMain = withRouter(
         dispatch(actions.moveItem(itemId, position))
       }
     })
-  )(EditorMainComponent)
+  )(QuizEditorStepsComponent)
 )
 
 export {
-  EditorMain
+  QuizEditorSteps
 }

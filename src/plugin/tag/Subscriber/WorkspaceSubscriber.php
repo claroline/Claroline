@@ -7,30 +7,28 @@ use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WorkspaceSubscriber implements EventSubscriberInterface
 {
-    /** @var TagManager */
-    private $manager;
-
-    public function __construct(TagManager $manager)
-    {
-        $this->manager = $manager;
+    public function __construct(
+        private readonly TagManager $manager
+    ) {
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'post', Workspace::class) => 'postCreate',
-            Crud::getEventName('copy', 'post', Workspace::class) => 'postCopy',
-            Crud::getEventName('delete', 'pre', Workspace::class) => 'preDelete',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Workspace::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_COPY, Workspace::class) => 'postCopy',
+            CrudEvents::getEventName(CrudEvents::PRE_DELETE, Workspace::class) => 'preDelete',
         ];
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var Workspace $workspace */
         $workspace = $event->getObject();
@@ -45,7 +43,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postCopy(CopyEvent $event)
+    public function postCopy(CopyEvent $event): void
     {
         /** @var Workspace $original */
         $original = $event->getObject();
@@ -68,7 +66,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preDelete(DeleteEvent $event)
+    public function preDelete(DeleteEvent $event): void
     {
         /** @var Workspace $workspace */
         $workspace = $event->getObject();

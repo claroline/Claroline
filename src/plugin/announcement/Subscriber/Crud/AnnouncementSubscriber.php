@@ -3,15 +3,13 @@
 namespace Claroline\AnnouncementBundle\Subscriber\Crud;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
-use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
 use Claroline\AnnouncementBundle\Manager\AnnouncementManager;
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Manager\FileManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,7 +19,6 @@ class AnnouncementSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly ObjectManager $om,
         private readonly AnnouncementManager $manager,
         private readonly FileManager $fileManager
     ) {
@@ -30,11 +27,11 @@ class AnnouncementSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Announcement::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Announcement::class) => 'postCreate',
-            Crud::getEventName('update', 'post', Announcement::class) => 'postUpdate',
-            Crud::getEventName('delete', 'pre', Announcement::class) => 'preDelete',
-            Crud::getEventName('delete', 'post', Announcement::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Announcement::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Announcement::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, Announcement::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::PRE_DELETE, Announcement::class) => 'preDelete',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, Announcement::class) => 'postDelete',
         ];
     }
 
@@ -43,7 +40,7 @@ class AnnouncementSubscriber implements EventSubscriberInterface
         /** @var Announcement $announcement */
         $announcement = $event->getObject();
 
-        /*$announcement->setUpdatedAt(new \DateTime());
+        /*$announcement->setCreatedAt(new \DateTime());
         $announcement->setUpdatedAt(new \DateTime());*/
 
         if (empty($announcement->getCreator())) {

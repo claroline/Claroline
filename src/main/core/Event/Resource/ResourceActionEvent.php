@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Event\Resource;
 
-use Claroline\AppBundle\Event\MandatoryEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +19,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 /**
  * An event which is dispatched when an action is requested on a Resource.
  */
-class ResourceActionEvent extends Event implements MandatoryEventInterface
+class ResourceActionEvent extends Event
 {
     private ?AbstractResource $resource;
 

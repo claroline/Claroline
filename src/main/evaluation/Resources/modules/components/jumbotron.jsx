@@ -16,6 +16,7 @@ const EvaluationJumbotron = (props) =>
   <div className={classes('row py-4', props.className, `bg-${baseConstants.EVALUATION_STATUS_COLOR[get(props.evaluation, 'status')]}-subtle`)}>
     <ContentSizing size="md" className="evaluation-jumbotron">
       <EvaluationGauge
+        size="xl"
         {...props.evaluation}
       />
 
@@ -25,15 +26,15 @@ const EvaluationJumbotron = (props) =>
           size="lg"
           items={[
             {
-              icon: 'fa fa-fw fa-eye',
+              //icon: 'fa fa-fw fa-eye',
               label: trans('views'),
               value: 100
             }, {
-              icon: 'fa fa-fw fa-clock',
+              //icon: 'fa fa-fw fa-clock',
               label: trans('duration'),
               value: get(props.evaluation, 'duration') ? displayDuration(get(props.evaluation, 'duration')) : null
             }, {
-              icon: 'fa fa-fw fa-history',
+              //icon: 'fa fa-fw fa-history',
               label: trans('last_activity'),
               value: get(props.evaluation, 'date') ? displayDate(props.evaluation.date, false, true) : null
             }

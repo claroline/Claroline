@@ -13,36 +13,21 @@ namespace Claroline\AppBundle\Event\Crud;
 
 class CopyEvent extends CrudEvent
 {
-    /** @var mixed */
-    private $copy;
-    /** @var mixed */
-    private $extra;
-
-    /**
-     * @param mixed $object  - The object created
-     * @param array $options - An array of options
-     * @param mixed $copy    - The copied entity
-     */
-    public function __construct($object, array $options, $copy, $extra)
-    {
+    public function __construct(
+        mixed $object,
+        array $options,
+        private readonly mixed $copy,
+        private readonly array $extra
+    ) {
         parent::__construct($object, $options);
-
-        $this->copy = $copy;
-        $this->extra = $extra;
     }
 
-    /**
-     * @return mixed $object
-     */
-    public function getCopy()
+    public function getCopy(): mixed
     {
         return $this->copy;
     }
 
-    /**
-     * @return mixed $object
-     */
-    public function getExtra()
+    public function getExtra(): array
     {
         return $this->extra;
     }

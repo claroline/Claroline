@@ -2,9 +2,9 @@
 
 namespace Claroline\MessageBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,8 +21,8 @@ class MessageSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Message::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Message::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Message::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Message::class) => 'postCreate',
         ];
     }
 

@@ -14,14 +14,14 @@ const EvaluationProgress = (props) => {
   const gutter =  arc()
     .startAngle(circleX(0))
     .endAngle(circleX(80))
-    .outerRadius(70)
-    .innerRadius(75)
+    .outerRadius(75)
+    .innerRadius(70)
 
   const progress =  arc()
     .startAngle(circleX(0))
     .endAngle(circleX(props.progression))
-    .outerRadius(70)
-    .innerRadius(75)
+    .outerRadius(75)
+    .innerRadius(70)
 
   const radius = 80
 
@@ -44,7 +44,7 @@ EvaluationProgress.propTypes = {
 const EvaluationGauge = (props) =>
   <div className={classes('evaluation-gauge', props.size && `evaluation-gauge-${props.size}`, props.className, constants.EVALUATION_STATUS_COLOR[props.status])}>
     <EvaluationProgress progression={props.progression} type={constants.EVALUATION_STATUS_COLOR[props.status]} />
-    {/*<EvaluationStatus status={props.status} />*/}
+    <EvaluationStatus status={props.status} />
   </div>
 
 EvaluationGauge.propTypes = {

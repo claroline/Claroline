@@ -1,4 +1,4 @@
-import React, {createElement, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
@@ -17,7 +17,6 @@ import {ResourceOverview} from '#/main/core/resource/components/overview'
 import {ResourceEvaluations} from '#/main/evaluation/resource/evaluation'
 import {ResourceProgression} from '#/main/evaluation/resource/progression'
 import {LogsMain} from '#/main/log/resource/logs/containers/main'
-import {getType} from '#/main/core/resource/utils'
 
 const ResourceMain = props => {
   const [loaded, setLoaded] = useState(false)

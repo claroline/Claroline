@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -41,12 +42,12 @@ class WorkspaceSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Workspace::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Workspace::class) => 'postCreate',
-            Crud::getEventName('update', 'pre', Workspace::class) => 'preUpdate',
-            Crud::getEventName('copy', 'pre', Workspace::class) => 'preCopy',
-            Crud::getEventName('copy', 'post', Workspace::class) => 'postCopy',
-            Crud::getEventName('delete', 'pre', Workspace::class) => 'preDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Workspace::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Workspace::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::PRE_UPDATE, Workspace::class) => 'preUpdate',
+            CrudEvents::getEventName(CrudEvents::PRE_COPY, Workspace::class) => 'preCopy',
+            CrudEvents::getEventName(CrudEvents::POST_COPY, Workspace::class) => 'postCopy',
+            CrudEvents::getEventName(CrudEvents::PRE_DELETE, Workspace::class) => 'preDelete',
         ];
     }
 

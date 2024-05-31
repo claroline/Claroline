@@ -8,6 +8,7 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
@@ -37,10 +38,10 @@ class SubjectSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Subject::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Subject::class) => 'postCreate',
-            Crud::getEventName('update', 'post', Subject::class) => 'postUpdate',
-            Crud::getEventName('delete', 'post', Subject::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Subject::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Subject::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, Subject::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, Subject::class) => 'postDelete',
         ];
     }
 

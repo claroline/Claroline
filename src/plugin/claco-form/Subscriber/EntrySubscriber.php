@@ -2,7 +2,6 @@
 
 namespace Claroline\ClacoFormBundle\Subscriber;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
@@ -10,6 +9,7 @@ use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Manager\CategoryManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -25,10 +25,10 @@ class EntrySubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Entry::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Entry::class) => 'postCreate',
-            Crud::getEventName('update', 'pre', Entry::class) => 'preUpdate',
-            Crud::getEventName('update', 'post', Entry::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Entry::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Entry::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::PRE_UPDATE, Entry::class) => 'preUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, Entry::class) => 'postUpdate',
         ];
     }
 

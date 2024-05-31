@@ -11,11 +11,11 @@
 
 namespace Claroline\CursusBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Manager\SessionManager;
@@ -34,11 +34,11 @@ class SessionSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Session::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Session::class) => 'postCreate',
-            Crud::getEventName('update', 'pre', Session::class) => 'preUpdate',
-            Crud::getEventName('update', 'post', Session::class) => 'postUpdate',
-            Crud::getEventName('delete', 'post', Session::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Session::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Session::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::PRE_UPDATE, Session::class) => 'preUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, Session::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, Session::class) => 'postDelete',
         ];
     }
 

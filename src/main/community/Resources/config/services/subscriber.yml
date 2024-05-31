@@ -11,7 +11,7 @@ services:
     Claroline\CommunityBundle\Subscriber\Crud\GroupSubscriber:
         arguments:
             - '@security.token_storage'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
+            - '@event_dispatcher'
             - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\CommunityBundle\Subscriber\Crud\OrganizationSubscriber:
@@ -37,13 +37,13 @@ services:
     Claroline\CommunityBundle\Subscriber\Crud\UserSubscriber:
         arguments:
             - '@security.token_storage'
+            - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\CoreBundle\Manager\RoleManager'
             - '@Claroline\CommunityBundle\Manager\MailManager'
             - '@Claroline\CoreBundle\Manager\Organization\OrganizationManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
             - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\CommunityBundle\Subscriber\DataSource\UserSourceSubscriber:

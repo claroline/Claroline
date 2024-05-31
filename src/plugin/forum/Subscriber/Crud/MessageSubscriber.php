@@ -2,10 +2,10 @@
 
 namespace Claroline\ForumBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
@@ -33,8 +33,8 @@ class MessageSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', Message::class) => 'preCreate',
-            Crud::getEventName('create', 'post', Message::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, Message::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Message::class) => 'postCreate',
         ];
     }
 

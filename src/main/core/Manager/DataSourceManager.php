@@ -11,42 +11,25 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DataSource\GetDataEvent;
 use Claroline\CoreBundle\Repository\DataSourceRepository;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class DataSourceManager
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var StrictDispatcher */
-    private $eventDispatcher;
-
-    /** @var DataSourceRepository */
-    private $dataSourceRepository;
-
-    /** @var PluginManager */
-    private $pluginManager;
+    private DataSourceRepository $dataSourceRepository;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        StrictDispatcher $eventDispatcher,
-        PluginManager $pluginManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ObjectManager $om,
+        private readonly PluginManager $pluginManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->pluginManager = $pluginManager;
         $this->dataSourceRepository = $om->getRepository(DataSource::class);
     }
 
@@ -85,13 +68,8 @@ class DataSourceManager
 
     /**
      * Loads data from a data source.
-     *
-     * @param string $contextId
-     * @param array  $options
-     *
-     * @return mixed
      */
-    public function load(string $type, string $context, $contextId = null, array $options = null)
+    public function load(string $type, string $context, ?string $contextId = null, array $options = null): mixed
     {
         $user = null;
         if ($this->tokenStorage->getToken()->getUser() instanceof User) {
@@ -105,12 +83,8 @@ class DataSourceManager
                 ->findOneBy(['uuid' => $contextId]);
         }
 
-        /** @var GetDataEvent $event */
-        $event = $this->eventDispatcher->dispatch(
-            'data_source.'.$type.'.load',
-            GetDataEvent::class,
-            [$context, $options, $user, $workspace]
-        );
+        $event = new GetDataEvent($context, $options, $user, $workspace);
+        $this->eventDispatcher->dispatch($event, 'data_source.'.$type.'.load');
 
         return $event->getData();
     }

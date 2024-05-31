@@ -2,9 +2,15 @@
 
 namespace Claroline\AppBundle\API;
 
+use Claroline\AppBundle\Event\Crud\CopyEvent;
+use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\CrudEvent;
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\Crud\PatchEvent;
+use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -138,7 +144,8 @@ class Crud
             $this->checkPermission('CREATE', $object, [], true);
         }
 
-        if ($this->dispatch('create', 'pre', [$object, $options, $data])) {
+        $event = new CreateEvent($object, $options, $data);
+        if ($this->dispatch(CrudEvents::PRE_CREATE, $class, $event)) {
             $this->om->persist($object);
             if (!in_array(Options::FORCE_FLUSH, $options)) {
                 $this->om->flush();
@@ -146,7 +153,7 @@ class Crud
                 $this->om->forceFlush();
             }
 
-            $this->dispatch('create', 'post', [$object, $options, $data]);
+            $this->dispatch(CrudEvents::POST_CREATE, $class, $event);
         }
 
         return $object;
@@ -186,9 +193,10 @@ class Crud
         }
 
         $oldData = $this->serializer->serialize($oldObject) ?? [];
-
         $object = $this->serializer->deserialize($data, $oldObject, $options);
-        if ($this->dispatch('update', 'pre', [$object, $options, $data, $oldData])) {
+
+        $event = new UpdateEvent($object, $options, $data, $oldData);
+        if ($this->dispatch(CrudEvents::PRE_UPDATE, $class, $event)) {
             $this->om->persist($object);
 
             if (!in_array(Options::FORCE_FLUSH, $options)) {
@@ -197,7 +205,7 @@ class Crud
                 $this->om->forceFlush();
             }
 
-            $this->dispatch('update', 'post', [$object, $options, $data, $oldData]);
+            $this->dispatch(CrudEvents::POST_UPDATE, $class, $event);
         }
 
         return $object;
@@ -225,7 +233,10 @@ class Crud
             $this->checkPermission('DELETE', $object, [], true);
         }
 
-        if ($this->dispatch('delete', 'pre', [$object, $options])) {
+        $className = $this->getRealClass($object);
+
+        $event = new DeleteEvent($object, $options);
+        if ($this->dispatch(CrudEvents::PRE_DELETE, $className, $event)) {
             if (!in_array(Options::SOFT_DELETE, $options)) {
                 $this->om->remove($object);
             }
@@ -236,7 +247,7 @@ class Crud
                 $this->om->forceFlush();
             }
 
-            $this->dispatch('delete', 'post', [$object, $options]);
+            $this->dispatch(CrudEvents::POST_DELETE, $className, $event);
         }
     }
 
@@ -273,8 +284,8 @@ class Crud
             $this->checkPermission('COPY', $object, [], true);
         }
 
-        $class = $this->getRealClass($object);
-        $new = new $class();
+        $className = $this->getRealClass($object);
+        $new = new $className();
 
         $serializer = $this->serializer->get($new);
 
@@ -290,15 +301,15 @@ class Crud
 
         $this->om->persist($new);
 
-        // first event is the pre one
-        if ($this->dispatch('copy', 'pre', [$object, $options, $new, $extra])) {
+        $event = new CopyEvent($object, $options, $new, $extra);
+        if ($this->dispatch(CrudEvents::PRE_COPY, $className, $event)) {
             if (!in_array(Options::FORCE_FLUSH, $options)) {
                 $this->om->flush();
             } else {
                 $this->om->forceFlush();
             }
 
-            $this->dispatch('copy', 'post', [$object, $options, $new, $extra]);
+            $this->dispatch(CrudEvents::POST_COPY, $className, $event);
         }
 
         return $new;
@@ -318,10 +329,11 @@ class Crud
      */
     public function patch(mixed $object, string $property, string $action, array $elements, array $options = []): mixed
     {
+        $className = $this->getRealClass($object);
         $methodName = $action.ucfirst(strtolower($property));
 
         if (!method_exists($object, $methodName)) {
-            throw new \LogicException(sprintf('You have requested a non implemented action %s on %s', $methodName, $this->getRealClass($object)));
+            throw new \LogicException(sprintf('You have requested a non implemented action %s on %s', $methodName, $className));
         }
 
         if (!in_array(static::NO_PERMISSIONS, $options)) {
@@ -337,7 +349,8 @@ class Crud
                 }
             }
 
-            if ($this->dispatch('patch', 'pre', [$object, $options, $property, $element, $action])) {
+            $event = new PatchEvent($object, $options, $property, $element, $action);
+            if ($this->dispatch(CrudEvents::PRE_PATCH, $className, $event)) {
                 $object->$methodName($element);
 
                 $this->om->persist($object);
@@ -347,7 +360,7 @@ class Crud
                     $this->om->forceFlush();
                 }
 
-                $this->dispatch('patch', 'post', [$object, $options, $property, $element, $action]);
+                $this->dispatch(CrudEvents::POST_PATCH, $className, $event);
             }
         }
 
@@ -369,10 +382,11 @@ class Crud
      */
     public function replace(mixed $object, string $property, mixed $data, array $options = []): mixed
     {
+        $className = $this->getRealClass($object);
         $methodName = 'set'.ucfirst($property);
 
         if (!method_exists($object, $methodName)) {
-            throw new \LogicException(sprintf('You have requested a non implemented action \'set\' on %s (looked for %s)', $this->getRealClass($object), $methodName));
+            throw new \LogicException(sprintf('You have requested a non implemented action \'set\' on %s (looked for %s)', $className, $methodName));
         }
 
         if (!in_array(static::NO_PERMISSIONS, $options)) {
@@ -381,7 +395,8 @@ class Crud
             // we'll need to pass the $action and $data here as well later
         }
 
-        if ($this->dispatch('patch', 'pre', [$object, $options, $property, $data, self::PROPERTY_SET])) {
+        $patchEvent = new PatchEvent($object, $options, $property, $data, self::PROPERTY_SET);
+        if ($this->dispatch(CrudEvents::PRE_PATCH, $className, $patchEvent)) {
             $object->$methodName($data);
 
             $this->om->persist($object);
@@ -391,7 +406,7 @@ class Crud
                 $this->om->forceFlush();
             }
 
-            $this->dispatch('patch', 'post', [$object, $options, $property, $data, self::PROPERTY_SET]);
+            $this->dispatch(CrudEvents::POST_PATCH, $className, $patchEvent);
         }
 
         return $object;
@@ -400,42 +415,20 @@ class Crud
     /**
      * We dispatch 2 events: a generic one and another with a custom name.
      * Listen to what you want. Both have their uses.
-     *
-     * @param string $action (create, copy, delete, patch, update)
-     * @param string $when   (post, pre)
-     * @param array  $args   the event arguments
      */
-    public function dispatch(string $action, string $when, array $args): bool
+    public function dispatch(string $eventName, string $className, CrudEvent $event): bool
     {
-        $className = $this->getRealClass($args[0]);
+        $this->dispatcher->dispatch($event, CrudEvents::getEventName($eventName));
+        if ($event->isAllowed()) {
+            $this->dispatcher->dispatch($event, CrudEvents::getEventName($eventName, $className));
 
-        $eventClass = ucfirst($action);
-        /** @var CrudEvent $genericEvent */
-        $genericEvent = new $eventClass(...$args);
-        $this->dispatcher->dispatch($genericEvent, static::getEventName($action, $when));
-
-        if ($genericEvent->isAllowed()) {
-            /** @var CrudEvent $specificEvent */
-            $specificEvent = new $eventClass(...$args);
-            $this->dispatcher->dispatch($specificEvent, static::getEventName($action, $when, $className));
-
-            return $specificEvent->isAllowed();
+            return $event->isAllowed();
         }
 
         return false;
     }
 
-    public static function getEventName(string $action, string $when, string $className = null): string
-    {
-        $name = 'crud_'.$when.'_'.$action.'_object';
-        if ($className) {
-            $name = $name.'_'.strtolower(str_replace('\\', '_', $className));
-        }
-
-        return $name;
-    }
-
-    private function getRealClass($object): string
+    private function getRealClass(mixed $object): string
     {
         return $this->om->getMetadataFactory()->getMetadataFor(get_class($object))->getName();
     }

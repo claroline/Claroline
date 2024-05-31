@@ -9,6 +9,7 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\EvaluationBundle\Component\Resource\EvaluatedResourceInterface;
 use Claroline\YouTubeBundle\Entity\Video;
 use Claroline\YouTubeBundle\Manager\EvaluationManager;
@@ -33,7 +34,7 @@ class VideoSubscriber extends ResourceComponent implements EvaluatedResourceInte
     public static function getSubscribedEvents(): array
     {
         return array_merge([], parent::getSubscribedEvents(), [
-            Crud::getEventName('create', 'post', Video::class) => 'onCrudCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, Video::class) => 'onCrudCreate',
         ]);
     }
 

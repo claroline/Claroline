@@ -117,7 +117,7 @@ class ContextMenu extends Component
               <header className="app-menu-header m-3 ms-4 me-1 d-flex align-items-center justify-content-between">
                 <h1 className="app-menu-title text-truncate d-block">{this.props.title}</h1>
 
-                {!this.props.notFound && !this.props.hasErrors &&
+                {!this.props.notFound && !this.props.hasErrors && actions &&
                   <Toolbar
                     id="app-menu-actions"
                     className="flex-shrink-0"

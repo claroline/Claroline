@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Event\CatalogEvents;
+namespace Claroline\AppBundle\Event;
 
 final class CrudEvents
 {
@@ -25,6 +25,26 @@ final class CrudEvents
     public const POST_UPDATE = 'crud.post_update';
 
     /**
+     * @Event("Claroline\AppBundle\Event\Crud\PatchEvent")
+     */
+    public const PRE_PATCH = 'crud.pre_patch';
+
+    /**
+     * @Event("Claroline\AppBundle\Event\Crud\PatchEvent")
+     */
+    public const POST_PATCH = 'crud.post_patch';
+
+    /**
+     * @Event("Claroline\AppBundle\Event\Crud\CopyEvent")
+     */
+    public const PRE_COPY = 'crud.pre_copy';
+
+    /**
+     * @Event("Claroline\AppBundle\Event\Crud\CopyEvent")
+     */
+    public const POST_COPY = 'crud.post_copy';
+
+    /**
      * @Event("Claroline\AppBundle\Event\Crud\DeleteEvent")
      */
     public const PRE_DELETE = 'crud.pre_delete';
@@ -34,8 +54,12 @@ final class CrudEvents
      */
     public const POST_DELETE = 'crud.post_delete';
 
-    public static function getEventName(string $event, string $className): string
+    public static function getEventName(string $event, ?string $className = null): string
     {
+        if (empty($className)) {
+            return $event;
+        }
+
         return $event.'.'.strtolower(str_replace('\\', '_', $className));
     }
 }

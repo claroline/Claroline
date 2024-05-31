@@ -8,6 +8,7 @@ use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Claroline\TransferBundle\Entity\ExportFile;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -16,42 +17,26 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ExportFileSubscriber implements EventSubscriberInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var string */
-    private $filesDir;
-    /** @var string */
-    private $logDir;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        Crud $crud,
-        string $filesDir,
-        string $logDir
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly string $filesDir,
+        private readonly string $logDir
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->crud = $crud;
-        $this->filesDir = $filesDir;
-        $this->logDir = $logDir;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'pre', ExportFile::class) => 'preCreate',
-            Crud::getEventName('create', 'post', ExportFile::class) => 'postCreate',
-            Crud::getEventName('update', 'post', ExportFile::class) => 'postUpdate',
-            Crud::getEventName('delete', 'post', ExportFile::class) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_CREATE, ExportFile::class) => 'preCreate',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, ExportFile::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, ExportFile::class) => 'postUpdate',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, ExportFile::class) => 'postDelete',
         ];
     }
 
-    public function preCreate(CreateEvent $event)
+    public function preCreate(CreateEvent $event): void
     {
         /** @var ExportFile $object */
         $object = $event->getObject();
@@ -64,7 +49,7 @@ class ExportFileSubscriber implements EventSubscriberInterface
         $object->setCreatedAt(new \DateTime());
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var ExportFile $object */
         $object = $event->getObject();
@@ -81,7 +66,7 @@ class ExportFileSubscriber implements EventSubscriberInterface
         ]), [Crud::THROW_EXCEPTION]);
     }
 
-    public function postUpdate(UpdateEvent $event)
+    public function postUpdate(UpdateEvent $event): void
     {
         /** @var ExportFile $object */
         $object = $event->getObject();
@@ -110,7 +95,7 @@ class ExportFileSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postDelete(DeleteEvent $event)
+    public function postDelete(DeleteEvent $event): void
     {
         /** @var ExportFile $object */
         $object = $event->getObject();

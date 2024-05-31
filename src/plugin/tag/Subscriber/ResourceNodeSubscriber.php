@@ -8,30 +8,28 @@ use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ResourceNodeSubscriber implements EventSubscriberInterface
 {
-    /** @var TagManager */
-    private $manager;
-
-    public function __construct(TagManager $manager)
-    {
-        $this->manager = $manager;
+    public function __construct(
+        private readonly TagManager $manager
+    ) {
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('create', 'post', ResourceNode::class) => 'postCreate',
-            Crud::getEventName('copy', 'post', ResourceNode::class) => 'postCopy',
-            Crud::getEventName('delete', 'pre', ResourceNode::class) => 'preDelete',
+            CrudEvents::getEventName(CrudEvents::POST_CREATE, ResourceNode::class) => 'postCreate',
+            CrudEvents::getEventName(CrudEvents::POST_COPY, ResourceNode::class) => 'postCopy',
+            CrudEvents::getEventName(CrudEvents::PRE_DELETE, ResourceNode::class) => 'preDelete',
         ];
     }
 
-    public function postCreate(CreateEvent $event)
+    public function postCreate(CreateEvent $event): void
     {
         /** @var ResourceNode $node */
         $node = $event->getObject();
@@ -46,7 +44,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function postCopy(CopyEvent $event)
+    public function postCopy(CopyEvent $event): void
     {
         /** @var ResourceNode $original */
         $original = $event->getObject();
@@ -69,7 +67,7 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preDelete(DeleteEvent $event)
+    public function preDelete(DeleteEvent $event): void
     {
         /** @var ResourceNode $object */
         $object = $event->getObject();

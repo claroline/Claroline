@@ -17,35 +17,29 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RoleSubscriber implements EventSubscriberInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var RuleManager */
-    private $manager;
-
     public function __construct(
-        ObjectManager $om,
-        RuleManager $manager
+        private readonly ObjectManager $om,
+        private readonly RuleManager $manager
     ) {
-        $this->om = $om;
-        $this->manager = $manager;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            Crud::getEventName('patch', 'post', User::class) => 'onUserPatch',
-            Crud::getEventName('patch', 'post', Group::class) => 'onGroupPatch',
-            Crud::getEventName('patch', 'post', Role::class) => 'onRolePatch',
+            CrudEvents::getEventName(CrudEvents::POST_PATCH, User::class) => 'onUserPatch',
+            CrudEvents::getEventName(CrudEvents::POST_PATCH, Group::class) => 'onGroupPatch',
+            CrudEvents::getEventName(CrudEvents::POST_PATCH, Role::class) => 'onRolePatch',
         ];
     }
 
-    public function onUserPatch(PatchEvent $event)
+    public function onUserPatch(PatchEvent $event): void
     {
         if (Crud::COLLECTION_ADD === $event->getAction()) {
             $user = $event->getObject();
@@ -73,7 +67,7 @@ class RoleSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function onRolePatch(PatchEvent $event)
+    public function onRolePatch(PatchEvent $event): void
     {
         if (Crud::COLLECTION_ADD === $event->getAction()) {
             $role = $event->getObject();
@@ -101,7 +95,7 @@ class RoleSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function onGroupPatch(PatchEvent $event)
+    public function onGroupPatch(PatchEvent $event): void
     {
         if (Crud::COLLECTION_ADD === $event->getAction()) {
             $group = $event->getObject();

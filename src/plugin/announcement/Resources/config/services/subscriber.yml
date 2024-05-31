@@ -3,6 +3,5 @@ services:
         tags: [kernel.event_subscriber]
         arguments:
             - '@security.token_storage'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AnnouncementBundle\Manager\AnnouncementManager'
             - '@Claroline\CoreBundle\Manager\FileManager'

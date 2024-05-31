@@ -5,42 +5,26 @@ namespace Claroline\AnnouncementBundle\Messenger;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementSend;
 use Claroline\AnnouncementBundle\Messenger\Message\SendAnnouncement;
-use Claroline\AppBundle\Event\MandatoryEventException;
-use Claroline\AppBundle\Event\MissingEventClassException;
-use Claroline\AppBundle\Event\NotPopulatedEventException;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\MessageEvents;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SendAnnouncementHandler implements MessageHandlerInterface
 {
-    private RoutingHelper $routing;
-    private ObjectManager $objectManager;
-    private TemplateManager $templateManager;
-    private StrictDispatcher $eventDispatcher;
-
     public function __construct(
-        RoutingHelper $routing,
-        ObjectManager $objectManager,
-        TemplateManager $templateManager,
-        StrictDispatcher $eventDispatcher
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly RoutingHelper $routing,
+        private readonly ObjectManager $objectManager,
+        private readonly TemplateManager $templateManager,
+
     ) {
-        $this->routing = $routing;
-        $this->objectManager = $objectManager;
-        $this->templateManager = $templateManager;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @throws MandatoryEventException
-     * @throws NotPopulatedEventException
-     * @throws MissingEventClassException
-     */
     public function __invoke(SendAnnouncement $sendAnnouncement): void
     {
         $announcement = $this->objectManager->getRepository(Announcement::class)->find($sendAnnouncement->getAnnouncementId());
@@ -99,12 +83,8 @@ class SendAnnouncementHandler implements MessageHandlerInterface
                 $content = $this->templateManager->getTemplate('email_announcement', $placeholders, $receiver->getLocale());
             }
 
-            $this->eventDispatcher->dispatch(MessageEvents::MESSAGE_SENDING, SendMessageEvent::class, [
-                $content,
-                $title,
-                [$receiver],
-                $sender,
-            ]);
+            $event = new SendMessageEvent($content, $title, [$receiver], $sender);
+            $this->eventDispatcher->dispatch($event, MessageEvents::MESSAGE_SENDING);
         }
     }
 }

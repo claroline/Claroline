@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\CatalogEvents\ContextEvents;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Context\OpenContextEvent;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
@@ -39,21 +40,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
 {
-    private TokenStorageInterface $tokenStorage;
-    private MessageBusInterface $messageBus;
-    private WorkspaceEvaluationManager $manager;
     private WorkspaceRepository $workspaceRepo;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        MessageBusInterface $messageBus,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly MessageBusInterface $messageBus,
         ObjectManager $om,
-        WorkspaceEvaluationManager $manager
+        private readonly WorkspaceEvaluationManager $manager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->messageBus = $messageBus;
-        $this->manager = $manager;
-
         $this->workspaceRepo = $om->getRepository(Workspace::class);
     }
 
@@ -63,8 +57,8 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
             ContextEvents::OPEN => 'onOpen',
             SecurityEvents::ADD_ROLE => 'onAddRole',
             EvaluationEvents::RESOURCE_EVALUATION => 'onResourceEvaluate',
-            Crud::getEventName('update', 'post', ResourceNode::class) => 'onResourcePublicationChange',
-            Crud::getEventName('delete', 'post', ResourceNode::class) => 'onResourceDelete',
+            CrudEvents::getEventName(CrudEvents::POST_UPDATE, ResourceNode::class) => 'onResourcePublicationChange',
+            CrudEvents::getEventName(CrudEvents::POST_DELETE, ResourceNode::class) => 'onResourceDelete',
         ];
     }
 

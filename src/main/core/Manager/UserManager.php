@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Messenger\Message\DisableInactiveUsers;
 use Claroline\CommunityBundle\Repository\RoleRepository;
@@ -24,39 +23,21 @@ use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\UserDisableEvent;
 use Claroline\CoreBundle\Event\Security\UserEnableEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class UserManager
 {
-    /** @var Crud */
-    private $crud;
-    /** @var ObjectManager */
-    private $om;
-    /** @var PlatformConfigurationHandler */
-    private $platformConfigHandler;
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var MessageBusInterface */
-    private $messageBus;
-
-    /** @var UserRepository */
-    private $userRepo;
-    /** @var RoleRepository */
-    private $roleRepo;
+    private UserRepository $userRepo;
+    private RoleRepository $roleRepo;
 
     public function __construct(
-        ObjectManager $om,
-        Crud $crud,
-        PlatformConfigurationHandler $platformConfigHandler,
-        StrictDispatcher $dispatcher,
-        MessageBusInterface $messageBus
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly PlatformConfigurationHandler $platformConfigHandler,
+        private readonly MessageBusInterface $messageBus
     ) {
-        $this->crud = $crud;
-        $this->om = $om;
-        $this->platformConfigHandler = $platformConfigHandler;
-        $this->dispatcher = $dispatcher;
-        $this->messageBus = $messageBus;
-
         $this->userRepo = $om->getRepository(User::class);
         $this->roleRepo = $om->getRepository(Role::class);
     }
@@ -162,7 +143,7 @@ class UserManager
             $this->om->persist($user);
             $this->om->flush();
 
-            $this->dispatcher->dispatch(SecurityEvents::USER_ENABLE, UserEnableEvent::class, [$user]);
+            $this->eventDispatcher->dispatch(new UserEnableEvent($user), SecurityEvents::USER_ENABLE);
         }
 
         return $user;
@@ -176,7 +157,7 @@ class UserManager
             $this->om->persist($user);
             $this->om->flush();
 
-            $this->dispatcher->dispatch(SecurityEvents::USER_DISABLE, UserDisableEvent::class, [$user]);
+            $this->eventDispatcher->dispatch(new UserDisableEvent($user), SecurityEvents::USER_DISABLE);
         }
 
         return $user;

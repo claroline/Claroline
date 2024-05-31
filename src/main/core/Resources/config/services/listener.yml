@@ -96,7 +96,6 @@ services:
             - '@event_dispatcher'
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
             - '@Claroline\CoreBundle\Manager\RoleManager'
-            - '@Claroline\AppBundle\Event\StrictDispatcher'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onViewAs, priority: 2 }
 
