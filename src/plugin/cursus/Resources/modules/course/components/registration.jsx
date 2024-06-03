@@ -25,7 +25,7 @@ const CourseRegistration = (props) => {
         callback: () => props.save(props.course, props.isNew, props.name).then(course => {
           if (props.isNew) {
             if ('workspace' === props.contextType) {
-              history.push(props.path)
+              history.push(route(course, null, course.workspace))
             } else {
               history.push(route(course))
             }
@@ -34,7 +34,7 @@ const CourseRegistration = (props) => {
       }}
       cancel={{
         type: LINK_BUTTON,
-        target: props.isNew ? props.path : (('workspace' === props.contextType) ? props.path : route(props.course)),
+        target: props.isNew ? props.path : (('workspace' === props.contextType) ? route(props.course, null, props.course.workspace) : route(props.course)),
         exact: true
       }}
       definition={[{

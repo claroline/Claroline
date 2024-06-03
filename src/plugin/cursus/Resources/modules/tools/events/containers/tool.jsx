@@ -7,7 +7,7 @@ import {selectors} from '#/plugin/cursus/tools/events/store'
 import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {EventsTool as EventsToolComponent} from '#/plugin/cursus/tools/events/components/tool'
-import {actions as eventActions, reducer as eventReducer, selectors as eventSelectors}             from '#/plugin/cursus/event/store'
+import {actions as eventActions, reducer as eventReducer, selectors as eventSelectors} from '#/plugin/cursus/event/store'
 import {actions as courseActions, reducer as courseReducer, selectors as courseSelectors} from '#/plugin/cursus/course/store'
 
 const EventsTool = withReducer(courseSelectors.STORE_NAME, courseReducer)(

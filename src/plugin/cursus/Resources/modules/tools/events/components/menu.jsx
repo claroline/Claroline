@@ -20,7 +20,7 @@ const EventsMenu = (props) =>
           name: 'about',
           type: LINK_BUTTON,
           label: trans('about', {}, 'platform'),
-          target: props.path + '/about'
+          target: props.course ? props.path + '/about/' + props.course.slug : props.path + '/about'
         },{
           name: 'registered',
           type: LINK_BUTTON,
@@ -51,6 +51,7 @@ const EventsMenu = (props) =>
 EventsMenu.propTypes = {
   canEdit: T.bool.isRequired,
   canRegister: T.bool.isRequired,
+  course: T.object,
 
   // from menu
   path: T.string,

@@ -10,6 +10,7 @@ import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {route as workspaceRoute} from '#/main/core/workspace/routing'
 
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
+import {route} from '#/plugin/cursus/routing'
 import {MODAL_SESSION_FORM} from '#/plugin/cursus/session/modals/parameters'
 import {SessionList} from '#/plugin/cursus/session/components/list'
 import {selectors} from '#/plugin/cursus/course/store'
@@ -21,6 +22,7 @@ const CourseSessions = (props) =>
   <Fragment>
     <SessionList
       className="my-3"
+      course={props.course}
       path={props.path}
       name={selectors.STORE_NAME+'.courseSessions'}
       contextType={props.contextType}
@@ -111,9 +113,13 @@ const CourseSessions = (props) =>
         label={trans('add_session', {}, 'cursus')}
         modal={[MODAL_SESSION_FORM, {
           course: props.course,
-          onSave: () => {
+          onSave: (newSession) => {
             // open created session, but let user on sessions list to allow multiples creations
-            props.history.push(props.path +'/sessions')
+            if('workspace' === props.contextType) {
+              props.history.push(route(props.course, newSession, props.course.workspace) + '/sessions')
+            } else {
+              props.history.push(route(props.course, newSession) + '/sessions')
+            }
             props.reload(props.course.slug)
           }
         }]}

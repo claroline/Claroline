@@ -91,6 +91,7 @@ const CourseDetails = (props) =>
             return (
               <CourseAbout
                 path={props.path}
+                contextType={props.contextType}
                 course={props.course}
                 activeSession={props.activeSession}
                 availableSessions={props.availableSessions}

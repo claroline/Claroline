@@ -1,9 +1,10 @@
 import {route as toolRoute} from '#/main/core/tool/routing'
 
-function route(course, session = null, basePath = null) {
+function route(course, session = null, workspace = null) {
   let coursePath
-  if (basePath) {
-    coursePath = `${basePath}/${course.slug}`
+
+  if (workspace) {
+    coursePath = `/workspace/${workspace.slug}/training_events/about/${course.slug}`
   } else {
     coursePath = `${toolRoute('trainings') }/catalog/${course.slug}`
   }

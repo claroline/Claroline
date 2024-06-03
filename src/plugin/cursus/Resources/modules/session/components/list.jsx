@@ -13,27 +13,22 @@ import {route} from '#/plugin/cursus/routing'
 import {SessionCard} from '#/plugin/cursus/session/components/card'
 import {EventStatus} from '#/plugin/cursus/components/event-status'
 
-const SessionList = (props) => {
-  let basePath = props.path.split('/').slice(0, -1).join('/')
-  if (props.path.split('/').slice(-1)[0] === 'about') {
-    basePath = props.path
-  }
-
-  return (
-    <ListData
-      className={props.className}
-      name={props.name}
-      fetch={{
-        url: props.url,
-        autoload: true
-      }}
-      primaryAction={(row) => ({
-        type: LINK_BUTTON,
-        target: basePath.includes('workspace') ? basePath + '/' + row.id : route(row.course, row),
-        label: trans('open', {}, 'actions')
-      })}
-      delete={props.delete}
-      definition={[{
+const SessionList = (props) =>
+  <ListData
+    className={props.className}
+    name={props.name}
+    fetch={{
+      url: props.url,
+      autoload: true
+    }}
+    primaryAction={(row) => ({
+      type: LINK_BUTTON,
+      target: 'workspace' === props.contextType ? route(props.course, row, props.course.workspace) : route(row.course, row),
+      label: trans('open', {}, 'actions')
+    })}
+    delete={props.delete}
+    definition={[
+      {
         name: 'status',
         type: 'choice',
         label: trans('status'),
@@ -117,32 +112,31 @@ const SessionList = (props) => {
         label: trans('order'),
         displayable: false,
         filterable: false
-      }].concat(props.definition)}
-      card={SessionCard}
-      actions={(rows) => {
-        let actions = [{
-          name: 'export-pdf',
-          type: URL_BUTTON,
-          icon: 'fa fa-fw fa-file-pdf',
-          label: trans('export-pdf', {}, 'actions'),
-          displayed: hasPermission('open', rows[0]),
-          group: trans('transfer'),
-          target: ['apiv2_cursus_session_download_pdf', {id: rows[0].id}],
-          scope: ['object']
-        }]
+      }
+    ].concat(props.definition)}
+    card={SessionCard}
+    actions={(rows) => {
+      let actions = [{
+        name: 'export-pdf',
+        type: URL_BUTTON,
+        icon: 'fa fa-fw fa-file-pdf',
+        label: trans('export-pdf', {}, 'actions'),
+        displayed: hasPermission('open', rows[0]),
+        group: trans('transfer'),
+        target: ['apiv2_cursus_session_download_pdf', {id: rows[0].id}],
+        scope: ['object']
+      }]
 
-        if (props.actions) {
-          actions = [].concat(actions, props.actions(rows))
-        }
+      if (props.actions) {
+        actions = [].concat(actions, props.actions(rows))
+      }
 
-        return actions
-      }}
-      display={{
-        current: listConst.DISPLAY_LIST
-      }}
-    />
-  )
-}
+      return actions
+    }}
+    display={{
+      current: listConst.DISPLAY_LIST
+    }}
+  />
 
 SessionList.propTypes = {
   className: T.string,
@@ -153,6 +147,8 @@ SessionList.propTypes = {
   definition: T.arrayOf(T.shape({
     // TODO : list property propTypes
   })),
+  course: T.object,
+  contextType: T.string,
   actions: T.func
 }
 

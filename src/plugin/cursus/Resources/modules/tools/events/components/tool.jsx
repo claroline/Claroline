@@ -19,7 +19,7 @@ const EventsTool = (props) =>
   <Routes
     path={props.path}
     redirect={[
-      {from: '/', exact: true, to: '/about'}
+      {from: '/', exact: true, to: props.course ? '/about/' + props.course.slug : '/about'}
     ]}
     routes={[
       {
@@ -28,7 +28,7 @@ const EventsTool = (props) =>
         disabled: !props.canEdit,
         component: CourseCreation
       }, {
-        path: '/edit',
+        path: '/about/:courseSlug/edit',
         onEnter: () => props.openForm(props.course.slug),
         component: CourseEdit
       }, {
@@ -42,7 +42,7 @@ const EventsTool = (props) =>
           if (props.course) {
             return (
               <Course
-                path={props.path + '/about'}
+                path={props.path + '/about/' + props.course.slug}
                 slug={props.course.slug}
                 history={params.history}
               />)
