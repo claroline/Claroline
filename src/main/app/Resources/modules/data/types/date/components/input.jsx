@@ -40,7 +40,7 @@ class DateInput extends Component {
         [`input-group-${this.props.size}`]: !!this.props.size
       })}>
         <Button
-          className="btn btn-outline-secondary rounded-end-0"
+          className="btn btn-body rounded-end-0"
           type={MENU_BUTTON}
           icon={this.props.calendarIcon}
           label={trans('show-calendar', {}, 'actions')}

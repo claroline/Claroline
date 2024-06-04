@@ -1,0 +1,18 @@
+// removes default button styles everywhere
+// appears as a <a>
+button,
+input[type=button],
+input[type=submit],
+input[type=reset] {
+  font-weight: var(--#{$prefix}body-font-weight);
+  background-color: transparent;
+  border: none;
+  text-decoration: none;
+  box-shadow: none;
+  padding: 0;
+
+  /*&:hover,*/
+  /*&:focus {
+      box-shadow: none;
+  }*/
+}

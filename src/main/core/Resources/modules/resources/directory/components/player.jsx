@@ -40,7 +40,10 @@ function transformAction(action, resourceNodes, embedded = false) {
 }
 
 const DirectoryPlayer = props =>
-  <ResourcePage>
+  <ResourcePage
+    root={true}
+    title={props.isRoot ? trans('resources', {}, 'tools') : get(props.currentNode, 'name', null)}
+  >
     {props.storageLock &&
       <Alert type="warning" className="mt-3">{trans('storage_limit_reached_resources')}</Alert>
     }
@@ -56,7 +59,7 @@ const DirectoryPlayer = props =>
           flush={true}
           name={props.listName}
           fetch={{
-            url: ['apiv2_resource_list', {parent: get(props.currentNode, 'id', null), all: props.all}],
+            url: ['apiv2_resource_list', {contextId: get(props.currentNode, 'workspace.id', null), parent: get(props.currentNode, 'id', null)}],
             autoload: true
           }}
           /*customActions={[

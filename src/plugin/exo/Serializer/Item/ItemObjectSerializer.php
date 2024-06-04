@@ -13,12 +13,17 @@ class ItemObjectSerializer
 {
     use SerializerTrait;
 
-    /**
-     * Converts a ItemObject into a JSON-encodable structure.
-     *
-     * @return array
-     */
-    public function serialize(ItemObject $itemObject, array $options = [])
+    public function getName(): string
+    {
+        return 'exo_item_object';
+    }
+
+    public function getClass(): string
+    {
+        return ItemObject::class;
+    }
+
+    public function serialize(ItemObject $itemObject, array $options = []): array
     {
         $serialized = [
             'id' => $itemObject->getUuid(),
@@ -34,20 +39,10 @@ class ItemObjectSerializer
         return $serialized;
     }
 
-    public function getName()
-    {
-        return 'exo_item_object';
-    }
-
     /**
      * Converts raw data into a ItemObject entity.
-     *
-     * @param array      $data
-     * @param ItemObject $itemObject
-     *
-     * @return ItemObject
      */
-    public function deserialize($data, ItemObject $itemObject = null, array $options = [])
+    public function deserialize(array $data, ItemObject $itemObject = null, array $options = []): ItemObject
     {
         $itemObject = $itemObject ?: new ItemObject();
 

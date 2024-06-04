@@ -2,6 +2,7 @@
 
 namespace Claroline\AppBundle\API;
 
+use Claroline\AppBundle\Entity\CrudEntityInterface;
 use JVal\Context;
 use JVal\Registry;
 use JVal\Resolver;
@@ -80,10 +81,13 @@ class SchemaProvider
      *
      * @return array
      */
-    public function getIdentifiers($class)
+    public function getIdentifiers(string $class): array
     {
-        $schema = $this->getSchema($class);
+        if (is_subclass_of($class, CrudEntityInterface::class)) {
+            return array_merge(['id'], $class::getIdentifiers());
+        }
 
+        $schema = $this->getSchema($class);
         if (isset($schema->claroline)) {
             return $schema->claroline->ids;
         }
@@ -98,7 +102,7 @@ class SchemaProvider
      *
      * @return \stdClass|null
      */
-    public function getSchema($class, array $options = [])
+    public function getSchema(string $class, array $options = [])
     {
         $serializer = $this->get($class);
 

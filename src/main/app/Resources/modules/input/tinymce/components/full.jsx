@@ -12,7 +12,6 @@ const TinymceFull = (props) =>
     {...omit(props, 'minRows', 'init')}
     inline={false}
     init={merge({}, props.init, {
-      auto_focus: props.id,
       height: '100%',
       menubar: 'edit view insert format help',
       menu: {

@@ -27,6 +27,7 @@ const Tinymce = (props) => {
   useEffect(() => setValue(props.value || ''), [props.value])
 
   const editorProps = merge({}, omit(props, 'onChange', 'placeholder'), {
+    auto_focus: props.autoFocus ? props.id : undefined,
     value: value,
     onEditorChange: (v, editor) => {
       if (v !== value) {
@@ -70,6 +71,7 @@ Tinymce.propTypes = {
   value: T.string,
   initialValue: T.string,
   placeholder: T.string,
+  autoFocus: T.bool,
   mode: T.oneOf(['inline', 'classic', 'full']),
   /**
    * A custom configuration for the editor (It is merged with the base tinymce config + the selected mode config)
@@ -87,7 +89,8 @@ Tinymce.propTypes = {
 }
 
 Tinymce.defaultProps = {
-  mode: 'classic'
+  mode: 'classic',
+  autoFocus: false
 }
 
 const TinymceEditor = withModal(Tinymce)

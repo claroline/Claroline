@@ -30,7 +30,7 @@ class SearchMinimal extends Component {
         />
 
         <Button
-          className="btn btn-outline-secondary"
+          className="btn btn-body"
           type={CALLBACK_BUTTON}
           icon="fa fa-fw fa-search"
           label={trans('search', {}, 'actions')}

@@ -77,11 +77,19 @@ class PathSubscriber extends ResourceComponent implements EvaluatedResourceInter
         }
 
         return [
-            'path' => $this->serializer->serialize($resource),
+            'resource' => $this->serializer->serialize($resource),
             'userEvaluation' => $evaluation,
             'resourceEvaluations' => $resourceEvaluations,
             'attempt' => $currentAttempt,
             'stepsProgression' => $stepsProgression,
+        ];
+    }
+
+    /** @var Path $resource */
+    public function update(AbstractResource $resource, array $data): ?array
+    {
+        return [
+            'resource' => $this->serializer->serialize($resource),
         ];
     }
 

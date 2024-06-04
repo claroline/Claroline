@@ -2,9 +2,7 @@
 
 namespace Claroline\NotificationBundle\Subscriber;
 
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\NotificationBundle\Entity\Notification;
 use Claroline\NotificationBundle\Manager\NotificationManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,7 +14,6 @@ class NotificationSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly SerializerProvider $serializer,
         private readonly NotificationManager $notificationManager
     ) {
     }
@@ -33,15 +30,9 @@ class NotificationSubscriber implements EventSubscriberInterface
         $response = $event->getResponse();
         $user = $this->tokenStorage->getToken()?->getUser();
         if ($event->isMainRequest() && 200 === $response->getStatusCode() && $response instanceof JsonResponse && $user instanceof User) {
-            $notifications = $this->notificationManager->getNewNotifications($user);
+            $notifications = $this->notificationManager->countNewNotifications($user);
             if (!empty($notifications)) {
-                $decodedContent = json_decode($response->getContent(), true);
-
-                /*$event->setResponse(new JsonResponse(array_merge($decodedContent ?? [], [
-                    '__notifications' => array_map(function (Notification $notification) {
-                        return $this->serializer->serialize($notification);
-                    }, $notifications)
-                ]), $response->getStatusCode()));*/
+                $response->headers->set('Claroline-Notifications', $notifications);
             }
         }
     }

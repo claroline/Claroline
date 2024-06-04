@@ -70,17 +70,24 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
     /**
      * Returns the root directory of a workspace.
-     *
-     * @return ResourceNode
      */
-    public function findWorkspaceRoot(Workspace $workspace)
+    public function findWorkspaceRoot(Workspace|string $workspace): ?ResourceNode
     {
-        $results = $this->createQueryBuilder('n')
-            ->where('n.parent IS NULL')
-            ->andWhere('n.workspace = :workspace')
-            ->setParameter('workspace', $workspace->getId())
-            ->getQuery()
-            ->getResult();
+        $queryBuilder = $this->createQueryBuilder('n')
+            ->where('n.parent IS NULL');
+
+        if (is_string($workspace)) {
+            $queryBuilder
+                ->leftJoin('n.workspace', 'w')
+                ->andWhere('w.uuid = :workspace')
+                ->setParameter('workspace', $workspace);
+        } else {
+            $queryBuilder
+                ->andWhere('n.workspace = :workspace')
+                ->setParameter('workspace', $workspace->getId());
+        }
+
+        $results = $queryBuilder->getQuery()->getResult();
 
         // in case something was messed up at some point
         if (1 === count($results)) {

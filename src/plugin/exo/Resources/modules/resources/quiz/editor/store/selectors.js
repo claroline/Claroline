@@ -2,14 +2,14 @@ import {createSelector} from 'reselect'
 import get from 'lodash/get'
 import uniq from 'lodash/uniq'
 
-import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
 import {selectors as quizSelectors} from '#/plugin/exo/resources/quiz/store/selectors'
+import {selectors as editorSelectors} from '#/main/core/resource/editor/store'
 
 const STORE_NAME = 'editor'
 const FORM_NAME = `${quizSelectors.STORE_NAME}.editor`
 const BANK_NAME = `${FORM_NAME}.bank`
 
-const quiz = (state) => formSelectors.data(formSelectors.form(state, FORM_NAME))
+const quiz = (state) => editorSelectors.resource(state)
 
 const quizId = createSelector(
   [quiz],

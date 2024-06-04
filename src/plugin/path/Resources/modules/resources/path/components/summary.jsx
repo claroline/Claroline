@@ -4,17 +4,16 @@ import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
+import {number, trans} from '#/main/app/intl'
 import {ContentSummary} from '#/main/app/content/components/summary'
 import {LINK_BUTTON} from '#/main/app/buttons'
+import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
+import {EvaluationScore} from '#/main/evaluation/components/score'
 import {constants} from '#/main/evaluation/constants'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
 import {Path as PathTypes} from '#/plugin/path/resources/path/prop-types'
-import {number, trans} from '#/main/app/intl'
-import {constants as PATH_NUMBERINGS} from '#/plugin/path/resources/path/constants'
 import {getNumbering} from '#/plugin/path/resources/path/utils'
-import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
-import {EvaluationScore} from '#/main/evaluation/components/score'
 
 const PathSummary = (props) => {
   function getStepSummary(step) {
@@ -26,12 +25,9 @@ const PathSummary = (props) => {
     return {
       id: step.id,
       type: LINK_BUTTON,
+      numbering: getNumbering(props.path.display.numbering, props.path.steps, step),
       label: (
-        <Fragment>
-          {(props.path.display.numbering && props.path.display.numbering !== PATH_NUMBERINGS.NUMBERING_NONE && getNumbering(props.path.display.numbering, props.path.steps, step) ?
-            <span className="h-numbering">{getNumbering(props.path.display.numbering, props.path.steps, step)}</span>
-            : ''
-          )}
+        <>
           {step.title}
 
           <span className="step-status">
@@ -68,7 +64,7 @@ const PathSummary = (props) => {
               </Fragment>
             }
           </span>
-        </Fragment>
+        </>
       ),
       target: `${props.basePath}/play/${step.slug}`,
       children: step.children ? step.children.map(getStepSummary) : [],
@@ -76,19 +72,19 @@ const PathSummary = (props) => {
     }
   }
 
-  let baseLinks = []
+  /*let baseLinks = []
   if (props.overview) {
     baseLinks = [{
       id: 'home',
       type: LINK_BUTTON,
       label: (
-        <Fragment>
+        <>
           {trans('home')}
 
           <span className="step-status">
             <span className={classes('fa fa-fw fa-home')} />
           </span>
-        </Fragment>
+        </>
       ),
       target: props.basePath,
       exact: true,
@@ -102,14 +98,14 @@ const PathSummary = (props) => {
       id: 'end',
       type: LINK_BUTTON,
       label:(
-        <Fragment>
+        <>
           {trans('end')}
           <span className="step-status">
             <span className={classes('fa fa-fw fa-flag-checkered', {
               'not_started': Object.values(props.stepsProgression).length <= 0 || Object.values(props.stepsProgression).map( (step) => ['seen'].includes(step) ).length !== props.path.steps.length
             } )} />
           </span>
-        </Fragment>
+        </>
       ),
       target: props.basePath + '/play/end',
       exact: true,
@@ -119,13 +115,13 @@ const PathSummary = (props) => {
 
   const summaryLinks = baseLinks.concat(
     props.path.steps.map(getStepSummary)
-  ).concat(endLink)
+  ).concat(endLink)*/
 
-  if (0 !== summaryLinks.length) {
+  if (0 !== props.path.steps.length) {
     return (
       <ContentSummary
         className={props.className}
-        links={summaryLinks}
+        links={props.path.steps.map(getStepSummary)}
         noCollapse={true}
       />
     )

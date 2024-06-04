@@ -21,7 +21,7 @@ const UserCreate = (props) =>
       }
     ]}
     icon={
-      <UserAvatar className="img-thumbnail" noStatus={true} size="xl" />
+      <UserAvatar noStatus={true} size="xl" />
     }
     title={trans('new_user', {}, 'community')}
   >

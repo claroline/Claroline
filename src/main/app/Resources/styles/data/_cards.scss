@@ -5,26 +5,39 @@
 @use "sass:math";
 
 // mixins
-@mixin data-card-size-variant($icon-size, $title-size, $icon-spacer) {
+@mixin data-card-size-variant($icon-size, $nbLines : 3) {
     .data-card-header {
-        min-height: calc($icon-size + $icon-spacer*2); // icon margin + height
+        //min-height: calc($icon-size + $icon-spacer*2); // icon margin + height
     }
 
-    .data-card-icon {
+    .thumbnail span:not(.theme-icon) {
+        font-size: $icon-size; // for FA icons
+    }
+
+    /*.data-card-icon {
         font-size: floor(math.div($icon-size, 2)); // for FA icons
         width: $icon-size;
         height: $icon-size;
-        margin: $icon-spacer;
+        //margin: $icon-spacer;
 
         .theme-icon,
         .theme-icon * {
             max-width: floor(math.div($icon-size, 2));
             max-height: floor(math.div($icon-size, 2));
         }
-    }
+    }*/
 
     .data-card-title {
-        font-size: $title-size;
+        //font-size: $title-size;
+    }
+
+    .data-card-description {
+        height: $line-height-base * $data-card-content-font * $nbLines;
+        // display the '...' if the text is truncated on browsers which support it
+        display: -webkit-box;
+        -webkit-line-clamp: $nbLines; /* number of lines to show */
+        line-clamp: $nbLines;
+        -webkit-box-orient: vertical;
     }
 }
 
@@ -34,7 +47,10 @@
     .data-card-header {
         border-bottom: $data-card-inner-border-width solid $data-card-inner-border-color;
 
-        @include border-radius($data-card-inner-border-radius $data-card-inner-border-radius 0 0);
+        &,
+        .thumbnail {
+            @include border-radius($data-card-inner-border-radius $data-card-inner-border-radius 0 0);
+        }
     }
 
     &.data-card-poster {
@@ -43,9 +59,9 @@
         }
     }
 
-    .data-card-content {
+    /*.data-card-content {
         flex: 1 0 auto;
-    }
+    }*/
 }
 
 @mixin data-card-horizontal-variant() {
@@ -53,24 +69,29 @@
     flex-direction: row;
 
     .data-card-header {
-        min-width: 40%;
+        /*min-width: 40%;*/
         border-right: $data-card-inner-border-width solid $data-card-inner-border-color;
 
-        @include border-radius($data-card-inner-border-radius 0 0 $data-card-inner-border-radius);
+        &,
+        .thumbnail {
+            @include border-radius($data-card-inner-border-radius 0 0 $data-card-inner-border-radius);
+        }
     }
 
     .data-card-content {
-        flex: 1 0 0;
-        min-width: 60%;
+        /*min-width: 60%;*/
+        /*flex: 1 0 0;*/
     }
 }
 
 .data-card {
+    --#{$prefix}data-card-bg: #{$data-card-bg};
+
     display: flex;
     position: relative; // constrain actions toolbar
 
     color: $data-card-color;
-    background: $data-card-bg;
+    background-color: var(--#{$prefix}data-card-bg);
     font-size: $data-card-font;
     border: $data-card-border-width solid $data-card-border-color;
 
@@ -93,31 +114,14 @@
 .data-card-clickable {
     transition-property: box-shadow, transform;
     transition-duration: .3s;
-    box-shadow: $box-shadow-sm;
+    //box-shadow: $box-shadow-sm;
 
     &:hover {
         z-index: 2;
         transform: translateY(-2px);
-        box-shadow: 0 18px 35px rgba(50,50,93,.1),0 8px 15px rgba(0,0,0,.07);
+        box-shadow: 0 0 0 1px rgba(0,0,0,.075), $box-shadow;
+        //box-shadow: 0 18px 35px rgba(50,50,93,.1),0 8px 15px rgba(0,0,0,.07);
     }
-}
-
-// TODO : create a mixin to generate card styles variants
-.data-card-muted {
-    //border-color: $data-card-muted-border;
-    //box-shadow: none;
-    /*color: $data-card-muted-color;
-    background-color: $data-card-muted-bg;
-    @include box-shadow($data-card-muted-box-shadow);
-
-    .data-card-header {
-        background: $data-card-muted-header-bg;
-        border-color: $data-card-muted-inner-border;
-    }
-
-    .data-card-content {
-        color: $data-card-muted-color;
-    }*/
 }
 
 .data-grid-item-container:hover {
@@ -135,27 +139,31 @@
 }
 
 .data-card-selected {
-    color: $data-card-active-color;
-    background-color: $data-card-active-bg;
-    //border-color: $data-card-active-border-color;
-
-    .data-card-header {
-        background: $data-card-active-header-bg;
-        //border-color: $data-card-active-inner-border-color;
-    }
-
-    .data-card-icon {
-        color: $data-card-active-icon-color;
-        background-color: $data-card-active-bg;
-    }
-
-    /*&:hover {
-        background-color: #bfe3f4;
-
-        .data-card-header {
-            background: #b5d9ea;
+    &.data-card-col,
+    &.data-card-row {
+        &:before {
+            content: " ";
+            position: absolute;
+            z-index: 1;
+            background: var(--#{$prefix}primary);
+            left: 0;
+            top: 0;
         }
-    }*/
+    }
+
+    &.data-card-col:before {
+        width: 100%;
+        height: $nav-underline-border-width;
+
+        @include border-top-radius($data-card-border-radius);
+    }
+
+    &.data-card-row:before {
+        width: $nav-underline-border-width;
+        height: 100%;
+
+        @include border-start-radius($data-card-border-radius);
+    }
 }
 
 // with poster image variant
@@ -172,13 +180,29 @@
     align-items: center;
     justify-content: center;
     background: $data-card-header-bg;
+
+    .thumbnail {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        span {
+            color: $data-card-icon-color;
+        }
+
+        span,
+        .theme-icon {
+            text-align: center;
+            position: relative;
+        }
+    }
 }
 
-.data-card-icon {
+/*.data-card-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: $data-card-bg;
+    //background: $data-card-bg;
     border-radius: 50%;
     line-height: 0;
 
@@ -197,7 +221,7 @@
         max-width: 100%;
         max-height: 100%;
     }
-}
+}*/
 
 .data-card-flags {
     position: absolute;
@@ -216,10 +240,12 @@
 }
 
 .data-card-title {
-    margin: $data-card-padding;
-    padding: 0;
+    //margin: $data-card-padding;
+    //padding: 0;
     font-size: $data-card-font;
     //font-weight: $font-weight-bolder;
+    //text-wrap: ;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 
@@ -230,22 +256,24 @@
 }
 
 .data-card-content {
-    color: $data-card-color; // reset color when card is clickable (uses a <a> tag)
+    //color: $data-card-color; // reset color when card is clickable (uses a <a> tag)
     display: flex;
     flex-direction: column;
     align-items: stretch;
     text-align: left;
     overflow-x: hidden;
+    padding: $data-card-padding;
+    flex: 1 0 auto;
 }
 
 .data-card-description {
-    margin-bottom: $data-card-padding;
+    /*margin-bottom: $data-card-padding;
     margin-left: $data-card-padding;
-    margin-right: $data-card-padding;
+    margin-right: $data-card-padding;*/
     font-size: $data-card-content-font;
     line-height: $line-height-base;
-    text-align: justify;
-    max-height: $line-height-base * 5em;
+    /*text-align: justify;*/
+    //height: $line-height-base * $data-card-content-font * 3;
     overflow: hidden;
 }
 
@@ -253,7 +281,7 @@
     margin-top: auto; // ensure footer is always at the bottom
     font-size: $data-card-content-font;
     text-align: right;
-    padding: 0 $data-card-padding $data-card-padding;
+    //padding: 0 $data-card-padding $data-card-padding;
     color: $data-card-color-muted;
     //font-style: italic;
 }
@@ -310,28 +338,27 @@
 // ---
 
 .data-card-xs {
-    @include data-card-size-variant(30px, $data-card-title-sm-font, 10px);
+    @include data-card-size-variant(map-get($icon-sizes, sm), 2);
 
     .data-card-flag {
         font-size: 10px;
     }
 
     .data-card-title {
-        margin: 10px;
-        white-space: nowrap;
+        //margin: 10px;
+        //white-space: nowrap;
     }
 
     .data-card-description {
-        margin: 0 10px;
+        //margin: 0 10px;
     }
 
     .data-card-footer {
-        padding: 0 10px 10px;
+        //padding: 0 10px 10px;
     }
 }
-
 .data-card-sm {
-    @include data-card-size-variant($data-card-icon-sm-size, $data-card-title-sm-font, $data-card-padding);
+    @include data-card-size-variant(map-get($icon-sizes, sm), 2);
 
     .data-card-flags {
         bottom: $data-card-padding;
@@ -342,8 +369,11 @@
         font-size: 75%;
     }
 }
+.data-card-md {
+    @include data-card-size-variant(map-get($icon-sizes, md), 3);
+}
 .data-card-lg {
-    @include data-card-size-variant($data-card-icon-lg-size, $data-card-title-lg-font, 30px);
+    @include data-card-size-variant(map-get($icon-sizes, lg), 4);
 
     .data-card-flags {
         bottom: $data-card-padding;
@@ -383,5 +413,13 @@
 @media (min-width: map-get($grid-breakpoints, 'sm')) {
     .data-card-row {
         @include data-card-horizontal-variant();
+    }
+}
+
+@if $enable-dark-mode {
+    @include color-mode(dark) {
+        .data-card {
+            --#{$prefix}data-card-bg: #{$data-card-bg-dark};
+        }
     }
 }

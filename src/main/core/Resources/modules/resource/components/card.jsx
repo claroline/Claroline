@@ -11,6 +11,7 @@ import {UserMicro} from '#/main/core/user/components/micro'
 
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ResourceIcon} from '#/main/core/resource/components/icon'
+import {UserAvatar} from '#/main/app/user/components/avatar'
 
 const ResourceCard = props =>
   <DataCard
@@ -28,8 +29,30 @@ const ResourceCard = props =>
       null
     }
     title={props.data.name}
-    subtitle={trans(props.data.meta.type, {}, 'resource')}
-    flags={[
+    /*subtitle={trans(props.data.meta.type, {}, 'resource')}*/
+    meta={
+      <>
+        <span className="badge bg-secondary-subtle text-secondary-emphasis">{trans(props.data.meta.type, {}, 'resource')}</span>
+        {get(props.data, 'meta.published') &&
+          <span className="badge bg-secondary-subtle text-secondary-emphasis">{transChoice('display_views', get(props.data, 'meta.views') || 0, {count: get(props.data, 'meta.views') || 0})}</span>
+        }
+        {get(props.data, 'evaluation.estimatedDuration') &&
+          <span className="badge bg-secondary-subtle text-secondary-emphasis">
+            <span className="fa far fa-clock me-1" />
+            {get(props.data, 'evaluation.estimatedDuration') + ' ' + trans('minutes_short')}
+          </span>
+        }
+
+        {!get(props.data, 'meta.published') &&
+          <span className="badge bg-secondary-subtle text-secondary-emphasis text-capitalize">{trans('not_published')}</span>
+        }
+
+        {get(props.data, 'restrictions.hidden', false) &&
+          <span className="badge bg-secondary-subtle text-secondary-emphasis text-capitalize">{trans('hidden')}</span>
+        }
+      </>
+    }
+    /*flags={[
       !get(props.data, 'meta.published') && ['fa fa-fw fa-eye-slash', trans('resource_not_published', {}, 'resource')],
       get(props.data, 'meta.published') && [
         'fa fa-fw fa-eye',
@@ -38,9 +61,9 @@ const ResourceCard = props =>
           :
           trans('resource_published', {}, 'resource')
         , get(props.data, 'meta.views')]
-    ].filter(flag => !!flag)}
+    ].filter(flag => !!flag)}*/
     contentText={get(props.data, 'meta.description')}
-    footer={get(props.data, 'meta.creator') || get(props.data, 'meta.created') ?
+    /*footer={get(props.data, 'meta.creator') || get(props.data, 'meta.created') ?
       <span
         style={{
           display: 'flex',
@@ -54,7 +77,7 @@ const ResourceCard = props =>
       </span>
       :
       null
-    }
+    }*/
   />
 
 ResourceCard.propTypes = {

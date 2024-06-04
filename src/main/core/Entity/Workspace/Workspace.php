@@ -15,7 +15,6 @@ use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Entity\Display\Hidden;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
-use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
@@ -42,7 +41,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
  * @ORM\Table(name="claro_workspace", indexes={@ORM\Index(name="name_idx", columns={"entity_name"})})
  */
-class Workspace implements IdentifiableInterface, ContextSubjectInterface
+class Workspace implements ContextSubjectInterface
 {
     // identifiers
     use Id;

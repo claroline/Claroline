@@ -30,13 +30,6 @@ const Editor = (props) => {
       component: props.appearancePage,
       standard: true
     }, {
-      name: 'history',
-      title: trans('history'),
-      help: trans('Retrouvez toutes les modifications effectuées sur vos contenus.'),
-      disabled: !props.historyPage,
-      component: props.historyPage,
-      standard: true
-    }, {
       name: 'permissions',
       title: trans('permissions'),
       help: trans('Gérez les différents droits d\'accès et de modifications de vos utilisateurs.'),
@@ -44,6 +37,20 @@ const Editor = (props) => {
       component: props.permissionsPage,
       standard: true,
       managerOnly: true
+    }, {
+      name: 'history',
+      title: trans('history'),
+      help: trans('Retrouvez toutes les modifications effectuées sur vos contenus.'),
+      disabled: !props.historyPage,
+      component: props.historyPage,
+      advanced: true
+    }, {
+      name: 'actions',
+      title: trans('Actions avancées'),
+      help: trans('Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?'),
+      disabled: !props.actionsPage,
+      component: props.actionsPage,
+      advanced: true
     }
   ]
     .concat(props.pages)
@@ -61,8 +68,12 @@ const Editor = (props) => {
         canAdministrate: props.canAdministrate
       }}
     >
-      {!isEmpty(props.styles) &&
+      {(!isEmpty(props.styles) || props.title) &&
         <Helmet>
+          {props.title &&
+            <title>{props.title} - {trans('edition')}</title>
+          }
+
           {props.styles.map(style =>
             <link key={style} rel="stylesheet" type="text/css" href={theme(style)} />
           )}
@@ -86,7 +97,6 @@ const Editor = (props) => {
           path={props.path}
           title={props.title}
           pages={pages}
-          actions={!!props.actionsPage}
         />
 
         <div className="app-editor-body" role="presentation">
@@ -98,13 +108,7 @@ const Editor = (props) => {
             routes={pages.map(page => ({
               path: page.path || '/' + page.name,
               ...omit(page/*, 'component', 'render'*/)
-            })).concat(props.actionsPage ? [
-              {
-                name: 'actions',
-                path: '/actions',
-                component: props.actionsPage
-              }
-            ] : [])}
+            }))}
           />
         </div>
       </Modal>
@@ -162,6 +166,7 @@ Editor.propTypes = {
 Editor.defaultProps = {
   pages: [],
   actions: [],
+  styles: [],
   canAdministrate: false
 }
 

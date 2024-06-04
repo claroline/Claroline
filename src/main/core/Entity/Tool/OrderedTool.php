@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Hidden;
 use Claroline\AppBundle\Entity\Display\Order;
 use Claroline\AppBundle\Entity\Display\Poster;
@@ -29,7 +30,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *
  * @DoctrineAssert\UniqueEntity({"tool", "contextName", "contextId"})
  */
-class OrderedTool
+class OrderedTool implements CrudEntityInterface
 {
     use Id;
     use Uuid;
@@ -74,6 +75,20 @@ class OrderedTool
         $this->refreshUuid();
 
         $this->rights = new ArrayCollection();
+    }
+
+    public static function getIdentifiers(): array
+    {
+        return [];
+    }
+
+    public function getMimeType(): string
+    {
+        if ($this->name) {
+            return 'tool.'.$this->name;
+        }
+
+        return 'tool';
     }
 
     public function getName(): string

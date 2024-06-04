@@ -28,6 +28,6 @@
   },
   "claroline": {
     "requiredAtCreation": ["name"],
-    "ids":  ["id", "name", "code"]
+    "ids":  ["id", "code"]
   }
 }

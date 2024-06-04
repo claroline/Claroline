@@ -41,7 +41,7 @@ const EditorPage = (props) => {
             level={5}
             disabled={props.disabled}
             name={editorDef.name}
-            autoFocus={true}
+            autoFocus={props.autoFocus}
             dataPart={props.dataPart}
             definition={props.definition}
           />
@@ -53,7 +53,9 @@ const EditorPage = (props) => {
       <Toolbar
         className="app-editor-toolbar sticky-top"
         buttonName="btn btn-text-body"
+        separatorName="my-2 border-top border-1"
         tooltip="left"
+        toolbar={"close summary | " + props.actions.map(a => !['close', 'summary'].includes(a.name))}
         actions={[
           {
             name: 'close',
@@ -75,6 +77,7 @@ EditorPage.propTypes = {
   children: T.any,
   managerOnly: T.bool,
   disabled: T.bool,
+  autoFocus: T.bool,
   actions: T.arrayOf(T.shape({
 
   })),
@@ -82,6 +85,11 @@ EditorPage.propTypes = {
   definition: T.arrayOf(T.shape(
     DataFormSectionTypes.propTypes
   ))
+}
+
+EditorPage.defaultProps = {
+  autoFocus: true,
+  actions: []
 }
 
 export {

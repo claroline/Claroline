@@ -214,7 +214,7 @@ class Crud
     public function createOrUpdate(string $className, array $data, array $options = []): mixed
     {
         $object = $this->om->getObject($data, $className, $this->schema->getIdentifiers($className) ?? []);
-        if (empty($object)) {
+        if (!empty($object)) {
             return $this->update($object, $data, $options);
         }
 

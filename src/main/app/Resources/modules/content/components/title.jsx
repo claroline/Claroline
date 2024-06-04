@@ -43,7 +43,7 @@ const ContentTitle = props =>
   >
     {!isEmpty(props.backAction) &&
       <Button
-        className="btn btn-outline-secondary h-back"
+        className="btn btn-body h-back"
         label={trans('back')}
         {...props.backAction}
         icon="fa fa-fw fa-arrow-left"
@@ -71,7 +71,7 @@ const ContentTitle = props =>
       <Toolbar
         id={props.id || toKey(props.title)}
         className="btn-toolbar ms-auto align-self-start"
-        buttonName="btn btn-outline-secondary"
+        buttonName="btn btn-body"
         tooltip="bottom"
         toolbar="more"
         actions={props.actions}

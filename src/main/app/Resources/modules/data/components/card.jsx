@@ -1,10 +1,10 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
-import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
 import {getPlainText} from '#/main/app/data/types/html/utils'
 import {number} from '#/main/app/intl'
 import {Await} from '#/main/app/components/await'
@@ -112,11 +112,13 @@ const CardHeader = props => {
   }
 
   return (
-    <div className="data-card-header" style={!isEmpty(headerStyles) ? headerStyles : undefined} role="presentation">
-      {typeof props.icon === 'string' ?
-        <span className={props.icon} aria-hidden={true} /> :
-        props.icon
-      }
+    <div className="data-card-header" role="presentation">
+      <div className="thumbnail ratio ratio-thumbnail" style={!isEmpty(headerStyles) ? headerStyles : undefined}>
+        {typeof props.icon === 'string' ?
+          <span className={props.icon} aria-hidden={true} /> :
+          props.icon
+        }
+      </div>
 
       {0 !== props.flags.length &&
         <div className="data-card-flags" role="presentation">
@@ -198,9 +200,11 @@ const DataCard = props =>
         }
       </Heading>
 
-      {-1 === ['xs', 'sm'].indexOf(props.size) && -1 !== props.display.indexOf('description') && props.contentText &&
-        <p key="data-card-description" className="data-card-description">
-          {getPlainText(props.contentText)}
+      {/*-1 === ['xs', 'sm'].indexOf(props.size) && */-1 !== props.display.indexOf('description') &&
+        <p key="data-card-description" className={classes('data-card-description text-body-secondary', {
+          'mb-0': 'xs' === props.size || !props.meta
+        })}>
+          {props.contentText && getPlainText(props.contentText)}
         </p>
       }
 
@@ -209,6 +213,12 @@ const DataCard = props =>
       {-1 === ['xs', 'sm'].indexOf(props.size) && -1 !== props.display.indexOf('footer') && props.footer &&
         <div key="data-card-footer" className="data-card-footer" role="presentation">
           {props.footer}
+        </div>
+      }
+
+      {'xs' !== props.size && props.meta &&
+        <div className="d-flex flex-row flex-wrap align-items-center gap-1 mt-auto">
+          {props.meta}
         </div>
       }
     </CardAction>
@@ -226,7 +236,8 @@ const DataCard = props =>
     }
   </article>
 
-implementPropTypes(DataCard, DataCardTypes)
+DataCard.propTypes = DataCardTypes.propTypes
+DataCard.defaultProps = DataCardTypes.defaultProps
 
 export {
   DataCard

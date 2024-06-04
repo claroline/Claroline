@@ -42,12 +42,12 @@ class AnswerManagerTest extends TransactionalTestCase
         $this->serializer->expects($this->once())
             ->method('serialize')
             ->with($answer, $options)
-            ->willReturn(new \stdClass());
+            ->willReturn([]);
 
         $data = $this->manager->serialize($answer, $options);
 
         // Checks the result of the serializer is returned
-        $this->assertInstanceOf('\stdClass', $data);
+        $this->assertIsArray($data);
     }
 
     public function testCreate()

@@ -1,5 +1,17 @@
 // Dark color mode variables
 
+// scss-docs-start theme-bg-subtle-dark-variables
+$primary-bg-subtle-dark:            shade-color($primary, 90%);
+$secondary-bg-subtle-dark:          shade-color($secondary, 90%);
+$success-bg-subtle-dark:            shade-color($success, 90%);
+$info-bg-subtle-dark:               shade-color($info, 90%);
+$warning-bg-subtle-dark:            shade-color($warning, 90%);
+$danger-bg-subtle-dark:             shade-color($danger, 90%);
+$light-bg-subtle-dark:              $gray-800 !default;
+$dark-bg-subtle-dark:               mix($gray-800, $black) !default;
+$learning-bg-subtle-dark:           shade-color($learning, 90%); // custom claroline
+// scss-docs-end theme-bg-subtle-dark-variables
+
 //
 // Menu
 //
@@ -17,3 +29,5 @@ $toolbar-link-active-color-dark:   $toolbar-color-dark !default;
 $toolbar-link-active-bg-dark:      fade-out($toolbar-color-dark, .9) !default;
 $toolbar-link-disabled-color-dark: fade-out($toolbar-color-dark, .5) !default;
 $toolbar-link-disabled-bg-dark:    null !default;
+
+$data-card-bg-dark: $toolbar-bg-dark;

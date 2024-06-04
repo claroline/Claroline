@@ -39,8 +39,8 @@ actions.sendRequest = (apiRequest) => (dispatch) => {
 }
 
 // response actions
-actions.processResponse = makeActionCreator(RESPONSE_RECEIVE, 'apiRequest', 'status', 'statusText')
-actions.receiveResponse = (apiRequest, status, statusText) => dispatch => {
+actions.processResponse = makeActionCreator(RESPONSE_RECEIVE, 'apiRequest', 'status', 'statusText', 'response')
+actions.receiveResponse = (apiRequest, status, statusText, response) => dispatch => {
   if (!apiRequest.silent) {
     // removes pending alert
     /*dispatch(alertActions.removeAlert(
@@ -73,7 +73,7 @@ actions.receiveResponse = (apiRequest, status, statusText) => dispatch => {
     }
   }
 
-  return dispatch(actions.processResponse(apiRequest, status, statusText))
+  return dispatch(actions.processResponse(apiRequest, status, statusText, response))
 }
 
 // file actions

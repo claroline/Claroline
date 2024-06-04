@@ -24,7 +24,7 @@
   width: map-get($icon-sizes, sm);
   height: map-get($icon-sizes, sm);
   border-radius: 50%;
-  font-size: 1.25rem;
+  //font-size: 1.25rem;
   background: var(--#{$prefix}menu-bg-subtle);
   display: flex;
   align-items: center;
@@ -72,10 +72,18 @@
   }
 }
 
+.notification-status,
 .app-context-status {
+  display: inline-block;
   border: .25rem solid var(--#{$prefix}menu-bg);
-  width: .875em;
-  height: .875em;
+  /*width: .875em;
+  height: .875em;*/
+  line-height: 1;
+  font-size: .75rem;
+  font-weight: bolder;
+  padding: map-get($spacers, 1);
+  min-width: .75rem;
+  box-sizing: content-box;
 }
 
 .app-context-icon {

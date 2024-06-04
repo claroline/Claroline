@@ -10,13 +10,13 @@ import {EditorPage} from '#/main/app/editor/components/page'
 import {EditorContext} from '#/main/app/editor/context'
 
 const ActionCard = (props) =>
-  <article className={classes('card mb-2', props.dangerous && 'border-danger')}>
+  <article className={classes('app-editor-action card mb-2', props.dangerous && 'border-danger')}>
     <div className="card-body d-flex flex-row gap-3 align-items-start" role="presentation">
       <div className="flex-fill" role="presentation">
-        <b className="d-block mb-2">
+        <b className="d-flex align-items-baseline mb-2 gap-2">
           {props.title}
           {props.managerOnly &&
-            <span className={classes(' ms-2 badge', props.dangerous ? 'text-danger-emphasis bg-danger-subtle' : 'text-secondary-emphasis bg-secondary-subtle')}>{trans('confidentiality_manager')}</span>
+            <span className={classes('badge', props.dangerous ? 'text-danger-emphasis bg-danger-subtle' : 'text-secondary-emphasis bg-secondary-subtle')}>{trans('confidentiality_manager')}</span>
           }
         </b>
         <p className="card-text text-body-secondary fs-sm">{props.help}</p>

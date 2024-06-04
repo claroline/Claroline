@@ -15,26 +15,21 @@ use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use UJM\ExoBundle\Entity\Item\Item;
 
 /**
  * Quiz questions finder (used by the Question bank).
  */
 class QuestionFinder extends AbstractFinder
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /**
-     * QuestionFinder constructor.
-     */
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
-        $this->tokenStorage = $tokenStorage;
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage
+    ) {
     }
 
     public static function getClass(): string
     {
-        return 'UJM\ExoBundle\Entity\Item\Item';
+        return Item::class;
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder

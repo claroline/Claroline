@@ -274,6 +274,7 @@ class SearchUnified extends Component {
               placeholder={trans('list_search_placeholder')}
               value={this.state.currentSearch}
               disabled={this.props.disabled}
+              autoFocus={this.props.autoFocus}
               onChange={(e) => this.updateSearch(e.target.value)}
             />
           </div>
@@ -317,6 +318,7 @@ class SearchUnified extends Component {
 SearchUnified.propTypes = {
   id: T.string.isRequired,
   disabled: T.bool,
+  autoFocus: T.bool,
   available: T.arrayOf(T.shape({
     name: T.string.isRequired,
     type: T.string.isRequired,
@@ -333,7 +335,8 @@ SearchUnified.propTypes = {
 }
 
 SearchUnified.defaultProps = {
-  disabled: false
+  disabled: false,
+  autoFocus: false
 }
 
 export {

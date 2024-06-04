@@ -16,30 +16,22 @@ class StepSerializer
 {
     use SerializerTrait;
 
-    /**
-     * @var ItemSerializer
-     */
-    private $itemSerializer;
-
-    /**
-     * StepSerializer constructor.
-     */
-    public function __construct(ItemSerializer $itemSerializer)
-    {
-        $this->itemSerializer = $itemSerializer;
+    public function __construct(
+        private readonly ItemSerializer $itemSerializer
+    ) {
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'exo_step';
     }
 
-    /**
-     * Converts a Step into a JSON-encodable structure.
-     *
-     * @return array
-     */
-    public function serialize(Step $step, array $options = [])
+    public function getClass(): string
+    {
+        return Step::class;
+    }
+
+    public function serialize(Step $step, array $options = []): array
     {
         $serialized = [
             'id' => $step->getUuid(),
@@ -61,13 +53,8 @@ class StepSerializer
 
     /**
      * Converts raw data into a Step entity.
-     *
-     * @param array $data
-     * @param Step  $step
-     *
-     * @return Step
      */
-    public function deserialize($data, Step $step = null, array $options = [])
+    public function deserialize(array $data, Step $step = null, array $options = []): Step
     {
         $step = $step ?: new Step();
 
@@ -99,12 +86,7 @@ class StepSerializer
         return $step;
     }
 
-    /**
-     * Serializes Step parameters.
-     *
-     * @return array
-     */
-    private function serializeParameters(Step $step)
+    private function serializeParameters(Step $step): array
     {
         return [
             'duration' => $step->getDuration(),
@@ -112,16 +94,13 @@ class StepSerializer
         ];
     }
 
-    /**
-     * Deserializes Step parameters.
-     */
-    private function deserializeParameters(Step $step, array $parameters)
+    private function deserializeParameters(Step $step, array $parameters): void
     {
         $this->sipe('maxAttempts', 'setMaxAttempts', $parameters, $step);
         $this->sipe('duration', 'setDuration', $parameters, $step);
     }
 
-    private function serializePicking(Step $step)
+    private function serializePicking(Step $step): array
     {
         return [
             'randomOrder' => $step->getRandomOrder(),
@@ -130,7 +109,7 @@ class StepSerializer
         ];
     }
 
-    private function deserializePicking(Step $step, array $picking)
+    private function deserializePicking(Step $step, array $picking): void
     {
         $this->sipe('randomOrder', 'setRandomOrder', $picking, $step);
 
@@ -148,10 +127,8 @@ class StepSerializer
     /**
      * Serializes Step items.
      * Forwards the item serialization to ItemSerializer.
-     *
-     * @return array
      */
-    public function serializeItems(Step $step, array $options = [])
+    public function serializeItems(Step $step, array $options = []): array
     {
         return array_values(array_map(function (StepItem $stepQuestion) use ($options) {
             $serialized = $this->itemSerializer->serialize($stepQuestion->getQuestion(), $options);
@@ -165,7 +142,7 @@ class StepSerializer
      * Deserializes Step items.
      * Forwards the item deserialization to ItemSerializer.
      */
-    public function deserializeItems(Step $step, array $items = [], array $options = [])
+    public function deserializeItems(Step $step, array $items = [], array $options = []): void
     {
         $stepQuestions = $step->getStepQuestions()->toArray();
 

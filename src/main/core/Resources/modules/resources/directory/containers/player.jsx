@@ -18,7 +18,8 @@ const DirectoryPlayer = connect(
     currentNode: resourceSelectors.resourceNode(state),
     listName: selectors.LIST_NAME,
     listConfiguration: selectors.listConfiguration(state),
-    storageLock: selectors.storageLock(state)
+    storageLock: selectors.storageLock(state),
+    isRoot: resourceSelectors.isRoot(state)
   }),
   (dispatch) => ({
     createFiles(parent, files) {

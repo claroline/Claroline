@@ -21,6 +21,7 @@ class NotificationSerializer
     {
         return [
             'id' => $notification->getUuid(),
+            'thumbnail' => $notification->getThumbnail(),
             'message' => $notification->getMessage(),
             'date' => DateNormalizer::normalize($notification->getCreatedAt()),
         ];

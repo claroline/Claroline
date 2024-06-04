@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -24,7 +25,8 @@ class ResourceNodeController extends AbstractCrudController
     public function __construct(
         private readonly ResourceActionManager $actionManager,
         private readonly RightsManager $rightsManager,
-        private readonly TokenStorageInterface $token
+        private readonly TokenStorageInterface $token,
+        private readonly AuthorizationCheckerInterface $authorization
     ) {
     }
 
@@ -41,51 +43,6 @@ class ResourceNodeController extends AbstractCrudController
     public function getIgnore(): array
     {
         return ['list'];
-    }
-
-    /**
-     * @Route("/{parent}/{all}", name="apiv2_resource_list", defaults={"parent"=null}, requirements={"all": "all"})
-     *
-     * @param string $parent
-     * @param string $all
-     */
-    public function listChildrenAction(Request $request, $parent, $all = null): JsonResponse
-    {
-        $options = $request->query->all();
-
-        if ($parent) {
-            // grab directory content
-            /** @var ResourceNode $parentNode */
-            $parentNode = $this->om->getRepository(ResourceNode::class)->findOneByUuidOrSlug($parent);
-
-            if ($all) {
-                $options['hiddenFilters']['path.after'] = $parentNode ? $parentNode->getPath() : null;
-            } else {
-                $options['hiddenFilters']['parent'] = $parentNode ? $parentNode->getUuid() : null;
-            }
-
-            if ($parentNode) {
-                $permissions = $this->rightsManager->getCurrentPermissionArray($parentNode);
-
-                if (!isset($permissions['administrate']) || !$permissions['administrate']) {
-                    $options['hiddenFilters']['published'] = true;
-                    $options['hiddenFilters']['hidden'] = false;
-                }
-            }
-        } elseif (!$all) {
-            $options['hiddenFilters']['parent'] = null;
-        }
-        $options['hiddenFilters']['active'] = true;
-        $options['hiddenFilters']['resourceTypeEnabled'] = true;
-
-        $roles = $this->token->getToken()->getRoleNames();
-        if (!in_array('ROLE_ADMIN', $roles) || empty($options['hiddenFilters']['parent'])) {
-            $options['hiddenFilters']['roles'] = $roles;
-        }
-
-        return new JsonResponse(
-            $this->crud->list(ResourceNode::class, $options, $this->getOptions()['list'])
-        );
     }
 
     /**
@@ -108,6 +65,47 @@ class ResourceNodeController extends AbstractCrudController
 
         return new JsonResponse(
             array_values($this->rightsManager->getRights($resourceNode))
+        );
+    }
+
+    /**
+     * @Route("/{contextId}/{parent}", name="apiv2_resource_list", defaults={"contextId"=null, "parent"=null})
+     */
+    public function listChildrenAction(Request $request, ?string $contextId = null, ?string $parent = null): JsonResponse
+    {
+        $options = $request->query->all();
+
+        $options['hiddenFilters']['parent'] = null;
+        if ($contextId || $parent) {
+            if (!$parent) {
+                $parentNode = $this->om->getRepository(ResourceNode::class)->findWorkspaceRoot($contextId);
+            } else {
+                $parentNode = $this->om->getRepository(ResourceNode::class)->findOneByUuidOrSlug($parent);
+            }
+
+            // grab directory content
+            if ($parentNode) {
+                $options['hiddenFilters']['parent'] = $parentNode->getUuid();
+
+                if (!$this->authorization->isGranted('ADMINISTRATE', $parentNode)) {
+                    $options['hiddenFilters']['published'] = true;
+                    $options['hiddenFilters']['hidden'] = false;
+                }
+            } else {
+                $options['hiddenFilters']['workspace'] = $contextId;
+            }
+        }
+
+        $options['hiddenFilters']['active'] = true;
+        $options['hiddenFilters']['resourceTypeEnabled'] = true;
+
+        $roles = $this->token->getToken()->getRoleNames();
+        if (!in_array('ROLE_ADMIN', $roles) || empty($options['hiddenFilters']['parent'])) {
+            $options['hiddenFilters']['roles'] = $roles;
+        }
+
+        return new JsonResponse(
+            $this->crud->list(ResourceNode::class, $options, $this->getOptions()['list'])
         );
     }
 

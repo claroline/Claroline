@@ -139,6 +139,9 @@ class ContextController
             foreach ($data['tools'] as $toolData) {
                 /** @var OrderedTool $updatedTool */
                 $updatedTool = $this->crud->createOrUpdate(OrderedTool::class, $toolData, [Crud::NO_PERMISSIONS]);
+                $updatedTool->setContextName($context);
+                $updatedTool->setContextId($contextObject ? $contextObject->getContextIdentifier() : null);
+
                 $updatedTools[$updatedTool->getName()] = $updatedTool;
             }
 

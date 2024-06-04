@@ -18,25 +18,20 @@ class PaperSerializer
 {
     use SerializerTrait;
 
-    /**
-     * @var UserSerializer
-     */
-    private $userSerializer;
-
-    /**
-     * @var AnswerSerializer
-     */
-    private $answerSerializer;
-
-    public function __construct(UserSerializer $userSerializer, AnswerSerializer $answerSerializer)
-    {
-        $this->userSerializer = $userSerializer;
-        $this->answerSerializer = $answerSerializer;
+    public function __construct(
+        private readonly UserSerializer $userSerializer,
+        private readonly AnswerSerializer $answerSerializer
+    ) {
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'exo_paper';
+    }
+
+    public function getClass(): string
+    {
+        return Paper::class;
     }
 
     /**
@@ -72,15 +67,7 @@ class PaperSerializer
         return $serialized;
     }
 
-    /**
-     * Converts raw data into a Paper entity.
-     *
-     * @param array $data
-     * @param Paper $paper
-     *
-     * @return Paper
-     */
-    public function deserialize($data, Paper $paper = null, array $options = [])
+    public function deserialize(array $data, Paper $paper = null, array $options = []): Paper
     {
         $paper = $paper ?: new Paper();
 
@@ -109,12 +96,7 @@ class PaperSerializer
         return $paper;
     }
 
-    /**
-     * Serializes paper answers.
-     *
-     * @return array
-     */
-    private function serializeAnswers(Paper $paper, array $options = [])
+    private function serializeAnswers(Paper $paper, array $options = []): array
     {
         // We need to inject the hints available in the structure
         $options['hints'] = $paper->getHints();
@@ -124,7 +106,7 @@ class PaperSerializer
         }, $paper->getAnswers()->toArray());
     }
 
-    private function deserializeAnswers(Paper $paper, array $answers, array $options = [])
+    private function deserializeAnswers(Paper $paper, array $answers, array $options = []): void
     {
         foreach ($answers as $answerData) {
             $answer = $this->answerSerializer->deserialize($answerData, $paper->getAnswer($answerData['questionId']), $options);

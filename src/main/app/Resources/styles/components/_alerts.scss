@@ -13,7 +13,7 @@
 
     &:before {
         content: " ";
-        left: 0;
+        left: calc(var(--#{$prefix}border-width) * -1);
         top: calc(var(--#{$prefix}border-width) * -1);
         bottom: calc(var(--#{$prefix}border-width) * -1);
         position: absolute;

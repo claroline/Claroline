@@ -5,7 +5,7 @@ import {Image as ImageTypes} from '#/plugin/image-player/files/image/prop-types'
 import {ResourcePage} from '#/main/core/resource'
 
 const ImagePlayer = props =>
-  <ResourcePage>
+  <ResourcePage root={true}>
     <img
       style={{
         marginLeft: 'auto',

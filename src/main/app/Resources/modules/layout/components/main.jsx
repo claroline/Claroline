@@ -11,7 +11,6 @@ import {HomeRegistration} from '#/main/app/layout/components/registration'
 import {SendPassword} from '#/main/app/layout/components/send-password'
 import {NewPassword} from '#/main/app/layout/components/new-password'
 import {HomeLogin} from '#/main/app/layout/components/login'
-import {ContextNav} from '#/main/app/context/containers/nav'
 
 const LayoutMain = props => {
   const [loaded, setLoaded] = useState(false)

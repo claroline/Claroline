@@ -52,7 +52,6 @@ const HistoryModal = (props) => {
         />
       }
 
-
       {props.loaded && (isEmpty(props.results) || isEmpty(props.results[section])) &&
         <div className="modal-body">
           <ContentPlaceholder

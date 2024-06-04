@@ -5,6 +5,7 @@ import {constants} from '#/main/app/content/search/constants'
 const Search = {
   propTypes: {
     disabled: T.bool,
+    autoFocus: T.bool,
     mode: T.oneOf(
       Object.keys(constants.SEARCH_TYPES)
     ),
@@ -23,6 +24,7 @@ const Search = {
   },
   defaultProps: {
     disabled: false,
+    autoFocus: false,
     mode: constants.DEFAULT_SEARCH_TYPE,
     current: []
   }

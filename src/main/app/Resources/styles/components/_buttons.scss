@@ -2,25 +2,6 @@
  * Buttons styles
  */
 
-// removes default button styles everywhere
-// appears as a <a>
-button,
-input[type=button],
-input[type=submit],
-input[type=reset] {
-    font-weight: $font-weight-base;
-    background-color: transparent;
-    border: none;
-    text-decoration: none;
-    box-shadow: none;
-    padding: 0;
-
-    &:hover,
-    &:focus {
-        box-shadow: none;
-    }
-}
-
 .toolbar-separator {
     display: inline-block;
     margin: map-get($spacers, 2);
@@ -50,7 +31,7 @@ input[type=reset] {
 
 .btn-body {
     --#{$prefix}btn-color: var(--#{$prefix}body-color);
-    --#{$prefix}btn-bg: var(--#{$prefix}body-bg);
+    --#{$prefix}btn-bg: var(--#{$prefix}tertiary-bg);
     --#{$prefix}btn-border-color: var(--#{$prefix}border-color-translucent);
 
     --#{$prefix}btn-hover-color: var(--#{$prefix}body-color);
@@ -64,6 +45,9 @@ input[type=reset] {
     --#{$prefix}btn-disabled-color: var(--#{$prefix}tertiary-color-color);
     --#{$prefix}btn-disabled-bg: var(--#{$prefix}body-bg);
     --#{$prefix}btn-disabled-border-color: var(--#{$prefix}border-color-translucent);
+
+    --#{$prefix}btn-active-shadow: #{$btn-active-box-shadow};
+    --#{$prefix}btn-focus-shadow-rgb: var(--#{$prefix}secondary-rgb);
 }
 
 //-

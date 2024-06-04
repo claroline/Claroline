@@ -107,6 +107,11 @@ const Toolbar = {
      */
     buttonName: T.string,
 
+    primaryName: T.string,
+    defaultName: T.string,
+    dangerousName: T.string,
+    separatorName: T.string,
+
     size: T.oneOf(['xs', 'sm', 'lg']),
 
     /**

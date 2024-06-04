@@ -29,50 +29,27 @@ class ItemSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var ItemDefinitionsCollection */
-    private $itemDefinitions;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var HintSerializer */
-    private $hintSerializer;
-    /** @var ResourceContentSerializer */
-    private $resourceContentSerializer;
-    /** @var ItemObjectSerializer */
-    private $itemObjectSerializer;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        ItemDefinitionsCollection $itemDefinitions,
-        UserSerializer $userSerializer,
-        HintSerializer $hintSerializer,
-        ResourceContentSerializer $resourceContentSerializer,
-        ItemObjectSerializer $itemObjectSerializer,
-        EventDispatcherInterface $eventDispatcher
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly ItemDefinitionsCollection $itemDefinitions,
+        private readonly UserSerializer $userSerializer,
+        private readonly HintSerializer $hintSerializer,
+        private readonly ResourceContentSerializer $resourceContentSerializer,
+        private readonly ItemObjectSerializer $itemObjectSerializer,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->itemDefinitions = $itemDefinitions;
-        $this->userSerializer = $userSerializer;
-        $this->hintSerializer = $hintSerializer;
-        $this->resourceContentSerializer = $resourceContentSerializer;
-        $this->itemObjectSerializer = $itemObjectSerializer;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function getName(): string
     {
         return 'exo_item';
+    }
+
+    public function getClass(): string
+    {
+        return Item::class;
     }
 
     /**
@@ -204,10 +181,8 @@ class ItemSerializer
     /**
      * Serializes Item data specific to its type.
      * Forwards the serialization to the correct handler.
-     *
-     * @return array
      */
-    private function serializeQuestionType(Item $question, array $options = [])
+    private function serializeQuestionType(Item $question, array $options = []): array
     {
         $type = $this->itemDefinitions->getConvertedType($question->getMimeType());
         $definition = $this->itemDefinitions->get($type);
@@ -219,7 +194,7 @@ class ItemSerializer
      * Deserializes Item data specific to its type.
      * Forwards the serialization to the correct handler.
      */
-    private function deserializeQuestionType(Item $question, array $data, array $options = [])
+    private function deserializeQuestionType(Item $question, array $data, array $options = []): void
     {
         $type = $this->itemDefinitions->getConvertedType($question->getMimeType());
         $definition = $this->itemDefinitions->get($type);
@@ -234,10 +209,8 @@ class ItemSerializer
 
     /**
      * Serializes Item metadata.
-     *
-     * @return array
      */
-    private function serializeMetadata(Item $question, array $options = [])
+    private function serializeMetadata(Item $question, array $options = []): array
     {
         $metadata = ['protectQuestion' => $question->getProtectUpdate()];
 
@@ -264,7 +237,7 @@ class ItemSerializer
     /**
      * Deserializes Item metadata.
      */
-    public function deserializeMetadata(Item $question, array $metadata)
+    public function deserializeMetadata(Item $question, array $metadata): void
     {
         $this->sipe('protectQuestion', 'setProtectUpdate', $metadata, $question);
     }
@@ -272,10 +245,8 @@ class ItemSerializer
     /**
      * Serializes Item hints.
      * Forwards the hint serialization to HintSerializer.
-     *
-     * @return array
      */
-    private function serializeHints(Item $question, array $options = [])
+    private function serializeHints(Item $question, array $options = []): array
     {
         return array_map(function (Hint $hint) use ($options) {
             return $this->hintSerializer->serialize($hint, $options);
@@ -286,7 +257,7 @@ class ItemSerializer
      * Deserializes Item hints.
      * Forwards the hint deserialization to HintSerializer.
      */
-    private function deserializeHints(Item $question, array $hints = [], array $options = [])
+    private function deserializeHints(Item $question, array $hints = [], array $options = []): void
     {
         $hintEntities = $question->getHints()->toArray();
 
@@ -322,10 +293,8 @@ class ItemSerializer
     /**
      * Serializes Item objects.
      * Forwards the object serialization to ItemObjectSerializer.
-     *
-     * @return array
      */
-    private function serializeObjects(Item $question, array $options = [])
+    private function serializeObjects(Item $question, array $options = []): array
     {
         return array_values(array_map(function (ItemObject $object) use ($options) {
             return $this->itemObjectSerializer->serialize($object, $options);
@@ -335,7 +304,7 @@ class ItemSerializer
     /**
      * Deserializes Item objects.
      */
-    private function deserializeObjects(Item $question, array $objects = [], array $options = [])
+    private function deserializeObjects(Item $question, array $objects = [], array $options = []): void
     {
         $objectEntities = $question->getObjects()->toArray();
         $question->emptyObjects();
@@ -368,10 +337,8 @@ class ItemSerializer
     /**
      * Serializes Item resources.
      * Forwards the resource serialization to ResourceContentSerializer.
-     *
-     * @return array
      */
-    private function serializeResources(Item $question, array $options = [])
+    private function serializeResources(Item $question, array $options = []): array
     {
         return array_map(function (ItemResource $resource) use ($options) {
             return $this->resourceContentSerializer->serialize($resource->getResourceNode(), $options);
@@ -381,7 +348,7 @@ class ItemSerializer
     /**
      * Deserializes Item resources.
      */
-    private function deserializeResources(Item $question, array $resources = [], array $options = [])
+    private function deserializeResources(Item $question, array $resources = [], array $options = []): void
     {
         $resourceEntities = $question->getResources()->toArray();
 
@@ -423,12 +390,8 @@ class ItemSerializer
 
     /**
      * The client may send dirty data, we need to clean them before storing it in DB.
-     *
-     * @param $score
-     *
-     * @return array
      */
-    private function sanitizeScore($score)
+    private function sanitizeScore(array $score): array
     {
         $sanitized = ['type' => $score['type']];
 
@@ -460,10 +423,8 @@ class ItemSerializer
     /**
      * Serializes Item tags.
      * Forwards the tag serialization to ItemTagSerializer.
-     *
-     * @return array
      */
-    private function serializeTags(Item $question)
+    private function serializeTags(Item $question): array
     {
         $event = new GenericDataEvent([
             'class' => Item::class,
@@ -477,7 +438,7 @@ class ItemSerializer
     /**
      * Deserializes Item tags.
      */
-    private function deserializeTags(Item $question, array $tags = [], array $options = [])
+    private function deserializeTags(Item $question, array $tags = [], array $options = []): void
     {
         if (in_array(Options::PERSIST_TAG, $options)) {
             $event = new GenericDataEvent([

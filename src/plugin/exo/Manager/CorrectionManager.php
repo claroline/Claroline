@@ -15,48 +15,18 @@ use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 
 class CorrectionManager
 {
-    /**
-     * @var ObjectManager
-     */
-    private $om;
+    private PaperRepository $paperRepository;
 
-    /**
-     * @var PaperRepository
-     */
-    private $paperRepository;
-
-    /**
-     * @var AnswerManager
-     */
-    private $answerManager;
-
-    /**
-     * @var PaperManager
-     */
-    private $paperManager;
-
-    /**
-     * @var ItemSerializer
-     */
-    private $itemSerializer;
-
-    /**
-     * ExerciseManager constructor.
-     */
     public function __construct(
-        ObjectManager $om,
-        AnswerManager $answerManager,
-        PaperManager $paperManager,
-        ItemSerializer $itemSerializer)
-    {
-        $this->om = $om;
+        private readonly ObjectManager $om,
+        private readonly AnswerManager $answerManager,
+        private readonly PaperManager $paperManager,
+        private readonly ItemSerializer $itemSerializer
+    ) {
         $this->paperRepository = $this->om->getRepository(Paper::class);
-        $this->answerManager = $answerManager;
-        $this->paperManager = $paperManager;
-        $this->itemSerializer = $itemSerializer;
     }
 
-    public function getToCorrect(Exercise $exercise)
+    public function getToCorrect(Exercise $exercise): array
     {
         $answers = [];
         $questions = [];
@@ -88,7 +58,7 @@ class CorrectionManager
      *
      * @throws InvalidDataException
      */
-    public function save(array $correctedAnswers = [])
+    public function save(array $correctedAnswers = []): void
     {
         $updatedPapers = [];
 
@@ -127,11 +97,11 @@ class CorrectionManager
         $this->om->flush();
     }
 
-    private function applyPenalties(Answer $answer)
+    private function applyPenalties(Answer $answer): void
     {
         $paper = $answer->getPaper();
 
-        // Retrieve the def o the question which is answered
+        // Retrieve the def of the question which is answered
         $question = $paper->getQuestion($answer->getQuestionId());
 
         foreach ($answer->getUsedHints() as $usedHint) {

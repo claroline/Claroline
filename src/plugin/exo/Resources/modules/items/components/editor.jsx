@@ -28,6 +28,7 @@ const ItemEditor = props => {
       id={`form-${props.item.id}`}
       className="quiz-item item-editor"
       flush={true}
+      autoFocus={props.autoFocus}
       embedded={props.embedded}
       name={props.formName}
       meta={props.meta}
@@ -64,6 +65,7 @@ const ItemEditor = props => {
           title: trans('custom'),
           primary: true,
           fill: true,
+          hideTitle: true,
           render: () => createElement(props.definition.components.editor, {
             formName: props.formName,
             path: props.path,
@@ -188,6 +190,7 @@ ItemEditor.propTypes = {
   formName: T.string.isRequired,
   path: T.string,
   disabled: T.bool,
+  autoFocus: T.bool,
   enableScores: T.bool, // used when the parent quiz disable the score
 
   /**

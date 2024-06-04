@@ -12,6 +12,8 @@ import {route} from '#/main/core/workspace/routing'
 import {MODAL_HISTORY} from '#/plugin/history/modals/history'
 import {MODAL_CONTEXT_SEARCH} from '#/main/app/context/modals/search'
 import {AppBrand} from '#/main/app/layout/components/brand'
+import {MODAL_MY_NOTIFICATIONS} from '#/main/notification/modals/my-notifications'
+import {NotificationButton} from '#/main/notification/components/button'
 
 const ContextNav = (props) => {
   if (!props.currentUser) {
@@ -29,7 +31,7 @@ const ContextNav = (props) => {
   return (
     <section className="app-contexts">
       <AppBrand className="menu-brand" />
-      {[]
+      {false && []
         .concat(props.availableContexts)
         .filter(availableContext => availableContext.root)
         .sort((a, b) => {
@@ -52,11 +54,6 @@ const ContextNav = (props) => {
                 target="/desktop"
               >
                 <UserAvatar user={props.currentUser} size="md" noStatus={true}/>
-                {/*<span
-                  className="app-context-status position-absolute top-100 start-100 translate-middle m-n1 bg-learning rounded-circle"
-                >
-                  <span className="visually-hidden">New alerts</span>
-                </span>*/}
               </Button>
             )
           }
@@ -74,6 +71,21 @@ const ContextNav = (props) => {
           )
         })
       }
+
+      <Button
+        type={LINK_BUTTON}
+        className="app-context-btn position-relative"
+        label={trans('desktop', {}, 'context')}
+        tooltip="right"
+        target="/desktop"
+      >
+        <UserAvatar user={props.currentUser} size="md" noStatus={true}/>
+      </Button>
+
+      <NotificationButton
+        className="app-context-btn"
+        tooltip="right"
+      />
 
       <hr className="app-context-separator" />
 
@@ -94,13 +106,6 @@ const ContextNav = (props) => {
               backgroundPosition: 'center'
             } : undefined}
           />
-          {false &&
-            <span
-              className="app-context-status position-absolute top-100 start-100 translate-middle m-n1 bg-learning rounded-circle"
-            >
-              <span className="visually-hidden">New alerts</span>
-            </span>
-          }
         </Button>
       ))}
 

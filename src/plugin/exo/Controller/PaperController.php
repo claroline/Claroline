@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,33 +30,13 @@ class PaperController
 {
     use RequestDecoderTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var ObjectManager */
-    private $om;
-
-    /* @var FinderProvider */
-    protected $finder;
-
-    /** @var PaperManager */
-    private $paperManager;
-
-    /** @var ExerciseManager */
-    private $exerciseManager;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        FinderProvider $finder,
-        PaperManager $paperManager,
-        ExerciseManager $exerciseManager
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly FinderProvider $finder,
+        private readonly PaperManager $paperManager,
+        private readonly ExerciseManager $exerciseManager
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->finder = $finder;
-        $this->paperManager = $paperManager;
-        $this->exerciseManager = $exerciseManager;
     }
 
     /**
@@ -76,10 +55,7 @@ class PaperController
         $params['hiddenFilters'] = [];
         $params['hiddenFilters']['exercise'] = $exercise->getId();
 
-        $collection = new ResourceCollection([$exercise->getResourceNode()]);
-        if (!$this->authorization->isGranted('ADMINISTRATE', $collection) &&
-            !$this->authorization->isGranted('MANAGE_PAPERS', $collection)
-        ) {
+        if (!$this->isAdmin($exercise)) {
             $params['hiddenFilters']['user'] = $user->getUuid();
         }
 
@@ -197,17 +173,14 @@ class PaperController
      */
     private function isAdmin(Exercise $exercise): bool
     {
-        $collection = new ResourceCollection([$exercise->getResourceNode()]);
-
-        return $this->authorization->isGranted('ADMINISTRATE', $collection) || $this->authorization->isGranted('MANAGE_PAPERS', $collection);
+        return $this->authorization->isGranted('ADMINISTRATE', $exercise->getResourceNode())
+            || $this->authorization->isGranted('MANAGE_PAPERS', $exercise->getResourceNode());
     }
 
-    private function assertHasPermission($permission, Exercise $exercise)
+    private function assertHasPermission($permission, Exercise $exercise): void
     {
-        $collection = new ResourceCollection([$exercise->getResourceNode()]);
-
-        if (!$this->authorization->isGranted($permission, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        if (!$this->authorization->isGranted($permission, $exercise->getResourceNode())) {
+            throw new AccessDeniedException();
         }
     }
 }

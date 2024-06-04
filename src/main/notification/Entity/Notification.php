@@ -2,6 +2,7 @@
 
 namespace Claroline\NotificationBundle\Entity;
 
+use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\CreatedAt;
@@ -18,6 +19,7 @@ class Notification
     use Id;
     use Uuid;
     use CreatedAt;
+    use Thumbnail;
 
     /**
      * @ORM\Column(nullable=true)

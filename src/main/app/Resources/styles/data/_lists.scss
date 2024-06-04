@@ -74,10 +74,11 @@
     }
 }
 
-a.list-primary-action,
+/*a.list-primary-action,
 button.list-primary-action {
+    @extend .btn;
     @extend .btn-link;
-}
+}*/
 
 .list-primary-action {
     text-align: inherit;

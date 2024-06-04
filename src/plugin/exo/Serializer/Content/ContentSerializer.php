@@ -11,20 +11,12 @@ class ContentSerializer
 {
     use SerializerTrait;
 
-    /**
-     * @var ResourceContentSerializer
-     */
-    private $resourceContentSerializer;
-
-    /**
-     * ContentSerializer constructor.
-     */
-    public function __construct(ResourceContentSerializer $resourceContentSerializer)
-    {
-        $this->resourceContentSerializer = $resourceContentSerializer;
+    public function __construct(
+        private readonly ResourceContentSerializer $resourceContentSerializer
+    ) {
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'exo_content';
     }

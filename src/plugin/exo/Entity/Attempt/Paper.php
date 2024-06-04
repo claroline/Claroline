@@ -141,22 +141,17 @@ class Paper
         return $this->number;
     }
 
-    public function setStart(\DateTime $start)
+    public function setStart(?\DateTimeInterface $start = null): void
     {
         $this->start = $start;
     }
 
-    /**
-     * Gets start date.
-     *
-     * @return \Datetime
-     */
-    public function getStart()
+    public function getStart(): ?\DateTimeInterface
     {
         return $this->start;
     }
 
-    public function setEnd($end)
+    public function setEnd(?\DateTimeInterface $end = null): void
     {
         $this->end = $end;
     }

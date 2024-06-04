@@ -214,6 +214,10 @@ function configureTypeFields(quizType, fields = []) {
  * @return {Array}
  */
 function configureTypeEditor(quizType, formDefinition = []) {
+  if (!quizType) {
+    return formDefinition
+  }
+
   const updatedForm = cloneDeep(formDefinition)
 
   return updatedForm.map(section => {

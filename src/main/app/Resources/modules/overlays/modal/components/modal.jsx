@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import omit from 'lodash/omit'
@@ -6,162 +6,52 @@ import omit from 'lodash/omit'
 import BaseModal from 'react-bootstrap/Modal'
 
 import {asset} from '#/main/app/config/asset'
+import {ModalEmpty} from '#/main/app/overlays/modal/components/empty'
 
-// TODO : implements modal actions
-
-class Modal extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      enterEvents: this.props.show,
-      exitEvents: true
-    }
-
-    this.onHide = this.onHide.bind(this)
-    this.onEnter = this.onEnter.bind(this)
-    this.onEntering = this.onEntering.bind(this)
-    this.onEntered = this.onEntered.bind(this)
-    this.onExit = this.onExit.bind(this)
-    this.onExiting = this.onExiting.bind(this)
-    this.onExited = this.onExited.bind(this)
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.show !== prevProps.show) {
-      // we are showing / hiding the modal,
-      // we need to enable lifecycle events
-      this.setState({
-        enterEvents: this.props.show,
-        exitEvents: !this.props.show
-      })
-    }
-
-    if (this.props.disabled !== prevProps.disabled) {
-      // we are enabling / disabling the modal,
-      // we need to disable lifecycle events
-      this.setState({
-        enterEvents: false,
-        exitEvents: !this.props.disabled
-      })
-    }
-  }
-
-  on(event, eventCallback) {
-    // only trigger enter events if needed
-    if (eventCallback && this.state[`${event}Events`]) {
-      eventCallback()
-    }
-  }
-
-  onHide() {
-    this.on('exit', this.props.fadeModal)
-  }
-
-  onEnter() {
-    this.on('enter', this.props.onEnter)
-  }
-
-  onEntering() {
-    this.on('enter', this.props.onEntering)
-  }
-
-  onEntered() {
-    this.on('enter', this.props.onEntered)
-  }
-
-  onExit() {
-    this.on('exit', this.props.onExit)
-  }
-
-  onExiting() {
-    this.on('exit', this.props.onExiting)
-  }
-
-  onExited() {
-    this.on('exit', this.props.onExited)
-    this.on('exit', this.props.hideModal)
-  }
-
-  render() {
-    return (
-      <BaseModal
-        {...omit(this.props, 'fadeModal', 'hideModal', 'closeButton', 'icon', 'title', 'subtitle', 'className', 'children')}
-        autoFocus={true}
-        enforceFocus={false}
-        dialogClassName={this.props.className}
-        fullscreen={this.props.fullscreen}
-        show={this.props.show && !this.props.disabled}
-
-        onHide={this.onHide}
-        onEnter={this.onEnter}
-        onEntering={this.onEntering}
-        onEntered={this.onEntered}
-        onExit={this.onExit}
-        onExiting={this.onExiting}
-        onExited={this.onExited}
+const Modal = (props) =>
+  <ModalEmpty
+    {...omit(props, 'closeButton', 'icon', 'title', 'subtitle', 'poster')}
+  >
+    {(props.title || props.icon) &&
+      <BaseModal.Header
+        closeButton={props.closeButton}
+        style={props.poster && {
+          backgroundImage: `url("${asset(props.poster)}")`
+        }}
+        className={classes({
+          'modal-poster': !!props.poster
+        })}
       >
-        {(this.props.title || this.props.icon) &&
-          <BaseModal.Header
-            closeButton={this.props.closeButton}
-            style={this.props.poster && {
-              backgroundImage: `url("${asset(this.props.poster)}")`
-            }}
-            className={classes({
-              'modal-poster': !!this.props.poster
-            })}
-          >
-            <BaseModal.Title className="h-title">
-              {this.props.icon &&
-                <span className={classes('modal-icon', this.props.icon)} />
-              }
+        <BaseModal.Title className="h-title" as="h5">
+          {props.icon &&
+            <span className={classes('modal-icon', props.icon)} aria-hidden={true} />
+          }
 
-              <div role="presentation">
-                {this.props.title}
+          <div role="presentation">
+            {props.title}
 
-                {this.props.subtitle &&
-                  <small>{this.props.subtitle}</small>
-                }
-              </div>
-            </BaseModal.Title>
-          </BaseModal.Header>
-        }
+            {props.subtitle &&
+              <small className={!props.poster && 'text-secondary'}>{props.subtitle}</small>
+            }
+          </div>
+        </BaseModal.Title>
+      </BaseModal.Header>
+    }
 
-        {this.props.children}
-      </BaseModal>
-    )
-  }
-}
+    {props.children}
+  </ModalEmpty>
 
 Modal.propTypes = {
-  fadeModal: T.func.isRequired,
-  hideModal: T.func.isRequired,
-  show: T.bool.isRequired,
+  ...ModalEmpty.propTypes,
+
   closeButton: T.bool,
-  size: T.oneOf(['sm', 'lg', 'xl']),
-  fullscreen: T.oneOf([true, 'sm-down','md-down', 'lg-down', 'xl-down', 'xxl-down']),
-  // modal events (from react-bootstrap)
-  onEnter: T.func,
-  onEntering: T.func,
-  onEntered: T.func,
-  onExit: T.func,
-  onExiting: T.func,
-  onExited: T.func,
-
-  // a modal is disabled when another one is opened
-  // over it. In this case we want to hide without trigger lifecycle events
-  disabled: T.bool,
-
   poster: T.string,
   icon: T.string,
   title: T.string,
-  subtitle: T.string,
-  className: T.string,
-  children: T.node.isRequired
+  subtitle: T.string
 }
 
 Modal.defaultProps = {
-  disabled: true,
   closeButton: true
 }
 

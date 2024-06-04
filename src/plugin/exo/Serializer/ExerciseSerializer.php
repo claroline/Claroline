@@ -24,34 +24,23 @@ class ExerciseSerializer
 {
     use SerializerTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ObjectManager */
-    private $om;
-    /** @var ResourceNodeSerializer */
-    private $resourceNodeSerializer;
-    /** @var StepSerializer */
-    private $stepSerializer;
-    /** @var ItemManager */
-    private $itemManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        ObjectManager $om,
-        ResourceNodeSerializer $resourceNodeSerializer,
-        StepSerializer $stepSerializer,
-        ItemManager $itemManager
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
+        private readonly ResourceNodeSerializer $resourceNodeSerializer,
+        private readonly StepSerializer $stepSerializer,
+        private readonly ItemManager $itemManager
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->om = $om;
-        $this->resourceNodeSerializer = $resourceNodeSerializer;
-        $this->stepSerializer = $stepSerializer;
-        $this->itemManager = $itemManager;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'exo_exercise';
+    }
+
+    public function getClass(): string
+    {
+        return Exercise::class;
     }
 
     /**

@@ -8,9 +8,9 @@ import {ResourceEditor} from '#/main/core/resource/editor'
 
 import {QuizEditorParameters} from '#/plugin/exo/resources/quiz/editor/containers/parameters'
 import {QuizEditorBank} from '#/plugin/exo/resources/quiz/editor/containers/bank'
-import {QuizEditorSteps} from '#/plugin/exo/resources/quiz/editor/components/steps'
+import {QuizEditorSteps} from '#/plugin/exo/resources/quiz/editor/containers/steps'
 import {selectors} from '#/plugin/exo/resources/quiz/store'
-
+import {QuizEditorAppearance} from '#/plugin/exo/resources/quiz/editor/components/appearance'
 
 const QuizEditor = () => {
   const quiz = useSelector(selectors.quiz)
@@ -23,6 +23,7 @@ const QuizEditor = () => {
           resource: quiz
         })}
         defaultPage="steps"
+        appearancePage={QuizEditorAppearance}
         pages={[
           {
             name: 'parameters',

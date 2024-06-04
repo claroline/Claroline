@@ -33,13 +33,10 @@ const ResourceInput = props => {
             label: trans('replace', {}, 'actions'),
             disabled: props.disabled,
             modal: [MODAL_RESOURCES, {
-              title: props.picker.title,
-              current: props.picker.current,
-              root: props.picker.root,
-              filters: props.picker.filters,
+              ...props.picker,
               selectAction: (selected) => ({
                 type: CALLBACK_BUTTON,
-                label: trans('select', {}, 'actions'),
+                label: trans('replace', {}, 'actions'),
                 callback: () => props.onChange(selected[0])
               })
             }]
@@ -90,13 +87,10 @@ const ResourceInput = props => {
         icon="fa fa-fw fa-plus"
         label={trans('add_resource', {}, 'resource')}
         modal={[MODAL_RESOURCES, {
-          title: props.picker.title,
-          current: props.picker.current,
-          root: props.picker.root,
-          filters: props.picker.filters,
+          ...props.picker,
           selectAction: (selected) => ({
             type: CALLBACK_BUTTON,
-            label: trans('select', {}, 'actions'),
+            label: trans('add', {}, 'actions'),
             callback: () => props.onChange(selected[0])
           })
         }]}
@@ -113,15 +107,11 @@ implementPropTypes(ResourceInput, DataInputTypes, {
   ),
   embedded: T.bool,
   picker: T.shape({
-    title: T.string,
-    root: T.shape({
-      slug: T.string.isRequired,
-      name: T.string.isRequired
-    }),
     current: T.shape({
       slug: T.string.isRequired,
       name: T.string.isRequired
     }),
+    contextId: T.string,
     filters: T.array
   })
 }, {
