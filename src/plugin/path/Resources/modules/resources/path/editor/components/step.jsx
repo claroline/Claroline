@@ -1,55 +1,87 @@
-import React, {Fragment} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
+import {useSelector} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
-import {PropTypes as T, implementPropTypes} from '#/main/app/prop-types'
-import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {LINK_BUTTON} from '#/main/app/buttons'
-import {ContentTitle} from '#/main/app/content/components/title'
-import {FormData} from '#/main/app/content/form/containers/data'
-
-import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
-
-import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
-import {selectors} from '#/plugin/path/resources/path/editor/store'
 import {EditorPage} from '#/main/app/editor'
-import get from 'lodash/get'
 
-const EditorStep = props =>
-  <Fragment>
-    <ContentTitle
-      className="step-title"
-      level={3}
-      displayLevel={2}
-      numbering={props.numbering}
-      title={props.title}
-      actions={props.actions}
-    />
+import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {selectors as editorSelectors} from '#/main/core/resource/editor'
 
+import {selectors} from '#/plugin/path/resources/path/editor/store'
+import {flattenSteps, getNumbering} from '#/plugin/path/resources/path/utils'
+import {getFormDataPart} from '#/plugin/path/resources/path/editor/utils'
+
+const PathEditorStep = props => {
+  const workspaceId = useSelector(resourceSelectors.workspaceId)
+  const resourceEditorPath = useSelector(editorSelectors.path)
+  const hasCustomNumbering = useSelector(selectors.hasCustomNumbering)
+  const numbering = useSelector(selectors.numbering)
+
+  const steps = useSelector(selectors.steps)
+  const step = flattenSteps(steps).find(s => props.match.params.slug === s.slug)
+  const stepNumbering = getNumbering(numbering, steps, step)
+
+  if (!step) {
+    props.history.push(resourceEditorPath+'/steps')
+  }
+
+  return (
     <EditorPage
-      title={props.title || trans('step', {}, 'path')}
-      dataPart={props.stepPath}
+      title={
+        <>
+          {stepNumbering &&
+            <span className="h-numbering">{stepNumbering}</span>
+          }
+
+          {step.title || trans('step', {}, 'path')}
+        </>
+      }
+      dataPart={'resource.'+getFormDataPart(step.id, steps)}
+      actions={[
+        {
+          name: 'summary',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-list',
+          label: trans('open-summary', {}, 'actions'),
+          target: resourceEditorPath+'/steps',
+          exact: true
+        }
+      ]}
       definition={[
         {
           title: trans('general'),
           primary: true,
           fields: [
             {
-              name: 'description',
-              type: 'html',
-              label: trans('content'),
-              options: {
-                workspace: props.workspace
-              }
+              name: 'poster',
+              type: 'poster',
+              hideLabel: true,
+              label: trans('poster')
             }, {
+              name: 'title',
+              type: 'string',
+              label: trans('title'),
+              required: true
+            }
+          ]
+        }, {
+          title: trans('Activité'),
+          subtitle: trans('Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur?'),
+          primary: true,
+          fields: [
+            {
               name: 'primaryResource',
               type: 'resource',
               label: trans('resource'),
+              hideLabel: true,
               options: {
                 embedded: true,
                 showHeader: true,
                 picker: {
-                  current : props.resourceParent
+                  contextId: workspaceId
                 }
               },
               linked: [
@@ -60,56 +92,61 @@ const EditorStep = props =>
                   displayed: (step) => !isEmpty(step.primaryResource)
                 }
               ]
-            }
-          ]
-        }, {
-          title: trans('information'),
-          icon: 'fa fa-fw fa-circle-info',
-          fields: [
-            {
-              name: 'title',
-              type: 'string',
-              label: trans('title'),
-              required: true
-            }
-          ]
-        }, {
-          icon: 'fa fa-fw fa-desktop',
-          title: trans('display_parameters'),
-          fields: [
-            {
-              name: 'poster',
-              type: 'image',
-              label: trans('poster')
             }, {
+              name: '_enableSecondaryResources',
+              type: 'boolean',
+              label: trans('Ajouter des ressources complémentaires', {}, 'path'),
+              help: trans('Ajoutez des liens vers les ressources qui peuvent être utiles à la réalisation de l\'activité.', {}, 'path'),
+              calculated: (step) => step._enableSecondaryResources || !isEmpty(step.secondaryResources),
+              linked: [
+                {
+                  name: 'secondaryResources',
+                  type: 'resources',
+                  label: trans('secondary_resources', {}, 'path'),
+                  displayed: (step) => step._enableSecondaryResources || !isEmpty(step.secondaryResources),
+                  options: {
+                    picker: {
+                      contextId: workspaceId
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }, {
+          title: trans('further_information'),
+          subtitle: trans('further_information_help'),
+          primary: true,
+          fields: [
+            {
               name: 'display.numbering',
               type: 'string',
               label: trans('step_numbering', {}, 'path'),
-              displayed: props.customNumbering
-            }
-          ]
-        }, {
-          icon: 'fa fa-fw fa-folder',
-          title: trans('secondary_resources', {}, 'path'),
-          fields: [
-            {
-              name: 'secondaryResources',
-              type: 'resources',
-              label: trans('secondary_resources'),
-              hideLabel: true,
+              displayed: hasCustomNumbering
+            }, {
+              name: 'description',
+              type: 'html',
+              label: trans('description'),
               options: {
-                picker: {
-                  current : props.resourceParent
-                }
+                workspace: props.workspace
               }
             }
           ]
         }
       ]}
     />
-  </Fragment>
+  )
+}
 
-implementPropTypes(EditorStep, StepTypes, {
+PathEditorStep.propTypes = {
+  math: T.shape({
+    params: T.shape({
+      slug: T.string
+    })
+  })
+}
+
+/*implementPropTypes(PathEditorStep, StepTypes, {
   basePath: T.string,
   workspace: T.object,
   pathId: T.string.isRequired,
@@ -118,7 +155,6 @@ implementPropTypes(EditorStep, StepTypes, {
     ActionTypes.propTypes
   )),
   numbering: T.string,
-  customNumbering: T.bool,
 
   // resources
   resourceParent: T.shape(
@@ -126,9 +162,9 @@ implementPropTypes(EditorStep, StepTypes, {
   )
 }, {
   customNumbering: false
-})
+})*/
 
 
 export {
-  EditorStep
+  PathEditorStep
 }

@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Entity\Role;
 
 class RoleValidator implements ValidatorInterface
 {
-    public function validate($data, $mode, array $options = []): array
+    public function validate(array $data, string $mode, array $options = []): array
     {
         return [];
     }
@@ -20,7 +20,6 @@ class RoleValidator implements ValidatorInterface
     public function getUniqueFields(): array
     {
         return [
-            'id' => 'uuid',
             'name' => 'name',
         ];
     }

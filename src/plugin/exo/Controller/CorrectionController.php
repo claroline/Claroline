@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Controller;
 
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\CoreBundle\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,17 +24,10 @@ class CorrectionController
 {
     use RequestDecoderTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var CorrectionManager */
-    private $correctionManager;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        CorrectionManager $correctionManager)
-    {
-        $this->authorization = $authorization;
-        $this->correctionManager = $correctionManager;
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly CorrectionManager $correctionManager
+    ) {
     }
 
     /**
@@ -57,39 +49,38 @@ class CorrectionController
      */
     public function saveAction(Exercise $exercise, Request $request): JsonResponse
     {
-        if ($this->isAdmin($exercise)) {
-            $data = $this->decodeRequest($request);
+        $this->isAdmin($exercise);
 
-            if (null === $data) {
-                $errors[] = [
-                    'path' => '',
-                    'message' => 'Invalid JSON data',
-                ];
-            } else {
-                // Try to save submitted correction
-                try {
-                    $this->correctionManager->save($data);
-                } catch (InvalidDataException $e) {
-                    $errors = $e->getErrors();
-                }
-            }
+        $data = $this->decodeRequest($request);
 
-            if (empty($errors)) {
-                // Correction saved
-                return new JsonResponse(null, 204);
-            } else {
-                // Invalid data received
-                return new JsonResponse($errors, 422);
+        $errors = [];
+        if (null === $data) {
+            $errors[] = [
+                'path' => '',
+                'message' => 'Invalid JSON data',
+            ];
+        } else {
+            // Try to save submitted correction
+            try {
+                $this->correctionManager->save($data);
+            } catch (InvalidDataException $e) {
+                $errors = $e->getErrors();
             }
         }
+
+        if (empty($errors)) {
+            // Correction saved
+            return new JsonResponse(null, 204);
+        }
+
+        // Invalid data received
+        return new JsonResponse($errors, 422);
     }
 
-    private function isAdmin(Exercise $exercise)
+    private function isAdmin(Exercise $exercise): bool
     {
-        $collection = new ResourceCollection([$exercise->getResourceNode()]);
-
-        if (!$this->authorization->isGranted('MANAGE_PAPERS', $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        if (!$this->authorization->isGranted('MANAGE_PAPERS', $exercise->getResourceNode())) {
+            throw new AccessDeniedException();
         }
 
         return true;

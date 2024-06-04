@@ -28,7 +28,6 @@ services:
             - '@UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator'
             - '@ujm_exo.serializer.item'
             - '@ujm_exo.collection.item_definitions'
-            - '@UJM\ExoBundle\Serializer\Item\HintSerializer'
 
     UJM\ExoBundle\Manager\Item\ShareManager:
         arguments:
@@ -61,8 +60,6 @@ services:
     UJM\ExoBundle\Manager\ExerciseManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator'
-            - '@ujm_exo.serializer.exercise'
             - '@UJM\ExoBundle\Manager\Item\ItemManager'
             - '@UJM\ExoBundle\Manager\Attempt\PaperManager'
             - '@ujm_exo.collection.item_definitions'

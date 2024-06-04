@@ -83,7 +83,7 @@ const workspace = createSelector(
 
 const workspaceId = createSelector(
   [workspace],
-  (workspace) => workspace.autoId
+  (workspace) => workspace.id
 )
 
 const meta = createSelector(

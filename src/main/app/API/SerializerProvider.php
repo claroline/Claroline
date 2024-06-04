@@ -6,19 +6,10 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 
 class SerializerProvider
 {
-    /**
-     * The list of registered serializers in the platform.
-     *
-     * @var iterable
-     */
-    private $serializers;
-    /** @var ObjectManager */
-    private $om;
-
-    public function __construct(ObjectManager $om, iterable $serializers)
-    {
-        $this->om = $om;
-        $this->serializers = $serializers;
+    public function __construct(
+        private readonly ObjectManager $om,
+        private readonly iterable $serializers
+    ) {
     }
 
     /**
@@ -30,7 +21,7 @@ class SerializerProvider
      *
      * @throws \Exception
      */
-    public function getSerializerHandledClass($serializer)
+    public function getSerializerHandledClass($serializer): string
     {
         if (method_exists($serializer, 'getClass')) {
             // 1. the serializer implements the getClass method, so we just call it
@@ -60,7 +51,7 @@ class SerializerProvider
      *
      * @throws \Exception
      */
-    public function get($object)
+    public function get(mixed $object)
     {
         // search for the correct serializer
         if (is_string($object)) {

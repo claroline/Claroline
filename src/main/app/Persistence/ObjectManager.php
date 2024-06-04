@@ -292,7 +292,7 @@ class ObjectManager extends ObjectManagerDecorator implements LoggerAwareInterfa
      *
      * @return object|null
      */
-    public function getObject(array $data, string $class, array $identifiers = [])
+    public function getObject(array $data, string $class, array $identifiers = []): mixed
     {
         $object = null;
 

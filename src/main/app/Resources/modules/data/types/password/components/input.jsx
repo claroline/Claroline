@@ -126,7 +126,7 @@ class PasswordInput extends PureComponent {
           />
 
           <Button
-            className="btn btn-outline-secondary"
+            className="btn btn-body"
             type={CALLBACK_BUTTON}
             icon={classes('fa fa-fw', {
               'fa-eye'      : !this.state.visible,

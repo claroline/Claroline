@@ -17,46 +17,21 @@ use UJM\ExoBundle\Repository\PaperRepository;
 
 class DocimologyManager
 {
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var ItemManager */
-    private $itemManager;
-
-    /** @var PaperManager */
-    private $paperManager;
-
-    /** @var ExerciseRepository */
-    private $exerciseRepository;
-
-    /** @var PaperRepository */
-    private $paperRepository;
-
-    /** @var AnswerRepository */
-    private $answerRepository;
+    private ExerciseRepository $exerciseRepository;
+    private PaperRepository $paperRepository;
+    private AnswerRepository $answerRepository;
 
     public function __construct(
-          ObjectManager $om,
-          ItemManager $itemManager,
-          PaperManager $paperManager
+        private readonly ObjectManager $om,
+        private readonly ItemManager $itemManager,
+        private readonly PaperManager $paperManager
     ) {
-        $this->om = $om;
-        $this->paperManager = $paperManager;
-        $this->itemManager = $itemManager;
-
-        $this->exerciseRepository = $this->om->getRepository(Exercise::class);
-        $this->paperRepository = $this->om->getRepository(Paper::class);
-        $this->answerRepository = $this->om->getRepository(Answer::class);
+        $this->exerciseRepository = $om->getRepository(Exercise::class);
+        $this->paperRepository = $om->getRepository(Paper::class);
+        $this->answerRepository = $om->getRepository(Answer::class);
     }
 
-    /**
-     * Serializes an Exercise.
-     *
-     * @param float $maxScore
-     *
-     * @return array
-     */
-    public function getStatistics(Exercise $exercise, $maxScore)
+    public function getStatistics(Exercise $exercise, float $maxScore): array
     {
         return [
             'maxScore' => $maxScore,
@@ -75,12 +50,8 @@ class DocimologyManager
 
     /**
      * Returns the max min and average score for a given exercise.
-     *
-     * @param float $scoreOn
-     *
-     * @return array
      */
-    public function getMinMaxAverageScores(Exercise $exercise, $scoreOn)
+    public function getMinMaxAverageScores(Exercise $exercise, float $scoreOn): array
     {
         $papers = $this->paperRepository->findBy([
             'exercise' => $exercise,
@@ -99,13 +70,9 @@ class DocimologyManager
     }
 
     /**
-     * Returns the number of fully, partially successfull and missed papers for a given exercise.
-     *
-     * @param float $scoreOn
-     *
-     * @return array
+     * Returns the number of fully, partially successful and missed papers for a given exercise.
      */
-    public function getPapersSuccessDistribution(Exercise $exercise, $scoreOn)
+    public function getPapersSuccessDistribution(Exercise $exercise, float $scoreOn): array
     {
         $papers = $this->paperRepository->findBy([
             'exercise' => $exercise,
@@ -137,12 +104,8 @@ class DocimologyManager
 
     /**
      * Returns the number of papers with a particular score for a given exercise.
-     *
-     * @param float $scoreOn
-     *
-     * @return array
      */
-    public function getPaperScoreDistribution(Exercise $exercise, $scoreOn)
+    public function getPaperScoreDistribution(Exercise $exercise, float $scoreOn): array
     {
         $papers = $this->paperRepository->findBy([
             'exercise' => $exercise,
@@ -170,7 +133,7 @@ class DocimologyManager
         return $paperScoreDistribution;
     }
 
-    public function getQuestionsDifficultyIndex(Exercise $exercise)
+    public function getQuestionsDifficultyIndex(Exercise $exercise): array
     {
         $papers = $this->paperRepository->findBy([
             'exercise' => $exercise,
@@ -203,7 +166,7 @@ class DocimologyManager
         return $questionStatistics;
     }
 
-    public function getAttemptsScores(Exercise $exercise, bool $finishedOnly = false, User $user = null)
+    public function getAttemptsScores(Exercise $exercise, bool $finishedOnly = false, User $user = null): array
     {
         $data = [
             'total' => [],
@@ -252,10 +215,8 @@ class DocimologyManager
 
     /**
      * Get discrimination coefficient for an exercise.
-     *
-     * @return array
      */
-    private function getDiscriminationCoefficient(Exercise $exercise)
+    private function getDiscriminationCoefficient(Exercise $exercise): array
     {
         // get all scores for the exercise
         $papers = $this->paperRepository->findBy([
@@ -324,12 +285,8 @@ class DocimologyManager
 
     /**
      * Get standard deviation for the discrimination coefficient.
-     *
-     * @param array $array
-     *
-     * @return float
      */
-    private function getStandardDeviation($array)
+    private function getStandardDeviation(array $array): float
     {
         $sdSquare = function ($x, $mean) {
             return pow($x - $mean, 2);
@@ -352,20 +309,15 @@ class DocimologyManager
     /**
      * Get scores for a paper.
      * If $scoreOn is not null then all scores are reported on this value.
-     *
-     * @param array $papers
-     * @param float $scoreOn
-     *
-     * @return array
      */
-    private function getPapersScores($papers, $scoreOn = null)
+    private function getPapersScores(array $papers, float $scoreOn = null): array
     {
         $scores = [];
         /** @var Paper $paper */
         foreach ($papers as $paper) {
             if ($paper->getTotal()) {
                 $score = $this->paperManager->calculateScore($paper);
-                // since totalScoreOn might have change through papers report all scores on a define value
+                // since totalScoreOn might have changed through papers report all scores on a define value
                 if ($scoreOn) {
                     $score = floatval(($scoreOn * $score) / $paper->getTotal());
                 }

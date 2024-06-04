@@ -48,6 +48,15 @@ class SummaryLink extends Component {
           <Button
             className="btn btn-text-body btn-summary-primary"
             {...omit(this.props, 'children', 'additional', 'collapsible', 'collapsed', 'toggleCollapse', 'noCollapse')}
+            label={this.props.numbering ?
+              <>
+                {this.props.numbering &&
+                  <span className="h-numbering">{this.props.numbering}</span>
+                }
+                {this.props.label}
+              </> :
+              this.props.label
+            }
           />
 
           {(collapsible || 0 !== this.props.additional.length) &&
@@ -92,6 +101,7 @@ class SummaryLink extends Component {
 }
 
 implementPropTypes(SummaryLink, ActionTypes, {
+  numbering: T.string,
   noCollapse: T.bool,
   additional: T.arrayOf(T.shape(
     ActionTypes.propTypes
@@ -137,6 +147,7 @@ ContentSummary.propTypes = {
   className: T.string,
   noCollapse: T.bool,
   links: T.arrayOf(T.shape(merge({}, ActionTypes.propTypes, {
+    numbering: T.string,
     collapsed: T.bool,
     // It forces the display of the collapse button even if children is empty
     // It permits to dynamic load the children

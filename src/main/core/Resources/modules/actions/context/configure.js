@@ -12,5 +12,6 @@ export default (contexts) => ({
   displayed: -1 !== contexts.findIndex(context => hasPermission('administrate', context)),
   target: `${route(contexts[0].type, contexts[0].slug)}/edit`,
   group: trans('management'),
-  scope: ['object']
+  scope: ['object'],
+  primary: true
 })

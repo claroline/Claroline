@@ -5,12 +5,17 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
 import {EditorPage} from '#/main/app/editor'
+import {selectors as editorSelectors} from '#/main/core/resource/editor'
 
 import {selectors} from '#/plugin/lesson/resources/lesson/editor/store'
+import {getNumbering} from '#/plugin/lesson/resources/lesson/utils'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
 const LessonEditorChapter = (props) => {
+  const resourceEditorPath = useSelector(editorSelectors.path)
   const hasInternalNotes = useSelector(selectors.hasInternalNotes)
   const hasCustomNumbering = useSelector(selectors.hasCustomNumbering)
+  const numbering = useSelector(selectors.numbering)
 
   const allChapters = useSelector(selectors.chapters)
   let chapterIndex
@@ -24,11 +29,30 @@ const LessonEditorChapter = (props) => {
     }
   }
 
+  const chapterNumbering = getNumbering(numbering, allChapters, chapter)
+
   return (
     <EditorPage
-      title={get(chapter, 'title') || trans('section', {}, 'lesson')}
-      autoFocus={true}
+      title={
+        <>
+          {chapterNumbering &&
+            <span className="h-numbering">{chapterNumbering}</span>
+          }
+
+          {get(chapter, 'title') || trans('section', {number: chapterIndex + 1}, 'lesson')}
+        </>
+      }
       dataPart={`chapters[${chapterIndex}]`}
+      actions={[
+        {
+          name: 'summary',
+          type: LINK_BUTTON,
+          icon: 'fa fa-fw fa-list',
+          label: trans('open-summary', {}, 'actions'),
+          target: resourceEditorPath+'/content',
+          exact: true
+        }
+      ]}
       definition={[
         {
           name: 'general',

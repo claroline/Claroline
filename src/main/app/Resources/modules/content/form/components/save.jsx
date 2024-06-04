@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl'
@@ -9,7 +10,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
 const FormSave = (props) => {
   if (props.pendingChanges) {
     const saveAction = props.save ? merge({}, props.save, {
-      disabled: props.disabled || props.save.disabled || !(props.pendingChanges && (!props.validating || !props.errors))
+      disabled: props.disabled || props.save.disabled || !props.pendingChanges || !isEmpty(props.errors)
     }) : undefined
 
     return (
@@ -18,20 +19,19 @@ const FormSave = (props) => {
           Attention, il reste des modifications non enregistrées !
         </span>
 
-        {props.cancel &&
-          <Button
-            {...props.cancel}
-            className="btn btn-link"
-            label={trans('Réinitialiser', {}, 'actions')}
-            type={CALLBACK_BUTTON}
-            size="sm"
-          />
-        }
+        <Button
+          {...saveAction}
+          className="btn btn-link"
+          label={trans('Enregistrer', {}, 'actions')}
+          type={CALLBACK_BUTTON}
+          size="sm"
+          data-bs-theme="dark"
+        />
 
         <Button
           {...saveAction}
           className="form-btn-save btn btn-primary btn-wave"
-          label={trans('Enregistrer les modifications', {}, 'actions')}
+          label={trans('Enregistrer & Quitter', {}, 'actions')}
           size="sm"
           htmlType="submit"
         />
@@ -46,7 +46,9 @@ FormSave.propTypes = {
   errors: T.bool,
   validating: T.bool,
   pendingChanges: T.bool.isRequired,
-  //cancel: T.func.isRequired
+  save: T.shape({
+
+  })
 }
 
 FormSave.defaultProps = {

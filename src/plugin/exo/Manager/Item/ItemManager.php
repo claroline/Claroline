@@ -17,48 +17,22 @@ use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Manager\Attempt\ScoreManager;
 use UJM\ExoBundle\Repository\AnswerRepository;
 use UJM\ExoBundle\Repository\ItemRepository;
-use UJM\ExoBundle\Serializer\Item\HintSerializer;
 use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 use UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator;
 
 class ItemManager
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var ScoreManager */
-    private $scoreManager;
-    /** @var ItemRepository */
-    private $repository;
-    /** @var ItemValidator */
-    private $validator;
-    /** @var ItemSerializer */
-    private $serializer;
-    /** @var AnswerRepository */
-    private $answerRepository;
-    /** @var ItemDefinitionsCollection */
-    private $itemDefinitions;
-    /** @var HintSerializer */
-    private $hintSerializer;
+    private ItemRepository $repository;
+    private AnswerRepository $answerRepository;
 
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        ScoreManager $scoreManager,
-        ItemValidator $validator,
-        ItemSerializer $serializer,
-        ItemDefinitionsCollection $itemDefinitions,
-        HintSerializer $hintSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly ScoreManager $scoreManager,
+        private readonly ItemValidator $validator,
+        private readonly ItemSerializer $serializer,
+        private readonly ItemDefinitionsCollection $itemDefinitions
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->scoreManager = $scoreManager;
-        $this->validator = $validator;
-        $this->serializer = $serializer;
-        $this->itemDefinitions = $itemDefinitions;
-        $this->hintSerializer = $hintSerializer;
-
         $this->repository = $this->om->getRepository(Item::class);
         $this->answerRepository = $this->om->getRepository(Answer::class);
     }
@@ -140,10 +114,8 @@ class ItemManager
 
     /**
      * Calculates the score of an answer to a question.
-     *
-     * @return float|null
      */
-    public function calculateScore(Item $question, Answer $answer, bool $applyHints = true)
+    public function calculateScore(Item $question, Answer $answer, bool $applyHints = true): ?float
     {
         if ($question->hasExpectedAnswers()) {
             // Let the question correct the answer
@@ -179,10 +151,8 @@ class ItemManager
 
     /**
      * Calculates the total score of a question.
-     *
-     * @return float|null
      */
-    public function calculateTotal(Item $question)
+    public function calculateTotal(Item $question): ?float
     {
         if ($question->hasExpectedAnswers()) {
             /** @var AnswerableItemDefinitionInterface $definition */
@@ -201,10 +171,8 @@ class ItemManager
 
     /**
      * Get all scores for an Answerable Item.
-     *
-     * @return array
      */
-    public function getItemScores(Exercise $exercise, Item $question)
+    public function getItemScores(Exercise $exercise, Item $question): array
     {
         $definition = $this->itemDefinitions->get($question->getMimeType());
 
@@ -228,10 +196,8 @@ class ItemManager
 
     /**
      * Get question statistics inside an Exercise.
-     *
-     * @return array
      */
-    public function getStatistics(Item $question, Exercise $exercise = null, $finishedPapersOnly = false)
+    public function getStatistics(Item $question, Exercise $exercise = null, $finishedPapersOnly = false): array
     {
         $questionStats = [];
 
@@ -292,7 +258,7 @@ class ItemManager
     /**
      * Generates new UUIDs for the entities of an item.
      */
-    public function refreshIdentifiers(Item $item)
+    public function refreshIdentifiers(Item $item): void
     {
         // refresh self id
         $item->refreshUuid();

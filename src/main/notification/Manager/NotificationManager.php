@@ -32,4 +32,11 @@ class NotificationManager
             'user' => $user,
         ]);
     }
+
+    public function countNewNotifications(User $user): int
+    {
+        return $this->om->getRepository(Notification::class)->count([
+            'user' => $user,
+        ]);
+    }
 }

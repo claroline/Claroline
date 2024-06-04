@@ -13,12 +13,17 @@ class HintSerializer
 {
     use SerializerTrait;
 
-    /**
-     * Converts a Hint into a JSON-encodable structure.
-     *
-     * @return array
-     */
-    public function serialize(Hint $hint, array $options = [])
+    public function getName(): string
+    {
+        return 'exo_hint';
+    }
+
+    public function getClass(): string
+    {
+        return Hint::class;
+    }
+
+    public function serialize(Hint $hint, array $options = []): array
     {
         $serialized = [
             'id' => $hint->getUuid(),
@@ -32,20 +37,7 @@ class HintSerializer
         return $serialized;
     }
 
-    public function getName()
-    {
-        return 'exo_hint';
-    }
-
-    /**
-     * Converts raw data into a Hint entity.
-     *
-     * @param array $data
-     * @param Hint  $hint
-     *
-     * @return Hint
-     */
-    public function deserialize($data, Hint $hint = null, array $options = [])
+    public function deserialize(array $data, Hint $hint = null, array $options = []): Hint
     {
         $hint = $hint ?: new Hint();
         $this->sipe('id', 'setUuid', $data, $hint);

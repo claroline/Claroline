@@ -23,11 +23,6 @@ services:
             - '@security.authorization_checker'
             - '@UJM\ExoBundle\Manager\CorrectionManager'
 
-    UJM\ExoBundle\Controller\ExerciseController:
-        arguments:
-            - '@security.authorization_checker'
-            - '@UJM\ExoBundle\Manager\ExerciseManager'
-
     UJM\ExoBundle\Controller\AnalyticsController:
         arguments:
             - '@security.token_storage'

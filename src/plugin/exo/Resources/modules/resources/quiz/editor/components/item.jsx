@@ -33,15 +33,15 @@ const EditorItem = props =>
       return (
         <FormSection
           {...omit(props, 'formName', 'path', 'index', 'item', 'update', 'enableScores')}
-          id={props.item.id}
+          id={'item-'+props.item.id}
           icon={
-            <Fragment>
+            <>
               {props.numbering &&
                 <span className="h-numbering">{props.numbering}</span>
               }
 
               <ItemIcon name={itemDefinition.name} className="icon-with-text-right" />
-            </Fragment>
+            </>
           }
           subtitle={(itemScore || 0 === itemScore) ? `(${transChoice('solution_score', itemScore, {score: itemScore}, 'quiz')})` : undefined}
           title={itemTitle}
@@ -54,6 +54,7 @@ const EditorItem = props =>
             embedded={true}
             formName={props.formName}
             path={props.path}
+            autoFocus={props.autoFocus}
             disabled={props.item.meta.protectQuestion && !hasPermission('edit', props.item)}
             enableScores={props.enableScores}
             definition={itemDefinition}
@@ -68,7 +69,7 @@ const EditorItem = props =>
 EditorItem.propTypes = {
   formName: T.string.isRequired,
   path: T.string.isRequired,
-
+  autoFocus: T.bool,
   enableScores: T.bool,
   numbering: T.string,
   item: T.shape(

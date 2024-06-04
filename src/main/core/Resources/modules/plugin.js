@@ -83,6 +83,10 @@ registry.add('ClarolineCoreBundle', {
     context: {
       'open'     : () => { return import(/* webpackChunkName: "core-action-context-open" */      '#/main/core/actions/context/open') },
       'configure': () => { return import(/* webpackChunkName: "core-action-context-configure" */ '#/main/core/actions/context/configure') },
+    },
+    desktop: {
+      'open-public'     : () => { return import(/* webpackChunkName: "core-action-desktop-public" */      '#/main/core/actions/desktop/open-public') },
+      'open-administration': () => { return import(/* webpackChunkName: "core-action-desktop-administration" */ '#/main/core/actions/desktop/open-administration') },
     }
   },
 

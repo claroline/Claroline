@@ -7,7 +7,6 @@ import isEmpty from 'lodash/isEmpty'
 
 import {toKey} from '#/main/core/scaffolding/text'
 import {Await} from '#/main/app/components/await'
-import {Action as ActionTypes, PromisedAction as PromisedActionTypes} from '#/main/app/action/prop-types'
 import {getType} from '#/main/app/data/types'
 import {TableRow, TableCell} from '#/main/app/content/components/table'
 import {DataListProperty} from '#/main/app/content/list/prop-types'
@@ -45,7 +44,7 @@ const DataCellContent = props => {
     <TableCell className={classes(props.className, `${props.column.type}-cell`, props.column.primary && 'primary-cell')}>
       {props.action &&
         <ListPrimaryAction
-          className="list-primary-action"
+          className="list-primary-action btn btn-link p-0"
           action={props.action}
         >
           {cellRendering || '-'}
@@ -105,7 +104,7 @@ const TableItem = props => {
   }
 
   return (
-    <TableRow className={classes(props.selected && 'selected table-primary', props.loading && 'placeholder-glow')}>
+    <TableRow className={classes(props.selected && 'table-active', props.loading && 'placeholder-glow')}>
       {props.onSelect &&
         <TableCell align="center" className="checkbox-cell">
           <input

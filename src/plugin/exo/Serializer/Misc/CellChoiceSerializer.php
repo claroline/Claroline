@@ -12,18 +12,23 @@ class CellChoiceSerializer
 {
     use SerializerTrait;
 
-    /**
-     * Converts a CellChoice into a JSON-encodable structure.
-     *
-     * @return array
-     */
-    public function serialize(CellChoice $choice, array $options = [])
+    public function getName(): string
+    {
+        return 'exo_cell_choice';
+    }
+
+    public function getClass(): string
+    {
+        return CellChoice::class;
+    }
+
+    public function serialize(CellChoice $choice, array $options = []): array
     {
         $serialized = [
             'text' => $choice->getText(),
             'caseSensitive' => $choice->isCaseSensitive(),
             'score' => $choice->getScore(),
-            'expected' => $choice->isExpected(), // TODO : should use the score to determine this
+            'expected' => $choice->isExpected(),
         ];
 
         if ($choice->getFeedback()) {
@@ -33,20 +38,7 @@ class CellChoiceSerializer
         return $serialized;
     }
 
-    public function getName()
-    {
-        return 'exo_cell_choice';
-    }
-
-    /**
-     * Converts raw data into a Keyword entity.
-     *
-     * @param array      $data
-     * @param CellChoice $choice
-     *
-     * @return CellChoice
-     */
-    public function deserialize($data, CellChoice $choice = null, array $options = [])
+    public function deserialize(array $data, CellChoice $choice = null, array $options = []): CellChoice
     {
         if (empty($choice)) {
             $choice = new CellChoice();

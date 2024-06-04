@@ -8,20 +8,20 @@ import {toKey} from '#/main/core/scaffolding/text'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
+import {selectors as editorSelectors} from '#/main/core/resource/editor/store'
 
 import {refreshIdentifiers} from '#/plugin/exo/resources/quiz/utils'
 import {QuizEditorSteps as QuizEditorStepsComponent} from '#/plugin/exo/resources/quiz/editor/components/steps'
-import {actions, selectors} from '#/plugin/exo/resources/quiz/editor/store'
-import {getStepSlug} from '#/plugin/exo/resources/quiz/editor/utils'
+import {selectors} from '#/plugin/exo/resources/quiz/editor/store'
+import {copyItem, copyStep, getStepSlug, moveItem, moveStep, removeStep} from '#/plugin/exo/resources/quiz/editor/utils'
 
 const QuizEditorSteps = withRouter(
   connect(
     (state) => ({
       path: resourceSelectors.path(state),
-      formName: selectors.FORM_NAME,
-      validating: formSelectors.validating(formSelectors.form(state, selectors.FORM_NAME)),
-      pendingChanges: formSelectors.pendingChanges(formSelectors.form(state, selectors.FORM_NAME)),
-      errors: formSelectors.errors(formSelectors.form(state, selectors.FORM_NAME)),
+      validating: formSelectors.validating(formSelectors.form(state, editorSelectors.STORE_NAME)),
+      pendingChanges: formSelectors.pendingChanges(formSelectors.form(state, editorSelectors.STORE_NAME)),
+      errors: formSelectors.errors(formSelectors.form(state, editorSelectors.STORE_NAME)),
 
       quizId: selectors.quizId(state),
       quizType: selectors.quizType(state),
@@ -35,42 +35,15 @@ const QuizEditorSteps = withRouter(
       steps: selectors.steps(state)
     }),
     (dispatch) => ({
-      /**
-       * Push the updated quiz data to the server.
-       *
-       * @param {string} quizId - the id of the quiz to save
-       */
-      save(quizId) {
-        dispatch(actions.save(quizId))
-      },
-
-      /**
-       * Change a quiz data value.
-       *
-       * @param {string} prop  - the path of the prop to update
-       * @param {*}      value - the new value to set
-       */
       update(prop, value) {
-        dispatch(formActions.updateProp(selectors.FORM_NAME, prop, value))
+        dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.'+prop, value))
       },
 
-      /**
-       * Remove a step from the quiz.
-       *
-       * @param {string} stepId - the id of the step to delete
-       */
-      removeStep(stepId) {
-        dispatch(actions.removeStep(stepId))
+      removeStep(steps, stepId) {
+        dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', removeStep(steps, stepId)))
       },
 
-      /**
-       * Create a copy of a step and push it at the requested position.
-       *
-       * @param {object} stepId   - the id of the step to copy
-       * @param {Array}  steps    - the list of existing steps
-       * @param {object} position - the position to push the created step
-       */
-      copyStep(stepId, steps, position) {
+      copyStep(steps, stepId, position) {
         // create a copy of the step
         const pos = steps.findIndex(step => step.id === stepId)
         if (-1 !== pos) {
@@ -88,44 +61,26 @@ const QuizEditorSteps = withRouter(
               copy.items.map(refreshIdentifiers)
             ).then(items => {
               copy.items = items
-              dispatch(actions.copyStep(copy, position))
+              dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', copyStep(steps, copy, position)))
             })
           } else {
-            dispatch(actions.copyStep(copy, position))
+            dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', copyStep(steps, copy, position)))
           }
         }
       },
 
-      /**
-       * Move an existing step to another position.
-       *
-       * @param {string} stepId   - the id of the step to move
-       * @param {object} position - the new position of the step
-       */
-      moveStep(stepId, position) {
-        dispatch(actions.moveStep(stepId, position))
+      moveStep(steps, stepId, position) {
+        dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', moveStep(steps, stepId, position)))
       },
 
-      /**
-       * Create a copy of an item and push it at the requested position.
-       *
-       * @param {string} item     - the item to copy
-       * @param {object} position - the position to push the created item
-       */
-      copyItem(item, position) {
+      copyItem(steps, item, position) {
         refreshIdentifiers(item).then(copy => {
-          dispatch(actions.copyItem(copy, position))
+          dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', copyItem(steps, copy, position)))
         })
       },
 
-      /**
-       * Move an existing item to another position.
-       *
-       * @param {string} itemId   - the id of the item to move
-       * @param {object} position - the new position of the item
-       */
-      moveItem(itemId, position) {
-        dispatch(actions.moveItem(itemId, position))
+      moveItem(steps, itemId, position) {
+        dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', moveItem(steps, itemId, position)))
       }
     })
   )(QuizEditorStepsComponent)

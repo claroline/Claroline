@@ -3,12 +3,12 @@ import get from 'lodash/get'
 
 const STORE_NAME = 'innova_path'
 
-const resource = (state) => state[STORE_NAME]
+const store = (state) => state[STORE_NAME]
 
 // path
 const path = createSelector(
-  [resource],
-  (resource) => resource.path
+  [store],
+  (store) => store.resource
 )
 
 const steps = createSelector(
@@ -33,29 +33,29 @@ const showEndPage = createSelector(
 
 // is step navigation enabled ?
 const navigationEnabled = createSelector(
-  [resource],
-  (resource) => resource.navigationEnabled
+  [store],
+  (store) => store.navigationEnabled
 )
 
 const attempt = createSelector(
-  [resource],
-  (resource) => resource.attempt
+  [store],
+  (store) => store.attempt
 )
 
 const stepsProgression = createSelector(
-  [resource],
-  (resource) => resource.stepsProgression
+  [store],
+  (store) => store.stepsProgression
 )
 
 // evaluation for the required resource of the path
 const resourceEvaluations = createSelector(
-  [resource],
-  (resource) => resource.resourceEvaluations
+  [store],
+  (store) => store.resourceEvaluations
 )
 
 export const selectors = {
   STORE_NAME,
-  resource,
+
   path,
   steps,
   empty,

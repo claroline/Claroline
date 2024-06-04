@@ -4,6 +4,11 @@ services:
         autoconfigure: false
         public: true #because controller
 
+    UJM\ExoBundle\Validator\QuizValidator:
+        tags: ['claroline.validator']
+        arguments:
+            - '@UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator'
+
     _instanceof:
         UJM\ExoBundle\Library\Validator\JsonSchemaValidator:
             calls:

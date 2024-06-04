@@ -23,10 +23,10 @@ const StaticToolbar = (props) => {
   return (0 !== toolbar.length &&
     <nav role="toolbar" className={classes(props.className, props.name)} style={props.style}>
       {toolbar.map((group, groupIndex) => [
-        0 !== groupIndex &&
+        0 !== groupIndex && props.separatorName &&
           <span
             key={`separator-${groupIndex}`}
-            className={`${props.name || props.className}-separator`}
+            className={`${props.name}-separator ${props.separatorName}`}
           />,
         ...group.map((action) =>
           <Button
@@ -34,7 +34,13 @@ const StaticToolbar = (props) => {
             id={`${props.id || props.name || ''}${action.id || action.name}`}
             key={action.id || action.name}
             disabled={props.disabled || action.disabled}
-            className={classes(props.name ? `${props.name}-btn` : null, props.buttonName, action.className)}
+            className={classes(props.buttonName,
+              props.name ? `${props.name}-btn` : null,
+              action.primary && props.primaryName,
+              action.dangerous && props.dangerousName,
+              (!action.primary && !action.dangerous) && props.defaultName,
+              action.className
+            )}
             tooltip={undefined !== action.tooltip ? action.tooltip : props.tooltip}
             size={action.size || props.size}
             variant={props.variant}

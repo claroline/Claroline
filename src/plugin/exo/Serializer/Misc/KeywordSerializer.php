@@ -12,12 +12,17 @@ class KeywordSerializer
 {
     use SerializerTrait;
 
-    /**
-     * Converts a Keyword into a JSON-encodable structure.
-     *
-     * @return array
-     */
-    public function serialize(Keyword $keyword, array $options = [])
+    public function getName(): string
+    {
+        return 'exo_keyword';
+    }
+
+    public function getClass(): string
+    {
+        return Keyword::class;
+    }
+
+    public function serialize(Keyword $keyword, array $options = []): array
     {
         $serialized = [
             'text' => $keyword->getText(),
@@ -32,20 +37,10 @@ class KeywordSerializer
         return $serialized;
     }
 
-    public function getName()
-    {
-        return 'exo_keyword';
-    }
-
     /**
      * Converts raw data into a Keyword entity.
-     *
-     * @param array   $data
-     * @param Keyword $keyword
-     *
-     * @return Keyword
      */
-    public function deserialize($data, Keyword $keyword = null, array $options = [])
+    public function deserialize(array $data, Keyword $keyword = null, array $options = []): Keyword
     {
         if (empty($keyword)) {
             $keyword = new Keyword();
@@ -68,7 +63,7 @@ class KeywordSerializer
      *
      * @return Keyword[] - the list of updated Keyword entities (and without the one no longer in `$keywordCollection`)
      */
-    public function deserializeCollection(array $keywordCollection, array $keywordEntities, array $options = [])
+    public function deserializeCollection(array $keywordCollection, array $keywordEntities, array $options = []): array
     {
         $keywords = [];
 

@@ -56,14 +56,14 @@ const FormContent = (props) => {
       {primarySections.map((primarySection, index) =>
         <Fragment key={primarySection.id || toKey(primarySection.title)}>
           {0 !== index &&
-            <hr />
+            <hr className="mb-5 mt-4" />
           }
           <section
             id={`${getSectionId(primarySection, props.id)}-section`}
-            className={classes('form-primary-section', primarySection.className, !props.flush && 'mb-3')}
+            className={classes('form-primary-section', primarySection.className/*, !props.flush && 'mb-3'*/)}
           >
             <ContentTitle
-              className="mb-4 mt-5"
+              className="mb-5"
               level={props.level}
               displayed={0 !== index && !primarySection.hideTitle}
               title={primarySection.title}
@@ -105,7 +105,7 @@ const FormContent = (props) => {
           displayLevel={props.displayLevel}
           defaultOpened={openedSection ? getSectionId(openedSection, props.id) : undefined}
           flush={props.flush}
-          className={classes(!props.flush && 'mb-3')}
+          /*className={classes(!props.flush && 'mb-3')}*/
         >
           {otherSections.map(section => (
             <FormSection

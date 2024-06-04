@@ -23,6 +23,7 @@ const Resources = props => {
 
   return (
     <ListData
+      autoFocus={props.autoFocus}
       primaryAction={(row) => getDefaultAction(row, refresher, props.path, props.currentUser)}
       actions={(rows) => getActions(rows, refresher, props.path, props.currentUser).then((actions) => [].concat(actions, props.customActions(rows)))}
       definition={[
@@ -70,8 +71,7 @@ const Resources = props => {
           name: 'meta.created',
           label: trans('creation_date'),
           type: 'date',
-          alias: 'creationDate',
-          displayed: true
+          alias: 'creationDate'
         }, {
           name: 'meta.updated',
           label: trans('modification_date'),
@@ -132,6 +132,7 @@ const Resources = props => {
 Resources.propTypes = {
   path: T.string,
   name: T.string.isRequired,
+  autoFocus: T.bool,
   autoload: T.bool,
   url: T.oneOfType([T.string, T.array]).isRequired,
   customDefinition: T.arrayOf(T.shape({

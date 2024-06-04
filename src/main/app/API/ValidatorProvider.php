@@ -13,27 +13,14 @@ class ValidatorProvider
     public const CREATE = 'create';
     /** @var string */
     public const UPDATE = 'update';
-
-    /** @var ObjectManager */
-    private $om;
-    /** @var SchemaProvider */
-    private $schema;
-
-    /**
-     * The list of registered validators in the platform.
-     *
-     * @var ContainerInterface
-     */
-    private $validators;
+    /** @var string */
+    public const DELETE = 'delete';
 
     public function __construct(
-        ObjectManager $om,
-        ContainerInterface $validators,
-        SchemaProvider $schema
+        private readonly ObjectManager $om,
+        private readonly ContainerInterface $validators,
+        private readonly SchemaProvider $schema
     ) {
-        $this->om = $om;
-        $this->validators = $validators;
-        $this->schema = $schema;
     }
 
     /**
@@ -62,7 +49,7 @@ class ValidatorProvider
      *
      * @throws InvalidDataException
      */
-    public function validate(string $class, $data, string $mode, bool $throwException = false, array $options = []): array
+    public function validate(string $class, array $data, string $mode, bool $throwException = false, array $options = []): array
     {
         // validates JSON Schema
         $schema = $this->schema->getSchema($class);
@@ -131,7 +118,7 @@ class ValidatorProvider
         return $data;
     }
 
-    private function validateUnique(array $uniqueFields, array $data, $mode, $class)
+    private function validateUnique(array $uniqueFields, array $data, string $mode, string $class): array
     {
         $errors = [];
 
@@ -142,7 +129,7 @@ class ValidatorProvider
                 $qb
                     ->select('COUNT(DISTINCT o)')
                     ->from($class, 'o')
-                    ->where("o.{$entityProp} = :{$entityProp}")
+                    ->where("o.$entityProp = :$entityProp")
                     ->setParameter($entityProp, $data[$dataProp]);
 
                 if (self::UPDATE === $mode && isset($data['id'])) {
@@ -152,18 +139,18 @@ class ValidatorProvider
 
                     $qb
                         ->setParameter($parameter, $value)
-                        ->andWhere("o.{$parameter} != :{$parameter}");
+                        ->andWhere("o.$parameter != :$parameter");
                 }
 
                 $countResults = $qb->getQuery()->getSingleScalarResult();
 
                 if ((self::UPDATE === $mode && isset($data['id'])) || self::CREATE === $mode) {
                     if ($countResults > 0) {
-                        $errors[] = ['path' => $dataProp, 'message' => "{$dataProp} already exists and should be unique"];
+                        $errors[] = ['path' => $dataProp, 'message' => "$dataProp already exists and should be unique"];
                     }
                 } else {
                     if ($countResults > 1) {
-                        $errors[] = ['path' => $dataProp, 'message' => "{$dataProp} already exists and should be unique"];
+                        $errors[] = ['path' => $dataProp, 'message' => "$dataProp already exists and should be unique"];
                     }
                 }
             }

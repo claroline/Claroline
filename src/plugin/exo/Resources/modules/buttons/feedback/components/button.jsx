@@ -16,7 +16,7 @@ import {CALLBACK_BUTTON} from '#/main/app/buttons'
  */
 const FeedbackEditorButton = (props) =>
   <Button
-    {...omit(props, 'feedback')}
+    {...omit(props, 'feedback', 'toggle')}
     id={`feedback-${props.id}`}
     className={classes('btn btn-text-secondary', props.className)}
     type={CALLBACK_BUTTON}

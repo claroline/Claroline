@@ -93,14 +93,14 @@ const ContextMain = (props) => {
         title={trans('access_forbidden')}
         description={trans('access_forbidden_help')}
       />
-  } else if (isEmpty(props.tools)) {
+  } /*else if (isEmpty(props.tools)) {
     CurrentPage = (
       <ContentPlaceholder
         size="lg"
         title="Cet espace est vide pour le moment"
       />
     )
-  } else {
+  } */else {
     CurrentPage = (
       <>
         {/*<AppLoader />*/}

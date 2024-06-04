@@ -14,12 +14,17 @@ class AnswerSerializer
 {
     use SerializerTrait;
 
-    /**
-     * Converts an Answer into a JSON-encodable structure.
-     *
-     * @return array
-     */
-    public function serialize(Answer $answer, array $options = [])
+    public function getName(): string
+    {
+        return 'exo_answer';
+    }
+
+    public function getClass(): string
+    {
+        return Answer::class;
+    }
+
+    public function serialize(Answer $answer, array $options = []): array
     {
         $usedHints = [];
         if (isset($options['hints'])) {
@@ -57,20 +62,7 @@ class AnswerSerializer
         return $serialized;
     }
 
-    public function getName()
-    {
-        return 'exo_answer';
-    }
-
-    /**
-     * Converts raw data into a Answer entity.
-     *
-     * @param array  $data
-     * @param Answer $answer
-     *
-     * @return Answer
-     */
-    public function deserialize($data, Answer $answer = null, array $options = [])
+    public function deserialize(array $data, Answer $answer = null, array $options = []): Answer
     {
         $answer = $answer ?: new Answer();
 

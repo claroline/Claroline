@@ -18,7 +18,7 @@ class VideoValidator implements ValidatorInterface
         return Video::class;
     }
 
-    public function validate($data, $mode, array $options = []): array
+    public function validate(array $data, string $mode, array $options = []): array
     {
         if (empty($data['url'])) {
             return [];

@@ -6,14 +6,23 @@
     position: relative;
     text-align: justify;
     //border: 1px solid $input-border;
-    color: $input-color;
-    background-color: $input-bg;
-    background-clip: padding-box;
-    border: $input-border-width solid $input-border-color;
+    //color: $input-color;
+    //background-color: $input-bg;
+    //background-clip: padding-box;
+    //border: $input-border-width solid $input-border-color;
 
-    @include border-radius($input-border-radius, 0);
-    @include box-shadow($input-box-shadow);
-    @include transition($input-transition);
+    .tox-tinymce {
+        //background-clip: padding-box;
+        border: $input-border-width solid $input-border-color;
+
+        @include border-radius($input-border-radius, 0);
+        //@include box-shadow($input-box-shadow);
+        //@include transition($input-transition);
+    }
+
+    .tinymce-inline .mce-content-body {
+        @extend .form-control;
+    }
 
     &.fullscreen {
         position: fixed;
@@ -22,10 +31,11 @@
         width: 100%;
         height: 100%;
         z-index: $zindex-offcanvas;
-        border: none;
+        /*border: none;*/
 
-        &,
+        /*&,*/
         .tox-tinymce {
+            border: none;
             @include border-radius(none !important);
         }
     }
@@ -52,6 +62,8 @@
         }
     }
 
+
+
     .mce-content-body {
         height: auto;
         /*min-height: 160px;
@@ -68,14 +80,21 @@
 .editor-toolbar {
     z-index: 2;
     position: absolute;
-    top: -13px;
-    right: -13px;
+    top: 0;
+    right: 0;
+    transform: translate(25%, -50%);
 
     .editor-toolbar-btn {
-        width: 26px;
-        height: 26px;
+        border-radius: 50rem;
 
-        // removes default btn styles
-        padding: 0;
+        // make it square
+        .fa {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: $icon-fixed-width;
+        }
+
+        padding: $btn-padding-x-sm;
     }
 }

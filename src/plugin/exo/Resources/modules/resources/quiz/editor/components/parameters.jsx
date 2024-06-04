@@ -101,7 +101,7 @@ const QuizEditorParameters = props => {
               name: 'parameters.showOverview',
               type: 'boolean',
               label: trans('enable_overview'),
-              // TODO : add message if false and there is a timer on the quiz
+              displayed: false,
               linked: [
                 {
                   name: 'description',
@@ -145,48 +145,6 @@ const QuizEditorParameters = props => {
                       }
                     }
                   ]
-                }
-              ]
-            }
-          ]
-        }, {
-          icon: 'fa fa-fw fa-desktop',
-          title: trans('display_parameters'),
-          fields: [
-            {
-              name: 'parameters.showTitles',
-              type: 'boolean',
-              label: trans('show_step_titles', {}, 'quiz'),
-              linked: [
-                {
-                  name: 'parameters.numbering',
-                  type: 'choice',
-                  label: trans('quiz_numbering', {}, 'quiz'),
-                  required: true,
-                  displayed: (quiz) => get(quiz, 'parameters.showTitles', false),
-                  options: {
-                    noEmpty: true,
-                    condensed: true,
-                    choices: constants.QUIZ_NUMBERINGS
-                  }
-                }
-              ]
-            }, {
-              name: 'parameters.showQuestionTitles',
-              type: 'boolean',
-              label: trans('show_question_titles', {}, 'quiz'),
-              linked: [
-                {
-                  name: 'parameters.questionNumbering',
-                  type: 'choice',
-                  label: trans('quiz_question_numbering', {}, 'quiz'),
-                  required: true,
-                  displayed: (quiz) => get(quiz, 'parameters.showQuestionTitles', false),
-                  options: {
-                    noEmpty: true,
-                    condensed: true,
-                    choices: constants.QUIZ_NUMBERINGS
-                  }
                 }
               ]
             }
@@ -394,6 +352,7 @@ const QuizEditorParameters = props => {
         }, {
           icon: 'fa fa-fw fa-flag-checkered',
           title: trans('end_page'),
+          displayed: false,
           fields: [
             {
               name: 'parameters.showEndPage',

@@ -14,20 +14,15 @@ use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
  */
 class ItemListener
 {
-    /**
-     * @var ItemDefinitionsCollection
-     */
-    private $itemDefinitions;
-
-    public function __construct(ItemDefinitionsCollection $itemDefinitions)
-    {
-        $this->itemDefinitions = $itemDefinitions;
+    public function __construct(
+        private readonly ItemDefinitionsCollection $itemDefinitions
+    ) {
     }
 
     /**
      * Loads the entity that holds the item type data when an Item is loaded.
      */
-    public function postLoad(Item $item, PostLoadEventArgs $event)
+    public function postLoad(Item $item, PostLoadEventArgs $event): void
     {
         $type = $this->itemDefinitions->getConvertedType($item->getMimeType());
         $definition = $this->itemDefinitions->get($type);
@@ -48,7 +43,7 @@ class ItemListener
     /**
      * Persists the entity that holds the item type data when an Item is persisted.
      */
-    public function prePersist(Item $item, PrePersistEventArgs $event)
+    public function prePersist(Item $item, PrePersistEventArgs $event): void
     {
         $interaction = $item->getInteraction();
         if (null !== $interaction) {
@@ -59,7 +54,7 @@ class ItemListener
     /**
      * Deletes the entity that holds the item type data when an Item is deleted.
      */
-    public function preRemove(Item $item, PreRemoveEventArgs $event)
+    public function preRemove(Item $item, PreRemoveEventArgs $event): void
     {
         $interaction = $item->getInteraction();
         if (null !== $interaction) {

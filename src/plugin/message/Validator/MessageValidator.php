@@ -17,12 +17,12 @@ class MessageValidator implements ValidatorInterface
     ) {
     }
 
-    public function validate($data, $mode, array $options = []): array
+    public function validate(array $data, string $mode, array $options = []): array
     {
         $errors = [];
 
         if (ValidatorProvider::UPDATE === $mode) {
-            $object = $this->om->getRepository($this->getClass())->find($data['id']);
+            $object = $this->om->getRepository(static::getClass())->find($data['id']);
 
             if (!$object) {
                 return [];

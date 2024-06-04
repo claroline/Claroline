@@ -110,6 +110,13 @@
   }
 }
 
+.app-editor-action {
+  .btn {
+    min-width: 20%;
+    flex-shrink: 0;
+  }
+}
+
 @if $enable-dark-mode {
   @include color-mode(dark) {
     .app-editor-menu {

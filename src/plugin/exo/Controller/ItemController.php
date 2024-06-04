@@ -27,17 +27,12 @@ class ItemController extends AbstractCrudController
     use RequestDecoderTrait;
     use PermissionCheckerTrait;
 
-    private ItemManager $manager;
-    private ShareManager $shareManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        ItemManager $manager,
-        ShareManager $shareManager
+        private readonly ItemManager $manager,
+        private readonly ShareManager $shareManager
     ) {
         $this->authorization = $authorization;
-        $this->manager = $manager;
-        $this->shareManager = $shareManager;
     }
 
     public function getName(): string

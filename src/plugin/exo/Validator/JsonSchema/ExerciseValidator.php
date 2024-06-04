@@ -9,25 +9,17 @@ use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
 
 class ExerciseValidator extends JsonSchemaValidator
 {
-    /**
-     * @var StepValidator
-     */
-    private $stepValidator;
-
-    /**
-     * ExerciseValidator constructor.
-     */
-    public function __construct(StepValidator $stepValidator)
-    {
-        $this->stepValidator = $stepValidator;
+    public function __construct(
+        private readonly StepValidator $stepValidator
+    ) {
     }
 
-    public function getJsonSchemaUri()
+    public function getJsonSchemaUri(): string
     {
         return 'quiz/schema.json';
     }
 
-    public function validateAfterSchema($exercise, array $options = [])
+    public function validateAfterSchema(mixed $exercise, array $options = []): array
     {
         $errors = [];
 
@@ -57,7 +49,7 @@ class ExerciseValidator extends JsonSchemaValidator
         return $errors;
     }
 
-    private function validateParameters(array $parameters)
+    private function validateParameters(array $parameters): array
     {
         $errors = [];
 
@@ -82,7 +74,7 @@ class ExerciseValidator extends JsonSchemaValidator
         return $errors;
     }
 
-    private function validatePicking(array $picking)
+    private function validatePicking(array $picking): array
     {
         $errors = [];
 

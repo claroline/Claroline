@@ -142,6 +142,7 @@ class ListData extends Component {
         {(displayTool || filtersTool || this.props.customActions) &&
           <ListHeader
             id={this.props.id}
+            autoFocus={this.props.autoFocus}
             disabled={this.props.loading || 0 === this.props.totalResults}
             display={displayTool}
             filters={filtersTool}

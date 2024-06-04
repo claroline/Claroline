@@ -36,7 +36,7 @@ $panel-body-padding:          15px !default;
 $images-path: "images/";
 
 // react strips whitespaces, so we need to move icons from text
-$icon-text-spacer:     15px;
+$icon-text-spacer:     .75rem;
 
 $icon-fixed-width: 1.25em; // same value as fa-fw (there is no var for it in font awesome)
 
@@ -147,8 +147,11 @@ $flying-alert-info-border:    $flying-alert-info-bg;
 // Summaries
 // ---
 
-$summary-lvl-indent:        map-get($spacers, 3); // indent children of a step in the summary
+$summary-gap:               map-get($spacers, 1);
+$summary-lvl-indent:        map-get($spacers, 4); // indent children of a step in the summary
 // Links
+$summary-link-spacer-y: map-get($spacers, 3);
+$summary-link-spacer-x: map-get($spacers, 4);
 $summary-link-color:          $link-color;
 $summary-link-bg:             var(--#{$prefix}tertiary-bg);
 $summary-link-border-radius:  var(--#{$prefix}border-radius-sm);
@@ -278,18 +281,18 @@ $data-card-padding:           $spacer;
 
 $data-card-color:               $card-color;
 $data-card-bg:                  $card-bg;
-$data-card-border-width:        $card-border-width !default;
+$data-card-border-width:        0 !default;
 $data-card-border-color:        $card-border-color !default;
 $data-card-border-radius:       $card-border-radius;
 $data-card-inner-border-radius: subtract($data-card-border-radius, $data-card-border-width) !default;
-$data-card-box-shadow:          $card-box-shadow;
+$data-card-box-shadow:          0 0 0 1px rgba($black, .075), $box-shadow-sm; //$card-box-shadow;
 
 
 $data-card-inner-border-width: 0 !default;
 $data-card-inner-border-color: $data-card-border-color !default;
 
-$data-card-header-bg:  fade-out($primary, .9)/*$card-cap-bg*/;
-$data-card-icon-color: var(--#{$prefix}secondary-color) !default;
+$data-card-header-bg:  rgba(var(--#{$prefix}primary-rgb), .1)/*$card-cap-bg*/;
+$data-card-icon-color: rgba(var(--#{$prefix}primary-rgb), 1) !default;
 
 // sizing
 $data-card-icon-sm-size:      80px;
@@ -301,7 +304,7 @@ $data-card-title-lg-font:     $font-size-lg;
 // states
 $data-card-color-muted:               var(--#{$prefix}secondary-color) !default;
 
-$data-card-active-color:              var(--#{$prefix}primary-text-emphasis) !default;
+$data-card-active-color:              var(--#{$prefix}primary) !default;
 $data-card-active-bg:                 var(--#{$prefix}primary-bg-subtle) !default;
 $data-card-active-header-bg:          tint-color($primary, 70%) !default;
 $data-card-active-icon-color: $data-card-active-color !default;

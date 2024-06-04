@@ -3,7 +3,7 @@
 function scrollTo(elementSelector, options) {
   const scrollToElement = document.querySelector(elementSelector)
   if (scrollToElement) {
-    scrollToElement.scrollIntoView(options)
+    scrollToElement.scrollIntoView(Object.assign({behavior: 'smooth'}, options))
   }
 }
 

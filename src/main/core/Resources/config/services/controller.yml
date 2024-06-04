@@ -31,6 +31,7 @@ services:
             - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
             - '@Claroline\CoreBundle\Manager\Resource\RightsManager'
             - '@security.token_storage'
+            - '@security.authorization_checker'
 
     Claroline\CoreBundle\Controller\APINew\Resource\ActivityController:
         arguments:

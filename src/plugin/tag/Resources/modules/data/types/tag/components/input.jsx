@@ -263,7 +263,7 @@ class TagInput extends Component {
           </div>
 
           <Button
-            className="btn btn-outline-secondary"
+            className="btn btn-body"
             type={MODAL_BUTTON}
             icon="fa fa-fw fa-tags"
             label={trans('add-tags', {}, 'actions')}

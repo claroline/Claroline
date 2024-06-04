@@ -8,6 +8,7 @@
 
     .step-children {
         padding-left: $summary-lvl-indent !important;
+        margin-top: $summary-gap;
     }
 }
 
@@ -26,7 +27,7 @@
     align-items: center;
     border-radius: $summary-link-border-radius;
     background-color: $summary-link-bg;
-    margin-top: map-get($spacers, 1);
+    margin-top: $summary-gap;
 }
 
 .summary-link-actions {
@@ -36,7 +37,7 @@
 .btn-summary-primary/*,
 .btn-summary*/ {
     //border: none;
-    padding: ($grid-gutter-width * .5) 0;
+    //padding: ($grid-gutter-width * .5) 0;
     //color: $summary-link-color;
 
     &:hover {
@@ -78,8 +79,8 @@
     flex: 1;
     display: flex;
     align-items: center;
-    padding-left: $grid-gutter-width;
-    padding-right: 5px;
+    padding: $summary-link-spacer-y $summary-link-spacer-x;
+    //padding-right: 5px;
     text-decoration: none;
 
     .action-icon {

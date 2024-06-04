@@ -34,7 +34,7 @@ function handleBefore(dispatch, originalRequest, before) {
  * @return {object}
  */
 function handleResponse(dispatch, response, originalRequest) {
-  dispatch(actions.receiveResponse(originalRequest, response.status, response.statusText))
+  dispatch(actions.receiveResponse(originalRequest, response.status, response.statusText, response))
 
   if (!response.ok) {
     return Promise.reject(response)

@@ -82,7 +82,7 @@ const TableHeader = props => {
       </tr>
 
       {props.selection && 0 < props.selection.current.length &&
-        <tr>
+        <tr className="table-selected">
           <td className="p-0" colSpan={props.displayedColumns.length + (props.selection ? 1:0) + (props.actions || !isEmpty(displayableColumns) ? 1:0) }>
             <ListBulkActions
               count={props.selection.current.length}

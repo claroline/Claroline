@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {useState} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
@@ -7,92 +7,111 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {Modal} from '#/main/app/overlays/modal/components/modal'
 
 import {selectors} from '#/main/core/modals/resources/store'
 import {ResourceList} from '#/main/core/resource/components/list'
+import {ModalTabbed} from '#/main/app/overlays/modal/components/tabbed'
 
-class ResourcesModal extends Component {
-  constructor(props) {
-    super(props)
+const ResourcesModal = (props) => {
+  const [initialized, setInitialized] = useState(false)
+  const [section, changeSection] = useState(props.contextId ? 'current': 'all')
+  const selectAction = props.selectAction(props.selected)
 
-    this.state = {initialized: false}
-  }
+  const ownProps = [
+    'root',
+    'current',
+    'currentDirectory',
+    'selected',
+    'selectAction',
+    'setCurrent',
+    'filters'
+  ]
 
-  render() {
-    const selectAction = this.props.selectAction(this.props.selected)
+  return (
+    <ModalTabbed
+      {...omit(props, ownProps)}
+      onEntering={() => {
+        if (props.current) {
+          props.setCurrent(props.current, props.filters)
+        }
 
-    const ownProps = [
-      'root',
-      'current',
-      'currentDirectory',
-      'selected',
-      'selectAction',
-      'setCurrent',
-      'filters'
-    ]
-
-    return (
-      <Modal
-        {...omit(this.props, ownProps)}
-        subtitle={this.props.currentDirectory ? this.props.currentDirectory.name : trans('all_resources', {}, 'resource')}
-        onEntering={() => {
-          if (this.props.current) {
-            this.props.setCurrent(this.props.current, this.props.filters)
-          } else if (this.props.root) {
-            this.props.setCurrent(this.props.root, this.props.filters)
+        setInitialized(true)
+      }}
+      onExited={props.reset}
+      className="data-picker-modal"
+      size="xl"
+      tabs={[
+        {
+          name: 'current',
+          type: CALLBACK_BUTTON,
+          label: trans('Resources de l\'espace'),
+          active: 'current' === section,
+          callback: () => {
+            props.setCurrent(null, props.filters)
+            changeSection('current')
+          },
+          displayed: !!props.contextId
+        }, {
+          name: 'all',
+          type: CALLBACK_BUTTON,
+          label: trans('Toutes les resources'),
+          active: 'all' === section,
+          callback: () => {
+            props.setCurrent(null, props.filters)
+            changeSection('all')
+          }
+        }
+      ]}
+    >
+      <ResourceList
+        name={selectors.LIST_NAME}
+        url={'current' === section ?
+          ['apiv2_resource_list', {contextId: props.contextId, parent: get(props.currentDirectory, 'slug')}] :
+          ['apiv2_resource_list', props.currentDirectory ? {contextId: get(props.currentDirectory, 'workspace.id'), parent: get(props.currentDirectory, 'slug')} : {}]
+        }
+        autoFocus={true}
+        autoload={initialized}
+        backAction={{
+          name: 'back',
+          type: CALLBACK_BUTTON,
+          icon: 'fa fa-fw fa-arrow-left',
+          label: get(props.currentDirectory, 'parent') ?
+            trans('back_to', {target: get(props.currentDirectory, 'parent.name')}) :
+            trans('back'),
+          callback: () => props.setCurrent(get(props.currentDirectory, 'parent'), props.filters),
+          disabled: isEmpty(props.currentDirectory) || (props.root && props.currentDirectory.slug === props.root.slug)
+        }}
+        primaryAction={(resourceNode) => {
+          if ('directory' === resourceNode.meta.type) {
+            return ({
+              type: CALLBACK_BUTTON,
+              callback: () => props.setCurrent(resourceNode, props.filters)
+            })
           }
 
-          this.setState({initialized: true})
+          return null
         }}
-        className="data-picker-modal"
-        size="xl"
-      >
-        <ResourceList
-          name={`${selectors.STORE_NAME}.resources`}
-          url={['apiv2_resource_list', {parent: get(this.props.currentDirectory, 'slug')}]}
-          autoload={this.state.initialized}
-          backAction={{
-            name: 'back',
-            type: CALLBACK_BUTTON,
-            icon: 'fa fa-fw fa-arrow-left',
-            label: get(this.props.currentDirectory, 'parent') ?
-              trans('back_to', {target: get(this.props.currentDirectory, 'parent.name')}) :
-              trans('back'),
-            callback: () => this.props.setCurrent(get(this.props.currentDirectory, 'parent'), this.props.filters),
-            disabled: isEmpty(this.props.currentDirectory) || (this.props.root && this.props.currentDirectory.slug === this.props.root.slug)
-          }}
-          primaryAction={(resourceNode) => {
-            if ('directory' === resourceNode.meta.type) {
-              return ({
-                type: CALLBACK_BUTTON,
-                callback: () => this.props.setCurrent(resourceNode, this.props.filters)
-              })
-            }
+        actions={undefined}
+      />
 
-            return null
-          }}
-          actions={undefined}
-        />
-
-        <Button
-          label={trans('select', {}, 'actions')}
-          {...selectAction}
-          className="modal-btn"
-          variant="btn"
-          size="lg"
-          primary={true}
-          disabled={0 === this.props.selected.length || !this.state.initialized}
-          onClick={this.props.fadeModal}
-        />
-      </Modal>
-    )
-  }
+      <Button
+        label={trans('select', {}, 'actions')}
+        {...selectAction}
+        className="modal-btn"
+        variant="btn"
+        size="lg"
+        primary={true}
+        disabled={0 === props.selected.length || !initialized}
+        onClick={props.fadeModal}
+      />
+    </ModalTabbed>
+  )
 }
 
 ResourcesModal.propTypes = {
   // from props
   filters: T.array,
+  contextId: T.string,
   root: T.shape({
     slug: T.string.isRequired,
     name: T.string.isRequired

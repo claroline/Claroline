@@ -124,7 +124,7 @@ class WorkspaceSerializer
             ];
 
             // this is a huge performances bottleneck as it will check if the current user as at least one right on one ws tool
-            $serialized['registered'] = $this->isRegistered($workspace);
+            //$serialized['registered'] = $this->isRegistered($workspace);
         }
 
         if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
@@ -206,7 +206,7 @@ class WorkspaceSerializer
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
             // this is a huge performances bottleneck
-            $serialized['waitingForRegistration'] = $workspace->getSelfRegistration() && $workspace->getRegistrationValidation() ? $this->waitingForRegistration($workspace) : false;
+            //$serialized['waitingForRegistration'] = $workspace->getSelfRegistration() && $workspace->getRegistrationValidation() ? $this->waitingForRegistration($workspace) : false;
         }
 
         return $serialized;

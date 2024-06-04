@@ -23,8 +23,8 @@ registry.add('ClarolineCommunityBundle', {
 
     workspace: {
       'register': () => { return import(/* webpackChunkName: "community-action-workspace-register" */ '#/main/community/actions/workspace/register') },
-      'register-self'  : () => { return import(/* webpackChunkName: "community-action-workspace-register-self" */   '#/main/community/actions/workspace/register-self') },
-      'unregister-self': () => { return import(/* webpackChunkName: "community-action-workspace-unregister-self" */ '#/main/community/actions/workspace/unregister-self') },
+      //'register-self'  : () => { return import(/* webpackChunkName: "community-action-workspace-register-self" */   '#/main/community/actions/workspace/register-self') },
+      //'unregister-self': () => { return import(/* webpackChunkName: "community-action-workspace-unregister-self" */ '#/main/community/actions/workspace/unregister-self') },
       'view-as'        : () => { return import(/* webpackChunkName: "community-action-workspace-view-as" */         '#/main/community/actions/workspace/view-as') }
     },
 

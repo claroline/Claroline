@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import get from 'lodash/get'
+
 import {asset} from '#/main/app/config'
 
 /**
@@ -27,19 +27,18 @@ const ThumbnailIcon = (props) => {
     }
   } else if (props.color) {
     styles = {
-      backgroundColor: props.color
+      color: props.color
     }
   }
 
   return (
     <div className={classes('thumbnail-icon', props.className, `thumbnail-icon-${props.size}`)} style={styles}>
-
       {!props.thumbnail && props.name &&
         props.name.charAt(0)
       }
 
       {!props.thumbnail && !props.name &&
-        props.icon
+        props.children
       }
     </div>
   )
@@ -50,8 +49,8 @@ ThumbnailIcon.propTypes = {
   size: T.oneOf(['xs', 'sm', 'md', 'lg', 'xl']),
   thumbnail: T.string,
   name: T.string,
-  icon: T.oneOfType([T.string, T.node]),
-  color: T.string
+  color: T.string,
+  children: T.node
 }
 
 ThumbnailIcon.defaultProps = {

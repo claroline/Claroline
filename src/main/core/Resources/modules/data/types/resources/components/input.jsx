@@ -23,9 +23,10 @@ const ResourcesButton = props =>
       title: props.title,
       current: props.current,
       root: props.root,
+      contextId: props.contextId,
       selectAction: (selected) => ({
         type: CALLBACK_BUTTON,
-        label: trans('select', {}, 'actions'),
+        label: trans('add', {}, 'actions'),
         callback: () => props.onChange(selected)
       })
     }]}
@@ -35,6 +36,7 @@ const ResourcesButton = props =>
 
 ResourcesButton.propTypes = {
   title: T.string,
+  contextId: T.string,
   root: T.shape({
     slug: T.string.isRequired,
     name: T.string.isRequired
@@ -126,10 +128,7 @@ implementPropTypes(ResourcesInput, DataInputTypes, {
   )),
   picker: T.shape({
     title: T.string,
-    root: T.shape({
-      slug: T.string.isRequired,
-      name: T.string.isRequired
-    }),
+    contextId: T.string,
     current: T.shape({
       slug: T.string.isRequired,
       name: T.string.isRequired
@@ -140,7 +139,6 @@ implementPropTypes(ResourcesInput, DataInputTypes, {
   value: null,
   picker: {
     current: null,
-    root: null,
     filters: {}
   }
 })

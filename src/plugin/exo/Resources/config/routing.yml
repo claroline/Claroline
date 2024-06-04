@@ -1,5 +1,4 @@
-# JSON API
-ujm_exo_api:
+claro_quiz:
     resource: "@UJMExoBundle/Controller/"
     prefix: apiv2
     type: api

@@ -29,19 +29,21 @@
     display: flex; // correct vertical align
     flex-direction: row;
     margin-left: auto;
+    align-items: center;
 
-    .btn {
+    /*.btn {
         padding: 0 $data-grid-gutter;
-    }
+    }*/
 }
 
 // customizes bulk actions
 .data-grid .list-selected {
-    border: var(--#{$prefix}border-width) solid transparent;
+    border-radius: $data-card-border-radius;
+    border: $data-card-border-width solid transparent;
     margin-bottom: $data-grid-gutter;
 
-    .list-selected-label,
-    .btn {
+    .list-selected-label/*,
+    .btn*/ {
         padding: $data-grid-gutter;
     }
 }

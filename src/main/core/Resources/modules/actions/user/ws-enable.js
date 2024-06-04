@@ -8,7 +8,7 @@ export default (users, refresher) => ({
   type: ASYNC_BUTTON,
   icon: 'fa fa-fw fa-book',
   label: trans('enable_personal_ws'),
-  scope: ['object', 'collection'],
+  scope: ['object'],
   displayed: users.length === users.filter(u => hasPermission('administrate', u)).length &&
     0 < users.filter(u => !u.meta.personalWorkspace).length,
   request: {

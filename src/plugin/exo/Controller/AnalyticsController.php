@@ -24,28 +24,13 @@ class AnalyticsController
     use PermissionCheckerTrait;
     use RequestDecoderTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var DocimologyManager */
-    private $docimologyManager;
-
-    /** @var ItemManager */
-    private $itemManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
+        private readonly TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
-        DocimologyManager $docimologyManager,
-        ItemManager $itemManager
+        private readonly DocimologyManager $docimologyManager,
+        private readonly ItemManager $itemManager
     ) {
-        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
-        $this->docimologyManager = $docimologyManager;
-        $this->itemManager = $itemManager;
     }
 
     /**

@@ -7,5 +7,11 @@ namespace Claroline\AppBundle\Entity;
  */
 interface CrudEntityInterface extends IdentifiableInterface
 {
-    public function getName(): string;
+    public function getMimeType(): string;
+
+    /**
+     * The list of identifiers which can be used to retrieve the entity in the API.
+     * NB. No need to declare
+     */
+    public static function getIdentifiers(): array;
 }

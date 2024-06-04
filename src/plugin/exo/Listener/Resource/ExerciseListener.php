@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Listener\Resource;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
@@ -17,12 +18,15 @@ use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\AttemptManager;
 use UJM\ExoBundle\Manager\ExerciseManager;
+use UJM\ExoBundle\Repository\ExerciseRepository;
 
 /**
  * Listens to resource events dispatched by the core.
  */
 class ExerciseListener extends ResourceComponent implements EvaluatedResourceInterface
 {
+    private ExerciseRepository $repository;
+
     public function __construct(
         private readonly AuthorizationCheckerInterface $authorization,
         private readonly TokenStorageInterface $tokenStorage,
@@ -30,8 +34,10 @@ class ExerciseListener extends ResourceComponent implements EvaluatedResourceInt
         private readonly ExerciseManager $exerciseManager,
         private readonly PaperManager $paperManager,
         private readonly AttemptManager $attemptManager,
-        private readonly ResourceEvaluationManager $resourceEvalManager
+        private readonly ResourceEvaluationManager $resourceEvalManager,
+        ObjectManager $om
     ) {
+        $this->repository = $om->getRepository(Exercise::class);
     }
 
     public static function getName(): string
@@ -71,10 +77,14 @@ class ExerciseListener extends ResourceComponent implements EvaluatedResourceInt
         ];
     }
 
+    /** @var Exercise $resource */
     public function update(AbstractResource $resource, array $data): ?array
     {
+        // Invalidate unfinished papers
+        $this->repository->invalidatePapers($resource);
+
         return [
-            'resource' => $this->serializer->serialize($resource),
+            'resource' => $this->serializer->serialize($resource, [Transfer::INCLUDE_SOLUTIONS]),
         ];
     }
 

@@ -8,7 +8,8 @@ import {trans} from '#/main/app/intl'
 
 const EditorMenu = (props) => {
   const commonPages = props.pages.filter(page => page.standard)
-  const otherPages = props.pages.filter(page => !page.standard)
+  const otherPages = props.pages.filter(page => !page.standard && !page.advanced)
+  const advancedPages = props.pages.filter(page => page.advanced)
 
   return (
     <div className="app-editor-menu" role="presentation">
@@ -28,39 +29,35 @@ const EditorMenu = (props) => {
       />
 
       {!isEmpty(otherPages) &&
-        <hr className="app-editor-menu-separator my-2" />
-      }
-
-      {!isEmpty(otherPages) &&
-        <Toolbar
-          className="nav nav-pills flex-column"
-          buttonName="nav-link text-start"
-          actions={otherPages.map(page => ({
-            name: page.name,
-            label: page.title,
-            type: LINK_BUTTON,
-            target: props.path + '/' + page.name
-          }))}
-        />
-      }
-
-      {props.actions &&
-        <hr className="app-editor-menu-separator my-2" />
-      }
-
-      {props.actions &&
-        <Toolbar
-          className="nav nav-pills flex-column"
-          buttonName="nav-link text-start"
-          actions={[
-            {
-              name: 'actions',
+        <>
+          <hr className="app-editor-menu-separator my-2" />
+          <Toolbar
+            className="nav nav-pills flex-column"
+            buttonName="nav-link text-start"
+            actions={otherPages.map(page => ({
+              name: page.name,
+              label: page.title,
               type: LINK_BUTTON,
-              label: trans('Actions avancées'),
-              target: props.path + '/actions'
-            }
-          ]}
-        />
+              target: props.path + '/' + page.name
+            }))}
+          />
+        </>
+      }
+
+      {!isEmpty(advancedPages) &&
+        <>
+          <hr className="app-editor-menu-separator my-2" />
+          <Toolbar
+            className="nav nav-pills flex-column"
+            buttonName="nav-link text-start"
+            actions={advancedPages.map(page => ({
+              name: page.name,
+              label: page.title,
+              type: LINK_BUTTON,
+              target: props.path + '/' + page.name
+            }))}
+          />
+        </>
       }
     </div>
   )
@@ -73,7 +70,8 @@ EditorMenu.propTypes = {
     name: T.string.isRequired,
     title: T.string.isRequired,
     managerOnly: T.bool,
-    standard: T.bool
+    standard: T.bool,
+    advanced: T.bool
   })),
   actions: T.bool
 }

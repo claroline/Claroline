@@ -1,9 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import get from 'lodash/get'
 
-import {asset} from '#/main/app/config'
 import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
 
 const WorkspaceIcon = (props) =>

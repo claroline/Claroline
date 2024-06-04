@@ -42,7 +42,7 @@ class OrderedToolSerializer
             //'thumbnail' => $orderedTool->getThumbnail(),
             'display' => [
                 'order' => $orderedTool->getOrder(),
-                'showIcon' => $orderedTool->getShowIcon(),
+                //'showIcon' => $orderedTool->getShowIcon(),
                 //'fullscreen' => $orderedTool->getFullscreen(),
             ],
             'restrictions' => [
@@ -69,7 +69,7 @@ class OrderedToolSerializer
         $this->sipe('poster', 'setPoster', $data, $orderedTool);
         //$this->sipe('thumbnail', 'setThumbnail', $data, $orderedTool);
         $this->sipe('display.order', 'setOrder', $data, $orderedTool);
-        $this->sipe('display.showIcon', 'setShowIcon', $data, $orderedTool);
+        //$this->sipe('display.showIcon', 'setShowIcon', $data, $orderedTool);
         //$this->sipe('display.fullscreen', 'setFullscreen', $data, $orderedTool);
         $this->sipe('restrictions.hidden', 'setHidden', $data, $orderedTool);
 

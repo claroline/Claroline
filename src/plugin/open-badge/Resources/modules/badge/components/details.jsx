@@ -28,9 +28,11 @@ const BadgeDetailsComponent = (props) => {
         </PageSection>
       }
 
-      <PageSection size="md" className="bg-body-tertiary py-3">
-        <h2>Comment obtenir ce badge ?</h2>
-
+      <PageSection
+        size="md"
+        className="bg-body-tertiary py-3"
+        title={trans('Comment obtenir ce badge ?', {}, 'badge')}
+      >
         {!props.badge.meta.enabled &&
           <div className="alert alert-info">
             <span className="fa fa-fw fa-circle-info icon-with-text-right" />
@@ -44,76 +46,77 @@ const BadgeDetailsComponent = (props) => {
       </PageSection>
 
       {(hasPermission('edit', props.badge) || !get(props.badge, 'restrictions.hideRecipients')) &&
-        <div className="row">
-          <ContentSizing size="md" className="my-3">
-            <h2>Utilisateurs ayant obtenu ce badge</h2>
-            <ListData
-              name={selectors.FORM_NAME + '.assertions'}
-              fetch={{
-                url: ['apiv2_badge-class_assertion', {badge: props.badge.id}],
-                autoload: !isEmpty(props.badge)
-              }}
-              primaryAction={(row) => ({
-                type: LINK_BUTTON,
-                target: props.path + `/badges/${props.badge.id}/assertion/${row.id}`,
-                label: trans('open', {}, 'actions')
-              })}
-              delete={{
-                url: ['apiv2_badge-class_remove_users', {badge: props.badge.id}],
-                displayed: () => get(props.badge, 'permissions.grant')
-              }}
-              definition={[
-                {
-                  name: 'user',
-                  type: 'user',
-                  label: trans('user'),
-                  displayed: true
-                }, {
-                  name: 'user.email',
-                  type: 'email',
-                  label: trans('email'),
-                  sortable: false,
-                  filterable: false
-                }, {
-                  name: 'issuedOn',
-                  label: trans('granted_date', {}, 'badge'),
-                  type: 'date',
-                  displayed: true,
-                  primary: true,
-                  options: {
-                    time: true
-                  }
-                }, {
-                  name: 'userDisabled',
-                  label: trans('user_disabled', {}, 'community'),
-                  type: 'boolean',
-                  displayable: false,
-                  sortable: false,
-                  filterable: true
+        <PageSection
+          size="md"
+          className="py-3"
+          title={trans('Utilisateurs ayant obtenu ce badge', {}, 'badges')}
+        >
+          <ListData
+            name={selectors.FORM_NAME + '.assertions'}
+            fetch={{
+              url: ['apiv2_badge-class_assertion', {badge: props.badge.id}],
+              autoload: !isEmpty(props.badge)
+            }}
+            primaryAction={(row) => ({
+              type: LINK_BUTTON,
+              target: props.path + `/badges/${props.badge.id}/assertion/${row.id}`,
+              label: trans('open', {}, 'actions')
+            })}
+            delete={{
+              url: ['apiv2_badge-class_remove_users', {badge: props.badge.id}],
+              displayed: () => get(props.badge, 'permissions.grant')
+            }}
+            definition={[
+              {
+                name: 'user',
+                type: 'user',
+                label: trans('user'),
+                displayed: true
+              }, {
+                name: 'user.email',
+                type: 'email',
+                label: trans('email'),
+                sortable: false,
+                filterable: false
+              }, {
+                name: 'issuedOn',
+                label: trans('granted_date', {}, 'badge'),
+                type: 'date',
+                displayed: true,
+                primary: true,
+                options: {
+                  time: true
                 }
-              ]}
-              actions={(rows) => [
-                {
-                  type: CALLBACK_BUTTON,
-                  icon: 'fa fa-fw fa-download',
-                  label: trans('download', {}, 'actions'),
-                  callback: () => rows.map(row => props.downloadAssertion(row)),
-                  displayed: get(props.badge, 'permissions.grant')
-                }
-              ]}
-              card={AssertionUserCard}
-              display={{
-                current: listConst.DISPLAY_LIST_SM,
-                available: [
-                  listConst.DISPLAY_TABLE_SM,
-                  listConst.DISPLAY_TABLE,
-                  listConst.DISPLAY_LIST_SM,
-                  listConst.DISPLAY_TILES_SM
-                ]
-              }}
-            />
-          </ContentSizing>
-        </div>
+              }, {
+                name: 'userDisabled',
+                label: trans('user_disabled', {}, 'community'),
+                type: 'boolean',
+                displayable: false,
+                sortable: false,
+                filterable: true
+              }
+            ]}
+            actions={(rows) => [
+              {
+                type: CALLBACK_BUTTON,
+                icon: 'fa fa-fw fa-download',
+                label: trans('download', {}, 'actions'),
+                callback: () => rows.map(row => props.downloadAssertion(row)),
+                displayed: get(props.badge, 'permissions.grant')
+              }
+            ]}
+            card={AssertionUserCard}
+            display={{
+              current: listConst.DISPLAY_LIST_SM,
+              available: [
+                listConst.DISPLAY_TABLE_SM,
+                listConst.DISPLAY_TABLE,
+                listConst.DISPLAY_LIST_SM,
+                listConst.DISPLAY_TILES_SM
+              ]
+            }}
+          />
+        </PageSection>
       }
     </>
   )

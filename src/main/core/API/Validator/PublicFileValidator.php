@@ -24,7 +24,7 @@ class PublicFileValidator implements ValidatorInterface
         return PublicFile::class;
     }
 
-    public function validate($data, $mode, array $options = []): array
+    public function validate(array $data, string $mode, array $options = []): array
     {
         /** @var File $tmpFile */
         $tmpFile = $options['file'];

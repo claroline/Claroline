@@ -49,9 +49,9 @@ class HtmlInput extends Component {
             id={`${this.props.id}-toolbar`}
             name="editor-toolbar"
             className="btn-toolbar gap-1"
-            buttonName="btn btn-secondary rounded-pill"
-            size="sm"
+            buttonName="btn btn-body"
             tooltip="bottom"
+            size="sm"
             actions={[
               {
                 name: 'fullscreen',
@@ -62,7 +62,7 @@ class HtmlInput extends Component {
               }, {
                 name: 'toggle-editor',
                 type: CALLBACK_BUTTON,
-                icon: classes('fa', {
+                icon: classes('fa fa-fw', {
                   'fa-plus': this.state.minimal,
                   'fa-minus': !this.state.minimal
                 }),

@@ -4,74 +4,24 @@ namespace UJM\ExoBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
-use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Item\Definition\AnswerableItemDefinitionInterface;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\ExerciseType;
 use UJM\ExoBundle\Library\Options\Transfer;
-use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\Item\ItemManager;
-use UJM\ExoBundle\Repository\ExerciseRepository;
 use UJM\ExoBundle\Repository\PaperRepository;
-use UJM\ExoBundle\Serializer\ExerciseSerializer;
-use UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator;
 
 class ExerciseManager
 {
-    private ExerciseRepository $repository;
-
     public function __construct(
         private readonly ObjectManager $om,
-        private readonly ExerciseValidator $validator,
-        private readonly ExerciseSerializer $serializer,
         private readonly ItemManager $itemManager,
         private readonly PaperManager $paperManager,
         private readonly ItemDefinitionsCollection $definitions
     ) {
-        $this->repository = $this->om->getRepository(Exercise::class);
-    }
-
-    /**
-     * Validates and updates an Exercise entity with raw data.
-     */
-    public function update(Exercise $exercise, array $data): Exercise
-    {
-        // Validate received data
-        $validationOptions = [];
-        $dataToValidate = $this->removeUnexpectedSolutions($data);
-
-        if ($exercise->hasExpectedAnswers()) {
-            $validationOptions[] = Validation::REQUIRE_SOLUTIONS;
-        }
-        $errors = $this->validator->validate($dataToValidate, $validationOptions);
-
-        if (count($errors) > 0) {
-            throw new InvalidDataException('Exercise is not valid', $errors);
-        }
-        // Start flush suite to avoid persisting and flushing tags before quiz
-        $this->om->startFlushSuite();
-        // Update Exercise with new data
-        $this->serializer->deserialize($data, $exercise, [Transfer::PERSIST_TAG]);
-
-        // Save to DB
-        $this->om->persist($exercise);
-        $this->om->endFlushSuite();
-
-        // Invalidate unfinished papers
-        $this->repository->invalidatePapers($exercise);
-
-        return $exercise;
-    }
-
-    /**
-     * Serializes an Exercise.
-     */
-    public function serialize(Exercise $exercise, array $options = []): array
-    {
-        return $this->serializer->serialize($exercise, $options);
     }
 
     /**
@@ -270,24 +220,5 @@ class ExerciseManager
         fclose($fp);
 
         return $fp;
-    }
-
-    private function removeUnexpectedSolutions($data)
-    {
-        $newData = $data;
-
-        if (isset($newData['steps'])) {
-            foreach ($newData['steps'] as $stepIdx => $step) {
-                if (isset($step['items'])) {
-                    foreach ($step['items'] as $itemIdx => $item) {
-                        if (isset($item['solutions']) && isset($item['hasExpectedAnswers']) && !$item['hasExpectedAnswers']) {
-                            unset($newData['steps'][$stepIdx]['items'][$itemIdx]['solutions']);
-                        }
-                    }
-                }
-            }
-        }
-
-        return $newData;
     }
 }

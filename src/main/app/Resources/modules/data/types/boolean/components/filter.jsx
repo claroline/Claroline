@@ -18,7 +18,7 @@ const BooleanFilter = (props) => {
       <Button
         className={classes('btn btn-filter', {
           'btn-primary': props.isValid && searchValue,
-          'btn-outline-secondary': !props.isValid || !searchValue
+          'btn-body': !props.isValid || !searchValue
         })}
         type={CALLBACK_BUTTON}
         label={trans('yes')}
@@ -31,7 +31,7 @@ const BooleanFilter = (props) => {
       <Button
         className={classes('btn btn-filter', {
           'btn-primary': props.isValid && !searchValue,
-          'btn-outline-secondary': !props.isValid || searchValue
+          'btn-body': !props.isValid || searchValue
         })}
         type={CALLBACK_BUTTON}
         label={trans('no')}

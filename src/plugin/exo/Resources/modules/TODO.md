@@ -1,6 +1,5 @@
 
 # General
-- [ ] remove all reference to translation function `tex()` use `trans('key', {}, 'quiz')` instead.
 - [ ] move each quiz section (editor, player, etc.) in `#/plugin/exo/resources/quiz` while refactoring the section.
 - [ ] rename `enums.js` in `constants.js` and only export a var `constants` which hold all the consts.
 - [ ] replace all default exports with named ones.

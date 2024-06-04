@@ -1,29 +1,26 @@
 import {createSelector} from 'reselect'
+import get from 'lodash/get'
 
-import {selectors as pathSelectors} from '#/plugin/path/resources/path/store/selectors'
-
-const FORM_NAME = pathSelectors.STORE_NAME+'.pathForm'
-
-// todo : reuse form selector
-const form = createSelector(
-  [pathSelectors.resource],
-  (resource) => resource.pathForm
-)
-
-// todo : reuse form selector
-const path = createSelector(
-  [form],
-  (form) => form.data
-)
+import {selectors as editorSelectors} from '#/main/core/resource/editor'
+import {constants} from '#/plugin/path//resources/path/constants'
 
 const steps = createSelector(
-  [path],
+  [editorSelectors.resource],
   (path) => path.steps || []
 )
 
+const numbering = createSelector(
+  [editorSelectors.resource],
+  (path) => get(path, 'display.numbering')
+)
+
+const hasCustomNumbering = createSelector(
+  [numbering],
+  (numbering) => numbering === constants.NUMBERING_CUSTOM
+)
+
 export const selectors = {
-  FORM_NAME,
-  form,
-  path,
-  steps
+  steps,
+  numbering,
+  hasCustomNumbering
 }

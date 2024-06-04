@@ -444,7 +444,7 @@ const WorkspaceForm = connect(
     id: formSelectors.data(formSelectors.form(state, ownProps.name)).id,
     // todo : fix tool/resource selection for opening. Those values are only available if the workspace is opened
     tools: contextSelectors.tools(state),
-    root: workspaceSelectors.root(state)
+    //root: workspaceSelectors.root(state)
   }),
   (dispatch, ownProps) =>({
     loadModel(model) {

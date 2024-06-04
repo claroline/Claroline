@@ -12,6 +12,7 @@ import {
   Action as ActionTypes,
   PromisedAction as PromisedActionTypes
 } from '#/main/app/action/prop-types'
+import isArray from 'lodash/isArray'
 
 // TODO : maybe manage it in action module (it's duplicated for cards)
 const StaticPrimaryAction = props => {
@@ -121,7 +122,7 @@ ListActions.propTypes = {
  * Bulk actions available for selected data items.
  */
 const ListBulkActions = props =>
-  <div className="data-bulk-actions list-selected">
+  <div className="data-bulk-actions list-selected text-primary-emphasis bg-primary-subtle">
     <div className="list-selected-label">
       <span className="fa fa-level-up fa-rotate-90 fa-fw icon-with-text-right" />
       {transChoice('list_selected_count', props.count, {count: props.count}, 'platform')}
@@ -131,8 +132,11 @@ const ListBulkActions = props =>
       <div className="list-selected-actions">
         <Toolbar
           buttonName="btn btn-link"
-          tooltip="left"
-          actions={props.actions}
+          /*tooltip="left"*/
+          actions={isArray(props.actions) ?
+            props.actions.map(action => ({...action, icon: null})) :
+            props.actions.then(actions => actions.map(action => ({...action, icon: null})))
+          }
           scope="collection"
         />
       </div>

@@ -23,9 +23,10 @@
 
     text-transform: uppercase;
     font-weight: $font-weight-base !important;
-    color: $primary;
+    color: var(--#{$prefix}primary);
 
-    background-color: fade-out($primary, .85);
+    //background-color: fade-out($primary, .85);
+    background-color: color-mix(in srgb, currentColor 15%, transparent);
     background-size: cover;
     background-position: center;
 }

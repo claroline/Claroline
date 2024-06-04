@@ -31,6 +31,7 @@ const ListHeader = props =>
       <Search
         id={props.id + '-search'}
         {...props.filters}
+        autoFocus={props.autoFocus}
         disabled={props.disabled && isEmpty(props.filters.current)}
       />
     }

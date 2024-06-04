@@ -12,17 +12,10 @@ use UJM\ExoBundle\Repository\ItemRepository;
 
 class ShareManager
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
     }
 
     public function canEdit(Item $question, User $user): bool
