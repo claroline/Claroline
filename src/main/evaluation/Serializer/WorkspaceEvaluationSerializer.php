@@ -67,12 +67,14 @@ class WorkspaceEvaluationSerializer
         }
 
         if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
-            $isAdmin = $this->authorization->isGranted('ADMINISTRATE', $evaluation);
-            $serialized['permissions'] = [
-                'open' => $isAdmin || $this->authorization->isGranted('OPEN', $evaluation),
-                'administrate' => $isAdmin,
-                'delete' => $isAdmin,
-            ];
+            if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+                $isAdmin = $this->authorization->isGranted('ADMINISTRATE', $evaluation);
+                $serialized['permissions'] = [
+                    'open' => $isAdmin || $this->authorization->isGranted('OPEN', $evaluation),
+                    'administrate' => $isAdmin,
+                    'delete' => $isAdmin,
+                ];
+            }
 
             $serialized['user'] = null;
             if ($evaluation->getUser()) {
