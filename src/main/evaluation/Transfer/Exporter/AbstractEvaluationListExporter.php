@@ -104,6 +104,10 @@ abstract class AbstractEvaluationListExporter extends AbstractListExporter
                         AbstractEvaluation::STATUS_PASSED => $this->translator->trans('evaluation_passed_short', [], 'evaluation'),
                     ],
                 ],
+            ], [
+                'name' => 'userDisabled',
+                'label' => $this->translator->trans('user_disabled', [], 'community'),
+                'type' => 'boolean',
             ],
         ];
     }
