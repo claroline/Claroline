@@ -1,6 +1,6 @@
 import {connect} from 'react-redux'
 
-import {actions} from '#/plugin/cursus/tools/trainings/catalog/store'
+import {actions} from '#/plugin/cursus/course/store'
 import {CoursePending as CoursePendingComponent} from '#/plugin/cursus/course/components/pending'
 
 const CoursePending = connect(

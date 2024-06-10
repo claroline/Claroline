@@ -91,6 +91,7 @@ const CourseDetails = (props) =>
             return (
               <CourseAbout
                 path={props.path}
+                contextType={props.contextType}
                 course={props.course}
                 activeSession={props.activeSession}
                 availableSessions={props.availableSessions}
@@ -125,8 +126,9 @@ const CourseDetails = (props) =>
                     },
                     displayed: (isFullyRegistered(activeSessionRegistration)
                       || get(props.activeSession, 'registration.autoRegistration')
-                      || hasPermission('edit', props.course)
-                    ) && !isEmpty(getInfo(props.course, props.activeSession, 'workspace')),
+                      || hasPermission('edit', props.course))
+                      && !isEmpty(getInfo(props.course, props.activeSession, 'workspace'))
+                      && props.contextType !== 'workspace',
                     primary: isFullyRegistered(activeSessionRegistration)
                   }, {
                     name: 'show-sessions',
@@ -150,6 +152,7 @@ const CourseDetails = (props) =>
           disabled: get(props.course, 'display.hideSessions', false),
           render: () => (
             <CourseSessions
+              contextType={props.contextType}
               path={props.path}
               course={props.course}
               registration={props.registrations}
@@ -220,6 +223,7 @@ CourseDetails.propTypes = {
   availableSessions: T.arrayOf(T.shape(
     SessionTypes.propTypes
   )),
+  contextType: T.string.isRequired,
   registrations: T.shape({
     users: T.array.isRequired,
     groups: T.array.isRequired,

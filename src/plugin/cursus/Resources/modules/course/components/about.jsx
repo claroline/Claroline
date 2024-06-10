@@ -371,7 +371,7 @@ const CourseAbout = (props) => {
                 data={session}
                 primaryAction={{
                   type: LINK_BUTTON,
-                  target: route(props.course, session)
+                  target: 'workspace' === props.contextType ? route(props.course, session, props.course.workspace) : route(props.course, session)
                 }}
               />
             )}
@@ -397,6 +397,8 @@ CourseAbout.propTypes = {
     groups: T.array.isRequired,
     pending: T.array.isRequired
   }),
+  contextType: T.string.isRequired,
+  path: T.string.isRequired,
   actions: T.array
 }
 

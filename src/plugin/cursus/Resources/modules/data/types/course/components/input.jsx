@@ -69,7 +69,7 @@ const CourseInput = props => {
   return (
     <ContentPlaceholder
       icon="fa fa-graduation-cap"
-      title={trans('no_course')}
+      title={trans('no_course', {}, 'cursus')}
       size={props.size}
     >
       <CourseButton

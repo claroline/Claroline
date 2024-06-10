@@ -30,7 +30,7 @@ const EventFormModal = withReducer(selectors.STORE_NAME, reducer)(
                 slug: session.slug,
                 restrictions: session.restrictions
               }
-            }, EventTypes.defaultProps, omit(session, 'id')
+            }, EventTypes.defaultProps, omit(session, 'id', 'name', 'code')
           ) // todo : omit props not needed for events
         }
 

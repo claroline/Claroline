@@ -1,6 +1,6 @@
 import {connect} from 'react-redux'
 
-import {actions, selectors} from '#/plugin/cursus/tools/trainings/catalog/store'
+import {actions, selectors} from '#/plugin/cursus/course/store'
 import {SessionUsers as SessionUsersComponent} from '#/plugin/cursus/session/components/users'
 
 const SessionUsers = connect(

@@ -23,7 +23,7 @@ const SessionList = (props) =>
     }}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: route(row.course, row),
+      target: 'workspace' === props.contextType ? route(props.course, row, props.course.workspace) : route(row.course, row),
       label: trans('open', {}, 'actions')
     })}
     delete={props.delete}
@@ -43,7 +43,11 @@ const SessionList = (props) =>
             not_ended: trans('session_not_ended', {}, 'cursus')
           }
         },
-        render: (row) => <EventStatus startDate={get(row, 'restrictions.dates[0]')} endDate={get(row, 'restrictions.dates[1]')} />
+        render: (row) =>
+          <EventStatus
+            startDate={get(row, 'restrictions.dates[0]')}
+            endDate={get(row, 'restrictions.dates[1]')}
+          />
       }, {
         name: 'name',
         type: 'string',
@@ -112,18 +116,16 @@ const SessionList = (props) =>
     ].concat(props.definition)}
     card={SessionCard}
     actions={(rows) => {
-      let actions = [
-        {
-          name: 'export-pdf',
-          type: URL_BUTTON,
-          icon: 'fa fa-fw fa-file-pdf',
-          label: trans('export-pdf', {}, 'actions'),
-          displayed: hasPermission('open', rows[0]),
-          group: trans('transfer'),
-          target: ['apiv2_cursus_session_download_pdf', {id: rows[0].id}],
-          scope: ['object']
-        }
-      ]
+      let actions = [{
+        name: 'export-pdf',
+        type: URL_BUTTON,
+        icon: 'fa fa-fw fa-file-pdf',
+        label: trans('export-pdf', {}, 'actions'),
+        displayed: hasPermission('open', rows[0]),
+        group: trans('transfer'),
+        target: ['apiv2_cursus_session_download_pdf', {id: rows[0].id}],
+        scope: ['object']
+      }]
 
       if (props.actions) {
         actions = [].concat(actions, props.actions(rows))
@@ -145,6 +147,8 @@ SessionList.propTypes = {
   definition: T.arrayOf(T.shape({
     // TODO : list property propTypes
   })),
+  course: T.object,
+  contextType: T.string,
   actions: T.func
 }
 

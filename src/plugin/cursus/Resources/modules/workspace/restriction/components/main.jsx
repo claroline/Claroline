@@ -13,7 +13,7 @@ import {route} from '#/plugin/cursus/routing'
 import {canSelfRegister, getCourseRegistration, getSessionRegistration, isFull} from '#/plugin/cursus/utils'
 import {CourseAbout} from '#/plugin/cursus/course/components/about'
 import {MODAL_COURSE_REGISTRATION} from '#/plugin/cursus/course/modals/registration'
-import {actions} from '#/plugin/cursus/tools/trainings/catalog/store'
+import {actions} from '#/plugin/cursus/course/store'
 
 const RestrictionMain = (props) => {
   const course = get(props.errors, 'trainings.course')

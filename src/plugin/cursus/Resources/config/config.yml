@@ -1,7 +1,7 @@
 plugin:
     tools:
         - name: training_events
-          icon: clock
+          icon: graduation-cap
           tool_rights:
               - register
 

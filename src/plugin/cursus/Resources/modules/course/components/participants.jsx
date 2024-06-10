@@ -10,7 +10,7 @@ import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
 import {MODAL_USERS} from '#/main/community/modals/users'
 import {MODAL_GROUPS} from '#/main/community/modals/groups'
 
-import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
+import {selectors} from '#/plugin/cursus/course/store'
 import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/prop-types'
 import {constants} from '#/plugin/cursus/constants'
 

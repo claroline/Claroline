@@ -35,7 +35,7 @@ const TrainingsMenu = (props) =>
         }, {
           name: 'registered',
           type: LINK_BUTTON,
-          label: trans('my_courses', {}, 'cursus'),
+          label: trans('my_sessions', {}, 'cursus'),
           target: `${props.path}/registered`,
           displayed: props.authenticated
         }, {

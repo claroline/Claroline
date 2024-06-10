@@ -4,10 +4,10 @@ import isEmpty from 'lodash/isEmpty'
 import {API_REQUEST, url} from '#/main/app/api'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {constants as actionConstants} from '#/main/app/action/constants'
-import {actions as formActions} from '#/main/app/content/form/store/actions'
 import {actions as listActions} from '#/main/app/content/list/store/actions'
+import {actions as formActions} from '#/main/app/content/form/store/actions'
 
-import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
+import {selectors} from '#/plugin/cursus/course/store'
 
 export const LOAD_COURSE = 'LOAD_COURSE'
 export const LOAD_COURSE_SESSION = 'LOAD_COURSE_SESSION'
@@ -36,8 +36,15 @@ actions.open = (courseSlug, force = false) => (dispatch, getState) => {
   }
 }
 
-actions.openForm = (courseSlug = null, defaultProps = {}) => (dispatch) => {
+actions.openForm = (courseSlug = null, defaultProps = {}, workspace = null) => (dispatch) => {
   if (!courseSlug) {
+    if(workspace) {
+      defaultProps = {
+        ...defaultProps,
+        _workspaceType: 'workspace',
+        workspace: workspace
+      }
+    }
     return dispatch(formActions.resetForm(selectors.FORM_NAME, defaultProps, true))
   }
 

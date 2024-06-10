@@ -10,7 +10,7 @@ import {Alert} from '#/main/app/alert/components/alert'
 import {formatListField} from '#/main/app/content/form/parameters/utils'
 import {MODAL_USERS} from '#/main/community/modals/users'
 
-import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
+import {selectors} from '#/plugin/cursus/course/store'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {MODAL_TRAINING_SESSIONS} from '#/plugin/cursus/modals/sessions'
 import {RegistrationUsers} from '#/plugin/cursus/registration/components/users'

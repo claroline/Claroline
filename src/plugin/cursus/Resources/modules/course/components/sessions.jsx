@@ -13,7 +13,7 @@ import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {route} from '#/plugin/cursus/routing'
 import {MODAL_SESSION_FORM} from '#/plugin/cursus/session/modals/parameters'
 import {SessionList} from '#/plugin/cursus/session/components/list'
-import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store/selectors'
+import {selectors} from '#/plugin/cursus/course/store'
 import {getInfo, isRegistered, isFull, canSelfRegister} from '#/plugin/cursus/utils'
 import {MODAL_COURSE_REGISTRATION} from '#/plugin/cursus/course/modals/registration'
 import {withRouter} from 'react-router-dom'
@@ -22,8 +22,10 @@ const CourseSessions = (props) =>
   <Fragment>
     <SessionList
       className="my-3"
+      course={props.course}
       path={props.path}
       name={selectors.STORE_NAME+'.courseSessions'}
+      contextType={props.contextType}
       url={['apiv2_cursus_course_list_sessions', {id: props.course.id}]}
       delete={{
         url: ['apiv2_cursus_session_delete_bulk'],
@@ -113,7 +115,11 @@ const CourseSessions = (props) =>
           course: props.course,
           onSave: (newSession) => {
             // open created session, but let user on sessions list to allow multiples creations
-            props.history.push(route(props.course, newSession)+'/sessions')
+            if('workspace' === props.contextType) {
+              props.history.push(route(props.course, newSession, props.course.workspace) + '/sessions')
+            } else {
+              props.history.push(route(props.course, newSession) + '/sessions')
+            }
             props.reload(props.course.slug)
           }
         }]}
@@ -135,6 +141,7 @@ CourseSessions.propTypes = {
     users: T.array,
     groups: T.array
   }),
+  contextType: T.string.isRequired,
   reload: T.func.isRequired,
   register: T.func.isRequired
 }

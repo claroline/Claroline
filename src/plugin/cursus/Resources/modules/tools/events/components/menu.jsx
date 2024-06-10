@@ -17,6 +17,11 @@ const EventsMenu = (props) =>
       buttonName="list-group-item list-group-item-action"
       actions={[
         {
+          name: 'about',
+          type: LINK_BUTTON,
+          label: trans('about', {}, 'platform'),
+          target: props.course ? props.path + '/about/' + props.course.slug : props.path + '/about'
+        },{
           name: 'registered',
           type: LINK_BUTTON,
           label: trans('my_events', {}, 'cursus'),
@@ -46,6 +51,7 @@ const EventsMenu = (props) =>
 EventsMenu.propTypes = {
   canEdit: T.bool.isRequired,
   canRegister: T.bool.isRequired,
+  course: T.object,
 
   // from menu
   path: T.string,

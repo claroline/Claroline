@@ -4,6 +4,8 @@ services:
         tags: [ 'claroline.component.tool' ]
         arguments:
             - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\API\SerializerProvider'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CursusBundle\Component\Tool\TrainingsTool:
         parent: Claroline\AppBundle\Component\Tool\AbstractTool
