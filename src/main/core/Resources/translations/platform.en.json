@@ -1018,6 +1018,8 @@
     "value": "Value",
     "web": "Web",
     "period": "Period",
+    "registration_mail_help": "Your account information will be sent to you by e-mail. (It may be put in your spam folder).",
+    "registration_validation_help": "Your account will only be accessible once you have activated it by clicking on the link sent to you by e-mail.",
     "display_optional_fields": "Show optional fields",
     "my_progression": "My progression",
     "useful_links": "Useful links",

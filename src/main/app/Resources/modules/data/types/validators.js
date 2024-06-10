@@ -282,13 +282,6 @@ function notExist(value, options = {}) {
     })
       .then(response => {
         if (404 !== response.status) {
-          return response.json()
-        }
-
-        return Promise.resolve(null)
-      })
-      .then(response => {
-        if (response) {
           return Promise.resolve(tval(options.unique.error || 'value_not_unique'))
         }
 
