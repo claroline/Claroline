@@ -28,7 +28,7 @@ const RegistrationMain = withRouter(
           if (termOfService) {
             dispatch(modalActions.showModal(MODAL_CONFIRM, {
               icon: 'fa fa-fw fa-copyright',
-              title: trans('terms_of_service'),
+              title: trans('terms_of_service', {}, 'privacy'),
               question: termOfService,
               isHtml: true,
               confirmButtonText: trans('accept_terms_of_service'),
