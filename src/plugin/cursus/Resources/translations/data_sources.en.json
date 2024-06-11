@@ -19,7 +19,6 @@
   "my_training_events": "List of my training events",
   "my_training_events_desc": "Allows to list the events to which the current user is registered.",
 
-
   "event_presences": "List of event presences",
   "event_presences_desc": "Allow to list all event presences.",
 

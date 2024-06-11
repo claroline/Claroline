@@ -1,22 +1,25 @@
 {
     "training_course": "Training",
     "training_course_desc": "Template used to print information about a training.",
-    "training_session": "Training",
-    "training_session_desc": "Template used to print information about a training session.",
+
     "training_event": "Training event",
     "training_event_desc": "Template used to print information about a training event.",
     "training_event_invitation": "Invitation to a training event",
     "training_event_invitation_desc": "Template used for the email invitation to a training event.",
+
+    "training_event_presence": "Certificate of attendance to a training event",
+    "training_event_presence_desc": "Template used for printing the certificate of attendance of a user to a training event.",
+    "training_event_presences": "Attendance grid for a training event",
+    "training_event_presences_desc": "Template used for printing the attendance grid (empty or pre-filled) of a training event.",
+
+    "training_session": "Training",
+    "training_session_desc": "Template used to print information about a training session.",
     "training_session_event_invitation": "Invitation to a training event",
     "training_session_event_invitation_desc": "Template used for the mail sent for the invitation to a training event.",
     "training_session_invitation": "Invitation to a training session",
     "training_session_invitation_desc": "Template used for the mail sent for the invitation to a training session.",
     "training_session_confirmation": "Confirmation of registration for a training session",
     "training_session_confirmation_desc": "Template used for the email requesting confirmation of registration for a training session.",
-    "training_event_presences": "Attendance grid for a training event",
-    "training_event_presences_desc": "Template used for printing the attendance grid (empty or pre-filled) of a training event.",
-    "training_event_presence": "Certificate of attendance to a training event",
-    "training_event_presence_desc": "Template used for printing the certificate of attendance of a user to a training event.",
 
     "course_code_desc": "The code of the training",
     "course_description_desc": "The description of the training",
@@ -25,6 +28,7 @@
     "course_default_duration_desc": "The default duration of the training",
     "course_public_registration_desc": "The public registration of the training",
     "course_max_users_desc": "The maximum number of users of the training",
+
     "event_description_desc": "The description of the session event",
     "event_location_address_desc": "The address of the session event",
     "event_location_extra_desc": "Extra information about the location of the session event",
@@ -41,6 +45,7 @@
     "event_presence_validation_datetime_utc_desc": "The date and time of user presence validation to event (UTC)",
     "event_trainers_desc": "The list of the trainers of the session event",
     "events_list_desc": "The list of session events",
+
     "session_description_desc": "The description of the training session",
     "session_name_desc": "The name of the training session",
     "session_code_desc": "The code of the training session",
@@ -49,6 +54,7 @@
     "session_public_registration_desc": "The public registration of the training session",
     "session_max_users_desc": "The maximum number of users of the training session",
     "session_trainers_desc": "The list of the trainers of the training session",
+
     "registration_confirmation_url": "The registration confirmation link",
     "registration_confirmation_url_desc": "The registration confirmation link",
 

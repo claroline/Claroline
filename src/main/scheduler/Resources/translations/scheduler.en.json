@@ -7,5 +7,10 @@
   "task_pending": "Pending",
   "task_in_progress": "Running",
   "task_success": "Executed",
-  "task_error": "Failed"
+  "task_error": "Failed",
+  "planing": "Planning",
+  "schedule": "Planning execution",
+  "once": "Unique execution",
+  "recurring": "Recurrent execution",
+  "interval": "Execution interval"
 }

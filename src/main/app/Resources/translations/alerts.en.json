@@ -27,6 +27,10 @@
     "error": {
       "title": "Error",
       "message": "Please contact an administrator."
+    },
+    "info": {
+      "title": "Information",
+      "message": ""
     }
   },
   "load": {

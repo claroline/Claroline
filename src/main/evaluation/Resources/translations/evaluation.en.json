@@ -19,5 +19,15 @@
   "evaluation_participated_status": "You have participated to the evaluation.",
   "evaluation_failed_status": "You did not pass the evaluation.",
   "evaluation_completed_status": "You have finished the evaluation.",
-  "evaluation_passed_status": "You have passed the evaluation."
+  "evaluation_passed_status": "You have passed the evaluation.",
+
+  "evaluation_not_attempted_short": "Not attempted",
+  "evaluation_todo_short": "To do",
+  "evaluation_unknown_short": "Unknown",
+  "evaluation_opened_short": "Opened",
+  "evaluation_incomplete_short": "Incomplete",
+  "evaluation_participated_short": "Participated",
+  "evaluation_failed_short": "Failed",
+  "evaluation_completed_short": "Completed",
+  "evaluation_passed_short": "Passed"
 }
