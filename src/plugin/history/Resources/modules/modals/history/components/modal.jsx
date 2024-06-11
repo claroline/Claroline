@@ -52,34 +52,35 @@ const HistoryModal = (props) => {
         />
       }
 
-      {props.loaded && (isEmpty(props.results) || isEmpty(props.results[section])) &&
-        <div className="modal-body">
+      <div className="modal-body">
+        {props.loaded && (isEmpty(props.results) || isEmpty(props.results[section])) &&
           <ContentPlaceholder
             size="lg"
             title={trans('workspaces' === section ? 'empty_workspaces':'empty_resources', {}, 'history')}
             help={trans('workspaces' === section ? 'empty_workspaces_help':'empty_resources_help', {}, 'history')}
           />
-        </div>
-      }
+        }
 
-      {props.loaded && !isEmpty(props.results) && !isEmpty(props.results[section]) &&
-        <div className="data-cards-stacked data-cards-stacked-flush">
-          {props.results[section].map(result =>
-            createElement(constants.RESULTS_CARD[section], {
-              key: result.id,
-              size: 'xs',
-              direction: 'row',
-              data: result,
-              primaryAction: {
-                type: LINK_BUTTON,
-                label: trans('open', {}, 'actions'),
-                target: 'workspaces' === section ? workspaceRoute(result) : resourceRoute(result),
-                onClick: props.fadeModal
-              }
-            })
-          )}
-        </div>
-      }
+        {props.loaded && !isEmpty(props.results) && !isEmpty(props.results[section]) &&
+          <div className="d-flex flex-column gap-1">
+            {props.results[section].map(result =>
+              createElement(constants.RESULTS_CARD[section], {
+                key: result.id,
+                size: 'sm',
+                direction: 'row',
+                asIcon: true,
+                data: result,
+                primaryAction: {
+                  type: LINK_BUTTON,
+                  label: trans('open', {}, 'actions'),
+                  target: 'workspaces' === section ? workspaceRoute(result) : resourceRoute(result),
+                  onClick: props.fadeModal
+                }
+              })
+            )}
+          </div>
+        }
+      </div>
 
       <Button
         className="modal-btn"

@@ -15,8 +15,9 @@ const ToolCard = props =>
     })}
     id={props.data.id}
     icon={!props.data.thumbnail ? `fa fa-${props.data.icon}` : null}
-    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
+    poster={props.data.thumbnail}
     title={trans(props.data.name, {}, 'tools')}
+    asIcon={true}
   />
 
 ToolCard.propTypes = {

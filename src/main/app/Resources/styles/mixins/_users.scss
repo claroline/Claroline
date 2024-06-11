@@ -1,11 +1,11 @@
 
 @mixin user-avatar-size($size, $status-size, $status-spacer) {
   // for picture
-  width: $size;
-  height: $size;
+  /*width: $size;
+  height: $size;*/
   // for .fa when no picture
   .user-status,
-  .user-avatar-placeholder {
+  /*.user-avatar-placeholder*/ {
     font-size: $size * .5;
   }
 

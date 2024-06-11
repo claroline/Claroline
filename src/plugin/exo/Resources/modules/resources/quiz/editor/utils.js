@@ -1,9 +1,11 @@
-import {makeId} from '#/main/core/scaffolding/id'
 import merge from 'lodash/merge'
-import {Step} from '#/plugin/exo/resources/quiz/prop-types'
 import cloneDeep from 'lodash/cloneDeep'
+
+import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl'
 import {toKey} from '#/main/core/scaffolding/text'
+
+import {Step} from '#/plugin/exo/resources/quiz/prop-types'
 
 function getStepSlug(steps, desiredSlug) {
   if (-1 === steps.findIndex(step => step.slug === desiredSlug)) {

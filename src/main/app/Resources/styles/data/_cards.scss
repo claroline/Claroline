@@ -85,7 +85,6 @@
 
     .btn {
         padding: $data-card-spacer-y $data-card-spacer-x;
-        //border-color: transparent !important;
     }
 }
 
@@ -145,15 +144,8 @@
     }
 }
 
-// with poster image variant
-.data-card-poster {
-    .data-card-flag {
-        @include text-movie-subtitles();
-    }
-}
-
 .data-card-header {
-    position: relative; // constrain flags
+    //position: relative; // constrain flags
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -180,7 +172,8 @@
     text-align: left;
     overflow-x: hidden;
     padding: $data-card-spacer-y $data-card-spacer-x;
-    flex: 1 0 auto;
+    flex: 1 1 auto;
+    max-width: 100%;
 }
 
 .data-card-description {
@@ -248,7 +241,7 @@
 // ---
 
 .data-card-xs {
-    @include data-card-size-variant(map-get($icon-sizes, sm), 2);
+    @include data-card-size-variant(map-get($icon-sizes, sm), 1);
 
 }
 .data-card-sm {

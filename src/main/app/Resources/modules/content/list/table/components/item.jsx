@@ -121,7 +121,7 @@ const TableItem = props => {
         <td key={column.name} className={classes(props.onSelect && 0 === index ? 'ps-0' : undefined, `${column.type}-cell`, column.primary && 'primary-cell')}>
           <div className="d-flex flex-direction-row gap-3 align-items-center">
             {column.primary &&
-              <div className={classes('placeholder user-avatar user-avatar-xs', props.primaryAction && 'bg-primary')} />
+              <div className={classes('placeholder thumbnail thumbnail-icon thumbnail-icon-xs', props.primaryAction && 'bg-primary')} />
             }
             <div className={classes('placeholder rounded-1 w-100', column.primary && props.primaryAction && 'bg-primary')}>
               &nbsp;

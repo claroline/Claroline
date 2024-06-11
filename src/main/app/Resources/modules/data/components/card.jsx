@@ -102,11 +102,7 @@ const CardHeader = props => {
   return (
     <div className="data-card-header" role="presentation">
       {props.asIcon ?
-        <ThumbnailIcon thumbnail={props.poster} color={props.color} size={props.size/*classes({
-            sm: 'xs' === props.size,
-            md: 'sm' === props.size,
-            lg: 'lg' === props.size
-        })*/}>
+        <ThumbnailIcon thumbnail={props.poster} color={props.color} size={props.size}>
           {typeof props.icon === 'string' ?
             <span className={props.icon} aria-hidden={true} /> :
             props.icon
@@ -137,72 +133,79 @@ CardHeader.propTypes = {
  * @param props
  * @constructor
  */
-const DataCard = props =>
-  <article style={props.style} className={classes(`data-card data-card-${props.orientation} data-card-${props.size}`, props.className, {
-    'data-card-clickable': props.primaryAction && !props.primaryAction.disabled,
-    'data-card-poster': !props.asIcon && (!!props.poster || !!props.color || !!props.icon),
-  })}>
-    <CardHeader
-      icon={props.icon}
-      color={props.color}
-      poster={props.poster}
-      asIcon={props.asIcon}
-      size={props.size}
-    />
+const DataCard = props => {
+  const asIcon = props.asIcon || 'row' === props.orientation
 
-    <CardAction
-      action={props.primaryAction}
-      className={classes('data-card-content text-reset text-decoration-none', {
-        'text-center': 'row' !== props.orientation && props.asIcon
-      })}
-    >
-      <Heading
-        level={props.level}
-        className="data-card-title"
-      >
-        {props.title}
-        {-1 !== props.display.indexOf('subtitle') && props.subtitle &&
-          <small>{props.subtitle}</small>
-        }
-      </Heading>
+  console.log(props.size)
 
-      {/*-1 === ['xs', 'sm'].indexOf(props.size) && */-1 !== props.display.indexOf('description') &&
-        <p className={classes('data-card-description text-body-secondary', {
-          'mb-0': 'xs' === props.size || !props.meta
-        })}>
-          {props.contentText && getPlainText(props.contentText)}
-        </p>
-      }
-
-      {props.children}
-
-      {-1 === ['xs', 'sm'].indexOf(props.size) && -1 !== props.display.indexOf('footer') && props.footer &&
-        <div key="data-card-footer" className="data-card-footer" role="presentation">
-          {props.footer}
-        </div>
-      }
-
-      {'xs' !== props.size && props.meta && (-1 !== props.display.indexOf('meta') || -1 !== props.display.indexOf('flags')) &&
-        <div className={classes('d-flex flex-row flex-wrap align-items-center gap-1 mt-auto', {
-          'justify-content-center': 'row' !== props.orientation && props.asIcon
-        })}>
-          {props.meta}
-        </div>
-      }
-    </CardAction>
-
-    {0 !== props.actions.length &&
-      <Toolbar
-        id={`actions-${props.id}`}
-        name="data-card-toolbar"
-        buttonName="btn btn-text-body"
-        tooltip="left"
-        toolbar={props.toolbar}
-        actions={props.actions}
-        scope="object"
+  return (
+    <article style={props.style} className={classes(`data-card data-card-${props.orientation} data-card-${props.size}`, props.className, {
+      'data-card-clickable': props.primaryAction && !props.primaryAction.disabled,
+      'data-card-poster': !props.asIcon && (!!props.poster || !!props.color || !!props.icon),
+    })}>
+      <CardHeader
+        icon={props.icon}
+        color={props.color}
+        poster={props.poster}
+        asIcon={asIcon}
+        size={props.size}
       />
-    }
-  </article>
+
+      <CardAction
+        action={props.primaryAction}
+        className={classes('data-card-content text-reset text-decoration-none', {
+          'text-center': 'row' !== props.orientation && asIcon
+        })}
+      >
+        <Heading
+          level={props.level}
+          className="data-card-title"
+        >
+          {props.title}
+          {-1 !== props.display.indexOf('subtitle') && props.subtitle &&
+            <small>{props.subtitle}</small>
+          }
+        </Heading>
+
+        {-1 !== props.display.indexOf('description') &&
+          <p className={classes('data-card-description text-body-secondary', {
+            'mb-0': -1 !== ['xs', 'sm'].indexOf(props.size) || !props.meta
+          })}>
+            {props.contentText && getPlainText(props.contentText)}
+          </p>
+        }
+
+        {props.children}
+
+        {-1 === ['xs', 'sm'].indexOf(props.size) && -1 !== props.display.indexOf('footer') && props.footer &&
+          <div key="data-card-footer" className="data-card-footer" role="presentation">
+            {props.footer}
+          </div>
+        }
+
+        {-1 === ['xs', 'sm'].indexOf(props.size) && props.meta && (-1 !== props.display.indexOf('meta') || -1 !== props.display.indexOf('flags')) &&
+          <div className={classes('d-flex flex-row flex-wrap align-items-center gap-1 mt-auto', {
+            'justify-content-center': 'row' !== props.orientation && asIcon
+          })}>
+            {props.meta}
+          </div>
+        }
+      </CardAction>
+
+      {0 !== props.actions.length &&
+        <Toolbar
+          id={`actions-${props.id}`}
+          name="data-card-toolbar"
+          buttonName="btn btn-text-body"
+          tooltip="left"
+          toolbar={props.toolbar}
+          actions={props.actions}
+          scope="object"
+        />
+      }
+    </article>
+  )
+}
 
 DataCard.propTypes = DataCardTypes.propTypes
 DataCard.defaultProps = DataCardTypes.defaultProps
