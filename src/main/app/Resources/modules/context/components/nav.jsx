@@ -14,6 +14,7 @@ import {MODAL_CONTEXT_SEARCH} from '#/main/app/context/modals/search'
 import {AppBrand} from '#/main/app/layout/components/brand'
 import {MODAL_MY_NOTIFICATIONS} from '#/main/notification/modals/my-notifications'
 import {NotificationButton} from '#/main/notification/components/button'
+import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
 
 const ContextNav = (props) => {
   if (!props.currentUser) {
@@ -53,7 +54,7 @@ const ContextNav = (props) => {
                 tooltip="right"
                 target="/desktop"
               >
-                <UserAvatar user={props.currentUser} size="md" noStatus={true}/>
+                <UserAvatar user={props.currentUser} size="sm" noStatus={true}/>
               </Button>
             )
           }
@@ -79,7 +80,7 @@ const ContextNav = (props) => {
         tooltip="right"
         target="/desktop"
       >
-        <UserAvatar user={props.currentUser} size="md" noStatus={true}/>
+        <UserAvatar user={props.currentUser} size="sm" noStatus={true}/>
       </Button>
 
       <NotificationButton
@@ -98,13 +99,10 @@ const ContextNav = (props) => {
           tooltip="right"
           target={route(pinnedContext)}
         >
-          <div
-            className="app-context-icon"
-            style={!isEmpty(pinnedContext.thumbnail) ? {
-              backgroundImage: `url(${asset(pinnedContext.thumbnail)})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
-            } : undefined}
+          <ThumbnailIcon
+            size="sm"
+            thumbnail={pinnedContext.thumbnail}
+            name={pinnedContext.name}
           />
         </Button>
       ))}

@@ -30,7 +30,7 @@ const FormGroup = props =>
         {props.label}
 
         {props.optional &&
-          <small className="ms-2 text-secondary">({trans('optional')})</small>
+          <small className="ms-2 text-secondary fw-normal">({trans('optional')})</small>
         }
       </label>
     }

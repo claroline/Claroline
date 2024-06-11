@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import isEmpty from 'lodash/isEmpty'
 
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -46,12 +46,12 @@ GroupsButton.propTypes = {
 const GroupsInput = props => {
   if (!isEmpty(props.value)) {
     return(
-      <Fragment>
+      <>
         {props.value.map(group =>
           <GroupCard
             key={`group-card-${group.id}`}
             data={group}
-            size="xs"
+            size="sm"
             actions={[
               {
                 name: 'delete',
@@ -90,7 +90,7 @@ const GroupsInput = props => {
             props.onChange(newValue)
           }}
         />
-      </Fragment>
+      </>
     )
   }
 

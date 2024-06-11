@@ -33,17 +33,23 @@
   flex-shrink: 0;
   margin: 0 .75rem;
 
-  .user-avatar {
+  /*.user-avatar {
     max-width: map-get($icon-sizes, sm) !important;
     max-height: map-get($icon-sizes, sm) !important;
-  }
+  }*/
 
   &:hover,
   &:focus,
   &.active {
     text-decoration: none;
     background: $primary;
-    color: color-contrast($primary);
+    .thumbnail {
+      background-color: transparent;
+    }
+
+    > * {
+      color: color-contrast($primary);
+    }
   }
 
   &:before {
@@ -84,13 +90,6 @@
   padding: map-get($spacers, 1);
   min-width: .75rem;
   box-sizing: content-box;
-}
-
-.app-context-icon {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
 }
 
 .app-context-separator {

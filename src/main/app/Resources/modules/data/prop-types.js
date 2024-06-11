@@ -61,7 +61,7 @@ const DataCard = {
     asIcon: false,
     size: 'sm',
     orientation: 'row',
-    level: 2,
+    level: 3,
     actions: [],
     toolbar: 'more',
     display: [

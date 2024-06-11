@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
@@ -11,15 +11,15 @@ import {GroupCard} from '#/main/community/group/components/card'
 const GroupsDisplay = (props) => {
   if (!isEmpty(props.data)) {
     return (
-      <Fragment>
+      <>
         {props.data.map(group =>
           <GroupCard
             key={`group-card-${group.id}`}
             data={group}
-            size="xs"
+            size="sm"
           />
         )}
-      </Fragment>
+      </>
     )
   }
 

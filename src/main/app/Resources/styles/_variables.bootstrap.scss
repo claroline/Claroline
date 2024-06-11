@@ -883,7 +883,7 @@ $form-text-color:                       var(--#{$prefix}secondary-color) !defaul
 $form-label-margin-bottom:              .5rem !default;
 $form-label-font-size:                  $font-size-sm !default;
 $form-label-font-style:                 null !default;
-$form-label-font-weight:                $font-weight-bolder !default;
+$form-label-font-weight:                $font-weight-semibold;
 $form-label-color:                      var(--#{$prefix}secondary-color) !default;
 // scss-docs-end form-label-variables
 
