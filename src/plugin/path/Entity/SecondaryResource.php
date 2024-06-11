@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Entity;
 
+use Claroline\AppBundle\Entity\Display\Order;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,101 +16,37 @@ use Doctrine\ORM\Mapping as ORM;
 class SecondaryResource
 {
     use Id;
+    use Order;
 
     /**
-     * Step.
-     *
-     * @var Step
-     *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step", inversedBy="secondaryResources")
      * @ORM\JoinColumn(name="step_id", onDelete="CASCADE", nullable=false)
      */
-    private $step;
+    private ?Step $step = null;
 
     /**
-     * Resource.
-     *
-     * @var ResourceNode
-     *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(name="resource_id", onDelete="CASCADE", nullable=false)
      */
-    private $resource;
+    private ?ResourceNode $resource = null;
 
-    /**
-     * Order of the secondary resource in the step.
-     *
-     * @var int
-     *
-     * @ORM\Column(name="resource_order", type="integer")
-     */
-    private $order;
-
-    /**
-     * Get step.
-     *
-     * @return Step
-     */
-    public function getStep()
+    public function getStep(): Step
     {
         return $this->step;
     }
 
-    /**
-     * Set step.
-     *
-     * @return SecondaryResource
-     */
-    public function setStep(Step $step)
+    public function setStep(Step $step): void
     {
         $this->step = $step;
-
-        return $this;
     }
 
-    /**
-     * Get resource.
-     *
-     * @return ResourceNode
-     */
-    public function getResource()
+    public function getResource(): ResourceNode
     {
         return $this->resource;
     }
 
-    /**
-     * Set resource.
-     *
-     * @return SecondaryResource
-     */
-    public function setResource(ResourceNode $resource)
+    public function setResource(ResourceNode $resource): void
     {
         $this->resource = $resource;
-
-        return $this;
-    }
-
-    /**
-     * Get order.
-     *
-     * @return int
-     */
-    public function getOrder()
-    {
-        return $this->order;
-    }
-
-    /**
-     * Set order.
-     *
-     * @param int $order
-     *
-     * @return SecondaryResource
-     */
-    public function setOrder($order)
-    {
-        $this->order = $order;
-
-        return $this;
     }
 }

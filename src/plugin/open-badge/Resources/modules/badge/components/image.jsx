@@ -4,23 +4,18 @@ import classes from 'classnames'
 import get from 'lodash/get'
 
 import {asset} from '#/main/app/config'
+import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
 
 const BadgeImage = (props) =>
-  <div
-    className={classes('badge-image', `badge-image-${props.size}`, props.className)}
-    role="presentation"
-    style={get(props.badge, 'color') ? {
-      backgroundColor: get(props.badge, 'color')
-    } : undefined}
+  <ThumbnailIcon
+    className={props.className}
+    size={props.size}
+    color={get(props.badge, 'color')}
+    thumbnail={get(props.badge, 'image') ? asset(get(props.badge, 'image')) : null}
+    name={get(props.badge, 'name')}
   >
-    {get(props.badge, 'image') &&
-      <img src={asset(get(props.badge, 'image'))} />
-    }
-
-    {!get(props.badge, 'image') &&
-      <span className="fa fa-trophy" />
-    }
-  </div>
+    <span className="fa fa-trophy" aria-hidden={true} />
+  </ThumbnailIcon>
 
 BadgeImage.propTypes = {
   className: T.string,

@@ -1,22 +1,28 @@
 import React from 'react'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
+import {useHistory} from 'react-router-dom'
 import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
+import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/app/intl/translation'
 import {Button} from '#/main/app/action'
-import {CALLBACK_BUTTON, LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {EditorPage} from '#/main/app/editor'
 import {ContentSummary} from '#/main/app/content/components/summary'
-import {selectors as editorSelectors} from '#/main/core/resource/editor'
+import {selectors as editorSelectors, actions as editorActions} from '#/main/core/resource/editor'
 
-import {MODAL_STEP_POSITION} from '#/plugin/path/resources/path/editor/modals/position'
 import {selectors} from '#/plugin/path/resources/path/editor/store'
 import {getNumbering} from '#/plugin/path/resources/path/utils'
 import {getFormDataPart} from '#/plugin/path/resources/path/editor/utils'
+import {addStep, getStepActions} from '#/plugin/path/resources/path/editor/actions'
 
 const PathEditorSummary = props => {
+  const history = useHistory()
+  const dispatch = useDispatch()
+  const update = (steps) => dispatch(editorActions.updateResource(steps, 'steps'))
+
   const resourceEditorPath = useSelector(editorSelectors.path)
   const errors = useSelector(editorSelectors.errors)
 
@@ -34,67 +40,12 @@ const PathEditorSummary = props => {
         status: 'danger',
         value: <span className="fa fa-fw fa-exclamation-circle" />
       } : undefined,
-      additional: [
-        {
-          name: 'add',
-          type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-plus',
-          label: trans('step_add_child', {}, 'path'),
-          callback: () => {
-            const newSlug = props.addStep(steps, step)
-            props.history.push(`${resourceEditorPath}/steps/${newSlug}`)
-          }
-        }, {
-          name: 'copy',
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-clone',
-          label: trans('copy', {}, 'actions'),
-          modal: [MODAL_STEP_POSITION, {
-            icon: 'fa fa-fw fa-clone',
-            title: trans('copy'),
-            step: step,
-            steps: props.steps,
-            selectAction: (position) => ({
-              type: CALLBACK_BUTTON,
-              label: trans('copy', {}, 'actions'),
-              callback: () => props.copyStep(step.id, position)
-            })
-          }]
-        }, {
-          name: 'move',
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-arrows',
-          label: trans('move', {}, 'actions'),
-          modal: [MODAL_STEP_POSITION, {
-            icon: 'fa fa-fw fa-arrows',
-            title: trans('movement'),
-            step: step,
-            steps: props.steps,
-            selectAction: (position) => ({
-              type: CALLBACK_BUTTON,
-              label: trans('move', {}, 'actions'),
-              callback: () => props.moveStep(step.id, position)
-            })
-          }]
-        }, {
-          name: 'delete',
-          type: CALLBACK_BUTTON,
-          icon: 'fa fa-fw fa-trash',
-          label: trans('delete', {}, 'actions'),
-          callback: () => {
-            props.removeStep(step.id)
-            if (`${resourceEditorPath}/steps/${step.slug}` === props.location.pathname) {
-              props.history.push(`${resourceEditorPath}/steps`)
-            }
-          },
-          confirm: {
-            title: trans('deletion'),
-            subtitle: step.title,
-            message: trans('step_delete_confirm', {}, 'path')
-          },
-          dangerous: true
-        }
-      ],
+      additional: getStepActions(
+        steps,
+        step,
+        update,
+        (path) => history.push(resourceEditorPath+path)
+      ),
       children: step.children ? step.children.map(getStepSummary) : []
     }
   }
@@ -136,26 +87,17 @@ const PathEditorSummary = props => {
         label={trans('step_add', {}, 'path')}
         size="lg"
         callback={() => {
-          const newSlug = props.addStep(steps)
-          props.history.push(`${resourceEditorPath}/steps/${newSlug}`)
+          const newStepId = makeId()
+
+          // update store
+          update(addStep(steps, {id: newStepId}))
+          // open new step
+          history.push(`${resourceEditorPath}/steps/${newStepId}`)
         }}
       />
     </EditorPage>
   )
 }
-
-/*PathEditorSummary.propTypes = {
-  history: T.shape({
-    push: T.func.isRequired
-  }).isRequired,
-  location: T.shape({
-    pathname: T.string.isRequired
-  }).isRequired,
-  addStep: T.func.isRequired,
-  copyStep: T.func.isRequired,
-  moveStep: T.func.isRequired,
-  removeStep: T.func.isRequired
-}*/
 
 export {
   PathEditorSummary

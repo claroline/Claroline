@@ -9,6 +9,7 @@ const Badge = {
     image: T.string,
     criteria: T.string,
     description: T.string,
+    color: T.string,
     issuingMode: T.arrayOf(T.string),
     meta: T.shape({
       enabled: T.bool

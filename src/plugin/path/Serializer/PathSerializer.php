@@ -45,7 +45,7 @@ class PathSerializer
         return [
             'id' => $path->getUuid(),
             'display' => [
-                'numbering' => $path->getNumbering() ? $path->getNumbering() : 'none',
+                'numbering' => $path->getNumbering() ?: 'none',
                 'manualProgressionAllowed' => $path->isManualProgressionAllowed(),
                 'showScore' => $path->getShowScore(),
             ],

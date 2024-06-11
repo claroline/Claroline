@@ -1,9 +1,7 @@
 import {makeReducer, combineReducers} from '#/main/app/store/reducer'
 import {makeInstanceAction} from '#/main/app/store/actions'
 
-import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store'
 import {TOOL_LOAD} from '#/main/core/tool/store/actions'
-import {selectors as parametersSelectors} from '#/main/core/tool/modals/parameters/store'
 
 import {reducer as activityReducer} from '#/main/community/tools/community/activity/store/reducer'
 import {reducer as pendingReducer} from '#/main/community/tools/community/pending/store/reducer'
@@ -17,12 +15,10 @@ import {selectors} from '#/main/community/tools/community/store/selectors'
 
 const reducer = combineReducers({
   parameters: makeReducer({}, {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters || state,
-    [makeInstanceAction(FORM_SUBMIT_SUCCESS, parametersSelectors.STORE_NAME)]: (state, action) => action.updatedData.parameters || state
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.parameters || state
   }),
   profile: makeReducer([], {
-    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.profile || state,
-    [makeInstanceAction(FORM_SUBMIT_SUCCESS, parametersSelectors.STORE_NAME)]: (state, action) => action.updatedData.profile || state
+    [makeInstanceAction(TOOL_LOAD, selectors.STORE_NAME)]: (state, action) => action.toolData.profile || state
   }),
   activity: activityReducer,
   users: usersReducer,

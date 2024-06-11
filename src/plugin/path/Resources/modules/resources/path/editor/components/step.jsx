@@ -1,6 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl/translation'
@@ -8,25 +8,39 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {EditorPage} from '#/main/app/editor'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
-import {selectors as editorSelectors} from '#/main/core/resource/editor'
+import {actions as editorActions, selectors as editorSelectors} from '#/main/core/resource/editor'
 
 import {selectors} from '#/plugin/path/resources/path/editor/store'
 import {flattenSteps, getNumbering} from '#/plugin/path/resources/path/utils'
 import {getFormDataPart} from '#/plugin/path/resources/path/editor/utils'
+import {getStepActions} from '#/plugin/path/resources/path/editor/actions'
+import {PathNav} from '#/plugin/path/resources/path/components/nav'
+import {scrollTo} from '#/main/app/dom/scroll'
 
 const PathEditorStep = props => {
-  const workspaceId = useSelector(resourceSelectors.workspaceId)
+  const dispatch = useDispatch()
+  const update = (steps) => dispatch(editorActions.updateResource(steps, 'steps'))
+
   const resourceEditorPath = useSelector(editorSelectors.path)
-  const hasCustomNumbering = useSelector(selectors.hasCustomNumbering)
-  const numbering = useSelector(selectors.numbering)
-
   const steps = useSelector(selectors.steps)
-  const step = flattenSteps(steps).find(s => props.match.params.slug === s.slug)
-  const stepNumbering = getNumbering(numbering, steps, step)
-
+  const flatSteps = flattenSteps(steps)
+  const step = flatSteps.find(s => props.match.params.slug === s.slug || props.match.params.slug === s.id)
   if (!step) {
     props.history.push(resourceEditorPath+'/steps')
   }
+
+  const workspaceId = useSelector(resourceSelectors.workspaceId)
+  const hasCustomNumbering = useSelector(selectors.hasCustomNumbering)
+  const numbering = useSelector(selectors.numbering)
+  const stepNumbering = getNumbering(numbering, steps, step)
+
+  const actions = getStepActions(
+    steps,
+    step,
+    update,
+    (path) => props.history.push(resourceEditorPath+path),
+    true
+  )
 
   return (
     <EditorPage
@@ -49,7 +63,7 @@ const PathEditorStep = props => {
           target: resourceEditorPath+'/steps',
           exact: true
         }
-      ]}
+      ].concat(actions)}
       definition={[
         {
           title: trans('general'),
@@ -64,6 +78,7 @@ const PathEditorStep = props => {
               name: 'title',
               type: 'string',
               label: trans('title'),
+              autoFocus: true,
               required: true
             }
           ]
@@ -134,36 +149,28 @@ const PathEditorStep = props => {
           ]
         }
       ]}
-    />
+    >
+      <PathNav
+        current={step}
+        all={flatSteps}
+        path={resourceEditorPath+'/steps'}
+        onNavigate={() => scrollTo(`.app-editor-form`)}
+      />
+    </EditorPage>
   )
 }
 
 PathEditorStep.propTypes = {
-  math: T.shape({
+  // from Route
+  match: T.shape({
     params: T.shape({
       slug: T.string
     })
-  })
+  }).isRequired,
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired
 }
-
-/*implementPropTypes(PathEditorStep, StepTypes, {
-  basePath: T.string,
-  workspace: T.object,
-  pathId: T.string.isRequired,
-  stepPath: T.string.isRequired,
-  actions: T.arrayOf(T.shape(
-    ActionTypes.propTypes
-  )),
-  numbering: T.string,
-
-  // resources
-  resourceParent: T.shape(
-    ResourceNodeTypes.propTypes
-  )
-}, {
-  customNumbering: false
-})*/
-
 
 export {
   PathEditorStep

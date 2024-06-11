@@ -11,7 +11,7 @@ import {ResourceEditorOverview} from '#/main/core/resource/editor/components/ove
 import {ResourceEditorPermissions} from '#/main/core/resource/editor/containers/permissions'
 
 // store
-import {selectors} from '#/main/core/resource/editor/store'
+import {selectors, actions} from '#/main/core/resource/editor/store'
 
 export {
   ResourceEditor,
@@ -21,5 +21,6 @@ export {
   ResourceEditorHistory,
   ResourceEditorOverview,
   ResourceEditorPermissions,
-  selectors
+  selectors,
+  actions
 }

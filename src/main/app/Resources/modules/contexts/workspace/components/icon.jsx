@@ -8,9 +8,11 @@ const WorkspaceIcon = (props) =>
   <ThumbnailIcon
     className={props.className}
     size={props.size}
-    thumbnail={get(props.workspace, 'thumbnail')}
     name={get(props.workspace, 'name')}
-  />
+    thumbnail={get(props.workspace, 'thumbnail')}
+  >
+    <span className="fa fa-book" aria-hidden={true} />
+  </ThumbnailIcon>
 
 WorkspaceIcon.propTypes = {
   className: T.string,

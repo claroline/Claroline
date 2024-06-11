@@ -8,27 +8,24 @@ import {DataCard} from '#/main/app/data/components/card'
 
 import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
 import {BadgeImage} from '#/plugin/open-badge/badge/components/image'
+import {asset} from '#/main/app/config'
 
 const BadgeCard = props =>
   <DataCard
     title={props.data.name}
-    subtitle={get(props.data, 'workspace') ? get(props.data, 'workspace.name') : trans('platform')}
     {...props}
     id={props.data.id}
-    className={classes('badge-card', props.className, {
+    className={classes(props.className, {
       'data-card-muted': !get(props.data, 'meta.enabled')
     })}
-    icon={
-      <BadgeImage badge={props.data} size={classes({
-        sm: 'xs' === props.size,
-        md: 'sm' === props.size,
-        lg: 'lg' === props.size
-      })} />
-    }
+    poster={get(props.data, 'image') ? asset(get(props.data, 'image')) : null}
+    color={get(props.data, 'color')}
+    icon={!get(props.data, 'image') ? <>{props.data.name.charAt(0)}</> : null}
     contentText={props.data.description}
-    flags={[
-      !get(props.data, 'meta.enabled') && ['fa fa-fw fa-eye-slash', trans('disabled')]
-    ].filter(flag => !!flag)}
+    meta={!get(props.data, 'meta.enabled') &&
+      <span className="badge bg-secondary-subtle text-secondary-emphasis text-capitalize">{trans('disabled')}</span>
+    }
+    asIcon={true}
   />
 
 BadgeCard.propTypes = {

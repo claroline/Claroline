@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import isEmpty from 'lodash/isEmpty'
 
 import {asset} from '#/main/app/config'
 
@@ -14,11 +15,9 @@ import {asset} from '#/main/app/config'
  * - OR A generic icon of the entity type
  *
  * Common usages :
- * - in the primary column of the table component (size MUST be "xs")
- * - as a data card icon (size MUST be linked to the card size)
- * - as a page icon (size MUST be "xl" for details page or "md" for any other page)
+ * - In a data card
  */
-const ThumbnailIcon = (props) => {
+const Thumbnail = (props) => {
   let styles = {}
   if (props.thumbnail) {
     styles = {
@@ -32,7 +31,7 @@ const ThumbnailIcon = (props) => {
   }
 
   return (
-    <div className={classes('thumbnail thumbnail-icon', props.className, `thumbnail-icon-${props.size}`)} style={styles}>
+    <div className={classes('thumbnail ratio ratio-thumbnail', `thumbnail-${props.size}`)} style={!isEmpty(styles) ? styles : undefined}>
       {!props.thumbnail && props.name &&
         props.name.charAt(0)
       }
@@ -44,7 +43,7 @@ const ThumbnailIcon = (props) => {
   )
 }
 
-ThumbnailIcon.propTypes = {
+Thumbnail.propTypes = {
   className: T.string,
   size: T.oneOf(['xs', 'sm', 'md', 'lg', 'xl']),
   thumbnail: T.string,
@@ -53,10 +52,10 @@ ThumbnailIcon.propTypes = {
   children: T.node
 }
 
-ThumbnailIcon.defaultProps = {
+Thumbnail.defaultProps = {
   size: 'md'
 }
 
 export {
-  ThumbnailIcon
+  Thumbnail
 }

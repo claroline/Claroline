@@ -6,31 +6,6 @@
 
 // mixins
 @mixin data-card-size-variant($icon-size, $nbLines : 3) {
-    .data-card-header {
-        //min-height: calc($icon-size + $icon-spacer*2); // icon margin + height
-    }
-
-    .thumbnail span:not(.theme-icon) {
-        font-size: $icon-size; // for FA icons
-    }
-
-    /*.data-card-icon {
-        font-size: floor(math.div($icon-size, 2)); // for FA icons
-        width: $icon-size;
-        height: $icon-size;
-        //margin: $icon-spacer;
-
-        .theme-icon,
-        .theme-icon * {
-            max-width: floor(math.div($icon-size, 2));
-            max-height: floor(math.div($icon-size, 2));
-        }
-    }*/
-
-    .data-card-title {
-        //font-size: $title-size;
-    }
-
     .data-card-description {
         height: $line-height-base * $data-card-content-font * $nbLines;
         // display the '...' if the text is truncated on browsers which support it
@@ -51,6 +26,12 @@
         .thumbnail {
             @include border-radius($data-card-inner-border-radius $data-card-inner-border-radius 0 0);
         }
+
+        .thumbnail-icon {
+            margin-top: $data-card-spacer-x;
+            margin-right: $data-card-spacer-y;
+            margin-left: $data-card-spacer-y;
+        }
     }
 
     &.data-card-poster {
@@ -58,10 +39,6 @@
             @include text-movie-subtitles();
         }
     }
-
-    /*.data-card-content {
-        flex: 1 0 auto;
-    }*/
 }
 
 @mixin data-card-horizontal-variant() {
@@ -76,11 +53,13 @@
         .thumbnail {
             @include border-radius($data-card-inner-border-radius 0 0 $data-card-inner-border-radius);
         }
-    }
 
-    .data-card-content {
-        /*min-width: 60%;*/
-        /*flex: 1 0 0;*/
+        .thumbnail-icon {
+            align-self: start;
+            margin-left: $data-card-spacer-x;
+            margin-top: $data-card-spacer-y;
+            margin-bottom: $data-card-spacer-y;
+        }
     }
 }
 
@@ -101,12 +80,12 @@
 
 .data-card-toolbar {
     position: absolute;
-    top: 0; // absorb btn border
-    right: 0; // absorb btn border
+    top: 0;
+    right: 0;
 
     .btn {
-        padding: $data-grid-gutter;
-        border-color: transparent !important;
+        padding: $data-card-spacer-y $data-card-spacer-x;
+        //border-color: transparent !important;
     }
 }
 
@@ -179,72 +158,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: $data-card-header-bg;
-
-    .thumbnail {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        span {
-            color: $data-card-icon-color;
-        }
-
-        span,
-        .theme-icon {
-            text-align: center;
-            position: relative;
-        }
-    }
-}
-
-/*.data-card-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    //background: $data-card-bg;
-    border-radius: 50%;
-    line-height: 0;
-
-    // for FA icons
-    color: $data-card-icon-color;
-
-    // for SVG icons
-    //fill: rgba(0, 0, 0, 0.5) !important;
-    //stroke: rgba(0, 0, 0, 0.5) !important;
-
-    .theme-icon {
-        flex: 1;
-    }
-
-    img, svg {
-        max-width: 100%;
-        max-height: 100%;
-    }
-}*/
-
-.data-card-flags {
-    position: absolute;
-    line-height: 1;
-    bottom: $data-grid-gutter;
-    right: $data-grid-gutter;
-}
-
-.data-card-flag {
-    cursor: help;
-    font-weight: bold;
-
-    + .data-card-flag {
-        margin-left: 5px;
-    }
 }
 
 .data-card-title {
-    //margin: $data-card-padding;
-    //padding: 0;
     font-size: $data-card-font;
-    //font-weight: $font-weight-bolder;
-    //text-wrap: ;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -262,18 +179,13 @@
     align-items: stretch;
     text-align: left;
     overflow-x: hidden;
-    padding: $data-card-padding;
+    padding: $data-card-spacer-y $data-card-spacer-x;
     flex: 1 0 auto;
 }
 
 .data-card-description {
-    /*margin-bottom: $data-card-padding;
-    margin-left: $data-card-padding;
-    margin-right: $data-card-padding;*/
     font-size: $data-card-content-font;
     line-height: $line-height-base;
-    /*text-align: justify;*/
-    //height: $line-height-base * $data-card-content-font * 3;
     overflow: hidden;
 }
 
@@ -281,9 +193,7 @@
     margin-top: auto; // ensure footer is always at the bottom
     font-size: $data-card-content-font;
     text-align: right;
-    //padding: 0 $data-card-padding $data-card-padding;
     color: $data-card-color-muted;
-    //font-style: italic;
 }
 
 // to remove. use bootstrap margin utilities
@@ -340,49 +250,15 @@
 .data-card-xs {
     @include data-card-size-variant(map-get($icon-sizes, sm), 2);
 
-    .data-card-flag {
-        font-size: 10px;
-    }
-
-    .data-card-title {
-        //margin: 10px;
-        //white-space: nowrap;
-    }
-
-    .data-card-description {
-        //margin: 0 10px;
-    }
-
-    .data-card-footer {
-        //padding: 0 10px 10px;
-    }
 }
 .data-card-sm {
-    @include data-card-size-variant(map-get($icon-sizes, sm), 2);
-
-    .data-card-flags {
-        bottom: $data-card-padding;
-        right: $data-card-padding;
-    }
-
-    .data-card-flag {
-        font-size: 75%;
-    }
+    @include data-card-size-variant(map-get($icon-sizes, sm), 1);
 }
 .data-card-md {
     @include data-card-size-variant(map-get($icon-sizes, md), 3);
 }
 .data-card-lg {
     @include data-card-size-variant(map-get($icon-sizes, lg), 4);
-
-    .data-card-flags {
-        bottom: $data-card-padding;
-        right: $data-card-padding;
-    }
-
-    .data-card-flag {
-        font-size: 100%;
-    }
 }
 
 
