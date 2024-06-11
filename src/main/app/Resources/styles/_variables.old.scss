@@ -277,7 +277,8 @@ $data-tree-lines-color: var(--#{$prefix}secondary-color);
 
 $data-card-font:              $font-size-base !default;
 $data-card-content-font:      $font-size-sm !default;
-$data-card-padding:           $spacer;
+$data-card-spacer-x:          $card-spacer-x;
+$data-card-spacer-y:          $card-spacer-y;
 
 $data-card-color:               $card-color;
 $data-card-bg:                  $card-bg;
@@ -291,15 +292,12 @@ $data-card-box-shadow:          0 0 0 1px rgba($black, .075), $box-shadow-sm; //
 $data-card-inner-border-width: 0 !default;
 $data-card-inner-border-color: $data-card-border-color !default;
 
-$data-card-header-bg:  rgba(var(--#{$prefix}primary-rgb), .1)/*$card-cap-bg*/;
-$data-card-icon-color: rgba(var(--#{$prefix}primary-rgb), 1) !default;
-
 // sizing
-$data-card-icon-sm-size:      80px;
-$data-card-title-sm-font:     $font-size-base;
+//$data-card-icon-sm-size:      80px;
+//$data-card-title-sm-font:     $font-size-base;
 
-$data-card-icon-lg-size:      120px;
-$data-card-title-lg-font:     $font-size-lg;
+//$data-card-icon-lg-size:      120px;
+//$data-card-title-lg-font:     $font-size-lg;
 
 // states
 $data-card-color-muted:               var(--#{$prefix}secondary-color) !default;

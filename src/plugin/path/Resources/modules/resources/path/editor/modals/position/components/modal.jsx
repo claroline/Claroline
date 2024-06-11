@@ -64,7 +64,7 @@ const PositionModal = props => {
       <FormData
         flush={true}
         name={selectors.STORE_NAME}
-        sections={[
+        definition={[
           {
             title: trans('general'),
             primary: true,
@@ -134,18 +134,18 @@ const PositionModal = props => {
             ]
           }
         ]}
-      />
-
-      <Button
-        label={trans('select', {}, 'actions')}
-        {...selectAction}
-        className="modal-btn"
-        variant="btn"
-        size="lg"
-        primary={true}
-        disabled={!props.selectEnabled}
-        onClick={props.fadeModal}
-      />
+      >
+        <Button
+          label={trans('select', {}, 'actions')}
+          {...selectAction}
+          className="modal-btn"
+          variant="btn"
+          size="lg"
+          primary={true}
+          htmlType="submit"
+          onClick={props.fadeModal}
+        />
+      </FormData>
     </Modal>
   )
 }

@@ -3,10 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 
-import {trans, displayDate, transChoice} from '#/main/app/intl'
 import {asset} from '#/main/app/config/asset'
+import {trans, transChoice} from '#/main/app/intl'
+import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {DataCard} from '#/main/app/data/components/card'
-import {UserMicro} from '#/main/core/user/components/micro'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
@@ -18,26 +18,28 @@ const WorkspaceCard = props =>
     })}
     id={props.data.id}
     poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
-    icon={!props.data.thumbnail ? <span className="fw-bold">{props.data.name.charAt(0)}</span> : null}
+    icon={!props.data.thumbnail ? <>{props.data.name.charAt(0)}</> : null}
     title={
       <>
-        <span className={classes({
-          'fa fa-fw fa-globe me-2': get(props.data, 'registration.selfRegistration'),
-          'fa fa-fw fa-stamp me-2': get(props.data, 'meta.model'),
-          'fa fa-fw fa-user me-2': get(props.data, 'meta.personal')
-        })} aria-hidden={true} />
+        <TooltipOverlay
+          id={'ws-type'+props.data.id}
+          position="top"
+          tip={classes({
+            [trans('workspace_public_registration', {}, 'workspace')]: get(props.data, 'registration.selfRegistration'),
+            [trans('workspace_model', {}, 'workspace')]: get(props.data, 'meta.model'),
+            [trans('workspace_personal', {}, 'workspace')]: get(props.data, 'meta.personal')
+          })}
+        >
+          <span className={classes({
+            'fa fa-fw fa-globe me-2': get(props.data, 'registration.selfRegistration'),
+            'fa fa-fw fa-stamp me-2': get(props.data, 'meta.model'),
+            'fa fa-fw fa-user me-2': get(props.data, 'meta.personal')
+          })} aria-hidden={true} />
+        </TooltipOverlay>
 
         {props.data.name}
       </>
     }
-    //subtitle={props.data.code}
-    /*flags={[
-      get(props.data, 'meta.archived')                       && ['fa fa-box',       trans('is_archived', {}, 'workspace')],
-      get(props.data, 'meta.personal')                       && ['fa fa-user',      trans('workspace_personal', {}, 'workspace')],
-      get(props.data, 'restrictions.hidden')                 && ['fa fa-eye-slash', trans('workspace_hidden', {}, 'workspace')],
-      get(props.data, 'registration.selfRegistration')       && ['fa fa-globe',     trans('workspace_public_registration', {}, 'workspace')],
-      get(props.data, 'registration.waitingForRegistration') && ['fa fa-hourglass', trans('pending')]
-    ].filter(flag => !!flag)}*/
     contentText={get(props.data, 'meta.description')}
     meta={
       <>
@@ -57,23 +59,6 @@ const WorkspaceCard = props =>
         }
       </>
     }
-    /*footer={get(props.data, 'meta.creator') || get(props.data, 'meta.created') ?
-      <span
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
-        }}
-      >
-        <UserMicro {...get(props.data, 'meta.creator', {})} />
-
-        {get(props.data, 'meta.created') &&
-          trans('created_at', {date: displayDate(props.data.meta.created, false, true)})
-        }
-      </span>
-      :
-      null
-    }*/
   />
 
 WorkspaceCard.propTypes = {

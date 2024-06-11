@@ -18,8 +18,8 @@ const RoleCard = props =>
       'fa-book': constants.ROLE_WORKSPACE === props.data.type,
       'fa-user': constants.ROLE_USER === props.data.type
     })}
+    asIcon={true}
     title={trans(props.data.translationKey)}
-    subtitle={props.data.name}
     contentText={get(props.data, 'meta.description')}
   />
 

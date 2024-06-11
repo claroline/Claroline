@@ -12,26 +12,33 @@
     margin-right: $icon-text-spacer;
 }
 
-.thumbnail-icon {
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0 !important;
-
+.thumbnail {
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
     text-transform: uppercase;
-    font-weight: $font-weight-base !important;
+    font-weight: $font-weight-bold !important;
     color: var(--#{$prefix}primary);
 
-    //background-color: fade-out($primary, .85);
     background-color: color-mix(in srgb, currentColor 15%, transparent);
     background-size: cover;
     background-position: center;
+
+    > * {
+        text-align: center;
+        position: relative;
+    }
+}
+
+.thumbnail-icon {
+    border-radius: 50% !important;
+    overflow: hidden;
+    flex-shrink: 0 !important;
 }
 
 .theme-icon {
+    font-size: 0 !important;
     display: inline-block;
 
     // declare color vars to make it available in SVG
@@ -43,6 +50,11 @@
     .theme-icon-#{$size} {
         width: $value;
         height: $value;
+    }
+
+    .thumbnail-#{$size} {
+        // for .fa when no picture
+        font-size: $value;
     }
 
     .thumbnail-icon-#{$size} {

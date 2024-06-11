@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Entity\Resource\HasHomePage;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\EvaluationBundle\Entity\EvaluationFeedbacks;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Innova\PathBundle\Entity\Step;
 
@@ -24,76 +25,56 @@ class Path extends AbstractResource
     use EvaluationFeedbacks;
 
     /**
-     * Steps linked to the path.
-     *
-     * @var ArrayCollection|Step[]
-     *
      * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({
-     *     "order" = "ASC"
-     * })
+     * @ORM\OrderBy({"order" = "ASC"})
      */
-    private $steps;
+    private Collection $steps;
 
     /**
      * Numbering of the steps.
      *
-     * @var string
-     *
      * @ORM\Column
      */
-    private $numbering = 'none';
+    private string $numbering = 'none';
 
     /**
      * Is it possible for the user to manually set the progression.
      *
-     * @var bool
-     *
      * @ORM\Column(name="manual_progression_allowed", type="boolean")
      */
-    private $manualProgressionAllowed = true;
+    private bool $manualProgressionAllowed = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(name="resource_id", nullable=true, onDelete="SET NULL")
-     *
-     * @var ResourceNode
      */
-    private $overviewResource;
+    private ?ResourceNode $overviewResource;
 
     /**
      * Force the opening of secondary resources.
      *
      * @ORM\Column(options={"default" : "_self"})
-     *
-     * @var string
      */
-    private $secondaryResourcesTarget = '_self';
+    private string $secondaryResourcesTarget = '_self';
 
     /**
      * @ORM\Column(name="score_total", type="float", options={"default" = 100})
-     *
-     * @var float
      */
-    private $scoreTotal = 100;
+    private ?float $scoreTotal = 100;
 
     /**
      * Score to obtain to pass.
      *
      * @ORM\Column(name="success_score", type="float", nullable=true)
-     *
-     * @var float
      */
-    private $successScore = 50;
+    private ?float $successScore = 50;
 
     /**
      * @ORM\Column(name="show_score", type="boolean")
      *
-     * @var bool
-     *
-     * @deprecated will be be replaced by the score type on resource node
+     * @deprecated will be replaced by the score type on resource node
      */
-    private $showScore = false;
+    private bool $showScore = false;
 
     public function __construct()
     {
@@ -130,22 +111,8 @@ class Path extends AbstractResource
         return $found;
     }
 
-    /**
-     * Remove all steps.
-     *
-     * @deprecated
-     */
-    public function emptySteps(): void
-    {
-        $this->steps->clear();
-    }
-
-    /**
-     * Get steps.
-     *
-     * @return ArrayCollection|Step[]
-     */
-    public function getSteps()
+    /** @return Step[] */
+    public function getSteps(): Collection
     {
         return $this->steps;
     }

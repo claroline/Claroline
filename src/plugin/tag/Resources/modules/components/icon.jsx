@@ -7,8 +7,9 @@ import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
 const TagIcon = (props) =>
   <ThumbnailIcon
     className={props.className}
-    color={get(props.tag, 'color')}
     size={props.size}
+    name={get(props.tag, 'name')}
+    color={get(props.tag, 'color')}
   >
     <span className="fa fa-tag" />
   </ThumbnailIcon>

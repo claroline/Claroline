@@ -14,21 +14,19 @@ const DataCard = {
       T.string, // uuid
       T.number  // autoincrement
     ]).isRequired,
-    size: T.oneOf(['xs', 'sm', 'lg']),
+    size: T.oneOf(['xs', 'sm', 'md', 'lg']),
     orientation: T.oneOf(['col', 'row']),
     className: T.string,
     poster: T.string,
     color: T.string,
     icon: T.oneOfType([T.string, T.element]),
+    asIcon: T.bool,
     title: T.node.isRequired,
     subtitle: T.node,
     contentText: T.string,
     display: T.arrayOf(T.oneOf([
-      'icon',
-      'flags',
-      'subtitle',
-      'description',
-      'footer'
+      'meta',
+      'description'
     ])),
     flags: T.arrayOf(
       T.arrayOf(T.oneOfType([T.string, T.number]))
@@ -60,18 +58,15 @@ const DataCard = {
     children: T.node
   },
   defaultProps: {
+    asIcon: false,
     size: 'sm',
     orientation: 'row',
     level: 2,
     actions: [],
-    flags: [],
     toolbar: 'more',
     display: [
-      'icon',
-      'flags',
-      'subtitle',
-      'description',
-      'footer'
+      'meta',
+      'description'
     ]
   }
 }

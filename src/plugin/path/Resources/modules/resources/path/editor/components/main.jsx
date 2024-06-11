@@ -13,6 +13,7 @@ import {PathEditorAppearance} from '#/plugin/path/resources/path/editor/componen
 
    return (
      <ResourceEditor
+       styles={['claroline-distribution-plugin-path-path-resource']}
        defaultPage="steps"
        additionalData={() => ({
          resource: path

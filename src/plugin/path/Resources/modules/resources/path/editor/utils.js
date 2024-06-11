@@ -2,9 +2,14 @@ import {trans} from '#/main/app/intl/translation'
 
 import {flattenSteps} from '#/plugin/path/resources/path/utils'
 
-function getFormDataPart(id, steps) {
+function getFormDataPart(id, steps, prefix = true) {
   const stepPath = getStepPath(id, steps)
-  let formDataPart = `steps[${stepPath[0]}]`
+  let formDataPart = ''
+  if (prefix) {
+    formDataPart = 'steps'
+  }
+
+  formDataPart += `[${stepPath[0]}]`
 
   for (let i = 1; i < stepPath.length; ++i) {
     formDataPart += `.children[${stepPath[i]}]`

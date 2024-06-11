@@ -92,36 +92,3 @@
         }
     }
 }
-
-// FIXME
-.user-card {
-    .data-card-header {
-        background: transparent !important;
-        min-height: auto !important;
-    }
-
-    &.data-card-col {
-        &,
-        .data-card-content,
-        .data-card-description,
-        .data-card-footer {
-            text-align: center !important;
-        }
-
-
-
-        .user-avatar {
-            margin-top: $data-card-padding;
-        }
-    }
-
-    &.data-card-row {
-        .data-card-header {
-            min-width: auto !important;
-        }
-
-        .user-avatar {
-            margin-left: $data-card-padding;
-        }
-    }
-}

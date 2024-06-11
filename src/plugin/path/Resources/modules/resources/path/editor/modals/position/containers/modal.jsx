@@ -9,8 +9,7 @@ import {reducer, selectors} from '#/plugin/path/resources/path/editor/modals/pos
 const PositionModal = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      positionData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME)),
-      selectEnabled: formSelectors.saveEnabled(formSelectors.form(state, selectors.STORE_NAME))
+      positionData: formSelectors.data(formSelectors.form(state, selectors.STORE_NAME))
     }),
     (dispatch) => ({
       reset(currentPosition = {}) {

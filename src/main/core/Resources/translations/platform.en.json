@@ -968,6 +968,7 @@
     "colors-library": "Library",
     "colors-selector": "Selector",
     "movement": "Move",
+    "copy": "Copy",
     "before": "Before",
     "after": "After",
     "deletion": "Deletion",

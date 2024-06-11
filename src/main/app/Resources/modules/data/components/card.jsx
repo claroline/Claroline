@@ -6,11 +6,9 @@ import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
 import {getPlainText} from '#/main/app/data/types/html/utils'
-import {number} from '#/main/app/intl'
 import {Await} from '#/main/app/components/await'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {Button} from '#/main/app/action/components/button'
-import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {Heading} from '#/main/app/components/heading'
 
 import {
@@ -18,8 +16,9 @@ import {
   PromisedAction as PromisedActionTypes
 } from '#/main/app/action/prop-types'
 import {DataCard as DataCardTypes} from '#/main/app/data/prop-types'
+import {Thumbnail} from '#/main/app/components/thumbnail'
+import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
 
-// TODO : maybe manage it in action module (it's duplicated for tables)
 const StaticCardAction = props => {
   if (isEmpty(props.action) || props.action.disabled || (props.action.displayed !== undefined && !props.action.displayed)) {
     return (
@@ -100,70 +99,36 @@ CardAction.propTypes = {
  * @constructor
  */
 const CardHeader = props => {
-  let headerStyles = {}
-  if (props.poster) {
-    headerStyles.backgroundImage = `url(${props.poster})`
-    headerStyles.backgroundSize = 'cover'
-    headerStyles.backgroundPosition = 'center'
-  }
-
-  if (props.color) {
-    headerStyles.backgroundColor = props.color
-  }
-
   return (
     <div className="data-card-header" role="presentation">
-      <div className="thumbnail ratio ratio-thumbnail" style={!isEmpty(headerStyles) ? headerStyles : undefined}>
-        {typeof props.icon === 'string' ?
-          <span className={props.icon} aria-hidden={true} /> :
-          props.icon
-        }
-      </div>
-
-      {0 !== props.flags.length &&
-        <div className="data-card-flags" role="presentation">
-          {props.flags.map((flag, flagIndex) => flag &&
-            <TooltipOverlay
-              key={flagIndex}
-              id={`data-card-${props.id}-flag-${flagIndex}`}
-              tip={flag[1]}
-            >
-              {undefined !== flag[2] ?
-                <span className="data-card-flag" role="presentation">
-                  {number(flag[2], true)}
-                  <span className={flag[0]} />
-                </span> :
-                <span className={classes('data-card-flag', flag[0])} aria-labelledby={`data-card-${props.id}-flag-${flagIndex}`} />
-              }
-            </TooltipOverlay>
-          )}
-        </div>
+      {props.asIcon ?
+        <ThumbnailIcon thumbnail={props.poster} color={props.color} size={props.size/*classes({
+            sm: 'xs' === props.size,
+            md: 'sm' === props.size,
+            lg: 'lg' === props.size
+        })*/}>
+          {typeof props.icon === 'string' ?
+            <span className={props.icon} aria-hidden={true} /> :
+            props.icon
+          }
+        </ThumbnailIcon> :
+        <Thumbnail thumbnail={props.poster} color={props.color} size={props.size}>
+          {typeof props.icon === 'string' ?
+            <span className={props.icon} aria-hidden={true} /> :
+            props.icon
+          }
+        </Thumbnail>
       }
     </div>
   )
 }
 
 CardHeader.propTypes = {
-  id: T.oneOfType([
-    T.string,
-    T.number
-  ]).isRequired,
   icon: T.oneOfType([T.string, T.element]),
   poster: T.string,
   color: T.string,
-  flags: T.arrayOf(
-    T.arrayOf(T.oneOfType([T.string, T.number]))
-  ),
-  action: T.oneOfType([
-    // a regular action
-    T.shape(merge({}, ActionTypes.propTypes, {
-      label: T.node // make label optional
-    })),
-    // a promise that will resolve a list of actions
-    T.shape(
-      PromisedActionTypes.propTypes
-    )
-  ])
+  asIcon: T.bool,
+  size: T.oneOf(['xs', 'sm', 'md', 'lg']),
 }
 
 /**
@@ -175,20 +140,21 @@ CardHeader.propTypes = {
 const DataCard = props =>
   <article style={props.style} className={classes(`data-card data-card-${props.orientation} data-card-${props.size}`, props.className, {
     'data-card-clickable': props.primaryAction && !props.primaryAction.disabled,
-    'data-card-poster': !!props.poster || !!props.color
+    'data-card-poster': !props.asIcon && (!!props.poster || !!props.color || !!props.icon),
   })}>
     <CardHeader
-      id={props.id}
-      icon={-1 !== props.display.indexOf('icon') ? props.icon : undefined}
+      icon={props.icon}
       color={props.color}
       poster={props.poster}
-      flags={-1 !== props.display.indexOf('flags') ? props.flags : []}
-      action={props.primaryAction}
+      asIcon={props.asIcon}
+      size={props.size}
     />
 
     <CardAction
       action={props.primaryAction}
-      className="data-card-content text-reset text-decoration-none"
+      className={classes('data-card-content text-reset text-decoration-none', {
+        'text-center': 'row' !== props.orientation && props.asIcon
+      })}
     >
       <Heading
         level={props.level}
@@ -201,7 +167,7 @@ const DataCard = props =>
       </Heading>
 
       {/*-1 === ['xs', 'sm'].indexOf(props.size) && */-1 !== props.display.indexOf('description') &&
-        <p key="data-card-description" className={classes('data-card-description text-body-secondary', {
+        <p className={classes('data-card-description text-body-secondary', {
           'mb-0': 'xs' === props.size || !props.meta
         })}>
           {props.contentText && getPlainText(props.contentText)}
@@ -216,8 +182,10 @@ const DataCard = props =>
         </div>
       }
 
-      {'xs' !== props.size && props.meta &&
-        <div className="d-flex flex-row flex-wrap align-items-center gap-1 mt-auto">
+      {'xs' !== props.size && props.meta && (-1 !== props.display.indexOf('meta') || -1 !== props.display.indexOf('flags')) &&
+        <div className={classes('d-flex flex-row flex-wrap align-items-center gap-1 mt-auto', {
+          'justify-content-center': 'row' !== props.orientation && props.asIcon
+        })}>
           {props.meta}
         </div>
       }

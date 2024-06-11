@@ -10,37 +10,6 @@
 // Plugin vars
 @import "../variables";
 
-// FIXME
-.badge-card {
-  .data-card-header {
-    background: transparent !important;
-    min-height: auto !important;
-  }
-
-  &.data-card-col {
-    &,
-    .data-card-content,
-    .data-card-description,
-    .data-card-footer {
-      text-align: center !important;
-    }
-
-    .badge-image {
-      margin-top: $data-card-padding;
-    }
-  }
-
-  &.data-card-row {
-    .data-card-header {
-      min-width: auto !important;
-    }
-
-    .badge-image {
-      margin-left: $data-card-padding;
-    }
-  }
-}
-
 // TODO : to remove
 .badge-meta {
   display: flex;
@@ -92,32 +61,6 @@
 
   + .data-list {
     margin-top: 0;
-  }
-}
-
-.badge-image {
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0 !important;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    border-radius: 50%;
-    max-height: 100%;
-    max-width: 100%;
-  }
-}
-
-@each $size, $value in $icon-sizes {
-  .badge-image-#{$size} {
-    // for picture
-    width: $value;
-    height: $value;
-    // for .fa when no picture
-    font-size: $value * .5;
   }
 }
 
