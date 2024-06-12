@@ -20,7 +20,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\LocationSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CursusBundle\Serializer\CourseSerializer'

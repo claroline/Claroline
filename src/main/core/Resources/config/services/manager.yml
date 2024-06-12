@@ -215,11 +215,7 @@ services:
         alias: Claroline\CoreBundle\Manager\Organization\OrganizationManager
         public: true
 
-    Claroline\CoreBundle\Manager\LocationManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\CoreBundle\Manager\CurlManager'
+    Claroline\CoreBundle\Manager\LocationManager: ~
 
     Claroline\CoreBundle\Manager\PlanningManager:
         arguments:

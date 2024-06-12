@@ -139,7 +139,6 @@ registry.add('ClarolineCoreBundle', {
       'location'          : () => { return import(/* webpackChunkName: "core-data-type-location" */           '#/main/core/data/types/location') },
       'resource'          : () => { return import(/* webpackChunkName: "core-data-type-resource" */           '#/main/core/data/types/resource') },
       'resources'         : () => { return import(/* webpackChunkName: "core-data-type-resources" */          '#/main/core/data/types/resources') },
-      'room'              : () => { return import(/* webpackChunkName: "core-data-type-room" */               '#/main/core/data/types/room') },
       'template'          : () => { return import(/* webpackChunkName: "core-data-type-template" */           '#/main/core/data/types/template') },
       'template_type'     : () => { return import(/* webpackChunkName: "core-data-type-template-type" */      '#/main/core/data/types/template-type') },
       'workspace'         : () => { return import(/* webpackChunkName: "core-data-type-workspace" */          '#/main/core/data/types/workspace') },

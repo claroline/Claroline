@@ -14,23 +14,7 @@ services:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
 
-    Claroline\CoreBundle\API\Finder\Location\LocationFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
-    Claroline\CoreBundle\API\Finder\Location\RoomFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
-    Claroline\CoreBundle\API\Finder\Location\RoomBookingFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
-    Claroline\CoreBundle\API\Finder\Location\MaterialFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
-    Claroline\CoreBundle\API\Finder\Location\MaterialBookingFinder:
+    Claroline\CoreBundle\API\Finder\LocationFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]
 

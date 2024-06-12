@@ -11,14 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Location\Location;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\CurlManager;
-
 class LocationManager
 {
-    private $countries = [
+    private array $countries = [
         'AF' => 'Afghanistan',
         'AX' => 'Åland Islands',
         'AL' => 'Albania',
@@ -264,58 +259,8 @@ class LocationManager
         'ZW' => 'Zimbabwe',
     ];
 
-    private $om;
-    private $repo;
-    private $ch;
-    private $cm;
-
-    public function __construct(
-        ObjectManager $om,
-        PlatformConfigurationHandler $ch,
-        CurlManager $cm
-    ) {
-        $this->om = $om;
-        $this->repo = $om->getRepository(Location::class);
-        $this->ch = $ch;
-        $this->cm = $cm;
-    }
-
-    public function setCoordinates(Location $location)
+    public function getCountryByCode(string $code): ?string
     {
-        $data = $this->geolocate($location);
-        $data = json_decode($data, true);
-
-        if (isset($data['results'][0])) {
-            $loc = $data['results'][0]['geometry']['location'];
-
-            $location->setLongitude($loc['lng']);
-            $location->setLatitude($loc['lat']);
-        }
-
-        $this->om->persist($location);
-        $this->om->flush();
-
-        return $location;
-    }
-
-    public function geolocate(Location $location)
-    {
-        //this will only work for western europe because the format may be different for other countries... big switch
-        //may be needed...
-        $address = $location->getStreetNumber().'+'.$location->getStreet().'+'.$location->getPc().'+'.$location->getTown().'+'.$location->getCountry();
-        $address = urlencode($address);
-        $query = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$this->ch->getParameter('google_geocoding_key');
-
-        return $this->cm->exec($query);
-    }
-
-    public function getCountryByCode($code)
-    {
-        return isset($this->countries[$code]) ? $this->countries[$code] : null;
-    }
-
-    public function getCountries()
-    {
-        return $this->countries;
+        return $this->countries[$code] ?? null;
     }
 }

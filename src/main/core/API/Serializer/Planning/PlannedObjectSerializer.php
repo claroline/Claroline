@@ -6,10 +6,8 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
-use Claroline\CoreBundle\API\Serializer\Location\LocationSerializer;
-use Claroline\CoreBundle\API\Serializer\Location\RoomSerializer;
-use Claroline\CoreBundle\Entity\Location\Location;
-use Claroline\CoreBundle\Entity\Location\Room;
+use Claroline\CoreBundle\API\Serializer\LocationSerializer;
+use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Entity\Planning\PlannedObject;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -18,25 +16,11 @@ class PlannedObjectSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var LocationSerializer */
-    private $locationSerializer;
-    /** @var RoomSerializer */
-    private $roomSerializer;
-
     public function __construct(
-        ObjectManager $om,
-        UserSerializer $userSerializer,
-        LocationSerializer $locationSerializer,
-        RoomSerializer $roomSerializer
+        private readonly ObjectManager $om,
+        private readonly UserSerializer $userSerializer,
+        private readonly LocationSerializer $locationSerializer
     ) {
-        $this->om = $om;
-        $this->userSerializer = $userSerializer;
-        $this->locationSerializer = $locationSerializer;
-        $this->roomSerializer = $roomSerializer;
     }
 
     public function serialize(PlannedObject $plannedObject, array $options = []): array
@@ -56,7 +40,6 @@ class PlannedObjectSerializer
             ],
             'locationUrl' => $plannedObject->getLocationUrl(),
             'location' => $plannedObject->getLocation() ? $this->locationSerializer->serialize($plannedObject->getLocation(), [Options::SERIALIZE_MINIMAL]) : null,
-            'room' => $plannedObject->getRoom() ? $this->roomSerializer->serialize($plannedObject->getRoom(), [Options::SERIALIZE_MINIMAL]) : null,
             'display' => [
                 'color' => $plannedObject->getColor(),
             ],
@@ -97,16 +80,6 @@ class PlannedObjectSerializer
             }
 
             $planned->setLocation($location);
-        }
-
-        if (array_key_exists('room', $data)) {
-            $room = null;
-            if (isset($data['room'], $data['room']['id'])) {
-                /** @var Room $room */
-                $room = $this->om->getObject($data['room'], Room::class);
-            }
-
-            $planned->setRoom($room);
         }
 
         if (isset($data['start'])) {

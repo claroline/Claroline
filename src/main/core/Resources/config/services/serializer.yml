@@ -25,8 +25,7 @@ services:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
-            - '@Claroline\CoreBundle\API\Serializer\Location\RoomSerializer'
+            - '@Claroline\CoreBundle\API\Serializer\LocationSerializer'
 
     Claroline\CoreBundle\API\Serializer\DataSourceSerializer:
         tags: [claroline.serializer]
@@ -77,31 +76,11 @@ services:
     Claroline\CoreBundle\API\Serializer\Widget\Type\ListWidgetSerializer:
         tags: [claroline.serializer]
 
-    Claroline\CoreBundle\API\Serializer\Location\LocationSerializer:
+    Claroline\CoreBundle\API\Serializer\LocationSerializer:
         tags: [claroline.serializer]
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-
-    Claroline\CoreBundle\API\Serializer\Location\RoomSerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
-
-    Claroline\CoreBundle\API\Serializer\Location\MaterialSerializer:
-        tags: [ claroline.serializer ]
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\CoreBundle\API\Serializer\Location\LocationSerializer'
-
-    Claroline\CoreBundle\API\Serializer\Location\MaterialBookingSerializer:
-        tags: [ claroline.serializer ]
-
-    Claroline\CoreBundle\API\Serializer\Location\RoomBookingSerializer:
-        tags: [ claroline.serializer ]
 
     Claroline\CoreBundle\API\Serializer\Tool\ToolRightsSerializer:
         tags: [ claroline.serializer ]

@@ -12,7 +12,7 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Claroline\AppBundle\Entity\IdentifiableInterface;
-use Claroline\CoreBundle\Entity\Location\Location;
+use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Template\Template;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -65,7 +65,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
     private Collection $resources;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location\Location")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Location")
      *
      * @ORM\JoinColumn(name="location_id", nullable=true, onDelete="SET NULL")
      */
@@ -207,7 +207,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
         return $this->invitationTemplate;
     }
 
-    public function setInvitationTemplate(Template $template = null)
+    public function setInvitationTemplate(Template $template = null): void
     {
         $this->invitationTemplate = $template;
     }

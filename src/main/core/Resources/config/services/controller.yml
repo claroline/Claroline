@@ -164,22 +164,8 @@ services:
             - '@event_dispatcher'
             - '@security.authorization_checker'
 
-    Claroline\CoreBundle\Controller\APINew\Location\LocationController:
+    Claroline\CoreBundle\Controller\APINew\LocationController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Manager\LocationManager'
-
-    Claroline\CoreBundle\Controller\APINew\Location\RoomController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-        arguments:
-            - '@security.authorization_checker'
-
-    Claroline\CoreBundle\Controller\APINew\Location\MaterialController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
-        arguments:
-            - '@security.authorization_checker'
-            - '@Claroline\CoreBundle\Manager\Tool\ToolManager'

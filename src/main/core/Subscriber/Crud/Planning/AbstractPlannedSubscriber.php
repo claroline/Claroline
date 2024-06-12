@@ -6,8 +6,7 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Location\Location;
-use Claroline\CoreBundle\Entity\Location\Room;
+use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
 use Claroline\CoreBundle\Entity\Planning\PlannedObject;
 use Claroline\CoreBundle\Entity\User;
@@ -75,10 +74,6 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
         if (!empty($object->getLocation())) {
             $this->planningManager->addToPlanning($object, $object->getLocation());
         }
-
-        if (!empty($object->getRoom())) {
-            $this->planningManager->addToPlanning($object, $object->getRoom());
-        }
     }
 
     public function postCreate(CreateEvent $event): void
@@ -115,24 +110,6 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
             if ($oldLocation) {
                 /** @var Location $old */
                 $old = $this->om->getObject($oldData['location'], Location::class);
-                if ($old) {
-                    $this->planningManager->removeFromPlanning($object, $old);
-                }
-            }
-        }
-
-        $oldRoom = !empty($oldData['room']) ? $oldData['room']['id'] : null;
-        $newRoom = !empty($object->getRoom()) ? $object->getRoom()->getUuid() : null;
-        if ($oldRoom !== $newRoom) {
-            // add to new room
-            if ($newRoom) {
-                $this->planningManager->addToPlanning($object, $object->getRoom());
-            }
-
-            // remove from old room
-            if ($oldRoom) {
-                /** @var Room $old */
-                $old = $this->om->getObject($oldData['room'], Room::class);
                 if ($old) {
                     $this->planningManager->removeFromPlanning($object, $old);
                 }

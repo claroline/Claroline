@@ -12,7 +12,6 @@ import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ContentHtml} from '#/main/app/content/components/html'
 import {ContentTitle} from '#/main/app/content/components/title'
 import {LocationCard} from '#/main/core/data/types/location/components/card'
-import {RoomCard} from '#/main/core/data/types/room/components/card'
 import {ResourceCard} from '#/main/core/resource/components/card'
 import {route as resourceRoute} from '#/main/core/resource/routing'
 
@@ -120,15 +119,6 @@ const EventAbout = (props) =>
           size="xs"
           orientation="row"
           data={get(props.event, 'location')}
-        />
-      }
-
-      {!isEmpty(get(props.event, 'room')) &&
-        <RoomCard
-          className="component-container"
-          size="xs"
-          orientation="row"
-          data={get(props.event, 'room')}
         />
       }
 

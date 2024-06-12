@@ -1,8 +1,10 @@
+import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
+
 const STORE_NAME = 'locations'
 
-const store = (state) => state[STORE_NAME]
+const currentLocation = (state) => formSelectors.originalData(formSelectors.form(state, STORE_NAME+'.current'))
 
 export const selectors = {
   STORE_NAME,
-  store
+  currentLocation
 }
