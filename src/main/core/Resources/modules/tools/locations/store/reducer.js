@@ -1,13 +1,37 @@
-import {combineReducers} from '#/main/app/store/reducer'
+import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
-import {reducer as locationReducer} from '#/main/core/tools/locations/location/store/reducer'
-import {reducer as materialReducer} from '#/main/core/tools/locations/material/store/reducer'
-import {reducer as roomReducer} from '#/main/core/tools/locations/room/store/reducer'
+import {makeListReducer} from '#/main/app/content/list/store'
+import {makeFormReducer} from '#/main/app/content/form/store/reducer'
+import {makeInstanceAction} from '#/main/app/store/actions'
+
+import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
+import {TOOL_LOAD} from '#/main/core/tool/store/actions'
+import {selectors} from '#/main/core/tools/locations/store/selectors'
 
 const reducer = combineReducers({
-  locations: locationReducer,
-  material: materialReducer,
-  room: roomReducer
+  list: makeListReducer(selectors.STORE_NAME+'.list', {}, {
+    invalidated: makeReducer(false, {
+      [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.STORE_NAME+'.current')]: () => true,
+      [makeInstanceAction(TOOL_LOAD, 'locations')]: () => true
+    })
+  }),
+  current: makeFormReducer(selectors.STORE_NAME+'.current', {}, {
+    users: makeListReducer(selectors.STORE_NAME+'.current.users', {}, {
+      invalidated: makeReducer(false, {
+        [makeInstanceAction(TOOL_LOAD, 'locations')]: () => true
+      })
+    }),
+    organizations: makeListReducer(selectors.STORE_NAME+'.current.organizations', {}, {
+      invalidated: makeReducer(false, {
+        [makeInstanceAction(TOOL_LOAD, 'locations')]: () => true
+      })
+    }),
+    groups: makeListReducer(selectors.STORE_NAME+'.current.groups', {}, {
+      invalidated: makeReducer(false, {
+        [makeInstanceAction(TOOL_LOAD, 'locations')]: () => true
+      })
+    })
+  })
 })
 
 export {

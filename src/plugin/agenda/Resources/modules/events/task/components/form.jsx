@@ -75,7 +75,6 @@ const TaskForm = (props) =>
                   props.update('locationUrl', null)
                 } else {
                   props.update('location', null)
-                  props.update('room', null)
                 }
               },
               options: {
@@ -95,16 +94,6 @@ const TaskForm = (props) =>
                   label: trans('location'),
                   type: 'location',
                   displayed: (event) => event.location || 'irl' === event._locationType
-                }, {
-                  name: 'room',
-                  label: trans('room'),
-                  type: 'room',
-                  displayed: (event) => !isEmpty(event.location),
-                  options: {
-                    picker: {
-                      filters: [{property: 'location', value: get(props.event, 'location.id'), locked: true}]
-                    }
-                  }
                 }
               ]
             }

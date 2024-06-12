@@ -8,7 +8,7 @@ services:
         class: Claroline\CoreBundle\Library\Testing\Persister
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@service_container' # FIXME avoid container injection -> service locator or direct per-dependency constructor arg
+            - '@service_container'
 
     test.annotation_reader:
         alias: annotations.reader

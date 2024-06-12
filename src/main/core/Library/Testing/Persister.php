@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Testing;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Location\Location;
+use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
@@ -14,21 +14,15 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
 
 class Persister
 {
-    /**
-     * @var ObjectManager
-     */
-    private $om;
-
-    private $container;
-
-    public function __construct(ObjectManager $om, $container)
-    {
-        $this->om = $om;
-        $this->container = $container;
+    public function __construct(
+        private readonly ObjectManager $om,
+        private readonly ContainerInterface $container
+    ) {
     }
 
     /**
@@ -37,7 +31,7 @@ class Persister
      *
      * @return User
      */
-    public function user($username, $personalWorkspace = false)
+    public function user(string $username, bool $personalWorkspace = false): User
     {
         $roleUser = $this->om->getRepository(Role::class)->findOneByName('ROLE_USER');
 
@@ -72,12 +66,7 @@ class Persister
         return $user;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Workspace
-     */
-    public function workspace($name, User $creator)
+    public function workspace(string $name, User $creator): Workspace
     {
         $workspace = new Workspace();
         $workspace->setName($name);
@@ -91,7 +80,7 @@ class Persister
         return $workspace;
     }
 
-    public function directory($name, ResourceNode $parent, Workspace $workspace, User $creator)
+    public function directory($name, ResourceNode $parent, Workspace $workspace, User $creator): Directory
     {
         $directory = new Directory();
         $directory->setName($name);
@@ -106,7 +95,7 @@ class Persister
         );
     }
 
-    public function group($name)
+    public function group(string $name): Group
     {
         $group = new Group();
         $group->setName($name);
@@ -116,12 +105,7 @@ class Persister
         return $group;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Role
-     */
-    public function role($name)
+    public function role(string $name): Role
     {
         $role = $this->om->getRepository(Role::class)->findOneByName($name);
 
@@ -135,7 +119,7 @@ class Persister
         return $role;
     }
 
-    public function file($fileName, $mimeType, $withNode = false, User $creator = null)
+    public function file(string $fileName, string $mimeType, bool $withNode = false, User $creator = null): File
     {
         $file = new File();
         $file->setSize(123);
@@ -161,7 +145,7 @@ class Persister
         return $file;
     }
 
-    public function maskDecoder(ResourceType $type, $permission, $value)
+    public function maskDecoder(ResourceType $type, string $permission, int $value): MaskDecoder
     {
         $decoder = new MaskDecoder();
         $decoder->setResourceType($type);
@@ -172,37 +156,20 @@ class Persister
         return $decoder;
     }
 
-    public function organization($name)
+    public function organization(string $name): Organization
     {
         $organization = new Organization();
-        $organization->setEmail($name.'@gmail.com');
+        $organization->setEmail($name.'@test.com');
         $organization->setName($name);
         $this->om->persist($organization);
 
         return $organization;
     }
 
-    public function location($name)
-    {
-        $location = new Location();
-        $location->setName($name);
-        $location->setStreet($name);
-        $location->setStreetNumber($name);
-        $location->setBoxNumber($name);
-        $location->setPc($name);
-        $location->setTown($name);
-        $location->setCountry($name);
-        $location->setLatitude(123);
-        $location->setLongitude(123);
-        $this->om->persist($location);
-
-        return $location;
-    }
-
     /**
      * shortcut for persisting (if we don't want/need to add the object manager for our tests).
      */
-    public function persist($entity)
+    public function persist(mixed $entity): void
     {
         $this->om->persist($entity);
     }
@@ -210,7 +177,7 @@ class Persister
     /**
      * shortcut for flushing (if we don't want/need to add the object manager for our tests).
      */
-    public function flush()
+    public function flush(): void
     {
         $this->om->flush();
     }

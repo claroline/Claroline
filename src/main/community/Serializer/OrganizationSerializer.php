@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Location\Location;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -14,17 +13,10 @@ class OrganizationSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
     }
 
     public function getName(): string
@@ -86,20 +78,12 @@ class OrganizationSerializer
             'parent' => !empty($organization->getParent()) ? $this->serialize($organization->getParent(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
         ];
 
-        if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
-            $serialized['locations'] = array_map(function (Location $location) {
-                return [
-                    'id' => $location->getId(),
-                    'name' => $location->getName(),
-                ];
-            }, $organization->getLocations()->toArray());
-        }
-
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+            $edit = $this->authorization->isGranted('EDIT', $organization);
             $serialized['permissions'] = [
-                'open' => $this->authorization->isGranted('OPEN', $organization),
-                'edit' => $this->authorization->isGranted('EDIT', $organization),
-                'delete' => $this->authorization->isGranted('DELETE', $organization),
+                'open' => $edit ||$this->authorization->isGranted('OPEN', $organization),
+                'edit' => $edit,
+                'delete' => $edit || $this->authorization->isGranted('DELETE', $organization),
             ];
         }
 

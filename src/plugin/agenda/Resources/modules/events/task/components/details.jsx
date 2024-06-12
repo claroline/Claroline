@@ -89,11 +89,6 @@ const TaskDetails = (props) =>
                     label: trans('location'),
                     type: 'location',
                     displayed: (event) => !isEmpty(event.location)
-                  }, {
-                    name: 'room',
-                    label: trans('room'),
-                    type: 'room',
-                    displayed: (event) => !isEmpty(event.location)
                   }
                 ]
               }

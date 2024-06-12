@@ -11,16 +11,16 @@
 
 namespace Claroline\CoreBundle\Entity\Organization;
 
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\Name;
-use Claroline\AppBundle\Entity\Meta\Poster;
-use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CommunityBundle\Model\HasGroups;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Location\Location;
+use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -50,22 +50,18 @@ class Organization
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    private $position;
+    private ?int $position = null;
 
     /**
      * @ORM\Column(nullable=true, type="string")
      * @Assert\Email()
-     *
-     * @var string
      */
-    private $email;
+    private ?string $email = null;
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Location\Location",
+     *     targetEntity="Claroline\CoreBundle\Entity\Location",
      *     cascade={"persist"},
      *     inversedBy="organizations"
      * )
@@ -116,7 +112,7 @@ class Organization
      *
      * @var Organization
      */
-    private $parent;
+    private ?Organization $parent = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", mappedBy="parent")

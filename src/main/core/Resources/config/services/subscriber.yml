@@ -63,11 +63,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'
 
-    Claroline\CoreBundle\Subscriber\Location\RoomPlanningSubscriber:
-        tags: [kernel.event_subscriber]
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-
     Claroline\CoreBundle\Subscriber\Facet\OrganizationFieldSubscriber:
         tags: [kernel.event_subscriber]
         arguments:

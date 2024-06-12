@@ -3,7 +3,7 @@
 namespace Claroline\OpenBadgeBundle\Manager;
 
 use Claroline\AppBundle\Manager\PlatformManager;
-use Claroline\CoreBundle\Entity\Location\Location;
+use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
