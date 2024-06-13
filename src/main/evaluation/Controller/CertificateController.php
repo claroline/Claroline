@@ -18,12 +18,11 @@ use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\EvaluationBundle\Manager\CertificateManager;
-use Claroline\EvaluationBundle\Manager\PdfManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -40,115 +39,132 @@ class CertificateController
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         private readonly ObjectManager $om,
-        private readonly PdfManager $pdfManager,
         private readonly CertificateManager $certificateManager
     ) {
         $this->authorization = $authorization;
     }
 
     /**
-     * @Route("/{workspace}/{user}/{type}", name="apiv2_workspace_download_certificate", methods={"GET"})
+     * @Route("/", name="apiv2_workspace_download_certificate", methods={"POST"})
+     */
+    public function downloadCertificateAction(Request $request): Response
+    {
+        $workspaceEvaluationIds = $this->decodeRequest($request);
+
+        if (!empty($workspaceEvaluationIds)) {
+            $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy(['uuid' => $workspaceEvaluationIds]);
+            if (!empty($workspaceEvaluations)) {
+                $workspace = $workspaceEvaluations[0]->getWorkspace();
+
+                return $this->downloadCertificates($workspace, $workspaceEvaluations);
+            }
+        }
+
+        throw new NotFoundHttpException('No workspace evaluation found.');
+    }
+
+    /**
+     * @Route("/{workspace}/all", name="apiv2_workspace_download_all_certificates", methods={"GET"})
+     *
+     * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
+     */
+    public function downloadAllCertificatesAction(Workspace $workspace): Response
+    {
+        $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy([
+            'workspace' => $workspace,
+        ]);
+
+        return $this->downloadCertificates($workspace, $workspaceEvaluations);
+    }
+
+    /**
+     * @Route("/{workspace}/user/{user}", name="apiv2_workspace_download_user_certificate", methods={"GET"})
      *
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function downloadCertificateAction(Workspace $workspace, User $user, string $type): StreamedResponse
+    public function downloadUserCertificateAction(Workspace $workspace, User $user): Response
     {
-        $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
+        $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy([
             'workspace' => $workspace,
             'user' => $user,
         ]);
 
-        if (empty($workspaceEvaluation)) {
-            throw new NotFoundHttpException('Workspace evaluation not found.');
+        return $this->downloadCertificates($workspace, $workspaceEvaluations);
+    }
+
+    /**
+     * @Route("/{evaluation}/generate", name="apiv2_workspace_generate_user_certificate", methods={"GET"})
+     *
+     * @EXT\ParamConverter("evaluation", class="Claroline\CoreBundle\Entity\Workspace\Evaluation", options={"mapping": {"evaluation": "uuid"}})
+     */
+    public function regenerateUserCertificateAction(Evaluation $evaluation): BinaryFileResponse
+    {
+        $this->checkPermission('OPEN', $evaluation);
+        $workspace = $evaluation->getWorkspace();
+
+        $pdfFilepath = $this->certificateManager->getCertificate($evaluation, true);
+
+        return new BinaryFileResponse($pdfFilepath, 200, [
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'.pdf',
+        ]);
+    }
+
+    /**
+     * @Route("/regenerate", name="apiv2_workspace_regenerate_certificate", methods={"POST"})
+     */
+    public function regenerateCertificateAction(Request $request): Response
+    {
+        $workspaceEvaluationIds = $this->decodeRequest($request);
+
+        if (!empty($workspaceEvaluationIds)) {
+            $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy(['uuid' => $workspaceEvaluationIds]);
+            if (!empty($workspaceEvaluations)) {
+                foreach ($workspaceEvaluations as $evaluation) {
+                    $this->checkPermission('OPEN', $evaluation);
+                    $this->certificateManager->getCertificate($evaluation, true);
+                }
+
+                return $this->downloadCertificateAction($request);
+            }
         }
 
-        $this->checkPermission('OPEN', $workspaceEvaluation, [], true);
+        throw new NotFoundHttpException('No workspace evaluation found.');
+    }
 
-        switch ($type) {
-            case 'participation':
-                $certificate = $this->pdfManager->getWorkspaceParticipationCertificate($workspaceEvaluation);
-                $fileNameSuffix = '-participation.pdf';
-                break;
-            case 'success':
-                $certificate = $this->pdfManager->getWorkspaceSuccessCertificate($workspaceEvaluation);
-                $fileNameSuffix = '-success.pdf';
-                break;
-            default:
-                throw new NotFoundHttpException('Invalid certificate type.');
+    private function downloadCertificates(Workspace $workspace, array $workspaceEvaluations): Response
+    {
+        if (empty($workspaceEvaluations)) {
+            throw new NotFoundHttpException('No workspace evaluation found.');
         }
 
-        if (empty($certificate)) {
+        $certificateFiles = [];
+        foreach ($workspaceEvaluations as $evaluation) {
+            if ($this->checkPermission('OPEN', $evaluation)) {
+                $certificateFiles[] = $this->certificateManager->getCertificate($evaluation);
+            }
+        }
+
+        if (empty($certificateFiles)) {
             throw new NotFoundHttpException('No certificate is available yet.');
         }
 
-        return new StreamedResponse(function () use ($certificate) {
-            echo $certificate;
-        }, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'-'.TextNormalizer::toKey($user->getFullName()).$fileNameSuffix,
-        ]);
-    }
+        if (count($certificateFiles) > 1) {
+            $archive = $this->certificateManager->createArchive($certificateFiles);
 
-    /**
-     * @Route("/certificates/participation", name="apiv2_workspace_download_participation_certificates", methods={"POST"})
-     *
-     * @throws InvalidDataException
-     */
-    public function downloadParticipationCertificatesAction(Request $request): BinaryFileResponse
-    {
-        $workspaceEvaluationsIds = $this->decodeRequest($request);
-
-        $evaluations = [];
-        foreach ($workspaceEvaluationsIds as $workspaceEvaluationId) {
-            $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
-                'uuid' => $workspaceEvaluationId,
+            return new BinaryFileResponse($archive, 200, [
+                'Content-Type' => 'application/zip',
+                'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'.zip',
             ]);
+        } else {
+            $certificate = file_get_contents($certificateFiles[0]);
 
-            if ($this->checkPermission('OPEN', $workspaceEvaluation)) {
-                $evaluations[] = $workspaceEvaluation;
-            }
-        }
-
-        // either we get the path to an archive or the path to a PDF if ony one certificate
-        $certificateFile = $this->pdfManager->getWorkspaceParticipationCertificates($evaluations);
-        if (empty($certificateFile)) {
-            throw new NotFoundHttpException('No participation certificates found for these ids.');
-        }
-
-        return new BinaryFileResponse($certificateFile[1], 200, [
-            'Content-Disposition' => "attachment; filename={$certificateFile[0]}",
-        ]);
-    }
-
-    /**
-     * @Route("/certificates/success", name="apiv2_workspace_download_success_certificates", methods={"POST"})
-     *
-     * @throws InvalidDataException
-     */
-    public function downloadSuccessCertificatesAction(Request $request): BinaryFileResponse
-    {
-        $workspaceEvaluationsIds = $this->decodeRequest($request);
-
-        $evaluations = [];
-        foreach ($workspaceEvaluationsIds as $workspaceEvaluationId) {
-            $workspaceEvaluation = $this->om->getRepository(Evaluation::class)->findOneBy([
-                'uuid' => $workspaceEvaluationId,
+            return new StreamedResponse(function () use ($certificate) {
+                echo $certificate;
+            }, 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'.pdf',
             ]);
-
-            if ($this->checkPermission('OPEN', $workspaceEvaluation)) {
-                $evaluations[] = $workspaceEvaluation;
-            }
         }
-
-        // either we get the path to an archive or the path to a PDF if ony one certificate
-        $certificateFile = $this->pdfManager->getWorkspaceSuccessCertificates($evaluations);
-        if (empty($certificateFile)) {
-            throw new NotFoundHttpException('No participation certificates found for these ids.');
-        }
-
-        return new BinaryFileResponse($certificateFile[1], 200, [
-            'Content-Disposition' => "attachment; filename={$certificateFile[0]}",
-        ]);
     }
 }

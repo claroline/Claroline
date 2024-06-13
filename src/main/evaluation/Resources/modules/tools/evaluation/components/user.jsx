@@ -117,30 +117,32 @@ class EvaluationUser extends Component {
                     }],
                     displayed: this.props.userId !== this.props.currentUserId
                   }, {
-                    name: 'download-participation-certificate',
+                    name: 'download-certificate',
                     type: URL_BUTTON,
                     label: trans('download_certificate', {}, 'actions'),
-                    target: ['apiv2_workspace_download_certificate', {
+                    target: ['apiv2_workspace_download_user_certificate', {
                       workspace: get(this.props.workspaceEvaluation, 'workspace.id'),
-                      user: get(this.props.workspaceEvaluation, 'user.id'),
-                      type: 'participation'
+                      user: get(this.props.workspaceEvaluation, 'user.id')
                     }],
                     displayed: [
                       baseConstants.EVALUATION_STATUS_COMPLETED,
-                      baseConstants.EVALUATION_STATUS_PARTICIPATED
+                      baseConstants.EVALUATION_STATUS_PARTICIPATED,
+                      baseConstants.EVALUATION_STATUS_PASSED
                     ].includes(get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)),
                     size: 'lg'
                   }, {
-                    name: 'download-success-certificate',
-                    size: 'lg',
+                    name: 'regenerate-certificate',
                     type: URL_BUTTON,
-                    label: trans('download_certificate', {}, 'actions'),
-                    target: ['apiv2_workspace_download_certificate', {
-                      workspace: get(this.props.workspaceEvaluation, 'workspace.id'),
-                      user: get(this.props.workspaceEvaluation, 'user.id'),
-                      type: 'success'
+                    label: trans('regenerate_certificate', {}, 'actions'),
+                    target: ['apiv2_workspace_generate_user_certificate', {
+                      evaluation: [get(this.props.workspaceEvaluation, 'id')]
                     }],
-                    displayed: baseConstants.EVALUATION_STATUS_PASSED === get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)
+                    displayed: [
+                      baseConstants.EVALUATION_STATUS_COMPLETED,
+                      baseConstants.EVALUATION_STATUS_PARTICIPATED,
+                      baseConstants.EVALUATION_STATUS_PASSED
+                    ].includes(get(this.props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)),
+                    size: 'lg'
                   }
                 ]}
               />

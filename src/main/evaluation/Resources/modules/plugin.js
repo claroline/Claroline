@@ -33,8 +33,8 @@ registry.add('ClarolineEvaluationBundle', {
       'open-workspace': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-open-ws" */ '#/main/evaluation/actions/workspace_evaluation/open-workspace') },
       'send-message': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-send-message" */ '#/main/evaluation/actions/workspace_evaluation/send-message') },
       'show-profile': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-show-profile" */ '#/main/evaluation/actions/workspace_evaluation/show-profile') },
-      'download-participation-certificate': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-p-certificate" */ '#/main/evaluation/actions/workspace_evaluation/download-participation-certificate') },
-      'download-success-certificate': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-s-certificate" */ '#/main/evaluation/actions/workspace_evaluation/download-success-certificate') }
+      'download-certificate': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-certificate" */ '#/main/evaluation/actions/workspace_evaluation/download-certificate') },
+      'regenerate-certificate': () => { return import(/* webpackChunkName: "evaluation-action-workspace_evaluation-regenerate-certificate" */ '#/main/evaluation/actions/workspace_evaluation/regenerate-certificate') },
     }
   }
 })

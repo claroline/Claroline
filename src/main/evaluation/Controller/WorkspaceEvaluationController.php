@@ -26,7 +26,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
-use Claroline\EvaluationBundle\Manager\PdfManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -52,8 +51,7 @@ class WorkspaceEvaluationController
         private readonly Crud $crud,
         private readonly FinderProvider $finder,
         private readonly SerializerProvider $serializer,
-        private readonly WorkspaceEvaluationManager $manager,
-        private readonly PdfManager $pdfManager
+        private readonly WorkspaceEvaluationManager $manager
     ) {
         $this->authorization = $authorization;
     }

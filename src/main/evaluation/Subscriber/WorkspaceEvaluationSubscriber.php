@@ -152,7 +152,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     public function onWorkspaceEvaluate(WorkspaceEvaluationEvent $event): void
     {
         if ($event->hasStatusChanged() && in_array($event->getEvaluation()->getStatus(), [EvaluationStatus::COMPLETED, EvaluationStatus::PASSED])) {
-            $this->certificateManager->generateCertificate($event->getEvaluation());
+            $this->certificateManager->getCertificate($event->getEvaluation());
         }
     }
 }

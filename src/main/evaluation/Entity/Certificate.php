@@ -51,16 +51,16 @@ class Certificate
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Evaluation")
      *
-     * @ORM\JoinColumn(name="evaluation_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="evaluation_id", onDelete="SET NULL", nullable=true)
      */
-    private Evaluation $evaluation;
+    private ?Evaluation $evaluation;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      *
-     * @ORM\JoinColumn(name="user_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)
      */
-    private User $user;
+    private ?User $user;
 
     /**
      * @ORM\Column(name="revoked", type="boolean", options={"default":false})
@@ -137,22 +137,22 @@ class Certificate
         $this->language = $language;
     }
 
-    public function getEvaluation(): Evaluation
+    public function getEvaluation(): ?Evaluation
     {
         return $this->evaluation;
     }
 
-    public function setEvaluation(Evaluation $evaluation): void
+    public function setEvaluation(?Evaluation $evaluation): void
     {
         $this->evaluation = $evaluation;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(User $user): void
+    public function setUser(?User $user): void
     {
         $this->user = $user;
     }

@@ -46,20 +46,15 @@ const WorkspaceCertificatesToolbar = (props) => {
       size="lg"
       actions={[
         {
-          name: 'download-participation-certificate',
+          name: 'download-certificate',
           type: CALLBACK_BUTTON,
           label: trans('download_certificate', {}, 'actions'),
-          callback: () => dispatch(evalActions.downloadCertificate(workspaceId, userId,'participation')),
+          callback: () => dispatch(evalActions.downloadCertificate(workspaceId, userId)),
           displayed: [
             evalConstants.EVALUATION_STATUS_COMPLETED,
-            evalConstants.EVALUATION_STATUS_PARTICIPATED
+            evalConstants.EVALUATION_STATUS_PARTICIPATED,
+            evalConstants.EVALUATION_STATUS_PASSED
           ].includes(get(wsEval, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN))
-        }, {
-          name: 'download-success-certificate',
-          type: CALLBACK_BUTTON,
-          label: trans('download_certificate', {}, 'actions'),
-          callback: () => dispatch(evalActions.downloadCertificate(workspaceId, userId,'success')),
-          displayed: evalConstants.EVALUATION_STATUS_PASSED === get(wsEval, 'status', evalConstants.EVALUATION_STATUS_UNKNOWN)
         }
       ]}
     />

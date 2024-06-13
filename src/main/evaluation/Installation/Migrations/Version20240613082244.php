@@ -8,17 +8,17 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated migration based on mapping information: modify it with caution.
  *
- * Generation date: 2024/05/23 02:44:35
+ * Generation date: 2024/06/13 08:22:45
  */
-final class Version20240523144434 extends AbstractMigration
+final class Version20240613082244 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
         $this->addSql('
             CREATE TABLE claro_evaluation_certificate (
                 id INT AUTO_INCREMENT NOT NULL, 
-                evaluation_id INT NOT NULL, 
-                user_id INT NOT NULL, 
+                evaluation_id INT DEFAULT NULL, 
+                user_id INT DEFAULT NULL, 
                 obtention_date DATETIME DEFAULT NULL, 
                 issue_date DATETIME DEFAULT NULL, 
                 content LONGTEXT DEFAULT NULL, 
@@ -38,13 +38,13 @@ final class Version20240523144434 extends AbstractMigration
             ALTER TABLE claro_evaluation_certificate 
             ADD CONSTRAINT FK_98CCC562456C5646 FOREIGN KEY (evaluation_id) 
             REFERENCES claro_workspace_evaluation (id) 
-            ON DELETE CASCADE
+            ON DELETE SET NULL
         ');
         $this->addSql('
             ALTER TABLE claro_evaluation_certificate 
             ADD CONSTRAINT FK_98CCC562A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
-            ON DELETE CASCADE
+            ON DELETE SET NULL
         ');
     }
 

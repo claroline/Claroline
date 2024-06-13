@@ -12,19 +12,13 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
 
-    Claroline\EvaluationBundle\Manager\PdfManager:
-        arguments:
-            - '@translator'
-            - '@Claroline\AppBundle\Manager\PlatformManager'
-            - '@Claroline\AppBundle\Manager\PdfManager'
-            - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
-            - '@Claroline\AppBundle\Manager\File\TempFileManager'
-            - '@Claroline\AppBundle\Manager\File\ArchiveManager'
-
     Claroline\EvaluationBundle\Manager\CertificateManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\PdfManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
-            - '@Claroline\EvaluationBundle\Manager\PdfManager'
+            - '@Claroline\AppBundle\Manager\PlatformManager'
+            - '@Claroline\AppBundle\Manager\File\TempFileManager'
+            - '@Claroline\AppBundle\Manager\File\ArchiveManager'
+            - '@translator'
