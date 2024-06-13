@@ -23,17 +23,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class IpUserController extends AbstractCrudController
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function getClass(): string

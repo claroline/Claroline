@@ -40,12 +40,10 @@ const RegistrationModal = props => {
       }
 
       {(!activeSession && !isEmpty(props.available)) &&
-        <>
-          <div className="modal-body lead text-center">
-            Veuillez choisir à quelle session vous désirez vous inscrire.
-          </div>
+        <div className="modal-body lead text-center">
+          <p className="lead text-center">Veuillez choisir à quelle session vous désirez vous inscrire.</p>
 
-          <div className="data-cards-stacked data-cards-stacked-flush">
+          <div className="d-flex flex-column gap-1">
             {props.available.map(session =>
               <SessionCard
                 key={session.id}
@@ -57,7 +55,7 @@ const RegistrationModal = props => {
               />
             )}
           </div>
-        </>
+        </div>
       }
 
       {activeSession &&

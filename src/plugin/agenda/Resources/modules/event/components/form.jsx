@@ -14,7 +14,7 @@ const EventForm = (props) =>
     flush={props.flush}
     name={props.name}
     meta={true}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,

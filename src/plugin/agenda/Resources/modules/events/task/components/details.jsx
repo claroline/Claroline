@@ -23,7 +23,7 @@ const TaskDetails = (props) =>
       <DetailsData
         data={props.task}
         meta={true}
-        sections={[
+        definition={[
           {
             title: trans('general'),
             primary: true,

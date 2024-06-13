@@ -13,7 +13,7 @@ const ResetPasswordForm = (props) =>
     <div className="authentication-column account-authentication-column">
       <FormData
         name={selectors.FORM_NAME}
-        sections={[
+        definition={[
           {
             title: trans('general'),
             primary: true,

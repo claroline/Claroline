@@ -6,12 +6,12 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {ListData} from '#/main/app/content/list/containers/data'
+import {Thumbnail} from '#/main/app/components/thumbnail'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 import {actions as listActions} from '#/main/app/content/list/store'
 
 import {getActions, getDefaultAction} from '#/main/community/group/utils'
 import {GroupCard} from '#/main/community/group/components/card'
-import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
 
 const Groups = props => {
   const refresher = merge({
@@ -33,7 +33,7 @@ const Groups = props => {
           primary: true,
           render: (group) => (
             <div className="d-flex flex-direction-row gap-3 align-items-center">
-              <ThumbnailIcon thumbnail={group.thumbnail} name={group.name} size="xs" />
+              <Thumbnail thumbnail={group.thumbnail} name={group.name} size="xs" square={true} />
               {group.name}
             </div>
           )

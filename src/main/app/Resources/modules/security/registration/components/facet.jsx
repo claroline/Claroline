@@ -24,7 +24,7 @@ const Facet = props => {
   return (
     <FormData
       name={selectors.FORM_NAME}
-      sections={sections}
+      definition={sections}
     />
   )
 }

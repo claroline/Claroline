@@ -288,24 +288,8 @@ $data-card-border-radius:       $card-border-radius;
 $data-card-inner-border-radius: subtract($data-card-border-radius, $data-card-border-width) !default;
 $data-card-box-shadow:          0 0 0 1px rgba($black, .075), $box-shadow-sm; //$card-box-shadow;
 
-
-$data-card-inner-border-width: 0 !default;
-$data-card-inner-border-color: $data-card-border-color !default;
-
-// sizing
-//$data-card-icon-sm-size:      80px;
-//$data-card-title-sm-font:     $font-size-base;
-
-//$data-card-icon-lg-size:      120px;
-//$data-card-title-lg-font:     $font-size-lg;
-
 // states
 $data-card-color-muted:               var(--#{$prefix}secondary-color) !default;
-
-$data-card-active-color:              var(--#{$prefix}primary) !default;
-$data-card-active-bg:                 var(--#{$prefix}primary-bg-subtle) !default;
-$data-card-active-header-bg:          tint-color($primary, 70%) !default;
-$data-card-active-icon-color: $data-card-active-color !default;
 
 
 // -

@@ -376,15 +376,15 @@ $escaped-characters: (
 // Quickly modify global styling by enabling or disabling optional features.
 
 $enable-caret:                false !default;
-$enable-rounded:              false !default;
-$enable-shadows:              false !default;
+$enable-rounded:              true;
+$enable-shadows:              true;
 $enable-gradients:            false !default;
 $enable-transitions:          true !default;
 $enable-reduced-motion:       true !default;
 $enable-smooth-scroll:        true !default;
 $enable-grid-classes:         true;
 $enable-container-classes:    true;
-$enable-cssgrid:              false;
+$enable-cssgrid:              true;
 $enable-button-pointers:      true !default;
 $enable-rfs:                  true !default;
 $enable-validation-icons:     true;
@@ -687,9 +687,9 @@ $display-line-height: $headings-line-height !default;
 
 // scss-docs-start type-variables
 $lead-font-size:              $font-size-base * 1.25 !default;
-$lead-font-weight:            300 !default;
+$lead-font-weight:            var(--#{$prefix}body-font-weight) !default;
 
-$small-font-size:             .75em !default;
+$small-font-size:             .875em; //.75em !default;
 
 $sub-sup-font-size:           .75em !default;
 
@@ -1520,7 +1520,7 @@ $badge-border-radius:               var(--#{$prefix}border-radius-sm) !default;
 // scss-docs-start modal-variables
 $modal-inner-padding:               $spacer !default;
 
-$modal-footer-margin-between:       .5rem !default;
+$modal-footer-margin-between:       null; // .5rem !default;
 
 $modal-dialog-margin:               .5rem !default;
 $modal-dialog-margin-y-sm-up:       1.75rem !default;
@@ -1540,19 +1540,19 @@ $modal-backdrop-bg:                 $black !default;
 $modal-backdrop-opacity:            .5 !default;
 
 $modal-header-border-color:         var(--#{$prefix}border-color-translucent) !default;
-$modal-header-border-width:         $modal-content-border-width !default;
+$modal-header-border-width:         0; // $modal-content-border-width !default;
 $modal-header-padding-y:            $modal-inner-padding !default;
 $modal-header-padding-x:            $modal-inner-padding !default;
 $modal-header-padding:              $modal-header-padding-y $modal-header-padding-x !default; // Keep this for backwards compatibility
 
-$modal-footer-bg:                   null !default;
+$modal-footer-bg:                   var(--#{$prefix}tertiary-bg); // null !default;
 $modal-footer-border-color:         $modal-header-border-color !default;
 $modal-footer-border-width:         $modal-header-border-width !default;
 
-$modal-sm:                          300px !default;
-$modal-md:                          500px !default;
-$modal-lg:                          800px !default;
-$modal-xl:                          1140px !default;
+$modal-sm:                          480px; // 300px !default;
+$modal-md:                          720px; // 500px !default;
+$modal-lg:                          960px; // 800px !default;
+$modal-xl:                          1280px; // 1140px !default;
 
 $modal-fade-transform:              translate(0, -50px) !default;
 $modal-show-transform:              none !default;

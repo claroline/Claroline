@@ -22,7 +22,7 @@ const LocationForm = props =>
       target: props.path,
       exact: true
     }}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,

@@ -24,7 +24,7 @@ export default {
     component: GridData,
     options: {
       useCard: true, // it uses card representation for rendering data
-      size: 'lg',
+      size: 'md',
       orientation: 'row'
     }
   },

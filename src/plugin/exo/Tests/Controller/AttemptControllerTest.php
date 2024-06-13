@@ -25,7 +25,7 @@ class AttemptControllerTest extends TransactionalTestCase
     private $om;
     /** @var PaperGenerator */
     private $paperGenerator;
-    private Persister $persist;
+    private ?Persister $persist = null;
     /** @var AttemptManager */
     private $attemptManager;
     /** @var User */

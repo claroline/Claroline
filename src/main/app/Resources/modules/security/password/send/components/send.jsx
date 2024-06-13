@@ -15,7 +15,7 @@ const SendPasswordForm = (props) =>
 
       <FormData
         name={selectors.FORM_NAME}
-        sections={[
+        definition={[
           {
             title: trans('general'),
             primary: true,

@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Ramsey\Uuid\Uuid;
@@ -223,10 +224,21 @@ class TransferManager implements LoggerAwareInterface
 
         $createdObjects = $roles; // keep a map of old ID => new object for all imported objects
         foreach ($data['tools'] as $orderedToolData) {
-            $this->logger->debug(sprintf('Importing the tool %s...', $orderedToolData['name']));
+            $toolName = $orderedToolData['name'];
 
-            $toolObjects = $this->toolProvider->import($orderedToolData['name'], WorkspaceContext::getName(), $workspace, $fileBag, $orderedToolData, $createdObjects);
-            $createdObjects = array_merge([], $createdObjects, $toolObjects);
+            $this->logger->debug(sprintf('Importing the tool %s...', $toolName));
+
+            try {
+                $toolObjects = $this->toolProvider->import($toolName, WorkspaceContext::getName(), $workspace, $fileBag, $orderedToolData, $createdObjects);
+                $createdObjects = array_merge([], $createdObjects, $toolObjects);
+            } catch (InvalidDataException $e) {
+                throw new InvalidDataException($e->getMessage(), array_map(function (array $error) use ($toolName) {
+                    return [
+                        'path' => $toolName.'/'.$error['path'],
+                        'message' => $error['message'],
+                    ];
+                }, $e->getErrors()));
+            }
         }
 
         return $createdObjects;

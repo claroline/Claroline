@@ -48,7 +48,7 @@ class Path extends AbstractResource
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(name="resource_id", nullable=true, onDelete="SET NULL")
      */
-    private ?ResourceNode $overviewResource;
+    private ?ResourceNode $overviewResource = null;
 
     /**
      * Force the opening of secondary resources.

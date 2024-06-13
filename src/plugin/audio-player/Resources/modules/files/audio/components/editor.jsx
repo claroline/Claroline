@@ -291,7 +291,7 @@ const Audio = props =>
     className="audio-editor"
     embedded={true}
     name={editorSelect.FORM_NAME}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,

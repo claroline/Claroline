@@ -10,17 +10,16 @@ import {WorkspaceList} from '#/main/core/workspace/components/list'
 import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
 import {selectors} from '#/main/core/modals/workspaces/store'
+import {PickerModal} from '#/main/app/data/modals/picker/components/modal'
 
 const WorkspacesModal = props => {
-  const selectAction = props.selectAction(props.selected)
+  //const selectAction = props.selectAction(props.selected)
 
   return (
-    <Modal
-      {...omit(props, 'url', 'selected', 'selectAction', 'reset')}
+    <PickerModal
+      {...omit(props, 'url', 'selected', 'reset')}
       icon="fa fa-fw fa-book"
-      className="data-picker-modal"
-      size="xl"
-      onExited={props.reset}
+      name={selectors.STORE_NAME}
     >
       <WorkspaceList
         name={selectors.STORE_NAME}
@@ -29,7 +28,7 @@ const WorkspacesModal = props => {
         actions={undefined}
       />
 
-      <Button
+      {/*<Button
         label={trans('select', {}, 'actions')}
         {...selectAction}
         className="modal-btn"
@@ -38,8 +37,8 @@ const WorkspacesModal = props => {
         primary={true}
         disabled={0 === props.selected.length}
         onClick={props.fadeModal}
-      />
-    </Modal>
+      />*/}
+    </PickerModal>
   )
 }
 

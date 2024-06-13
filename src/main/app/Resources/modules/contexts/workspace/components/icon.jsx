@@ -2,17 +2,18 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
+import {Thumbnail} from '#/main/app/components/thumbnail'
 
 const WorkspaceIcon = (props) =>
-  <ThumbnailIcon
+  <Thumbnail
     className={props.className}
     size={props.size}
     name={get(props.workspace, 'name')}
     thumbnail={get(props.workspace, 'thumbnail')}
+    square={true}
   >
     <span className="fa fa-book" aria-hidden={true} />
-  </ThumbnailIcon>
+  </Thumbnail>
 
 WorkspaceIcon.propTypes = {
   className: T.string,

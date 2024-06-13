@@ -7,9 +7,9 @@ namespace Claroline\CoreBundle\Validator\Exception;
  */
 class InvalidDataException extends \Exception
 {
-    private $errors;
+    private array $errors;
 
-    public function __construct($message, array $errors = [])
+    public function __construct(string $message, array $errors = [])
     {
         $this->errors = $errors;
 
@@ -32,7 +32,7 @@ class InvalidDataException extends \Exception
         parent::__construct($message);
     }
 
-    public function getErrors()
+    public function getErrors(): array
     {
         return $this->errors;
     }

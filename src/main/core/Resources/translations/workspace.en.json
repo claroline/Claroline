@@ -1,7 +1,6 @@
 {
   "workspace": "Workspace",
   "workspaces": "Workspaces",
-  "create_workspace": "Create a new workspace",
   "new_workspace": "New workspace",
   "managed_workspaces": "Managed workspaces",
   "my_workspaces": "My workspaces",

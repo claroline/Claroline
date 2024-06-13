@@ -36,7 +36,7 @@ const EventDetails = (props) =>
       <DetailsData
         data={props.agendaEvent}
         meta={true}
-        sections={[
+        definition={[
           {
             title: trans('general'),
             primary: true,

@@ -152,6 +152,7 @@ class ToolProvider extends AbstractComponentProvider
         }
 
         // set tool config
+        unset($data['orderedTool']['id']); // just to be able to pass the validation.
         $this->crud->create($orderedTool, $data['orderedTool'], [SerializerInterface::REFRESH_UUID, Crud::NO_PERMISSIONS]);
 
         // set tool rights

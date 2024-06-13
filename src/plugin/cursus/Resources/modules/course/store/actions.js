@@ -7,7 +7,7 @@ import {constants as actionConstants} from '#/main/app/action/constants'
 import {actions as listActions} from '#/main/app/content/list/store/actions'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
 
-import {selectors} from '#/plugin/cursus/course/store'
+import {selectors} from '#/plugin/cursus/course/store/selectors'
 
 export const LOAD_COURSE = 'LOAD_COURSE'
 export const LOAD_COURSE_SESSION = 'LOAD_COURSE_SESSION'

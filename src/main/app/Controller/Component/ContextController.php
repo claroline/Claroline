@@ -130,7 +130,7 @@ class ContextController
         $data = $this->decodeRequest($request);
 
         $this->om->startFlushSuite();
-        if (!empty($data['data'])) {
+        if (!empty($data['data']) && $contextObject) {
             $this->crud->update($contextObject, $data['data'], [Crud::NO_PERMISSIONS, Options::PERSIST_TAG]);
         }
 

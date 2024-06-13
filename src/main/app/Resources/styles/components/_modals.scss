@@ -28,6 +28,10 @@
     line-height: $modal-title-line-height;
 }
 
+.modal-body {
+    scrollbar-width: thin;
+}
+
 .modal-btn {
     display: block;
     width: 100%;
