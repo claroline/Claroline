@@ -54,7 +54,7 @@ const SessionUsers = (props) => {
           displayed: constants.LEARNER_TYPE === props.type && !isEmpty(get(props.course, 'registration.form')),
           modal: [MODAL_REGISTRATION_PARAMETERS, {
             course: props.course,
-            session: rows[0].session,
+            session: rows[0] ? rows[0].session : null,
             registration: rows[0],
             onSave: (registrationData) => props.updateUser(registrationData)
           }],

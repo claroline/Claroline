@@ -4,10 +4,10 @@ const STORE_NAME = 'workspace'
 
 const store = (state) => state[STORE_NAME] || {}
 
-const root = createSelector(
+/*const root = createSelector(
   [store],
   (store) => store.root
-)
+)*/
 
 const userEvaluation = createSelector(
   [store],
@@ -17,6 +17,6 @@ const userEvaluation = createSelector(
 export const selectors = {
   STORE_NAME,
 
-  root,
+  /*root,*/
   userEvaluation
 }

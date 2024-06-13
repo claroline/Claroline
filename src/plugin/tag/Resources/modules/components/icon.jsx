@@ -2,17 +2,18 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
+import {Thumbnail} from '#/main/app/components/thumbnail'
 
 const TagIcon = (props) =>
-  <ThumbnailIcon
+  <Thumbnail
     className={props.className}
     size={props.size}
     name={get(props.tag, 'name')}
     color={get(props.tag, 'color')}
+    square={true}
   >
     <span className="fa fa-tag" />
-  </ThumbnailIcon>
+  </Thumbnail>
 
 TagIcon.propTypes = {
   className: T.string,

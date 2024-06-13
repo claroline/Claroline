@@ -113,12 +113,12 @@ class WorkspaceContext extends AbstractContext
             );
         }
 
-        $rootNode = $this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]);
+        //$rootNode = $this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]);
 
         return [
             'userEvaluation' => $userEvaluation,
             // do not expose root resource here (used in the WS to configure opening target)
-            'root' => $this->serializer->serialize($rootNode, [SerializerInterface::SERIALIZE_MINIMAL]),
+            //'root' => $this->serializer->serialize($rootNode, [SerializerInterface::SERIALIZE_MINIMAL]),
         ];
     }
 }

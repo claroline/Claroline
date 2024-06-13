@@ -26,6 +26,7 @@ const HistoryModal = (props) => {
       icon="fa fa-fw fa-history"
       title={trans('history', {}, 'history')}
       onEntering={props.getHistory}
+      size="sm"
     >
       <ContentTabs
         sections={[

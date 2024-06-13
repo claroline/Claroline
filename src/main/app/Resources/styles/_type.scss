@@ -67,8 +67,8 @@ h1, h2, h3, h4, h5, h6,
     .small,
     small {
         display: block;
-        font-weight: $font-weight-normal;
-        //margin-top: map-get($spacers, 1);
+        font-weight: var(--#{$prefix}body-font-weight);
+        margin-top: map-get($spacers, 1);
     }
 }
 

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Installation\DataFixtures;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Manager\File\TempFileManager;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Manager\FileManager;
@@ -26,14 +25,12 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class ExampleData extends AbstractFixture implements PreInstallInterface, PreUpdateInterface, ContainerAwareInterface
 {
-    private Crud $crud;
     private TempFileManager $tempManager;
     private FileManager $fileManager;
     private string $projectDir;
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null): void
     {
-        $this->crud = $container->get(Crud::class);
         $this->tempManager = $container->get(TempFileManager::class);
         $this->fileManager = $container->get(FileManager::class);
         $this->projectDir = $container->getParameter('kernel.project_dir');
@@ -42,7 +39,7 @@ class ExampleData extends AbstractFixture implements PreInstallInterface, PreUpd
     /**
      * Loads some example data into the platform.
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         // create sample thumbnail & poster
         $poster = $this->createSampleFile('poster.jpg');

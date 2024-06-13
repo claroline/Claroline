@@ -19,7 +19,7 @@ const TaskForm = (props) =>
       flush={props.flush}
       name={props.name}
       embedded={true}
-      sections={[
+      definition={[
         {
           title: trans('general'),
           primary: true,

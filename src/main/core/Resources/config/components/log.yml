@@ -24,3 +24,7 @@ services:
     Claroline\CoreBundle\Component\Log\Operational\LogWorkspace:
         parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
         tags: [ 'claroline.component.log' ]
+
+    Claroline\CoreBundle\Component\Log\Operational\LogTool:
+        parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
+        tags: [ 'claroline.component.log' ]

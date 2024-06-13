@@ -38,28 +38,28 @@ const Workspaces = (props) => {
             </div>
           )
         }, {
-          name: 'code',
-          type: 'string',
-          label: trans('code'),
-          displayed: true
-        }, {
           name: 'meta.description',
           type: 'string',
           label: trans('description'),
           sortable: false,
-          options: {long: true}
+          options: {long: true},
+          //displayed: true
+        }, {
+          name: 'code',
+          type: 'string',
+          label: trans('code')
         }, {
           name: 'meta.created',
           label: trans('creation_date'),
           type: 'date',
           alias: 'createdAt',
-          displayed: true,
           filterable: false
         }, {
           name: 'meta.updated',
           label: trans('modification_date'),
           type: 'date',
           alias: 'updatedAt',
+          displayed: true,
           filterable: false
         }, {
           name: 'meta.creator',
@@ -75,7 +75,8 @@ const Workspaces = (props) => {
           name: 'restrictions.hidden',
           label: trans('hidden'),
           type: 'boolean',
-          alias: 'hidden'
+          alias: 'hidden',
+          displayable: false
         }, {
           name: 'registration.waitingForRegistration',
           label: trans('pending'),

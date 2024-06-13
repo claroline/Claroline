@@ -2,8 +2,7 @@
 // to avoid adding unwanted styles in iframe or tinyMCE
 
 body {
-    //background: transparent; // removes bootstrap default for TinyMCE rendering
-    scrollbar-color: shade-color($gray-900, 40%) shade-color($gray-900, 10%);
+    scrollbar-color: var(--#{$prefix}scrollbar-color) var(--#{$prefix}scrollbar-bg);
     scrollbar-width: auto;
     scroll-behavior: smooth;
 }
@@ -11,9 +10,6 @@ body {
 // Moves the app scroll bar after the fixed header
 .claroline-app {
     height: 100%;
-
-    // only put body bg for claroline apps (avoids modifying TinyMCE content bg)
-    //background: var(--#{$prefix}body-bg);
 }
 
 .app-container {
@@ -75,29 +71,4 @@ body {
 
 .app-loader + .page {
     margin-top: -$loader-height;
-}
-
-.context-icon {
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0 !important;
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    text-transform: uppercase;
-    font-weight: $font-weight-base !important;
-    color: $primary;
-    background: fade-out($primary, .85);
-}
-
-@each $size, $value in $icon-sizes {
-    .context-icon-#{$size} {
-        // for picture
-        width: $value;
-        height: $value;
-        // for .fa when no picture
-        font-size: $value * .5;
-    }
 }

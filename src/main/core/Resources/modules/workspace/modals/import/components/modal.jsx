@@ -20,7 +20,7 @@ const ImportModal = props =>
     <FormData
       flush={true}
       name={selectors.STORE_NAME}
-      sections={[
+      definition={[
         {
           title: trans('general'),
           primary: true,

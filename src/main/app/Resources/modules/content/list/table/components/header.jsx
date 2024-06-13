@@ -15,6 +15,11 @@ import {TableColumns} from '#/main/app/content/list/table/components/columns'
 const TableHeader = props => {
   const displayableColumns = getDisplayableProps(props.availableColumns)
 
+  const bulkActions = getActions(
+    props.selection.current.map(id => props.data.find(row => id === row.id) || {id: id}),
+    props.actions
+  ) || []
+
   return (
     <thead>
       <tr>
@@ -81,15 +86,12 @@ const TableHeader = props => {
         }
       </tr>
 
-      {props.selection && 0 < props.selection.current.length &&
+      {props.selection && 0 < props.selection.current.length && 0 !== bulkActions.length &&
         <tr className="table-selected">
           <td className="p-0" colSpan={props.displayedColumns.length + (props.selection ? 1:0) + (props.actions || !isEmpty(displayableColumns) ? 1:0) }>
             <ListBulkActions
               count={props.selection.current.length}
-              actions={getActions(
-                props.selection.current.map(id => props.data.find(row => id === row.id) || {id: id}),
-                props.actions
-              )}
+              actions={bulkActions}
             />
           </td>
         </tr>

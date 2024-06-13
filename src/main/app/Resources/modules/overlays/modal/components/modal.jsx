@@ -19,21 +19,19 @@ const Modal = (props) =>
           backgroundImage: `url("${asset(props.poster)}")`
         }}
         className={classes({
-          'modal-poster': !!props.poster
+          'modal-poster': !!props.poster,
+          'mt-3': !props.poster
         })}
       >
-        <BaseModal.Title className="h-title" as="h5">
-          {props.icon &&
-            <span className={classes('modal-icon', props.icon)} aria-hidden={true} />
+        {props.icon &&
+          <span className={classes('modal-icon fs-5', props.icon)} aria-hidden={true} />
+        }
+        <BaseModal.Title className="flex-fill" as="h5">
+          {props.title}
+
+          {props.subtitle &&
+            <small className={!props.poster && 'text-body-secondary'}>{props.subtitle}</small>
           }
-
-          <div role="presentation">
-            {props.title}
-
-            {props.subtitle &&
-              <small className={!props.poster && 'text-secondary'}>{props.subtitle}</small>
-            }
-          </div>
         </BaseModal.Title>
       </BaseModal.Header>
     }
@@ -45,6 +43,9 @@ Modal.propTypes = {
   ...ModalEmpty.propTypes,
 
   closeButton: T.bool,
+  /**
+   * @deprecated
+   */
   poster: T.string,
   icon: T.string,
   title: T.string,

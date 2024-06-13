@@ -21,6 +21,7 @@ const UsersModal = props => {
       className="data-picker-modal"
       size="xl"
       onExited={props.reset}
+      centered={true}
     >
       <UserList
         name={selectors.STORE_NAME}

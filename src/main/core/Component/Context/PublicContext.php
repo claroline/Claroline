@@ -82,6 +82,10 @@ class PublicContext extends AbstractContext
 
         return [
             'data' => [
+                'permissions' => [
+                    'open' => true,
+                    'administrate' => $this->securityManager->isAdmin(),
+                ],
                 'opening' => [
                     'type' => 'tool' === $type ? 'tool' : null,
                     'target' => 'home',

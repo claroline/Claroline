@@ -96,7 +96,7 @@ class SlideFormModal extends Component {
           name={this.props.formName}
           dataPart={this.props.dataPart}
           flush={true}
-          sections={[
+          definition={[
             {
               title: trans('general'),
               primary: true,

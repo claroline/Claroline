@@ -17,7 +17,6 @@ import {
 } from '#/main/app/action/prop-types'
 import {DataCard as DataCardTypes} from '#/main/app/data/prop-types'
 import {Thumbnail} from '#/main/app/components/thumbnail'
-import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
 
 const StaticCardAction = props => {
   if (isEmpty(props.action) || props.action.disabled || (props.action.displayed !== undefined && !props.action.displayed)) {
@@ -59,7 +58,7 @@ const CardAction = props => {
           </StaticCardAction>
         )}
         placeholder={
-          <span className={props.className}>
+          <span className={props.className} role="presentation">
             {props.children}
           </span>
         }
@@ -93,41 +92,6 @@ CardAction.propTypes = {
 }
 
 /**
- * Renders the card header.
- *
- * @param props
- * @constructor
- */
-const CardHeader = props => {
-  return (
-    <div className="data-card-header" role="presentation">
-      {props.asIcon ?
-        <ThumbnailIcon thumbnail={props.poster} color={props.color} size={props.size}>
-          {typeof props.icon === 'string' ?
-            <span className={props.icon} aria-hidden={true} /> :
-            props.icon
-          }
-        </ThumbnailIcon> :
-        <Thumbnail thumbnail={props.poster} color={props.color} size={props.size}>
-          {typeof props.icon === 'string' ?
-            <span className={props.icon} aria-hidden={true} /> :
-            props.icon
-          }
-        </Thumbnail>
-      }
-    </div>
-  )
-}
-
-CardHeader.propTypes = {
-  icon: T.oneOfType([T.string, T.element]),
-  poster: T.string,
-  color: T.string,
-  asIcon: T.bool,
-  size: T.oneOf(['xs', 'sm', 'md', 'lg']),
-}
-
-/**
  * Renders a card representation of a data object.
  *
  * @param props
@@ -136,20 +100,22 @@ CardHeader.propTypes = {
 const DataCard = props => {
   const asIcon = props.asIcon || 'row' === props.orientation
 
-  console.log(props.size)
-
   return (
     <article style={props.style} className={classes(`data-card data-card-${props.orientation} data-card-${props.size}`, props.className, {
       'data-card-clickable': props.primaryAction && !props.primaryAction.disabled,
       'data-card-poster': !props.asIcon && (!!props.poster || !!props.color || !!props.icon),
     })}>
-      <CardHeader
-        icon={props.icon}
+      <Thumbnail
+        thumbnail={props.poster}
         color={props.color}
-        poster={props.poster}
-        asIcon={asIcon}
         size={props.size}
-      />
+        square={asIcon}
+      >
+        {typeof props.icon === 'string' ?
+          <span className={props.icon} /> :
+          props.icon
+        }
+      </Thumbnail>
 
       <CardAction
         action={props.primaryAction}
@@ -162,14 +128,11 @@ const DataCard = props => {
           className="data-card-title"
         >
           {props.title}
-          {-1 !== props.display.indexOf('subtitle') && props.subtitle &&
-            <small>{props.subtitle}</small>
-          }
         </Heading>
 
         {-1 !== props.display.indexOf('description') &&
           <p className={classes('data-card-description text-body-secondary', {
-            'mb-0': -1 !== ['xs', 'sm'].indexOf(props.size) || !props.meta
+            'mb-0': -1 !== ['xs', 'sm'].indexOf(props.size) || !props.meta || (-1 === props.display.indexOf('meta') && -1 === props.display.indexOf('flags'))
           })}>
             {props.contentText && getPlainText(props.contentText)}
           </p>
@@ -177,16 +140,10 @@ const DataCard = props => {
 
         {props.children}
 
-        {-1 === ['xs', 'sm'].indexOf(props.size) && -1 !== props.display.indexOf('footer') && props.footer &&
-          <div key="data-card-footer" className="data-card-footer" role="presentation">
-            {props.footer}
-          </div>
-        }
-
         {-1 === ['xs', 'sm'].indexOf(props.size) && props.meta && (-1 !== props.display.indexOf('meta') || -1 !== props.display.indexOf('flags')) &&
           <div className={classes('d-flex flex-row flex-wrap align-items-center gap-1 mt-auto', {
             'justify-content-center': 'row' !== props.orientation && asIcon
-          })}>
+          })} role="presentation">
             {props.meta}
           </div>
         }

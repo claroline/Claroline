@@ -13,8 +13,6 @@ namespace Claroline\AuthenticationBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Entity\ApiToken;
-use Claroline\CoreBundle\Component\Context\AdministrationContext;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,10 +47,7 @@ class ApiTokenController extends AbstractCrudController
             throw new AccessDeniedException();
         }
 
-        $tool = $this->om->getRepository(OrderedTool::class)
-            ->findOneBy(['name' => 'integration', 'contextName' => AdministrationContext::getName()]);
-
-        if (!$this->authorization->isGranted('OPEN', $tool)) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             // only list tokens of the current token for non admins
             return [
                 'user' => $this->tokenStorage->getToken()->getUser()->getUuid(),

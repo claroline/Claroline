@@ -26,7 +26,7 @@ const BlogOptionsComponent = props =>
         title={trans('configure_blog', {}, 'icap_blog')}
         level={2}
         name={selectors.STORE_NAME + '.blog.data.options'}
-        sections={[
+        definition={[
           {
             id: 'display',
             icon: 'fa fa-fw fa-desktop',

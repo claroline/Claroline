@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
-import {asset} from '#/main/app/config'
 import {trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
@@ -12,9 +11,9 @@ import {route} from '#/main/core/workspace/routing'
 import {MODAL_HISTORY} from '#/plugin/history/modals/history'
 import {MODAL_CONTEXT_SEARCH} from '#/main/app/context/modals/search'
 import {AppBrand} from '#/main/app/layout/components/brand'
-import {MODAL_MY_NOTIFICATIONS} from '#/main/notification/modals/my-notifications'
 import {NotificationButton} from '#/main/notification/components/button'
-import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
+import {Thumbnail} from '#/main/app/components/thumbnail'
+import {MODAL_WORKSPACE_CREATION} from '#/main/app/contexts/workspace/modals/creation'
 
 const ContextNav = (props) => {
   if (!props.currentUser) {
@@ -32,46 +31,6 @@ const ContextNav = (props) => {
   return (
     <section className="app-contexts">
       <AppBrand className="menu-brand" />
-      {false && []
-        .concat(props.availableContexts)
-        .filter(availableContext => availableContext.root)
-        .sort((a, b) => {
-          if (a.order < b.order) {
-            return -1
-          } else if (a.order > b.order) {
-            return 1
-          }
-          return 0
-        })
-        .map((availableContext) => {
-          if ('desktop' === availableContext.name) {
-            return (
-              <Button
-                key={availableContext.name}
-                type={LINK_BUTTON}
-                className="app-context-btn position-relative"
-                label={trans(availableContext.name, {}, 'context')}
-                tooltip="right"
-                target="/desktop"
-              >
-                <UserAvatar user={props.currentUser} size="sm" noStatus={true}/>
-              </Button>
-            )
-          }
-
-          return (
-            <Button
-              key={availableContext.name}
-              type={LINK_BUTTON}
-              className="app-context-btn"
-              icon={`fa fa-fw fa-${availableContext.icon}`}
-              label={trans(availableContext.name, {}, 'context')}
-              tooltip="right"
-              target={'/'+availableContext.name}
-            />
-          )
-        })
-      }
 
       <Button
         type={LINK_BUTTON}
@@ -99,10 +58,11 @@ const ContextNav = (props) => {
           tooltip="right"
           target={route(pinnedContext)}
         >
-          <ThumbnailIcon
+          <Thumbnail
             size="sm"
             thumbnail={pinnedContext.thumbnail}
             name={pinnedContext.name}
+            square={true}
           />
         </Button>
       ))}
@@ -126,6 +86,17 @@ const ContextNav = (props) => {
         tooltip="right"
         modal={[MODAL_CONTEXT_SEARCH]}
       />
+
+      {props.canCreate &&
+        <Button
+          type={MODAL_BUTTON}
+          className="app-context-btn"
+          icon="fa fa-fw fa-plus"
+          label={trans('add_workspace')}
+          tooltip="right"
+          modal={[MODAL_WORKSPACE_CREATION]}
+        />
+      }
     </section>
   )
 }
@@ -140,7 +111,8 @@ ContextNav.propTypes = {
   })),
   favoriteContexts: T.arrayOf(T.shape({
 
-  }))
+  })),
+  canCreate: T.bool.isRequired
 }
 
 export {

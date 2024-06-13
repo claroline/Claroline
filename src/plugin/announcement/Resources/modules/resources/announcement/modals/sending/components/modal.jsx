@@ -28,7 +28,7 @@ const SendingModal = (props) =>
       flush={true}
       name={selectors.STORE_NAME+'.form'}
       level={2}
-      sections={[
+      definition={[
         {
           title: trans('general'),
           primary: true,

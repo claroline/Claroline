@@ -25,7 +25,7 @@ const TemplateForm = (props) =>
       type: CALLBACK_BUTTON,
       callback: () => props.saveForm(get(props.template, 'type.id'), props.template.id, props.new)
     }}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,

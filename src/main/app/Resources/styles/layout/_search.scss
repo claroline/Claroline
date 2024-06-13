@@ -11,7 +11,7 @@
     height: $input-height-lg;
     line-height: $input-line-height;
     padding: $input-padding-y-lg $input-padding-x-lg;
-    top: 1px; // because of the increased border size of the input
+    top: map-get($border-widths, 2) * .5; // because of the increased border size of the input
   }
 
   .app-search-icon {
@@ -23,7 +23,7 @@
     padding-left: calc($input-padding-x-lg * 2 + $icon-fixed-width);
     padding-right: calc($input-padding-x-lg * 2 + $icon-fixed-width);
     border-color: var(--#{$prefix}primary);
-    border-width: 2px;
+    border-width: map-get($border-widths, 2);
   }
 
   .app-search-loader {

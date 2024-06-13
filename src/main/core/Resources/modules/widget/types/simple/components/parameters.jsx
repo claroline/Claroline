@@ -10,7 +10,7 @@ const SimpleWidgetParameters = (props) =>
     level={5}
     flush={true}
     name={props.name}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,

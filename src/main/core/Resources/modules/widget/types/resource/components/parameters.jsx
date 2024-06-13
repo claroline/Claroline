@@ -11,7 +11,7 @@ const ResourceWidgetParameters = (props) =>
     flush={true}
     level={5}
     name={props.name}
-    sections={[
+    definition={[
       {
         title: trans('general'),
         primary: true,

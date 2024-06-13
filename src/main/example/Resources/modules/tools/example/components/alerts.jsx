@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import {useDispatch} from 'react-redux'
 
 import {ContentTitle} from '#/main/app/content/components/title'
-import {Alert} from '#/main/app/alert/components/alert'
+import {Alert} from '#/main/app/components/alert'
 import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {actions as alertActions} from '#/main/app/overlays/alert/store'
@@ -17,17 +17,6 @@ const ExampleAlerts = () => {
       <ContentTitle title="Flying alerts" />
 
       <div className="btn-toolbar gap-1 mb-3">
-        <Button
-          type={CALLBACK_BUTTON}
-          className="btn btn-secondary"
-          label="Pending"
-          callback={() => dispatch(alertActions.addAlert(
-            'ALERT_EXAMPLE_PENDING',
-            alertConstants.ALERT_STATUS_PENDING,
-            actionConstants.ACTION_SAVE
-          ))}
-        />
-
         <Button
           type={CALLBACK_BUTTON}
           className="btn btn-success"

@@ -5,7 +5,6 @@ import omit from 'lodash/omit'
 
 import BaseModal from 'react-bootstrap/Modal'
 
-import {asset} from '#/main/app/config/asset'
 import {ModalEmpty} from '#/main/app/overlays/modal/components/empty'
 import {ContentTabs} from '#/main/app/content/components/tabs'
 

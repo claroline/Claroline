@@ -47,7 +47,7 @@ export default (contextType, contextData, refresher, currentUser) => ({
       label: trans('created_after'),
       type: 'date',
       displayable: false
-    }, {
+    }, /*{
       name: 'createdBefore',
       label: trans('created_before'),
       type: 'date'
@@ -62,7 +62,7 @@ export default (contextType, contextData, refresher, currentUser) => ({
       type: 'boolean',
       filterable: false,
       sortable: false
-    }, {
+    }, */{
       name: 'archived',
       label: trans('archived'),
       type: 'boolean',

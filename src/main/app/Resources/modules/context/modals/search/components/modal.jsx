@@ -55,6 +55,7 @@ class SearchModal extends Component {
     return (
       <Modal
         {...omit(this.props, 'fetching', 'results', 'empty', 'search')}
+        size="sm"
       >
         <div className="modal-body">
           <div className="app-search">
@@ -98,12 +99,12 @@ class SearchModal extends Component {
             .filter(resultType => !isEmpty(this.state.availableSearches[resultType]) && !isEmpty(this.props.results[resultType]))
             .map(resultType =>
               <div role="presentation" className="mt-3" key={resultType}>
-                <h5>{this.state.availableSearches[resultType].label}</h5>
-                <div className="data-cards-stacked">
+                <h5 className="fs-sm text-uppercase text-body-secondary">{this.state.availableSearches[resultType].label}</h5>
+                <div className="d-flex flex-column gap-1">
                   {this.props.results[resultType].map(result =>
                     createElement(this.state.availableSearches[resultType].component, {
                       key: result.id,
-                      size: 'xs',
+                      size: 'sm',
                       direction: 'row',
                       data: result,
                       primaryAction: {

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
-import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {Tool, constants as toolConstants} from '#/main/core/tool'
 
 import {ActivityMain} from '#/main/community/tools/community/activity/containers/main'
@@ -14,7 +14,6 @@ import {PendingMain} from '#/main/community/tools/community/pending/containers/m
 import {OrganizationMain} from '#/main/community/tools/community/organization/containers/main'
 import {TeamMain} from '#/main/community/tools/community/team/containers/main'
 
-import {MODAL_USER_DISABLE_INACTIVE} from '#/main/community/tools/community/user/modals/disable-inactive'
 import {CommunityEditor} from '#/main/community/tools/community/editor/containers/main'
 
 const CommunityTool = (props) =>

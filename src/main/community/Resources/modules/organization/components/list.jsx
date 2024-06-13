@@ -12,7 +12,7 @@ import {constants as listConst} from '#/main/app/content/list/constants'
 
 import {getActions, getDefaultAction} from '#/main/community/organization/utils'
 import {OrganizationCard} from '#/main/community/organization/components/card'
-import {ThumbnailIcon} from '#/main/app/components/thumbnail-icon'
+import {Thumbnail} from '#/main/app/components/thumbnail'
 
 const OrganizationListComponent = props => {
   const refresher = merge({
@@ -48,7 +48,7 @@ const OrganizationListComponent = props => {
         primary: true,
         render: (organization) => (
           <div className="d-flex flex-direction-row gap-3 align-items-center">
-            <ThumbnailIcon thumbnail={organization.thumbnail} name={organization.name} size="xs" />
+            <Thumbnail thumbnail={organization.thumbnail} name={organization.name} size="xs" square={true} />
             {organization.name}
           </div>
         )

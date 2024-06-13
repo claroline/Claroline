@@ -24,7 +24,7 @@ const UploadModal = (props) =>
     <FormData
       level={5}
       name={props.formName}
-      sections={[
+      definition={[
         {
           title: trans('general'),
           primary: true,

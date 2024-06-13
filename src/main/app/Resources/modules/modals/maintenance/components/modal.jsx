@@ -30,7 +30,7 @@ const MaintenanceModal = props =>
 
     <FormData
       name={selectors.STORE_NAME}
-      sections={[
+      definition={[
         {
           title: trans('general'),
           fields: [

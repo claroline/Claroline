@@ -6,7 +6,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {trans} from '#/main/app/intl/translation'
-import {ToolPage} from '#/main/core/tool/containers/page'
+import {ToolPage} from '#/main/core/tool'
 
 import {ContentLoader} from '#/main/app/content/components/loader'
 

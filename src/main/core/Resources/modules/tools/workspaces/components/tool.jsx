@@ -23,7 +23,7 @@ const WorkspacesPage = (props) =>
         name: 'add',
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
-        label: trans('create_workspace', {}, 'workspace'),
+        label: trans('add_workspace'),
         target: `${props.path}/new`,
         primary: true,
         displayed: props.canCreate
