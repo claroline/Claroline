@@ -25,9 +25,7 @@ class ResourceNodeValidator implements ValidatorInterface
 
     public function getUniqueFields()
     {
-        return [
-            'code' => 'code',
-        ];
+        return [];
     }
 
     /**
