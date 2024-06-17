@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Slide.
  *
  * @ORM\Table(name="claro_slide")
+ *
  * @ORM\Entity()
  */
 class Slide
@@ -57,7 +58,8 @@ class Slide
      * The parent slideshow.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\SlideshowBundle\Entity\Resource\Slideshow", inversedBy="slides")
-     * @ORM\JoinColumn(name="slideshow_id", referencedColumnName="id")
+     *
+     * @ORM\JoinColumn(name="slideshow_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @var Slideshow
      */
@@ -169,8 +171,6 @@ class Slide
 
     /**
      * Set parent slideshow.
-     *
-     * @param Slideshow $slideshow
      */
     public function setSlideshow(Slideshow $slideshow = null)
     {
