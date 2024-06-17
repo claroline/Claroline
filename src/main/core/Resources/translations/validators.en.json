@@ -7,9 +7,10 @@
     "This value should be lower than {{ limit }}.": "This value should be lower than {{ limit }}.",
     "This value should be a valid email.": "This value should be a valid email.",
     "This value should be a valid color.": "This value should be a valid color.",
+    "This value should be a valid date.": "This value should be a valid date.",
+    "This value is invalid.": "This value is invalid.",
     "This email already exists.": "This email already exists.",
     "This username already exists.": "This username already exists.",
-    "This value is invalid.": "This value is invalid.",
     "email_not_valid": "This email address is not valid.",
     "invalid_date_range": "The end date may not precede the start date",
     "invalid_domain_name": "This domain name is invalid",
@@ -27,5 +28,9 @@
     "value_lower_or_equal_to": "This value must be lower or equal to %limit%.",
     "value_not_blank": "This value can not be blank.",
     "value_not_unique": "This value is already in use.",
+    "This filter should have a name.": "This filter should have a name.",
+    "This filter should have a value.": "This filter should have a value.",
+    "This filter should use a filterable property." : "This filter should use a filterable property.",
+    "The room is not available for this dates." : "The room is not available for this dates.",
     "invalid_image": "This file is not a valid image."
 }

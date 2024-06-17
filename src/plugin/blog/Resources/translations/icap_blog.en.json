@@ -133,6 +133,7 @@
     "tag_cloud": "Tag cloud",
     "tags_in_the_cloud": "most used tags.",
     "to_comment": "Comment",
+    "unpublish": "Make it invisible",
     "view": "%viewCounter% view | %viewCounter% views",
     "vertical_list": "Vertical list"
 }

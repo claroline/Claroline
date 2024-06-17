@@ -1,16 +1,19 @@
 {
     "training_course": "Formation",
     "training_course_desc": "Template utilisé pour l'impression des informations relatives à une formation du catalogue.",
-    "training_session": "Session de formation",
-    "training_session_desc": "Template utilisé pour l'impression des informations relatives à une session de formation.",
+
     "training_event": "Séance de formation",
     "training_event_desc": "Template utilisé pour l'impression des informations relatives à une séance de formation.",
     "training_event_invitation": "Invitation à une séance de formation",
     "training_event_invitation_desc": "Template utilisé pour le mail d'invitation à une séance de formation.",
-    "training_event_presences": "Grille de présence d'une séance de formation",
-    "training_event_presences_desc": "Template utilisé pour l'impression de la grille de présence (vide ou pré-remplie) d'une séance de formation.",
+
     "training_event_presence": "Attestation de présence à une séance de formation",
     "training_event_presence_desc": "Template utilisé pour l'impression l'attestation de présence d'un utilisateur à une séance de formation.",
+    "training_event_presences": "Grille de présence d'une séance de formation",
+    "training_event_presences_desc": "Template utilisé pour l'impression de la grille de présence (vide ou pré-remplie) d'une séance de formation.",
+
+    "training_session": "Session de formation",
+    "training_session_desc": "Template utilisé pour l'impression des informations relatives à une session de formation.",
     "training_session_invitation": "Invitation à une session de formation",
     "training_session_invitation_desc": "Template utilisé pour le mail d'invitation à une session de formation.",
     "training_session_confirmation": "Confirmation d'inscription à une session de formation",
@@ -23,6 +26,7 @@
     "course_default_duration_desc": "La durée par défaut d'une session de formation",
     "course_public_registration_desc": "L'inscription publique à la formation",
     "course_max_users_desc": "Le nombre maximum d'utilisateurs par session de formation",
+
     "event_description_desc": "La description de la séance",
     "event_location_address_desc": "L'adresse de la séance",
     "event_location_extra_desc": "Les informations complémentaires sur le lieu de la séance",
@@ -39,6 +43,7 @@
     "event_presence_validation_datetime_utc_desc": "La date et l'heure de validation de la présence de l'utilisateur à la séance (UTC)",
     "event_trainers_desc": "La liste des formateurs de la séance",
     "events_list_desc": "La liste des séances",
+
     "session_description_desc": "La description de la session de formation",
     "session_name_desc": "Le nom de la session de formation",
     "session_code_desc": "Le code de la session de formation",
@@ -47,6 +52,7 @@
     "session_public_registration_desc": "L'inscription publique à la session de formation",
     "session_max_users_desc": "Le nombre maximum d'utilisateurs par session de formation",
     "session_trainers_desc": "La liste des formateurs de la session de formation",
+
     "registration_confirmation_url": "Le lien de confirmation de l'inscription",
     "registration_confirmation_url_desc": "Le lien de confirmation de l'inscription",
 
