@@ -16,7 +16,7 @@ final class Version20240617074835 extends AbstractMigration
     {
         $this->addSql('
             ALTER TABLE claro_slide 
-            DROP FOREIGN KEY FK_9F1DBC778B14E343
+            DROP FOREIGN KEY FK_F8EC39708B14E343
         ');
         $this->addSql('
             ALTER TABLE claro_slide 
@@ -34,7 +34,7 @@ final class Version20240617074835 extends AbstractMigration
         ');
         $this->addSql('
             ALTER TABLE claro_slide 
-            ADD CONSTRAINT FK_9F1DBC778B14E343 FOREIGN KEY (slideshow_id) 
+            ADD CONSTRAINT FK_F8EC39708B14E343 FOREIGN KEY (slideshow_id) 
             REFERENCES claro_slideshow (id)
         ');
     }
