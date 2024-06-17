@@ -57,7 +57,7 @@ class Slide
      * The parent slideshow.
      *
      * @ORM\ManyToOne(targetEntity="Claroline\SlideshowBundle\Entity\Resource\Slideshow", inversedBy="slides")
-     * @ORM\JoinColumn(name="slideshow_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="slideshow_id", referencedColumnName="id", onDelete="CASCADE")
      *
      * @var Slideshow
      */
