@@ -5,6 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
+import {Alert} from '#/main/app/components/alert'
 
 import {selectors} from '#/main/core/tools/locations/material/store'
 import {MaterialCard} from '#/main/core/tools/locations/material/components/card'
@@ -28,6 +29,12 @@ const MaterialList = (props) =>
       }
     ]}
   >
+    {props.editable &&
+      <Alert type="warning" title={trans('deprecated_tool', {}, 'platform')} className="component-container">
+        {trans('deprecated_tool_message', {}, 'platform')}
+      </Alert>
+    }
+
     <ListData
       name={selectors.LIST_NAME}
       fetch={{

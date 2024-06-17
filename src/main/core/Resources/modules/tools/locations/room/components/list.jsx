@@ -5,7 +5,7 @@ import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {ToolPage} from '#/main/core/tool/containers/page'
-
+import {Alert} from '#/main/app/components/alert'
 import {selectors} from '#/main/core/tools/locations/room/store'
 import {RoomCard} from '#/main/core/data/types/room/components/card'
 import {MODAL_ROOM_PARAMETERS} from '#/main/core/tools/locations/room/modals/parameters'
@@ -28,6 +28,12 @@ const RoomList = (props) =>
       }
     ]}
   >
+    {props.editable &&
+      <Alert type="warning" title={trans('deprecated_tool', {}, 'platform')} className="component-container">
+        {trans('deprecated_tool_message', {}, 'platform')}
+      </Alert>
+    }
+
     <ListData
       name={selectors.LIST_NAME}
       fetch={{
