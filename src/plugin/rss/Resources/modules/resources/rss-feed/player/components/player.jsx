@@ -3,8 +3,11 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/app/intl/translation'
+import {Alert} from '#/main/app/components/alert'
+import {hasPermission} from '#/main/app/security'
 import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 
+import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {selectors} from '#/plugin/rss/resources/rss-feed/player/store/selectors'
 
 const PlayerComponent = props => {
@@ -21,6 +24,12 @@ const PlayerComponent = props => {
 
   return (
     <div className="feed-rss">
+      {props.canEdit &&
+        <Alert type="warning" title={trans('deprecated_resource', {}, 'platform')} className="component-container">
+          {trans('deprecated_resource_message', {}, 'platform')}
+        </Alert>
+      }
+
       {props.items.map((item, index) =>
         <div className="feed-item" key={index}>
           <h4 className="feed-item-title">
@@ -37,11 +46,13 @@ const PlayerComponent = props => {
 PlayerComponent.propTypes = {
   items: T.arrayOf(T.shape({
     // TODO
-  })).isRequired
+  })).isRequired,
+  canEdit: T.bool.isRequired
 }
 
 const Player = connect(
   (state) => ({
+    canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     items: selectors.items(state)
   })
 )(PlayerComponent)

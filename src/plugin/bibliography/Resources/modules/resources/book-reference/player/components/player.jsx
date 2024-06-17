@@ -8,7 +8,9 @@ import {selectors as formSelect} from '#/main/app/content/form/store/selectors'
 import {DetailsData} from '#/main/app/content/details/containers/data'
 
 import {trans} from '#/main/app/intl/translation'
-
+import {Alert} from '#/main/app/components/alert'
+import {hasPermission} from '#/main/app/security'
+import {selectors as resourceSelect} from '#/main/core/resource/store'
 import {selectors} from '#/plugin/bibliography/resources/book-reference/store'
 
 const PlayerComponent = props =>
@@ -23,8 +25,13 @@ const PlayerComponent = props =>
         />
       </Col>
     }
-
     <Col md={props.bookReference.cover ? 9 : 12}>
+      {props.canEdit &&
+        <Alert type="warning" title={trans('deprecated_resource', {}, 'platform')} className="component-container content-md mt-3">
+          {trans('deprecated_resource_message', {}, 'platform')}
+        </Alert>
+      }
+
       <DetailsData
         level={3}
         name={selectors.STORE_NAME+'.bookReference'}
@@ -85,11 +92,13 @@ const PlayerComponent = props =>
   </Row>
 
 PlayerComponent.propTypes = {
-  bookReference: T.object.isRequired
+  bookReference: T.object.isRequired,
+  canEdit: T.bool.isRequired
 }
 
 const Player = connect(
   state => ({
+    canEdit: hasPermission('edit', resourceSelect.resourceNode(state)),
     bookReference: formSelect.originalData(formSelect.form(state, selectors.STORE_NAME+'.bookReference'))
   })
 )(PlayerComponent)
