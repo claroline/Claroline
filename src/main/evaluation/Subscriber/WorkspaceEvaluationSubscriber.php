@@ -27,7 +27,9 @@ use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
+use Claroline\EvaluationBundle\Event\WorkspaceEvaluationEvent;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
+use Claroline\EvaluationBundle\Manager\CertificateManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -43,16 +45,19 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     private MessageBusInterface $messageBus;
     private WorkspaceEvaluationManager $manager;
     private WorkspaceRepository $workspaceRepo;
+    private CertificateManager $certificateManager;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
         MessageBusInterface $messageBus,
         ObjectManager $om,
-        WorkspaceEvaluationManager $manager
+        WorkspaceEvaluationManager $manager,
+        CertificateManager $certificateManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->messageBus = $messageBus;
         $this->manager = $manager;
+        $this->certificateManager = $certificateManager;
 
         $this->workspaceRepo = $om->getRepository(Workspace::class);
     }
@@ -63,6 +68,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
             ContextEvents::OPEN => 'onOpen',
             SecurityEvents::ADD_ROLE => 'onAddRole',
             EvaluationEvents::RESOURCE_EVALUATION => 'onResourceEvaluate',
+            EvaluationEvents::WORKSPACE_EVALUATION => 'onWorkspaceEvaluate',
             Crud::getEventName('update', 'post', ResourceNode::class) => 'onResourcePublicationChange',
             Crud::getEventName('delete', 'post', ResourceNode::class) => 'onResourceDelete',
         ];
@@ -140,6 +146,13 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
 
         if ($resourceNode->isRequired() && !empty($oldData['meta']) && ($oldData['meta']['published'] !== $resourceNode->isPublished())) {
             $this->manager->recompute($resourceNode->getWorkspace());
+        }
+    }
+
+    public function onWorkspaceEvaluate(WorkspaceEvaluationEvent $event): void
+    {
+        if ($event->hasStatusChanged() && in_array($event->getEvaluation()->getStatus(), [EvaluationStatus::COMPLETED, EvaluationStatus::PASSED])) {
+            $this->certificateManager->getCertificate($event->getEvaluation());
         }
     }
 }

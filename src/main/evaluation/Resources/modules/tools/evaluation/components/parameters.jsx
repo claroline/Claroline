@@ -38,6 +38,17 @@ const EvaluationParameters = (props) =>
             method: 'PUT'
           }
         }
+      }, {
+        name: 'download_all_workspace_certificates',
+        type: ASYNC_BUTTON,
+        icon: 'fa fa-fw fa-file-zipper',
+        label: trans('download_all_workspace_certificates', {}, 'actions'),
+        request: {
+          url: ['apiv2_workspace_download_all_certificates', {workspace: props.contextId}],
+          request: {
+            method: 'GET'
+          }
+        }
       }
     ]}
   >

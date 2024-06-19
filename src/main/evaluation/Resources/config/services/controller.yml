@@ -11,7 +11,6 @@ services:
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
-            - '@Claroline\EvaluationBundle\Manager\PdfManager'
 
     Claroline\EvaluationBundle\Controller\ResourceUserEvaluationController:
         arguments:
@@ -20,3 +19,9 @@ services:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
+
+    Claroline\EvaluationBundle\Controller\CertificateController:
+        arguments:
+            - '@security.authorization_checker'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\EvaluationBundle\Manager\CertificateManager'

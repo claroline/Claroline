@@ -1,7 +1,11 @@
 {
   "open_evaluation": "Show learning Report",
   "show_evaluations": "Show evaluations",
-  "download_participation_certificate": "Download the certificate of participation",
-  "download_success_certificate": "Download the certificate of achievement",
-  "give_attempt": "Give one more attempt"
+  "download_certificate": "Download the certificate",
+  "download_certificates": "Download the certificates",
+  "give_attempt": "Give one more attempt",
+  "regenerate_certificate": "Regenerate certificate",
+  "regenerate_certificates": "Regenerate certificates",
+  "download_all_certificates": "Download all certificates",
+  "download_all_workspace_certificates": "Download all workspace certificates"
 }

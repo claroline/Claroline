@@ -92,7 +92,7 @@ class PlaceholderManager
             ];
         }
 
-        $localeDate = $this->localeManager->getLocaleDateTimeFormat($date);
+        $localeDate = $this->localeManager->getLocaleDate($date);
         $dateFormat = $this->config->getParameter('intl.dateFormat') ?: 'Y-m-d';
         $timeFormat = $this->config->getParameter('intl.timeFormat') ?: 'H:i';
 
