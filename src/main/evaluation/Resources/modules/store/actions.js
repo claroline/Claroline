@@ -9,18 +9,9 @@ actions.fetchEvaluation = (workspaceId, userId) => ({
   }
 })
 
-actions.downloadParticipationCertificate = (workspaceId, userId) => ({
+actions.downloadCertificate = (workspaceId, userId) => ({
   [API_REQUEST] : {
-    url: ['apiv2_workspace_download_participation_certificate', {
-      workspace: workspaceId,
-      user: userId
-    }]
-  }
-})
-
-actions.downloadSuccessCertificate = (workspaceId, userId) => ({
-  [API_REQUEST] : {
-    url: ['apiv2_workspace_download_success_certificate', {
+    url: ['apiv2_workspace_download_certificate', {
       workspace: workspaceId,
       user: userId
     }]

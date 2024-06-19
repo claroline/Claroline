@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import isEmpty from 'lodash/isEmpty'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
@@ -8,7 +7,6 @@ import {route} from '#/main/community/user/routing'
 import {LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ToolPage} from '#/main/core/tool'
-import {UserAvatar} from '#/main/app/user/components/avatar'
 
 import {WorkspaceEvaluation as WorkspaceEvaluationTypes} from '#/main/evaluation/workspace/prop-types'
 import {ResourceEvaluation as ResourceEvaluationTypes} from '#/main/evaluation/resource/prop-types'
@@ -44,10 +42,10 @@ const EvaluationUser = (props) =>
         label: trans('show_profile', {}, 'actions'),
         target: route(get(props.workspaceEvaluation, 'user'), props.contextPath+'/community')
       }, {
-        name: 'download',
+        name: 'download-certificate',
         type: URL_BUTTON,
         label: trans('download_certificate', {}, 'actions'),
-        target: ['apiv2_workspace_download_participation_certificate', { // FIXME
+        target: ['apiv2_workspace_download_user_certificate', {
           workspace: get(props.workspaceEvaluation, 'workspace.id'),
           user: get(props.workspaceEvaluation, 'user.id')
         }],
@@ -56,6 +54,20 @@ const EvaluationUser = (props) =>
           baseConstants.EVALUATION_STATUS_PARTICIPATED,
           baseConstants.EVALUATION_STATUS_PASSED
         ].includes(get(props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)),
+        size: 'lg'
+      }, {
+        name: 'regenerate-certificate',
+        type: URL_BUTTON,
+        label: trans('regenerate_certificate', {}, 'actions'),
+        target: ['apiv2_workspace_generate_user_certificate', {
+          evaluation: [get(props.workspaceEvaluation, 'id')]
+        }],
+        displayed: [
+          baseConstants.EVALUATION_STATUS_COMPLETED,
+          baseConstants.EVALUATION_STATUS_PARTICIPATED,
+          baseConstants.EVALUATION_STATUS_PASSED
+        ].includes(get(props.workspaceEvaluation, 'status', baseConstants.EVALUATION_STATUS_UNKNOWN)),
+        size: 'lg'
       }
     ] : undefined}
   >
