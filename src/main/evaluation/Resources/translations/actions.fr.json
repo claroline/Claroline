@@ -2,7 +2,10 @@
   "open_evaluation": "Voir le suivi pédagogique",
   "show_evaluations": "Voir les évaluations",
   "download_certificate": "Télécharger le certificat",
-  "download_participation_certificate": "Télécharger le certificat de participation",
-  "download_success_certificate": "Télécharger le certificat de réussite",
-  "give_attempt": "Donner une tentative supplémentaire"
+  "download_certificates": "Télécharger les certificats",
+  "give_attempt": "Donner une tentative supplémentaire",
+  "regenerate_certificate": "Regénérer le certificat",
+  "regenerate_certificates": "Regénérer les certificats",
+  "download_all_certificates": "Télécharger tous les certificats",
+  "download_all_workspace_certificates": "Télécharger tous les certificats de l'espace d'activité"
 }

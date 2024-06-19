@@ -1,4 +1,5 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl'
 import {ToolPage} from '#/main/core/tool'
@@ -9,7 +10,6 @@ import {constants as listConst} from '#/main/app/content/list/constants'
 import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
-import {PropTypes as T} from 'prop-types'
 
 const EvaluationActivities = (props) =>
   <ToolPage

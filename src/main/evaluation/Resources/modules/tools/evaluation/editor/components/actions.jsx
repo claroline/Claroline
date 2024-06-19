@@ -15,6 +15,17 @@ const EvaluationEditorActions = () => {
     <ToolEditorActions
       actions={[
         {
+          name: 'download_all_workspace_certificates',
+          type: ASYNC_BUTTON,
+          icon: 'fa fa-fw fa-file-zipper',
+          label: trans('download_all_workspace_certificates', {}, 'actions'),
+          request: {
+            url: ['apiv2_workspace_download_all_certificates', {workspace: contextId}],
+            request: {
+              method: 'GET'
+            }
+          }
+        }, {
           title: trans('initialize_evaluations', {}, 'evaluation'),
           help: trans('Générez les évaluations pour tous les utilisateurs n\'ayant pas encore commencé l\'espace d\'activités.'),
           action: {

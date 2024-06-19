@@ -28,7 +28,9 @@ use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\ResourceEvaluationEvent;
+use Claroline\EvaluationBundle\Event\WorkspaceEvaluationEvent;
 use Claroline\EvaluationBundle\Library\EvaluationStatus;
+use Claroline\EvaluationBundle\Manager\CertificateManager;
 use Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager;
 use Claroline\EvaluationBundle\Messenger\Message\InitializeWorkspaceEvaluations;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -46,7 +48,8 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         private readonly TokenStorageInterface $tokenStorage,
         private readonly MessageBusInterface $messageBus,
         ObjectManager $om,
-        private readonly WorkspaceEvaluationManager $manager
+        private readonly WorkspaceEvaluationManager $manager,
+        private readonly CertificateManager $certificateManager
     ) {
         $this->workspaceRepo = $om->getRepository(Workspace::class);
     }
@@ -59,6 +62,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
             EvaluationEvents::RESOURCE_EVALUATION => 'onResourceEvaluate',
             CrudEvents::getEventName(CrudEvents::POST_UPDATE, ResourceNode::class) => 'onResourcePublicationChange',
             CrudEvents::getEventName(CrudEvents::POST_DELETE, ResourceNode::class) => 'onResourceDelete',
+            EvaluationEvents::WORKSPACE_EVALUATION => 'onWorkspaceEvaluate',
         ];
     }
 
@@ -134,6 +138,13 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
 
         if ($resourceNode->isRequired() && !empty($oldData['meta']) && ($oldData['meta']['published'] !== $resourceNode->isPublished())) {
             $this->manager->recompute($resourceNode->getWorkspace());
+        }
+    }
+
+    public function onWorkspaceEvaluate(WorkspaceEvaluationEvent $event): void
+    {
+        if ($event->hasStatusChanged() && in_array($event->getEvaluation()->getStatus(), [EvaluationStatus::COMPLETED, EvaluationStatus::PASSED])) {
+            $this->certificateManager->getCertificate($event->getEvaluation());
         }
     }
 }
