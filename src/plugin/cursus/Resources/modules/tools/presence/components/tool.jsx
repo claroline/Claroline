@@ -2,35 +2,28 @@ import React from 'react'
 import {connect} from 'react-redux'
 import omit from 'lodash/omit'
 
+import {Tool} from '#/main/core/tool'
 import {withReducer} from '#/main/app/store/reducer'
-import {Routes} from '#/main/app/router'
 import {selectors as securitySelectors} from '#/main/app/security/store'
-import {Tool, ToolPage} from '#/main/core/tool'
 
-import {actions, reducer, selectors} from '#/plugin/cursus/tools/presence/store'
-import {SignPresence} from '#/plugin/cursus/tools/presence/components/signing'
 import {EventPresence} from '#/plugin/cursus/tools/presence/components/event'
+import {SignPresence} from '#/plugin/cursus/tools/presence/components/signing'
+import {actions, reducer, selectors} from '#/plugin/cursus/tools/presence/store'
 
 const PresenceToolComponent = (props) =>
   <Tool
     {...omit(props, 'currentUser', 'getEventByCode')}
-  >
-    <ToolPage root={true}>
-      <Routes
-        path={props.path}
-        routes={[
-          {
-            path: '/:code',
-            onEnter: (params) => props.getEventByCode(params.code),
-            component: SignPresence
-          }, {
-            path: '/',
-            component: EventPresence
-          }
-        ]}
-      />
-    </ToolPage>
-  </Tool>
+    pages={[
+      {
+        path: '/:code',
+        onEnter: (params) => props.getEventByCode(params.code),
+        component: SignPresence
+      }, {
+        path: '/',
+        component: EventPresence
+      }
+    ]}
+  />
 
 const PresenceTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
