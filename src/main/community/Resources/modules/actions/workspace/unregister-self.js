@@ -38,7 +38,7 @@ export default (workspaces, refresher, path, currentUser) => {
       ]
     },
     request: {
-      url: url('apiv2_workspace_self_unregister', {workspaces: processable.map(workspace => workspace.id)}),
+      url: url(['apiv2_workspace_self_unregister'], {workspaces: processable.map(workspace => workspace.id)}),
       request: {
         method: 'DELETE'
       },
