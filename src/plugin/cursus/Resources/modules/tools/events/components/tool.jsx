@@ -19,7 +19,7 @@ const EventsTool = (props) =>
   <Routes
     path={props.path}
     redirect={[
-      {from: '/', exact: true, to: props.course ? '/about/' + props.course.slug : '/about'}
+      {from: '/', exact: true, to: props.course ? '/about/' + props.course.slug + '/sessions' : '/about'}
     ]}
     routes={[
       {

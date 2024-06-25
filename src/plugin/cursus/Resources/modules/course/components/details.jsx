@@ -155,7 +155,7 @@ const CourseDetails = (props) =>
               contextType={props.contextType}
               path={props.path}
               course={props.course}
-              registration={props.registrations}
+              registrations={props.registrations}
               reload={props.reload}
               register={props.register}
             />
