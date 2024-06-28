@@ -115,7 +115,7 @@ class EventPresenceController
         $presences = $this->om->getRepository(EventPresence::class)->findBy(['uuid' => $data]);
         $this->om->startFlushSuite();
         foreach ($presences as $presence) {
-            $this->checkPermission('ADMINISTRER', $presence, [], true);
+            $this->checkPermission('ADMINISTRATE', $presence, [], true);
 
             $this->manager->setValidationDate([$presence], new \DateTime());
         }
