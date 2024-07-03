@@ -79,7 +79,7 @@ class Entry
     /**
      * @ORM\Column(name="publication_date", type="datetime", nullable=true)
      */
-    private ?\DateTimeInterface $publicationDate;
+    private ?\DateTimeInterface $publicationDate = null;
 
     /**
      * @ORM\OneToMany(
