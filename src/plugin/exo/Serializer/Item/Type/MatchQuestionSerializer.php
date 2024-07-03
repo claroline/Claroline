@@ -97,8 +97,7 @@ class MatchQuestionSerializer
     /**
      * Converts raw data into a Match question entity.
      *
-     * @param array         $data
-     * @param MatchQuestion $matchQuestion
+     * @param array $data
      *
      * @return MatchQuestion
      */
