@@ -97,8 +97,7 @@ class MatchQuestionSerializer
     /**
      * Converts raw data into a Match question entity.
      *
-     * @param array         $data
-     * @param MatchQuestion $matchQuestion
+     * @param array $data
      *
      * @return MatchQuestion
      */
@@ -108,7 +107,7 @@ class MatchQuestionSerializer
             $matchQuestion = new MatchQuestion();
         }
 
-        if (isset($data['penaty'])) {
+        if (isset($data['penalty'])) {
             if (!empty($data['penalty']) || 0 === $data['penalty']) {
                 $matchQuestion->setPenalty($data['penalty']);
             }
