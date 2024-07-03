@@ -108,7 +108,7 @@ class MatchQuestionSerializer
             $matchQuestion = new MatchQuestion();
         }
 
-        if (isset($data['penaty'])) {
+        if (isset($data['penalty'])) {
             if (!empty($data['penalty']) || 0 === $data['penalty']) {
                 $matchQuestion->setPenalty($data['penalty']);
             }
