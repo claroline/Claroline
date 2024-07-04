@@ -28,6 +28,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Claroline\CoreBundle\Manager\Workspace\WorkspaceRestrictionsManager;
 use Claroline\CoreBundle\Messenger\Message\CopyWorkspace;
+use Claroline\CoreBundle\Messenger\Message\CreateWorkspace;
 use Claroline\CoreBundle\Messenger\Message\ImportWorkspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
@@ -202,6 +203,23 @@ class WorkspaceController extends AbstractCrudController
             ])]),
             $this->getOptions()['list']
         ));
+    }
+
+    public function createAction(Request $request): JsonResponse
+    {
+        $this->checkPermission('CREATE', new Workspace(), [], true);
+
+        $options = static::getOptions();
+
+        $this->messageBus->dispatch(new CreateWorkspace(
+            $this->decodeRequest($request),
+            $options['create'] ?? []
+        ), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
+
+        return new JsonResponse(
+            null,
+            204
+        );
     }
 
     /**
