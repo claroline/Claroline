@@ -20,15 +20,12 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class ImportWorkspaceHandler implements MessageHandlerInterface
 {
-    /** @var WorkspaceManager */
-    private $manager;
-
-    public function __construct(WorkspaceManager $manager)
-    {
-        $this->manager = $manager;
+    public function __construct(
+        private readonly WorkspaceManager $manager
+    ) {
     }
 
-    public function __invoke(ImportWorkspace $importWorkspace)
+    public function __invoke(ImportWorkspace $importWorkspace): void
     {
         $newWorkspace = new Workspace();
 

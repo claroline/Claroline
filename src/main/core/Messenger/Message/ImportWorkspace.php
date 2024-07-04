@@ -18,18 +18,11 @@ use Claroline\AppBundle\Messenger\Message\AsyncLowMessageInterface;
  */
 class ImportWorkspace implements AsyncLowMessageInterface
 {
-    /** @var string */
-    private $archivePath;
-    /** @var string */
-    private $name;
-    /** @var string */
-    private $code;
-
-    public function __construct(string $archivePath, ?string $name = null, ?string $code = null)
-    {
-        $this->archivePath = $archivePath;
-        $this->name = $name;
-        $this->code = $code;
+    public function __construct(
+        private readonly string $archivePath,
+        private readonly ?string $name = null,
+        private readonly ?string $code = null
+    ) {
     }
 
     public function getArchivePath(): string
