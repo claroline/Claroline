@@ -65,7 +65,7 @@ const EvaluationEditorActions = () => {
           },
           dangerous: true,
           managerOnly: true
-        },
+        }
       ]}
     />
   )

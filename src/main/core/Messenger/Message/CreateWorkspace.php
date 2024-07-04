@@ -14,19 +14,19 @@ namespace Claroline\CoreBundle\Messenger\Message;
 use Claroline\AppBundle\Messenger\Message\AsyncLowMessageInterface;
 
 /**
- * Copy a workspace.
+ * Create a workspace.
  */
-class CopyWorkspace implements AsyncLowMessageInterface
+class CreateWorkspace implements AsyncLowMessageInterface
 {
     public function __construct(
-        private readonly int $workspaceId,
+        private readonly array $data,
         private readonly ?array $options = []
     ) {
     }
 
-    public function getWorkspaceId(): int
+    public function getData(): array
     {
-        return $this->workspaceId;
+        return $this->data;
     }
 
     public function getOptions(): ?array
