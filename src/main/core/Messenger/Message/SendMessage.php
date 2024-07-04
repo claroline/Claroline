@@ -15,21 +15,12 @@ use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 
 class SendMessage implements AsyncHighMessageInterface
 {
-    /** @var string */
-    private $content;
-    /** @var string */
-    private $object;
-    /** @var array */
-    private $receiverIds;
-    /** @var int|null */
-    private $senderId;
-
-    public function __construct(string $content, string $object, array $receiverIds, ?int $senderId = null)
-    {
-        $this->content = $content;
-        $this->object = $object;
-        $this->receiverIds = $receiverIds;
-        $this->senderId = $senderId;
+    public function __construct(
+        private readonly string $content,
+        private readonly string $object,
+        private readonly array $receiverIds,
+        private readonly ?int $senderId = null
+    ) {
     }
 
     public function getContent(): string

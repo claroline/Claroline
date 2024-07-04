@@ -21,20 +21,13 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class SendMessageHandler implements MessageHandlerInterface
 {
-    /** @var StrictDispatcher */
-    private $dispatcher;
-    /** @var ObjectManager */
-    private $om;
-
     public function __construct(
-        StrictDispatcher $dispatcher,
-        ObjectManager $om
+        private readonly StrictDispatcher $dispatcher,
+        private readonly ObjectManager $om
     ) {
-        $this->dispatcher = $dispatcher;
-        $this->om = $om;
     }
 
-    public function __invoke(SendMessage $message)
+    public function __invoke(SendMessage $message): void
     {
         $receivers = [];
         foreach ($message->getReceiverIds() as $receiverId) {
