@@ -11,9 +11,9 @@ import {getPlatformRoles, getWorkspaceRoles} from '#/main/community/utils'
 import {UserList as BaseUserList} from '#/main/community/user/components/list'
 
 import {selectors} from '#/main/community/tools/community/user/store'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 
 import {MODAL_REGISTER} from '#/main/community/modals/register'
+import {PageListSection} from '#/main/app/page/components/list-section'
 
 const UserList = props =>
   <ToolPage
@@ -52,9 +52,8 @@ const UserList = props =>
       <Alert type="warning" className="mt-3">{trans('users_limit_reached')}</Alert>
     }
 
-    <ContentSizing size="full">
+    <PageListSection>
       <BaseUserList
-        flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
         url={!isEmpty(props.contextData) ?
@@ -107,7 +106,7 @@ const UserList = props =>
           }
         ]}
       />
-    </ContentSizing>
+    </PageListSection>
   </ToolPage>
 
 UserList.propTypes = {

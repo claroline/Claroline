@@ -266,8 +266,8 @@ $data-grid-gutter: map-get($spacers, 3);
 // Data tree
 // ---
 
-$data-tree-gutter:      $data-grid-gutter*.5;
-$data-tree-indent:      $data-grid-gutter*4;
+$data-tree-gutter:      $data-grid-gutter;
+$data-tree-indent:      $data-tree-gutter*2;
 $data-tree-lines-color: var(--#{$prefix}secondary-color);
 
 

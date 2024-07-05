@@ -34,6 +34,16 @@ class RoutingHelper
         return $this->indexPath().'#/desktop/'.$toolName;
     }
 
+    public function toolUrl(string $toolName, string $context, ?string $contextId = null): string
+    {
+        $url = $this->indexUrl().'#/'.$context;
+        if ($contextId) {
+            $url .= '/'.$contextId;
+        }
+
+        return $url.'/'.$toolName;
+    }
+
     public function resourceUrl(ResourceNode $resource): string
     {
         return $this->indexUrl().'#'.$this->resourceFragment($resource);
@@ -54,14 +64,6 @@ class RoutingHelper
         return $this->indexPath().'#/administration/'.$adminToolName;
     }
 
-    /**
-     * @internal should be simplified
-     */
-    public function resourceFragment(ResourceNode $resource): string
-    {
-        return $this->workspaceFragment($resource->getWorkspace(), 'resources').'/'.$resource->getSlug();
-    }
-
     public function workspaceUrl(Workspace $workspace, string $toolName = null): string
     {
         return $this->indexUrl().'#'.$this->workspaceFragment($workspace, $toolName);
@@ -74,11 +76,16 @@ class RoutingHelper
 
     private function workspaceFragment(Workspace $workspace, string $toolName = null): string
     {
-        $fragment = '/desktop/workspaces/open/'.$workspace->getSlug();
+        $fragment = '/workspace/'.$workspace->getSlug();
         if ($toolName) {
             $fragment .= '/'.$toolName;
         }
 
         return $fragment;
+    }
+
+    private function resourceFragment(ResourceNode $resource): string
+    {
+        return $this->workspaceFragment($resource->getWorkspace(), 'resources').'/'.$resource->getSlug();
     }
 }

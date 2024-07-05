@@ -20,7 +20,7 @@ class WorkspaceValidator implements ValidatorInterface
     public function getUniqueFields(): array
     {
         return [
-            'code' => 'code',
+            //'code' => 'code',
         ];
     }
 }

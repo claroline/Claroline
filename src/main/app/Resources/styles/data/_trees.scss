@@ -6,7 +6,7 @@
 
 .data-tree {
     flex: 1;
-    margin-left: -$data-tree-gutter;
+    //margin-left: -$data-tree-gutter;
 }
 
 .btn-tree-toggle {
@@ -15,11 +15,11 @@
     padding: 0;
     justify-content: center;
     align-items: center;
-    width: $data-tree-gutter*2;
-    height: $data-tree-gutter*2;
-    font-size: $data-tree-gutter*2;
-    margin-left: $data-tree-gutter;
-    margin-right: $data-tree-gutter;
+    width: $data-tree-gutter;
+    height: $data-tree-gutter;
+    font-size: $data-tree-gutter*1.5;
+    margin-left: $data-tree-gutter*.5;
+    margin-right: $data-tree-gutter*.5;
     color: $data-tree-lines-color;
     background-color: var(--#{$prefix}body-bg);
     border-radius: 50%;
@@ -34,11 +34,11 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-top: $data-tree-gutter;
+    margin-top: $data-tree-gutter*.5;
 
     > .form-check {
         flex: 1;
-        margin-left: $data-tree-gutter;
+        margin-left: $data-tree-gutter*.5;
     }
 }
 
@@ -46,28 +46,32 @@
     display: flex; // correct vertical align
     flex-direction: row;
     margin-left: auto;
+    align-items: center;
 
     .btn {
-        padding: 0 $data-tree-gutter;
+        //padding: 0 $data-tree-gutter;
     }
 }
 
 // customizes bulk actions
 .data-tree .list-selected {
     position: relative;
-    border: var(--#{$prefix}border-width) solid transparent;
-    margin-top: $data-tree-gutter;
+    border-radius: $data-card-border-radius;
+    border: $data-card-border-width solid transparent;
+
+    margin-top: $data-tree-gutter*.5;
     margin-left: $data-tree-indent;
 
-    .list-selected-label,
-    .btn {
-        padding: $data-tree-gutter;
+    .list-selected-label/*,
+    .btn*/ {
+        //padding: $data-tree-gutter;
+        padding: $data-card-spacer-y $data-card-spacer-x;
     }
 
     &:before {
         position: absolute;
         z-index: 1;
-        top: -($data-tree-gutter);
+        top: -($data-tree-gutter*.5);
         left: -($data-tree-indent*.5);
         bottom: 0;
         content: " ";
@@ -112,11 +116,11 @@
     align-items: flex-start;
 
     .btn-tree-toggle {
-        margin-top: $data-tree-gutter*2;
+        margin-top: $data-tree-gutter;
     }
 
     .data-card {
-        margin-top: $data-tree-gutter;
+        margin-top: $data-tree-gutter*.5;
     }
 
     // draw lines
@@ -130,7 +134,7 @@
         border-bottom: 1px solid $data-tree-lines-color;
         width: $data-tree-indent*.5;
         border-left: 1px solid $data-tree-lines-color;
-        height: $data-tree-gutter*3;
+        height: $data-tree-gutter*1.5;
         box-sizing: content-box !important;
     }
 
@@ -140,7 +144,7 @@
         z-index: 1;
         position: absolute;
         left: $data-tree-indent*.5;
-        top: $data-tree-gutter*2;
+        top: $data-tree-gutter;
         bottom: 0;
         content: " ";
         border-left: 1px solid $data-tree-lines-color;
@@ -149,9 +153,9 @@
 
 .data-tree-item-select {
     position: absolute;
-    top: $data-tree-gutter;
+    top: $data-tree-gutter*.5;
     left: $data-tree-indent;
-    margin: $data-tree-gutter !important;
+    margin: $data-tree-gutter*.5 !important;
 }
 
 .data-tree-leaf {

@@ -6,8 +6,8 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool'
 
 import {EventList} from '#/plugin/cursus/event/components/list'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 import {selectors} from '#/plugin/cursus/tools/events/store'
+import {PageListSection} from '#/main/app/page/components/list-section'
 
 const EventsPublic = (props) =>
   <ToolPage
@@ -18,14 +18,13 @@ const EventsPublic = (props) =>
     }]}
     title={trans('public_events', {}, 'cursus')}
   >
-    <ContentSizing size="full">
+    <PageListSection>
       <EventList
-        flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
         url={['apiv2_cursus_event_public', {workspace: props.contextId}]}
       />
-    </ContentSizing>
+    </PageListSection>
   </ToolPage>
 
 EventsPublic.propTypes = {

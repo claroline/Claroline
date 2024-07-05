@@ -70,19 +70,14 @@ const Workspaces = (props) => {
           name: 'meta.personal',
           label: trans('personal_workspace'),
           type: 'boolean',
-          alias: 'personal'
+          alias: 'personal',
+          displayable: false
         }, {
           name: 'restrictions.hidden',
           label: trans('hidden'),
           type: 'boolean',
           alias: 'hidden',
           displayable: false
-        }, {
-          name: 'registration.waitingForRegistration',
-          label: trans('pending'),
-          type: 'boolean',
-          filterable: false,
-          sortable: false
         }, {
           name: 'registration.selfRegistration',
           label: trans('public_registration'),

@@ -11,17 +11,14 @@ import {route} from '#/main/community/user/routing'
 import {UserCard} from '#/main/community/user/components/card'
 import {constants} from '#/main/community/constants'
 import {selectors} from '#/main/community/tools/community/pending/store'
-import {ContentSizing} from '#/main/app/content/components/sizing'
-
-// TODO : reuse main/core/user/components/list
+import {PageListSection} from '#/main/app/page/components/list-section'
 
 const PendingMain = props =>
   <ToolPage
     title={trans('pending_registrations')}
   >
-    <ContentSizing size="full">
+    <PageListSection>
       <ListData
-        flush={true}
         name={selectors.LIST_NAME}
         fetch={{
           url: ['apiv2_workspace_list_pending', {id: props.workspace.id}],
@@ -100,7 +97,7 @@ const PendingMain = props =>
         ]}
         card={UserCard}
       />
-    </ContentSizing>
+    </PageListSection>
   </ToolPage>
 
 PendingMain.propTypes = {

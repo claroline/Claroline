@@ -8,7 +8,7 @@ import {ToolPage} from '#/main/core/tool'
 
 import {selectors} from '#/main/community/tools/community/organization/store'
 import {OrganizationList as BaseOrganizationList} from '#/main/community/organization/components/list'
-import {ContentSizing} from '#/main/app/content/components/sizing'
+import {PageListSection} from '#/main/app/page/components/list-section'
 
 const OrganizationList = (props) =>
   <ToolPage
@@ -26,9 +26,8 @@ const OrganizationList = (props) =>
       }
     ]}
   >
-    <ContentSizing size="full">
+    <PageListSection>
       <BaseOrganizationList
-        flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
         url={['apiv2_organization_list']}
@@ -46,7 +45,7 @@ const OrganizationList = (props) =>
           }
         ]}
       />
-    </ContentSizing>
+    </PageListSection>
   </ToolPage>
 
 OrganizationList.propTypes = {

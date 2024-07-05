@@ -85,7 +85,7 @@ const AuthenticationTool = props =>
                   userDisabled: true,
                   onSave: () => props.invalidateList()
                 }],
-                disabled: !hasPermission('edit', rows[0]) || get(rows[0], 'restrictions.locked', false),
+                disabled: !rows[0] || !hasPermission('edit', rows[0]) || get(rows[0], 'restrictions.locked', false),
                 scope: ['object'],
                 group: trans('management')
               }

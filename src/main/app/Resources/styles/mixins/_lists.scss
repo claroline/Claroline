@@ -12,8 +12,8 @@
 
     // customize view modes
     .data-tree {
-        margin-left: 0;
-        margin-right: $data-tree-gutter;
+        //margin-left: 0;
+        margin-right: $data-tree-gutter*.5;
     }
 
     .data-grid {

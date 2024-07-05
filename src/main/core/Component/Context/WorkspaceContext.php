@@ -121,4 +121,10 @@ class WorkspaceContext extends AbstractContext
             //'root' => $this->serializer->serialize($rootNode, [SerializerInterface::SERIALIZE_MINIMAL]),
         ];
     }
+
+    public function create(array $data): void
+    {
+        // create collaborator role
+        // create manager role
+    }
 }
