@@ -1,6 +1,7 @@
 @use "sass:math";
 
-.page {
+.app-page {
+    order: 2;
     flex: 1 0 auto;
     display: flex;
     flex-direction: column;
@@ -100,9 +101,7 @@
         align-items: center;
         justify-content: center;
 
-
         font-size: 2rem;
-        //padding: map-get($spacers, 3);
     }
 }
 
@@ -123,33 +122,13 @@
 .page-actions {
     margin-left: auto;
     white-space: nowrap;
-    display: flex;
-
-    .btn-primary {
-        /*font-size: $font-size-base;
-        padding: map-get($spacers, 3) map-get($spacers, 4);*/
-    }
 
     .btn-toolbar {
         white-space: nowrap;
     }
 }
 
-.page-actions-btn {
-    position: relative; // for buttons with labels
-    // puts labels in the bottom right corner
-    .action-subscript {
-        position: absolute;
-        top: auto; // reset bootstrap default
-        bottom: -5px;
-        right: 0;
-        font-size: .75rem;
-        line-height: 1;
-    }
-}
-
 .page-content {
-    //position: relative;
     display: flex;
     flex-direction: column;
     flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent

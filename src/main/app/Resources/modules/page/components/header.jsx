@@ -44,7 +44,7 @@ const PageActions = (props) => {
   }
 
   return (
-    <div className="page-actions gap-2 ms-auto" role="presentation">
+    <div className="page-actions gap-2 ms-auto d-flex" role="presentation">
       {primaryAction &&
         <Button
           {...primaryAction}
@@ -102,7 +102,8 @@ const PageHeader = props =>
       backgroundImage: `url("${asset(props.poster)}")`
     }}
     className={classes('page-header', {
-      'page-poster': !!props.poster
+      'page-poster': !!props.poster,
+      'border-bottom border-1': !props.poster
     })}
   >
     <PageNav
