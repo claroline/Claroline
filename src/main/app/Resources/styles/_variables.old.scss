@@ -259,14 +259,14 @@ $user-message-border-radius: $border-radius-lg;
 // Data grid
 // ---
 
-$data-grid-gutter: $grid-gutter-width*.5;
+$data-grid-gutter: map-get($spacers, 3);
 
 
 // -
 // Data tree
 // ---
 
-$data-tree-gutter:      $data-grid-gutter;
+$data-tree-gutter:      $data-grid-gutter*.5;
 $data-tree-indent:      $data-grid-gutter*4;
 $data-tree-lines-color: var(--#{$prefix}secondary-color);
 

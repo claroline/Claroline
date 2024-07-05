@@ -19,11 +19,14 @@
 
     text-transform: uppercase;
     font-weight: $font-weight-bold !important;
-    color: var(--#{$prefix}primary);
 
-    background-color: color-mix(in srgb, currentColor 15%, transparent);
-    background-size: cover;
-    background-position: center;
+
+    &:not(.placeholder) {
+        color: var(--#{$prefix}primary);
+        background-color: color-mix(in srgb, currentColor 15%, transparent);
+        background-size: cover;
+        background-position: center;
+    }
 
     > * {
         text-align: center;

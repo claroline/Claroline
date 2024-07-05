@@ -36,7 +36,12 @@ body {
     overflow-y: auto;
 }
 
+.app-banner {
+    order: 0;
+}
+
 .app-loader {
+    order: 1;
     width: 100%;
     height: $loader-height;
     flex-shrink: 0;
@@ -62,6 +67,10 @@ body {
     }
 }
 
+.app-page-loader {
+    oreder: 2;
+}
+
 @keyframes loader-wave {
     // only starts animation at the end of animation-time to create a delay between each "wave"
     // animation ends early to create a delay between each "wave"
@@ -69,6 +78,6 @@ body {
     0% { background-position: 500% 0; }
 }
 
-.app-loader + .page {
+.app-loader + .app-page {
     margin-top: -$loader-height;
 }

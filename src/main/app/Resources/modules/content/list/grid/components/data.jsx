@@ -55,7 +55,7 @@ const GridData = props =>
       />
     }
 
-    <ul className="data-grid-content">
+    <ul className="data-grid-content mb-auto">
       {props.data.map((row) =>
         <GridItem
           key={row.id}
