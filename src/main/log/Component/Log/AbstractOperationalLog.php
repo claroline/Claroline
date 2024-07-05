@@ -2,7 +2,6 @@
 
 namespace Claroline\LogBundle\Component\Log;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\ComponentInterface;
 use Claroline\AppBundle\Event\Crud\CopyEvent;
@@ -11,6 +10,7 @@ use Claroline\AppBundle\Event\Crud\CrudEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\LogBundle\Helper\LinkHelper;
@@ -35,6 +35,9 @@ abstract class AbstractOperationalLog implements EventSubscriberInterface, Compo
         ];
     }
 
+    /**
+     * @internal used by DI.
+     */
     public function setSerializer(SerializerProvider $serializer): void
     {
         $this->serializer = $serializer;
@@ -42,7 +45,7 @@ abstract class AbstractOperationalLog implements EventSubscriberInterface, Compo
 
     public function logCreate(CreateEvent $event): void
     {
-        $this->log('create', $this->getMessageFromEvent($event, 'create'), $event->getObject()->getUuid());
+        $this->log('create', $this->getMessageFromEvent($event, 'create'), $event->getObject());
     }
 
     public function logUpdate(UpdateEvent $event): void
@@ -53,13 +56,13 @@ abstract class AbstractOperationalLog implements EventSubscriberInterface, Compo
         $newData = $this->serializer->serialize($event->getObject());
         $changeSet = $this->getUpdateDiff($event->getOldData(), $newData);
         if (count($changeSet) > 0) {
-            $this->log('update', $this->getMessageFromEvent($event, 'update'), $event->getObject()->getUuid());
+            $this->log('update', $this->getMessageFromEvent($event, 'update'), $event->getObject());
         }
     }
 
     public function logCopy(CopyEvent $event): void
     {
-        $this->log('copy', $this->getMessageFromEvent($event, 'copy'), $event->getObject()->getUuid());
+        $this->log('copy', $this->getMessageFromEvent($event, 'copy'), $event->getObject());
     }
 
     public function logPatch(PatchEvent $event): void
@@ -68,7 +71,7 @@ abstract class AbstractOperationalLog implements EventSubscriberInterface, Compo
 
     public function logDelete(DeleteEvent $event): void
     {
-        $this->log('delete', $this->getMessageFromEvent($event, 'delete'), $event->getObject()->getUuid());
+        $this->log('delete', $this->getMessageFromEvent($event, 'delete'), $event->getObject());
     }
 
     /**
@@ -100,12 +103,22 @@ abstract class AbstractOperationalLog implements EventSubscriberInterface, Compo
         }
     }
 
-    protected function getObjectName(mixed $object): string
+    protected function getContext(object $object): string
+    {
+        return DesktopContext::getName();
+    }
+
+    protected function getContextId(object $object): ?string
+    {
+        return null;
+    }
+
+    protected function getObjectName(object $object): string
     {
         return $object->getName();
     }
 
-    protected function getObjectPath(mixed $object): ?string
+    protected function getObjectPath(object $object): ?string
     {
         return null;
     }
@@ -117,16 +130,25 @@ abstract class AbstractOperationalLog implements EventSubscriberInterface, Compo
      *     - If $doer is not set, the method will try to retrieve it from the TokenStorage.
      *     - We allow to set the doer through params for some edge cases where the doer is not the current user.
      */
-    protected function log(string $action, string $message, string $objectId, array $changeset = [], User $doer = null): void
+    protected function log(string $action, string $message, object $object, array $changeset = [], User $doer = null): void
     {
         if (empty($doer)) {
             $doer = $this->getCurrentUser();
         }
 
-        $this->logManager->logOperational(static::getName().'.'.$action, $message, $doer, static::getEntityClass(), $objectId, $changeset);
+        $this->logManager->logOperational(
+            static::getName().'.'.$action,
+            $message,
+            $doer,
+            static::getEntityClass(),
+            $object->getUuid(),
+            $this->getContext($object),
+            $this->getContextId($object),
+            $changeset
+        );
     }
 
-    private function getUpdateDiff(array $old, mixed $new): array
+    private function getUpdateDiff(array $old, array $new): array
     {
         $result = [];
         foreach ($old as $key => $val) {

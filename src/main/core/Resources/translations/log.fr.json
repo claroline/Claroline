@@ -7,9 +7,25 @@
     "resource.publish_desc": "Lorsqu'un utilisateur publie une ressource.",
     "resource.publish_message": "a <b>publié</b> la ressource %resource%.",
 
+    "tool.create": "Activation d'un outil",
+    "tool.create_desc": "Lorsqu'un utilisateur active un outil.",
+    "tool.create_message": "a <b>activé</b> l'outil %object%.",
+
+    "tool.update": "Mise à jour d'un outil",
+    "tool.update_desc": "Lorsqu'un utilisateur met à jour la configuration d'un outil.",
+    "tool.update_message": "a <b>modifié</b> l'outil %object%.",
+
+    "tool.delete": "Désactivation d'un outil",
+    "tool.delete_desc": "Lorsqu'un utilisateur désactive un outil.",
+    "tool.delete_message": "a <b>désactivé</b> l'outil %object%.",
+
     "workspace.create": "Création d'un espace d'activités",
     "workspace.create_desc": "Lorsqu'un utilisateur crée un nouvel espace d'activités.",
-    "workspace.create_message": "a <b>créé</b> l'espace d'activités %workspace%.",
+    "workspace.create_message": "a <b>créé</b> l'espace d'activités %object%.",
+
+    "workspace.update": "Mise à jour d'un espace d'activités",
+    "workspace.update_desc": "Lorsqu'un utilisateur met à jour un espace d'activités.",
+    "workspace.update_message": "a <b>modifié</b> l'espace d'activités %object%.",
 
     "workspace.open": "Ouverture d'un espace d'activités",
     "workspace.open_desc": "Lorsqu'un utilisateur consulte un espace d'activités de la plateforme.",

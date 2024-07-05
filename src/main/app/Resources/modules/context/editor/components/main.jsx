@@ -1,11 +1,13 @@
 import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
 import {Editor} from '#/main/app/editor/components/main'
 
 import {selectors} from '#/main/app/context/editor/store'
 import {ContextEditorTools} from '#/main/app/context/editor/components/tools'
+import {ContextEditorHistory} from '#/main/app/context/editor/components/history'
 
 const ContextEditor = (props) => {
   useEffect(() => {
@@ -16,9 +18,9 @@ const ContextEditor = (props) => {
   return (
     <Editor
       path={props.path+'/edit'}
-      title={trans(props.contextName, {}, 'context') || props.title}
+      title={get(props.formData, 'name') || trans(props.contextName, {}, 'context')}
       name={selectors.FORM_NAME}
-      onSave={(savedData) => props.refresh(props.name, savedData, props.contextType)}
+      onSave={props.refresh}
       target={['claro_context_configure', {
         context: props.contextName,
         contextId: props.contextId
@@ -49,9 +51,14 @@ ContextEditor.propTypes = {
   tools: T.arrayOf(T.shape({
 
   })).isRequired,
+  formData: T.object,
   getAvailableTools: T.func.isRequired,
   openEditor: T.func.isRequired,
   refresh: T.func.isRequired
+}
+
+ContextEditor.defaultProps = {
+  historyPage: ContextEditorHistory
 }
 
 export {

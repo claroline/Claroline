@@ -3,53 +3,47 @@
 namespace Claroline\LogBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\AppBundle\Controller\AbstractSecurityController;
+use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\LogBundle\Entity\OperationalLog;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Route("/log/operational")
  */
-class OperationalLogController extends AbstractSecurityController
+class OperationalLogController
 {
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage,
         private readonly AuthorizationCheckerInterface $authorization,
-        private readonly FinderProvider $finder
+        private readonly FinderProvider $finder,
+        private readonly ContextProvider $contextProvider
     ) {
     }
 
     /**
-     * @Route("", name="apiv2_logs_operational", methods={"GET"})
+     * @Route("/{context}/{contextId}", name="apiv2_logs_operational", methods={"GET"})
      */
-    public function listAction(Request $request): JsonResponse
+    public function listAction(Request $request, string $context, string $contextId = null): JsonResponse
     {
-        $this->canOpenAdminTool('logs');
+        try {
+            $contextHandler = $this->contextProvider->getContext($context, $contextId);
+            $contextSubject = $contextHandler->getObject($contextId);
+        } catch (\Exception $e) {
+            throw new NotFoundHttpException($e->getMessage());
+        }
 
-        return new JsonResponse(
-            $this->finder->search(OperationalLog::class, $request->query->all())
-        );
-    }
-
-    /**
-     * @Route("/current", name="apiv2_logs_operational_list_current", methods={"GET"})
-     */
-    public function listForCurrentUserAction(Request $request): JsonResponse
-    {
-        if (!$this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$this->authorization->isGranted('EDIT', $contextSubject)) {
             throw new AccessDeniedException();
         }
 
-        $user = $this->tokenStorage->getToken()->getUser();
-
         $query = $request->query->all();
         $query['hiddenFilters'] = [
-            'doer' => $user->getUuid(),
+            'contextName' => $context,
+            'contextId' => $contextSubject ? $contextSubject->getUuid() : null
         ];
 
         return new JsonResponse(
