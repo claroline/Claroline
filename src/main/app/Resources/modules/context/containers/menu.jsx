@@ -16,8 +16,7 @@ const ContextMenu = withRouter(
       opened: selectors.menuOpened(state),
       untouched: selectors.menuUntouched(state),
       notFound: selectors.notFound(state),
-      hasErrors: !isEmpty(selectors.accessErrors(state)),
-      //tools: contextSelectors.tools(state)
+      hasErrors: !isEmpty(selectors.accessErrors(state)) && !selectors.managed(state)
     }),
     (dispatch) => ({
       reload() {

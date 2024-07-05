@@ -1,3 +1,6 @@
+import get from 'lodash/get'
+import cloneDeep from 'lodash/cloneDeep'
+
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
 
 import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
@@ -5,14 +8,12 @@ import {
   CONTEXT_OPEN,
   CONTEXT_LOAD,
   CONTEXT_NOT_FOUND,
-  CONTEXT_RESTRICTIONS_DISMISS,
   CONTEXT_SET_LOADED,
   CONTEXT_MENU_CLOSE,
   CONTEXT_MENU_OPEN,
   CONTEXT_MENU_TOGGLE
 } from '#/main/app/context/store/actions'
-import get from 'lodash/get'
-import cloneDeep from 'lodash/cloneDeep'
+
 import {TOOL_LOAD} from '#/main/core/tool/store'
 
 const reducer = combineReducers({
@@ -71,17 +72,13 @@ const reducer = combineReducers({
     [CONTEXT_OPEN]: () => false,
     [CONTEXT_NOT_FOUND]: () => true
   }),
-  accessErrors: combineReducers({
-    dismissed: makeReducer(false, {
-      [CONTEXT_RESTRICTIONS_DISMISS]: () => true,
-      [CONTEXT_OPEN]: () => false
-    }),
-    details: makeReducer({}, {
-      [CONTEXT_LOAD]: (state, action) => action.contextData.accessErrors || {}
-    })
+  accessErrors: makeReducer({}, {
+    [CONTEXT_OPEN]: () => ({}),
+    [CONTEXT_LOAD]: (state, action) => action.contextData.accessErrors || {}
   }),
 
   data: makeReducer({}, {
+    [CONTEXT_OPEN]: () => ({}),
     [CONTEXT_LOAD]: (state, action) => action.contextData.data || {}
   }),
 
@@ -95,15 +92,11 @@ const reducer = combineReducers({
     [CONTEXT_LOAD]: (state, action) => action.contextData.roles || []
   }),
 
-  managed: makeReducer(false, {
-    [CONTEXT_OPEN]: () => false,
-    [CONTEXT_LOAD]: (state, action) => action.contextData.managed || false
-  }),
-
   /**
    * The list of available tools on the desktop.
    */
   tools: makeReducer([], {
+    [CONTEXT_OPEN]: () => [],
     [CONTEXT_LOAD]: (state, action) => action.contextData.tools || [],
     [TOOL_LOAD]: (state, action) => {
       const toolPos = state.findIndex(tool => tool.name === action.toolName)

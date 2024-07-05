@@ -119,7 +119,7 @@ class Crud
      *
      * @throws InvalidDataException
      */
-    public function create(mixed $classOrObject, array $data = [], array $options = []): mixed
+    public function create(string|object $classOrObject, array $data = [], array $options = []): mixed
     {
         if (is_string($classOrObject)) {
             // class name received
@@ -170,7 +170,7 @@ class Crud
      *
      * @throws InvalidDataException
      */
-    public function update(mixed $classOrObject, array $data, array $options = []): mixed
+    public function update(string|object $classOrObject, array $data, array $options = []): mixed
     {
         if (is_string($classOrObject)) {
             // class name received
@@ -211,14 +211,24 @@ class Crud
         return $object;
     }
 
-    public function createOrUpdate(string $className, array $data, array $options = []): mixed
+    public function createOrUpdate(string|object $classOrObject, array $data, array $options = []): mixed
     {
-        $object = $this->om->getObject($data, $className, $this->schema->getIdentifiers($className) ?? []);
-        if (!empty($object)) {
-            return $this->update($object, $data, $options);
+        if (is_string($classOrObject)) {
+            // class name received
+            $className = $classOrObject;
+            $object = new $className;
+        } else {
+            // object instance received
+            $className = $this->getRealClass($classOrObject);
+            $object = $classOrObject;
         }
 
-        return $this->create(new $className(), $data, $options);
+        $existingObject = $this->om->getObject($data, $className, $this->schema->getIdentifiers($className) ?? []);
+        if (!empty($existingObject)) {
+            return $this->update($existingObject, $data, $options);
+        }
+
+        return $this->create($object, $data, $options);
     }
 
     /**
@@ -227,7 +237,7 @@ class Crud
      * @param object $object  - the entity to delete
      * @param array  $options - additional delete options
      */
-    public function delete(mixed $object, array $options = []): void
+    public function delete(object $object, array $options = []): void
     {
         if (!in_array(static::NO_PERMISSIONS, $options)) {
             $this->checkPermission('DELETE', $object, [], true);
@@ -278,7 +288,7 @@ class Crud
      *
      * @return object
      */
-    public function copy(mixed $object, array $options = [], array $extra = []): mixed
+    public function copy(object $object, array $options = [], array $extra = []): mixed
     {
         if (!in_array(static::NO_PERMISSIONS, $options)) {
             $this->checkPermission('COPY', $object, [], true);
@@ -324,10 +334,11 @@ class Crud
      * @param array  $elements - the collection to patch
      * @param array  $options  - additional patch options
      *
-     * @todo only flush once (do not flush for each collection element)
-     * @todo only dispatch lifecycle events once with the full collection in param
+     * @todo
+     *  - only flush once (do not flush for each collection element)
+     *  - only dispatch lifecycle events once with the full collection in param
      */
-    public function patch(mixed $object, string $property, string $action, array $elements, array $options = []): mixed
+    public function patch(object $object, string $property, string $action, array $elements, array $options = []): mixed
     {
         $className = $this->getRealClass($object);
         $methodName = $action.ucfirst(strtolower($property));
@@ -380,7 +391,7 @@ class Crud
      *
      * @deprecated should use standard update instead
      */
-    public function replace(mixed $object, string $property, mixed $data, array $options = []): mixed
+    public function replace(object $object, string $property, mixed $data, array $options = []): mixed
     {
         $className = $this->getRealClass($object);
         $methodName = 'set'.ucfirst($property);

@@ -16,6 +16,7 @@ const CreationModal = (props) => {
     case 'type':
       StepComponent = (
         <CreationType
+          startCreation={props.startCreation}
           changeStep={setCurrentStep}
         />
       )
@@ -29,23 +30,25 @@ const CreationModal = (props) => {
         />
       )
       break
+
     case 'info':
       StepComponent = (
         <CreationInfo
           create={props.create}
           changeStep={setCurrentStep}
+          fadeModal={props.fadeModal}
         />
       )
+      break
   }
 
   return (
     <Modal
-      {...omit(props)}
-      /*icon="fa fa-fw fa-plus"*/
+      {...omit(props, 'create', 'startCreation')}
       title={trans('new_workspace', {}, 'workspace')}
       subtitle={trans('L\'espace d\'activités est au coeur de votre formation.')}
       centered={true}
-      /*size="sm"*/
+      onExited={props.reset}
     >
       {StepComponent}
     </Modal>
@@ -53,7 +56,9 @@ const CreationModal = (props) => {
 }
 
 CreationModal.propTypes = {
-  create: T.func.isRequired
+  startCreation: T.func.isRequired,
+  create: T.func.isRequired,
+  reset: T.func.isRequired
 }
 
 export {

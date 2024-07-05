@@ -99,7 +99,7 @@ class PlatformController
      *
      * @Route("/locale/{locale}", name="claroline_locale_change")
      */
-    public function changeAction(Request $request, string $locale): RedirectResponse
+    public function changeLocaleAction(Request $request, string $locale): RedirectResponse
     {
         $user = $this->tokenStorage->getToken()->getUser();
         if ($user instanceof User) {

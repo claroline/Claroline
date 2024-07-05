@@ -20,6 +20,8 @@ interface ToolInterface extends ComponentInterface, ContextualInterface
 
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array;
 
+    public function create(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): void;
+
     public function configure(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): ?array;
 
     public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array;
