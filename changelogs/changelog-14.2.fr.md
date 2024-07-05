@@ -1,0 +1,6 @@
+- Prise de présence depuis l'accueil public
+- Prise en compte de motif d'absence sur les présences
+- La validation des listes de présences par un formateur
+- La gestion complète d'une formation est possible depuis l'E.A.
+- Suivi pédagogique : génération d'attestation en base de données
+- Amélioration génération des codes uniques
