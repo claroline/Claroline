@@ -35,12 +35,7 @@ const TemplateForm = (props) =>
             type: 'string',
             label: trans('name'),
             required: true,
-            disabled: (template) => template.system,
-            options: {
-              unique: {
-                check: ['apiv2_template_get', {field: 'name'}]
-              }
-            }
+            disabled: (template) => template.system
           }, {
             name: 'defineAsDefault',
             type: 'boolean',
