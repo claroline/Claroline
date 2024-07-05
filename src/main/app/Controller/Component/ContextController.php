@@ -21,6 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -62,12 +63,8 @@ class ContextController
 
         $contextRoles = $contextHandler->getRoles($this->tokenStorage->getToken(), $contextObject);
         $isImpersonated = $contextHandler->isImpersonated($this->tokenStorage->getToken(), $contextObject);
-        $isManager = $contextHandler->isManager($this->tokenStorage->getToken(), $contextObject);
-        $accessErrors = $contextHandler->getAccessErrors($this->tokenStorage->getToken(), $contextObject);
 
-        // $this->authorization->isGranted('OPEN', $contextObject);
-
-        if (empty($accessErrors) || $isManager) {
+        if ($this->authorization->isGranted('OPEN', $contextObject)) {
             $openEvent = new OpenContextEvent($context, $contextObject);
             $this->eventDispatcher->dispatch($openEvent, ContextEvents::OPEN);
 
@@ -76,12 +73,12 @@ class ContextController
             return new JsonResponse(array_merge($openEvent->getResponse() ?? [], [
                 'data' => $contextObject ? $this->serializer->serialize($contextObject) : null, // maybe only expose minimal ?
 
-                'managed' => $isManager,
+                //'managed' => $isManager,
                 'impersonated' => $isImpersonated,
                 'roles' => array_values(array_map(function (Role $role) {
                     return $this->serializer->serialize($role, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $contextRoles)),
-                'accessErrors' => $accessErrors,
+                //'accessErrors' => $accessErrors,
 
                 // get all enabled tools for the context, even those inaccessible to the current user
                 // this will allow the ui to know if a user try to access a closed tool or a non-existent one.
@@ -96,10 +93,10 @@ class ContextController
         }
 
         // return the details of access errors to display it to users
+        $accessErrors = $contextHandler->getAccessErrors($this->tokenStorage->getToken(), $contextObject);
+
         return new JsonResponse([
             'data' => $contextObject ? $this->serializer->serialize($contextObject) : null, // maybe only expose minimal ?
-
-            'managed' => false,
             'impersonated' => $isImpersonated,
             'roles' => array_map(function (Role $role) {
                 return $this->serializer->serialize($role, [SerializerInterface::SERIALIZE_MINIMAL]);
@@ -125,23 +122,28 @@ class ContextController
         $contextObject = $contextHandler->getObject($contextId);
         $contextTools = $contextHandler->getTools($contextObject);
 
-        $this->authorization->isGranted('ADMINISTRATE', $contextObject);
+        if (!$this->authorization->isGranted('ADMINISTRATE', $contextObject)) {
+            throw new AccessDeniedException();
+        }
 
         $data = $this->decodeRequest($request);
 
         $this->om->startFlushSuite();
+
+        // update context configuration
         if (!empty($data['data']) && $contextObject) {
             $this->crud->update($contextObject, $data['data'], [Crud::NO_PERMISSIONS, Options::PERSIST_TAG]);
         }
 
+        // update tools configuration if any
         if (!empty($data['tools'])) {
             $updatedTools = [];
             foreach ($data['tools'] as $toolData) {
-                /** @var OrderedTool $updatedTool */
-                $updatedTool = $this->crud->createOrUpdate(OrderedTool::class, $toolData, [Crud::NO_PERMISSIONS]);
+                $updatedTool = new OrderedTool();
                 $updatedTool->setContextName($context);
                 $updatedTool->setContextId($contextObject ? $contextObject->getContextIdentifier() : null);
 
+                $updatedTool = $this->crud->createOrUpdate($updatedTool, $toolData, [Crud::NO_PERMISSIONS]);
                 $updatedTools[$updatedTool->getName()] = $updatedTool;
             }
 
@@ -156,8 +158,9 @@ class ContextController
 
         $this->om->endFlushSuite();
 
+        // reopen context to get fresh data
         return new JsonResponse(array_merge([], [
-            'data' => $contextObject ? $this->serializer->serialize($contextObject) : null, // maybe only expose minimal ?
+            'data' => $contextObject ? $this->serializer->serialize($contextObject) : null,
             'tools' => array_map(function (OrderedTool $orderedTool) use ($context, $contextObject) {
                 $serializedTool = $this->serializer->serialize($orderedTool, [SerializerInterface::SERIALIZE_MINIMAL]);
 
@@ -178,7 +181,9 @@ class ContextController
         $contextHandler = $this->contextProvider->getContext($context);
         $contextSubject = $contextHandler->getObject($contextId);
 
-        $this->authorization->isGranted('ADMINISTRATE', $contextSubject);
+        if (!$this->authorization->isGranted('ADMINISTRATE', $contextSubject)) {
+            throw new AccessDeniedException();
+        }
 
         $tools = $contextHandler->getAvailableTools($contextSubject);
 

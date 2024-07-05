@@ -122,7 +122,7 @@ const WorkspaceMenu = (props) => {
         />
       }
 
-      {!isEmpty(props.workspace) && props.impersonated &&
+      {false && !isEmpty(props.workspace) && props.impersonated &&
         <WorkspaceImpersonation
           roles={props.roles}
           workspace={props.workspace}

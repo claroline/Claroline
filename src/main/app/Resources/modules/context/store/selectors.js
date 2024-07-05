@@ -2,6 +2,8 @@ import {createSelector} from 'reselect'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 
+import {hasPermission} from '#/main/app/security'
+
 const STORE_NAME = 'context'
 const EDITOR_NAME = 'contextEditor'
 
@@ -35,6 +37,11 @@ const path = createSelector(
   (type, id) => id ? `/${type}/${id}` : `/${type}`
 )
 
+const data = createSelector(
+  [store],
+  (store) => store.data
+)
+
 /**
  * Is the context fully loaded ?
  *
@@ -62,7 +69,7 @@ const notFound = createSelector(
  */
 const accessErrors = createSelector(
   [store],
-  (store) => !store.accessErrors.dismissed && !isEmpty(store.accessErrors.details) ? store.accessErrors.details : {}
+  (store) => store.accessErrors
 )
 
 /**
@@ -71,8 +78,8 @@ const accessErrors = createSelector(
  * @return bool
  */
 const managed = createSelector(
-  [store],
-  (store) => store.managed
+  [data],
+  (data) => hasPermission('administrate', data)
 )
 
 /**
@@ -92,11 +99,6 @@ const impersonated = createSelector(
 const roles = createSelector(
   [store],
   (store) => store.roles
-)
-
-const data = createSelector(
-  [store],
-  (store) => store.data
 )
 
 const tools = createSelector(

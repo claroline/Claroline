@@ -17,12 +17,12 @@ const ContextPage = (props) => {
   return (
     <PageFull
       className={classes('context-page', `${contextType}-page`, props.className)}
-      breadcrumb={[
+      breadcrumb={(!props.root ? [
         {
           label: get(contextData, 'name') || trans(contextType, {}, 'context'),
           target: contextPath
         }
-      ].concat(props.breadcrumb || [])}
+      ] : []).concat(props.breadcrumb || [])}
       poster={props.poster || get(contextData, 'poster')}
       meta={{
         title: get(contextData, 'name') || trans(contextType, {}, 'context'),
@@ -30,7 +30,7 @@ const ContextPage = (props) => {
       }}
       title={get(contextData, 'name') || trans(contextType, {}, 'context')}
 
-      {...omit(props, 'className', 'breadcrumb', 'poster')}
+      {...omit(props, 'className', 'breadcrumb', 'poster', 'root')}
     >
       {props.children}
     </PageFull>
