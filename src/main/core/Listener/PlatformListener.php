@@ -169,9 +169,9 @@ class PlatformListener
         $locale = $this->localeManager->getLocale($user);
         $content = $this->versionManager->getChangelogs($locale).'<br/><br/>';
         $content .= '<em>'.$this->translator->trans('platform_changelog_display', [
-                '%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles')),
-                '%end_date%' => $endDate->format('d/m/Y'),
-            ], 'platform').'</em>';
+            '%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles')),
+            '%end_date%' => $endDate->format('d/m/Y'),
+        ], 'platform').'</em>';
 
         return [
             [
