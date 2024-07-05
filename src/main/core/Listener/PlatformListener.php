@@ -113,18 +113,6 @@ class PlatformListener
             throw new HttpException(503, 'Platform is not available (Platform is disabled).');
         }
 
-        $dates = $this->config->getParameter('restrictions.dates');
-        if (!empty($dates)) {
-            $now = new \DateTime();
-            if (!empty($dates[0]) && DateNormalizer::normalize($now) < $dates[0]) {
-                throw new HttpException(503, 'Platform is not available (Platform start date not reached).');
-            }
-
-            if (!empty($dates[1]) && DateNormalizer::normalize($now) > $dates[1]) {
-                throw new HttpException(503, 'Platform is not available (Platform end date reached).');
-            }
-        }
-
         // checks platform maintenance
         if (MaintenanceHandler::isMaintenanceEnabled() || $this->config->getParameter('maintenance.enable')) {
             // only disable for non admin
