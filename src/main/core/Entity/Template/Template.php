@@ -19,12 +19,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(
- *     name="claro_template",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(name="template_unique_name", columns={"claro_template_type", "entity_name"})
- *     }
- * )
+ *
+ * @ORM\Table(name="claro_template")
  */
 class Template
 {
@@ -34,6 +30,7 @@ class Template
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\TemplateType")
+     *
      * @ORM\JoinColumn(name="claro_template_type", nullable=false, onDelete="CASCADE")
      *
      * @var TemplateType
