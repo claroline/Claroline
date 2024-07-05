@@ -9,9 +9,9 @@ import {ContentLoader} from '#/main/app/content/components/loader'
 import {getTab} from '#/plugin/home/home'
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
 import {HomePage} from '#/plugin/home/tools/home/containers/page'
-import {PlayerRestrictions} from '#/plugin/home/tools/home/player/components/restrictions'
+import {HomeRestrictions} from '#/plugin/home/tools/home/components/restrictions'
 
-class PlayerTab extends Component {
+class HomeTab extends Component {
   constructor(props) {
     super(props)
 
@@ -49,10 +49,15 @@ class PlayerTab extends Component {
   render() {
     if (!this.props.loaded) {
       return (
-        <ContentLoader
-          size="lg"
-          description={trans('loading', {}, 'home')}
-        />
+        <HomePage
+          currentTab={this.props.currentTab}
+          title={this.props.currentTabTitle}
+        >
+          <ContentLoader
+            size="lg"
+            description={trans('loading', {}, 'home')}
+          />
+        </HomePage>
       )
     }
 
@@ -62,7 +67,7 @@ class PlayerTab extends Component {
           currentTab={this.props.currentTab}
           title={this.props.currentTabTitle}
         >
-          <PlayerRestrictions
+          <HomeRestrictions
             errors={this.props.accessErrors}
             dismiss={this.props.dismissRestrictions}
             managed={this.props.managed}
@@ -76,7 +81,6 @@ class PlayerTab extends Component {
       return createElement(this.state.component, {
         path: `${this.props.path}/${this.props.currentTab.slug}`,
         currentContext: this.props.currentContext,
-        //tabs: this.props.tabs,
         currentTab: this.props.currentTab,
         title: this.props.currentTabTitle
       })
@@ -86,13 +90,10 @@ class PlayerTab extends Component {
   }
 }
 
-PlayerTab.propTypes = {
+HomeTab.propTypes = {
   path: T.string.isRequired,
   loaded: T.bool.isRequired,
   currentContext: T.object.isRequired,
-  tabs: T.arrayOf(T.shape(
-    TabTypes.propTypes
-  )),
   currentTabTitle: T.string.isRequired,
   currentTab: T.shape(TabTypes.propTypes),
   managed: T.bool.isRequired,
@@ -103,5 +104,5 @@ PlayerTab.propTypes = {
 }
 
 export {
-  PlayerTab
+  HomeTab
 }

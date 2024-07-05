@@ -9,7 +9,7 @@ import {PasswordInput} from '#/main/app/data/types/password/components/input'
 import {FormGroup} from '#/main/app/content/form/components/group'
 import {ContentRestriction} from '#/main/app/content/components/restriction'
 
-class PlayerRestrictions extends Component {
+class HomeRestrictions extends Component {
   constructor(props) {
     super(props)
 
@@ -121,7 +121,7 @@ class PlayerRestrictions extends Component {
   }
 }
 
-PlayerRestrictions.propTypes = {
+HomeRestrictions.propTypes = {
   managed: T.bool,
   errors: T.shape({
     // optional restrictions (if we get nothing, the restriction is disabled)
@@ -136,5 +136,5 @@ PlayerRestrictions.propTypes = {
 }
 
 export {
-  PlayerRestrictions
+  HomeRestrictions
 }
