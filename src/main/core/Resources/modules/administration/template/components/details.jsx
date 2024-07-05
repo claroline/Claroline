@@ -61,6 +61,11 @@ const TemplateDetails = (props) =>
               ]}
               routes={[
                 {
+                  path: '/form',
+                  component: TemplateForm,
+                  onEnter: () => props.openForm(props.templateType, props.defaultLocale),
+                  onLeave: () => props.resetForm(props.templateType, props.defaultLocale)
+                }, {
                   path: '/:id',
                   component: TemplateForm,
                   onEnter: (params) => props.openForm(props.templateType, props.defaultLocale, params.id || null),
