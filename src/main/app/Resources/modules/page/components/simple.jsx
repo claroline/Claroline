@@ -11,7 +11,7 @@ import {PageSimple as PageSimpleTypes} from '#/main/app/page/prop-types'
 
 const PageWrapper = props => createElement(!props.embedded ? 'main':'article', {
   id: props.id,
-  className: classes('page', props.className)
+  className: classes('app-page', props.className)
 }, props.children)
 
 PageWrapper.propTypes = {
