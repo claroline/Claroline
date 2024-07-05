@@ -1,12 +1,15 @@
 import {makeActionCreator} from '#/main/app/store/actions'
 import {API_REQUEST} from '#/main/app/api'
 import {actions as formActions} from '#/main/app/content/form/store/actions'
+import {actions as contextActions} from '#/main/app/context/store/actions'
 
 import {selectors} from '#/main/app/context/editor/store/selectors'
 
 export const CONTEXT_LOAD_AVAILABLE_TOOLS = 'CONTEXT_LOAD_AVAILABLE_TOOLS'
 
 export const actions = {}
+
+actions.refresh = (contextData) => contextActions.load(contextData)
 
 actions.update = (value, propPath = null) => {
   if (propPath) {

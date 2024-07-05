@@ -24,9 +24,8 @@ services:
             - '@Claroline\AppBundle\API\FinderProvider'
 
     Claroline\LogBundle\Controller\OperationalLogController:
-        parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
         arguments:
-            - '@security.token_storage'
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\FinderProvider'
+            - '@Claroline\AppBundle\Component\Context\ContextProvider'

@@ -64,8 +64,16 @@ class LogManager
     /**
      * Create a new operational log.
      */
-    public function logOperational(string $action, string $message, User $doer = null, string $objectClass, string $objectId, ?array $changeset = []): void
-    {
+    public function logOperational(
+        string $action,
+        string $message,
+        User $doer = null,
+        string $objectClass,
+        string $objectId,
+        string $contextName,
+        ?string $contextId = null,
+        ?array $changeset = []
+    ): void {
         $this->operationalLogs[] = new CreateOperationalLog(
             new \DateTime(),
             $action,
@@ -73,6 +81,8 @@ class LogManager
             $doer?->getId(),
             $objectClass,
             $objectId,
+            $contextName,
+            $contextId,
             $changeset
         );
     }

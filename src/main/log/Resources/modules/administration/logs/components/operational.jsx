@@ -2,16 +2,15 @@ import React from 'react'
 
 import {trans} from '#/main/app/intl/translation'
 import {ToolPage} from '#/main/core/tool'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 
 import {selectors} from '#/main/log/administration/logs/store/selectors'
 import {LogOperationalList} from '#/main/log/components/operational-list'
+import {PageListSection} from '#/main/app/page/components/list-section'
 
 const LogsOperational = () =>
   <ToolPage title={trans('operational', {}, 'log')}>
-    <ContentSizing size="full">
+    <PageListSection>
       <LogOperationalList
-        flush={true}
         name={selectors.OPERATIONAL_NAME}
         url={['apiv2_logs_operational']}
         customDefinition={[
@@ -28,7 +27,7 @@ const LogsOperational = () =>
           }
         ]}
       />
-    </ContentSizing>
+    </PageListSection>
   </ToolPage>
 
 export {
