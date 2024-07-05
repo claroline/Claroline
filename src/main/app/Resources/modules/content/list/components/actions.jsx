@@ -1,6 +1,5 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
@@ -90,35 +89,6 @@ ListPrimaryAction.propTypes = {
 }
 
 /**
- * Actions available for a single data item.
- */
-const ListActions = props =>
-  <Toolbar
-    id={`${props.id}-btn`}
-    className={classes('data-actions', props.className)}
-    buttonName="btn btn-text-body"
-    tooltip="left"
-    toolbar="more"
-    actions={props.actions}
-    scope="object"
-  />
-
-ListActions.propTypes = {
-  id: T.string.isRequired,
-  className: T.string,
-  actions: T.oneOfType([
-    // a regular array of actions
-    T.arrayOf(T.shape(
-      ActionTypes.propTypes
-    )),
-    // a promise that will resolve a list of actions
-    T.shape(
-      PromisedActionTypes.propTypes
-    )
-  ]).isRequired
-}
-
-/**
  * Bulk actions available for selected data items.
  */
 const ListBulkActions = props =>
@@ -129,17 +99,15 @@ const ListBulkActions = props =>
     </div>
 
     {props.actions &&
-      <div className="list-selected-actions">
-        <Toolbar
-          buttonName="btn btn-link"
-          /*tooltip="left"*/
-          actions={isArray(props.actions) ?
-            props.actions.map(action => ({...action, icon: null})) :
-            props.actions.then(actions => actions.map(action => ({...action, icon: null})))
-          }
-          scope="collection"
-        />
-      </div>
+      <Toolbar
+        className="list-selected-actions"
+        buttonName="btn btn-link"
+        actions={isArray(props.actions) ?
+          props.actions.map(action => ({...action, icon: null})) :
+          props.actions.then(actions => actions.map(action => ({...action, icon: null})))
+        }
+        scope="collection"
+      />
     }
   </div>
 
@@ -158,7 +126,6 @@ ListBulkActions.propTypes = {
 }
 
 export {
-  ListActions,
   ListBulkActions,
   ListPrimaryAction
 }

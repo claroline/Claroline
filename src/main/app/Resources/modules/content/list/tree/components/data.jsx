@@ -228,7 +228,7 @@ const TreeData = props => {
   const flatTree = flattenTree(props.data)
 
   return (
-    <div className="data-tree">
+    <div className="data-tree mb-auto">
       {(props.selection || props.sorting) &&
         <div className="data-tree-header">
           <Button

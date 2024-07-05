@@ -20,7 +20,7 @@ const TableData = props => {
   }
 
   return (
-    <Table className="data-table mb-0" condensed={'sm' === props.size}>
+    <Table className="data-table mb-auto" condensed={'sm' === props.size}>
       <TableHeader
         count={props.count}
         data={props.data}

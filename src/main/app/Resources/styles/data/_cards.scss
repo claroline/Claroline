@@ -76,6 +76,7 @@
     display: flex;
     position: relative; // constrain actions toolbar
     flex: 1;
+    //overflow: hidden;
 
     color: $data-card-color;
     background-color: var(--#{$prefix}data-card-bg);
@@ -96,13 +97,11 @@
 .data-card-clickable {
     transition-property: box-shadow, transform;
     transition-duration: .3s;
-    //box-shadow: $box-shadow-sm;
 
     &:hover {
         z-index: 2;
         transform: translateY(-2px);
         box-shadow: 0 0 0 1px rgba(0,0,0,.075), $box-shadow;
-        //box-shadow: 0 18px 35px rgba(50,50,93,.1),0 8px 15px rgba(0,0,0,.07);
     }
 }
 

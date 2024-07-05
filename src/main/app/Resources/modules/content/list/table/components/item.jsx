@@ -10,8 +10,9 @@ import {Await} from '#/main/app/components/await'
 import {getType} from '#/main/app/data/types'
 import {TableRow, TableCell} from '#/main/app/content/components/table'
 import {DataListProperty} from '#/main/app/content/list/prop-types'
-import {ListActions, ListPrimaryAction} from '#/main/app/content/list/components/actions'
+import {ListPrimaryAction} from '#/main/app/content/list/components/actions'
 import {getActions, getPrimaryAction} from '#/main/app/content/list/utils'
+import {Toolbar} from '#/main/app/action'
 
 const DataCellContent = props => {
   let cellData
@@ -103,6 +104,11 @@ const TableItem = props => {
     columnAction = props.columns[0]
   }
 
+  let actions
+  if (!props.loading && props.actions) {
+    actions = getActions([props.row], props.actions)
+  }
+
   return (
     <TableRow className={classes(props.selected && 'table-active', props.loading && 'placeholder-glow')}>
       {props.onSelect &&
@@ -142,15 +148,18 @@ const TableItem = props => {
       )}
 
       <TableCell align="right" className="actions-cell">
-        {!props.loading && props.actions &&
-          <ListActions
-            className="text-end"
+        {!props.loading && actions &&
+          <Toolbar
             id={`data-table-item-${props.row.id}-actions`}
-            actions={getActions([props.row], props.actions)}
+            buttonName="btn btn-text-body"
+            tooltip="left"
+            toolbar="more"
+            actions={actions}
+            scope="object"
           />
         }
 
-        {props.loading && props.actions &&
+        {props.loading && actions &&
           <div className="placeholder bg-primary rounded-1">
             &nbsp;
           </div>

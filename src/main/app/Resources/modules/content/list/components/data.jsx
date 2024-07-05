@@ -5,7 +5,6 @@ import classes from 'classnames'
 import isEqual from 'lodash/isEqual'
 
 import {ContentLoader} from '#/main/app/content/components/loader'
-import {ContentTitle} from '#/main/app/content/components/title'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {constants as listConst} from '#/main/app/content/list/constants'
@@ -130,15 +129,7 @@ class ListData extends Component {
     }
 
     return (
-      <div className={classes('data-list', this.props.className, {'data-list-flush': this.props.flush})}>
-        {this.props.title &&
-          <ContentTitle
-            level={this.props.level}
-            displayLevel={this.props.displayLevel}
-            title={this.props.title}
-          />
-        }
-
+      <div className={classes('data-list', this.props.className, {'data-list-flush': this.props.flush})} role="presentation">
         {(displayTool || filtersTool || this.props.customActions) &&
           <ListHeader
             id={this.props.id}
@@ -192,15 +183,9 @@ class ListData extends Component {
 
 ListData.propTypes = {
   id: T.string.isRequired,
-  level: T.number,
-  displayLevel: T.number,
   className: T.string,
   flush: T.bool,
 
-  /**
-   * @deprecated
-   */
-  title: T.string,
   loading: T.bool,
 
   /**
@@ -302,7 +287,6 @@ ListData.propTypes = {
 }
 
 ListData.defaultProps = {
-  level: 2,
   loading: false,
   invalidated: false,
   count: false,
