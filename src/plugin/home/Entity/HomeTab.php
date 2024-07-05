@@ -24,6 +24,7 @@ use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -81,24 +82,18 @@ class HomeTab
     private ?HomeTab $parent = null;
 
     /**
-     * Children tabs.
-     *
-     * @var ArrayCollection|HomeTab[]
-     *
      * @ORM\OneToMany(targetEntity="Claroline\HomeBundle\Entity\HomeTab", mappedBy="parent", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"order" = "ASC"})
      */
-    private $children;
+    private Collection $children;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
      *
      * @ORM\JoinTable(name="claro_home_tab_roles")
-     *
-     * @var ArrayCollection|Role[]
      */
-    private $roles;
+    private Collection $roles;
 
     public function __construct()
     {

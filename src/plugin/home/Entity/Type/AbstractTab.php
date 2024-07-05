@@ -13,19 +13,17 @@ abstract class AbstractTab
     /**
      * @ORM\OneToOne(targetEntity="Claroline\HomeBundle\Entity\HomeTab", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="tab_id", referencedColumnName="id", onDelete="CASCADE")
-     *
-     * @var HomeTab
      */
-    private $tab;
+    private ?HomeTab $tab = null;
 
     abstract public static function getType(): string;
 
-    public function getTab()
+    public function getTab(): HomeTab
     {
         return $this->tab;
     }
 
-    public function setTab(HomeTab $tab)
+    public function setTab(HomeTab $tab): void
     {
         $this->tab = $tab;
     }

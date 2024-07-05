@@ -5,6 +5,7 @@ namespace Claroline\HomeBundle\Entity\Type;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\CoreBundle\Entity\Widget\WidgetContainer;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,10 +22,8 @@ class WidgetsTab extends AbstractTab
      *      joinColumns={@ORM\JoinColumn(name="tab_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="container_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}
      * )
-     *
-     * @var WidgetContainer[]|ArrayCollection
      */
-    private $widgetContainers;
+    private Collection $widgetContainers;
 
     public function __construct()
     {
@@ -36,7 +35,7 @@ class WidgetsTab extends AbstractTab
         return 'widgets';
     }
 
-    public function getWidgetContainers()
+    public function getWidgetContainers(): Collection
     {
         return $this->widgetContainers;
     }
@@ -55,14 +54,14 @@ class WidgetsTab extends AbstractTab
         return $found;
     }
 
-    public function addWidgetContainer(WidgetContainer $widgetContainer)
+    public function addWidgetContainer(WidgetContainer $widgetContainer): void
     {
         if (!$this->widgetContainers->contains($widgetContainer)) {
             $this->widgetContainers->add($widgetContainer);
         }
     }
 
-    public function removeWidgetContainer(WidgetContainer $widgetContainer)
+    public function removeWidgetContainer(WidgetContainer $widgetContainer): void
     {
         if ($this->widgetContainers->contains($widgetContainer)) {
             $this->widgetContainers->removeElement($widgetContainer);
