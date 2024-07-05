@@ -89,5 +89,6 @@
   "show-menu": "Open menu",
   "hide-menu": "Close menu",
   "initialize": "Initialize",
-  "purge": "Purger"
+  "purge": "Purger",
+  "hide": "Hide"
 }

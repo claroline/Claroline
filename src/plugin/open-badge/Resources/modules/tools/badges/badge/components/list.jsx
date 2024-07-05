@@ -7,6 +7,7 @@ import {ToolPage} from '#/main/core/tool'
 
 import {BadgeList as BaseBadgeList}  from '#/plugin/open-badge/badge/components/list'
 import {selectors} from '#/plugin/open-badge/tools/badges/store'
+import {PageListSection} from '#/main/app/page'
 
 const BadgeList = props =>
   <ToolPage
@@ -24,9 +25,8 @@ const BadgeList = props =>
       }
     ]}
   >
-    {/*<PageSection size="full">*/}
+    <PageListSection>
       <BaseBadgeList
-        /*flush={true}*/
         path={props.path}
         name={selectors.LIST_NAME}
         url={'workspace' === props.contextType ?
@@ -43,7 +43,7 @@ const BadgeList = props =>
           }
         ] : []}
       />
-    {/*</PageSection>*/}
+    </PageListSection>
   </ToolPage>
 
 BadgeList.propTypes = {

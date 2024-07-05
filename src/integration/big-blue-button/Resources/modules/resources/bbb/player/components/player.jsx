@@ -56,7 +56,7 @@ class Player extends Component {
     return (
       <ResourcePage>
         {this.props.bbb.newTab && this.props.bbb.welcomeMessage &&
-          <div className="card mb-3" style={{marginTop: 20}}>
+          <div className="card my-3">
             <ContentHtml className="card-body">
               {this.props.bbb.welcomeMessage}
             </ContentHtml>

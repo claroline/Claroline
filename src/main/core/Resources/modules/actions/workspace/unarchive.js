@@ -32,6 +32,6 @@ export default (workspaces, refresher) => {
     },
     group: trans('management'),
     scope: ['object', 'collection'],
-    primary: true
+    dangerous: true
   }
 }

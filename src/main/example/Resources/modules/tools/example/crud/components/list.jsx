@@ -2,13 +2,13 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool'
 import {ListData} from '#/main/app/content/list/containers/data'
 
 import {CrudCard} from '#/main/example/tools/example/crud/components/card'
 import {selectors} from '#/main/example/tools/example/crud/store/selectors'
+import {PageListSection} from '#/main/app/page/components/list-section'
 
 const CrudList = (props) =>
   <ToolPage
@@ -30,9 +30,8 @@ const CrudList = (props) =>
       }
     ]}
   >
-    <ContentSizing size="full">
+    <PageListSection>
       <ListData
-        flush={true}
         name={selectors.LIST_NAME}
         fetch={{
           url: ['apiv2_example_list'],
@@ -119,7 +118,7 @@ const CrudList = (props) =>
 
         card={CrudCard}
       />
-    </ContentSizing>
+    </PageListSection>
   </ToolPage>
 
 CrudList.propTypes = {

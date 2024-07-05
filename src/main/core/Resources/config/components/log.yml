@@ -20,11 +20,17 @@ services:
     Claroline\CoreBundle\Component\Log\Operational\LogResource:
         parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
         tags: [ 'claroline.component.log' ]
+        arguments:
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
 
     Claroline\CoreBundle\Component\Log\Operational\LogWorkspace:
         parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
         tags: [ 'claroline.component.log' ]
+        arguments:
+            - '@Claroline\CoreBundle\Library\RoutingHelper'
 
     Claroline\CoreBundle\Component\Log\Operational\LogTool:
         parent: Claroline\LogBundle\Component\Log\AbstractOperationalLog
         tags: [ 'claroline.component.log' ]
+        arguments:
+            - '@Claroline\CoreBundle\Library\RoutingHelper'

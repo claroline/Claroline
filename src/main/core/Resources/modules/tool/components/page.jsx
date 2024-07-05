@@ -45,7 +45,7 @@ const ToolPage = props => {
       }}
 
       styles={[].concat(toolDef.styles, props.styles || [])}
-      {...omit(props, 'className', 'breadcrumb', 'poster', 'styles')}
+      {...omit(props, 'className', 'breadcrumb', 'poster', 'styles', 'root')}
     >
       {props.children}
     </ContextPage>

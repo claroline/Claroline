@@ -24,12 +24,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ConnectionMessageController extends AbstractCrudController
 {
-    /** @var ConnectionMessageManager */
-    private $manager;
-
-    public function __construct(ConnectionMessageManager $manager)
-    {
-        $this->manager = $manager;
+    public function __construct(
+        private readonly ConnectionMessageManager $manager
+    ) {
     }
 
     public function getName(): string

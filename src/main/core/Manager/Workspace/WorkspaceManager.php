@@ -215,9 +215,8 @@ class WorkspaceManager implements LoggerAwareInterface
 
     public function archive(Workspace $workspace): Workspace
     {
-        // rename with [archive] and ids
-        $workspace->setName('[archive]'.$workspace->getName());
-        $workspace->setCode('[archive]'.$workspace->getCode().uniqid());
+        //$workspace->setName('[archive]'.$workspace->getName());
+        //$workspace->setCode('[archive]'.$workspace->getCode().uniqid());
         $workspace->setArchived(true);
 
         $this->om->persist($workspace);

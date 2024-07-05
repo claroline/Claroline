@@ -11,8 +11,8 @@ import {getPlatformRoles, getWorkspaceRoles} from '#/main/community/utils'
 import {GroupList as BaseGroupList} from '#/main/community/group/components/list'
 import {selectors} from '#/main/community/tools/community/group/store/selectors'
 import {GroupCard} from '#/main/community/group/components/card'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 import {MODAL_REGISTER} from '#/main/community/modals/register'
+import {PageListSection} from '#/main/app/page/components/list-section'
 
 const GroupList = props =>
   <ToolPage
@@ -46,9 +46,8 @@ const GroupList = props =>
       }
     ]}
   >
-    <ContentSizing size="full">
+    <PageListSection>
       <BaseGroupList
-        flush={true}
         path={props.path}
         name={selectors.LIST_NAME}
         url={!isEmpty(props.contextData) ?
@@ -102,7 +101,7 @@ const GroupList = props =>
           }
         ]}
       />
-    </ContentSizing>
+    </PageListSection>
   </ToolPage>
 
 GroupList.propTypes = {

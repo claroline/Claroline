@@ -17,17 +17,10 @@ class PlannedObjectController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var RequestStack */
-    private $requestStack;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        RequestStack $requestStack
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly RequestStack $requestStack
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->requestStack = $requestStack;
     }
 
     public function getName(): string

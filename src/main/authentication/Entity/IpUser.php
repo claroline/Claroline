@@ -21,34 +21,28 @@ class IpUser
 
     /**
      * @ORM\Column(type="string", nullable=false, unique=true)
-     *
-     * @var string
      */
-    private $ip;
+    private ?string $ip = null;
 
     /**
      * If true, the $ip field contains to ips separated by a , to define the range.
      *
      * @ORM\Column(name="is_range", type="boolean")
-     *
-     * @var bool
      */
-    private $range = false;
+    private bool $range = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     *
-     * @var User
      */
-    private $user;
+    private ?User $user = null;
 
     public function getIp(): ?string
     {
         return $this->ip;
     }
 
-    public function setIp(string $ip)
+    public function setIp(string $ip): void
     {
         $this->ip = $ip;
     }
@@ -58,7 +52,7 @@ class IpUser
         return $this->range;
     }
 
-    public function setRange(bool $range)
+    public function setRange(bool $range): void
     {
         $this->range = $range;
     }
@@ -68,12 +62,12 @@ class IpUser
         return $this->user;
     }
 
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
-    public function inRange(string $ip)
+    public function inRange(string $ip): bool
     {
         if ($this->range) {
             $range = explode(',', $this->ip);

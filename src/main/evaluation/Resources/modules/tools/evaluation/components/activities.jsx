@@ -7,13 +7,27 @@ import {Alert} from '#/main/app/components/alert'
 import {ResourceList} from '#/main/core/resource/components/list'
 import {selectors} from '#/main/evaluation/tools/evaluation/store'
 import {constants as listConst} from '#/main/app/content/list/constants'
-import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {MODAL_RESOURCES} from '#/main/core/modals/resources'
 
 const EvaluationActivities = (props) =>
   <ToolPage
     title={trans('activities')}
+    primaryAction="add-resource"
+    actions={[
+      {
+        name: 'add-resource',
+        type: MODAL_BUTTON,
+        label: trans('add_resources'),
+        modal: [MODAL_RESOURCES, {
+          contextId: props.contextId,
+          selectAction: (selected) => ({
+            type: CALLBACK_BUTTON,
+            callback: () => props.addRequiredResources(props.contextId, selected)
+          })
+        }]
+      }
+    ]}
   >
     <Alert
       className="mt-3"
@@ -35,27 +49,11 @@ const EvaluationActivities = (props) =>
         current: listConst.DISPLAY_LIST_SM
       }}
     />
-
-    <Button
-      className="btn btn-primary w-100 mb-3"
-      type={MODAL_BUTTON}
-      primary={true}
-      size="lg"
-      label={trans('add_resources')}
-      modal={[MODAL_RESOURCES, {
-        root: props.workspaceRoot,
-        selectAction: (selected) => ({
-          type: CALLBACK_BUTTON,
-          callback: () => props.addRequiredResources(props.contextId, selected)
-        })
-      }]}
-    />
   </ToolPage>
 
 EvaluationActivities.propTypes = {
   contextId: T.string.isRequired,
-  addRequiredResources: T.func.isRequired,
-  workspaceRoot: T.object.isRequired
+  addRequiredResources: T.func.isRequired
 }
 
 export {

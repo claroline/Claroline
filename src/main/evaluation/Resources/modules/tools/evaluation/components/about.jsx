@@ -89,11 +89,7 @@ const EvaluationAbout = (props) => {
 
       <PageSection size="full" className="text-center pt-5">
         <div className="mx-auto d-flex align-items-center gap-5">
-
-
           <StatusChart />
-
-
         </div>
       </PageSection>
 

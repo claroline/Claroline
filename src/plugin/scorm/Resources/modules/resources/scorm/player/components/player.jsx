@@ -11,8 +11,8 @@ import {ContentIFrame} from '#/main/app/content/components/iframe'
 
 import {Scorm as ScormTypes, Sco as ScoTypes} from '#/plugin/scorm/resources/scorm/prop-types'
 import {getFirstOpenableSco} from '#/plugin/scorm/resources/scorm/utils'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 import {ResourcePage} from '#/main/core/resource'
+import {PageSection} from '#/main/app/page'
 
 const Player = (props) => {
   if (isEmpty(props.scos)) {
@@ -47,13 +47,13 @@ const Player = (props) => {
               const currentSco = props.scos.find(sco => sco.id === routeProps.match.params.id)
               if (currentSco && !isEmpty(currentSco.data.entryUrl)) {
                 return (
-                  <ContentSizing size="full">
+                  <PageSection size="full">
                     <ContentIFrame
                       ratio={get(props.scorm, 'ratio')}
                       url={`${asset('data/uploads/scorm/')}${props.workspaceUuid}/${props.scorm.hashName}/${currentSco.data.entryUrl}${currentSco.data.parameters ? currentSco.data.parameters : ''}`}
                       sco={currentSco}
                     />
-                  </ContentSizing>
+                  </PageSection>
                 )
               }
 
