@@ -22,7 +22,7 @@ const EventsTool = (props) =>
   <Tool
     {...props}
     redirect={[
-      {from: '/', exact: true, to: props.course ? '/about/' + props.course.slug : '/about'}
+      {from: '/', exact: true, to: props.course ? '/about/' + props.course.slug + '/sessions' : '/about'}
     ]}
     menu={[
       {

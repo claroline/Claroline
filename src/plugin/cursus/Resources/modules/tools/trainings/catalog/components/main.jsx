@@ -34,8 +34,8 @@ const CatalogMain = (props) =>
         onEnter: (params = {}) => props.open(params.slug),
         render: (params = {}) => (
           <Course
-            path={props.course ? route(props.course) : ''}
-            slug={params.slug}
+            path={props.course ? route(props.course) : params.match.url}
+            slug={params.match.params.slug}
             history={params.history}
           />
         )

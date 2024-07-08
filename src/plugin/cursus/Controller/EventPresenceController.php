@@ -60,6 +60,94 @@ class EventPresenceController
     }
 
     /**
+     * Updates the status of a EventPresence for current user.
+     *
+     * @Route("/sign", name="apiv2_cursus_event_presence_sign", methods={"PUT"})
+     */
+    public function signStatusAction(Request $request): JsonResponse
+    {
+        $data = $this->decodeRequest($request);
+        if (empty($data)) {
+            throw new InvalidDataException('Invalid data');
+        }
+
+        $event = $data['event'];
+        $signature = trim($data['signature']);
+
+        $eventObject = $this->om->getRepository(Event::class)->findOneBy([
+            'uuid' => $event['id'],
+        ]);
+
+        $presence = $this->om->getRepository(EventPresence::class)->findOneBy([
+            'event' => $eventObject,
+            'user' => $this->tokenStorage->getToken()->getUser(),
+        ]);
+
+        if (!$presence) {
+            return new JsonResponse(null, 404);
+        }
+
+        if (EventPresence::PRESENT === $presence->getStatus()) {
+            return new JsonResponse(['success' => false]);
+        }
+
+        $presenceData = $this->serializer->serialize($presence);
+        $presenceData['status'] = EventPresence::PRESENT;
+        $presenceData['signature'] = $signature;
+
+        $this->crud->update($presence, $presenceData);
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    /**
+     * Confirm the status of a EventPresence for current user.
+     *
+     * @Route("/confirm", name="apiv2_cursus_event_presence_confirm", methods={"PUT"})
+     */
+    public function confirmStatusAction(Request $request): JsonResponse
+    {
+        $data = $this->decodeRequest($request);
+        if (empty($data)) {
+            throw new InvalidDataException('Invalid data');
+        }
+
+        $presences = $this->om->getRepository(EventPresence::class)->findBy(['uuid' => $data]);
+        $this->om->startFlushSuite();
+        foreach ($presences as $presence) {
+            $this->checkPermission('ADMINISTRATE', $presence, [], true);
+
+            $this->manager->setValidationDate([$presence], new \DateTime());
+        }
+        $this->om->endFlushSuite();
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @Route("/check/{code}", name="apiv2_cursus_event_presence_check", methods={"GET"})
+     */
+    public function getEventPresenceByCodeAction(string $code): JsonResponse
+    {
+        $event = $this->om->getRepository(Event::class)->findOneBy(['code' => $code]);
+        if (!$event) {
+            return new JsonResponse(null, 404);
+        }
+
+        $user = $this->tokenStorage->getToken()->getUser();
+        if (!$user || 'anon.' === $user) {
+            return new JsonResponse(null, 401);
+        }
+
+        $presence = $this->om->getRepository(EventPresence::class)->findOneBy([
+            'event' => $event,
+            'user' => $user,
+        ]);
+
+        return new JsonResponse($this->serializer->serialize($presence));
+    }
+
+    /**
      * @Route("/{id}", name="apiv2_cursus_event_presence_list", methods={"GET"})
      *
      * @EXT\ParamConverter("event", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
@@ -130,71 +218,6 @@ class EventPresenceController
         return new JsonResponse(array_map(function (EventPresence $presence) {
             return $this->serializer->serialize($presence);
         }, $presences));
-    }
-
-    /**
-     * Updates the status of a EventPresence for current user.
-     *
-     * @Route("/sign", name="apiv2_cursus_event_presence_sign", methods={"PUT"})
-     */
-    public function signStatusAction(Request $request): JsonResponse
-    {
-        $data = $this->decodeRequest($request);
-        if (empty($data)) {
-            throw new InvalidDataException('Invalid data');
-        }
-
-        $event = $data['event'];
-        $signature = trim($data['signature']);
-
-        $eventObject = $this->om->getRepository(Event::class)->findOneBy([
-            'uuid' => $event['id'],
-        ]);
-
-        $presence = $this->om->getRepository(EventPresence::class)->findOneBy([
-            'event' => $eventObject,
-            'user' => $this->tokenStorage->getToken()->getUser(),
-        ]);
-
-        if (!$presence) {
-            return new JsonResponse(null, 404);
-        }
-
-        if (EventPresence::PRESENT === $presence->getStatus()) {
-            return new JsonResponse(['success' => false]);
-        }
-
-        $presenceData = $this->serializer->serialize($presence);
-        $presenceData['status'] = EventPresence::PRESENT;
-        $presenceData['signature'] = $signature;
-
-        $this->crud->update($presence, $presenceData);
-
-        return new JsonResponse(['success' => true]);
-    }
-
-    /**
-     * Confirm the status of a EventPresence for current user.
-     *
-     * @Route("/confirm", name="apiv2_cursus_event_presence_confirm", methods={"PUT"})
-     */
-    public function confirmStatusAction(Request $request): JsonResponse
-    {
-        $data = $this->decodeRequest($request);
-        if (empty($data)) {
-            throw new InvalidDataException('Invalid data');
-        }
-
-        $presences = $this->om->getRepository(EventPresence::class)->findBy(['uuid' => $data]);
-        $this->om->startFlushSuite();
-        foreach ($presences as $presence) {
-            $this->checkPermission('ADMINISTRER', $presence, [], true);
-
-            $this->manager->setValidationDate([$presence], new \DateTime());
-        }
-        $this->om->endFlushSuite();
-
-        return new JsonResponse();
     }
 
     /**

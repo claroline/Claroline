@@ -1,18 +1,15 @@
-import {trans} from '#/main/app/intl'
-
 import {createSelector} from 'reselect'
 import {API_REQUEST} from '#/main/app/api'
-
-import {MODAL_ALERT} from '#/main/app/modals/alert'
+import {constants} from '#/plugin/cursus/constants'
 import {makeActionCreator} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
-import {actions as modalActions} from '#/main/app/overlays/modal/store'
 
 const STORE_NAME = 'presence'
 const SIGN_EVENT = 'eventSign'
 const CURRENT_EVENT = 'eventCurrent'
 const LOAD_EVENT = 'eventLoad'
 const CHANGE_EVENT = 'eventChange'
+const EVENT_SIGNED = 'eventSigned'
 
 const store = (state) => state[STORE_NAME]
 
@@ -36,12 +33,18 @@ const code = createSelector(
   (store) => store.code
 )
 
+const eventSigned = createSelector(
+  [store],
+  (store) => store.eventSigned
+)
+
 const selectors = {
   STORE_NAME,
   currentEvent,
   eventLoaded,
   signature,
   code,
+  eventSigned,
   store
 }
 
@@ -51,17 +54,23 @@ actions.setCode = makeActionCreator(CHANGE_EVENT, 'code')
 actions.setSignature = makeActionCreator(SIGN_EVENT, 'signature')
 actions.setEventLoaded = makeActionCreator(LOAD_EVENT, 'eventLoaded')
 actions.setCurrentEvent = makeActionCreator(CURRENT_EVENT, 'currentEvent')
+actions.setEventSigned = makeActionCreator(EVENT_SIGNED, 'eventSigned')
 
 actions.getEventByCode = (code = null) => ({
   [API_REQUEST]: {
-    url: ['apiv2_cursus_event_get', {field: 'code', id: code}],
+    url: ['apiv2_cursus_event_presence_check', {code: code}],
     success: (response, dispatch) => {
-      dispatch(actions.setCurrentEvent(response))
+      if (typeof response.status !== 'undefined' && constants.PRESENCE_STATUS_PRESENT === response.status) {
+        dispatch(actions.setEventSigned(true))
+      }
+      dispatch(actions.setCurrentEvent(response.event))
       dispatch(actions.setEventLoaded(true))
     },
     error: (response, status, dispatch) => {
-      dispatch(actions.setCurrentEvent(null))
-      dispatch(actions.setEventLoaded(true))
+      if (status === 404) {
+        dispatch(actions.setCurrentEvent(null))
+        dispatch(actions.setEventLoaded(true))
+      }
     }
   }
 })
@@ -78,13 +87,7 @@ actions.signPresence = (event, signature) => ({
       })
     },
     success: (response, dispatch) => {
-      dispatch(modalActions.showModal(MODAL_ALERT, {
-        type: 'info',
-        title: trans('presence_confirm_title', {}, 'presence'),
-        message: response.success ?
-          trans('presence_confirm_desc', { event_title : event.name }, 'presence') :
-          trans('presence_confirm_already', { event_title : event.name }, 'presence')
-      }))
+      dispatch(actions.setEventSigned(true))
     }
   }
 })
@@ -101,6 +104,9 @@ const reducer = combineReducers({
   }),
   signature : makeReducer('', {
     [SIGN_EVENT]: (state, action) => action.signature
+  }),
+  eventSigned : makeReducer(null, {
+    [EVENT_SIGNED]: (state, action) => action.eventSigned
   })
 })
 
@@ -112,5 +118,6 @@ export {
   currentEvent,
   eventLoaded,
   signature,
+  eventSigned,
   code
 }
