@@ -1,4 +1,0 @@
-services:
-    Claroline\HistoryBundle\Manager\HistoryManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'

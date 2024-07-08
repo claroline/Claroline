@@ -8,7 +8,7 @@ import {LINK_BUTTON} from '#/main/app/buttons'
 const SearchResults = (props) => {
   if (props.empty) {
     return (
-      <div className="text-center mt-3">
+      <div className="text-center mt-3" role="presentation">
         <p className="lead mb-1">{trans('no_search_results')}</p>
         <p className="mb-0 text-secondary">{trans('no_search_results_help')}</p>
       </div>
@@ -22,7 +22,7 @@ const SearchResults = (props) => {
         .map(resultType =>
           <div role="presentation" className="mt-3" key={resultType}>
             <h5 className="fs-sm text-uppercase text-body-secondary">{props.availableSearches[resultType].label}</h5>
-            <div className="d-flex flex-column gap-1">
+            <div className="d-flex flex-column gap-1" role="presentation">
               {props.results[resultType].map(result =>
                 createElement(props.availableSearches[resultType].component, {
                   key: result.id,

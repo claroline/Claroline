@@ -8,7 +8,6 @@ import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {UserAvatar} from '#/main/app/user/components/avatar'
 import {route} from '#/main/core/workspace/routing'
 
-import {MODAL_HISTORY} from '#/plugin/history/modals/history'
 import {MODAL_CONTEXT_SEARCH} from '#/main/app/context/modals/search'
 import {AppBrand} from '#/main/app/layout/components/brand'
 import {NotificationButton} from '#/main/notification/components/button'
@@ -68,20 +67,9 @@ const ContextNav = (props) => {
       ))}
 
       <Button
-        className="app-context-btn"
-        tooltip="right"
-        {...{
-          type: MODAL_BUTTON,
-          icon: 'fa fa-fw fa-history',
-          label: trans('history', {}, 'history'),
-          modal: [MODAL_HISTORY]
-        }}
-      />
-
-      <Button
         type={MODAL_BUTTON}
         className="app-context-btn"
-        icon="fa fa-fw fa-search"
+        icon="far fa-fw fa-compass"
         label={trans('search')}
         tooltip="right"
         modal={[MODAL_CONTEXT_SEARCH]}

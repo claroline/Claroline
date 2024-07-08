@@ -2,7 +2,12 @@
 @mixin embedded-list-variant() {
     .list-header {
         background: $list-controls-bg;
-        //border-bottom: $list-controls-border-width solid $list-controls-border-color;
+    }
+
+    .list-footer {
+        margin: 0;
+        padding: $data-tree-gutter*.5 $data-grid-gutter;
+        padding-right: 0;
     }
 
     .content-loader {
@@ -12,7 +17,6 @@
 
     // customize view modes
     .data-tree {
-        //margin-left: 0;
         margin-right: $data-tree-gutter*.5;
     }
 

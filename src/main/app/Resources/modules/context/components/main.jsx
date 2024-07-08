@@ -23,6 +23,12 @@ const ContextMain = (props) => {
       openQuery = makeCancelable(
         props.open(props.name, props.id)
       )
+
+      openQuery.promise.then((response) => {
+        if (props.onOpen) {
+          props.onOpen(response.data)
+        }
+      })
     }
 
     return () => {
@@ -174,6 +180,7 @@ ContextMain.propTypes = {
   notFoundPage: T.elementType,
   forbiddenPage: T.elementType,
   editor: T.elementType,
+  onOpen: T.func,
 
   open: T.func.isRequired,
   history: T.shape({
