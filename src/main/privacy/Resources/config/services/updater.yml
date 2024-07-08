@@ -7,3 +7,9 @@ services:
       - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
       - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
       - '@Claroline\AppBundle\Persistence\ObjectManager'
+
+  Claroline\PrivacyBundle\Installation\Updater\Updater142000:
+    arguments:
+      - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
+      - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
+      - '@Claroline\AppBundle\Persistence\ObjectManager'
