@@ -20,13 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  *
- * @ORM\Table(
- *      name="claro_template",
- *     uniqueConstraints={
- *
- *          @ORM\UniqueConstraint(name="template_unique_name", columns={"claro_template_type", "entity_name"})
- *      }
- *  )
+ * @ORM\Table(name="claro_template")
  */
 class Template
 {

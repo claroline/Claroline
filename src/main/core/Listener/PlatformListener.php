@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\ConnectionMessage\ConnectionMessage;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
-use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\VersionManager;
@@ -113,18 +112,6 @@ class PlatformListener
             throw new HttpException(503, 'Platform is not available (Platform is disabled).');
         }
 
-        $dates = $this->config->getParameter('restrictions.dates');
-        if (!empty($dates)) {
-            $now = new \DateTime();
-            if (!empty($dates[0]) && DateNormalizer::normalize($now) < $dates[0]) {
-                throw new HttpException(503, 'Platform is not available (Platform start date not reached).');
-            }
-
-            if (!empty($dates[1]) && DateNormalizer::normalize($now) > $dates[1]) {
-                throw new HttpException(503, 'Platform is not available (Platform end date reached).');
-            }
-        }
-
         // checks platform maintenance
         if (MaintenanceHandler::isMaintenanceEnabled() || $this->config->getParameter('maintenance.enable')) {
             // only disable for non admin
@@ -182,9 +169,9 @@ class PlatformListener
         $locale = $this->localeManager->getLocale($user);
         $content = $this->versionManager->getChangelogs($locale).'<br/><br/>';
         $content .= '<em>'.$this->translator->trans('platform_changelog_display', [
-                '%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles')),
-                '%end_date%' => $endDate->format('d/m/Y'),
-            ], 'platform').'</em>';
+            '%roles%' => implode(', ', $this->config->getParameter('changelogMessage.roles')),
+            '%end_date%' => $endDate->format('d/m/Y'),
+        ], 'platform').'</em>';
 
         return [
             [
