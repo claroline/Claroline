@@ -49,14 +49,14 @@ class CourseVoter extends AbstractVoter
 
             case self::OPEN: // member of organization & OPEN right on tool
             case self::VIEW:
-                if ($this->isToolGranted('OPEN', 'training_events', $workspace)) {
+                if ($this->isToolGranted('OPEN', 'training_events', $workspace) || $this->isToolGranted('OPEN', 'trainings')) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
                 return VoterInterface::ACCESS_DENIED;
 
             case self::REGISTER:
-                if ($this->isToolGranted('REGISTER', 'training_events', $workspace)) {
+                if ($this->isToolGranted('REGISTER', 'training_events', $workspace) || $this->isToolGranted('REGISTER', 'trainings')) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 

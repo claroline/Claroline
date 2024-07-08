@@ -19,6 +19,7 @@ const PresenceToolComponent = (props) =>
           component: SignPresence
         }, {
           path: '/',
+          onEnter: () => props.resetEvent(),
           component: EventPresence
         }
       ]}
@@ -32,6 +33,11 @@ const PresenceTool = connect(
   (dispatch) => ({
     getEventByCode(code = null) {
       dispatch(actions.getEventByCode(code))
+    },
+    resetEvent() {
+      dispatch(actions.setCode(''))
+      dispatch(actions.setCurrentEvent(null))
+      dispatch(actions.setEventLoaded(false))
     }
   })
 )(PresenceToolComponent)

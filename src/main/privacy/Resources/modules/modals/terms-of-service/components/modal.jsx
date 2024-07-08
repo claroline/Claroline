@@ -16,7 +16,7 @@ const TermsOfServiceModal = props =>
     title={trans('terms_of_service',{},'privacy')}
     size="lg"
     backdrop="static"
-    closeButton={false}
+    closeButton={true}
     onEntering={() => {
       if (!props.loaded) {
         props.fetch()
