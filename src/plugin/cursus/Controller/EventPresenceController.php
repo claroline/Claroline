@@ -125,6 +125,29 @@ class EventPresenceController
     }
 
     /**
+     * @Route("/check/{code}", name="apiv2_cursus_event_presence_check", methods={"GET"})
+     */
+    public function getEventPresenceByCodeAction(string $code): JsonResponse
+    {
+        $event = $this->om->getRepository(Event::class)->findOneBy(['code' => $code]);
+        if (!$event) {
+            return new JsonResponse(null, 404);
+        }
+
+        $user = $this->tokenStorage->getToken()->getUser();
+        if (!$user || 'anon.' === $user) {
+            return new JsonResponse(null, 401);
+        }
+
+        $presence = $this->om->getRepository(EventPresence::class)->findOneBy([
+            'event' => $event,
+            'user' => $user,
+        ]);
+
+        return new JsonResponse($this->serializer->serialize($presence));
+    }
+
+    /**
      * @Route("/{id}", name="apiv2_cursus_event_presence_list", methods={"GET"})
      *
      * @EXT\ParamConverter("event", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
