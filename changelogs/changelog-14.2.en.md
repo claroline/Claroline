@@ -1,0 +1,6 @@
+- Taking attendance from the public reception desk
+- Taking account of reasons for absence on attendance lists
+- Validation of attendance lists by a trainer
+- Complete management of a training course is possible from the E.A.
+- Pedagogical follow-up: generation of certificates in the database
+- Improved generation of unique codes
