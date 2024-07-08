@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 
-import {asset} from '#/main/app/config/asset'
 import {trans, transChoice} from '#/main/app/intl'
 import {TooltipOverlay} from '#/main/app/overlays/tooltip/components/overlay'
 import {DataCard} from '#/main/app/data/components/card'
@@ -17,7 +16,7 @@ const WorkspaceCard = props =>
       'data-card-muted': get(props.data, 'restrictions.hidden', false)
     })}
     id={props.data.id}
-    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
+    poster={props.data.thumbnail}
     icon={!props.data.thumbnail ? <>{props.data.name.charAt(0)}</> : null}
     title={
       <>

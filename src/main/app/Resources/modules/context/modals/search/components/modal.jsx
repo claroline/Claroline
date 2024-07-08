@@ -1,4 +1,4 @@
-import React, {Component, createElement} from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 import omit from 'lodash/omit'
@@ -9,6 +9,9 @@ import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
 import {getApps} from '#/main/app/plugins'
+import {SearchResults} from '#/main/app/context/modals/search/components/results'
+import {SearchRecent} from '#/main/app/context/modals/search/components/recent'
+import {route} from '#/main/core/tool/routing'
 
 class SearchModal extends Component {
   constructor(props) {
@@ -55,11 +58,11 @@ class SearchModal extends Component {
     return (
       <Modal
         {...omit(this.props, 'fetching', 'results', 'empty', 'search')}
-        size="sm"
+        /*size="sm"*/
       >
-        <div className="modal-body">
-          <div className="app-search">
-            <span className="app-search-icon fa fa-search" />
+        <div className="modal-body" role="presentation">
+          <div className="app-search" role="form">
+            <span className="app-search-icon fa fa-search" aria-hidden={true} />
 
             <input
               type="search"
@@ -88,40 +91,34 @@ class SearchModal extends Component {
             }
           </div>
 
-          {(this.state.currentSearch && this.props.empty) &&
-            <div className="text-center mt-3">
-              <p className="lead mb-1">{trans('no_search_results')}</p>
-              <p className="mb-0 text-secondary">{trans('no_search_results_help')}</p>
-            </div>
+          {!this.props.fetching && this.state.currentSearch &&
+            <SearchResults
+              empty={this.props.empty}
+              results={this.props.results}
+              availableSearches={this.state.availableSearches}
+              reset={this.reset}
+              fadeModal={this.props.fadeModal}
+            />
           }
 
-          {this.state.currentSearch && !this.props.empty && Object.keys(this.props.results)
-            .filter(resultType => !isEmpty(this.state.availableSearches[resultType]) && !isEmpty(this.props.results[resultType]))
-            .map(resultType =>
-              <div role="presentation" className="mt-3" key={resultType}>
-                <h5 className="fs-sm text-uppercase text-body-secondary">{this.state.availableSearches[resultType].label}</h5>
-                <div className="d-flex flex-column gap-1">
-                  {this.props.results[resultType].map(result =>
-                    createElement(this.state.availableSearches[resultType].component, {
-                      key: result.id,
-                      size: 'sm',
-                      direction: 'row',
-                      data: result,
-                      primaryAction: {
-                        type: LINK_BUTTON,
-                        label: trans('open', {}, 'actions'),
-                        target: this.state.availableSearches[resultType].link(result),
-                        onClick: () => {
-                          this.reset()
-                          this.props.fadeModal()
-                        }
-                      }
-                    })
-                  )}
-                </div>
-              </div>
-            )
+          {!this.state.currentSearch &&
+            <SearchRecent
+              fadeModal={this.props.fadeModal}
+            />
           }
+        </div>
+
+        <div className="modal-footer gap-2 flex-column flex-md-row">
+          Vous ne trouvez pas ce que vous cherchez ?
+
+          <Button
+            className="btn btn-primary"
+            type={LINK_BUTTON}
+            label={trans('Parcourir tous mes espaces', {}, 'history')}
+            size="sm"
+            target={route('workspaces')}
+            onClick={this.props.fadeModal}
+          />
         </div>
       </Modal>
     )

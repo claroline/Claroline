@@ -14,7 +14,6 @@ Claroline\AgendaBundle\ClarolineAgendaBundle = true
 Claroline\ImagePlayerBundle\ClarolineImagePlayerBundle = true
 Claroline\MessageBundle\ClarolineMessageBundle = true
 Claroline\ForumBundle\ClarolineForumBundle = true
-Claroline\HistoryBundle\ClarolineHistoryBundle = true
 Claroline\HomeBundle\ClarolineHomeBundle = true
 Claroline\AnnouncementBundle\ClarolineAnnouncementBundle = true
 Claroline\ScormBundle\ClarolineScormBundle = true

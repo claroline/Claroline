@@ -102,7 +102,6 @@
             "Claroline\\ExampleBundle\\": "src/main/example",
             "Claroline\\ForumBundle\\": "src/plugin/forum",
             "Claroline\\FlashcardBundle\\": "src/plugin/flashcard",
-            "Claroline\\HistoryBundle\\": "src/plugin/history",
             "Claroline\\HomeBundle\\": "src/plugin/home",
             "Claroline\\ImagePlayerBundle\\": "src/plugin/image-player",
             "Claroline\\InstallationBundle\\": "src/main/installation",

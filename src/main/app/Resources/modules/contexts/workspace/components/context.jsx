@@ -16,6 +16,7 @@ import {WorkspaceLoading} from '#/main/app/contexts/workspace/components/loading
 import {WorkspaceNotFound} from '#/main/app/contexts/workspace/components/not-found'
 import {WorkspaceMenu} from '#/main/app/contexts/workspace/containers/menu'
 import {WorkspaceEditor} from '#/main/app/contexts/workspace/editor/components/main'
+import {addRecent} from '#/main/app/history'
 
 const WorkspaceWarning = () => {
   const workspace = useSelector(selectors.data)
@@ -71,15 +72,6 @@ const WorkspaceWarning = () => {
           label={trans('Créer à partir du modèle', {}, 'actions')}
           callback={() => true}
         />
-
-        {/*<Button
-          className="btn btn-link text-reset p-1"
-          type={CALLBACK_BUTTON}
-          icon="fa fa-fw fa-info-circle"
-          label={trans('En savoir plus', {}, 'actions')}
-          callback={() => true}
-          tooltip="bottom"
-        />*/}
       </PageBanner>
     )
   }
@@ -93,6 +85,9 @@ const WorkspaceContext = (props) =>
     loadingPage={WorkspaceLoading}
     notFoundPage={WorkspaceNotFound}
     forbiddenPage={WorkspaceForbidden}
+    onOpen={(contextData) => {
+      addRecent(contextData.id, 'workspace', route(contextData), contextData.name, get(contextData, 'meta.description'), contextData.thumbnail)
+    }}
   >
     <WorkspaceWarning />
   </ContextMain>

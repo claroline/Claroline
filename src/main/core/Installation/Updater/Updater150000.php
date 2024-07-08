@@ -29,6 +29,7 @@ class Updater150000 extends Updater
         $this->removePlugin('Icap', 'BibliographyBundle');
         $this->removePlugin('Claroline', 'RssBundle');
         $this->removePlugin('Icap', 'FormulaPluginBundle');
+        $this->removePlugin('Claroline', 'HistoryBundle');
 
         $deleteTool = $this->connection->prepare(
             'DELETE FROM claro_ordered_tool WHERE tool_name = "notifications"'
