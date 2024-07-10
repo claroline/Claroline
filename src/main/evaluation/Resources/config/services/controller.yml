@@ -25,3 +25,7 @@ services:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\EvaluationBundle\Manager\CertificateManager'
+
+    Claroline\EvaluationBundle\Controller\SkillsFrameworkController:
+        parent: Claroline\AppBundle\Controller\AbstractCrudController
+        public: true

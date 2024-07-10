@@ -192,99 +192,93 @@ const ContentRights = props => {
   const hasNonStandardPerms = hasCustomRoles(props.rights, props.workspace)
 
   return (
-    <table className="table table-striped table-hover content-rights-advanced">
-      <thead>
-        <tr>
-          <th scope="col">{trans('role')}</th>
+    <>
+      <table className="table table-striped table-hover content-rights-advanced mb-3">
+        <thead>
+          <tr>
+            <th scope="col">{trans('role')}</th>
 
-          {allPerms.map(permission =>
-            <th key={`${permission}-header`} scope="col">
-              <div className="permission-name-container">
-                <span className="permission-name">{trans(permission, {}, 'actions')}</span>
-              </div>
-            </th>
-          )}
+            {allPerms.map(permission =>
+              <th key={`${permission}-header`} scope="col">
+                <div className="permission-name-container">
+                  <span className="permission-name">{trans(permission, {}, 'actions')}</span>
+                </div>
+              </th>
+            )}
 
-          {hasNonStandardPerms &&
-            <td scope="col" />
-          }
-        </tr>
-      </thead>
-
-      <tbody>
-        {[]
-          // create new array to be able to modify it
-          .concat(props.rights)
-          // move workspace manager role to the top of the list
-          .sort((a, b) => props.workspace && roleWorkspace(props.workspace, true) === b.name ? 1 : 0)
-          .map((rolePerm) => {
-            const workspaceCode = rolePerm.workspace ? rolePerm.workspace.code : null
-            const displayName = trans(rolePerm.translationKey) + (workspaceCode ? ' (' + workspaceCode + ')' : '')
-            let managerRole = null
-            if (props.workspace) {
-              managerRole = roleWorkspace(props.workspace, true)
+            {hasNonStandardPerms &&
+              <td scope="col" />
             }
+          </tr>
+        </thead>
 
-            return (
-              <RolePermissions
-                key={rolePerm.id || rolePerm.name}
-                name={rolePerm.name}
-                translationKey={displayName}
-                permissions={Object.assign({}, defaultPerms, rolePerm.permissions)}
-                deletable={!isStandardRole(rolePerm.name, props.workspace)}
-                creatable={props.creatable}
-                editable={!managerRole || rolePerm.name !== managerRole}
-                hasNonStandardPerms={hasNonStandardPerms}
-                update={(permissions) => {
-                  const newPerms = merge([], props.rights)
-                  const rights = newPerms.find(perm => perm.name === rolePerm.name)
-                  rights.permissions = permissions
+        <tbody>
+          {[]
+            // create new array to be able to modify it
+            .concat(props.rights)
+            // move workspace manager role to the top of the list
+            .sort((a, b) => props.workspace && roleWorkspace(props.workspace, true) === b.name ? 1 : 0)
+            .map((rolePerm) => {
+              const workspaceCode = rolePerm.workspace ? rolePerm.workspace.code : null
+              const displayName = trans(rolePerm.translationKey) + (workspaceCode ? ' (' + workspaceCode + ')' : '')
+              let managerRole = null
+              if (props.workspace) {
+                managerRole = roleWorkspace(props.workspace, true)
+              }
 
-                  props.updateRights(newPerms)
-                }}
-                delete={() => {
-                  const newPerms = merge([], props.rights)
-                  // rights have been reordered for display, we need to retrieve perm position in stored data
-                  const realIndex = newPerms.findIndex(p => p.name === rolePerm.name)
-                  if (-1 !== realIndex) {
-                    newPerms.splice(realIndex, 1)
+              return (
+                <RolePermissions
+                  key={rolePerm.id || rolePerm.name}
+                  name={rolePerm.name}
+                  translationKey={displayName}
+                  permissions={Object.assign({}, defaultPerms, rolePerm.permissions)}
+                  deletable={!isStandardRole(rolePerm.name, props.workspace)}
+                  creatable={props.creatable}
+                  editable={!managerRole || rolePerm.name !== managerRole}
+                  hasNonStandardPerms={hasNonStandardPerms}
+                  update={(permissions) => {
+                    const newPerms = merge([], props.rights)
+                    const rights = newPerms.find(perm => perm.name === rolePerm.name)
+                    rights.permissions = permissions
 
                     props.updateRights(newPerms)
-                  }
-                }}
-              />
-            )
-          })
-        }
-      </tbody>
+                  }}
+                  delete={() => {
+                    const newPerms = merge([], props.rights)
+                    // rights have been reordered for display, we need to retrieve perm position in stored data
+                    const realIndex = newPerms.findIndex(p => p.name === rolePerm.name)
+                    if (-1 !== realIndex) {
+                      newPerms.splice(realIndex, 1)
 
-      <tfoot>
-        <tr>
-          <td colSpan={allPerms.length + (hasNonStandardPerms ? 2 : 1)}>
-            <ModalButton
-              className="w-100"
-              variant="btn"
-              modal={[MODAL_ROLES, {
-                filters: [
-                  {property: 'type', value: constants.ROLE_PLATFORM}
-                ],
-                selectAction: (selectedRoles) => ({
-                  type: CALLBACK_BUTTON,
-                  callback: () => props.updateRights([].concat(props.rights, selectedRoles.map(role => ({
-                    name: role.name,
-                    translationKey: role.translationKey,
-                    permissions: {}
-                  }))))
-                })
-              }]}
-            >
-              <span className="fa fa-fw fa-plus icon-with-text-right" />
-              {trans('add_rights')}
-            </ModalButton>
-          </td>
-        </tr>
-      </tfoot>
-    </table>
+                      props.updateRights(newPerms)
+                    }
+                  }}
+                />
+              )
+            })
+          }
+        </tbody>
+      </table>
+
+      <ModalButton
+        className="btn btn-primary w-100 mb-3"
+        modal={[MODAL_ROLES, {
+          filters: [
+            {property: 'type', value: constants.ROLE_PLATFORM}
+          ],
+          selectAction: (selectedRoles) => ({
+            type: CALLBACK_BUTTON,
+            callback: () => props.updateRights([].concat(props.rights, selectedRoles.map(role => ({
+              name: role.name,
+              translationKey: role.translationKey,
+              permissions: {}
+            }))))
+          })
+        }]}
+      >
+        {trans('add_rights')}
+      </ModalButton>
+    </>
   )
 }
 

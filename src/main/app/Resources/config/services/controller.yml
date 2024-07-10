@@ -53,7 +53,6 @@ services:
     Claroline\AppBundle\Controller\Component\ToolController:
         arguments:
             - '@security.authorization_checker'
-            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\API\SerializerProvider'

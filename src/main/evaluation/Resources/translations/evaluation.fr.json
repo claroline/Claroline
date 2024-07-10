@@ -31,5 +31,9 @@
   "evaluation_failed_short": "Echoué",
   "evaluation_completed_short": "Terminé",
   "evaluation_pending_short": "En attente",
-  "evaluation_passed_short": "Réussi"
+  "evaluation_passed_short": "Réussi",
+
+  "skills_framework": "Référentiel de compétences",
+  "skills_frameworks": "Référentiels de compétences",
+  "new_skills_framework": "Nouveau référentiel de compétences"
 }

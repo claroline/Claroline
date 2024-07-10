@@ -35,7 +35,7 @@ const RegistrationModal = props => {
       {(!activeSession && isEmpty(props.available)) &&
         <div className="modal-body">
           <h2 className="h3 text-center">{trans('no_available_session', {}, 'cursus')}</h2>
-          <p className="lead text-center mb-00">{trans('no_available_session_help', {}, 'cursus')}</p>
+          <p className="lead text-center mb-0">{trans('no_available_session_help', {}, 'cursus')}</p>
         </div>
       }
 

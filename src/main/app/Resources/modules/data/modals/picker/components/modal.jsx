@@ -65,7 +65,11 @@ const PickerModal = (props) => {
               if (selectAction) {
                 return {
                   ...selectAction,
-                  onClick: props.fadeModal
+                  onClick: () => {
+                    if (props.autoClose) {
+                      props.fadeModal()
+                    }
+                  }
                 }
               }
             }}
@@ -75,6 +79,8 @@ const PickerModal = (props) => {
         }
         {}
       </div>
+
+      {props.children}
 
       {props.multiple &&
         <div className="modal-footer">
@@ -105,11 +111,14 @@ PickerModal.propTypes = {
   multiple: T.bool,
   definition: T.arrayOf(T.object),
   card: T.func,
-  selectAction: T.func
+  selectAction: T.func,
+  children: T.any,
+  autoClose: T.bool
 }
 
 PickerModal.defaultProps = {
-  multiple: true
+  multiple: true,
+  autoClose: true
 }
 
 export {

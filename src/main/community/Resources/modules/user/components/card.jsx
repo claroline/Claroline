@@ -3,7 +3,6 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import classes from 'classnames'
 
-import {asset} from '#/main/app/config/asset'
 import {DataCard} from '#/main/app/data/components/card'
 
 import {User as UserTypes} from '#/main/community/prop-types'
@@ -11,12 +10,11 @@ import {UserStatus} from '#/main/app/user/components/status'
 
 const UserCard = props =>
   <DataCard
-    {...props}
     className={classes(props.className, {
       'data-card-muted': get(props.data, 'restrictions.disabled', false)
     })}
     id={props.data.id}
-    poster={get(props.data, 'picture') ? asset(get(props.data, 'picture')) : null}
+    poster={get(props.data, 'picture')}
     icon={!get(props.data, 'picture') ? <>{props.data.name.charAt(0)}</> : null}
     title={props.data.name}
     meta={
@@ -24,6 +22,7 @@ const UserCard = props =>
     }
     contentText={get(props.data, 'meta.description')}
     asIcon={true}
+    {...props}
   />
 
 UserCard.propTypes = {

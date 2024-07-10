@@ -1,17 +1,16 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-
-import {Alert} from '#/main/app/components/alert'
-import {Tool} from '#/main/core/tool'
-import {ToolPage} from '#/main/core/tool'
-
-import {WorkspaceEvaluation} from '#/main/evaluation/workspace/components/evaluation'
-import {ContentLoader} from '#/main/app/content/components/loader'
 import get from 'lodash/get'
-import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+
 import {trans} from '#/main/app/intl'
+import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
+import {Alert} from '#/main/app/components/alert'
+import {ContentLoader} from '#/main/app/content/components/loader'
+import {Tool, ToolPage} from '#/main/core/tool'
+
 import {constants as baseConstants} from '#/main/evaluation/constants'
 import {EvaluationGauge} from '#/main/evaluation/components/gauge'
+import {WorkspaceEvaluation} from '#/main/evaluation/workspace/components/evaluation'
 
 const ProgressionTool = (props) =>
   <Tool
@@ -40,7 +39,7 @@ const ProgressionTool = (props) =>
           name: 'download',
           type: URL_BUTTON,
           label: trans('download_certificate', {}, 'actions'),
-          target: ['apiv2_workspace_download_participation_certificate', { // FIXME
+          target: ['apiv2_workspace_download_user_certificate', {
             workspace: get(props.workspaceEvaluation, 'workspace.id'),
             user: get(props.workspaceEvaluation, 'user.id')
           }],
@@ -65,6 +64,7 @@ const ProgressionTool = (props) =>
           Vous n'avez pas de progression pour cet espace.
         </Alert>
       }
+
       {props.loaded && props.workspaceEvaluation &&
         <WorkspaceEvaluation
           workspaceEvaluation={props.workspaceEvaluation}

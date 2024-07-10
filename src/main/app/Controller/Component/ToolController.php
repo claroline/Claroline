@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -36,7 +35,6 @@ class ToolController
 
     public function __construct(
         private readonly AuthorizationCheckerInterface $authorization,
-        private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly Crud $crud,
         private readonly SerializerProvider $serializer,

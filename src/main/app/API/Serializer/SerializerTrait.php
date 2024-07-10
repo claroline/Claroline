@@ -25,9 +25,9 @@ trait SerializerTrait
      * @param mixed  $object - the object to use the setter on
      * @param bool   $trim
      */
-    public function sipe($prop, $setter, $data, $object, $trim = true)
+    public function sipe(string $prop, string $setter, array $data, mixed $object, bool $trim = true): void
     {
-        if ($data && is_array($data)) {
+        if (!empty($data)) {
             if (ArrayUtils::has($data, $prop)) {
                 $value = ArrayUtils::get($data, $prop);
 

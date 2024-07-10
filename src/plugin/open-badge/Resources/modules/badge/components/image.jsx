@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {asset} from '#/main/app/config'
 import {Thumbnail} from '#/main/app/components/thumbnail'
 
 const BadgeImage = (props) =>
@@ -10,7 +9,7 @@ const BadgeImage = (props) =>
     className={props.className}
     size={props.size}
     color={get(props.badge, 'color')}
-    thumbnail={get(props.badge, 'image') ? asset(get(props.badge, 'image')) : null}
+    thumbnail={get(props.badge, 'image')}
     name={get(props.badge, 'name')}
     square={true}
   >

@@ -8,7 +8,6 @@ import {displayDate} from '#/main/app/intl/date'
 
 import {getPlainText} from '#/main/app/data/types/html/utils'
 import {DataCard} from '#/main/app/data/components/card'
-import {UserAvatar} from '#/main/app/user/components/avatar'
 
 import {Message as MessageTypes} from '#/plugin/message/prop-types'
 
@@ -16,15 +15,15 @@ const MessageCard = (props) =>
   <DataCard
     {...props}
     id={props.data.id}
-    className={classes('notification-card', props.className, {
+    className={classes(props.className, {
       'data-card-muted': get(props.data, 'meta.read', false)
     })}
-    icon={
-      <UserAvatar user={get(props.data, 'from')} size="md" />
-    }
+    poster={get(props.data, 'from.picture')}
+    icon={!get(props.data, 'from.picture') ? <>{props.data.from.name.charAt(0)}</> : null}
+    asIcon={true}
     title={props.data.object || trans('no_object', {}, 'message')}
     contentText={getPlainText(props.data.content)}
-    subtitle={trans('sent_at', {
+    meta={trans('sent_at', {
       date: displayDate(get(props.data, 'meta.date'), false, true)
     }, 'message')}
   />

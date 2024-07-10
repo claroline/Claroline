@@ -14,7 +14,8 @@ const ToolEditorActions = (props) =>
         action: {
           label: trans('disable', {}, 'actions'),
           type: CALLBACK_BUTTON,
-          callback: () => true
+          callback: () => true,
+          disabled: true
         },
         dangerous: true,
         managerOnly: true

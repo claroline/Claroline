@@ -1,27 +1,22 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {displayDate} from '#/main/app/intl/date'
 
-import {DataCard} from '#/main/app/data/components/card'
-import {UserAvatar} from '#/main/app/user/components/avatar'
-import {displayUsername} from '#/main/community/utils'
-
+import {UserCard} from '#/main/community/user/components/card'
 import {BadgeCard} from '#/plugin/open-badge/badge/components/card'
-
 import {Assertion as AssertionTypes} from '#/plugin/open-badge/prop-types'
 
 const AssertionBadgeCard = props =>
   <BadgeCard
     {...props}
-    id={props.data.id}
-    data={props.data.badge}
-    subtitle={trans('granted_at', {
+    data={get(props.data, 'badge')}
+    contentText={trans('granted_at', {
       date: displayDate(get(props.data, 'issuedOn'), false, true)
     }, 'badge')}
+    meta={null}
   />
 
 AssertionBadgeCard.propTypes = {
@@ -31,17 +26,13 @@ AssertionBadgeCard.propTypes = {
 }
 
 const AssertionUserCard = props =>
-  <DataCard
+  <UserCard
     {...props}
-    id={props.data.id}
-    className={classes('notification-card', props.className)}
-    icon={
-      <UserAvatar user={get(props.data, 'user')} />
-    }
-    title={displayUsername(get(props.data, 'user'))}
-    subtitle={trans('granted_at', {
+    data={get(props.data, 'user')}
+    contentText={trans('granted_at', {
       date: displayDate(get(props.data, 'issuedOn'), false, true)
     }, 'badge')}
+    meta={null}
   />
 
 AssertionUserCard.propTypes = {
