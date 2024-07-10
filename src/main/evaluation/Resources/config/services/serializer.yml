@@ -23,3 +23,6 @@ services:
         arguments:
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\EvaluationBundle\Serializer\WorkspaceEvaluationSerializer'
+
+    Claroline\EvaluationBundle\Serializer\SkillsFrameworkSerializer:
+        tags: [ claroline.serializer ]

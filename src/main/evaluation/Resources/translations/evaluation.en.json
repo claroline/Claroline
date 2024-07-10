@@ -29,5 +29,9 @@
   "evaluation_participated_short": "Participated",
   "evaluation_failed_short": "Failed",
   "evaluation_completed_short": "Completed",
-  "evaluation_passed_short": "Passed"
+  "evaluation_passed_short": "Passed",
+
+  "skills_framework": "Skills framework",
+  "skills_frameworks": "Skills frameworks",
+  "new_skills_framework": "New skills framework"
 }

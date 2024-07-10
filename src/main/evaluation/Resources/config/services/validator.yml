@@ -1,0 +1,5 @@
+services:
+    _defaults:
+        tags: [claroline.validator]
+    
+    Claroline\EvaluationBundle\Validator\SkillsFrameworkValidator: ~

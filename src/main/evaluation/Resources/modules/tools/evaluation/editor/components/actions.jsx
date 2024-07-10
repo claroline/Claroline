@@ -15,17 +15,6 @@ const EvaluationEditorActions = () => {
     <ToolEditorActions
       actions={[
         {
-          name: 'download_all_workspace_certificates',
-          type: ASYNC_BUTTON,
-          icon: 'fa fa-fw fa-file-zipper',
-          label: trans('download_all_workspace_certificates', {}, 'actions'),
-          request: {
-            url: ['apiv2_workspace_download_all_certificates', {workspace: contextId}],
-            request: {
-              method: 'GET'
-            }
-          }
-        }, {
           title: trans('initialize_evaluations', {}, 'evaluation'),
           help: trans('Générez les évaluations pour tous les utilisateurs n\'ayant pas encore commencé l\'espace d\'activités.'),
           action: {
@@ -56,12 +45,27 @@ const EvaluationEditorActions = () => {
             }
           }
         }, {
+          title: trans('download_all_certificates', {}, 'actions'),
+          help: trans('Téléchargez les certificats de tous les utilisateurs ayant terminé l\'espace d\'activités.'),
+          action: {
+            name: 'download_all_certificates',
+            type: ASYNC_BUTTON,
+            label: trans('download', {}, 'actions'),
+            request: {
+              url: ['apiv2_workspace_download_all_certificates', {workspace: contextId}],
+              request: {
+                method: 'GET'
+              }
+            }
+          }
+        }, {
           title: trans('Purger les évaluations'),
           help: trans('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
           action: {
             label: trans('purge', {}, 'actions'),
             type: CALLBACK_BUTTON,
-            callback: () => true
+            callback: () => true,
+            disabled: true
           },
           dangerous: true,
           managerOnly: true

@@ -17,7 +17,7 @@ const EvaluationToolAppearance = () =>
           picker: {
             filters: [{
               property: 'typeName',
-              value: 'email_announcement',
+              value: 'workspace_participation_certificate',
               locked: true
             }]
           }
@@ -31,7 +31,7 @@ const EvaluationToolAppearance = () =>
           picker: {
             filters: [{
               property: 'typeName',
-              value: 'pdf_announcement',
+              value: 'workspace_success_certificate',
               locked: true
             }]
           }

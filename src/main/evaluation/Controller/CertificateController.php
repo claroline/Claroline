@@ -22,8 +22,6 @@ use Claroline\EvaluationBundle\Manager\CertificateManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -47,7 +45,7 @@ class CertificateController
     /**
      * @Route("/", name="apiv2_workspace_download_certificate", methods={"POST"})
      */
-    public function downloadCertificateAction(Request $request): Response
+    public function downloadCertificateAction(Request $request): BinaryFileResponse
     {
         $workspaceEvaluationIds = $this->decodeRequest($request);
 
@@ -68,7 +66,7 @@ class CertificateController
      *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function downloadAllCertificatesAction(Workspace $workspace): Response
+    public function downloadAllCertificatesAction(Workspace $workspace): BinaryFileResponse
     {
         $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy([
             'workspace' => $workspace,
@@ -83,7 +81,7 @@ class CertificateController
      * @EXT\ParamConverter("user", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"user": "uuid"}})
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
-    public function downloadUserCertificateAction(Workspace $workspace, User $user): Response
+    public function downloadUserCertificateAction(Workspace $workspace, User $user): BinaryFileResponse
     {
         $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy([
             'workspace' => $workspace,
@@ -100,39 +98,29 @@ class CertificateController
      */
     public function regenerateUserCertificateAction(Evaluation $evaluation): BinaryFileResponse
     {
-        $this->checkPermission('OPEN', $evaluation);
-        $workspace = $evaluation->getWorkspace();
+        $this->checkPermission('OPEN', $evaluation, [], true);
 
-        $pdfFilepath = $this->certificateManager->getCertificate($evaluation, true);
-
-        return new BinaryFileResponse($pdfFilepath, 200, [
-            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'.pdf',
-        ]);
+        return $this->downloadCertificates($evaluation->getWorkspace(), [$evaluation], true);
     }
 
     /**
      * @Route("/regenerate", name="apiv2_workspace_regenerate_certificate", methods={"POST"})
      */
-    public function regenerateCertificateAction(Request $request): Response
+    public function regenerateCertificateAction(Request $request): BinaryFileResponse
     {
         $workspaceEvaluationIds = $this->decodeRequest($request);
 
         if (!empty($workspaceEvaluationIds)) {
             $workspaceEvaluations = $this->om->getRepository(Evaluation::class)->findBy(['uuid' => $workspaceEvaluationIds]);
             if (!empty($workspaceEvaluations)) {
-                foreach ($workspaceEvaluations as $evaluation) {
-                    $this->checkPermission('OPEN', $evaluation);
-                    $this->certificateManager->getCertificate($evaluation, true);
-                }
-
-                return $this->downloadCertificateAction($request);
+                return $this->downloadCertificates($workspaceEvaluations[0]->getWorkspace(), $workspaceEvaluations, true);
             }
         }
 
         throw new NotFoundHttpException('No workspace evaluation found.');
     }
 
-    private function downloadCertificates(Workspace $workspace, array $workspaceEvaluations): Response
+    private function downloadCertificates(Workspace $workspace, array $workspaceEvaluations, bool $regenerate = false): BinaryFileResponse
     {
         if (empty($workspaceEvaluations)) {
             throw new NotFoundHttpException('No workspace evaluation found.');
@@ -141,7 +129,7 @@ class CertificateController
         $certificateFiles = [];
         foreach ($workspaceEvaluations as $evaluation) {
             if ($this->checkPermission('OPEN', $evaluation)) {
-                $certificateFiles[] = $this->certificateManager->getCertificate($evaluation);
+                $certificateFiles[] = $this->certificateManager->getCertificate($evaluation, $regenerate);
             }
         }
 
@@ -156,15 +144,11 @@ class CertificateController
                 'Content-Type' => 'application/zip',
                 'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'.zip',
             ]);
-        } else {
-            $certificate = file_get_contents($certificateFiles[0]);
-
-            return new StreamedResponse(function () use ($certificate) {
-                echo $certificate;
-            }, 200, [
-                'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'.pdf',
-            ]);
         }
+
+        return new BinaryFileResponse($certificateFiles[0], 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename='.TextNormalizer::toKey($workspace->getName()).'.pdf',
+        ]);
     }
 }

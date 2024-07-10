@@ -6,6 +6,5 @@
   "give_attempt": "Give one more attempt",
   "regenerate_certificate": "Regenerate certificate",
   "regenerate_certificates": "Regenerate certificates",
-  "download_all_certificates": "Download all certificates",
-  "download_all_workspace_certificates": "Download all workspace certificates"
+  "download_all_certificates": "Download all certificates"
 }

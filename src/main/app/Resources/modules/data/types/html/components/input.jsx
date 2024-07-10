@@ -43,7 +43,7 @@ class HtmlInput extends Component {
       <div id={`${this.props.id}-container`} className={classes('editor-control text-editor', this.props.className, {
         minimal: this.state.minimal && !this.state.fullscreen,
         fullscreen: this.state.fullscreen
-      })}>
+      })} role="presentation">
         {!this.state.fullscreen &&
           <Toolbar
             id={`${this.props.id}-toolbar`}
@@ -52,6 +52,7 @@ class HtmlInput extends Component {
             buttonName="btn btn-body"
             tooltip="bottom"
             size="sm"
+            disabled={this.props.disabled}
             actions={[
               {
                 name: 'fullscreen',

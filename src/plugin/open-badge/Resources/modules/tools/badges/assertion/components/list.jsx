@@ -17,7 +17,6 @@ const AssertionsList = (props) =>
   <ToolPage title={trans('my_badges', {}, 'badge')}>
     <PageListSection>
       <ListData
-        /*flush={true}*/
         name={selectors.STORE_NAME + '.mine'}
         fetch={{
           url: ['apiv2_assertion_current_user_list', {workspace: props.contextData ? props.contextData.id : null}],

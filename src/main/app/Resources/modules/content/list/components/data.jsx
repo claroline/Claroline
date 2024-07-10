@@ -4,7 +4,6 @@ import invariant from 'invariant'
 import classes from 'classnames'
 import isEqual from 'lodash/isEqual'
 
-import {ContentLoader} from '#/main/app/content/components/loader'
 import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 import {constants as listConst} from '#/main/app/content/list/constants'
@@ -128,6 +127,9 @@ class ListData extends Component {
       })
     }
 
+    const empty = !this.props.loading && 0 === this.props.totalResults
+    const hasFilters = this.props.filters && 0 < this.props.filters.current.length
+
     return (
       <div className={classes('data-list', this.props.className, {'data-list-flush': this.props.flush})} role="presentation">
         {(displayTool || filtersTool || this.props.customActions) &&
@@ -141,12 +143,10 @@ class ListData extends Component {
           />
         }
 
-        {false && this.props.loading &&
-          <ContentLoader />
-        }
+        {empty && !hasFilters && this.props.children}
 
-        {(!this.props.loading && 0 === this.props.totalResults) &&
-          <ListEmpty hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
+        {empty && (!this.props.children || hasFilters) &&
+          <ListEmpty hasFilters={hasFilters} />
         }
 
         {(this.props.loading || 0 !== this.props.totalResults) &&
@@ -283,7 +283,9 @@ ListData.propTypes = {
    *
    * It must be a React component.
    */
-  card: T.func
+  card: T.func,
+
+  children: T.func
 }
 
 ListData.defaultProps = {

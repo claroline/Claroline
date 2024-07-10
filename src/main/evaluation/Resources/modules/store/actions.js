@@ -11,7 +11,7 @@ actions.fetchEvaluation = (workspaceId, userId) => ({
 
 actions.downloadCertificate = (workspaceId, userId) => ({
   [API_REQUEST] : {
-    url: ['apiv2_workspace_download_certificate', {
+    url: ['apiv2_workspace_download_user_certificate', {
       workspace: workspaceId,
       user: userId
     }]
