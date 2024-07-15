@@ -13,9 +13,9 @@
 
   "presence_code": "Event Code",
   "presence_code_desc": "Please enter the event code to confirm your presence.",
-  "presence_confirm_already":"You have already confirmed your presence at this event.",
   "presence_confirm_title": "Presence confirmation",
   "presence_confirm_desc": "Your %event_title% event signature has been successfully recorded.",
+  "presence_confirm_other": "Confirm another presence",
   "presence_confirmation_date": "Confirmation date",
   "presence_validation_date": "Validation date by tutor",
   "presence_info": "Me, %user%, was present at the event %event_title% from %event_date_start% to %event_date_end%.",

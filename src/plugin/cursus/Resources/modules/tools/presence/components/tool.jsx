@@ -20,6 +20,7 @@ const PresenceToolComponent = (props) =>
         component: SignPresence
       }, {
         path: '/',
+        onEnter: () => props.resetEvent(),
         component: EventPresence
       }
     ]}
@@ -33,6 +34,11 @@ const PresenceTool = withReducer(selectors.STORE_NAME, reducer)(
     (dispatch) => ({
       getEventByCode(code = null) {
         dispatch(actions.getEventByCode(code))
+      },
+      resetEvent() {
+        dispatch(actions.setCode(''))
+        dispatch(actions.setCurrentEvent(null))
+        dispatch(actions.setEventLoaded(false))
       }
     })
   )(PresenceToolComponent)

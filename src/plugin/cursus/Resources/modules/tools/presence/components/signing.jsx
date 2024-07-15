@@ -19,44 +19,61 @@ const SignPresenceComponent = (props) =>
   <ToolPage
     title={trans('presence', {}, 'tools')}
   >
-    <ContentSizing size="md" className="d-flex flex-column align-items-center">
-      { props.currentUser && props.eventLoaded && props.currentEvent &&
-        <Form
-          className="mt-5"
-        >
-          <div className="bg-body-secondary rounded-2 p-4">
-            <ContentHtml className="text-center mb-3">
-              {trans('presence_info', {
-                user: props.currentUser.name,
-                event_title: props.currentEvent.name,
-                event_datetime_start: '<span class="fw-bold">' + displayDate(props.currentEvent.start, true, true) + '</span>',
-                event_datetime_end: '<span class="fw-bold">' + displayDate(props.currentEvent.end, true, true) + '</span>'
-              }, 'presence')}
-            </ContentHtml>
+    <ContentSizing size="md" className="d-flex flex-column align-items-center mt-5">
+      {props.currentUser && props.eventLoaded && props.currentEvent && props.eventSigned &&
+      <Alert
+        type="success"
+        className="content-md"
+        title={trans('presence_confirm_title', {}, 'presence')}
+      >
+        {trans('presence_confirm_desc', {event_title: props.currentEvent.name}, 'presence')}
+        <div className="btn-toolbar gap-1 mt-3 justify-content-end">
+          <Button
+            className="btn btn-success"
+            label={trans('presence_confirm_other', {}, 'presence')}
+            type={CALLBACK_BUTTON}
+            callback={() => props.history.push(`${props.path}`)}
+          />
+        </div>
+      </Alert>
+      }
 
-            <ContentSizing size="sm" className="d-flex flex-column align-items-center">
-              <input
-                className="form-control"
-                placeholder={trans('event_presence_label', {}, 'presence')}
-                onChange={(event) => {props.setSignature(event.target.value.trim())}}
-              />
+      { props.currentUser && props.eventLoaded && props.currentEvent && !props.eventSigned &&
+      <Form>
+        <div className="bg-body-secondary rounded-2 p-4">
+          <ContentHtml className="text-center mb-3">
+            {trans('presence_info', {
+              user: props.currentUser.name,
+              event_title: props.currentEvent.name,
+              event_datetime_start: '<span class="fw-bold">' + displayDate(props.currentEvent.start, true, true) + '</span>',
+              event_datetime_end: '<span class="fw-bold">' + displayDate(props.currentEvent.end, true, true) + '</span>'
+            }, 'presence')}
+          </ContentHtml>
 
-              <Button
-                className="btn btn-primary mt-3"
-                type={CALLBACK_BUTTON}
-                label={trans('validate', {}, 'presence')}
-                primary={true}
-                disabled={props.signature.trim().length <= 0}
-                callback={() => {props.signPresence(props.currentEvent, props.signature)}}
-              />
-            </ContentSizing>
-          </div>
-        </Form>
+          <ContentSizing size="sm" className="d-flex flex-column align-items-center">
+            <input
+              className="form-control"
+              placeholder={trans('event_presence_label', {}, 'presence')}
+              onChange={(event) => {props.setSignature(event.target.value.trim())}}
+            />
+
+            <Button
+              className="btn btn-primary mt-3"
+              type={CALLBACK_BUTTON}
+              label={trans('validate', {}, 'presence')}
+              primary={true}
+              disabled={props.signature.trim().length <= 0}
+              callback={() => {props.signPresence(props.currentEvent, props.signature)}}
+            />
+          </ContentSizing>
+        </div>
+      </Form>
       }
 
       { !props.currentUser && props.eventLoaded && props.currentEvent &&
         <Alert
           type="warning"
+          className="content-md"
           title={trans('not_registered', {}, 'presence')}
         >
           {trans('not_registered_desc', {}, 'presence')}
@@ -78,6 +95,7 @@ const SignPresenceComponent = (props) =>
       { props.eventLoaded && !props.currentEvent &&
         <Alert
           type="warning"
+          className="content-md"
           title={trans('event_not_found', {}, 'presence')}
         >
           {trans('event_not_found_desc', {}, 'presence')}
@@ -100,7 +118,8 @@ const SignPresence = connect(
     currentUser: securitySelectors.currentUser(state),
     currentEvent: selectors.currentEvent(state),
     eventLoaded: selectors.eventLoaded(state),
-    signature: selectors.signature(state)
+    signature: selectors.signature(state),
+    eventSigned: selectors.eventSigned(state)
   }),
   (dispatch) => ({
     signPresence: (event, signature) => {
