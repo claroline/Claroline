@@ -9,6 +9,7 @@ import {Course as CourseComponent} from '#/plugin/cursus/course/components/main'
 const Course = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
+      basePath: toolSelectors.path(state),
       course: selectors.course(state),
       contextType: toolSelectors.contextType(state),
       defaultSession: selectors.defaultSession(state),

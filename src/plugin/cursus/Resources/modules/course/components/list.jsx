@@ -27,8 +27,8 @@ const Courses = (props) => {
         url: props.url,
         autoload: true
       }}
-      primaryAction={(row) => getDefaultAction(row, refresher, null, props.currentUser)}
-      actions={(rows) => getActions(rows, refresher, null, props.currentUser)}
+      primaryAction={(row) => getDefaultAction(row, refresher, props.path, props.currentUser)}
+      actions={(rows) => getActions(rows, refresher, props.path, props.currentUser)}
       definition={[
         {
           name: 'name',

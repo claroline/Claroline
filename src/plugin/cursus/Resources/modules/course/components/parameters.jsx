@@ -24,17 +24,13 @@ const CourseParameters = (props) => {
         type: CALLBACK_BUTTON,
         callback: () => props.save(props.course, props.isNew, props.name).then(course => {
           if (props.isNew) {
-            if ('workspace' === props.contextType) {
-              history.push(route(course, null, course.workspace))
-            } else {
-              history.push(route(course))
-            }
+            history.push(route(course, null, props.path))
           }
         })
       }}
       cancel={{
         type: LINK_BUTTON,
-        target: props.isNew ? props.path : (('workspace' === props.contextType) ? route(props.course, null, props.course.workspace) : route(props.course)),
+        target: props.isNew ? props.path : route(props.course, null, props.path),
         exact: true
       }}
       definition={[

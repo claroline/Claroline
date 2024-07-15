@@ -12,15 +12,12 @@ import {trans} from '#/main/app/intl'
 const TrainingsTool = (props) =>
   <Tool
     {...props}
-    redirect={[
-      {from: '/', exact: true, to: '/catalog'}
-    ]}
     menu={[
       {
         name: 'catalog',
         type: LINK_BUTTON,
         label: trans('catalog', {}, 'cursus'),
-        target: `${props.path}/catalog`
+        target: `${props.path}`
       }, {
         name: 'public',
         type: LINK_BUTTON,
@@ -48,7 +45,7 @@ const TrainingsTool = (props) =>
     ]}
     pages={[
       {
-        path: '/catalog',
+        path: '/',
         component: CatalogMain
       }, {
         path: '/registered',
@@ -64,7 +61,8 @@ const TrainingsTool = (props) =>
 TrainingsTool.propTypes = {
   authenticated: T.bool.isRequired,
   canEdit: T.bool.isRequired,
-  canRegister: T.bool.isRequired
+  canRegister: T.bool.isRequired,
+  path: T.string.isRequired
 }
 
 export {

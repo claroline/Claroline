@@ -22,14 +22,14 @@ const EventsTool = (props) =>
   <Tool
     {...props}
     redirect={[
-      {from: '/', exact: true, to: props.course ? '/about/' + props.course.slug + '/sessions' : '/about'}
+      {from: '/', exact: true, to: props.course ? '/course/' + props.course.slug : '/course'}
     ]}
     menu={[
       {
         name: 'about',
         type: LINK_BUTTON,
         label: trans('about', {}, 'platform'),
-        target: props.course ? props.path + '/about/' + props.course.slug : props.path + '/about'
+        target: props.course ? props.path + '/course/' + props.course.slug : props.path + '/course'
       }, {
         name: 'registered',
         type: LINK_BUTTON,
@@ -60,11 +60,11 @@ const EventsTool = (props) =>
         disabled: !props.canEdit,
         component: CourseCreation
       }, {
-        path: '/about/:courseSlug/edit',
+        path: '/course/:courseSlug/edit',
         onEnter: () => props.openForm(props.course.slug),
         component: CourseEdit
       }, {
-        path: '/about',
+        path: '/course',
         onEnter: () => {
           if (props.course) {
             return props.openCourse(props.course.slug)
@@ -74,7 +74,7 @@ const EventsTool = (props) =>
           if (props.course) {
             return (
               <Course
-                path={props.path + '/about/' + props.course.slug}
+                path={props.path + '/course/' + props.course.slug}
                 slug={props.course.slug}
                 history={params.history}
               />)

@@ -1,13 +1,16 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {ToolPage} from '#/main/core/tool'
 import {trans} from '#/main/app/intl/translation'
-
-import {selectors} from '#/plugin/cursus/tools/catalog/store'
 import {CourseList} from '#/plugin/cursus/course/components/list'
 
-const CatalogList = (props) =>
+import {ToolPage} from '#/main/core/tool'
+import {selectors as toolSelectors} from '#/main/core/tool/store'
+import {withReducer} from '#/main/app/store/components/withReducer'
+import {reducer, selectors} from '#/plugin/cursus/tools/catalog/store'
+
+const CatalogListComponent = (props) =>
   <ToolPage
     title={trans('catalog', {}, 'cursus')}
   >
@@ -18,9 +21,18 @@ const CatalogList = (props) =>
     />
   </ToolPage>
 
-CatalogList.propTypes = {
+CatalogListComponent.propTypes = {
   path: T.string.isRequired
 }
+
+const CatalogList = withReducer(selectors.STORE_NAME, reducer)(
+  connect(
+    (state) => ({
+      path: toolSelectors.path(state)
+    })
+  )(CatalogListComponent)
+)
+
 
 export {
   CatalogList

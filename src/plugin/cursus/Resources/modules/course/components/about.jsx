@@ -327,7 +327,7 @@ const CourseAbout = (props) => {
             data={props.course.parent}
             primaryAction={{
               type: LINK_BUTTON,
-              target: route(props.course.parent)
+              target: route(props.course.parent, null, props.path)
             }}
           />
         }
@@ -349,7 +349,7 @@ const CourseAbout = (props) => {
             data={child}
             primaryAction={{
               type: LINK_BUTTON,
-              target: route(child)
+              target: route(child, null, props.path)
             }}
           />
         )}
@@ -371,7 +371,7 @@ const CourseAbout = (props) => {
                 data={session}
                 primaryAction={{
                   type: LINK_BUTTON,
-                  target: 'workspace' === props.contextType ? route(props.course, session, props.course.workspace) : route(props.course, session)
+                  target: route(props.course, session, props.path)
                 }}
               />
             )}
@@ -397,8 +397,8 @@ CourseAbout.propTypes = {
     groups: T.array.isRequired,
     pending: T.array.isRequired
   }),
-  contextType: T.string.isRequired,
-  path: T.string.isRequired,
+  contextType: T.string,
+  path: T.string,
   actions: T.array
 }
 

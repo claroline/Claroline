@@ -27,9 +27,9 @@ const RestrictionMain = (props) => {
   const registrations = get(props.errors, 'trainings.registrations')
 
   return (
-    <Router embedded={true} basename={route(course)}>
+    <Router embedded={true} basename={route(course, null, props.path)}>
       <Routes
-        path={route(get(props.errors, 'trainings.course'))}
+        path={route(get(props.errors, 'trainings.course'), null, props.path)}
         routes={[
           {
             path: '/:id?',
@@ -107,7 +107,8 @@ RestrictionMain.propTypes = {
       registrations: T.object
     })
   }),
-  dismiss: T.func.isRequired
+  dismiss: T.func.isRequired,
+  path: T.string.isRequired
 }
 
 export {

@@ -154,6 +154,7 @@ const CourseDetails = (props) =>
             <CourseSessions
               contextType={props.contextType}
               path={props.path}
+              basePath={props.basePath}
               course={props.course}
               registrations={props.registrations}
               reload={props.reload}

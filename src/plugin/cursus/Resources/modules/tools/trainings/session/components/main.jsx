@@ -51,7 +51,7 @@ const SessionMain = (props) =>
           onEnter: () => props.invalidateList(),
           render: () => (
             <SessionList
-              path={props.path+'/catalog'}
+              path={props.path}
               name={selectors.STORE_NAME}
               url={['apiv2_cursus_my_sessions_active']}
               actions={(rows) => [
@@ -71,7 +71,7 @@ const SessionMain = (props) =>
           onEnter: () => props.invalidateList(),
           render: () => (
             <SessionList
-              path={props.path+'/catalog'}
+              path={props.path}
               name={selectors.STORE_NAME}
               url={['apiv2_cursus_my_sessions_ended']}
               actions={(rows) => [
@@ -92,7 +92,7 @@ const SessionMain = (props) =>
           onEnter: () => props.invalidateList(),
           render: () => (
             <SessionList
-              path={props.path+'/catalog'}
+              path={props.path}
               name={selectors.STORE_NAME}
               url={['apiv2_cursus_my_sessions_pending']}
             />

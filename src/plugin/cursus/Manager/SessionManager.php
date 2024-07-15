@@ -78,15 +78,15 @@ class SessionManager
     public function generateFromTemplate(Session $session, string $locale): string
     {
         $placeholders = array_merge([
-                'session_url' => $this->routingHelper->desktopUrl('trainings').'/catalog/'.$session->getCourse()->getSlug().'/'.$session->getUuid(),
-                'session_name' => $session->getName(),
-                'session_code' => $session->getCode(),
-                'session_description' => $session->getDescription(),
-                'session_poster' => $session->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$session->getPoster().'" style="max-width: 100%;" />' : '',
-                'session_public_registration' => $this->translator->trans($session->getPublicRegistration() ? 'yes' : 'no', [], 'platform'),
-                'session_max_users' => $session->getMaxUsers(),
-                'workspace_url' => $this->routingHelper->workspaceUrl($session->getWorkspace()),
-            ],
+            'session_url' => $this->routingHelper->desktopUrl('trainings').'/course/'.$session->getCourse()->getSlug().'/'.$session->getUuid(),
+            'session_name' => $session->getName(),
+            'session_code' => $session->getCode(),
+            'session_description' => $session->getDescription(),
+            'session_poster' => $session->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$session->getPoster().'" style="max-width: 100%;" />' : '',
+            'session_public_registration' => $this->translator->trans($session->getPublicRegistration() ? 'yes' : 'no', [], 'platform'),
+            'session_max_users' => $session->getMaxUsers(),
+            'workspace_url' => $this->routingHelper->workspaceUrl($session->getWorkspace()),
+        ],
             $this->templateManager->formatDatePlaceholder('session_start', $session->getStartDate()),
             $this->templateManager->formatDatePlaceholder('session_end', $session->getEndDate()),
         );
@@ -386,17 +386,17 @@ class SessionManager
         }
 
         $basicPlaceholders = array_merge([
-                'course_name' => $course->getName(),
-                'course_code' => $course->getCode(),
-                'course_description' => $course->getDescription(),
-                'session_url' => $this->routingHelper->desktopUrl('trainings').'/catalog/'.$session->getCourse()->getSlug().'/'.$session->getUuid(),
-                'session_poster' => $session->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$session->getPoster().'" style="max-width: 100%;" />' : '',
-                'session_name' => $session->getName(),
-                'session_description' => $session->getDescription(),
-                'session_trainers' => $trainersList,
-                'workspace_url' => $workspace ? $this->routingHelper->workspaceUrl($workspace) : '',
-                'registration_confirmation_url' => $this->router->generate('apiv2_cursus_session_self_confirm', ['id' => $session->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL), // TODO
-            ],
+            'course_name' => $course->getName(),
+            'course_code' => $course->getCode(),
+            'course_description' => $course->getDescription(),
+            'session_url' => $this->routingHelper->desktopUrl('trainings').'/course/'.$session->getCourse()->getSlug().'/'.$session->getUuid(),
+            'session_poster' => $session->getPoster() ? '<img src="'.$this->platformManager->getUrl().'/'.$session->getPoster().'" style="max-width: 100%;" />' : '',
+            'session_name' => $session->getName(),
+            'session_description' => $session->getDescription(),
+            'session_trainers' => $trainersList,
+            'workspace_url' => $workspace ? $this->routingHelper->workspaceUrl($workspace) : '',
+            'registration_confirmation_url' => $this->router->generate('apiv2_cursus_session_self_confirm', ['id' => $session->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL), // TODO
+        ],
             $this->templateManager->formatDatePlaceholder('session_start', $session->getStartDate()),
             $this->templateManager->formatDatePlaceholder('session_end', $session->getEndDate()),
         );

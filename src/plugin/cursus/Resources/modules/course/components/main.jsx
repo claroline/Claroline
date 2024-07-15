@@ -12,7 +12,7 @@ import {Course as CourseTypes, Session as SessionTypes} from '#/plugin/cursus/pr
 
 const Course = (props) =>
   <CoursePage
-    path={props.path}
+    path={props.basePath}
     course={props.course}
     activeSession={props.activeSession}
   >
@@ -31,6 +31,7 @@ const Course = (props) =>
           render: (routerProps) => (
             <CourseDetails
               contextType={props.contextType}
+              basePath={props.basePath}
               path={props.path + (routerProps.match.params.id && !['sessions', 'participants', 'pending', 'events', 'about', 'desktop'].includes(routerProps.match.params.id) ? '/' + routerProps.match.params.id : '')}
               history={props.history}
               course={props.course}
@@ -45,7 +46,7 @@ const Course = (props) =>
                   props.reload(course.slug)
 
                   if (!isEmpty(sessionId)) {
-                    props.history.push(route(course, {id: sessionId}))
+                    props.history.push(route(course, {id: sessionId}, props.path))
                   }
                 })
               }}
@@ -83,7 +84,8 @@ Course.propTypes = {
   contextType: T.string.isRequired,
   openSession: T.func.isRequired,
   reload: T.func.isRequired,
-  register: T.func.isRequired
+  register: T.func.isRequired,
+  basePath: T.string.isRequired
 }
 
 export {
