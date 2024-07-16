@@ -110,6 +110,21 @@ class CourseController extends AbstractCrudController
     }
 
     /**
+     * @Route("/public", name="apiv2_cursus_course_list_public", methods={"GET"})
+     */
+    public function listPublicAction(Request $request): JsonResponse
+    {
+        $params = $request->query->all();
+        $params['hiddenFilters'] = [
+            'public' => true,
+        ];
+
+        return new JsonResponse(
+            $this->crud->list(Course::class, $params)
+        );
+    }
+
+    /**
      * @Route("/{slug}/open", name="apiv2_cursus_course_open", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"slug": "slug"}})
