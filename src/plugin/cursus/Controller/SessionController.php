@@ -278,7 +278,7 @@ class SessionController extends AbstractCrudController
         }
 
         return new RedirectResponse(
-            $this->routingHelper->desktopUrl('trainings').'/catalog/'.$session->getCourse()->getSlug().'/'.$session->getUuid()
+            $this->routingHelper->desktopUrl('trainings').'/course/'.$session->getCourse()->getSlug().'/'.$session->getUuid()
         );
     }
 

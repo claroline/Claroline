@@ -9,7 +9,7 @@ export default (courses, refresher, path) => ({
   type: LINK_BUTTON,
   icon: 'fa fa-fw fa-pencil',
   label: trans('edit', {}, 'actions'),
-  target: route(courses[0], null, path) + '/edit',
+  target: route(courses[0], null, path.replace('/public/catalog', '/desktop/trainings')) + '/edit',
   displayed: hasPermission('edit', courses[0]),
   primary: true,
   group: trans('management'),

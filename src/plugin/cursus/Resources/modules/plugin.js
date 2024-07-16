@@ -29,7 +29,8 @@ registry.add('ClarolineCursusBundle', {
   tools: {
     'trainings'      : () => { return import(/* webpackChunkName: "training-tools-trainings" */       '#/plugin/cursus/tools/trainings') },
     'training_events': () => { return import(/* webpackChunkName: "training-tools-training-events" */ '#/plugin/cursus/tools/events') },
-    'presence'       : () => { return import(/* webpackChunkName: "training-tools-presence" */        '#/plugin/cursus/tools/presence') }
+    'presence'       : () => { return import(/* webpackChunkName: "training-tools-presence" */        '#/plugin/cursus/tools/presence') },
+    'catalog'        : () => { return import(/* webpackChunkName: "training-tools-catalog" */         '#/plugin/cursus/tools/catalog') }
   },
 
   events: {

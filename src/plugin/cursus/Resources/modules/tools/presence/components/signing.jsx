@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 
 import {Button} from '#/main/app/action'
+import {ToolPage} from '#/main/core/tool'
 import {Alert} from '#/main/app/components/alert'
 import {displayDate, trans} from '#/main/app/intl'
 import {MODAL_LOGIN} from '#/main/app/modals/login'
@@ -15,8 +16,11 @@ import {selectors, actions} from '#/plugin/cursus/tools/presence/store'
 import {selectors as securitySelectors} from '#/main/app/security/store/selectors'
 
 const SignPresenceComponent = (props) =>
-  <ContentSizing size="md" className="d-flex flex-column align-items-center mt-5">
-    {props.currentUser && props.eventLoaded && props.currentEvent && props.eventSigned &&
+  <ToolPage
+    title={trans('presence', {}, 'tools')}
+  >
+    <ContentSizing size="md" className="d-flex flex-column align-items-center mt-5">
+      {props.currentUser && props.eventLoaded && props.currentEvent && props.eventSigned &&
       <Alert
         type="success"
         className="content-md"
@@ -32,9 +36,9 @@ const SignPresenceComponent = (props) =>
           />
         </div>
       </Alert>
-    }
+      }
 
-    { props.currentUser && props.eventLoaded && props.currentEvent && !props.eventSigned &&
+      { props.currentUser && props.eventLoaded && props.currentEvent && !props.eventSigned &&
       <Form>
         <div className="bg-body-secondary rounded-2 p-4">
           <ContentHtml className="text-center mb-3">
@@ -64,9 +68,9 @@ const SignPresenceComponent = (props) =>
           </ContentSizing>
         </div>
       </Form>
-    }
+      }
 
-    { !props.currentUser && props.eventLoaded && props.currentEvent &&
+      { !props.currentUser && props.eventLoaded && props.currentEvent &&
         <Alert
           type="warning"
           className="content-md"
@@ -86,9 +90,9 @@ const SignPresenceComponent = (props) =>
             />
           </div>
         </Alert>
-    }
+      }
 
-    { props.eventLoaded && !props.currentEvent &&
+      { props.eventLoaded && !props.currentEvent &&
         <Alert
           type="warning"
           className="content-md"
@@ -104,8 +108,9 @@ const SignPresenceComponent = (props) =>
             />
           </div>
         </Alert>
-    }
-  </ContentSizing>
+      }
+    </ContentSizing>
+  </ToolPage>
 
 const SignPresence = connect(
   (state) => ({

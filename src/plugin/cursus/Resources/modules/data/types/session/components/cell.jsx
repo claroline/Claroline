@@ -10,7 +10,7 @@ import {route} from '#/plugin/cursus/routing'
 const SessionCell = props => {
   if (!isEmpty(props.data)) {
     return (
-      <UrlButton target={'#'+route(props.data.course, props.data)}>
+      <UrlButton target={'#'+route(props.data.course, props.data, props.path)}>
         {props.data.name}
       </UrlButton>
     )

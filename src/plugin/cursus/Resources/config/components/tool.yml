@@ -14,3 +14,7 @@ services:
     Claroline\CursusBundle\Component\Tool\PresenceTool:
       parent: Claroline\AppBundle\Component\Tool\AbstractTool
       tags: [ 'claroline.component.tool' ]
+
+    Claroline\CursusBundle\Component\Tool\CatalogTool:
+      parent: Claroline\AppBundle\Component\Tool\AbstractTool
+      tags: [ 'claroline.component.tool' ]

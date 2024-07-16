@@ -13,6 +13,9 @@ plugin:
         - name: presence
           icon: signature
 
+        - name: catalog
+          icon: graduation-cap
+
     data_sources:
         - name: course_sessions
           type: list

@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\AppBundle\Entity\Meta\IsPublic;
 use Claroline\CommunityBundle\Model\HasOrganizations;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,27 +22,33 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CourseRepository")
+ *
  * @ORM\Table(name="claro_cursusbundle_course")
+ *
  * @DoctrineAssert\UniqueEntity("code")
  */
 class Course extends AbstractTraining
 {
     use HasOrganizations;
+    use IsPublic;
 
     /**
      * @Gedmo\Slug(fields={"name"})
+     *
      * @ORM\Column(length=128, unique=true)
      */
     private string $slug;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\Course", inversedBy="children")
+     *
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private ?Course $parent = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CursusBundle\Entity\Course", mappedBy="parent")
+     *
      * @ORM\OrderBy({"order" = "ASC"})
      *
      * @var Collection|Course[]
@@ -78,6 +85,7 @@ class Course extends AbstractTraining
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
      * )
+     *
      * @ORM\JoinTable(name="claro_cursusbundle_course_organizations")
      */
     private Collection $organizations;
@@ -86,6 +94,7 @@ class Course extends AbstractTraining
      * A list of custom panels and fields for the user registration form.
      *
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacet", cascade={"persist"})
+     *
      * @ORM\JoinTable(name="claro_cursusbundle_course_panel_facet",
      *     joinColumns={@ORM\JoinColumn(name="course_id", referencedColumnName="id", onDelete="CASCADE")},
      *     inverseJoinColumns={@ORM\JoinColumn(name="panel_facet_id", referencedColumnName="id", onDelete="CASCADE", unique=true)}

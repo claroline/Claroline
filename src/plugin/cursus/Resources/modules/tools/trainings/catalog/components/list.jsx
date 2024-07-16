@@ -13,7 +13,7 @@ const CatalogList = (props) =>
     breadcrumb={[{
       type: LINK_BUTTON,
       label: trans('catalog', {}, 'cursus'),
-      target: props.path + '/catalog'
+      target: props.path
     }]}
     title={trans('catalog', {}, 'cursus')}
     primaryAction="add"
@@ -23,7 +23,7 @@ const CatalogList = (props) =>
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-plus',
         label: trans('add_course', {}, 'cursus'),
-        target: `${props.path}/catalog/new`,
+        target: `${props.path}/new`,
         group: trans('management'),
         displayed: props.canEdit,
         primary: true
@@ -31,7 +31,7 @@ const CatalogList = (props) =>
     ]}
   >
     <CourseList
-      path={props.path+'/catalog'}
+      path={props.path}
       name={selectors.LIST_NAME}
       url={['apiv2_cursus_course_list']}
     />

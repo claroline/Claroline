@@ -23,7 +23,7 @@ const CourseSessions = (props) =>
     <SessionList
       className="my-3"
       course={props.course}
-      path={props.path}
+      path={props.basePath}
       name={selectors.STORE_NAME+'.courseSessions'}
       contextType={props.contextType}
       url={['apiv2_cursus_course_list_sessions', {id: props.course.id}]}
@@ -115,11 +115,7 @@ const CourseSessions = (props) =>
           course: props.course,
           onSave: (newSession) => {
             // open created session, but let user on sessions list to allow multiples creations
-            if('workspace' === props.contextType) {
-              props.history.push(route(props.course, newSession, props.course.workspace) + '/sessions')
-            } else {
-              props.history.push(route(props.course, newSession) + '/sessions')
-            }
+            props.history.push(route(props.course, newSession, props.basePath) + '/sessions')
             props.reload(props.course.slug)
           }
         }]}
@@ -131,6 +127,7 @@ const CourseSessions = (props) =>
 
 CourseSessions.propTypes = {
   path: T.string.isRequired,
+  basePath: T.string.isRequired,
   history: T.shape({
     push: T.func.isRequired
   }).isRequired,

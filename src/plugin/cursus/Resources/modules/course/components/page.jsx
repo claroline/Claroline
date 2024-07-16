@@ -46,11 +46,11 @@ const Course = (props) => {
         }, {
           type: LINK_BUTTON,
           label: get(props.course, 'name', trans('loading')),
-          target: !isEmpty(props.course) ? route(props.course, null, props.path) : ''
+          target: !isEmpty(props.course) ? route(props.course, null, props.basePath) : ''
         }
       ].concat(props.course ? props.breadcrumb : [])}
       primaryAction="edit"
-      actions={getActions([props.course], {}, 'workspace' === props.contextType ? props.course.workspace : null, props.currentUser)}
+      actions={getActions([props.course], {}, props.basePath)}
     >
       {props.children}
     </ToolPage>
@@ -59,6 +59,7 @@ const Course = (props) => {
 
 Course.propTypes = {
   path: T.string,
+  basePath: T.string.isRequired,
   breadcrumb: T.array,
   course: T.shape(
     CourseTypes.propTypes
@@ -78,7 +79,8 @@ Course.defaultProps = {
 const CoursePage = connect(
   (state) => ({
     currentUser: securitySelectors.currentUser(state),
-    contextType: toolSelectors.contextType(state)
+    contextType: toolSelectors.contextType(state),
+    basePath: toolSelectors.path(state)
   })
 )(Course)
 
