@@ -109,6 +109,7 @@ class CourseSerializer
                 'created' => DateNormalizer::normalize($course->getCreatedAt()),
                 'updated' => DateNormalizer::normalize($course->getUpdatedAt()),
                 'duration' => $course->getDefaultSessionDuration(),
+                'public' => $course->isPublic(),
             ],
             'opening' => [
                 'session' => $course->getSessionOpening(),
@@ -212,6 +213,10 @@ class CourseSerializer
                 /** @var User $creator */
                 $creator = $this->om->getObject($data['meta']['creator'], User::class);
                 $course->setCreator($creator);
+            }
+
+            if (isset($data['meta']['public'])) {
+                $course->setPublic($data['meta']['public']);
             }
         }
 

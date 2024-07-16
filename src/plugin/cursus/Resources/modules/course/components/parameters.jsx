@@ -264,6 +264,13 @@ const CourseParameters = (props) => {
                   }
                 }
               ]
+            }, {
+              name: 'meta.public',
+              type: 'boolean',
+              label: trans('make_course_public', {}, 'cursus'),
+              help: [
+                trans('make_course_public_help', {}, 'cursus')
+              ]
             }
           ]
         }

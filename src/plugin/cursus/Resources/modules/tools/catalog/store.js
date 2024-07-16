@@ -24,7 +24,7 @@ const selectors = {
 const reducer = combineReducers({
   courses: makeListReducer(selectors.LIST_NAME, {
     sortBy: {property: 'name', direction: 1},
-    filters: [{property: 'publicRegistration', value: true, locked: true}]
+    filters: [{property: 'public', value: true, locked: true}]
   }),
   course: makeReducer(null, {
     [LOAD_COURSE]: (state, action) => action.course

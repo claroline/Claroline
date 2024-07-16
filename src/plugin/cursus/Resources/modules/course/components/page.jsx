@@ -50,7 +50,7 @@ const Course = (props) => {
         }
       ].concat(props.course ? props.breadcrumb : [])}
       primaryAction="edit"
-      actions={getActions([props.course], {}, props.basePath.replace('/public/catalog', '/desktop/trainings'))}
+      actions={getActions([props.course], {}, props.basePath)}
     >
       {props.children}
     </ToolPage>

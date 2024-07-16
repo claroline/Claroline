@@ -10,6 +10,8 @@
     "catalog": "Training catalog",
     "course": "Training",
     "courses": "Trainings",
+    "make_course_public": "Make the training public",
+    "make_course_public_help": "Public trainings are visible to anonymous.",
     "course_delete_confirm_title": "{1} Training deletion | [2,Inf[ Trainings deletion",
     "course_delete_confirm_message": "{1} Are you sure you want to delete this training? | [2,Inf[ Are you sure you want to delete these %count% trainings?",
     "my_courses": "My trainings",

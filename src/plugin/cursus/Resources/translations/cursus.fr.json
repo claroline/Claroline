@@ -10,6 +10,8 @@
     "catalog": "Catalogue de formations",
     "course": "Formation",
     "courses": "Formations",
+    "make_course_public": "Rendre la formation publique",
+    "make_course_public_help": "Les formations publiques sont visibles par les anonymes.",
     "course_delete_confirm_title": "{1} Suppression d'une formation | [2,Inf[ Suppression de plusieurs formations",
     "course_delete_confirm_message": "{1} Êtes-vous sûr de vouloir supprimer ce formation ? | [2,Inf[ Êtes-vous sûr de vouloir supprimer ces %count% formations ?",
     "my_courses": "Mes formations",

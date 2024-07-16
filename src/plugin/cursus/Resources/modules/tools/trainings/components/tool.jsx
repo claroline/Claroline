@@ -17,7 +17,7 @@ const TrainingsTool = (props) =>
         name: 'catalog',
         type: LINK_BUTTON,
         label: trans('catalog', {}, 'cursus'),
-        target: `${props.path}`
+        target: props.path
       }, {
         name: 'public',
         type: LINK_BUTTON,
