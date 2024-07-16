@@ -28,7 +28,7 @@ const Courses = (props) => {
         autoload: true
       }}
       primaryAction={(row) => getDefaultAction(row, refresher, props.path, props.currentUser)}
-      actions={(rows) => getActions(rows, refresher, props.path, props.currentUser)}
+      actions={(rows) => getActions(rows, refresher, props.path.replace('/public/catalog', '/desktop/trainings'), props.currentUser)}
       definition={[
         {
           name: 'name',
