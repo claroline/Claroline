@@ -100,6 +100,32 @@ class WorkspaceController extends AbstractCrudController
 
     /**
      * @ApiDoc(
+     *     description="The list of public workspaces for the current security token.",
+     *     queryString={
+     *         "$finder",
+     *         {"name": "page", "type": "integer", "description": "The queried page."},
+     *         {"name": "limit", "type": "integer", "description": "The max amount of objects per page."},
+     *         {"name": "sortBy", "type": "string", "description": "Sort by the property if you want to."}
+     *     }
+     * )
+     *
+     * @Route("/list/public", name="apiv2_workspace_list_public", methods={"GET"})
+     */
+    public function listPublicAction(Request $request): JsonResponse
+    {
+        return new JsonResponse($this->crud->list(
+            Workspace::class,
+            array_merge($request->query->all(), ['hiddenFilters' => [
+                'displayable' => true,
+                'model' => false,
+                'public' => true,
+            ]]),
+            $this->getOptions()['list']
+        ));
+    }
+
+    /**
+     * @ApiDoc(
      *     description="The list of registered workspaces for the current security token.",
      *     queryString={
      *         "$finder=Claroline\CoreBundle\Entity\Workspace\Workspace&!user",

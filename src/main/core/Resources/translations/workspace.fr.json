@@ -8,6 +8,9 @@
   "workspace_models": "Modèles d'espaces d'activités",
   "workspace_archived": "Espaces d'activités archivés",
 
+  "make_workspace_public": "Rendre l'espace d'activités public",
+  "make_workspace_public_help": "Les espaces d'activités publics sont visibles par tous les utilisateurs de la plateforme.",
+
   "view_as_info": "Vous voyez actuellement ce que les utilisateurs avec ce rôle voient.",
   "copy_as_model": "Copier comme modèle",
   "copy_confirm_title": "{1} Copie d'un espace d'activités | [2,Inf[ Copie de plusieurs espaces d'activités",

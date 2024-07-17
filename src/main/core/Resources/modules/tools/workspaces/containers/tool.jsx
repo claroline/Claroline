@@ -16,6 +16,7 @@ const WorkspacesTool = withReducer(selectors.STORE_NAME, reducer)(
       path: toolSelectors.path(state),
       currentUser: securitySelectors.currentUser(state),
       canCreate: selectors.creatable(state),
+      contextType: toolSelectors.contextType(state),
       canArchive: hasPermission('archive', toolSelectors.toolData(state))
     }),
     (dispatch) => ({
