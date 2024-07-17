@@ -17,7 +17,7 @@ const CatalogListComponent = (props) =>
     <CourseList
       path={props.path}
       name={selectors.LIST_NAME}
-      url={['apiv2_cursus_course_list']}
+      url={['apiv2_cursus_course_list_public']}
     />
   </ToolPage>
 
