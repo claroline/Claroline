@@ -17,6 +17,7 @@ use Claroline\AppBundle\Entity\Identifier\Code;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
+use Claroline\AppBundle\Entity\Meta\IsPublic;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Claroline\CommunityBundle\Model\HasGroups;
 use Claroline\CoreBundle\Entity\Group;
@@ -31,7 +32,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\OrganizationRepository")
+ *
  * @ORM\Table(name="claro__organization")
+ *
  * @Gedmo\Tree(type="nested")
  */
 class Organization
@@ -40,13 +43,14 @@ class Organization
     use Id;
     use Uuid;
     use Name;
+    use IsPublic;
     use Description;
     use Poster;
     use Thumbnail;
     use HasGroups;
 
-    const TYPE_EXTERNAL = 'external';
-    const TYPE_INTERNAL = 'internal';
+    public const TYPE_EXTERNAL = 'external';
+    public const TYPE_INTERNAL = 'internal';
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -55,6 +59,7 @@ class Organization
 
     /**
      * @ORM\Column(nullable=true, type="string")
+     *
      * @Assert\Email()
      */
     private ?string $email = null;
@@ -65,6 +70,7 @@ class Organization
      *     cascade={"persist"},
      *     inversedBy="organizations"
      * )
+     *
      * @ORM\JoinTable(name="claro__location_organization")
      *
      * @var ArrayCollection
@@ -75,6 +81,7 @@ class Organization
 
     /**
      * @Gedmo\TreeLeft
+     *
      * @ORM\Column(name="lft", type="integer")
      *
      * @var int
@@ -83,6 +90,7 @@ class Organization
 
     /**
      * @Gedmo\TreeLevel
+     *
      * @ORM\Column(name="lvl", type="integer")
      *
      * @var int
@@ -91,6 +99,7 @@ class Organization
 
     /**
      * @Gedmo\TreeRight
+     *
      * @ORM\Column(name="rgt", type="integer")
      *
      * @var int
@@ -99,6 +108,7 @@ class Organization
 
     /**
      * @Gedmo\TreeRoot
+     *
      * @ORM\Column(name="root", type="integer", nullable=true)
      *
      * @var int
@@ -107,15 +117,16 @@ class Organization
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      *
-     * @var Organization
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="children")
+     *
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private ?Organization $parent = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", mappedBy="parent")
+     *
      * @ORM\OrderBy({"name" = "ASC"})
      *
      * @var Organization[]|ArrayCollection
@@ -127,6 +138,7 @@ class Organization
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     mappedBy="organizations"
      * )
+     *
      * @ORM\JoinTable(name="claro_user_workspace")
      *
      * @var Workspace[]|ArrayCollection
@@ -140,6 +152,7 @@ class Organization
      *     targetEntity="Claroline\CoreBundle\Entity\Group",
      *     mappedBy="organizations"
      * )
+     *
      * @ORM\JoinTable(name="claro_group_organization")
      *
      * @var ArrayCollection
@@ -152,11 +165,6 @@ class Organization
      * @ORM\Column(name="is_default", type="boolean")
      */
     private $default = false;
-
-    /**
-     * @ORM\Column(name="is_public", type="boolean")
-     */
-    private $public = false;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -179,6 +187,7 @@ class Organization
      *     cascade={"persist", "remove"},
      *     orphanRemoval=true
      * )
+     *
      * @ORM\JoinColumn(name="organization_id", nullable=false)
      *
      * @var ArrayCollection|UserOrganizationReference[]
@@ -325,16 +334,6 @@ class Organization
     public function isDefault(): bool
     {
         return $this->default;
-    }
-
-    public function isPublic(): bool
-    {
-        return $this->public;
-    }
-
-    public function setPublic(bool $public): void
-    {
-        $this->public = $public;
     }
 
     /**
