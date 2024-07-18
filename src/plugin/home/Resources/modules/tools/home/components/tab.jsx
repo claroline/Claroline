@@ -52,6 +52,7 @@ class HomeTab extends Component {
         <HomePage
           currentTab={this.props.currentTab}
           title={this.props.currentTabTitle}
+          root={this.props.root}
         >
           <ContentLoader
             size="lg"
@@ -66,6 +67,7 @@ class HomeTab extends Component {
         <HomePage
           currentTab={this.props.currentTab}
           title={this.props.currentTabTitle}
+          root={this.props.root}
         >
           <HomeRestrictions
             errors={this.props.accessErrors}
@@ -82,7 +84,8 @@ class HomeTab extends Component {
         path: `${this.props.path}/${this.props.currentTab.slug}`,
         currentContext: this.props.currentContext,
         currentTab: this.props.currentTab,
-        title: this.props.currentTabTitle
+        title: this.props.currentTabTitle,
+        root: this.props.root
       })
     }
 
@@ -93,6 +96,7 @@ class HomeTab extends Component {
 HomeTab.propTypes = {
   path: T.string.isRequired,
   loaded: T.bool.isRequired,
+  root: T.bool,
   currentContext: T.object.isRequired,
   currentTabTitle: T.string.isRequired,
   currentTab: T.shape(TabTypes.propTypes),

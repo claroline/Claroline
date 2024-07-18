@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
 import {Tool, ToolPage} from '#/main/core/tool'
 
@@ -30,7 +31,7 @@ const HomeTool = props => {
           render: (routeProps) => {
             const flattened = flattenTabs(props.tabs)
             if (flattened.find(tab => tab.slug === routeProps.match.params.slug)) {
-              return <HomeTab />
+              return <HomeTab root={!isEmpty(props.tabs) && 1 === props.tabs.length} />
             }
 
             // tab does not exist
@@ -43,7 +44,7 @@ const HomeTool = props => {
       ]}
     >
       {!props.loaded &&
-        <ToolPage />
+        <ToolPage root={true} />
       }
     </Tool>
   )
