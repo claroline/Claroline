@@ -45,7 +45,7 @@ const PageActions = (props) => {
 
   return (
     <div className="page-actions gap-2 ms-auto d-flex" role="presentation">
-      {primaryAction &&
+      {primaryAction && (undefined === primaryAction.displayed || primaryAction.displayed) &&
         <Button
           {...primaryAction}
           className="btn btn-primary page-action-btn"
@@ -55,7 +55,7 @@ const PageActions = (props) => {
         />
       }
 
-      {secondaryAction &&
+      {secondaryAction && (undefined === secondaryAction.displayed || secondaryAction.displayed) &&
         <Button
           {...secondaryAction}
           className="btn btn-body page-actions-btn"
