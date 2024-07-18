@@ -2,8 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {trans} from '#/main/app/intl/translation'
-import {LINK_BUTTON} from '#/main/app/buttons'
+/*import {trans} from '#/main/app/intl/translation'
+import {LINK_BUTTON} from '#/main/app/buttons'*/
 import {ToolPage} from '#/main/core/tool'
 
 import {Tab as TabTypes} from '#/plugin/home/prop-types'
@@ -15,6 +15,7 @@ const HomePage = props =>
     /*icon={props.currentTab && props.currentTab.icon ?
       <span className={`tool-icon fa fa-${props.currentTab.icon}`} /> : undefined
     }*/
+    root={props.root}
     title={props.title || props.subtitle}
     poster={props.poster || get(props.currentTab, 'poster')}
     /*primaryAction="add"*/
@@ -40,6 +41,7 @@ HomePage.propTypes = {
   title: T.string.isRequired,
   subtitle: T.string,
   poster: T.string,
+  root: T.bool,
   currentTab: T.shape(
     TabTypes.propTypes
   ),
