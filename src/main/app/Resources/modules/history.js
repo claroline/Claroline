@@ -1,17 +1,11 @@
 import {now} from '#/main/app/intl'
 import isEmpty from 'lodash/isEmpty'
 
-const HISTORY_SIZE = 5
-
-function getRecent(sort = false) {
+function getRecent() {
   const recent = window.localStorage.getItem('recent')
 
   if (isEmpty(recent)) {
     return {}
-  }
-
-  if (sort) {
-
   }
 
   return JSON.parse(recent) || {}

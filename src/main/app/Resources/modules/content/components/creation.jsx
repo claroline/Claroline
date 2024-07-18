@@ -23,7 +23,10 @@ const ContentCreationType = (props) =>
       autoFocus={props.autoFocus}
       icon={props.icon &&
         <Thumbnail square={true} size="sm" color={props.color}>
-          <span className={`fa fa-${props.icon}`} />
+          {typeof props.icon === 'string' ?
+            <span className={`fa fa-${props.icon}`} /> :
+            props.icon
+          }
         </Thumbnail>
       }
       label={
@@ -47,8 +50,8 @@ const ContentCreationType = (props) =>
 ContentCreationType.propTypes = {
   id: T.string.isRequired,
   className: T.string,
-  icon: T.string,
-  color: T.string.isRequired,
+  icon: T.oneOfType([T.string, T.node]),
+  color: T.string,
   label: T.string.isRequired,
   description: T.string.isRequired,
   advanced: T.bool,
@@ -86,7 +89,7 @@ const ContentCreation = (props) => {
           key={creationType.id}
           className={0 !== index ? 'mt-2' : undefined}
           autoFocus={0 === index}
-          color={COLORS[index]}
+          color={props.color ? COLORS[index] : undefined}
           {...creationType}
         />
       )}
@@ -97,7 +100,7 @@ const ContentCreation = (props) => {
           <ContentCreationType
             key={creationType.id}
             className={0 !== index ? 'mt-2' : undefined}
-            color={COLORS[unclassifiedTypes.length + index]}
+            color={props.color ? COLORS[unclassifiedTypes.length + index] : undefined}
             {...creationType}
           />
         )
@@ -110,7 +113,7 @@ ContentCreation.propTypes = {
   className: T.string,
   types: T.arrayOf(T.shape({
     id: T.string.isRequired,
-    icon: T.string,
+    icon: T.oneOfType([T.string, T.node]),
     label: T.string.isRequired,
     description: T.string,
     advanced: T.bool,
@@ -119,7 +122,12 @@ ContentCreation.propTypes = {
       // Action types
     }),
     group: T.string
-  }))
+  })),
+  color: T.bool
+}
+
+ContentCreation.defaultProps = {
+  color: true
 }
 
 export {
