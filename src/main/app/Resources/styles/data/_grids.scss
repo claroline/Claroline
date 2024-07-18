@@ -14,7 +14,7 @@
 // ---
 
 .data-grid-header {
-    padding: $data-grid-gutter 0 $data-grid-gutter $data-grid-gutter;
+    padding: $data-grid-gutter*.5 0 $data-grid-gutter*.5 $data-card-spacer-x;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -36,7 +36,7 @@
 
     .list-selected-label/*,
     .btn*/ {
-        padding: $data-grid-gutter;
+        padding: $data-card-spacer-y $data-card-spacer-x;
     }
 }
 
@@ -46,13 +46,9 @@
 // ---
 
 .data-grid-content {
-    margin: 0; // reset ul margin
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
     // remove <ul> styles
     list-style-type: none;
+    margin: 0;
     padding: 0;
 }
 
@@ -68,7 +64,8 @@
 .data-grid-item-select {
     position: absolute;
     margin: 0 !important;
-    left: $data-grid-gutter * 2;
+    left: $data-card-spacer-x;
+    top: $data-card-spacer-y;
     transition-property: box-shadow, transform;
     transition-duration: .3s;
 }
@@ -80,75 +77,16 @@
 
 .data-grid-row {
     .data-grid-content {
-        margin: -$data-grid-gutter*.5 (-$data-grid-gutter); // absorb items margin
-    }
-
-    .data-grid-item-container {
-        padding: $data-grid-gutter*.5 $data-grid-gutter;
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-
-    .data-grid-item-select {
-        top: $data-grid-gutter + $data-grid-gutter*.5;
+        display: flex;
+        flex-direction: column;
+        gap: $data-grid-gutter*.5 0;
     }
 }
 
 .data-grid-col {
     .data-grid-content {
-        margin: -$data-grid-gutter; // absorb items margin
-    }
-
-    .data-grid-item-container {
-        padding: $data-grid-gutter;
-    }
-
-    .data-grid-item-select {
-        top: $data-grid-gutter * 2;
-    }
-
-    // XS screens :
-    //   - small tiles : 2
-    //   - large tiles : 1
-    @media (max-width: map-get($grid-breakpoints, 'sm')) {
-        &.data-grid-md .data-grid-item-container {
-            flex: 0 0 math.div(100%, 2);
-            max-width: math.div(100%, 2);
-        }
-
-        &.data-grid-lg .data-grid-item-container {
-            flex: 0 0 100%;
-            max-width: 100%;
-        }
-    }
-
-    // SM screens :
-    //   - small tiles : 3
-    //   - large tiles : 2
-    @media (max-width: map-get($grid-breakpoints, 'md')) {
-        &.data-grid-md .data-grid-item-container {
-            flex: 0 0 math.div(100%, 3);
-            max-width: math.div(100%, 3);
-        }
-
-        &.data-grid-lg .data-grid-item-container {
-            flex: 0 0 math.div(100%, 2);
-            max-width: math.div(100%, 2);
-        }
-    }
-
-    // MD & LG screens :
-    //   - small tiles : 5
-    //   - large tiles : 3
-    @media (min-width: map-get($grid-breakpoints, 'md')) {
-        &.data-grid-md .data-grid-item-container {
-            flex: 0 0 math.div(100%, 5);
-            max-width: math.div(100%, 5);
-        }
-
-        &.data-grid-lg .data-grid-item-container {
-            flex: 0 0 math.div(100%, 3);
-            max-width: math.div(100%, 3);
-        }
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: $data-grid-gutter;
     }
 }

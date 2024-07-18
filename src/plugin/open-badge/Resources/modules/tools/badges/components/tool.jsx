@@ -30,7 +30,8 @@ const BadgeTool = props =>
         name: 'all-badges',
         label: trans('all_badges', {}, 'badge'),
         target: props.path,
-        type: LINK_BUTTON
+        type: LINK_BUTTON,
+        exact: true
       }
     ]}
     editor={BadgesToolEditor}

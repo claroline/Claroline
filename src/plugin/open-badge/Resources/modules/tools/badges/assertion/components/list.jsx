@@ -11,13 +11,12 @@ import {selectors as toolSelectors} from '#/main/core/tool/store'
 import {AssertionBadgeCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
 import {actions, selectors} from '#/plugin/open-badge/tools/badges/store'
 import {ToolPage} from '#/main/core/tool'
-import {PageSection} from '#/main/app/page/components/section'
+import {PageListSection} from '#/main/app/page'
 
 const AssertionsList = (props) =>
   <ToolPage title={trans('my_badges', {}, 'badge')}>
-    {/*<PageSection size="full">*/}
+    <PageListSection>
       <ListData
-        /*flush={true}*/
         name={selectors.STORE_NAME + '.mine'}
         fetch={{
           url: ['apiv2_assertion_current_user_list', {workspace: props.contextData ? props.contextData.id : null}],
@@ -62,7 +61,7 @@ const AssertionsList = (props) =>
         card={AssertionBadgeCard}
         display={{current: listConstants.DISPLAY_LIST_SM}}
       />
-    {/*</PageSection>*/}
+    </PageListSection>
   </ToolPage>
 
 AssertionsList.propTypes = {

@@ -6,6 +6,5 @@
   "give_attempt": "Donner une tentative supplémentaire",
   "regenerate_certificate": "Regénérer le certificat",
   "regenerate_certificates": "Regénérer les certificats",
-  "download_all_certificates": "Télécharger tous les certificats",
-  "download_all_workspace_certificates": "Télécharger tous les certificats de l'espace d'activité"
+  "download_all_certificates": "Télécharger tous les certificats"
 }

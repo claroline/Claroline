@@ -1,12 +1,14 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
 
-import {Tool} from '#/main/core/tool'
+import {Tool, ToolPage} from '#/main/core/tool'
 
-import {PlayerMain} from '#/plugin/home/tools/home/player/containers/main'
 import {HomeEditor} from '#/plugin/home/tools/home/editor/containers/main'
-import {getTabSummary} from '#/plugin/home/tools/home/utils'
+import {flattenTabs, getTabSummary} from '#/plugin/home/tools/home/utils'
+import {HomeTab} from '#/plugin/home/tools/home/containers/tab'
+import {Tab as TabTypes} from '#/plugin/home/prop-types'
 
 const HomeTool = props => {
   const tabs = props.tabs
@@ -19,15 +21,42 @@ const HomeTool = props => {
       styles={['claroline-distribution-plugin-home-home-tool']}
       menu={1 < tabs.length ? tabs : []}
       editor={HomeEditor}
+      redirect={[
+        props.tabs[0] && {from: '/', exact: true, to: '/' + props.tabs[0].slug}
+      ].filter(redirect => !!redirect)}
+      pages={[
+        {
+          path: '/:slug',
+          onEnter: (params = {}) => props.setCurrentTab(params.slug),
+          render: (routeProps) => {
+            const flattened = flattenTabs(props.tabs)
+            if (flattened.find(tab => tab.slug === routeProps.match.params.slug)) {
+              return <HomeTab root={!isEmpty(props.tabs) && 1 === props.tabs.length} />
+            }
+
+            // tab does not exist
+            // let redirection open the first available
+            routeProps.history.replace(props.path)
+
+            return null
+          }
+        }
+      ]}
     >
-      <PlayerMain/>
+      {!props.loaded &&
+        <ToolPage root={true} />
+      }
     </Tool>
   )
 }
 
 HomeTool.propTypes = {
   path: T.string.isRequired,
-  tabs: T.array
+  loaded: T.bool.isRequired,
+  tabs: T.arrayOf(T.shape(
+    TabTypes.propTypes
+  )),
+  setCurrentTab: T.func.isRequired
 }
 
 HomeTool.defaultProps = {

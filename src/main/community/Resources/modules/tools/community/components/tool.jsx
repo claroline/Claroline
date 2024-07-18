@@ -19,7 +19,6 @@ import {CommunityEditor} from '#/main/community/tools/community/editor/container
 const CommunityTool = (props) =>
   <Tool
     {...props}
-    styles={['claroline-distribution-main-community-tool']}
     redirect={[
       {from: '/', exact: true, to: '/users', disabled: props.contextType === toolConstants.TOOL_WORKSPACE && get(props.contextData, 'meta.model')},
       {from: '/', exact: true, to: '/roles', disabled: props.contextType !== toolConstants.TOOL_WORKSPACE || !get(props.contextData, 'meta.model')}

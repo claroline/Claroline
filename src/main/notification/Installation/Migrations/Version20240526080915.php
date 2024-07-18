@@ -19,6 +19,7 @@ final class Version20240526080915 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 uuid VARCHAR(36) NOT NULL, 
                 createdAt DATETIME DEFAULT NULL, 
+                thumbnail VARCHAR(255) DEFAULT NULL,
                 user_id INT DEFAULT NULL, 
                 message VARCHAR(255) DEFAULT NULL,
                 UNIQUE INDEX UNIQ_856AFB35D17F50A6 (uuid), 

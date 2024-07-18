@@ -234,41 +234,6 @@ class StandardRestrictions extends Component {
               }
             </ContentRestriction>
           }
-
-          {!isUndefined(this.props.errors.invalidLocation) &&
-            <ContentRestriction
-              icon="fa fa-fw fa-laptop"
-              onlyWarn={true}
-              failed={this.props.errors.invalidLocation}
-              success={{
-                title: trans('restricted_workspace.authorized_ip', {}, 'workspace'),
-                help: ''
-              }}
-              fail={{
-                title: trans('restricted_workspace.authorized_ip_required', {}, 'workspace'),
-                help: trans('restricted_workspace.use_authorized_ip', {}, 'workspace')
-              }}
-            />
-          }
-
-          {this.props.managed &&
-            <>
-              <hr/>
-              <p className="text-secondary">
-                {trans('restricted_workspace.manager_info', {}, 'workspace')}
-              </p>
-
-              <Button
-                className="w-100 mb-3"
-                variant="btn"
-                size="lg"
-                type={CALLBACK_BUTTON}
-                label={trans('open-workspace', {}, 'actions')}
-                callback={this.props.dismiss}
-                primary={true}
-              />
-            </>
-          }
         </PageSection>
       </>
     )
@@ -285,7 +250,7 @@ const WorkspaceForbidden = (props) => {
   }, [props.workspace.id])
 
   return (
-    <ContextPage>
+    <ContextPage root={true}>
       {!isUndefined(restrictions) && 0 !== restrictions.length &&
         createElement(restrictions[0].component, {
           workspace: props.workspace,
@@ -305,7 +270,6 @@ const WorkspaceForbidden = (props) => {
 
 WorkspaceForbidden.propTypes = {
   currentUser: T.object,
-  managed: T.bool.isRequired,
   errors: T.shape({
     noRights: T.bool.isRequired,
     registered: T.bool,
@@ -323,7 +287,6 @@ WorkspaceForbidden.propTypes = {
     WorkspaceType.propTypes
   ),
   platformSelfRegistration: T.bool,
-  dismiss: T.func.isRequired,
   checkAccessCode: T.func,
   selfRegister: T.func
 }

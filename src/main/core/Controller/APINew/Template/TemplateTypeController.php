@@ -30,25 +30,13 @@ class TemplateTypeController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var Crud */
-    private $crud;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var TemplateManager */
-    private $templateManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        Crud $crud,
-        SerializerProvider $serializer,
-        TemplateManager $templateManager
+        private readonly Crud $crud,
+        private readonly SerializerProvider $serializer,
+        private readonly TemplateManager $templateManager
     ) {
         $this->authorization = $authorization;
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->templateManager = $templateManager;
     }
 
     /**
@@ -103,19 +91,5 @@ class TemplateTypeController
         return new JsonResponse(
             $this->crud->list(Template::class, $query)
         );
-    }
-
-    /**
-     * @Route("/{id}/preview/{templateId}/{locale}", name="apiv2_template_preview")
-     * @EXT\ParamConverter("template", class="Claroline\CoreBundle\Entity\Template\Template", options={"mapping": {"templateId": "uuid"}})
-     */
-    public function previewAction(Template $template, string $locale)
-    {
-        $placeholders = [];
-
-        return new JsonResponse([
-            'title' => $this->templateManager->getTemplateContent($template, $placeholders, $locale, 'title'),
-            'content' => $this->templateManager->getTemplateContent($template, $placeholders, $locale, 'content'),
-        ]);
     }
 }

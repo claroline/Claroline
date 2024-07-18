@@ -1,8 +1,5 @@
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
         tags: [claroline.validator]
 
     Claroline\CommunityBundle\Validator\GroupValidator: ~

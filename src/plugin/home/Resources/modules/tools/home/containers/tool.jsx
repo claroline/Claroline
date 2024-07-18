@@ -1,15 +1,22 @@
 import {connect} from 'react-redux'
 
 import {withReducer} from '#/main/app/store/reducer'
+import {selectors as toolSelectors} from '#/main/core/tool'
 
 import {HomeTool as HomeToolComponent} from '#/plugin/home/tools/home/components/tool'
-import {reducer, selectors} from '#/plugin/home/tools/home/store'
-import {selectors as playerSelectors} from '#/plugin/home/tools/home/player/store'
+import {actions, reducer, selectors} from '#/plugin/home/tools/home/store'
 
 const HomeTool = withReducer(selectors.STORE_NAME, reducer)(
   connect(
     (state) => ({
-      tabs: playerSelectors.tabs(state)
+      path: toolSelectors.path(state),
+      loaded: toolSelectors.loaded(state),
+      tabs: selectors.tabs(state),
+    }),
+    (dispatch) => ({
+      setCurrentTab(tab) {
+        dispatch(actions.setCurrentTab(tab))
+      }
     })
   )(HomeToolComponent)
 )

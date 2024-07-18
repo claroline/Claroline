@@ -21,15 +21,12 @@ const PositionModal = props => {
   let i = 0
 
   const qChoices = (selectedParent.items || [])
-    //.filter(item => item.id !== props.item.id)
     .reduce((qChoices, current) => Object.assign(qChoices, {
-      [current.id]: current.title || trans('question') + ' ' + ++i
+      [current.id]: current.title || trans('item', {number: i + 1}, 'quiz')
     }), {})
 
   // generate select actions
   const selectAction = props.selectAction(props.positionData)
-
-  //props.update('parent', props.step.id)
 
   return (
     <Modal
@@ -148,14 +145,10 @@ PositionModal.propTypes = {
     id: T.string.isRequired,
     title: T.string.isRequired
   })),
-  items: T.arrayOf(T.shape({
+  item: T.shape({
     id: T.string.isRequired,
     title: T.string.isRequired
-  })),
-  item: T.arrayOf(T.shape({
-    id: T.string.isRequired,
-    title: T.string.isRequired
-  })),
+  }),
   positionData: T.shape({
     order: T.oneOf(['first', 'before', 'after', 'last']),
     item: T.string,

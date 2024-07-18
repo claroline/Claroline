@@ -12,10 +12,10 @@ use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\CoreBundle\Library\Normalizer\CodeNormalizer;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -58,18 +58,19 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         $data = $event->getData();
         $options = $event->getOptions();
 
-        // make sure the workspace code is unique
-        if (!empty($workspace->getCode())) {
-            $workspace->setCode($this->manager->getUniqueCode($workspace->getCode()));
-        }
+        // make sure the workspace code is unique and generate one if missing
+        $workspaceCode = $this->manager->getUniqueCode(
+            $workspace->getCode() ?? CodeNormalizer::normalize($workspace->getName())
+        );
+        $workspace->setCode($workspaceCode);
 
         // copy model data
-        if (!in_array(Options::NO_MODEL, $options)) {
+        if (!empty($workspace->getWorkspaceModel())) {
             // The NO_MODEL options is only here for workspace import.
             // It's not possible for now to create a workspace without a model (it will miss some required data).
-            if (empty($workspace->getWorkspaceModel())) {
+            /*if (empty($workspace->getWorkspaceModel())) {
                 $workspace->setWorkspaceModel($this->manager->getDefaultModel($workspace->isPersonal()));
-            }
+            }*/
 
             // inject model data inside the new workspace
             $this->copy($workspace->getWorkspaceModel(), $workspace, in_array(Options::AS_MODEL, $options) || $workspace->isModel());
@@ -78,6 +79,9 @@ class WorkspaceSubscriber implements EventSubscriberInterface
             // this is not really aesthetic because this has already been done by the Crud before
             // and workspace deserialization is heavy
             $this->serializer->deserialize($data, $workspace, $options);
+            if ($workspaceCode) {
+                $workspace->setCode($workspaceCode);
+            }
         }
 
         $this->handleNewWorkspace($workspace);
@@ -89,9 +93,9 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         $workspace = $event->getObject();
 
         // give the creator the manager role
-        if (!$workspace->isModel() && !$workspace->isPersonal() && $workspace->getManagerRole() && $workspace->getCreator()) {
+        /*if (!$workspace->isModel() && !$workspace->isPersonal() && $workspace->getManagerRole() && $workspace->getCreator()) {
             $this->crud->patch($workspace->getCreator(), 'role', 'add', [$workspace->getManagerRole()]);
-        }
+        }*/
 
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         if ($root) {
@@ -124,9 +128,9 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         $workspace = $event->getCopy();
 
         // give the creator the manager role
-        if (!$workspace->isModel() && $workspace->getManagerRole() && $workspace->getCreator()) {
+        /*if (!$workspace->isModel() && $workspace->getManagerRole() && $workspace->getCreator()) {
             $this->crud->patch($workspace->getCreator(), 'role', 'add', [$workspace->getManagerRole()]);
-        }
+        }*/
 
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         if ($root) {

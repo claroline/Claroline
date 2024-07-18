@@ -1,11 +1,12 @@
 import {createSelector} from 'reselect'
 
 import {selectors as formSelectors} from '#/main/app/content/form/store/selectors'
+import {selectors as toolSelectors} from '#/main/core/tool/store/selectors'
 import {selectors as homeSelectors} from '#/plugin/home/tools/home/store/selectors'
 
 import {flattenTabs, getTabTitle} from '#/plugin/home/tools/home/utils'
 
-const FORM_NAME = `${homeSelectors.STORE_NAME}.editor`
+const FORM_NAME = 'homeEditor'
 
 const editorTabs = (state) => {
   return [].concat(formSelectors.data(formSelectors.form(state, FORM_NAME)) || [])
@@ -20,7 +21,7 @@ const currentTab = (state) => {
 }
 
 const currentTabTitle = createSelector(
-  [homeSelectors.context, currentTab],
+  [toolSelectors.context, currentTab],
   (context, currentTab) => getTabTitle(context, currentTab)
 )
 

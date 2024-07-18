@@ -16,10 +16,9 @@ abstract class AbstractSecurityController
 {
     use PermissionCheckerTrait;
 
-    /** @var ObjectManager */
-    private $om;
+    private ObjectManager $om;
 
-    public function setAuthorizationChecker(AuthorizationCheckerInterface $authorization)
+    public function setAuthorizationChecker(AuthorizationCheckerInterface $authorization): void
     {
         $this->authorization = $authorization;
     }

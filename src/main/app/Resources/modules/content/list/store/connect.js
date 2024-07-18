@@ -165,7 +165,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     loaded:        stateProps.loaded,
     invalidated:   stateProps.invalidated,
     data:          stateProps.data,
-    totalResults:  stateProps.totalResults
+    totalResults:  stateProps.totalResults,
+    children:      ownProps.children
   }
 
   props.customActions = ownProps.customActions

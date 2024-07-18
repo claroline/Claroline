@@ -57,6 +57,16 @@ class ResourcesTool extends AbstractTool
         ];
     }
 
+    public function create(string $context, ContextSubjectInterface $contextSubject = null, array $configData = []): void
+    {
+
+        /*$root = $this->resourceManager->getWorkspaceRoot($workspace);
+        if ($root) {
+            $this->resourceManager->createRights($root, [], true, false);
+        }*/
+
+    }
+
     public function export(string $context, ContextSubjectInterface $contextSubject = null, FileBag $fileBag = null): ?array
     {
         $root = $this->resourceRepository->findWorkspaceRoot($contextSubject);

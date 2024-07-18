@@ -20,18 +20,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class BuildThemesCommand extends Command
 {
-    private $themeBuilder;
-    private $themeManager;
-
-    public function __construct(ThemeBuilderManager $themeBuilder, ThemeManager $themeManager)
-    {
-        $this->themeBuilder = $themeBuilder;
-        $this->themeManager = $themeManager;
-
+    public function __construct(
+        private readonly ThemeBuilderManager $themeBuilder,
+        private readonly ThemeManager $themeManager
+    ) {
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Build themes which are installed in the platform')

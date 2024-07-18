@@ -23,6 +23,7 @@ const HomeEditor = props => {
 
   return (
     <ToolEditor
+      styles={['claroline-distribution-plugin-home-home-tool']}
       menu={(1 < tabs.length ? tabs : []).concat([
         {
           type: MODAL_BUTTON,

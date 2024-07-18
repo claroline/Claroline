@@ -128,11 +128,11 @@ class WorkspaceSerializer
             // $serialized['registered'] = $this->isRegistered($workspace);
         }
 
-        if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
+        /*if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
             $serialized['organizations'] = array_map(function (Organization $organization) {
                 return $this->organizationSerializer->serialize($organization, [SerializerInterface::SERIALIZE_MINIMAL]);
             }, $workspace->getOrganizations()->toArray());
-        }
+        }*/
 
         return $serialized;
     }
@@ -175,7 +175,7 @@ class WorkspaceSerializer
 
     private function getRegistration(Workspace $workspace, array $options): array
     {
-        $defaultRole = null;
+        /*$defaultRole = null;
         if ($workspace->getDefaultRole()) {
             // this should use RoleSerializer, but we will get a circular reference if we do it
             $defaultRole = [
@@ -184,13 +184,13 @@ class WorkspaceSerializer
                 'type' => $workspace->getDefaultRole()->getType(),
                 'translationKey' => $workspace->getDefaultRole()->getTranslationKey(),
             ];
-        }
+        }*/
 
         $serialized = [
             'validation' => $workspace->getRegistrationValidation(),
             'selfRegistration' => $workspace->getSelfRegistration(),
             'selfUnregistration' => $workspace->getSelfUnregistration(),
-            'defaultRole' => $defaultRole,
+            // 'defaultRole' => $defaultRole,
             'maxTeams' => $workspace->getMaxTeams(),
         ];
 

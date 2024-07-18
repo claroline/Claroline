@@ -107,7 +107,7 @@ const Editor = (props) => {
             ] : undefined}
             routes={pages.map(page => ({
               path: page.path || '/' + page.name,
-              ...omit(page/*, 'component', 'render'*/)
+              ...omit(page)
             }))}
           />
         </div>

@@ -1,4 +1,3 @@
-import get from 'lodash/get'
 import merge from 'lodash/merge'
 
 import {makeActionCreator} from '#/main/app/store/actions'
@@ -26,13 +25,6 @@ export const CONTEXT_SET_LOADED = 'CONTEXT_SET_LOADED'
  */
 export const CONTEXT_NOT_FOUND = 'CONTEXT_NOT_FOUND'
 
-/**
- * Action dispatched when a context manager dismiss all the access restrictions to open the context.
- */
-export const CONTEXT_RESTRICTIONS_DISMISS = 'CONTEXT_RESTRICTIONS_DISMISS'
-
-export const CONTEXT_UPDATE_TOOL = 'CONTEXT_UPDATE_TOOL'
-
 export const CONTEXT_MENU_OPEN = 'MENU_OPEN'
 export const CONTEXT_MENU_CLOSE = 'MENU_CLOSE'
 export const CONTEXT_MENU_TOGGLE = 'MENU_TOGGLE'
@@ -42,7 +34,6 @@ export const actions = {}
 actions.load = makeActionCreator(CONTEXT_LOAD, 'contextData')
 actions.setLoaded = makeActionCreator(CONTEXT_SET_LOADED, 'loaded')
 actions.setNotFound = makeActionCreator(CONTEXT_NOT_FOUND)
-actions.dismissRestrictions = makeActionCreator(CONTEXT_RESTRICTIONS_DISMISS)
 actions.reload = () => actions.setLoaded(false)
 
 actions.open = (contextType, contextId = null) => (dispatch) => dispatch({

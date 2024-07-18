@@ -17,10 +17,8 @@ class LogUser extends AbstractOperationalLog
         return User::class;
     }
 
-    /**
-     * @param User $object
-     */
-    protected function getObjectName(mixed $object): string
+    /** @param User $object */
+    protected function getObjectName(object $object): string
     {
         return $object->getFullname();
     }

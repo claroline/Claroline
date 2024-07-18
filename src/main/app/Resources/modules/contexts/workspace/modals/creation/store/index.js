@@ -3,5 +3,6 @@ import {reducer} from '#/main/app/contexts/workspace/modals/creation/store/reduc
 import {selectors} from '#/main/app/contexts/workspace/modals/creation/store/selectors'
 
 export {
-  reducer, selectors
+  reducer,
+  selectors
 }

@@ -39,43 +39,15 @@ class RegistrationController
 {
     use RequestDecoderTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-
-    /** @var ObjectManager */
-    protected $om;
-
-    /** @var SerializerProvider */
-    private $serializer;
-
-    /** @var Crud */
-    private $crud;
-
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-
-    /** @var WorkspaceUserQueueManager */
-    private $registrationQueueManager;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        Crud $crud,
-        WorkspaceManager $workspaceManager,
-        WorkspaceUserQueueManager $registrationQueueManager,
-        TokenStorageInterface $tokenStorage
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly Crud $crud,
+        private readonly WorkspaceManager $workspaceManager,
+        private readonly WorkspaceUserQueueManager $registrationQueueManager,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->crud = $crud;
-        $this->workspaceManager = $workspaceManager;
-        $this->registrationQueueManager = $registrationQueueManager;
-        $this->tokenStorage = $tokenStorage;
     }
 
     /**

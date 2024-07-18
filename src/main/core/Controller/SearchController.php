@@ -15,18 +15,11 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class SearchController
 {
-    private PlatformConfigurationHandler $config;
-    private EventDispatcherInterface $dispatcher;
-    private AuthorizationCheckerInterface $authorization;
-
     public function __construct(
-        PlatformConfigurationHandler $config,
-        EventDispatcherInterface $dispatcher,
-        AuthorizationCheckerInterface $authorization
+        private readonly PlatformConfigurationHandler $config,
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly AuthorizationCheckerInterface $authorization
     ) {
-        $this->config = $config;
-        $this->dispatcher = $dispatcher;
-        $this->authorization = $authorization;
     }
 
     /**

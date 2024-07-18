@@ -52,10 +52,10 @@ const Workspace = {
       showProgression: true,
       showMenu: true
     },
-    breadcrumb: {
+    /*breadcrumb: {
       displayed: true,
       items: ['desktop', 'workspaces', 'current', 'tool']
-    },
+    },*/
     registration: {
       validation: false,
       selfRegistration: false,
@@ -65,9 +65,9 @@ const Workspace = {
       hidden: false,
       dates: []
     },
-    notifications: {
+    /*notifications: {
       enabled: false
-    },
+    },*/
     evaluation: {
       scoreTotal: 100
     }

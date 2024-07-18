@@ -5,16 +5,19 @@ import get from 'lodash/get'
 
 import {constants as baseConstants} from '#/main/evaluation/constants'
 
-import {ContentSizing} from '#/main/app/content/components/sizing'
 import {EvaluationGauge} from '#/main/evaluation/components/gauge'
 import {displayDate, displayDuration, trans} from '#/main/app/intl'
 import {Button} from '#/main/app/action'
 import {LINK_BUTTON} from '#/main/app/buttons'
 import {ContentInfoBlocks} from '#/main/app/content/components/info-block'
+import {PageSection} from '#/main/app/page'
 
 const EvaluationJumbotron = (props) =>
-  <div className={classes('row py-4', props.className, `bg-${baseConstants.EVALUATION_STATUS_COLOR[get(props.evaluation, 'status')]}-subtle`)}>
-    <ContentSizing size="md" className="evaluation-jumbotron">
+  <PageSection
+    size="md"
+    className={classes('evaluation-jumbotron py-4', props.className, `bg-${baseConstants.EVALUATION_STATUS_COLOR[get(props.evaluation, 'status')]}-subtle`)}
+  >
+    <div className="d-flex flex-row gap-4" role="presentation">
       <EvaluationGauge
         size="xl"
         {...props.evaluation}
@@ -59,8 +62,8 @@ const EvaluationJumbotron = (props) =>
           />
         </div>*/}
       </div>
-    </ContentSizing>
-  </div>
+    </div>
+  </PageSection>
 
 EvaluationJumbotron.propTypes = {
   className: T.string,

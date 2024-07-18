@@ -144,6 +144,11 @@ ListData.propTypes = {
    */
   card: T.func,
 
+  /**
+   * The component to display when the list is empty.
+   */
+  children: T.func,
+
   searchMode: T.string,
   pageSizes: T.arrayOf(T.number),
 

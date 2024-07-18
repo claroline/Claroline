@@ -23,25 +23,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SwaggerController
 {
-    /** @var Finder */
-    private $routerFinder;
-    /** @var Documentator */
-    private $documentator;
-    /** @var SchemaProvider */
-    private $schemaProvider;
-    /** @var string */
-    private $rootDir;
-
     public function __construct(
-        Finder $routerFinder,
-        Documentator $documentator,
-        SchemaProvider $schemaProvider,
-        string $rootDir
+        private readonly Finder $routerFinder,
+        private readonly Documentator $documentator,
+        private readonly SchemaProvider $schemaProvider,
+        private readonly string $rootDir
     ) {
-        $this->routerFinder = $routerFinder;
-        $this->documentator = $documentator;
-        $this->schemaProvider = $schemaProvider;
-        $this->rootDir = $rootDir;
     }
 
     /**

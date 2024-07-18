@@ -2,6 +2,7 @@
 
 namespace Claroline\LogBundle\Entity;
 
+use Claroline\AppBundle\Entity\HasContext;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class OperationalLog extends AbstractLog
 {
+    use HasContext;
+
     /**
      * @ORM\Column(type="string", nullable=false)
      */

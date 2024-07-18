@@ -133,16 +133,4 @@ class ToolMaskDecoderManager
 
         return null;
     }
-
-    /**
-     * @return ToolMaskDecoder[]
-     */
-    public function getCustomMaskDecodersByTool(string $toolName): array
-    {
-        $toolDecoders = $this->getMaskDecodersByTool($toolName);
-
-        return array_filter($toolDecoders, function (ToolMaskDecoder $maskDecoder) {
-            return !in_array($maskDecoder->getName(), ToolMaskDecoder::DEFAULT_ACTIONS);
-        });
-    }
 }

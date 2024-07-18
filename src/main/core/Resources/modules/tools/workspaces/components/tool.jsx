@@ -5,7 +5,6 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 
 import {Tool, constants as toolConstants} from '#/main/core/tool'
 import {ToolPage} from '#/main/core/tool'
@@ -14,6 +13,7 @@ import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
 import {WorkspaceList} from '#/main/core/workspace/components/list'
 import {WorkspaceCreation} from '#/main/core/tools/workspaces/containers/creation'
 import {MODAL_WORKSPACE_IMPORT} from '#/main/core/workspace/modals/import'
+import {PageListSection} from '#/main/app/page/components/list-section'
 
 const WorkspacesPage = (props) =>
   <ToolPage
@@ -128,14 +128,13 @@ const WorkspacesTool = (props) => {
           render: () => {
             const Registered = (
               <WorkspacesPage path={props.path} title={trans('my_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
-                <ContentSizing size="full">
+                <PageListSection>
                   <WorkspaceList
-                    flush={true}
                     url={['apiv2_workspace_list_registered']}
                     name="workspaces.registered"
                     refresher={refresher}
                   />
-                </ContentSizing>
+                </PageListSection>
               </WorkspacesPage>
             )
 
@@ -146,14 +145,14 @@ const WorkspacesTool = (props) => {
           render: () => {
             const PublicList = (
               <WorkspacesPage path={props.path} title={trans('public_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
-                <ContentSizing size="full">
+                <PageListSection>
                   <WorkspaceList
                     flush={true}
                     url={['apiv2_workspace_list_public']}
                     name="workspaces.public"
                     refresher={refresher}
                   />
-                </ContentSizing>
+                </PageListSection>
               </WorkspacesPage>
             )
 
@@ -165,14 +164,13 @@ const WorkspacesTool = (props) => {
           render: () => {
             const ManagedList = (
               <WorkspacesPage path={props.path} title={trans('managed_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
-                <ContentSizing size="full">
+                <PageListSection>
                   <WorkspaceList
-                    flush={true}
                     url={['apiv2_workspace_list_managed']}
                     name="workspaces.managed"
                     refresher={refresher}
                   />
-                </ContentSizing>
+                </PageListSection>
               </WorkspacesPage>
             )
 
@@ -184,14 +182,13 @@ const WorkspacesTool = (props) => {
           render: () => {
             const ModelList = (
               <WorkspacesPage path={props.path} title={trans('workspace_models', {}, 'workspace')} canCreate={props.canCreate}>
-                <ContentSizing size="full">
+                <PageListSection>
                   <WorkspaceList
                     url={['apiv2_workspace_list_model']}
                     name="workspaces.models"
                     refresher={refresher}
-                    flush={true}
                   />
-                </ContentSizing>
+                </PageListSection>
               </WorkspacesPage>
             )
 
@@ -203,9 +200,8 @@ const WorkspacesTool = (props) => {
           render: () => {
             const ArchiveList = (
               <WorkspacesPage path={props.path} title={trans('workspace_archived', {}, 'workspace')} canCreate={props.canCreate}>
-                <ContentSizing size="full">
+                <PageListSection>
                   <WorkspaceList
-                    flush={true}
                     url={['apiv2_workspace_list_archive']}
                     name="workspaces.archives"
                     refresher={refresher}
@@ -218,7 +214,7 @@ const WorkspacesTool = (props) => {
                       }
                     ]}
                   />
-                </ContentSizing>
+                </PageListSection>
               </WorkspacesPage>
             )
 

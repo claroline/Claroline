@@ -37,10 +37,12 @@ class EvaluationTool extends AbstractTool
     {
         if (!empty($configData['evaluation'])) {
             $this->crud->update($contextSubject, ['evaluation' => $configData['evaluation']], [Crud::NO_PERMISSIONS]);
+
+            return [
+                'evaluation' => $configData['evaluation'],
+            ];
         }
 
-        return [
-            'evaluation' => $configData['evaluation'],
-        ];
+        return [];
     }
 }

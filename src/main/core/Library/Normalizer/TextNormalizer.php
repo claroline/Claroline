@@ -79,7 +79,7 @@ class TextNormalizer
         return str_replace(array_keys($transliteration), array_values($transliteration), $string);
     }
 
-    public static function toKey($string, int $length = null)
+    public static function toKey(string $string, int $length = null): string
     {
         $key = static::stripDiacritics($string);
         // removes multiple whitespaces, new lines & tabs by single whitespace

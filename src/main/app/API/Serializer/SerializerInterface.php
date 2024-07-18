@@ -11,7 +11,7 @@ interface SerializerInterface
 
     /**
      * Options : Only serialize the minimal representation of data.
-     * Common fields in minimal data : id, name, code, slug, thumbnail, permissions.
+     * Common fields in minimal data : id, name, code, slug, thumbnail, description.
      */
     const SERIALIZE_MINIMAL = 'serialize_minimal';
 

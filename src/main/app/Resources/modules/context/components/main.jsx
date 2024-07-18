@@ -9,7 +9,6 @@ import {trans} from '#/main/app/intl'
 import {ContentNotFound} from '#/main/app/content/components/not-found'
 import {ContentLoader} from '#/main/app/content/components/loader'
 import {ContentForbidden} from '#/main/app/content/components/forbidden'
-import {ContentPlaceholder} from '#/main/app/content/components/placeholder'
 import {ContextEditor} from '#/main/app/context/editor/containers/main'
 import {ContextProfile} from '#/main/app/context/profile/containers/main'
 import {getTool} from '#/main/core/tool/utils'
@@ -24,11 +23,16 @@ const ContextMain = (props) => {
       openQuery = makeCancelable(
         props.open(props.name, props.id)
       )
+
+      openQuery.promise.then((response) => {
+        if (props.onOpen) {
+          props.onOpen(response.data)
+        }
+      })
     }
 
     return () => {
       if (openQuery) {
-        console.log('context open cancelled')
         openQuery.cancel()
       }
     }
@@ -67,7 +71,7 @@ const ContextMain = (props) => {
         appPromise.cancel()
       }
     }
-  }, [props.loaded])
+  }, [props.loaded, props.tools.map(t => t.name).join('-')])
 
   let CurrentPage
   if (!props.loaded || !toolApps) {
@@ -85,7 +89,7 @@ const ContextMain = (props) => {
         title={trans('not_found')}
         description={trans('not_found_desc')}
       />
-  } else if (!isEmpty(props.accessErrors)) {
+  } else if (!isEmpty(props.accessErrors) && !props.managed) {
     CurrentPage = props.forbiddenPage ?
       createElement(props.forbiddenPage) :
       <ContentForbidden
@@ -93,18 +97,9 @@ const ContextMain = (props) => {
         title={trans('access_forbidden')}
         description={trans('access_forbidden_help')}
       />
-  } /*else if (isEmpty(props.tools)) {
-    CurrentPage = (
-      <ContentPlaceholder
-        size="lg"
-        title="Cet espace est vide pour le moment"
-      />
-    )
-  } */else {
+  } else {
     CurrentPage = (
       <>
-        {/*<AppLoader />*/}
-
         <Routes
           path={props.path}
           routes={[
@@ -152,6 +147,8 @@ const ContextMain = (props) => {
         <AppLoader />
 
         {CurrentPage}
+
+        {props.children}
       </div>
     </>
   )
@@ -167,6 +164,7 @@ ContextMain.propTypes = {
   loaded: T.bool.isRequired,
   notFound: T.bool.isRequired,
   accessErrors: T.object,
+  managed: T.bool,
   // context params
   defaultOpening: T.string,
   tools: T.arrayOf(T.shape({
@@ -182,6 +180,7 @@ ContextMain.propTypes = {
   notFoundPage: T.elementType,
   forbiddenPage: T.elementType,
   editor: T.elementType,
+  onOpen: T.func,
 
   open: T.func.isRequired,
   history: T.shape({

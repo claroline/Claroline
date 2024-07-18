@@ -1,3 +1,4 @@
 {
+  "my_notifications": "Mes notifications",
   "notifications_count": "{0} Vous n'avez aucune nouvelle notification. | {1} Vous avez 1 nouvelle notification. | ]1,Inf[ Vous avez %count% nouvelles notifications."
 }

@@ -4,6 +4,7 @@ import {ToolEditorAppearance} from '#/main/core/tool/editor/components/appearanc
 import {ToolEditorHistory} from '#/main/core/tool/editor/components/history'
 import {ToolEditorOverview} from '#/main/core/tool/editor/components/overview'
 import {ToolEditorPermissions} from '#/main/core/tool/editor/components/permissions'
+import {actions, selectors} from '#/main/core/tool/editor/store'
 
 export {
   ToolEditor,
@@ -11,5 +12,7 @@ export {
   ToolEditorAppearance,
   ToolEditorHistory,
   ToolEditorOverview,
-  ToolEditorPermissions
+  ToolEditorPermissions,
+  actions,
+  selectors
 }

@@ -3,17 +3,17 @@ import isEmpty from 'lodash/isEmpty'
 
 import {makeInstanceAction} from '#/main/app/store/actions'
 import {combineReducers, makeReducer} from '#/main/app/store/reducer'
-
-import {FORM_SUBMIT_SUCCESS} from '#/main/app/content/form/store/actions'
+import {SECURITY_USER_CHANGE} from '#/main/app/security/store/actions'
 import {TOOL_LOAD, TOOL_OPEN} from '#/main/core/tool/store/actions'
 
 import {
   CURRENT_TAB,
-  TABS_LOAD
+  TABS_LOAD,
+  TAB_LOAD,
+  TAB_RESTRICTIONS_DISMISS,
+  TAB_SET_LOADED
 } from '#/plugin/home/tools/home/store/actions'
 import {selectors} from '#/plugin/home/tools/home/store/selectors'
-import {reducer as editorReducer} from '#/plugin/home/tools/home/editor/store/reducer'
-import {reducer as playerReducer} from '#/plugin/home/tools/home/player/store/reducer'
 
 const reducer = combineReducers({
   currentTabId: makeReducer(null, {
@@ -34,7 +34,6 @@ const reducer = combineReducers({
 
       return tabs
     },
-    [makeInstanceAction(FORM_SUBMIT_SUCCESS, selectors.STORE_NAME + '.editor')]: (state, action) => action.updatedData,
     [TABS_LOAD]: (state, action) => {
       const tabs = [].concat(action.tabs || [])
 
@@ -47,8 +46,30 @@ const reducer = combineReducers({
       return tabs
     }
   }),
-  editor: editorReducer,
-  player: playerReducer
+
+  loaded: makeReducer(false, {
+    [SECURITY_USER_CHANGE]: () => false,
+    [TAB_LOAD]: () => true,
+    [TAB_SET_LOADED]: (state, action) => action.loaded
+  }),
+
+  current: makeReducer(null, {
+    [TAB_LOAD]: (state, action) => action.homeTab
+  }),
+
+  managed: makeReducer(false, {
+    [TAB_LOAD]: (state, action) => action.managed || false
+  }),
+
+  accessErrors: combineReducers({
+    dismissed: makeReducer(false, {
+      [TAB_RESTRICTIONS_DISMISS]: () => true,
+      [TAB_LOAD]: () => false
+    }),
+    details: makeReducer({}, {
+      [TAB_LOAD]: (state, action) => action.accessErrors || {}
+    })
+  })
 })
 
 export {

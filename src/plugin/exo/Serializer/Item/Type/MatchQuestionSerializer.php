@@ -14,30 +14,25 @@ class MatchQuestionSerializer
 {
     use SerializerTrait;
 
-    /**
-     * @var ContentSerializer
-     */
-    private $contentSerializer;
-
-    /**
-     * MatchQuestionSerializer constructor.
-     */
-    public function __construct(ContentSerializer $contentSerializer)
-    {
-        $this->contentSerializer = $contentSerializer;
+    public function __construct(
+        private readonly ContentSerializer $contentSerializer
+    ) {
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'exo_question_match';
     }
 
+    public function getClass(): string
+    {
+        return MatchQuestion::class;
+    }
+
     /**
      * Converts a Match question into a JSON-encodable structure.
-     *
-     * @return array
      */
-    public function serialize(MatchQuestion $matchQuestion, array $options = [])
+    public function serialize(MatchQuestion $matchQuestion, array $options = []): array
     {
         $serialized = [
             'random' => $matchQuestion->getShuffle(),
@@ -73,7 +68,7 @@ class MatchQuestionSerializer
         return $serialized;
     }
 
-    private function serializeSolutions(MatchQuestion $matchQuestion)
+    private function serializeSolutions(MatchQuestion $matchQuestion): array
     {
         $solutions = [];
 
@@ -96,12 +91,8 @@ class MatchQuestionSerializer
 
     /**
      * Converts raw data into a Match question entity.
-     *
-     * @param array $data
-     *
-     * @return MatchQuestion
      */
-    public function deserialize($data, MatchQuestion $matchQuestion = null, array $options = [])
+    public function deserialize(array $data, MatchQuestion $matchQuestion = null, array $options = []): MatchQuestion
     {
         if (empty($matchQuestion)) {
             $matchQuestion = new MatchQuestion();
@@ -121,12 +112,7 @@ class MatchQuestionSerializer
         return $matchQuestion;
     }
 
-    /**
-     * Deserializes Question labels.
-     *
-     * @param array $secondSets ie labels
-     */
-    private function deserializeLabels(MatchQuestion $matchQuestion, array $secondSets, array $options = [])
+    private function deserializeLabels(MatchQuestion $matchQuestion, array $secondSets, array $options = []): void
     {
         $secondSetEntities = $matchQuestion->getLabels()->toArray();
 
@@ -157,12 +143,7 @@ class MatchQuestionSerializer
         }
     }
 
-    /**
-     * Deserializes Question proposals.
-     *
-     * @param array $firstSets ie proposals
-     */
-    private function deserializeProposals(MatchQuestion $matchQuestion, array $firstSets, array $options = [])
+    private function deserializeProposals(MatchQuestion $matchQuestion, array $firstSets, array $options = []): void
     {
         $firstSetEntities = $matchQuestion->getProposals()->toArray();
 
@@ -195,10 +176,7 @@ class MatchQuestionSerializer
         }
     }
 
-    /**
-     * Deserializes Question solutions.
-     */
-    private function deserializeSolutions(MatchQuestion $matchQuestion, array $solutions)
+    private function deserializeSolutions(MatchQuestion $matchQuestion, array $solutions): void
     {
         $associationsEntities = $matchQuestion->getAssociations()->toArray();
 

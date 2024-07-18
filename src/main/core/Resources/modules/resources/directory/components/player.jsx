@@ -1,12 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {makeAbsolute} from '#/main/app/action/utils'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {ListSource} from '#/main/app/content/list/containers/source'
 import {ListParameters as ListParametersTypes} from '#/main/app/content/list/parameters/prop-types'
 import {Alert} from '#/main/app/components/alert'
@@ -14,9 +12,9 @@ import {Alert} from '#/main/app/components/alert'
 import resourcesSource from '#/main/core/data/sources/resources'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {getActions, getDefaultAction} from '#/main/core/resource/utils'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 import {FileDrop} from '#/main/app/overlays/dnd/components/file-drop'
 import {ResourcePage} from '#/main/core/resource'
+import {PageListSection} from '#/main/app/page/components/list-section'
 
 /**
  * Transform resource node actions.
@@ -48,7 +46,7 @@ const DirectoryPlayer = props =>
       <Alert type="warning" className="mt-3">{trans('storage_limit_reached_resources')}</Alert>
     }
 
-    <ContentSizing size="full">
+    <PageListSection>
       <FileDrop
         size="lg"
         disabled={props.storageLock || !(get(props.currentNode, 'permissions.create') || []).includes('file')}
@@ -56,25 +54,11 @@ const DirectoryPlayer = props =>
         help={trans('file_drop_help', {}, 'resource')}
       >
         <ListSource
-          flush={true}
           name={props.listName}
           fetch={{
             url: ['apiv2_resource_list', {contextId: get(props.currentNode, 'workspace.id', null), parent: get(props.currentNode, 'id', null)}],
             autoload: true
           }}
-          /*customActions={[
-            {
-              name: 'back',
-              type: LINK_BUTTON,
-              icon: 'fa fa-fw fa-arrow-left',
-              label: get(props.currentNode, 'parent') ?
-                trans('back_to', {target: get(props.currentNode, 'parent.name')}) :
-                trans('back'),
-              disabled: !isEmpty(props.rootNode) && props.currentNode.slug === props.rootNode.slug,
-              target: `${props.path}/${get(props.currentNode, 'parent.slug', '')}`,
-              exact: true
-            }
-          ]}*/
           source={merge({}, resourcesSource('workspace', get(props.currentNode, 'workspace'), {
             update: props.updateNodes,
             delete: props.deleteNodes
@@ -100,7 +84,7 @@ const DirectoryPlayer = props =>
           parameters={props.listConfiguration}
         />
       </FileDrop>
-    </ContentSizing>
+    </PageListSection>
   </ResourcePage>
 
 DirectoryPlayer.propTypes = {

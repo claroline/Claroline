@@ -22,18 +22,10 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ObjectLockController
 {
-    private $om;
-    private $serializer;
-    private $manager;
-
     public function __construct(
-      ObjectManager $om,
-      SerializerProvider $serializer,
-      LockManager $manager
-  ) {
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->manager = $manager;
+        private readonly SerializerProvider $serializer,
+        private readonly LockManager $manager
+    ) {
     }
 
     /**

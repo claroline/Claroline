@@ -81,6 +81,8 @@ class SubmitLogsHandler implements MessageHandlerInterface
     {
         $logEntry = new OperationalLog();
 
+        $logEntry->setContextName($createLog->getContextName());
+        $logEntry->setContextId($createLog->getContextId());
         $logEntry->setObjectClass($createLog->getObjectClass());
         $logEntry->setObjectId($createLog->getObjectId());
         $logEntry->setChangeset($createLog->getChangeset());

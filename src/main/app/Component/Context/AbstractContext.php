@@ -27,4 +27,9 @@ abstract class AbstractContext implements ContextInterface
     {
         return [];
     }
+
+    public function create(array $data): void
+    {
+
+    }
 }

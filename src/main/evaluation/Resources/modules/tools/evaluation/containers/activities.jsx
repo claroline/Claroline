@@ -8,8 +8,7 @@ import {actions} from '#/main/evaluation/tools/evaluation/store'
 
 const EvaluationActivities = connect(
   (state) => ({
-    contextId: toolSelectors.contextId(state),
-    workspaceRoot: workspaceSelectors.root(state)
+    contextId: toolSelectors.contextId(state)
   }),
   (dispatch) => ({
     addRequiredResources(contextId, resources) {

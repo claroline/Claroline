@@ -8,6 +8,7 @@ import {ToolPage} from '#/main/core/tool'
 
 import {PresencesList} from '#/plugin/cursus/presence/components/list'
 import {selectors} from '#/plugin/cursus/tools/events/store'
+import {PageListSection} from '#/main/app/page/components/list-section'
 
 const EventsPresences = (props) =>
   <ToolPage
@@ -18,9 +19,8 @@ const EventsPresences = (props) =>
     }]}
     title={(props.canEdit || props.canRegister) ? trans('presences', {}, 'cursus') : trans('my_presences', {}, 'cursus')}
   >
-    <ContentSizing size="full">
+    <PageListSection>
       <PresencesList
-        flush={true}
         path={props.path}
         name={selectors.STORE_NAME+'.presences'}
         url={['apiv2_cursus_workspace_presence_list', {id: props.contextId}]}
@@ -55,7 +55,7 @@ const EventsPresences = (props) =>
           }
         ]}
       />
-    </ContentSizing>
+    </PageListSection>
   </ToolPage>
 
 EventsPresences.propTypes = {

@@ -44,8 +44,8 @@ const PageActions = (props) => {
   }
 
   return (
-    <div className="page-actions gap-2 ms-auto" role="presentation">
-      {primaryAction &&
+    <div className="page-actions gap-2 ms-auto d-flex" role="presentation">
+      {primaryAction && (undefined === primaryAction.displayed || primaryAction.displayed) &&
         <Button
           {...primaryAction}
           className="btn btn-primary page-action-btn"
@@ -55,7 +55,7 @@ const PageActions = (props) => {
         />
       }
 
-      {secondaryAction &&
+      {secondaryAction && (undefined === secondaryAction.displayed || secondaryAction.displayed) &&
         <Button
           {...secondaryAction}
           className="btn btn-body page-actions-btn"
@@ -102,7 +102,8 @@ const PageHeader = props =>
       backgroundImage: `url("${asset(props.poster)}")`
     }}
     className={classes('page-header', {
-      'page-poster': !!props.poster
+      'page-poster': !!props.poster,
+      'border-bottom border-1': !props.poster
     })}
   >
     <PageNav

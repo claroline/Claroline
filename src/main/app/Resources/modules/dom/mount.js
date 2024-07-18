@@ -2,7 +2,6 @@ import {createElement} from 'react'
 import {createRoot} from 'react-dom/client'
 import merge from 'lodash/merge'
 
-// todo : find where I must put it
 // (I put it here for now because it's the root of all apps)
 // this give the source paths to webpack for dynamic loading
 import {asset, env} from '#/main/app/config'
@@ -69,8 +68,6 @@ function mount(
       createElement(rootComponent)
     )
   )
-
-  //render(appRoot, container)
 
   return root
 }

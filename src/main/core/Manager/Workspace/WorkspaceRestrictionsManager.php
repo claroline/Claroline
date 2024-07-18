@@ -73,9 +73,9 @@ class WorkspaceRestrictionsManager
                 $errors['endDate'] = DateNormalizer::normalize($workspace->getAccessibleUntil());
             }
 
-            if (!empty($workspace->getAllowedIps())) {
+            /*if (!empty($workspace->getAllowedIps())) {
                 $errors['invalidLocation'] = !$this->isIpAuthorized($workspace);
-            }
+            }*/
 
             $event = new AccessRestrictedWorkspaceEvent($workspace, $errors);
             $this->dispatcher->dispatch($event, WorkspaceEvents::ACCESS_RESTRICTED);
