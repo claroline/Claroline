@@ -36,7 +36,7 @@ const ItemList = props => {
             const itemType = itemDefinitions.find(type => type.type === rowData.type)
             if (itemType) {
               return (
-                <ItemIcon name={itemType.name} />
+                <ItemIcon name={itemType.name} size="xs" />
               )
             }
 

@@ -13,25 +13,28 @@ import {selectors as editorSelectors} from '#/main/core/resource/editor/store'
 import {refreshIdentifiers} from '#/plugin/exo/resources/quiz/utils'
 import {QuizEditorSteps as QuizEditorStepsComponent} from '#/plugin/exo/resources/quiz/editor/components/steps'
 import {selectors} from '#/plugin/exo/resources/quiz/editor/store'
-import {copyItem, copyStep, getStepSlug, moveItem, moveStep, removeStep} from '#/plugin/exo/resources/quiz/editor/utils'
+import {
+  addStep,
+  copyStep,
+  getStepSlug,
+  moveStep,
+  removeStep,
+  addItem,
+  copyItem,
+  moveItem,
+  removeItem
+} from '#/plugin/exo/resources/quiz/editor/utils'
 
 const QuizEditorSteps = withRouter(
   connect(
     (state) => ({
       path: resourceSelectors.path(state),
-      validating: formSelectors.validating(formSelectors.form(state, editorSelectors.STORE_NAME)),
-      pendingChanges: formSelectors.pendingChanges(formSelectors.form(state, editorSelectors.STORE_NAME)),
       errors: formSelectors.errors(formSelectors.form(state, editorSelectors.STORE_NAME)),
 
-      quizId: selectors.quizId(state),
-      quizType: selectors.quizType(state),
-      workspace: resourceSelectors.workspace(state),
       numberingType: selectors.numberingType(state),
       questionNumberingType: selectors.questionNumberingType(state),
       hasExpectedAnswers: selectors.hasExpectedAnswers(state),
       score: selectors.score(state),
-      tags: selectors.tags(state),
-      randomPick: selectors.randomPick(state),
       steps: selectors.steps(state)
     }),
     (dispatch) => ({
@@ -39,10 +42,13 @@ const QuizEditorSteps = withRouter(
         dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.'+prop, value))
       },
 
-      removeStep(steps, stepId) {
-        dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', removeStep(steps, stepId)))
-      },
+      addStep(steps = []) {
+        const updatedSteps = addStep(steps)
+        dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', updatedSteps))
 
+        // return slug for redirection
+        return updatedSteps[updatedSteps.length - 1].slug
+      },
       copyStep(steps, stepId, position) {
         // create a copy of the step
         const pos = steps.findIndex(step => step.id === stepId)
@@ -68,19 +74,30 @@ const QuizEditorSteps = withRouter(
           }
         }
       },
-
       moveStep(steps, stepId, position) {
         dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', moveStep(steps, stepId, position)))
       },
+      removeStep(steps, stepId) {
+        dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', removeStep(steps, stepId)))
+      },
 
+      addItem(steps, stepId, item) {
+        const updatedSteps = addItem(steps, stepId, item)
+        dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', updatedSteps))
+
+        // return id for redirection (id has been generated in the creation modal)
+        return item.id
+      },
       copyItem(steps, item, position) {
         refreshIdentifiers(item).then(copy => {
           dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', copyItem(steps, copy, position)))
         })
       },
-
       moveItem(steps, itemId, position) {
         dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', moveItem(steps, itemId, position)))
+      },
+      removeItem(steps, itemId) {
+        dispatch(formActions.updateProp(editorSelectors.STORE_NAME, 'resource.steps', removeItem(steps, itemId)))
       }
     })
   )(QuizEditorStepsComponent)

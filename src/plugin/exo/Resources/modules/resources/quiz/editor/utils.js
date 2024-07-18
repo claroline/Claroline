@@ -134,6 +134,21 @@ function removeStep(steps, stepId) {
   return newState
 }
 
+function addItem(steps, stepId, item) {
+  const newState = cloneDeep(steps)
+
+  const stepPosition = newState.findIndex(step => step.id === stepId)
+  if (-1 !== stepPosition) {
+    if (!newState[stepPosition].items) {
+      newState[stepPosition].items = []
+    }
+
+    newState[stepPosition].items.push(item)
+  }
+
+  return newState
+}
+
 function copyItem(steps, item, position) {
   const newState = cloneDeep(steps)
 
@@ -162,12 +177,27 @@ function moveItem(steps, itemId, position) {
   return newState
 }
 
+function removeItem(steps, itemId) {
+  const newState = cloneDeep(steps)
+
+  const step = newState.find(step => step.items.find(item => item.id === itemId))
+  const currentPos = step.items.findIndex(item => item.id === itemId)
+  if (-1 !== currentPos) {
+    step.items.splice(currentPos, 1)
+  }
+
+  return newState
+}
+
 export {
   getStepSlug,
   addStep,
   moveStep,
   copyStep,
   removeStep,
+
+  addItem,
   copyItem,
-  moveItem
+  moveItem,
+  removeItem
 }

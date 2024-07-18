@@ -40,7 +40,7 @@ const EditorItem = props =>
                 <span className="h-numbering">{props.numbering}</span>
               }
 
-              <ItemIcon name={itemDefinition.name} className="icon-with-text-right" />
+              <ItemIcon name={itemDefinition.name} className="icon-with-text-right" size="xs" />
             </>
           }
           subtitle={(itemScore || 0 === itemScore) ? `(${transChoice('solution_score', itemScore, {score: itemScore}, 'quiz')})` : undefined}
