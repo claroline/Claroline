@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, createElement} from 'react'
 import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
@@ -6,12 +6,13 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
-import {GridSelection} from '#/main/app/content/grid/components/selection'
 
 import {Icon} from '#/plugin/exo/items/components/icon'
 
 import {Item as ItemTypes} from '#/plugin/exo/items/prop-types'
 import {getItems} from '#/plugin/exo/items'
+import {ContentCreation} from '#/main/app/content/components/creation'
+import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 class CreationModal extends Component {
   constructor(props) {
@@ -31,42 +32,46 @@ class CreationModal extends Component {
   render() {
     return (
       <Modal
-        icon="fa fa-fw fa-plus"
-        title={trans('add_question_from_new', {}, 'quiz')}
+        title={trans('new_item', {}, 'quiz')}
         {...omit(this.props, 'create')}
         onEntering={this.loadAvailableTypes}
-        size="lg"
       >
-        <GridSelection
-          items={this.state.types.map(type => ({
-            id: type.type,
-            name: type.name,
-            icon: React.createElement(Icon, {
-              name: type.name,
-              size: 'lg'
-            }),
-            label: trans(type.name, {}, 'question_types'),
-            description: trans(`${type.name}_desc`, {}, 'question_types'),
-            tags: type.tags
-          }))}
+        <div className="modal-body" role="presentation">
+          <ContentCreation
+            className="mb-3"
+            color={false}
+            types={this.state.types.map(type => {
+              return ({
+                id: type.type,
+                icon: createElement(Icon, {
+                  name: type.name,
+                  size: 'sm'
+                }),
+                label: trans(type.name, {}, 'question_types'),
+                description: trans(`${type.name}_desc`, {}, 'question_types'),
+                action: {
+                  type: CALLBACK_BUTTON,
+                  callback: () => {
+                    let newItem = merge({
+                      id: makeId(),
+                      type: type.type
+                    }, ItemTypes.defaultProps)
 
-          handleSelect={(type) => {
-            let newItem = merge({
-              id: makeId(),
-              type: type.id
-            }, ItemTypes.defaultProps)
+                    // check if the current item type implement a callback for creation
+                    // (to append some custom defaults for example)
+                    const itemDefinition = this.state.types.find(t => t.name === type.name)
+                    if (itemDefinition && typeof itemDefinition.create === 'function') {
+                      newItem = itemDefinition.create(newItem)
+                    }
 
-            // check if the current item type implement a callback for creation
-            // (to append some custom defaults for example)
-            const itemDefinition = this.state.types.find(t => t.name === type.name)
-            if (itemDefinition && typeof itemDefinition.create === 'function') {
-              newItem = itemDefinition.create(newItem)
-            }
-
-            this.props.fadeModal()
-            this.props.create(newItem)
-          }}
-        />
+                    this.props.fadeModal()
+                    this.props.create(newItem)
+                  }
+                }
+              })
+            })}
+          />
+        </div>
       </Modal>
     )
   }

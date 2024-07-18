@@ -16,8 +16,6 @@ function refreshIdentifiers(item) {
   })
 }
 
-// TODO : find a way to merge with path numbering
-
 function getNumbering(type, stepIndex, itemIndex) {
   let numbering = [
     stepIndex

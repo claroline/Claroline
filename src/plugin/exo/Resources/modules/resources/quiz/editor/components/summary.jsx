@@ -8,6 +8,7 @@ import {Button} from '#/main/app/action'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {ContentSummary} from '#/main/app/content/components/summary'
 import {EditorPage} from '#/main/app/editor'
+
 import {getNumbering} from '#/plugin/exo/resources/quiz/utils'
 
 const QuizEditorSummary = props => {
@@ -37,9 +38,10 @@ const QuizEditorSummary = props => {
             target: `${props.path}/steps/${step.slug}/${item.id}`,
             subscript: !isEmpty(get(props.errors, `resource.steps[${index}].items[${itemIndex}]`)) ? {
               type: 'text',
-              status: props.validating ? 'danger' : 'warning',
+              status: 'danger',
               value: <span className="fa fa-fw fa-exclamation-circle" />
-            } : undefined
+            } : undefined,
+            additional: props.getItemActions(step, index, item, itemIndex),
           }))
         }))}
       />
@@ -49,31 +51,22 @@ const QuizEditorSummary = props => {
         className="btn btn-primary w-100 mt-3"
         size="lg"
         label={trans('step_add', {}, 'path')}
-        callback={() => {
-          const newSlug = props.addStep(props.steps)
-          props.history.push(`${props.path}/steps/${newSlug}`)
-        }}
+        callback={props.addStep}
       />
     </EditorPage>
   )
 }
 
 QuizEditorSummary.propTypes = {
-  history: T.shape({
-    push: T.func.isRequired
-  }).isRequired,
-  location: T.shape({
-    pathname: T.string.isRequired
-  }).isRequired,
   path: T.string.isRequired,
-  numberingType: T.string.isRequired,
-  questionNumberingType: T.string.isRequired,
+  numberingType: T.string,
+  questionNumberingType: T.string,
   steps: T.arrayOf(T.shape({
     // step types
   })),
   errors: T.object,
-  validating: T.bool.isRequired,
   getStepActions: T.func.isRequired,
+  getItemActions: T.func.isRequired,
   addStep: T.func.isRequired
 }
 

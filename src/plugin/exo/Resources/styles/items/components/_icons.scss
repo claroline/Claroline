@@ -2,7 +2,7 @@
     text-align: center;
     padding: 5px; // this is for better rendering in the selection modal
 
-    &.item-icon-sm {
+    &.item-icon-xs {
         width: 16px;
         height: 16px;
         padding: 0;
@@ -12,5 +12,26 @@
         fill: var(--#{$prefix}secondary-color);
         // for FontAwesome (content types)
         color: var(--#{$prefix}secondary-color);
+    }
+}
+
+.thumbnail-icon {
+    @each $size, $value in $icon-sizes {
+        .item-icon-#{$size} {
+            // for picture
+            width: $value;
+            height: $value;
+            // for .fa when no picture
+            font-size: $value * .5;
+        }
+    }
+
+    .item-icon {
+        padding: .5em;
+        // for SVG (question types)
+        stroke: currentColor;
+        fill: currentColor;
+        // for FontAwesome (content types)
+        color: currentColor;
     }
 }

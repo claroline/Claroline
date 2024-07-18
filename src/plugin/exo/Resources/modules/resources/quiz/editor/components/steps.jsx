@@ -1,4 +1,5 @@
 import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import {useSelector} from 'react-redux'
 import get from 'lodash/get'
 import uniqBy from 'lodash/uniqBy'
@@ -13,6 +14,7 @@ import {QuizEditorStep} from '#/plugin/exo/resources/quiz/editor/components/step
 import {MODAL_STEP_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/step-position'
 import {MODAL_ITEM_IMPORT} from '#/plugin/exo/items/modals/import'
 import {MODAL_ITEM_CREATION} from '#/plugin/exo/items/modals/creation'
+import {MODAL_ITEM_POSITION} from '#/plugin/exo/resources/quiz/editor/modals/item-position'
 
 const QuizEditorSteps = (props) => {
   const resourceEditorPath = useSelector(editorSelectors.path) + '/steps'
@@ -36,7 +38,7 @@ const QuizEditorSteps = (props) => {
               }
             }
 
-            props.update('items', [].concat(props.items, [item]))
+            props.addItem(props.steps, step.id, item)
             props.history.push(`${resourceEditorPath}/${step.slug}/${item.id}`)
           }
         }],
@@ -91,8 +93,7 @@ const QuizEditorSteps = (props) => {
             label: trans('copy', {}, 'actions'),
             callback: () => props.copyStep(props.steps, step.id, position)
           })
-        }],
-        //group: trans('management')
+        }]
       }, {
         name: 'move',
         type: MODAL_BUTTON,
@@ -114,8 +115,7 @@ const QuizEditorSteps = (props) => {
             label: trans('move', {}, 'actions'),
             callback: () => props.moveStep(props.steps, step.id, position)
           })
-        }],
-        //group: trans('management')
+        }]
       }, {
         name: 'delete',
         type: CALLBACK_BUTTON,
@@ -132,8 +132,79 @@ const QuizEditorSteps = (props) => {
           subtitle: step.title || trans('step', {number: index + 1}, 'quiz'),
           message: trans('remove_step_confirm_message', {}, 'quiz')
         },
-        dangerous: true,
-        //group: trans('management')
+        dangerous: true
+      }
+    ]
+  }
+
+  function getItemActions(step, stepIndex, item, itemIndex) {
+    return [
+      {
+        name: 'copy',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-clone',
+        label: trans('copy', {}, 'actions'),
+        modal: [MODAL_ITEM_POSITION, {
+          icon: 'fa fa-fw fa-arrows',
+          title: trans('copy'),
+          step: {
+            id: step.id,
+            title: step.title || trans('step', {number: stepIndex + 1}, 'quiz')
+          },
+          steps: (props.steps || []).map((s, i) => ({
+            id: s.id,
+            title: s.title || trans('step', {number: i + 1}, 'quiz'),
+            items: s.items
+          })),
+          item: {
+            id: item.id,
+            title: item.title || trans('item', {number: itemIndex + 1}, 'quiz')
+          },
+          selectAction: (position) => ({
+            type: CALLBACK_BUTTON,
+            label: trans('copy', {}, 'actions'),
+            callback: () => props.copyItem(props.steps, item, position)
+          })
+        }]
+      }, {
+        name: 'move',
+        type: MODAL_BUTTON,
+        icon: 'fa fa-fw fa-arrows',
+        label: trans('move', {}, 'actions'),
+        modal: [MODAL_ITEM_POSITION, {
+          icon: 'fa fa-fw fa-arrows',
+          title: trans('movement'),
+          step: {
+            id: step.id,
+            title: step.title || trans('step', {number: stepIndex + 1}, 'quiz')
+          },
+          steps: (props.steps || []).map((s, i) => ({
+            id: s.id,
+            title: s.title || trans('step', {number: i + 1}, 'quiz'),
+            items: s.items
+          })),
+          item: {
+            id: item.id,
+            title: item.title || trans('item', {number: itemIndex + 1}, 'quiz')
+          },
+          selectAction: (position) => ({
+            type: CALLBACK_BUTTON,
+            label: trans('move', {}, 'actions'),
+            callback: () => props.moveItem(props.steps, item.id, position)
+          })
+        }]
+      }, {
+        name: 'delete',
+        type: CALLBACK_BUTTON,
+        icon: 'fa fa-fw fa-trash',
+        label: trans('delete', {}, 'actions'),
+        callback: () => props.removeItem(props.steps, item.id),
+        confirm: {
+          title: trans('deletion'),
+          subtitle: item.title || trans('item', {number: itemIndex + 1}, 'quiz'),
+          message: trans('remove_item_confirm_message', {}, 'quiz')
+        },
+        dangerous: true
       }
     ]
   }
@@ -147,7 +218,12 @@ const QuizEditorSteps = (props) => {
           exact: true,
           render: () => (
             <QuizEditorSummary
+              addStep={() => {
+                const newSlug = props.addStep(props.steps)
+                props.history.push(`${resourceEditorPath}/${newSlug}`)
+              }}
               getStepActions={getStepActions}
+              getItemActions={getItemActions}
             />
           )
         }, {
@@ -174,8 +250,7 @@ const QuizEditorSteps = (props) => {
                   errors={get(props.errors, `resource.steps[${stepIndex}]`)}
                   actions={getStepActions(currentStep, stepIndex)}
                   update={(prop, value) => props.update(`steps[${stepIndex}].${prop}`, value)}
-                  moveItem={(itemId, position) => props.moveItem(props.steps, itemId, position)}
-                  copyItem={(itemId, position) => props.copyItem(props.steps, itemId, position)}
+                  getItemActions={(item, itemIndex) => getItemActions(currentStep, stepIndex, item, itemIndex)}
                 />
               )
             }
@@ -188,6 +263,18 @@ const QuizEditorSteps = (props) => {
       ]}
     />
   )
+}
+
+QuizEditorSteps.propTypes = {
+  addStep: T.func.isRequired,
+  copyStep: T.func.isRequired,
+  moveStep: T.func.isRequired,
+  removeStep: T.func.isRequired,
+
+  addItem: T.func.isRequired,
+  copyItem: T.func.isRequired,
+  moveItem: T.func.isRequired,
+  removeItem: T.func.isRequired
 }
 
 export {
