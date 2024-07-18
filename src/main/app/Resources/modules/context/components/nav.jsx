@@ -70,7 +70,7 @@ const ContextNav = (props) => {
         type={MODAL_BUTTON}
         className="app-context-btn"
         icon="far fa-fw fa-compass"
-        label={trans('search')}
+        label={trans('search_and_history')}
         tooltip="right"
         modal={[MODAL_CONTEXT_SEARCH]}
       />

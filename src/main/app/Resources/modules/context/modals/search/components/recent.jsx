@@ -7,11 +7,13 @@ import {trans} from '#/main/app/intl'
 import {DataCard} from '#/main/app/data/components/card'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 
+function parseRecent(recent) {
+  return Object.keys(recent).map(recentId => recent[recentId])
+}
+
 const SearchRecent = (props) => {
   let recent = getRecent()
-  recent = Object.keys(recent).map(recentId => recent[recentId])
-
-  const [history, setHistory] = useState(recent)
+  const [history, setHistory] = useState(parseRecent(recent))
 
   if (isEmpty(recent)) {
     return (
@@ -31,6 +33,7 @@ const SearchRecent = (props) => {
           .map(result => (
             <DataCard
               key={result.id}
+              id={result.id}
               size="sm"
               direction="row"
               title={result.name}
@@ -50,7 +53,10 @@ const SearchRecent = (props) => {
                   type: CALLBACK_BUTTON,
                   icon: 'fa fa-fw fa-times',
                   label: trans('delete', {}, 'actions'),
-                  callback: () => setHistory(removeRecent(result.id))
+                  callback: () => {
+                    const newRecent = removeRecent(result.id)
+                    setHistory(parseRecent(newRecent))
+                  }
                 }
               ]}
             />

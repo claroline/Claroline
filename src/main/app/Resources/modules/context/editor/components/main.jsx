@@ -31,6 +31,7 @@ const ContextEditor = (props) => {
       appearancePage={props.appearancePage}
       historyPage={props.historyPage}
       actionsPage={props.actionsPage}
+      permissionsPage={props.permissionsPage}
       defaultPage="overview"
       pages={[
         {
@@ -51,6 +52,11 @@ ContextEditor.propTypes = {
   tools: T.arrayOf(T.shape({
 
   })).isRequired,
+  overviewPage: T.elementType,
+  appearancePage: T.elementType,
+  historyPage: T.elementType,
+  actionsPage: T.elementType,
+  permissionsPage: T.elementType,
   formData: T.object,
   getAvailableTools: T.func.isRequired,
   openEditor: T.func.isRequired,

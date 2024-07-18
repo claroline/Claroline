@@ -13,7 +13,7 @@
 
 .menu-brand {
   max-width: map-get($icon-sizes, sm);
-  height: $brand-size;
+  max-height: $brand-size;
   margin-bottom: .5rem;
 }
 
