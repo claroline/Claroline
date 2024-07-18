@@ -5,9 +5,8 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/app/intl/translation'
 import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 
-import {Tool} from '#/main/core/tool'
+import {Tool, constants as toolConstants} from '#/main/core/tool'
 import {ToolPage} from '#/main/core/tool'
 
 import {Workspace as WorkspaceType} from '#/main/core/workspace/prop-types'
@@ -82,8 +81,8 @@ const WorkspacesTool = (props) => {
     <Tool
       {...props}
       redirect={[
-        {from: '/', exact: true, to: '/registered', disabled: isEmpty(props.currentUser)},
-        {from: '/', exact: true, to: '/public',     disabled: !isEmpty(props.currentUser)}
+        {from: '/', exact: true, to: '/registered', disabled: props.contextType === toolConstants.TOOL_PUBLIC || isEmpty(props.currentUser)},
+        {from: '/', exact: true, to: '/public',     disabled: props.contextType !== toolConstants.TOOL_PUBLIC && !isEmpty(props.currentUser)}
       ]}
       menu={[
         {
@@ -91,7 +90,7 @@ const WorkspacesTool = (props) => {
           type: LINK_BUTTON,
           label: trans('my_workspaces_menu', {}, 'workspace'),
           target: props.path+'/registered',
-          displayed: !isEmpty(props.currentUser)
+          displayed: !isEmpty(props.currentUser) && props.contextType !== toolConstants.TOOL_PUBLIC
         }, {
           name: 'public',
           type: LINK_BUTTON,
@@ -102,19 +101,19 @@ const WorkspacesTool = (props) => {
           type: LINK_BUTTON,
           label: trans('managed_workspaces_menu', {}, 'workspace'),
           target: props.path+'/managed',
-          displayed: !isEmpty(props.currentUser)
+          displayed: !isEmpty(props.currentUser) && props.contextType !== toolConstants.TOOL_PUBLIC
         }, {
           name: 'model',
           type: LINK_BUTTON,
           label: trans('models'),
           target: props.path+'/model',
-          displayed: props.canCreate
+          displayed: props.canCreate && props.contextType !== toolConstants.TOOL_PUBLIC
         }, {
           name: 'archive',
           type: LINK_BUTTON,
           label: trans('archives'),
           target: props.path+'/archived',
-          displayed: props.canArchive
+          displayed: props.canArchive && props.contextType !== toolConstants.TOOL_PUBLIC
         }
       ]}
       pages={[
@@ -125,7 +124,7 @@ const WorkspacesTool = (props) => {
           onEnter: () => props.resetForm('workspaces.creation', merge({}, WorkspaceType.defaultProps, {meta: {creator: props.currentUser}}))
         }, {
           path: '/registered',
-          disabled: isEmpty(props.currentUser),
+          disabled: isEmpty(props.currentUser) || props.contextType !== toolConstants.TOOL_DESKTOP,
           render: () => {
             const Registered = (
               <WorkspacesPage path={props.path} title={trans('my_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
@@ -148,7 +147,8 @@ const WorkspacesTool = (props) => {
               <WorkspacesPage path={props.path} title={trans('public_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
                 <PageListSection>
                   <WorkspaceList
-                    url={['apiv2_workspace_list_registerable']}
+                    flush={true}
+                    url={['apiv2_workspace_list_public']}
                     name="workspaces.public"
                     refresher={refresher}
                   />
@@ -160,7 +160,7 @@ const WorkspacesTool = (props) => {
           }
         }, {
           path: '/managed',
-          disabled: isEmpty(props.currentUser),
+          disabled: isEmpty(props.currentUser) || props.contextType !== toolConstants.TOOL_DESKTOP,
           render: () => {
             const ManagedList = (
               <WorkspacesPage path={props.path} title={trans('managed_workspaces', {}, 'workspace')} canCreate={props.canCreate}>
@@ -178,7 +178,7 @@ const WorkspacesTool = (props) => {
           }
         }, {
           path: '/model',
-          disabled: !props.canCreate,
+          disabled: !props.canCreate || props.contextType !== toolConstants.TOOL_DESKTOP,
           render: () => {
             const ModelList = (
               <WorkspacesPage path={props.path} title={trans('workspace_models', {}, 'workspace')} canCreate={props.canCreate}>
@@ -196,7 +196,7 @@ const WorkspacesTool = (props) => {
           }
         }, {
           path: '/archived',
-          disabled: !props.canArchive,
+          disabled: !props.canArchive || props.contextType !== toolConstants.TOOL_DESKTOP,
           render: () => {
             const ArchiveList = (
               <WorkspacesPage path={props.path} title={trans('workspace_archived', {}, 'workspace')} canCreate={props.canCreate}>
@@ -232,6 +232,7 @@ WorkspacesTool.propTypes = {
     // TODO : user types
   }),
   canCreate: T.bool.isRequired,
+  contextType: T.string,
   canArchive: T.bool.isRequired,
   resetForm: T.func.isRequired,
   invalidateList: T.func.isRequired

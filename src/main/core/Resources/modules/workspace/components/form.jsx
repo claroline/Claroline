@@ -11,7 +11,6 @@ import {FormData} from '#/main/app/content/form/containers/data'
 
 import {selectors as configSelectors} from '#/main/app/config/store'
 import {selectors as contextSelectors} from '#/main/app/context/store'
-import {selectors as workspaceSelectors} from '#/main/app/contexts/workspace/store'
 import {actions as formActions, selectors as formSelectors} from '#/main/app/content/form/store'
 
 import {route} from '#/main/core/workspace/routing'
@@ -311,6 +310,13 @@ const WorkspaceFormComponent = (props) =>
                 required: true
               }
             ]
+          }, {
+            name: 'meta.public',
+            type: 'boolean',
+            label: trans('make_workspace_public', {}, 'workspace'),
+            help: [
+              trans('make_workspace_public_help', {}, 'workspace')
+            ]
           }
         ]
       }, {
@@ -443,7 +449,7 @@ const WorkspaceForm = connect(
     new: formSelectors.isNew(formSelectors.form(state, ownProps.name)),
     id: formSelectors.data(formSelectors.form(state, ownProps.name)).id,
     // todo : fix tool/resource selection for opening. Those values are only available if the workspace is opened
-    tools: contextSelectors.tools(state),
+    tools: contextSelectors.tools(state)
     //root: workspaceSelectors.root(state)
   }),
   (dispatch, ownProps) =>({

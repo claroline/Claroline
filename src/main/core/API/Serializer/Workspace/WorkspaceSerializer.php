@@ -87,6 +87,7 @@ class WorkspaceSerializer
             'poster' => $workspace->getPoster(),
             'meta' => [
                 'archived' => $workspace->isArchived(),
+                'public' => $workspace->isPublic(),
                 'model' => $workspace->isModel(),
                 'personal' => $workspace->isPersonal(),
                 'description' => $workspace->getDescription(),
@@ -124,7 +125,7 @@ class WorkspaceSerializer
             ];
 
             // this is a huge performances bottleneck as it will check if the current user as at least one right on one ws tool
-            //$serialized['registered'] = $this->isRegistered($workspace);
+            // $serialized['registered'] = $this->isRegistered($workspace);
         }
 
         /*if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
@@ -135,17 +136,6 @@ class WorkspaceSerializer
 
         return $serialized;
     }
-
-    /*private function isRegistered(Workspace $workspace): bool
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ($user instanceof User) {
-            return $this->workspaceManager->isRegistered($workspace, $user);
-        }
-
-        return false;
-    }*/
 
     private function getOpening(Workspace $workspace): array
     {
@@ -200,13 +190,13 @@ class WorkspaceSerializer
             'validation' => $workspace->getRegistrationValidation(),
             'selfRegistration' => $workspace->getSelfRegistration(),
             'selfUnregistration' => $workspace->getSelfUnregistration(),
-            //'defaultRole' => $defaultRole,
+            // 'defaultRole' => $defaultRole,
             'maxTeams' => $workspace->getMaxTeams(),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
             // this is a huge performances bottleneck
-            //$serialized['waitingForRegistration'] = $workspace->getSelfRegistration() && $workspace->getRegistrationValidation() ? $this->waitingForRegistration($workspace) : false;
+            // $serialized['waitingForRegistration'] = $workspace->getSelfRegistration() && $workspace->getRegistrationValidation() ? $this->waitingForRegistration($workspace) : false;
         }
 
         return $serialized;
@@ -248,6 +238,10 @@ class WorkspaceSerializer
             }
             if (array_key_exists('updated', $data['meta'])) {
                 $workspace->setUpdatedAt(DateNormalizer::denormalize($data['meta']['updated']));
+            }
+
+            if (isset($data['meta']['public'])) {
+                $workspace->setPublic($data['meta']['public']);
             }
 
             if (array_key_exists('creator', $data['meta'])) {
@@ -373,15 +367,4 @@ class WorkspaceSerializer
             $this->eventDispatcher->dispatch($event, 'claroline_tag_multiple_data');
         }
     }
-
-    /*private function waitingForRegistration(Workspace $workspace): bool
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-        if (!$user instanceof User) {
-            return false;
-        }
-
-        return (bool) $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue')
-          ->findBy(['workspace' => $workspace, 'user' => $user]);
-    }*/
 }

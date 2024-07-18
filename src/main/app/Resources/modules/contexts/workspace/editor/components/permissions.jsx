@@ -10,9 +10,22 @@ const WorkspaceEditorPermissions = () =>
     managerOnly={true}
     definition={[
       {
+        name: 'public',
+        title: trans('public_workspace', {}, 'workspace'),
+        primary: true,
+        fields: [
+          {
+            name: 'data.meta.public',
+            type: 'boolean',
+            label: trans('make_workspace_public', {}, 'workspace'),
+            help: [
+              trans('make_workspace_public_help', {}, 'workspace')
+            ]
+          }
+        ]
+      },{
         name: 'organizations',
         title: trans('organizations'),
-        primary: true,
         fields: [
           {
             name: 'organizations',

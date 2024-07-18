@@ -4,9 +4,13 @@
   "new_workspace": "New workspace",
   "managed_workspaces": "Managed workspaces",
   "my_workspaces": "My workspaces",
+  "public_workspace": "Public workspace",
   "public_workspaces": "Public workspaces",
   "workspace_models": "Models of workspaces",
   "workspace_archived": "Archived workspaces",
+
+  "make_workspace_public": "Make workspace public",
+  "make_workspace_public_help": "Public workspaces are visible to all platform users.",
 
   "view_as_info": "You are currently seeing what users with this role are seeing.",
   "copy_as_model": "Copy as model",

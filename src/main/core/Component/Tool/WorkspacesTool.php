@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Component\Tool;
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Component\Tool\AbstractTool;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
+use Claroline\CoreBundle\Component\Context\PublicContext;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -27,7 +28,10 @@ class WorkspacesTool extends AbstractTool
 
     public function supportsContext(string $context): bool
     {
-        return DesktopContext::getName() === $context;
+        return in_array($context, [
+            DesktopContext::getName(),
+            PublicContext::getName(),
+        ]);
     }
 
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array
