@@ -10,9 +10,9 @@ use Claroline\AppBundle\Event\Crud\CrudEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\LogBundle\Helper\LinkHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

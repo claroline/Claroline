@@ -18,40 +18,19 @@ class IconSetBuilderManager
      *
      * @var string
      */
-    const INSTALLED_ICON_PATH = 'Resources'.DIRECTORY_SEPARATOR.'icons';
+    private const INSTALLED_ICON_PATH = 'Resources'.DIRECTORY_SEPARATOR.'icons';
 
-    /** @var Filesystem */
-    private $filesystem;
-    /** @var string */
-    private $iconSetsDir;
-    /** @var string */
-    private $iconSetsWebDir;
-    /** @var string */
-    private $webDir;
-
-    /** @var ObjectManager */
-    private $om;
-    /** @var TempFileManager */
-    private $tempManager;
-    /** @var ArchiveManager */
-    private $archiveManager;
+    private Filesystem $filesystem;
 
     public function __construct(
-        string $webDir,
-        string $iconSetsWebDir,
-        string $iconSetsDir,
-        ObjectManager $om,
-        TempFileManager $tempManager,
-        ArchiveManager $archiveManager
+        private readonly string $webDir,
+        private readonly string $iconSetsWebDir,
+        private readonly string $iconSetsDir,
+        private readonly ObjectManager $om,
+        private readonly TempFileManager $tempManager,
+        private readonly ArchiveManager $archiveManager
     ) {
         $this->filesystem = new FileSystem();
-        $this->webDir = $webDir;
-        $this->iconSetsWebDir = $iconSetsWebDir;
-        $this->iconSetsDir = $iconSetsDir;
-
-        $this->om = $om;
-        $this->tempManager = $tempManager;
-        $this->archiveManager = $archiveManager;
     }
 
     public function zip(string $setName): string

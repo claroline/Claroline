@@ -30,32 +30,24 @@ class IconItem
 
     /**
      * @ORM\Column(name="mime_type", nullable=true)
-     *
-     * @var string
      */
-    private $mimeType;
+    private ?string $mimeType = null;
 
     /**
      * @ORM\Column(name="relative_url")
-     *
-     * @var string
      */
-    private $relativeUrl;
+    private ?string $relativeUrl = null;
 
     /**
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    private $svg = false;
+    private bool $svg = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="IconSet", inversedBy="icons", fetch="LAZY")
      * @ORM\JoinColumn(name="icon_set_id", referencedColumnName="id", onDelete="CASCADE")
-     *
-     * @var IconSet
      */
-    private $iconSet;
+    private ?IconSet $iconSet = null;
 
     public function __construct()
     {
@@ -77,11 +69,9 @@ class IconItem
         return $this->mimeType;
     }
 
-    public function setMimeType(?string $mimeType = null)
+    public function setMimeType(?string $mimeType = null): void
     {
         $this->mimeType = $mimeType;
-
-        return $this;
     }
 
     public function getRelativeUrl(): ?string

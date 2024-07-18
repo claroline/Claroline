@@ -17,6 +17,7 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Name;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -30,40 +31,32 @@ class IconSet
     use Uuid;
     use Name;
 
-    const RESOURCE_ICON_SET = 'resources';
-    const WIDGET_ICON_SET = 'widgets';
-    const DATA_ICON_SET = 'data';
+    public const RESOURCE_ICON_SET = 'resources';
+    public const WIDGET_ICON_SET = 'widgets';
+    public const DATA_ICON_SET = 'data';
 
     /**
      * @Gedmo\Slug(fields={"name"}, unique=true, updatable=false, separator="_")
      * @ORM\Column(unique=true)
      *
-     * @var string
-     *
      * @deprecated
      */
-    private $cname;
+    private ?string $cname = null;
 
     /**
      * @ORM\Column(name="is_default", type="boolean", options={"default"= 0})
-     *
-     * @var bool
      */
-    private $default = false;
+    private bool $default = false;
 
     /**
      * @ORM\Column(nullable=true)
-     *
-     * @var string
      */
-    private $type;
+    private ?string $type = null;
 
     /**
      * @ORM\OneToMany(targetEntity="IconItem", mappedBy="iconSet")
-     *
-     * @var ArrayCollection|IconItem[]
      */
-    private $icons;
+    private Collection $icons;
 
     public function __construct()
     {
@@ -101,9 +94,9 @@ class IconSet
     }
 
     /**
-     * @return IconItem[]
+     * @return Collection|IconItem[]
      */
-    public function getIcons()
+    public function getIcons(): Collection
     {
         return $this->icons;
     }

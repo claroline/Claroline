@@ -997,6 +997,7 @@
     "header": "Header",
     "header_widgets": "Widgets",
     "search": "Search",
+    "search_and_history": "Search & History",
     "user_interface": "User interface",
     "mail_config_issue": "The email could not be sent, please check your mailer configuration",
     "email_not_exist": "The email address does not exist",

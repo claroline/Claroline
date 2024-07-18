@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ThemeManager
 {
     private ThemeRepository $repository;
-    private Theme $currentTheme;
+    private ?Theme $currentTheme = null;
 
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,

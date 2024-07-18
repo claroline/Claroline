@@ -1,15 +1,25 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {PropTypes as T} from 'prop-types'
+import {useSelector} from 'react-redux'
 import classes from 'classnames'
 
-import {trans, transChoice} from '#/main/app/intl'
+import {transChoice} from '#/main/app/intl'
+import {useReducer} from '#/main/app/store/reducer'
 import {Button} from '#/main/app/action'
 import {MODAL_BUTTON} from '#/main/app/buttons'
 
+import {reducer, selectors} from '#/main/notification/store'
 import {MODAL_MY_NOTIFICATIONS} from '#/main/notification/modals/my-notifications'
 
+
 const NotificationButton = (props) => {
-  const countNotifications = 1
+  useReducer(selectors.STORE_NAME, reducer)
+
+  const countNotifications = useSelector(selectors.count)
+
+  useEffect(() => {
+
+  })
 
   return (
     <Button
