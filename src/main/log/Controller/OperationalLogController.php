@@ -43,7 +43,7 @@ class OperationalLogController
         $query = $request->query->all();
         $query['hiddenFilters'] = [
             'contextName' => $context,
-            'contextId' => $contextSubject ? $contextSubject->getUuid() : null
+            'contextId' => $contextSubject ? $contextSubject->getUuid() : null,
         ];
 
         return new JsonResponse(

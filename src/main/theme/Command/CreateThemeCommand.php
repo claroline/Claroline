@@ -19,17 +19,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateThemeCommand extends Command
 {
-    /** @var ThemeManager */
-    private $themeManager;
-
-    public function __construct(ThemeManager $themeManager)
-    {
-        $this->themeManager = $themeManager;
-
+    public function __construct(
+        private readonly ThemeManager $themeManager
+    ) {
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Creates a new custom theme for the platform.')

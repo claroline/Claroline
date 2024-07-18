@@ -1018,6 +1018,7 @@
     "header": "Entête",
     "header_widgets": "Widgets",
     "search": "Recherche",
+    "search_and_history": "Recherche & Historique",
     "user_interface": "Interface utilisateur",
     "password_reset_send": "Email de changement de mot de passe envoyé",
     "mail_config_issue": "L'envoi d'email a échoué, veuillez vérifier la configuration du serveur mail",

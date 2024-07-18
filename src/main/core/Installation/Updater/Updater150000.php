@@ -3,12 +3,6 @@
 namespace Claroline\CoreBundle\Installation\Updater;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Component\Context\AccountContext;
-use Claroline\CoreBundle\Component\Context\AdministrationContext;
-use Claroline\CoreBundle\Component\Context\PublicContext;
-use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\InstallationBundle\Updater\Helper\RemovePluginTrait;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;
