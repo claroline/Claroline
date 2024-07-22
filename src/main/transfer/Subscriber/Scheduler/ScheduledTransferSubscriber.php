@@ -15,22 +15,24 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\SchedulerBundle\Event\ExecuteScheduledTaskEvent;
 use Claroline\TransferBundle\Entity\ExportFile;
 use Claroline\TransferBundle\Entity\ImportFile;
-use Claroline\TransferBundle\Manager\TransferManager;
+use Claroline\TransferBundle\Manager\ExportManager;
+use Claroline\TransferBundle\Manager\ImportManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ScheduledTransferSubscriber implements EventSubscriberInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var TransferManager */
-    private $transferManager;
+    private ObjectManager $om;
+    private ImportManager $importManager;
+    private ExportManager $exportManager;
 
     public function __construct(
         ObjectManager $om,
-        TransferManager $transferManager
+        ImportManager $importManager,
+        ExportManager $exportManager
     ) {
         $this->om = $om;
-        $this->transferManager = $transferManager;
+        $this->importManager = $importManager;
+        $this->exportManager = $exportManager;
     }
 
     public static function getSubscribedEvents(): array
@@ -54,7 +56,7 @@ class ScheduledTransferSubscriber implements EventSubscriberInterface
         }
 
         // we don't ask for a Messenger message here because scheduled tasks are already executed in one
-        $status = $this->transferManager->export($exportFile);
+        $status = $this->exportManager->export($exportFile);
 
         $event->setStatus($status);
     }
@@ -72,7 +74,7 @@ class ScheduledTransferSubscriber implements EventSubscriberInterface
         }
 
         // we don't ask for a Messenger message here because scheduled tasks are already executed in one
-        $status = $this->transferManager->import($importFile);
+        $status = $this->importManager->import($importFile);
 
         $event->setStatus($status);
     }

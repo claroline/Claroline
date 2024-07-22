@@ -13,7 +13,7 @@ namespace Claroline\TransferBundle\Messenger;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\TransferBundle\Entity\ExportFile;
-use Claroline\TransferBundle\Manager\TransferManager;
+use Claroline\TransferBundle\Manager\ExportManager;
 use Claroline\TransferBundle\Messenger\Message\ExecuteExport;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
@@ -21,7 +21,7 @@ class ExecuteExportHandler implements MessageHandlerInterface
 {
     public function __construct(
         private readonly ObjectManager $om,
-        private readonly TransferManager $transferManager
+        private readonly ExportManager $exportManager
     ) {
     }
 
@@ -32,6 +32,6 @@ class ExecuteExportHandler implements MessageHandlerInterface
             return;
         }
 
-        $this->transferManager->export($exportFile);
+        $this->exportManager->export($exportFile);
     }
 }

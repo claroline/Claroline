@@ -3,10 +3,10 @@ services:
         tags: [ messenger.message_handler ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\TransferBundle\Manager\TransferManager'
+            - '@Claroline\TransferBundle\Manager\ExportManager'
 
     Claroline\TransferBundle\Messenger\ExecuteImportHandler:
         tags: [ messenger.message_handler ]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\TransferBundle\Manager\TransferManager'
+            - '@Claroline\TransferBundle\Manager\ImportManager'

@@ -14,24 +14,22 @@ namespace Claroline\TransferBundle\Messenger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\TransferBundle\Entity\ImportFile;
 use Claroline\TransferBundle\Entity\TransferFileInterface;
-use Claroline\TransferBundle\Manager\TransferManager;
+use Claroline\TransferBundle\Manager\ImportManager;
 use Claroline\TransferBundle\Messenger\Message\ExecuteImport;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class ExecuteImportHandler implements MessageHandlerInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var TransferManager */
-    private $transferManager;
+    private ObjectManager $om;
+    private ImportManager $importManager;
 
     public function __construct(
         ObjectManager $om,
-        TransferManager $transferManager
+        ImportManager $importManager
     ) {
         $this->om = $om;
-        $this->transferManager = $transferManager;
+        $this->importManager = $importManager;
     }
 
     public function __invoke(ExecuteImport $importMessage)
@@ -42,7 +40,7 @@ class ExecuteImportHandler implements MessageHandlerInterface
         }
 
         try {
-            $execStatus = $this->transferManager->import($importFile);
+            $execStatus = $this->importManager->import($importFile);
             $failed = TransferFileInterface::ERROR === $execStatus;
         } catch (\Exception $e) {
             $failed = true;

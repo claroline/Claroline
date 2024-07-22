@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\ToolPermissions;
 use Claroline\TransferBundle\Entity\ImportFile;
-use Claroline\TransferBundle\Manager\TransferManager;
+use Claroline\TransferBundle\Manager\ImportManager;
 use Claroline\TransferBundle\Transfer\ImportProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -36,19 +36,17 @@ class ImportController extends AbstractCrudController
 
     /** @var AuthorizationCheckerInterface */
     private $authorization;
-    /** @var ImportProvider */
-    private $provider;
-    /** @var TransferManager */
-    private $transferManager;
+    private ImportProvider $provider;
+    private ImportManager $importManager;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         ImportProvider $provider,
-        TransferManager $transferManager
+        ImportManager $importManager
     ) {
         $this->authorization = $authorization;
         $this->provider = $provider;
-        $this->transferManager = $transferManager;
+        $this->importManager = $importManager;
     }
 
     public function getName(): string
@@ -86,7 +84,7 @@ class ImportController extends AbstractCrudController
     {
         $this->checkPermission('EDIT', $importFile, [], true);
 
-        $this->transferManager->requestImport($importFile);
+        $this->importManager->requestImport($importFile);
 
         return new JsonResponse(
             $this->serializer->serialize($importFile),
@@ -103,7 +101,7 @@ class ImportController extends AbstractCrudController
     {
         $this->checkPermission('OPEN', $importFile, [], true);
 
-        $logs = $this->transferManager->getLog($importFile);
+        $logs = $this->importManager->getLog($importFile);
         if (empty($logs)) {
             throw new NotFoundHttpException('Log for import cannot be found');
         }
