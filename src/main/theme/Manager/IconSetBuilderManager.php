@@ -25,7 +25,6 @@ class IconSetBuilderManager
     public function __construct(
         private readonly string $webDir,
         private readonly string $iconSetsWebDir,
-        private readonly string $iconSetsDir,
         private readonly ObjectManager $om,
         private readonly TempFileManager $tempManager,
         private readonly ArchiveManager $archiveManager
@@ -83,7 +82,7 @@ class IconSetBuilderManager
 
     public function generateFromPlugin(string $pluginPath, ?array $customMimeTypes = []): void
     {
-        $iconsPath = $pluginPath.DIRECTORY_SEPARATOR.static::INSTALLED_ICON_PATH;
+        $iconsPath = $pluginPath.DIRECTORY_SEPARATOR.self::INSTALLED_ICON_PATH;
         if (!$this->filesystem->exists($iconsPath)) {
             // no icon defined in the plugin, we can stop now
             return;
