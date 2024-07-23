@@ -11,7 +11,7 @@ import {Icon} from '#/plugin/exo/items/components/icon'
 
 import {Item as ItemTypes} from '#/plugin/exo/items/prop-types'
 import {getItems} from '#/plugin/exo/items'
-import {ContentCreation} from '#/main/app/content/components/creation'
+import {ContentMenu} from '#/main/app/content/components/menu'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 class CreationModal extends Component {
@@ -37,10 +37,10 @@ class CreationModal extends Component {
         onEntering={this.loadAvailableTypes}
       >
         <div className="modal-body" role="presentation">
-          <ContentCreation
+          <ContentMenu
             className="mb-3"
             color={false}
-            types={this.state.types.map(type => {
+            items={this.state.types.map(type => {
               return ({
                 id: type.type,
                 icon: createElement(Icon, {

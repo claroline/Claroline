@@ -1,13 +1,19 @@
 import React from 'react'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
+import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
 
-import {selectors} from '#/main/app/context/editor/store/selectors'
-import {ContextEditorAppearance} from '#/main/app/context/editor/components/appearance'
+import {ContextEditorAppearance, actions, selectors} from '#/main/app/context/editor'
 
-const WorkspaceEditorAppearance = (props) => {
+const WorkspaceEditorAppearance = () => {
   const context = useSelector(selectors.context)
+  const enabledTools = useSelector(selectors.enabledTools)
+
+  const dispatch = useDispatch()
+  const updateProp = (prop, value) => {
+    dispatch(actions.update(value, 'data.'+prop))
+  }
 
   return (
     <ContextEditorAppearance
@@ -18,7 +24,7 @@ const WorkspaceEditorAppearance = (props) => {
           hideTitle: true,
           fields: [
             {
-              name: 'restrictions.hidden',
+              name: 'data.restrictions.hidden',
               type: 'boolean',
               label: trans('restrict_hidden'),
               help: trans('restrict_hidden_help')
@@ -27,11 +33,11 @@ const WorkspaceEditorAppearance = (props) => {
         }, {
           name: 'opening',
           title: trans('Ouverture'),
-          subtitle: 'Lorem ipsum dolor sit amet non sequiture et cetera',
+          subtitle: trans('Configurez la façon dont votre espace de travail va s\'ouvrir.'),
           primary: true,
           fields: [
             {
-              name: 'opening.type',
+              name: 'data.opening.type',
               type: 'choice',
               label: trans('type'),
               required: true,
@@ -43,44 +49,41 @@ const WorkspaceEditorAppearance = (props) => {
                   resource: trans('open_workspace_resource')
                 }
               },
-              onChange: () => props.updateProp('opening.target', null),
+              onChange: () => updateProp('opening.target', null),
               linked: [
                 {
-                  name: 'opening.target',
+                  name: 'data.opening.target',
                   type: 'choice',
                   label: trans('tool'),
                   required: true,
-                  displayed: (workspace) => workspace.opening && 'tool' === workspace.opening.type,
+                  displayed: (context) => 'tool' === get(context, 'data.opening.type'),
                   options: {
                     noEmpty: true,
                     multiple: false,
                     condensed: true,
-                    choices: props.tools ? props.tools.reduce((acc, tool) => Object.assign(acc, {
+                    choices: enabledTools ? enabledTools.reduce((acc, tool) => Object.assign(acc, {
                       [tool.name]: trans(tool.name, {}, 'tools')
                     }), {}) : {}
                   }
                 }, {
-                  name: 'opening.target',
+                  name: 'data.opening.target',
                   type: 'resource',
                   help: trans ('opening_target_resource_help'),
                   label: trans('resource'),
                   options: {
                     picker: {
-                      contextId: context.id
+                      contextId: context ? context.id : null
                     }
                   },
                   required: true,
-                  displayed: (workspace) => workspace.opening && 'resource' === workspace.opening.type,
-                  onChange: (selected) => {
-                    props.updateProp('opening.target', selected)
-                  }
+                  displayed: (context) => 'resource' === get(context, 'data.opening.type'),
+                  onChange: (selected) => updateProp('opening.target', selected)
                 }
               ]
             }, {
-              name: 'opening.menu',
+              name: 'data.opening.menu',
               type: 'choice',
               label: trans('tools_menu'),
-              mode: 'expert',
               placeholder: trans('do_nothing'),
               options: {
                 condensed: false,

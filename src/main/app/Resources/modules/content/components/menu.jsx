@@ -12,9 +12,11 @@ const COLORS = [
   'var(--bs-purple)',
   'var(--bs-teal)',
   'var(--bs-orange)',
+  'var(--bs-blue)',
+  'var(--bs-indigo)'
 ]
 
-const ContentCreationType = (props) =>
+const ContentMenuItem = (props) =>
   <div className={classes('list-group', props.className)} role="presentation">
     <Button
       {...props.action}
@@ -47,7 +49,7 @@ const ContentCreationType = (props) =>
     />
   </div>
 
-ContentCreationType.propTypes = {
+ContentMenuItem.propTypes = {
   id: T.string.isRequired,
   className: T.string,
   icon: T.oneOfType([T.string, T.node]),
@@ -61,8 +63,8 @@ ContentCreationType.propTypes = {
   })
 }
 
-const ContentCreation = (props) => {
-  const displayedTypes = props.types.filter(
+const ContentMenu = (props) => {
+  const displayedTypes = props.items.filter(
     action => undefined === action.displayed || action.displayed
   )
 
@@ -85,7 +87,7 @@ const ContentCreation = (props) => {
   return (
     <div className={props.className} role="presentation">
       {unclassifiedTypes.map((creationType, index) =>
-        <ContentCreationType
+        <ContentMenuItem
           key={creationType.id}
           className={0 !== index ? 'mt-2' : undefined}
           autoFocus={0 === index}
@@ -97,7 +99,7 @@ const ContentCreation = (props) => {
       {Object.keys(groupedTypes).map((group) => [
         <div key={group} className="fs-sm text-body-secondary text-uppercase fw-semibold mt-5 mb-1">{group}</div>,
         ...groupedTypes[group].map((creationType, index) =>
-          <ContentCreationType
+          <ContentMenuItem
             key={creationType.id}
             className={0 !== index ? 'mt-2' : undefined}
             color={props.color ? COLORS[unclassifiedTypes.length + index] : undefined}
@@ -109,9 +111,9 @@ const ContentCreation = (props) => {
   )
 }
 
-ContentCreation.propTypes = {
+ContentMenu.propTypes = {
   className: T.string,
-  types: T.arrayOf(T.shape({
+  items: T.arrayOf(T.shape({
     id: T.string.isRequired,
     icon: T.oneOfType([T.string, T.node]),
     label: T.string.isRequired,
@@ -126,10 +128,10 @@ ContentCreation.propTypes = {
   color: T.bool
 }
 
-ContentCreation.defaultProps = {
+ContentMenu.defaultProps = {
   color: true
 }
 
 export {
-  ContentCreation
+  ContentMenu
 }
