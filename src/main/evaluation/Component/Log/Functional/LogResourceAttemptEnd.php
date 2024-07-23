@@ -28,21 +28,11 @@ class LogResourceAttemptEnd extends AbstractFunctionalLog
         if ($event->hasStatusChanged() && $attempt->isTerminated()) {
             $resourceNode = $event->getResourceNode();
 
-            switch ($attempt->getStatus()) {
-                case EvaluationStatus::FAILED:
-                    $status = ColorHelper::danger(
-                        strtolower($this->getTranslator()->trans('evaluation_failed_short', [], 'evaluation'))
-                    );
-                    break;
-                default:
-                    $status = ColorHelper::success(
-                        strtolower($this->getTranslator()->trans('evaluation_'.$attempt->getStatus().'_short', [], 'evaluation'))
-                    );
-                    break;
-            }
-
             $message = $this->getTranslator()->trans('evaluation.attempt_end_message', [
-                '%status%' => $status,
+                '%status%' => ColorHelper::color(
+                    strtolower($this->getTranslator()->trans('evaluation_' . $attempt->getStatus() . '_short', [], 'evaluation')),
+                    EvaluationStatus::FAILED === $attempt->getStatus() ? ColorHelper::DANGER : ColorHelper::SUCCESS
+                ),
                 '%resource%' => $resourceNode->getName(),
             ], 'log');
 
