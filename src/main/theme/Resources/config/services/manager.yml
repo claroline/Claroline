@@ -16,7 +16,6 @@ services:
         arguments:
             - '%claroline.param.public_directory%'
             - '%claroline.param.icon_sets_web_dir%'
-            - '%claroline.param.icon_sets_directory%'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\File\TempFileManager'
             - '@Claroline\AppBundle\Manager\File\ArchiveManager'
