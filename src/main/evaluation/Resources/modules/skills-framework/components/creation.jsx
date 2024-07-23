@@ -2,12 +2,12 @@ import React from 'react'
 
 import {trans} from '#/main/app/intl'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {ContentCreation} from '#/main/app/content/components/creation'
+import {ContentMenu} from '#/main/app/content/components/menu'
 import {MODAL_SKILLS_FRAMEWORKS_CREATION} from '#/main/evaluation/skills-framework/modals/creation'
 
 const SkillsFrameworkCreation = () =>
-  <ContentCreation
-    types={[
+  <ContentMenu
+    items={[
       {
         id: 'create-empty',
         icon: 'plus',

@@ -119,7 +119,7 @@ const defaultOpening = createSelector(
     }
 
     // no opening config for the current context, just get the first available tool
-    if (isEmpty(defaultTool) && !isEmpty(tools)) {
+    if (!isEmpty(tools)) {
       if (!defaultTool || -1 === tools.findIndex(tool => defaultTool === tool.name)) {
         // no default set or the default tool is not available for the user
         // open the first available tool

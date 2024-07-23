@@ -5,68 +5,60 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {withRouter} from '#/main/app/router'
-import {AsyncButton} from '#/main/app/buttons/async'
-import {LinkButton} from '#/main/app/buttons/link'
+import {ASYNC_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
+import {PageSection} from '#/main/app/page/components/section'
+import {ContentMenu} from '#/main/app/content/components/menu'
 
 import {selectors as resourceSelectors} from '#/main/core/resource/store'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/store'
-
 import {ResourceOverview} from '#/main/core/resource'
-import {PageSection} from '#/main/app/page/components/section'
+
 
 const OverviewComponent = props =>
   <ResourceOverview>
-    <PageSection size="md" className="py-3">
-      {(props.canAddEntry || props.canSearchEntry || props.randomEnabled) &&
-        <ul className="list-group">
-          {props.canAddEntry &&
-            <LinkButton
-              className="list-group-item list-group-item-action d-flex gap-3 p-3"
-              target={`${props.path}/entry/form`}
-            >
-              <span className="fa fa-fw fa-plus fs-2" aria-hidden={true} />
-              <div className="" role="presentation">
-                <h5 className="mb-1">{trans('new_entry', {}, 'clacoform')}</h5>
-                <p className="mb-0 text-body-secondary">{trans('new_entry_help', {}, 'clacoform')}</p>
-              </div>
-              <span className="fa fa-chevron-right text-body-tertiary ms-auto align-self-center" aria-hidden={true} />
-            </LinkButton>
-          }
-
-          {props.canSearchEntry &&
-            <LinkButton
-              className="list-group-item list-group-item-action d-flex gap-3 p-3"
-              target={`${props.path}/entries`}
-            >
-              <span className="fa fa-fw fa-search fs-2" />
-              <div className="" role="presentation">
-                <h5 className="mb-1">{trans('entries_list', {}, 'clacoform')}</h5>
-                <p className="mb-0 text-body-secondary">{trans('entries_list_help', {}, 'clacoform')}</p>
-              </div>
-              <span className="fa fa-chevron-right text-body-tertiary ms-auto align-self-center" aria-hidden={true} />
-            </LinkButton>
-          }
-
-          {props.randomEnabled &&
-            <AsyncButton
-              className="list-group-item list-group-item-action d-flex gap-3 p-3"
-              request={{
-                url: ['claro_claco_form_entry_random', {clacoForm: props.resourceId}],
-                success: (entryId) => props.history.push(`${props.path}/entries/${entryId}`)
-              }}
-            >
-              <span className="fa fa-fw fa-random fs-2" />
-              <div className="" role="presentation">
-                <h5 className="mb-1">{trans('random_entry', {}, 'clacoform')}</h5>
-                <p className="mb-0 text-body-secondary">{trans('random_entry_help', {}, 'clacoform')}</p>
-              </div>
-              <span className="fa fa-chevron-right text-body-tertiary ms-auto align-self-center" aria-hidden={true} />
-            </AsyncButton>
-          }
-        </ul>
-      }
-    </PageSection>
+    {(props.canAddEntry || props.canSearchEntry || props.randomEnabled) &&
+      <PageSection size="md" className="py-3">
+        <ContentMenu
+          items={[
+            {
+              id: 'add',
+              icon: 'plus',
+              label: trans('new_entry', {}, 'clacoform'),
+              description: trans('new_entry_help', {}, 'clacoform'),
+              displayed: props.canAddEntry,
+              action: {
+                type: LINK_BUTTON,
+                target: `${props.path}/entry/form`
+              }
+            }, {
+              id: 'list',
+              icon: 'search',
+              label: trans('entries_list', {}, 'clacoform'),
+              description: trans('entries_list_help', {}, 'clacoform'),
+              displayed: props.canSearchEntry,
+              action: {
+                type: LINK_BUTTON,
+                target: `${props.path}/entries`
+              }
+            }, {
+              id: 'random',
+              icon: 'random',
+              label: trans('random_entry', {}, 'clacoform'),
+              description: trans('random_entry_help', {}, 'clacoform'),
+              displayed: props.randomEnabled,
+              action: {
+                type: ASYNC_BUTTON,
+                request: {
+                  url: ['claro_claco_form_entry_random', {clacoForm: props.resourceId}],
+                  success: (entryId) => props.history.push(`${props.path}/entries/${entryId}`)
+                }
+              }
+            }
+          ]}
+        />
+      </PageSection>
+    }
   </ResourceOverview>
 
 OverviewComponent.propTypes = {

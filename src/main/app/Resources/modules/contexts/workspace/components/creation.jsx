@@ -6,15 +6,15 @@ import pick from 'lodash/pick'
 import {trans} from '#/main/app/intl'
 import {makeId} from '#/main/core/scaffolding/id'
 import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
-import {ContentCreation} from '#/main/app/content/components/creation'
+import {ContentMenu} from '#/main/app/content/components/menu'
 
 import {MODAL_WORKSPACE_IMPORT} from '#/main/core/workspace/modals/import'
 import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
 
 const WorkspaceCreation = (props) =>
-  <ContentCreation
+  <ContentMenu
     className="mb-3"
-    types={[
+    items={[
       {
         id: 'create-from-model',
         icon: 'stamp',

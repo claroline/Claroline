@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 import {trans} from '#/main/app/intl'
 import {Modal} from '#/main/app/overlays/modal/components/modal'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
-import {ContentCreation} from '#/main/app/content/components/creation'
+import {ContentMenu} from '#/main/app/content/components/menu'
 
 const CreationType = (props) =>
   <Modal
@@ -15,9 +15,9 @@ const CreationType = (props) =>
     onExited={props.reset}
   >
     <div className="modal-body">
-      <ContentCreation
+      <ContentMenu
         className="mb-3"
-        types={[
+        items={[
           {
             id: 'create-empty',
             icon: 'plus',

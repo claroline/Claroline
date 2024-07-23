@@ -3,7 +3,7 @@
 namespace Claroline\EvaluationBundle\Validator;
 
 use Claroline\AppBundle\API\ValidatorInterface;
-use Claroline\EvaluationBundle\Entity\SkillsFramework;
+use Claroline\EvaluationBundle\Entity\Skill\SkillsFramework;
 
 class SkillsFrameworkValidator implements ValidatorInterface
 {
