@@ -13,6 +13,7 @@ namespace Claroline\OpenBadgeBundle\Entity;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
@@ -28,283 +29,105 @@ class Evidence
 {
     use Id;
     use Uuid;
-
-    /**
-     * @ORM\Column(type="text")
-     *
-     * @var string
-     */
-    private $narrative;
+    use Description;
 
     /**
      * @ORM\Column()
-     *
-     * @var string
      */
-    private $name;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
-     */
-    private $description;
-
-    /**
-     * @ORM\Column(nullable=true)
-     *
-     * @var string
-     */
-    private $genre;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
-     */
-    private $audience;
+    private ?string $name = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Assertion", inversedBy="evidences")
      *
      * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @var Assertion
      */
-    private $assertion;
+    private ?Assertion $assertion = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation")
-     *
-     * @var ResourceUserEvaluation
      */
-    private $resourceEvidence;
+    private ?ResourceUserEvaluation $resourceEvidence = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Evaluation")
-     *
-     * @var Evaluation
      */
-    private $workspaceEvidence;
+    private ?Evaluation $workspaceEvidence = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\Rules\Rule")
      *
      * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @var Rule
      */
-    private $rule;
+    private ?Rule $rule = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      *
      * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @var User
      */
-    private $user;
+    private ?User $user = null;
 
-    /**
-     * Evidence constructor.
-     */
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    /**
-     * Get the value of Narrative.
-     *
-     * @return string
-     */
-    public function getNarrative()
-    {
-        return $this->narrative;
-    }
-
-    /**
-     * Set the value of Narrative.
-     *
-     * @param string $narrative
-     *
-     * @return self
-     */
-    public function setNarrative($narrative)
-    {
-        $this->narrative = $narrative;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of Name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * Set the value of Name.
-     *
-     * @param string $name
-     *
-     * @return self
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    /**
-     * Get the value of Description.
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Set the value of Description.
-     *
-     * @param string $description
-     *
-     * @return self
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of Genre.
-     *
-     * @return string
-     */
-    public function getGenre()
-    {
-        return $this->genre;
-    }
-
-    /**
-     * Set the value of Genre.
-     *
-     * @param string $genre
-     *
-     * @return self
-     */
-    public function setGenre($genre)
-    {
-        $this->genre = $genre;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of Audience.
-     *
-     * @return string
-     */
-    public function getAudience()
-    {
-        return $this->audience;
-    }
-
-    /**
-     * Set the value of Audience.
-     *
-     * @param string $audience
-     *
-     * @return self
-     */
-    public function setAudience($audience)
-    {
-        $this->audience = $audience;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of Assertion.
-     *
-     * @return Assertion
-     */
-    public function getAssertion()
+    public function getAssertion(): ?Assertion
     {
         return $this->assertion;
     }
 
-    /**
-     * Set the value of Assertion.
-     *
-     * @param Assertion assertion
-     *
-     * @return self
-     */
-    public function setAssertion(Assertion $assertion)
+    public function setAssertion(Assertion $assertion): void
     {
         $this->assertion = $assertion;
-
-        return $this;
     }
 
-    public function setResourceEvidence(?ResourceUserEvaluation $resourceEvidence)
+    public function setResourceEvidence(?ResourceUserEvaluation $resourceEvidence): void
     {
         $this->resourceEvidence = $resourceEvidence;
     }
 
-    /**
-     * @return ResourceUserEvaluation|null
-     */
-    public function getResourceEvidence()
+    public function getResourceEvidence(): ResourceUserEvaluation
     {
         return $this->resourceEvidence;
     }
 
-    public function setWorkspaceEvidence(?Evaluation $workspaceEvidence)
+    public function setWorkspaceEvidence(?Evaluation $workspaceEvidence): void
     {
         $this->workspaceEvidence = $workspaceEvidence;
     }
 
-    /**
-     * @return Evaluation|null
-     */
-    public function getWorkspaceEvidence()
+    public function getWorkspaceEvidence(): Evaluation
     {
         return $this->workspaceEvidence;
     }
 
-    public function setRule(Rule $rule)
+    public function setRule(Rule $rule): void
     {
         $this->rule = $rule;
     }
 
-    /**
-     * @return Rule
-     */
-    public function getRule()
+    public function getRule(): ?Rule
     {
         return $this->rule;
     }
 
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }

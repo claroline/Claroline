@@ -1,51 +1,27 @@
 services:
-    Claroline\OpenBadgeBundle\Serializer\AssertionSerializer:
+    _defaults:
         tags: [claroline.serializer]
+
+    Claroline\OpenBadgeBundle\Serializer\AssertionSerializer:
         arguments:
             - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\BadgeClassSerializer'
-            - '@router'
 
     Claroline\OpenBadgeBundle\Serializer\BadgeClassSerializer:
-        tags: [claroline.serializer]
         arguments:
             - '@security.authorization_checker'
-            - '@router'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer'
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
-            - '@Claroline\OpenBadgeBundle\Serializer\ImageSerializer'
             - '@Claroline\CommunityBundle\Serializer\OrganizationSerializer'
             - '@Claroline\OpenBadgeBundle\Serializer\RuleSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Template\TemplateSerializer'
 
-    Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer:
-        arguments:
-            - '@router'
-
-    Claroline\OpenBadgeBundle\Serializer\CryptographicKeySerializer:
-        tags: [claroline.serializer]
-        arguments:
-            - '@router'
-
     Claroline\OpenBadgeBundle\Serializer\EvidenceSerializer:
-        tags: [claroline.serializer]
         arguments:
-            - '@router'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
 
-    Claroline\OpenBadgeBundle\Serializer\ImageSerializer:
-        arguments:
-            - '@router'
-
-    Claroline\OpenBadgeBundle\Serializer\ProfileSerializer:
-        arguments:
-            - '@router'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-
     Claroline\OpenBadgeBundle\Serializer\RuleSerializer:
-        tags: [claroline.serializer]
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'

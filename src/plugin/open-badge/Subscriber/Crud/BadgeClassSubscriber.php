@@ -39,6 +39,9 @@ class BadgeClassSubscriber implements EventSubscriberInterface
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
 
+        $badge->setCreatedAt(new \DateTime());
+        $badge->setUpdatedAt(new \DateTime());
+
         $this->checkOrganization($badge);
     }
 
@@ -56,6 +59,8 @@ class BadgeClassSubscriber implements EventSubscriberInterface
     {
         /** @var BadgeClass $badge */
         $badge = $event->getObject();
+
+        $badge->setUpdatedAt(new \DateTime());
 
         $this->checkOrganization($badge);
     }

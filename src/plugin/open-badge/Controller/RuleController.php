@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\OpenBadgeBundle\Controller\API;
+namespace Claroline\OpenBadgeBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;

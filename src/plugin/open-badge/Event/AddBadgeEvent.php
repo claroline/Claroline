@@ -16,29 +16,9 @@ use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class AddBadgeEvent extends Event
+/**
+ * Event dispatched when a user obtains a new badge (aka a new Assertion entity is created).
+ */
+class AddBadgeEvent extends AbstractBadgeEvent
 {
-    private $user;
-    private $badge;
-
-    public function __construct(User $user, BadgeClass $badge)
-    {
-        $this->user = $user;
-        $this->badge = $badge;
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
-    }
-
-    public function getBadge(): BadgeClass
-    {
-        return $this->badge;
-    }
-
-    public function getMessage(TranslatorInterface $translator)
-    {
-        return $translator->trans('addBadge', ['userName' => $this->user->getUsername(), 'badgeName' => $this->badge->getName()], 'functional');
-    }
 }

@@ -21,14 +21,11 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class BadgeClassVoter extends AbstractVoter
 {
-    const GRANT = 'GRANT';
+    public const GRANT = 'GRANT';
 
-    /** @var ObjectManager */
-    private $om;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
+    public function __construct(
+        private readonly ObjectManager $om
+    ) {
     }
 
     public function getClass(): string
@@ -52,7 +49,6 @@ class BadgeClassVoter extends AbstractVoter
 
             case self::CREATE:
             case self::EDIT:
-            case self::PATCH:
             case self::DELETE:
                 // has edit rights on the tool
                 if ($this->isToolGranted(self::EDIT, 'badges', $object->getWorkspace() ?? null)) {
@@ -92,6 +88,6 @@ class BadgeClassVoter extends AbstractVoter
 
     public function getSupportedActions(): array
     {
-        return [self::OPEN, self::CREATE, self::ADMINISTRATE, self::EDIT, self::DELETE, self::PATCH, self::GRANT];
+        return [self::OPEN, self::CREATE, self::ADMINISTRATE, self::EDIT, self::DELETE, self::GRANT];
     }
 }

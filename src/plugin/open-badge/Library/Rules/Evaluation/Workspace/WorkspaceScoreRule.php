@@ -10,17 +10,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WorkspaceScoreRule extends AbstractScoreRule
 {
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var ObjectManager */
-    private $om;
-
     public function __construct(
-        TranslatorInterface $translator,
-        ObjectManager $om
+        private readonly TranslatorInterface $translator,
+        private readonly ObjectManager $om
     ) {
-        $this->translator = $translator;
-        $this->om = $om;
     }
 
     public static function getType(): string

@@ -16,7 +16,6 @@ import {Badge as BadgeTypes} from '#/plugin/open-badge/prop-types'
 import {AssertionUserCard} from '#/plugin/open-badge/tools/badges/assertion/components/card'
 import {actions as badgeActions}  from '#/plugin/open-badge/tools/badges/store'
 import {selectors}  from '#/plugin/open-badge/tools/badges/store'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 import {PageSection} from '#/main/app/page/components/section'
 
 const BadgeDetailsComponent = (props) => {
@@ -45,7 +44,7 @@ const BadgeDetailsComponent = (props) => {
         </div>
       </PageSection>
 
-      {(hasPermission('edit', props.badge) || !get(props.badge, 'restrictions.hideRecipients')) &&
+      {(hasPermission('grant', props.badge) || !get(props.badge, 'restrictions.hideRecipients')) &&
         <PageSection
           size="md"
           className="py-3"
@@ -108,12 +107,6 @@ const BadgeDetailsComponent = (props) => {
             card={AssertionUserCard}
             display={{
               current: listConst.DISPLAY_LIST_SM,
-              available: [
-                listConst.DISPLAY_TABLE_SM,
-                listConst.DISPLAY_TABLE,
-                listConst.DISPLAY_LIST_SM,
-                listConst.DISPLAY_TILES_SM
-              ]
             }}
           />
         </PageSection>

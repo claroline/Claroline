@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\OpenBadgeBundle\Controller\API;
+namespace Claroline\OpenBadgeBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\PdfManager;
@@ -151,7 +151,7 @@ class AssertionController extends AbstractCrudController
      * @EXT\ParamConverter("userFrom", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userFrom": "uuid"}})
      * @EXT\ParamConverter("userTo", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userTo": "uuid"}})
      */
-    public function transferBadges(User $userFrom, User $userTo): JsonResponse
+    public function transferBadgesAction(User $userFrom, User $userTo): JsonResponse
     {
         $this->canAdministrate();
 
@@ -160,7 +160,7 @@ class AssertionController extends AbstractCrudController
         return new JsonResponse();
     }
 
-    protected function canAdministrate(): void
+    private function canAdministrate(): void
     {
         $tool = $this->om->getRepository(OrderedTool::class)
             ->findOneBy(['name' => 'badges', 'contextName' => DesktopContext::getName()]);

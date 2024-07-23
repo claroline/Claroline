@@ -14,24 +14,14 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
  */
 class GrantBadgeHandler implements MessageHandlerInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var RuleManager */
-    private $ruleManager;
-    /** @var AssertionManager */
-    private $assertionManager;
-
     public function __construct(
-        ObjectManager $om,
-        RuleManager $ruleManager,
-        AssertionManager $assertionManager
+        private readonly ObjectManager $om,
+        private readonly RuleManager $ruleManager,
+        private readonly AssertionManager $assertionManager
     ) {
-        $this->om = $om;
-        $this->ruleManager = $ruleManager;
-        $this->assertionManager = $assertionManager;
     }
 
-    public function __invoke(GrantBadge $grantBadge)
+    public function __invoke(GrantBadge $grantBadge): void
     {
         /** @var BadgeClass $badge */
         $badge = $this->om->getRepository(BadgeClass::class)->find($grantBadge->getBadgeId());

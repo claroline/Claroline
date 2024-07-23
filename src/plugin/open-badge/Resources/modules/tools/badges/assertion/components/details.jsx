@@ -76,7 +76,7 @@ const AssertionDetailsComponent = (props) =>
                       domain: 'badge'
                     }
                   }, {
-                    name: 'narrative',
+                    name: 'description',
                     type: 'string',
                     label: trans('description'),
                     displayed: true

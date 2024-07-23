@@ -1,15 +1,8 @@
 services:
     _defaults:
-        public: true #because controller
+        public: true # because controller
 
-    Claroline\OpenBadgeBundle\Controller\OpenBadgeController:
-        arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\OpenBadgeBundle\Serializer\CriteriaSerializer'
-            - '@Claroline\OpenBadgeBundle\Serializer\ImageSerializer'
-            - '@Claroline\OpenBadgeBundle\Serializer\ProfileSerializer'
-
-    Claroline\OpenBadgeBundle\Controller\API\AssertionController:
+    Claroline\OpenBadgeBundle\Controller\AssertionController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
@@ -19,7 +12,7 @@ services:
             - '@Claroline\AppBundle\Manager\PdfManager'
             - '@Claroline\OpenBadgeBundle\Manager\AssertionManager'
 
-    Claroline\OpenBadgeBundle\Controller\API\BadgeClassController:
+    Claroline\OpenBadgeBundle\Controller\BadgeClassController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
@@ -28,13 +21,13 @@ services:
             - '@Claroline\OpenBadgeBundle\Manager\BadgeManager'
             - '@Claroline\OpenBadgeBundle\Manager\AssertionManager'
 
-    Claroline\OpenBadgeBundle\Controller\API\EvidenceController:
+    Claroline\OpenBadgeBundle\Controller\EvidenceController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
 
-    Claroline\OpenBadgeBundle\Controller\API\RuleController:
+    Claroline\OpenBadgeBundle\Controller\RuleController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true

@@ -34,9 +34,9 @@ const EvidenceModal = props =>
               label: trans('name'),
               required: true
             }, {
-              name: 'narrative',
+              name: 'description',
               type: 'html',
-              label: trans('narrative', {}, 'badge'),
+              label: trans('description'),
               required: true,
               options: {
                 long: true

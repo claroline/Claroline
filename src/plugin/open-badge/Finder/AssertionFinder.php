@@ -14,7 +14,6 @@ namespace Claroline\OpenBadgeBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
@@ -23,15 +22,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class AssertionFinder extends AbstractFinder
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ToolMaskDecoderManager */
-    private $toolMaskDecoderManager;
-
-    public function __construct(TokenStorageInterface $tokenStorage, ToolMaskDecoderManager $toolMaskDecoderManager)
-    {
-        $this->tokenStorage = $tokenStorage;
-        $this->toolMaskDecoderManager = $toolMaskDecoderManager;
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ToolMaskDecoderManager $toolMaskDecoderManager
+    ) {
     }
 
     public static function getClass(): string

@@ -52,7 +52,7 @@ class RuleManager
             if ($user->isEnabled() && !$user->isRemoved() && !in_array($user->getUuid(), $owners)) {
                 $this->createEvidence($rule, $user);
 
-                $recomputeUsers[$user->getUuid()] = $user; // using uuid as key will automatically dedup the array
+                $recomputeUsers[$user->getUuid()] = $user; // using uuid as key will automatically deduplicate the array
             }
         }
 
@@ -69,7 +69,7 @@ class RuleManager
         $evidence->setRule($rule);
         $evidence->setUser($user);
 
-        $evidence->setNarrative($ruleDefinition->getEvidenceMessage());
+        $evidence->setDescription($ruleDefinition->getEvidenceMessage());
 
         $this->om->persist($evidence);
         $this->om->flush();

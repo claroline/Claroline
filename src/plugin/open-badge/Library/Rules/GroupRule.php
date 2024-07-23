@@ -11,22 +11,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GroupRule extends AbstractRule
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var UserRepository */
-    private $userRepo;
+    private UserRepository $userRepo;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly TranslatorInterface $translator,
         ObjectManager $om
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->translator = $translator;
-
         $this->userRepo = $om->getRepository(User::class);
     }
 
