@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\OpenBadgeBundle\Controller\API;
+namespace Claroline\OpenBadgeBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -118,7 +118,7 @@ class BadgeClassController extends AbstractCrudController
      *
      * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */
-    public function listUsersAction(Request $request, BadgeClass $badge)
+    public function listUsersAction(Request $request, BadgeClass $badge): JsonResponse
     {
         if ($badge->getHideRecipients()) {
             $this->checkPermission('GRANT', $badge, [], true);

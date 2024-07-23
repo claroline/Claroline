@@ -27,7 +27,6 @@
   "evidence": "Evidence",
   "evidences": "Evidences",
   "add_evidence": "Add an evidence",
-  "narrative": "Narrative",
   "evidence_narrative_resource_status": "The resource has obtained the status the %date%",
   "evidence_narrative_resource_score_above": "The resource was completed the %date%",
   "evidence_narrative_resource_completed_above": "The resource was completed the %date%",

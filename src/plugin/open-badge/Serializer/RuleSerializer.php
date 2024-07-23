@@ -14,25 +14,22 @@ class RuleSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
+    public function __construct(
+        private readonly ObjectManager $om
+    ) {
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'open_badge_rule';
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return Rule::class;
     }
 
-    public function serialize(Rule $rule, array $options = [])
+    public function serialize(Rule $rule, array $options = []): array
     {
         return [
             'id' => $rule->getUuid(),
@@ -41,15 +38,7 @@ class RuleSerializer
         ];
     }
 
-    /**
-     * Deserializes data into a Rule entity.
-     *
-     * @param array $data
-     * @param Rule  $rule
-     *
-     * @return Rule
-     */
-    public function deserialize($data, Rule $rule = null, array $options = [])
+    public function deserialize(array $data, Rule $rule = null, array $options = []): Rule
     {
         $rule->setData($data['data']);
         $rule->setAction($data['type']);

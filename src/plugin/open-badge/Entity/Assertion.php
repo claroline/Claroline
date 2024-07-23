@@ -15,6 +15,7 @@ use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -32,61 +33,30 @@ class Assertion
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @var User
      */
-    private $recipient;
+    private ?User $recipient = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\BadgeClass")
      * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @var BadgeClass
      */
-    private $badge;
+    private ?BadgeClass $badge = null;
 
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
-     *
-     * @var \DateTime
      */
-    private $issuedOn;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
-     */
-    private $image;
+    private ?\DateTimeInterface $issuedOn = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Claroline\OpenBadgeBundle\Entity\Evidence", mappedBy="assertion")
-     *
-     * @var Evidence[]|ArrayCollection
      */
-    private $evidences;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
-     */
-    private $narrative;
+    private Collection $evidences;
 
     /**
      * @ORM\Column(type="boolean")
-     *
-     * @var bool
      */
-    private $revoked = false;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @var string
-     */
-    private $revocationReason;
+    private bool $revoked = false;
 
     public function __construct()
     {
@@ -95,195 +65,53 @@ class Assertion
         $this->evidences = new ArrayCollection();
     }
 
-    /**
-     * Get the value of Recipient.
-     *
-     * @return User
-     */
-    public function getRecipient()
+    public function getRecipient(): ?User
     {
         return $this->recipient;
     }
 
-    /**
-     * Set the value of Recipient.
-     *
-     * @param User $recipient
-     *
-     * @return self
-     */
-    public function setRecipient($recipient)
+    public function setRecipient(User $recipient): void
     {
         $this->recipient = $recipient;
-
-        return $this;
     }
 
-    /**
-     * Get the value of Badge.
-     *
-     * @return BadgeClass
-     */
-    public function getBadge()
+    public function getBadge(): ?BadgeClass
     {
         return $this->badge;
     }
 
-    /**
-     * Set the value of Badge.
-     *
-     * @param BadgeClass $badge
-     *
-     * @return self
-     */
-    public function setBadge($badge)
+    public function setBadge(BadgeClass $badge): void
     {
         $this->badge = $badge;
-
-        return $this;
     }
 
-    /**
-     * Get the value of Issued On.
-     *
-     * @return \DateTime
-     */
-    public function getIssuedOn()
+    public function getIssuedOn(): \DateTimeInterface
     {
         return $this->issuedOn;
     }
 
-    /**
-     * Set the value of Issued On.
-     *
-     * @param \DateTime $issuedOn
-     *
-     * @return self
-     */
-    public function setIssuedOn($issuedOn)
+    public function setIssuedOn(\DateTimeInterface $issuedOn): void
     {
         $this->issuedOn = $issuedOn;
-
-        return $this;
     }
 
-    /**
-     * Get the value of Image.
-     *
-     * @return string
-     */
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
-     * Set the value of Image.
-     *
-     * @param string $image
-     *
-     * @return self
-     */
-    public function setImage($image)
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of Evidences.
-     *
-     * @return Evidence[]|ArrayCollection
-     */
-    public function getEvidences()
+    public function getEvidences(): Collection
     {
         return $this->evidences;
     }
 
-    /**
-     * Set the value of Evidences.
-     *
-     * @param Evidence[]|ArrayCollection $evidences
-     *
-     * @return self
-     */
-    public function setEvidences($evidences)
+    public function setEvidences(Collection $evidences): void
     {
         $this->evidences = $evidences;
-
-        return $this;
     }
 
-    /**
-     * Get the value of Narrative.
-     *
-     * @return string
-     */
-    public function getNarrative()
-    {
-        return $this->narrative;
-    }
-
-    /**
-     * Set the value of Narrative.
-     *
-     * @param string $narrative
-     *
-     * @return self
-     */
-    public function setNarrative($narrative)
-    {
-        $this->narrative = $narrative;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of Revoked.
-     *
-     * @return bool
-     */
-    public function getRevoked()
+    public function isRevoked(): bool
     {
         return $this->revoked;
     }
 
-    /**
-     * Set the value of Revoked.
-     *
-     * @param bool $revoked
-     *
-     * @return self
-     */
-    public function setRevoked($revoked)
+    public function setRevoked(bool $revoked): void
     {
         $this->revoked = $revoked;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of Revocation Reason.
-     *
-     * @return string
-     */
-    public function getRevocationReason()
-    {
-        return $this->revocationReason;
-    }
-
-    /**
-     * Set the value of Revocation Reason.
-     *
-     * @param string $revocationReason
-     *
-     * @return self
-     */
-    public function setRevocationReason($revocationReason)
-    {
-        $this->revocationReason = $revocationReason;
-
-        return $this;
     }
 }

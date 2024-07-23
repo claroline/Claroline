@@ -13,6 +13,10 @@ namespace Claroline\OpenBadgeBundle\Entity\Rules;
 
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,134 +29,128 @@ class Rule
     use Id;
     use Uuid;
 
-    const RESOURCE_SCORE_ABOVE = 'resource_score_above';
-    const RESOURCE_COMPLETED_ABOVE = 'resource_completed_above';
-    const RESOURCE_STATUS = 'resource_status';
+    public const RESOURCE_SCORE_ABOVE = 'resource_score_above';
+    public const RESOURCE_COMPLETED_ABOVE = 'resource_completed_above';
+    public const RESOURCE_STATUS = 'resource_status';
 
-    const WORKSPACE_SCORE_ABOVE = 'workspace_score_above';
-    const WORKSPACE_COMPLETED_ABOVE = 'workspace_completed_above';
-    const WORKSPACE_STATUS = 'workspace_status';
+    public const WORKSPACE_SCORE_ABOVE = 'workspace_score_above';
+    public const WORKSPACE_COMPLETED_ABOVE = 'workspace_completed_above';
+    public const WORKSPACE_STATUS = 'workspace_status';
 
-    const IN_GROUP = 'in_group';
-    const IN_ROLE = 'in_role';
+    public const IN_GROUP = 'in_group';
+    public const IN_ROLE = 'in_role';
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", nullable=false)
      */
-    protected $action;
+    protected ?string $action = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\BadgeClass", inversedBy="rules")
      * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @var BadgeClass
      */
-    private $badge;
+    private ?BadgeClass $badge = null;
 
     /**
      * @ORM\Column(type="json")
-     *
-     * @var array
      */
-    private $data = [];
+    private array $data = [];
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    private $node;
+    private ?ResourceNode $node = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    private $workspace;
+    private ?Workspace $workspace = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    private $role;
+    private ?Role $role = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Group")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    private $group;
+    private ?Group $group = null;
 
     public function __construct()
     {
         $this->refreshUuid();
     }
 
-    public function setAction($action)
+    public function setAction(string $action): void
     {
         $this->action = $action;
     }
 
-    public function getAction()
+    public function getAction(): ?string
     {
         return $this->action;
     }
 
-    public function setData(array $data = [])
+    public function setData(array $data = []): void
     {
         $this->data = $data;
     }
 
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
 
-    public function setBadge($badge)
+    public function setBadge(BadgeClass $badge): void
     {
         $this->badge = $badge;
     }
 
-    public function getBadge()
+    public function getBadge(): ?BadgeClass
     {
         return $this->badge;
     }
 
-    public function setResourceNode($node)
+    public function setResourceNode(?ResourceNode $node = null): void
     {
         $this->node = $node;
     }
 
-    public function getResourceNode()
+    public function getResourceNode(): ?ResourceNode
     {
         return $this->node;
     }
 
-    public function setWorkspace($workspace)
+    public function setWorkspace(?Workspace $workspace = null): void
     {
         $this->workspace = $workspace;
     }
 
-    public function getWorkspace()
+    public function getWorkspace(): ?Workspace
     {
         return $this->workspace;
     }
 
-    public function setGroup($group)
+    public function setGroup(?Group $group = null): void
     {
         $this->group = $group;
     }
 
-    public function getGroup()
+    public function getGroup(): ?Group
     {
         return $this->group;
     }
 
-    public function setRole($role)
+    public function setRole(?Role $role): void
     {
         $this->role = $role;
     }
 
-    public function getRole()
+    public function getRole(): ?Role
     {
         return $this->role;
     }

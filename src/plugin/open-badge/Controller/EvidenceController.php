@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\OpenBadgeBundle\Controller\API;
+namespace Claroline\OpenBadgeBundle\Controller;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
@@ -28,17 +28,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class EvidenceController extends AbstractCrudController
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function getClass(): string
@@ -57,7 +50,7 @@ class EvidenceController extends AbstractCrudController
      */
     public function createAtAction(Request $request, Assertion $assertion): JsonResponse
     {
-        $object = $this->crud->create($this->getClass(), $this->decodeRequest($request), [Crud::THROW_EXCEPTION]);
+        $object = $this->crud->create($this->getClass(), $this->decodeRequest($request));
         $object->setAssertion($assertion);
 
         $this->om->persist($object);

@@ -15,24 +15,14 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
  */
 class GrantRuleHandler implements MessageHandlerInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var RuleManager */
-    private $ruleManager;
-    /** @var AssertionManager */
-    private $assertionManager;
-
     public function __construct(
-        ObjectManager $om,
-        RuleManager $ruleManager,
-        AssertionManager $assertionManager
+        private readonly ObjectManager $om,
+        private readonly RuleManager $ruleManager,
+        private readonly AssertionManager $assertionManager
     ) {
-        $this->om = $om;
-        $this->ruleManager = $ruleManager;
-        $this->assertionManager = $assertionManager;
     }
 
-    public function __invoke(GrantRule $grantRule)
+    public function __invoke(GrantRule $grantRule): void
     {
         /** @var Rule $rule */
         $rule = $this->om->getRepository(Rule::class)->find($grantRule->getRuleId());

@@ -56,6 +56,20 @@ const Badges = (props) => {
           displayable: false,
           filterable: true
         }, {
+          name: 'meta.createdAt',
+          type: 'date',
+          label: trans('creation_date'),
+          options: {time: true},
+          filterable: false,
+          sortable: false
+        }, {
+          name: 'meta.updatedAt',
+          type: 'date',
+          label: trans('modification_date'),
+          options: {time: true},
+          filterable: false,
+          sortable: false
+        }, {
           name: 'tags',
           type: 'tag',
           label: trans('tags'),

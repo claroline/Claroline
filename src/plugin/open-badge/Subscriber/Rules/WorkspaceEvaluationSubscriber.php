@@ -17,23 +17,17 @@ use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\EvaluationBundle\Entity\AbstractEvaluation;
 use Claroline\EvaluationBundle\Event\EvaluationEvents;
 use Claroline\EvaluationBundle\Event\WorkspaceEvaluationEvent;
+use Claroline\EvaluationBundle\Library\EvaluationStatus;
 use Claroline\OpenBadgeBundle\Entity\Rules\Rule;
 use Claroline\OpenBadgeBundle\Manager\RuleManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var RuleManager */
-    private $manager;
-
     public function __construct(
-        ObjectManager $om,
-        RuleManager $manager
+        private readonly ObjectManager $om,
+        private readonly RuleManager $manager
     ) {
-        $this->om = $om;
-        $this->manager = $manager;
     }
 
     public static function getSubscribedEvents(): array
@@ -71,7 +65,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     {
         $data = $rule->getData();
         if (!empty($data) && !empty($data['value'])) {
-            if (AbstractEvaluation::STATUS_PRIORITY[$data['value']] <= AbstractEvaluation::STATUS_PRIORITY[$evaluation->getStatus()]) {
+            if (EvaluationStatus::PRIORITY[$data['value']] <= EvaluationStatus::PRIORITY[$evaluation->getStatus()]) {
                 $this->manager->grant($rule, $user);
             }
         }
@@ -80,15 +74,17 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     private function awardWorkspaceScoreAbove(User $user, Evaluation $evaluation, Rule $rule): void
     {
         $data = $rule->getData();
-        if (isset($data)) {
-            $scoreProgress = 0;
-            if ($evaluation->getScoreMax()) {
-                $scoreProgress = ($evaluation->getScore() ?? 0) / $evaluation->getScoreMax() * 100;
-            }
+        if (empty($data)) {
+            return;
+        }
 
-            if ($scoreProgress >= $data['value']) {
-                $this->manager->grant($rule, $user);
-            }
+        $scoreProgress = 0;
+        if ($evaluation->getScoreMax()) {
+            $scoreProgress = ($evaluation->getScore() ?? 0) / $evaluation->getScoreMax() * 100;
+        }
+
+        if ($scoreProgress >= $data['value']) {
+            $this->manager->grant($rule, $user);
         }
     }
 

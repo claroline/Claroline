@@ -28,6 +28,6 @@ class BadgeGrantedNotification extends AbstractNotification
         $user = $event->getUser();
         $badge = $event->getBadge();
 
-        $this->notify('Vous avez obtenu un nouveau badge', [$user]);
+        $this->notify('Vous avez obtenu un nouveau badge.', [$user], 'trophy', $badge->getImage());
     }
 }

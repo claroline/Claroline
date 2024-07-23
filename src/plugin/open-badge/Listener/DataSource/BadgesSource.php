@@ -13,24 +13,14 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class BadgesSource
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var FinderProvider */
-    private $finder;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        FinderProvider $finder
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly FinderProvider $finder
     ) {
-        $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->finder = $finder;
     }
 
-    public function getData(GetDataEvent $event)
+    public function getData(GetDataEvent $event): void
     {
         $options = $event->getOptions() ? $event->getOptions() : [];
         $options['hiddenFilters']['meta.enabled'] = true;

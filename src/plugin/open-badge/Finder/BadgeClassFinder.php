@@ -22,15 +22,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class BadgeClassFinder extends AbstractFinder
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var ToolMaskDecoderManager */
-    private $toolMaskDecoderManager;
-
-    public function __construct(TokenStorageInterface $tokenStorage, ToolMaskDecoderManager $toolMaskDecoderManager)
-    {
-        $this->tokenStorage = $tokenStorage;
-        $this->toolMaskDecoderManager = $toolMaskDecoderManager;
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly ToolMaskDecoderManager $toolMaskDecoderManager
+    ) {
     }
 
     public static function getClass(): string

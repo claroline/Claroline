@@ -6,12 +6,9 @@ use Claroline\AppBundle\Messenger\Message\AsyncHighMessageInterface;
 
 class GrantBadge implements AsyncHighMessageInterface
 {
-    /** @var int */
-    private $badgeId;
-
-    public function __construct(int $badgeId)
-    {
-        $this->badgeId = $badgeId;
+    public function __construct(
+        private readonly int $badgeId
+    ) {
     }
 
     public function getBadgeId(): int
