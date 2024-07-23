@@ -9,7 +9,7 @@ import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ExportForm} from '#/main/transfer/tools/export/containers/form'
 
 import {ExportFile as ExportFileTypes} from '#/main/transfer/prop-types'
-import {TransferDetails} from '#/main/transfer/tools/transfer/components/details'
+import {TransferDetails} from '#/main/transfer/components/details'
 
 
 const ExportDetails = props =>

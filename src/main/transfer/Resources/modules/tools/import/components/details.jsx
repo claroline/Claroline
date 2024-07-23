@@ -9,7 +9,7 @@ import {URL_BUTTON} from '#/main/app/buttons'
 import {Logs} from '#/main/transfer/log/components/logs'
 import {TransferDetails} from '#/main/transfer/components/details'
 import {ImportFile as ImportFileTypes} from '#/main/transfer/prop-types'
-import {ImportForm} from '#/main/transfer/tools/transfer/import/containers/form'
+import {ImportForm} from '#/main/transfer/tools/import/containers/form'
 
 const ImportDetails = props =>
   <TransferDetails

@@ -25,7 +25,6 @@ services:
         - '@Claroline\AppBundle\API\Crud'
         - '@Claroline\TransferBundle\Transfer\ImportProvider'
         - '@Claroline\CoreBundle\Manager\FileManager'
-        - '%claroline.transfer.files_dir%'
         - '%claroline.transfer.logs_dir%'
 
     Claroline\TransferBundle\Manager\ExportManager:
