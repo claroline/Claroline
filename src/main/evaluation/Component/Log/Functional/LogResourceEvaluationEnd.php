@@ -28,21 +28,11 @@ class LogResourceEvaluationEnd extends AbstractFunctionalLog
         if ($event->hasStatusChanged() && $evaluation->isTerminated()) {
             $resourceNode = $event->getResourceNode();
 
-            switch ($evaluation->getStatus()) {
-                case EvaluationStatus::FAILED:
-                    $status = ColorHelper::danger(
-                        strtolower($this->getTranslator()->trans('evaluation_failed_short', [], 'evaluation'))
-                    );
-                    break;
-                default:
-                    $status = ColorHelper::success(
-                        strtolower($this->getTranslator()->trans('evaluation_'.$evaluation->getStatus().'_short', [], 'evaluation'))
-                    );
-                    break;
-            }
-
             $message = $this->getTranslator()->trans('evaluation.resource_end_message', [
-                '%status%' => $status,
+                '%status%' => ColorHelper::color(
+                    strtolower($this->getTranslator()->trans('evaluation_' . $evaluation->getStatus() . '_short', [], 'evaluation')),
+                    EvaluationStatus::FAILED === $evaluation->getStatus() ? ColorHelper::DANGER : ColorHelper::SUCCESS
+                ),
                 '%resource%' => $resourceNode->getName(),
             ], 'log');
 
