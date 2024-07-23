@@ -18,8 +18,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class ExportFileVoter extends AbstractTransferFileVoter
 {
-    const EXPORT = 'EXPORT';
-    const REFRESH = 'REFRESH';
+    public const EXPORT = 'EXPORT';
+    public const REFRESH = 'REFRESH';
 
     public function getClass(): string
     {
@@ -33,7 +33,7 @@ class ExportFileVoter extends AbstractTransferFileVoter
     {
         switch ($attributes[0]) {
             case self::CREATE:
-                if ($this->isToolGranted(self::EXPORT, 'transfer', $object->getWorkspace() ?? null)) {
+                if ($this->isToolGranted(self::EXPORT, 'export', $object->getWorkspace() ?? null)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -41,14 +41,14 @@ class ExportFileVoter extends AbstractTransferFileVoter
 
             case self::OPEN:
             case self::VIEW:
-                if ($this->isToolGranted(self::OPEN, 'transfer', $object->getWorkspace() ?? null)) {
+                if ($this->isToolGranted(self::OPEN, 'export', $object->getWorkspace() ?? null)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
                 return VoterInterface::ACCESS_DENIED;
 
             case self::REFRESH:
-                if ($this->isToolGranted(self::REFRESH, 'transfer', $object->getWorkspace() ?? null)) {
+                if ($this->isToolGranted(self::REFRESH, 'export', $object->getWorkspace() ?? null)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -60,7 +60,7 @@ class ExportFileVoter extends AbstractTransferFileVoter
 
             case self::EDIT:
             case self::DELETE:
-                if ($this->isToolGranted(self::EDIT, 'transfer', $object->getWorkspace() ?? null)) {
+                if ($this->isToolGranted(self::EDIT, 'export', $object->getWorkspace() ?? null)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 

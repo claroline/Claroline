@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class ImportFileVoter extends AbstractTransferFileVoter
 {
-    const IMPORT = 'IMPORT';
+    public const IMPORT = 'IMPORT';
 
     public function getClass(): string
     {
@@ -32,7 +32,7 @@ class ImportFileVoter extends AbstractTransferFileVoter
     {
         switch ($attributes[0]) {
             case self::CREATE:
-                if ($this->isToolGranted(self::IMPORT, 'transfer', $object->getWorkspace() ?? null)) {
+                if ($this->isToolGranted(self::IMPORT, 'import', $object->getWorkspace() ?? null)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -40,7 +40,7 @@ class ImportFileVoter extends AbstractTransferFileVoter
 
             case self::OPEN:
             case self::VIEW:
-                if ($this->isToolGranted(self::OPEN, 'transfer', $object->getWorkspace() ?? null)) {
+                if ($this->isToolGranted(self::OPEN, 'import', $object->getWorkspace() ?? null)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
@@ -48,7 +48,7 @@ class ImportFileVoter extends AbstractTransferFileVoter
 
             case self::EDIT:
             case self::DELETE:
-                if ($this->isToolGranted(self::EDIT, 'transfer', $object->getWorkspace() ?? null)) {
+                if ($this->isToolGranted(self::EDIT, 'import', $object->getWorkspace() ?? null)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
 
