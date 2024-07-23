@@ -1,8 +1,5 @@
 # This file contains the core container parameters.
 parameters:
-    # Disable symfony legacy autowiring
-    container.autowiring.strict_mode: true
-
     test.client.class: Claroline\CoreBundle\Library\Testing\TransactionalTestClient
 
     # Project base paths

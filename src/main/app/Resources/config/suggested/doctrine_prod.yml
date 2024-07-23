@@ -15,8 +15,6 @@ doctrine:
                     charset: utf8mb4
                     collation: utf8mb4_unicode_ci
                     engine: InnoDB
-                options:
-                    1002: 'SET sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY", ""))'
 
             messenger:
                 server_version: "%database_version%"
@@ -31,8 +29,6 @@ doctrine:
                     charset: utf8mb4
                     collation: utf8mb4_unicode_ci
                     engine: InnoDB
-                options:
-                    1002: 'SET sql_mode=(SELECT REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY", ""))'
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
