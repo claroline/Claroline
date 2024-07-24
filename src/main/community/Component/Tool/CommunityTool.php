@@ -62,7 +62,7 @@ class CommunityTool extends AbstractTool
 
     public function isRequired(string $context, ContextSubjectInterface $contextSubject = null): bool
     {
-        return true;
+        return false;
     }
 
     public function open(string $context, ContextSubjectInterface $contextSubject = null): ?array

@@ -10,8 +10,6 @@ const LayoutForbidden = connect(
   (state) => ({
     authenticated: securitySelectors.isAuthenticated(state),
     disabled: selectors.disabled(state),
-    maintenance: selectors.maintenance(state),
-    maintenanceMessage: selectors.maintenanceMessage(state),
     restrictions: configSelectors.param(state, 'restrictions')
   }),
   (dispatch) => ({

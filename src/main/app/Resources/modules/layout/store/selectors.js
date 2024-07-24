@@ -27,10 +27,7 @@ const disabled = createSelector(
   }
 )
 
-const maintenance = state => state.maintenance.enabled
-const maintenanceMessage = state => state.maintenance.message
-
-const unavailable = (state) => disabled(state) || (!securitySelectors.isAuthenticated(state) && maintenance(state))
+const unavailable = (state) => disabled(state)
 
 const selfRegistration = (state) => configSelectors.param(state, 'selfRegistration')
 
@@ -41,8 +38,6 @@ const favoriteContexts = (state) => state.contextFavorites
 export const selectors = {
   unavailable,
   disabled,
-  maintenance,
-  maintenanceMessage,
   selfRegistration,
   availableContexts,
   favoriteContexts

@@ -4,8 +4,7 @@ import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
 import {now, displayDate} from '#/main/app/intl/date'
-import {AlertBlock} from '#/main/app/alert/components/alert-block'
-import {ContentHtml} from '#/main/app/content/components/html'
+import {Alert} from '#/main/app/components/alert'
 import {Toolbar} from '#/main/app/action/components/toolbar'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {PageSimple} from '#/main/app/page'
@@ -20,41 +19,35 @@ const LayoutForbidden = (props) => {
         <h2 className="h3 text-center">{trans('platform_unavailable_title', {}, 'administration')}</h2>
         <p className="lead text-center">{trans('platform_unavailable_help', {}, 'administration')}</p>
 
-        {!props.disabled && props.maintenance && props.maintenanceMessage &&
-          <div className="card mb-3">
-            <ContentHtml className="card-body">{props.maintenanceMessage}</ContentHtml>
-          </div>
-        }
-
         {props.disabled && props.authenticated &&
           <section className="mb-3">
             <h2 className="h4 text-center">{trans('why_platform_disabled', {}, 'administration')}</h2>
 
             {props.restrictions.disabled &&
-              <AlertBlock
+              <Alert
                 type="info"
                 title={trans('platform_disabled_alert', {}, 'administration')}
               >
                 {trans('platform_disabled_desc', {}, 'administration')}
-              </AlertBlock>
+              </Alert>
             }
 
             {!started &&
-              <AlertBlock
+              <Alert
                 type="info"
                 title={trans('platform_not_started_alert', {}, 'administration')}
               >
                 {trans('platform_not_started_desc', {date: displayDate(get(props.restrictions, 'dates[0]'))}, 'administration')}
-              </AlertBlock>
+              </Alert>
             }
 
             {ended &&
-              <AlertBlock
+              <Alert
                 type="info"
                 title={trans('platform_ended_alert', {}, 'administration')}
               >
                 {trans('platform_ended_desc', {date: displayDate(get(props.restrictions, 'dates[1]'))}, 'administration')}
-              </AlertBlock>
+              </Alert>
             }
           </section>
         }
@@ -96,8 +89,6 @@ const LayoutForbidden = (props) => {
 LayoutForbidden.propTypes = {
   authenticated: T.bool.isRequired,
   disabled: T.bool.isRequired,
-  maintenance: T.bool.isRequired,
-  maintenanceMessage: T.string,
   restrictions: T.shape({
     disabled: T.bool,
     dates: T.arrayOf(T.string)

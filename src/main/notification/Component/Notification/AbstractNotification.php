@@ -27,7 +27,7 @@ abstract class AbstractNotification implements EventSubscriberInterface, Notific
     /**
      * @internal only used by DI
      */
-    public function setNotificationManager(NotificationManager $notificationManager)
+    public function setNotificationManager(NotificationManager $notificationManager): void
     {
         $this->notificationManager = $notificationManager;
     }
@@ -41,8 +41,8 @@ abstract class AbstractNotification implements EventSubscriberInterface, Notific
         return $this->getTranslator()->trans($message, $parameters, $domain);
     }
 
-    protected function notify(string $message, array $users): void
+    protected function notify(string $message, array $users, string $icon, ?string $thumbnail = null): void
     {
-        $this->notificationManager->createNotifications($message, $users);
+        $this->notificationManager->createNotifications($message, $users, $icon, $thumbnail);
     }
 }

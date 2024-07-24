@@ -13,7 +13,7 @@ class NotificationManager
     ) {
     }
 
-    public function createNotifications(string $message, array $users): void
+    public function createNotifications(string $message, array $users, string $icon, ?string $thumbnail = null): void
     {
         foreach ($users as $user) {
             $notification = new Notification();
