@@ -25,6 +25,8 @@ class NotificationController
     }
 
     /**
+     * Lists all the notifications of the current user.
+     *
      * @Route("", name="claro_notification_list", methods={"GET"})
      */
     public function listAction(): JsonResponse
@@ -35,7 +37,7 @@ class NotificationController
 
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $notifications = $this->om->getRepository(Notification::class)->findBy(['user' => $user]);
+        $notifications = $this->om->getRepository(Notification::class)->findBy(['user' => $user], ['createdAt' => 'DESC']);
 
         return new JsonResponse(array_map(function (Notification $notification) {
             return $this->serializer->serialize($notification);

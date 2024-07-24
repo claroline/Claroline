@@ -13,7 +13,6 @@ bootstrap(
   LayoutMain,
   reducer,
   (initialData) => ({
-    maintenance: initialData.maintenance,
     footer: initialData.footer,
     config: initialData.config,
     contexts: initialData.contexts,

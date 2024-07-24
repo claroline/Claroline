@@ -53,7 +53,6 @@ class ClientSerializer
         $data = [
             'logo' => $this->config->getParameter('logo'),
             'name' => $this->config->getParameter('name'),
-            'description' => null, // the one for the current locale
             'version' => $this->versionManager->getCurrent(),
             'environment' => $this->env,
             'helpUrl' => $this->config->getParameter('help_url'),
@@ -67,7 +66,7 @@ class ClientSerializer
             ],
             'restrictions' => $this->config->getParameter('restrictions'),
             'richTextScript' => $this->config->getParameter('rich_text_script'),
-            'resources' => [ // TODO : find a better way to store and expose this
+            'resources' => [
                 'types' => array_map(function (ResourceType $resourceType) {
                     return $this->resourceTypeSerializer->serialize($resourceType);
                 }, $this->om->getRepository(ResourceType::class)->findAll()),

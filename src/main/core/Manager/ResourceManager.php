@@ -287,7 +287,7 @@ class ResourceManager
     /**
      * @return ResourceType[]
      */
-    public function getAllResourceTypes()
+    public function getAllResourceTypes(): array
     {
         return $this->resourceTypeRepo->findAll();
     }
@@ -329,7 +329,6 @@ class ResourceManager
         $this->setActive($resourceNode);
         $workspace = $resourceNode->getWorkspace();
         if ($workspace) {
-            // TODO : node should keep its parent when deleted and this should be done only if parent has been deleted too
             $root = $this->getWorkspaceRoot($workspace);
             $resourceNode->setParent($root);
         }
