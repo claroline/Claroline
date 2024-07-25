@@ -3,15 +3,23 @@ services:
         autoconfigure: false
         public: false
 
-    Claroline\TransferBundle\Manager\TransferManager:
-        arguments:
-            - '@security.token_storage'
-            - '@messenger.default_bus'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\TransferBundle\Transfer\ExportProvider'
-            - '@Claroline\TransferBundle\Transfer\ImportProvider'
-            - '@Claroline\CoreBundle\Manager\FileManager'
-            - '%claroline.transfer.files_dir%'
-            - '%claroline.transfer.logs_dir%'
+    Claroline\TransferBundle\Manager\ImportManager:
+      arguments:
+        - '@security.token_storage'
+        - '@messenger.default_bus'
+        - '@Claroline\AppBundle\Persistence\ObjectManager'
+        - '@Claroline\AppBundle\API\SerializerProvider'
+        - '@Claroline\AppBundle\API\Crud'
+        - '@Claroline\TransferBundle\Transfer\ImportProvider'
+        - '@Claroline\CoreBundle\Manager\FileManager'
+        - '%claroline.transfer.logs_dir%'
+
+    Claroline\TransferBundle\Manager\ExportManager:
+      arguments:
+        - '@security.token_storage'
+        - '@messenger.default_bus'
+        - '@Claroline\AppBundle\Persistence\ObjectManager'
+        - '@Claroline\AppBundle\API\SerializerProvider'
+        - '@Claroline\AppBundle\API\Crud'
+        - '@Claroline\TransferBundle\Transfer\ExportProvider'
+        - '%claroline.transfer.files_dir%'

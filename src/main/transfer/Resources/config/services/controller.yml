@@ -5,12 +5,12 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\TransferBundle\Transfer\ImportProvider'
-            - '@Claroline\TransferBundle\Manager\TransferManager'
+            - '@Claroline\TransferBundle\Manager\ImportManager'
 
     Claroline\TransferBundle\Controller\ExportController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\TransferBundle\Manager\TransferManager'
+            - '@Claroline\TransferBundle\Manager\ExportManager'
             - '%claroline.param.files_directory%'

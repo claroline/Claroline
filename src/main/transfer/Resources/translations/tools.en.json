@@ -1,3 +1,5 @@
 {
-    "transfer": "Data import/export"
+    "transfer": "Data import/export",
+    "import": "Data import",
+    "export": "Data export"
 }

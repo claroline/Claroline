@@ -21,6 +21,7 @@ services:
     Claroline\TransferBundle\Subscriber\Scheduler\ScheduledTransferSubscriber:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\TransferBundle\Manager\TransferManager'
+            - '@Claroline\TransferBundle\Manager\ImportManager'
+            - '@Claroline\TransferBundle\Manager\ExportManager'
         tags:
             - { name: kernel.event_subscriber }

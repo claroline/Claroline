@@ -1,8 +1,13 @@
 plugin:
     tools:
-        - name: transfer
-          icon: exchange
+        - name: import
+          icon: file-import
           tool_rights:
               - import
+              - refresh
+
+        - name: export
+          icon: file-export
+          tool_rights:
               - export
               - refresh

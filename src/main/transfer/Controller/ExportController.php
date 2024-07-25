@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Security\ToolPermissions;
 use Claroline\TransferBundle\Entity\ExportFile;
-use Claroline\TransferBundle\Manager\TransferManager;
+use Claroline\TransferBundle\Manager\ExportManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,16 +33,16 @@ class ExportController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    private TransferManager $transferManager;
+    private ExportManager $exportManager;
     private string $filesDir;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TransferManager $transferManager,
+        ExportManager $exportManager,
         string $filesDir
     ) {
         $this->authorization = $authorization;
-        $this->transferManager = $transferManager;
+        $this->exportManager = $exportManager;
         $this->filesDir = $filesDir;
     }
 
@@ -63,7 +63,7 @@ class ExportController extends AbstractCrudController
      */
     public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
     {
-        $this->checkPermission(ToolPermissions::getPermission('transfer', 'OPEN'), $workspace, [], true);
+        $this->checkPermission(ToolPermissions::getPermission('export', 'OPEN'), $workspace, [], true);
 
         return new JsonResponse(
             $this->crud->list(self::getClass(), array_merge($request->query->all(), ['hiddenFilters' => [
@@ -81,7 +81,7 @@ class ExportController extends AbstractCrudController
     {
         $this->checkPermission('REFRESH', $exportFile, [], true);
 
-        $this->transferManager->requestExport($exportFile);
+        $this->exportManager->requestExport($exportFile);
 
         return new JsonResponse(
             $this->serializer->serialize($exportFile),
