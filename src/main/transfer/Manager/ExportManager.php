@@ -18,30 +18,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ExportManager
 {
-    private TokenStorageInterface $tokenStorage;
-    private MessageBusInterface $messageBus;
-    private ObjectManager $om;
-    private SerializerProvider $serializer;
-    private Crud $crud;
-    private ExportProvider $exporter;
-    private string $filesDir;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        MessageBusInterface $messageBus,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        Crud $crud,
-        ExportProvider $exporter,
-        string $filesDir
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly MessageBusInterface $messageBus,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly Crud $crud,
+        private readonly ExportProvider $exporter,
+        private readonly string $filesDir
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->messageBus = $messageBus;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->crud = $crud;
-        $this->exporter = $exporter;
-        $this->filesDir = $filesDir;
     }
 
     public function requestExport(ExportFile $exportFile): void

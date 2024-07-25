@@ -20,33 +20,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ImportManager
 {
-    private TokenStorageInterface $tokenStorage;
-    private MessageBusInterface $messageBus;
-    private ObjectManager $om;
-    private SerializerProvider $serializer;
-    private Crud $crud;
-    private ImportProvider $importer;
-    private FileManager $fileManager;
-    private string $logDir;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        MessageBusInterface $messageBus,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        Crud $crud,
-        ImportProvider $importer,
-        FileManager $fileManager,
-        string $logDir
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly MessageBusInterface $messageBus,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly Crud $crud,
+        private readonly ImportProvider $importer,
+        private readonly FileManager $fileManager,
+        private readonly string $logDir
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->messageBus = $messageBus;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->crud = $crud;
-        $this->importer = $importer;
-        $this->fileManager = $fileManager;
-        $this->logDir = $logDir;
     }
 
     public function getLog(AbstractTransferFile $transferFile): ?string

@@ -8,12 +8,12 @@ import {URL_BUTTON} from '#/main/app/buttons'
 
 import {Logs} from '#/main/transfer/log/components/logs'
 import {TransferDetails} from '#/main/transfer/components/details'
-import {ImportFile as ImportFileTypes} from '#/main/transfer/prop-types'
+import {ImportFile as ImportFileTypes} from '#/main/transfer/tools/import/prop-types'
 import {ImportForm} from '#/main/transfer/tools/import/containers/form'
 
 const ImportDetails = props =>
   <TransferDetails
-    path={props.importFile ? props.path+'/history/'+props.importFile.id : ''}
+    path={props.importFile ? props.path+'/'+props.importFile.id : ''}
     transferFile={props.importFile}
     actions={[
       {
@@ -29,7 +29,7 @@ const ImportDetails = props =>
   >
     {props.importFile &&
       <Routes
-        path={props.path+'/history/'+props.importFile.id}
+        path={props.path+'/'+props.importFile.id}
         routes={[
           {
             path: '/',

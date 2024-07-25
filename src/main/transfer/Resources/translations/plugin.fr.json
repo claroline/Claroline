@@ -1,8 +1,4 @@
 {
   "claroline_transfer": "Import/Export",
-  "claroline_transfer_desc": "Fournit les fonctionnalités d'import/export (.csv) de données de la plateforme Claroline.",
-  "claroline_transfer_import": "Import de données",
-  "claroline_transfer_import_desc": "Fournit les fonctionnalités d'import (.csv) de données de la plateforme Claroline.",
-  "claroline_transfer_export": "Export de données",
-  "claroline_transfer_export_desc": "Fournit les fonctionnalités d'export (.csv) de données de la plateforme Claroline."
+  "claroline_transfer_desc": "Fournit les fonctionnalités d'import/export (.csv) de données de la plateforme Claroline."
 }

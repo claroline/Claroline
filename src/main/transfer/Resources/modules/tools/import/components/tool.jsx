@@ -19,10 +19,6 @@ const ImportTool = (props) =>
         exact: true,
         component: ImportList
       }, {
-        path: '/history/:id',
-        onEnter: (params) => props.open(params.id),
-        component: ImportDetails
-      }, {
         path: '/new',
         disabled: !props.canImport,
         render: () => (
@@ -36,6 +32,10 @@ const ImportTool = (props) =>
             <ImportForm />
           </TransferForm>
         )
+      }, {
+        path: '/:id',
+        onEnter: (params) => props.open(params.id),
+        component: ImportDetails
       }
     ]}
   />

@@ -88,12 +88,12 @@ class ImportForm extends Component {
           icon: 'fa fa-fw fa-upload',
           label: trans('import', {}, 'actions'),
           callback: () => this.props.save(this.props.formData, this.props.isNew).then(importFile =>
-            props.history.push(`${this.props.path}/history/${importFile.id}`)
+            props.history.push(`${this.props.path}/${importFile.id}`)
           )
         }}
         cancel={{
           type: LINK_BUTTON,
-          target: props.isNew ? `${this.props.path}/history` : `${this.props.path}/history/`+this.props.formData.id,
+          target: props.isNew ? `${this.props.path}` : `${this.props.path}`+this.props.formData.id,
           exact: true
         }}
         definition={[

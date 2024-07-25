@@ -5,7 +5,7 @@ import classes from 'classnames'
 import {trans} from '#/main/app/intl/translation'
 import {Checkbox} from '#/main/app/input/components/checkbox'
 
-import {Schema as SchemaTypes} from '#/main/transfer/tools/export/prop-types'
+import {Schema as SchemaTypes} from '#/main/transfer/prop-types'
 
 const Fields = props =>
   <Fragment>

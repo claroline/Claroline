@@ -8,13 +8,13 @@ import {Alert} from '#/main/app/alert/components/alert'
 import {CALLBACK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ExportForm} from '#/main/transfer/tools/export/containers/form'
 
-import {ExportFile as ExportFileTypes} from '#/main/transfer/prop-types'
+import {ExportFile as ExportFileTypes} from '#/main/transfer/tools/export/prop-types'
 import {TransferDetails} from '#/main/transfer/components/details'
 
 
 const ExportDetails = props =>
   <TransferDetails
-    path={props.exportFile ? props.path+'/history/'+props.exportFile.id : ''}
+    path={props.exportFile ? props.path+'/'+props.exportFile.id : ''}
     transferFile={props.exportFile}
     actions={[
       {
@@ -42,7 +42,7 @@ const ExportDetails = props =>
 
     {props.exportFile &&
       <Routes
-        path={props.path+'/history/'+props.exportFile.id}
+        path={props.path+'/'+props.exportFile.id}
         routes={[
           {
             path: '/edit',

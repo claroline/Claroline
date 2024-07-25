@@ -34,7 +34,7 @@ const ExportList = (props) =>
       name={selectors.LIST_NAME}
       primaryAction={(row) => ({
         type: LINK_BUTTON,
-        target: `${props.path}/history/${row.id}`
+        target: `${props.path}/${row.id}`
       })}
       fetch={{
         url: !isEmpty(props.workspace) ?
@@ -124,7 +124,7 @@ const ExportList = (props) =>
           label: trans('edit', {}, 'actions'),
           displayed: hasPermission('edit', rows[0]),
           disabled: 'in_progress' === rows[0].status,
-          target: props.path+'/history/'+rows[0].id+'/edit',
+          target: props.path+'/'+rows[0].id+'/edit',
           group: trans('management'),
           scope: ['object']
         }

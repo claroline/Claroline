@@ -81,12 +81,12 @@ class ExportForm extends Component {
           icon: 'fa fa-fw fa-download',
           label: trans('export', {}, 'actions'),
           callback: () => this.props.save(props.formData, props.isNew).then(exportFile =>
-            props.history.push(`${this.props.path}/history/${exportFile.id}`)
+            props.history.push(`${this.props.path}/${exportFile.id}`)
           )
         }}
         cancel={{
           type: LINK_BUTTON,
-          target: this.props.isNew ? `${this.props.path}/history` : `${this.props.path}/history/`+this.props.formData.id,
+          target: this.props.isNew ? `${this.props.path}` : `${this.props.path}`+this.props.formData.id,
           exact: true
         }}
         definition={[

@@ -8,7 +8,7 @@ import {trans} from '#/main/app/intl/translation'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 import {Button} from '#/main/app/action/components/button'
 
-import {Schema as SchemaTypes} from '#/main/transfer/tools/import/prop-types'
+import {Schema as SchemaTypes} from '#/main/transfer/prop-types'
 
 const Fields = props =>
   <Fragment>

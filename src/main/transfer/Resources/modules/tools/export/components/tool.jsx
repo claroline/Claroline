@@ -19,10 +19,6 @@ const ExportTool = (props) =>
         exact: true,
         component: ExportList
       }, {
-        path: '/history/:id',
-        onEnter: (params) => props.open(params.id),
-        component: ExportDetails
-      }, {
         path: '/new',
         disabled: !props.canExport,
         render: () => (
@@ -36,6 +32,10 @@ const ExportTool = (props) =>
             <ExportForm />
           </TransferForm>
         )
+      }, {
+        path: '/:id',
+        onEnter: (params) => props.open(params.id),
+        component: ExportDetails
       }
     ]}
   />
