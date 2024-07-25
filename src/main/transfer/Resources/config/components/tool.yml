@@ -1,12 +1,4 @@
 services:
-    Claroline\TransferBundle\Component\Tool\TransferTool:
-        parent: Claroline\AppBundle\Component\Tool\AbstractTool
-        tags: [ 'claroline.component.tool' ]
-        arguments:
-            - '@Claroline\TransferBundle\Transfer\ImportProvider'
-            - '@Claroline\TransferBundle\Transfer\ExportProvider'
-            - '@Claroline\AppBundle\API\SerializerProvider'
-
     Claroline\TransferBundle\Component\Tool\ImportTool:
         parent: Claroline\AppBundle\Component\Tool\AbstractTool
         tags: [ 'claroline.component.tool' ]

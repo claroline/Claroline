@@ -17,11 +17,13 @@ import {Toolbar} from '#/main/app/action'
 const TransferDetails = props => {
   if (isEmpty(props.transferFile)) {
     return (
-      <ContentLoader
-        className="row"
-        size="lg"
-        description={trans('loading', {}, 'transfer')}
-      />
+      <ToolPage>
+        <ContentLoader
+          className="row"
+          size="lg"
+          description={trans('loading', {}, 'transfer')}
+        />
+      </ToolPage>
     )
   }
 
@@ -56,6 +58,7 @@ const TransferDetails = props => {
         }
       ]}
     >
+
       <div className="row">
         <div className="col-md-3">
           <div className="card my-3">

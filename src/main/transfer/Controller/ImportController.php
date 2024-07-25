@@ -66,7 +66,7 @@ class ImportController extends AbstractCrudController
      */
     public function listByWorkspaceAction(Workspace $workspace, Request $request): JsonResponse
     {
-        $this->checkPermission(ToolPermissions::getPermission('transfer', 'OPEN'), $workspace, [], true);
+        $this->checkPermission(ToolPermissions::getPermission('import', 'OPEN'), $workspace, [], true);
 
         return new JsonResponse(
             $this->crud->list(self::getClass(), array_merge($request->query->all(), ['hiddenFilters' => [
