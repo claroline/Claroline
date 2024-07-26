@@ -16,6 +16,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Bridge\Google\Transport\GmailSmtpTransport;
 use Symfony\Component\Mailer\Transport\SendmailTransport;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mailer\Transport\TransportInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class TransportFactory
@@ -23,23 +24,16 @@ class TransportFactory
     private const COMMAND = '/usr/sbin/sendmail -bs';
     private const TIMEOUT = 30;
 
-    private $configHandler;
-    private $eventDispatcher;
-    private $logger;
-
     public function __construct(
-        PlatformConfigurationHandler $configHandler,
-        EventDispatcherInterface $eventDispatcher,
-        LoggerInterface $logger
+        private readonly PlatformConfigurationHandler $configHandler,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly LoggerInterface $logger
     ) {
-        $this->configHandler = $configHandler;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->logger = $logger;
     }
 
-    public function getTransport()
+    public function getTransport(): TransportInterface
     {
-        $type = $this->configHandler->getParameter('mailer_transport');
+        $type = $this->configHandler->getParameter('mailer.transport');
 
         if ('sendmail' === $type) {
             return new SendmailTransport(
@@ -51,28 +45,28 @@ class TransportFactory
 
         if ('gmail' === $type) {
             return new GmailSmtpTransport(
-                $this->configHandler->getParameter('mailer_username'),
-                $this->configHandler->getParameter('mailer_password'),
+                $this->configHandler->getParameter('mailer.username'),
+                $this->configHandler->getParameter('mailer.password'),
                 $this->eventDispatcher,
                 $this->logger
             );
         }
 
         // Default smtp
-        $encryption = 'none' === $this->configHandler->getParameter('mailer_encryption') ? false : null; // null lets the transport choose the best value based on the platform.
+        $encryption = 'none' === $this->configHandler->getParameter('mailer.encryption') ? false : null; // null lets the transport choose the best value based on the platform.
 
         $transport = new EsmtpTransport(
-            $this->configHandler->getParameter('mailer_host'),
-            $this->configHandler->getParameter('mailer_port') ?? 0,
+            $this->configHandler->getParameter('mailer.host'),
+            $this->configHandler->getParameter('mailer.port') ?? 0,
             $encryption,
             $this->eventDispatcher,
             $this->logger
         );
-        if ($this->configHandler->getParameter('mailer_username')) {
-            $transport->setUsername($this->configHandler->getParameter('mailer_username'));
+        if ($this->configHandler->getParameter('mailer.username')) {
+            $transport->setUsername($this->configHandler->getParameter('mailer.username'));
         }
-        if ($this->configHandler->getParameter('mailer_password')) {
-            $transport->setPassword($this->configHandler->getParameter('mailer_password'));
+        if ($this->configHandler->getParameter('mailer.password')) {
+            $transport->setPassword($this->configHandler->getParameter('mailer.password'));
         }
         // should probably be configurable too
         $transport->getStream()->setTimeout(self::TIMEOUT);

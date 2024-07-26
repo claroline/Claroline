@@ -5,6 +5,7 @@ services:
         public: true
 
     Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler:
+        lazy: true
         arguments:
             - '%claroline.param.platform_options%'
             - '@request_stack'

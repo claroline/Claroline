@@ -1,7 +1,4 @@
 services:
-    Claroline\AppBundle\Routing\Router:
-        parent: router.default
-
     Claroline\AppBundle\Routing\Finder:
         arguments:
             - '@router'

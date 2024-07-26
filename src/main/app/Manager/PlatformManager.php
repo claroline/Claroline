@@ -24,7 +24,7 @@ class PlatformManager
             $request = $this->requestStack->getCurrentRequest();
 
             // add protocol
-            $url = ($request && $request->isSecure()) || $this->config->getParameter('ssl.enabled') ? 'https://' : 'http://';
+            $url = $request && $request->isSecure() ? 'https://' : 'http://';
 
             // add host
             if ($this->config->getParameter('internet.domain_name')) {

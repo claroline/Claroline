@@ -12,7 +12,6 @@
 namespace Claroline\AppBundle;
 
 use Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle;
-use Claroline\AppBundle\DependencyInjection\Compiler\RouterPass;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use FOS\JsRoutingBundle\FOSJsRoutingBundle;
@@ -29,13 +28,6 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
 class ClarolineAppBundle extends Bundle implements AutoConfigurableInterface
 {
-    public function build(ContainerBuilder $container)
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(new RouterPass());
-    }
-
     public function supports(string $environment): bool
     {
         return true;

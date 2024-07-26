@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Testing;
 
 use Claroline\CoreBundle\Library\Installation\Plugin\Loader;
+use Claroline\KernelBundle\Bundle\PluginBundleInterface;
 
 /**
  * Trait containing utility methods for test cases using stub plugins
@@ -21,10 +22,8 @@ trait StubPluginTrait
 {
     /**
      * PHPUnit provider.
-     *
-     * @return array
      */
-    public function provideValidPlugins()
+    public function provideValidPlugins(): array
     {
         $this->requirePluginClass('Valid\WithCustomResources\Entity\ResourceA');
         $this->requirePluginClass('Valid\WithCustomResources\Entity\ResourceB');
@@ -39,7 +38,7 @@ trait StubPluginTrait
         ];
     }
 
-    private function getPluginClassPath($classFqcn)
+    private function getPluginClassPath(string $classFqcn): string
     {
         return __DIR__
             .'/../../Tests/Stub/plugin/'
@@ -47,7 +46,7 @@ trait StubPluginTrait
             .'.php';
     }
 
-    private function loadPlugin($pluginFqcn)
+    private function loadPlugin(string $pluginFqcn): PluginBundleInterface
     {
         return (new Loader())->load(
             $pluginFqcn,
@@ -55,7 +54,7 @@ trait StubPluginTrait
         );
     }
 
-    private function requirePluginClass($classFqcn)
+    private function requirePluginClass(string $classFqcn): void
     {
         require_once $this->getPluginClassPath($classFqcn);
     }
