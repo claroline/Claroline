@@ -3,8 +3,8 @@ import {connect} from 'react-redux'
 import {withReducer} from '#/main/app/store/components/withReducer'
 import {selectors as configSelectors} from '#/main/app/config/store'
 
-import {FooterMain as FooterMainComponent} from '#/main/app/layout/footer/components/main'
-import {selectors, reducer} from '#/main/app/layout/footer/store'
+import {FooterMain as FooterMainComponent} from '#/main/app/platform/footer/components/main'
+import {selectors, reducer} from '#/main/app/platform/footer/store'
 
 const FooterMain = withReducer(selectors.STORE_NAME, reducer)(
   connect(

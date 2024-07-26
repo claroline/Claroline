@@ -35,10 +35,15 @@ const availableContexts = (state) => state.contexts
 
 const favoriteContexts = (state) => state.contextFavorites
 
+const currentOrganization = (state) => state.currentOrganization
+const availableOrganizations = (state) => state.availableOrganizations
+
 export const selectors = {
   unavailable,
   disabled,
   selfRegistration,
   availableContexts,
-  favoriteContexts
+  favoriteContexts,
+  currentOrganization,
+  availableOrganizations
 }

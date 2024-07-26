@@ -8,9 +8,9 @@ use Claroline\AppBundle\Event\Crud\CrudEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
-use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -87,7 +87,7 @@ class Crud
         return !empty($object);
     }
 
-    public function find(string $class, $data): ?object
+    public function find(string $class, array $data): ?object
     {
         return $this->om->getObject($data, $class, $this->schema->getIdentifiers($class));
     }
@@ -216,7 +216,7 @@ class Crud
         if (is_string($classOrObject)) {
             // class name received
             $className = $classOrObject;
-            $object = new $className;
+            $object = new $className();
         } else {
             // object instance received
             $className = $this->getRealClass($classOrObject);

@@ -4,7 +4,6 @@ import isEmpty from 'lodash/isEmpty'
 
 import {makeCancelable} from '#/main/app/api'
 import {Routes} from '#/main/app/router'
-import {FooterMain} from '#/main/app/layout/footer/containers/main'
 import {trans} from '#/main/app/intl'
 import {ContentNotFound} from '#/main/app/content/components/not-found'
 import {ContentLoader} from '#/main/app/content/components/loader'
@@ -13,7 +12,7 @@ import {ContextEditor} from '#/main/app/context/editor/containers/main'
 import {ContextProfile} from '#/main/app/context/profile/containers/main'
 import {getTool} from '#/main/core/tool/utils'
 import {hasPermission} from '#/main/app/security'
-import {AppLoader} from '#/main/app/layout/components/loader'
+import {AppLoader} from '#/main/app/platform/components/loader'
 
 const ContextMain = (props) => {
   // fetch current context data
@@ -99,43 +98,39 @@ const ContextMain = (props) => {
       />
   } else {
     CurrentPage = (
-      <>
-        <Routes
-          path={props.path}
-          routes={[
-            {
-              path: '/profile',
-              component: ContextProfile
-            }, {
-              path: '/edit',
-              component: props.editor
-            }, {
-              path: '/:toolName',
-              onEnter: (params = {}) => {
-                const openedTool = props.tools.find(tool => tool.name === params.toolName)
-                if (isEmpty(openedTool) || !hasPermission('open', openedTool)) {
-                  // tool is disabled (or does not exist) for the context
-                  // let's go to the default opening of the context
-                  props.history.replace(props.path)
-                }
-              },
-              render: (routerProps) => {
-                const params = routerProps.match.params
-
-                return createElement(toolApps[params.toolName], {
-                  name: params.toolName,
-                  path: props.path+'/'+params.toolName,
-                })
+      <Routes
+        path={props.path}
+        routes={[
+          {
+            path: '/profile',
+            component: ContextProfile
+          }, {
+            path: '/edit',
+            component: props.editor
+          }, {
+            path: '/:toolName',
+            onEnter: (params = {}) => {
+              const openedTool = props.tools.find(tool => tool.name === params.toolName)
+              if (isEmpty(openedTool) || !hasPermission('open', openedTool)) {
+                // tool is disabled (or does not exist) for the context
+                // let's go to the default opening of the context
+                props.history.replace(props.path)
               }
-            }
-          ]}
-          redirect={[
-            {from: '/', exact: true, to: `/${props.defaultOpening}`, disabled: !props.defaultOpening}
-          ]}
-        />
+            },
+            render: (routerProps) => {
+              const params = routerProps.match.params
 
-        {props.footer && createElement(props.footer)}
-      </>
+              return createElement(toolApps[params.toolName], {
+                name: params.toolName,
+                path: props.path+'/'+params.toolName
+              })
+            }
+          }
+        ]}
+        redirect={[
+          {from: '/', exact: true, to: `/${props.defaultOpening}`, disabled: !props.defaultOpening}
+        ]}
+      />
     )
   }
 
@@ -185,12 +180,12 @@ ContextMain.propTypes = {
   open: T.func.isRequired,
   history: T.shape({
     replace: T.func.isRequired
-  }).isRequired
+  }).isRequired,
+  children: T.node
 }
 
 ContextMain.defaultProps = {
   tools: [],
-  footer: FooterMain,
   editor: ContextEditor
 }
 

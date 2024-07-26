@@ -90,7 +90,7 @@ const ContentMenu = (props) => {
         <ContentMenuItem
           key={creationType.id}
           className={0 !== index ? 'mt-2' : undefined}
-          autoFocus={0 === index}
+          autoFocus={ props.autoFocus && 0 === index}
           color={props.color ? COLORS[index] : undefined}
           {...creationType}
         />
@@ -112,6 +112,7 @@ const ContentMenu = (props) => {
 }
 
 ContentMenu.propTypes = {
+  autoFocus: T.bool,
   className: T.string,
   items: T.arrayOf(T.shape({
     id: T.string.isRequired,
@@ -129,7 +130,8 @@ ContentMenu.propTypes = {
 }
 
 ContentMenu.defaultProps = {
-  color: true
+  color: true,
+  autoFocus: true
 }
 
 export {

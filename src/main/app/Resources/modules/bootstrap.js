@@ -1,22 +1,20 @@
 import {bootstrap} from '#/main/app/dom/bootstrap'
 
-import {LayoutMain} from '#/main/app/layout/containers/main'
-import {reducer} from '#/main/app/layout/store'
-
-// for dev purpose. This allows us to have an understandable name in
-// the list of stores in the dev tools
-LayoutMain.displayName = 'MainApp'
+import {Platform} from '#/main/app/platform/components/main'
+import {reducer} from '#/main/app/platform/store'
 
 // mount the whole Claroline Connect application
 bootstrap(
   '#claroline-app',
-  LayoutMain,
+  Platform,
   reducer,
   (initialData) => ({
     footer: initialData.footer,
     config: initialData.config,
     contexts: initialData.contexts,
     contextFavorites: initialData.contextFavorites,
+    currentOrganization: initialData.currentOrganization,
+    availableOrganizations: initialData.availableOrganizations,
     security: {
       impersonated: initialData.impersonated,
       currentUser: initialData.currentUser,

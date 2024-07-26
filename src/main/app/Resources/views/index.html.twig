@@ -20,12 +20,13 @@
         class="app"
         role="presentation"
 
-        data-maintenance="{{ maintenance | json_encode | raw | escape }}"
         data-impersonated="{{ impersonated ? 'true' : 'false' }}"
         data-current-user="{{ currentUser | json_encode | raw | escape }}"
         data-client="{{ client | json_encode | raw | escape }}"
         data-contexts="{{ contexts | json_encode | raw | escape }}"
         data-context-favorites="{{ contextFavorites | json_encode | raw | escape }}"
+        data-current-organization="{{ currentOrganization | json_encode | raw | escape }}"
+        data-available-organizations="{{ availableOrganizations | json_encode | raw | escape }}"
         data-footer="{{ footer | json_encode | raw | escape }}"
         data-config="{{ parameters | json_encode | raw | escape }}"
     ></div>

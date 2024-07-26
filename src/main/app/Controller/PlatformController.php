@@ -8,11 +8,11 @@ use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Manager\SecurityManager;
 use Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
 use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\PrivacyBundle\Manager\PrivacyManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -52,23 +52,25 @@ class PlatformController
     {
         $currentUser = null;
         if ($this->tokenStorage->getToken()->getUser() instanceof User) {
-            $currentUser = $this->serializer->serialize(
-                $this->tokenStorage->getToken()->getUser(), [Options::SERIALIZE_FACET] // TODO : we should only get the minimal representation of user here
-            );
+            $currentUser = $this->tokenStorage->getToken()->getUser();
         }
 
         return new Response(
             $this->templating->render('@ClarolineApp/index.html.twig', [
                 'baseUrl' => $this->platformManager->getUrl(),
                 'parameters' => $this->clientSerializer->serialize(),
-                'maintenance' => [
-                    'enabled' => MaintenanceHandler::isMaintenanceEnabled() || $this->configHandler->getParameter('maintenance.enable'),
-                    'message' => $this->configHandler->getParameter('maintenance.message'),
-                ],
-                'currentUser' => $currentUser,
+
+                'currentUser' => $currentUser ? $this->serializer->serialize(
+                    $currentUser, [Options::SERIALIZE_FACET] // TODO : we should only get the minimal representation of user here
+                ) : null,
                 'impersonated' => $this->securityManager->isImpersonated(),
                 'contexts' => $this->contextProvider->getAvailableContexts(),
                 'contextFavorites' => $this->contextProvider->getFavoriteContexts(),
+                'currentOrganization' => $currentUser ? $this->serializer->serialize($currentUser->getMainOrganization(), [Options::SERIALIZE_MINIMAL]) : null,
+                'availableOrganizations' => $currentUser ? array_map(function (Organization $organization) {
+                    return $this->serializer->serialize($organization, [Options::SERIALIZE_MINIMAL]);
+                }, $currentUser->getOrganizations()) : [],
+
                 'client' => [
                     'ip' => $request->getClientIp(),
                     'forwarded' => $request->headers->get('X-Forwarded-For'), // I can only get trusted proxies if I use symfony getClientIps()
@@ -79,7 +81,7 @@ class PlatformController
                         'show' => $this->configHandler->getParameter('footer.show'),
                         'locale' => $this->configHandler->getParameter('footer.show_locale'),
                         'help' => $this->configHandler->getParameter('footer.show_help'),
-                        'termsOfService' => $this->privacyManager->getTosEnabled($request->getLocale()),
+                        // 'termsOfService' => $this->privacyManager->getTosEnabled($request->getLocale()),
                     ],
                 ],
 

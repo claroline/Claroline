@@ -1,7 +1,13 @@
 import {API_REQUEST, url} from '#/main/app/api'
+import {makeActionCreator} from '#/main/app/store/actions'
+
+// action names
+export const PLATFORM_SET_CURRENT_ORGANIZATION = 'PLATFORM_SET_CURRENT_ORGANIZATION'
 
 // action creators
 export const actions = {}
+
+actions.setCurrentOrganizations = makeActionCreator(PLATFORM_SET_CURRENT_ORGANIZATION, 'organization')
 
 actions.extend = () => ({
   [API_REQUEST]: {

@@ -2,16 +2,17 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useHistory} from 'react-router-dom'
 import Modal from 'react-bootstrap/Modal'
+import {Helmet} from 'react-helmet'
 import omit from 'lodash/omit'
+import isEmpty from 'lodash/isEmpty'
 
 import {trans} from '#/main/app/intl'
 import {Routes} from '#/main/app/router'
 
 import {EditorMenu} from '#/main/app/editor/components/menu'
-import {AppLoader} from '#/main/app/layout/components/loader'
+import {AppLoader} from '#/main/app/platform/components/loader'
 import {EditorContext} from '#/main/app/editor/context'
-import isEmpty from 'lodash/isEmpty'
-import {Helmet} from 'react-helmet'
+
 import {theme} from '#/main/app/config/theme'
 
 const Editor = (props) => {
@@ -140,6 +141,7 @@ Editor.propTypes = {
     T.array
   ]),
   canAdministrate: T.bool,
+  styles: T.array,
   title: T.string.isRequired,
   pages: T.arrayOf(T.shape({
     name: T.string.isRequired,
