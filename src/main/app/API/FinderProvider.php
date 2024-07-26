@@ -113,7 +113,7 @@ class FinderProvider
     /**
      * Builds and fires the query for a given class. There will be no serialization here.
      */
-    public function fetch(string $class, ?array $filters = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false)
+    public function fetch(string $class, ?array $filters = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false): int|array
     {
         try {
             return $this->get($class)->find($filters, $sortBy, $page, $limit, $count);
@@ -150,7 +150,7 @@ class FinderProvider
         ];
     }
 
-    private static function formatPaginatedData($data, $total, $page, $limit, $filters, $sortBy): array
+    private static function formatPaginatedData(array $data, int $total, int $page, int $limit, ?array $filters = [], ?array $sortBy = []): array
     {
         return [
             'data' => $data,
@@ -162,9 +162,6 @@ class FinderProvider
         ];
     }
 
-    /**
-     * @todo : we should make UI and API formats uniform to avoid such transformations
-     */
     private static function parseSortBy(?string $sortBy): array
     {
         // default values
@@ -221,9 +218,6 @@ class FinderProvider
         return $parsed;
     }
 
-    /**
-     * @todo : we should make UI and API formats uniform to avoid such transformations
-     */
     private static function decodeFilters(array $filters): array
     {
         $decodedFilters = [];

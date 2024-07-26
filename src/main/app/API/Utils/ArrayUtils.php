@@ -6,13 +6,8 @@ class ArrayUtils
 {
     /**
      * This is more or less the equivalent of lodash set for array.
-     *
-     * @param string $keys - the property path
-     * @param $value
-     *
-     * @throws \Exception
      */
-    public static function set(array &$object, string $keys, $value)
+    public static function set(array &$object, string $keys, mixed $value): void
     {
         $keys = explode('.', $keys);
         $depth = count($keys);
@@ -31,7 +26,7 @@ class ArrayUtils
         }
     }
 
-    public static function remove(array &$object, string $keys)
+    public static function remove(array &$object, string $keys): void
     {
         // because sometimes there are keys with dot in it (eg. Scorm props cmi.*)
         // we check the whole key exist before starting the recursive search
@@ -55,13 +50,10 @@ class ArrayUtils
     /**
      * This is more or less the equivalent of lodash get for array.
      *
-     * @param array  $object  - the array
-     * @param string $keys    - the property path
-     * @param mixed  $default
-     *
-     * @return mixed
+     * @param array  $object - the array
+     * @param string $keys   - the property path
      */
-    public static function get(array $object, string $keys, $default = null)
+    public static function get(array $object, string $keys, mixed $default = null): mixed
     {
         // because sometimes there are keys with dot in it (eg. Scorm props cmi.*)
         // we check the whole key exist before starting the recursive search
@@ -113,7 +105,7 @@ class ArrayUtils
         return false;
     }
 
-    public static function getPropertiesName(array $object, $titles = [], $currentPos = null)
+    public static function getPropertiesName(array $object, $titles = [], $currentPos = null): array
     {
         $keys = array_keys($object);
 
@@ -132,7 +124,7 @@ class ArrayUtils
         return $titles;
     }
 
-    public static function isAssociative(array $array)
+    public static function isAssociative(array $array): bool
     {
         return count(array_filter(array_keys($array), 'is_string')) > 0;
     }

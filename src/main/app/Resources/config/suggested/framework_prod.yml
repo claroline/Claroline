@@ -5,9 +5,7 @@ framework:
     form: false
     validation:
         enable_annotations: true
-    translator:
-        fallback: en
-    default_locale: "%locale%"
+    default_locale: en
     session:
         name: claroline
         handler_id: "claroline.session_handler.file" # Overridden by SessionConfigPass

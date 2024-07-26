@@ -349,7 +349,6 @@
     "mail_not_exist": "Ce courriel n'existe pas",
     "mail_options": "Options du courriel",
     "mail_sent": "Un courriel vient de vous être envoyé. Vérifiez votre dossier \"pourriels\" au cas où celui-ci n'apparaîtrait pas dans votre boîte de réception.",
-    "mailer_from": "Champ \"from\" du courriel",
     "manager": "Gestionnaire",
     "mandatory": "Obligatoire",
     "manual": "Manuelle",
@@ -692,7 +691,6 @@
     "years": "années",
     "years_short": "a",
     "yes": "Oui",
-    "ssl_enabled": "Activer SSL ?",
 
     "access_code": "Code d'accès",
     "allow_ip_filtering": "Activer le filtrage par IP",

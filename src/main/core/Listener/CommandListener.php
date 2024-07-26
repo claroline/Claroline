@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\UserManager;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CommandListener

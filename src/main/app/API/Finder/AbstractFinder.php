@@ -58,7 +58,7 @@ abstract class AbstractFinder implements FinderInterface
         return $qb;
     }
 
-    public function find(?array $filters = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false)
+    public function find(?array $filters = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false): int|array
     {
         // sorting is not required when we count stuff
         $sortBy = $count ? null : $sortBy;
@@ -125,7 +125,7 @@ abstract class AbstractFinder implements FinderInterface
         return $qb;
     }
 
-    protected function setDefaults(QueryBuilder $qb, string $filterName, $filterValue): void
+    protected function setDefaults(QueryBuilder $qb, string $filterName, mixed $filterValue): void
     {
         $property = $filterName;
         if (array_key_exists($filterName, $this->getExtraFieldMapping())) {

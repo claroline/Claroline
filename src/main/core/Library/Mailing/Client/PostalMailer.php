@@ -22,8 +22,8 @@ class PostalMailer implements MailClientInterface
     public function send(Message $message): void
     {
         $client = new Client(
-            $this->ch->getParameter('mailer_host'),
-            $this->ch->getParameter('mailer_api_key')
+            $this->ch->getParameter('mailer.host'),
+            $this->ch->getParameter('mailer.api_key')
         );
 
         // Create a new message
@@ -32,7 +32,7 @@ class PostalMailer implements MailClientInterface
         $sendMessage->to($message->getAttribute('to'));
         $sendMessage->from($message->getAttribute('from'));
 
-        $tag = $this->ch->getParameter('mailer_tag');
+        $tag = $this->ch->getParameter('mailer.tag');
         if ($tag) {
             $sendMessage->tag($tag);
         }

@@ -94,10 +94,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'tag' => null,
                 'from' => 'noreply@claroline.com',
             ],
-            'ssl' => [ // to remove
-                'enabled' => false,
-                'version' => 3,
-            ],
             'locales' => [ // to move in `intl` block
                 'default' => 'fr',
                 'available' => ['fr', 'en'],
@@ -124,7 +120,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'show_progression' => false,
                 'menu' => null,
             ],
-            'show_about_button' => true,
             'javascripts' => [],
             'restrictions' => [
                 'users' => null,

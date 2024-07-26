@@ -1,9 +1,8 @@
 # Template for the 'parameters.yml' config file (same directory).
-# Currently only the db parameters are required.
+# Currently only the db parameters and locale are required.
 
 parameters:
-
-  # database
+  secret: change_me
 
   database_version: 8.0
   database_driver: pdo_mysql
@@ -19,21 +18,3 @@ parameters:
   test_database_name: '%database_name%_test'
   test_database_user: '%database_user%'
   test_database_password: '%database_password%'
-
-  # mail
-
-  mailer_transport: smtp
-  mailer_encryption: ~
-  mailer_auth_mode: ~
-  mailer_host: ~
-  mailer_port: ~
-  mailer_user: ~
-  mailer_password: ~
-
-  # others
-
-  locale: fr
-  secret: change_me
-
-  # logs
-  non_repeatable_log_time_in_seconds: 600

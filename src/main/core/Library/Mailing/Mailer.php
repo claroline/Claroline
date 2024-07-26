@@ -59,7 +59,7 @@ class Mailer implements LoggerAwareInterface
 
     public function getClient(): MailClientInterface
     {
-        $transport = $this->ch->getParameter('mailer_transport');
+        $transport = $this->ch->getParameter('mailer.transport');
 
         foreach ($this->clients as $client) {
             if (in_array($transport, $client->getTransports())) {
