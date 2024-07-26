@@ -106,7 +106,7 @@ const BadgeDetailsComponent = (props) => {
             ]}
             card={AssertionUserCard}
             display={{
-              current: listConst.DISPLAY_LIST_SM,
+              current: listConst.DISPLAY_LIST_SM
             }}
           />
         </PageSection>
@@ -132,7 +132,7 @@ BadgeDetailsComponent.defaultProps = {
 
 const BadgeDetails = withRouter(
   connect(
-    (state) => null,
+    null,
     (dispatch) =>({
       downloadAssertion(assertion) {
         dispatch(badgeActions.downloadAssertion(assertion))

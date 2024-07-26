@@ -65,7 +65,8 @@ const CreationType = (props) =>
   </Modal>
 
 CreationType.propTypes = {
-  changeStep: T.func.isRequired
+  changeStep: T.func.isRequired,
+  reset: T.func.isRequired
 }
 
 export {

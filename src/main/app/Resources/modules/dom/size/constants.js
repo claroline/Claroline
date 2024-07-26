@@ -1,10 +1,4 @@
 
-// taken from bootstrap
-const SCREEN_XS_MAX = 576
-const SCREEN_SM_MAX = 768
-const SCREEN_MD_MAX = 992
-const SCREEN_LG_MAX = 1200
-
 // taken from bootstrap $grid-breakpoints
 const BREAKPOINT_XS  = 0
 const BREAKPOINT_SM  = 576
@@ -30,11 +24,6 @@ const BREAKPOINTS = {
 }
 
 export const constants = {
-  SCREEN_XS_MAX,
-  SCREEN_SM_MAX,
-  SCREEN_MD_MAX,
-  SCREEN_LG_MAX,
-
   BREAKPOINTS,
   BREAKPOINT_XS,
   BREAKPOINT_SM,

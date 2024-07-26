@@ -73,7 +73,7 @@ class ValidatorProvider
             $uniqueFields = [];
             $identifiers = $this->schema->getIdentifiers($class);
 
-            if (is_array($identifiers)) {
+            if (!empty($identifiers)) {
                 foreach ($identifiers as $identifier) {
                     if ('id' === $identifier) {
                         // slightly hacky : the 'id' prop declared in the schema must be remapped on the 'uuid' entity prop

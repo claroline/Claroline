@@ -30,6 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Represents an obtainable badge.
  *
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro__open_badge_badge_class")
  */
 class BadgeClass
@@ -150,7 +151,7 @@ class BadgeClass
     public function getDurationValidation(): int
     {
         if (!$this->durationValidation) {
-            //100 years validation !
+            // 100 years validation !
             return 365 * 100;
         }
 

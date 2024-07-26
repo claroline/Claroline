@@ -1,5 +1,5 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {useDispatch, useSelector} from 'react-redux'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl/translation'
@@ -9,9 +9,20 @@ import {Toolbar} from '#/main/app/action/components/toolbar'
 import {CALLBACK_BUTTON, LINK_BUTTON} from '#/main/app/buttons'
 import {PageSimple} from '#/main/app/page'
 
-const LayoutForbidden = (props) => {
-  const started = get(props.restrictions, 'dates[0]') && get(props.restrictions, 'dates[0]') < now(false)
-  const ended   = get(props.restrictions, 'dates[1]') && get(props.restrictions, 'dates[1]') < now(false)
+import {selectors as securitySelectors} from '#/main/app/security/store'
+import {selectors as configSelectors} from '#/main/app/config/store'
+
+import {actions, selectors} from '#/main/app/platform/store'
+
+const PlatformForbidden = () => {
+  const dispatch = useDispatch()
+
+  const authenticated = useSelector(securitySelectors.isAuthenticated)
+  const disabled = useSelector(selectors.disabled)
+  const restrictions = useSelector((state) => configSelectors.param(state, 'restrictions'))
+
+  const started = get(restrictions, 'dates[0]') && get(restrictions, 'dates[0]') < now(false)
+  const ended   = get(restrictions, 'dates[1]') && get(restrictions, 'dates[1]') < now(false)
 
   return (
     <PageSimple>
@@ -19,11 +30,11 @@ const LayoutForbidden = (props) => {
         <h2 className="h3 text-center">{trans('platform_unavailable_title', {}, 'administration')}</h2>
         <p className="lead text-center">{trans('platform_unavailable_help', {}, 'administration')}</p>
 
-        {props.disabled && props.authenticated &&
+        {disabled && authenticated &&
           <section className="mb-3">
             <h2 className="h4 text-center">{trans('why_platform_disabled', {}, 'administration')}</h2>
 
-            {props.restrictions.disabled &&
+            {restrictions.disabled &&
               <Alert
                 type="info"
                 title={trans('platform_disabled_alert', {}, 'administration')}
@@ -37,7 +48,7 @@ const LayoutForbidden = (props) => {
                 type="info"
                 title={trans('platform_not_started_alert', {}, 'administration')}
               >
-                {trans('platform_not_started_desc', {date: displayDate(get(props.restrictions, 'dates[0]'))}, 'administration')}
+                {trans('platform_not_started_desc', {date: displayDate(get(restrictions, 'dates[0]'))}, 'administration')}
               </Alert>
             }
 
@@ -46,14 +57,15 @@ const LayoutForbidden = (props) => {
                 type="info"
                 title={trans('platform_ended_alert', {}, 'administration')}
               >
-                {trans('platform_ended_desc', {date: displayDate(get(props.restrictions, 'dates[1]'))}, 'administration')}
+                {trans('platform_ended_desc', {date: displayDate(get(restrictions, 'dates[1]'))}, 'administration')}
               </Alert>
             }
           </section>
         }
 
         <hr/>
-        {!props.authenticated &&
+
+        {!authenticated &&
           <p className="text-secondary">
             {trans('only_admin_login_help', {}, 'administration')}
           </p>
@@ -69,14 +81,14 @@ const LayoutForbidden = (props) => {
               type: LINK_BUTTON,
               label: trans('login', {}, 'actions'),
               target: '/login',
-              displayed: !props.authenticated,
+              displayed: !authenticated,
               primary: true
             }, {
               name: 'reactivate',
               type: CALLBACK_BUTTON,
               label: trans('reactivate', {}, 'actions'),
-              callback: () => props.reactivate(),
-              displayed: props.authenticated && !props.restrictions.disabled && ended,
+              callback: () => dispatch(actions.extend()),
+              displayed: authenticated && !restrictions.disabled && ended,
               primary: true
             }
           ]}
@@ -86,16 +98,6 @@ const LayoutForbidden = (props) => {
   )
 }
 
-LayoutForbidden.propTypes = {
-  authenticated: T.bool.isRequired,
-  disabled: T.bool.isRequired,
-  restrictions: T.shape({
-    disabled: T.bool,
-    dates: T.arrayOf(T.string)
-  }),
-  reactivate: T.func.isRequired
-}
-
 export {
-  LayoutForbidden
+  PlatformForbidden
 }

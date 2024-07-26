@@ -9,10 +9,10 @@ import {UserAvatar} from '#/main/app/user/components/avatar'
 import {route} from '#/main/core/workspace/routing'
 
 import {MODAL_CONTEXT_SEARCH} from '#/main/app/context/modals/search'
-import {AppBrand} from '#/main/app/layout/components/brand'
 import {NotificationButton} from '#/main/notification/components/button'
 import {Thumbnail} from '#/main/app/components/thumbnail'
 import {MODAL_WORKSPACE_CREATION} from '#/main/app/contexts/workspace/modals/creation'
+import {PlatformOrganization} from '#/main/app/platform/components/organization'
 
 const ContextNav = (props) => {
   if (!props.currentUser) {
@@ -29,7 +29,7 @@ const ContextNav = (props) => {
 
   return (
     <section className="app-contexts">
-      <AppBrand className="menu-brand" />
+      <PlatformOrganization />
 
       <Button
         type={LINK_BUTTON}
@@ -91,7 +91,9 @@ const ContextNav = (props) => {
 
 ContextNav.propTypes = {
   currentUser: T.shape({}),
-  currentContext: T.shape({}),
+  currentContext: T.shape({
+    id: T.string
+  }),
   currentContextType: T.string,
 
   availableContexts: T.arrayOf(T.shape({

@@ -23,6 +23,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * Represents the obtaining of a BadgeClass by a User.
  *
  * @ORM\Entity(repositoryClass="Claroline\OpenBadgeBundle\Repository\AssertionRepository")
+ *
  * @ORM\Table(name="claro__open_badge_assertion")
  */
 class Assertion
@@ -32,18 +33,21 @@ class Assertion
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private ?User $recipient = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\BadgeClass")
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private ?BadgeClass $badge = null;
 
     /**
      * @ORM\Column(type="datetime")
+     *
      * @Gedmo\Timestampable(on="create")
      */
     private ?\DateTimeInterface $issuedOn = null;

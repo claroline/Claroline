@@ -12,9 +12,7 @@
 namespace Claroline\OpenBadgeBundle\Event;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\OpenBadgeBundle\Entity\BadgeClass;
 use Symfony\Contracts\EventDispatcher\Event;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Event dispatched when a user obtains a new badge (aka a new Assertion entity is created).

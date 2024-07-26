@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ *
  * @ORM\Table(name="claro__open_badge_rule")
  */
 class Rule
@@ -47,6 +48,7 @@ class Rule
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\OpenBadgeBundle\Entity\BadgeClass", inversedBy="rules")
+     *
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private ?BadgeClass $badge = null;
@@ -58,24 +60,28 @@ class Rule
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     *
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private ?ResourceNode $node = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
+     *
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private ?Workspace $workspace = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
+     *
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private ?Role $role = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Group")
+     *
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private ?Group $group = null;

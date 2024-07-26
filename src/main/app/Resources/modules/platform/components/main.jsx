@@ -1,18 +1,30 @@
 import React, {useState, useEffect, createElement} from 'react'
-import {PropTypes as T} from 'prop-types'
+import {useSelector} from 'react-redux'
+import {useHistory} from 'react-router-dom'
 import isEmpty from 'lodash/isEmpty'
 
 import {makeCancelable} from '#/main/app/api'
 import {Routes, Redirect} from '#/main/app/router'
 import {getContexts} from '#/main/app/context/registry'
 
-import {LayoutForbidden} from '#/main/app/layout/containers/forbidden'
-import {HomeRegistration} from '#/main/app/layout/components/registration'
-import {SendPassword} from '#/main/app/layout/components/send-password'
-import {NewPassword} from '#/main/app/layout/components/new-password'
-import {HomeLogin} from '#/main/app/layout/components/login'
+import {PlatformForbidden} from '#/main/app/platform/components/forbidden'
+import {PlatformRegistration} from '#/main/app/platform/components/registration'
+import {PlatformSendPassword} from '#/main/app/platform/components/send-password'
+import {PlatformNewPassword} from '#/main/app/platform/components/new-password'
+import {PlatformLogin} from '#/main/app/platform/components/login'
+import {selectors} from '#/main/app/platform/store'
+import {selectors as securitySelectors} from '#/main/app/security/store'
+import {selectors as configSelectors} from '#/main/app/config/store'
 
-const LayoutMain = props => {
+const Platform = () => {
+  const history = useHistory()
+
+  const availableContexts = useSelector(selectors.availableContexts)
+  const unavailable = useSelector(selectors.unavailable)
+  const authenticated = useSelector(securitySelectors.isAuthenticated)
+  const selfRegistration = useSelector(selectors.selfRegistration)
+  const changePassword = useSelector((state) => configSelectors.param(state, 'authentication.login.changePassword'))
+
   const [loaded, setLoaded] = useState(false)
   const [appContexts, setAppContexts] = useState([])
 
@@ -47,15 +59,15 @@ const LayoutMain = props => {
     <>
       <Routes
         redirect={[
-          {from: '/', exact: true, to: '/unavailable', disabled: !props.unavailable},
+          {from: '/', exact: true, to: '/unavailable', disabled: !unavailable},
 
           // disable registration and redirect user if no self registration or the user is already authenticated
-          {from: '/registration', to: '/', disabled: props.selfRegistration || !props.authenticated},
-          {from: '/login', exact: true, to: '/', disabled: !props.authenticated},
+          {from: '/registration', to: '/', disabled: selfRegistration || !authenticated},
+          {from: '/login', exact: true, to: '/', disabled: !authenticated},
 
-          {from: '/', exact: true, to: '/login', disabled: -1 !== props.availableContexts.findIndex(c => 'public' === c.name) || props.authenticated},
-          {from: '/', exact: true, to: '/public', disabled: -1 === props.availableContexts.findIndex(c => 'public' === c.name) || props.authenticated},
-          {from: '/', exact: true, to: '/desktop', disabled: !props.authenticated},
+          {from: '/', exact: true, to: '/login', disabled: -1 !== availableContexts.findIndex(c => 'public' === c.name) || authenticated},
+          {from: '/', exact: true, to: '/public', disabled: -1 === availableContexts.findIndex(c => 'public' === c.name) || authenticated},
+          {from: '/', exact: true, to: '/desktop', disabled: !authenticated},
 
           // for retro-compatibility. DO NOT REMOVE !
           {from: '/home', to: '/public'}
@@ -76,9 +88,9 @@ const LayoutMain = props => {
         ].concat(appContexts.map(appContext => ({
           path: appContext.path,
           onEnter: () => {
-            if (-1 === props.availableContexts.findIndex(availableContext => appContext.name === availableContext.name)) {
+            if (-1 === availableContexts.findIndex(availableContext => appContext.name === availableContext.name)) {
               // context is not enabled
-              props.history.replace('/')
+              history.replace('/')
             }
           },
           render: (routerProps) => {
@@ -92,23 +104,23 @@ const LayoutMain = props => {
         })), [
           {
             path: '/unavailable',
-            disabled: !props.unavailable,
-            component: LayoutForbidden
+            disabled: !unavailable,
+            component: PlatformForbidden
           }, {
             path: '/reset_password',
-            disabled: props.authenticated || !props.changePassword,
-            component: SendPassword
+            disabled: authenticated || !changePassword,
+            component: PlatformSendPassword
           }, {
             path: '/newpassword/:hash',
-            component: NewPassword
+            component: PlatformNewPassword
           }, {
             path: '/login/:forceInternalAccount(account)?',
-            disabled: props.authenticated,
-            component: HomeLogin
+            disabled: authenticated,
+            component: PlatformLogin
           }, {
             path: '/registration',
-            disabled: props.unavailable || !props.selfRegistration || props.authenticated,
-            component: HomeRegistration
+            disabled: unavailable || !selfRegistration || authenticated,
+            component: PlatformRegistration
           }
         ])}
       />
@@ -116,17 +128,6 @@ const LayoutMain = props => {
   )
 }
 
-LayoutMain.propTypes = {
-  history: T.shape({
-    replace: T.func.isRequired
-  }).isRequired,
-  availableContexts: T.array,
-  unavailable: T.bool.isRequired,
-  authenticated: T.bool.isRequired,
-  changePassword: T.bool.isRequired,
-  selfRegistration: T.bool
-}
-
 export {
-  LayoutMain
+  Platform
 }

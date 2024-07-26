@@ -15,7 +15,7 @@ const PageSimple = {
      */
     embedded: T.bool,
 
-    children: T.node.isRequired,
+    children: T.node,
 
     /**
      * Custom data used for document head.

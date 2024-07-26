@@ -30,7 +30,7 @@ class LogResourceEvaluationEnd extends AbstractFunctionalLog
 
             $message = $this->getTranslator()->trans('evaluation.resource_end_message', [
                 '%status%' => ColorHelper::color(
-                    strtolower($this->getTranslator()->trans('evaluation_' . $evaluation->getStatus() . '_short', [], 'evaluation')),
+                    strtolower($this->getTranslator()->trans('evaluation_'.$evaluation->getStatus().'_short', [], 'evaluation')),
                     EvaluationStatus::FAILED === $evaluation->getStatus() ? ColorHelper::DANGER : ColorHelper::SUCCESS
                 ),
                 '%resource%' => $resourceNode->getName(),

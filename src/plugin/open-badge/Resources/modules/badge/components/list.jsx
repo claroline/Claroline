@@ -100,7 +100,10 @@ Badges.propTypes = {
   url: T.oneOfType([T.string, T.array]).isRequired,
   customDefinition: T.arrayOf(T.shape({
     // data list prop types
-  }))
+  })),
+  invalidate: T.func.isRequired,
+  currentUser: T.object,
+  refresher: T.object
 }
 
 Badges.defaultProps = {

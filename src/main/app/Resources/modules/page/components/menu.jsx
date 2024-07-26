@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import isEmpty from 'lodash/isEmpty'
 
@@ -21,7 +21,6 @@ const PageNav = (props) =>  {
             <Button
               {...action}
               className="nav-link"
-              /*icon={undefined}*/
             />
           </li>
         )
@@ -36,33 +35,25 @@ PageNav.propTypes = {
   }))
 }
 
-const PageMenu = (props) => {
-  /*const nav =
-  useEffect(() => {
+const PageMenu = (props) =>
+  <nav className="page-nav ms-auto d-flex gap-3 flex-nowrap" role="presentation">
+    {props.nav instanceof Promise ?
+      <Await for={props.nav} then={(resolvedActions) => (
+        <PageNav actions={resolvedActions} />
+      )} /> :
+      <PageNav actions={props.nav} />
+    }
 
-  })*/
-
-  return (
-    <nav className="page-nav ms-auto d-flex gap-3 flex-nowrap" role="presentation">
-      {props.nav instanceof Promise ?
-        <Await for={props.nav} then={(resolvedActions) => (
-          <PageNav actions={resolvedActions} />
-        )} /> :
-        <PageNav actions={props.nav} />
-      }
-
-      {props.actions &&
-        <Toolbar
-          className="nav nav-underline text-shrink-0 flex-nowrap"
-          buttonName="nav-link"
-          toolbar={props.toolbar}
-          tooltip="bottom"
-          actions={props.actions}
-        />
-      }
-    </nav>
-  )
-}
+    {props.actions &&
+      <Toolbar
+        className="nav nav-underline text-shrink-0 flex-nowrap"
+        buttonName="nav-link"
+        toolbar={props.toolbar}
+        tooltip="bottom"
+        actions={props.actions}
+      />
+    }
+  </nav>
 
 PageMenu.propTypes = {
   /**

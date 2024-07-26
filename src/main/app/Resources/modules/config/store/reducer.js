@@ -8,7 +8,6 @@ import {APP_CONFIG_UPDATE, APP_CONFIG_LOAD} from '#/main/app/config/store/action
 
 const reducer = makeReducer({}, {
   [SECURITY_USER_CHANGE]: (state, action) => {
-    console.log(action)
     if (action.config) {
       return merge({}, state, action.config)
     }

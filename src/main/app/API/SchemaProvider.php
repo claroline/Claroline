@@ -12,30 +12,19 @@ use JVal\Walker;
 
 class SchemaProvider
 {
-    const IGNORE_COLLECTIONS = 'ignore_collections';
+    public const IGNORE_COLLECTIONS = 'ignore_collections';
+    private const BASE_URI = 'https://github.com/claroline/Claroline/tree/master';
 
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var string */
-    private $projectDir;
-    /** @var string */
-    private $baseUri;
-
-    public function __construct(string $projectDir, SerializerProvider $serializer)
-    {
-        $this->projectDir = $projectDir;
-        $this->baseUri = 'https://github.com/claroline/Claroline/tree/master';
-        $this->serializer = $serializer;
+    public function __construct(
+        private readonly string $projectDir,
+        private readonly SerializerProvider $serializer
+    ) {
     }
 
     /**
      * Returns the class handled by the schema provider.
-     *
-     * @param mixed $serializer
-     *
-     * @return string
      */
-    public function getSchemaHandledClass($serializer)
+    public function getSchemaHandledClass(object $serializer): string
     {
         if (method_exists($serializer, 'getClass')) {
             // 1. the serializer implements the getClass method, so we just call it
@@ -54,7 +43,7 @@ class SchemaProvider
     /**
      * Gets a registered serializer instance.
      */
-    public function get(string $class)
+    public function get(string $class): ?object
     {
         foreach ($this->serializer->all() as $serializer) {
             if ($class === $this->getSchemaHandledClass($serializer)) {
@@ -62,7 +51,7 @@ class SchemaProvider
             }
         }
 
-        //no exception to not break everything atm
+        // no exception to not break everything atm
         return null;
     }
 
@@ -76,10 +65,6 @@ class SchemaProvider
 
     /**
      * Get the identifier list from the json schema.
-     *
-     * @param string $class
-     *
-     * @return array
      */
     public function getIdentifiers(string $class): array
     {
@@ -97,19 +82,15 @@ class SchemaProvider
 
     /**
      * Gets the json schema of a class.
-     *
-     * @param string $class
-     *
-     * @return \stdClass|null
      */
-    public function getSchema(string $class, array $options = [])
+    public function getSchema(string $class, array $options = []): ?\stdClass
     {
         $serializer = $this->get($class);
 
         if (method_exists($serializer, 'getSchema')) {
             $url = $serializer->getSchema();
             $path = explode('/', $url);
-            array_shift($path); //that one is for the #, we have no implementation for plugins yet
+            array_shift($path); // that one is for the #, we have no implementation for plugins yet
             $first = array_shift($path);
             $sec = array_shift($path);
 
@@ -135,7 +116,7 @@ class SchemaProvider
     /**
      * Gets the json schema examples.
      */
-    public function getSamples(string $class, array $options = []): array
+    public function getSamples(string $class): array
     {
         $serializer = $this->get($class);
         $samples = [];
@@ -145,7 +126,7 @@ class SchemaProvider
 
             foreach ($iterator as $file) {
                 if ($file->isFile()) {
-                    $originalData = \file_get_contents($file->getPathName());
+                    $originalData = file_get_contents($file->getPathName());
                     $samples[basename($file)] = json_decode($originalData, true);
                 }
             }
@@ -156,12 +137,8 @@ class SchemaProvider
 
     /**
      * Loads a json schema.
-     *
-     * @param string $path
-     *
-     * @return \stdClass
      */
-    public function loadSchema($path)
+    public function loadSchema(string $path): \stdClass
     {
         $schema = Utils::LoadJsonFromFile($path);
 
@@ -169,8 +146,8 @@ class SchemaProvider
             return $this->resolveRef($uri);
         };
 
-        //this is the resolution of the $ref thingy with Jval classes
-        //resolver can take a Closure parameter to change the $ref value
+        // this is the resolution of the $ref thingy with Jval classes
+        // resolver can take a Closure parameter to change the $ref value
         $resolver = new Resolver();
         $resolver->setPreFetchHook($hook);
         $walker = new Walker(new Registry(), $resolver);
@@ -196,14 +173,10 @@ class SchemaProvider
 
     /**
      * Converts distant schema URI to a local one to load schemas from source code.
-     *
-     * @param string $uri
-     *
-     * @return string mixed
      */
-    private function resolveRef($uri)
+    private function resolveRef(string $uri): string
     {
-        $uri = str_replace($this->baseUri, '', $uri);
+        $uri = str_replace(self::BASE_URI, '', $uri);
         $schemaDir = realpath($this->projectDir);
 
         return $schemaDir.'/'.$uri;

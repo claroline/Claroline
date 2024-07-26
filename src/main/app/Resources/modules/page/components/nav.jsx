@@ -7,18 +7,18 @@ import {Button} from '#/main/app/action/components/button'
 import {CALLBACK_BUTTON} from '#/main/app/buttons'
 
 import {actions as contextActions, selectors as contextSelectors} from '#/main/app/context/store'
-import {AppBrand} from '#/main/app/layout/components/brand'
 import {PageMenu} from '#/main/app/page/components/menu'
 
 const MenuButton = () => {
   const dispatch = useDispatch()
   const menuOpened = useSelector(contextSelectors.menuOpened)
+
   return (
     <Button
       type={CALLBACK_BUTTON}
       className="app-menu-toggle position-relative"
       label={trans(menuOpened ? 'hide-menu' : 'show-menu', {}, 'actions')}
-      icon={'fa fa-bars'/*menuOpened ? 'fa fa-fw fa-chevron-left' : 'fa fa-fw fa-chevron-right'*/}
+      icon="fa fa-bars"
       tooltip="bottom"
       callback={() => dispatch(contextActions.toggleMenu())}
     />

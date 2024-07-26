@@ -195,7 +195,7 @@ class CommunityTool extends AbstractTool
         // only grab platform options we want
         return [
             'registration' => $registration ?? [],
-            'profile' => $this->config->getParameter('profile')  ?? [],
+            'profile' => $this->config->getParameter('profile') ?? [],
             'community' => $this->config->getParameter('community') ?? [],
         ];
     }

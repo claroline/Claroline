@@ -1,6 +1,7 @@
 /**
- * Resource Parameters modal.
- * Displays a form to configure the resource.
+ * Platform search modal.
+ * It displays a search field to retrieve various entities (workspaces, resources, users, etc.).
+ * It also displays the user browse history (local storage)
  */
 
 import {registry} from '#/main/app/modals/registry'

@@ -46,7 +46,7 @@ const WorkspaceEditorOverview = () =>
             name: 'data.meta.descriptionHtml',
             label: trans('description_long'),
             type: 'html',
-            help: trans('Décrivez de manière détaillée le contenu de votre espace d\'activités, la travail attendu par vos utilisateurs (La description détaillée est affichée sur la vue "À propos" à la place de la description courte).'),
+            help: trans('Décrivez de manière détaillée le contenu de votre espace d\'activités, la travail attendu par vos utilisateurs (La description détaillée est affichée sur la vue "À propos" à la place de la description courte).')
           }, {
             name: 'data.tags',
             label: trans('tags'),

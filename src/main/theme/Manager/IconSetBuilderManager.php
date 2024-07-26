@@ -29,7 +29,7 @@ class IconSetBuilderManager
         private readonly TempFileManager $tempManager,
         private readonly ArchiveManager $archiveManager
     ) {
-        $this->filesystem = new FileSystem();
+        $this->filesystem = new Filesystem();
     }
 
     public function zip(string $setName): string

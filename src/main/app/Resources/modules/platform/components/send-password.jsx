@@ -6,13 +6,13 @@ import {PageSimple} from '#/main/app/page/components/simple'
 
 import {SendPasswordForm} from '#/main/app/security/password/send/containers/send'
 
-const SendPassword = () =>
+const PlatformSendPassword = () =>
   <PageSimple
-    className="page auth-page login-page main"
+    className="auth-page login-page"
   >
     <SendPasswordForm/>
   </PageSimple>
 
 export {
-  SendPassword
+  PlatformSendPassword
 }

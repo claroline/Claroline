@@ -2,12 +2,11 @@
 
 namespace Claroline\OpenBadgeBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;

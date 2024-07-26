@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux'
 import {selectors as configSelectors} from '#/main/app/config/store'
 import {asset} from '#/main/app/config'
 
-const AppBrand = props => {
+const PlatformBrand = props => {
   const brand = useSelector((state) => configSelectors.param(state, 'theme.logo'))
   const name = useSelector((state) => configSelectors.param(state, 'name'))
 
@@ -23,10 +23,10 @@ const AppBrand = props => {
   return null
 }
 
-AppBrand.propTypes = {
+PlatformBrand.propTypes = {
   className: T.string
 }
 
 export {
-  AppBrand
+  PlatformBrand
 }
