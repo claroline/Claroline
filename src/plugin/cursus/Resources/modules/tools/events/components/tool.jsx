@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 import {Course} from '#/plugin/cursus/course/containers/main'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {CourseCreation} from '#/plugin/cursus/course/components/creation'
-import {CourseEdit} from '#/plugin/cursus/course/components/edit'
+import {CourseEditor} from '#/plugin/cursus/course/editor/containers/main'
 
 import {Tool} from '#/main/core/tool'
 
@@ -62,7 +62,7 @@ const EventsTool = (props) =>
       }, {
         path: '/course/:courseSlug/edit',
         onEnter: () => props.openForm(props.course.slug),
-        component: CourseEdit
+        component: CourseEditor
       }, {
         path: '/course',
         onEnter: () => {

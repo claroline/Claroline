@@ -7,5 +7,12 @@
   "validate_registration": "Validate registration",
   "send_invitation": "Send an invitation",
   "open-training": "Open training",
-  "move-pending": "Move on pending list"
+  "move-pending": "Move on pending list",
+
+  "archive_training": "Archive training",
+  "archive_training_help": "Hide the training from the list of active trainings.",
+  "restore_training": "Restore training",
+  "restore_training_help": "Show the training in the list of active trainings.",
+  "delete_training": "Delete training",
+  "delete_training_help": "Permanently delete the training."
 }

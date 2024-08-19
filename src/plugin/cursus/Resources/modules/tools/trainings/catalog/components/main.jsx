@@ -6,7 +6,7 @@ import {Routes} from '#/main/app/router'
 import {route} from '#/plugin/cursus/routing'
 import {Course} from '#/plugin/cursus/course/containers/main'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
-import {CourseEdit} from '#/plugin/cursus/course/components/edit'
+import {CourseEditor} from '#/plugin/cursus/course/editor/containers/main'
 import {CatalogList} from '#/plugin/cursus/tools/trainings/catalog/components/list'
 import {CourseCreation} from '#/plugin/cursus/course/components/creation'
 
@@ -28,7 +28,7 @@ const CatalogMain = (props) =>
       }, {
         path: '/:slug/edit',
         onEnter: (params = {}) => props.openForm(params.slug),
-        component: CourseEdit
+        component: CourseEditor
       }, {
         path: '/:slug',
         onEnter: (params = {}) => props.open(params.slug),

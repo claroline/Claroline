@@ -132,6 +132,7 @@ class CourseSerializer
                 'edit' => $this->authorization->isGranted('EDIT', $course),
                 'delete' => $this->authorization->isGranted('DELETE', $course),
                 'register' => $this->authorization->isGranted('REGISTER', $course),
+                'administrate' => $this->authorization->isGranted('ADMINISTRATE', $course),
             ];
         }
 
