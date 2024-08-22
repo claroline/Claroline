@@ -1,13 +1,14 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {trans} from '#/main/app/intl'
 import {Tool} from '#/main/core/tool'
+import {LINK_BUTTON} from '#/main/app/buttons'
 
+import {EventMain} from '#/plugin/cursus/tools/trainings/event/containers/main'
 import {CatalogMain} from '#/plugin/cursus/tools/trainings/catalog/containers/main'
 import {SessionMain} from '#/plugin/cursus/tools/trainings/session/containers/main'
-import {EventMain} from '#/plugin/cursus/tools/trainings/event/containers/main'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {trans} from '#/main/app/intl'
+import {TrainingsEditor} from '#/plugin/cursus/tools/trainings/editor/containers/main'
 
 const TrainingsTool = (props) =>
   <Tool
@@ -59,6 +60,7 @@ const TrainingsTool = (props) =>
         component: EventMain
       }
     ]}
+    editor={TrainingsEditor}
   />
 
 TrainingsTool.propTypes = {

@@ -11,8 +11,12 @@
 
   "archive_training": "Archiver la formation",
   "archive_training_help": "Permet de masquer la formation de la liste des formations actives.",
+  "archive_training_confirm_title": "{1} Archivage d'une formation | [2,Inf[ Archivage de plusieurs formations",
+  "archive_training_confirm_message": "{1} Êtes-vous sûr de vouloir archiver cette formation ? | [2,Inf[ Êtes-vous sûr de vouloir archiver ces %count% formations ?",
+
   "restore_training": "Restaurer la formation",
-  "restore_training_help": "Permet de réafficher la formation dans la liste des formations actives.",
+  "restore_training_help": "Permet de restaurer la formation dans la liste des formations actives.",
+
   "delete_training": "Supprimer la formation",
   "delete_training_help": "Permet de supprimer définitivement la formation."
 }

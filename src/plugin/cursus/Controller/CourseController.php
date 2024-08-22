@@ -125,6 +125,81 @@ class CourseController extends AbstractCrudController
     }
 
     /**
+     * @Route("/list/archived", name="apiv2_cursus_course_list_archived", methods={"GET"})
+     */
+    public function listArchivedAction(Request $request): JsonResponse
+    {
+        $params = $request->query->all();
+        $params['hiddenFilters'] = [
+            'archived' => true,
+        ];
+
+        return new JsonResponse(
+            $this->crud->list(Course::class, $params)
+        );
+    }
+
+    /**
+     * @Route("/archive", name="apiv2_cursus_course_archive", methods={"POST"})
+     */
+    public function archiveAction(Request $request): JsonResponse
+    {
+        $processed = [];
+
+        $this->om->startFlushSuite();
+
+        $data = json_decode($request->getContent(), true);
+
+        /** @var Course[] $courses */
+        $courses = $this->om->getRepository(Course::class)->findBy([
+            'uuid' => $data['ids'],
+        ]);
+
+        foreach ($courses as $course) {
+            if ($this->authorization->isGranted('EDIT', $course) && !$course->isArchived()) {
+                $course->setArchived(true);
+                $processed[] = $course;
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (Course $course) {
+            return $this->serializer->serialize($course);
+        }, $processed));
+    }
+
+    /**
+     * @Route("/restore", name="apiv2_cursus_course_restore", methods={"POST"})
+     */
+    public function restoreAction(Request $request): JsonResponse
+    {
+        $processed = [];
+
+        $this->om->startFlushSuite();
+
+        $data = json_decode($request->getContent(), true);
+
+        /** @var Course[] $courses */
+        $courses = $this->om->getRepository(Course::class)->findBy([
+            'uuid' => $data['ids'],
+        ]);
+
+        foreach ($courses as $course) {
+            if ($this->authorization->isGranted('EDIT', $course) && $course->isArchived()) {
+                $course->setArchived(false);
+                $processed[] = $course;
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (Course $course) {
+            return $this->serializer->serialize($course);
+        }, $processed));
+    }
+
+    /**
      * @Route("/{slug}/open", name="apiv2_cursus_course_open", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"slug": "slug"}})

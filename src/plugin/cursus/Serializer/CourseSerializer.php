@@ -110,6 +110,7 @@ class CourseSerializer
                 'updated' => DateNormalizer::normalize($course->getUpdatedAt()),
                 'duration' => $course->getDefaultSessionDuration(),
                 'public' => $course->isPublic(),
+                'archived' => $course->isArchived(),
             ],
             'opening' => [
                 'session' => $course->getSessionOpening(),

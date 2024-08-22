@@ -26,6 +26,9 @@
     "course_type_workspace": "Utiliser le même espace d'activités pour toutes les sessions de la formation.",
     "course_workspaces_help": "Gérer les paramètres d'espaces d'activités liés à votre formation.",
 
+    "archived_trainings": "Formations archivées",
+    "archived_trainings_help": "Gérez les formations archivées.",
+
 
     "my_courses": "Mes formations",
     "new_course": "Nouvelle formation",
