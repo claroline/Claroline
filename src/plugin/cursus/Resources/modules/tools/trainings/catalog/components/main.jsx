@@ -12,7 +12,7 @@ import {CourseCreation} from '#/plugin/cursus/course/components/creation'
 
 const CatalogMain = (props) =>
   <Routes
-    path={props.path}
+    path={props.path+'/course'}
     routes={[
       {
         path: '/',
@@ -26,11 +26,11 @@ const CatalogMain = (props) =>
         disabled: !props.canEdit,
         component: CourseCreation
       }, {
-        path: '/course/:slug/edit',
+        path: '/:slug/edit',
         onEnter: (params = {}) => props.openForm(params.slug),
         component: CourseEdit
       }, {
-        path: '/course/:slug',
+        path: '/:slug',
         onEnter: (params = {}) => props.open(params.slug),
         render: (params = {}) => (
           <Course
