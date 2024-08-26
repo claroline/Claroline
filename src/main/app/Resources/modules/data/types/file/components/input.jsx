@@ -146,7 +146,7 @@ implementPropTypes(FileComponent, DataInputTypes, {
   types: [],
   multiple: false,
   autoUpload: true,
-  uploadUrl: ['apiv2_file_upload']
+  uploadUrl: ['apiv2_public_file_upload']
 })
 
 const FileInput = connect(

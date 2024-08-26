@@ -39,7 +39,7 @@ actions.fetchCurrentEvaluation = () => (dispatch, getState) => {
 
 actions.checkAccessCode = (workspace, code) => (dispatch) => dispatch({
   [API_REQUEST] : {
-    url: ['claro_workspace_unlock', {id: workspace.id}],
+    url: ['apiv2_workspace_unlock', {id: workspace.id}],
     request: {
       method: 'POST',
       body: JSON.stringify({code: code})

@@ -20,14 +20,11 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/task")
+ * @Route("/task", name="apiv2_task_")
  */
 class TaskController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
-
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization
@@ -35,12 +32,12 @@ class TaskController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Task::class;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'task';
     }
@@ -48,7 +45,7 @@ class TaskController extends AbstractCrudController
     /**
      * Marks a list of tasks as done.
      *
-     * @Route("/done", name="apiv2_task_mark_done", methods={"PUT"})
+     * @Route("/done", name="mark_done", methods={"PUT"})
      */
     public function markDoneAction(Request $request): JsonResponse
     {
@@ -71,7 +68,7 @@ class TaskController extends AbstractCrudController
     /**
      * Marks a list of tasks as to do.
      *
-     * @Route("/todo", name="apiv2_task_mark_todo", methods={"PUT"})
+     * @Route("/todo", name="mark_todo", methods={"PUT"})
      */
     public function markTodoAction(Request $request): JsonResponse
     {

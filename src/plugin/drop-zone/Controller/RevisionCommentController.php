@@ -16,16 +16,16 @@ use Claroline\DropZoneBundle\Entity\RevisionComment;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/revisioncomment")
+ * @Route("/revisioncomment", name="apiv2_revisioncomment_")
  */
 class RevisionCommentController extends AbstractCrudController
 {
-    public function getName(): string
+    public static function getName(): string
     {
         return 'revisioncomment';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return RevisionComment::class;
     }

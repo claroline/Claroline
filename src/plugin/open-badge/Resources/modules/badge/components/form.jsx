@@ -21,8 +21,8 @@ const BadgeFormComponent = (props) =>
     name={props.name}
     buttons={true}
     target={(badge, isNew) => isNew ?
-      ['apiv2_badge-class_create'] :
-      ['apiv2_badge-class_update', {id: props.badge.id}]
+      ['apiv2_badge_create'] :
+      ['apiv2_badge_update', {id: props.badge.id}]
     }
     cancel={{
       type: LINK_BUTTON,

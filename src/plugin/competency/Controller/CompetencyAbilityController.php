@@ -25,12 +25,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CompetencyAbilityController extends AbstractCrudController
 {
-    public function getName(): string
+    public static function getName(): string
     {
         return 'competency_ability';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return CompetencyAbility::class;
     }

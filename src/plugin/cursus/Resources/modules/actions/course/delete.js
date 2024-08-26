@@ -37,7 +37,7 @@ export default (courses, refresher) => {
       ]
     },
     request: {
-      url: url(['apiv2_cursus_course_delete_bulk'], {ids: processable.map(course => course.id)}),
+      url: url(['apiv2_cursus_course_delete'], {ids: processable.map(course => course.id)}),
       request: {
         method: 'DELETE'
       },

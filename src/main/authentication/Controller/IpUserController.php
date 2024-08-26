@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/ip_user")
+ * @Route("/ip_user", name="apiv2_ip_user_")
  */
 class IpUserController extends AbstractCrudController
 {
@@ -29,12 +29,12 @@ class IpUserController extends AbstractCrudController
     ) {
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return IpUser::class;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'ip_user';
     }

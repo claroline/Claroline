@@ -51,7 +51,7 @@ const AssertionDetailsComponent = (props) =>
                 className="component-container"
                 name={selectors.STORE_NAME + '.badges.assertion.evidences'}
                 fetch={{
-                  url: ['apiv2_assertion_evidences', {assertion: props.assertion.id}],
+                  url: ['apiv2_badge_assertion_evidences', {assertion: props.assertion.id}],
                   autoload: props.assertion.id && !props.new
                 }}
                 primaryAction={(row) => ({
@@ -63,7 +63,7 @@ const AssertionDetailsComponent = (props) =>
                   }]
                 })}
                 delete={{
-                  url: ['apiv2_evidence_delete_bulk']
+                  url: ['apiv2_badge_evidence_delete']
                 }}
                 definition={[
                   {

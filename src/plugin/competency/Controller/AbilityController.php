@@ -39,12 +39,12 @@ class AbilityController extends AbstractCrudController
         $this->manager = $manager;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'ability';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Ability::class;
     }

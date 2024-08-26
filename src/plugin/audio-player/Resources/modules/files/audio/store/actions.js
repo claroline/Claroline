@@ -31,7 +31,7 @@ actions.saveSection = (sections, section, isNew) => ({
 
 actions.deleteSection = (sections, sectionId) => ({
   [API_REQUEST]: {
-    url: ['apiv2_audioresourcesection_delete_bulk', {ids: [sectionId]}],
+    url: ['apiv2_audioresourcesection_delete', {ids: [sectionId]}],
     request: {
       method: 'DELETE'
     },
@@ -49,7 +49,7 @@ actions.deleteSection = (sections, sectionId) => ({
 
 actions.saveSectionComment = (sections, sectionId, comment) => ({
   [API_REQUEST]: {
-    url: comment.id ? ['apiv2_audioresourcesectioncomment_update', {id: comment.id}] : ['apiv2_audioresourcesectioncomment_create'],
+    url: comment.id ? ['apiv2_resource_audio_comment_update', {id: comment.id}] : ['apiv2_resource_audio_comment_create'],
     request: {
       method: comment.id ? 'PUT' : 'POST',
       body: JSON.stringify(comment)
@@ -68,7 +68,7 @@ actions.saveSectionComment = (sections, sectionId, comment) => ({
 
 actions.deleteSectionComment = (sections, sectionId, commentId) => ({
   [API_REQUEST]: {
-    url: ['apiv2_audioresourcesectioncomment_delete_bulk', {ids: [commentId]}],
+    url: ['apiv2_resource_audio_comment_delete', {ids: [commentId]}],
     request: {
       method: 'DELETE'
     },

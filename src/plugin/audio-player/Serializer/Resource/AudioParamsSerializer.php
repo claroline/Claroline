@@ -9,10 +9,12 @@ class AudioParamsSerializer
 {
     use SerializerTrait;
 
-    /**
-     * @return array
-     */
-    public function serialize(AudioParams $audioParams, array $options = [])
+    public function getClass(): string
+    {
+        return AudioParams::class;
+    }
+
+    public function serialize(AudioParams $audioParams, array $options = []): array
     {
         return [
             'id' => $audioParams->getUuid(),
@@ -22,12 +24,7 @@ class AudioParamsSerializer
         ];
     }
 
-    /**
-     * @param array $data
-     *
-     * @return AudioParams
-     */
-    public function deserialize($data, AudioParams $audioParams, array $options = [])
+    public function deserialize(array $data, AudioParams $audioParams, array $options = []): AudioParams
     {
         $this->sipe('sectionsType', 'setSectionsType', $data, $audioParams);
         $this->sipe('rateControl', 'setRateControl', $data, $audioParams);

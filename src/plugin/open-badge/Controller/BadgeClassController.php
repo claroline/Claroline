@@ -29,7 +29,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/badge-class")
+ * @Route("/badge", name="apiv2_badge_")
  */
 class BadgeClassController extends AbstractCrudController
 {
@@ -44,18 +44,18 @@ class BadgeClassController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
-        return 'badge-class';
+        return 'badge';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return BadgeClass::class;
     }
 
     /**
-     * @Route("/enable", name="apiv2_badge-class_enable", methods={"PUT"})
+     * @Route("/enable", name="enable", methods={"PUT"})
      */
     public function enableAction(Request $request): JsonResponse
     {
@@ -77,7 +77,7 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @Route("/disable", name="apiv2_badge-class_disable", methods={"PUT"})
+     * @Route("/disable", name="disable", methods={"PUT"})
      */
     public function disableAction(Request $request): JsonResponse
     {
@@ -99,7 +99,7 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @Route("/workspace/{workspace}", name="apiv2_badge-class_workspace_badge_list", methods={"GET"})
+     * @Route("/workspace/{workspace}", name="workspace_list", methods={"GET"})
      *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
@@ -114,7 +114,7 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{badge}/users", name="apiv2_badge-class_assertion", methods={"GET"})
+     * @Route("/{badge}/users", name="list_assertions", methods={"GET"})
      *
      * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */
@@ -135,7 +135,7 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{badge}/users/add", name="apiv2_badge-class_add_users", methods={"PATCH"})
+     * @Route("/{badge}/users/add", name="add_users", methods={"PATCH"})
      *
      * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */
@@ -155,7 +155,7 @@ class BadgeClassController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{badge}/users/remove", name="apiv2_badge-class_remove_users", methods={"DELETE"})
+     * @Route("/{badge}/users/remove", name="remove_users", methods={"DELETE"})
      *
      * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */
@@ -177,7 +177,7 @@ class BadgeClassController extends AbstractCrudController
     /**
      * Searches for users which meet the badge rules and grant them the badge.
      *
-     * @Route("/{badge}/users/recalculate", name="apiv2_badge-class_recalculate_users", methods={"POST"})
+     * @Route("/{badge}/users/recalculate", name="recalculate", methods={"POST"})
      *
      * @EXT\ParamConverter("badge", class="Claroline\OpenBadgeBundle\Entity\BadgeClass", options={"mapping": {"badge": "uuid"}})
      */

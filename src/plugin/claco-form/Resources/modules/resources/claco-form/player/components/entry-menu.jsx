@@ -32,7 +32,7 @@ const EntryMenuComponent = props =>
         type={CALLBACK_BUTTON}
         icon="fa fa-fw fa-random"
         label={trans('random_entry', {}, 'clacoform')}
-        callback={() => fetch(url(['claro_claco_form_entry_random', {clacoForm: props.clacoFormId}]), {
+        callback={() => fetch(url(['apiv2_clacoformentry_random', {clacoForm: props.clacoFormId}]), {
           method: 'GET' ,
           credentials: 'include'
         })

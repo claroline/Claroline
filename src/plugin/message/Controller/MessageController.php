@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/message")
+ * @Route("/message", name="apiv2_message_")
  */
 class MessageController extends AbstractCrudController
 {
@@ -37,13 +37,18 @@ class MessageController extends AbstractCrudController
     ) {
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'message';
     }
 
+    public static function getClass(): string
+    {
+        return Message::class;
+    }
+
     /**
-     * @Route("/received", name="apiv2_message_received", methods={"GET"})
+     * @Route("/received", name="received", methods={"GET"})
      *
      * @ApiDoc(
      *     description="Returns the list of received message for the current connected user",
@@ -66,7 +71,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/removed", name="apiv2_message_removed", methods={"GET"})
+     * @Route("/removed", name="removed", methods={"GET"})
      *
      * @ApiDoc(
      *     description="Returns the list of removed message for the current connected user",
@@ -89,7 +94,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/sent", name="apiv2_message_sent", methods={"GET"})
+     * @Route("/sent", name="sent", methods={"GET"})
      *
      * @ApiDoc(
      *     description="Returns the list of sent message for the current connected user",
@@ -112,7 +117,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/softdelete", name="apiv2_message_soft_delete", methods={"PUT"})
+     * @Route("/softdelete", name="soft_delete", methods={"PUT"})
      *
      * @ApiDoc(
      *     description="Soft delete an array of messages.",
@@ -137,7 +142,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/remove", name="apiv2_message_hard_delete", methods={"DELETE"})
+     * @Route("/remove", name="hard_delete", methods={"DELETE"})
      *
      * @ApiDoc(
      *     description="Hard delete an array of messages.",
@@ -160,7 +165,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/restore", name="apiv2_message_restore", methods={"PUT"})
+     * @Route("/restore", name="restore", methods={"PUT"})
      *
      * @ApiDoc(
      *     description="Restore a list of messages for the current user.",
@@ -185,7 +190,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/read", name="apiv2_message_read", methods={"PUT"})
+     * @Route("/read", name="read", methods={"PUT"})
      *
      * @ApiDoc(
      *     description="Read an array of message for the current user.",
@@ -212,7 +217,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/unread", name="apiv2_message_unread", methods={"PUT"})
+     * @Route("/unread", name="unread", methods={"PUT"})
      *
      * @ApiDoc(
      *     description="Unread an array of message for the current user.",
@@ -239,7 +244,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/root/{id}", name="apiv2_message_root", methods={"GET"})
+     * @Route("/root/{id}", name="root", methods={"GET"})
      *
      * @ApiDoc(
      *     description="Get the fist message.",
@@ -283,11 +288,6 @@ class MessageController extends AbstractCrudController
         return array_merge(parent::getOptions(), [
             'get' => [Options::IS_RECURSIVE],
         ]);
-    }
-
-    public function getClass(): string
-    {
-        return Message::class;
     }
 
     protected function getDefaultHiddenFilters(): array

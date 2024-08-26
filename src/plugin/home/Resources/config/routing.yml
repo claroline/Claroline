@@ -1,7 +1,6 @@
 # JSON API
-claroline_home_api:
+claro_home:
   resource: "@ClarolineHomeBundle/Controller/"
-  prefix: apiv2
-  type: api
+  type: annotation
   options:
     expose: true

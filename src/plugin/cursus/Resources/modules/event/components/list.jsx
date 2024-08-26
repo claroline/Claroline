@@ -83,7 +83,7 @@ const Events = (props) =>
       }
     ].concat(props.customActions(rows))}
     delete={{
-      url: ['apiv2_cursus_event_delete_bulk'],
+      url: ['apiv2_cursus_event_delete'],
       displayed: (rows) => -1 !== rows.findIndex(row => hasPermission('delete', row))
     }}
     definition={[

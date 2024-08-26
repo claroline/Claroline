@@ -127,7 +127,7 @@ const Message = (props) =>
     level={2}
     title={props.new ? trans('connection_message_creation') : trans('connection_message_edition')}
     name={selectors.STORE_NAME + '.current'}
-    target={(message, isNew) => isNew ? ['apiv2_connectionmessage_create'] : ['apiv2_connectionmessage_update', {id: message.id}]}
+    target={(message, isNew) => isNew ? ['apiv2_connection_message_create'] : ['apiv2_connection_message_update', {id: message.id}]}
     buttons={true}
     disabled={props.message.locked}
     cancel={{

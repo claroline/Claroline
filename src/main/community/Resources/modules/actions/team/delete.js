@@ -37,7 +37,7 @@ export default (teams, refresher) => {
       ]
     },
     request: {
-      url: url(['apiv2_team_delete_bulk'], {ids: processable.map(team => team.id)}),
+      url: url(['apiv2_team_delete'], {ids: processable.map(team => team.id)}),
       request: {
         method: 'DELETE'
       },

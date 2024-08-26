@@ -69,7 +69,7 @@ actions.openSubject = (id) => (dispatch, getState) => {
 
 actions.deleteSubject = (id, push, path) => ({
   [API_REQUEST]: {
-    url: ['apiv2_forum_subject_delete_bulk', {ids: id}],
+    url: ['apiv2_forum_subject_delete', {ids: id}],
     request: {
       method: 'DELETE'
     },
@@ -167,7 +167,7 @@ actions.unFlagSubject = (subject) => ({
 actions.createMessage = (subjectId, content, moderation) => (dispatch, getState) => {
   dispatch({
     [API_REQUEST]: {
-      url: ['claroline_forum_subject_createmessage', {id: subjectId}],
+      url: ['apiv2_forum_subject_create_message', {id: subjectId}],
       request: {
         method: 'POST',
         body: JSON.stringify({
@@ -192,7 +192,7 @@ actions.createMessage = (subjectId, content, moderation) => (dispatch, getState)
 actions.createComment = (messageId, comment, moderation) => (dispatch, getState) => {
   dispatch({
     [API_REQUEST]: {
-      url: ['claroline_forum_message_createcomment', {id: messageId}],
+      url: ['apiv2_forum_message_create_comment', {id: messageId}],
       request: {
         method: 'POST',
         body: JSON.stringify({

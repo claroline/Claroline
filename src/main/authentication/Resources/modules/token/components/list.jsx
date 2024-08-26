@@ -16,7 +16,7 @@ const TokenList = (props) =>
       autoload: true
     }}
     delete={{
-      url: ['apiv2_apitoken_delete_bulk'],
+      url: ['apiv2_apitoken_delete'],
       disabled: (rows) => -1 === rows.findIndex(row => hasPermission('delete', row) && !get(rows[0], 'restrictions.locked', false))
     }}
     definition={[

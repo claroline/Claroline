@@ -1,6 +1,5 @@
 claro_example:
     resource: "@ClarolineExampleBundle/Controller/"
-    prefix: apiv2
-    type: api
+    type: annotation
     options:
         expose: true

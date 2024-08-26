@@ -20,7 +20,7 @@ actions.fetchTab = (tab) => (dispatch) => {
     return dispatch({
       [API_REQUEST]: {
         silent: true,
-        url: ['claro_home_tab_open', {id: tab.id}],
+        url: ['apiv2_home_tab_open', {id: tab.id}],
         before: () => dispatch(actions.setTabLoaded(false)),
         success: (response) => dispatch(actions.loadTab(response.homeTab, response.managed, response.accessErrors || [])),
         error: (response, status) => {
@@ -42,7 +42,7 @@ actions.dismissRestrictions = makeActionCreator(TAB_RESTRICTIONS_DISMISS)
 
 actions.checkAccessCode = (tab, code) => (dispatch) => dispatch({
   [API_REQUEST] : {
-    url: ['claro_home_tab_unlock', {id: tab.id}],
+    url: ['apiv2_home_tab_unlock', {id: tab.id}],
     request: {
       method: 'POST',
       body: JSON.stringify({code: code})

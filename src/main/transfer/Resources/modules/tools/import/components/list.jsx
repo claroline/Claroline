@@ -38,12 +38,12 @@ const ImportList = props =>
       })}
       fetch={{
         url: !isEmpty(props.workspace) ?
-          ['apiv2_workspace_transfer_import_list', {workspaceId: props.workspace.id}] :
+          ['apiv2_transfer_import_workspace_list', {workspaceId: props.workspace.id}] :
           ['apiv2_transfer_import_list'],
         autoload: true
       }}
       delete={{
-        url: ['apiv2_transfer_import_delete_bulk'],
+        url: ['apiv2_transfer_import_delete'],
         disabled: (rows) => -1 === rows.findIndex(row => hasPermission('delete', row))
       }}
       definition={[

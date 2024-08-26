@@ -7,16 +7,16 @@ use Claroline\ExampleBundle\Entity\Example;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/example")
+ * @Route("/example", name="apiv2_example_")
  */
 class ExampleController extends AbstractCrudController
 {
-    public function getName(): string
+    public static function getName(): string
     {
         return 'example';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Example::class;
     }

@@ -29,7 +29,11 @@ class SectionCommentVoter extends AbstractVoter
                 return $this->checkEdit($token, $object);
         }
 
-        return $this->isGranted($attributes, $object->getSection()->getResourceNode());
+        if ($this->isGranted($attributes, $object->getSection()->getResourceNode())) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
     public function getClass(): string

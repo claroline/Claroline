@@ -1,5 +1,6 @@
 services:
     Claroline\PeerTubeBundle\Controller\VideoController:
+        lazy: true
         public: true # because controller
         arguments:
             - '@security.authorization_checker'

@@ -32,7 +32,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/assertion")
+ * @Route("/badge_assertion", name="apiv2_badge_assertion_")
  */
 class AssertionController extends AbstractCrudController
 {
@@ -48,18 +48,23 @@ class AssertionController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Assertion::class;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
-        return 'badge-assertion';
+        return 'badge_assertion';
+    }
+
+    public function getIgnore(): array
+    {
+        return ['create', 'update', 'list', 'deleteBulk'];
     }
 
     /**
-     * @Route("/current-user/{workspace}", name="apiv2_assertion_current_user_list", methods={"GET"})
+     * @Route("/current-user/{workspace}", name="current_user_list", methods={"GET"})
      */
     public function listMyAssertionsAction(Request $request, ?string $workspace = null): JsonResponse
     {
@@ -85,7 +90,7 @@ class AssertionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{assertion}/evidences", name="apiv2_assertion_evidences", methods={"GET"})
+     * @Route("/{assertion}/evidences", name="evidences", methods={"GET"})
      *
      * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
@@ -104,7 +109,7 @@ class AssertionController extends AbstractCrudController
     /**
      * Downloads pdf version of assertion.
      *
-     * @Route("/{assertion}/pdf/download", name="apiv2_assertion_pdf_download", methods={"GET"})
+     * @Route("/{assertion}/pdf/download", name="pdf_download", methods={"GET"})
      *
      * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
@@ -146,7 +151,7 @@ class AssertionController extends AbstractCrudController
     /**
      * Transfer badges from one user to another.
      *
-     * @Route("/transfer/{userFrom}/{userTo}/", name="apiv2_badge_transfer", methods={"POST"})
+     * @Route("/transfer/{userFrom}/{userTo}/", name="transfer", methods={"POST"})
      *
      * @EXT\ParamConverter("userFrom", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userFrom": "uuid"}})
      * @EXT\ParamConverter("userTo", class="Claroline\CoreBundle\Entity\User", options={"mapping": {"userTo": "uuid"}})

@@ -12,8 +12,8 @@
 namespace Claroline\CommunityBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
-use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
+use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
+use Claroline\CoreBundle\Controller\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/role")
+ * @Route("/role", name="apiv2_role_")
  */
 class RoleController extends AbstractCrudController
 {
@@ -39,12 +39,12 @@ class RoleController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'role';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Role::class;
     }
@@ -52,7 +52,7 @@ class RoleController extends AbstractCrudController
     /**
      * Get a role rights for the given context.
      *
-     * @Route("/{id}/rights/{contextType}/{contextId}", name="apiv2_role_rights_list", defaults={"contextId"=null}, methods={"GET"})
+     * @Route("/{id}/rights/{contextType}/{contextId}", name="rights_list", defaults={"contextId"=null}, methods={"GET"})
      *
      * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
      */
@@ -73,7 +73,7 @@ class RoleController extends AbstractCrudController
     /**
      * Manages workspace tools accesses for a Role.
      *
-     * @Route("/{id}/rights/{contextType}/{contextId}", name="apiv2_role_rights_update", defaults={"contextId"=null}, methods={"PUT"})
+     * @Route("/{id}/rights/{contextType}/{contextId}", name="rights_update", defaults={"contextId"=null}, methods={"PUT"})
      *
      * @EXT\ParamConverter("role", options={"mapping": {"id": "uuid"}})
      */

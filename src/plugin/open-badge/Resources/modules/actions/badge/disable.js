@@ -20,7 +20,7 @@ export default (badges, refresher) => {
 
     displayed: !isEmpty(processable),
     request: {
-      url: url(['apiv2_badge-class_disable'], {ids: processable.map(u => u.id)}),
+      url: url(['apiv2_badge_disable'], {ids: processable.map(u => u.id)}),
       request: {
         method: 'PUT'
       },

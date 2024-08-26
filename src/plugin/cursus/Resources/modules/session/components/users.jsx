@@ -31,7 +31,7 @@ const SessionUsers = (props) => {
         ['apiv2_training_session_user_list', {id: props.course.id, sessionId: props.session.id}] :
         ['apiv2_training_session_user_list', {id: props.course.id}]
       }
-      unregisterUrl={['apiv2_training_session_user_delete_bulk']}
+      unregisterUrl={['apiv2_training_session_user_delete']}
       session={props.session || props.course}
       customDefinition={customDefinition}
       actions={(rows) => [

@@ -37,7 +37,7 @@ const AppearanceColorCharts = (props) => {
                   icon: 'fa fa-fw fa-trash',
                   label: trans('delete', {}, 'actions'),
                   request: {
-                    url: ['apiv2_color_collection_delete_bulk', {ids: [color.id]}],
+                    url: ['apiv2_color_collection_delete', {ids: [color.id]}],
                     request: {
                       method: 'DELETE'
                     },

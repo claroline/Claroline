@@ -14,7 +14,10 @@ const PlatformLogin = () => {
     >
       <LoginMain
         forceInternalAccount={routeParams.forceInternalAccount}
-        onLogin={() => history.push('/desktop')}
+        onLogin={() => {
+          console.log('coucou')
+          history.push('/desktop')
+        }}
       />
     </PageSimple>
   )

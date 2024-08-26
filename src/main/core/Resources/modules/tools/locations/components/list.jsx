@@ -55,7 +55,7 @@ const LocationList = props =>
         label: trans('open', {}, 'actions')
       })}
       delete={{
-        url: ['apiv2_location_delete_bulk']
+        url: ['apiv2_location_delete']
       }}
       actions={(rows) => [
         {

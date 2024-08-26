@@ -16,7 +16,7 @@ export default (users, refresher) => {
     scope: ['object', 'collection'],
     displayed: 0 !== processable.length,
     request: {
-      url: url(['apiv2_users_enable'], {ids: users.map(u => u.id)}),
+      url: url(['apiv2_user_enable'], {ids: users.map(u => u.id)}),
       request: {
         method: 'PUT'
       },

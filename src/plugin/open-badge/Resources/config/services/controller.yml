@@ -27,7 +27,3 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
-
-    Claroline\OpenBadgeBundle\Controller\RuleController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true

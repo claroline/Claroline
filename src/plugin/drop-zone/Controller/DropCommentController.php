@@ -16,16 +16,16 @@ use Claroline\DropZoneBundle\Entity\DropComment;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/dropcomment")
+ * @Route("/dropcomment", name="apiv2_dropcomment_")
  */
 class DropCommentController extends AbstractCrudController
 {
-    public function getName(): string
+    public static function getName(): string
     {
         return 'dropcomment';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return DropComment::class;
     }

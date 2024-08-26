@@ -24,7 +24,7 @@ const FlaggedMessagesComponent = (props) =>
       autoload: !!get(props.forum, 'id')
     }}
     delete={{
-      url: ['apiv2_forum_message_delete_bulk']
+      url: ['apiv2_forum_message_delete']
     }}
     display={{
       current: listConst.DISPLAY_LIST

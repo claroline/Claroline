@@ -34,7 +34,7 @@ const EntriesComponent = props =>
         autoload: true
       }}
       delete={{
-        url: ['apiv2_clacoformentry_delete_bulk'],
+        url: ['apiv2_clacoformentry_delete'],
         displayed: (rows) => rows.filter(e => !e.locked && canManageEntry(e, props.canEdit, props.currentUser)).length === rows.length
       }}
       source={merge({}, entriesSource(props.clacoForm, props.canViewMetadata, props.canEdit, props.isCategoryManager, props.path, props.currentUser), {

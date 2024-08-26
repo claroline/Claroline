@@ -26,7 +26,7 @@ const EditorSkillList = () => {
           autoload: true
         }}
         delete={{
-          url: ['apiv2_skills_framework_delete_bulk'],
+          url: ['apiv2_skills_framework_delete'],
           disabled: (rows) => -1 === rows.findIndex(row => hasPermission('administrate', row))
         }}
         primaryAction={(row) => ({

@@ -23,7 +23,7 @@ const TransferModal = withReducer(selectors.STORE_NAME, reducer)(
         dispatch(formActions.reset(selectors.STORE_NAME, merge({}, BadgeTypes.defaultProps, {}), true))
       },
       transfer(data) {
-        dispatch(formActions.save(selectors.STORE_NAME, url(['apiv2_badge_transfer', {
+        dispatch(formActions.save(selectors.STORE_NAME, url(['apiv2_badge_assertion_transfer', {
           userFrom: data.sender.id,
           userTo: data.receiver.id
         }])))

@@ -13,7 +13,7 @@ const Messages = (props) =>
   <ListData
     name={selectors.STORE_NAME + '.list'}
     fetch={{
-      url: ['apiv2_connectionmessage_list'],
+      url: ['apiv2_connection_message_list'],
       autoload: true
     }}
     primaryAction={(row) => ({
@@ -39,7 +39,7 @@ const Messages = (props) =>
       }]
     }]}
     delete={{
-      url: ['apiv2_connectionmessage_delete_bulk'],
+      url: ['apiv2_connection_message_delete'],
       displayed: (rows) => !rows.find(message => message.locked)
     }}
     definition={[{

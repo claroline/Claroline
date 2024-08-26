@@ -10,38 +10,32 @@ use Claroline\AudioPlayerBundle\Entity\Resource\SectionComment;
 use Claroline\CommunityBundle\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Doctrine\Persistence\ObjectRepository;
 
 class SectionCommentSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
+    private ObjectRepository $sectionRepo;
+    private ObjectRepository $userRepo;
 
-    /** @var SectionSerializer */
-    private $sectionSerializer;
-    /** @var UserSerializer */
-    private $userSerializer;
-
-    private $sectionRepo;
-    private $userRepo;
-
-    public function __construct(ObjectManager $om, SectionSerializer $sectionSerializer, UserSerializer $userSerializer)
-    {
-        $this->om = $om;
-        $this->sectionSerializer = $sectionSerializer;
-        $this->userSerializer = $userSerializer;
-
+    public function __construct(
+        ObjectManager $om,
+        private readonly SectionSerializer $sectionSerializer,
+        private readonly UserSerializer $userSerializer
+    ) {
         $this->sectionRepo = $om->getRepository(Section::class);
         $this->userRepo = $om->getRepository(User::class);
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(SectionComment $sectionComment, array $options = [])
+    public function getClass(): string
     {
-        $serialized = [
+        return SectionComment::class;
+    }
+
+    public function serialize(SectionComment $sectionComment, array $options = []): array
+    {
+        return [
             'id' => $sectionComment->getUuid(),
             'content' => $sectionComment->getContent(),
             'meta' => [
@@ -55,16 +49,9 @@ class SectionCommentSerializer
                 'section' => $this->sectionSerializer->serialize($sectionComment->getSection()),
             ],
         ];
-
-        return $serialized;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return SectionComment
-     */
-    public function deserialize($data, SectionComment $sectionComment, array $options = [])
+    public function deserialize(array $data, SectionComment $sectionComment, array $options = []): SectionComment
     {
         $this->sipe('content', 'setContent', $data, $sectionComment);
 

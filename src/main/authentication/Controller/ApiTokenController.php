@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("apitoken")
+ * @Route("apitoken", name="apiv2_apitoken_")
  */
 class ApiTokenController extends AbstractCrudController
 {
@@ -31,12 +31,12 @@ class ApiTokenController extends AbstractCrudController
     ) {
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return ApiToken::class;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'apitoken';
     }
@@ -58,7 +58,7 @@ class ApiTokenController extends AbstractCrudController
     }
 
     /**
-     * @Route("/list/current", name="apiv2_apitoken_list_current", methods={"GET"})
+     * @Route("/list/current", name="list_current", methods={"GET"})
      */
     public function getCurrentAction(Request $request): JsonResponse
     {
@@ -74,7 +74,7 @@ class ApiTokenController extends AbstractCrudController
         ];
 
         return new JsonResponse($this->crud->list(
-            $this->getClass(),
+            static::getClass(),
             $query,
             $options['get'] ?? []
         ));

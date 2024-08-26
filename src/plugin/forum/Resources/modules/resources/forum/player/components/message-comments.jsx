@@ -196,7 +196,7 @@ const MessageComments =  withModal(connect(
       dispatch(actions.createComment(messageId, comment, moderation))
     },
     deleteComment(id) {
-      dispatch(listActions.deleteData('subjects.messages', ['apiv2_forum_message_delete_bulk'], [{id: id}]))
+      dispatch(listActions.deleteData('subjects.messages', ['apiv2_forum_message_delete'], [{id: id}]))
     },
     reload(id, forumId) {
       dispatch(listActions.fetchData('subjects.messages', ['apiv2_forum_subject_get_message', {id, forumId}]))

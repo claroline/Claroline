@@ -94,7 +94,7 @@ ConnectionMessagesModal.propTypes = {
 }
 
 ConnectionMessagesModal.defaultProps = {
-  url: ['apiv2_connectionmessage_list'],
+  url: ['apiv2_connection_message_list'],
   title: trans('connection_messages')
 }
 

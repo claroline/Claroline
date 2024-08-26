@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/forum_message")
+ * @Route("/forum_message", name="apiv2_forum_message_")
  */
 class MessageController extends AbstractCrudController
 {
@@ -26,12 +26,12 @@ class MessageController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'forum_message';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Message::class;
     }
@@ -42,7 +42,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/comment", methods={"POST"})
+     * @Route("/{id}/comment", name="create_comment", methods={"POST"})
      *
      * @ParamConverter("message", options={"mapping": {"id": "uuid"}})
      *
@@ -70,7 +70,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("forum/{forum}/messages/list/flagged", name="apiv2_forum_message_flagged_list", methods={"GET"})
+     * @Route("forum/{forum}/messages/list/flagged", name="flagged_list", methods={"GET"})
      *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
@@ -87,7 +87,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("forum/{forum}/messages/list/blocked", name="apiv2_forum_message_blocked_list", methods={"GET"})
+     * @Route("forum/{forum}/messages/list/blocked", name="blocked_list", methods={"GET"})
      *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */

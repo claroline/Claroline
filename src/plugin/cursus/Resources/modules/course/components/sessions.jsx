@@ -28,7 +28,7 @@ const CourseSessions = (props) =>
       contextType={props.contextType}
       url={['apiv2_cursus_course_list_sessions', {id: props.course.id}]}
       delete={{
-        url: ['apiv2_cursus_session_delete_bulk'],
+        url: ['apiv2_cursus_session_delete'],
         displayed: (rows) => -1 !== rows.findIndex(row => hasPermission('delete', row))
       }}
       definition={[

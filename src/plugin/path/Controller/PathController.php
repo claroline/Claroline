@@ -12,7 +12,7 @@
 namespace Innova\PathBundle\Controller;
 
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
-use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -28,23 +28,24 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 /**
  * @Route("/path")
  */
-class PathController extends AbstractCrudController
+class PathController
 {
     use PermissionCheckerTrait;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        private readonly SerializerProvider $serializer,
         private readonly EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Path::class;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'path';
     }

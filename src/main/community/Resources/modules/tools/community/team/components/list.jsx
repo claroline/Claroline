@@ -28,7 +28,7 @@ const TeamList = props =>
       <BaseTeamList
         path={props.path}
         name={selectors.LIST_NAME}
-        url={['apiv2_workspace_team_list', {id: props.contextData.id}]}
+        url={['apiv2_team_workspace_list', {id: props.contextData.id}]}
       />
     </PageListSection>
   </ToolPage>

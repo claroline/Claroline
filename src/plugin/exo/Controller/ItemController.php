@@ -20,7 +20,7 @@ use UJM\ExoBundle\Manager\Item\ShareManager;
 /**
  * Item Controller exposes REST API.
  *
- * @Route("/quiz_questions")
+ * @Route("/quiz_questions", name="apiv2_quiz_questions_")
  */
 class ItemController extends AbstractCrudController
 {
@@ -35,12 +35,12 @@ class ItemController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'quiz_questions';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Item::class;
     }
@@ -48,7 +48,7 @@ class ItemController extends AbstractCrudController
     /**
      * Shares a list of questions to users.
      *
-     * @Route("/share", name="apiv2_quiz_questions_share", methods={"POST"})
+     * @Route("/share", name="share", methods={"POST"})
      */
     public function shareAction(Request $request): JsonResponse
     {

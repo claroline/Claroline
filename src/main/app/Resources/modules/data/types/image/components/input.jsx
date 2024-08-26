@@ -159,7 +159,7 @@ implementPropTypes(ImageInputComponent, DataInputTypes, {
   uploadFile: T.func.isRequired
 }, {
   size: [200, 200],
-  uploadUrl: ['apiv2_image_upload']
+  uploadUrl: ['apiv2_public_file_image_upload']
 })
 
 const ImageInput = connect(

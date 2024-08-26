@@ -138,12 +138,12 @@ const menu = createSelector(
 
 const menuUntouched = createSelector(
   [menu],
-  (menu) => menu.untouched
+  (menu) => !!menu && menu.untouched
 )
 
 const menuOpened = createSelector(
   [menu],
-  (menu) => menu.opened
+  (menu) => !!menu && menu.opened
 )
 
 export const selectors = {

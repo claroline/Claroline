@@ -19,7 +19,7 @@ const QuizEditorBank = (props) =>
     <ItemList
       name={selectors.BANK_NAME}
       delete={{
-        url: ['apiv2_quiz_questions_delete_bulk'],
+        url: ['apiv2_quiz_questions_delete'],
         displayed: (rows) => -1 !== rows.findIndex(row => hasPermission('delete', row))
       }}
       actions={(rows) => [

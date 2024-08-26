@@ -2,10 +2,10 @@ services:
     _defaults:
         public: true # because controller
 
-    Claroline\AudioPlayerBundle\Controller\API\SectionCommentController:
+    Claroline\AudioPlayerBundle\Controller\SectionCommentController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
 
-    Claroline\AudioPlayerBundle\Controller\API\SectionController:
+    Claroline\AudioPlayerBundle\Controller\SectionController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true

@@ -1,7 +1,6 @@
 # JSON API
 hevinci_competency_bundle_api:
     resource: "@HeVinciCompetencyBundle/Controller/"
-    prefix: apiv2
-    type: api
+    type: annotation
     options:
         expose: true

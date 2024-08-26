@@ -39,7 +39,7 @@ export default (roles, refresher) => {
       ]
     },
     request: {
-      url: url(['apiv2_role_delete_bulk'], {ids: processable.map(role => role.id)}),
+      url: url(['apiv2_role_delete'], {ids: processable.map(role => role.id)}),
       request: {
         method: 'DELETE'
       },

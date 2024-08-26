@@ -12,7 +12,7 @@ export default (users, refresher) => ({
   displayed: users.length === users.filter(u => hasPermission('administrate', u)).length &&
     0 < users.filter(u => !u.meta.personalWorkspace).length,
   request: {
-    url: url(['apiv2_users_pws_create'], {ids: users.map(u => u.id)}),
+    url: url(['apiv2_user_pws_create'], {ids: users.map(u => u.id)}),
     request: {
       method: 'POST'
     },

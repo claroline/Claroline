@@ -78,7 +78,7 @@ const CompetencyComponent = (props) =>
               label: trans('open', {}, 'actions')
             })}
             delete={{
-              url: ['apiv2_competency_ability_delete_bulk']
+              url: ['apiv2_competency_ability_delete']
             }}
             definition={[
               {
