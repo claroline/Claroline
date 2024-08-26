@@ -31,6 +31,11 @@ trait RequestDecoderTrait
             return [];
         }
 
-        return $this->om->getRepository($class)->findBy(['uuid' => $ids]);
+        $idProp = 'uuid';
+        if (is_numeric($ids[0])) {
+            $idProp = 'id';
+        }
+        
+        return $this->om->getRepository($class)->findBy([$idProp => $ids]);
     }
 }
