@@ -17,7 +17,7 @@ const TrainingsTool = (props) =>
         name: 'catalog',
         type: LINK_BUTTON,
         label: trans('catalog', {}, 'cursus'),
-        target: props.path
+        target: props.path+'/course'
       }, {
         name: 'public',
         type: LINK_BUTTON,
@@ -43,9 +43,12 @@ const TrainingsTool = (props) =>
         displayed: props.authenticated
       }
     ]}
+    redirect={[
+      {from: '/', to: '/course', exact: true}
+    ]}
     pages={[
       {
-        path: '/',
+        path: '/course',
         component: CatalogMain
       }, {
         path: '/registered',
