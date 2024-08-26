@@ -2,12 +2,13 @@ import React from 'react'
 import get from 'lodash/get'
 import {PropTypes as T} from 'prop-types'
 
+import {trans} from '#/main/app/intl'
+import {Tool} from '#/main/core/tool'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {Course} from '#/plugin/cursus/course/containers/main'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {CourseCreation} from '#/plugin/cursus/course/components/creation'
 import {CourseEditor} from '#/plugin/cursus/course/editor/containers/main'
-
-import {Tool} from '#/main/core/tool'
 
 import {EmptyCourse} from '#/plugin/cursus/course/components/empty'
 import {EventsAll} from '#/plugin/cursus/tools/events/components/all'
@@ -15,8 +16,6 @@ import {EventsPublic} from '#/plugin/cursus/tools/events/components/public'
 import {EventsDetails} from '#/plugin/cursus/tools/events/containers/details'
 import {EventsPresences} from '#/plugin/cursus/tools/events/containers/presences'
 import {EventsRegistered} from '#/plugin/cursus/tools/events/components/registered'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {trans} from '#/main/app/intl'
 
 const EventsTool = (props) =>
   <Tool

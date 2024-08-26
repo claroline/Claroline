@@ -14,6 +14,8 @@ const CatalogMain = withReducer(courseSelectors.STORE_NAME, courseReducer)(
       (state) => ({
         path: toolSelectors.path(state),
         course: selectors.course(state),
+        courses: selectors.courses(state),
+        contextType: toolSelectors.contextType(state),
         canEdit: hasPermission('edit', toolSelectors.toolData(state))
       }),
       (dispatch) => ({

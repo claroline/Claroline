@@ -10,9 +10,15 @@ const course = createSelector(
   (catalog) => catalog.course
 )
 
+const courses = createSelector(
+  [catalog],
+  (catalog) => catalog.courses || []
+)
+
 export const selectors = {
   STORE_NAME,
   LIST_NAME,
 
-  course
+  course,
+  courses
 }

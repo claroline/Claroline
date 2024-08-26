@@ -37,13 +37,11 @@ actions.open = (courseSlug, force = false) => (dispatch, getState) => {
 }
 
 actions.openForm = (courseSlug = null, defaultProps = {}, workspace = null) => (dispatch) => {
-  if (!courseSlug) {
-    if(workspace) {
-      defaultProps = {
-        ...defaultProps,
-        _workspaceType: 'workspace',
-        workspace: workspace
-      }
+  if(workspace) {
+    defaultProps = {
+      ...defaultProps,
+      _workspaceType: workspace.meta.model ? 'model' : 'workspace',
+      workspace: workspace
     }
     return dispatch(formActions.resetForm(selectors.FORM_NAME, defaultProps, true))
   }
