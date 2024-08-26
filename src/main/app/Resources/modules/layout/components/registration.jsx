@@ -10,26 +10,28 @@ import {PageFull} from '#/main/app/page/components/full'
 import {RegistrationMain} from '#/main/app/security/registration/containers/main'
 
 const HomeRegistrationComponent = (props) =>
-  <PageFull
-    title={trans('registration')}
-  >
-    <RegistrationMain
-      className="content-sm"
-      path="/registration"
-      onRegister={(response) => {
-        if (get(response, 'user')) {
-          if (document.referrer && -1 !== document.referrer.indexOf(param('serverUrl'))) {
-            // only redirect to previous url if it's part of the claroline platform
-            props.history.goBack()
+  <div className="app-content" role="presentation">
+    <PageFull
+      title={trans('registration')}
+    >
+      <RegistrationMain
+        className="content-sm"
+        path="/registration"
+        onRegister={(response) => {
+          if (get(response, 'user')) {
+            if (document.referrer && -1 !== document.referrer.indexOf(param('serverUrl'))) {
+              // only redirect to previous url if it's part of the claroline platform
+              props.history.goBack()
+            } else {
+              props.history.push('/desktop')
+            }
           } else {
-            props.history.push('/desktop')
+            props.history.push('/login')
           }
-        } else {
-          props.history.push('/login')
-        }
-      }}
-    />
-  </PageFull>
+        }}
+      />
+    </PageFull>
+  </div>
 
 HomeRegistrationComponent.propTypes = {
   history: T.shape({
