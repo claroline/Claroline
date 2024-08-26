@@ -7,10 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 trait RequestDecoderTrait
 {
-    /**
-     * @return mixed|null
-     */
-    protected function decodeRequest(Request $request)
+    protected function decodeRequest(Request $request): mixed
     {
         $decodedRequest = null;
         if (!empty($request->getContent())) {
@@ -24,18 +21,13 @@ trait RequestDecoderTrait
         return $decodedRequest;
     }
 
-    protected function decodeIdsString(Request $request, string $class, string $property = 'ids')
+    protected function decodeIdsString(Request $request, string $class, string $property = 'ids'): array
     {
         $ids = $request->query->all($property) ?? [];
         if (empty($ids)) {
             return [];
         }
 
-        $idProp = 'uuid';
-        if (is_numeric($ids[0])) {
-            $idProp = 'id';
-        }
-        
-        return $this->om->getRepository($class)->findBy([$idProp => $ids]);
+        return $this->om->getRepository($class)->findBy(['uuid' => $ids]);
     }
 }
