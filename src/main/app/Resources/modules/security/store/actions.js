@@ -28,13 +28,13 @@ actions.changeUser = (user, config, impersonated = false, contexts = [], context
   // to know when to invalidate/reload data for the new user
   const currentUser = selectors.currentUser(getState())
   if (get(currentUser, 'id') !== get(user, 'id')) {
-    dispatch({
+    return dispatch({
       type: SECURITY_USER_CHANGE,
       user: user,
+      config: config,
       impersonated: impersonated,
       contexts: contexts,
-      contextFavorites: contextFavorites,
-      config: config
+      contextFavorites: contextFavorites
     })
   }
 }
@@ -61,9 +61,7 @@ actions.onLogin = (response) => (dispatch) => {
     return dispatch(modalActions.showModal(MODAL_TERMS_OF_SERVICE, {
       messages: response.messages,
       validate: true,
-      onAccept: () => {
-        dispatch(actions.changeUser(response.user, response.config, false, response.contexts, response.contextFavorites))
-      },
+      onAccept: () => dispatch(actions.changeUser(response.user, response.config, false, response.contexts, response.contextFavorites)),
       onRefuse: () => dispatch(actions.logout())
     }))
   }

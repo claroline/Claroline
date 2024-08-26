@@ -1,6 +1,5 @@
 claro_scheduler:
     resource: "@ClarolineSchedulerBundle/Controller/"
-    prefix: apiv2
-    type: api
+    type: annotation
     options:
         expose: true

@@ -40,7 +40,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/cursus_session")
+ * @Route("/cursus_session", name="apiv2_cursus_session_")
  */
 class SessionController extends AbstractCrudController
 {
@@ -71,12 +71,12 @@ class SessionController extends AbstractCrudController
         $this->pdfManager = $pdfManager;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'cursus_session';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Session::class;
     }
@@ -108,7 +108,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/public", name="apiv2_cursus_session_public", methods={"GET"})
+     * @Route("/public", name="public", methods={"GET"})
      */
     public function listPublicAction(Request $request): JsonResponse
     {
@@ -130,7 +130,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/pdf", name="apiv2_cursus_session_download_pdf", methods={"GET"})
+     * @Route("/{id}/pdf", name="download_pdf", methods={"GET"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
@@ -149,7 +149,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/events", name="apiv2_cursus_session_list_events")
+     * @Route("/{id}/events", name="list_events")
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
@@ -167,7 +167,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/users/{type}", name="apiv2_cursus_session_add_users", methods={"PATCH"})
+     * @Route("/{id}/users/{type}", name="add_users", methods={"PATCH"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
@@ -192,7 +192,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/groups/{type}", name="apiv2_cursus_session_add_groups", methods={"PATCH"})
+     * @Route("/{id}/groups/{type}", name="add_groups", methods={"PATCH"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
@@ -221,7 +221,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/pending", name="apiv2_cursus_session_add_pending", methods={"PATCH"})
+     * @Route("/{id}/pending", name="add_pending", methods={"PATCH"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
@@ -238,7 +238,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/self/register", name="apiv2_cursus_session_self_register", methods={"PUT"})
+     * @Route("/{id}/self/register", name="self_register", methods={"PUT"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -263,7 +263,7 @@ class SessionController extends AbstractCrudController
     /**
      * This is the endpoint used by confirmation email.
      *
-     * @Route("/{id}/self/confirm", name="apiv2_cursus_session_self_confirm", methods={"GET"})
+     * @Route("/{id}/self/confirm", name="self_confirm", methods={"GET"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -283,7 +283,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/invite/all", name="apiv2_cursus_session_invite_all", methods={"PUT"})
+     * @Route("/{id}/invite/all", name="invite_all", methods={"PUT"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
@@ -297,7 +297,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/stats", name="apiv2_cursus_session_stats", methods={"GET"})
+     * @Route("/{id}/stats", name="stats", methods={"GET"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */

@@ -19,7 +19,7 @@ const AssertionsList = (props) =>
       <ListData
         name={selectors.STORE_NAME + '.mine'}
         fetch={{
-          url: ['apiv2_assertion_current_user_list', {workspace: props.contextData ? props.contextData.id : null}],
+          url: ['apiv2_badge_assertion_current_user_list', {workspace: props.contextData ? props.contextData.id : null}],
           autoload: true
         }}
         primaryAction={(row) => ({

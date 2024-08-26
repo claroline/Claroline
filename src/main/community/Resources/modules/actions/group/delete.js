@@ -39,7 +39,7 @@ export default (groups, refresher) => {
       ]
     },
     request: {
-      url: url(['apiv2_group_delete_bulk'], {ids: processable.map(group => group.id)}),
+      url: url(['apiv2_group_delete'], {ids: processable.map(group => group.id)}),
       request: {
         method: 'DELETE'
       },

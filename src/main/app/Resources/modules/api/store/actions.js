@@ -77,7 +77,7 @@ actions.receiveResponse = (apiRequest, status, statusText, response) => dispatch
 }
 
 // file actions
-actions.uploadFile = (file, uploadUrl = ['apiv2_file_upload']) => {
+actions.uploadFile = (file, uploadUrl = ['apiv2_public_file_upload']) => {
   const formData = new FormData()
   formData.append('file', file)
   formData.append('fileName', file.name)
@@ -101,7 +101,7 @@ actions.uploadFile = (file, uploadUrl = ['apiv2_file_upload']) => {
 
 actions.deleteFile = (fileId) => ({
   [constants.API_REQUEST]: {
-    url: url(['apiv2_public_file_delete_bulk'], {ids: [fileId]}),
+    url: url(['apiv2_public_file_delete'], {ids: [fileId]}),
     silent: true,
     request: {
       method: 'DELETE'

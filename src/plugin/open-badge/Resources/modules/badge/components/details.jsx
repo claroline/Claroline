@@ -53,7 +53,7 @@ const BadgeDetailsComponent = (props) => {
           <ListData
             name={selectors.FORM_NAME + '.assertions'}
             fetch={{
-              url: ['apiv2_badge-class_assertion', {badge: props.badge.id}],
+              url: ['apiv2_badge_list_assertions', {badge: props.badge.id}],
               autoload: !isEmpty(props.badge)
             }}
             primaryAction={(row) => ({
@@ -62,7 +62,7 @@ const BadgeDetailsComponent = (props) => {
               label: trans('open', {}, 'actions')
             })}
             delete={{
-              url: ['apiv2_badge-class_remove_users', {badge: props.badge.id}],
+              url: ['apiv2_badge_remove_users', {badge: props.badge.id}],
               displayed: () => get(props.badge, 'permissions.grant')
             }}
             definition={[

@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/droprevision")
+ * @Route("/droprevision", name="apiv2_droprevision_")
  */
 class RevisionController extends AbstractCrudController
 {
@@ -40,12 +40,12 @@ class RevisionController extends AbstractCrudController
     ) {
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'droprevision';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Revision::class;
     }

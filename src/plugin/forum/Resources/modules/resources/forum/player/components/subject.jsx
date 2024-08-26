@@ -378,7 +378,7 @@ const Subject =  withRouter(withModal(connect(
       dispatch(actions.deleteSubject(id, push, path))
     },
     deleteMessage(id) {
-      dispatch(listActions.deleteData(`${selectors.STORE_NAME}.subjects.messages`, ['apiv2_forum_message_delete_bulk'], [{id: id}]))
+      dispatch(listActions.deleteData(`${selectors.STORE_NAME}.subjects.messages`, ['apiv2_forum_message_delete'], [{id: id}]))
     },
     reload(id, forumId) {
       dispatch(listActions.fetchData(`${selectors.STORE_NAME}.subjects.messages`, ['apiv2_forum_subject_get_message', {id, forumId}]))

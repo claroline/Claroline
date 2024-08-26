@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/training_course_user")
+ * @Route("/training_course_user", name="apiv2_training_course_user_")
  */
 class CourseUserController extends AbstractCrudController
 {
@@ -32,20 +32,25 @@ class CourseUserController extends AbstractCrudController
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'training_course_user';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return CourseUser::class;
+    }
+
+    public function getIgnore(): array
+    {
+        return ['get', 'list'];
     }
 
     /**
      * List pending users of a course.
      *
-     * @Route("/{id}/pending", name="apiv2_training_course_pending_list", methods={"GET"})
+     * @Route("/{id}/pending", name="list", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
@@ -83,10 +88,5 @@ class CourseUserController extends AbstractCrudController
         }
 
         return [];
-    }
-
-    public function getIgnore(): array
-    {
-        return ['get', 'list'];
     }
 }

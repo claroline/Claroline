@@ -13,9 +13,9 @@ namespace Claroline\CommunityBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Manager\MailManager;
-use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
-use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
-use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
+use Claroline\CoreBundle\Controller\Model\HasOrganizationsTrait;
+use Claroline\CoreBundle\Controller\Model\HasRolesTrait;
+use Claroline\CoreBundle\Controller\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/group")
+ * @Route("/group", name="apiv2_group_")
  */
 class GroupController extends AbstractCrudController
 {
@@ -48,18 +48,18 @@ class GroupController extends AbstractCrudController
         $this->mailManager = $mailManager;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'group';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Group::class;
     }
 
     /**
-     * @Route("/password/reset", name="apiv2_group_password_reset", methods={"PUT"})
+     * @Route("/password/reset", name="password_reset", methods={"PUT"})
      */
     public function resetPasswordAction(Request $request): JsonResponse
     {

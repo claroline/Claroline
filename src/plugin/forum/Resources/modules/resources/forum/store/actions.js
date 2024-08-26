@@ -47,7 +47,7 @@ actions.validateSubject = (subject, formName) => ({
 
 actions.unLockUser = (userId, forumId) => ({
   [API_REQUEST]: {
-    url: ['claroline_forum_forum_unlock', {user: userId, forum: forumId}],
+    url: ['apiv2_forum_unlock_user', {user: userId, forum: forumId}],
     request: {
       method: 'PATCH'
     },
@@ -60,7 +60,7 @@ actions.unLockUser = (userId, forumId) => ({
 
 actions.banUser = (userId, forumId) => ({
   [API_REQUEST]: {
-    url: ['claroline_forum_forum_ban', {user: userId, forum: forumId}],
+    url: ['apiv2_forum_ban', {user: userId, forum: forumId}],
     request: {
       method: 'PATCH'
     },
@@ -73,7 +73,7 @@ actions.banUser = (userId, forumId) => ({
 actions.notified = makeActionCreator(USER_NOTIFIED)
 actions.notify = (forum, user) => ({
   [API_REQUEST]: {
-    url: ['claroline_forum_forum_notify', {user: user.id, forum: forum.id}],
+    url: ['apiv2_forum_notify', {user: user.id, forum: forum.id}],
     request: {
       method: 'PATCH'
     },
@@ -86,7 +86,7 @@ actions.notify = (forum, user) => ({
 actions.notNotified = makeActionCreator(USER_NOT_NOTIFIED)
 actions.stopNotify = (forum, user) => ({
   [API_REQUEST]: {
-    url: ['claroline_forum_forum_unnotify', {user: user.id, forum: forum.id}],
+    url: ['apiv2_forum_unnotify', {user: user.id, forum: forum.id}],
     request: {
       method: 'PATCH'
     },

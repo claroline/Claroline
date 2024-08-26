@@ -53,7 +53,7 @@ class AnnouncementController
         $this->authorization = $authorization;
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Announcement::class;
     }

@@ -13,7 +13,7 @@ export default (badges, refresher) => ({
   label: trans('recalculate', {}, 'actions'),
   displayed: hasPermission('grant', badges[0]) && !isEmpty(get(badges[0], 'rules')) && !get(badges[0], 'meta.enabled'),
   request: {
-    url: url(['apiv2_badge-class_recalculate_users', {badge: badges[0].id}]),
+    url: url(['apiv2_badge_recalculate', {badge: badges[0].id}]),
     request: {
       method: 'POST'
     },

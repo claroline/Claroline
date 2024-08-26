@@ -38,12 +38,12 @@ const ExportList = (props) =>
       })}
       fetch={{
         url: !isEmpty(props.workspace) ?
-          ['apiv2_workspace_transfer_export_list', {workspaceId: props.workspace.id}] :
+          ['apiv2_transfer_export_workspace_list', {workspaceId: props.workspace.id}] :
           ['apiv2_transfer_export_list'],
         autoload: true
       }}
       delete={{
-        url: ['apiv2_transfer_export_delete_bulk'],
+        url: ['apiv2_transfer_export_delete'],
         disabled: (rows) => -1 === rows.findIndex(row => hasPermission('delete', row))
       }}
       definition={[

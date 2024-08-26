@@ -30,7 +30,7 @@ const Scales = (props) =>
       }
     ]}
     delete={{
-      url: ['apiv2_competency_scale_delete_bulk']
+      url: ['apiv2_competency_scale_delete']
     }}
     definition={[
       {

@@ -30,7 +30,11 @@ class SectionVoter extends AbstractVoter
                 return $this->checkEdit($token, $object);
         }
 
-        return $this->isGranted($attributes, $object->getResourceNode());
+        if ($this->isGranted($attributes, $object->getResourceNode())) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
     public function getClass(): string
@@ -43,7 +47,7 @@ class SectionVoter extends AbstractVoter
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 
-    private function checkCreate(TokenInterface $token, Section $section)
+    private function checkCreate(TokenInterface $token, Section $section): int
     {
         $resourceNode = $section->getResourceNode();
         $user = $token->getUser();
@@ -57,7 +61,7 @@ class SectionVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkEdit(TokenInterface $token, Section $section)
+    private function checkEdit(TokenInterface $token, Section $section): int
     {
         $resourceNode = $section->getResourceNode();
         $sectionUser = $section->getUser();

@@ -24,7 +24,7 @@ const FlaggedSubjectsComponent = (props) =>
       autoload: !!get(props.forum, 'id')
     }}
     delete={{
-      url: ['apiv2_forum_subject_delete_bulk']
+      url: ['apiv2_forum_subject_delete']
     }}
     display={{
       current: listConst.DISPLAY_LIST

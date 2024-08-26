@@ -17,9 +17,9 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Manager\MailManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
-use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
-use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
-use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
+use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
+use Claroline\CoreBundle\Controller\Model\HasOrganizationsTrait;
+use Claroline\CoreBundle\Controller\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
@@ -36,7 +36,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/user")
+ * @Route("/user", name="apiv2_user_")
  */
 class UserController extends AbstractCrudController
 {
@@ -45,34 +45,23 @@ class UserController extends AbstractCrudController
     use HasOrganizationsTrait;
     use HasGroupsTrait;
 
-    private TokenStorageInterface $tokenStorage;
-    private UserManager $manager;
-    private MailManager $mailManager;
-    private ToolManager $toolManager;
-    private WorkspaceManager $workspaceManager;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
+        private readonly TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
-        UserManager $manager,
-        MailManager $mailManager,
-        ToolManager $toolManager,
-        WorkspaceManager $workspaceManager
+        private readonly UserManager $manager,
+        private readonly MailManager $mailManager,
+        private readonly ToolManager $toolManager,
+        private readonly WorkspaceManager $workspaceManager
     ) {
-        $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
-        $this->manager = $manager;
-        $this->mailManager = $mailManager;
-        $this->toolManager = $toolManager;
-        $this->workspaceManager = $workspaceManager;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'user';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return User::class;
     }
@@ -109,7 +98,7 @@ class UserController extends AbstractCrudController
      *     }
      * )
      *
-     * @Route("/pws", name="apiv2_users_pws_create", methods={"POST"})
+     * @Route("/pws", name="pws_create", methods={"POST"})
      */
     public function createPersonalWorkspaceAction(Request $request): JsonResponse
     {
@@ -140,7 +129,7 @@ class UserController extends AbstractCrudController
      *     }
      * )
      *
-     * @Route("/pws", name="apiv2_users_pws_delete", methods={"DELETE"})
+     * @Route("/pws", name="pws_delete", methods={"DELETE"})
      */
     public function deletePersonalWorkspaceAction(Request $request): JsonResponse
     {
@@ -172,7 +161,7 @@ class UserController extends AbstractCrudController
      *     }
      * )
      *
-     * @Route("/enable", name="apiv2_users_enable", methods={"PUT"})
+     * @Route("/enable", name="enable", methods={"PUT"})
      */
     public function enableAction(Request $request): JsonResponse
     {
@@ -203,7 +192,7 @@ class UserController extends AbstractCrudController
      *     }
      * )
      *
-     * @Route("/disable", name="apiv2_users_disable", methods={"PUT"})
+     * @Route("/disable", name="disable", methods={"PUT"})
      */
     public function disableAction(Request $request): JsonResponse
     {
@@ -227,7 +216,7 @@ class UserController extends AbstractCrudController
     }
 
     /**
-     * @Route("/disable_inactive", name="apiv2_user_disable_inactive", methods={"PUT"})
+     * @Route("/disable_inactive", name="disable_inactive", methods={"PUT"})
      */
     public function disableInactiveAction(Request $request): JsonResponse
     {
@@ -252,7 +241,7 @@ class UserController extends AbstractCrudController
      *     }
      * )
      *
-     * @Route("/password/reset", name="apiv2_user_password_reset", methods={"PUT"})
+     * @Route("/password/reset", name="password_reset", methods={"PUT"})
      */
     public function resetPasswordAction(Request $request): JsonResponse
     {

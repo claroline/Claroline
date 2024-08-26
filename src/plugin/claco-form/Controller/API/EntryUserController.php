@@ -15,11 +15,11 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/clacoformentryuser")
+ * @Route("/clacoformentryuser", name="apiv2_clacoformentryuser_")
  */
 class EntryUserController extends AbstractCrudController
 {
-    public function getClass(): string
+    public static function getClass(): string
     {
         return 'Claroline\ClacoFormBundle\Entity\EntryUser';
     }
@@ -29,7 +29,7 @@ class EntryUserController extends AbstractCrudController
         return ['list', 'create', 'deleteBulk', 'get'];
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'clacoformentryuser';
     }

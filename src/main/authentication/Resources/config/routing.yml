@@ -7,9 +7,8 @@ claro_security_logout:
     options: { expose: true }
 
 # API
-claro_authentication_api:
+claro_authentication:
     resource: "@ClarolineAuthenticationBundle/Controller/"
-    prefix: apiv2
-    type: api
+    type: annotation
     options:
         expose: true

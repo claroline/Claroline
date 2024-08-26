@@ -11,12 +11,20 @@ class WaveformQuestionSerializer
 {
     use SerializerTrait;
 
+    public function getName(): string
+    {
+        return 'waveform_question';
+    }
+
+    public function getClass(): string
+    {
+        return WaveformQuestion::class;
+    }
+
     /**
      * Converts a Waveform question into a JSON-encodable structure.
-     *
-     * @return array
      */
-    public function serialize(WaveformQuestion $waveformQuestion, array $options = [])
+    public function serialize(WaveformQuestion $waveformQuestion, array $options = []): array
     {
         $serialized = [
             'file' => $waveformQuestion->getUrl(),
@@ -32,24 +40,15 @@ class WaveformQuestionSerializer
         return $serialized;
     }
 
-    public function getName()
-    {
-        return 'waveform_question';
-    }
-
     /**
      * Converts raw data into a Waveform question entity.
-     *
-     * @param array            $data
-     * @param WaveformQuestion $waveformQuestion
-     *
-     * @return WaveformQuestion
      */
-    public function deserialize($data, WaveformQuestion $waveformQuestion = null, array $options = [])
+    public function deserialize(array $data, WaveformQuestion $waveformQuestion = null, array $options = []): WaveformQuestion
     {
         if (empty($waveformQuestion)) {
             $waveformQuestion = new WaveformQuestion();
         }
+
         $this->sipe('file', 'setUrl', $data, $waveformQuestion);
         $this->sipe('tolerance', 'setTolerance', $data, $waveformQuestion);
         $this->sipe('penalty', 'setPenalty', $data, $waveformQuestion);
@@ -59,12 +58,7 @@ class WaveformQuestionSerializer
         return $waveformQuestion;
     }
 
-    /**
-     * Serializes Question solutions.
-     *
-     * @return array
-     */
-    private function serializeSolutions(WaveformQuestion $waveformQuestion)
+    private function serializeSolutions(WaveformQuestion $waveformQuestion): array
     {
         return array_values(array_map(function (Section $section) {
             $solutionData = [
@@ -80,10 +74,7 @@ class WaveformQuestionSerializer
         }, $waveformQuestion->getSections()->toArray()));
     }
 
-    /**
-     * Deserializes Question sections.
-     */
-    private function deserializeSections(WaveformQuestion $waveformQuestion, array $solutions)
+    private function deserializeSections(WaveformQuestion $waveformQuestion, array $solutions): void
     {
         $sectionsEntities = $waveformQuestion->getSections()->toArray();
 
@@ -124,12 +115,7 @@ class WaveformQuestionSerializer
         }
     }
 
-    /**
-     * Serializes a Section.
-     *
-     * @return array
-     */
-    private function serializeSection(Section $section)
+    private function serializeSection(Section $section): array
     {
         $data = [
             'id' => $section->getUuid(),
@@ -146,10 +132,7 @@ class WaveformQuestionSerializer
         return $data;
     }
 
-    /**
-     * Deserializes a Section.
-     */
-    private function deserializeSection(Section $section, array $data)
+    private function deserializeSection(Section $section, array $data): void
     {
         $this->sipe('start', 'setStart', $data, $section);
         $this->sipe('end', 'setEnd', $data, $section);

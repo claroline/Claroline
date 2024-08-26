@@ -53,7 +53,7 @@ const ScheduledTaskList = (props) =>
         target: `${props.path}/form/${row.id}`
       })}
       delete={{
-        url: ['apiv2_scheduled_task_delete_bulk'],
+        url: ['apiv2_scheduled_task_delete'],
         disabled: (rows) => -1 === rows.findIndex(row => hasPermission('delete', row))
       }}
       definition={[

@@ -19,7 +19,7 @@ const Framework = (props) =>
       label: trans('open', {}, 'actions')
     })}
     delete={{
-      url: ['apiv2_competency_delete_bulk']
+      url: ['apiv2_competency_delete']
     }}
     definition={[
       {

@@ -1,6 +1,5 @@
 claro_log:
     resource: "@ClarolineLogBundle/Controller/"
-    prefix: apiv2
-    type: api
+    type: annotation
     options:
         expose: true

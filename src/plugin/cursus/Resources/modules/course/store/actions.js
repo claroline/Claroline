@@ -249,7 +249,7 @@ actions.confirmPending = (users) => (dispatch, getState) => dispatch({
 
 actions.validatePending = (users) => (dispatch, getState) => dispatch({
   [API_REQUEST]: {
-    url: url(['apiv2_cursus_session_validate_pending'], {ids: users.map(user => user.id)}),
+    url: url(['apiv2_training_session_user_validate'], {ids: users.map(user => user.id)}),
     request: {
       method: 'PUT'
     },

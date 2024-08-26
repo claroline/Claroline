@@ -41,7 +41,7 @@ actions.loadUsedCountries = makeActionCreator(USED_COUNTRIES_LOAD, 'countries')
 
 actions.deleteEntry = (entry) => (dispatch) => dispatch({
   [API_REQUEST]: {
-    url: url(['apiv2_clacoformentry_delete_bulk', {ids: [entry.id]}]),
+    url: url(['apiv2_clacoformentry_delete', {ids: [entry.id]}]),
     request: {
       method: 'DELETE'
     },
@@ -51,7 +51,7 @@ actions.deleteEntry = (entry) => (dispatch) => dispatch({
 
 actions.switchEntryStatus = (entryId) => ({
   [API_REQUEST]: {
-    url: ['claro_claco_form_entry_status_change', {entry: entryId}],
+    url: ['apiv2_clacoformentry_change_status', {entry: entryId}],
     request: {
       method: 'PUT'
     },
@@ -61,7 +61,7 @@ actions.switchEntryStatus = (entryId) => ({
 
 actions.switchEntriesStatus = (entries, status) => ({
   [API_REQUEST]: {
-    url: url(['claro_claco_form_entries_status_change', {status: status, ids: entries.map(e => e.id)}]),
+    url: url(['apiv2_clacoformentry_change_status_bulk', {status: status, ids: entries.map(e => e.id)}]),
     request: {
       method: 'PATCH'
     },

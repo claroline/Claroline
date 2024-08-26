@@ -38,9 +38,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route(options={"expose"=true})
- *
- * @todo merge with APINew\FileController
+ * @Route("/file")
  */
 class FileController
 {

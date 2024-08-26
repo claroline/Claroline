@@ -4,7 +4,7 @@ namespace Claroline\SchedulerBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Controller\RequestDecoderTrait;
-use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
+use Claroline\CoreBundle\Controller\Model\HasUsersTrait;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\SchedulerBundle\Entity\ScheduledTask;
 use Claroline\SchedulerBundle\Manager\ScheduledTaskManager;
@@ -14,31 +14,27 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/scheduled_task")
+ * @Route("/scheduled_task", name="apiv2_scheduled_task_")
  */
 class ScheduledTaskController extends AbstractCrudController
 {
-    use HasUsersTrait; // TODO : to remove
+    use HasUsersTrait;
     use PermissionCheckerTrait;
     use RequestDecoderTrait;
 
-    /** @var ScheduledTaskManager */
-    private $manager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        ScheduledTaskManager $manager
+        private readonly ScheduledTaskManager $manager
     ) {
         $this->authorization = $authorization;
-        $this->manager = $manager;
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return ScheduledTask::class;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'scheduled_task';
     }
@@ -47,7 +43,7 @@ class ScheduledTaskController extends AbstractCrudController
      * Manually execute a list of scheduled tasks.
      * If no ids is passed, it will execute all eligible tasks.
      *
-     * @Route("/execute", name="apiv2_scheduled_task_execute", methods={"POST"})
+     * @Route("/execute", name="execute", methods={"POST"})
      */
     public function executeAction(Request $request): JsonResponse
     {

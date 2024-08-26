@@ -1,7 +1,6 @@
 # JSON API
 claroline_audio_player_bundle_api:
-    resource: "@ClarolineAudioPlayerBundle/Controller/API/"
-    prefix: apiv2
-    type: api
+    resource: "@ClarolineAudioPlayerBundle/Controller/"
+    type: annotation
     options:
         expose: true

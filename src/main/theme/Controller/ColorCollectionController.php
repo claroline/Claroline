@@ -7,16 +7,16 @@ use Claroline\ThemeBundle\Entity\ColorCollection;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/color_collection")
+ * @Route("/color_collection", name="apiv2_color_collection_")
  */
 class ColorCollectionController extends AbstractCrudController
 {
-    public function getName(): string
+    public static function getName(): string
     {
         return 'color_collection';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return ColorCollection::class;
     }

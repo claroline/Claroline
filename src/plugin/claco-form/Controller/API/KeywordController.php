@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/clacoformkeyword")
+ * @Route("/clacoformkeyword", name="apiv2_clacoformkeyword_")
  */
 class KeywordController extends AbstractCrudController
 {
@@ -34,7 +34,7 @@ class KeywordController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Keyword::class;
     }
@@ -44,24 +44,17 @@ class KeywordController extends AbstractCrudController
         return ['list'];
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'clacoformkeyword';
     }
 
     /**
-     * @Route(
-     *     "/clacoform/{clacoForm}/keywords/list",
-     *     name="apiv2_clacoformkeyword_list"
-     * )
+     * @Route("/clacoform/{clacoForm}/keywords/list", name="list")
      *
-     * @EXT\ParamConverter(
-     *     "clacoForm",
-     *     class="Claroline\ClacoFormBundle\Entity\ClacoForm",
-     *     options={"mapping": {"clacoForm": "uuid"}}
-     * )
+     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
-    public function keywordsListAction(ClacoForm $clacoForm, Request $request): JsonResponse
+    public function listByResourceAction(ClacoForm $clacoForm, Request $request): JsonResponse
     {
         $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
 
@@ -79,7 +72,7 @@ class KeywordController extends AbstractCrudController
     /**
      * Returns the keyword.
      *
-     * @Route("/{clacoForm}/keyword/{value}/excluding/uuid/{uuid}", name="claro_claco_form_get_keyword_by_name_excluding_uuid", defaults={"uuid"=null})
+     * @Route("/{clacoForm}/keyword/{value}/excluding/uuid/{uuid}", name="check_unique", defaults={"uuid"=null})
      *
      * @EXT\ParamConverter( "clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */

@@ -1,7 +1,6 @@
 # JSON API
-claroline_big_blue_button_bundle_api:
+claroline_big_blue_button:
     resource: "@ClarolineBigBlueButtonBundle/Controller/"
-    prefix: apiv2
-    type: api
+    type: annotation
     options:
         expose: true

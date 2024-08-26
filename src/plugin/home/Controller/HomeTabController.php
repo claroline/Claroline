@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/home_tab")
+ * @Route("/home_tab", name="apiv2_home_tab_")
  */
 class HomeTabController extends AbstractCrudController
 {
@@ -32,12 +32,12 @@ class HomeTabController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'home_tab';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return HomeTab::class;
     }
@@ -48,7 +48,7 @@ class HomeTabController extends AbstractCrudController
     }
 
     /**
-     * @Route("/open/{id}", name="claro_home_tab_open", methods={"GET"})
+     * @Route("/open/{id}", name="open", methods={"GET"})
      *
      * @EXT\ParamConverter("homeTab", options={"mapping": {"id": "uuid"}})
      */
@@ -78,7 +78,7 @@ class HomeTabController extends AbstractCrudController
     /**
      * Submit access code.
      *
-     * @Route("/unlock/{id}", name="claro_home_tab_unlock", methods={"POST"})
+     * @Route("/unlock/{id}", name="unlock", methods={"POST"})
      *
      * @EXT\ParamConverter("homeTab", options={"mapping": {"id": "uuid"}})
      */
@@ -90,7 +90,7 @@ class HomeTabController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{context}/{contextId}", name="apiv2_home_update", methods={"PUT"})
+     * @Route("/{context}/{contextId}", name="update", methods={"PUT"})
      */
     public function updateContextAction(Request $request, string $context, string $contextId = null): JsonResponse
     {

@@ -32,43 +32,28 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/event")
+ * @Route("/event", name="apiv2_event_")
  */
 class EventController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-    /** @var RequestStack */
-    private $requestStack;
-    /** @var EventManager */
-    private $manager;
-    /** @var RoutingHelper */
-    private $routing;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TokenStorageInterface $tokenStorage,
-        RequestStack $requestStack,
-        EventManager $manager,
-        RoutingHelper $routing
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly RequestStack $requestStack,
+        private readonly EventManager $manager,
+        private readonly RoutingHelper $routing
     ) {
         $this->authorization = $authorization;
-        $this->tokenStorage = $tokenStorage;
-        $this->requestStack = $requestStack;
-        $this->manager = $manager;
-        $this->routing = $routing;
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Event::class;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'event';
     }
@@ -96,7 +81,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/ics", name="apiv2_event_download_ics", methods={"GET"})
+     * @Route("/{id}/ics", name="download_ics", methods={"GET"})
      *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
@@ -115,7 +100,7 @@ class EventController extends AbstractCrudController
     /**
      * Lists the participants of an event.
      *
-     * @Route("/{id}/participants", name="apiv2_event_list_participants", methods={"GET"})
+     * @Route("/{id}/participants", name="list_participants", methods={"GET"})
      *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
@@ -133,7 +118,7 @@ class EventController extends AbstractCrudController
     /**
      * Adds the selected users as event participants.
      *
-     * @Route("/{id}/participants", name="apiv2_event_add_participants", methods={"POST"})
+     * @Route("/{id}/participants", name="add_participants", methods={"POST"})
      *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
@@ -160,7 +145,7 @@ class EventController extends AbstractCrudController
     /**
      * Removes selected users from the event participants.
      *
-     * @Route("/{id}/participants", name="apiv2_event_remove_participants", methods={"DELETE"})
+     * @Route("/{id}/participants", name="remove_participants", methods={"DELETE"})
      *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
@@ -184,7 +169,7 @@ class EventController extends AbstractCrudController
     /**
      * Sends invitations to the selected participants.
      *
-     * @Route("/{id}/invitations/send", name="apiv2_event_send_invitations", methods={"POST"})
+     * @Route("/{id}/invitations/send", name="send_invitations", methods={"POST"})
      *
      * @EXT\ParamConverter("event", options={"mapping": {"id": "uuid"}})
      */
@@ -201,7 +186,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/invitations/{id}/status/{status}", name="apiv2_event_change_invitation_status", methods={"GET"})
+     * @Route("/invitations/{id}/status/{status}", name="change_invitation_status", methods={"GET"})
      *
      * @EXT\ParamConverter("invitation", options={"mapping": {"id": "id"}})
      */
@@ -226,7 +211,7 @@ class EventController extends AbstractCrudController
             );
         }
 
-        // for email validation link, redirect to event view
+        // for email validation link, redirect to the event view
         return new RedirectResponse(
             $this->routing->desktopUrl('agenda').'/event/'.$invitation->getEvent()->getUuid()
         );

@@ -32,7 +32,7 @@ const TagList = (props) =>
         autoload: true
       }}
       delete={{
-        url: ['apiv2_tag_delete_bulk']
+        url: ['apiv2_tag_delete']
       }}
       primaryAction={(tag) => ({
         type: LINK_BUTTON,
