@@ -40,6 +40,9 @@
     "course_type_workspace": "Use the same workspace for all training sessions.",
     "course_workspaces_help": "Manage workspaces parameters related to your training.",
 
+    "course_archived_info": "Archived training",
+    "course_archived_info_help": "This training is archived.",
+
     "archived_trainings": "Archived trainings",
     "archived_trainings_help": "Manage archived trainings.",
 

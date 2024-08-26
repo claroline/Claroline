@@ -18,6 +18,7 @@ const EventsTool = withReducer(selectors.STORE_NAME, reducer)(
           path: toolSelectors.path(state),
           course: selectors.course(state),
           currentContext: toolSelectors.context(state),
+          contextType: toolSelectors.contextType(state),
           canEdit: hasPermission('edit', toolSelectors.toolData(state)),
           canRegister: hasPermission('register', toolSelectors.toolData(state))
         }),

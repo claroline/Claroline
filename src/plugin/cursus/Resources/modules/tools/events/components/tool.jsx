@@ -78,7 +78,7 @@ const EventsTool = (props) =>
                 history={params.history}
               />)
           } else {
-            return (<EmptyCourse path={props.path} canEdit={props.canEdit}/>)
+            return (<EmptyCourse path={props.path} canEdit={props.canEdit} contextType={props.contextType} />)
           }
         }
       }, {
@@ -127,6 +127,7 @@ EventsTool.propTypes = {
     type: T.string,
     data: T.object
   }).isRequired,
+  contextType: T.string,
   canEdit: T.bool.isRequired,
   canRegister: T.bool.isRequired,
   invalidateList: T.func.isRequired,

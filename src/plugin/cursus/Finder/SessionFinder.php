@@ -27,6 +27,7 @@ class SessionFinder extends AbstractFinder
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1): QueryBuilder
     {
         $qb->join('obj.course', 'c');
+        $qb->andWhere('c.archived = 0');
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {

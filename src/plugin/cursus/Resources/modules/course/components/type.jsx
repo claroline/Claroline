@@ -33,7 +33,7 @@ const CreationType = (props) => {
                     if (props.modal) {
                       props.fadeModal()
                     }
-                    history.push(props.path + '/new')
+                    history.push(props.path + '/course/new')
                     props.startCreation(null, CourseTypes.defaultProps, selected[0])
                   }
                 }
@@ -58,7 +58,7 @@ const CreationType = (props) => {
                     if (props.modal) {
                       props.fadeModal()
                     }
-                    history.push(props.path + '/new')
+                    history.push(props.path + '/course/new')
                     props.startCreation(null, CourseTypes.defaultProps, selected[0])
                   }
                 }
@@ -76,7 +76,7 @@ const CreationType = (props) => {
               if (props.modal) {
                 props.fadeModal()
               }
-              history.push(props.path + '/new')
+              history.push(props.path + '/course/new')
               props.startCreation(null, CourseTypes.defaultProps)
             }
           }

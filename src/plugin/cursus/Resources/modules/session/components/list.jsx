@@ -23,7 +23,7 @@ const SessionList = (props) =>
     }}
     primaryAction={(row) => ({
       type: LINK_BUTTON,
-      target: route(props.course, row, props.path),
+      target: route(row.course, row, props.path),
       label: trans('open', {}, 'actions')
     })}
     delete={props.delete}
