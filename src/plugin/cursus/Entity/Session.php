@@ -185,7 +185,7 @@ class Session extends AbstractTraining implements IdentifiableInterface
     }
 
     /**
-     * @return Event[]|ArrayCollection
+     * @return Event[]|Collection
      */
     public function getEvents(): Collection
     {
