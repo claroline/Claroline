@@ -20,17 +20,10 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class WorkspaceFinder extends AbstractFinder
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authChecker;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        AuthorizationCheckerInterface $authChecker,
-        TokenStorageInterface $tokenStorage
+        private readonly AuthorizationCheckerInterface $authChecker,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->authChecker = $authChecker;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public static function getClass(): string

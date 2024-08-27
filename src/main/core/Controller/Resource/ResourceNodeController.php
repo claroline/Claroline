@@ -71,7 +71,7 @@ class ResourceNodeController extends AbstractCrudController
     /**
      * @Route("/{contextId}/{parent}", name="list", defaults={"contextId"=null, "parent"=null})
      */
-    public function listChildrenAction(Request $request, ?string $contextId = null, ?string $parent = null): JsonResponse
+    public function listAction(Request $request, ?string $contextId = null, ?string $parent = null): JsonResponse
     {
         $options = $request->query->all();
 
