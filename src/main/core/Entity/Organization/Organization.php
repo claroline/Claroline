@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Organization;
 
+use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Code;
@@ -19,12 +20,11 @@ use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Meta\IsPublic;
 use Claroline\AppBundle\Entity\Meta\Name;
-use Claroline\CommunityBundle\Model\HasGroups;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid as BaseUuid;
@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Gedmo\Tree(type="nested")
  */
-class Organization
+class Organization implements CrudEntityInterface
 {
     use Code;
     use Id;
@@ -47,10 +47,6 @@ class Organization
     use Description;
     use Poster;
     use Thumbnail;
-    use HasGroups;
-
-    public const TYPE_EXTERNAL = 'external';
-    public const TYPE_INTERNAL = 'internal';
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -65,55 +61,32 @@ class Organization
     private ?string $email = null;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Location",
-     *     cascade={"persist"},
-     *     inversedBy="organizations"
-     * )
-     *
-     * @ORM\JoinTable(name="claro__location_organization")
-     *
-     * @var ArrayCollection
-     *
-     * @deprecated Should be unidirectional. Still used in badges
-     */
-    private $locations;
-
-    /**
      * @Gedmo\TreeLeft
      *
      * @ORM\Column(name="lft", type="integer")
-     *
-     * @var int
      */
-    protected $lft;
+    protected ?int $lft = null;
 
     /**
      * @Gedmo\TreeLevel
      *
      * @ORM\Column(name="lvl", type="integer")
-     *
-     * @var int
      */
-    protected $lvl;
+    protected ?int $lvl = null;
 
     /**
      * @Gedmo\TreeRight
      *
      * @ORM\Column(name="rgt", type="integer")
-     *
-     * @var int
      */
-    protected $rgt;
+    protected ?int $rgt = null;
 
     /**
      * @Gedmo\TreeRoot
      *
      * @ORM\Column(name="root", type="integer", nullable=true)
-     *
-     * @var int
      */
-    protected $root;
+    protected ?int $root = null;
 
     /**
      * @Gedmo\TreeParent
@@ -128,101 +101,28 @@ class Organization
      * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", mappedBy="parent")
      *
      * @ORM\OrderBy({"name" = "ASC"})
-     *
-     * @var Organization[]|ArrayCollection
      */
-    private $children;
-
-    /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     mappedBy="organizations"
-     * )
-     *
-     * @ORM\JoinTable(name="claro_user_workspace")
-     *
-     * @var Workspace[]|ArrayCollection
-     *
-     * @deprecated should be unidirectional
-     */
-    private $workspaces;
-
-    /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Group",
-     *     mappedBy="organizations"
-     * )
-     *
-     * @ORM\JoinTable(name="claro_group_organization")
-     *
-     * @var ArrayCollection
-     *
-     * @deprecated should be unidirectional
-     */
-    private $groups;
+    private Collection $children;
 
     /**
      * @ORM\Column(name="is_default", type="boolean")
      */
-    private $default = false;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
-     */
-    private $vat;
-
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
-     */
-    private $type = self::TYPE_INTERNAL;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\UserOrganizationReference",
-     *     mappedBy="organization",
-     *     cascade={"persist", "remove"},
-     *     orphanRemoval=true
-     * )
-     *
-     * @ORM\JoinColumn(name="organization_id", nullable=false)
-     *
-     * @var ArrayCollection|UserOrganizationReference[]
-     *
-     * @deprecated should be unidirectional
-     */
-    private $userOrganizationReferences;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Cryptography\CryptographicKey", mappedBy="organization")
-     */
-    private $keys;
-
-    /**
-     * @ORM\Column(type="integer")
-     *
-     * @var int
-     */
-    private $maxUsers = -1;
+    private bool $default = false;
 
     public function __construct()
     {
         $this->refreshUuid();
         // todo : generate unique from name for a more beautiful code
         $this->code = BaseUuid::uuid4()->toString();
-
-        $this->locations = new ArrayCollection();
-        $this->workspaces = new ArrayCollection();
-        $this->keys = new ArrayCollection();
-        $this->groups = new ArrayCollection();
-        $this->userOrganizationReferences = new ArrayCollection();
         $this->children = new ArrayCollection();
     }
 
-    public function __toString()
+    public static function getIdentifiers(): array
+    {
+        return ['code'];
+    }
+
+    public function __toString(): string
     {
         return $this->name;
     }
@@ -257,75 +157,6 @@ class Organization
         return $this->email;
     }
 
-    /**
-     * @deprecated
-     */
-    public function setLocations($locations): void
-    {
-        $this->locations = $locations;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function getLocations()
-    {
-        return $this->locations;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function addLocation(Location $location)
-    {
-        return $this->locations->add($location);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function removeLocation(Location $location)
-    {
-        return $this->locations->removeElement($location);
-    }
-
-    public function getManagers(): ArrayCollection
-    {
-        $managers = new ArrayCollection();
-        foreach ($this->userOrganizationReferences as $userRef) {
-            if ($userRef->isManager()) {
-                $managers->add($userRef->getUser());
-            }
-        }
-
-        return $managers;
-    }
-
-    public function hasManager(User $user): bool
-    {
-        foreach ($this->userOrganizationReferences as $userRef) {
-            if ($userRef->isManager() && $user->getId() === $userRef->getUser()->getId()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function addManager(User $user): void
-    {
-        $this->addUser($user, true);
-    }
-
-    public function removeManager(User $user): void
-    {
-        foreach ($this->userOrganizationReferences as $userRef) {
-            if ($userRef->isManager() && $user->getId() === $userRef->getUser()->getId()) {
-                $userRef->setManager(false);
-            }
-        }
-    }
-
     public function setDefault(bool $default): void
     {
         $this->default = $default;
@@ -336,150 +167,86 @@ class Organization
         return $this->default;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getChildren()
+    public function getChildren(): Collection
     {
         return $this->children;
     }
 
-    public function addGroup(Group $group): void
-    {
-        if (!$this->groups->contains($group)) {
-            $this->groups->add($group);
-            $group->addOrganization($this);
-        }
-    }
-
-    public function removeGroup(Group $group): void
-    {
-        if ($this->groups->contains($group)) {
-            $this->groups->removeElement($group);
-            $group->removeOrganization($this);
-        }
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getWorkspaces()
-    {
-        return $this->workspaces;
-    }
-
-    public function setVat(?string $vat = null): void
-    {
-        $this->vat = $vat;
-    }
-
-    public function getVat(): ?string
-    {
-        return $this->vat;
-    }
-
-    public function setType(?string $type = null): void
-    {
-        $this->type = $type;
-    }
-
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
-    public function getUserOrganizationReferences()
-    {
-        return $this->userOrganizationReferences;
-    }
-
-    public function hasUser(User $user): bool
-    {
-        foreach ($this->userOrganizationReferences as $userRef) {
-            if ($user->getId() === $userRef->getUser()->getId()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function addUser(User $user, ?bool $manager = false): void
-    {
-        if ($this->getMaxUsers() > -1) {
-            $totalUsers = count($this->userOrganizationReferences);
-            if ($totalUsers >= $this->getMaxUsers()) {
-                throw new \Exception('The organization user limit has been reached');
-            }
-        }
-
-        $ref = null;
-        foreach ($this->userOrganizationReferences as $userOrgaRef) {
-            if ($userOrgaRef->getOrganization() === $this && $userOrgaRef->getUser() === $user) {
-                $ref = $userOrgaRef;
-            }
-        }
-
-        if (empty($ref)) {
-            $ref = new UserOrganizationReference();
-            $ref->setOrganization($this);
-            $ref->setUser($user);
-            $this->userOrganizationReferences->add($ref);
-        }
-
-        $ref->setManager($manager);
-    }
-
-    public function removeUser(User $user): void
-    {
-        $found = null;
-        foreach ($this->userOrganizationReferences as $ref) {
-            if ($ref->getUser()->getId() === $user->getId() && !$ref->isMain()) {
-                $found = $ref;
-            }
-        }
-
-        if ($found) {
-            $this->userOrganizationReferences->removeElement($found);
-        }
-    }
-
-    public function getRoot()
+    public function getRoot(): ?int
     {
         return $this->root;
     }
 
-    public function getLeft()
+    public function getLeft(): ?int
     {
         return $this->lft;
     }
 
-    public function getRight()
+    public function getRight(): ?int
     {
         return $this->rgt;
     }
 
-    public function getKeys()
+    /**
+     * @deprecated no replacement. Required by TransferFeature and OrganizationController::HasUsersTrait.
+     */
+    public function addUser(User $user): void
     {
-        return $this->keys;
+        $user->addOrganization($this);
     }
 
-    public function getMaxUsers(): ?int
+    /**
+     * @deprecated no replacement. Required by TransferFeature and OrganizationController::HasUsersTrait.
+     */
+    public function removeUser(User $user): void
     {
-        return $this->maxUsers;
+        $user->removeOrganization($this);
     }
 
-    public function setMaxUsers(int $maxUsers): void
+    /**
+     * @deprecated no replacement. Required by TransferFeature and OrganizationController::addManagersAction.
+     */
+    public function addManager(User $user): void
     {
-        $this->maxUsers = $maxUsers;
+        $user->addAdministratedOrganization($this);
     }
 
-    public function addWorkspace(Workspace $workspace)
+    /**
+     * @deprecated no replacement. Required by TransferFeature and OrganizationController::removeManagersAction.
+     */
+    public function removeManager(User $user): void
+    {
+        $user->removeAdministratedOrganization($this);
+    }
+
+    /**
+     * @deprecated no replacement. Required by TransferFeature and OrganizationController::HasGroupsTrait.
+     */
+    public function addGroup(Group $group): void
+    {
+        $group->addOrganization($this);
+    }
+
+    /**
+     * @deprecated no replacement. Required by TransferFeature and OrganizationController::HasGroupsTrait.
+     */
+    public function removeGroup(Group $group): void
+    {
+        $group->removeOrganization($this);
+    }
+
+    /**
+     * @deprecated no replacement. Required by OrganizationController::HasGroupsTrait.
+     */
+    public function addWorkspace(Workspace $workspace): void
     {
         $workspace->addOrganization($this);
     }
 
-    public function removeWorkspace(Workspace $workspace)
+    /**
+     * @deprecated no replacement. Required by OrganizationController::HasWorkspacesTrait.
+     */
+    public function removeWorkspace(Workspace $workspace): void
     {
         $workspace->removeOrganization($this);
     }

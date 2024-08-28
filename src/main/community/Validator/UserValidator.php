@@ -49,16 +49,10 @@ class UserValidator implements ValidatorInterface
 
     public function getUniqueFields(): array
     {
-        $unique = [
+        return [
             'username' => 'username',
             'email' => 'email',
         ];
-
-        if ($this->config->getParameter('is_user_admin_code_unique')) {
-            $unique['administrativeCode'] = 'administrativeCode';
-        }
-
-        return $unique;
     }
 
     public function validate(array $data, string $mode, array $options = []): array

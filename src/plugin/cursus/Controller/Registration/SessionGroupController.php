@@ -122,7 +122,7 @@ class SessionGroupController extends AbstractCrudController
         foreach ($sessionGroups as $sessionGroup) {
             $this->checkPermission('REGISTER', $sessionGroup->getSession());
 
-            $groupUsers = $sessionGroup->getGroup()->getUsers();
+            $groupUsers = $this->om->getRepository(User::class)->findByGroup($sessionGroup->getGroup());
 
             foreach ($groupUsers as $user) {
                 $users[$user->getUuid()] = $user;

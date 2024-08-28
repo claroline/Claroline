@@ -207,32 +207,9 @@ class EventController extends AbstractCrudController
         if (Session::REGISTRATION_PUBLIC !== $sessionEvent->getRegistrationType()) {
             throw new AccessDeniedException();
         }
-        $this->manager->registerUserToSessionEvent($sessionEvent, $user);
+        $eventUsers = $this->manager->addUsers($sessionEvent, [$user]);
 
-        $eventsRegistration = [];
-        $eventUsers = !is_null($user) ?
-            $this->crud->list(
-                EventUser::class,
-                ['session' => $sessionEvent->getSession()->getUuid(), 'user' => $user->getUuid()]
-            ) :
-            [];
-
-        foreach ($eventUsers as $eventUser) {
-            $event = $eventUser->getSessionEvent();
-            $set = $event->getEventSet();
-            $eventsRegistration[$event->getUuid()] = true;
-
-            if ($set) {
-                $setName = $set->getName();
-
-                if (!isset($eventsRegistration[$setName])) {
-                    $eventsRegistration[$setName] = $set->getLimit();
-                }
-                --$eventsRegistration[$setName];
-            }
-        }
-
-        return new JsonResponse($eventsRegistration);
+        return new JsonResponse($this->serializer->serialize($eventUsers));
     }
 
     /**
@@ -379,7 +356,7 @@ class EventController extends AbstractCrudController
         $nbUsers = 0;
 
         foreach ($groups as $group) {
-            $nbUsers += count($group->getUsers()->toArray());
+            $nbUsers += count($this->om->getRepository(User::class)->findByGroup($group));
         }
 
         if (AbstractRegistration::LEARNER === $type && !$this->manager->checkSessionEventCapacity($sessionEvent, $nbUsers)) {
@@ -419,11 +396,14 @@ class EventController extends AbstractCrudController
     {
         $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
+        /** @var EventGroup[] $sessionGroups */
         $sessionGroups = $this->decodeIdsString($request, EventGroup::class);
+
         $users = [];
         foreach ($sessionGroups as $sessionGroup) {
-            $groupUsers = $sessionGroup->getGroup()->getUsers();
+            $groupUsers = $this->om->getRepository(User::class)->findByGroup($sessionGroup->getGroup());
 
+            // de duplicate users (a user can have multiple groups)
             foreach ($groupUsers as $user) {
                 $users[$user->getUuid()] = $user;
             }

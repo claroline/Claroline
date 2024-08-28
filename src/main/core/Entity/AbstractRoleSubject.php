@@ -12,10 +12,11 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 abstract class AbstractRoleSubject
 {
-    protected $roles;
+    protected Collection $roles;
 
     public function __construct()
     {
@@ -26,7 +27,7 @@ abstract class AbstractRoleSubject
      * Adds a role to the subject role collection. This method effectively add
      * the role only if it isn't in the collection yet.
      */
-    public function addRole(Role $role)
+    public function addRole(Role $role): void
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
@@ -36,7 +37,7 @@ abstract class AbstractRoleSubject
     /**
      * Removes a role from the subject role collection.
      */
-    public function removeRole(Role $role)
+    public function removeRole(Role $role): void
     {
         if ($this->roles->contains($role)) {
             $this->roles->removeElement($role);
@@ -45,20 +46,16 @@ abstract class AbstractRoleSubject
 
     /**
      * Returns the subject's roles as an ArrayCollection of Role objects.
-     *
-     * @return ArrayCollection[Role]
      */
-    public function getEntityRoles()
+    public function getEntityRoles(): iterable
     {
         return $this->roles;
     }
 
     /**
      * Checks if the subject has a given role.
-     *
-     * @param string|Role $role
      */
-    public function hasRole($role): bool
+    public function hasRole(Role|string $role): bool
     {
         $roleName = $role instanceof Role ? $role->getName() : $role;
         if (in_array($roleName, $this->getRoles())) {
@@ -71,7 +68,7 @@ abstract class AbstractRoleSubject
     /**
      * Returns the subject roles as an array of string values.
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         $roleNames = [];
 

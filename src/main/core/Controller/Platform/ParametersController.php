@@ -122,7 +122,7 @@ class ParametersController extends AbstractSecurityController
         $event = new EnableEvent();
         $this->eventDispatcher->dispatch($event, 'platform.enable');
         if ($event->isCanceled()) {
-            return new JsonResponse($event->getCancellationMessage(), 422); // not sure it's the correct status
+            return new JsonResponse($event->getCancellationMessage(), 422); // not sure if it's the correct status
         }
 
         $this->config->setParameter('restrictions.disabled', false);
@@ -150,7 +150,7 @@ class ParametersController extends AbstractSecurityController
             $this->eventDispatcher->dispatch($event, 'platform.extend');
 
             if ($event->isCanceled()) {
-                return new JsonResponse($event->getCancellationMessage(), 422); // not sure it's the correct status
+                return new JsonResponse($event->getCancellationMessage(), 422); // not sure if it's the correct status
             }
 
             $newEnd = $event->getEnd();
@@ -171,35 +171,6 @@ class ParametersController extends AbstractSecurityController
         $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
 
         $this->config->setParameter('restrictions.disabled', true);
-
-        return new JsonResponse(null, 204);
-    }
-
-    /**
-     * @Route("/maintenance/enable", name="apiv2_maintenance_enable", methods={"PUT"})
-     */
-    public function enableMaintenanceAction(Request $request): JsonResponse
-    {
-        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
-
-        $this->config->setParameter('maintenance.enable', true);
-        if (!empty($request->getContent())) {
-            $this->config->setParameter('maintenance.message', $request->getContent());
-        }
-
-        return new JsonResponse(
-            $this->config->getParameter('maintenance.message')
-        );
-    }
-
-    /**
-     * @Route("/maintenance/disable", name="apiv2_maintenance_disable", methods={"PUT"})
-     */
-    public function disableMaintenanceAction(): JsonResponse
-    {
-        $this->checkPermission(PlatformRoles::ADMIN, null, [], true);
-
-        $this->config->setParameter('maintenance.enable', false);
 
         return new JsonResponse(null, 204);
     }

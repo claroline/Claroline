@@ -39,21 +39,16 @@ class ToolRights
     private int $mask = 0;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="toolRights"
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
      *
      * @ORM\JoinColumn(name="role_id", nullable=false, onDelete="CASCADE")
      */
     private Role $role;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
-     *     inversedBy="rights",
-     *     cascade={"persist"}
-     * )
+     * should be unidirectional imo.
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool", inversedBy="rights")
      *
      * @ORM\JoinColumn(name="ordered_tool_id", nullable=false, onDelete="CASCADE")
      */

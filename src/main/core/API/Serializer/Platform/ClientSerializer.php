@@ -51,10 +51,10 @@ class ClientSerializer
         $data = [
             'logo' => $this->config->getParameter('logo'),
             'name' => $this->config->getParameter('name'),
-            'version' => $this->versionManager->getCurrent(),
+            //'version' => $this->versionManager->getCurrent(),
             'environment' => $this->env,
             'helpUrl' => $this->config->getParameter('help_url'),
-            'selfRegistration' => $this->config->getParameter('registration.self') && !$this->userManager->hasReachedLimit(),
+            'selfRegistration' => $this->config->getParameter('registration.self')/* && !$this->userManager->hasReachedLimit()*/,
             'community' => $this->config->getParameter('community'),
             'serverUrl' => $this->platformManager->getUrl(),
             'locale' => [
@@ -62,7 +62,7 @@ class ClientSerializer
                 'current' => $this->localeManager->getUserLocale($request),
                 'available' => $this->localeManager->getEnabledLocales(),
             ],
-            'restrictions' => $this->config->getParameter('restrictions'),
+            //'restrictions' => $this->config->getParameter('restrictions'),
             'richTextScript' => $this->config->getParameter('rich_text_script'),
             'resources' => [
                 'types' => array_map(function (ResourceType $resourceType) {

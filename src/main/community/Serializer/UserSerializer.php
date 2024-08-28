@@ -113,7 +113,15 @@ class UserSerializer
             'phone' => $showEmail ? $user->getPhone() : null,
             'meta' => $this->serializeMeta($user),
             'restrictions' => $this->serializeRestrictions($user),
-            'roles' => $this->roleRepo->loadByUser($user),
+            'roles' => array_map(function (Role $role) {
+                return [
+                    'id' => $role->getUuid(),
+                    'autoId' => $role->getId(),
+                    'name' => $role->getName(),
+                    'type' => $role->getType(),
+                    'translationKey' => $role->getTranslationKey(),
+                ];
+            }, $user->getEntityRoles()),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
@@ -267,15 +275,12 @@ class UserSerializer
     {
         $this->sipe('locale', 'setLocale', $meta, $user);
         $this->sipe('description', 'setDescription', $meta, $user);
-        $this->sipe('mailNotified', 'setIsMailNotified', $meta, $user);
-        $this->sipe('mailValidated', 'setIsMailValidated', $meta, $user);
+        $this->sipe('mailNotified', 'setMailNotified', $meta, $user);
+        $this->sipe('mailValidated', 'setMailValidated', $meta, $user);
     }
 
     private function serializePermissions(User $user): array
     {
-        $token = $this->tokenStorage->getToken();
-        $currentUser = $token ? $token->getUser() : null;
-
         return [
             'open' => true,
             'edit' => $this->authorization->isGranted('EDIT', $user),
@@ -287,7 +292,6 @@ class UserSerializer
     private function serializeRestrictions(User $user): array
     {
         return [
-            'locked' => $user->isLocked(),
             'disabled' => !$user->isEnabled(),
             'removed' => $user->isRemoved(),
             'dates' => DateRangeNormalizer::normalize($user->getInitDate(), $user->getExpirationDate()),
@@ -298,10 +302,6 @@ class UserSerializer
     {
         if (isset($restrictions['disabled'])) {
             $user->setIsEnabled(!$restrictions['disabled']);
-        }
-
-        if (isset($restrictions['locked'])) {
-            $user->setLocked($restrictions['locked']);
         }
 
         if (isset($restrictions['removed'])) {

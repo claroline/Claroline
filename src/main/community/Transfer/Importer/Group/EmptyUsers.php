@@ -5,28 +5,30 @@ namespace Claroline\CommunityBundle\Transfer\Importer\Group;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
 class EmptyUsers extends AbstractImporter
 {
-    /** @var Crud */
-    private $crud;
-    /** @var ObjectManager */
-    private $om;
+    public function __construct(
+        private readonly Crud $crud,
+        private readonly ObjectManager $om
+    ) {
+    }
 
-    public function __construct(Crud $crud, ObjectManager $om)
+    public static function getAction(): array
     {
-        $this->crud = $crud;
-        $this->om = $om;
+        return ['group', 'empty_users'];
     }
 
     public function execute(array $data): array
     {
         /** @var Group $group */
-        $group = $this->om->getObject($data['group'], Group::class, array_keys($data['group']));
+        $group = $this->crud->find(Group::class, $data['group']);
 
         if ($group) {
-            $this->crud->patch($group, 'user', 'remove', $group->getUsers()->toArray());
+            $users = $this->om->getRepository(User::class)->findByGroup($group);
+            $this->crud->patch($group, 'user', 'remove', $users);
 
             return [
                 'empty_users' => [[
@@ -42,16 +44,5 @@ class EmptyUsers extends AbstractImporter
     public function getSchema(?array $options = [], ?array $extra = []): array
     {
         return ['group' => Group::class];
-    }
-
-    /**
-     * return an array with the following element:
-     * - section
-     * - action
-     * - action name.
-     */
-    public static function getAction(): array
-    {
-        return ['group', 'empty_users'];
     }
 }

@@ -12,7 +12,9 @@
 namespace Claroline\CursusBundle\Finder\Registration;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Registration\SessionGroup;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 class SessionGroupFinder extends AbstractFinder
@@ -64,7 +66,7 @@ class SessionGroupFinder extends AbstractFinder
                         $groupJoin = true;
                     }
 
-                    $qb->leftJoin('g.users', 'gu');
+                    $qb->leftJoin(User::class, 'gu', Join::WITH, 'g MEMBER OF gu.groups');
                     $qb->andWhere("gu.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;

@@ -25,7 +25,7 @@ trait HasUsersTrait
     /**
      * List users of the collection.
      *
-     * @Route("/{id}/user", name="list_users", methods={"GET"})
+     * @Route("/{id}/user", name="list_users", methods={"GET"}, priority=1)
      *
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\User.",
@@ -67,7 +67,7 @@ trait HasUsersTrait
     /**
      * Adds users to the collection.
      *
-     * @Route("/{id}/user", name="add_users", methods={"PATCH"})
+     * @Route("/{id}/user", name="add_users", methods={"PATCH"}, priority=1)
      *
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\User.",

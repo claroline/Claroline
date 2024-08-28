@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
@@ -85,7 +86,8 @@ class SessionRepository extends EntityRepository
             ->getResult();
 
         foreach ($sessionGroups as $sessionGroup) {
-            $count += $sessionGroup->getGroup()->getUsers()->count();
+            $groupUsers = $this->getEntityManager()->getRepository(User::class)->findByGroup($sessionGroup->getGroup());
+            $count += count($groupUsers);
         }
 
         return $count;

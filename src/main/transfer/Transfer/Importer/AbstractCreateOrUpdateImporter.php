@@ -34,7 +34,7 @@ abstract class AbstractCreateOrUpdateImporter extends AbstractImporter
 
         $object = $this->crud->find(static::getClass(), $data);
         if (empty($object)) {
-            // fire the create action
+            // fire the creation action
             return $this->transfer->getAction($serializedClass.'_'.self::MODE_CREATE)->execute($data);
         }
 

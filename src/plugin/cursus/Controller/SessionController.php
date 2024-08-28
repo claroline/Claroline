@@ -200,11 +200,12 @@ class SessionController extends AbstractCrudController
     {
         $this->checkPermission('REGISTER', $session, [], true);
 
+        /** @var Group[] $groups */
         $groups = $this->decodeIdsString($request, Group::class);
         $nbUsers = 0;
 
         foreach ($groups as $group) {
-            $nbUsers += count($group->getUsers()->toArray());
+            $nbUsers += count($this->om->getRepository(User::class)->findByGroup($group));
         }
 
         if (AbstractRegistration::LEARNER === $type && !$this->manager->checkSessionCapacity($session, $nbUsers)) {

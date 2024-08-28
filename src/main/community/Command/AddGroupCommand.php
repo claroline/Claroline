@@ -23,23 +23,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class AddGroupCommand extends Command
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var Crud */
-    private $crud;
-    /** @var FinderProvider */
-    private $finder;
-
-    public function __construct(ObjectManager $om, Crud $crud, FinderProvider $finder)
-    {
-        $this->om = $om;
-        $this->crud = $crud;
-        $this->finder = $finder;
-
+    public function __construct(
+        private readonly ObjectManager $om,
+        private readonly Crud $crud,
+        private readonly FinderProvider $finder
+    ) {
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Add users to a group based on their email address.')

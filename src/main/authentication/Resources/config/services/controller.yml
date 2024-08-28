@@ -2,7 +2,6 @@ services:
     Claroline\AuthenticationBundle\Controller\ApiTokenController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
@@ -10,7 +9,6 @@ services:
     Claroline\AuthenticationBundle\Controller\IpUserController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
@@ -18,7 +16,6 @@ services:
     Claroline\AuthenticationBundle\Controller\AuthenticationParametersController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
-        lazy: true
         arguments:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AuthenticationBundle\Manager\AuthenticationManager'

@@ -23,7 +23,7 @@ class GroupRepository extends EntityRepository
      *
      * @return Group[]
      */
-    public function findByWorkspace(Workspace $workspace)
+    public function findByWorkspace(Workspace $workspace): array
     {
         return $this->getEntityManager()
             ->createQuery('
@@ -43,7 +43,7 @@ class GroupRepository extends EntityRepository
     /**
      * @return Group[]
      */
-    public function findByOrganizations(array $organizations = [])
+    public function findByOrganizations(array $organizations = []): array
     {
         if (!empty($organizations)) {
             return $this->getEntityManager()
@@ -60,12 +60,25 @@ class GroupRepository extends EntityRepository
         return $this->findAll();
     }
 
+    public function findByRole(Role $role): array
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT DISTINCT g
+                FROM Claroline\CoreBundle\Entity\Group u
+                JOIN g.roles r
+                WHERE r.id = :roleId
+            ')
+            ->setParameter('roleId', $role->getId())
+            ->getResult();
+    }
+
     /**
      * Returns groups by their names.
      *
      * @return Group[]
      */
-    public function findByNames(array $names)
+    public function findByNames(array $names): array
     {
         $dql = '
             SELECT g FROM Claroline\CoreBundle\Entity\Group g

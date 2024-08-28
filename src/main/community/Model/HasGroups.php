@@ -4,11 +4,11 @@ namespace Claroline\CommunityBundle\Model;
 
 use Claroline\CoreBundle\Entity\Group;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 trait HasGroups
 {
-    /** @var ArrayCollection|Group[] */
-    private $groups;
+    private Collection $groups;
 
     /**
      * Add a group.

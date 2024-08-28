@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Transfer\Importer\Workspace;
 
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -13,31 +12,20 @@ use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
 class AddUser extends AbstractImporter
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var Crud */
-    private $crud;
-
-    public function __construct(Crud $crud, SerializerProvider $serializer, ObjectManager $om)
-    {
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->om = $om;
+    public function __construct(
+        private readonly Crud $crud,
+        private readonly ObjectManager $om
+    ) {
     }
 
     public function execute(array $data): array
     {
-        $user = $this->om->getObject($data['user'], User::class, array_keys($data['user']));
-
+        $user = $this->crud->find(User::class, $data['user']);
         if (!$user) {
             throw new \Exception('User '.$this->printError($data['user'])." doesn't exists.");
         }
 
-        //todo find a generic way to find the identifiers
-        $workspace = $this->om->getObject($data['workspace'], Workspace::class, ['code']);
-
+        $workspace = $this->crud->find(Workspace::class, $data['workspace']);
         if (!$workspace) {
             throw new \Exception('Workspace '.$this->printError($data['workspace'])." doesn't exists.");
         }

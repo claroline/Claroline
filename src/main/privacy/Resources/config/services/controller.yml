@@ -5,7 +5,6 @@ services:
     Claroline\PrivacyBundle\Controller\PrivacyController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
-        lazy: true
         arguments:
             - '@Claroline\AppBundle\API\Crud'
             - '@security.authorization_checker'
@@ -14,7 +13,6 @@ services:
             - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
 
     Claroline\PrivacyBundle\Controller\TermsOfServiceController:
-        lazy: true
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\API\SerializerProvider'

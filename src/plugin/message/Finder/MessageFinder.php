@@ -19,15 +19,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class MessageFinder extends AbstractFinder
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    /**
-     * MessageFinder constructor.
-     */
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
-        $this->tokenStorage = $tokenStorage;
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage
+    ) {
     }
 
     public static function getClass(): string
@@ -39,7 +33,6 @@ class MessageFinder extends AbstractFinder
     {
         $qb->join('obj.userMessages', 'um');
         $qb->leftJoin('um.user', 'currentUser');
-        $userId = null;
 
         if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
             $userId = $this->tokenStorage->getToken()->getUser()->getId();

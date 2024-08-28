@@ -52,7 +52,7 @@ class RoleSerializer
             $serialized['meta'] = [
                 'description' => $role->getDescription(),
                 'readOnly' => $role->isLocked(),
-                'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
+                'personalWorkspaceCreationEnabled' => $role->isPersonalWorkspaceCreationEnabled(),
             ];
 
             if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
@@ -87,7 +87,7 @@ class RoleSerializer
             $role->refreshUuid();
         }
 
-        if (!$role->isLocked()) { // shouldn't be checked in the deserialize
+        if (!$role->isLocked()) { // shouldn't be checked in the deserialization
             $this->sipe('name', 'setName', $data, $role);
             $this->sipe('type', 'setType', $data, $role);
             $this->sipe('translationKey', 'setTranslationKey', $data, $role);

@@ -118,7 +118,7 @@ class AssertionFinder extends AbstractFinder
                         ->getDQL()
                     ;
 
-                    $administratedOrganizations = $user->getAdministratedOrganizations()->toArray();
+                    $administratedOrganizations = $user->getAdministratedOrganizations();
 
                     $qb->andWhere($qb->expr()->orX(
                         // always assignable by organization managers

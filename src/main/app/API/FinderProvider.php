@@ -12,6 +12,8 @@
 namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\API\Finder\FinderInterface;
+use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderResult;
 use Claroline\AppBundle\Persistence\ObjectManager;
 
 class FinderProvider
@@ -51,6 +53,32 @@ class FinderProvider
         $finders = $this->finders instanceof \Traversable ? iterator_to_array($this->finders) : $this->finders;
 
         return array_values($finders);
+    }
+
+    public function find(string $class, FinderQuery $query, ?array $options = []): array
+    {
+        $results = $this->get($class)->search($query);
+
+        $generator = function () use ($results, $options) {
+            $count = 0;
+            foreach ($results->get() as $result) {
+                yield $this->serializer->serialize($result, $options);
+                $this->om->detach($result);
+
+                if (0 === ++$count % 30) {
+                    flush();
+                }
+            }
+        };
+
+        return [
+            'data' => $generator(),
+            'totalResults' => $results->count(),
+            'page' => $query->getPage(),
+            'pageSize' => $query->getPageSize(),
+            'filters' => self::decodeFilters($query->getFilters()),
+            //'sortBy' => $sortBy,
+        ];
     }
 
     /**
@@ -119,7 +147,7 @@ class FinderProvider
             return $this->get($class)->find($filters, $sortBy, $page, $limit, $count);
         } catch (FinderException $e) {
             if ($count) {
-                return count($this->om->getRepository($class)->findBy($filters));
+                return $this->om->getRepository($class)->count($filters);
             }
 
             return $this->om->getRepository($class)->findBy($filters, null, 0 < $limit ? $limit : null, $page);

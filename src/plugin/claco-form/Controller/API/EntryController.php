@@ -145,7 +145,6 @@ class EntryController extends AbstractCrudController
         $filters['clacoForm'] = $clacoForm->getId();
         $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
 
-        // array map is not even needed; objects are fine here
         /** @var Entry[] $data */
         $data = $this->finder->get(Entry::class)->find($filters, $sortBy, 0, -1, false);
         $next = null;

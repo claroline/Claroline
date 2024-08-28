@@ -2,7 +2,6 @@ services:
     Claroline\LogBundle\Controller\SecurityLogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
-        lazy: true
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
@@ -11,7 +10,6 @@ services:
     Claroline\LogBundle\Controller\MessageLogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
-        lazy: true
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
@@ -20,7 +18,6 @@ services:
     Claroline\LogBundle\Controller\FunctionalLogController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
-        lazy: true
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
@@ -28,7 +25,6 @@ services:
 
     Claroline\LogBundle\Controller\OperationalLogController:
         public: true
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\FinderProvider'

@@ -50,8 +50,3 @@ plugin:
               - issued_on_time
               - issuer_name
               - issuer_email
-              - issuer_phone
-              - issuer_street
-              - issuer_pc
-              - issuer_town
-              - issuer_country

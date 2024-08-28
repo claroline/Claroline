@@ -12,18 +12,19 @@
 namespace Claroline\CommunityBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class OrganizationFinder extends AbstractFinder
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
-        $this->tokenStorage = $tokenStorage;
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage
+    ) {
     }
 
     public static function getClass(): string
@@ -35,11 +36,6 @@ class OrganizationFinder extends AbstractFinder
     {
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-                case 'location':
-                    $qb->leftJoin('obj.locations', 'l');
-                    $qb->andWhere('l.uuid IN (:locationIds)');
-                    $qb->setParameter('locationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    break;
                 case 'parent':
                     if (empty($filterValue)) {
                         $qb->andWhere('obj.parent IS NULL');
@@ -50,25 +46,25 @@ class OrganizationFinder extends AbstractFinder
                     }
                     break;
                 case 'group':
-                    $qb->leftJoin('obj.groups', 'g');
+                    $qb->leftJoin(Group::class, 'g', Join::WITH, 'obj MEMBER OF g.organizations');
                     $qb->andWhere('g.uuid IN (:groupIds)');
                     $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'user':
-                    $qb->leftJoin('obj.userOrganizationReferences', 'ur');
+                    $qb->leftJoin(UserOrganizationReference::class, 'ur', Join::WITH, 'ur.organization = obj');
                     $qb->leftJoin('ur.user', 'u');
                     $qb->andWhere('u.uuid IN (:userIds)');
                     $qb->setParameter('userIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'workspace':
-                    $qb->leftJoin('obj.workspaces', 'w');
+                    $qb->leftJoin(Workspace::class, 'w', Join::WITH, 'obj MEMBER OF w.organizations');
                     $qb->andWhere('w.uuid IN (:workspaceIds)');
                     $qb->setParameter('workspaceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'administrated':
+                    $qb->leftJoin(UserOrganizationReference::class, 'ur2', Join::WITH, 'ur2.organization = obj AND ur2.manager = 1');
                     $qb->leftJoin('obj.userOrganizationReferences', 'ur2');
                     $qb->leftJoin('ur2.user', 'u2');
-                    $qb->andWhere('ur2.manager = 1');
                     $qb->andWhere('ur2.user = (:currentUserId)');
                     $qb->setParameter('currentUserId', $this->tokenStorage->getToken()->getUser() ? $this->tokenStorage->getToken()->getUser()->getId() : null);
                     break;

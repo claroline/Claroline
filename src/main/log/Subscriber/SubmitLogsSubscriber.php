@@ -3,6 +3,7 @@
 namespace Claroline\LogBundle\Subscriber;
 
 use Claroline\AuthenticationBundle\Messenger\Stamp\AuthenticationStamp;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\LogBundle\Manager\LogManager;
 use Claroline\LogBundle\Messenger\Message\CreateFunctionalLog;
 use Claroline\LogBundle\Messenger\Message\CreateMessageLog;
@@ -61,8 +62,13 @@ class SubmitLogsSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $stamps = null;
+        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+            $stamps = [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())];
+        }
+
         // dispatch stashed messages
-        $this->messageBus->dispatch(new SubmitLogs($type, $doerIp, $logs), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
+        $this->messageBus->dispatch(new SubmitLogs($type, $doerIp, $logs), $stamps);
     }
 
     private function getDoerIp(Request $request = null): string

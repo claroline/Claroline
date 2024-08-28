@@ -14,8 +14,10 @@ namespace Claroline\CommunityBundle\Finder;
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CommunityBundle\Finder\Filter\UserFilter;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 
 class UserFinder extends AbstractFinder
@@ -171,12 +173,6 @@ class UserFinder extends AbstractFinder
                     $qb->setParameter('organizations', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 
-                case 'location':
-                    $qb->leftJoin('obj.locations', 'l');
-                    $qb->andWhere('l.uuid IN (:locationIds)');
-                    $qb->setParameter('locationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    break;
-
                 case 'teams':
                     $qb->leftJoin('Claroline\CommunityBundle\Entity\Team', 't', 'WITH', 'obj MEMBER OF t.users')
                         ->andWhere('t.uuid IN (:teamIds)');
@@ -265,7 +261,7 @@ class UserFinder extends AbstractFinder
         return $qb;
     }
 
-    private function sortBy(QueryBuilder $qb, array $sortBy = null)
+    private function sortBy(QueryBuilder $qb, array $sortBy = null): void
     {
         // manages custom sort properties
         if ($sortBy && 0 !== $sortBy['direction']) {
@@ -278,8 +274,6 @@ class UserFinder extends AbstractFinder
                     break;
             }
         }
-
-        return $qb;
     }
 
     protected function getExtraFieldMapping(): array

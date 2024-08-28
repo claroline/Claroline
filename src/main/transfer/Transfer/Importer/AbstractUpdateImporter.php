@@ -45,7 +45,7 @@ abstract class AbstractUpdateImporter extends AbstractImporter
         return ['$root' => static::getClass()];
     }
 
-    public function getMode()
+    public function getMode(): string
     {
         return self::MODE_UPDATE;
     }

@@ -1,6 +1,5 @@
 services:
     Claroline\BigBlueButtonBundle\Controller\AdministrationController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
@@ -10,7 +9,6 @@ services:
             - '@Claroline\BigBlueButtonBundle\Manager\BBBManager'
 
     Claroline\BigBlueButtonBundle\Controller\BBBController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\Crud'

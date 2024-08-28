@@ -20,12 +20,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class OrganizationVoter extends AbstractVoter
 {
-    /** @var PlatformConfigurationHandler */
-    private $config;
-
-    public function __construct(PlatformConfigurationHandler $config)
-    {
-        $this->config = $config;
+    public function __construct(
+        private readonly PlatformConfigurationHandler $config
+    ) {
     }
 
     /**
@@ -33,6 +30,9 @@ class OrganizationVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options): int
     {
+        /** @var User|string|null $currentUser */
+        $currentUser = $token->getUser();
+
         switch ($attributes[0]) {
             case self::CREATE:
                 if ('create' === $this->config->getParameter('registration.organization_selection')) {
@@ -43,13 +43,13 @@ class OrganizationVoter extends AbstractVoter
                 }
                 break;
             case self::OPEN:
-                if ($token->getUser() instanceof User && $object->hasUser($token->getUser())) {
+                if ($currentUser instanceof User && $currentUser->hasOrganization($object)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
                 break;
             case self::EDIT:
             case self::PATCH:
-                if ($token->getUser() instanceof User && $this->isToolGranted('EDIT', 'community') && $object->hasManager($token->getUser())) {
+                if ($currentUser instanceof User && $this->isToolGranted('EDIT', 'community') && $currentUser->hasOrganization($object, true)) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
                 break;

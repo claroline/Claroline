@@ -2,16 +2,13 @@
 
 namespace Claroline\CommunityBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Cryptography\CryptographicKey;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\AppBundle\Event\CrudEvents;
-use Claroline\CoreBundle\Manager\CryptographyManager;
 use Claroline\CoreBundle\Manager\FileManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -21,8 +18,6 @@ class OrganizationSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
-        private readonly CryptographyManager $cryptoManager,
-        private readonly Crud $crud,
         private readonly FileManager $fileManager
     ) {
     }
@@ -96,14 +91,6 @@ class OrganizationSubscriber implements EventSubscriberInterface
         $organization = $event->getObject();
         if ($organization->isDefault()) {
             $event->block();
-
-            return;
-        }
-
-        $keys = $this->om->getRepository(CryptographicKey::class)->findBy(['organization' => $organization]);
-
-        foreach ($keys as $key) {
-            $this->crud->delete($key);
         }
     }
 
