@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller\Workspace;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
 use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Finder\FinderQuery;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Manager\File\TempFileManager;
@@ -36,6 +37,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedJsonResponse;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -137,16 +139,17 @@ class WorkspaceController extends AbstractCrudController
      *
      * @Route("/list/registered", name="list_registered", methods={"GET"})
      */
-    public function listRegisteredAction(Request $request): JsonResponse
+    public function listRegisteredAction(Request $request): StreamedJsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        return new JsonResponse($this->crud->list(
+        return new StreamedJsonResponse($this->crud->search(
             Workspace::class,
-            array_merge($request->query->all(), ['hiddenFilters' => [
-                'model' => false,
-                'roles' => $this->tokenStorage->getToken()->getRoleNames(),
-            ]]),
+            FinderQuery::fromRequest($request)
+                ->addFilters([
+                    'model' => false,
+                    'roles' => $this->tokenStorage->getToken()->getRoleNames(),
+                ]),
             $this->getOptions()['list']
         ));
     }
@@ -164,16 +167,17 @@ class WorkspaceController extends AbstractCrudController
      *
      * @Route("/list/administrated", name="list_managed", methods={"GET"})
      */
-    public function listManagedAction(Request $request): JsonResponse
+    public function listManagedAction(Request $request): StreamedJsonResponse
     {
         $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        return new JsonResponse($this->crud->list(
+        return new StreamedJsonResponse($this->crud->search(
             Workspace::class,
-            array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
-                'administrated' => true,
-                'model' => false,
-            ])]),
+            FinderQuery::fromRequest($request)
+                ->addFilters([
+                    'model' => false,
+                    'administrated' => true,
+                ]),
             $this->getOptions()['list']
         ));
     }

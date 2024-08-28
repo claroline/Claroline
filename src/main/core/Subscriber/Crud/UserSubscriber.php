@@ -38,7 +38,7 @@ class UserSubscriber implements EventSubscriberInterface
         if (!in_array(Options::NO_PERSONAL_WORKSPACE, $options)) {
             $createWs = false;
             foreach ($user->getEntityRoles() as $role) {
-                if ($role->getPersonalWorkspaceCreationEnabled()) {
+                if ($role->isPersonalWorkspaceCreationEnabled()) {
                     $createWs = true;
                     break;
                 }

@@ -33,6 +33,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Manager\Tool\ToolMaskDecoderManager:
+        lazy: true
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
@@ -113,10 +114,6 @@ services:
             - '@Claroline\CoreBundle\Manager\PluginManager'
 
     Claroline\CoreBundle\Manager\CurlManager: ~
-
-    Claroline\CoreBundle\Manager\CryptographyManager:
-        arguments:
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Manager\ConnectionMessageManager:
         arguments:

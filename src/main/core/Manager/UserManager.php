@@ -67,7 +67,7 @@ class UserManager
     {
         $user = $this->getByEmailValidationHash($validationHash);
         if ($user) {
-            $user->setIsMailValidated(true);
+            $user->setMailValidated(true);
 
             $this->om->persist($user);
             $this->om->flush();
@@ -80,8 +80,6 @@ class UserManager
 
     /**
      * Set the user locale.
-     *
-     * @todo REMOVE ME. use crud instead
      */
     public function setLocale(User $user, ?string $locale = 'en'): void
     {
@@ -102,7 +100,7 @@ class UserManager
     public function activateUser(User $user): void
     {
         $user->setIsEnabled(true);
-        $user->setIsMailValidated(true);
+        $user->setMailValidated(true);
         $user->setResetPasswordHash(null);
 
         $this->om->persist($user);

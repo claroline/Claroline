@@ -79,8 +79,9 @@ class RoleSubscriber implements EventSubscriberInterface
                 if ($event->getValue() instanceof User) {
                     $users[] = $event->getValue();
                 } elseif ($event->getValue() instanceof Group) {
-                    foreach ($event->getValue()->getUsers() as $user) {
-                        if ($user->isEnabled() && !$user->isRemoved() && !$user->hasRole($role->getName(), false)) {
+                    $groupUsers = $this->om->getRepository(User::class)->findByGroup($event->getValue());
+                    foreach ($groupUsers as $user) {
+                        if (!$user->hasRole($role->getName(), false)) {
                             $users[] = $user;
                         }
                     }
@@ -119,9 +120,10 @@ class RoleSubscriber implements EventSubscriberInterface
                 }
             } elseif ($event->getValue() instanceof Role) {
                 $role = $event->getValue();
+                $groupUsers = $this->om->getRepository(User::class)->findByGroup($group);
 
                 $users = [];
-                foreach ($group->getUsers() as $user) {
+                foreach ($groupUsers as $user) {
                     if ($user->isEnabled() && !$user->isRemoved() && !$user->hasRole($role->getName(), false)) {
                         $users[] = $user;
                     }

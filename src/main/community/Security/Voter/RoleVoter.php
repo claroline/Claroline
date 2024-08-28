@@ -126,7 +126,7 @@ class RoleVoter extends AbstractVoter
 
     protected function checkDelete(TokenInterface $token, Role $object): int
     {
-        if ($object->isReadOnly()) {
+        if ($object->isLocked()) {
             return VoterInterface::ACCESS_DENIED;
         }
 

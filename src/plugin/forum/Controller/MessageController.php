@@ -70,7 +70,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("forum/{forum}/messages/list/flagged", name="flagged_list", methods={"GET"})
+     * @Route("/forum/{forum}/messages/list/flagged", name="flagged_list", methods={"GET"})
      *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */
@@ -87,7 +87,7 @@ class MessageController extends AbstractCrudController
     }
 
     /**
-     * @Route("forum/{forum}/messages/list/blocked", name="blocked_list", methods={"GET"})
+     * @Route("/forum/{forum}/messages/list/blocked", name="blocked_list", methods={"GET"})
      *
      * @EXT\ParamConverter("forum", class = "Claroline\ForumBundle\Entity\Forum",  options={"mapping": {"forum": "uuid"}})
      */

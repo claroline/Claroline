@@ -65,7 +65,6 @@ class OrganizationSerializer
             'thumbnail' => $organization->getThumbnail(),
             'poster' => $organization->getPoster(),
             'email' => $organization->getEmail(),
-            'type' => $organization->getType(),
             'meta' => [
                 'description' => $organization->getDescription(),
                 'default' => $organization->isDefault(),
@@ -73,9 +72,7 @@ class OrganizationSerializer
             ],
             'restrictions' => [
                 'public' => $organization->isPublic(),
-                'users' => $organization->getMaxUsers(),
             ],
-            'parent' => !empty($organization->getParent()) ? $this->serialize($organization->getParent(), [SerializerInterface::SERIALIZE_MINIMAL]) : null,
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
@@ -91,22 +88,21 @@ class OrganizationSerializer
             $serialized['children'] = array_map(function (Organization $child) use ($options) {
                 return $this->serialize($child, $options);
             }, $organization->getChildren()->toArray());
+        } else {
+            $serialized['parent'] = !empty($organization->getParent()) ? $this->serialize($organization->getParent(), [SerializerInterface::SERIALIZE_MINIMAL]) : null;
         }
 
         return $serialized;
     }
 
-    public function deserialize($data, Organization $organization = null, array $options = []): Organization
+    public function deserialize(array $data, Organization $organization = null, array $options = []): Organization
     {
         $this->sipe('name', 'setName', $data, $organization);
         $this->sipe('code', 'setCode', $data, $organization);
         $this->sipe('email', 'setEmail', $data, $organization);
-        $this->sipe('type', 'setType', $data, $organization);
-        $this->sipe('vat', 'setVat', $data, $organization);
         $this->sipe('poster', 'setPoster', $data, $organization);
         $this->sipe('thumbnail', 'setThumbnail', $data, $organization);
         $this->sipe('meta.description', 'setDescription', $data, $organization);
-        $this->sipe('restrictions.users', 'setMaxUsers', $data, $organization);
         $this->sipe('restrictions.public', 'setPublic', $data, $organization);
 
         if (array_key_exists('parent', $data)) {

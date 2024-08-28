@@ -26,7 +26,7 @@ trait HasGroupsTrait
     /**
      * List groups of the collection.
      *
-     * @Route("/{id}/group", name="list_groups", methods={"GET"})
+     * @Route("/{id}/group", name="list_groups", methods={"GET"}, priority=1)
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Group.",
      *     queryString={
@@ -67,7 +67,7 @@ trait HasGroupsTrait
     /**
      * Adds groups to the collection.
      *
-     * @Route("/{id}/group", name="add_groups", methods={"PATCH"})
+     * @Route("/{id}/group", name="add_groups", methods={"PATCH"}, priority=1)
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\Group.",
      *     parameters={
@@ -96,7 +96,7 @@ trait HasGroupsTrait
     /**
      * Removes groups from the collection.
      *
-     * @Route("/{id}/group", name="remove_groups", methods={"DELETE"})
+     * @Route("/{id}/group", name="remove_groups", methods={"DELETE"}, priority=1)
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\Group.",
      *     parameters={

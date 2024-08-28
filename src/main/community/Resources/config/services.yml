@@ -6,7 +6,6 @@ imports:
     - { resource: services/importer.yml }
     - { resource: services/manager.yml }
     - { resource: services/messenger.yml }
-    - { resource: services/repository.yml }
     - { resource: services/serializer.yml }
     - { resource: services/subscriber.yml }
     - { resource: services/validator.yml }

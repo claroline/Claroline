@@ -12,6 +12,7 @@
 namespace Claroline\AgendaBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
@@ -70,7 +71,7 @@ abstract class AbstractEventFinder extends AbstractFinder
                     $qb->leftJoin('otr.role', 'otrr');
                     $qb->leftJoin('otrr.users', 'otrru');
                     $qb->leftJoin('otrr.groups', 'otrrg');
-                    $qb->leftJoin('otrrg.users', 'otrrgu');
+                    $qb->leftJoin(User::class, 'otrrgu', Join::WITH, 'otrrg MEMBER OF otrrgu.groups');
 
                     $qb->andWhere($qb->expr()->orX(
                         // creator of the event

@@ -21,7 +21,7 @@ trait HasRolesTrait
     abstract public static function getName(): string;
 
     /**
-     * @Route("/{id}/role", name="list_roles", methods={"GET"})
+     * @Route("/{id}/role", name="list_roles", methods={"GET"}, priority=1)
      *
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Role.",
@@ -51,7 +51,7 @@ trait HasRolesTrait
     }
 
     /**
-     * @Route("/{id}/role", name="add_roles", methods={"PATCH"})
+     * @Route("/{id}/role", name="add_roles", methods={"PATCH"}, priority=1)
      *
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\Role.",
@@ -79,7 +79,7 @@ trait HasRolesTrait
     }
 
     /**
-     * @Route("/{id}/role", name="remove_roles", methods={"DELETE"})
+     * @Route("/{id}/role", name="remove_roles", methods={"DELETE"}, priority=1)
      *
      * @ApiDoc(
      *     description="Remove objects of class Claroline\CoreBundle\Entity\Role.",

@@ -23,7 +23,7 @@ trait HasWorkspacesTrait
     /**
      * List workspaces of the collection.
      *
-     * @Route("/{id}/workspace", name="list_workspaces", methods={"GET"})
+     * @Route("/{id}/workspace", name="list_workspaces", methods={"GET"}, priority=1)
      *
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",
@@ -53,7 +53,7 @@ trait HasWorkspacesTrait
     /**
      * Adds workspaces to the collection.
      *
-     * @Route("/{id}/workspace", name="add_workspaces", methods={"PATCH"})
+     * @Route("/{id}/workspace", name="add_workspaces", methods={"PATCH"}, priority=1)
      *
      * @ApiDoc(
      *     description="Add objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",
@@ -83,7 +83,7 @@ trait HasWorkspacesTrait
     /**
      * Removes workspaces from the collection.
      *
-     * @Route("/{id}/workspace", name="remove_workspaces", methods={"DELETE"})
+     * @Route("/{id}/workspace", name="remove_workspaces", methods={"DELETE"}, priority=1)
      *
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\Workspace\Workspace.",

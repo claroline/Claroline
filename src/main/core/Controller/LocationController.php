@@ -12,9 +12,7 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\Model\HasOrganizationsTrait;
-use Claroline\CoreBundle\Controller\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,8 +23,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class LocationController extends AbstractCrudController
 {
-    use HasUsersTrait;
-    use HasGroupsTrait;
     use HasOrganizationsTrait;
     use PermissionCheckerTrait;
 

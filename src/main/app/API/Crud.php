@@ -2,6 +2,9 @@
 
 namespace Claroline\AppBundle\API;
 
+use Claroline\AppBundle\API\Finder\FinderQuery;
+use Claroline\AppBundle\API\Finder\FinderResult;
+use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\CrudEvent;
@@ -55,7 +58,12 @@ class Crud
         if ('id' === $idProp) {
             $object = $this->om->getRepository($class)->findOneBy(['uuid' => $id]);
         } else {
-            $identifiers = $this->schema->getIdentifiers($class);
+            if (is_a($class, CrudEntityInterface::class)) {
+                $identifiers = call_user_func([$class, 'getIdentifiers']);
+            } else {
+                $identifiers = $this->schema->getIdentifiers($class);
+            }
+
             if (!in_array($idProp, $identifiers)) {
                 throw new \LogicException(sprintf('You can only get entities with an identifier property (identifiers: %s).', implode(', ', $identifiers)));
             }
@@ -76,7 +84,12 @@ class Crud
         if ('id' === $idProp) {
             $object = $this->om->getRepository($class)->count(['uuid' => $id]);
         } else {
-            $identifiers = $this->schema->getIdentifiers($class);
+            if (is_a($class, CrudEntityInterface::class)) {
+                $identifiers = call_user_func([$class, 'getIdentifiers']);
+            } else {
+                $identifiers = $this->schema->getIdentifiers($class);
+            }
+
             if (!in_array($idProp, $identifiers)) {
                 throw new \LogicException(sprintf('You can only get entities with an identifier property (identifiers: %s).', implode(', ', $identifiers)));
             }
@@ -89,12 +102,23 @@ class Crud
 
     public function find(string $class, array $data): ?object
     {
-        return $this->om->getObject($data, $class, $this->schema->getIdentifiers($class));
+        if (class_implements($class, CrudEntityInterface::class)) {
+            $identifiers = call_user_func([$class, 'getIdentifiers']);
+        } else {
+            $identifiers = $this->schema->getIdentifiers($class);
+        }
+
+        return $this->om->getObject($data, $class, $identifiers);
     }
 
     public function count(string $class, array $query = []): int
     {
         return $this->finder->count($class, $query);
+    }
+
+    public function search(string $class, FinderQuery $query, ?array $options = []): array
+    {
+        return $this->finder->find($class, $query, $options);
     }
 
     public function list(string $class, array $query = [], array $options = []): array
@@ -119,7 +143,7 @@ class Crud
      *
      * @throws InvalidDataException
      */
-    public function create(string|object $classOrObject, array $data = [], array $options = []): mixed
+    public function create(string|object $classOrObject, array $data = [], array $options = []): object
     {
         if (is_string($classOrObject)) {
             // class name received
@@ -338,7 +362,7 @@ class Crud
      *  - only flush once (do not flush for each collection element)
      *  - only dispatch lifecycle events once with the full collection in param
      */
-    public function patch(object $object, string $property, string $action, array $elements, array $options = []): mixed
+    public function patch(object $object, string $property, string $action, array $elements, array $options = []): object
     {
         $className = $this->getRealClass($object);
         $methodName = $action.ucfirst(strtolower($property));
@@ -350,6 +374,7 @@ class Crud
         if (!in_array(static::NO_PERMISSIONS, $options)) {
             $this->checkPermission('PATCH', $object, ['collection' => new ObjectCollection($elements, ['action' => $action])], true);
         }
+
         foreach ($elements as $element) {
             // check if the element is in the collection if the object implement a has*() method
             $checkerName = 'has'.ucfirst(strtolower($property));
@@ -365,6 +390,7 @@ class Crud
                 $object->$methodName($element);
 
                 $this->om->persist($object);
+
                 if (!in_array(Options::FORCE_FLUSH, $options)) {
                     $this->om->flush();
                 } else {

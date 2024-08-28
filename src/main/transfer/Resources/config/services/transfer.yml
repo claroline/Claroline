@@ -34,9 +34,6 @@ services:
         arguments:
             - '@translator'
 
-    Claroline\TransferBundle\Transfer\Adapter\JsonAdapter:
-        tags: [ claroline.transfer.adapter ]
-
     # Base services for common import actions
     # Implemented actions must use the tag `claroline.transfer.importer`
     Claroline\TransferBundle\Transfer\Importer\AbstractCreateImporter:
@@ -76,9 +73,6 @@ services:
     Claroline\TransferBundle\Transfer\Importer\AbstractCollectionImporter:
         abstract: true
         calls:
-            - method: setObjectManager
-              arguments:
-                  - '@Claroline\AppBundle\Persistence\ObjectManager'
             - method: setCrud
               arguments:
                   - '@Claroline\AppBundle\API\Crud'

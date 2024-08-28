@@ -11,14 +11,15 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\AppBundle\Entity\Restriction\Locked;
-use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -26,10 +27,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="Claroline\CommunityBundle\Repository\RoleRepository")
  *
  * @ORM\Table(name="claro_role")
- *
- * @ORM\HasLifecycleCallbacks
  */
-class Role
+class Role implements CrudEntityInterface
 {
     use Id;
     use Uuid;
@@ -45,50 +44,31 @@ class Role
      * @ORM\Column(unique=true)
      *
      * @Assert\NotBlank()
-     *
-     * @var string
      */
-    private $name;
+    private ?string $name = null;
 
     /**
      * @ORM\Column(name="translation_key")
      *
      * @Assert\NotBlank()
-     *
-     * @var string
      */
-    private $translationKey;
+    private ?string $translationKey = null;
 
     /**
      * should be unidirectional.
      *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     mappedBy="roles"
+     *     mappedBy="roles",
+     *     fetch="EXTRA_LAZY"
      * )
-     *
-     * @var ArrayCollection
      */
-    private $users;
-
-    /**
-     * should be unidirectional.
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Group",
-     *     mappedBy="roles"
-     * )
-     *
-     * @var ArrayCollection
-     */
-    private $groups;
+    private Collection $users;
 
     /**
      * @ORM\Column(type="integer")
-     *
-     * @var int
      */
-    private $type = self::PLATFORM_ROLE;
+    private int $type = self::PLATFORM_ROLE;
 
     /**
      * @ORM\ManyToOne(
@@ -97,42 +77,29 @@ class Role
      * )
      *
      * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @var Workspace
      */
-    private $workspace;
-
-    /**
-     * should be unidirectional.
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolRights",
-     *     mappedBy="role"
-     * )
-     */
-    private $toolRights;
+    private ?Workspace $workspace = null;
 
     /**
      * @ORM\Column(name="personal_workspace_creation_enabled", type="boolean")
-     *
-     * @var bool
      */
-    private $personalWorkspaceCreationEnabled = false;
+    private bool $personalWorkspaceCreationEnabled = false;
 
     public function __construct()
     {
         $this->refreshUuid();
 
         $this->users = new ArrayCollection();
-        $this->groups = new ArrayCollection();
-        $this->toolRights = new ArrayCollection();
+    }
+
+    public static function getIdentifiers(): array
+    {
+        return ['name'];
     }
 
     public function __toString(): string
     {
-        $name = $this->workspace ? '['.$this->workspace->getName().'] '.$this->name : $this->name;
-
-        return "[{$this->getId()}]".$name;
+        return $this->name;
     }
 
     /**
@@ -140,13 +107,11 @@ class Role
      * platform-wide roles (as listed in Claroline/CoreBundle/Security/PlatformRoles)
      * cannot be modified by this setter.
      *
-     * @param string $name
-     *
      * @throws \RuntimeException if the name isn't prefixed by 'ROLE_' or if the role is platform-wide
      */
-    public function setName($name): void
+    public function setName(string $name): void
     {
-        if (0 !== strpos($name, 'ROLE_')) {
+        if (!str_starts_with($name, 'ROLE_')) {
             throw new \RuntimeException('Role names must start with "ROLE_"');
         }
 
@@ -161,9 +126,19 @@ class Role
         $this->name = $name;
     }
 
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function setType(int $type): void
+    {
+        $this->type = $type;
+    }
+
+    public function getType(): int
+    {
+        return $this->type;
     }
 
     public function setTranslationKey(string $key): void
@@ -177,52 +152,17 @@ class Role
     }
 
     /**
-     * @deprecated use isLocked
+     * @deprecated no replacement
      */
-    public function isReadOnly()
-    {
-        return $this->isLocked();
-    }
-
-    /**
-     * Alias of getName().
-     *
-     * @return string The role name
-     */
-    public function getRole()
-    {
-        return $this->getName();
-    }
-
-    /**
-     * @ORM\PreRemove
-     */
-    public function preRemove()
-    {
-        if (PlatformRoles::contains($this->name)) {
-            throw new \RuntimeException('Platform roles cannot be deleted');
-        }
-    }
-
-    /**
-     * @deprecated use setLocked
-     */
-    public function setReadOnly($value)
-    {
-        $this->setLocked($value);
-    }
-
-    /**
-     * Get the users property.
-     *
-     * @return ArrayCollection|User[]
-     */
-    public function getUsers()
+    public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    public function addUser(User $user)
+    /**
+     * @deprecated no replacement
+     */
+    public function addUser(User $user): void
     {
         $this->users->add($user);
 
@@ -231,76 +171,47 @@ class Role
         }
     }
 
-    public function addGroup(Group $group)
-    {
-        $this->groups->add($group);
-
-        if (!$group->hasRole($this)) {
-            $group->addRole($this);
-        }
-    }
-
-    public function removeUser(User $user)
+    /**
+     * @deprecated no replacement
+     */
+    public function removeUser(User $user): void
     {
         $this->users->removeElement($user);
         $user->removeRole($this);
     }
 
-    public function removeGroup(Group $group)
+    /**
+     * @deprecated no replacement
+     */
+    public function addGroup(Group $group): void
     {
-        $this->groups->removeElement($group);
-        $group->removeRole($this);
+        $group->addRole($this);
     }
 
     /**
-     * @return ArrayCollection|Group[]
+     * @deprecated no replacement
      */
-    public function getGroups()
+    public function removeGroup(Group $group): void
     {
-        return $this->groups;
+        $group->removeRole($this);
     }
 
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    public function setWorkspace(Workspace $ws = null)
+    public function setWorkspace(Workspace $ws = null): void
     {
         $this->workspace = $ws;
     }
 
-    public function getWorkspace()
+    public function getWorkspace(): ?Workspace
     {
         return $this->workspace;
     }
 
-    public function addToolRights(ToolRights $tr)
-    {
-        $this->toolRights->add($tr);
-    }
-
-    public function getToolRights()
-    {
-        return $this->toolRights;
-    }
-
-    public function getPersonalWorkspaceCreationEnabled()
+    public function isPersonalWorkspaceCreationEnabled(): bool
     {
         return $this->personalWorkspaceCreationEnabled;
     }
 
-    public function isPersonalWorkspaceCreationEnabled()
-    {
-        return $this->personalWorkspaceCreationEnabled;
-    }
-
-    public function setPersonalWorkspaceCreationEnabled($boolean)
+    public function setPersonalWorkspaceCreationEnabled(bool $boolean): void
     {
         $this->personalWorkspaceCreationEnabled = $boolean;
     }

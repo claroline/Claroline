@@ -33,7 +33,7 @@ class RoleManager
         $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($translationKey);
-        $role->setReadOnly($isReadOnly);
+        $role->setLocked($isReadOnly);
         $role->setType(Role::WS_ROLE);
         $role->setWorkspace($workspace);
 
@@ -53,7 +53,7 @@ class RoleManager
         $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($translationKey);
-        $role->setReadOnly($isReadOnly);
+        $role->setLocked($isReadOnly);
         $role->setPersonalWorkspaceCreationEnabled(true);
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
@@ -62,7 +62,7 @@ class RoleManager
             $group = new Group();
             $group->setName($name);
             $group->setCode($name);
-            $group->setReadOnly($isReadOnly);
+            $group->setLocked($isReadOnly);
             $group->addRole($role);
             $this->om->persist($group);
         }
@@ -87,7 +87,7 @@ class RoleManager
             $role = new Role();
             $role->setName($roleName);
             $role->setTranslationKey($username);
-            $role->setReadOnly(true);
+            $role->setLocked(true);
             $role->setType(Role::USER_ROLE);
             $this->om->persist($role);
         }

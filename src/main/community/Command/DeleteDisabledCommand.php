@@ -23,23 +23,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DeleteDisabledCommand extends Command
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var FinderProvider */
-    private $finder;
-    /** @var Crud */
-    private $crud;
-
-    public function __construct(ObjectManager $om, FinderProvider $finder, Crud $crud)
-    {
-        $this->om = $om;
-        $this->finder = $finder;
-        $this->crud = $crud;
-
+    public function __construct(
+        private readonly ObjectManager $om,
+        private readonly FinderProvider $finder,
+        private readonly Crud $crud
+    ) {
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Delete all disabled users')

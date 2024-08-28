@@ -14,13 +14,10 @@ class GroupSerializer
 {
     use SerializerTrait;
 
-    private RoleRepository $roleRepo;
-
     public function __construct(
         private readonly AuthorizationCheckerInterface $authorization,
-        private readonly ObjectManager $om
+        private readonly RoleSerializer $roleSerializer
     ) {
-        $this->roleRepo = $om->getRepository(Role::class);
     }
 
     public function getClass(): string
@@ -67,7 +64,9 @@ class GroupSerializer
                 'description' => $group->getDescription(),
                 'readOnly' => $group->isLocked(),
             ],
-            'roles' => $this->roleRepo->loadByGroup($group),
+            'roles' => array_map(function (Role $role) {
+                return $this->roleSerializer->serialize($role, [SerializerInterface::SERIALIZE_MINIMAL]);
+            }, $group->getEntityRoles()->toArray()),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {

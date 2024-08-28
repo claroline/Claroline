@@ -13,6 +13,8 @@ namespace Claroline\CommunityBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\User;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 class GroupFinder extends AbstractFinder
@@ -38,24 +40,11 @@ class GroupFinder extends AbstractFinder
                     $qb->andWhere('o.uuid IN (:organizationIds)');
                     $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
-                case 'administrated':
-                    if (!$organizationJoin) {
-                        $qb->leftJoin('obj.organizations', 'o');
-                        $organizationJoin = true;
-                    }
-                    // TODO
-                    break;
                 case 'user':
                 case 'users':
-                    $qb->leftJoin('obj.users', 'gu');
+                    $qb->leftJoin(User::class, 'gu', Join::WITH, 'obj MEMBER OF gu.groups');
                     $qb->andWhere('gu.uuid IN (:userIds)');
                     $qb->setParameter('userIds', is_array($filterValue) ? $filterValue : [$filterValue]);
-                    break;
-                case 'location':
-                case 'locations':
-                    $qb->leftJoin('obj.locations', 'l');
-                    $qb->andWhere('l.uuid IN (:locationIds)');
-                    $qb->setParameter('locationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'role':
                 case 'roles':

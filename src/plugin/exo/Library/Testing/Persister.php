@@ -244,12 +244,7 @@ class Persister
         return $exercise;
     }
 
-    /**
-     * @param string $username
-     *
-     * @return User
-     */
-    public function user($username)
+    public function user(string $username): User
     {
         $user = new User();
         $user->setFirstName($username);
@@ -257,7 +252,6 @@ class Persister
         $user->setUsername($username);
         $user->setPlainPassword($username);
         $user->setEmail($username.'@email.com');
-        $user->setIsMailValidated(true);
         $this->om->persist($user);
 
         if (!$this->userRole) {

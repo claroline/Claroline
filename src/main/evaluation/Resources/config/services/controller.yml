@@ -3,7 +3,6 @@ services:
         public: true
 
     Claroline\EvaluationBundle\Controller\WorkspaceEvaluationController:
-        lazy: true
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
@@ -14,7 +13,6 @@ services:
             - '@Claroline\EvaluationBundle\Manager\WorkspaceEvaluationManager'
 
     Claroline\EvaluationBundle\Controller\ResourceUserEvaluationController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
@@ -23,7 +21,6 @@ services:
             - '@Claroline\EvaluationBundle\Manager\ResourceEvaluationManager'
 
     Claroline\EvaluationBundle\Controller\CertificateController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -32,4 +29,3 @@ services:
     Claroline\EvaluationBundle\Controller\SkillsFrameworkController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true

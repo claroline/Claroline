@@ -18,7 +18,7 @@ use Doctrine\ORM\EntityRepository;
 
 class TeamRepository extends EntityRepository
 {
-    public function countUsers(Team $team)
+    public function countUsers(Team $team): int
     {
         return (int) $this->getEntityManager()
             ->createQuery('

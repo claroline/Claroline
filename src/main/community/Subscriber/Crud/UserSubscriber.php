@@ -90,10 +90,10 @@ class UserSubscriber implements EventSubscriberInterface
             $user->addRole($roleUser);
         }
 
-        $user->setIsMailNotified(
+        $user->setMailNotified(
             ArrayUtils::get($data, 'meta.mailNotified', $this->config->getParameter('auto_enable_email_redirect'))
         );
-        $user->setIsMailValidated(
+        $user->setMailValidated(
             ArrayUtils::get($data, 'meta.mailValidated', $this->config->getParameter('auto_validate_email'))
         );
 

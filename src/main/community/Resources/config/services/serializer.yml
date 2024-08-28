@@ -3,7 +3,7 @@ services:
         tags: [claroline.serializer]
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CommunityBundle\Serializer\RoleSerializer'
 
     Claroline\CommunityBundle\Serializer\OrganizationSerializer:
         tags: [claroline.serializer]

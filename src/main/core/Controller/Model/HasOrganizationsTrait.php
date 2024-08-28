@@ -23,7 +23,7 @@ trait HasOrganizationsTrait
     /**
      * List organizations of the collection.
      *
-     * @Route("/{id}/organization", name="list_organizations", methods={"GET"})
+     * @Route("/{id}/organization", name="list_organizations", methods={"GET"}, priority=1)
      *
      * @ApiDoc(
      *     description="List the objects of class Claroline\CoreBundle\Entity\Organization\Organization.",
@@ -53,7 +53,7 @@ trait HasOrganizationsTrait
     /**
      * Adds organizations to the collection.
      *
-     * @Route("/{id}/organization", name="add_organizations", methods={"PATCH"})
+     * @Route("/{id}/organization", name="add_organizations", methods={"PATCH"}, priority=1)
      *
      * @ApiDoc(
      *     description="Adds objects of class Claroline\CoreBundle\Entity\Organization\Organization.",
@@ -83,7 +83,7 @@ trait HasOrganizationsTrait
     /**
      * Removes organizations from the collection.
      *
-     * @Route("/{id}/organization", name="remove_organizations", methods={"DELETE"})
+     * @Route("/{id}/organization", name="remove_organizations", methods={"DELETE"}, priority=1)
      *
      * @ApiDoc(
      *     description="Removes objects of class Claroline\CoreBundle\Entity\Organization\Organization.",

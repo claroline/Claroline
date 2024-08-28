@@ -4,7 +4,6 @@ services:
 
     Claroline\CoreBundle\Controller\Platform\PluginController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
-        lazy: true
         public: true
         arguments:
             - '@Claroline\AppBundle\API\Crud'
@@ -13,7 +12,6 @@ services:
 
     Claroline\CoreBundle\Controller\Planning\PlannedObjectController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
-        lazy: true
         public: true
         arguments:
             - '@security.token_storage'
@@ -21,7 +19,6 @@ services:
 
     Claroline\CoreBundle\Controller\Resource\Types\FileController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
-        lazy: true
         public: true
         arguments:
             - '@security.authorization_checker'
@@ -29,7 +26,6 @@ services:
 
     Claroline\CoreBundle\Controller\Resource\ResourceNodeController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
-        lazy: true
         public: true
         arguments:
             - '@Claroline\CoreBundle\Manager\Resource\ResourceActionManager'
@@ -38,7 +34,6 @@ services:
             - '@security.authorization_checker'
 
     Claroline\CoreBundle\Controller\Resource\ActivityController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
@@ -47,10 +42,8 @@ services:
     Claroline\CoreBundle\Controller\Template\TemplateController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
 
     Claroline\CoreBundle\Controller\Template\TemplateTypeController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\Crud'
@@ -58,7 +51,6 @@ services:
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
 
     Claroline\CoreBundle\Controller\Workspace\RegistrationController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -69,7 +61,6 @@ services:
             - '@security.token_storage'
 
     Claroline\CoreBundle\Controller\Workspace\RoleController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\FinderProvider'
@@ -79,7 +70,6 @@ services:
     Claroline\CoreBundle\Controller\Workspace\WorkspaceController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
@@ -92,12 +82,10 @@ services:
     Claroline\CoreBundle\Controller\Platform\ConnectionMessageController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
         arguments:
             - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
 
     Claroline\CoreBundle\Controller\DataSourceController:
-        lazy: true
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\DataSourceManager'
@@ -105,13 +93,11 @@ services:
     Claroline\CoreBundle\Controller\PublicFileController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\Controller\ObjectLockController:
-        lazy: true
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\LockManager'
@@ -119,7 +105,6 @@ services:
     Claroline\CoreBundle\Controller\Platform\ParametersController:
         parent: Claroline\AppBundle\Controller\AbstractSecurityController
         public: true
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@event_dispatcher'
@@ -130,7 +115,6 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
 
     Claroline\CoreBundle\Controller\SwaggerController:
-        lazy: true
         arguments:
             - '@Claroline\AppBundle\Routing\Finder'
             - '@Claroline\AppBundle\Routing\Documentator'
@@ -138,14 +122,12 @@ services:
             - '%kernel.project_dir%'
 
     Claroline\CoreBundle\Controller\WidgetController:
-        lazy: true
         arguments:
             - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\CoreBundle\Manager\WidgetManager'
             - '@Claroline\CoreBundle\Manager\DataSourceManager'
 
     Claroline\CoreBundle\Controller\AuthenticationController:
-        lazy: true
         arguments:
             - '@event_dispatcher'
             - '@Claroline\CoreBundle\Manager\UserManager'
@@ -155,7 +137,6 @@ services:
             - '@Claroline\AuthenticationBundle\Security\Authentication\Authenticator'
 
     Claroline\CoreBundle\Controller\FileController:
-        lazy: true
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
@@ -167,7 +148,6 @@ services:
             - '@security.authorization_checker'
 
     Claroline\CoreBundle\Controller\ResourceController:
-        lazy: true
         arguments:
             - '@security.token_storage'
             - '@Claroline\AppBundle\API\SerializerProvider'
@@ -178,7 +158,6 @@ services:
             - '@security.authorization_checker'
 
     Claroline\CoreBundle\Controller\SearchController:
-        lazy: true
         arguments:
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@event_dispatcher'
@@ -187,6 +166,5 @@ services:
     Claroline\CoreBundle\Controller\LocationController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
         arguments:
             - '@security.authorization_checker'

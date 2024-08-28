@@ -3,7 +3,6 @@ services:
         public: true # because controller
 
     Claroline\CommunityBundle\Controller\ActivityController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
@@ -14,7 +13,6 @@ services:
     Claroline\CommunityBundle\Controller\GroupController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'
@@ -23,13 +21,11 @@ services:
     Claroline\CommunityBundle\Controller\OrganizationController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
 
     Claroline\CommunityBundle\Controller\ProfileController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -40,7 +36,6 @@ services:
             - '@Claroline\CommunityBundle\Serializer\ProfileSerializer'
 
     Claroline\CommunityBundle\Controller\RegistrationController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
@@ -54,7 +49,6 @@ services:
     Claroline\CommunityBundle\Controller\RoleController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\CoreBundle\Manager\Tool\ToolManager'
@@ -62,7 +56,6 @@ services:
     Claroline\CommunityBundle\Controller\TeamController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\CommunityBundle\Manager\TeamManager'
@@ -70,7 +63,6 @@ services:
     Claroline\CommunityBundle\Controller\UserController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true
-        lazy: true
         arguments:
             - '@security.token_storage'
             - '@security.authorization_checker'

@@ -1,7 +1,6 @@
 services:
     Claroline\NotificationBundle\Controller\NotificationController:
         public: true
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'

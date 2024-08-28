@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Controller\Model\HasRolesTrait;
 use Claroline\CoreBundle\Controller\Model\HasUsersTrait;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,7 +70,8 @@ class GroupController extends AbstractCrudController
         $this->om->startFlushSuite();
         $i = 0;
         foreach ($groups as $group) {
-            foreach ($group->getUsers() as $user) {
+            $users = $this->om->getRepository(User::class)->findByGroup($group);
+            foreach ($users as $user) {
                 if ($this->authorization->isGranted('ADMINISTRATE', $user)) {
                     $this->mailManager->sendInitPassword($user);
                     ++$i;

@@ -25,7 +25,7 @@ abstract class AbstractImporter implements ImporterInterface
         return 1;
     }
 
-    public function getMode()
+    public function getMode(): string
     {
         return self::MODE_DEFAULT;
     }

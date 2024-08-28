@@ -33,12 +33,12 @@ class SendEmailSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function executeTask(ExecuteScheduledTaskEvent $event)
+    public function executeTask(ExecuteScheduledTaskEvent $event): void
     {
         $task = $event->getTask();
 
         $data = $task->getData();
-        $users = $task->getUsers(); // TODO : to remove
+        $users = $task->getUsers();
         $object = isset($data['object']) ? $data['object'] : null;
         $content = isset($data['content']) ? $data['content'] : null;
 

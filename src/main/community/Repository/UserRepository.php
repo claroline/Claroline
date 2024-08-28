@@ -14,11 +14,9 @@ namespace Claroline\CommunityBundle\Repository;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -27,15 +25,8 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class UserRepository extends ServiceEntityRepository implements UserProviderInterface, UserLoaderInterface, PasswordUpgraderInterface
+class UserRepository extends EntityRepository implements UserProviderInterface, UserLoaderInterface, PasswordUpgraderInterface
 {
-    public function __construct(
-        ManagerRegistry $registry,
-        private readonly PlatformConfigurationHandler $platformConfigHandler
-    ) {
-        parent::__construct($registry, User::class);
-    }
-
     public function search(string $search, int $nbResults)
     {
         return $this->createQueryBuilder('u')
@@ -55,20 +46,13 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
 
     public function loadUserByUsername($username): UserInterface
     {
-        $isUserAdminCodeUnique = $this->platformConfigHandler->getParameter('is_user_admin_code_unique');
-
-        $dql = '
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.username LIKE :username
-            OR u.email LIKE :username
-        ';
-
-        if ($isUserAdminCodeUnique) {
-            $dql .= ' OR u.administrativeCode LIKE :username';
-        }
-
-        $query = $this->getEntityManager()->createQuery($dql);
-        $query->setParameter('username', $username);
+        $query = $this->getEntityManager()
+            ->createQuery('
+                SELECT u FROM Claroline\CoreBundle\Entity\User u
+                WHERE u.username LIKE :username
+                OR u.email LIKE :username
+            ')
+            ->setParameter('username', $username);
 
         try {
             $user = $query->getSingleResult();
@@ -110,7 +94,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         return $user;
     }
 
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
         return $this->getEntityName() === $class || is_subclass_of($class, $this->getEntityName());
     }
@@ -120,11 +104,11 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
      *
      * @return User[]
      */
-    public function findByGroup(Group $group)
+    public function findByGroup(Group $group): array
     {
         $query = $this->getEntityManager()->createQuery('
             SELECT DISTINCT u 
-            FROM Claroline\\CoreBundle\\Entity\\User u
+            FROM Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
             WHERE g.id = :groupId
               AND u.isRemoved = false
@@ -142,7 +126,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
      *
      * @return User[]
      */
-    public function findByWorkspaces(array $workspaces)
+    public function findByWorkspaces(array $workspaces): array
     {
         $dql = '
             SELECT u
@@ -187,7 +171,7 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         return $result;
     }
 
-    public function countUsers(array $organizations = [])
+    public function countUsers(array $organizations = []): int
     {
         $qb = $this->createQueryBuilder('user')
             ->select('COUNT(DISTINCT user.id)')
@@ -207,34 +191,36 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
     /**
      * @return User[]
      */
-    public function findByRoles(array $roles)
+    public function findByRoles(array $roles, bool $includeGroups = true): iterable
     {
         $rsm = new ResultSetMappingBuilder($this->getEntityManager());
         $rsm->addRootEntityFromClassMetadata(User::class, 'u');
 
+        $query = '
+            SELECT u.* 
+            FROM claro_user AS u
+            LEFT JOIN claro_user_role AS ur ON (u.id = ur.user_id)
+            WHERE (ur.role_id IN (:roles)) 
+              AND u.is_removed = false 
+              AND u.is_enabled = true
+              AND u.technical = false
+        ';
+
+        if ($includeGroups) {
+            $query = "($query) UNION DISTINCT (
+                SELECT u.* 
+                FROM claro_user AS u
+                LEFT JOIN claro_user_group AS ug ON (u.id = ug.user_id)
+                LEFT JOIN claro_group_role AS gr ON (ug.group_id = gr.group_id)
+                WHERE (gr.role_id IN (:roles)) 
+                AND u.is_removed = false 
+                AND u.is_enabled = true
+                AND u.technical = false
+            )";
+        }
+
         return $this->getEntityManager()
-            ->createNativeQuery('
-                (
-                    SELECT u.* 
-                    FROM claro_user AS u
-                    LEFT JOIN claro_user_role AS ur ON (u.id = ur.user_id)
-                    WHERE (ur.role_id IN (:roles)) 
-                    AND u.is_removed = false 
-                    AND u.is_enabled = true
-                    AND u.technical = false
-                )
-                UNION DISTINCT
-                (
-                    SELECT u.* 
-                    FROM claro_user AS u
-                    LEFT JOIN claro_user_group AS ug ON (u.id = ug.user_id)
-                    LEFT JOIN claro_group_role AS gr ON (ug.group_id = gr.group_id)
-                    WHERE (gr.role_id IN (:roles)) 
-                    AND u.is_removed = false 
-                    AND u.is_enabled = true
-                    AND u.technical = false
-                )
-            ', $rsm)
+            ->createNativeQuery($query, $rsm)
             ->setParameter('roles', array_map(function (Role $role) {
                 return $role->getId();
             }, $roles))

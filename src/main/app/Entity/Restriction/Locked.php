@@ -8,10 +8,8 @@ trait Locked
 {
     /**
      * @ORM\Column(name="is_locked", type="boolean", options={"default" = 0})
-     *
-     * @var bool
      */
-    protected $locked = false;
+    protected bool $locked = false;
 
     public function isLocked(): bool
     {

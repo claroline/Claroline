@@ -20,11 +20,11 @@ use Twig\Environment;
 class MailManager
 {
     public function __construct(
-        private Environment $templating,
-        private Mailer $mailer,
-        private PlatformConfigurationHandler $config,
-        private PlatformManager $platformManager,
-        private TemplateManager $templateManager
+        private readonly Environment $templating,
+        private readonly Mailer $mailer,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly PlatformManager $platformManager,
+        private readonly TemplateManager $templateManager
     ) {
     }
 

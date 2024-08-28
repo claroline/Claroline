@@ -2,10 +2,6 @@ services:
     Claroline\CommunityBundle\Security\Voter\AbstractRoleSubjectVoter:
         abstract: true
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
-        calls:
-            - method: setWorkspaceManager
-              arguments:
-                  - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
     Claroline\CommunityBundle\Security\Voter\CurrentUser\AdministratorVoter:
         tags:

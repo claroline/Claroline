@@ -42,10 +42,10 @@ class Persister
         $user->setPlainPassword($username);
         $user->setPassword($username);
         $user->setEmail($username.'@email.com');
-        $user->setIsMailValidated(true);
+        $user->setMailValidated(true);
         $user->addRole($roleUser);
         $user->setCreationDate(new \DateTime());
-        $user->enable();
+        $user->setIsEnabled(true);
         $this->container->get('claroline.manager.role_manager')->createUserRole($user);
         $this->om->persist($user);
 

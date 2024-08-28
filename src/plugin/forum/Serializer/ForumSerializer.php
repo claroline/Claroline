@@ -21,22 +21,13 @@ class ForumSerializer
     use PermissionCheckerTrait;
     use SerializerTrait;
 
-    private $finder;
-    private $tokenStorage;
-    private $eventDispatcher;
-    private $manager;
-
     public function __construct(
-        FinderProvider $finder,
-        TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $eventDispatcher,
-        ForumManager $manager,
+        private readonly FinderProvider $finder,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ForumManager $manager,
         AuthorizationCheckerInterface $authorization
     ) {
-        $this->finder = $finder;
-        $this->tokenStorage = $tokenStorage;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->manager = $manager;
         $this->authorization = $authorization;
     }
 

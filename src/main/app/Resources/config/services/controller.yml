@@ -26,7 +26,6 @@ services:
                   - '@security.authorization_checker'
 
     Claroline\AppBundle\Controller\PlatformController:
-        lazy: true
         arguments:
             - '@security.token_storage'
             - '@twig'
@@ -41,7 +40,6 @@ services:
             - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
 
     Claroline\AppBundle\Controller\Component\ContextController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@security.token_storage'
@@ -53,7 +51,6 @@ services:
             - '@Claroline\AppBundle\Component\Tool\ToolProvider'
 
     Claroline\AppBundle\Controller\Component\ToolController:
-        lazy: true
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
