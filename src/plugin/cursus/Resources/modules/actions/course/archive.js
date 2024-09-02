@@ -12,7 +12,7 @@ import {CourseCard} from '#/plugin/cursus/course/components/card'
  * Archive action.
  */
 export default (courses, refresher) => {
-  const processable = courses.filter(course => hasPermission('edit', course) && !get(course, 'meta.archived'))
+  const processable = courses.filter(course => hasPermission('administrate', course) && !get(course, 'meta.archived'))
 
   return {
     name: 'archive',

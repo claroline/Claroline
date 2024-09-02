@@ -41,7 +41,7 @@ const CreationType = (props) => {
             }]
           }
         }, {
-          id: 'create-from-model',
+          id: 'create-with-model',
           icon: 'stamp',
           label: trans('create_mode_model', {}, 'cursus'),
           description: trans('create_mode_model_desc', {}, 'cursus'),
@@ -86,7 +86,8 @@ const CreationType = (props) => {
           label: trans('create_mode_copy', {}, 'cursus'),
           description: trans('create_mode_copy_desc', {}, 'cursus'),
           action: {
-            type: MODAL_BUTTON
+            type: MODAL_BUTTON,
+            modal: []
           },
           group: trans('create_mode_group_existing', {}, 'cursus')
         }, {
@@ -106,7 +107,8 @@ const CreationType = (props) => {
           description: trans('create_mode_existing_desc', {}, 'cursus'),
           displayed: props.contextType === 'workspace',
           action: {
-            type: CALLBACK_BUTTON
+            type: CALLBACK_BUTTON,
+            callback: () => true
           },
           group: trans('create_mode_group_existing', {}, 'cursus')
         }
@@ -116,11 +118,11 @@ const CreationType = (props) => {
 }
 
 CreationType.propTypes = {
-  startCreation: T.func.isRequired,
-  create: T.func.isRequired,
-  reset: T.func.isRequired,
+  startCreation: T.func,
+  create: T.func,
+  reset: T.func,
   contextType: T.string,
-  path: T.string,
+  path: T.string.isRequired,
   modal: T.bool,
   fadeModal: T.func
 }

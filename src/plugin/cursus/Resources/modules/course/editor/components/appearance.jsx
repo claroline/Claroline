@@ -1,9 +1,7 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/app/intl'
 import {EditorPage} from '#/main/app/editor'
-import {DataFormSection as DataFormSectionTypes} from '#/main/app/content/form/prop-types'
 
 const CourseEditorAppearance = (props) =>
   <EditorPage
@@ -59,21 +57,10 @@ const CourseEditorAppearance = (props) =>
           }
         ]
       }
-    ].concat(props.definition)}
+    ]}
   >
     {props.children}
   </EditorPage>
-
-CourseEditorAppearance.propTypes = {
-  definition: T.arrayOf(T.shape(
-    DataFormSectionTypes.propTypes
-  )),
-  children: T.any
-}
-
-CourseEditorAppearance.defaultProps = {
-  definition: []
-}
 
 export {
   CourseEditorAppearance

@@ -13,6 +13,8 @@ import {actions as listActions} from '#/main/app/content/list/store'
 import {CourseCard} from '#/plugin/cursus/course/components/card'
 import {getActions, getDefaultAction} from '#/plugin/cursus/course/utils'
 
+import {ContentSizing} from '#/main/app/content/components/sizing'
+
 const Courses = (props) => {
   const refresher = merge({
     add:    () => props.invalidate(props.name),
@@ -79,7 +81,11 @@ const Courses = (props) => {
       display={{
         current: listConst.DISPLAY_LIST
       }}
-    />
+    >
+      <ContentSizing size="md" className="mt-4">
+        {props.children}
+      </ContentSizing>
+    </ListData>
   )
 }
 
@@ -89,7 +95,8 @@ Courses.propTypes = {
   url: T.oneOfType([T.string, T.array]),
   currentUser: T.object,
   refresher: T.object,
-  invalidate: T.func.isRequired
+  invalidate: T.func.isRequired,
+  children: T.node
 }
 
 Courses.defaultProps = {

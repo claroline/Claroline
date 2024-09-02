@@ -16,7 +16,6 @@ const TrainingsEditor = (props) =>
         render: () => (
           <TrainingsEditorArchive
             path={props.path}
-            canEdit={props.canEdit}
           />
         )
       }
@@ -24,8 +23,7 @@ const TrainingsEditor = (props) =>
   />
 
 TrainingsEditor.propTypes = {
-  path: T.string.isRequired,
-  canEdit: T.bool.isRequired
+  path: T.string.isRequired
 }
 
 export {

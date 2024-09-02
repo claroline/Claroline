@@ -34,10 +34,6 @@ const CourseEditorOverview = () =>
         primary: true,
         fields: [
           {
-            name: 'parent',
-            type: 'training_course',
-            label: trans('parent')
-          }, {
             name: 'description',
             type: 'string',
             label: trans('description_short'),
@@ -64,6 +60,10 @@ const CourseEditorOverview = () =>
             name: 'tags',
             label: trans('tags'),
             type: 'tag'
+          }, {
+            name: 'parent',
+            type: 'training_course',
+            label: trans('parent')
           }
         ]
       }

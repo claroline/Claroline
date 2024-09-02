@@ -13,7 +13,7 @@ const TrainingsEditorArchive = (props) =>
   >
     <CourseList
       path={props.path}
-      name={selectors.LIST_NAME}
+      name={selectors.STORE_NAME}
       url={['apiv2_cursus_course_list_archived']}
     />
   </EditorPage>

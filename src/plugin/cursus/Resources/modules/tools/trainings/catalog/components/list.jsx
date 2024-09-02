@@ -6,7 +6,6 @@ import {LINK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {ToolPage} from '#/main/core/tool'
 
 import {CourseList} from '#/plugin/cursus/course/components/list'
-import {ContentSizing} from '#/main/app/content/components/sizing'
 import {CreationType} from '#/plugin/cursus/course/components/type'
 import {selectors} from '#/plugin/cursus/tools/trainings/catalog/store'
 import {MODAL_COURSE_TYPE_CREATION} from '#/plugin/cursus/course/modals/creation'
@@ -39,19 +38,19 @@ const CatalogList = (props) =>
       path={props.path}
       name={selectors.LIST_NAME}
       url={['apiv2_cursus_course_list']}
-    />
+    >
+      <CreationType
+        path={props.path}
+        contextType={props.contextType}
+      />
+    </CourseList>
 
-    {props.courses.totalResults === 0 &&
-      <ContentSizing size="md" className="mt-4">
-        <CreationType {...props} />
-      </ContentSizing>
-    }
   </ToolPage>
 
 CatalogList.propTypes = {
   path: T.string.isRequired,
   canEdit: T.bool.isRequired,
-  courses: T.object
+  contextType: T.string
 }
 
 export {

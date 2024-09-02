@@ -55,7 +55,7 @@ class CourseController extends AbstractCrudController
         RoutingHelper $routing,
         ToolManager $toolManager,
         CourseManager $manager,
-        PdfManager $pdfManager
+        PdfManager $pdfManager,
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
@@ -110,6 +110,21 @@ class CourseController extends AbstractCrudController
     }
 
     /**
+     * @Route("/", name="apiv2_cursus_course_list", methods={"GET"})
+     */
+    public function listAction(Request $request): JsonResponse
+    {
+        $params = $request->query->all();
+        $params['hiddenFilters'] = [
+            'archived' => false,
+        ];
+
+        return new JsonResponse(
+            $this->crud->list(Course::class, $params)
+        );
+    }
+
+    /**
      * @Route("/public", name="apiv2_cursus_course_list_public", methods={"GET"})
      */
     public function listPublicAction(Request $request): JsonResponse
@@ -129,14 +144,15 @@ class CourseController extends AbstractCrudController
      */
     public function listArchivedAction(Request $request): JsonResponse
     {
-        $params = $request->query->all();
-        $params['hiddenFilters'] = [
-            'archived' => true,
-        ];
+        $this->checkPermission('IS_AUTHENTICATED_FULLY', null, [], true);
 
-        return new JsonResponse(
-            $this->crud->list(Course::class, $params)
-        );
+        return new JsonResponse($this->crud->list(
+            Course::class,
+            array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
+                'archived' => true,
+            ])]),
+            $this->getOptions()['list']
+        ));
     }
 
     /**
@@ -156,7 +172,7 @@ class CourseController extends AbstractCrudController
         ]);
 
         foreach ($courses as $course) {
-            if ($this->authorization->isGranted('EDIT', $course) && !$course->isArchived()) {
+            if ($this->authorization->isGranted('ADMINISTRATE', $course) && !$course->isArchived()) {
                 $course->setArchived(true);
                 $processed[] = $course;
             }
@@ -186,7 +202,7 @@ class CourseController extends AbstractCrudController
         ]);
 
         foreach ($courses as $course) {
-            if ($this->authorization->isGranted('EDIT', $course) && $course->isArchived()) {
+            if ($this->authorization->isGranted('ADMINISTRATE', $course) && $course->isArchived()) {
                 $course->setArchived(false);
                 $processed[] = $course;
             }

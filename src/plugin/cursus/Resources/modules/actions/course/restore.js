@@ -9,7 +9,7 @@ import {hasPermission} from '#/main/app/security'
  * Restore action.
  */
 export default (courses, refresher) => {
-  const processable = courses.filter(course => hasPermission('edit', course) && get(course, 'meta.archived'))
+  const processable = courses.filter(course => hasPermission('administrate', course) && get(course, 'meta.archived'))
 
   return {
     name: 'restore',

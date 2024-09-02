@@ -21,7 +21,6 @@ const CatalogMain = (props) =>
             path={props.path}
             canEdit={props.canEdit}
             contextType={props.contextType}
-            courses={props.courses}
           />
         )
       }, {

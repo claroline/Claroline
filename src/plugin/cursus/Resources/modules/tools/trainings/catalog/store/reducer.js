@@ -8,8 +8,7 @@ import {selectors as courseSelectors} from '#/plugin/cursus/course/store/selecto
 
 const reducer = combineReducers({
   courses: makeListReducer(selectors.LIST_NAME, {
-    sortBy: {property: 'name', direction: 1},
-    filters: [{property: 'archived', value: false}]
+    sortBy: {property: 'name', direction: 1}
   }, {
     invalidated: makeReducer(false, {
       [FORM_SUBMIT_SUCCESS+'/'+courseSelectors.FORM_NAME]: () => true

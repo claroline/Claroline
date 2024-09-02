@@ -57,7 +57,7 @@ class CourseSerializer
         RoleSerializer $roleSerializer,
         OrganizationSerializer $orgaSerializer,
         WorkspaceSerializer $workspaceSerializer,
-        PanelFacetSerializer $panelFacetSerializer
+        PanelFacetSerializer $panelFacetSerializer,
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
