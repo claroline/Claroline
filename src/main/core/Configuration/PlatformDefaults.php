@@ -103,7 +103,7 @@ class PlatformDefaults implements ParameterProviderInterface
                 'from' => 'noreply@claroline.com',
             ],
             'ssl' => [ // to remove
-                'enabled' => false,
+                'enabled' => true,
                 'version' => 3,
             ],
             'auto_enable_notifications' => [
