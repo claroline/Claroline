@@ -52,7 +52,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         MessageBusInterface $messageBus,
         ObjectManager $om,
         WorkspaceEvaluationManager $manager,
-        CertificateManager $certificateManager
+        CertificateManager $certificateManager,
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->messageBus = $messageBus;
@@ -100,6 +100,10 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
     public function onAddRole(AddRoleEvent $event): void
     {
         $role = $event->getRole();
+
+        if (!$this->tokenStorage->getToken()->getUser() instanceof User) {
+            return;
+        }
 
         // init evaluation for all the workspaces accessible by the role
         // this is not required by the code, but is a feature for managers to see users in evaluation tool/exports
