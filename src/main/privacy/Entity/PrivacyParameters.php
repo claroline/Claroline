@@ -68,7 +68,7 @@ class PrivacyParameters
     /**
      * @ORM\Column(name="tos_enabled", type="boolean")
      */
-    private bool $tosEnabled = true;
+    private bool $tosEnabled = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Template\Template")
