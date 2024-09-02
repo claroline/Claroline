@@ -104,7 +104,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         if (!$this->tokenStorage->getToken()->getUser() instanceof User) {
             return;
         }
-        
+
         // init evaluation for all the workspaces accessible by the role
         // this is not required by the code, but is a feature for managers to see users in evaluation tool/exports
         // event if they have not opened the workspace yet.
