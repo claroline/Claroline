@@ -52,7 +52,7 @@ class WorkspaceEvaluationSubscriber implements EventSubscriberInterface
         MessageBusInterface $messageBus,
         ObjectManager $om,
         WorkspaceEvaluationManager $manager,
-        CertificateManager $certificateManager
+        CertificateManager $certificateManager,
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->messageBus = $messageBus;
