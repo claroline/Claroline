@@ -22,7 +22,7 @@ export const actions = {}
 
 actions.updateUser = makeActionCreator(SECURITY_USER_UPDATE, 'user')
 
-actions.changeUser = (user, config, impersonated = false, contexts = [], contextFavorites = []) => (dispatch, getState) => {
+actions.changeUser = (user, config, impersonated = false, contexts = [], contextFavorites = [], currentOrganization = null, availableOrganizations = []) => (dispatch, getState) => {
   // we will dispatch action only if the user has really changed
   // this will avoid false positive as it is used by other ui components
   // to know when to invalidate/reload data for the new user
@@ -34,12 +34,14 @@ actions.changeUser = (user, config, impersonated = false, contexts = [], context
       config: config,
       impersonated: impersonated,
       contexts: contexts,
-      contextFavorites: contextFavorites
+      contextFavorites: contextFavorites,
+      currentOrganization: currentOrganization,
+      availableOrganizations: availableOrganizations
     })
   }
 }
 
-actions.login = (username, password, rememberMe) => (dispatch) => dispatch({
+actions.login = (username, password) => (dispatch) => dispatch({
   [apiConst.API_REQUEST]: {
     silent: true,
     forceReauthenticate: false,
@@ -48,25 +50,30 @@ actions.login = (username, password, rememberMe) => (dispatch) => dispatch({
       method: 'POST',
       body: JSON.stringify({
         username: username,
-        password: password,
-        remember_me: rememberMe
+        password: password
       })
     },
-    success: (response) => dispatch(actions.onLogin(response))
+    success: (response) => {
+      return dispatch(actions.onLogin(response))
+    }
   }
 })
 
 actions.onLogin = (response) => (dispatch) => {
+  const changeCurrentUser = () => {
+    return dispatch(actions.changeUser(response.user, response.config, false, response.contexts, response.contextFavorites, response.currentOrganization, response.availableOrganizations))
+  }
+
   if (!get(response.user, 'meta.acceptedTerms') && param('privacy.tos.enabled')) {
     return dispatch(modalActions.showModal(MODAL_TERMS_OF_SERVICE, {
       messages: response.messages,
       validate: true,
-      onAccept: () => dispatch(actions.changeUser(response.user, response.config, false, response.contexts, response.contextFavorites)),
+      onAccept: () => changeCurrentUser,
       onRefuse: () => dispatch(actions.logout())
     }))
   }
 
-  dispatch(actions.changeUser(response.user, response.config, false, response.contexts, response.contextFavorites))
+  changeCurrentUser()
 
   if (!isEmpty(response.messages)) {
     dispatch(modalActions.showModal(MODAL_CONNECTION, {
@@ -79,6 +86,6 @@ actions.logout = () => ({
   [apiConst.API_REQUEST]: {
     silent: true,
     url: ['claro_security_logout'],
-    success: (response, dispatch) => dispatch(actions.changeUser(null, {}, false, [], []))
+    success: (response, dispatch) => dispatch(actions.changeUser(null, {}))
   }
 })

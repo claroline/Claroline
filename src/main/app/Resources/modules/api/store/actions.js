@@ -14,40 +14,11 @@ export const RESPONSE_RECEIVE = 'RESPONSE_RECEIVE'
 export const actions = {}
 
 // request actions
-actions.processRequest = makeActionCreator(REQUEST_SEND, 'apiRequest')
-actions.sendRequest = (apiRequest) => (dispatch) => {
-  if (!apiRequest.silent) {
-    // display a user alert
-    /*const currentAction = apiRequest.type || constants.HTTP_ACTIONS[apiRequest.request.method]
-    const customMessages = apiRequest.messages[alertConstants.ALERT_STATUS_PENDING]
-
-    dispatch(alertActions.addAlert(
-      // id
-      apiRequest.id + alertConstants.ALERT_STATUS_PENDING,
-      // status
-      alertConstants.ALERT_STATUS_PENDING,
-      // action
-      currentAction,
-      // title
-      customMessages && customMessages.title,
-      // message
-      customMessages && customMessages.message
-    ))*/
-  }
-
-  return dispatch(actions.processRequest(apiRequest))
-}
+actions.sendRequest = makeActionCreator(REQUEST_SEND, 'apiRequest')
 
 // response actions
 actions.processResponse = makeActionCreator(RESPONSE_RECEIVE, 'apiRequest', 'status', 'statusText', 'response')
 actions.receiveResponse = (apiRequest, status, statusText, response) => dispatch => {
-  if (!apiRequest.silent) {
-    // removes pending alert
-    /*dispatch(alertActions.removeAlert(
-      apiRequest.id + alertConstants.ALERT_STATUS_PENDING
-    ))*/
-  }
-
   // add new status alert
   // we force the display of errors
   // this is a quick fix for components which maintain their own loader without managing errors
