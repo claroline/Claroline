@@ -51,14 +51,9 @@ final class Options
     public const NO_PERSONAL_WORKSPACE = 'no_personal_workspace';
     public const SERIALIZE_FACET = 'serialize_facet';
     public const NO_EMAIL = 'no_email';
-    public const ADD_NOTIFICATIONS = 'add_notifications';
     public const VALIDATE_FACET = 'validate_facet';
     public const REGISTRATION = 'registration';
 
-    /**
-     * @deprecated
-     */
-    public const WORKSPACE_VALIDATE_ROLES = 'workspace_validate_roles';
     // make created workspace a model
     public const AS_MODEL = 'as_model';
     // avoid copying model (this is used by import)

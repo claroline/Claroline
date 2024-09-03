@@ -243,11 +243,7 @@ class UserController extends AbstractCrudController
     {
         return array_merge(parent::getOptions(), [
             'deleteBulk' => [Options::SOFT_DELETE],
-            'create' => [
-                // maybe move these options in another class
-                Options::WORKSPACE_VALIDATE_ROLES,
-                Options::SERIALIZE_FACET,
-            ],
+            'create' => [Options::SERIALIZE_FACET],
             'get' => [Options::SERIALIZE_FACET],
             'update' => [Options::SERIALIZE_FACET],
         ]);
