@@ -19,9 +19,7 @@ const RegistrationMain = withRouter(
         facets: selectors.facets(state),
         allFacetFields: selectors.allFacetFields(state),
         termOfService: selectors.termOfService(state),
-        options: selectors.options(state),
-        workspaces: selectors.workspaces(state),
-        defaultWorkspaces: selectors.defaultWorkspaces(state)
+        options: selectors.options(state)
       }),
       (dispatch) => ({
         register(user, termOfService, onRegister) {

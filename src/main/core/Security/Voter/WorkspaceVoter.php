@@ -57,6 +57,7 @@ class WorkspaceVoter extends AbstractVoter implements CacheableVoterInterface
             case self::VIEW:   return $this->checkView($token, $object);
             case self::CREATE: return $this->checkCreation($token);
             case self::EDIT:
+            case self::ADMINISTRATE:
             case self::COPY:
                 return $this->checkEdit($token, $object);
             case self::DELETE: return $this->checkDelete($token, $object);

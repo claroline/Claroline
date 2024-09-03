@@ -9,9 +9,6 @@ import {FormStepper} from '#/main/app/content/form/components/stepper'
 import {Facet} from '#/main/app/security/registration/components/facet'
 import {Required} from '#/main/app/security/registration/components/required'
 import {Optional} from '#/main/app/security/registration/components/optional'
-import {Organization} from '#/main/app/security/registration/components/organization'
-import {Workspace} from '#/main/app/security/registration/components/workspace'
-import {Registration} from '#/main/app/security/registration/components/registration'
 import {OrganizationSelection} from '#/main/app/security/registration/components/organization-selection'
 
 import {constants} from '#/main/app/security/registration/constants'
@@ -24,12 +21,6 @@ class RegistrationMain extends Component {
   render() {
     let steps = []
 
-    if (!this.props.options.allowWorkspace && this.props.defaultWorkspaces) {
-      steps.push({
-        title: 'Registration',
-        component: Registration
-      })
-    }
 
     steps = steps.concat([
       {
@@ -48,22 +39,10 @@ class RegistrationMain extends Component {
       }
     })))
 
-    if (constants.ORGANIZATION_SELECTION_CREATE === this.props.options.organizationSelection) {
-      steps.push({
-        title: trans('organization'),
-        component: Organization
-      })
-    } else if (constants.ORGANIZATION_SELECTION_SELECT === this.props.options.organizationSelection) {
+    if (constants.ORGANIZATION_SELECTION_SELECT === this.props.options.organizationSelection) {
       steps.push({
         title: trans('organization'),
         component: OrganizationSelection
-      })
-    }
-
-    if (this.props.options.allowWorkspace) {
-      steps.push({
-        title: trans('workspaces'),
-        component: Workspace
       })
     }
 
@@ -122,10 +101,8 @@ RegistrationMain.propTypes = {
   fetchRegistrationData: T.func.isRequired,
   options: T.shape({
     validation: T.bool,
-    allowWorkspace: T.bool,
     organizationSelection: T.string
   }).isRequired,
-  defaultWorkspaces: T.array,
   allFacetFields: T.array,
   onRegister: T.func
 }

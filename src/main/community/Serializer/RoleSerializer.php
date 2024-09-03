@@ -59,11 +59,13 @@ class RoleSerializer
             ];
 
             if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+                $administrate = $this->authorization->isGranted('ADMINISTRATE', $role);
+
                 $serialized['permissions'] = [
-                    'open' => $this->authorization->isGranted('OPEN', $role),
-                    'edit' => $this->authorization->isGranted('EDIT', $role),
-                    'administrate' => $this->authorization->isGranted('ADMINISTRATE', $role),
-                    'delete' => $this->authorization->isGranted('DELETE', $role),
+                    'open' => $administrate || $this->authorization->isGranted('OPEN', $role),
+                    'edit' => $administrate || $this->authorization->isGranted('EDIT', $role),
+                    'administrate' => $administrate,
+                    'delete' => $administrate || $this->authorization->isGranted('DELETE', $role),
                 ];
 
                 if (Role::WS_ROLE === $role->getType() && $role->getWorkspace()) {

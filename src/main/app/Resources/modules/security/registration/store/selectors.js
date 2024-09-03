@@ -20,16 +20,6 @@ const facets = createSelector(
   (store) => store.facets
 )
 
-const workspaces = createSelector(
-  [store],
-  (store) => store.workspaces
-)
-
-const defaultWorkspaces = createSelector(
-  [store],
-  (store) => store.defaultWorkspaces
-)
-
 const allFacetFields = createSelector(
   [facets],
   (configuredFacets) => {
@@ -50,7 +40,5 @@ export const selectors = {
   termOfService,
   options,
   facets,
-  allFacetFields,
-  workspaces,
-  defaultWorkspaces
+  allFacetFields
 }

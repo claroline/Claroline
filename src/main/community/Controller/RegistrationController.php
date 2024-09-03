@@ -19,7 +19,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Security\Authentication\Authenticator;
 use Claroline\CommunityBundle\Serializer\ProfileSerializer;
 use Claroline\CoreBundle\Configuration\PlatformDefaults;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\PrivacyBundle\Manager\PrivacyManager;
@@ -41,88 +40,31 @@ class RegistrationController
 {
     use RequestDecoderTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var Crud */
-    private $crud;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var ProfileSerializer */
-    private $profileSerializer;
-    /** @var PrivacyManager */
-    private $privacyManager;
-    /** @var Authenticator */
-    private $authenticator;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        PlatformConfigurationHandler $config,
-        Crud $crud,
-        SerializerProvider $serializer,
-        ProfileSerializer $profileSerializer,
-        PrivacyManager $privacyManager,
-        Authenticator $authenticator
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly Crud $crud,
+        private readonly SerializerProvider $serializer,
+        private readonly ProfileSerializer $profileSerializer,
+        private readonly PrivacyManager $privacyManager,
+        private readonly Authenticator $authenticator
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->config = $config;
-        $this->crud = $crud;
-        $this->serializer = $serializer;
-        $this->profileSerializer = $profileSerializer;
-        $this->authenticator = $authenticator;
-        $this->privacyManager = $privacyManager;
     }
 
     /**
      * @Route("/", name="apiv2_user_register", methods={"POST"})
-     *
-     * @return Response
      */
-    public function registerAction(Request $request)
+    public function registerAction(Request $request): Response
     {
         $this->checkAccess();
-
-        $data = $this->decodeRequest($request);
-
-        $organizationRepository = $this->om->getRepository(Organization::class);
-
-        $organization = null;
-        $autoOrganization = 'create' === $this->config->getParameter('registration.organization_selection');
-        // step one: creation the organization if it's here. If it exists, we fetch it.
-        if ($autoOrganization) {
-            // try to find orga first
-            if (isset($data['mainOrganization'])) {
-                if (isset($data['mainOrganization']['vat']) && null !== $data['mainOrganization']['vat']) {
-                    $organization = $organizationRepository
-                        ->findOneBy(['vat' => $data['mainOrganization']['vat']]);
-                } else {
-                    $organization = $organizationRepository
-                        ->findOneBy(['code' => $data['mainOrganization']['code']]);
-                }
-            }
-
-            if (!$organization && isset($data['mainOrganization'])) {
-                $organization = $this->crud->create(Organization::class, $data['mainOrganization'], [Crud::THROW_EXCEPTION]);
-            }
-        }
 
         /** @var array|User $user */
         $user = $this->crud->create(User::class, $this->decodeRequest($request), [
             // maybe move these options in another class
             Options::REGISTRATION,
-            Options::WORKSPACE_VALIDATE_ROLES,
-            Options::VALIDATE_FACET,
-            Crud::THROW_EXCEPTION,
+            Options::VALIDATE_FACET
         ]);
-
-        if ($organization) {
-            $this->crud->replace($user, 'mainOrganization', $organization);
-        }
 
         $validation = $this->config->getParameter('registration.validation');
         // auto log user if option is set and account doesn't need to be validated
@@ -151,8 +93,6 @@ class RegistrationController
             'termOfService' => $terms,
             'options' => [
                 'validation' => $this->config->getParameter('registration.validation'),
-                'locale' => $request->getLocale(),
-                'allowWorkspace' => $this->config->getParameter('registration.allow_workspace'),
                 'organizationSelection' => $this->config->getParameter('registration.organization_selection'),
             ],
         ]);
@@ -164,7 +104,7 @@ class RegistrationController
      *
      * @throws AccessDeniedException
      */
-    private function checkAccess()
+    private function checkAccess(): void
     {
         if (!$this->config->getParameter('registration.self') || $this->authorization->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();

@@ -26,7 +26,6 @@ class UserSerializer
 {
     use SerializerTrait;
 
-    private RoleRepository $roleRepo;
     private FieldFacetRepository $fieldFacetRepo;
     private FieldFacetValueRepository $fieldFacetValueRepo;
 
@@ -39,7 +38,6 @@ class UserSerializer
         private readonly FacetManager $facetManager,
         private readonly WorkspaceUserQueueManager $workspaceUserQueueManager
     ) {
-        $this->roleRepo = $om->getRepository(Role::class);
         $this->fieldFacetRepo = $om->getRepository(FieldFacet::class);
         $this->fieldFacetValueRepo = $om->getRepository(FieldFacetValue::class);
     }
@@ -84,14 +82,7 @@ class UserSerializer
                 'status' => $user->getStatus(),
                 'lastActivity' => DateNormalizer::normalize($user->getLastActivity()),
                 'picture' => $user->getPicture(),
-
                 'username' => $user->getUsername(), // required because used to user profile URL
-                //'firstName' => $user->getFirstName(),
-                //'lastName' => $user->getLastName(),
-                //'username' => $user->getUsername(),
-                //'email' => $showEmail ? $user->getEmail() : null,
-                //'thumbnail' => $user->getThumbnail(),
-                //'poster' => $user->getPoster(),
             ];
         }
 
@@ -193,40 +184,6 @@ class UserSerializer
             }
         }
 
-        // TODO : this should not be done here (this is still used to register new users in ws in platform registration)
-        //only add role here. If we want to remove them, use the crud remove method instead
-        //it's useful if we want to create a user with a list of roles
-        if (isset($data['roles'])) {
-            foreach ($data['roles'] as $roleData) {
-                /** @var Role|null $role */
-                $role = null;
-
-                if (isset($roleData['id'])) {
-                    $role = $this->roleRepo->findOneBy(['uuid' => $roleData['id']]);
-                } elseif (isset($roleData['name'])) {
-                    $role = $this->roleRepo->findOneBy(['name' => $roleData['name']]);
-                } elseif (isset($roleData['translationKey'])) {
-                    $role = $this->roleRepo->findOneBy([
-                        'translationKey' => $roleData['translationKey'],
-                        'type' => Role::PLATFORM_ROLE,
-                    ]);
-                }
-
-                if ($role && $role->getId()) {
-                    $roleWs = $role->getWorkspace();
-                    if (in_array(Options::WORKSPACE_VALIDATE_ROLES, $options) && Role::WS_ROLE === $role->getType() && $roleWs->getRegistrationValidation()) {
-                        if (!$user->hasRole($role)) {
-                            if (!$this->workspaceUserQueueManager->isUserInValidationQueue($roleWs, $user)) {
-                                $this->workspaceUserQueueManager->addUserQueue($roleWs, $user, $role);
-                            }
-                        }
-                    } else {
-                        $user->addRole($role);
-                    }
-                }
-            }
-        }
-
         if (isset($data['profile'])) {
             $fieldFacets = $this->fieldFacetRepo->findPlatformFieldFacets();
             foreach ($fieldFacets as $fieldFacet) {
@@ -261,7 +218,6 @@ class UserSerializer
     {
         return [
             'acceptedTerms' => $user->hasAcceptedTerms(),
-            'lastActivity' => DateNormalizer::normalize($user->getLastActivity()), // deprecated
             'created' => DateNormalizer::normalize($user->getCreated()),
             'description' => $user->getDescription(),
             'mailValidated' => $user->isMailValidated(),
@@ -281,11 +237,13 @@ class UserSerializer
 
     private function serializePermissions(User $user): array
     {
+        $administrate = $this->authorization->isGranted('ADMINISTRATE', $user);
+
         return [
-            'open' => $this->authorization->isGranted('OPEN', $user),
-            'edit' => $this->authorization->isGranted('EDIT', $user),
-            'administrate' => $this->authorization->isGranted('ADMINISTRATE', $user),
-            'delete' => $this->authorization->isGranted('DELETE', $user),
+            'open' => $administrate || $this->authorization->isGranted('OPEN', $user),
+            'edit' => $administrate || $this->authorization->isGranted('EDIT', $user),
+            'administrate' => $administrate,
+            'delete' => $administrate || $this->authorization->isGranted('DELETE', $user),
         ];
     }
 

@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/app/intl'
-import {constants as registrationConst} from '#/main/app/security/registration/constants'
+import {constants, constants as registrationConst} from '#/main/app/security/registration/constants'
 import {ToolEditorOverview} from '#/main/core/tool/editor/components/overview'
 
 const workspaceDefinition = (contextId, update) => [
@@ -23,7 +23,7 @@ const workspaceDefinition = (contextId, update) => [
             type: 'boolean',
             label: trans('validate_registration'),
             help: trans('validate_registration_help'),
-            displayed: (parameters) => get(parameters, 'registration.selfRegistration', false)
+            displayed: (parameters) => get(parameters, 'parameters.registration.selfRegistration', false)
           }
         ]
       }, {
@@ -45,7 +45,7 @@ const workspaceDefinition = (contextId, update) => [
         name: 'parameters.registration._restrictMaxTeams',
         type: 'boolean',
         label: trans('restrict_max_teams', {}, 'community'),
-        calculated: (parameters) => get(parameters, 'registration._restrictMaxTeams') || get(parameters, 'registration.maxTeams'),
+        calculated: (parameters) => get(parameters, 'parameters.registration._restrictMaxTeams') || get(parameters, 'parameters.registration.maxTeams'),
         onChange: (enabled) => {
           if (!enabled) {
             update('registration.maxTeams', null)
@@ -56,7 +56,7 @@ const workspaceDefinition = (contextId, update) => [
             name: 'parameters.registration.maxTeams',
             type: 'number',
             label: trans('teams_count', {}, 'community'),
-            displayed: (parameters) => get(parameters, 'registration._restrictMaxTeams') || get(parameters, 'registration.maxTeams'),
+            displayed: (parameters) => get(parameters, 'parameters.registration._restrictMaxTeams') || get(parameters, 'parameters.registration.maxTeams'),
             options: {min: 0}
           }
         ]
@@ -65,7 +65,7 @@ const workspaceDefinition = (contextId, update) => [
   }
 ]
 
-const desktopDefinition = () => [
+const desktopDefinition = (contextId, update) => [
   {
     title: trans('general'),
     primary: true,
@@ -93,20 +93,17 @@ const desktopDefinition = () => [
         help: trans('self_registration_platform_help'),
         linked: [
           {
-            name: 'parameters.registration.allow_workspace',
-            type: 'boolean',
-            label: trans('allow_workspace_registration'),
-            displayed: (parameters) => get(parameters, 'registration.self', false)
-          }, {
             name: 'parameters.registration.organization_selection',
-            type: 'choice',
-            label: trans('organizations'),
-            options: {
-              multiple: false,
-              condensed: false,
-              choices: registrationConst.ORGANIZATION_SELECTION_CHOICES
+            type: 'boolean',
+            label: trans('allow_organization_selection'),
+            calculated: (parameters) => {
+              console.log(get(parameters, 'parameters.registration.organization_selection'))
+              return constants.ORGANIZATION_SELECTION_SELECT === get(parameters, 'parameters.registration.organization_selection')
             },
-            displayed: (parameters) => get(parameters, 'registration.self', false)
+            displayed: (parameters) => get(parameters, 'parameters.registration.self', false),
+            onChange: (enabled) => {
+              update('registration.organization_selection', !enabled ? null : constants.ORGANIZATION_SELECTION_SELECT)
+            }
           }
         ]
       }, {
@@ -121,7 +118,7 @@ const desktopDefinition = () => [
         required: true,
         options: {
           noEmpty: true,
-          condensed: true,
+          condensed: false,
           choices: registrationConst.registrationValidationTypes
         }
       }
