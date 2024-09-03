@@ -31,7 +31,6 @@ const LoginMain = withReducer(selectors.STORE_NAME, reducer)(
 
           return dispatch(securityActions.login(formData.username, formData.password)).then(
             (response) => {
-              console.log('action before dispatch')
               if (callback) {
                 callback(response)
               }

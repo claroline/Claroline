@@ -20,21 +20,12 @@ class EvaluationController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        SerializerProvider $serializer,
-        EvaluationManager $evaluationManager
+        private readonly SerializerProvider $serializer,
+        private readonly EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
-        $this->serializer = $serializer;
-        $this->evaluationManager = $evaluationManager;
     }
 
     /**

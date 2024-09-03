@@ -16,12 +16,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class UserLoginEvent extends Event
 {
-    /**
-     * Data which will be sent to the client after a successful login.
-     * Example. ThemeBundle will return the user appearance options.
-     */
-    private array $responseData = [];
-
     public function __construct(
         private readonly User $user
     ) {
@@ -30,19 +24,5 @@ class UserLoginEvent extends Event
     public function getUser(): User
     {
         return $this->user;
-    }
-
-    /**
-     * Sets response data to return in the api.
-     * NB. It MUST contain serialized structures.
-     */
-    public function addResponse(array $responseData): void
-    {
-        $this->responseData = array_merge($responseData, $this->responseData);
-    }
-
-    public function getResponse(): array
-    {
-        return $this->responseData;
     }
 }

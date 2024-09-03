@@ -134,6 +134,7 @@ services:
             - '@Claroline\AppBundle\Component\Context\ContextProvider'
             - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
+            - '@Claroline\AppBundle\Manager\ClientManager'
 
     Claroline\CoreBundle\Listener\Entity\UserListener:
         arguments:

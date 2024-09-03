@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\YouTubeBundle\Subscriber;
+namespace Claroline\VideoPlayerBundle\Subscriber;
 
 use Claroline\AppBundle\Event\Client\InjectJavascriptEvent;
 use Claroline\AppBundle\Event\ClientEvents;
@@ -24,7 +24,7 @@ class PluginSubscriber implements EventSubscriberInterface
     public function onInjectJs(InjectJavascriptEvent $event): void
     {
         $event->addContent(
-            $this->templating->render('@ClarolineYouTube/scripts.html.twig')
+            $this->templating->render('@ClarolineVideoPlayer/scripts.html.twig')
         );
     }
 }

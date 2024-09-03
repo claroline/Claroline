@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event\Layout;
+namespace Claroline\AppBundle\Event\Client;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -19,14 +19,14 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class InjectJavascriptEvent extends Event
 {
-    private $content = '';
+    private string $content = '';
 
-    public function addContent($content)
+    public function addContent($content): void
     {
         $this->content .= $content;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }

@@ -5,16 +5,12 @@ namespace Claroline\AppBundle\Controller;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\Context\ContextProvider;
-use Claroline\AppBundle\Manager\PlatformManager;
+use Claroline\AppBundle\Manager\ClientManager;
 use Claroline\AppBundle\Manager\SecurityManager;
-use Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
-use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,14 +26,12 @@ class PlatformController
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
         private readonly Environment $templating,
-        private readonly EventDispatcherInterface $dispatcher,
         private readonly PlatformConfigurationHandler $configHandler,
-        private readonly PlatformManager $platformManager,
         private readonly LocaleManager $localeManager,
         private readonly SecurityManager $securityManager,
         private readonly ContextProvider $contextProvider,
         private readonly SerializerProvider $serializer,
-        private readonly ClientSerializer $clientSerializer
+        private readonly ClientManager $clientManager
     ) {
     }
 
@@ -53,10 +47,13 @@ class PlatformController
             $currentUser = $this->tokenStorage->getToken()->getUser();
         }
 
+        $userPreferences = $this->clientManager->getUserPreferences($currentUser);
+
         return new Response(
             $this->templating->render('@ClarolineApp/index.html.twig', [
-                'baseUrl' => $this->platformManager->getUrl(),
-                'parameters' => $this->clientSerializer->serialize(),
+                'baseUrl' => $this->clientManager->getBaseUrl(),
+                'parameters' => array_merge($this->clientManager->getParameters(), $userPreferences), // for retro-compatibility
+                //'userPreferences' => $this->clientManager->getUserPreferences($currentUser),
 
                 'currentUser' => $currentUser ? $this->serializer->serialize(
                     $currentUser, [Options::SERIALIZE_FACET] // TODO : we should only get the minimal representation of user here
@@ -83,13 +80,9 @@ class PlatformController
                     ],
                 ],
 
-                // additional assets for the platform
-                // assets defined by users in the platform configuration
-                'javascripts' => $this->configHandler->getParameter('javascripts'),
-                'stylesheets' => $this->configHandler->getParameter('stylesheets'),
                 // assets injected from plugins
-                'injectedJavascripts' => $this->injectJavascript(),
-                'injectedStylesheets' => $this->injectStylesheet(),
+                'javascripts' => $this->clientManager->getJavascripts(),
+                'stylesheets' => $this->clientManager->getStylesheets(),
             ])
         );
     }
@@ -112,27 +105,5 @@ class PlatformController
         return new RedirectResponse(
             $request->headers->get('referer')
         );
-    }
-
-    /**
-     * Gets the javascript injected by the plugins if any.
-     */
-    private function injectJavascript(): string
-    {
-        $event = new InjectJavascriptEvent();
-        $this->dispatcher->dispatch($event, 'layout.inject.javascript');
-
-        return $event->getContent();
-    }
-
-    /**
-     * Gets the styles injected by the plugins if any.
-     */
-    private function injectStylesheet(): string
-    {
-        $event = new InjectStylesheetEvent();
-        $this->dispatcher->dispatch($event, 'layout.inject.stylesheet');
-
-        return $event->getContent();
     }
 }

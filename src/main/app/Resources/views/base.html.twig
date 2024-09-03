@@ -23,12 +23,7 @@
         <link rel="stylesheet" type="text/css" href="{{ themeAsset('bootstrap.css') }}" />
 
         {# Styles from loaded plugins #}
-        {{ injectedStylesheets | raw }}
-
-        {# Styles from plateform configuration #}
-        {% for file in stylesheets %}
-            <link rel="stylesheet" type="text/css" href="{{ asset(file) }}" />
-        {% endfor %}
+        {{ stylesheets | raw }}
 
         <script src="{{ asset('bundles/bazingajstranslation/js/translator.min.js') }}"></script>
         <script src="{{ asset('js/translations/config.js') }}"></script>
@@ -59,13 +54,7 @@
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
         {# JS from loaded plugins #}
-        {{ injectedJavascripts | raw }}
-
-        {# JS from plateform configuration #}
-        {% for file in javascripts %}
-            <script src="{{ asset(file) }}"></script>
-        {% endfor %}
-
+        {{ javascripts | raw }}
         {% block foot %}
         {% endblock %}
     </body>

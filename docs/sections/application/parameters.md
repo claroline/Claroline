@@ -54,7 +54,7 @@ Instead, consider defining a `*Parameters` entity in your plugin to manage your 
 
 Sometimes you will need to make your parameters available for the whole UI application.
 
-You just have to subscribe to the `claroline_populate_client_config`.
+You just have to subscribe to the `Claroline\AppBundle\Event\ClientEvents::CONFIGURE`.
 
 ```php
 <?php
@@ -63,14 +63,14 @@ You just have to subscribe to the `claroline_populate_client_config`.
 
 namespace MyVendor\MyPluginBundle\Subscriber;
 
-use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\AppBundle\Event\ClientEvents;
 
 class ClientSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {
         return [
-            'claroline_populate_client_config' => 'onPopulateConfig',
+            ClientEvents::CONFIGURE => 'onPopulateConfig',
         ];
     }
 
