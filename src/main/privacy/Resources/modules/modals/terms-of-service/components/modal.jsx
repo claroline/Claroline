@@ -11,7 +11,7 @@ import {ContentHtml} from '#/main/app/content/components/html'
 
 const TermsOfServiceModal = props =>
   <Modal
-    {...omit(props, 'fetch')}
+    {...omit(props, 'fetch', 'loaded', 'content', 'validate', 'accept', 'onAccept', 'onRefuse', 'formData')}
     icon="fa fa-fw fa-file-shield"
     title={trans('terms_of_service',{},'privacy')}
     size="lg"

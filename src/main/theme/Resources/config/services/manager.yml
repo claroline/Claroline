@@ -1,7 +1,6 @@
 services:
     Claroline\ThemeBundle\Manager\ThemeManager:
         arguments:
-            - '@security.token_storage'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
             - '@Claroline\AppBundle\API\SerializerProvider'

@@ -8,9 +8,8 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 
 const WidgetContent = connect(
   (state) => ({
-    currentUser: securitySelectors.currentUser(state),
-    impersonated: securitySelectors.isImpersonated(state),
-    config: configSelectors.config(state)
+    config: configSelectors.config(state),
+    security: securitySelectors.security(state)
   })
 )(WidgetContentComponent)
 

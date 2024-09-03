@@ -56,10 +56,7 @@ class ResourceEmbedded extends Component {
       [contextSelectors.STORE_NAME]: contextReducer,
       [toolSelectors.STORE_NAME]: toolReducer
     }, {
-      [securitySelectors.STORE_NAME]: {
-        currentUser: this.props.currentUser,
-        impersonated: this.props.impersonated
-      },
+      [securitySelectors.STORE_NAME]: this.props.security,
       [configSelectors.STORE_NAME]: this.props.config,
       // mount the resource tool in the store
       context: {
@@ -105,8 +102,7 @@ ResourceEmbedded.propTypes = {
   }),
 
   // from store (to build the embedded store)
-  currentUser: T.object,
-  impersonated: T.bool,
+  security: T.object,
   config: T.object
 }
 

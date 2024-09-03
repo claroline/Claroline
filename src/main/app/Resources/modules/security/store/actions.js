@@ -66,7 +66,6 @@ actions.onLogin = (response) => (dispatch) => {
 
   if (!get(response.user, 'meta.acceptedTerms') && param('privacy.tos.enabled')) {
     return dispatch(modalActions.showModal(MODAL_TERMS_OF_SERVICE, {
-      messages: response.messages,
       validate: true,
       onAccept: () => changeCurrentUser,
       onRefuse: () => dispatch(actions.logout())

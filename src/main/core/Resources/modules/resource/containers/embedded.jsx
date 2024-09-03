@@ -8,8 +8,7 @@ import {selectors as securitySelectors} from '#/main/app/security/store'
 
 const ResourceEmbedded = connect(
   (state) => ({
-    currentUser: securitySelectors.currentUser(state),
-    impersonated: securitySelectors.isImpersonated(state),
+    security: securitySelectors.security(state),
     config: configSelectors.config(state)
   })
 )(ResourceEmbeddedComponent)

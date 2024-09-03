@@ -92,7 +92,7 @@ class PlatformListener
         }
 
         // checks platform maintenance
-        if (MaintenanceHandler::isMaintenanceEnabled() || $this->config->getParameter('maintenance.enable')) {
+        if (MaintenanceHandler::isMaintenanceEnabled()) {
             // only disable for non admin
             if (!$this->authorization->isGranted(PlatformRoles::ADMIN)) {
                 throw new HttpException(503, 'Platform is not available (Platform is under maintenance).');

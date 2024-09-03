@@ -6,9 +6,3 @@ services:
             - '@Claroline\VideoPlayerBundle\Manager\EvaluationManager'
         tags:
             - { name: kernel.event_listener, event: file.video.load, method: onLoad }
-
-    Claroline\VideoPlayerBundle\Listener\PluginListener:
-        arguments:
-            - '@twig'
-        tags:
-            - { name: kernel.event_listener, event: layout.inject.javascript, method: onInjectJs }

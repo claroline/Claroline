@@ -26,7 +26,6 @@ class ThemeManager
     private ?Theme $currentTheme = null;
 
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly PlatformConfigurationHandler $config,
         private readonly SerializerProvider $serializer,
@@ -49,14 +48,13 @@ class ThemeManager
     /**
      * Computes UI appearance based on the current platform theme and user preferences.
      */
-    public function getAppearance(): array
+    public function getAppearance(?User $user = null): array
     {
         $theme = $this->getCurrentTheme();
 
         $userPreferences = null;
-        $currentUser = $this->tokenStorage->getToken()->getUser();
-        if ($currentUser instanceof User) {
-            $userPreferences = $this->om->getRepository(UserPreferences::class)->findOneBy(['user' => $currentUser]);
+        if ($user) {
+            $userPreferences = $this->om->getRepository(UserPreferences::class)->findOneBy(['user' => $user]);
         }
 
         return array_merge([], $this->serializer->serialize($theme), [

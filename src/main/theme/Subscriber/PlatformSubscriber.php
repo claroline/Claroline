@@ -3,10 +3,10 @@
 namespace Claroline\ThemeBundle\Subscriber;
 
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Event\Client\ConfigureEvent;
+use Claroline\AppBundle\Event\Client\UserPreferencesEvent;
+use Claroline\AppBundle\Event\ClientEvents;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
-use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Security\UserLoginEvent;
 use Claroline\ThemeBundle\Entity\ColorCollection;
 use Claroline\ThemeBundle\Manager\ThemeManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class PlatformSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly ObjectManager $objectManager,
+        private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
         private readonly ThemeManager $themeManager
     ) {
@@ -23,27 +23,24 @@ class PlatformSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'claroline_populate_client_config' => 'onConfig',
-            SecurityEvents::USER_LOGIN => 'onLogin',
+            ClientEvents::CONFIGURE => 'onClientConfig',
+            ClientEvents::USER_PREFERENCES => 'onUserPreferences',
         ];
     }
 
-    public function onConfig(GenericDataEvent $event): void
+    public function onClientConfig(ConfigureEvent $event): void
     {
-        $colorCharts = $this->objectManager->getRepository(ColorCollection::class)->findAll();
+        $colorCharts = $this->om->getRepository(ColorCollection::class)->findAll();
 
-        $event->setResponse([
-            'theme' => $this->themeManager->getAppearance(),
+        $event->setParameters([
             'colorChart' => array_map(function (ColorCollection $colorCollection) {
                 return $this->serializer->serialize($colorCollection);
             }, $colorCharts),
         ]);
     }
 
-    public function onLogin(UserLoginEvent $event): void
+    public function onUserPreferences(UserPreferencesEvent $event): void
     {
-        $event->addResponse([
-            'config' => ['theme' => $this->themeManager->getAppearance()],
-        ]);
+        $event->addPreferences('theme', $this->themeManager->getAppearance($event->getUser()));
     }
 }

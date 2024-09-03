@@ -65,10 +65,7 @@ class WidgetContent extends Component {
         WidgetAppComponent.displayName = `WidgetApp(${this.props.instance.type})`
 
         this.mountedApp = mount(this.mountNode, WidgetAppComponent, reducer, {
-          [securitySelectors.STORE_NAME]: {
-            currentUser: this.props.currentUser,
-            impersonated: this.props.impersonated
-          },
+          [securitySelectors.STORE_NAME]: this.props.security,
           [configSelectors.STORE_NAME]: this.props.config,
           instance: this.props.instance,
           currentContext: this.props.currentContext
@@ -91,9 +88,8 @@ WidgetContent.propTypes = {
   ).isRequired,
 
   // from store (to build the embedded store)
-  currentUser: T.object,
-  impersonated: T.bool,
-  config: T.object
+  config: T.object,
+  security: T.object
 }
 
 export {

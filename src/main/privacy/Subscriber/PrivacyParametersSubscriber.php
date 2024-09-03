@@ -3,35 +3,32 @@
 namespace Claroline\PrivacyBundle\Subscriber;
 
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\AppBundle\Event\Client\ConfigureEvent;
+use Claroline\AppBundle\Event\ClientEvents;
 use Claroline\PrivacyBundle\Manager\PrivacyManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PrivacyParametersSubscriber implements EventSubscriberInterface
 {
-    private SerializerProvider $serializer;
-    private PrivacyManager $privacyManager;
-
     public function __construct(
-        SerializerProvider $serializer,
-        PrivacyManager $privacyManager
+        private readonly SerializerProvider $serializer,
+        private readonly PrivacyManager $privacyManager
     ) {
-        $this->serializer = $serializer;
-        $this->privacyManager = $privacyManager;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            'claroline_populate_client_config' => 'onPopulateConfig',
+            ClientEvents::CONFIGURE => 'onClientConfig',
         ];
     }
 
-    public function onPopulateConfig(GenericDataEvent $event): void
+    public function onClientConfig(ConfigureEvent $event): void
     {
         $privacyParameters = $this->privacyManager->getParameters();
         $serializedParameters = $this->serializer->serialize($privacyParameters);
-        $event->setResponse([
+
+        $event->setParameters([
             'privacy' => $serializedParameters,
         ]);
     }
