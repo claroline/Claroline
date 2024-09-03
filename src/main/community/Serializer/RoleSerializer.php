@@ -46,6 +46,9 @@ class RoleSerializer
             'name' => $role->getName(),
             'type' => $role->getType(),
             'translationKey' => $role->getTranslationKey(),
+            'meta' => [
+                'description' => $role->getDescription(),
+            ],
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
