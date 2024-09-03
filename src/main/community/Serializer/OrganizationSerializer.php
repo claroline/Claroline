@@ -54,6 +54,9 @@ class OrganizationSerializer
                 'name' => $organization->getName(),
                 'code' => $organization->getCode(),
                 'thumbnail' => $organization->getThumbnail(),
+                'meta' => [
+                    'description' => $organization->getDescription(),
+                ],
             ];
         }
 

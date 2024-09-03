@@ -50,6 +50,9 @@ class GroupSerializer
                 'id' => $group->getUuid(),
                 'name' => $group->getName(),
                 'thumbnail' => $group->getThumbnail(),
+                'meta' => [
+                    'description' => $group->getDescription(),
+                ],
             ];
         }
 

@@ -282,7 +282,7 @@ class UserSerializer
     private function serializePermissions(User $user): array
     {
         return [
-            'open' => true,
+            'open' => $this->authorization->isGranted('OPEN', $user),
             'edit' => $this->authorization->isGranted('EDIT', $user),
             'administrate' => $this->authorization->isGranted('ADMINISTRATE', $user),
             'delete' => $this->authorization->isGranted('DELETE', $user),
