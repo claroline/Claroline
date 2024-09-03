@@ -12,7 +12,6 @@
 namespace Claroline\CommunityBundle\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AuthenticationBundle\Manager\MailManager;
@@ -64,30 +63,6 @@ class UserController extends AbstractCrudController
     public static function getClass(): string
     {
         return User::class;
-    }
-
-    public function updateAction($id, Request $request): JsonResponse
-    {
-        $data = $this->decodeRequest($request);
-        if (!isset($data['id'])) {
-            $data['id'] = $id;
-        }
-
-        $object = $this->crud->get(User::class, $id);
-        if (!$this->checkPermission('ADMINISTRATE', $object)) {
-            // removes main organization from the serialized structure because it will cause access issues.
-            unset($data['mainOrganization']);
-        }
-
-        // removes roles from the serialized structure because it will cause access issues.
-        // those roles should not be here anyway.
-        unset($data['roles']);
-
-        $object = $this->crud->update(self::getClass(), $data, [Options::SERIALIZE_FACET, Crud::THROW_EXCEPTION]);
-
-        return new JsonResponse(
-            $this->serializer->serialize($object, [Options::SERIALIZE_FACET])
-        );
     }
 
     /**
@@ -305,7 +280,7 @@ class UserController extends AbstractCrudController
     }
 
     /**
-     * @Route("/request-deletion", name="apiv2_user_request_account_deletion", methods={"POST"})
+     * @Route("/request-deletion", name="request_account_deletion", methods={"POST"})
      *
      * @todo : to move in privacy plugin when available.
      */
