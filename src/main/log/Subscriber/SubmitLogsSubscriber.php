@@ -62,9 +62,9 @@ class SubmitLogsSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $stamps = null;
-        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
-            $stamps = [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())];
+        $stamps = [];
+        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
+            $stamps[] = new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId());
         }
 
         // dispatch stashed messages

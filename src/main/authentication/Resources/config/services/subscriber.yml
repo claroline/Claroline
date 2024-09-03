@@ -2,6 +2,11 @@ services:
     _defaults:
         tags: [ kernel.event_subscriber ]
 
+    Claroline\AuthenticationBundle\Subscriber\Crud\UserSubscriber:
+        arguments:
+            - '@event_dispatcher'
+            - '@security.user_password_hasher'
+
     Claroline\AuthenticationBundle\Subscriber\Crud\ApiTokenSubscriber:
         arguments:
             - '@security.token_storage'
