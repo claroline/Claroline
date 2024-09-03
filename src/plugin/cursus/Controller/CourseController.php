@@ -106,22 +106,9 @@ class CourseController extends AbstractCrudController
             }
         }
 
+        $filters['archived'] = false;
+
         return $filters;
-    }
-
-    /**
-     * @Route("/", name="apiv2_cursus_course_list", methods={"GET"})
-     */
-    public function listAction(Request $request): JsonResponse
-    {
-        $params = $request->query->all();
-        $params['hiddenFilters'] = [
-            'archived' => false,
-        ];
-
-        return new JsonResponse(
-            $this->crud->list(Course::class, $params)
-        );
     }
 
     /**
@@ -129,14 +116,13 @@ class CourseController extends AbstractCrudController
      */
     public function listPublicAction(Request $request): JsonResponse
     {
-        $params = $request->query->all();
-        $params['hiddenFilters'] = [
-            'public' => true,
-        ];
-
-        return new JsonResponse(
-            $this->crud->list(Course::class, $params)
-        );
+        return new JsonResponse($this->crud->list(
+            Course::class,
+            array_merge($request->query->all(), ['hiddenFilters' => array_merge($this->getDefaultHiddenFilters(), [
+                'public' => true,
+            ])]),
+            $this->getOptions()['list']
+        ));
     }
 
     /**

@@ -78,7 +78,13 @@ const EventsTool = (props) =>
                 history={params.history}
               />)
           } else {
-            return (<EmptyCourse path={props.path} canEdit={props.canEdit} contextType={props.contextType} />)
+            return (
+              <EmptyCourse
+                path={props.path}
+                canEdit={props.canEdit}
+                contextType={props.contextType}
+              />
+            )
           }
         }
       }, {

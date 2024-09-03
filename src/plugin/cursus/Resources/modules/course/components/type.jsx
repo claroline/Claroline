@@ -33,8 +33,8 @@ const CreationType = (props) => {
                     if (props.modal) {
                       props.fadeModal()
                     }
-                    history.push(props.path + '/course/new')
-                    props.startCreation(null, CourseTypes.defaultProps, selected[0])
+                    history.push(props.path + '/new')
+                    props.openForm(null, CourseTypes.defaultProps, selected[0])
                   }
                 }
               )
@@ -58,8 +58,8 @@ const CreationType = (props) => {
                     if (props.modal) {
                       props.fadeModal()
                     }
-                    history.push(props.path + '/course/new')
-                    props.startCreation(null, CourseTypes.defaultProps, selected[0])
+                    history.push(props.path + '/new')
+                    props.openForm(null, CourseTypes.defaultProps, selected[0])
                   }
                 }
               )
@@ -76,8 +76,8 @@ const CreationType = (props) => {
               if (props.modal) {
                 props.fadeModal()
               }
-              history.push(props.path + '/course/new')
-              props.startCreation(null, CourseTypes.defaultProps)
+              history.push(props.path + '/new')
+              props.openForm(null, CourseTypes.defaultProps)
             }
           }
         }, {
@@ -118,11 +118,10 @@ const CreationType = (props) => {
 }
 
 CreationType.propTypes = {
-  startCreation: T.func,
-  create: T.func,
+  path: T.string.isRequired,
+  openForm: T.func.isRequired,
   reset: T.func,
   contextType: T.string,
-  path: T.string.isRequired,
   modal: T.bool,
   fadeModal: T.func
 }

@@ -26,7 +26,7 @@ const CatalogList = (props) =>
         icon: 'fa fa-fw fa-plus',
         label: trans('add_course', {}, 'cursus'),
         modal: [MODAL_COURSE_TYPE_CREATION, {
-          path: props.path
+          path: props.path + '/course'
         }],
         group: trans('management'),
         displayed: props.canEdit,
@@ -40,8 +40,9 @@ const CatalogList = (props) =>
       url={['apiv2_cursus_course_list']}
     >
       <CreationType
-        path={props.path}
+        path={props.path + '/course'}
         contextType={props.contextType}
+        openForm={props.openForm}
       />
     </CourseList>
 
@@ -50,7 +51,8 @@ const CatalogList = (props) =>
 CatalogList.propTypes = {
   path: T.string.isRequired,
   canEdit: T.bool.isRequired,
-  contextType: T.string
+  contextType: T.string,
+  openForm: T.func.isRequired
 }
 
 export {

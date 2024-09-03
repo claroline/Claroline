@@ -14,7 +14,7 @@ const CreationModal = withReducer(selectors.STORE_NAME, reducer)(
       contextType: toolSelectors.contextType(state)
     }),
     (dispatch) => ({
-      startCreation(slug, defaultProps, workspace) {
+      openForm(slug, defaultProps, workspace = null) {
         dispatch(courseActions.openForm(slug, defaultProps, workspace))
       },
       reset() {

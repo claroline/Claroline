@@ -46,14 +46,18 @@ actions.openForm = (courseSlug = null, defaultProps = {}, workspace = null) => (
     return dispatch(formActions.resetForm(selectors.FORM_NAME, defaultProps, true))
   }
 
-  return dispatch({
-    [API_REQUEST]: {
-      url: ['apiv2_cursus_course_get', {field: 'slug', id: courseSlug}],
-      silent: true,
-      before: () => dispatch(formActions.resetForm(selectors.FORM_NAME, null, true)),
-      success: (data) => dispatch(formActions.resetForm(selectors.FORM_NAME, data))
-    }
-  })
+  if (courseSlug) {
+    return dispatch({
+      [API_REQUEST]: {
+        url: ['apiv2_cursus_course_get', {field: 'slug', id: courseSlug}],
+        silent: true,
+        before: () => dispatch(formActions.resetForm(selectors.FORM_NAME, null, true)),
+        success: (data) => dispatch(formActions.resetForm(selectors.FORM_NAME, data))
+      }
+    })
+  } else {
+    return dispatch(formActions.resetForm(selectors.FORM_NAME, defaultProps, true))
+  }
 }
 
 actions.openSession = (sessionId = null, force = false) => (dispatch, getState) => {

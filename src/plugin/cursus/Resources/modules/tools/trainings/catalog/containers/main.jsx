@@ -21,8 +21,8 @@ const CatalogMain = withReducer(courseSelectors.STORE_NAME, courseReducer)(
         open(slug) {
           dispatch(courseActions.open(slug))
         },
-        openForm(slug, defaultProps) {
-          dispatch(courseActions.openForm(slug, defaultProps))
+        openForm(slug, defaultProps, workspace = null) {
+          dispatch(courseActions.openForm(slug, defaultProps, workspace))
         }
       })
     )(CatalogMainComponent)
