@@ -2,12 +2,13 @@ import React from 'react'
 import get from 'lodash/get'
 import {PropTypes as T} from 'prop-types'
 
+import {trans} from '#/main/app/intl'
+import {Tool} from '#/main/core/tool'
+import {LINK_BUTTON} from '#/main/app/buttons'
 import {Course} from '#/plugin/cursus/course/containers/main'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
 import {CourseCreation} from '#/plugin/cursus/course/components/creation'
-import {CourseEdit} from '#/plugin/cursus/course/components/edit'
-
-import {Tool} from '#/main/core/tool'
+import {CourseEditor} from '#/plugin/cursus/course/editor/containers/main'
 
 import {EmptyCourse} from '#/plugin/cursus/course/components/empty'
 import {EventsAll} from '#/plugin/cursus/tools/events/components/all'
@@ -15,8 +16,6 @@ import {EventsPublic} from '#/plugin/cursus/tools/events/components/public'
 import {EventsDetails} from '#/plugin/cursus/tools/events/containers/details'
 import {EventsPresences} from '#/plugin/cursus/tools/events/containers/presences'
 import {EventsRegistered} from '#/plugin/cursus/tools/events/components/registered'
-import {LINK_BUTTON} from '#/main/app/buttons'
-import {trans} from '#/main/app/intl'
 
 const EventsTool = (props) =>
   <Tool
@@ -62,7 +61,7 @@ const EventsTool = (props) =>
       }, {
         path: '/course/:courseSlug/edit',
         onEnter: () => props.openForm(props.course.slug),
-        component: CourseEdit
+        component: CourseEditor
       }, {
         path: '/course',
         onEnter: () => {
@@ -79,7 +78,13 @@ const EventsTool = (props) =>
                 history={params.history}
               />)
           } else {
-            return (<EmptyCourse path={props.path} canEdit={props.canEdit}/>)
+            return (
+              <EmptyCourse
+                path={props.path}
+                canEdit={props.canEdit}
+                contextType={props.contextType}
+              />
+            )
           }
         }
       }, {
@@ -128,6 +133,7 @@ EventsTool.propTypes = {
     type: T.string,
     data: T.object
   }).isRequired,
+  contextType: T.string,
   canEdit: T.bool.isRequired,
   canRegister: T.bool.isRequired,
   invalidateList: T.func.isRequired,

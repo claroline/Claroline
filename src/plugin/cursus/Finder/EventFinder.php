@@ -27,6 +27,7 @@ class EventFinder extends AbstractFinder
         $qb->join('obj.plannedObject', 'po');
         $qb->join('obj.session', 's');
         $qb->join('s.course', 'c');
+        $qb->andWhere('c.archived = 0');
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {

@@ -37,25 +37,27 @@ actions.open = (courseSlug, force = false) => (dispatch, getState) => {
 }
 
 actions.openForm = (courseSlug = null, defaultProps = {}, workspace = null) => (dispatch) => {
-  if (!courseSlug) {
-    if(workspace) {
-      defaultProps = {
-        ...defaultProps,
-        _workspaceType: 'workspace',
-        workspace: workspace
-      }
+  if(workspace) {
+    defaultProps = {
+      ...defaultProps,
+      _workspaceType: workspace.meta.model ? 'model' : 'workspace',
+      workspace: workspace
     }
     return dispatch(formActions.resetForm(selectors.FORM_NAME, defaultProps, true))
   }
 
-  return dispatch({
-    [API_REQUEST]: {
-      url: ['apiv2_cursus_course_get', {field: 'slug', id: courseSlug}],
-      silent: true,
-      before: () => dispatch(formActions.resetForm(selectors.FORM_NAME, null, false)),
-      success: (data) => dispatch(formActions.resetForm(selectors.FORM_NAME, data))
-    }
-  })
+  if (courseSlug) {
+    return dispatch({
+      [API_REQUEST]: {
+        url: ['apiv2_cursus_course_get', {field: 'slug', id: courseSlug}],
+        silent: true,
+        before: () => dispatch(formActions.resetForm(selectors.FORM_NAME, null, true)),
+        success: (data) => dispatch(formActions.resetForm(selectors.FORM_NAME, data))
+      }
+    })
+  } else {
+    return dispatch(formActions.resetForm(selectors.FORM_NAME, defaultProps, true))
+  }
 }
 
 actions.openSession = (sessionId = null, force = false) => (dispatch, getState) => {

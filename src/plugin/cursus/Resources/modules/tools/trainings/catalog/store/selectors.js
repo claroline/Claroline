@@ -10,6 +10,7 @@ const course = createSelector(
   (catalog) => catalog.course
 )
 
+
 export const selectors = {
   STORE_NAME,
   LIST_NAME,

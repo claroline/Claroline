@@ -7,5 +7,16 @@
   "validate_registration": "Validate registration",
   "send_invitation": "Send an invitation",
   "open-training": "Open training",
-  "move-pending": "Move on pending list"
+  "move-pending": "Move on pending list",
+
+  "archive_training": "Archive training",
+  "archive_training_help": "Hide the training from the list of active trainings.",
+  "archive_training_confirm_title": "{1} Archive a training | [2,Inf[ Archive multiple trainings",
+  "archive_training_confirm_message": "{1} Are you sure you want to archive this training? | [2,Inf[ Are you sure you want to archive these %count% trainings?",
+
+  "restore_training": "Restore training",
+  "restore_training_help": "Restore the training in the list of active trainings.",
+
+  "delete_training": "Delete training",
+  "delete_training_help": "Permanently delete the training."
 }

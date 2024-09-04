@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\AppBundle\Entity\Meta\Archived;
 use Claroline\AppBundle\Entity\Meta\IsPublic;
 use Claroline\CommunityBundle\Model\HasOrganizations;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
@@ -31,6 +32,7 @@ class Course extends AbstractTraining
 {
     use HasOrganizations;
     use IsPublic;
+    use Archived;
 
     /**
      * @Gedmo\Slug(fields={"name"})

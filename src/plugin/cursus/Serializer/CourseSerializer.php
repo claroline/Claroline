@@ -57,7 +57,7 @@ class CourseSerializer
         RoleSerializer $roleSerializer,
         OrganizationSerializer $orgaSerializer,
         WorkspaceSerializer $workspaceSerializer,
-        PanelFacetSerializer $panelFacetSerializer
+        PanelFacetSerializer $panelFacetSerializer,
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
@@ -110,6 +110,7 @@ class CourseSerializer
                 'updated' => DateNormalizer::normalize($course->getUpdatedAt()),
                 'duration' => $course->getDefaultSessionDuration(),
                 'public' => $course->isPublic(),
+                'archived' => $course->isArchived(),
             ],
             'opening' => [
                 'session' => $course->getSessionOpening(),
@@ -132,6 +133,7 @@ class CourseSerializer
                 'edit' => $this->authorization->isGranted('EDIT', $course),
                 'delete' => $this->authorization->isGranted('DELETE', $course),
                 'register' => $this->authorization->isGranted('REGISTER', $course),
+                'administrate' => $this->authorization->isGranted('ADMINISTRATE', $course),
             ];
         }
 

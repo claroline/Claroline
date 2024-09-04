@@ -14,14 +14,15 @@ const CatalogMain = withReducer(courseSelectors.STORE_NAME, courseReducer)(
       (state) => ({
         path: toolSelectors.path(state),
         course: selectors.course(state),
+        contextType: toolSelectors.contextType(state),
         canEdit: hasPermission('edit', toolSelectors.toolData(state))
       }),
       (dispatch) => ({
         open(slug) {
           dispatch(courseActions.open(slug))
         },
-        openForm(slug, defaultProps) {
-          dispatch(courseActions.openForm(slug, defaultProps))
+        openForm(slug, defaultProps, workspace = null) {
+          dispatch(courseActions.openForm(slug, defaultProps, workspace))
         }
       })
     )(CatalogMainComponent)

@@ -178,6 +178,13 @@ const CourseAbout = (props) => {
       </div>
 
       <div className="col-md-9">
+
+        {get(props.course, 'meta.archived') === true &&
+          <AlertBlock type="info" title={trans('course_archived_info', {}, 'cursus')}>
+            {trans('course_archived_info_help', {}, 'cursus')}
+          </AlertBlock>
+        }
+
         {!isEmpty(props.activeSession) &&
           <div className="content-resume">
             <div className="content-resume-info content-resume-primary">
