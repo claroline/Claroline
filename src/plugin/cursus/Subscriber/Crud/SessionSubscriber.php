@@ -191,8 +191,8 @@ class SessionSubscriber implements EventSubscriberInterface
         /** @var Session $copy */
         $copy = $event->getCopy();
 
-        foreach ($original->getEvents() as $seance) {
-            $this->crud->copy($seance, [], ['parent' => $copy]);
+        foreach ($original->getEvents() as $event) {
+            $this->crud->copy($event, [], ['parent' => $copy]);
         }
 
         if ($copy->getPoster()) {

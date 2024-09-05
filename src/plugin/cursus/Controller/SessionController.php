@@ -130,6 +130,35 @@ class SessionController extends AbstractCrudController
     }
 
     /**
+     * @Route("/copy", name="apiv2_cursus_session_copy", methods={"POST"})
+     */
+    public function copyAction(Request $request): JsonResponse
+    {
+        $processed = [];
+
+        $this->om->startFlushSuite();
+
+        $data = json_decode($request->getContent(), true);
+
+        /** @var Session[] $sessions */
+        $sessions = $this->om->getRepository(Session::class)->findBy([
+            'uuid' => $data['ids'],
+        ]);
+
+        foreach ($sessions as $session) {
+            if ($this->authorization->isGranted('EDIT', $session)) {
+                $processed[] = $this->crud->copy($session, [], ['parent' => $session->getCourse()]);
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (Session $session) {
+            return $this->serializer->serialize($session);
+        }, $processed));
+    }
+
+    /**
      * @Route("/{id}/pdf", name="apiv2_cursus_session_download_pdf", methods={"GET"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})

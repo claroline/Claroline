@@ -21,5 +21,8 @@
   "delete_training_help": "Permanently delete the training.",
 
   "copy_course_confirm_title": "{1} Training copy | [2,Inf[ Trainings copy",
-  "copy_course_confirm_message": "{1} Are you sure you want to copy this training ? | [2,Inf[ Are you sure you want to copy these %count% trainings?"
+  "copy_course_confirm_message": "{1} Are you sure you want to copy this training ? | [2,Inf[ Are you sure you want to copy these %count% trainings?",
+
+  "copy_session_confirm_title": "{1} Session copy | [2,Inf[ Sessions copy",
+  "copy_session_confirm_message": "{1} Are you sure you want to copy this session ? | [2,Inf[ Are you sure you want to copy these %count% sessions?"
 }

@@ -219,7 +219,7 @@ class CourseController extends AbstractCrudController
 
         foreach ($courses as $course) {
             if ($this->authorization->isGranted('ADMINISTRATE', $course)) {
-                $this->crud->copy($course);
+                $processed[] = $this->crud->copy($course);
             }
         }
 
