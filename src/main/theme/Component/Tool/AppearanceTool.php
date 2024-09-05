@@ -9,14 +9,17 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\Component\Context\AccountContext;
 use Claroline\CoreBundle\Component\Context\AdministrationContext;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\ThemeBundle\Entity\ColorCollection;
 use Claroline\ThemeBundle\Manager\IconSetManager;
 use Claroline\ThemeBundle\Manager\ThemeManager;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AppearanceTool extends AbstractTool
 {
     public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly ObjectManager $om,
         private readonly PlatformConfigurationHandler $config,
         private readonly SerializerProvider $serializer,
@@ -66,9 +69,14 @@ class AppearanceTool extends AbstractTool
             ];
         }
 
+        $currentUser = null;
+        if ($this->tokenStorage->getToken()->getUser() instanceof User) {
+            $currentUser = $this->tokenStorage->getToken()->getUser();
+        }
+
         return [
             'availableThemes' => $this->themeManager->getAvailableThemes(),
-            'theme' => $this->themeManager->getAppearance(),
+            'theme' => $this->themeManager->getAppearance($currentUser),
         ];
     }
 }

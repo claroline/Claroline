@@ -1,8 +1,6 @@
 services:
     Claroline\CoreBundle\API\Serializer\ParametersSerializer:
         arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
 
     Claroline\CoreBundle\API\Serializer\ObjectLockSerializer:
