@@ -98,7 +98,7 @@ const impersonated = createSelector(
  */
 const roles = createSelector(
   [store],
-  (store) => store.roles
+  (store) => store.roles || []
 )
 
 const tools = createSelector(

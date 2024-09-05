@@ -9,6 +9,9 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
+/**
+ * The Desktop context is the main context for all the authenticated users.
+ */
 class DesktopContext extends AbstractContext
 {
     public function __construct(
@@ -27,11 +30,6 @@ class DesktopContext extends AbstractContext
         return 'atlas';
     }
 
-    public static function getOrder(): int
-    {
-        return 0;
-    }
-
     public function getObject(?string $contextId): ?ContextSubjectInterface
     {
         return null;
@@ -40,13 +38,6 @@ class DesktopContext extends AbstractContext
     public function isAvailable(): bool
     {
         return !empty($this->securityManager->getCurrentUser());
-        // do user have access to at least one tool ?
-        // return !empty($this->toolManager->getOrderedToolsByDesktop($token->getRoleNames()));
-    }
-
-    public function isRoot(): bool
-    {
-        return true;
     }
 
     public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array

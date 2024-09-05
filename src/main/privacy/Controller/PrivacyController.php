@@ -18,24 +18,13 @@ class PrivacyController extends AbstractSecurityController
 {
     use RequestDecoderTrait;
 
-    private Crud $crud;
-    private AuthorizationCheckerInterface $authorization;
-    private PlatformConfigurationHandler $config;
-    private PrivacyParametersSerializer $serializer;
-    private PrivacyManager $manager;
-
     public function __construct(
-        Crud $crud,
-        AuthorizationCheckerInterface $authorization,
-        PlatformConfigurationHandler $ch,
-        PrivacyParametersSerializer $serializer,
-        PrivacyManager $manager
+        private readonly Crud $crud,
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly PrivacyParametersSerializer $serializer,
+        private readonly PrivacyManager $manager
     ) {
-        $this->crud = $crud;
-        $this->authorization = $authorization;
-        $this->config = $ch;
-        $this->serializer = $serializer;
-        $this->manager = $manager;
     }
 
     /**

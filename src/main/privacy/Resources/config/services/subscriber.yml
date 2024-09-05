@@ -2,12 +2,7 @@ services:
   _defaults:
     tags: [ kernel.event_subscriber ]
 
-  Claroline\PrivacyBundle\Subscriber\PrivacyParametersSubscriber:
-    arguments:
-      - '@Claroline\AppBundle\API\SerializerProvider'
-      - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
-
-  Claroline\PrivacyBundle\Subscriber\ParametersSubscriber:
+  Claroline\PrivacyBundle\Subscriber\ClientSubscriber:
     arguments:
       - '@Claroline\AppBundle\API\SerializerProvider'
       - '@Claroline\PrivacyBundle\Manager\PrivacyManager'

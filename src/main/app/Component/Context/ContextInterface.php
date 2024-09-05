@@ -14,14 +14,7 @@ interface ContextInterface extends ComponentInterface
 
     public static function getIcon(): string;
 
-    /**
-     * @deprecated
-     */
-    public static function getOrder(): int;
-
     public function isAvailable(): bool;
-
-    public function isRoot(): bool;
 
     public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool;
 

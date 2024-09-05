@@ -39,11 +39,6 @@ class WorkspaceContext extends AbstractContext
         return 'book';
     }
 
-    public static function getOrder(): int
-    {
-        return 3;
-    }
-
     public function getObject(?string $contextId): ?Workspace
     {
         if (empty($contextId)) {
@@ -63,11 +58,6 @@ class WorkspaceContext extends AbstractContext
     public function isAvailable(): bool
     {
         return true;
-    }
-
-    public function isRoot(): bool
-    {
-        return false;
     }
 
     public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
