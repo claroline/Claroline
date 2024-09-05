@@ -14,6 +14,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 
 abstract class AbstractCrudController
 {
+    use RequestDecoderTrait;
     use GetAction;
     use ListAction;
     use CreateAction;
@@ -39,7 +40,7 @@ abstract class AbstractCrudController
         $this->serializer = $serializer;
     }
 
-    private function getSerializer(): SerializerProvider
+    protected function getSerializer(): SerializerProvider
     {
         return $this->serializer;
     }
@@ -49,7 +50,7 @@ abstract class AbstractCrudController
         $this->crud = $crud;
     }
 
-    private function getCrud(): Crud
+    protected function getCrud(): Crud
     {
         return $this->crud;
     }
@@ -59,7 +60,7 @@ abstract class AbstractCrudController
         $this->om = $om;
     }
 
-    private function getObjectManager(): ObjectManager
+    protected function getObjectManager(): ObjectManager
     {
         return $this->om;
     }

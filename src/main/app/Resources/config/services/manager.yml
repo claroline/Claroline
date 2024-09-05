@@ -21,6 +21,7 @@ services:
             - '@Claroline\AppBundle\Manager\File\TempFileManager'
 
     Claroline\AppBundle\Manager\File\TempFileManager:
+        public: true # for DataFixtures
         arguments:
             - '%claroline.tmp_dir%'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'

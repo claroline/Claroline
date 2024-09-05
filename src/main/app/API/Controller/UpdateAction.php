@@ -3,7 +3,6 @@
 namespace Claroline\AppBundle\API\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
-use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,9 +10,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 trait UpdateAction {
     use CrudAction;
-    use RequestDecoderTrait;
 
     abstract protected function getObjectManager(): ObjectManager;
+    abstract protected function decodeRequest(Request $request): mixed;
 
     /**
      * @Route("/{id}", name="update", requirements={"id"=".+"}, methods={"PUT"})

@@ -6,8 +6,8 @@ use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\SerializerProvider;
 
 trait CrudAction {
-    abstract private function getCrud(): Crud;
-    abstract private function getSerializer(): SerializerProvider;
+    abstract protected function getCrud(): Crud;
+    abstract protected function getSerializer(): SerializerProvider;
 
     abstract public static function getClass(): string;
     abstract public static function getOptions(): array;
