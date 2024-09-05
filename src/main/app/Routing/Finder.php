@@ -51,7 +51,6 @@ class Finder
                     $refClass = new \ReflectionClass($controllerClass);
 
                     if ($refClass->isSubClassOf(AbstractCrudController::class)) {
-                        $controller = $refClass->newInstanceWithoutConstructor();
                         if (!in_array($controllerClass::getClass(), $classes)) {
                             $classes[] = $controllerClass::getClass();
                         }

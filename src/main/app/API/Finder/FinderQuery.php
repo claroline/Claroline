@@ -12,7 +12,6 @@ class FinderQuery
     private int $page;
     private int $pageSize;
 
-
     public function __construct(string $fulltext = null, array $filters = [], array $sortBy = null, ?int $page = 0, ?int $pageSize = -1)
     {
         $this->fulltext = $fulltext;
@@ -33,8 +32,8 @@ class FinderQuery
             !empty($query['q']) ? $query['q'] : null,
             !empty($query['filters']) ? self::parseFilters($query['filters']) : [],
             !empty($query['sortBy']) ? self::parseSortBy($query['sortBy']) : [],
-            !empty($query['page']) ? $query['page'] : 0,
-            !empty($query['pageSize']) ? $query['pageSize'] : -1
+            !empty($query['page']) ? (int) $query['page'] : 0,
+            !empty($query['pageSize']) ? (int) $query['pageSize'] : -1
         );
     }
 

@@ -3,14 +3,14 @@
 namespace Claroline\AppBundle\API\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
-use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 trait CreateAction {
     use CrudAction;
-    use RequestDecoderTrait;
+
+    abstract protected function decodeRequest(Request $request): mixed;
 
     /**
      * @Route("/", name="create", methods={"POST"})

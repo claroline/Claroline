@@ -3,7 +3,6 @@
 namespace Claroline\AppBundle\API\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
-use Claroline\AppBundle\API\Finder\FinderQuery;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,11 +29,6 @@ trait ListAction {
     public function listAction(Request $request): JsonResponse
     {
         $options = static::getOptions();
-
-        $finderQuery = FinderQuery::fromRequest($request)
-            ->addFilters($this->getDefaultHiddenFilters());
-
-        //return new JsonResponse($this->getCrud()->search(static::getClass(), $finderQuery, $options));
 
         return new JsonResponse(
             $this->getCrud()->list(static::getClass(), array_merge([], $request->query->all(), [

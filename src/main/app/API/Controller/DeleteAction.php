@@ -3,14 +3,14 @@
 namespace Claroline\AppBundle\API\Controller;
 
 use Claroline\AppBundle\Annotations\ApiDoc;
-use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 trait DeleteAction {
     use CrudAction;
-    use RequestDecoderTrait;
+
+    abstract protected function decodeIdsString(Request $request, string $class, string $property = 'ids'): array;
 
     /**
      * @Route("/", name="delete", methods={"DELETE"})
