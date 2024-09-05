@@ -8,10 +8,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-trait UpdateAction {
+trait UpdateAction
+{
     use CrudAction;
 
     abstract protected function getObjectManager(): ObjectManager;
+
     abstract protected function decodeRequest(Request $request): mixed;
 
     /**

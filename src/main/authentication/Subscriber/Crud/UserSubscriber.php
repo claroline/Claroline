@@ -4,8 +4,8 @@ namespace Claroline\AuthenticationBundle\Subscriber\Crud;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\NewPasswordEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

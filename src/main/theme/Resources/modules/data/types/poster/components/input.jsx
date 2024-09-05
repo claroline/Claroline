@@ -1,6 +1,5 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
-import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'

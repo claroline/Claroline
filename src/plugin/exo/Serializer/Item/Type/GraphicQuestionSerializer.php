@@ -190,8 +190,8 @@ class GraphicQuestionSerializer
                 $areaData['center'] = $center;
 
                 break;
-            // For retro-compatibility purpose.
-            // It doesn't exist anymore in the schema and is handled as rect
+                // For retro-compatibility purpose.
+                // It doesn't exist anymore in the schema and is handled as rect
             case 'square':
                 $areaData['shape'] = 'rect';
                 $areaData['coords'] = [

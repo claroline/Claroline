@@ -9,13 +9,13 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Manager\MailManager;
 use Claroline\CoreBundle\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -59,10 +59,7 @@ class UserSubscriber implements EventSubscriberInterface
     {
         /** @var User $user */
         $user = $event->getObject();
-        $options = $event->getOptions();
         $data = $event->getData();
-
-        $this->om->startFlushSuite();
 
         if (empty($user->getUsername())) {
             $user->setUsername($user->getEmail());
@@ -95,12 +92,6 @@ class UserSubscriber implements EventSubscriberInterface
             ArrayUtils::get($data, 'meta.mailValidated', $this->config->getParameter('auto_validate_email'))
         );
 
-        if (!in_array(Options::NO_EMAIL, $options)) {
-            $this->sendNewMessage($user);
-        }
-
-        $this->om->persist($user);
-
         if (empty($user->getMainOrganization())) {
             $token = $this->tokenStorage->getToken();
             // we want a main organization
@@ -110,14 +101,13 @@ class UserSubscriber implements EventSubscriberInterface
                 $user->setMainOrganization($this->organizationManager->getDefault());
             }
         }
-
-        $this->om->endFlushSuite();
     }
 
     public function postCreate(CreateEvent $event): void
     {
         /** @var User $user */
         $user = $event->getObject();
+        $options = $event->getOptions();
 
         if ($user->getPoster()) {
             $this->fileManager->linkFile(User::class, $user->getUuid(), $user->getPoster());
@@ -129,6 +119,10 @@ class UserSubscriber implements EventSubscriberInterface
 
         if ($user->getPicture()) {
             $this->fileManager->linkFile(User::class, $user->getUuid(), $user->getPicture());
+        }
+
+        if (!in_array(Options::NO_EMAIL, $options)) {
+            $this->sendNewMessage($user);
         }
     }
 
@@ -260,7 +254,7 @@ class UserSubscriber implements EventSubscriberInterface
                 $this->mailManager->sendCreationMessage($user);
                 break;
 
-            // the user will need to validate its account to be able to connect
+                // the user will need to validate its account to be able to connect
             case PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL:
                 $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
                 $user->setResetPasswordHash($password);

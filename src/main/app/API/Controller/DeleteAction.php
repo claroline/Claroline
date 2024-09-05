@@ -7,7 +7,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-trait DeleteAction {
+trait DeleteAction
+{
     use CrudAction;
 
     abstract protected function decodeIdsString(Request $request, string $class, string $property = 'ids'): array;

@@ -36,7 +36,6 @@ class LegacyParametersMapping implements LegacyParametersMappingInterface
             'resource_icon_set' => 'display.resource_icon_set',
             'auto_validate_email' => 'database_restoration.auto_validate_email',
             'auto_enable_email_redirect' => 'database_restoration.auto_enable_email_redirect',
-            'force_organization_creation' => 'registration.force_organization_creation',
             'profile_roles_confidential' => 'profile.roles_confidential',
             'profile_roles_locked' => 'profile.roles_locked',
             'profile_roles_edition' => 'profile.roles_edition',

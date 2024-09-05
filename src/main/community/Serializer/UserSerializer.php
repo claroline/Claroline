@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CommunityBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -97,7 +96,7 @@ class UserSerializer
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
-            //'thumbnail' => $user->getThumbnail(),
+            // 'thumbnail' => $user->getThumbnail(),
             'poster' => $user->getPoster(),
             'email' => $showEmail ? $user->getEmail() : null,
             'administrativeCode' => $user->getAdministrativeCode(),
@@ -177,7 +176,7 @@ class UserSerializer
         $this->sipe('thumbnail', 'setThumbnail', $data, $user);
         $this->sipe('poster', 'setPoster', $data, $user);
 
-        //don't trim the password just in case
+        // don't trim the password just in case
         $this->sipe('plainPassword', 'setPlainPassword', $data, $user, false);
 
         if (isset($data['meta'])) {

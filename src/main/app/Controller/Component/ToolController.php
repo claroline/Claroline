@@ -114,7 +114,7 @@ class ToolController
             'data' => $this->serializer->serialize($orderedTool),
             'rights' => $isManager ? array_map(function (ToolRights $rights) {
                 return $this->serializer->serialize($rights);
-            }, $orderedTool->getRights()->toArray()) : []
+            }, $orderedTool->getRights()->toArray()) : [],
         ]));
     }
 

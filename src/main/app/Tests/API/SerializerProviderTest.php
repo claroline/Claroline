@@ -12,16 +12,14 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 class SerializerProviderTest extends TransactionalTestCase
 {
-    /** @var SerializerProvider */
-    private $provider;
-    /** @var ValidatorProvider */
-    private $validator;
-    /** @var SchemaProvider */
-    private $schema;
+    private ?SerializerProvider $provider = null;
+    private ?ValidatorProvider $validator = null;
+    private ?SchemaProvider $schema = null;
 
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->provider = $this->client->getContainer()->get(SerializerProvider::class);
         $this->validator = $this->client->getContainer()->get(ValidatorProvider::class);
         $this->schema = $this->client->getContainer()->get(SchemaProvider::class);
@@ -40,11 +38,9 @@ class SerializerProviderTest extends TransactionalTestCase
     /**
      * @dataProvider getHandledClassesProvider
      *
-     * @param string $class
-     *
      * If json is malformed, a syntax error will be thrown
      */
-    public function testSchema($class)
+    public function testSchema(string $class): void
     {
         if ($this->schema->has($class)) {
             $schema = $this->schema->getSchema($class);
@@ -56,27 +52,26 @@ class SerializerProviderTest extends TransactionalTestCase
 
     /**
      * @dataProvider getHandledClassesProvider
-     *
-     * @param string $class
      */
-    public function testSerializer($class)
+    public function testSerializer(string $class): void
     {
         $iterator = new \DirectoryIterator($this->schema->getSampleDirectory($class).'/json/valid/create');
 
         foreach ($iterator as $file) {
             if ($file->isFile()) {
                 $originalData = \file_get_contents($file->getPathName());
-                //let's test the deserializer
+                // let's test the deserializer
                 $object = new $class();
                 $object = $this->provider->deserialize(json_decode($originalData, true), $object);
-                //can we serialize it ?
+                // can we serialize it ?
                 $data = $this->provider->serialize($object);
 
                 if ('Claroline\CoreBundle\Entity\User' === $class) {
-                    $data['plainPassword'] = '123';
+                    $data['plainPassword'] = '1234';
                 }
-                //is the result... valid ?
+                // is the result... valid ?
                 $errors = $this->validator->validate($class, $data, ValidatorProvider::UPDATE);
+
                 $this->assertTrue(0 === count($errors));
             }
         }
@@ -85,7 +80,7 @@ class SerializerProviderTest extends TransactionalTestCase
     /**
      * @return [][]
      */
-    public function getHandledClassesProvider()
+    public function getHandledClassesProvider(): array
     {
         parent::setUp();
         $provider = $this->client->getContainer()->get('Claroline\AppBundle\API\SerializerProvider');

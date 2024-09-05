@@ -74,7 +74,7 @@ class RoleSerializer
                     if (count($role->getUsers()->toArray()) > 0) {
                         $serialized['user'] = $this->userSerializer->serialize($role->getUsers()->toArray()[0], [SerializerInterface::SERIALIZE_MINIMAL]);
                     } else {
-                        //if we removed some user roles... for some reason.
+                        // if we removed some user roles... for some reason.
                         $serialized['user'] = null;
                     }
                 }

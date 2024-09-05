@@ -27,22 +27,22 @@ class BadgeManager
         $organization = $badge->getIssuer();
 
         $placeholders = array_merge([
-                // recipient
-                'first_name' => $user->getFirstName(),
-                'last_name' => $user->getLastName(),
-                'username' => $user->getUsername(),
-                // badge
-                'badge_name' => $badge->getName(),
-                'badge_description' => $badge->getDescription(),
-                'badge_image' => '<img src="'.$this->platformManager->getUrl().'/'.$badge->getImage().'" style="max-width: 100px; max-height: 50px;"/>',
-                'badge_image_url' => $this->platformManager->getUrl().'/'.$badge->getImage(),
-                'badge_duration' => $badge->getDurationValidation(),
-                // assertion
-                'assertion_id' => $assertion->getUuid(),
-                // issuer
-                'issuer_name' => $organization ? $organization->getName() : '',
-                'issuer_email' => $organization ? $organization->getEmail() : '',
-            ],
+            // recipient
+            'first_name' => $user->getFirstName(),
+            'last_name' => $user->getLastName(),
+            'username' => $user->getUsername(),
+            // badge
+            'badge_name' => $badge->getName(),
+            'badge_description' => $badge->getDescription(),
+            'badge_image' => '<img src="'.$this->platformManager->getUrl().'/'.$badge->getImage().'" style="max-width: 100px; max-height: 50px;"/>',
+            'badge_image_url' => $this->platformManager->getUrl().'/'.$badge->getImage(),
+            'badge_duration' => $badge->getDurationValidation(),
+            // assertion
+            'assertion_id' => $assertion->getUuid(),
+            // issuer
+            'issuer_name' => $organization ? $organization->getName() : '',
+            'issuer_email' => $organization ? $organization->getEmail() : '',
+        ],
             $this->templateManager->formatDatePlaceholder('issued_on', $assertion->getIssuedOn())
         );
 

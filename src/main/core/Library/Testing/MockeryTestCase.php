@@ -22,17 +22,11 @@ abstract class MockeryTestCase extends TestCase
     private static array $nonCloneableClasses = [];
     private static array $mocks = [];
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->initMockery();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         m::close();

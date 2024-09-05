@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+    
+    UJM\ExoBundle\Library\Testing\Persister:
+        arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@claroline.library.testing.persister'

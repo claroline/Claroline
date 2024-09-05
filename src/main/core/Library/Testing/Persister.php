@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Library\Testing;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
@@ -16,21 +15,17 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class Persister
 {
     public function __construct(
         private readonly ObjectManager $om,
+        private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly ContainerInterface $container
     ) {
     }
 
-    /**
-     * @param string $username
-     * @param bool   $personalWorkspace
-     *
-     * @return User
-     */
     public function user(string $username, bool $personalWorkspace = false): User
     {
         $roleUser = $this->om->getRepository(Role::class)->findOneByName('ROLE_USER');
@@ -40,7 +35,12 @@ class Persister
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPlainPassword($username);
-        $user->setPassword($username);
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $user->getPlainpassword()
+        );
+        $user->setPassword($hashedPassword);
+
         $user->setEmail($username.'@email.com');
         $user->setMailValidated(true);
         $user->addRole($roleUser);
@@ -107,7 +107,9 @@ class Persister
 
     public function role(string $name): Role
     {
-        $role = $this->om->getRepository(Role::class)->findOneByName($name);
+        $role = $this->om->getRepository(Role::class)->findOneBy([
+            'name' => $name,
+        ]);
 
         if (!$role) {
             $role = new Role();

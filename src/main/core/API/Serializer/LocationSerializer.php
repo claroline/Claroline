@@ -76,7 +76,7 @@ class LocationSerializer
                 'city' => $location->getAddressCity(),
                 'state' => $location->getAddressState(),
                 'country' => $location->getAddressCountry(),
-            ]
+            ],
         ];
     }
 

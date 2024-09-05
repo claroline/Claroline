@@ -13,10 +13,10 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
-use Claroline\AppBundle\Entity\Identifier\Id;
-use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\CommunityBundle\Model\HasGroups;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -44,13 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         @ORM\Index(name="is_removed", columns={"is_removed"})
  * })
  */
-class User extends AbstractRoleSubject implements
-    UserInterface,
-    EquatableInterface,
-    PasswordAuthenticatedUserInterface,
-    LegacyPasswordAuthenticatedUserInterface,
-    CrudEntityInterface,
-    ContextSubjectInterface
+class User extends AbstractRoleSubject implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface, CrudEntityInterface, ContextSubjectInterface
 {
     use Id;
     use Uuid;
@@ -118,6 +112,7 @@ class User extends AbstractRoleSubject implements
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Group")
+     *
      * @ORM\JoinTable(name="claro_user_group")
      */
     private Collection $groups;
@@ -217,8 +212,8 @@ class User extends AbstractRoleSubject implements
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\UserOrganizationReference",
      *     mappedBy="user",
-     *     cascade={"all"},
      *     orphanRemoval=true,
+     *     cascade={"persist"},
      *     fetch="EXTRA_LAZY"
      *  )
      *

@@ -63,7 +63,7 @@ class RegistrationController
         $user = $this->crud->create(User::class, $this->decodeRequest($request), [
             // maybe move these options in another class
             Options::REGISTRATION,
-            Options::VALIDATE_FACET
+            Options::VALIDATE_FACET,
         ]);
 
         $validation = $this->config->getParameter('registration.validation');

@@ -7,5 +7,5 @@ use Claroline\AppBundle\Component\Context\ContextualInterface;
 
 interface DataSourceInterface extends ComponentInterface, ContextualInterface
 {
-    //public static function getIcon(): string;
+    // public static function getIcon(): string;
 }

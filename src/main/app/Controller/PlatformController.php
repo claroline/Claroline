@@ -53,7 +53,7 @@ class PlatformController
             $this->templating->render('@ClarolineApp/index.html.twig', [
                 'baseUrl' => $this->clientManager->getBaseUrl(),
                 'parameters' => array_merge($this->clientManager->getParameters(), $userPreferences), // for retro-compatibility
-                //'userPreferences' => $this->clientManager->getUserPreferences($currentUser),
+                // 'userPreferences' => $this->clientManager->getUserPreferences($currentUser),
 
                 'currentUser' => $currentUser ? $this->serializer->serialize(
                     $currentUser, [Options::SERIALIZE_FACET] // TODO : we should only get the minimal representation of user here

@@ -77,12 +77,12 @@ class ContextController
             return new JsonResponse(array_merge($openEvent->getResponse() ?? [], [
                 'data' => $contextSubject ? $this->serializer->serialize($contextSubject) : null, // maybe only expose minimal ?
 
-                //'managed' => $isManager,
+                // 'managed' => $isManager,
                 'impersonated' => $isImpersonated,
                 'roles' => array_values(array_map(function (Role $role) {
                     return $this->serializer->serialize($role, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $contextRoles)),
-                //'accessErrors' => $accessErrors,
+                // 'accessErrors' => $accessErrors,
 
                 // get all enabled tools for the context, even those inaccessible to the current user
                 // this will allow the ui to know if a user try to access a closed tool or a non-existent one.
@@ -195,7 +195,7 @@ class ContextController
             return [
                 'icon' => $tool::getIcon(),
                 'name' => $tool::getName(),
-                'required' => $tool->isRequired($context, $contextSubject)
+                'required' => $tool->isRequired($context, $contextSubject),
             ];
         }, $tools));
     }

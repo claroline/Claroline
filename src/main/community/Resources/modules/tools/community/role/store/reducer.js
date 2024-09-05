@@ -10,7 +10,7 @@ import {TOOL_LOAD, TOOL_OPEN} from '#/main/core/tool/store/actions'
 import {constants} from '#/main/community/constants'
 import {selectors as baseSelectors} from '#/main/community/tools/community/store/selectors'
 
-import {ROLE_WORKSPACE_RIGHTS_LOAD, ROLE_DESKTOP_RIGHTS_LOAD, ROLE_ADMINISTRATION_RIGHTS_LOAD} from '#/main/community/tools/community/role/store/actions'
+import {ROLE_WORKSPACE_RIGHTS_LOAD, ROLE_DESKTOP_RIGHTS_LOAD} from '#/main/community/tools/community/role/store/actions'
 import {selectors} from '#/main/community/tools/community/role/store/selectors'
 
 const reducer = combineReducers({
@@ -47,9 +47,6 @@ const reducer = combineReducers({
     }),
     desktopRights: makeReducer({}, {
       [ROLE_DESKTOP_RIGHTS_LOAD]: (state, action) => action.rights
-    }),
-    administrationRights: makeReducer({}, {
-      [ROLE_ADMINISTRATION_RIGHTS_LOAD]: (state, action) => action.rights
     })
   })
 })
