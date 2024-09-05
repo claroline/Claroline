@@ -52,7 +52,6 @@ actions.open = (id, contextData = null, reload = false) => (dispatch, getState) 
           dispatch(actions.fetchWorkspaceRights(id, !isEmpty(contextData) ? contextData.id : get(response, 'workspace.id')))
         } else if (constants.ROLE_PLATFORM === response.type) {
           dispatch(actions.fetchDesktopRights(id))
-          dispatch(actions.fetchAdministrationRights(id))
         }
       }
     }
