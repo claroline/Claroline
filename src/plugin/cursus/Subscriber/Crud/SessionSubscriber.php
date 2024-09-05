@@ -44,6 +44,7 @@ class SessionSubscriber implements EventSubscriberInterface
             CrudEvents::getEventName(CrudEvents::POST_UPDATE, Session::class) => 'postUpdate',
             CrudEvents::getEventName(CrudEvents::POST_DELETE, Session::class) => 'postDelete',
             CrudEvents::getEventName(CrudEvents::PRE_COPY, Session::class) => 'preCopy',
+            CrudEvents::getEventName(CrudEvents::POST_COPY, Session::class) => 'postCopy',
         ];
     }
 
@@ -170,22 +171,36 @@ class SessionSubscriber implements EventSubscriberInterface
         /** @var Course $course */
         $course = $event->getExtra()['parent'];
 
+        /** @var Session $copy */
+        $copy = $event->getCopy();
+
+        $copy->setCourse($course);
+        $copy->setCreatedAt(new \DateTime());
+        $copy->setUpdatedAt(new \DateTime());
+
+        $copyName = $this->sessionManager->getCopyName($copy->getName());
+        $copy->setName($copyName);
+        $copy->setCode($copyName);
+    }
+
+    public function postCopy(CopyEvent $event): void
+    {
         /** @var Session $original */
         $original = $event->getObject();
 
         /** @var Session $copy */
         $copy = $event->getCopy();
 
-        $copy->refreshUuid();
-        $copy->setCourse($course);
-        $copy->setCreatedAt(new \DateTime());
-        $copy->setUpdatedAt(new \DateTime());
-        $copyName = $this->sessionManager->getCopyName($original->getName());
-        $copy->setName($copyName);
-        $copy->setCode($copyName);
-
         foreach ($original->getEvents() as $seance) {
             $this->crud->copy($seance, [], ['parent' => $copy]);
+        }
+
+        if ($copy->getPoster()) {
+            $this->fileManager->linkFile(Session::class, $copy->getUuid(), $copy->getPoster());
+        }
+
+        if ($copy->getThumbnail()) {
+            $this->fileManager->linkFile(Session::class, $copy->getUuid(), $copy->getThumbnail());
         }
     }
 }

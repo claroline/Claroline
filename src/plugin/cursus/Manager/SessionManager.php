@@ -516,7 +516,7 @@ class SessionManager
         $index = count($existingNames);
         do {
             ++$index;
-            $newName = $name.'_'.$index;
+            $newName = $name.$index;
         } while (in_array($newName, $existingNames));
 
         return $newName;

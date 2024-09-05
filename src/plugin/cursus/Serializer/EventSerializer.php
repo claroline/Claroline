@@ -106,11 +106,16 @@ class EventSerializer
         return $serialized;
     }
 
-    public function deserialize(array $data, Event $event): Event
+    public function deserialize(array $data, Event $event, array $options = []): Event
     {
         $this->plannedObjectSerializer->deserialize($data, $event->getPlannedObject());
 
-        $this->sipe('id', 'setUuid', $data, $event);
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $event);
+        } else {
+            $event->refreshUuid();
+        }
+
         $this->sipe('code', 'setCode', $data, $event);
         $this->sipe('restrictions.users', 'setMaxUsers', $data, $event);
         $this->sipe('registration.registrationType', 'setRegistrationType', $data, $event);

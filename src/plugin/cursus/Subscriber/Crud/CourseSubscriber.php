@@ -147,23 +147,25 @@ class CourseSubscriber implements EventSubscriberInterface
         /** @var Course $copy */
         $copy = $event->getCopy();
 
-        $copy->refreshUuid();
         $copy->setCreatedAt(new \DateTime());
         $copy->setUpdatedAt(new \DateTime());
         $copyName = $this->manager->getCopyName($original->getName());
         $copy->setSlug($copyName);
         $copy->setName($copyName);
         $copy->setCode($copyName);
-
-        foreach ($original->getSessions() as $session) {
-            $this->crud->copy($session, [], ['parent' => $copy]);
-        }
     }
 
     public function postCopy(CopyEvent $event): void
     {
         /** @var Course $course */
         $course = $event->getCopy();
+
+        /** @var Course $original */
+        $original = $event->getObject();
+
+        foreach ($original->getSessions() as $session) {
+            $this->crud->copy($session, [], ['parent' => $course]);
+        }
 
         if ($course->getPoster()) {
             $this->fileManager->linkFile(Course::class, $course->getUuid(), $course->getPoster());

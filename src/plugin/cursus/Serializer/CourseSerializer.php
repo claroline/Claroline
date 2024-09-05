@@ -181,7 +181,12 @@ class CourseSerializer
 
     public function deserialize(array $data, Course $course, array $options): Course
     {
-        $this->sipe('id', 'setUuid', $data, $course);
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $course);
+        } else {
+            $course->refreshUuid();
+        }
+
         $this->sipe('code', 'setCode', $data, $course);
         $this->sipe('name', 'setName', $data, $course);
         $this->sipe('description', 'setDescription', $data, $course);

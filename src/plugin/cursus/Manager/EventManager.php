@@ -413,7 +413,7 @@ class EventManager
 
     public function getCopyName(string $name): string
     {
-        $existingNames = $this->eventRepo->findCodesWithPrefix($name);
+        $existingNames = $this->eventRepo->findNamesWithPrefix($name);
 
         if (empty($existingNames)) {
             return $name;
@@ -422,7 +422,7 @@ class EventManager
         $index = count($existingNames);
         do {
             ++$index;
-            $newName = $name.'_'.$index;
+            $newName = $name.$index;
         } while (in_array($newName, $existingNames));
 
         return $newName;

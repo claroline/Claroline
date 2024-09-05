@@ -70,16 +70,17 @@ class EventRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    public function findCodesWithPrefix(string $prefix): array
+    public function findNamesWithPrefix(string $prefix): array
     {
         return array_map(
             function (array $event) {
-                return $event['code'];
+                return $event['name'];
             },
             $this->getEntityManager()->createQuery('
-                SELECT e.code
+                SELECT po.name
                 FROM Claroline\CursusBundle\Entity\Event e
-                WHERE e.code LIKE :search
+                JOIN Claroline\CoreBundle\Entity\Planning\PlannedObject po WITH e.plannedObject = po.id
+                WHERE po.name LIKE :search
             ')
                 ->setParameter('search', addcslashes($prefix, '%_').'%')
                 ->getResult()
