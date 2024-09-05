@@ -70,7 +70,7 @@ const ContextMain = (props) => {
         appPromise.cancel()
       }
     }
-  }, [props.loaded, props.tools.map(t => t.name).join('-')])
+  }, [props.loaded, props.name, props.tools.map(t => t.name).join('-')])
 
   let CurrentPage
   if (!props.loaded || !toolApps) {

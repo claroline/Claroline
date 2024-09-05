@@ -47,7 +47,6 @@ class RoleFinder extends AbstractFinder
             $qb->setParameter('roleAdmin', PlatformRoles::ADMIN);
         }
 
-        $groupJoin = false;
         $workspaceJoin = false;
 
         foreach ($searches as $filterName => $filterValue) {
@@ -70,9 +69,6 @@ class RoleFinder extends AbstractFinder
                 case 'user':
                 case 'users':
                     $qb->leftJoin(User::class, 'ru', Join::WITH, 'obj MEMBER OF ru.roles AND ru.uuid IN (:userIds)');
-
-                    //$qb->leftJoin('obj.users', 'ru', 'WITH', 'ru.uuid IN (:userIds)');
-
                     $qb->andWhere('(ru IS NOT NULL OR EXISTS (
                         SELECT u2.id 
                         FROM Claroline\CoreBundle\Entity\User AS u2

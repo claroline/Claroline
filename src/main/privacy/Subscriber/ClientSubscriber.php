@@ -8,7 +8,7 @@ use Claroline\AppBundle\Event\ClientEvents;
 use Claroline\PrivacyBundle\Manager\PrivacyManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class PrivacyParametersSubscriber implements EventSubscriberInterface
+class ClientSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly SerializerProvider $serializer,

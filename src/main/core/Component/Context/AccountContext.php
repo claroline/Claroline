@@ -41,11 +41,6 @@ class AccountContext extends AbstractContext
         return !empty($this->securityManager->getCurrentUser());
     }
 
-    public function isRoot(): bool
-    {
-        return false;
-    }
-
     public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array
     {
         return [];

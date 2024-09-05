@@ -9,6 +9,9 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
+/**
+ * The Public context is an optional context (must be enabled by an admin) for anonymous users.
+ */
 class PublicContext extends AbstractContext
 {
     public function __construct(
@@ -27,11 +30,6 @@ class PublicContext extends AbstractContext
         return 'home';
     }
 
-    public static function getOrder(): int
-    {
-        return 1;
-    }
-
     public function getObject(?string $contextId): ?ContextSubjectInterface
     {
         return null;
@@ -41,11 +39,6 @@ class PublicContext extends AbstractContext
     {
         return 'tool' === $this->config->getParameter('home.type')
             && (empty($this->securityManager->getCurrentUser()) || $this->securityManager->isAdmin());
-    }
-
-    public function isRoot(): bool
-    {
-        return true;
     }
 
     public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array

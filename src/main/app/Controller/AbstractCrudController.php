@@ -14,8 +14,6 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 
 abstract class AbstractCrudController
 {
-    use RequestDecoderTrait;
-
     use GetAction;
     use ListAction;
     use CreateAction;
