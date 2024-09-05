@@ -3,6 +3,7 @@ services:
     parent: Claroline\AppBundle\Component\Tool\AbstractTool
     tags: [ 'claroline.component.tool' ]
     arguments:
+      - '@security.token_storage'
       - '@Claroline\AppBundle\Persistence\ObjectManager'
       - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
       - '@Claroline\AppBundle\API\SerializerProvider'
