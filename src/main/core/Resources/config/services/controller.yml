@@ -85,11 +85,6 @@ services:
         arguments:
             - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
 
-    Claroline\CoreBundle\Controller\DataSourceController:
-        arguments:
-            - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\Manager\DataSourceManager'
-
     Claroline\CoreBundle\Controller\PublicFileController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true

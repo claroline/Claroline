@@ -47,6 +47,13 @@ services:
             - '@Claroline\AppBundle\Component\Context\ContextProvider'
             - '@Claroline\AppBundle\Component\Tool\ToolProvider'
 
+    Claroline\AppBundle\Controller\Component\DataSourceController:
+        arguments:
+            - '@Claroline\CoreBundle\Manager\DataSourceManager'
+            - '@Claroline\AppBundle\Component\Context\ContextProvider'
+            - '@Claroline\AppBundle\Component\DataSource\DataSourceProvider'
+
+
     Claroline\AppBundle\Controller\Component\ToolController:
         arguments:
             - '@security.authorization_checker'
