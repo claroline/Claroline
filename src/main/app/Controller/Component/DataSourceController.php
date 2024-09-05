@@ -1,12 +1,15 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller;
+namespace Claroline\AppBundle\Controller\Component;
 
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Component\Context\ContextProvider;
+use Claroline\AppBundle\Component\DataSource\DataSourceProvider;
 use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Manager\DataSourceManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -17,23 +20,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class DataSourceController
 {
     public function __construct(
-        private readonly SerializerProvider $serializer,
-        private readonly DataSourceManager $manager
+        private readonly DataSourceManager $manager,
+        private readonly ContextProvider $contextProvider,
+        private readonly DataSourceProvider $dataSourceProvider
     ) {
-    }
-
-    /**
-     * Lists available data sources for a given context.
-     *
-     * @Route("/{context}", name="apiv2_data_source_list", defaults={"context"=null}, methods={"GET"})
-     */
-    public function listAction(string $context = null): JsonResponse
-    {
-        $dataSources = $this->manager->getAvailable($context);
-
-        return new JsonResponse(array_map(function (DataSource $dataSource) {
-            return $this->serializer->serialize($dataSource);
-        }, $dataSources));
     }
 
     /**
@@ -43,8 +33,13 @@ class DataSourceController
      */
     public function loadAction(Request $request, string $type, string $context, string $contextId = null): JsonResponse
     {
-        if (!$this->manager->check($type, $context)) {
-            return new JsonResponse('Unknown data source.', 404);
+        try {
+            $contextHandler = $this->contextProvider->getContext($context, $contextId);
+            $contextSubject = $contextHandler->getObject($contextId);
+
+            $dataSource = $this->dataSourceProvider->getDataSource($type, $context, $contextSubject);
+        } catch (\Exception $e) {
+            throw new NotFoundHttpException($e->getMessage());
         }
 
         return new JsonResponse(
