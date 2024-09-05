@@ -17,6 +17,7 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\AppBundle\Manager\PdfManager'
             - '@Claroline\CoreBundle\Manager\Template\TemplateManager'
+            - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\AppBundle\Manager\File\TempFileManager'

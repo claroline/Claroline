@@ -10,6 +10,7 @@ use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Evaluation;
 use Claroline\CoreBundle\Manager\FileManager;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\EvaluationBundle\Entity\Certificate;
 use Symfony\Component\Filesystem\Filesystem;
@@ -21,6 +22,7 @@ class CertificateManager
         private readonly ObjectManager $om,
         private readonly PdfManager $pdfManager,
         private readonly TemplateManager $templateManager,
+        private readonly LocaleManager $localeManager,
         private readonly FileManager $fileManager,
         private readonly PlatformManager $platformManager,
         private readonly TempFileManager $tempFileManager,
@@ -44,10 +46,15 @@ class CertificateManager
 
         $placeholders = $this->getCommonPlaceholders($evaluation);
 
+        $locale = $evaluation->getUser()->getLocale();
+        if (!$locale) {
+            $locale = $this->localeManager->getDefault();
+        }
+
         $html = $this->templateManager->getTemplate(
             $evaluation->isTerminated() ? 'workspace_success_certificate' : 'workspace_participation_certificate',
             $placeholders,
-            $evaluation->getUser()->getLocale()
+            $locale
         );
 
         $certificate = new Certificate();
@@ -56,7 +63,7 @@ class CertificateManager
         $certificate->setEvaluation($evaluation);
         $certificate->setObtentionDate($evaluation->getDate());
         $certificate->setScore($evaluation->getScore() ?: 0);
-        $certificate->setLanguage($evaluation->getUser()->getLocale());
+        $certificate->setLanguage($locale);
         $certificate->setStatus($evaluation->getStatus());
         $certificate->setContent($html);
         $this->om->persist($certificate);
