@@ -52,7 +52,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->rightsManager = $this->client->getContainer()->get('claroline.manager.rights_manager');
         $this->roleManager = $this->client->getContainer()->get('claroline.manager.role_manager');
 
-        $this->persist = new Persister($this->om);
+        $this->persist = $this->client->getContainer()->get(Persister::class);
         $this->john = $this->persist->user('john');
         $this->bob = $this->persist->user('bob');
 
@@ -84,7 +84,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         // Test the list route
-        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}/papers", $this->bob);
+        $this->request('GET', "/exercises/{$this->exercise->getUuid()}/papers", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -102,7 +102,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         // Test the detail of one paper route
-        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}", $this->bob);
+        $this->request('GET', "/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -111,7 +111,7 @@ class PaperControllerTest extends TransactionalTestCase
      */
     public function testAnonymousPapers()
     {
-        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}/papers");
+        $this->request('GET', "/exercises/{$this->exercise->getUuid()}/papers");
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
     }
 
@@ -131,7 +131,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->persist($pa2);
         $this->om->flush();
 
-        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}/papers", $this->bob);
+        $this->request('GET', "/exercises/{$this->exercise->getUuid()}/papers", $this->bob);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
@@ -156,7 +156,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->persist($pa4);
         $this->om->flush();
 
-        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}/papers", $this->john);
+        $this->request('GET', "/exercises/{$this->exercise->getUuid()}/papers", $this->john);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
@@ -179,7 +179,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         // Request the created paper
-        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}");
+        $this->request('GET', "/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}");
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
     }
 
@@ -195,7 +195,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         // Request the created paper
-        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}", $this->bob);
+        $this->request('GET', "/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}", $this->bob);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         // Validate the received content
@@ -216,7 +216,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         // Request the created paper
-        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}", $james);
+        $this->request('GET', "/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}", $james);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -231,7 +231,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         // Let the admin John request the created paper
-        $this->request('GET', "/apiv2/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}", $this->john);
+        $this->request('GET', "/exercises/{$this->exercise->getUuid()}/papers/{$paper->getUuid()}", $this->john);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         // Validate the received content
@@ -247,7 +247,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->persist($paper);
         $this->om->flush();
 
-        $this->request('DELETE', "/apiv2/exercises/{$this->exercise->getUuid()}/papers?ids[]={$paper->getUuid()}", $this->bob);
+        $this->request('DELETE', "/exercises/{$this->exercise->getUuid()}/papers?ids[]={$paper->getUuid()}", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -260,7 +260,7 @@ class PaperControllerTest extends TransactionalTestCase
         $this->om->persist($paper);
         $this->om->flush();
 
-        $this->request('DELETE', "/apiv2/exercises/{$this->exercise->getUuid()}/papers?ids[]={$paper->getUuid()}", $this->john);
+        $this->request('DELETE', "/exercises/{$this->exercise->getUuid()}/papers?ids[]={$paper->getUuid()}", $this->john);
 
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
 
@@ -275,8 +275,6 @@ class PaperControllerTest extends TransactionalTestCase
     /**
      * Checks the export of a paper has the correct format.
      * The paper detail MUST contain the paper itself and the list of used questions.
-     *
-     * @param $content
      */
     private function assertIsValidPaperDetail(Paper $paper, $content)
     {

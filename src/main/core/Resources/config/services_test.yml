@@ -8,6 +8,7 @@ services:
         class: Claroline\CoreBundle\Library\Testing\Persister
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@security.user_password_hasher'
             - '@service_container'
 
     test.annotation_reader:

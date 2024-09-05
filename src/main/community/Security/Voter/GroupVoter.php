@@ -34,8 +34,7 @@ class GroupVoter extends AbstractRoleSubjectVoter
 
         switch ($attributes[0]) {
             case self::OPEN:
-            case self::VIEW:
-                return $this->checkView($token, $object);
+                return $this->checkOpen($token, $object);
             case self::ADMINISTRATE:
             case self::EDIT:
                 return $this->checkEdit($token, $object);
@@ -48,12 +47,8 @@ class GroupVoter extends AbstractRoleSubjectVoter
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    private function checkView($token, Group $group)
+    private function checkOpen($token, Group $group)
     {
-        if ($this->isOrganizationManager($token, $group)) {
-            return VoterInterface::ACCESS_GRANTED;
-        }
-
         /** @var User $user */
         $user = $token->getUser();
         if ($user instanceof User && $user->hasGroup($group)) {
@@ -96,6 +91,6 @@ class GroupVoter extends AbstractRoleSubjectVoter
 
     public function getSupportedActions(): array
     {
-        return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH];
+        return [self::OPEN, self::CREATE, self::EDIT, self::ADMINISTRATE, self::DELETE, self::PATCH];
     }
 }

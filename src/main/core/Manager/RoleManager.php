@@ -81,8 +81,6 @@ class RoleManager
         $roleName = 'ROLE_USER_'.strtoupper($username);
         $role = $this->getRoleByName($roleName);
 
-        $this->om->startFlushSuite();
-
         if (is_null($role)) {
             $role = new Role();
             $role->setName($roleName);
@@ -93,7 +91,6 @@ class RoleManager
         }
 
         $user->addRole($role);
-        $this->om->endFlushSuite();
 
         return $role;
     }

@@ -11,7 +11,6 @@
 
 namespace Claroline\OpenBadgeBundle\Controller;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
@@ -51,6 +50,7 @@ class EvidenceController extends AbstractCrudController
 
     /**
      * @Route("/assertion/{assertion}", name="create_at", methods={"POST"})
+     *
      * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
     public function createAtAction(Request $request, Assertion $assertion): JsonResponse

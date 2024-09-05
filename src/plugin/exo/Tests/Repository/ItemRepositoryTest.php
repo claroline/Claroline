@@ -37,7 +37,7 @@ class ItemRepositoryTest extends TransactionalTestCase
         parent::setUp();
 
         $this->om = $this->client->getContainer()->get(ObjectManager::class);
-        $this->persist = new Persister($this->om);
+        $this->persist = $this->client->getContainer()->get(Persister::class);
         $this->repo = $this->om->getRepository(Item::class);
 
         // Creates some questions

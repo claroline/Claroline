@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\ThemeBundle\Entity\Theme;
 use Claroline\ThemeBundle\Entity\UserPreferences;
 use Claroline\ThemeBundle\Repository\ThemeRepository;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ThemeManager
 {

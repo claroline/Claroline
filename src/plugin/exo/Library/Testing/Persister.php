@@ -3,13 +3,12 @@
 namespace UJM\ExoBundle\Library\Testing;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\AuthenticationBundle\Entity\ApiToken;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Testing\Persister as BasePersister;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Hint;
 use UJM\ExoBundle\Entity\Item\Item;
@@ -17,8 +16,6 @@ use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
 use UJM\ExoBundle\Entity\Misc\Choice;
-use UJM\ExoBundle\Entity\Misc\Label;
-use UJM\ExoBundle\Entity\Misc\Proposal;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Library\Item\ItemType;
 
@@ -28,34 +25,15 @@ use UJM\ExoBundle\Library\Item\ItemType;
  */
 class Persister
 {
-    /**
-     * @var ObjectManager
-     */
-    private $om;
+    private ?ResourceType $exoType = null;
 
-    /**
-     * @var ResourceType
-     */
-    private $exoType;
-
-    /**
-     * @var Role
-     */
-    private $userRole;
-
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
+    public function __construct(
+        private readonly ObjectManager $om,
+        private readonly BasePersister $persister
+    ) {
     }
 
-    /**
-     * @param string $text
-     * @param float  $order
-     * @param float  $score
-     *
-     * @return Choice
-     */
-    public function qcmChoice($text, $order, $score)
+    public function qcmChoice(string $text, int $order, float $score): Choice
     {
         $choice = new Choice();
         $choice->setUuid(uniqid('', true));
@@ -67,14 +45,7 @@ class Persister
         return $choice;
     }
 
-    /**
-     * @param string   $title
-     * @param Choice[] $choices
-     * @param string   $description
-     *
-     * @return Item
-     */
-    public function choiceQuestion($title, array $choices = [], $description = '')
+    public function choiceQuestion(string $title, ?array $choices = [], ?string $description = ''): Item
     {
         $question = new Item();
         $question->setUuid(uniqid('', true));
@@ -100,12 +71,7 @@ class Persister
         return $question;
     }
 
-    /**
-     * @param string $title
-     *
-     * @return Item
-     */
-    public function openQuestion($title)
+    public function openQuestion(string $title): Item
     {
         $question = new Item();
         $question->setScoreRule(json_encode(['type' => 'manual', 'max' => 10]));
@@ -126,41 +92,10 @@ class Persister
         return $question;
     }
 
-    public function matchLabel($text, $score = 0)
-    {
-        $label = new Label();
-        $label->setFeedback('feedback...');
-        $label->setData($text);
-        $label->setScore($score);
-        $label->setUuid(uniqid('', true));
-        $this->om->persist($label);
-
-        return $label;
-    }
-
-    public function matchProposal($text, Label $label = null)
-    {
-        $proposal = new Proposal();
-        $proposal->setData($text);
-        $proposal->setUuid(uniqid('', true));
-        if (null !== $label) {
-            $proposal->addExpectedLabel($label);
-        }
-        $this->om->persist($proposal);
-
-        return $proposal;
-    }
-
     /**
      * Creates a match question.
-     *
-     * @param string $title
-     * @param array  $labels
-     * @param array  $proposals
-     *
-     * @return Item
      */
-    public function matchQuestion($title, $labels = [], $proposals = [])
+    public function matchQuestion(string $title, ?array $labels = [], ?array $proposals = []): Item
     {
         $question = new Item();
         $question->setExpectedAnswers(true);
@@ -190,13 +125,9 @@ class Persister
     }
 
     /**
-     * @param string $title
-     * @param array  $questionData - grouping questions in sub arrays will create 1 step for one sub array
-     * @param User   $user
-     *
-     * @return Exercise
+     * @param array $questionData - grouping questions in sub arrays will create 1 step for one sub array
      */
-    public function exercise($title, array $questionData = [], User $user = null)
+    public function exercise(string $title, array $questionData = [], User $user = null): Exercise
     {
         $exercise = new Exercise();
         $exercise->setExpectedAnswers(true);
@@ -246,70 +177,20 @@ class Persister
 
     public function user(string $username): User
     {
-        $user = new User();
-        $user->setFirstName($username);
-        $user->setLastName($username);
-        $user->setUsername($username);
-        $user->setPlainPassword($username);
-        $user->setEmail($username.'@email.com');
-        $this->om->persist($user);
-
-        if (!$this->userRole) {
-            $this->userRole = $this->role('ROLE_USER');
-            $this->om->persist($this->userRole);
-        }
-
-        $user->addRole($this->userRole);
-
-        $workspace = new Workspace();
-        $workspace->setName($username);
-        $workspace->setCreator($user);
-        $workspace->setCode($username);
-        $workspace->setUuid($username);
-        $this->om->persist($workspace);
-
-        $user->setPersonalWorkspace($workspace);
-
-        $token = new ApiToken();
-        $token->setUser($user);
-        $this->om->persist($token);
-
-        return $user;
+        return $this->persister->user($username, true);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return Role
-     */
-    public function role($name)
+    public function role(string $name): Role
     {
-        $role = $this->om->getRepository(Role::class)->findOneBy([
-            'name' => $name,
-        ]);
-
-        if (!$role) {
-            $role = new Role();
-            $role->setName($name);
-            $role->setTranslationKey($name);
-            $this->om->persist($role);
-        }
-
-        return $role;
+        return $this->persister->role($name);
     }
 
-    public function maskDecoder(ResourceType $type, $permission, $value)
+    public function maskDecoder(ResourceType $type, string $permission, int $value): MaskDecoder
     {
-        $decoder = new MaskDecoder();
-        $decoder->setResourceType($type);
-        $decoder->setName($permission);
-        $decoder->setValue($value);
-        $this->om->persist($decoder);
-
-        return $decoder;
+        return $this->persister->maskDecoder($type, $permission, $value);
     }
 
-    public function hint(Item $question, $text, $penalty = 1)
+    public function hint(Item $question, string $text, float $penalty = 1): Hint
     {
         $hint = new Hint();
         $hint->setData($text);

@@ -3,7 +3,6 @@
 namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\API\Finder\FinderQuery;
-use Claroline\AppBundle\API\Finder\FinderResult;
 use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
@@ -321,7 +320,7 @@ class Crud
         $className = $this->getRealClass($object);
         $new = new $className();
 
-        $serializer = $this->serializer->get($new);
+        $serializer = $this->serializer->get($className);
 
         if (method_exists($serializer, 'getCopyOptions')) {
             $options = array_merge($options, $serializer->getCopyOptions());

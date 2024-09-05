@@ -23,6 +23,7 @@ use Twig\Environment;
 
 /**
  * @Route("/lesson/{lessonId}/chapters")
+ *
  * @EXT\ParamConverter("lesson", class="Icap\LessonBundle\Entity\Lesson", options={"mapping": {"lessonId": "uuid"}})
  *
  * @todo refactor using AbstractCrudController
@@ -48,8 +49,6 @@ class ChapterController
 
     /**
      * Get the name of the managed entity.
-     *
-     * @return string
      */
     public static function getName(): string
     {
@@ -97,6 +96,7 @@ class ChapterController
      * Create new chapter.
      *
      * @Route("/{slug}", name="apiv2_lesson_chapter_create", methods={"POST"})
+     *
      * @EXT\ParamConverter("parent", class="Icap\LessonBundle\Entity\Chapter", options={"mapping": {"slug": "slug"}})
      */
     public function createAction(Request $request, Lesson $lesson, Chapter $parent): JsonResponse
@@ -113,6 +113,7 @@ class ChapterController
      * Update existing chapter.
      *
      * @Route("/{slug}", name="apiv2_lesson_chapter_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter("chapter", class="Icap\LessonBundle\Entity\Chapter", options={"mapping": {"slug": "slug"}})
      */
     public function editAction(Request $request, Lesson $lesson, Chapter $chapter): JsonResponse
@@ -129,6 +130,7 @@ class ChapterController
      * Delete existing chapter.
      *
      * @Route("/{slug}", name="apiv2_lesson_chapter_delete", methods={"DELETE"})
+     *
      * @EXT\ParamConverter("chapter", class="Icap\LessonBundle\Entity\Chapter", options={"mapping": {"slug": "slug"}})
      */
     public function deleteAction(Request $request, Lesson $lesson, Chapter $chapter): JsonResponse
@@ -151,6 +153,7 @@ class ChapterController
 
     /**
      * @Route("/{chapter}/pdf", name="icap_lesson_chapter_export_pdf")
+     *
      * @EXT\ParamConverter("chapter", class="Icap\LessonBundle\Entity\Chapter", options={"mapping": {"chapter": "uuid"}})
      */
     public function downloadPdfAction(Chapter $chapter): StreamedResponse

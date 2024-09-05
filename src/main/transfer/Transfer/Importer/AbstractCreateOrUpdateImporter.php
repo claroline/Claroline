@@ -13,7 +13,7 @@ abstract class AbstractCreateOrUpdateImporter extends AbstractImporter
     abstract protected static function getClass(): string;
 
     /**
-     * @internal Only used by DI.
+     * @internal only used by DI
      */
     public function setCrud(Crud $crud): void
     {
@@ -21,7 +21,7 @@ abstract class AbstractCreateOrUpdateImporter extends AbstractImporter
     }
 
     /**
-     * @internal Only used by DI.
+     * @internal only used by DI
      */
     public function setTransfer(ImportProvider $transfer): void
     {

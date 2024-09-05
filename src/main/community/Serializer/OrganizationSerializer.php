@@ -81,7 +81,7 @@ class OrganizationSerializer
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
             $edit = $this->authorization->isGranted('EDIT', $organization);
             $serialized['permissions'] = [
-                'open' => $edit ||$this->authorization->isGranted('OPEN', $organization),
+                'open' => $edit || $this->authorization->isGranted('OPEN', $organization),
                 'edit' => $edit,
                 'delete' => $edit || $this->authorization->isGranted('DELETE', $organization),
             ];

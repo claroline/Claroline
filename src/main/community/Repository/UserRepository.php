@@ -152,23 +152,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
      *
      * @return User[]
      */
-    public function findByUsernames(array $usernames)
+    public function findByUsernames(array $usernames): array
     {
-        if (count($usernames) > 0) {
-            $dql = '
-                SELECT u FROM Claroline\CoreBundle\Entity\User u
-                WHERE u.isRemoved = false
-                AND u.username IN (:usernames)
-            ';
-
-            $query = $this->getEntityManager()->createQuery($dql);
-            $query->setParameter('usernames', $usernames);
-            $result = $query->getResult();
-        } else {
-            $result = [];
+        if (empty($usernames)) {
+            return [];
         }
 
-        return $result;
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT u FROM Claroline\CoreBundle\Entity\User u
+                WHERE u.isRemoved = false
+                  AND u.isEnabled = true
+                  AND u.username IN (:usernames)
+            ')
+            ->setParameter('usernames', $usernames)
+            ->getResult();
     }
 
     public function countUsers(array $organizations = []): int

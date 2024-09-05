@@ -44,10 +44,6 @@ class WorkspaceRepository extends EntityRepository
 
     /**
      * Counts non personal workspaces.
-     *
-     * @param array $organizations
-     *
-     * @return int
      */
     public function countNonPersonalWorkspaces(array $organizations = null): int
     {

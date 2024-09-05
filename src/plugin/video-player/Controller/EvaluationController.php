@@ -30,6 +30,7 @@ class EvaluationController
 
     /**
      * @Route("/{id}/progression/{currentTime}/{totalTime}", name="apiv2_video_progression_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\ParamConverter("video", class="Claroline\CoreBundle\Entity\Resource\File", options={"mapping": {"id": "uuid"}})
      */

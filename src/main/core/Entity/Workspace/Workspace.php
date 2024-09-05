@@ -129,8 +129,6 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
 
     /**
      * @ORM\Column(name="is_personal", type="boolean")
-     *
-     * @var bool
      */
     private bool $personal = false;
 
@@ -160,6 +158,7 @@ class Workspace implements ContextSubjectInterface, CrudEntityInterface
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization")
+     *
      * @ORM\JoinTable(name="workspace_organization")
      */
     private Collection $organizations;

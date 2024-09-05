@@ -13,7 +13,6 @@ namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\API\Finder\FinderInterface;
 use Claroline\AppBundle\API\Finder\FinderQuery;
-use Claroline\AppBundle\API\Finder\FinderResult;
 use Claroline\AppBundle\Persistence\ObjectManager;
 
 class FinderProvider
@@ -77,7 +76,7 @@ class FinderProvider
             'page' => $query->getPage(),
             'pageSize' => $query->getPageSize(),
             'filters' => self::decodeFilters($query->getFilters()),
-            //'sortBy' => $sortBy,
+            // 'sortBy' => $sortBy,
         ];
     }
 

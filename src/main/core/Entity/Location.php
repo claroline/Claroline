@@ -12,11 +12,11 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Claroline\AppBundle\Entity\Address;
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\IdentifiableInterface;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
-use Claroline\AppBundle\Entity\Display\Poster;
-use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Meta\Description;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,6 +26,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\Table(name="claro__location")
  */
 class Location implements IdentifiableInterface
@@ -39,6 +40,7 @@ class Location implements IdentifiableInterface
 
     /**
      * @ORM\Column()
+     *
      * @Assert\NotBlank()
      */
     private ?string $name = null;

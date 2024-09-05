@@ -53,15 +53,15 @@ class SectionCommentVoter extends AbstractVoter
         $user = $token->getUser();
         $isAnon = !$user instanceof User;
 
-        if (!$isAnon &&
-            $this->isGranted(self::OPEN, $resourceNode) &&
-            $section->isCommentsAllowed() &&
-            $sectionComment->getUser()->getUuid() === $user->getUuid() &&
-            (
-                AudioParams::MANAGER_TYPE === $section->getType() ||
-                (
-                    AudioParams::USER_TYPE === $section->getType() &&
-                    $section->getUser()->getUuid() === $user->getUuid()
+        if (!$isAnon
+            && $this->isGranted(self::OPEN, $resourceNode)
+            && $section->isCommentsAllowed()
+            && $sectionComment->getUser()->getUuid() === $user->getUuid()
+            && (
+                AudioParams::MANAGER_TYPE === $section->getType()
+                || (
+                    AudioParams::USER_TYPE === $section->getType()
+                    && $section->getUser()->getUuid() === $user->getUuid()
                 )
             )
         ) {

@@ -149,11 +149,15 @@ const ClacoFormResource = props =>
 
 ClacoFormResource.propTypes = {
   path: T.string.isRequired,
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
   currentUser: T.object,
   clacoForm: T.shape(
     ClacoFormTypes.propTypes
   ).isRequired,
   hasStatistics: T.bool,
+  randomEnabled: T.bool,
   canEdit: T.bool.isRequired,
   canAdministrate: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,

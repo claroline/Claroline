@@ -88,11 +88,9 @@ class ContextProvider extends AbstractComponentProvider
 
     public function open()
     {
-
     }
 
     public function configure(): ?array
     {
-
     }
 }

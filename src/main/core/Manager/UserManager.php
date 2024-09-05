@@ -42,17 +42,6 @@ class UserManager
         $this->roleRepo = $om->getRepository(Role::class);
     }
 
-    public function getUserByUsername(string $username): ?User
-    {
-        try {
-            $user = $this->userRepo->loadUserByUsername($username);
-        } catch (\Exception $e) {
-            $user = null;
-        }
-
-        return $user;
-    }
-
     public function getByResetPasswordHash(string $resetPassword): ?User
     {
         return $this->userRepo->findOneBy(['resetPasswordHash' => $resetPassword]);
@@ -168,10 +157,14 @@ class UserManager
 
     public function getDefaultClarolineAdmin(): User
     {
-        $user = $this->getUserByUsername('support@claroline.com');
+        $user = $this->userRepo->findOneBy(['email' => 'support@claroline.com']);
 
         if (!$user) {
-            $user = $this->crud->create(User::class, [
+            // hide this user for everyone
+            $user = new User();
+            $user->setTechnical(true);
+
+            $this->crud->create($user, [
                 'firstName' => 'Claroline',
                 'lastName' => 'Connect',
                 'username' => 'claroline-connect',
@@ -191,9 +184,6 @@ class UserManager
             $this->om->persist($user);
             $this->om->flush();
         }
-
-        // hide this user for everyone
-        $user->setTechnical(true);
 
         return $user;
     }

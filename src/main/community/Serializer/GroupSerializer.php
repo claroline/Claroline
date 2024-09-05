@@ -4,8 +4,6 @@ namespace Claroline\CommunityBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CommunityBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;

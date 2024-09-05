@@ -9,12 +9,12 @@ use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Library\Normalizer\CodeNormalizer;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
@@ -66,12 +66,6 @@ class WorkspaceSubscriber implements EventSubscriberInterface
 
         // copy model data
         if (!empty($workspace->getWorkspaceModel())) {
-            // The NO_MODEL options is only here for workspace import.
-            // It's not possible for now to create a workspace without a model (it will miss some required data).
-            /*if (empty($workspace->getWorkspaceModel())) {
-                $workspace->setWorkspaceModel($this->manager->getDefaultModel($workspace->isPersonal()));
-            }*/
-
             // inject model data inside the new workspace
             $this->copy($workspace->getWorkspaceModel(), $workspace, in_array(Options::AS_MODEL, $options) || $workspace->isModel());
 

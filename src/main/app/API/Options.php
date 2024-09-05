@@ -56,8 +56,6 @@ final class Options
 
     // make created workspace a model
     public const AS_MODEL = 'as_model';
-    // avoid copying model (this is used by import)
-    public const NO_MODEL = 'no_model';
 
     /**
      * for resource node.

@@ -43,7 +43,7 @@ class EmptyRole extends AbstractImporter
 
         if ($role) {
             $groups = $this->om->getRepository(Group::class)->findByRole($role);
-            $users =  $this->om->getRepository(User::class)->findByRoles([$role], false);
+            $users = $this->om->getRepository(User::class)->findByRoles([$role], false);
 
             $this->crud->patch($role, 'user', 'remove', $users);
             $this->crud->patch($role, 'group', 'remove', $groups);

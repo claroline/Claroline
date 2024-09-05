@@ -98,6 +98,7 @@ class FileController
      * Creates a resource from uploaded file.
      *
      * @Route("/tinymce/upload", name="claro_tinymce_file_upload", methods={"POST"})
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
     public function uploadTinyMceAction(Request $request, User $user): JsonResponse
@@ -192,7 +193,7 @@ class FileController
      */
     private function stream(ResourceNode $resourceNode, Request $request): BinaryFileResponse
     {
-        //temporary because otherwise injected resource must have the "open" right
+        // temporary because otherwise injected resource must have the "open" right
         $this->checkPermission('OPEN', $resourceNode, [], true);
 
         // free the session as soon as possible

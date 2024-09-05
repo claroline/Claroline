@@ -60,7 +60,7 @@ class PaperGeneratorTest extends TransactionalTestCase
         $this->generator = $this->client->getContainer()->get('ujm_exo.generator.paper');
         $this->exerciseValidator = $this->client->getContainer()->get('UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator');
 
-        $this->persist = new Persister($this->om);
+        $this->persist = $this->client->getContainer()->get(Persister::class);
 
         // Initialize some base data for tests
         $this->user = $this->persist->user('john');
@@ -355,8 +355,6 @@ class PaperGeneratorTest extends TransactionalTestCase
     /**
      * Checks the structure of an exercise has been generated accordingly to the generation options.
      * The structure MUST be an array of step structures.
-     *
-     * @param mixed $exerciseStructure
      */
     private function checkExerciseStructure(Exercise $exercise, $exerciseStructure)
     {
@@ -371,8 +369,6 @@ class PaperGeneratorTest extends TransactionalTestCase
     /**
      * Checks the structure of a step has been generated accordingly to the generation options.
      * The structure MUST be an object containing the step uuid and a list of picked questions.
-     *
-     * @param mixed $stepStructure
      */
     private function checkStepStructure(Step $step, $stepStructure)
     {

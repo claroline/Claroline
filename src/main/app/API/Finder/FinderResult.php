@@ -12,7 +12,7 @@ class FinderResult
     public function __construct(
         Query $query
     ) {
-        $this->paginator = new Paginator($query/*, false*/);
+        $this->paginator = new Paginator($query/* , false */);
     }
 
     public function count(): int

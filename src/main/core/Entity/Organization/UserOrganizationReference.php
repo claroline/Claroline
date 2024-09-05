@@ -17,9 +17,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\Table(
  *     name="user_organization",
  *     uniqueConstraints={
+ *
  *          @ORM\UniqueConstraint(name="organization_unique_user", columns={"user_id", "organization_id"})
  *     }
  * )
@@ -31,8 +33,10 @@ class UserOrganizationReference
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     inversedBy="userOrganizationReferences"
+     *     inversedBy="userOrganizationReferences",
+     *     cascade={"persist"}
      * )
+     *
      * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
      */
     private User $user;
@@ -41,6 +45,7 @@ class UserOrganizationReference
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
      * )
+     *
      * @ORM\JoinColumn(name="organization_id", nullable=false, onDelete="CASCADE")
      */
     private ?Organization $organization = null;

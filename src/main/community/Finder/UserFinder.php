@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 
 class UserFinder extends AbstractFinder
@@ -162,14 +161,7 @@ class UserFinder extends AbstractFinder
                         $organizationJoin = true;
                     }
 
-                    // get organizations from the group
-                    if (!$groupJoin) {
-                        $qb->leftJoin('obj.groups', 'g');
-                        $groupJoin = true;
-                    }
-                    $qb->leftJoin('g.organizations', 'go');
-
-                    $qb->andWhere('(o.uuid IN (:organizations) OR go.uuid IN (:organizations))');
+                    $qb->andWhere('o.uuid IN (:organizations)');
                     $qb->setParameter('organizations', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
 

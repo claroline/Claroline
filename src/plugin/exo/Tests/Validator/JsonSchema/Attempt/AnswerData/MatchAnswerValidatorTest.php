@@ -19,7 +19,7 @@ class MatchAnswerValidatorTest extends JsonSchemaTestCase
     /**
      * @var MatchAnswerValidator
      */
-    private $validator = null;
+    private $validator;
 
     /**
      * @var Item
@@ -33,9 +33,7 @@ class MatchAnswerValidatorTest extends JsonSchemaTestCase
         $this->om = $this->client->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->validator = $this->injectJsonSchemaMock(new MatchAnswerValidator());
 
-        $persister = new Persister(
-            $this->om
-        );
+        $persister = $this->client->getContainer()->get(Persister::class);
 
         $this->question = $persister->matchQuestion('Match question');
 

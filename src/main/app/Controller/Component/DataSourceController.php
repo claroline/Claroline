@@ -2,10 +2,8 @@
 
 namespace Claroline\AppBundle\Controller\Component;
 
-use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\Context\ContextProvider;
 use Claroline\AppBundle\Component\DataSource\DataSourceProvider;
-use Claroline\CoreBundle\Entity\DataSource;
 use Claroline\CoreBundle\Manager\DataSourceManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +35,7 @@ class DataSourceController
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
             $contextSubject = $contextHandler->getObject($contextId);
 
-            $dataSource = $this->dataSourceProvider->getDataSource($type, $context, $contextSubject);
+            $this->dataSourceProvider->getDataSource($type, $context, $contextSubject);
         } catch (\Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }

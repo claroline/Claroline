@@ -51,7 +51,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->paperGenerator = $this->client->getContainer()->get('ujm_exo.generator.paper');
         $this->attemptManager = $this->client->getContainer()->get('UJM\ExoBundle\Manager\AttemptManager');
 
-        $this->persist = new Persister($this->om);
+        $this->persist = $this->client->getContainer()->get(Persister::class);
         $this->john = $this->persist->user('john');
         $this->bob = $this->persist->user('bob');
 
@@ -78,13 +78,13 @@ class AttemptControllerTest extends TransactionalTestCase
 
     public function testAnonymousAttempt()
     {
-        $this->request('POST', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts");
+        $this->request('POST', "/exercises/{$this->ex1->getUuid()}/attempts");
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
     }
 
     public function testNewAttempt()
     {
-        $this->request('POST', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts", $this->john);
+        $this->request('POST', "/exercises/{$this->ex1->getUuid()}/attempts", $this->john);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
@@ -120,7 +120,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->attemptManager->end($paper);
 
         // second attempt for bob
-        $this->request('POST', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts", $this->bob);
+        $this->request('POST', "/exercises/{$this->ex1->getUuid()}/attempts", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -144,7 +144,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         // second attempt for john
-        $this->request('POST', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts", $this->john);
+        $this->request('POST', "/exercises/{$this->ex1->getUuid()}/attempts", $this->john);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($content);
@@ -156,7 +156,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->persist($pa1);
         $this->om->flush();
 
-        $this->request('PUT', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}");
+        $this->request('PUT', "/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}");
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
     }
 
@@ -170,7 +170,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->persist($pa1);
         $this->om->flush();
 
-        $this->request('PUT', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}", $this->john);
+        $this->request('PUT', "/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}", $this->john);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -180,7 +180,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->persist($pa1);
         $this->om->flush();
 
-        $this->request('PUT', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}", $this->bob);
+        $this->request('PUT', "/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -212,7 +212,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->persist($pa1);
         $this->om->flush();
 
-        $this->request('PUT', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/end", $this->bob);
+        $this->request('PUT', "/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/end", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -223,7 +223,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->flush();
 
         // end the paper
-        $this->request('PUT', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/end", $this->john);
+        $this->request('PUT', "/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/end", $this->john);
 
         // Check if the Paper has been correctly updated
         $this->assertFalse($pa1->isInterrupted());
@@ -244,7 +244,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->flush();
         $this->request(
             'GET',
-            "/apiv2/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$this->hi1->getQuestion()->getUuid()}/hints/{$this->hi1->getUuid()}",
+            "/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$this->hi1->getQuestion()->getUuid()}/hints/{$this->hi1->getUuid()}",
             $this->john
         );
 
@@ -261,7 +261,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->persist($pa1);
         $this->om->flush();
 
-        $this->request('GET', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$this->hi1->getQuestion()->getUuid()}/hints/{$this->hi1->getUuid()}");
+        $this->request('GET', "/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$this->hi1->getQuestion()->getUuid()}/hints/{$this->hi1->getUuid()}");
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
     }
 
@@ -275,7 +275,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->persist($pa1);
         $this->om->flush();
 
-        $this->request('GET', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$this->hi1->getQuestion()->getUuid()}/hints/{$this->hi1->getUuid()}", $this->john);
+        $this->request('GET', "/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$this->hi1->getQuestion()->getUuid()}/hints/{$this->hi1->getUuid()}", $this->john);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -285,7 +285,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->persist($pa1);
         $this->om->flush();
 
-        $this->request('GET', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$this->hi1->getQuestion()->getUuid()}/hints/{$this->hi1->getUuid()}", $this->bob);
+        $this->request('GET', "/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$this->hi1->getQuestion()->getUuid()}/hints/{$this->hi1->getUuid()}", $this->bob);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 
@@ -299,7 +299,7 @@ class AttemptControllerTest extends TransactionalTestCase
         $this->om->persist($pa1);
         $this->om->flush();
 
-        $this->request('GET', "/apiv2/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$hint->getQuestion()->getUuid()}/hints/{$hint->getUuid()}", $this->john);
+        $this->request('GET', "/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$hint->getQuestion()->getUuid()}/hints/{$hint->getUuid()}", $this->john);
 
         $this->assertEquals(422, $this->client->getResponse()->getStatusCode());
 
@@ -322,7 +322,7 @@ class AttemptControllerTest extends TransactionalTestCase
 
         $this->request(
             'GET',
-            "/apiv2/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$question->getUuid()}/hints/{$this->hi1->getUuid()}",
+            "/exercises/{$this->ex1->getUuid()}/attempts/{$pa1->getUuid()}/{$question->getUuid()}/hints/{$this->hi1->getUuid()}",
             $this->john
         );
 

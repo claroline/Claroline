@@ -13,7 +13,7 @@ class FinderQueryBuilder
             ->select('obj')
             ->distinct()
             ->from(static::getClass(), 'obj');
-        //$qb->select($count ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj')->from(static::getClass(), 'obj');
+        // $qb->select($count ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj')->from(static::getClass(), 'obj');
 
         // Lets the whole app knows we are doing a search with an event
         // ATTENTION : This needs to be done first because if a listener manage a filter (like Tags),
@@ -25,7 +25,7 @@ class FinderQueryBuilder
         $qb = $this->configureQueryBuilder($qb, $event->getFilters(), $query->getSortBy(), $query->getPage(), $query->getPageSize());
 
         // order query if implementation has not done it
-        //$this->sortResults($qb, $sortBy);
+        // $this->sortResults($qb, $sortBy);
         if (0 < $query->getPageSize()) {
             $qb->setFirstResult($query->getPage() * $query->getPageSize());
             $qb->setMaxResults($query->getPageSize());

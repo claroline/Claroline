@@ -201,8 +201,6 @@ services:
     Claroline\CoreBundle\Manager\Resource\MaskManager:
         arguments:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-        calls:
-            - setLogger: [ '@logger' ]
 
     Claroline\CoreBundle\Manager\Organization\OrganizationManager:
         arguments:

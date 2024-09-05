@@ -122,7 +122,7 @@ class CreateOrUpdate extends AbstractImporter
                 'permissions' => $permissions,
                 'name' => $role->getName(),
                 'translationKey' => $role->getTranslationKey(),
-          ];
+            ];
         }
 
         $dataResourceNode = [
