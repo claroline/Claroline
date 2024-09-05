@@ -126,7 +126,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/list/archived", name="apiv2_cursus_course_list_archived", methods={"GET"})
+     * @Route("/list/archived", name="list_archived", methods={"GET"})
      */
     public function listArchivedAction(Request $request): JsonResponse
     {
@@ -142,7 +142,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/archive", name="apiv2_cursus_course_archive", methods={"POST"})
+     * @Route("/archive", name="archive", methods={"POST"})
      */
     public function archiveAction(Request $request): JsonResponse
     {
@@ -172,7 +172,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/restore", name="apiv2_cursus_course_restore", methods={"POST"})
+     * @Route("/restore", name="restore", methods={"POST"})
      */
     public function restoreAction(Request $request): JsonResponse
     {
