@@ -202,6 +202,35 @@ class CourseController extends AbstractCrudController
     }
 
     /**
+     * @Route("/copy", name="apiv2_cursus_course_copy", methods={"POST"})
+     */
+    public function copyAction(Request $request): JsonResponse
+    {
+        $processed = [];
+
+        $this->om->startFlushSuite();
+
+        $data = json_decode($request->getContent(), true);
+
+        /** @var Course[] $courses */
+        $courses = $this->om->getRepository(Course::class)->findBy([
+            'uuid' => $data['ids'],
+        ]);
+
+        foreach ($courses as $course) {
+            if ($this->authorization->isGranted('ADMINISTRATE', $course)) {
+                $this->crud->copy($course);
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (Course $course) {
+            return $this->serializer->serialize($course);
+        }, $processed));
+    }
+
+    /**
      * @Route("/{slug}/open", name="apiv2_cursus_course_open", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"slug": "slug"}})

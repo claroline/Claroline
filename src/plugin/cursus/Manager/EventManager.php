@@ -25,6 +25,7 @@ use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Claroline\CursusBundle\Entity\Registration\EventGroup;
 use Claroline\CursusBundle\Entity\Registration\EventUser;
 use Claroline\CursusBundle\Entity\Session;
+use Claroline\CursusBundle\Repository\EventRepository;
 use Claroline\CursusBundle\Repository\Registration\EventGroupRepository;
 use Claroline\CursusBundle\Repository\Registration\EventUserRepository;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -36,6 +37,7 @@ class EventManager
 {
     private EventUserRepository $eventUserRepo;
     private EventGroupRepository $eventGroupRepo;
+    private EventRepository $eventRepo;
 
     public function __construct(
         private readonly EventDispatcherInterface $eventDispatcher,
@@ -47,6 +49,7 @@ class EventManager
     ) {
         $this->eventUserRepo = $om->getRepository(EventUser::class);
         $this->eventGroupRepo = $om->getRepository(EventGroup::class);
+        $this->eventRepo = $om->getRepository(Event::class);
     }
 
     public function getBySessionAndUser(Session $session, User $user): ?array
@@ -406,5 +409,22 @@ class EventManager
             $this->templateManager->formatDatePlaceholder('event_start', $event->getStartDate()),
             $this->templateManager->formatDatePlaceholder('event_end', $event->getEndDate()),
         );
+    }
+
+    public function getCopyName(string $name): string
+    {
+        $existingNames = $this->eventRepo->findCodesWithPrefix($name);
+
+        if (empty($existingNames)) {
+            return $name;
+        }
+
+        $index = count($existingNames);
+        do {
+            ++$index;
+            $newName = $name.'_'.$index;
+        } while (in_array($newName, $existingNames));
+
+        return $newName;
     }
 }

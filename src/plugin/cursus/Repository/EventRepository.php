@@ -69,4 +69,20 @@ class EventRepository extends EntityRepository
             ])
             ->getSingleScalarResult();
     }
+
+    public function findCodesWithPrefix(string $prefix): array
+    {
+        return array_map(
+            function (array $event) {
+                return $event['code'];
+            },
+            $this->getEntityManager()->createQuery('
+                SELECT e.code
+                FROM Claroline\CursusBundle\Entity\Event e
+                WHERE e.code LIKE :search
+            ')
+                ->setParameter('search', addcslashes($prefix, '%_').'%')
+                ->getResult()
+        );
+    }
 }

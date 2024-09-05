@@ -128,4 +128,20 @@ class SessionRepository extends EntityRepository
             ])
             ->getSingleScalarResult();
     }
+
+    public function findNamesWithPrefix(string $prefix): array
+    {
+        return array_map(
+            function (array $session) {
+                return $session['name'];
+            },
+            $this->getEntityManager()->createQuery('
+                SELECT s.name
+                FROM Claroline\CursusBundle\Entity\Session s
+                WHERE s.name LIKE :search
+            ')
+                ->setParameter('search', addcslashes($prefix, '%_').'%')
+                ->getResult()
+        );
+    }
 }

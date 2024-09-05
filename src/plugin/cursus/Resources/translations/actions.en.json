@@ -18,5 +18,8 @@
   "restore_training_help": "Restore the training in the list of active trainings.",
 
   "delete_training": "Delete training",
-  "delete_training_help": "Permanently delete the training."
+  "delete_training_help": "Permanently delete the training.",
+
+  "copy_course_confirm_title": "{1} Training copy | [2,Inf[ Trainings copy",
+  "copy_course_confirm_message": "{1} Are you sure you want to copy this training ? | [2,Inf[ Are you sure you want to copy these %count% trainings?"
 }

@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Subscriber\Crud;
 
+use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Subscriber\Crud\Planning\AbstractPlannedSubscriber;
 use Claroline\CursusBundle\Entity\Event;
@@ -19,6 +20,7 @@ use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\CursusBundle\Manager\EventManager;
+use Ramsey\Uuid\Uuid as BaseUuid;
 
 class EventSubscriber extends AbstractPlannedSubscriber
 {
@@ -97,5 +99,26 @@ class EventSubscriber extends AbstractPlannedSubscriber
                 }, $sessionGroups));
             }
         }
+    }
+
+    public function preCopy(CopyEvent $event): void
+    {
+        parent::preCopy($event);
+
+        /** @var Session $session */
+        $session = $event->getExtra()['parent'];
+
+        /** @var Event $original */
+        $original = $event->getObject();
+
+        /** @var Event $copy */
+        $copy = $event->getCopy();
+
+        $copy->setUuid(BaseUuid::uuid4()->toString());
+
+        $copyName = $this->manager->getCopyName($original->getName());
+        $copy->setCode($copyName);
+        $copy->setSession($session);
+        $copy->getPlannedObject()->setName($copyName);
     }
 }

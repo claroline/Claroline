@@ -247,4 +247,20 @@ class CourseRepository extends EntityRepository
 
         return (int) $query->getSingleScalarResult();
     }
+
+    public function findNamesWithPrefix(string $prefix): array
+    {
+        return array_map(
+            function (array $course) {
+                return $course['name'];
+            },
+            $this->getEntityManager()->createQuery('
+                SELECT c.name
+                FROM Claroline\CursusBundle\Entity\Course c
+                WHERE c.name LIKE :search
+            ')
+                ->setParameter('search', addcslashes($prefix, '%_').'%')
+                ->getResult()
+        );
+    }
 }

@@ -2,15 +2,16 @@
 
 namespace Claroline\CoreBundle\Subscriber\Crud\Planning;
 
+use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Entity\Planning\AbstractPlanned;
 use Claroline\CoreBundle\Entity\Planning\PlannedObject;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\PlanningManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -55,6 +56,7 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
             CrudEvents::getEventName(CrudEvents::POST_CREATE, static::getPlannedClass()) => 'postCreate',
             CrudEvents::getEventName(CrudEvents::PRE_UPDATE, static::getPlannedClass()) => 'preUpdate',
             CrudEvents::getEventName(CrudEvents::POST_DELETE, static::getPlannedClass()) => 'postDelete',
+            CrudEvents::getEventName(CrudEvents::PRE_COPY, static::getPlannedClass()) => 'preCopy',
         ];
     }
 
@@ -150,5 +152,13 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
         if ($object->getThumbnail()) {
             $this->fileManager->unlinkFile(PlannedObject::class, $object->getUuid(), $object->getThumbnail());
         }
+    }
+
+    public function preCopy(CopyEvent $event): void
+    {
+        /** @var AbstractPlanned $copy */
+        $copy = $event->getCopy();
+        $copy->setCreatedAt(new \DateTime());
+        $copy->setUpdatedAt(new \DateTime());
     }
 }
