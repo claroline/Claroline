@@ -68,7 +68,7 @@ const UserList = props =>
           callback: () => props.unregisterUsers(rows, props.contextData),
           dangerous: true,
           displayed: props.canRegister,
-          disabled: -1 === rows.findIndex(row => -1 !== row.roles.findIndex(r => r.context !== 'group' && r.workspace && r.workspace.id === props.contextData.id)),
+          disabled: -1 === rows.findIndex(row => -1 !== row.roles.findIndex(r => r.context !== 'group' && -1 !== r.name.indexOf(props.contextData.id))),
           confirm: {
             title: trans('unregister', {}, 'actions'),
             message: transChoice('unregister_users_confirm_message', rows.length, {count: rows.length})

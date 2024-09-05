@@ -75,7 +75,7 @@ class GroupSerializer
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
             $isAdmin = $this->authorization->isGranted('ADMINISTRATE', $group);
             $serialized['permissions'] = [
-                'open' => $this->authorization->isGranted('OPEN', $group),
+                'open' => $isAdmin || $this->authorization->isGranted('OPEN', $group),
                 'edit' => $isAdmin,
                 'administrate' => $isAdmin,
                 'delete' => $isAdmin,

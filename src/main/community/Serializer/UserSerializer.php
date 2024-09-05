@@ -104,15 +104,28 @@ class UserSerializer
             'phone' => $showEmail ? $user->getPhone() : null,
             'meta' => $this->serializeMeta($user),
             'restrictions' => $this->serializeRestrictions($user),
-            'roles' => array_map(function (Role $role) {
-                return [
-                    'id' => $role->getUuid(),
-                    'autoId' => $role->getId(),
-                    'name' => $role->getName(),
-                    'type' => $role->getType(),
-                    'translationKey' => $role->getTranslationKey(),
-                ];
-            }, $user->getEntityRoles()),
+            'roles' => array_merge(
+                array_map(function (Role $role) {
+                    return [
+                        'id' => $role->getUuid(),
+                        'autoId' => $role->getId(),
+                        'name' => $role->getName(),
+                        'type' => $role->getType(),
+                        'translationKey' => $role->getTranslationKey(),
+                        'context' => 'user',
+                    ];
+                }, $user->getEntityRoles(false)),
+                array_map(function (Role $role) {
+                    return [
+                        'id' => $role->getUuid(),
+                        'autoId' => $role->getId(),
+                        'name' => $role->getName(),
+                        'type' => $role->getType(),
+                        'translationKey' => $role->getTranslationKey(),
+                        'context' => 'group',
+                    ];
+                }, $user->getGroupRoles()),
+            ),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
