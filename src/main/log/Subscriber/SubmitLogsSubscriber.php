@@ -61,8 +61,13 @@ class SubmitLogsSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $stamps = [];
+        if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
+            $stamps[] = new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId());
+        }
+
         // dispatch stashed messages
-        $this->messageBus->dispatch(new SubmitLogs($type, $doerIp, $logs), [new AuthenticationStamp($this->tokenStorage->getToken()->getUser()->getId())]);
+        $this->messageBus->dispatch(new SubmitLogs($type, $doerIp, $logs), $stamps);
     }
 
     private function getDoerIp(Request $request = null): string
