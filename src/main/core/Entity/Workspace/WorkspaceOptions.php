@@ -23,7 +23,7 @@ class WorkspaceOptions
     use Id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace", mappedBy="options")
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace", mappedBy="options", cascade={"persist"})
      * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
      *
      * @var Workspace
