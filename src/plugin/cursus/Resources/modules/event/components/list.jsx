@@ -4,16 +4,17 @@ import {connect} from 'react-redux'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 
+import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
-import {LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {actions as listActions} from '#/main/app/content/list/store'
-import {constants as listConst} from '#/main/app/content/list/constants'
+import {ASYNC_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
 
 import {constants} from '#/plugin/cursus/constants'
-import {EventStatus} from '#/plugin/cursus/components/event-status'
 import {EventCard} from '#/plugin/cursus/event/components/card'
+import {EventStatus} from '#/plugin/cursus/components/event-status'
+import {constants as listConst} from '#/main/app/content/list/constants'
 import {MODAL_TRAINING_EVENT_ABOUT} from '#/plugin/cursus/event/modals/about'
 import {MODAL_TRAINING_EVENT_PARAMETERS} from '#/plugin/cursus/event/modals/parameters'
 
@@ -46,6 +47,24 @@ const Events = (props) =>
         scope: ['object'],
         group: trans('management'),
         displayed: hasPermission('edit', rows[0])
+      }, {
+        name: 'copy',
+        type: ASYNC_BUTTON,
+        icon: 'fa fa-fw fa-clone',
+        label: trans('copy', {}, 'actions'),
+        displayed: hasPermission('edit', rows[0]),
+        confirm: true,
+        request: {
+          url: url(['apiv2_cursus_event_copy']),
+          request: {
+            method: 'POST',
+            body: JSON.stringify({
+              ids: rows[0].id
+            })
+          }
+        },
+        group: trans('management'),
+        scope: ['object']
       }, {
         name: 'export-pdf',
         type: URL_BUTTON,

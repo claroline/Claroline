@@ -22,7 +22,8 @@
 
   "copy_course_confirm_title":"{1} Copie d'une formation | [2,Inf[ Copie de plusieurs formations",
   "copy_course_confirm_message":"{1} Êtes-vous sûr de vouloir copier cette formation ? | [2,Inf[ Êtes-vous sûr de vouloir copier ces %count% formations ?",
-
   "copy_session_confirm_title":"{1} Copie d'une session | [2,Inf[ Copie de plusieurs sessions",
-  "copy_session_confirm_message":"{1} Êtes-vous sûr de vouloir copier cette session  ? | [2,Inf[ Êtes-vous sûr de vouloir copier ces %count% sessions ?"
+  "copy_session_confirm_message":"{1} Êtes-vous sûr de vouloir copier cette session  ? | [2,Inf[ Êtes-vous sûr de vouloir copier ces %count% sessions ?",
+  "copy_event_confirm_title":"{1} Copie d'une séance | [2,Inf[ Copie de plusieurs séances",
+  "copy_event_confirm_message":"{1} Êtes-vous sûr de vouloir copier cette séance  ? | [2,Inf[ Êtes-vous sûr de vouloir copier ces %count% séances ?"
 }

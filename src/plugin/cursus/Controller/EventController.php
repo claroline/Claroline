@@ -88,6 +88,35 @@ class EventController extends AbstractCrudController
     }
 
     /**
+     * @Route("/copy", name="apiv2_cursus_event_copy", methods={"POST"})
+     */
+    public function copyAction(Request $request): JsonResponse
+    {
+        $processed = [];
+
+        $this->om->startFlushSuite();
+
+        $data = json_decode($request->getContent(), true);
+
+        /** @var Event[] $events */
+        $events = $this->om->getRepository(Event::class)->findBy([
+            'uuid' => $data['ids'],
+        ]);
+
+        foreach ($events as $event) {
+            if ($this->authorization->isGranted('EDIT', $event)) {
+                $processed[] = $this->crud->copy($event, [], ['parent' => $event->getSession()]);
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return new JsonResponse(array_map(function (Event $event) {
+            return $this->serializer->serialize($event);
+        }, $processed));
+    }
+
+    /**
      * @Route("/{workspace}", name="apiv2_cursus_event_list", methods={"GET"})
      *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
