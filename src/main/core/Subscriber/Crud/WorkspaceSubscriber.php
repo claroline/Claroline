@@ -59,7 +59,8 @@ class WorkspaceSubscriber implements EventSubscriberInterface
         $options = $event->getOptions();
 
         // make sure the workspace code is unique and generate one if missing
-        $workspaceCode = $this->manager->getUniqueCode(
+        $workspaceCode = $this->om->getRepository(Workspace::class)->findNextUnique(
+            'code',
             $workspace->getCode() ?? CodeNormalizer::normalize($workspace->getName())
         );
         $workspace->setCode($workspaceCode);
@@ -108,7 +109,8 @@ class WorkspaceSubscriber implements EventSubscriberInterface
 
         // make sure the workspace code is unique
         if (!empty($copy->getCode())) {
-            $copy->setCode($this->manager->getUniqueCode($copy->getCode()));
+            $workspaceCode = $this->om->getRepository(Workspace::class)->findNextUnique('code', $copy->getCode());
+            $copy->setCode($workspaceCode);
         }
 
         $this->copy($original, $copy, in_array(Options::AS_MODEL, $options));
