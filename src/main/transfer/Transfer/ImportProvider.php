@@ -5,7 +5,6 @@ namespace Claroline\TransferBundle\Transfer;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SchemaProvider;
 use Claroline\AppBundle\API\SerializerProvider;
-use Claroline\AppBundle\Log\JsonLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Claroline\TransferBundle\Transfer\Importer\ImporterInterface;
@@ -13,29 +12,13 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ImportProvider extends AbstractProvider
 {
-    /** @var string */
-    private $projectDir;
-    /** @var ObjectManager */
-    private $om;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var string */
-    private $logDir;
-    /** @var SchemaProvider */
-    private $schema;
-
     public function __construct(
-        string $projectDir,
-        ObjectManager $om,
-        SerializerProvider $serializer,
-        SchemaProvider $schema,
-        string $logDir
+        private readonly string $projectDir,
+        private readonly ObjectManager $om,
+        private readonly SerializerProvider $serializer,
+        private readonly SchemaProvider $schema,
+        private readonly string $logDir
     ) {
-        $this->projectDir = $projectDir;
-        $this->om = $om;
-        $this->serializer = $serializer;
-        $this->logDir = $logDir;
-        $this->schema = $schema;
     }
 
     /**
@@ -50,7 +33,7 @@ class ImportProvider extends AbstractProvider
         $fs->mkDir($this->logDir);
 
         $logFile = $this->logDir.'/'.$logFile;
-        $jsonLogger = new JsonLogger($logFile.'.json');
+        $jsonLogger = new ImportLogger($logFile.'.json');
 
         $executor = $this->getAction($action);
         if (!$executor->supports($format, $options, $extra)) {
