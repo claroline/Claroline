@@ -11,12 +11,15 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class WorkspaceRepository extends EntityRepository
 {
+    use UniqueValueFinder;
+
     public function search(string $search, int $nbResults)
     {
         return $this->createQueryBuilder('w')
@@ -166,25 +169,5 @@ class WorkspaceRepository extends EntityRepository
         $query->setParameter('codes', $codes);
 
         return $query->getResult();
-    }
-
-    /**
-     * Returns the list of workspace codes starting with $prefix.
-     * Useful to auto generate unique workspace codes.
-     */
-    public function findCodesWithPrefix(string $prefix): array
-    {
-        return array_map(
-            function (array $ws) {
-                return $ws['code'];
-            },
-            $this->getEntityManager()->createQuery('
-                SELECT LOWER(w.code) AS code
-                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE LOWER(w.code) LIKE :search
-            ')
-            ->setParameter('search', strtolower(addcslashes($prefix, '%_')).'%')
-            ->getResult()
-        );
     }
 }
