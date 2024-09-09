@@ -1,12 +1,12 @@
 import React from 'react'
-import {PropTypes as T}       from 'prop-types'
+import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {url} from '#/main/app/api'
-import {trans} from '#/main/app/intl'
 import {param} from '#/main/app/config'
 import {route} from '#/plugin/cursus/routing'
 import {hasPermission} from '#/main/app/security'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {constants as listConst} from '#/main/app/content/list/constants'
 import {ASYNC_BUTTON, LINK_BUTTON, URL_BUTTON} from '#/main/app/buttons'
@@ -133,18 +133,22 @@ const SessionList = (props) =>
           icon: 'fa fa-fw fa-clone',
           label: trans('copy', {}, 'actions'),
           displayed: hasPermission('edit', rows[0]),
-          confirm: true,
+          confirm: {
+            title: transChoice('copy_session_confirm_title', rows.length, {}, 'actions'),
+            subtitle: 1 === rows.length ? rows[0].name : transChoice('count_elements', rows.length, {count: rows.length}),
+            message: transChoice('copy_session_confirm_message', rows.length, {count: rows.length}, 'actions')
+          },
           request: {
             url: url(['apiv2_cursus_session_copy']),
             request: {
               method: 'POST',
               body: JSON.stringify({
-                ids: rows[0].id
+                ids: rows.map(row => row.id)
               })
             }
           },
           group: trans('management'),
-          scope: ['object']
+          scope: ['object', 'collection']
         }
       ]
 

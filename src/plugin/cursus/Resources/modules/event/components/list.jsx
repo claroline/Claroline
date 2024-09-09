@@ -5,8 +5,8 @@ import get from 'lodash/get'
 import omit from 'lodash/omit'
 
 import {url} from '#/main/app/api'
-import {trans} from '#/main/app/intl/translation'
 import {hasPermission} from '#/main/app/security'
+import {trans, transChoice} from '#/main/app/intl/translation'
 import {ListData} from '#/main/app/content/list/containers/data'
 import {actions as listActions} from '#/main/app/content/list/store'
 import {ASYNC_BUTTON, LINK_BUTTON, MODAL_BUTTON, URL_BUTTON} from '#/main/app/buttons'
@@ -53,18 +53,22 @@ const Events = (props) =>
         icon: 'fa fa-fw fa-clone',
         label: trans('copy', {}, 'actions'),
         displayed: hasPermission('edit', rows[0]),
-        confirm: true,
+        confirm: {
+          title: transChoice('copy_event_confirm_title', rows.length, {}, 'actions'),
+          subtitle: 1 === rows.length ? rows[0].name : transChoice('count_elements', rows.length, {count: rows.length}),
+          message: transChoice('copy_event_confirm_message', rows.length, {count: rows.length}, 'actions')
+        },
         request: {
           url: url(['apiv2_cursus_event_copy']),
           request: {
             method: 'POST',
             body: JSON.stringify({
-              ids: rows[0].id
+              ids: rows.map(row => row.id)
             })
           }
         },
         group: trans('management'),
-        scope: ['object']
+        scope: ['object', 'collection']
       }, {
         name: 'export-pdf',
         type: URL_BUTTON,
