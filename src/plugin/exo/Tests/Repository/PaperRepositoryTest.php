@@ -63,7 +63,7 @@ class PaperRepositoryTest extends TransactionalTestCase
 
         $this->om = $this->client->getContainer()->get(ObjectManager::class);
         $this->paperGenerator = $this->client->getContainer()->get('ujm_exo.generator.paper');
-        $this->persist = new Persister($this->om);
+        $this->persist = $this->client->getContainer()->get(Persister::class);
         $this->repo = $this->om->getRepository(Paper::class);
 
         // Initialize some base data for tests

@@ -29,7 +29,7 @@ const SubjectsList = props =>
         autoload: !!get(props.forum, 'id')
       }}
       delete={{
-        url: ['apiv2_forum_subject_delete_bulk'],
+        url: ['apiv2_forum_subject_delete'],
         displayed: (rows) => props.currentUser && ((rows[0].meta.creator.id === props.currentUser.id) || props.moderator)
       }}
       primaryAction={(subject) => ({

@@ -22,7 +22,7 @@ const EvidenceModal = withReducer(selectors.STORE_NAME, reducer)(
       },
 
       saveEvidence(assertion) {
-        dispatch(formActions.saveForm(selectors.STORE_NAME, ['apiv2_evidence_create_at', {assertion: assertion.id}]))
+        dispatch(formActions.saveForm(selectors.STORE_NAME, ['apiv2_badge_evidence_create_at', {assertion: assertion.id}]))
         dispatch(listActions.invalidateData('badges.assertion.evidences'))
       }
     })

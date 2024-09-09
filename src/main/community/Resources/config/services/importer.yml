@@ -16,14 +16,11 @@ services:
         parent: Claroline\TransferBundle\Transfer\Importer\AbstractDeleteImporter
 
     Claroline\CommunityBundle\Transfer\Importer\Group\AddUser:
-        arguments:
-            - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
+        parent: Claroline\TransferBundle\Transfer\Importer\AbstractCollectionImporter
 
     Claroline\CommunityBundle\Transfer\Importer\Group\RemoveUser:
         arguments:
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CommunityBundle\Transfer\Importer\Group\EmptyUsers:
         arguments:

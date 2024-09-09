@@ -38,7 +38,7 @@ const AuthenticationIps = props =>
         autoload: true
       }}
       delete={{
-        url: ['apiv2_ip_user_delete_bulk'],
+        url: ['apiv2_ip_user_delete'],
         disabled: (rows) => -1 === rows.findIndex(row => !row.restrictions.locked)
       }}
       definition={[

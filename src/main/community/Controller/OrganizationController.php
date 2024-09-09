@@ -14,9 +14,9 @@ namespace Claroline\CommunityBundle\Controller;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
-use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
-use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
-use Claroline\CoreBundle\Controller\APINew\Model\HasWorkspacesTrait;
+use Claroline\CoreBundle\Controller\Model\HasGroupsTrait;
+use Claroline\CoreBundle\Controller\Model\HasUsersTrait;
+use Claroline\CoreBundle\Controller\Model\HasWorkspacesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -28,7 +28,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/organization")
+ * @Route("/organization", name="apiv2_organization_")
  */
 class OrganizationController extends AbstractCrudController
 {
@@ -44,18 +44,18 @@ class OrganizationController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'organization';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Organization::class;
     }
 
     /**
-     * @Route("/list/recursive", name="apiv2_organization_list_recursive")
+     * @Route("/list/recursive", name="list_recursive")
      */
     public function recursiveListAction(Request $request): JsonResponse
     {
@@ -71,7 +71,7 @@ class OrganizationController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/managers", name="apiv2_organization_list_managers", methods={"GET"})
+     * @Route("/{id}/managers", name="list_managers", methods={"GET"})
      *
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      */
@@ -89,7 +89,7 @@ class OrganizationController extends AbstractCrudController
     /**
      * Adds managers to the collection.
      *
-     * @Route("/{id}/manager", name="apiv2_organization_add_managers", methods={"PATCH"})
+     * @Route("/{id}/manager", name="add_managers", methods={"PATCH"})
      *
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      */
@@ -104,7 +104,7 @@ class OrganizationController extends AbstractCrudController
     /**
      * Removes managers from the collection.
      *
-     * @Route("/{id}/manager", name="apiv2_organization_remove_managers", methods={"DELETE"})
+     * @Route("/{id}/manager", name="remove_managers", methods={"DELETE"})
      *
      * @ParamConverter("organization", options={"mapping": {"id": "uuid"}})
      */

@@ -39,7 +39,6 @@ services:
     Claroline\CoreBundle\Transfer\Importer\Workspace\AddUser:
         arguments:
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
 
     Claroline\CoreBundle\Transfer\Importer\Workspace\RemoveUser:

@@ -20,25 +20,17 @@ class EvaluationController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var SerializerProvider */
-    private $serializer;
-    /** @var EvaluationManager */
-    private $evaluationManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        SerializerProvider $serializer,
-        EvaluationManager $evaluationManager
+        private readonly SerializerProvider $serializer,
+        private readonly EvaluationManager $evaluationManager
     ) {
         $this->authorization = $authorization;
-        $this->serializer = $serializer;
-        $this->evaluationManager = $evaluationManager;
     }
 
     /**
      * @Route("/{id}/progression/{currentTime}/{totalTime}", name="apiv2_video_progression_update", methods={"PUT"})
+     *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\ParamConverter("video", class="Claroline\CoreBundle\Entity\Resource\File", options={"mapping": {"id": "uuid"}})
      */

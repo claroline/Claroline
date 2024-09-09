@@ -57,7 +57,6 @@ class PlatformDefaults implements ParameterProviderInterface
                 'self' => false,
                 'default_role' => PlatformRoles::USER,
                 'validation' => self::REGISTRATION_MAIL_VALIDATION_PARTIAL,
-                'allow_workspace' => false,
                 'organization_selection' => 'none',
                 'username_regex' => "/^[a-zA-Z0-9@\-_\.]*$/",
             ],

@@ -2,6 +2,7 @@
 services:
     # Contexts
     Claroline\AppBundle\Component\Context\ContextProvider:
+        lazy: true
         arguments:
             - !tagged_iterator claroline.component.context
             - '@security.token_storage'
@@ -21,6 +22,7 @@ services:
 
     # Tools
     Claroline\AppBundle\Component\Tool\ToolProvider:
+        lazy: true
         arguments:
             - !tagged_iterator claroline.component.tool
             - '@event_dispatcher'
@@ -33,4 +35,17 @@ services:
         public: true
 
     Claroline\AppBundle\Component\Tool\AbstractTool:
+        abstract: true
+
+    # DataSources
+    Claroline\AppBundle\Component\DataSource\DataSourceProvider:
+        lazy: true
+        arguments:
+            - !tagged_iterator claroline.component.data_source
+
+    claroline.data_source_provider:
+        alias: Claroline\AppBundle\Component\DataSource\DataSourceProvider
+        public: true
+
+    Claroline\AppBundle\Component\DataSource\AbstractDataSource:
         abstract: true

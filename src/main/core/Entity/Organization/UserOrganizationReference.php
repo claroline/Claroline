@@ -17,9 +17,11 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\Table(
  *     name="user_organization",
  *     uniqueConstraints={
+ *
  *          @ORM\UniqueConstraint(name="organization_unique_user", columns={"user_id", "organization_id"})
  *     }
  * )
@@ -31,39 +33,36 @@ class UserOrganizationReference
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     inversedBy="userOrganizationReferences"
-     * )
-     * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
-     *
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
      *     inversedBy="userOrganizationReferences",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="organization_id", nullable=false, onDelete="CASCADE")
      *
-     * @var Organization
+     * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
      */
-    private $organization;
+    private User $user;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
+     * )
+     *
+     * @ORM\JoinColumn(name="organization_id", nullable=false, onDelete="CASCADE")
+     */
+    private ?Organization $organization = null;
 
     /**
      * The organization is the main organization of the user.
      *
      * @ORM\Column(name="is_main", type="boolean")
      */
-    private $main = false;
+    private bool $main = false;
 
     /**
      * The user is a manager of the organization.
      *
      * @ORM\Column(name="is_manager", type="boolean")
      */
-    private $manager = false;
+    private bool $manager = false;
 
     public function getUser(): User
     {

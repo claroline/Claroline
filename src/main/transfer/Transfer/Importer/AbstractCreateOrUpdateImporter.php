@@ -13,7 +13,7 @@ abstract class AbstractCreateOrUpdateImporter extends AbstractImporter
     abstract protected static function getClass(): string;
 
     /**
-     * @internal Only used by DI.
+     * @internal only used by DI
      */
     public function setCrud(Crud $crud): void
     {
@@ -21,7 +21,7 @@ abstract class AbstractCreateOrUpdateImporter extends AbstractImporter
     }
 
     /**
-     * @internal Only used by DI.
+     * @internal only used by DI
      */
     public function setTransfer(ImportProvider $transfer): void
     {
@@ -34,7 +34,7 @@ abstract class AbstractCreateOrUpdateImporter extends AbstractImporter
 
         $object = $this->crud->find(static::getClass(), $data);
         if (empty($object)) {
-            // fire the create action
+            // fire the creation action
             return $this->transfer->getAction($serializedClass.'_'.self::MODE_CREATE)->execute($data);
         }
 

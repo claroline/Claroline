@@ -37,7 +37,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/cursus_course")
+ * @Route("/cursus_course", name="apiv2_cursus_course_")
  */
 class CourseController extends AbstractCrudController
 {
@@ -65,12 +65,12 @@ class CourseController extends AbstractCrudController
         $this->pdfManager = $pdfManager;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'cursus_course';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Course::class;
     }
@@ -112,7 +112,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/public", name="apiv2_cursus_course_list_public", methods={"GET"})
+     * @Route("/public", name="list_public", methods={"GET"})
      */
     public function listPublicAction(Request $request): JsonResponse
     {
@@ -126,7 +126,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/list/archived", name="apiv2_cursus_course_list_archived", methods={"GET"})
+     * @Route("/list/archived", name="list_archived", methods={"GET"})
      */
     public function listArchivedAction(Request $request): JsonResponse
     {
@@ -142,7 +142,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/archive", name="apiv2_cursus_course_archive", methods={"POST"})
+     * @Route("/archive", name="archive", methods={"POST"})
      */
     public function archiveAction(Request $request): JsonResponse
     {
@@ -172,7 +172,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/restore", name="apiv2_cursus_course_restore", methods={"POST"})
+     * @Route("/restore", name="restore", methods={"POST"})
      */
     public function restoreAction(Request $request): JsonResponse
     {
@@ -231,7 +231,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{slug}/open", name="apiv2_cursus_course_open", methods={"GET"})
+     * @Route("/{slug}/open", name="open", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"slug": "slug"}})
      */
@@ -287,7 +287,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/pdf", name="apiv2_cursus_course_download_pdf", methods={"GET"})
+     * @Route("/{id}/pdf", name="download_pdf", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
@@ -306,7 +306,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/sessions", name="apiv2_cursus_course_list_sessions", methods={"GET"})
+     * @Route("/{id}/sessions", name="list_sessions", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
@@ -332,7 +332,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/users", name="apiv2_cursus_course_add_pending", methods={"PATCH"})
+     * @Route("/{id}/users", name="add_pending", methods={"PATCH"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
@@ -350,7 +350,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/move/users", name="apiv2_cursus_course_move_pending", methods={"PUT"})
+     * @Route("/{id}/move/users", name="move_pending", methods={"PUT"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
@@ -384,7 +384,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/move/pending", name="apiv2_cursus_course_move_to_pending", methods={"PUT"})
+     * @Route("/{id}/move/pending", name="move_to_pending", methods={"PUT"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
@@ -414,7 +414,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/self/register", name="apiv2_cursus_course_self_register", methods={"PUT"})
+     * @Route("/{id}/self/register", name="self_register", methods={"PUT"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -437,7 +437,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/stats", name="apiv2_cursus_course_stats", methods={"GET"})
+     * @Route("/{id}/stats", name="stats", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */

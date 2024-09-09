@@ -6,7 +6,7 @@ import {isAdmin as userIsAdmin} from '#/main/app/security/permissions'
 
 const STORE_NAME = 'security'
 
-const store = (state) => state[STORE_NAME]
+const security = (state) => state[STORE_NAME]
 
 /**
  * Get a user placeholder object.
@@ -29,7 +29,7 @@ const fakeUser = () => ({
  * @return {object|null}
  */
 const currentUser = createSelector(
-  [store],
+  [security],
   (store) => store.currentUser
 )
 
@@ -44,7 +44,7 @@ const currentUserId = createSelector(
  * @return {bool}
  */
 const isImpersonated = createSelector(
-  [store],
+  [security],
   (store) => store.impersonated
 )
 
@@ -82,7 +82,7 @@ const mainOrganization = createSelector(
 )
 
 const clientIp = createSelector(
-  [store],
+  [security],
   (store) => {
     let ip = store.client.ip
     if (store.client.forwarded) {
@@ -96,6 +96,7 @@ const clientIp = createSelector(
 export const selectors = {
   STORE_NAME,
 
+  security,
   fakeUser,
   currentUser,
   currentUserId,

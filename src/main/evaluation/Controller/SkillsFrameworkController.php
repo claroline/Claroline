@@ -10,22 +10,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/skills_framework")
+ * @Route("/skills_framework", name="apiv2_skills_framework_")
  */
 class SkillsFrameworkController extends AbstractCrudController
 {
-    public function getName(): string
+    public static function getName(): string
     {
         return 'skills_framework';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return SkillsFramework::class;
     }
 
     /**
-     * @Route("/copy/{id}", methods={"POST"})
+     * @Route("/copy/{id}", name="copy", methods={"POST"})
      *
      * @EXT\ParamConverter("workspace", class="Claroline\EvaluationBundle\Entity\Skill\SkillsFramework", options={"mapping": {"id": "uuid"}})
      */
@@ -37,7 +37,7 @@ class SkillsFrameworkController extends AbstractCrudController
     }
 
     /**
-     * @Route("/import", methods={"POST"})
+     * @Route("/import", name="import", methods={"POST"})
      */
     public function importAction(Request $request): JsonResponse
     {

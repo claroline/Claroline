@@ -9,13 +9,13 @@ use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\API\Utils\FileBag;
 use Claroline\AppBundle\Component\Tool\ToolProvider;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Manager\File\ArchiveManager;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use Psr\Log\LoggerAwareInterface;
@@ -47,7 +47,7 @@ class TransferManager implements LoggerAwareInterface
         // todo : put it in an event
         $data = $this->replaceResourceIds($data);
 
-        $options = [Options::NO_MODEL];
+        $options = [];
         $fileBag = $this->archiveManager->extractFiles($archive);
 
         $defaultRole = $data['registration']['defaultRole'];
@@ -232,12 +232,7 @@ class TransferManager implements LoggerAwareInterface
                 $toolObjects = $this->toolProvider->import($toolName, WorkspaceContext::getName(), $workspace, $fileBag, $orderedToolData, $createdObjects);
                 $createdObjects = array_merge([], $createdObjects, $toolObjects);
             } catch (InvalidDataException $e) {
-                throw new InvalidDataException($e->getMessage(), array_map(function (array $error) use ($toolName) {
-                    return [
-                        'path' => $toolName.'/'.$error['path'],
-                        'message' => $error['message'],
-                    ];
-                }, $e->getErrors()));
+                throw new InvalidDataException($e->getMessage(), array_map(function (array $error) use ($toolName) { return ['path' => $toolName.'/'.$error['path'], 'message' => $error['message']]; }, $e->getErrors()));
             }
         }
 

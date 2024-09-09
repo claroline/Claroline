@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Component\Context\ContextProvider;
+use Claroline\AppBundle\Manager\ClientManager;
 use Claroline\AppBundle\Manager\PlatformManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
@@ -39,7 +40,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         private readonly PlatformManager $platformManager,
         private readonly ContextProvider $contextProvider,
         private readonly UserManager $userManager,
-        private readonly ConnectionMessageManager $messageManager
+        private readonly ConnectionMessageManager $messageManager,
+        private readonly ClientManager $clientManager
     ) {
     }
 
@@ -58,8 +60,9 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->eventDispatcher->dispatch($loginEvent, SecurityEvents::USER_LOGIN);
 
         if ($request->isXmlHttpRequest()) {
-            return new JsonResponse(array_merge([], $loginEvent->getResponse(), [
+            return new JsonResponse([
                 'user' => $this->serializer->serialize($user, [Options::SERIALIZE_FACET]), // TODO : we should only get the minimal representation of user here,
+                'config' => $this->clientManager->getUserPreferences($user), // for retro-compatibility. Should be in a new key userPreferences
                 'messages' => $this->messageManager->getConnectionMessagesByUser($user),
                 'contexts' => $this->contextProvider->getAvailableContexts(),
                 'contextFavorites' => $this->contextProvider->getFavoriteContexts(),
@@ -67,7 +70,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 'availableOrganizations' => array_map(function (Organization $organization) {
                     return $this->serializer->serialize($organization, [Options::SERIALIZE_MINIMAL]);
                 }, $user->getOrganizations()),
-            ]));
+            ]);
         }
 
         return new RedirectResponse($this->getRedirectUrl($request));

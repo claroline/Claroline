@@ -215,8 +215,8 @@ class WorkspaceManager implements LoggerAwareInterface
 
     public function archive(Workspace $workspace): Workspace
     {
-        //$workspace->setName('[archive]'.$workspace->getName());
-        //$workspace->setCode('[archive]'.$workspace->getCode().uniqid());
+        // $workspace->setName('[archive]'.$workspace->getName());
+        // $workspace->setCode('[archive]'.$workspace->getCode().uniqid());
         $workspace->setArchived(true);
 
         $this->om->persist($workspace);
@@ -271,25 +271,5 @@ class WorkspaceManager implements LoggerAwareInterface
     public function unregister(AbstractRoleSubject $subject, Workspace $workspace, array $options = []): void
     {
         $this->crud->patch($subject, 'role', Crud::COLLECTION_REMOVE, $workspace->getRoles()->toArray(), $options);
-    }
-
-    /**
-     * Generates a unique workspace code from given one by iterating it.
-     */
-    public function getUniqueCode(string $code): string
-    {
-        $existingCodes = $this->workspaceRepo->findCodesWithPrefix($code);
-        if (empty($existingCodes)) {
-            return $code;
-        }
-
-        $index = count($existingCodes);
-        do {
-            ++$index;
-            $currentCode = $code.'_'.$index;
-            $lowerCurrentCode = strtolower($currentCode);
-        } while (in_array($lowerCurrentCode, $existingCodes));
-
-        return $currentCode;
     }
 }

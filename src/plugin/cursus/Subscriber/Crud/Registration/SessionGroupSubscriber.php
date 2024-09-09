@@ -14,6 +14,8 @@ namespace Claroline\CursusBundle\Subscriber\Crud\Registration;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Registration\SessionGroup;
 use Claroline\CursusBundle\Manager\SessionManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,6 +23,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class SessionGroupSubscriber implements EventSubscriberInterface
 {
     public function __construct(
+        private readonly ObjectManager $om,
         private readonly SessionManager $sessionManager
     ) {
     }
@@ -50,12 +53,9 @@ class SessionGroupSubscriber implements EventSubscriberInterface
 
         // send invitation if configured
         if ($session->getRegistrationMail()) {
-            $users = [];
-            foreach ($sessionGroup->getGroup()->getUsers() as $user) {
-                $users[] = $user;
-            }
+            $groupUsers = $this->om->getRepository(User::class)->findByGroup($sessionGroup->getGroup());
 
-            $this->sessionManager->sendSessionInvitation($session, $users, false);
+            $this->sessionManager->sendSessionInvitation($session, $groupUsers, false);
         }
 
         $this->sessionManager->registerGroup($sessionGroup);

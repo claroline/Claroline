@@ -11,7 +11,6 @@
 
 namespace Claroline\OpenBadgeBundle\Controller;
 
-use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\Evidence;
@@ -24,7 +23,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @Route("/evidence")
+ * @Route("/badge_evidence", name="apiv2_badge_evidence_")
  */
 class EvidenceController extends AbstractCrudController
 {
@@ -34,18 +33,24 @@ class EvidenceController extends AbstractCrudController
     ) {
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Evidence::class;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
-        return 'badge-evidence';
+        return 'badge_evidence';
+    }
+
+    public function getIgnore(): array
+    {
+        return ['get', 'create', 'update', 'list'];
     }
 
     /**
-     * @Route("/assertion/{assertion}", name="apiv2_evidence_create_at", methods={"POST"})
+     * @Route("/assertion/{assertion}", name="create_at", methods={"POST"})
+     *
      * @EXT\ParamConverter("assertion", class="Claroline\OpenBadgeBundle\Entity\Assertion", options={"mapping": {"assertion": "uuid"}})
      */
     public function createAtAction(Request $request, Assertion $assertion): JsonResponse

@@ -16,20 +16,11 @@ use Claroline\AppBundle\Security\Voter\AbstractVoter;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\Workspace\WorkspaceManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class AbstractRoleSubjectVoter extends AbstractVoter
 {
-    /** @var WorkspaceManager */
-    private $workspaceManager;
-
-    public function setWorkspaceManager(WorkspaceManager $workspaceManager)
-    {
-        $this->workspaceManager = $workspaceManager;
-    }
-
     protected function checkPatchRoles(TokenInterface $token, AbstractRoleSubject $object, ObjectCollection $collection): int
     {
         if (!$collection->isInstanceOf(Role::class)) {
@@ -50,7 +41,7 @@ class AbstractRoleSubjectVoter extends AbstractVoter
             $workspace = $role->getWorkspace();
             if ($workspace) {
                 // If user is workspace manager then grant access
-                if ($this->workspaceManager->isManager($workspace, $token)) {
+                if ($this->isGranted('ADMINISTRATE', $workspace)) {
                     return false;
                 }
 

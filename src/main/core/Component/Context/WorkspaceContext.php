@@ -39,11 +39,6 @@ class WorkspaceContext extends AbstractContext
         return 'book';
     }
 
-    public static function getOrder(): int
-    {
-        return 3;
-    }
-
     public function getObject(?string $contextId): ?Workspace
     {
         if (empty($contextId)) {
@@ -63,11 +58,6 @@ class WorkspaceContext extends AbstractContext
     public function isAvailable(): bool
     {
         return true;
-    }
-
-    public function isRoot(): bool
-    {
-        return false;
     }
 
     public function isManager(TokenInterface $token, ?ContextSubjectInterface $contextSubject): bool
@@ -113,12 +103,12 @@ class WorkspaceContext extends AbstractContext
             );
         }
 
-        //$rootNode = $this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]);
+        // $rootNode = $this->om->getRepository(ResourceNode::class)->findOneBy(['workspace' => $workspace, 'parent' => null]);
 
         return [
             'userEvaluation' => $userEvaluation,
             // do not expose root resource here (used in the WS to configure opening target)
-            //'root' => $this->serializer->serialize($rootNode, [SerializerInterface::SERIALIZE_MINIMAL]),
+            // 'root' => $this->serializer->serialize($rootNode, [SerializerInterface::SERIALIZE_MINIMAL]),
         ];
     }
 

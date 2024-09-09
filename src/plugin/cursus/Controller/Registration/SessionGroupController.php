@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/training_session_group")
+ * @Route("/training_session_group", name="apiv2_training_session_group_")
  */
 class SessionGroupController extends AbstractCrudController
 {
@@ -38,21 +38,26 @@ class SessionGroupController extends AbstractCrudController
         $this->sessionManager = $sessionManager;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'training_session_group';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return SessionGroup::class;
+    }
+
+    public function getIgnore(): array
+    {
+        return ['list'];
     }
 
     /**
      * List registered groups to sessions.
      *
-     * @Route("/{id}", name="apiv2_training_session_group_list", methods={"GET"})
-     * @Route("/{id}/{sessionId}", name="apiv2_training_session_group_list", methods={"GET"})
+     * @Route("/{id}", name="list", methods={"GET"})
+     * @Route("/{id}/{sessionId}", name="list", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
      */
@@ -77,7 +82,7 @@ class SessionGroupController extends AbstractCrudController
     /**
      * Move user's registration from a session to another.
      *
-     * @Route("/move/{type}/{targetId}", name="apiv2_training_session_group_move", methods={"PUT"})
+     * @Route("/move/{type}/{targetId}", name="move", methods={"PUT"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"targetId": "uuid"}})
      */
@@ -107,7 +112,7 @@ class SessionGroupController extends AbstractCrudController
     }
 
     /**
-     * @Route("/invite", name="apiv2_training_session_group_invite", methods={"PUT"})
+     * @Route("/invite", name="invite", methods={"PUT"})
      */
     public function inviteAction(Request $request): JsonResponse
     {
@@ -117,7 +122,7 @@ class SessionGroupController extends AbstractCrudController
         foreach ($sessionGroups as $sessionGroup) {
             $this->checkPermission('REGISTER', $sessionGroup->getSession());
 
-            $groupUsers = $sessionGroup->getGroup()->getUsers();
+            $groupUsers = $this->om->getRepository(User::class)->findByGroup($sessionGroup->getGroup());
 
             foreach ($groupUsers as $user) {
                 $users[$user->getUuid()] = $user;
@@ -150,10 +155,5 @@ class SessionGroupController extends AbstractCrudController
         }
 
         return [];
-    }
-
-    public function getIgnore(): array
-    {
-        return ['list'];
     }
 }

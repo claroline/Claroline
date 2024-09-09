@@ -20,12 +20,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ScaleController extends AbstractCrudController
 {
-    public function getName(): string
+    public static function getName(): string
     {
         return 'scale';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Scale::class;
     }

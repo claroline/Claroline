@@ -39,7 +39,7 @@ export default (organizations, refresher) => {
       ]
     },
     request: {
-      url: url(['apiv2_organization_delete_bulk'], {ids: processable.map(organization => organization.id)}),
+      url: url(['apiv2_organization_delete'], {ids: processable.map(organization => organization.id)}),
       request: {
         method: 'DELETE'
       },

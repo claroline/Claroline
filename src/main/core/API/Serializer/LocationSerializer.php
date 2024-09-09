@@ -66,7 +66,6 @@ class LocationSerializer
                 'delete' => $edit || $this->authorization->isGranted('DELETE', $location),
             ],
             'meta' => [
-                'type' => $location->getType(),
                 'description' => $location->getDescription(),
             ],
             'phone' => $location->getPhone(),
@@ -78,10 +77,6 @@ class LocationSerializer
                 'state' => $location->getAddressState(),
                 'country' => $location->getAddressCountry(),
             ],
-            'gps' => [
-                'latitude' => $location->getLatitude(),
-                'longitude' => $location->getLongitude(),
-            ],
         ];
     }
 
@@ -90,7 +85,6 @@ class LocationSerializer
         $this->sipe('name', 'setName', $data, $location);
         $this->sipe('poster', 'setPoster', $data, $location);
         $this->sipe('thumbnail', 'setThumbnail', $data, $location);
-        $this->sipe('meta.type', 'setType', $data, $location);
         $this->sipe('meta.description', 'setDescription', $data, $location);
         $this->sipe('phone', 'setPhone', $data, $location);
 

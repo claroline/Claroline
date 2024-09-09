@@ -45,18 +45,22 @@ class RoleRepository extends EntityRepository
             ->createQuery('
                 SELECT r.uuid AS id, r.type, r.name, r.translationKey
                 FROM Claroline\CoreBundle\Entity\Role AS r
-                LEFT JOIN r.users AS u
-                LEFT JOIN r.groups AS g
-                LEFT JOIN g.users AS gu
-                WHERE u.id = :userId 
-                   OR gu.id = :userId
+                WHERE EXISTS (
+                    SELECT u.id
+                    FROM Claroline\CoreBundle\Entity\User AS u
+                    LEFT JOIN u.roles AS r2
+                    LEFT JOIN u.groups AS g
+                    LEFT JOIN g.roles AS gr
+                    WHERE u.id = :userId
+                      AND (r2.id = r.id OR gr.id = r.id)
+                )
             ')
             ->setParameter('userId', $user->getId())
             ->getArrayResult();
     }
 
     /**
-     * Returns the platform roles of a user.
+     * Returns the platform roles of a group.
      * NB. This method is called in the GroupSerializer. We bypass ORM for performances.
      */
     public function loadByGroup(Group $group): array
@@ -65,6 +69,13 @@ class RoleRepository extends EntityRepository
             ->createQuery('
                 SELECT r.uuid AS id, r.type, r.name, r.translationKey
                 FROM Claroline\CoreBundle\Entity\Role AS r
+                WHERE EXISTS (
+                    SELECT g.id
+                    FROM Claroline\CoreBundle\Entity\Group AS g
+                    LEFT JOIN g.roles AS r2
+                    WHERE g.id = :groupId
+                      AND r2.id = r.id
+                )
                 LEFT JOIN r.groups AS g
                 WHERE g.id = :groupId
             ')

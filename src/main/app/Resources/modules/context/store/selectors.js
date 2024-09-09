@@ -98,7 +98,7 @@ const impersonated = createSelector(
  */
 const roles = createSelector(
   [store],
-  (store) => store.roles
+  (store) => store.roles || []
 )
 
 const tools = createSelector(
@@ -138,12 +138,12 @@ const menu = createSelector(
 
 const menuUntouched = createSelector(
   [menu],
-  (menu) => menu.untouched
+  (menu) => !!menu && menu.untouched
 )
 
 const menuOpened = createSelector(
   [menu],
-  (menu) => menu.opened
+  (menu) => !!menu && menu.opened
 )
 
 export const selectors = {

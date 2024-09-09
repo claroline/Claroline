@@ -30,7 +30,11 @@ class SectionVoter extends AbstractVoter
                 return $this->checkEdit($token, $object);
         }
 
-        return $this->isGranted($attributes, $object->getResourceNode());
+        if ($this->isGranted($attributes, $object->getResourceNode())) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
     public function getClass(): string
@@ -43,13 +47,13 @@ class SectionVoter extends AbstractVoter
         return [self::OPEN, self::VIEW, self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 
-    private function checkCreate(TokenInterface $token, Section $section)
+    private function checkCreate(TokenInterface $token, Section $section): int
     {
         $resourceNode = $section->getResourceNode();
         $user = $token->getUser();
 
-        if ((AudioParams::MANAGER_TYPE === $section->getType() && $this->isGranted(self::EDIT, $resourceNode)) ||
-            (AudioParams::USER_TYPE === $section->getType() && $user instanceof User && $this->isGranted(self::OPEN, $resourceNode))
+        if ((AudioParams::MANAGER_TYPE === $section->getType() && $this->isGranted(self::EDIT, $resourceNode))
+            || (AudioParams::USER_TYPE === $section->getType() && $user instanceof User && $this->isGranted(self::OPEN, $resourceNode))
         ) {
             return VoterInterface::ACCESS_GRANTED;
         }
@@ -57,19 +61,19 @@ class SectionVoter extends AbstractVoter
         return VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkEdit(TokenInterface $token, Section $section)
+    private function checkEdit(TokenInterface $token, Section $section): int
     {
         $resourceNode = $section->getResourceNode();
         $sectionUser = $section->getUser();
         $user = $token->getUser();
 
-        if ((AudioParams::MANAGER_TYPE === $section->getType() && $this->isGranted(self::EDIT, $resourceNode)) ||
-            (
-                AudioParams::USER_TYPE === $section->getType() &&
-                $user instanceof User &&
-                $this->isGranted(self::OPEN, $resourceNode) &&
-                $sectionUser &&
-                $sectionUser->getUuid() === $user->getUuid()
+        if ((AudioParams::MANAGER_TYPE === $section->getType() && $this->isGranted(self::EDIT, $resourceNode))
+            || (
+                AudioParams::USER_TYPE === $section->getType()
+                && $user instanceof User
+                && $this->isGranted(self::OPEN, $resourceNode)
+                && $sectionUser
+                && $sectionUser->getUuid() === $user->getUuid()
             )
         ) {
             return VoterInterface::ACCESS_GRANTED;

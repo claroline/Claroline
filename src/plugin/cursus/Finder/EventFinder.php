@@ -12,7 +12,11 @@
 namespace Claroline\CursusBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Event;
+use Claroline\CursusBundle\Entity\Registration\EventGroup;
+use Claroline\CursusBundle\Entity\Registration\EventUser;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 class EventFinder extends AbstractFinder
@@ -60,11 +64,11 @@ class EventFinder extends AbstractFinder
                     break;
 
                 case 'user':
-                    $qb->leftJoin('Claroline\CursusBundle\Entity\Registration\EventUser', 'eu', 'WITH', 'eu.event = obj');
+                    $qb->leftJoin(EventUser::class, 'eu', Join::WITH, 'eu.event = obj');
                     $qb->leftJoin('eu.user', 'u');
-                    $qb->leftJoin('Claroline\CursusBundle\Entity\Registration\EventGroup', 'eg', 'WITH', 'eg.event = obj');
+                    $qb->leftJoin(EventGroup::class, 'eg', Join::WITH, 'eg.event = obj');
                     $qb->leftJoin('eg.group', 'g');
-                    $qb->leftJoin('g.users', 'gu');
+                    $qb->leftJoin(User::class, 'gu', Join::WITH, 'g MEMBER OF gu.groups');
                     $qb->andWhere('eu.confirmed = 1 AND eu.validated = 1');
                     $qb->andWhere($qb->expr()->orX(
                         $qb->expr()->eq('u.uuid', ':userId'),
@@ -74,7 +78,7 @@ class EventFinder extends AbstractFinder
                     break;
 
                 case 'userPending':
-                    $qb->leftJoin('Claroline\CursusBundle\Entity\Registration\EventUser', 'eu', 'WITH', 'eu.event = obj');
+                    $qb->leftJoin(EventUser::class, 'eu', Join::WITH, 'eu.event = obj');
                     $qb->leftJoin('eu.user', 'u');
                     $qb->andWhere('(eu.confirmed = 0 AND eu.validated = 0)');
                     $qb->andWhere('u.uuid = :userId');

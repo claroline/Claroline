@@ -19,7 +19,7 @@ export default (badges, refresher) => ({
       type: ASYNC_BUTTON,
       label: trans('select', {}, 'actions'),
       request: {
-        url: url(['apiv2_badge-class_add_users', {badge: badges[0].id}], {ids: selected.map(user => user.id)}),
+        url: url(['apiv2_badge_add_users', {badge: badges[0].id}], {ids: selected.map(user => user.id)}),
         request: {
           method: 'PATCH'
         },

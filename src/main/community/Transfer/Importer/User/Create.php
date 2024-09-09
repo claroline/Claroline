@@ -123,7 +123,7 @@ class Create extends AbstractImporter
         return ['$root' => User::class];
     }
 
-    public function getMode()
+    public function getMode(): string
     {
         return self::MODE_CREATE;
     }

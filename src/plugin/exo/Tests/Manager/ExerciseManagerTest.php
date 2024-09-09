@@ -34,7 +34,7 @@ class ExerciseManagerTest extends JsonDataTestCase
 
         $this->om = $this->client->getContainer()->get('Claroline\AppBundle\Persistence\ObjectManager');
         $this->crud = $this->client->getContainer()->get('Claroline\AppBundle\API\Crud');
-        $this->persist = new Persister($this->om);
+        $this->persist = $this->client->getContainer()->get(Persister::class);
         $this->manager = $this->client->getContainer()->get('UJM\ExoBundle\Manager\ExerciseManager');
         $this->paperGenerator = $this->client->getContainer()->get('ujm_exo.generator.paper');
 

@@ -28,6 +28,7 @@ trait RequestDecoderTrait
             return [];
         }
 
+        // for retro-compatibility. We should no longer use auto-ids
         $idProp = 'uuid';
         if (is_numeric($ids[0])) {
             $idProp = 'id';

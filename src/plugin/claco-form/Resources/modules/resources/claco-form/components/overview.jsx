@@ -50,7 +50,7 @@ const OverviewComponent = props =>
               action: {
                 type: ASYNC_BUTTON,
                 request: {
-                  url: ['claro_claco_form_entry_random', {clacoForm: props.resourceId}],
+                  url: ['apiv2_clacoformentry_random', {clacoForm: props.resourceId}],
                   success: (entryId) => props.history.push(`${props.path}/entries/${entryId}`)
                 }
               }

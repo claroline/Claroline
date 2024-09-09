@@ -18,21 +18,11 @@ use Claroline\ThemeBundle\Entity\Icon\IconSet;
 
 class IconSetManager
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var PlatformConfigurationHandler */
-    private $config;
-    /** @var IconSetBuilderManager */
-    private $builder;
-
     public function __construct(
-        ObjectManager $om,
-        PlatformConfigurationHandler $config,
-        IconSetBuilderManager $builder
+        private readonly ObjectManager $om,
+        private readonly PlatformConfigurationHandler $config,
+        private readonly IconSetBuilderManager $builder
     ) {
-        $this->om = $om;
-        $this->config = $config;
-        $this->builder = $builder;
     }
 
     public function createSet(string $setName, \SplFileInfo $archive): array

@@ -11,12 +11,15 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Component\Context\WorkspaceContext;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class WorkspaceRepository extends EntityRepository
 {
+    use UniqueValueFinder;
+
     public function search(string $search, int $nbResults)
     {
         return $this->createQueryBuilder('w')
@@ -43,13 +46,9 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
-     * Counts the non personal workspaces.
-     *
-     * @param array $organizations
-     *
-     * @return int
+     * Counts non personal workspaces.
      */
-    public function countNonPersonalWorkspaces($organizations = null)
+    public function countNonPersonalWorkspaces(array $organizations = null): int
     {
         $qb = $this
             ->createQueryBuilder('w')
@@ -136,21 +135,26 @@ class WorkspaceRepository extends EntityRepository
 
     public function findManaged(string $userId)
     {
-        $qb = $this
-            ->createQueryBuilder('w')
-            ->leftJoin('w.roles', 'r')
-            ->leftJoin('r.users', 'u')
-            ->leftJoin('r.groups', 'g')
-            ->leftJoin('g.users', 'gu')
-            ->where('(u.uuid = :userId OR gu.uuid = :userId)')
-            ->andWhere('r.name LIKE :managerRolePrefix')
-            ->andWhere('w.personal = 0')
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT w
+                FROM Claroline\CoreBundle\Entity\Workspace\Workspace AS w
+                WHERE w.personal = 0
+                AND EXISTS (
+                    SELECT u.id
+                    FROM Claroline\CoreBundle\Entity\User AS u
+                    LEFT JOIN u.roles AS r
+                    LEFT JOIN u.groups AS g
+                    LEFT JOIN g.roles AS gr
+                    WHERE u.id = :userId
+                      AND (r.name LIKE :managerRolePrefix OR gr.name LIKE :managerRolePrefix)
+                )
+            ')
             ->setParameters([
                 'userId' => $userId,
                 'managerRolePrefix' => 'ROLE_WS_MANAGER_%',
-            ]);
-
-        return $qb->getQuery()->getResult();
+            ])
+            ->getResult();
     }
 
     public function findByCodes(array $codes)
@@ -159,31 +163,11 @@ class WorkspaceRepository extends EntityRepository
             SELECT w
             FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace w
             WHERE w.code IN (:codes)
-            ';
+        ';
 
         $query = $this->getEntityManager()->createQuery($dql);
         $query->setParameter('codes', $codes);
 
         return $query->getResult();
-    }
-
-    /**
-     * Returns the list of workspace codes starting with $prefix.
-     * Useful to auto generate unique workspace codes.
-     */
-    public function findCodesWithPrefix(string $prefix): array
-    {
-        return array_map(
-            function (array $ws) {
-                return $ws['code'];
-            },
-            $this->getEntityManager()->createQuery('
-                SELECT LOWER(w.code) AS code
-                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE LOWER(w.code) LIKE :search
-            ')
-            ->setParameter('search', strtolower(addcslashes($prefix, '%_')).'%')
-            ->getResult()
-        );
     }
 }

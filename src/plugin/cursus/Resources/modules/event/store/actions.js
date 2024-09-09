@@ -36,7 +36,7 @@ actions.open = (id, force = false) => (dispatch, getState) => {
 
 actions.register = (id) => ({
   [API_REQUEST]: {
-    url: ['apiv2_cursus_session_event_self_register', {id: id}],
+    url: ['apiv2_cursus_event_self_register', {id: id}],
     request: {
       method: 'PUT'
     },

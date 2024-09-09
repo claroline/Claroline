@@ -35,7 +35,7 @@ export default (users, refresher) => {
       ]
     },
     request: {
-      url: url(['apiv2_users_disable'], {ids: users.map(u => u.id)}),
+      url: url(['apiv2_user_disable'], {ids: users.map(u => u.id)}),
       request: {
         method: 'PUT'
       },

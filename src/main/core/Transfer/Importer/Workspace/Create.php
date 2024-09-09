@@ -63,7 +63,7 @@ class Create extends AbstractImporter
         return ['$root' => Workspace::class];
     }
 
-    public function getMode()
+    public function getMode(): string
     {
         return self::MODE_CREATE;
     }

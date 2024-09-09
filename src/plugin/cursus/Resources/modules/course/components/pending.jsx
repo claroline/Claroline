@@ -34,8 +34,8 @@ const CoursePending = (props) => {
       <RegistrationUsers
         session={props.course}
         name={selectors.STORE_NAME+'.coursePending'}
-        url={['apiv2_training_course_pending_list', {id: props.course.id}]}
-        unregisterUrl={['apiv2_training_course_user_delete_bulk']}
+        url={['apiv2_training_course_user_list', {id: props.course.id}]}
+        unregisterUrl={['apiv2_training_course_user_delete']}
         actions={(rows) => [
           {
             name: 'edit',

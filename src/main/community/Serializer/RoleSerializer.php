@@ -46,21 +46,26 @@ class RoleSerializer
             'name' => $role->getName(),
             'type' => $role->getType(),
             'translationKey' => $role->getTranslationKey(),
+            'meta' => [
+                'description' => $role->getDescription(),
+            ],
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_MINIMAL, $options)) {
             $serialized['meta'] = [
                 'description' => $role->getDescription(),
                 'readOnly' => $role->isLocked(),
-                'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
+                'personalWorkspaceCreationEnabled' => $role->isPersonalWorkspaceCreationEnabled(),
             ];
 
             if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
+                $administrate = $this->authorization->isGranted('ADMINISTRATE', $role);
+
                 $serialized['permissions'] = [
-                    'open' => $this->authorization->isGranted('OPEN', $role),
-                    'edit' => $this->authorization->isGranted('EDIT', $role),
-                    'administrate' => $this->authorization->isGranted('ADMINISTRATE', $role),
-                    'delete' => $this->authorization->isGranted('DELETE', $role),
+                    'open' => $administrate || $this->authorization->isGranted('OPEN', $role),
+                    'edit' => $administrate || $this->authorization->isGranted('EDIT', $role),
+                    'administrate' => $administrate,
+                    'delete' => $administrate || $this->authorization->isGranted('DELETE', $role),
                 ];
 
                 if (Role::WS_ROLE === $role->getType() && $role->getWorkspace()) {
@@ -69,7 +74,7 @@ class RoleSerializer
                     if (count($role->getUsers()->toArray()) > 0) {
                         $serialized['user'] = $this->userSerializer->serialize($role->getUsers()->toArray()[0], [SerializerInterface::SERIALIZE_MINIMAL]);
                     } else {
-                        //if we removed some user roles... for some reason.
+                        // if we removed some user roles... for some reason.
                         $serialized['user'] = null;
                     }
                 }
@@ -87,7 +92,7 @@ class RoleSerializer
             $role->refreshUuid();
         }
 
-        if (!$role->isLocked()) { // shouldn't be checked in the deserialize
+        if (!$role->isLocked()) { // shouldn't be checked in the deserialization
             $this->sipe('name', 'setName', $data, $role);
             $this->sipe('type', 'setType', $data, $role);
             $this->sipe('translationKey', 'setTranslationKey', $data, $role);

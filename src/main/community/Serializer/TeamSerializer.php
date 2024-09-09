@@ -17,29 +17,13 @@ class TeamSerializer
 {
     use SerializerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var ObjectManager */
-    private $om;
-    /** @var ResourceNodeSerializer */
-    private $resourceNodeSerializer;
-    /** @var RoleSerializer */
-    private $roleSerializer;
-    /** @var WorkspaceSerializer */
-    private $workspaceSerializer;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        ObjectManager $om,
-        ResourceNodeSerializer $resourceNodeSerializer,
-        RoleSerializer $roleSerializer,
-        WorkspaceSerializer $workspaceSerializer
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly ObjectManager $om,
+        private readonly ResourceNodeSerializer $resourceNodeSerializer,
+        private readonly RoleSerializer $roleSerializer,
+        private readonly WorkspaceSerializer $workspaceSerializer
     ) {
-        $this->authorization = $authorization;
-        $this->om = $om;
-        $this->resourceNodeSerializer = $resourceNodeSerializer;
-        $this->roleSerializer = $roleSerializer;
-        $this->workspaceSerializer = $workspaceSerializer;
     }
 
     public function getClass(): string
@@ -60,6 +44,9 @@ class TeamSerializer
                 'autoId' => $team->getId(),
                 'name' => $team->getName(),
                 'thumbnail' => $team->getThumbnail(),
+                'meta' => [
+                    'description' => $team->getDescription(),
+                ],
             ];
         }
 

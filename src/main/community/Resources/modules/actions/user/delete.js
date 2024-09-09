@@ -38,7 +38,7 @@ export default (users, refresher) => {
       ]
     },
     request: {
-      url: url(['apiv2_user_delete_bulk'], {ids: processable.map(user=> user.id)}),
+      url: url(['apiv2_user_delete'], {ids: processable.map(user=> user.id)}),
       request: {
         method: 'DELETE'
       },

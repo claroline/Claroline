@@ -1,6 +1,5 @@
-claro_video_api:
+claro_video:
     resource: "@ClarolineVideoPlayerBundle/Controller/"
-    prefix: apiv2
-    type: api
+    type: annotation
     options:
         expose: true

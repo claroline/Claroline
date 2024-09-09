@@ -2,7 +2,8 @@
 
 namespace Claroline\YouTubeBundle\Subscriber;
 
-use Claroline\CoreBundle\Event\Layout\InjectJavascriptEvent;
+use Claroline\AppBundle\Event\Client\InjectJavascriptEvent;
+use Claroline\AppBundle\Event\ClientEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Twig\Environment;
 
@@ -16,7 +17,7 @@ class PluginSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            'layout.inject.javascript' => 'onInjectJs',
+            ClientEvents::JAVASCRIPTS => 'onInjectJs',
         ];
     }
 

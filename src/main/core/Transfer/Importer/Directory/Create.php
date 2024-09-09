@@ -294,7 +294,7 @@ class Create extends AbstractImporter
         return ['directory', 'create'];
     }
 
-    public function getMode()
+    public function getMode(): string
     {
         return self::MODE_CREATE;
     }

@@ -68,8 +68,6 @@ class ContextProvider extends AbstractComponentProvider
                 $available[] = [
                     'icon' => $contextComponent::getIcon(),
                     'name' => $contextComponent::getName(),
-                    //'order' => $contextComponent::getOrder(),
-                    //'root' => $contextComponent->isRoot(),
                 ];
             }
         }
@@ -90,11 +88,9 @@ class ContextProvider extends AbstractComponentProvider
 
     public function open()
     {
-
     }
 
     public function configure(): ?array
     {
-
     }
 }

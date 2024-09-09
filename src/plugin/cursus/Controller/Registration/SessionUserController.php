@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/training_session_user")
+ * @Route("/training_session_user", name="apiv2_training_session_user_")
  */
 class SessionUserController extends AbstractCrudController
 {
@@ -38,20 +38,25 @@ class SessionUserController extends AbstractCrudController
         $this->sessionManager = $sessionManager;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'training_session_user';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return SessionUser::class;
+    }
+
+    public function getIgnore(): array
+    {
+        return ['list'];
     }
 
     /**
      * List registered users to sessions.
      *
-     * @Route("/{id}", name="apiv2_training_session_user_list", methods={"GET"})
+     * @Route("/{id}", name="list", methods={"GET"})
      * @Route("/{id}/{sessionId}", name="apiv2_training_session_user_list", methods={"GET"})
      *
      * @EXT\ParamConverter("course", class="Claroline\CursusBundle\Entity\Course", options={"mapping": {"id": "uuid"}})
@@ -77,7 +82,7 @@ class SessionUserController extends AbstractCrudController
     /**
      * Move user's registration from a session to another.
      *
-     * @Route("/move/{type}/{targetId}", name="apiv2_training_session_user_move", methods={"PUT"})
+     * @Route("/move/{type}/{targetId}", name="move", methods={"PUT"})
      *
      * @EXT\ParamConverter("session", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"targetId": "uuid"}})
      */
@@ -107,7 +112,7 @@ class SessionUserController extends AbstractCrudController
     }
 
     /**
-     * @Route("/confirm", name="apiv2_training_session_user_confirm", methods={"PUT"})
+     * @Route("/confirm", name="confirm", methods={"PUT"})
      */
     public function confirmAction(Request $request): JsonResponse
     {
@@ -128,7 +133,7 @@ class SessionUserController extends AbstractCrudController
     }
 
     /**
-     * @Route("/validate", name="apiv2_cursus_session_validate_pending", methods={"PUT"})
+     * @Route("/validate", name="validate", methods={"PUT"})
      */
     public function validateAction(Request $request): JsonResponse
     {
@@ -149,7 +154,7 @@ class SessionUserController extends AbstractCrudController
     }
 
     /**
-     * @Route("/invite", name="apiv2_training_session_user_invite", methods={"PUT"})
+     * @Route("/invite", name="invite", methods={"PUT"})
      */
     public function inviteAction(Request $request): JsonResponse
     {
@@ -188,10 +193,5 @@ class SessionUserController extends AbstractCrudController
         }
 
         return [];
-    }
-
-    public function getIgnore(): array
-    {
-        return ['list'];
     }
 }

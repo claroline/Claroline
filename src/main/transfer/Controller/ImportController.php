@@ -28,39 +28,32 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/transfer_import")
+ * @Route("/transfer_import", name="apiv2_transfer_import_")
  */
 class ImportController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    private ImportProvider $provider;
-    private ImportManager $importManager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        ImportProvider $provider,
-        ImportManager $importManager
+        private readonly ImportProvider $provider,
+        private readonly ImportManager $importManager
     ) {
         $this->authorization = $authorization;
-        $this->provider = $provider;
-        $this->importManager = $importManager;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'transfer_import';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return ImportFile::class;
     }
 
     /**
-     * @Route("/workspace/{workspaceId}", name="apiv2_workspace_transfer_import_list", methods={"GET"})
+     * @Route("/workspace/{workspaceId}", name="workspace_list", methods={"GET"})
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspaceId": "uuid"}})
      */
@@ -76,7 +69,7 @@ class ImportController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/execute", name="apiv2_transfer_import_execute", methods={"POST"})
+     * @Route("/{id}/execute", name="execute", methods={"POST"})
      *
      * @EXT\ParamConverter("importFile", options={"mapping": {"id": "uuid"}})
      */
@@ -93,7 +86,7 @@ class ImportController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/log", name="apiv2_transfer_import_log", methods={"get"})
+     * @Route("/{id}/log", name="log", methods={"GET"})
      *
      * @EXT\ParamConverter("importFile", options={"mapping": {"id": "uuid"}})
      */
@@ -110,17 +103,7 @@ class ImportController extends AbstractCrudController
     }
 
     /**
-     * @Route("/action/{format}", name="apiv2_transfer_import_actions", methods={"GET"})
-     */
-    public function getAvailableActionsAction(string $format): JsonResponse
-    {
-        return new JsonResponse(
-            $this->provider->getAvailableActions($format)
-        );
-    }
-
-    /**
-     * @Route("/sample/{format}/{entity}/{name}/{sample}", name="apiv2_transfer_import_sample", methods={"GET"})
+     * @Route("/sample/{format}/{entity}/{name}/{sample}", name="sample", methods={"GET"})
      */
     public function downloadSampleAction(string $name, string $format, string $entity, string $sample): BinaryFileResponse
     {

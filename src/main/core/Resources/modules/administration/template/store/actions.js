@@ -44,7 +44,7 @@ actions.resetForm = (formName, defaultData = {}) => (dispatch) => {
 
 actions.deleteTemplate = (templateTypeId, templateId) => (dispatch) => dispatch({
   [API_REQUEST]: {
-    url: url(['apiv2_template_delete_bulk'], {ids: [templateId]}),
+    url: url(['apiv2_template_delete'], {ids: [templateId]}),
     request: {method: 'DELETE'},
     success: () => dispatch(actions.open(templateTypeId))
   }

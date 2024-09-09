@@ -51,12 +51,12 @@ class CompetencyController extends AbstractCrudController
         $this->toolManager = $toolManager;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'competency';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Competency::class;
     }

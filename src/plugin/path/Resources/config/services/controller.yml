@@ -3,8 +3,7 @@ services:
         public: true # because controller
 
     Innova\PathBundle\Controller\PathController:
-        parent: Claroline\AppBundle\Controller\AbstractCrudController
-        public: true
         arguments:
             - '@security.authorization_checker'
+            - '@Claroline\AppBundle\API\SerializerProvider'
             - '@Innova\PathBundle\Manager\EvaluationManager'

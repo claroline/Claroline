@@ -3,37 +3,28 @@
 namespace Claroline\TransferBundle\Transfer\Importer;
 
 use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\Persistence\ObjectManager;
 
 abstract class AbstractCollectionImporter extends AbstractImporter
 {
-    /** @var Crud */
-    protected $crud;
-    /** @var ObjectManager */
-    protected $om;
+    protected Crud $crud;
 
     abstract protected static function getClass(): string;
 
     abstract protected static function getCollectionClass(): string;
 
-    public function setCrud(Crud $crud)
+    public function setCrud(Crud $crud): void
     {
         $this->crud = $crud;
     }
 
-    public function setObjectManager(ObjectManager $om)
-    {
-        $this->om = $om;
-    }
-
     public function execute(array $data): array
     {
-        $parent = $this->om->getObject($data[static::getAction()[0]], static::getClass(), array_keys($data[static::getAction()[0]]));
+        $parent = $this->crud->find(static::getClass(), $data[static::getAction()[0]]);
         if (!$parent) {
             throw new \Exception(sprintf('%s does not exists', ucfirst(static::getAction()[0])));
         }
 
-        $toAdd = $this->om->getObject($data[static::getCollectionAlias()], static::getCollectionClass(), array_keys($data[static::getCollectionAlias()]));
+        $toAdd = $this->crud->find(static::getCollectionClass(), $data[static::getCollectionAlias()]);
         if (!$toAdd) {
             throw new \Exception(sprintf('%s does not exists', ucfirst(static::getCollectionAlias())));
         }
@@ -65,7 +56,6 @@ abstract class AbstractCollectionImporter extends AbstractImporter
     {
         $action = static::getAction()[1];
 
-        $collectionAction = null;
         if (-1 !== strpos($action, Crud::COLLECTION_ADD)) {
             $collectionAction = Crud::COLLECTION_ADD;
         } elseif (-1 !== strpos($action, Crud::COLLECTION_REMOVE)) {

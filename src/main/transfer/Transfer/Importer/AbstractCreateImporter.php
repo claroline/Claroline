@@ -33,7 +33,7 @@ abstract class AbstractCreateImporter extends AbstractImporter
         return ['$root' => static::getClass()];
     }
 
-    public function getMode()
+    public function getMode(): string
     {
         return self::MODE_CREATE;
     }

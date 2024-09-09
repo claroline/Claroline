@@ -3,7 +3,6 @@
 namespace Claroline\OpenBadgeBundle\Manager;
 
 use Claroline\AppBundle\Manager\PlatformManager;
-use Claroline\CoreBundle\Entity\Location;
 use Claroline\CoreBundle\Manager\Template\TemplateManager;
 use Claroline\OpenBadgeBundle\Entity\Assertion;
 use Claroline\OpenBadgeBundle\Entity\BadgeClass;
@@ -27,31 +26,23 @@ class BadgeManager
         $badge = $assertion->getBadge();
         $organization = $badge->getIssuer();
 
-        /** @var Location $location */
-        $location = $organization && 0 < count($organization->getLocations()) ? $organization->getLocations()->toArray()[0] : null;
-
         $placeholders = array_merge([
-                // recipient
-                'first_name' => $user->getFirstName(),
-                'last_name' => $user->getLastName(),
-                'username' => $user->getUsername(),
-                // badge
-                'badge_name' => $badge->getName(),
-                'badge_description' => $badge->getDescription(),
-                'badge_image' => '<img src="'.$this->platformManager->getUrl().'/'.$badge->getImage().'" style="max-width: 100px; max-height: 50px;"/>',
-                'badge_image_url' => $this->platformManager->getUrl().'/'.$badge->getImage(),
-                'badge_duration' => $badge->getDurationValidation(),
-                // assertion
-                'assertion_id' => $assertion->getUuid(),
-                // issuer
-                'issuer_name' => $organization ? $organization->getName() : '',
-                'issuer_email' => $organization ? $organization->getEmail() : '',
-                'issuer_phone' => $location ? $location->getPhone() : null,
-                'issuer_street' => $location ? $location->getAddressStreet1().' '.$location->getAddressStreet2() : null,
-                'issuer_pc' => $location ? $location->getAddressPostalCode() : null,
-                'issuer_town' => $location ? $location->getAddressCity() : null,
-                'issuer_country' => $location ? $location->getAddressCountry() : null,
-            ],
+            // recipient
+            'first_name' => $user->getFirstName(),
+            'last_name' => $user->getLastName(),
+            'username' => $user->getUsername(),
+            // badge
+            'badge_name' => $badge->getName(),
+            'badge_description' => $badge->getDescription(),
+            'badge_image' => '<img src="'.$this->platformManager->getUrl().'/'.$badge->getImage().'" style="max-width: 100px; max-height: 50px;"/>',
+            'badge_image_url' => $this->platformManager->getUrl().'/'.$badge->getImage(),
+            'badge_duration' => $badge->getDurationValidation(),
+            // assertion
+            'assertion_id' => $assertion->getUuid(),
+            // issuer
+            'issuer_name' => $organization ? $organization->getName() : '',
+            'issuer_email' => $organization ? $organization->getEmail() : '',
+        ],
             $this->templateManager->formatDatePlaceholder('issued_on', $assertion->getIssuedOn())
         );
 

@@ -7,31 +7,29 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AudioPlayerBundle\Entity\Resource\Section;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Persistence\ObjectRepository;
 
 class SectionSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-
-    private $resourceNodeRepo;
-    private $userRepo;
+    private ObjectRepository $resourceNodeRepo;
+    private ObjectRepository $userRepo;
 
     public function __construct(ObjectManager $om)
     {
-        $this->om = $om;
-
         $this->resourceNodeRepo = $om->getRepository(ResourceNode::class);
         $this->userRepo = $om->getRepository(User::class);
     }
 
-    /**
-     * @return array
-     */
-    public function serialize(Section $section, array $options = [])
+    public function getClass(): string
     {
-        $serialized = [
+        return Section::class;
+    }
+
+    public function serialize(Section $section, array $options = []): array
+    {
+        return [
             'id' => $section->getUuid(),
             'type' => $section->getType(),
             'title' => $section->getTitle(),
@@ -47,16 +45,9 @@ class SectionSerializer
             'audioUrl' => $section->getAudioUrl(),
             'audioDescription' => $section->getAudioDescription(),
         ];
-
-        return $serialized;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return Section
-     */
-    public function deserialize($data, Section $section, array $options = [])
+    public function deserialize(array $data, Section $section, array $options = []): Section
     {
         $this->sipe('type', 'setType', $data, $section);
         $this->sipe('title', 'setTitle', $data, $section);

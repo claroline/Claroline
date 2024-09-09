@@ -36,7 +36,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @Route("/cursus_event")
+ * @Route("/cursus_event", name="apiv2_cursus_event_")
  */
 class EventController extends AbstractCrudController
 {
@@ -52,12 +52,12 @@ class EventController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'cursus_event';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Event::class;
     }
@@ -117,7 +117,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{workspace}", name="apiv2_cursus_event_list", methods={"GET"})
+     * @Route("/{workspace}", name="list", methods={"GET"})
      *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
@@ -137,7 +137,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/public/{workspace}", name="apiv2_cursus_event_public", methods={"GET"})
+     * @Route("/public/{workspace}", name="public", methods={"GET"})
      *
      * @EXT\ParamConverter("workspace", class="Claroline\CoreBundle\Entity\Workspace\Workspace", options={"mapping": {"workspace": "uuid"}})
      */
@@ -158,7 +158,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/open", name="apiv2_cursus_event_open", methods={"GET"})
+     * @Route("/{id}/open", name="open", methods={"GET"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
@@ -188,7 +188,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/pdf", name="apiv2_cursus_event_download_pdf", methods={"GET"})
+     * @Route("/{id}/pdf", name="download_pdf", methods={"GET"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
@@ -207,7 +207,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/ics", name="apiv2_cursus_event_download_ics", methods={"GET"})
+     * @Route("/{id}/ics", name="download_ics", methods={"GET"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
@@ -224,7 +224,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/self/register", name="apiv2_cursus_session_event_self_register", methods={"PUT"})
+     * @Route("/{id}/self/register", name="self_register", methods={"PUT"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -236,36 +236,13 @@ class EventController extends AbstractCrudController
         if (Session::REGISTRATION_PUBLIC !== $sessionEvent->getRegistrationType()) {
             throw new AccessDeniedException();
         }
-        $this->manager->registerUserToSessionEvent($sessionEvent, $user);
+        $eventUsers = $this->manager->addUsers($sessionEvent, [$user]);
 
-        $eventsRegistration = [];
-        $eventUsers = !is_null($user) ?
-            $this->crud->list(
-                EventUser::class,
-                ['session' => $sessionEvent->getSession()->getUuid(), 'user' => $user->getUuid()]
-            ) :
-            [];
-
-        foreach ($eventUsers as $eventUser) {
-            $event = $eventUser->getSessionEvent();
-            $set = $event->getEventSet();
-            $eventsRegistration[$event->getUuid()] = true;
-
-            if ($set) {
-                $setName = $set->getName();
-
-                if (!isset($eventsRegistration[$setName])) {
-                    $eventsRegistration[$setName] = $set->getLimit();
-                }
-                --$eventsRegistration[$setName];
-            }
-        }
-
-        return new JsonResponse($eventsRegistration);
+        return new JsonResponse($this->serializer->serialize($eventUsers));
     }
 
     /**
-     * @Route("/{id}/invite/all", name="apiv2_cursus_event_invite_all", methods={"PUT"})
+     * @Route("/{id}/invite/all", name="invite_all", methods={"PUT"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
@@ -279,7 +256,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/users/{type}", name="apiv2_cursus_event_list_users", methods={"GET"})
+     * @Route("/{id}/users/{type}", name="list_users", methods={"GET"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
@@ -318,7 +295,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/users/{type}", name="apiv2_cursus_event_add_users", methods={"PATCH"})
+     * @Route("/{id}/users/{type}", name="add_users", methods={"PATCH"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
@@ -343,7 +320,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/users/{type}", name="apiv2_cursus_event_remove_users", methods={"DELETE"})
+     * @Route("/{id}/users/{type}", name="remove_users", methods={"DELETE"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
@@ -358,7 +335,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/invite/users", name="apiv2_cursus_event_invite_users", methods={"PUT"})
+     * @Route("/{id}/invite/users", name="invite_users", methods={"PUT"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
@@ -375,7 +352,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/groups/{type}", name="apiv2_cursus_event_list_groups", methods={"GET"})
+     * @Route("/{id}/groups/{type}", name="list_groups", methods={"GET"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
@@ -396,7 +373,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/groups/{type}", name="apiv2_cursus_event_add_groups", methods={"PATCH"})
+     * @Route("/{id}/groups/{type}", name="add_groups", methods={"PATCH"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
@@ -408,7 +385,7 @@ class EventController extends AbstractCrudController
         $nbUsers = 0;
 
         foreach ($groups as $group) {
-            $nbUsers += count($group->getUsers()->toArray());
+            $nbUsers += count($this->om->getRepository(User::class)->findByGroup($group));
         }
 
         if (AbstractRegistration::LEARNER === $type && !$this->manager->checkSessionEventCapacity($sessionEvent, $nbUsers)) {
@@ -425,7 +402,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/groups/{type}", name="apiv2_cursus_event_remove_groups", methods={"DELETE"})
+     * @Route("/{id}/groups/{type}", name="remove_groups", methods={"DELETE"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Event", options={"mapping": {"id": "uuid"}})
      */
@@ -440,7 +417,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/invite/groups", name="apiv2_cursus_event_invite_groups", methods={"PUT"})
+     * @Route("/{id}/invite/groups", name="invite_groups", methods={"PUT"})
      *
      * @EXT\ParamConverter("sessionEvent", class="Claroline\CursusBundle\Entity\Session", options={"mapping": {"id": "uuid"}})
      */
@@ -448,11 +425,14 @@ class EventController extends AbstractCrudController
     {
         $this->checkPermission('REGISTER', $sessionEvent, [], true);
 
+        /** @var EventGroup[] $sessionGroups */
         $sessionGroups = $this->decodeIdsString($request, EventGroup::class);
+
         $users = [];
         foreach ($sessionGroups as $sessionGroup) {
-            $groupUsers = $sessionGroup->getGroup()->getUsers();
+            $groupUsers = $this->om->getRepository(User::class)->findByGroup($sessionGroup->getGroup());
 
+            // de duplicate users (a user can have multiple groups)
             foreach ($groupUsers as $user) {
                 $users[$user->getUuid()] = $user;
             }

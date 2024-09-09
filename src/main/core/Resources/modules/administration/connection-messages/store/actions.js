@@ -5,7 +5,7 @@ export const openConnectionMessageForm = (formName, defaultProps, id = null) => 
   if (id) {
     return dispatch({
       [API_REQUEST]: {
-        url: ['apiv2_connectionmessage_get', { id }],
+        url: ['apiv2_connection_message_get', { id }],
         success: (response, dispatch) => {
           dispatch(formActions.resetForm(formName, response, false))
         }

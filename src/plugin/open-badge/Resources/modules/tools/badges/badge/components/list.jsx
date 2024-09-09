@@ -30,8 +30,8 @@ const BadgeList = props =>
         path={props.path}
         name={selectors.LIST_NAME}
         url={'workspace' === props.contextType ?
-          ['apiv2_badge-class_workspace_badge_list', {workspace: props.contextId}] :
-          ['apiv2_badge-class_list']
+          ['apiv2_badge_workspace_list', {workspace: props.contextId}] :
+          ['apiv2_badge_list']
         }
         customDefinition={'workspace' !== props.contextType ? [
           {

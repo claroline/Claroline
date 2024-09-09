@@ -2,18 +2,12 @@ services:
     Claroline\CommunityBundle\Security\Voter\AbstractRoleSubjectVoter:
         abstract: true
         parent: Claroline\AppBundle\Security\Voter\AbstractVoter
-        calls:
-            - method: setWorkspaceManager
-              arguments:
-                  - '@Claroline\CoreBundle\Manager\Workspace\WorkspaceManager'
 
     Claroline\CommunityBundle\Security\Voter\CurrentUser\AdministratorVoter:
         tags:
             # The AdministratorVoter checks if the current user as the ROLE_ADMIN to grant all rights
-            # We want it to be executed at first for performances reasons
+            # We want it to be executed first for performances reasons
             - { name: security.voter , priority: 255 }
-        arguments:
-            - '@security.helper'
 
     Claroline\CommunityBundle\Security\Voter\CurrentUser\CreatorVoter:
         tags:

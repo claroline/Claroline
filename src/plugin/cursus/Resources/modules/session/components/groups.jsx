@@ -17,7 +17,7 @@ const SessionGroups = (props) =>
       ['apiv2_training_session_group_list', {id: props.course.id, sessionId: props.session.id}] :
       ['apiv2_training_session_group_list', {id: props.course.id}]
     }
-    unregisterUrl={['apiv2_training_session_group_delete_bulk']}
+    unregisterUrl={['apiv2_training_session_group_delete']}
     actions={(rows) => [
       {
         name: 'invite',

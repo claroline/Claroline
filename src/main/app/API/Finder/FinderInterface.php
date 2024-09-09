@@ -13,10 +13,9 @@ namespace Claroline\AppBundle\API\Finder;
 
 interface FinderInterface
 {
-    /**
-     * @return array|int
-     */
-    public function find(?array $filters = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false);
+    public function find(?array $filters = [], array $sortBy = null, ?int $page = 0, ?int $limit = -1, ?bool $count = false): array|int;
 
     public static function getClass(): string;
+
+    public function search(FinderQuery $query): FinderResult;
 }

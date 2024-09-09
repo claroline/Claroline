@@ -27,37 +27,32 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/transfer_export")
+ * @Route("/transfer_export", name="apiv2_transfer_export_")
  */
 class ExportController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    private ExportManager $exportManager;
-    private string $filesDir;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        ExportManager $exportManager,
-        string $filesDir
+        private readonly ExportManager $exportManager,
+        private readonly string $filesDir
     ) {
         $this->authorization = $authorization;
-        $this->exportManager = $exportManager;
-        $this->filesDir = $filesDir;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'transfer_export';
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return ExportFile::class;
     }
 
     /**
-     * @Route("/workspace/{workspaceId}", name="apiv2_workspace_transfer_export_list", methods={"GET"})
+     * @Route("/workspace/{workspaceId}", name="workspace_list", methods={"GET"})
      *
      * @EXT\ParamConverter("workspace", options={"mapping": {"workspaceId": "uuid"}})
      */
@@ -73,7 +68,7 @@ class ExportController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/execute", name="apiv2_transfer_export_execute", methods={"POST"})
+     * @Route("/{id}/execute", name="execute", methods={"POST"})
      *
      * @EXT\ParamConverter("exportFile", options={"mapping": {"id": "uuid"}})
      */
@@ -90,7 +85,7 @@ class ExportController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/download", name="apiv2_transfer_export_download", methods={"GET"})
+     * @Route("/{id}/download", name="download", methods={"GET"})
      *
      * @EXT\ParamConverter("exportFile", options={"mapping": {"id": "uuid"}})
      */

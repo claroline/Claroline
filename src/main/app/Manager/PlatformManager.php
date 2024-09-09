@@ -3,14 +3,22 @@
 namespace Claroline\AppBundle\Manager;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\VersionManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class PlatformManager
 {
     public function __construct(
+        private readonly string $env,
         private readonly RequestStack $requestStack,
+        private readonly VersionManager $versionManager,
         private readonly PlatformConfigurationHandler $config
     ) {
+    }
+
+    public function getEnv(): string
+    {
+        return $this->env;
     }
 
     /**
@@ -40,6 +48,11 @@ class PlatformManager
         }
 
         return trim($url, '/');
+    }
+
+    public function getVersion(): string
+    {
+        return $this->versionManager->getCurrent();
     }
 
     public function hasParameter(string $parameter): bool

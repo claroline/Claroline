@@ -19,10 +19,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class MailManager
 {
     public function __construct(
-        private UrlGeneratorInterface $router,
-        private BaseMailManager $mailManager,
-        private LocaleManager $localeManager,
-        private TemplateManager $templateManager
+        private readonly UrlGeneratorInterface $router,
+        private readonly BaseMailManager $mailManager,
+        private readonly LocaleManager $localeManager,
+        private readonly TemplateManager $templateManager
     ) {
     }
 

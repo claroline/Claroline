@@ -113,15 +113,15 @@ class WorkspaceSerializer
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
-            $editPerm = $this->authorization->isGranted('EDIT', $workspace);
+            $administrate = $this->authorization->isGranted('ADMINISTRATE', $workspace);
 
             $serialized['permissions'] = [
-                'open' => $editPerm || $this->authorization->isGranted('OPEN', $workspace),
-                'delete' => $editPerm || $this->authorization->isGranted('DELETE', $workspace),
-                'edit' => $editPerm,
-                'administrate' => $editPerm,
-                'export' => $editPerm || $this->authorization->isGranted('EXPORT', $workspace),
-                'archive' => $editPerm || $this->authorization->isGranted('ARCHIVE', $workspace),
+                'open' => $administrate || $this->authorization->isGranted('OPEN', $workspace),
+                'delete' => $administrate || $this->authorization->isGranted('DELETE', $workspace),
+                'edit' => $administrate || $this->authorization->isGranted('EDIT', $workspace),
+                'administrate' => $administrate,
+                'export' => $administrate || $this->authorization->isGranted('EXPORT', $workspace),
+                'archive' => $administrate || $this->authorization->isGranted('ARCHIVE', $workspace),
             ];
 
             // this is a huge performances bottleneck as it will check if the current user as at least one right on one ws tool

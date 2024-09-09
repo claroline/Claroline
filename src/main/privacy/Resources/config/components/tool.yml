@@ -3,4 +3,5 @@ services:
         parent: Claroline\AppBundle\Component\Tool\AbstractTool
         tags: [ 'claroline.component.tool' ]
         arguments:
-            - '@Claroline\CoreBundle\API\Serializer\ParametersSerializer'
+            - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
+            - '@Claroline\AppBundle\API\SerializerProvider'

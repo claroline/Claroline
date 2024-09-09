@@ -11,13 +11,14 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
 use Doctrine\ORM\EntityRepository;
 
 class EventRepository extends EntityRepository
 {
-    public function countParticipants(Event $event)
+    public function countParticipants(Event $event): array
     {
         return [
             'tutors' => $this->countTutors($event),
@@ -25,12 +26,12 @@ class EventRepository extends EntityRepository
         ];
     }
 
-    public function countTutors(Event $event)
+    public function countTutors(Event $event): int
     {
         return $this->countUsers($event, AbstractRegistration::TUTOR);
     }
 
-    public function countLearners(Event $event)
+    public function countLearners(Event $event): int
     {
         $count = $this->countUsers($event, AbstractRegistration::LEARNER);
 
@@ -48,13 +49,14 @@ class EventRepository extends EntityRepository
             ->getResult();
 
         foreach ($eventGroups as $eventGroup) {
-            $count += $eventGroup->getGroup()->getUsers()->count();
+            $groupUsers = $this->getEntityManager()->getRepository(User::class)->findByGroup($eventGroup->getGroup());
+            $count += count($groupUsers);
         }
 
         return $count;
     }
 
-    private function countUsers(Event $event, string $type)
+    private function countUsers(Event $event, string $type): int
     {
         return (int) $this->getEntityManager()
             ->createQuery('

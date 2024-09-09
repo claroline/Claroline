@@ -8,12 +8,13 @@ use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\CoreBundle\Library\Normalizer\CodeNormalizer;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceLifecycleManager;
 use Claroline\CoreBundle\Manager\Resource\RightsManager;
@@ -53,8 +54,11 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
         $resourceNode = $event->getObject();
 
         // make sure the resource code is unique
-        // use name as code if not defined
-        $resourceNode->setCode($this->resourceManager->getUniqueCode(!empty($resourceNode->getCode()) ? $resourceNode->getCode() : $resourceNode->getName()));
+        $resourceNodeCode = $this->om->getRepository(ResourceNode::class)->findNextUnique(
+            'code',
+            $resourceNode->getCode() ?? CodeNormalizer::normalize($resourceNode->getName())
+        );
+        $resourceNode->setCode($resourceNodeCode);
 
         // set the creator of the resource
         $user = $this->tokenStorage->getToken()->getUser();
@@ -155,7 +159,12 @@ class ResourceNodeSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $newNode->setCode($this->resourceManager->getUniqueCode($newNode->getCode() ?? $newNode->getName()));
+        // make sure the resource code is unique
+        $resourceNodeCode = $this->om->getRepository(ResourceNode::class)->findNextUnique(
+            'code',
+            $newNode->getCode() ?? CodeNormalizer::normalize($newNode->getName())
+        );
+        $newNode->setCode($resourceNodeCode);
 
         // set the creator of the copy
         $user = $this->tokenStorage->getToken()->getUser();

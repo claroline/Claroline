@@ -96,7 +96,7 @@ class BadgeClassFinder extends AbstractFinder
                             // always assignable by organization managers
                             $qb->expr()->in('o.id', array_map(function (Organization $organization) {
                                 return $organization->getId();
-                            }, $user->getAdministratedOrganizations()->toArray())),
+                            }, $user->getAdministratedOrganizations())),
 
                             // assignable by users with GRANT rights on the tool
                             $qb->expr()->exists($subQb),

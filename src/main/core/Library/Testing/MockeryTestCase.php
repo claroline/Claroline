@@ -13,25 +13,20 @@ namespace Claroline\CoreBundle\Library\Testing;
 
 use Mockery as m;
 use Mockery\Mock;
+use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 
 abstract class MockeryTestCase extends TestCase
 {
-    private static $isMockeryInitialized = false;
-    private static $nonCloneableClasses = [];
-    private static $mocks = [];
+    private static bool $isMockeryInitialized = false;
+    private static array $nonCloneableClasses = [];
+    private static array $mocks = [];
 
-    /**
-     * {@inheritdoc}
-     */
     protected function setUp(): void
     {
         $this->initMockery();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function tearDown(): void
     {
         m::close();
@@ -40,14 +35,9 @@ abstract class MockeryTestCase extends TestCase
     /**
      * Creates a mock. This method will delegate to Mockery::mock() and possibly
      * store the created mock and return a clone of it to reduce the memory footprint.
-     * Its usage remains the same than the original.
-     *
-     * @param mixed $class
-     * @param mixed $parameters
-     *
-     * @return Mock
+     * Its usage remains the same as the original.
      */
-    protected function mock($class, $parameters = null)
+    protected function mock(mixed $class, mixed $parameters = null): MockInterface
     {
         // ensure mockery is initialized in the data providers, which are
         // called before the setUp method
@@ -67,18 +57,18 @@ abstract class MockeryTestCase extends TestCase
             return $mock;
         }
 
-        // keep the orginal mock before returning a clone
+        // keep the original mock before returning a clone
         self::$mocks[$class] = $mock;
 
         return clone $mock;
     }
 
-    private function initMockery()
+    private function initMockery(): void
     {
         m::getConfiguration()->allowMockingNonExistentMethods(false);
     }
 
-    private function isCloneable($class)
+    private function isCloneable($class): bool
     {
         if (!is_string($class) // probably a final class mock
             || in_array($class, self::$nonCloneableClasses) // already checked

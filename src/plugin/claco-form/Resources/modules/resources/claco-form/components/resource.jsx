@@ -88,7 +88,7 @@ const ClacoFormResource = props =>
               props.openEntryForm(null, props.clacoForm.id, [], props.currentUser)
               break
             case 'random':
-              fetch(url(['claro_claco_form_entry_random', {clacoForm: props.clacoForm.id}]), {
+              fetch(url(['apiv2_clacoformentry_random', {clacoForm: props.clacoForm.id}]), {
                 method: 'GET' ,
                 credentials: 'include'
               })
@@ -106,7 +106,7 @@ const ClacoFormResource = props =>
         path: '/random',
         disabled: !props.randomEnabled,
         onEnter: () => {
-          fetch(url(['claro_claco_form_entry_random', {clacoForm: props.clacoForm.id}]), {
+          fetch(url(['apiv2_clacoformentry_random', {clacoForm: props.clacoForm.id}]), {
             method: 'GET' ,
             credentials: 'include'
           })
@@ -149,11 +149,15 @@ const ClacoFormResource = props =>
 
 ClacoFormResource.propTypes = {
   path: T.string.isRequired,
+  history: T.shape({
+    push: T.func.isRequired
+  }).isRequired,
   currentUser: T.object,
   clacoForm: T.shape(
     ClacoFormTypes.propTypes
   ).isRequired,
   hasStatistics: T.bool,
+  randomEnabled: T.bool,
   canEdit: T.bool.isRequired,
   canAdministrate: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,

@@ -134,10 +134,4 @@ services:
             - '@Claroline\AppBundle\Component\Context\ContextProvider'
             - '@Claroline\CoreBundle\Manager\UserManager'
             - '@Claroline\CoreBundle\Manager\ConnectionMessageManager'
-
-    Claroline\CoreBundle\Listener\Entity\UserListener:
-        arguments:
-            - '@security.encoder_factory'
-        tags:
-            - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'prePersist' }
-            - { name: 'doctrine.orm.entity_listener', entity: 'Claroline\CoreBundle\Entity\User', event: 'preUpdate' }
+            - '@Claroline\AppBundle\Manager\ClientManager'

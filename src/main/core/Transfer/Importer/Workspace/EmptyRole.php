@@ -5,21 +5,23 @@ namespace Claroline\CoreBundle\Transfer\Importer\Workspace;
 use Claroline\AppBundle\API\Crud;
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\TransferBundle\Transfer\Importer\AbstractImporter;
 
 class EmptyRole extends AbstractImporter
 {
-    /** @var Crud */
-    private $crud;
-    /** @var ObjectManager */
-    private $om;
+    public function __construct(
+        private readonly Crud $crud,
+        private readonly ObjectManager $om
+    ) {
+    }
 
-    public function __construct(Crud $crud, ObjectManager $om)
+    public static function getAction(): array
     {
-        $this->crud = $crud;
-        $this->om = $om;
+        return ['workspace', 'empty_role'];
     }
 
     public function execute(array $data): array
@@ -28,7 +30,7 @@ class EmptyRole extends AbstractImporter
             throw new \Exception('Missing role.translationKey.');
         }
 
-        $workspace = $this->om->getObject($data['workspace'], Workspace::class, array_keys($data['workspace']));
+        $workspace = $this->crud->find(Workspace::class, $data['workspace']);
         if (empty($workspace)) {
             throw new \Exception('Workspace not found.');
         }
@@ -40,8 +42,11 @@ class EmptyRole extends AbstractImporter
         ]);
 
         if ($role) {
-            $this->crud->patch($role, 'user', 'remove', $role->getUsers()->toArray());
-            $this->crud->patch($role, 'group', 'remove', $role->getGroups()->toArray());
+            $groups = $this->om->getRepository(Group::class)->findByRole($role);
+            $users = $this->om->getRepository(User::class)->findByRoles([$role], false);
+
+            $this->crud->patch($role, 'user', 'remove', $users);
+            $this->crud->patch($role, 'group', 'remove', $groups);
 
             return [
                 'empty_role' => [[
@@ -81,16 +86,5 @@ class EmptyRole extends AbstractImporter
         }
 
         return $schema;
-    }
-
-    /**
-     * return an array with the following element:
-     * - section
-     * - action
-     * - action name.
-     */
-    public static function getAction(): array
-    {
-        return ['workspace', 'empty_role'];
     }
 }

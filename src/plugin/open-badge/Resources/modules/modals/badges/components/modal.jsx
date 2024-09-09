@@ -63,7 +63,7 @@ BadgesModal.propTypes = {
   url: T.oneOfType([T.string, T.array]),
   title: T.string,
   filters: T.arrayOf(T.shape({
-    // TODO : list filter types
+    // list filter types
   })),
   selectAction: T.func.isRequired,
   fadeModal: T.func.isRequired,
@@ -75,7 +75,7 @@ BadgesModal.propTypes = {
 }
 
 BadgesModal.defaultProps = {
-  url: ['apiv2_badge-class_list'],
+  url: ['apiv2_badge_list'],
   title: trans('badges', {}, 'badge'),
   filters: []
 }

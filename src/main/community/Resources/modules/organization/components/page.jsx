@@ -28,7 +28,8 @@ const Organization = (props) =>
       }
     ].concat(props.organization ? props.breadcrumb : [])}
     title={get(props.organization, 'name', trans('loading'))}
-    toolbar="edit | send-message | fullscreen more"
+    primaryAction="browse"
+    toolbar="edit more"
     poster={get(props.organization, 'poster')}
     actions={!isEmpty(props.organization) ? getActions([props.organization], {
       add: () => props.reload(props.organization.id),

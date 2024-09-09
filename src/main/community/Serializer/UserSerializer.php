@@ -6,7 +6,6 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CommunityBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -26,7 +25,6 @@ class UserSerializer
 {
     use SerializerTrait;
 
-    private RoleRepository $roleRepo;
     private FieldFacetRepository $fieldFacetRepo;
     private FieldFacetValueRepository $fieldFacetValueRepo;
 
@@ -39,7 +37,6 @@ class UserSerializer
         private readonly FacetManager $facetManager,
         private readonly WorkspaceUserQueueManager $workspaceUserQueueManager
     ) {
-        $this->roleRepo = $om->getRepository(Role::class);
         $this->fieldFacetRepo = $om->getRepository(FieldFacet::class);
         $this->fieldFacetValueRepo = $om->getRepository(FieldFacetValue::class);
     }
@@ -84,14 +81,7 @@ class UserSerializer
                 'status' => $user->getStatus(),
                 'lastActivity' => DateNormalizer::normalize($user->getLastActivity()),
                 'picture' => $user->getPicture(),
-
                 'username' => $user->getUsername(), // required because used to user profile URL
-                //'firstName' => $user->getFirstName(),
-                //'lastName' => $user->getLastName(),
-                //'username' => $user->getUsername(),
-                //'email' => $showEmail ? $user->getEmail() : null,
-                //'thumbnail' => $user->getThumbnail(),
-                //'poster' => $user->getPoster(),
             ];
         }
 
@@ -106,14 +96,35 @@ class UserSerializer
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
-            //'thumbnail' => $user->getThumbnail(),
+            // 'thumbnail' => $user->getThumbnail(),
             'poster' => $user->getPoster(),
             'email' => $showEmail ? $user->getEmail() : null,
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $showEmail ? $user->getPhone() : null,
             'meta' => $this->serializeMeta($user),
             'restrictions' => $this->serializeRestrictions($user),
-            'roles' => $this->roleRepo->loadByUser($user),
+            'roles' => array_merge(
+                array_map(function (Role $role) {
+                    return [
+                        'id' => $role->getUuid(),
+                        'autoId' => $role->getId(),
+                        'name' => $role->getName(),
+                        'type' => $role->getType(),
+                        'translationKey' => $role->getTranslationKey(),
+                        'context' => 'user',
+                    ];
+                }, $user->getEntityRoles(false)),
+                array_map(function (Role $role) {
+                    return [
+                        'id' => $role->getUuid(),
+                        'autoId' => $role->getId(),
+                        'name' => $role->getName(),
+                        'type' => $role->getType(),
+                        'translationKey' => $role->getTranslationKey(),
+                        'context' => 'group',
+                    ];
+                }, $user->getGroupRoles()),
+            ),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_LIST, $options)) {
@@ -165,7 +176,7 @@ class UserSerializer
         $this->sipe('thumbnail', 'setThumbnail', $data, $user);
         $this->sipe('poster', 'setPoster', $data, $user);
 
-        //don't trim the password just in case
+        // don't trim the password just in case
         $this->sipe('plainPassword', 'setPlainPassword', $data, $user, false);
 
         if (isset($data['meta'])) {
@@ -182,40 +193,6 @@ class UserSerializer
 
             if ($organization) {
                 $user->setMainOrganization($organization);
-            }
-        }
-
-        // TODO : this should not be done here (this is still used to register new users in ws in platform registration)
-        //only add role here. If we want to remove them, use the crud remove method instead
-        //it's useful if we want to create a user with a list of roles
-        if (isset($data['roles'])) {
-            foreach ($data['roles'] as $roleData) {
-                /** @var Role|null $role */
-                $role = null;
-
-                if (isset($roleData['id'])) {
-                    $role = $this->roleRepo->findOneBy(['uuid' => $roleData['id']]);
-                } elseif (isset($roleData['name'])) {
-                    $role = $this->roleRepo->findOneBy(['name' => $roleData['name']]);
-                } elseif (isset($roleData['translationKey'])) {
-                    $role = $this->roleRepo->findOneBy([
-                        'translationKey' => $roleData['translationKey'],
-                        'type' => Role::PLATFORM_ROLE,
-                    ]);
-                }
-
-                if ($role && $role->getId()) {
-                    $roleWs = $role->getWorkspace();
-                    if (in_array(Options::WORKSPACE_VALIDATE_ROLES, $options) && Role::WS_ROLE === $role->getType() && $roleWs->getRegistrationValidation()) {
-                        if (!$user->hasRole($role)) {
-                            if (!$this->workspaceUserQueueManager->isUserInValidationQueue($roleWs, $user)) {
-                                $this->workspaceUserQueueManager->addUserQueue($roleWs, $user, $role);
-                            }
-                        }
-                    } else {
-                        $user->addRole($role);
-                    }
-                }
             }
         }
 
@@ -253,7 +230,6 @@ class UserSerializer
     {
         return [
             'acceptedTerms' => $user->hasAcceptedTerms(),
-            'lastActivity' => DateNormalizer::normalize($user->getLastActivity()), // deprecated
             'created' => DateNormalizer::normalize($user->getCreated()),
             'description' => $user->getDescription(),
             'mailValidated' => $user->isMailValidated(),
@@ -267,27 +243,25 @@ class UserSerializer
     {
         $this->sipe('locale', 'setLocale', $meta, $user);
         $this->sipe('description', 'setDescription', $meta, $user);
-        $this->sipe('mailNotified', 'setIsMailNotified', $meta, $user);
-        $this->sipe('mailValidated', 'setIsMailValidated', $meta, $user);
+        $this->sipe('mailNotified', 'setMailNotified', $meta, $user);
+        $this->sipe('mailValidated', 'setMailValidated', $meta, $user);
     }
 
     private function serializePermissions(User $user): array
     {
-        $token = $this->tokenStorage->getToken();
-        $currentUser = $token ? $token->getUser() : null;
+        $administrate = $this->authorization->isGranted('ADMINISTRATE', $user);
 
         return [
-            'open' => true,
-            'edit' => $this->authorization->isGranted('EDIT', $user),
-            'administrate' => $this->authorization->isGranted('ADMINISTRATE', $user),
-            'delete' => $this->authorization->isGranted('DELETE', $user),
+            'open' => $administrate || $this->authorization->isGranted('OPEN', $user),
+            'edit' => $administrate || $this->authorization->isGranted('EDIT', $user),
+            'administrate' => $administrate,
+            'delete' => $administrate || $this->authorization->isGranted('DELETE', $user),
         ];
     }
 
     private function serializeRestrictions(User $user): array
     {
         return [
-            'locked' => $user->isLocked(),
             'disabled' => !$user->isEnabled(),
             'removed' => $user->isRemoved(),
             'dates' => DateRangeNormalizer::normalize($user->getInitDate(), $user->getExpirationDate()),
@@ -298,10 +272,6 @@ class UserSerializer
     {
         if (isset($restrictions['disabled'])) {
             $user->setIsEnabled(!$restrictions['disabled']);
-        }
-
-        if (isset($restrictions['locked'])) {
-            $user->setLocked($restrictions['locked']);
         }
 
         if (isset($restrictions['removed'])) {

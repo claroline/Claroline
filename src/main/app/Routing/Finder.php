@@ -2,40 +2,32 @@
 
 namespace Claroline\AppBundle\Routing;
 
+use Claroline\AppBundle\Controller\AbstractCrudController;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 
 class Finder
 {
-    /**
-     * Crud constructor.
-     */
-    public function __construct(RouterInterface $router)
-    {
-        $this->router = $router;
+    public function __construct(
+        private readonly RouterInterface $router
+    ) {
     }
 
-    public function find($class)
+    public function find(string $class): RouteCollection
     {
-        /** @var RouteCollection */
         $collection = $this->router->getRouteCollection();
         $describeCollection = new RouteCollection();
 
         foreach ($collection->getIterator() as $key => $route) {
-            if ($route instanceof ApiRoute && $class === $route->getClass()) {
-                $describeCollection->add($key, $route);
-            } else {
-                $defaults = $route->getDefaults();
-                if (isset($defaults['_controller'])) {
-                    $controllerClass = explode(':', $defaults['_controller'])[0];
-                    if (class_exists($controllerClass)) {
-                        $refClass = new \ReflectionClass($controllerClass);
+            $defaults = $route->getDefaults();
+            if (isset($defaults['_controller'])) {
+                $controllerClass = explode(':', $defaults['_controller'])[0];
+                if (class_exists($controllerClass)) {
+                    $refClass = new \ReflectionClass($controllerClass);
 
-                        if ($refClass->isSubClassOf('Claroline\AppBundle\Controller\AbstractCrudController')) {
-                            $controller = $refClass->newInstanceWithoutConstructor();
-                            if ($class === $controller->getClass()) {
-                                $describeCollection->add($key, $route);
-                            }
+                    if ($refClass->isSubClassOf(AbstractCrudController::class)) {
+                        if ($class === $controllerClass::getClass()) {
+                            $describeCollection->add($key, $route);
                         }
                     }
                 }
@@ -45,34 +37,28 @@ class Finder
         return $describeCollection;
     }
 
-    public function getHandledClasses()
+    public function getHandledClasses(): array
     {
         $classes = [];
 
-        /** @var RouteCollection */
         $collection = $this->router->getRouteCollection();
 
         foreach ($collection->getIterator() as $route) {
-            if ($route instanceof ApiRoute && !in_array($route->getClass(), $classes)) {
-                $classes[] = $route->getClass();
-            } else {
-                $defaults = $route->getDefaults();
-                if (isset($defaults['_controller'])) {
-                    $controllerClass = explode(':', $defaults['_controller'])[0];
-                    if (class_exists($controllerClass)) {
-                        $refClass = new \ReflectionClass($controllerClass);
+            $defaults = $route->getDefaults();
+            if (isset($defaults['_controller'])) {
+                $controllerClass = explode(':', $defaults['_controller'])[0];
+                if (class_exists($controllerClass)) {
+                    $refClass = new \ReflectionClass($controllerClass);
 
-                        if ($refClass->isSubClassOf('Claroline\AppBundle\Controller\AbstractCrudController')) {
-                            $controller = $refClass->newInstanceWithoutConstructor();
-                            if (!in_array($controller->getClass(), $classes)) {
-                                $classes[] = $controller->getClass();
-                            }
+                    if ($refClass->isSubClassOf(AbstractCrudController::class)) {
+                        if (!in_array($controllerClass::getClass(), $classes)) {
+                            $classes[] = $controllerClass::getClass();
                         }
                     }
                 }
             }
         }
 
-        return array_filter($classes);
+        return array_values($classes);
     }
 }

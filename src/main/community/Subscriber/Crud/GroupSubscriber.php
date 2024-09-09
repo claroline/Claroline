@@ -2,11 +2,12 @@
 
 namespace Claroline\CommunityBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -23,6 +24,7 @@ class GroupSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
         private readonly EventDispatcherInterface $dispatcher,
+        private readonly ObjectManager $om,
         private readonly FileManager $fileManager
     ) {
     }
@@ -92,8 +94,10 @@ class GroupSubscriber implements EventSubscriberInterface
         if ($event->getValue() instanceof Role) {
             $role = $event->getValue();
 
-            $users = array_filter($group->getUsers()->toArray(), function (User $user) use ($role) {
-                return $user->isEnabled() && !$user->isRemoved() && !$user->hasRole($role->getName(), false);
+            $users = $this->om->getRepository(User::class)->findByGroup($group);
+
+            $users = array_filter($users, function (User $user) use ($role) {
+                return !$user->hasRole($role->getName(), false);
             });
 
             if ('add' === $event->getAction()) {

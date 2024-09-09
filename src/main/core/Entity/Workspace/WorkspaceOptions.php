@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="claro_workspace_options")
+ *
  * @ORM\Entity()
  */
 class WorkspaceOptions
@@ -23,7 +24,8 @@ class WorkspaceOptions
     use Id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace", mappedBy="options")
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace", mappedBy="options", cascade={"persist"})
+     *
      * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
      *
      * @var Workspace

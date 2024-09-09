@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * This voter grants access to admin users, whenever the attribute or the
@@ -24,19 +23,10 @@ use Symfony\Component\Security\Core\Security;
  */
 class AdministratorVoter implements VoterInterface, CacheableVoterInterface
 {
-    private Security $security;
-
-    public function __construct(
-        Security $security
-    ) {
-        $this->security = $security;
-    }
-
     public function supportsAttribute(string $attribute): bool
     {
-        // PlatformRoles::ADMIN check is here to avoid an infinite loop (@see vote())
         // ROLE_USURPATE_WORKSPACE_ROLE check is here to avoid applying the admin bypass when browsing a workspace in impersonation mode
-        return PlatformRoles::ADMIN !== $attribute && 'ROLE_USURPATE_WORKSPACE_ROLE' !== $attribute;
+        return 'ROLE_USURPATE_WORKSPACE_ROLE' !== $attribute;
     }
 
     public function supportsType(string $subjectType): bool
@@ -46,7 +36,7 @@ class AdministratorVoter implements VoterInterface, CacheableVoterInterface
 
     public function vote(TokenInterface $token, $subject, array $attributes): int
     {
-        if ($this->security->isGranted(PlatformRoles::ADMIN)) {
+        if (in_array(PlatformRoles::ADMIN, $token->getRoleNames())) {
             return VoterInterface::ACCESS_GRANTED;
         }
 

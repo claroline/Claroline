@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("/clacoformentry")
+ * @Route("/clacoform_entry", name="apiv2_clacoformentry_")
  */
 class EntryController extends AbstractCrudController
 {
@@ -38,7 +38,7 @@ class EntryController extends AbstractCrudController
         $this->authorization = $authorization;
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Entry::class;
     }
@@ -48,13 +48,13 @@ class EntryController extends AbstractCrudController
         return ['list'];
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
-        return 'clacoformentry';
+        return 'clacoform_entry';
     }
 
     /**
-     * @Route("/clacoform/{clacoForm}/entries/list", name="apiv2_clacoformentry_list")
+     * @Route("/clacoform/{clacoForm}/entries/list", name="list", methods={"GET"})
      *
      * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
@@ -96,7 +96,7 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @Route("/clacoform/{clacoForm}/file/upload", name="apiv2_clacoformentry_file_upload")
+     * @Route("/clacoform/{clacoForm}/file/upload", name="file_upload")
      *
      * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
@@ -117,11 +117,11 @@ class EntryController extends AbstractCrudController
     /**
      * Returns id of a random entry.
      *
-     * @Route("/{clacoForm}/random", name="claro_claco_form_entry_random")
+     * @Route("/{clacoForm}/random", name="random")
      *
      * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
-    public function entryRandomAction(ClacoForm $clacoForm): JsonResponse
+    public function randomAction(ClacoForm $clacoForm): JsonResponse
     {
         $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
 
@@ -131,7 +131,7 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @Route("/clacoform/{clacoForm}/{entry}/next", name="apiv2_clacoformentry_next")
+     * @Route("/clacoform/{clacoForm}/{entry}/next", name="next")
      *
      * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
@@ -145,7 +145,6 @@ class EntryController extends AbstractCrudController
         $filters['clacoForm'] = $clacoForm->getId();
         $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
 
-        // array map is not even needed; objects are fine here
         /** @var Entry[] $data */
         $data = $this->finder->get(Entry::class)->find($filters, $sortBy, 0, -1, false);
         $next = null;
@@ -162,7 +161,7 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @Route("/clacoform/{clacoForm}/{entry}/previous", name="apiv2_clacoformentry_previous")
+     * @Route("/clacoform/{clacoForm}/{entry}/previous", name="previous")
      *
      * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
@@ -195,11 +194,11 @@ class EntryController extends AbstractCrudController
     /**
      * Changes status of an entry.
      *
-     * @Route("/entry/{entry}/status/change", name="claro_claco_form_entry_status_change")
+     * @Route("/entry/{entry}/status/change", name="change_status")
      *
      * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
      */
-    public function entryStatusChangeAction(Entry $entry): JsonResponse
+    public function changeStatusAction(Entry $entry): JsonResponse
     {
         $clacoForm = $entry->getClacoForm();
 
@@ -219,11 +218,11 @@ class EntryController extends AbstractCrudController
     /**
      * Changes status of entries.
      *
-     * @Route("/entries/status/{status}/change", name="claro_claco_form_entries_status_change")
+     * @Route("/entries/status/{status}/change", name="change_status_bulk")
      *
      * @param int $status
      */
-    public function entriesStatusChangeAction($status, Request $request): JsonResponse
+    public function changeStatusBulkAction($status, Request $request): JsonResponse
     {
         $entries = [];
         $serializedEntries = [];

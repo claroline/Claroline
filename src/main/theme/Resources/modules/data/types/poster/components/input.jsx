@@ -1,6 +1,5 @@
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
-import classes from 'classnames'
 
 import {trans} from '#/main/app/intl/translation'
 import {url} from '#/main/app/api'
@@ -180,7 +179,7 @@ implementPropTypes(PosterInputComponent, DataInputTypes, {
   uploadFile: T.func.isRequired
 }, {
   size: [200, 200],
-  uploadUrl: ['apiv2_image_upload']
+  uploadUrl: ['apiv2_public_file_image_upload']
 })
 
 const PosterInput = connect(

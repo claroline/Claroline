@@ -36,7 +36,7 @@ const KeywordModal = (props) =>
               options: {
                 unique: {
                   check: [
-                    'claro_claco_form_get_keyword_by_name_excluding_uuid',
+                    'apiv2_clacoformkeyword_check_unique',
                     {clacoForm: props.clacoFormId, uuid: props.keyword ? props.keyword.id : null}
                   ]
                 }

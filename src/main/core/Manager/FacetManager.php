@@ -10,8 +10,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FacetManager
 {
-    /** @var EventDispatcherInterface */
-    private $dispatcher;
+    private EventDispatcherInterface $dispatcher;
 
     public function __construct(EventDispatcherInterface $dispatcher)
     {

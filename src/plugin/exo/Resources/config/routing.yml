@@ -1,6 +1,5 @@
 claro_quiz:
     resource: "@UJMExoBundle/Controller/"
-    prefix: apiv2
-    type: api
+    type: annotation
     options:
         expose: true

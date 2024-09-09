@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\Persistence\ObjectRepository;
 use Gedmo\Timestampable\TimestampableListener;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -66,12 +67,8 @@ abstract class RepositoryTestCase extends WebTestCase
 
     /**
      * Returns the repository associated to an entity class.
-     *
-     * @param string $entityClass
-     *
-     * @return EntityRepository
      */
-    protected static function getRepository($entityClass)
+    protected static function getRepository(string $entityClass): ObjectRepository
     {
         return self::$om->getRepository($entityClass);
     }

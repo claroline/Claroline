@@ -1,7 +1,6 @@
 # JSON API
-claro_cursus_bundle_api:
+claro_training:
     resource: "@ClarolineCursusBundle/Controller/"
-    prefix: apiv2
-    type: api
+    type: annotation
     options:
         expose: true

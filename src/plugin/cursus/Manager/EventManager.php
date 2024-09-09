@@ -137,16 +137,6 @@ class EventManager
     }
 
     /**
-     * Registers a user to a session event.
-     */
-    public function registerUserToSessionEvent(Event $event, User $user): void
-    {
-        if ($this->checkSessionEventCapacity($event)) {
-            $this->addUsers($event, [$user]);
-        }
-    }
-
-    /**
      * Adds groups to a session.
      */
     public function addGroups(Event $event, array $groups, string $type = AbstractRegistration::LEARNER): array
@@ -176,7 +166,8 @@ class EventManager
 
                 $results[] = $eventGroup;
 
-                foreach ($group->getUsers() as $user) {
+                $groupUsers = $this->om->getRepository(User::class)->findByGroup($group);
+                foreach ($groupUsers as $user) {
                     $users[$user->getUuid()] = $user;
 
                     // add event to user planning
@@ -344,9 +335,7 @@ class EventManager
         }
 
         foreach ($eventGroups as $eventGroup) {
-            $group = $eventGroup->getGroup();
-            $groupUsers = $group->getUsers();
-
+            $groupUsers = $this->om->getRepository(User::class)->findByGroup($eventGroup->getGroup());
             foreach ($groupUsers as $user) {
                 $users[$user->getUuid()] = $user;
             }

@@ -56,47 +56,51 @@ class ContextController
         // retrieve the requested context
         try {
             $contextHandler = $this->contextProvider->getContext($context, $contextId);
-            $contextObject = $contextHandler->getObject($contextId);
+            $contextSubject = $contextHandler->getObject($contextId);
         } catch (\Exception $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
 
-        $contextRoles = $contextHandler->getRoles($this->tokenStorage->getToken(), $contextObject);
-        $isImpersonated = $contextHandler->isImpersonated($this->tokenStorage->getToken(), $contextObject);
+        if (!$contextHandler->isAvailable()) {
+            throw new NotFoundHttpException();
+        }
 
-        if ($this->authorization->isGranted('OPEN', $contextObject)) {
-            $openEvent = new OpenContextEvent($context, $contextObject);
+        $contextRoles = $contextHandler->getRoles($this->tokenStorage->getToken(), $contextSubject);
+        $isImpersonated = $contextHandler->isImpersonated($this->tokenStorage->getToken(), $contextSubject);
+
+        if (!$contextSubject || $this->authorization->isGranted('OPEN', $contextSubject)) {
+            $openEvent = new OpenContextEvent($context, $contextSubject);
             $this->eventDispatcher->dispatch($openEvent, ContextEvents::OPEN);
 
-            $contextTools = $contextHandler->getTools($contextObject);
+            $contextTools = $contextHandler->getTools($contextSubject);
 
             return new JsonResponse(array_merge($openEvent->getResponse() ?? [], [
-                'data' => $contextObject ? $this->serializer->serialize($contextObject) : null, // maybe only expose minimal ?
+                'data' => $contextSubject ? $this->serializer->serialize($contextSubject) : null, // maybe only expose minimal ?
 
-                //'managed' => $isManager,
+                // 'managed' => $isManager,
                 'impersonated' => $isImpersonated,
                 'roles' => array_values(array_map(function (Role $role) {
                     return $this->serializer->serialize($role, [SerializerInterface::SERIALIZE_MINIMAL]);
                 }, $contextRoles)),
-                //'accessErrors' => $accessErrors,
+                // 'accessErrors' => $accessErrors,
 
                 // get all enabled tools for the context, even those inaccessible to the current user
                 // this will allow the ui to know if a user try to access a closed tool or a non-existent one.
-                'tools' => array_map(function (OrderedTool $orderedTool) use ($context, $contextObject) {
+                'tools' => array_map(function (OrderedTool $orderedTool) use ($context, $contextSubject) {
                     $serializedTool = $this->serializer->serialize($orderedTool, [SerializerInterface::SERIALIZE_MINIMAL]);
 
                     return array_merge([], $serializedTool, [
-                        'status' => $serializedTool['permissions']['open'] ? $this->toolProvider->getStatus($orderedTool->getName(), $context, $contextObject) : null,
+                        'status' => $serializedTool['permissions']['open'] ? $this->toolProvider->getStatus($orderedTool->getName(), $context, $contextSubject) : null,
                     ]);
                 }, $contextTools),
-            ], $contextHandler->getAdditionalData($contextObject)));
+            ], $contextHandler->getAdditionalData($contextSubject)));
         }
 
         // return the details of access errors to display it to users
-        $accessErrors = $contextHandler->getAccessErrors($this->tokenStorage->getToken(), $contextObject);
+        $accessErrors = $contextHandler->getAccessErrors($this->tokenStorage->getToken(), $contextSubject);
 
         return new JsonResponse([
-            'data' => $contextObject ? $this->serializer->serialize($contextObject) : null, // maybe only expose minimal ?
+            'data' => $contextSubject ? $this->serializer->serialize($contextSubject) : null, // maybe only expose minimal ?
             'impersonated' => $isImpersonated,
             'roles' => array_map(function (Role $role) {
                 return $this->serializer->serialize($role, [SerializerInterface::SERIALIZE_MINIMAL]);
@@ -119,10 +123,10 @@ class ContextController
             throw new NotFoundHttpException($e->getMessage());
         }
 
-        $contextObject = $contextHandler->getObject($contextId);
-        $contextTools = $contextHandler->getTools($contextObject);
+        $contextSubject = $contextHandler->getObject($contextId);
+        $contextTools = $contextHandler->getTools($contextSubject);
 
-        if (!$this->authorization->isGranted('ADMINISTRATE', $contextObject)) {
+        if (!$this->authorization->isGranted('ADMINISTRATE', $contextSubject)) {
             throw new AccessDeniedException();
         }
 
@@ -131,8 +135,8 @@ class ContextController
         $this->om->startFlushSuite();
 
         // update context configuration
-        if (!empty($data['data']) && $contextObject) {
-            $this->crud->update($contextObject, $data['data'], [Crud::NO_PERMISSIONS, Options::PERSIST_TAG]);
+        if (!empty($data['data']) && $contextSubject) {
+            $this->crud->update($contextSubject, $data['data'], [Crud::NO_PERMISSIONS, Options::PERSIST_TAG]);
         }
 
         // update tools configuration if any
@@ -141,7 +145,7 @@ class ContextController
             foreach ($data['tools'] as $toolData) {
                 $updatedTool = new OrderedTool();
                 $updatedTool->setContextName($context);
-                $updatedTool->setContextId($contextObject ? $contextObject->getContextIdentifier() : null);
+                $updatedTool->setContextId($contextSubject ? $contextSubject->getContextIdentifier() : null);
 
                 $updatedTool = $this->crud->createOrUpdate($updatedTool, $toolData, [Crud::NO_PERMISSIONS]);
                 $updatedTools[$updatedTool->getName()] = $updatedTool;
@@ -160,15 +164,15 @@ class ContextController
 
         // reopen context to get fresh data
         return new JsonResponse(array_merge([], [
-            'data' => $contextObject ? $this->serializer->serialize($contextObject) : null,
-            'tools' => array_map(function (OrderedTool $orderedTool) use ($context, $contextObject) {
+            'data' => $contextSubject ? $this->serializer->serialize($contextSubject) : null,
+            'tools' => array_map(function (OrderedTool $orderedTool) use ($context, $contextSubject) {
                 $serializedTool = $this->serializer->serialize($orderedTool, [SerializerInterface::SERIALIZE_MINIMAL]);
 
                 return array_merge([], $serializedTool, [
-                    'status' => $serializedTool['permissions']['open'] ? $this->toolProvider->getStatus($orderedTool->getName(), $context, $contextObject) : null,
+                    'status' => $serializedTool['permissions']['open'] ? $this->toolProvider->getStatus($orderedTool->getName(), $context, $contextSubject) : null,
                 ]);
             }, $contextTools),
-        ], $contextHandler->getAdditionalData($contextObject)));
+        ], $contextHandler->getAdditionalData($contextSubject)));
     }
 
     /**
@@ -191,7 +195,7 @@ class ContextController
             return [
                 'icon' => $tool::getIcon(),
                 'name' => $tool::getName(),
-                'required' => $tool->isRequired($context, $contextSubject)
+                'required' => $tool->isRequired($context, $contextSubject),
             ];
         }, $tools));
     }

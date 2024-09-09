@@ -12,17 +12,18 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
-use Claroline\AppBundle\Entity\IdentifiableInterface;
+use Claroline\AppBundle\Entity\CrudEntityInterface;
+use Claroline\AppBundle\Entity\Display\Poster;
+use Claroline\AppBundle\Entity\Display\Thumbnail;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Claroline\AppBundle\Entity\Meta\Description;
-use Claroline\AppBundle\Entity\Meta\Poster;
-use Claroline\AppBundle\Entity\Meta\Thumbnail;
 use Claroline\CommunityBundle\Model\HasGroups;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Organization\UserOrganizationReference;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\EquatableInterface;
@@ -43,7 +44,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *         @ORM\Index(name="is_removed", columns={"is_removed"})
  * })
  */
-class User extends AbstractRoleSubject implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface, IdentifiableInterface, ContextSubjectInterface
+class User extends AbstractRoleSubject implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, LegacyPasswordAuthenticatedUserInterface, CrudEntityInterface, ContextSubjectInterface
 {
     use Id;
     use Uuid;
@@ -53,189 +54,130 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     use HasGroups;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="first_name", length=50)
      *
      * @Assert\NotBlank()
      */
-    private $firstName;
+    private ?string $firstName = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="last_name", length=50)
      *
      * @Assert\NotBlank()
      */
-    private $lastName;
+    private ?string $lastName = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(unique=true)
      *
      * @Assert\NotBlank()
-     *
-     * @Assert\Length(min="3")
      */
-    private $username;
+    private ?string $username = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column()
      */
-    private $password;
+    private ?string $password = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(nullable=true)
      */
-    private $locale;
+    private ?string $locale = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column()
      */
-    private $salt;
+    private string $salt;
+
+    private ?string $plainPassword = null;
 
     /**
-     * @var string
-     *
-     * @Assert\NotBlank(groups={"registration"})
-     *
-     * @Assert\Length(min="4", groups={"registration"})
-     */
-    private $plainPassword;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(nullable=true)
      */
-    private $phone;
+    private ?string $phone = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(unique=true, name="mail")
      *
      * @Assert\NotBlank()
      *
      * @Assert\Email(mode="strict")
      */
-    private $email;
+    private ?string $email = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="administrative_code", nullable=true)
      */
-    private $administrativeCode;
+    private ?string $administrativeCode = null;
 
     /**
-     * @var Group[]|ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\CoreBundle\Entity\Group",
-     *      inversedBy="users"
-     * )
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Group")
      *
      * @ORM\JoinTable(name="claro_user_group")
      */
-    private $groups;
+    private Collection $groups;
 
     /**
-     * @var Role[]|ArrayCollection
-     *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="users",
-     *     fetch="EXTRA_LAZY",
-     *     cascade={"merge", "refresh"}
+     *     fetch="EXTRA_LAZY"
      * )
      *
      * @ORM\JoinTable(name="claro_user_role")
      */
-    protected $roles;
+    protected Collection $roles;
 
     /**
-     * @var Workspace
-     *
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     cascade={"persist", "remove"}
-     * )
+     * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
      *
      * @ORM\JoinColumn(name="workspace_id", onDelete="SET NULL")
      */
-    private $personalWorkspace;
+    private ?Workspace $personalWorkspace = null;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="creation_date", type="datetime")
      *
      * @Gedmo\Timestampable(on="create")
      */
-    private $created;
+    private ?\DateTimeInterface $created = null;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="last_activity", type="datetime", nullable=true)
      */
-    private $lastActivity;
+    private ?\DateTimeInterface $lastActivity = null;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="initialization_date", type="datetime", nullable=true)
      */
-    private $initDate;
+    private ?\DateTimeInterface $initDate = null;
 
     /**
      * @ORM\Column(name="reset_password", nullable=true)
      */
-    private $resetPasswordHash;
+    private ?string $resetPasswordHash = null;
 
     /**
      * @ORM\Column(nullable=true)
      */
-    private $picture;
+    private ?string $picture = null;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(type="boolean")
      */
-    private $hasAcceptedTerms = false;
+    private bool $hasAcceptedTerms = false;
 
     /**
-     *  This should be renamed because this field really means "is not deleted".
-     *
-     * @var bool
+     * This should be renamed because this field really means "is not deleted".
      *
      * @ORM\Column(name="is_enabled", type="boolean")
      */
-    private $isEnabled = true;
+    private bool $isEnabled = true;
 
     /**
      * @ORM\Column(name="is_removed", type="boolean")
      */
-    private $isRemoved = false;
-
-    /**
-     * Avoids any modification on the user.
-     *
-     * @ORM\Column(name="is_locked", type="boolean")
-     *
-     * @deprecated
-     */
-    private $locked = false;
+    private bool $isRemoved = false;
 
     /**
      * A technical user is only creatable from the command line/code, cannot be modified,
@@ -243,66 +185,41 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      * This is useful to create a support user in the platform.
      *
      * @ORM\Column(type="boolean", options={"default"= 0})
-     *
-     * @var bool
      */
-    private $technical = false;
+    private bool $technical = false;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="is_mail_notified", type="boolean")
      */
-    private $isMailNotified = true;
+    private bool $mailNotified = true;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(name="is_mail_validated", type="boolean")
      */
-    private $isMailValidated = false;
+    private bool $mailValidated = false;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="expiration_date", type="datetime", nullable=true)
      */
-    private $expirationDate;
+    private ?\DateTimeInterface $expirationDate = null;
 
     /**
      * @ORM\Column(name="email_validation_hash", nullable=true)
      */
-    private $emailValidationHash;
-
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Location",
-     *     inversedBy="users"
-     * )
-     *
-     * @deprecated relation should not be declared here (only use Unidirectional)
-     */
-    private $locations;
+    private ?string $emailValidationHash = null;
 
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\UserOrganizationReference",
      *     mappedBy="user",
-     *     cascade={"all"}
+     *     orphanRemoval=true,
+     *     cascade={"persist"},
+     *     fetch="EXTRA_LAZY"
      *  )
      *
      * @ORM\JoinColumn(name="user_id", nullable=false)
-     *
-     * @var ArrayCollection|UserOrganizationReference[]
      */
-    private $userOrganizationReferences;
-
-    /**
-     * @ORM\Column(nullable=true)
-     */
-    private ?string $code = null;
+    private Collection $userOrganizationReferences;
 
     /**
      * @ORM\Column(name="user_status", nullable=true)
@@ -318,9 +235,13 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
 
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
-        $this->locations = new ArrayCollection();
         $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
         $this->userOrganizationReferences = new ArrayCollection();
+    }
+
+    public static function getIdentifiers(): array
+    {
+        return ['username', 'email'];
     }
 
     public function __toString()
@@ -427,11 +348,6 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return $this->salt;
     }
 
-    public function setSalt(string $salt): void
-    {
-        $this->salt = $salt;
-    }
-
     public function setFirstName(string $firstName): void
     {
         $this->firstName = $firstName;
@@ -493,10 +409,7 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
      */
     public function getEntityRoles(?bool $areGroupsIncluded = true): array
     {
-        $roles = [];
-        if ($this->roles) {
-            $roles = $this->roles->toArray();
-        }
+        $roles = $this->roles->toArray();
 
         if ($areGroupsIncluded) {
             foreach ($this->groups as $group) {
@@ -531,17 +444,15 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return $roles;
     }
 
-    public function getGroups()
+    public function getGroups(): Collection
     {
         return $this->groups;
     }
 
     /**
      * Checks if the user has a given role.
-     *
-     * @param string|Role $role
      */
-    public function hasRole($role, ?bool $includeGroup = true): bool
+    public function hasRole(Role|string $role, ?bool $includeGroup = true): bool
     {
         $roleName = $role instanceof Role ? $role->getName() : $role;
 
@@ -673,29 +584,11 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     public function isAccountNonExpired(): bool
     {
         $roles = $this->getRoles();
-        foreach ($roles as $role) {
-            if ('ROLE_ADMIN' === $role) {
-                return true;
-            }
+        if (in_array('ROLE_ADMIN', $roles, true)) {
+            return true;
         }
 
         return empty($this->getExpirationDate()) || $this->getExpirationDate() >= new \DateTime();
-    }
-
-    /**
-     * @deprecated
-     */
-    public function isLocked(): bool
-    {
-        return $this->locked;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function setLocked(bool $locked): void
-    {
-        $this->locked = $locked;
     }
 
     public function isTechnical(): bool
@@ -718,14 +611,14 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         $this->isEnabled = $isEnabled;
     }
 
-    public function setIsMailNotified(bool $isMailNotified): void
+    public function setMailNotified(bool $mailNotified): void
     {
-        $this->isMailNotified = $isMailNotified;
+        $this->mailNotified = $mailNotified;
     }
 
     public function isMailNotified(): bool
     {
-        return $this->isMailNotified;
+        return $this->mailNotified;
     }
 
     public function setExpirationDate(?\DateTimeInterface $expirationDate): void
@@ -748,14 +641,14 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return $this->initDate;
     }
 
-    public function setIsMailValidated($isMailValidated): void
+    public function setMailValidated(bool $mailValidated): void
     {
-        $this->isMailValidated = $isMailValidated;
+        $this->mailValidated = $mailValidated;
     }
 
     public function isMailValidated(): bool
     {
-        return $this->isMailValidated;
+        return $this->mailValidated;
     }
 
     public function setEmailValidationHash($hash): void
@@ -768,9 +661,9 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return $this->emailValidationHash;
     }
 
-    public function hasOrganization(Organization $organization, ?bool $includeGroup = true): bool
+    public function hasOrganization(Organization $organization, bool $managed = false): bool
     {
-        $organizations = $this->getOrganizations($includeGroup);
+        $organizations = $managed ? $this->getAdministratedOrganizations() : $this->getOrganizations();
         foreach ($organizations as $userOrganization) {
             if ($userOrganization->getId() === $organization->getId()) {
                 return true;
@@ -780,34 +673,19 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         return false;
     }
 
-    public function getOrganizations(?bool $includeGroups = true): array
+    public function getOrganizations(): array
     {
         $organizations = [];
 
-        if ($includeGroups) {
-            foreach ($this->groups as $group) {
-                foreach ($group->getOrganizations() as $groupOrganization) {
-                    $organizations[$groupOrganization->getId()] = $groupOrganization;
-                }
-            }
-        }
-
         foreach ($this->userOrganizationReferences as $userOrganizationReference) {
-            $organizations[$userOrganizationReference->getOrganization()->getId()] = $userOrganizationReference->getOrganization();
+            $organizations[] = $userOrganizationReference->getOrganization();
         }
 
-        return array_values($organizations);
+        return $organizations;
     }
 
     public function addOrganization(Organization $organization, ?bool $managed = false): void
     {
-        if ($organization->getMaxUsers() > -1) {
-            $totalUsers = count($organization->getUserOrganizationReferences());
-            if ($totalUsers >= $organization->getMaxUsers()) {
-                throw new \Exception('The organization user limit has been reached');
-            }
-        }
-
         $ref = null;
         foreach ($this->userOrganizationReferences as $userRef) {
             if ($userRef->getOrganization() === $organization && $userRef->getUser() === $this) {
@@ -834,22 +712,21 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         foreach ($this->userOrganizationReferences as $ref) {
             if ($ref->getOrganization()->getId() === $organization->getId()) {
                 $found = $ref;
+                break;
             }
         }
 
         if ($found) {
             $this->userOrganizationReferences->removeElement($found);
-            // this is the line doing all the work. I'm not sure the previous one is useful
-            $found->getOrganization()->removeUser($this);
         }
     }
 
-    public function getAdministratedOrganizations(): ArrayCollection
+    public function getAdministratedOrganizations(): array
     {
-        $managedOrganizations = new ArrayCollection();
+        $managedOrganizations = [];
         foreach ($this->userOrganizationReferences as $userRef) {
             if ($userRef->isManager()) {
-                $managedOrganizations->add($userRef->getOrganization());
+                $managedOrganizations[] = $userRef->getOrganization();
             }
         }
 
@@ -918,15 +795,6 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
         $this->isEnabled = false;
     }
 
-    public function clearRoles(): void
-    {
-        foreach ($this->roles as $role) {
-            if ('ROLE_USER' !== $role->getName()) {
-                $this->removeRole($role);
-            }
-        }
-    }
-
     public function setLastActivity(\DateTimeInterface $date): void
     {
         $this->lastActivity = $date;
@@ -935,20 +803,5 @@ class User extends AbstractRoleSubject implements UserInterface, EquatableInterf
     public function getLastActivity(): ?\DateTimeInterface
     {
         return $this->lastActivity;
-    }
-
-    public function getLocations()
-    {
-        return $this->locations;
-    }
-
-    public function setCode($code): void
-    {
-        $this->code = $code;
-    }
-
-    public function getCode(): ?string
-    {
-        return $this->code;
     }
 }

@@ -15,32 +15,27 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class GenericDataEvent extends Event
 {
-    private $data;
-    private $response;
+    private mixed $data;
+    private array $response = [];
 
-    public function __construct($data = null)
+    public function __construct(mixed $data = null)
     {
         $this->data = $data;
-        $this->response = null;
     }
 
-    public function getData()
+    public function getData(): mixed
     {
         return $this->data;
     }
 
-    public function getResponse()
+    public function getResponse(): array
     {
         return $this->response;
     }
 
-    public function setResponse($response = null)
+    public function setResponse(?array $response = null): void
     {
         if (!empty($response)) {
-            if (!is_array($this->response)) {
-                $this->response = [];
-            }
-
             $this->response = array_merge_recursive($this->response, $response);
         }
     }

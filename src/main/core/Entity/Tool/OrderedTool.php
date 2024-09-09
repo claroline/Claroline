@@ -20,6 +20,7 @@ use Claroline\AppBundle\Entity\HasContext;
 use Claroline\AppBundle\Entity\Identifier\Id;
 use Claroline\AppBundle\Entity\Identifier\Uuid;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
@@ -65,10 +66,8 @@ class OrderedTool implements CrudEntityInterface
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolRights",
      *     mappedBy="orderedTool"
      * )
-     *
-     * @var ToolRights[]|ArrayCollection
      */
-    private $rights;
+    private Collection $rights;
 
     public function __construct()
     {
@@ -121,10 +120,7 @@ class OrderedTool implements CrudEntityInterface
         $this->fullscreen = $fullscreen;
     }
 
-    /**
-     * @return ToolRights[]|ArrayCollection
-     */
-    public function getRights()
+    public function getRights(): Collection
     {
         return $this->rights;
     }

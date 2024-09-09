@@ -45,9 +45,3 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - !tagged_locator { tag: 'claroline.validator', default_index_method: 'getClass' }
             - '@Claroline\AppBundle\API\SchemaProvider'
-
-    Claroline\AppBundle\Routing\ApiLoader:
-        tags: ['routing.loader']
-        arguments:
-            - '@file_locator'
-            - '@annotation_reader'

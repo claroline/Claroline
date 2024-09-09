@@ -1,6 +1,6 @@
 services:
     Claroline\YouTubeBundle\Controller\VideoController:
-        public: true
+        public: true # because controller
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\API\SerializerProvider'

@@ -54,6 +54,7 @@ services:
 
     Claroline\CursusBundle\Subscriber\Crud\Registration\SessionGroupSubscriber:
         arguments:
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CursusBundle\Manager\SessionManager'
         tags:
             - { name: kernel.event_subscriber }

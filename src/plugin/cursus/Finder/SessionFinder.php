@@ -12,9 +12,13 @@
 namespace Claroline\CursusBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\Registration\SessionGroup;
+use Claroline\CursusBundle\Entity\Registration\SessionUser;
 use Claroline\CursusBundle\Entity\Session;
 use Claroline\TagBundle\Entity\TaggedObject;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 class SessionFinder extends AbstractFinder
@@ -86,11 +90,11 @@ class SessionFinder extends AbstractFinder
                     break;
 
                 case 'user':
-                    $qb->leftJoin('Claroline\CursusBundle\Entity\Registration\SessionUser', 'su', 'WITH', 'su.session = obj');
+                    $qb->leftJoin(SessionUser::class, 'su', Join::WITH, 'su.session = obj');
                     $qb->leftJoin('su.user', 'u');
-                    $qb->leftJoin('Claroline\CursusBundle\Entity\Registration\SessionGroup', 'sg', 'WITH', 'sg.session = obj');
+                    $qb->leftJoin(SessionGroup::class, 'sg', Join::WITH, 'sg.session = obj');
                     $qb->leftJoin('sg.group', 'g');
-                    $qb->leftJoin('g.users', 'gu');
+                    $qb->leftJoin(User::class, 'gu', Join::WITH, 'g MEMBER OF gu.groups');
                     $qb->andWhere('su.confirmed = 1 AND su.validated = 1');
                     $qb->andWhere($qb->expr()->orX(
                         $qb->expr()->eq('u.uuid', ':userId'),

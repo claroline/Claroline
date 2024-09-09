@@ -81,7 +81,7 @@ class ResourceManager
             $resource->getMimeType();
         $node->setMimeType($mimeType);
         $node->setName($resource->getName());
-        $node->setCode($this->getUniqueCode($resource->getName()));
+        $node->setCode($this->resourceNodeRepo->findNextUnique('code', $resource->getName()));
 
         if (!empty($creator)) {
             $node->setCreator($creator);
@@ -375,41 +375,6 @@ class ResourceManager
     public function isManager(ResourceNode $resourceNode): bool
     {
         return $this->rightsManager->isManager($resourceNode);
-    }
-
-    /**
-     * Generates a unique resource code from given one by iterating it.
-     */
-    public function getUniqueCode(string $code): string
-    {
-        $existingCodes = $this->resourceNodeRepo->findCodesWithPrefix($code);
-
-        $toInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
-        foreach ($toInsert as $entityInsertion) {
-            if ($entityInsertion instanceof ResourceNode && str_starts_with(strtolower($entityInsertion->getCode()), strtolower($code))) {
-                $existingCodes[] = strtolower($entityInsertion->getCode());
-            }
-        }
-
-        $toUpdate = $this->om->getUnitOfWork()->getScheduledEntityUpdates();
-        foreach ($toUpdate as $entityUpdate) {
-            if ($entityUpdate instanceof ResourceNode && str_starts_with(strtolower($entityUpdate->getCode()), strtolower($code))) {
-                $existingCodes[] = strtolower($entityUpdate->getCode());
-            }
-        }
-
-        if (empty($existingCodes)) {
-            return $code;
-        }
-
-        $index = 0;
-        $currentCode = $code;
-        while (in_array(strtolower($currentCode), $existingCodes)) {
-            ++$index;
-            $currentCode = $code.'_'.$index;
-        }
-
-        return $currentCode;
     }
 
     /**

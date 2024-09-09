@@ -9,16 +9,14 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
+use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CommunityBundle\Manager\MailManager;
 use Claroline\CoreBundle\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\AppBundle\Event\CrudEvents;
-use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
-use Claroline\CoreBundle\Event\Security\NewPasswordEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\FileManager;
@@ -61,10 +59,7 @@ class UserSubscriber implements EventSubscriberInterface
     {
         /** @var User $user */
         $user = $event->getObject();
-        $options = $event->getOptions();
         $data = $event->getData();
-
-        $this->om->startFlushSuite();
 
         if (empty($user->getUsername())) {
             $user->setUsername($user->getEmail());
@@ -90,28 +85,12 @@ class UserSubscriber implements EventSubscriberInterface
             $user->addRole($roleUser);
         }
 
-        $user->setIsMailNotified(
+        $user->setMailNotified(
             ArrayUtils::get($data, 'meta.mailNotified', $this->config->getParameter('auto_enable_email_redirect'))
         );
-        $user->setIsMailValidated(
+        $user->setMailValidated(
             ArrayUtils::get($data, 'meta.mailValidated', $this->config->getParameter('auto_validate_email'))
         );
-
-        if (!in_array(Options::NO_EMAIL, $options)) {
-            // send a validation by hash
-            $mailValidation = $this->config->getParameter('registration.validation');
-            if (PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL === $mailValidation) {
-                $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
-                $user->setResetPasswordHash($password);
-                $user->setIsEnabled(false);
-                $this->mailManager->sendEnableAccountMessage($user);
-            } elseif (PlatformDefaults::REGISTRATION_MAIL_VALIDATION_PARTIAL === $mailValidation) {
-                // don't change anything
-                $this->mailManager->sendCreationMessage($user);
-            }
-        }
-
-        $this->om->persist($user);
 
         if (empty($user->getMainOrganization())) {
             $token = $this->tokenStorage->getToken();
@@ -122,14 +101,13 @@ class UserSubscriber implements EventSubscriberInterface
                 $user->setMainOrganization($this->organizationManager->getDefault());
             }
         }
-
-        $this->om->endFlushSuite();
     }
 
     public function postCreate(CreateEvent $event): void
     {
         /** @var User $user */
         $user = $event->getObject();
+        $options = $event->getOptions();
 
         if ($user->getPoster()) {
             $this->fileManager->linkFile(User::class, $user->getUuid(), $user->getPoster());
@@ -141,6 +119,10 @@ class UserSubscriber implements EventSubscriberInterface
 
         if ($user->getPicture()) {
             $this->fileManager->linkFile(User::class, $user->getUuid(), $user->getPicture());
+        }
+
+        if (!in_array(Options::NO_EMAIL, $options)) {
+            $this->sendNewMessage($user);
         }
     }
 
@@ -183,11 +165,6 @@ class UserSubscriber implements EventSubscriberInterface
             $user->getPicture(),
             !empty($oldData['picture']) ? $oldData['picture'] : null
         );
-
-        if ($user->getPlainpassword()) {
-            $event = new NewPasswordEvent($user);
-            $this->eventDispatcher->dispatch($event, SecurityEvents::NEW_PASSWORD);
-        }
     }
 
     public function postPatch(PatchEvent $event): void
@@ -261,6 +238,35 @@ class UserSubscriber implements EventSubscriberInterface
 
         if ($user->getPicture()) {
             $this->fileManager->unlinkFile(User::class, $user->getUuid(), $user->getPicture());
+        }
+    }
+
+    /**
+     * Send email to newly created users based on the platform configuration.
+     */
+    private function sendNewMessage(User $user): void
+    {
+        $mailValidation = $this->config->getParameter('registration.validation');
+
+        switch ($mailValidation) {
+            // the user is just notified for its registration. No action required from him
+            case PlatformDefaults::REGISTRATION_MAIL_VALIDATION_PARTIAL:
+                $this->mailManager->sendCreationMessage($user);
+                break;
+
+                // the user will need to validate its account to be able to connect
+            case PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL:
+                $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
+                $user->setResetPasswordHash($password);
+                $user->setIsEnabled(false);
+                $this->mailManager->sendEnableAccountMessage($user);
+
+                break;
+
+            case PlatformDefaults::REGISTRATION_MAIL_VALIDATION_NONE:
+            default:
+                // no email to be sent
+                break;
         }
     }
 }

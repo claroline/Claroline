@@ -29,7 +29,7 @@ const LoginMain = withReducer(selectors.STORE_NAME, reducer)(
 
           dispatch(formActions.submit(selectors.FORM_NAME))
 
-          return dispatch(securityActions.login(formData.username, formData.password, formData.remember_me)).then(
+          return dispatch(securityActions.login(formData.username, formData.password)).then(
             (response) => {
               if (callback) {
                 callback(response)

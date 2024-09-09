@@ -29,15 +29,12 @@ services:
         arguments:
             - '@security.token_storage'
             - '@twig'
-            - '@event_dispatcher'
             - '@Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler'
-            - '@Claroline\AppBundle\Manager\PlatformManager'
             - '@Claroline\CoreBundle\Manager\LocaleManager'
             - '@Claroline\AppBundle\Manager\SecurityManager'
-            - '@Claroline\PrivacyBundle\Manager\PrivacyManager'
             - '@Claroline\AppBundle\Component\Context\ContextProvider'
             - '@Claroline\AppBundle\API\SerializerProvider'
-            - '@Claroline\CoreBundle\API\Serializer\Platform\ClientSerializer'
+            - '@Claroline\AppBundle\Manager\ClientManager'
 
     Claroline\AppBundle\Controller\Component\ContextController:
         arguments:
@@ -49,6 +46,13 @@ services:
             - '@Claroline\AppBundle\API\Crud'
             - '@Claroline\AppBundle\Component\Context\ContextProvider'
             - '@Claroline\AppBundle\Component\Tool\ToolProvider'
+
+    Claroline\AppBundle\Controller\Component\DataSourceController:
+        arguments:
+            - '@Claroline\CoreBundle\Manager\DataSourceManager'
+            - '@Claroline\AppBundle\Component\Context\ContextProvider'
+            - '@Claroline\AppBundle\Component\DataSource\DataSourceProvider'
+
 
     Claroline\AppBundle\Controller\Component\ToolController:
         arguments:

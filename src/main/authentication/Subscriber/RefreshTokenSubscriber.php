@@ -9,13 +9,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RefreshTokenSubscriber implements EventSubscriberInterface
 {
-    /** @var Authenticator */
-    private $authenticator;
-
     public function __construct(
-        Authenticator $authenticator
+        private readonly Authenticator $authenticator
     ) {
-        $this->authenticator = $authenticator;
     }
 
     public static function getSubscribedEvents(): array
@@ -29,7 +25,7 @@ class RefreshTokenSubscriber implements EventSubscriberInterface
     /**
      * Checks if the roles of the current user have been changed and refreshes its token if needed.
      */
-    public function onRoleChanges(AbstractRoleEvent $event)
+    public function onRoleChanges(AbstractRoleEvent $event): void
     {
         $updatedUsers = $event->getUsers();
         foreach ($updatedUsers as $updatedUser) {

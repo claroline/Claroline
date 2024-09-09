@@ -17,7 +17,7 @@ export default (users, refresher) => ({
     message: trans('disable_personal_workspaces_confirm', {users_list: users.map(u => `${u.firstName} ${u.lastName}`).join(', ')})
   },
   request: {
-    url: url(['apiv2_users_pws_delete'], {ids: users.map(u => u.id)}),
+    url: url(['apiv2_user_pws_delete'], {ids: users.map(u => u.id)}),
     request: {
       method: 'DELETE'
     },

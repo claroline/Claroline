@@ -12,25 +12,21 @@
 namespace Claroline\CommunityBundle\Finder;
 
 use Claroline\AppBundle\API\Finder\AbstractFinder;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PlatformRoles;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class RoleFinder extends AbstractFinder
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authChecker;
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     public function __construct(
-        AuthorizationCheckerInterface $authChecker,
-        TokenStorageInterface $tokenStorage
+        private readonly AuthorizationCheckerInterface $authChecker,
+        private readonly TokenStorageInterface $tokenStorage
     ) {
-        $this->authChecker = $authChecker;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public static function getClass(): string
@@ -51,7 +47,6 @@ class RoleFinder extends AbstractFinder
             $qb->setParameter('roleAdmin', PlatformRoles::ADMIN);
         }
 
-        $groupJoin = false;
         $workspaceJoin = false;
 
         foreach ($searches as $filterName => $filterValue) {
@@ -73,8 +68,7 @@ class RoleFinder extends AbstractFinder
                     break;
                 case 'user':
                 case 'users':
-                    $qb->leftJoin('obj.users', 'ru', 'WITH', 'ru.uuid IN (:userIds)');
-
+                    $qb->leftJoin(User::class, 'ru', Join::WITH, 'obj MEMBER OF ru.roles AND ru.uuid IN (:userIds)');
                     $qb->andWhere('(ru IS NOT NULL OR EXISTS (
                         SELECT u2.id 
                         FROM Claroline\CoreBundle\Entity\User AS u2
@@ -88,10 +82,7 @@ class RoleFinder extends AbstractFinder
                     break;
                 case 'group':
                 case 'groups':
-                    if (!$groupJoin) {
-                        $qb->leftJoin('obj.groups', 'g');
-                        $groupJoin = true;
-                    }
+                    $qb->leftJoin(Group::class, 'g', Join::WITH, 'obj MEMBER OF g.roles');
 
                     $qb->andWhere('g.uuid IN (:groupIds)');
                     $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);

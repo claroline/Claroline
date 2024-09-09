@@ -38,7 +38,7 @@ export default (workspaces, refresher) => {
       ]
     },
     request: {
-      url: url(['apiv2_workspace_delete_bulk'], {ids: processable.map(w => w.id)}),
+      url: url(['apiv2_workspace_delete'], {ids: processable.map(w => w.id)}),
       request: {
         method: 'DELETE'
       },

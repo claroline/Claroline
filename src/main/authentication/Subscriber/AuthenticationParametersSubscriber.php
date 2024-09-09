@@ -3,35 +3,32 @@
 namespace Claroline\AuthenticationBundle\Subscriber;
 
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Event\Client\ConfigureEvent;
+use Claroline\AppBundle\Event\ClientEvents;
 use Claroline\AuthenticationBundle\Manager\AuthenticationManager;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class AuthenticationParametersSubscriber implements EventSubscriberInterface
 {
-    private SerializerProvider $serializer;
-    private AuthenticationManager $authenticationManager;
-
     public function __construct(
-        SerializerProvider $serializer,
-        AuthenticationManager $authenticationManager
+        private readonly SerializerProvider $serializer,
+        private readonly AuthenticationManager $authenticationManager
     ) {
-        $this->serializer = $serializer;
-        $this->authenticationManager = $authenticationManager;
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            'claroline_populate_client_config' => 'onPopulateConfig',
+            ClientEvents::CONFIGURE => 'onClientConfig',
         ];
     }
 
-    public function onPopulateConfig(GenericDataEvent $event): void
+    public function onClientConfig(ConfigureEvent $event): void
     {
         $authenticationParameters = $this->authenticationManager->getParameters();
         $serializedParameters = $this->serializer->serialize($authenticationParameters);
-        $event->setResponse([
+
+        $event->setParameters([
             'authentication' => $serializedParameters,
         ]);
     }

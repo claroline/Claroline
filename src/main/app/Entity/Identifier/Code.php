@@ -13,10 +13,8 @@ trait Code
      * @ORM\Column(unique=true)
      *
      * @Assert\NotBlank()
-     *
-     * @var string
      */
-    protected $code;
+    protected ?string $code = null;
 
     public function getCode(): ?string
     {

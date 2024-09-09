@@ -150,7 +150,7 @@ class EditorTab extends Component {
             id: this.props.currentTab.id,
             className: 'Claroline\\HomeBundle\\Entity\\HomeTab'
           } : undefined}
-          target={['apiv2_home_update', {
+          target={['apiv2_home_tab_update', {
             context: this.props.currentContext.type,
             contextId: !isEmpty(this.props.currentContext.data) ? this.props.currentContext.data.id : null
           }]}

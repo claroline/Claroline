@@ -192,7 +192,8 @@ class CourseRepository extends EntityRepository
             ->getResult();
 
         foreach ($sessionGroups as $sessionGroup) {
-            $count += $sessionGroup->getGroup()->getUsers()->count();
+            $groupUsers = $this->getEntityManager()->getRepository(User::class)->findByGroup($sessionGroup->getGroup());
+            $count += count($groupUsers);
         }
 
         return $count;

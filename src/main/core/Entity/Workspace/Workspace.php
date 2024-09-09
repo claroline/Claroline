@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Claroline\AppBundle\Component\Context\ContextSubjectInterface;
+use Claroline\AppBundle\Entity\CrudEntityInterface;
 use Claroline\AppBundle\Entity\Display\Hidden;
 use Claroline\AppBundle\Entity\Display\Poster;
 use Claroline\AppBundle\Entity\Display\Thumbnail;
@@ -31,7 +32,6 @@ use Claroline\AppBundle\Entity\Restriction\AccessibleFrom;
 use Claroline\AppBundle\Entity\Restriction\AccessibleUntil;
 use Claroline\AppBundle\Entity\Restriction\AllowedIps;
 use Claroline\CommunityBundle\Model\HasOrganizations;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -43,7 +43,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="claro_workspace", indexes={@ORM\Index(name="name_idx", columns={"entity_name"})})
  */
-class Workspace implements ContextSubjectInterface
+class Workspace implements ContextSubjectInterface, CrudEntityInterface
 {
     // identifiers
     use Id;
@@ -73,87 +73,64 @@ class Workspace implements ContextSubjectInterface
      * @Gedmo\Slug(fields={"code"})
      *
      * @ORM\Column(length=128, unique=true)
-     *
-     * @var string
      */
-    private $slug;
+    private ?string $slug = null;
 
     /**
      * @ORM\Column(name="isModel", type="boolean")
-     *
-     * @var bool
      */
-    private $model = false;
+    private bool $model = false;
 
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     mappedBy="workspace",
-     *     cascade={"persist", "merge"}
+     *     fetch="EXTRA_LAZY"
      * )
-     *
-     * @var Role[]|ArrayCollection
-     *
-     * @deprecated relation should be unidirectional
      */
-    private $roles;
+    private Collection $roles;
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     cascade={"persist"}
+     *     targetEntity="Claroline\CoreBundle\Entity\Role"
      * )
      *
      * @ORM\JoinColumn(name="default_role_id", onDelete="SET NULL")
-     *
-     * @var Role
-     *
-     * @deprecated to move in community parameters
      */
-    private $defaultRole;
+    private ?Role $defaultRole;
 
     /**
      * @ORM\Column(name="self_registration", type="boolean")
      *
-     * @var bool
-     *
      * @deprecated to move in community parameters
      */
-    private $selfRegistration = false;
+    private bool $selfRegistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
      *
-     * @var bool
-     *
      * @deprecated to move in community parameters
      */
-    private $registrationValidation = false;
+    private bool $registrationValidation = false;
 
     /**
      * @ORM\Column(name="self_unregistration", type="boolean")
      *
-     * @var bool
-     *
      * @deprecated to move in community parameters
      */
-    private $selfUnregistration = false;
+    private bool $selfUnregistration = false;
 
     /**
      * @ORM\Column(name="max_teams", type="integer", nullable=true)
      *
-     * @var int
-     *
      * @deprecated to move in community parameters
      */
-    private $maxTeams;
+    private ?int $maxTeams = null;
 
     /**
      * @ORM\Column(name="is_personal", type="boolean")
-     *
-     * @var bool
      */
-    private $personal = false;
+    private bool $personal = false;
 
     /**
      * @ORM\OneToOne(
@@ -163,35 +140,26 @@ class Workspace implements ContextSubjectInterface
      * )
      *
      * @ORM\JoinColumn(name="options_id", onDelete="SET NULL", nullable=true)
-     *
-     * @var WorkspaceOptions
      */
-    private $options;
+    private WorkspaceOptions $options;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", nullable=true)
      */
-    private $contactEmail;
+    private ?string $contactEmail = null;
 
     /**
      * The conditions to get a success status for the workspace evaluation.
      * Supported conditions : minimal score, min successful resources, max failed resources.
      *
-     * @var array
-     *
      * @ORM\Column(type="json", nullable=true)
      */
-    private $successCondition;
+    private ?array $successCondition = [];
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
-     *     inversedBy="workspaces"
-     * )
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization")
      *
-     * @var Collection|Organization[]
+     * @ORM\JoinTable(name="workspace_organization")
      */
     private Collection $organizations;
 
@@ -200,17 +168,13 @@ class Workspace implements ContextSubjectInterface
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     *
-     * @var int
      */
-    private $estimatedDuration;
+    private ?int $estimatedDuration = null;
 
     /**
      * @ORM\Column(name="score_total", type="float", options={"default" = 100})
-     *
-     * @var float
      */
-    private $scoreTotal = 100;
+    private float $scoreTotal = 100;
 
     public function __construct()
     {
@@ -219,6 +183,11 @@ class Workspace implements ContextSubjectInterface
         $this->roles = new ArrayCollection();
         $this->organizations = new ArrayCollection();
         $this->options = new WorkspaceOptions();
+    }
+
+    public static function getIdentifiers(): array
+    {
+        return ['code'];
     }
 
     public function __toString(): string
@@ -242,13 +211,9 @@ class Workspace implements ContextSubjectInterface
     }
 
     /**
-     * Get roles.
-     *
-     * @return Role[]|ArrayCollection
-     *
      * @deprecated
      */
-    public function getRoles()
+    public function getRoles(): Collection
     {
         return $this->roles;
     }

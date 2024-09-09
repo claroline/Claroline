@@ -2,7 +2,7 @@
 
 namespace Claroline\AuthenticationBundle\Serializer;
 
-use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AuthenticationBundle\Entity\IpUser;
@@ -13,20 +13,13 @@ class IpUserSerializer
 {
     use SerializerTrait;
 
-    /** @var ObjectManager */
-    private $om;
-    /** @var UserSerializer */
-    private $userSerializer;
-
     public function __construct(
-        ObjectManager $om,
-        UserSerializer $userSerializer
+        private readonly ObjectManager $om,
+        private readonly UserSerializer $userSerializer
     ) {
-        $this->om = $om;
-        $this->userSerializer = $userSerializer;
     }
 
-    public function getClass()
+    public function getClass(): string
     {
         return IpUser::class;
     }
@@ -34,18 +27,24 @@ class IpUserSerializer
     public function serialize(IpUser $object): array
     {
         return [
-            'id' => $object->getId(),
+            'id' => $object->getUuid(),
             'ip' => $object->isRange() ? explode(',', $object->getIp()) : $object->getIp(),
             'range' => $object->isRange(),
-            'user' => $this->userSerializer->serialize($object->getUser(), [Options::SERIALIZE_MINIMAL]),
+            'user' => $this->userSerializer->serialize($object->getUser(), [SerializerInterface::SERIALIZE_MINIMAL]),
             'restrictions' => [
                 'locked' => $object->isLocked(),
             ],
         ];
     }
 
-    public function deserialize(array $data, IpUser $object): IpUser
+    public function deserialize(array $data, IpUser $object, ?array $options = []): IpUser
     {
+        if (!in_array(SerializerInterface::REFRESH_UUID, $options)) {
+            $this->sipe('id', 'setUuid', $data, $object);
+        } else {
+            $object->refreshUuid();
+        }
+
         if (isset($data['ip'])) {
             $object->setIp(is_array($data['ip']) ? implode(',', $data['ip']) : $data['ip']);
         }

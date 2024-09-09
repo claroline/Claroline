@@ -6,10 +6,10 @@ use Claroline\AppBundle\API\Options;
 
 abstract class AbstractImporter implements ImporterInterface
 {
-    const MODE_CREATE = 'create';
-    const MODE_UPDATE = 'update';
-    const MODE_DELETE = 'delete';
-    const MODE_DEFAULT = 'default';
+    public const MODE_CREATE = 'create';
+    public const MODE_UPDATE = 'update';
+    public const MODE_DELETE = 'delete';
+    public const MODE_DEFAULT = 'default';
 
     public function supports(string $format, ?array $options = [], ?array $extra = []): bool
     {
@@ -25,7 +25,7 @@ abstract class AbstractImporter implements ImporterInterface
         return 1;
     }
 
-    public function getMode()
+    public function getMode(): string
     {
         return self::MODE_DEFAULT;
     }

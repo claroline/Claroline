@@ -1,7 +1,6 @@
 # JSON API
-innova_path_api:
+claro_pdf:
     resource: "@ClarolinePdfPlayerBundle/Controller/"
-    prefix: apiv2
-    type: api
+    type: annotation
     options:
         expose: true

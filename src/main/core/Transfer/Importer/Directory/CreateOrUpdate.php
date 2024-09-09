@@ -122,7 +122,7 @@ class CreateOrUpdate extends AbstractImporter
                 'permissions' => $permissions,
                 'name' => $role->getName(),
                 'translationKey' => $role->getTranslationKey(),
-          ];
+            ];
         }
 
         $dataResourceNode = [
@@ -326,7 +326,7 @@ class CreateOrUpdate extends AbstractImporter
         return ['directory', 'create_or_update'];
     }
 
-    public function getMode()
+    public function getMode(): string
     {
         return self::MODE_CREATE;
     }

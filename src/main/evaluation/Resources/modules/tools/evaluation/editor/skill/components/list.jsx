@@ -26,7 +26,7 @@ const EditorSkillList = () => {
           autoload: true
         }}
         delete={{
-          url: ['apiv2_skills_framework_delete_bulk'],
+          url: ['apiv2_skills_framework_delete'],
           disabled: (rows) => -1 === rows.findIndex(row => hasPermission('administrate', row))
         }}
         primaryAction={(row) => ({
@@ -52,7 +52,7 @@ const EditorSkillList = () => {
       >
         <p className="text-center my-5">
           <span className="h1 fa fa-bullseye mb-3 text-body-tertiary" />
-          <b className="h5 d-block">Votre espace d'activités n'est lié à aucun référentiel de compétences.</b>
+          <b className="h5 d-block">Votre espace d&apos;activités n&apos;est lié à aucun référentiel de compétences.</b>
           <span className="text-body-secondary">Ajoutez un référentiel pour pouvoir associer vos Séquences à des compétences et vos activités à des Capacités.</span>
         </p>
 

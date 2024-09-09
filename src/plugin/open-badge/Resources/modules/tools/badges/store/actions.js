@@ -15,7 +15,7 @@ actions.openBadge = (formName, id = null, workspace = null) => {
     return {
       [API_REQUEST]: {
         silent: true,
-        url: ['apiv2_badge-class_get', {id: id}],
+        url: ['apiv2_badge_get', {id: id}],
         before: (dispatch) => {
           dispatch(formActions.resetForm(formName, {}, false))
         },
@@ -35,7 +35,7 @@ actions.openAssertion = (formName, id = null) => {
     return {
       [API_REQUEST]: {
         silent: true,
-        url: ['apiv2_assertion_get', {id: id}],
+        url: ['apiv2_badge_assertion_get', {id: id}],
         before: (dispatch) => {
           dispatch(formActions.resetForm(formName, {}, false))
         },
@@ -51,7 +51,7 @@ actions.openAssertion = (formName, id = null) => {
 
 actions.downloadAssertion = (assertion) => ({
   [API_REQUEST]: {
-    url: ['apiv2_assertion_pdf_download', {assertion: assertion.id}],
+    url: ['apiv2_badge_assertion_pdf_download', {assertion: assertion.id}],
     request: {
       method: 'GET'
     }

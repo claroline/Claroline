@@ -24,7 +24,7 @@
     "username": {
       "type": "string",
       "description": "The user username",
-      "minLength": 1
+      "minLength": 3
     },
     "administrativeCode": {
       "type": ["string", "null"],
@@ -33,7 +33,7 @@
     "plainPassword": {
       "type": "string",
       "description": "The plain login password",
-      "minLength": 1
+      "minLength": 4
     },
     "meta": {
       "type": "object",

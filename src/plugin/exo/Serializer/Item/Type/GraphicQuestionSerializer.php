@@ -13,25 +13,20 @@ class GraphicQuestionSerializer
 {
     use SerializerTrait;
 
-    /** @var FileManager */
-    private $fileManager;
-
-    public function __construct(FileManager $fileManager)
-    {
-        $this->fileManager = $fileManager;
+    public function __construct(
+        private readonly FileManager $fileManager
+    ) {
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'exo_question_graphic';
     }
 
     /**
      * Converts a Graphic question into a JSON-encodable structure.
-     *
-     * @return array
      */
-    public function serialize(GraphicQuestion $graphicQuestion, array $options = [])
+    public function serialize(GraphicQuestion $graphicQuestion, array $options = []): array
     {
         $serialized = [
             'image' => $this->serializeImage($graphicQuestion),
@@ -48,29 +43,20 @@ class GraphicQuestionSerializer
 
     /**
      * Converts raw data into a Graphic question entity.
-     *
-     * @param array           $data
-     * @param GraphicQuestion $graphicQuestion
-     *
-     * @return GraphicQuestion
      */
-    public function deserialize($data, GraphicQuestion $graphicQuestion = null, array $options = [])
+    public function deserialize(array $data, GraphicQuestion $graphicQuestion = null, ?array $options = []): GraphicQuestion
     {
         if (empty($graphicQuestion)) {
             $graphicQuestion = new GraphicQuestion();
         }
+
         $this->deserializeImage($graphicQuestion, $data['image']);
         $this->deserializeAreas($graphicQuestion, $data['solutions']);
 
         return $graphicQuestion;
     }
 
-    /**
-     * Serializes the Question image.
-     *
-     * @return \stdClass
-     */
-    private function serializeImage(GraphicQuestion $graphicQuestion)
+    private function serializeImage(GraphicQuestion $graphicQuestion): array
     {
         $questionImg = $graphicQuestion->getImage();
 
@@ -94,10 +80,7 @@ class GraphicQuestionSerializer
         return $image;
     }
 
-    /**
-     * Deserializes the Question image.
-     */
-    private function deserializeImage(GraphicQuestion $graphicQuestion, array $imageData)
+    private function deserializeImage(GraphicQuestion $graphicQuestion, array $imageData): void
     {
         $image = $graphicQuestion->getImage() ?: new Image();
 
@@ -133,12 +116,7 @@ class GraphicQuestionSerializer
         $graphicQuestion->setImage($image);
     }
 
-    /**
-     * Serializes Question solutions.
-     *
-     * @return array
-     */
-    private function serializeSolutions(GraphicQuestion $graphicQuestion)
+    private function serializeSolutions(GraphicQuestion $graphicQuestion): array
     {
         return array_map(function (Area $area) {
             $solutionData = [
@@ -154,10 +132,7 @@ class GraphicQuestionSerializer
         }, $graphicQuestion->getAreas()->toArray());
     }
 
-    /**
-     * Deserializes Question areas.
-     */
-    private function deserializeAreas(GraphicQuestion $graphicQuestion, array $solutions)
+    private function deserializeAreas(GraphicQuestion $graphicQuestion, array $solutions): void
     {
         $areaEntities = $graphicQuestion->getAreas()->toArray();
 
@@ -194,12 +169,7 @@ class GraphicQuestionSerializer
         }
     }
 
-    /**
-     * Serializes an Area.
-     *
-     * @return array
-     */
-    private function serializeArea(Area $area)
+    private function serializeArea(Area $area): array
     {
         $areaData = [
             'id' => $area->getUuid(),
@@ -220,8 +190,8 @@ class GraphicQuestionSerializer
                 $areaData['center'] = $center;
 
                 break;
-            // For retro-compatibility purpose.
-            // It doesn't exist anymore in the schema and is handled as rect
+                // For retro-compatibility purpose.
+                // It doesn't exist anymore in the schema and is handled as rect
             case 'square':
                 $areaData['shape'] = 'rect';
                 $areaData['coords'] = [
@@ -243,10 +213,7 @@ class GraphicQuestionSerializer
         return $areaData;
     }
 
-    /**
-     * Deserializes an Area.
-     */
-    private function deserializeArea(Area $area, array $data)
+    private function deserializeArea(Area $area, array $data): void
     {
         if (!empty($data['color'])) {
             $area->setColor($data['color']);
@@ -275,12 +242,7 @@ class GraphicQuestionSerializer
         }
     }
 
-    /**
-     * Serializes Coordinates.
-     *
-     * @return array
-     */
-    private function serializeCoords(array $coords)
+    private function serializeCoords(array $coords): array
     {
         return [
             'x' => (int) $coords[0],

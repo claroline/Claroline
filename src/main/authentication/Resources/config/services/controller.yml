@@ -1,7 +1,4 @@
 services:
-    _defaults:
-        public: true
-
     Claroline\AuthenticationBundle\Controller\ApiTokenController:
         parent: Claroline\AppBundle\Controller\AbstractCrudController
         public: true

@@ -4,11 +4,12 @@ namespace Claroline\CommunityBundle\Subscriber\Crud;
 
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\PatchEvent;
+use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\AppBundle\Event\CrudEvents;
 use Claroline\CoreBundle\Event\CatalogEvents\SecurityEvents;
 use Claroline\CoreBundle\Event\Security\AddRoleEvent;
 use Claroline\CoreBundle\Event\Security\RemoveRoleEvent;
@@ -21,7 +22,8 @@ class RoleSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly Connection $conn,
-        private readonly EventDispatcherInterface $eventDispatcher
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ObjectManager $om
     ) {
     }
 
@@ -126,9 +128,10 @@ class RoleSubscriber implements EventSubscriberInterface
             if ($event->getValue() instanceof User) {
                 $users[] = $event->getValue();
             } elseif ($event->getValue() instanceof Group) {
-                foreach ($event->getValue()->getUsers() as $user) {
-                    if ($user->isEnabled() && !$user->isRemoved() && !$user->hasRole($role->getName(), false)) {
-                        $users[] = $user;
+                $groupUsers = $this->om->getRepository(User::class)->findByGroup($event->getValue());
+                foreach ($groupUsers as $user) {
+                    if (!$user->hasRole($role->getName(), false)) {
+                        $users[$user->getUuid()] = $user;
                     }
                 }
             }

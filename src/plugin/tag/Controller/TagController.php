@@ -23,31 +23,25 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @Route("tag")
+ * @Route("tag", name="apiv2_tag_")
  */
 class TagController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
 
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var TagManager */
-    private $manager;
-
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        TagManager $tagManager
+        private readonly TagManager $manager
     ) {
         $this->authorization = $authorization;
-        $this->manager = $tagManager;
     }
 
-    public function getClass(): string
+    public static function getClass(): string
     {
         return Tag::class;
     }
 
-    public function getName(): string
+    public static function getName(): string
     {
         return 'tag';
     }
@@ -55,7 +49,7 @@ class TagController extends AbstractCrudController
     /**
      * List all objects linked to a Tag.
      *
-     * @Route("/{id}/object", name="apiv2_tag_list_objects", methods={"GET"})
+     * @Route("/{id}/object", name="list_objects", methods={"GET"})
      *
      * @EXT\ParamConverter("tag", class="Claroline\TagBundle\Entity\Tag", options={"mapping": {"id": "uuid"}})
      */
@@ -64,7 +58,7 @@ class TagController extends AbstractCrudController
         return new JsonResponse(
             $this->crud->list(TaggedObject::class, array_merge(
                 $request->query->all(),
-                ['hiddenFilters' => [$this->getName() => $tag->getUuid()]]
+                ['hiddenFilters' => ['tag' => $tag->getUuid()]]
             ))
         );
     }
@@ -73,7 +67,7 @@ class TagController extends AbstractCrudController
      * Adds a tag to a collection of taggable objects.
      * NB. If the tag does not exist, it will be created if the user has the correct rights.
      *
-     * @Route("/{tag}/object", name="apiv2_tag_add_objects", methods={"POST"})
+     * @Route("/{tag}/object", name="add_objects", methods={"POST"})
      *
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
@@ -89,7 +83,7 @@ class TagController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/object", name="apiv2_tag_remove_objects", methods={"DELETE"})
+     * @Route("/{id}/object", name="remove_objects", methods={"DELETE"})
      *
      * @EXT\ParamConverter("tag", class="Claroline\TagBundle\Entity\Tag", options={"mapping": {"id": "uuid"}})
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})

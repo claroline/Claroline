@@ -8,13 +8,13 @@ export const reducer = {
     [SECURITY_USER_CHANGE]: (state, action) => action.contexts
   }),
   contextFavorites: makeReducer([], {
-    [SECURITY_USER_CHANGE]: (state, action) => action.contextFavorites
+    [SECURITY_USER_CHANGE]: (state, action) => action.contextFavorites || []
   }),
   currentOrganization: makeReducer(null, {
-    [SECURITY_USER_CHANGE]: (state, action) => action.currentOrganization,
+    [SECURITY_USER_CHANGE]: (state, action) => action.currentOrganization || null,
     [PLATFORM_SET_CURRENT_ORGANIZATION]: (state, action) => action.organization
   }),
-  availableOrganizations: makeReducer(null, {
-    [SECURITY_USER_CHANGE]: (state, action) => action.availableOrganizations
+  availableOrganizations: makeReducer([], {
+    [SECURITY_USER_CHANGE]: (state, action) => action.availableOrganizations || []
   })
 }

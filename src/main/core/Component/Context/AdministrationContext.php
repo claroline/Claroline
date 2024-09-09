@@ -10,7 +10,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * Administration context is attended to manage all the low-level application
+ * The Administration context is attended to manage all the low-level application
  * parameters and features.
  * Therefore, only a limited number of users should have access to this part of the app.
  */
@@ -32,11 +32,6 @@ class AdministrationContext extends AbstractContext
         return 'sliders';
     }
 
-    public static function getOrder(): int
-    {
-        return 2;
-    }
-
     public function getObject(?string $contextId): ?ContextSubjectInterface
     {
         return null;
@@ -45,11 +40,6 @@ class AdministrationContext extends AbstractContext
     public function isAvailable(): bool
     {
         return $this->securityManager->isAdmin();
-    }
-
-    public function isRoot(): bool
-    {
-        return true;
     }
 
     public function getAccessErrors(TokenInterface $token, ?ContextSubjectInterface $contextSubject): array

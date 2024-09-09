@@ -4,8 +4,6 @@ namespace Claroline\CommunityBundle\Serializer;
 
 use Claroline\AppBundle\API\Serializer\SerializerInterface;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\AppBundle\Persistence\ObjectManager;
-use Claroline\CommunityBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -14,13 +12,10 @@ class GroupSerializer
 {
     use SerializerTrait;
 
-    private RoleRepository $roleRepo;
-
     public function __construct(
         private readonly AuthorizationCheckerInterface $authorization,
-        private readonly ObjectManager $om
+        private readonly RoleSerializer $roleSerializer
     ) {
-        $this->roleRepo = $om->getRepository(Role::class);
     }
 
     public function getClass(): string
@@ -53,6 +48,9 @@ class GroupSerializer
                 'id' => $group->getUuid(),
                 'name' => $group->getName(),
                 'thumbnail' => $group->getThumbnail(),
+                'meta' => [
+                    'description' => $group->getDescription(),
+                ],
             ];
         }
 
@@ -67,13 +65,15 @@ class GroupSerializer
                 'description' => $group->getDescription(),
                 'readOnly' => $group->isLocked(),
             ],
-            'roles' => $this->roleRepo->loadByGroup($group),
+            'roles' => array_map(function (Role $role) {
+                return $this->roleSerializer->serialize($role, [SerializerInterface::SERIALIZE_MINIMAL]);
+            }, $group->getEntityRoles()->toArray()),
         ];
 
         if (!in_array(SerializerInterface::SERIALIZE_TRANSFER, $options)) {
             $isAdmin = $this->authorization->isGranted('ADMINISTRATE', $group);
             $serialized['permissions'] = [
-                'open' => $this->authorization->isGranted('OPEN', $group),
+                'open' => $isAdmin || $this->authorization->isGranted('OPEN', $group),
                 'edit' => $isAdmin,
                 'administrate' => $isAdmin,
                 'delete' => $isAdmin,

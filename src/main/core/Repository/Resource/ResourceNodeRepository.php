@@ -11,13 +11,15 @@
 
 namespace Claroline\CoreBundle\Repository\Resource;
 
+use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Doctrine\ORM\AbstractQuery;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 
 class ResourceNodeRepository extends MaterializedPathRepository
 {
+    use UniqueValueFinder;
+
     public function search(string $search, int $nbResults)
     {
         return $this->createQueryBuilder('n')
@@ -161,25 +163,6 @@ class ResourceNodeRepository extends MaterializedPathRepository
         }
 
         return (int) $qb->getQuery()->getSingleScalarResult();
-    }
-
-    /**
-     * Returns the list of resource codes starting with $prefix.
-     * Useful to auto generate unique resource codes.
-     */
-    public function findCodesWithPrefix(string $prefix): array
-    {
-        $results = $this->getEntityManager()->createQuery('
-                SELECT LOWER(n.code) AS code
-                FROM Claroline\CoreBundle\Entity\Resource\ResourceNode n
-                WHERE LOWER(n.code) LIKE :search
-            ')
-            ->setParameter('search', strtolower(addcslashes($prefix, '%_')).'%')
-            ->getResult(AbstractQuery::HYDRATE_ARRAY);
-
-        return array_map(function (array $resource) {
-            return $resource['code'];
-        }, $results);
     }
 
     /**

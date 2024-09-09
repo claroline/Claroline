@@ -38,7 +38,7 @@ export default (badges, refresher) => {
       ]
     },
     request: {
-      url: url(['apiv2_badge-class_delete_bulk'], {ids: processable.map(badge => badge.id)}),
+      url: url(['apiv2_badge_delete'], {ids: processable.map(badge => badge.id)}),
       request: {
         method: 'DELETE'
       },

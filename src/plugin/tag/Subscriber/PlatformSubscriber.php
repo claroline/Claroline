@@ -2,8 +2,9 @@
 
 namespace Claroline\TagBundle\Subscriber;
 
-use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\Layout\InjectStylesheetEvent;
+use Claroline\AppBundle\Event\Client\ConfigureEvent;
+use Claroline\AppBundle\Event\Client\InjectStylesheetEvent;
+use Claroline\AppBundle\Event\ClientEvents;
 use Claroline\TagBundle\Entity\Tag;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -11,35 +12,28 @@ use Twig\Environment;
 
 class PlatformSubscriber implements EventSubscriberInterface
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorization;
-    /** @var Environment */
-    private $templating;
-
     public function __construct(
-        AuthorizationCheckerInterface $authorization,
-        Environment $templating
+        private readonly AuthorizationCheckerInterface $authorization,
+        private readonly Environment $templating
     ) {
-        $this->authorization = $authorization;
-        $this->templating = $templating;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
-            'layout.inject.stylesheet' => 'onInjectCss',
-            'claroline_populate_client_config' => 'onPopulateConfig',
+            ClientEvents::STYLESHEETS => 'onInjectCss',
+            ClientEvents::CONFIGURE => 'onClientConfig',
         ];
     }
 
-    public function onPopulateConfig(GenericDataEvent $event)
+    public function onClientConfig(ConfigureEvent $event): void
     {
-        $event->setResponse([
+        $event->setParameters([
             'canCreateTags' => $this->authorization->isGranted('CREATE', new Tag()),
         ]);
     }
 
-    public function onInjectCss(InjectStylesheetEvent $event)
+    public function onInjectCss(InjectStylesheetEvent $event): void
     {
         $content = $this->templating->render('@ClarolineTag/layout/stylesheets.html.twig', []);
 
