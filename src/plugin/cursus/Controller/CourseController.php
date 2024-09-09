@@ -202,7 +202,7 @@ class CourseController extends AbstractCrudController
     }
 
     /**
-     * @Route("/copy", name="apiv2_cursus_course_copy", methods={"POST"})
+     * @Route("/copy", name="copy", methods={"POST"})
      */
     public function copyAction(Request $request): JsonResponse
     {

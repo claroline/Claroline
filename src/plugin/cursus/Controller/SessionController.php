@@ -130,7 +130,7 @@ class SessionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/copy", name="apiv2_cursus_session_copy", methods={"POST"})
+     * @Route("/copy", name="copy", methods={"POST"})
      */
     public function copyAction(Request $request): JsonResponse
     {

@@ -88,7 +88,7 @@ class EventController extends AbstractCrudController
     }
 
     /**
-     * @Route("/copy", name="apiv2_cursus_event_copy", methods={"POST"})
+     * @Route("/copy", name="copy", methods={"POST"})
      */
     public function copyAction(Request $request): JsonResponse
     {
