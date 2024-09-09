@@ -21,7 +21,6 @@ services:
             - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\AppBundle\API\Crud'
-            - '@Claroline\CursusBundle\Manager\CourseManager'
         tags:
             - { name: kernel.event_subscriber }
 
@@ -35,6 +34,7 @@ services:
     Claroline\CursusBundle\Subscriber\Crud\SessionSubscriber:
         arguments:
             - '@security.token_storage'
+            - '@Claroline\AppBundle\Persistence\ObjectManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
             - '@Claroline\CursusBundle\Manager\SessionManager'
             - '@Claroline\AppBundle\API\Crud'

@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CursusBundle\Entity\Course;
-use Claroline\CursusBundle\Manager\CourseManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -33,7 +32,6 @@ class CourseSubscriber implements EventSubscriberInterface
         private readonly ObjectManager $om,
         private readonly FileManager $fileManager,
         private readonly Crud $crud,
-        private readonly CourseManager $manager,
     ) {
     }
 
@@ -149,10 +147,11 @@ class CourseSubscriber implements EventSubscriberInterface
 
         $copy->setCreatedAt(new \DateTime());
         $copy->setUpdatedAt(new \DateTime());
-        $copyName = $this->manager->getCopyName($original->getName());
-        $copy->setSlug($copyName);
+        $copyName = $this->om->getRepository(Course::class)->findNextUnique('name', $original->getName());
+        $copyCode = $this->om->getRepository(Course::class)->findNextUnique('code', $original->getCode());
         $copy->setName($copyName);
-        $copy->setCode($copyName);
+        $copy->setCode($copyCode);
+        $copy->setSlug($copyName);
     }
 
     public function postCopy(CopyEvent $event): void

@@ -38,7 +38,6 @@ class CourseManager
     private SessionManager $sessionManager;
 
     private $courseUserRepo;
-    private $courseRepo;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -60,7 +59,6 @@ class CourseManager
         $this->sessionManager = $sessionManager;
 
         $this->courseUserRepo = $this->om->getRepository(CourseUser::class);
-        $this->courseRepo = $this->om->getRepository(Course::class);
     }
 
     public function generateFromTemplate(Course $course, string $locale): string
@@ -192,22 +190,5 @@ class CourseManager
                 $this->om->endFlushSuite();
             }
         }
-    }
-
-    public function getCopyName(string $name): string
-    {
-        $existingNames = $this->courseRepo->findNamesWithPrefix($name);
-
-        if (empty($existingNames)) {
-            return $name;
-        }
-
-        $index = count($existingNames);
-        do {
-            ++$index;
-            $newName = $name.$index;
-        } while (in_array($newName, $existingNames));
-
-        return $newName;
     }
 }

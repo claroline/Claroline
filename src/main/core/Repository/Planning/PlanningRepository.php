@@ -11,11 +11,14 @@
 
 namespace Claroline\CoreBundle\Repository\Planning;
 
+use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Doctrine\ORM\EntityRepository;
 
 class PlanningRepository extends EntityRepository
 {
+    use UniqueValueFinder;
+
     public function areDatesAvailable(string $objectId, \DateTimeInterface $start, \DateTimeInterface $end): bool
     {
         $count = (int) $this->getEntityManager()

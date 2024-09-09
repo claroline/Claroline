@@ -17,6 +17,7 @@ use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\AppBundle\Event\CrudEvents;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CursusBundle\Entity\Course;
@@ -29,6 +30,7 @@ class SessionSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly ObjectManager $om,
         private readonly FileManager $fileManager,
         private readonly SessionManager $sessionManager,
         private readonly Crud $crud,
@@ -178,9 +180,10 @@ class SessionSubscriber implements EventSubscriberInterface
         $copy->setCreatedAt(new \DateTime());
         $copy->setUpdatedAt(new \DateTime());
 
-        $copyName = $this->sessionManager->getCopyName($copy->getName());
+        $copyName = $this->om->getRepository(Session::class)->findNextUnique('name', $copy->getName());
+        $copyCode = $this->om->getRepository(Session::class)->findNextUnique('code', $copy->getCode());
         $copy->setName($copyName);
-        $copy->setCode($copyName);
+        $copy->setCode($copyCode);
     }
 
     public function postCopy(CopyEvent $event): void

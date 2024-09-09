@@ -504,21 +504,4 @@ class SessionManager
             $this->sessionEventManager->removeGroups($eventRegistration->getEvent(), [$eventRegistration]);
         }
     }
-
-    public function getCopyName(string $name): string
-    {
-        $existingNames = $this->sessionRepo->findNamesWithPrefix($name);
-
-        if (empty($existingNames)) {
-            return $name;
-        }
-
-        $index = count($existingNames);
-        do {
-            ++$index;
-            $newName = $name.$index;
-        } while (in_array($newName, $existingNames));
-
-        return $newName;
-    }
 }

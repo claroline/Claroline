@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -21,6 +22,8 @@ use Doctrine\ORM\EntityRepository;
 
 class CourseRepository extends EntityRepository
 {
+    use UniqueValueFinder;
+
     public function search(string $search, int $nbResults)
     {
         return $this->createQueryBuilder('c')
@@ -247,21 +250,5 @@ class CourseRepository extends EntityRepository
         }
 
         return (int) $query->getSingleScalarResult();
-    }
-
-    public function findNamesWithPrefix(string $prefix): array
-    {
-        return array_map(
-            function (array $course) {
-                return $course['name'];
-            },
-            $this->getEntityManager()->createQuery('
-                SELECT c.name
-                FROM Claroline\CursusBundle\Entity\Course c
-                WHERE c.name LIKE :search
-            ')
-                ->setParameter('search', addcslashes($prefix, '%_').'%')
-                ->getResult()
-        );
     }
 }

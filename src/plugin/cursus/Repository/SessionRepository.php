@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\Course;
@@ -20,6 +21,8 @@ use Doctrine\ORM\EntityRepository;
 
 class SessionRepository extends EntityRepository
 {
+    use UniqueValueFinder;
+
     public function findByWorkspace(Workspace $workspace)
     {
         return $this->getEntityManager()
@@ -129,21 +132,5 @@ class SessionRepository extends EntityRepository
                 'session' => $session,
             ])
             ->getSingleScalarResult();
-    }
-
-    public function findNamesWithPrefix(string $prefix): array
-    {
-        return array_map(
-            function (array $session) {
-                return $session['name'];
-            },
-            $this->getEntityManager()->createQuery('
-                SELECT s.name
-                FROM Claroline\CursusBundle\Entity\Session s
-                WHERE s.name LIKE :search
-            ')
-                ->setParameter('search', addcslashes($prefix, '%_').'%')
-                ->getResult()
-        );
     }
 }

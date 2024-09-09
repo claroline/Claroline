@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\AppBundle\Repository\UniqueValueFinder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
@@ -18,6 +19,8 @@ use Doctrine\ORM\EntityRepository;
 
 class EventRepository extends EntityRepository
 {
+    use UniqueValueFinder;
+
     public function countParticipants(Event $event): array
     {
         return [
@@ -70,22 +73,5 @@ class EventRepository extends EntityRepository
                 'event' => $event,
             ])
             ->getSingleScalarResult();
-    }
-
-    public function findNamesWithPrefix(string $prefix): array
-    {
-        return array_map(
-            function (array $event) {
-                return $event['name'];
-            },
-            $this->getEntityManager()->createQuery('
-                SELECT po.name
-                FROM Claroline\CursusBundle\Entity\Event e
-                JOIN Claroline\CoreBundle\Entity\Planning\PlannedObject po WITH e.plannedObject = po.id
-                WHERE po.name LIKE :search
-            ')
-                ->setParameter('search', addcslashes($prefix, '%_').'%')
-                ->getResult()
-        );
     }
 }
