@@ -7,35 +7,6 @@
 @import "../variables";
 @import "../mixins";
 
-.entry-container {
-    margin-top: $component-margin-bottom;
-    margin-bottom: $component-margin-bottom;
-
-    .entry {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-
-        .btn-entry-nav {
-            flex: 0;
-            font-size: $font-size-lg;
-            padding: 0;
-            border: none;
-        }
-
-        // Scale up controls for tablets and up
-        @media screen and (min-width: map-get($grid-breakpoints, 'sm')) {
-            .btn-entry-nav {
-                font-size: ($font-size-lg * 1.5);
-            }
-        }
-
-    }
-
-    .entry-content {
-        flex: 1;
-    }
-}
 
 .entry-help {
     padding: $panel-body-padding;

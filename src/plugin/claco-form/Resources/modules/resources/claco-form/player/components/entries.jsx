@@ -30,7 +30,7 @@ const EntriesComponent = props =>
       className="mt-3"
       name={selectors.STORE_NAME+'.entries.list'}
       fetch={{
-        url: ['apiv2_clacoformentry_list', {clacoForm: props.clacoForm.id}],
+        url: ['apiv2_clacoformentry_claroform_list', {clacoForm: props.clacoForm.id}],
         autoload: true
       }}
       delete={{

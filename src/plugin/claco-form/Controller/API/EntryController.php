@@ -54,7 +54,7 @@ class EntryController extends AbstractCrudController
     }
 
     /**
-     * @Route("/clacoform/{clacoForm}/entries/list", name="list", methods={"GET"})
+     * @Route("/clacoform/{clacoForm}/entries/list", name="claroform_list", methods={"GET"})
      *
      * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
      */
@@ -128,67 +128,6 @@ class EntryController extends AbstractCrudController
         $entryId = $this->manager->getRandomEntryId($clacoForm);
 
         return new JsonResponse($entryId, 200);
-    }
-
-    /**
-     * @Route("/clacoform/{clacoForm}/{entry}/next", name="next")
-     *
-     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
-     * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
-     */
-    public function nextAction(ClacoForm $clacoForm, Entry $entry, Request $request): JsonResponse
-    {
-        $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
-
-        $params = FinderProvider::parseQueryParams($request->query->all());
-        $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
-        $filters['clacoForm'] = $clacoForm->getId();
-        $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
-
-        /** @var Entry[] $data */
-        $data = $this->finder->get(Entry::class)->find($filters, $sortBy, 0, -1, false);
-        $next = null;
-
-        foreach ($data as $position => $value) {
-            if ($value->getId() === $entry->getId()) {
-                $next = $position + 1;
-            }
-        }
-
-        $nextEntry = array_key_exists($next, $data) ? $data[$next] : reset($data);
-
-        return new JsonResponse($this->serializer->serialize($nextEntry), 200);
-    }
-
-    /**
-     * @Route("/clacoform/{clacoForm}/{entry}/previous", name="previous")
-     *
-     * @EXT\ParamConverter("clacoForm", class="Claroline\ClacoFormBundle\Entity\ClacoForm", options={"mapping": {"clacoForm": "uuid"}})
-     * @EXT\ParamConverter("entry", class="Claroline\ClacoFormBundle\Entity\Entry", options={"mapping": {"entry": "uuid"}})
-     */
-    public function previousAction(ClacoForm $clacoForm, Entry $entry, Request $request): JsonResponse
-    {
-        $this->checkPermission('OPEN', $clacoForm->getResourceNode(), [], true);
-
-        $params = FinderProvider::parseQueryParams($request->query->all());
-        $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
-        $filters['clacoForm'] = $clacoForm->getId();
-        $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
-
-        // array map is not even needed; objects are fine here
-        /** @var Entry[] $data */
-        $data = $this->finder->get(Entry::class)->find($filters, $sortBy, 0, -1, false);
-        $prev = null;
-
-        foreach ($data as $position => $value) {
-            if ($value->getId() === $entry->getId()) {
-                $prev = $position - 1;
-            }
-        }
-
-        $previousEntry = array_key_exists($prev, $data) ? $data[$prev] : end($data);
-
-        return new JsonResponse($this->serializer->serialize($previousEntry), 200);
     }
 
     /**
