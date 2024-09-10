@@ -3,46 +3,31 @@ import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 import omit from 'lodash/omit'
 
-import {trans} from '#/main/app/intl/translation'
 import {makeId} from '#/main/core/scaffolding/id'
-import {LINK_BUTTON} from '#/main/app/buttons'
 import {Resource} from '#/main/core/resource'
 
 import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
-import {Announces} from '#/plugin/announcement/resources/announcement/components/announces'
-import {Announce} from '#/plugin/announcement/resources/announcement/components/announce'
 import {AnnounceForm} from '#/plugin/announcement/resources/announcement/components/announce-form'
 import {AnnouncementEditor} from '#/plugin/announcement/resources/announcement/components/editor'
+import {AnnouncementOverview} from '#/plugin/announcement/resources/announcement/containers/overview'
+import {AnnouncementPost} from '#/plugin/announcement/resources/announcement/containers/post'
 
 const AnnouncementResource = props =>
   <Resource
     {...omit(props)}
     styles={['claroline-distribution-plugin-announcement-announcement-resource']}
-    menu={[
-      {
-        name: 'all',
-        type: LINK_BUTTON,
-        //icon: 'fa fa-fw fa-list',
-        label: trans('announcements_list', {}, 'announcement'),
-        target: props.path+'/all'
-      }
-    ]}
     editor={AnnouncementEditor}
+    overviewPage={AnnouncementOverview}
     pages={[
       {
-        path: '/all',
-        //exact: true,
-        component: Announces
-      }, {
         path: '/add',
-        exact: true,
         component: AnnounceForm,
         onEnter: () => props.resetForm(merge({}, AnnouncementTypes.defaultProps, {
           id: makeId()
         }), true)
       }, {
         path: '/:id',
-        component: Announce,
+        component: AnnouncementPost,
         exact: true,
         onEnter: (params) => props.openDetail(params.id),
         onLeave: props.resetDetail

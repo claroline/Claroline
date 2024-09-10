@@ -68,7 +68,7 @@ class AnnouncementController
         $announcement = new Announcement();
         $announcement->setAggregate($aggregate);
 
-        $this->crud->create($announcement, $this->decodeRequest($request), [Crud::THROW_EXCEPTION]);
+        $this->crud->create($announcement, $this->decodeRequest($request), [Options::PERSIST_TAG]);
 
         return new JsonResponse(
             $this->serializer->serialize($announcement),
@@ -89,7 +89,7 @@ class AnnouncementController
      */
     public function updateAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request): JsonResponse
     {
-        $this->crud->update($announcement, $this->decodeRequest($request), [Crud::THROW_EXCEPTION]);
+        $this->crud->update($announcement, $this->decodeRequest($request), [Options::PERSIST_TAG]);
 
         return new JsonResponse(
             $this->serializer->serialize($announcement)
@@ -111,7 +111,7 @@ class AnnouncementController
     {
         $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
-        $this->crud->delete($announcement, [Crud::THROW_EXCEPTION]);
+        $this->crud->delete($announcement);
 
         return new JsonResponse(null, 204);
     }

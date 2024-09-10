@@ -52,10 +52,14 @@ const AnnounceFormComponent = props =>
                 workspace: props.workspace
               }
             }, {
+              name: 'tags',
+              type: 'tag',
+              label: trans('tags')
+            }/*, {
               name: 'meta.author',
               type: 'string',
               label: trans('author')
-            }
+            }*/
           ]
         }, {
           icon: 'fa fa-fw fa-desktop',

@@ -1,15 +1,10 @@
 services:
-    _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
-
     Claroline\AnnouncementBundle\Serializer\AnnouncementSerializer:
         tags: [claroline.serializer]
         arguments:
-            - '@security.token_storage'
-            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
+            - '@event_dispatcher'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
+            - '@Claroline\CommunityBundle\Serializer\UserSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Workspace\WorkspaceSerializer'
             - '@Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer'
             - '@Claroline\CommunityBundle\Serializer\RoleSerializer'

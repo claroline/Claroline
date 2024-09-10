@@ -5,80 +5,30 @@
 @import "../variables";
 
 .announce-post {
-    .announce-title {
-        margin-top: 0;
-        // same style as current step in path
-        border-left: 3px solid #ccc;
-        padding-left: 12px;
-    }
-
-    &.active-post {
-        .announce-title {
-            border-left-color: $learning;
-        }
-    }
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-// TODO : merge with content meta
-.announce-meta {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    color: var(--#{$prefix}tertiary-color);
-    background: var(--#{$prefix}tertiary-bg);
-    padding: 5px 10px;
-    margin-bottom: $component-margin-bottom;
-
-    .announce-info {
-        flex: 1 0 auto;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-
-        .date {
-            padding: 0 10px;
-            font-size: $font-size-sm;
-            font-style: italic;
-        }
-    }
-
-    .announce-actions {
-        padding-left: 10px;
-        margin-left: 10px;
-        border-left: 1px solid #ccc;
-
-        .btn {
-            padding: 0;
-            + .btn {
-                margin-left: 5px;
-            }
-        }
-    }
+.announce-posts {
+    display: grid;
+    column-gap: map-get($spacers, 4);
+    row-gap: map-get($spacers, 5);
 }
 
-// TODO : remove next rules
+.announce-posts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+}
+
+/*.announce-posts-list {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}*/
+
 .announce-content {
-    padding: $announce-padding;
-}
-
-.announces-sort {
-    margin-top: $component-margin-bottom;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-bottom: 10px; // same as list grid sort
-
-    .btn {
-        font-weight: bold;
-        border: none;
-        padding-top: 0;
-        padding-bottom: 0;
-
-        .fa {
-            margin-left: $icon-text-spacer;
-        }
-    }
+    // display the '...' if the text is truncated on browsers which support it
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* number of lines to show */
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }

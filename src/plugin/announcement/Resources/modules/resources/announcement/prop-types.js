@@ -2,8 +2,10 @@ import {PropTypes as T} from 'prop-types'
 
 const Announcement = {
   propTypes: {
+    id: T.string,
     title: T.string,
     content: T.string.isRequired,
+    poster: T.string,
     meta: T.shape({
       author: T.string,
       notifyUsers: T.number.isRequired,
@@ -13,7 +15,8 @@ const Announcement = {
       hidden: T.bool.isRequired,
       dates: T.arrayOf(T.string)
     }).isRequired,
-    roles: T.array
+    roles: T.array,
+    tags: T.array
   },
   defaultProps: {
     title: null,
