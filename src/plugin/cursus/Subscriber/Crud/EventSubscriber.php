@@ -13,7 +13,6 @@ namespace Claroline\CursusBundle\Subscriber\Crud;
 
 use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
-use Claroline\CoreBundle\Entity\Planning\PlannedObject;
 use Claroline\CoreBundle\Subscriber\Crud\Planning\AbstractPlannedSubscriber;
 use Claroline\CursusBundle\Entity\Event;
 use Claroline\CursusBundle\Entity\Registration\AbstractRegistration;
@@ -117,12 +116,9 @@ class EventSubscriber extends AbstractPlannedSubscriber
 
         $copy->setUuid(BaseUuid::uuid4()->toString());
 
-        $plannedObjectRepo = $this->om->getRepository(PlannedObject::class);
-        $copyName = $plannedObjectRepo->findNextUnique('name', $original->getPlannedObject()->getName());
         $copyCode = $this->om->getRepository(Event::class)->findNextUnique('code', $original->getCode());
 
         $copy->setCode($copyCode);
         $copy->setSession($session);
-        $copy->getPlannedObject()->setName($copyName);
     }
 }

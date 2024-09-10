@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Group;
@@ -45,6 +46,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SessionController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
+    use RequestDecoderTrait;
 
     private TokenStorageInterface $tokenStorage;
     private TranslatorInterface $translator;
@@ -138,7 +140,7 @@ class SessionController extends AbstractCrudController
 
         $this->om->startFlushSuite();
 
-        $data = json_decode($request->getContent(), true);
+        $data = $this->decodeRequest($request);
 
         /** @var Session[] $sessions */
         $sessions = $this->om->getRepository(Session::class)->findBy([

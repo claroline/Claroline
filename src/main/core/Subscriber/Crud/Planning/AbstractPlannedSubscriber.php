@@ -156,9 +156,18 @@ abstract class AbstractPlannedSubscriber implements EventSubscriberInterface
 
     public function preCopy(CopyEvent $event): void
     {
+        /** @var AbstractPlanned $original */
+        $original = $event->getObject();
+
         /** @var AbstractPlanned $copy */
         $copy = $event->getCopy();
+
         $copy->setCreatedAt(new \DateTime());
         $copy->setUpdatedAt(new \DateTime());
+
+        $plannedObjectRepo = $this->om->getRepository(PlannedObject::class);
+
+        $copyName = $plannedObjectRepo->findNextUnique('name', $original->getPlannedObject()->getName());
+        $copy->getPlannedObject()->setName($copyName);
     }
 }

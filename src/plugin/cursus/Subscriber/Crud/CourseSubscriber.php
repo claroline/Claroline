@@ -151,7 +151,6 @@ class CourseSubscriber implements EventSubscriberInterface
         $copyCode = $this->om->getRepository(Course::class)->findNextUnique('code', $original->getCode());
         $copy->setName($copyName);
         $copy->setCode($copyCode);
-        $copy->setSlug($copyName);
     }
 
     public function postCopy(CopyEvent $event): void

@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Controller;
 
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -41,6 +42,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class EventController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
+    use RequestDecoderTrait;
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -96,7 +98,7 @@ class EventController extends AbstractCrudController
 
         $this->om->startFlushSuite();
 
-        $data = json_decode($request->getContent(), true);
+        $data = $this->decodeRequest($request);
 
         /** @var Event[] $events */
         $events = $this->om->getRepository(Event::class)->findBy([

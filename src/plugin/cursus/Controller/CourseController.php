@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Controller;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Controller\RequestDecoderTrait;
 use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Organization\Organization;
@@ -42,6 +43,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class CourseController extends AbstractCrudController
 {
     use PermissionCheckerTrait;
+    use RequestDecoderTrait;
 
     private TokenStorageInterface $tokenStorage;
     private RoutingHelper $routing;
@@ -210,7 +212,7 @@ class CourseController extends AbstractCrudController
 
         $this->om->startFlushSuite();
 
-        $data = json_decode($request->getContent(), true);
+        $data = $this->decodeRequest($request);
 
         /** @var Course[] $courses */
         $courses = $this->om->getRepository(Course::class)->findBy([
