@@ -64,13 +64,6 @@ const SubjectsList = props =>
           //filterable true if we want them
           filterable: false
         }, {
-          name: 'meta.hot',
-          type: 'boolean',
-          label: trans('hot_subject', {}, 'forum'),
-          filterable: false,
-          displayed: true,
-          sortable: false
-        }, {
           name: 'meta.messages',
           type: 'number',
           label: trans('posts_count', {}, 'forum'),
@@ -104,22 +97,6 @@ const SubjectsList = props =>
           options: {
             objectClass: 'Claroline\\ForumBundle\\Entity\\Subject'
           }
-        }, {
-          name: 'createdBefore',
-          type: 'date',
-          label: trans('created_before'),
-          displayed: false,
-          displayable: false,
-          filterable: true,
-          sortable: false
-        }, {
-          name: 'createdAfter',
-          type: 'date',
-          label: trans('created_after'),
-          displayed: false,
-          displayable: false,
-          filterable: true,
-          sortable: false
         }, {
           name: 'lastMessage',
           type: 'string',

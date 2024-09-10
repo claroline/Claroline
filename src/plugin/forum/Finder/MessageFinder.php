@@ -61,10 +61,6 @@ class MessageFinder extends AbstractFinder
                     $qb->andWhere("creator.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                case 'createdAfter':
-                    $qb->andWhere("obj.creationDate >= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
                 case 'moderation':
                     if ($filterValue) {
                         $qb->andWhere($qb->expr()->orX(

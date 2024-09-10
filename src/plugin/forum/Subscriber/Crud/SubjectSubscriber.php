@@ -2,8 +2,6 @@
 
 namespace Claroline\ForumBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
 use Claroline\AppBundle\Event\Crud\UpdateEvent;
@@ -14,7 +12,6 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
-use Claroline\ForumBundle\Manager\ForumManager;
 use Claroline\ForumBundle\Messenger\NotifyUsersOnMessageCreated;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -28,8 +25,6 @@ class SubjectSubscriber implements EventSubscriberInterface
         AuthorizationCheckerInterface $authorization,
         private readonly MessageBusInterface $messageBus,
         private readonly ObjectManager $om,
-        private readonly FinderProvider $finder,
-        private readonly ForumManager $forumManager,
         private readonly FileManager $fileManager
     ) {
         $this->authorization = $authorization;

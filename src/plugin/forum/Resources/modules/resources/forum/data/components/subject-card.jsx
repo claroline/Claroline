@@ -18,7 +18,6 @@ const SubjectCard = (props) =>
     poster={props.data.poster ? asset(props.data.poster) : null}
     subtitle={transChoice('replies', props.data.meta.messages, {count: props.data.meta.messages}, 'forum')}
     flags={[
-      props.data.meta.hot && ['fa fa-fw fa-fire', trans('hot_subject', {}, 'forum')],
       props.data.meta.sticky && ['fa fa-fw fa-thumb-tack', trans('stuck', {}, 'forum')],
       props.data.meta.closed && ['fa fa-fw fa-circle-xmark', trans('closed_subject', {}, 'forum')]
     ].filter(flag => !!flag)}

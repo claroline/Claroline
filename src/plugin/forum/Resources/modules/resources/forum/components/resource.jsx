@@ -39,27 +39,27 @@ const ForumResource = props =>
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-bell',
         label: trans('receive_notifications', {}, 'forum'),
-        displayed: !get(props.forum, 'meta.notified'),
+        displayed: !props.notified,
         callback: () => props.notify(props.forum, props.currentUser)
       }, {
         type: CALLBACK_BUTTON,
         icon: 'fa fa-fw fa-bell',
         label: trans('stop_receive_notifications', {}, 'forum'),
-        displayed: !!get(props.forum, 'meta.notified'),
+        displayed: props.notified,
         callback: () => props.stopNotify(props.forum, props.currentUser)
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-gavel',
         label: trans('blocked_messages_subjects', {}, 'forum'),
         group: trans('moderation', {}, 'forum'),
-        displayed: constants.VALIDATE_NONE !== get(props.forum, 'moderation') && !!get(props.forum, 'restrictions.moderator'),
+        displayed: constants.VALIDATE_NONE !== get(props.forum, 'moderation') && props.moderator,
         target: `${props.path}/moderation/blocked/subjects`
       }, {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-flag',
         label: trans('flagged_messages_subjects', {}, 'forum'),
         group: trans('moderation', {}, 'forum'),
-        displayed: !!get(props.forum, 'restrictions.moderator'),
+        displayed: props.moderator,
         target: `${props.path}/moderation/flagged/subjects`
       }
     ]}
@@ -91,6 +91,7 @@ ForumResource.propTypes = {
   moderator: T.bool.isRequired,
   editable: T.bool.isRequired,
   loadLastMessages: T.func.isRequired,
+  notified: T.bool.isRequired,
   notify: T.func.isRequired,
   stopNotify: T.func.isRequired
 }

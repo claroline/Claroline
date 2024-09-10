@@ -1,8 +1,4 @@
 services:
-    Claroline\ForumBundle\Finder\ForumFinder:
-        parent: Claroline\AppBundle\API\Finder\AbstractFinder
-        tags: [ claroline.finder ]
-
     Claroline\ForumBundle\Finder\MessageFinder:
         parent: Claroline\AppBundle\API\Finder\AbstractFinder
         tags: [ claroline.finder ]

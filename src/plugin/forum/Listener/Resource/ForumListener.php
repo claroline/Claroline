@@ -20,16 +20,20 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Component\Resource\ResourceComponent;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Subject;
+use Claroline\ForumBundle\Entity\Validation\User as ForumUser;
 use Claroline\ForumBundle\Manager\ForumManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ForumListener extends ResourceComponent
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly ObjectManager $om,
         private readonly SerializerProvider $serializer,
         private readonly Crud $crud,
@@ -48,11 +52,10 @@ class ForumListener extends ResourceComponent
     {
         /** @var User|string $user */
         $user = $this->tokenStorage->getToken()->getUser();
-        $isValidatedUser = false;
 
+        $validationUser = null;
         if ($user instanceof User) {
             $validationUser = $this->manager->getValidationUser($user, $resource);
-            $isValidatedUser = $validationUser->getAccess();
         }
 
         $myMessages = 0;
@@ -65,7 +68,14 @@ class ForumListener extends ResourceComponent
 
         return [
             'forum' => $this->serializer->serialize($resource),
-            'isValidatedUser' => $isValidatedUser,
+            'tags' => $this->getTags($resource),
+            'users' => $this->finder->fetch(ForumUser::class, ['forum' => $resource->getUuid(), 'banned' => false], null, 0, 0, true),
+            'subjects' => $this->finder->fetch(Subject::class, ['forum' => $resource->getUuid(), 'flagged' => false], null, 0, 0, true),
+            'messages' => $this->finder->fetch(Message::class, ['forum' => $resource->getUuid(), 'flagged' => false], null, 0, 0, true),
+
+            'isValidatedUser' => $validationUser && $validationUser->getAccess(),
+            'banned' => $validationUser && $validationUser->isBanned(),
+            'notified' => $validationUser && $validationUser->isNotified(),
             'myMessages' => $myMessages,
         ];
     }
@@ -134,5 +144,28 @@ class ForumListener extends ResourceComponent
         }
 
         $this->om->endFlushSuite();
+    }
+
+    private function getTags(Forum $forum): array
+    {
+        $subjects = $forum->getSubjects();
+        $available = [];
+
+        foreach ($subjects as $subject) {
+            $event = new GenericDataEvent([
+                'class' => Subject::class,
+                'ids' => [$subject->getUuid()],
+            ]);
+
+            $this->eventDispatcher->dispatch(
+                $event,
+                'claroline_retrieve_used_tags_object_by_class_and_ids'
+            );
+
+            $tags = $event->getResponse() ?? [];
+            $available = array_merge($available, $tags);
+        }
+
+        return $available;
     }
 }

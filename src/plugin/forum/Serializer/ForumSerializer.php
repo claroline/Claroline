@@ -2,34 +2,13 @@
 
 namespace Claroline\ForumBundle\Serializer;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
-use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
-use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
-use Claroline\ForumBundle\Entity\Message;
-use Claroline\ForumBundle\Entity\Subject;
-use Claroline\ForumBundle\Entity\Validation\User;
-use Claroline\ForumBundle\Manager\ForumManager;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ForumSerializer
 {
-    use PermissionCheckerTrait;
     use SerializerTrait;
-
-    public function __construct(
-        private readonly FinderProvider $finder,
-        private readonly TokenStorageInterface $tokenStorage,
-        private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly ForumManager $manager,
-        AuthorizationCheckerInterface $authorization
-    ) {
-        $this->authorization = $authorization;
-    }
 
     public function getClass(): string
     {
@@ -53,25 +32,6 @@ class ForumSerializer
 
     public function serialize(Forum $forum, ?array $options = []): array
     {
-        $currentUser = $this->tokenStorage->getToken()->getUser();
-
-        if ($currentUser instanceof User) {
-            $forumUser = $this->manager->getValidationUser($currentUser, $forum);
-        } else {
-            $forumUser = new User();
-        }
-
-        $now = new \DateTime();
-        $readonly = false;
-
-        if ($forum->getLockDate()) {
-            $readonly = $forum->getLockDate() > $now;
-        }
-
-        $banned = $this->checkPermission('EDIT', $forum->getResourceNode()) ?
-          false :
-          $forumUser->isBanned() || $readonly;
-
         return [
             'id' => $forum->getUuid(),
             'moderation' => $forum->getValidationMode(),
@@ -85,18 +45,6 @@ class ForumSerializer
             ],
             'restrictions' => [
                 'lockDate' => DateNormalizer::normalize($forum->getLockDate()),
-                'banned' => $banned, // TODO : data about current user should not be here
-                'moderator' => $this->checkPermission('EDIT', $forum->getResourceNode()), // TODO : data about current user should not be here
-            ],
-            'meta' => [
-                'tags' => $this->getTags($forum),
-
-                // TODO : do not use finder in serializer
-                'users' => $this->finder->fetch(User::class, ['forum' => $forum->getUuid(), 'banned' => false], null, 0, 0, true),
-                'subjects' => $this->finder->fetch(Subject::class, ['forum' => $forum->getUuid(), 'flagged' => false], null, 0, 0, true),
-                'messages' => $this->finder->fetch(Message::class, ['forum' => $forum->getUuid(), 'flagged' => false], null, 0, 0, true),
-                // TODO : data about current user should not be here
-                'notified' => $forumUser->isNotified(),
             ],
         ];
     }
@@ -118,28 +66,5 @@ class ForumSerializer
         }
 
         return $forum;
-    }
-
-    public function getTags(Forum $forum): array
-    {
-        $subjects = $forum->getSubjects();
-        $available = [];
-
-        foreach ($subjects as $subject) {
-            $event = new GenericDataEvent([
-                'class' => Subject::class,
-                'ids' => [$subject->getUuid()],
-            ]);
-
-            $this->eventDispatcher->dispatch(
-                $event,
-                'claroline_retrieve_used_tags_object_by_class_and_ids'
-            );
-
-            $tags = $event->getResponse() ?? [];
-            $available = array_merge($available, $tags);
-        }
-
-        return $available;
     }
 }

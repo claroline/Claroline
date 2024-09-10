@@ -34,14 +34,6 @@ class SubjectFinder extends AbstractFinder
                     $qb->andWhere("forum.uuid = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
-                case 'createdAfter':
-                    $qb->andWhere("obj.creationDate >= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
-                case 'createdBefore':
-                    $qb->andWhere("obj.creationDate <= :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                    break;
                 case 'creator':
                     if (!$creatorJoin) {
                         $qb->leftJoin('obj.creator', 'creator');

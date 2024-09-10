@@ -15,20 +15,30 @@ import {selectors} from '#/plugin/forum/resources/forum/store/selectors'
 const reducer = combineReducers({
   forum: makeReducer({}, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.forum,
-    [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.forumForm']: (state, action) => action.updatedData,
-    [USER_NOTIFIED]: (state) => {
-      const newState = cloneDeep(state)
-      newState.meta.notified = true
-      return newState
-    },
-    [USER_NOT_NOTIFIED]: (state) => {
-      const newState = cloneDeep(state)
-      newState.meta.notified = false
-      return newState
-    }
+    [FORM_SUBMIT_SUCCESS+'/'+selectors.STORE_NAME+'.forumForm']: (state, action) => action.updatedData
   }),
-  isValidatedUser: makeReducer({}, {
+  tags: makeReducer([], {
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.tags
+  }),
+  usersCount: makeReducer(0, {
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.users
+  }),
+  subjectsCount: makeReducer(0, {
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.subjects
+  }),
+  messagesCount: makeReducer(0, {
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.messages
+  }),
+  isValidatedUser: makeReducer(false, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.isValidatedUser
+  }),
+  banned: makeReducer(false, {
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.banned
+  }),
+  notified: makeReducer(false, {
+    [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.notified,
+    [USER_NOTIFIED]: () => true,
+    [USER_NOT_NOTIFIED]: () => false
   }),
   myMessages:  makeReducer(0, {
     [makeInstanceAction(RESOURCE_LOAD, selectors.STORE_NAME)]: (state, action) => action.resourceData.myMessages

@@ -1,17 +1,8 @@
 services:
     _defaults:
-        autowire: false
-        autoconfigure: false
-        public: true
         tags: [claroline.serializer]
 
-    Claroline\ForumBundle\Serializer\ForumSerializer:
-        arguments:
-           - '@Claroline\AppBundle\API\FinderProvider'
-           - '@security.token_storage'
-           - '@event_dispatcher'
-           - '@Claroline\ForumBundle\Manager\ForumManager'
-           - '@security.authorization_checker'
+    Claroline\ForumBundle\Serializer\ForumSerializer: ~
 
     Claroline\ForumBundle\Serializer\MessageSerializer:
         arguments:

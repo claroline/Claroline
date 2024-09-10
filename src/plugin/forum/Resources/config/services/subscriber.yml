@@ -5,8 +5,6 @@ services:
             - '@security.authorization_checker'
             - '@messenger.default_bus'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\ForumBundle\Manager\ForumManager'
             - '@Claroline\CoreBundle\Manager\FileManager'
 
     Claroline\ForumBundle\Subscriber\Crud\MessageSubscriber:
@@ -14,6 +12,4 @@ services:
         arguments:
             - '@security.authorization_checker'
             - '@Claroline\AppBundle\Persistence\ObjectManager'
-            - '@Claroline\AppBundle\API\FinderProvider'
-            - '@Claroline\ForumBundle\Manager\ForumManager'
             - '@messenger.default_bus'

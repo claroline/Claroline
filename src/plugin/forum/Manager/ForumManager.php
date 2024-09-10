@@ -11,64 +11,16 @@
 
 namespace Claroline\ForumBundle\Manager;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Entity\Forum;
-use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
 
 class ForumManager
 {
-    /** @var ObjectManager */
-    private $om;
-    /** @var FinderProvider */
-    private $finder;
-
     public function __construct(
-        FinderProvider $finder,
-        ObjectManager $om
+        private readonly ObjectManager $om
     ) {
-        $this->finder = $finder;
-        $this->om = $om;
-    }
-
-    public function getHotSubjects(Forum $forum)
-    {
-        $date = new \DateTime();
-        $date->modify('-1 week');
-
-        /** @var Message[] $messages */
-        $messages = $this->finder->fetch(Message::class, [
-            'createdAfter' => $date,
-            'forum' => $forum->getUuid(),
-        ]);
-
-        $totalMessages = count($messages);
-
-        if (0 === $totalMessages) {
-            return [];
-        }
-
-        $subjects = [];
-
-        foreach ($messages as $message) {
-            $total = isset($subjects[$message->getSubject()->getUuid()]) ?
-              $subjects[$message->getSubject()->getUuid()] + 1 : 1;
-
-            $subjects[$message->getSubject()->getUuid()] = $total;
-        }
-
-        $totalSubjects = count($subjects);
-        $avg = $totalMessages / $totalSubjects;
-
-        foreach ($subjects as $subject => $count) {
-            if ($count < $avg) {
-                unset($subjects[$subject]);
-            }
-        }
-
-        return array_keys($subjects);
     }
 
     public function getValidationUser(User $creator, Forum $forum)

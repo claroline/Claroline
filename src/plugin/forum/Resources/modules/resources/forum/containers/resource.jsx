@@ -11,7 +11,8 @@ const ForumResource = withReducer(selectors.STORE_NAME, reducer)(
     (state) => ({
       currentUser: securitySelectors.currentUser(state),
       forum: selectors.forum(state),
-      moderator: selectors.moderator(state)
+      moderator: selectors.moderator(state),
+      notified: selectors.notified(state)
     }),
     (dispatch) => ({
       loadLastMessages(forum) {

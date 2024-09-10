@@ -35,7 +35,7 @@ class ForumSource
 
     public function getData(GetDataEvent $event)
     {
-        $options = $event->getOptions() ? $event->getOptions() : [];
+        $options = $event->getOptions() ?: [];
         $options['hiddenFilters']['published'] = true;
         $options['hiddenFilters']['moderation'] = false;
         $options['hiddenFilters']['flagged'] = false;

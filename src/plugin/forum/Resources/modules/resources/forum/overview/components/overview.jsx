@@ -25,6 +25,7 @@ const OverviewComponent = props => {
 
   return (
     <ResourceOverview
+      primaryAction="create-subject"
       actions={[
         {
           name: 'create-subject',
@@ -43,21 +44,28 @@ const OverviewComponent = props => {
             {
               icon: 'fa fa-user',
               label: trans('participants'),
-              value: props.forum.meta.users
+              value: props.usersCount
             }, {
               icon: 'fa fa-comments',
               label: trans('subjects', {}, 'forum'),
-              value: props.forum.meta.subjects
+              value: props.subjectsCount
             }, {
               icon: 'fa fa-comment',
               label: trans('messages', {}, 'forum'),
-              value: props.forum.meta.messages
+              value: props.messagesCount
             }
           ]}
         />
       </PageSection>
 
-      {!isEmpty(props.forum.meta.tags) &&
+      {0 !== props.lastMessages.length &&
+        <LastMessages
+          lastMessages={props.lastMessages}
+          path={props.path}
+        />
+      }
+
+      {!isEmpty(props.tags) &&
         <PageSection size="md" title={trans('tags')}>
           <ContentTags
             className="text-center"
@@ -65,7 +73,7 @@ const OverviewComponent = props => {
             minSize={12}
             maxSize={28}
             onClick={(tag) => {
-              const forumTag = props.forum.meta.tags.find(t => t.name === tag)
+              const forumTag = props.tags.find(t => t.name === tag)
 
               if (forumTag) {
                 props.goToList(forumTag.id)
@@ -74,13 +82,6 @@ const OverviewComponent = props => {
             }}
           />
         </PageSection>
-      }
-
-      {0 !== props.lastMessages.length &&
-        <LastMessages
-          lastMessages={props.lastMessages}
-          path={props.path}
-        />
       }
     </ResourceOverview>
   )
@@ -91,7 +92,11 @@ OverviewComponent.propTypes = {
   forum: T.shape(ForumType.propTypes),
   lastMessages: T.array.isRequired,
   bannedUser: T.bool.isRequired,
-  tagsCount: T.shape({}),
+  tags: T.array,
+  tagsCount: T.object,
+  usersCount: T.number.isRequired,
+  subjectsCount: T.number.isRequired,
+  messagesCount: T.number.isRequired,
   myMessages: T.number.isRequired,
   goToList: T.func.isRequired,
   history: T.shape({
@@ -110,7 +115,11 @@ const Overview = connect(
     subject: selectors.subject(state),
     forum: selectors.forum(state),
     lastMessages: selectors.lastMessages(state).data,
+    tags: selectors.tags(state),
     tagsCount: selectors.tagsCount(state),
+    usersCount: selectors.usersCount(state),
+    subjectsCount: selectors.subjectsCount(state),
+    messagesCount: selectors.messagesCount(state),
     bannedUser: selectors.bannedUser(state),
     moderator: selectors.moderator(state),
     myMessages: selectors.myMessages(state)

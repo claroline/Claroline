@@ -23,20 +23,7 @@ class SubjectSerializer
 {
     use SerializerTrait;
 
-    /** @var FinderProvider */
-    private $finder;
-    /** @var EventDispatcherInterface */
-    private $eventDispatcher;
-    /** @var ObjectManager */
-    private $om;
-    /** @var PublicFileSerializer */
-    private $fileSerializer;
-    /** @var UserSerializer */
-    private $userSerializer;
-    /** @var ForumManager */
-    private $manager;
-    /** @var ObjectRepository */
-    private $messageRepo;
+    private ObjectRepository $messageRepo;
 
     public function getClass(): string
     {
@@ -59,20 +46,13 @@ class SubjectSerializer
     }
 
     public function __construct(
-        FinderProvider $finder,
-        EventDispatcherInterface $eventDispatcher,
-        PublicFileSerializer $fileSerializer,
-        ObjectManager $om,
-        UserSerializer $userSerializer,
-        ForumManager $manager
+        private readonly FinderProvider $finder,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly PublicFileSerializer $fileSerializer,
+        private readonly ObjectManager $om,
+        private readonly UserSerializer $userSerializer,
+        private readonly ForumManager $manager
     ) {
-        $this->finder = $finder;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->om = $om;
-        $this->fileSerializer = $fileSerializer;
-        $this->userSerializer = $userSerializer;
-        $this->manager = $manager;
-
         $this->messageRepo = $om->getRepository(Message::class);
     }
 
@@ -105,7 +85,6 @@ class SubjectSerializer
                 'sticky' => $subject->isSticked(),
                 'closed' => $subject->isClosed(),
                 'flagged' => $subject->isFlagged(),
-                'hot' => in_array($subject->getUuid(), $this->manager->getHotSubjects($subject->getForum())),
             ],
             'poster' => $subject->getPoster() ? $subject->getPoster()->getUrl() : null,
         ];

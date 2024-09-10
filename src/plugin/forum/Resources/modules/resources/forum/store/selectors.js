@@ -45,18 +45,18 @@ const lastMessages = createSelector(
   (resource) => resource.lastMessages
 )
 
-const restrictions = createSelector(
-  [forum],
-  (forum) => forum.restrictions
-)
-
 const bannedUser = createSelector(
-  [restrictions],
-  (restrictions) => restrictions.banned
+  [resource],
+  (resource) => resource.banned
 )
 const moderator = createSelector(
   [resourceSelectors.resourceNode],
   (resourceNode) => hasPermission('edit', resourceNode)
+)
+
+const notified = createSelector(
+  [resource],
+  (resource) => resource.notified
 )
 
 const myMessages = createSelector(
@@ -90,16 +90,34 @@ const moderatedMessages = createSelector(
   [messages],
   (messages) => messages.data.filter(message => 'NONE' !== message.meta.moderation)
 )
-
+const tags = createSelector(
+  [resource],
+  (resource) => resource.tags || []
+)
 const tagsCount = createSelector(
-  [forum],
-  (forum) => forum.meta.tags ? forum.meta.tags.reduce((obj, tag) => {
+  [tags],
+  (tags) => tags.reduce((obj, tag) => {
     if (!obj[tag.name]) {
       obj[tag.name] = 0
     }
     obj[tag.name]++
+
     return obj
-  }, {}) : {}
+  }, {})
+)
+const usersCount = createSelector(
+  [resource],
+  (resource) => resource.usersCount
+)
+
+const subjectsCount = createSelector(
+  [resource],
+  (resource) => resource.subjectsCount
+)
+
+const messagesCount = createSelector(
+  [resource],
+  (resource) => resource.messagesCount
 )
 
 export const selectors = {
@@ -114,12 +132,17 @@ export const selectors = {
   sortOrder,
   bannedUser,
   moderator,
+  notified,
   showSubjectForm,
   editingSubject,
   closedSubject,
   visibleMessages,
   moderatedMessages,
+  tags,
   tagsCount,
+  usersCount,
+  subjectsCount,
+  messagesCount,
   lastMessages,
   myMessages
 }

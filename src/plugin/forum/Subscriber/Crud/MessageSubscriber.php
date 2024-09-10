@@ -2,7 +2,6 @@
 
 namespace Claroline\ForumBundle\Subscriber\Crud;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Event\CrudEvents;
@@ -10,7 +9,6 @@ use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Entity\Validation\User as UserValidation;
-use Claroline\ForumBundle\Manager\ForumManager;
 use Claroline\ForumBundle\Messenger\NotifyUsersOnMessageCreated;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -23,8 +21,6 @@ class MessageSubscriber implements EventSubscriberInterface
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         private readonly ObjectManager $om,
-        private readonly FinderProvider $finder,
-        private readonly ForumManager $forumManager,
         private readonly MessageBusInterface $messageBus
     ) {
         $this->authorization = $authorization;
