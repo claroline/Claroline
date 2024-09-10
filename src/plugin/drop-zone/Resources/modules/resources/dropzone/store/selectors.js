@@ -2,8 +2,6 @@ import {createSelector} from 'reselect'
 
 import {trans} from '#/main/app/intl/translation'
 import {now} from '#/main/app/intl/date'
-import {selectors as searchSelectors} from '#/main/app/content/search/store/selectors'
-import {selectors as listSelectors} from '#/main/app/content/list/store/selectors'
 import {selectors as securitySelectors} from '#/main/app/security/store'
 
 import {selectors as resourceSelect} from '#/main/core/resource/store'
@@ -297,32 +295,6 @@ const currentRevisionId = createSelector(
   (resource) => resource.currentRevisionId
 )
 
-const slideshowQueryString = (state, name) => {
-  const queryParams = []
-
-  const listState = listSelectors.list(state, name)
-
-  // adds list filters
-  const currentFilters = searchSelectors.queryString(
-    listSelectors.filters(listState)
-  )
-  if (0 < currentFilters.length) {
-    queryParams.push(currentFilters)
-  }
-
-  // adds sort by
-  const currentSort = listSelectors.sortByQueryString(listState)
-  if (0 < currentSort.length) {
-    queryParams.push(currentSort)
-  }
-
-  if (0 !== queryParams.length) {
-    return  '?' + queryParams.join('&')
-  }
-
-  return ''
-}
-
 export const selectors = {
   STORE_NAME,
   resource,
@@ -349,6 +321,5 @@ export const selectors = {
   peerReviewDisabledMessages,
   getMyDropStatus,
   revision,
-  currentRevisionId,
-  slideshowQueryString
+  currentRevisionId
 }

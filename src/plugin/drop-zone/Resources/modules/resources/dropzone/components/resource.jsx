@@ -25,7 +25,7 @@ const DropzoneResource = props =>
   <Resource
     {...omit(props)}
     styles={['claroline-distribution-plugin-drop-zone-dropzone-resource']}
-    customActions={[
+    actions={[
       {
         type: LINK_BUTTON,
         icon: 'fa fa-fw fa-upload',

@@ -29,101 +29,60 @@ import {ResourcePage} from '#/main/core/resource'
 
 const RevisionComponent = props => props.revision && props.drop ?
   <ResourcePage>
-    <div className="revision-nav">
+    <h2>{trans('revision', {}, 'dropzone')}</h2>
 
-      {matchPath(props.location.pathname, {path: `${props.path}/revisions/`}) &&
-        <Button
-          className="btn-link btn-revision-nav"
-          type={ASYNC_BUTTON}
-          icon="fa fa-fw fa-chevron-left"
-          label={trans('previous')}
-          tooltip="right"
-          request={{
-            url: url(['claro_dropzone_revision_previous', {id: props.revision.id}]) + props.slideshowQueryString,
-            success: (previous) => {
-              if (previous && previous.id) {
-                props.history.push(`${props.path}/revisions/${previous.id}`)
-              }
-            }
-          }}
-        />
-      }
+    <table className="revision-table table table-responsive table-bordered">
+      <tbody>
+        <tr>
+          <th>{trans('creator')}</th>
+          <td>{props.revision.creator ? `${props.revision.creator.firstName} ${props.revision.creator.lastName}` : trans('unknown')}</td>
+        </tr>
+        <tr>
+          <th>{trans('creation_date')}</th>
+          <td>{displayDate(props.revision.creationDate, false, true)}</td>
+        </tr>
+      </tbody>
+    </table>
 
-      <div className="revision-content">
-        <h2>{trans('revision', {}, 'dropzone')}</h2>
+    <Documents
+      documents={props.revision.documents}
+      showMeta={true}
+      isManager={props.isManager}
+      {...props}
+    />
 
-        <table className="revision-table table table-responsive table-bordered">
-          <tbody>
-            <tr>
-              <th>{trans('creator')}</th>
-              <td>{props.revision.creator ? `${props.revision.creator.firstName} ${props.revision.creator.lastName}` : trans('unknown')}</td>
-            </tr>
-            <tr>
-              <th>{trans('creation_date')}</th>
-              <td>{displayDate(props.revision.creationDate, false, true)}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <Documents
-          documents={props.revision.documents}
-          showMeta={true}
-          isManager={props.isManager}
-          {...props}
-        />
-
-        {matchPath(props.location.pathname, {path: `${props.path}/revisions/`}) &&
-          <Button
-            className="btn component-container"
-            icon="fa fa-fw fa-plus"
-            type={MODAL_BUTTON}
-            label={trans('add_document', {}, 'dropzone')}
-            modal={1 < props.dropzone.parameters.documents.length ?
-              [MODAL_SELECTION, {
-                icon: 'fa fa-fw fa-plus',
-                title: trans('new_document', {}, 'dropzone'),
-                items: props.dropzone.parameters.documents.map((type) => ({
-                  name: type,
-                  icon: constants.DOCUMENT_TYPE_ICONS[type],
-                  label: constants.DOCUMENT_TYPES[type],
-                  description: trans(`document_${type}_desc`, {}, 'dropzone')
-                })),
-                selectAction: (type) => ({
-                  type: MODAL_BUTTON,
-                  modal: [
-                    MODAL_ADD_DOCUMENT, {
-                      type: type.name,
-                      save: (formData) => props.saveDocument(props.drop.id, props.revision.id, type.name, formData.data)
-                    }
-                  ]
-                })
-              }] :
-              [MODAL_ADD_DOCUMENT, {
-                type: props.dropzone.parameters.documents[0],
-                save: (formData) => props.saveDocument(props.drop.id, props.revision.id, props.dropzone.parameters.documents[0], formData.data)
-              }]}
-          />
-        }
-      </div>
-
-      {matchPath(props.location.pathname, {path: `${props.path}/revisions/`}) &&
-        <Button
-          className="btn-link btn-revision-nav"
-          type={ASYNC_BUTTON}
-          icon="fa fa-fw fa-chevron-right"
-          label={trans('next')}
-          tooltip="left"
-          request={{
-            url: url(['claro_dropzone_revision_next', {id: props.revision.id}])+props.slideshowQueryString,
-            success: (next) => {
-              if (next && next.id) {
-                props.history.push(`${props.path}/revisions/${next.id}`)
-              }
-            }
-          }}
-        />
-      }
-    </div>
+    {matchPath(props.location.pathname, {path: `${props.path}/revisions/`}) &&
+      <Button
+        className="btn component-container"
+        icon="fa fa-fw fa-plus"
+        type={MODAL_BUTTON}
+        label={trans('add_document', {}, 'dropzone')}
+        modal={1 < props.dropzone.parameters.documents.length ?
+          [MODAL_SELECTION, {
+            icon: 'fa fa-fw fa-plus',
+            title: trans('new_document', {}, 'dropzone'),
+            items: props.dropzone.parameters.documents.map((type) => ({
+              name: type,
+              icon: constants.DOCUMENT_TYPE_ICONS[type],
+              label: constants.DOCUMENT_TYPES[type],
+              description: trans(`document_${type}_desc`, {}, 'dropzone')
+            })),
+            selectAction: (type) => ({
+              type: MODAL_BUTTON,
+              modal: [
+                MODAL_ADD_DOCUMENT, {
+                  type: type.name,
+                  save: (formData) => props.saveDocument(props.drop.id, props.revision.id, type.name, formData.data)
+                }
+              ]
+            })
+          }] :
+          [MODAL_ADD_DOCUMENT, {
+            type: props.dropzone.parameters.documents[0],
+            save: (formData) => props.saveDocument(props.drop.id, props.revision.id, props.dropzone.parameters.documents[0], formData.data)
+          }]}
+      />
+    }
 
     <ContentComments
       title={trans('drop_comments', {}, 'dropzone')}
@@ -158,7 +117,6 @@ RevisionComponent.propTypes = {
   saveDropComment: T.func.isRequired,
   saveRevisionComment: T.func.isRequired,
   saveDocument: T.func.isRequired,
-  slideshowQueryString: T.string,
   history: T.object.isRequired
 }
 
@@ -168,8 +126,7 @@ const Revision = withRouter(connect(
     isManager: hasPermission('edit', resourceSelect.resourceNode(state)),
     dropzone: selectors.dropzone(state),
     revision: selectors.revision(state),
-    drop: selectors.currentDrop(state),
-    slideshowQueryString: selectors.slideshowQueryString(state, selectors.STORE_NAME+'.revisions')
+    drop: selectors.currentDrop(state)
   }),
   (dispatch) => ({
     saveDropComment(dropId, comment) {

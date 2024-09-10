@@ -11,7 +11,6 @@
 
 namespace Claroline\DropZoneBundle\Controller;
 
-use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
@@ -35,9 +34,9 @@ class RevisionController extends AbstractCrudController
 
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        private readonly FinderProvider $finder,
         private readonly DropzoneManager $manager
     ) {
+        $this->authorization = $authorization;
     }
 
     public static function getName(): string
@@ -58,7 +57,7 @@ class RevisionController extends AbstractCrudController
     /**
      * Submits Drop for revision.
      *
-     * @Route("/drop/{id}/submit/revision", name="claro_dropzone_drop_submit_for_revision", methods={"PUT"})
+     * @Route("/drop/{id}/submit/revision", name="submit_for_revision", methods={"PUT"})
      *
      * @EXT\ParamConverter(
      *     "drop",
@@ -86,7 +85,7 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/revisions/list", name="claro_dropzone_revisions_list", methods={"GET"})
+     * @Route("/{id}/revisions/list", name="dropzone_list", methods={"GET"})
      *
      * @EXT\ParamConverter(
      *     "dropzone",
@@ -108,7 +107,7 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/drop/{drop}/revisions/list", name="claro_dropzone_drop_revisions_list", methods={"GET"})
+     * @Route("/drop/{drop}/revisions/list", name="drop_list", methods={"GET"})
      *
      * @EXT\ParamConverter(
      *     "drop",
@@ -133,7 +132,7 @@ class RevisionController extends AbstractCrudController
     }
 
     /**
-     * @Route("/{id}/revision/drop", name="claro_dropzone_drop_from_revision_get", methods={"GET"})
+     * @Route("/{id}/revision/drop", name="drop_get", methods={"GET"})
      *
      * @EXT\ParamConverter(
      *     "revision",
@@ -152,84 +151,6 @@ class RevisionController extends AbstractCrudController
         }
 
         return new JsonResponse($this->serializer->serialize($drop), 200);
-    }
-
-    /**
-     * @Route(
-     *     "/revision/{id}/next",
-     *     name="claro_dropzone_revision_next"
-     * )
-     *
-     * @EXT\ParamConverter(
-     *     "revision",
-     *     class="Claroline\DropZoneBundle\Entity\Revision",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
-     */
-    public function nextRevisionAction(Revision $revision, Request $request): JsonResponse
-    {
-        $dropzone = $revision->getDrop()->getDropzone();
-
-        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
-
-        $params = $request->query->all();
-        $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
-        $filters['dropzone'] = $dropzone->getUuid();
-        $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
-
-        // array map is not even needed; objects are fine here
-        /** @var Revision[] $data */
-        $data = $this->finder->get(Revision::class)->find($filters, $sortBy, 0, -1, false);
-        $next = null;
-
-        foreach ($data as $position => $value) {
-            if ($value->getUuid() === $revision->getUuid()) {
-                $next = $position + 1;
-            }
-        }
-
-        $nextRevision = array_key_exists($next, $data) ? $data[$next] : reset($data);
-
-        return new JsonResponse($this->serializer->serialize($nextRevision), 200);
-    }
-
-    /**
-     * @Route(
-     *     "/revision/{id}/previous",
-     *     name="claro_dropzone_revision_previous"
-     * )
-     *
-     * @EXT\ParamConverter(
-     *     "revision",
-     *     class="Claroline\DropZoneBundle\Entity\Revision",
-     *     options={"mapping": {"id": "uuid"}}
-     * )
-     */
-    public function previousRevisionAction(Revision $revision, Request $request): JsonResponse
-    {
-        $dropzone = $revision->getDrop()->getDropzone();
-
-        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
-
-        $params = $request->query->all();
-        $filters = array_key_exists('filters', $params) ? $params['filters'] : [];
-        $filters['dropzone'] = $dropzone->getUuid();
-        $sortBy = array_key_exists('sortBy', $params) ? $params['sortBy'] : null;
-
-        // array map is not even needed; objects are fine here
-        /** @var Revision[] $data */
-        $data = $this->finder->get(Revision::class)->find($filters, $sortBy, 0, -1, false);
-        $previous = null;
-
-        foreach ($data as $position => $value) {
-            if ($value->getUuid() === $revision->getUuid()) {
-                $previous = $position - 1;
-            }
-        }
-
-        $previousDrop = array_key_exists($previous, $data) ? $data[$previous] : end($data);
-
-        return new JsonResponse($this->serializer->serialize($previousDrop), 200);
     }
 
     private function checkDropEdition(Drop $drop, User $user): void

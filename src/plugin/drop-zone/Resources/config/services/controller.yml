@@ -36,5 +36,4 @@ services:
         public: true
         arguments:
             - '@security.authorization_checker'
-            - '@Claroline\AppBundle\API\FinderProvider'
             - '@Claroline\DropZoneBundle\Manager\DropzoneManager'

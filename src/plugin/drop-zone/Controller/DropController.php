@@ -503,62 +503,6 @@ class DropController
         ]);
     }
 
-    /**
-     * @Route("/drop/{id}/next", name="claro_dropzone_drop_next")
-     * @EXT\ParamConverter("drop", class="Claroline\DropZoneBundle\Entity\Drop", options={"mapping": {"id": "uuid"}})
-     */
-    public function nextAction(Drop $drop, Request $request): JsonResponse
-    {
-        $dropzone = $drop->getDropzone();
-
-        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
-
-        $params = FinderProvider::parseQueryParams($request->query->all());
-        $params['allFilters']['dropzone'] = $dropzone->getUuid();
-
-        /** @var Drop[] $data */
-        $data = $this->finder->fetch(Drop::class, $params['allFilters'], $params['sortBy'], 0, -1, false);
-        $next = null;
-
-        foreach ($data as $position => $value) {
-            if ($value->getUuid() === $drop->getUuid()) {
-                $next = $position + 1;
-            }
-        }
-
-        $nextDrop = array_key_exists($next, $data) ? $data[$next] : reset($data);
-
-        return new JsonResponse($this->serializer->serialize($nextDrop), 200);
-    }
-
-    /**
-     * @Route("/drop/{id}/previous", name="claro_dropzone_drop_previous")
-     * @EXT\ParamConverter("drop", class="Claroline\DropZoneBundle\Entity\Drop", options={"mapping": {"id": "uuid"}})
-     */
-    public function previousAction(Drop $drop, Request $request): JsonResponse
-    {
-        $dropzone = $drop->getDropzone();
-
-        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
-
-        $params = FinderProvider::parseQueryParams($request->query->all());
-        $params['allFilters']['dropzone'] = $dropzone->getUuid();
-
-        /** @var Drop[] $data */
-        $data = $this->finder->fetch(Drop::class, $params['allFilters'], $params['sortBy'], 0, -1, false);
-        $previous = null;
-
-        foreach ($data as $position => $value) {
-            if ($value->getUuid() === $drop->getUuid()) {
-                $previous = $position - 1;
-            }
-        }
-
-        $previousDrop = array_key_exists($previous, $data) ? $data[$previous] : end($data);
-
-        return new JsonResponse($this->serializer->serialize($previousDrop), 200);
-    }
-
     private function checkDropEdition(Drop $drop, User $user): void
     {
         $dropzone = $drop->getDropzone();

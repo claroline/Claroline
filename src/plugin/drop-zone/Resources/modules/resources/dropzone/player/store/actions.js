@@ -148,7 +148,7 @@ actions.submitCorrection = (correctionId, navigate, path) => ({
 
 actions.submitDropForRevision = (dropId) => ({
   [API_REQUEST]: {
-    url: ['claro_dropzone_drop_submit_for_revision', {id: dropId}],
+    url: ['apiv2_droprevision_submit_for_revision', {id: dropId}],
     request: {
       method: 'PUT'
     },
@@ -178,7 +178,7 @@ actions.fetchRevision = (revisionId) => (dispatch) => {
 actions.fetchDropFromRevision = (revisionId) => (dispatch) => {
   dispatch({
     [API_REQUEST]: {
-      url: ['claro_dropzone_drop_from_revision_get', {id: revisionId}],
+      url: ['apiv2_droprevision_drop_get', {id: revisionId}],
       success: (data, dispatch) => {
         if (data && data.id) {
           dispatch(correctionActions.loadCurrentDrop(data))

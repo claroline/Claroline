@@ -16,7 +16,7 @@ const MyRevisionsComponent = props =>
     <ListData
       name={`${selectors.STORE_NAME}.myRevisions`}
       fetch={{
-        url: ['claro_dropzone_drop_revisions_list', {drop: props.myDropId}],
+        url: ['apiv2_droprevision_drop_list', {drop: props.myDropId}],
         autoload: true
       }}
       primaryAction={(row) => ({
