@@ -18,6 +18,7 @@ use Claroline\AppBundle\Manager\PdfManager;
 use Claroline\CoreBundle\Component\Context\DesktopContext;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Claroline\CoreBundle\Library\RoutingHelper;
 use Claroline\CoreBundle\Manager\Tool\ToolManager;
@@ -214,6 +215,13 @@ class CourseController extends AbstractCrudController
 
         $data = $this->decodeRequest($request);
 
+        $workspaceData = $data['workspace'] ?? null;
+        $workspace = null;
+
+        if ($workspaceData) {
+            $workspace = $this->om->getRepository(Workspace::class)->findOneBy(['uuid' => $data['workspace']['id']]);
+        }
+
         /** @var Course[] $courses */
         $courses = $this->om->getRepository(Course::class)->findBy([
             'uuid' => $data['ids'],
@@ -221,7 +229,11 @@ class CourseController extends AbstractCrudController
 
         foreach ($courses as $course) {
             if ($this->authorization->isGranted('ADMINISTRATE', $course)) {
-                $processed[] = $this->crud->copy($course);
+                $copy = $this->crud->copy($course);
+                if (1 === count($courses) && $workspace) {
+                    $copy->setWorkspace($workspace);
+                }
+                $processed[] = $copy;
             }
         }
 

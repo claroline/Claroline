@@ -1,15 +1,29 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {useHistory} from 'react-router-dom'
+
+import {url} from '#/main/app/api'
 import {trans} from '#/main/app/intl'
+import {ContentMenu} from '#/main/app/content/components/menu'
+import {ASYNC_BUTTON, CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 
 import {MODAL_WORKSPACES} from '#/main/core/modals/workspaces'
-import {ContentMenu} from '#/main/app/content/components/menu'
-import {CALLBACK_BUTTON, MODAL_BUTTON} from '#/main/app/buttons'
 import {Course as CourseTypes} from '#/plugin/cursus/prop-types'
+import {MODAL_TRAINING_COURSES} from '#/plugin/cursus/modals/courses'
 
 const CreationType = (props) => {
   const history = useHistory()
+  const handleNavigation = (props, history, workspace = null, course = null) => {
+    if (props.modal) {
+      props.fadeModal()
+    }
+    if (course) {
+      history.push(`${props.path}/${course.slug}`)
+    } else {
+      history.push(props.path + '/new')
+      props.openForm(null, CourseTypes.defaultProps, workspace)
+    }
+  }
 
   return (
     <ContentMenu
@@ -29,13 +43,7 @@ const CreationType = (props) => {
               selectAction: (selected) => (
                 {
                   type: CALLBACK_BUTTON,
-                  callback: () => {
-                    if (props.modal) {
-                      props.fadeModal()
-                    }
-                    history.push(props.path + '/new')
-                    props.openForm(null, CourseTypes.defaultProps, selected[0])
-                  }
+                  callback: () => handleNavigation(props, history, selected[0])
                 }
               )
             }]
@@ -54,13 +62,7 @@ const CreationType = (props) => {
               selectAction: (selected) => (
                 {
                   type: CALLBACK_BUTTON,
-                  callback: () => {
-                    if (props.modal) {
-                      props.fadeModal()
-                    }
-                    history.push(props.path + '/new')
-                    props.openForm(null, CourseTypes.defaultProps, selected[0])
-                  }
+                  callback: () => handleNavigation(props, history, selected[0])
                 }
               )
             }]
@@ -72,13 +74,7 @@ const CreationType = (props) => {
           description: trans('create_mode_empty_desc', {}, 'cursus'),
           action: {
             type: CALLBACK_BUTTON,
-            callback: () => {
-              if (props.modal) {
-                props.fadeModal()
-              }
-              history.push(props.path + '/new')
-              props.openForm(null, CourseTypes.defaultProps)
-            }
+            callback: () => handleNavigation(props, history)
           }
         }, {
           id: 'create-from-copy',
@@ -87,7 +83,23 @@ const CreationType = (props) => {
           description: trans('create_mode_copy_desc', {}, 'cursus'),
           action: {
             type: MODAL_BUTTON,
-            modal: []
+            modal: [MODAL_TRAINING_COURSES, {
+              selectAction: (selected) => ({
+                type: ASYNC_BUTTON,
+                label: trans('copy', {}, 'actions'),
+                request: {
+                  url: url(['apiv2_cursus_course_copy']),
+                  request: {
+                    method: 'POST',
+                    body: JSON.stringify({
+                      ids: selected.length ? [selected[selected.length - 1].id] : [],
+                      workspace: props.contextId
+                    })
+                  },
+                  success: (course) => handleNavigation(props, history, null, course[0])
+                }
+              })
+            }]
           },
           group: trans('create_mode_group_existing', {}, 'cursus')
         }, {
@@ -119,9 +131,10 @@ const CreationType = (props) => {
 
 CreationType.propTypes = {
   path: T.string.isRequired,
-  openForm: T.func.isRequired,
+  openForm: T.func,
   reset: T.func,
   contextType: T.string,
+  contextId: T.object,
   modal: T.bool,
   fadeModal: T.func
 }
